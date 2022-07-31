@@ -14,8 +14,9 @@ Misago provides `Model` base class that implements minimal contract for models:
 - `id: int` attribute
 - `DoesNotExist` and `MultipleObjectsReturned` exceptions specific to this model
 - `table` and `query` class attributes
-- `replace` classm method for `dataclasses.replace(model, **attrs)` in case of models being dataclasses
+- `replace` class method for `dataclasses.replace(model, **attrs)` in case of models being dataclasses
 - `fetch_from_db` instance method that queries database and returns update model.
+- `diff` instance method thats useful in updates.
 
 For sake of this guide we will implement "report" model representing record from "reports" table.
 
@@ -54,6 +55,23 @@ class Report(Model):
 Misago will now know about this model and will use it to represent query results from `reports` table.
 
 It will also populate model's `table`, `query`, `DoesNotExist` and `MultipleObjectsReturned` class attributes.
+
+By default model's name will be same as `Report.__name__`, but we can override this passing name as second argument to `@register_model`:
+
+```python
+from datetime import datetime
+
+from misago.database.models import Model, register_model
+from myplugin.tables import reports
+
+
+@register_model(reports, "Report")
+class ReportModel(Model):
+    message: str
+    url: str
+    created_at: datetime
+    is_closed: bool
+```
 
 
 ## Model initialization
@@ -184,7 +202,7 @@ class Report(Model):
         )
 ```
 
-We can now insert new instances of `Report` to database like this:
+We can now insert new instance of `Report` to database like this:
 
 ```python
 async def example_function():
@@ -198,6 +216,246 @@ async def example_function():
     report_from_db = await Report.query.one(id=r.id)
     assert report_from_db == r  # Report was saved to database successfully
 ```
+
+
+## Updating instance
+
+To update model in the database, you can run update query:
+
+```python
+async def update_report(r: Report):
+    await Report.query.filter(id=r.id).update(
+        message="New message value"
+    )
+```
+
+But we would like to be able to update `Report` instances we are working with in the code. To achieve that we can define `update` method that will take fields to update, compare their values against current ones and update the model in database and return updated instance:
+
+```python
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, Optional
+
+from misago.database.models import Model, register_model
+from misago.utils import timezone
+
+from myplugin.tables import reports
+
+
+@register_model(reports)
+@dataclass
+class Report(Model):
+    message: str
+    url: str
+    created_at: datetime
+    updated_at: datetime
+    is_closed: bool
+
+    @classmethod
+    async def create(
+        cls,
+        message: str,
+        url: str,
+        created_at: Optional[datetime],
+        updated_at: Optional[datetime],
+        is_closed: bool = False,
+    ) -> "Report":
+        now = timezone.now()
+
+        return await cls.query.insert(
+            message=message,
+            url=url,
+            created_at=created_at or now,
+            updated_at=updated_at or created_at or now,
+            is_closed=is_closed,
+        )
+
+    async def update(
+        self,
+        *,
+        message: Optional[str] = None,
+        url: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
+        is_closed: Optional[bool] = None,
+    ) -> "Report":
+        # Compare new values to current state
+        changes: Dict[str, Any] = self.diff(
+            message=message,
+            url=url,
+            created_at=created_at,
+            updated_at=updated_at,
+            is_closed=is_closed,
+        )
+
+        if not changes:
+            return self  # No changes to make in database
+        
+        # Manually update `updated_at` value
+        if "updated_at" not in changes:
+            changes["updated_at"] = timezone.now()
+
+        await self.query.filter(id=self.id).update(**changes)
+        return self.replace(**changes)
+```
+
+Now if we update our model, only values that really changed will be saved to database, and instead of mutating our instance we will get completely new one. We are avoiding unexpected side effects from state mutability or overwriting fields that are already updated by other users:
+
+```python
+async def update_report(r: Report):
+    updated_report = await Report.update(
+        message="New message value"
+    )
+```
+
+`self.diff` is little handy utility that compares it's kwargs against attributes on model and returns dict with difference. This reduces amount of boilerplace. It also skips attributes where new value wouldd be `None`.
+
+> **Note:** we could instead implement method alike to Django's save() that just collects current values from instance into a dict runs update to database, but I've found that `update` approach creates less race conditions in app and makes you more conscious about state mutations.
+
+
+### `None` and nullable fields
+
+What if our model has nullable field? For example `user_id` foreign key that holds ID of user associated with given report. If our update looked like below example, it would remove the relation even if it was called without `user_id` value:
+
+```python
+async def update(
+    self,
+    *,
+    message: Optional[str] = None,
+    user_id: Optional[int] = None,
+):
+    changes: Dict[str, Any] = self.diff(
+        message=message,
+        user_id=user_id,
+    )
+
+    if not changes:
+        return self  # No changes to make in database
+
+    await self.query.filter(id=self.id).update(**changes)
+    return self.replace(**changes)
+
+
+await my_model.update(message="New message")  # Wooops!
+```
+
+To prevent this situation from happening, `self.diff` explicitly skips `None` values, making it up to developer to handle situation.
+
+One solution to this problem is introducing argument to update dedicated to cleaning relation:
+
+```python
+async def update(
+    self,
+    *,
+    message: Optional[str] = None,
+    user_id: Optional[int] = None,
+    clear_user_id: Optional[bool] = False,
+):
+    if clear_user_id and user_id is not None:
+        raise ValueError("'clear_user_id' and 'user_id' can't be combined!")
+
+    changes: Dict[str, Any] = self.diff(
+        message=message,
+        user_id=user_id,
+    )
+
+    if clear_user_id and self.user_id:
+        changes["user_id"] = None  # Explicit unset user_id
+
+    if not changes:
+        return self  # No changes to make in database
+
+    await self.query.filter(id=self.id).update(**changes)
+    return self.replace(**changes)
+```
+
+
+### Increments
+
+
+## Deleting instance
+
+We can delete our model from database using delete query:
+
+```python
+await Report.query.filter(id=r.id).delete()
+```
+
+But for convenience `Report` could define `delete` method:
+
+```python
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, Optional
+
+from misago.database.models import Model, register_model
+from misago.utils import timezone
+
+from myplugin.tables import reports
+
+
+@register_model(reports)
+@dataclass
+class Report(Model):
+    message: str
+    url: str
+    created_at: datetime
+    updated_at: datetime
+    is_closed: bool
+
+    @classmethod
+    async def create(
+        cls,
+        message: str,
+        url: str,
+        created_at: Optional[datetime],
+        updated_at: Optional[datetime],
+        is_closed: bool = False,
+    ) -> "Report":
+        now = timezone.now()
+
+        return await cls.query.insert(
+            message=message,
+            url=url,
+            created_at=created_at or now,
+            updated_at=updated_at or created_at or now,
+            is_closed=is_closed,
+        )
+
+    async def update(
+        self,
+        *,
+        message: Optional[str] = None,
+        url: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
+        is_closed: Optional[bool] = None,
+    ) -> "Report":
+        # Compare new values to current state
+        changes: Dict[str, Any] = self.diff(
+            message=message,
+            url=url,
+            created_at=created_at,
+            updated_at=updated_at,
+            is_closed=is_closed,
+        )
+
+        if not changes:
+            return self  # No changes to make in database
+        
+        # Manually update `updated_at` value
+        if "updated_at" not in changes:
+            changes["updated_at"] = timezone.now()
+
+        await self.query.filter(id=self.id).update(**changes)
+        return self.replace(**changes)
+
+    async def delete(self):
+        await self.query.filter(id=self.id).delete()
+```
+
+
+# Handling relations
 
 
 ## Registry

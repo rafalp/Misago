@@ -1,5 +1,5 @@
 from dataclasses import replace
-from typing import ClassVar, Type
+from typing import Any, ClassVar, Dict, Type
 
 from sqlalchemy.sql import TableClause
 
@@ -15,6 +15,13 @@ class Model:
 
     query: ClassVar[RootQuery]
     table: ClassVar[TableClause]
+
+    def diff(self, **kwargs) -> dict:
+        changes: Dict[str, Any] = {}
+        for key, value in kwargs.items():
+            if value is not None and getattr(self, key) != value:
+                changes[key] = value
+        return changes
 
     def replace(self, **kwargs):
         return replace(self, **kwargs)

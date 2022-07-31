@@ -27,8 +27,8 @@ class AttachmentType(Model):
     ) -> Awaitable["AttachmentType"]:
         data: Dict[str, Any] = {
             "name": name,
-            "extensions": clean_list_value(extensions),
-            "mimetypes": clean_list_value(mimetypes),
+            "extensions": clean_list_value(extensions) or [],
+            "mimetypes": clean_list_value(mimetypes) or [],
             "size_limit": size_limit if size_limit and size_limit > 0 else None,
             "is_active": is_active,
         }
@@ -45,25 +45,18 @@ class AttachmentType(Model):
         size_limit_clear: Optional[bool] = False,
         is_active: Optional[bool] = None,
     ) -> "AttachmentType":
-        changes: Dict[str, Any] = {}
-
-        if name is not None and name != self.name:
-            changes["name"] = name
-
-        if extensions is not None:
-            clean_extensions = clean_list_value(extensions)
-            if clean_extensions != self.extensions:
-                changes["extensions"] = clean_extensions
-
-        if mimetypes is not None:
-            clean_mimetypes = clean_list_value(mimetypes)
-            if clean_mimetypes != self.mimetypes:
-                changes["mimetypes"] = clean_mimetypes
-
         if size_limit_clear and size_limit is not None:
             raise ValueError(
                 "'size_limit' can't be used together with 'size_limit_clear'"
             )
+
+        changes: Dict[str, Any] = self.diff(
+            name=name,
+            extensions=clean_list_value(extensions),
+            mimetypes=clean_list_value(mimetypes),
+            size_limit=size_limit,
+            is_active=is_active,
+        )
 
         if size_limit_clear and self.size_limit is not None:
             changes["size_limit"] = None
@@ -72,9 +65,6 @@ class AttachmentType(Model):
             changes["size_limit"] = (
                 size_limit if size_limit and size_limit > 0 else None
             )
-
-        if is_active is not None and is_active != self.is_active:
-            changes["is_active"] = is_active
 
         if not changes:
             return self
@@ -92,7 +82,7 @@ class AttachmentType(Model):
 
 def clean_list_value(list_value: Optional[List[str]]) -> List[str]:
     if list_value is None:
-        return []
+        return None
 
     clean_list = [item.strip().lower() for item in list_value]
     clean_list = list(set(clean_list))

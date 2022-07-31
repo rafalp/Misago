@@ -135,10 +135,9 @@ class Thread(Model):
         is_closed: Optional[bool] = None,
         extra: Optional[dict] = None,
     ) -> "Thread":
-        changes: Dict[str, Any] = {}
-
-        if category and category.id != self.category_id:
-            changes["category_id"] = category.id
+        changes: Dict[str, Any] = self.diff(
+            category_id=category.id if category else None,
+        )
 
         if first_post:
             if starter:
@@ -153,14 +152,13 @@ class Thread(Model):
                 raise ValueError(
                     "'first_post' and 'started_at' options are mutually exclusive"
                 )
-            if first_post.id != self.first_post_id:
-                changes["first_post_id"] = first_post.id
-            if first_post.poster_id != self.starter_id:
-                changes["starter_id"] = first_post.poster_id
-            if first_post.poster_name != self.starter_name:
-                changes["starter_name"] = first_post.poster_name
-            if first_post.posted_at != self.started_at:
-                changes["started_at"] = first_post.posted_at
+
+            changes |= self.diff(
+                first_post_id=first_post.id,
+                starter_id=first_post.poster_id,
+                starter_name=first_post.poster_name,
+                started_at=first_post.posted_at,
+            )
 
         if starter:
             if starter_name:
@@ -191,14 +189,12 @@ class Thread(Model):
                     "'last_post' and 'last_posted_at' options are mutually exclusive"
                 )
 
-            if last_post.id != self.last_post_id:
-                changes["last_post_id"] = last_post.id
-            if last_post.poster_id != self.last_poster_id:
-                changes["last_poster_id"] = last_post.poster_id
-            if last_post.poster_name != self.last_poster_name:
-                changes["last_poster_name"] = last_post.poster_name
-            if last_post.posted_at != self.last_posted_at:
-                changes["last_posted_at"] = last_post.posted_at
+            changes |= self.diff(
+                last_post_id=last_post.id,
+                last_poster_id=last_post.poster_id,
+                last_poster_name=last_post.poster_name,
+                last_posted_at=last_post.posted_at,
+            )
 
         if last_poster:
             if last_poster_name:
