@@ -302,6 +302,38 @@ await Thread.query.filter(id=2137).delete()
 
 ## Lookups
 
+Lookups are arguments passed to `filter()` and `exclude()` methods to set `WHERE` clause on final query.
+
+`filter` limits results only to those that match specified lookups while `exclude` limits results to those that DON'T match specified lookups:
+
+```python
+from misago.users.models import User
+
+# All admins
+all_admins = await User.query.filter(is_admin=True).all()
+
+# All non-admins
+all_non_admins = await User.query.exclude(is_admin=True).all()
+```
+
+Both `filter()` andd `exclude()` can be combined within single query:
+
+```python
+from misago.users.models import User
+
+# All admins that aren't moderators
+all_admins = await User.query.filter(is_admin=True).exclude(is_mod=True).all()
+```
+
+
+### Equals
+
+`column=value` will produce `col = val` SQL expression for `filter` and `cal = val OR col is None` for exclude.
+
+If value is `None`, `IS NULL` and `NOT IS NULL` expression will be produced instead.
+
+If value is an SQL Alchemy expression, `IN ()` expression with subquery will be created instead.
+
 
 ## Transactions
 
