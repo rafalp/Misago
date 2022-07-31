@@ -44,6 +44,62 @@ async def run_complex_query():
 
 ## Select
 
+### Selecting single object
+
+To retrieve single object matching query, use `one()` method:
+
+```python
+from misago.users.models import User
+
+user = await User.query.one()
+```
+
+If query returns more than one result it will raise `misago.database.models.MultipleObjectsReturned` exception. If no results are found, `misago.database.models.DoesNotExist` will be raised.
+
+`one()` accepts kwargs as filters:
+
+```python
+from misago.users.models import User
+
+# Select user with id 100
+user = await User.query.one(id=100)
+
+# Select user with id 500 but only if they are admin
+admin = await User.query.one(id=500, is_admin=True)
+```
+
+`one()` can also be used on queries that were already filtered with `filter` and `exclude`.
+
+
+### Selecting some values of single object
+
+To retrieve some values of single object matching query, use `one()` with names of columns passed to it:
+
+```python
+from misago.users.models import User
+
+user_id, user_name, user_email = await User.query.one("id", "name", "email")
+```
+
+By default the result is returned as a tuple, but you can request named tuple instead by using `named=True` option:
+
+```python
+from misago.users.models import User
+
+user = await User.query.one("id", "name", named=True)  # <Result(id=1, name="User")>
+```
+
+### Selecting single value
+
+To retrieve single value of single object matching query, use `one_flat()` with name of column:
+
+```python
+from misago.users.models import User
+
+user_name = await User.query.one_flat("name")
+```
+
+
 ### Selecting list of all results
 
 To retrieve all results matching query, use `all()` method:
