@@ -19,6 +19,11 @@ ORM's implementation is located in [`misago.database.models`](/misago/database/m
 
 Individual models are defined in `models` modules (`models.py` files) or models packages.
 
+Further reading:
+
+- [Defining models](models.md)
+- [Making queries](queries.md)
+
 
 ## Migrations
 
@@ -28,3 +33,10 @@ Individual models are defined in `models` modules (`models.py` files) or models 
 >
 > All existing migrations need to be applied on database before new migration may be generated.
 
+To learn how to create migrations [see this reference]](migrations.md).
+
+To run migrations, use `migrate` command from Misago's command line interface:
+
+```shell
+python manage.py migrate
+```
