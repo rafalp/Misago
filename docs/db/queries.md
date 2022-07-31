@@ -4,6 +4,12 @@
 
 - [Querying models](#querying-models)
 - [Select](#select)
+  - [Selecting some values of single object](#selecting-some-values-of-single-object)
+  - [Selecting single value](#selecting-single-value)
+  - [Selecting list of all results](#selecting-list-of-all-results)
+  - [Selecting list of all results limited to selected columns](#selecting-list-of-all-results-limited-to-selected-columns)
+  - [Selecting flat list of values of single column](#selecting-flat-list-of-values-of-single-column)
+  - [Selecting list of all results in batches](#selecting-list-of-all-results-in-batches)
 - [Insert](#insert)
   - [Bulk insert](#bulk-insert)
 - [Update](#update)
