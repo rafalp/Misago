@@ -146,7 +146,7 @@ users_ids = await User.query.all_flat("id")  # [1, 3, 4, 5...]
 
 ### Selecting list of all results in batches
 
-For situations when you want to fetch large number of results from database (eg. to process them in celery task), you can slice query into smaller batches to reduce memory usage:
+In situations when you want to walk over large number of results from the database (eg. to process them in celery task), you can slice query into smaller batches to reduce memory usage at expense of longer iteration time:
 
 ```python
 from misago.users.threads import Thread
