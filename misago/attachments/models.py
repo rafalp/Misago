@@ -80,7 +80,7 @@ class AttachmentType(Model):
         return self.name
 
 
-def clean_list_value(list_value: Optional[List[str]]) -> List[str]:
+def clean_list_value(list_value: Optional[List[str]]) -> Optional[List[str]]:
     if list_value is None:
         return None
 
