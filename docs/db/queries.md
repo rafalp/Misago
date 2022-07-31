@@ -11,6 +11,13 @@
   - [Selecting list of all results limited to selected columns](#selecting-list-of-all-results-limited-to-selected-columns)
   - [Selecting flat list of values of single column](#selecting-flat-list-of-values-of-single-column)
   - [Selecting list of all results in batches](#selecting-list-of-all-results-in-batches)
+  - [Selecting column values in batches](#selecting-column-values-in-batches)
+  - [Joins](#joins)
+  - [Using selects in subqueries](#using-selects-in-subqueries)
+  - [Making results distinct](#making-results-distinct)
+  - [Ordering results](#ordering-results)
+  - [Limiting results](#limiting-results)
+  - [Offset results](#offset-results)
 - [Insert](#insert)
   - [Bulk insert](#bulk-insert)
 - [Update](#update)
@@ -152,6 +159,7 @@ from misago.users.models import User
 users_ids = await User.query.all_flat("id")  # [1, 3, 4, 5...]
 ```
 
+
 ### Selecting list of all results in batches
 
 In situations when you want to walk over large number of results from the database (eg. to process them in celery task), you can slice query into smaller batches to reduce memory usage at expense of longer iteration time:
@@ -212,6 +220,12 @@ async for thread_title in Thread.query.batch_flat("title"):
 ```
 
 > **Note:**  `batch_flat` doesn't support queries with joins.
+
+
+### Joins
+
+
+### Using selects in subqueries
 
 
 ### Making results distinct
