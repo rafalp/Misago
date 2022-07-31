@@ -4,6 +4,7 @@
 
 - [Querying models](#querying-models)
 - [Select](#select)
+- [Insert](#insert)
 - [Update](#update)
 - [Delete](#delete)
 - [Lookups](#lookups)
@@ -97,6 +98,35 @@ from misago.threads.models import Thread
 
 categories_with_threads = await Thread.query.distinct().all_flat("category_id")
 ```
+
+
+## Insert
+
+To insert new data into database, use `insert` on unfiltered query:
+
+```python
+from misago.threads.models import Thread
+
+new_thread = await Thread.query.insert(title="Thread title!", slug="thread-title")
+```
+
+`insert()` returns new model instance with attributes having values from `insert` arguments. This instance will also have its `id` attribute set to value returned by the database.
+
+To bulk insert values pass list of dicts to `insert_bulk`:
+
+```python
+from misago.threads.models import Thread
+
+Thread.query.insert_bulk(
+    [
+        {"title": "Thread A", "slug": "thread-a"},
+        {"title": "Thread B", "slug": "thread-b"},
+        {"title": "Thread C", "slug": "thread-c"},
+    ]
+)
+```
+
+`insert_bulk()` has no return value.
 
 
 ## Update
