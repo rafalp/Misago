@@ -137,6 +137,12 @@ class Thread(Model):
     ) -> "Thread":
         changes: Dict[str, Any] = self.diff(
             category_id=category.id if category else None,
+            title=title,
+            slug=slugify(title),
+            started_at=started_at,
+            last_posted_at=last_posted_at,
+            is_closed=is_closed,
+            extra=extra,
         )
 
         if first_post:
@@ -201,24 +207,17 @@ class Thread(Model):
                 raise ValueError(
                     "'last_poster' and 'last_poster_name' options are mutually exclusive"
                 )
-            if last_poster.id != self.last_poster_id:
-                changes["last_poster_id"] = last_poster.id
-            if last_poster.name != self.last_poster_name:
-                changes["last_poster_name"] = last_poster.name
+
+            changes |= self.diff(
+                last_poster_id=last_poster.id,
+                last_poster_name=last_poster.name,
+            )
+
         elif last_poster_name:
             if self.last_poster_id:
                 changes["last_poster_id"] = None
             if last_poster_name != self.last_poster_name:
                 changes["last_poster_name"] = last_poster_name
-
-        if title and title != self.title:
-            changes["title"] = title
-            changes["slug"] = slugify(title)
-
-        if started_at and started_at != self.started_at:
-            changes["started_at"] = started_at
-        if last_posted_at and last_posted_at != self.last_posted_at:
-            changes["last_posted_at"] = last_posted_at
 
         if replies is not None and increment_replies:
             raise ValueError(
@@ -228,12 +227,6 @@ class Thread(Model):
             changes["replies"] = replies
         if increment_replies:
             changes["replies"] = threads.c.replies + 1
-
-        if is_closed is not None and is_closed != self.is_closed:
-            changes["is_closed"] = is_closed
-
-        if extra is not None and extra != self.extra:
-            changes["extra"] = extra
 
         if not changes:
             return self

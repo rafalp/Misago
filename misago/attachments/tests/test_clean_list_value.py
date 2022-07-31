@@ -3,7 +3,7 @@ from ..models import clean_list_value
 
 
 def test_none_is_cleaned_to_none():
-    assert clean_list_value(None) == None
+    assert clean_list_value(None) is None
 
 
 def test_empty_strings_are_removed_on_cleaning():
