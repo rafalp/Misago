@@ -33,7 +33,7 @@ Further reading:
 >
 > All existing migrations need to be applied on database before new migration may be generated.
 
-To learn how to create migrations [see this reference]](migrations.md).
+To learn how to create migrations [see this reference](migrations.md).
 
 To run migrations, use `migrate` command from Misago's command line interface:
 
