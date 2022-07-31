@@ -2,8 +2,150 @@
 
 ## Table of contents
 
+- [Querying models](#querying-models)
+- [Select](#select)
+- [Update](#update)
+- [Delete](#delete)
+- [Lookups](#lookups)
 - [Transactions](#transactions)
 - [Executing raw queries](#executing-raw-queries)
+
+
+## Querying models
+
+Every model extending `misago.database.models.Model` and registered with `misago.database.models.register_model` has `query` attribute containing instance of query builder class that can be used to construct and execute queries against it's table:
+
+```python
+from misago.users.models import User
+
+
+async def get_user_by_id(id: int):
+    await User.query.one(id=id)
+```
+
+In addition to `query` attribute, models also have `table` attribute that can be used to construct SQL Alchemy expressions:
+
+```python
+from misago.database import database
+from misago.users.models import User, UserGroup
+
+
+async def run_complex_query():
+    users_table = User.table
+    groups_table = UserGroup.table
+
+    query = User.table.select([users_table.c.id, users_table.c.name]).where(
+        users_table.c.group_id=groups_table.select().where(groups_table.c.is_admin=True)
+    )
+    await database.fetch_all(query=query)
+```
+
+
+## Select
+
+### Selecting list of all results
+
+To retrieve all results matching query, use `all()` method:
+
+```python
+from misago.users.models import User
+
+all_users = await User.query.all()
+```
+
+
+### Selecting list of all results limited to selected columns
+
+To retrieve only some of columns for all results matching query, pass those columns names to `all()`:
+
+```python
+from misago.users.models import User
+
+all_users = await User.query.all("id", "name", "email")
+for id, name, email in all_users:
+    ...
+```
+
+By default results are returned as a tuple, but you can request named tuple instead by using `named=True` option:
+
+```python
+from misago.users.models import User
+
+all_users = await User.query.all("id", "name", "email", named=True)
+for user in all_users:
+    await do_something(user.id, user.name, user.email)
+```
+
+
+### Selecting flat list of values of single column
+
+To retrieve values from single column as flat list use `all_flat()`:
+
+```python
+from misago.users.models import User
+
+users_ids = await User.query.all_flat("id")  # [1, 3, 4, 5...]
+```
+
+
+### Makings results distinct
+
+Combine `all()` with `distinct()` to make results distinct:
+
+```python
+from misago.threads.models import Thread
+
+categories_with_threads = await Thread.query.distinct().all_flat("category_id")
+```
+
+
+## Update
+
+To update all objects run `update_all` on unfiltered query:
+
+```python
+from misago.threads.models import Thread
+
+await Thread.query.update_all(is_closed=False)
+```
+
+To update only some objects in database run `update`:
+
+```python
+from misago.threads.models import Thread
+
+await Thread.query.filter(id=2137).update(is_closed=False)
+```
+
+Both `update_all` and `update` take values to save to database as kwargs. Those values can be basic Python values (like `int` or `str`) or SQL Alchemy expressions:
+
+```python
+from misago.threads.models import Thread
+
+await Thread.query.filter(id=2137).update(replies=Thread.table.c.replies + 1)
+```
+
+
+## Delete
+
+To delete all objects run `delete_all` on unfiltered query:
+
+```python
+from misago.threads.models import Thread
+
+await Thread.query.delete_all()
+```
+
+To delete only some objects in database run `delete`:
+
+```python
+from misago.threads.models import Thread
+
+await Thread.query.filter(id=2137).delete()
+```
+
+
+## Lookups
 
 
 ## Transactions
@@ -51,6 +193,8 @@ For more examples see ["databases" documentation](https://www.encode.io/database
 To run raw query against the database, use `database` instance from `misago.database`:
 
 ```python
+from misago.database import database
+
 # Run query
 await database.execute(
     query="UPDATE misago_settings SET value = 'Test Forum ' WHERE name = 'forum_name'"
