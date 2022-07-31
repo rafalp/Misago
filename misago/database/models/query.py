@@ -168,14 +168,14 @@ class Query:
         column: str,
         cursor_column: str = "id",
         step_size: int = 20,
-        ascending: bool = False,
+        descending: bool = True,
     ):
         generator = self.batch(
             column,
             cursor_column,
             cursor_column=cursor_column,
             step_size=step_size,
-            ascending=ascending,
+            descending=descending,
         )
         async for result in generator:
             if isinstance(result, dict):
@@ -188,13 +188,14 @@ class Query:
         *columns: str,
         cursor_column: str = "id",
         step_size: int = 20,
-        ascending: bool = False,
+        descending: bool = True,
     ):
+        in_join = bool(self.state.join)
         cursor = None
-        cursor_clause = cursor_column + ("__gt" if ascending else "__lt")
+        cursor_clause = cursor_column + ("__lt" if descending else "__gt")
 
         base_query = (
-            self.order_by(cursor_column if ascending else "-" + cursor_column)
+            self.order_by("-" + cursor_column if descending else cursor_column)
             .offset(0)
             .limit(step_size + 1)
         )
@@ -210,6 +211,8 @@ class Query:
             if len(results) > step_size:
                 results = results[:step_size]
                 last_result = results[-1]
+                if in_join:
+                    last_result = last_result[0]
                 if isinstance(last_result, dict):
                     cursor = last_result[cursor_column]
                 else:

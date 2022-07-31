@@ -57,7 +57,7 @@ async def test_small_table_can_be_batched_in_ascending_order(db):
             is_active=True,
         )
 
-    results = await consume_generator(root_query.batch(ascending=True))
+    results = await consume_generator(root_query.batch(descending=False))
     assert results == ["#1", "#2", "#3", "#4", "#5"]
 
 
@@ -91,7 +91,7 @@ async def test_large_table_can_be_batched_in_ascending_order(db):
             is_active=True,
         )
 
-    results = await consume_generator(root_query.batch(ascending=True))
+    results = await consume_generator(root_query.batch(descending=False))
     assert results == [f"#{i}" for i in range(1, 41)]
 
 

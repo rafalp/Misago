@@ -144,6 +144,67 @@ from misago.users.models import User
 users_ids = await User.query.all_flat("id")  # [1, 3, 4, 5...]
 ```
 
+### Selecting list of all results in batches
+
+For situations when you want to fetch large number of results from database (eg. to process them in celery task), you can slice query into smaller batches to reduce memory usage:
+
+```python
+from misago.users.threads import Thread
+
+async for thread in Thread.query.batch():
+    ...
+```
+
+By default objects are pulled in batches of 20. This value can be set through `step_size` option:
+
+```python
+from misago.users.threads import Thread
+
+async for thread in Thread.query.batch(step_size=50):
+    ...
+```
+
+By default objects are ordered by `id` column in descending order, so most recent objects are returned first. To change column or order use `cursor_column` and `descending` options:
+
+```python
+from misago.users.threads import Thread
+
+# Threads will now be returned in ascending order
+async for thread in Thread.query.batch(descending=False):
+    ...
+
+# Threads will now be ordered by last post id 
+async for thread in Thread.query.batch(cursor_column="last_post_id"):
+    ...
+```
+
+> **Note:**  `cursor_column` doesn't support joined tables.
+
+You can also limit results to selected columns, but you need to make sure that list of columns includes cursor column. Results are then returned as named tuples:
+
+```python
+from misago.users.threads import Thread
+
+# Threads will now be returned in ascending order
+async for thread in Thread.query.batch("id", "title"):
+    print(thread)  # <Result(id=1, title="Hello world!")>
+```
+
+
+### Selecting column values in batches
+
+`batch_flat` does what `all_flat` does, but in batches:
+
+```python
+from misago.users.threads import Thread
+
+# Threads will now be returned in ascending order
+async for thread_title in Thread.query.batch_flat("title"):
+    print(thread_title)  # "New thread"
+```
+
+> **Note:**  `batch_flat` doesn't support queries with joins.
+
 
 ### Making results distinct
 
@@ -314,6 +375,15 @@ all_admins = await User.query.filter(is_admin=True).all()
 
 # All non-admins
 all_non_admins = await User.query.exclude(is_admin=True).all()
+```
+
+Multiple lookups can be passed to function at same time:
+
+```python
+from misago.users.models import User
+
+# All admins that aren't moderators
+all_admins = await User.query.filter(is_admin=True, is_mod=False).all()
 ```
 
 Both `filter()` andd `exclude()` can be combined within single query:
