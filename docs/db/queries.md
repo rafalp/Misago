@@ -4,6 +4,7 @@
 
 - [Querying models](#querying-models)
 - [Select](#select)
+  - [Selecting single object](#selecting-single-object)
   - [Selecting some values of single object](#selecting-some-values-of-single-object)
   - [Selecting single value](#selecting-single-value)
   - [Selecting list of all results](#selecting-list-of-all-results)
