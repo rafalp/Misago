@@ -47,7 +47,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def filter(self, *expressions, **conditions) -> "Query":
-        filters = self.state.filter or []
+        filters = list(self.state.filter or [])
         if expressions:
             filters.extend(expressions)
         if conditions:
@@ -57,7 +57,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def exclude(self, *expressions, **conditions) -> "Query":
-        excludes = self.state.exclude or []
+        excludes = list(self.state.exclude or [])
         if expressions:
             excludes.extend(expressions)
         if conditions:
@@ -67,7 +67,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def or_filter(self, *expressions, **conditions) -> "Query":
-        or_filter: List[LookupsList] = self.state.or_filter or []
+        or_filter: List[LookupsList] = list(self.state.or_filter or [])
         filters: LookupsList = []
         if expressions:
             filters.extend(expressions)
@@ -78,7 +78,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def or_exclude(self, *expressions, **conditions) -> "Query":
-        or_exclude: List[LookupsList] = self.state.or_exclude or []
+        or_exclude: List[LookupsList] = list(self.state.or_exclude or [])
         filters: LookupsList = []
         if expressions:
             filters.extend(expressions)

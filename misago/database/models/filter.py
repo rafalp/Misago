@@ -32,7 +32,6 @@ def filter_query(
         return query.where(*lookups, or_(*or_lookups))
     if lookups:
         return query.where(*lookups)
-
     return query
 
 

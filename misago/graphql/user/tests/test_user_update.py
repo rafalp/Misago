@@ -881,8 +881,8 @@ async def test_inactive_user_update_mutation_updates_active_status_to_true(
         "updated": True,
         "user": {
             "id": str(inactive_user.id),
-            "name": "User",
-            "slug": "user",
+            "name": "InactiveUser",
+            "slug": "inactiveuser",
             "fullName": None,
             "email": "inactive@example.com",
             "isActive": True,
@@ -985,8 +985,8 @@ async def test_inactive_user_update_mutation_skips_update_if_active_status_is_sa
         "updated": False,
         "user": {
             "id": str(inactive_user.id),
-            "name": "User",
-            "slug": "user",
+            "name": "InactiveUser",
+            "slug": "inactiveuser",
             "fullName": None,
             "email": "inactive@example.com",
             "isActive": False,
