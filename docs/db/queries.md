@@ -2,29 +2,42 @@
 
 ## Table of contents
 
-- [Querying models](#querying-models)
-- [Select](#select)
-  - [Selecting single object](#selecting-single-object)
-  - [Selecting some values of single object](#selecting-some-values-of-single-object)
-  - [Selecting single value](#selecting-single-value)
-  - [Selecting list of all results](#selecting-list-of-all-results)
-  - [Selecting list of all results limited to selected columns](#selecting-list-of-all-results-limited-to-selected-columns)
-  - [Selecting flat list of values of single column](#selecting-flat-list-of-values-of-single-column)
-  - [Selecting list of all results in batches](#selecting-list-of-all-results-in-batches)
-  - [Selecting column values in batches](#selecting-column-values-in-batches)
-  - [Joins](#joins)
-  - [Ordering results](#ordering-results)
-  - [Limiting results](#limiting-results)
-  - [Offset results](#offset-results)
-  - [Making results distinct](#making-results-distinct)
-  - [Using selects in subqueries](#using-selects-in-subqueries)
-- [Insert](#insert)
-  - [Bulk insert](#bulk-insert)
-- [Update](#update)
-- [Delete](#delete)
-- [Lookups](#lookups)
-- [Transactions](#transactions)
-- [Executing raw queries](#executing-raw-queries)
+- (Querying models)[#querying-models]
+- (Select)[#select]
+  - (Selecting single object)[#selecting-single-object]
+  - (Selecting some values of single object)[#selecting-some-values-of-single-object]
+  - (Selecting single value)[#selecting-single-value]
+  - (Selecting list of all results)[#selecting-list-of-all-results]
+  - (Selecting list of all results limited to selected columns)[#selecting-list-of-all-results-limited-to-selected-columns]
+  - (Selecting flat list of values of single column)[#selecting-flat-list-of-values-of-single-column]
+  - (Selecting list of all results in batches)[#selecting-list-of-all-results-in-batches]
+  - (Selecting column values in batches)[#selecting-column-values-in-batches]
+  - (Joins)[#joins]
+  - (Ordering results)[#ordering-results]
+  - (Limiting results)[#limiting-results]
+  - (Offset results)[#offset-results]
+  - (Making results distinct)[#making-results-distinct]
+  - (Using selects in subqueries)[#using-selects-in-subqueries]
+- (Insert)[#insert]
+  - (Bulk insert)[#bulk-insert]
+- (Update)[#update]
+- (Delete)[#delete]
+- (Lookups)[#lookups]
+  - (Or)[#or]
+  - (Equals)[#equals]
+  - (Greater than)[#greater-than]
+  - (Greater than or equal)[#greater-than-or-equal]
+  - (Lesser than)[#lesser-than]
+  - (Lesser than or equal)[#lesser-than-or-equal]
+  - (In)[#in]
+  - (Content search)[#content-search]
+  - (Prefix)[#prefix]
+  - (Suffix)[#suffix]
+  - (Case insensitive string comparison )[#case-insensitive-string-comparison-]
+  - (Simple search)[#simple-search]
+  - (Null test)[#null-test]
+- (Transactions)[#transactions]
+- (Executing raw queries)[#executing-raw-queries]
 
 
 ## Querying models
