@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 def list_copy_or_init(value: list | None) -> list:
     return list(value) if value else []
 
+
 class Query:
     mapper_registry: "MapperRegistry"
     state: QueryState
