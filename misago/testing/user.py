@@ -30,7 +30,7 @@ async def other_user(db, user_password):
 @pytest_asyncio.fixture
 async def inactive_user(db, user_password):
     return await User.create(
-        "User",
+        "InactiveUser",
         "inactive@example.com",
         password=user_password,
         is_active=False,

@@ -110,6 +110,13 @@ async def test_matching_escapes_value(admin):
     assert await root_query.filter(name__ilike="%min").count() == 0
     assert await root_query.filter(name__ilike="\%min").count() == 0
 
+    assert await root_query.filter(name__ilike="A_min").count() == 0
+    assert await root_query.filter(name__ilike="A\_min").count() == 0
+
     await admin.update(name="A%min")
     assert await root_query.filter(name__contains="%min").count() == 1
     assert await root_query.filter(name__contains="\%min").count() == 0
+
+    await admin.update(name="A_min")
+    assert await root_query.filter(name__contains="A_min").count() == 1
+    assert await root_query.filter(name__contains="A\_min").count() == 0

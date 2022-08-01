@@ -540,7 +540,16 @@ from misago.users.models import User
 # Admins that aren't moderators or moderators that aren't admins
 users = await (
     User.query
-    .filter(is_admin=True, is_moderator=False)
+    .or_filter(is_admin=True, is_moderator=False)
+    .or_filter(is_admin=False, is_moderator=True)
+    .all()
+)
+
+# Active admins that aren't moderators or moderators that aren't admins
+users = await (
+    User.query
+    .exclude(is_active=False)
+    .or_filter(is_admin=True, is_moderator=False)
     .or_filter(is_admin=False, is_moderator=True)
     .all()
 )

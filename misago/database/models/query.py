@@ -7,7 +7,7 @@ from sqlalchemy.sql import ClauseElement, TableClause, select
 from ..database import database
 from .exceptions import DoesNotExist, MultipleObjectsReturned
 from .filter import filter_query
-from .querystate import QueryState
+from .querystate import LookupsList, QueryState
 from .select import (
     get_select_join_query,
     select_from_one_table,
@@ -47,7 +47,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def filter(self, *expressions, **conditions) -> "Query":
-        filters = list(self.state.filter or [])
+        filters = self.state.filter or []
         if expressions:
             filters.extend(expressions)
         if conditions:
@@ -57,13 +57,35 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def exclude(self, *expressions, **conditions) -> "Query":
-        excludes = list(self.state.exclude or [])
+        excludes = self.state.exclude or []
         if expressions:
             excludes.extend(expressions)
         if conditions:
             validate_conditions(self.state, conditions)
             excludes.extend([conditions])
         new_state = replace(self.state, exclude=excludes)
+        return Query(self.mapper_registry, new_state)
+
+    def or_filter(self, *expressions, **conditions) -> "Query":
+        or_filter: List[LookupsList] = self.state.or_filter or []
+        filters: LookupsList = []
+        if expressions:
+            filters.extend(expressions)
+        if conditions:
+            validate_conditions(self.state, conditions)
+            filters.extend([conditions])
+        new_state = replace(self.state, or_filter=or_filter + [filters])
+        return Query(self.mapper_registry, new_state)
+
+    def or_exclude(self, *expressions, **conditions) -> "Query":
+        or_exclude: List[LookupsList] = self.state.or_exclude or []
+        filters: LookupsList = []
+        if expressions:
+            filters.extend(expressions)
+        if conditions:
+            validate_conditions(self.state, conditions)
+            filters.extend([conditions])
+        new_state = replace(self.state, or_exclude=or_exclude + [filters])
         return Query(self.mapper_registry, new_state)
 
     def join_on(self, *columns: str) -> "Query":

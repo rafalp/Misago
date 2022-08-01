@@ -1,54 +1,75 @@
-from typing import Any, Dict, List, TypeAlias, cast
+from typing import Any, Iterable
 
-from sqlalchemy.sql import ClauseElement, ColumnElement, not_, or_
+from sqlalchemy.sql import ClauseElement, ColumnElement, and_, not_, or_
 
 from .getcolumn import get_column
-from .querystate import QueryState
+from .querystate import Lookup, QueryState
 
 
 def filter_query(
-    state: QueryState, query: ClauseElement, *, in_join: bool = False
+    state: QueryState,
+    query: ClauseElement,
+    *,
+    in_join: bool = False,
 ) -> ClauseElement:
+    lookups = []
+    or_lookups = []
+
     if state.filter:
-        query = apply_filters(state, query, in_join)
+        lookups += get_filter_expressions(state, state.filter, in_join)
     if state.exclude:
-        query = apply_excludes(state, query, in_join)
+        lookups += get_exclude_expressions(state, state.exclude, in_join)
+    if state.or_filter:
+        for or_filter in state.or_filter:
+            or_lookups.append(and_(*get_filter_expressions(state, or_filter, in_join)))
+    if state.or_exclude:
+        for or_exclude in state.or_exclude:
+            or_lookups.append(
+                and_(*get_exclude_expressions(state, or_exclude, in_join))
+            )
+
+    if or_lookups:
+        return query.where(*lookups, or_(*or_lookups))
+    if lookups:
+        return query.where(*lookups)
 
     return query
 
 
-FilterClause: TypeAlias = ClauseElement | Dict[str, Any]
-
-
-def apply_filters(
-    state: QueryState, query: ClauseElement, in_join: bool
+def get_filter_expressions(
+    state: QueryState,
+    lookups: Iterable[Lookup],
+    in_join: bool,
 ) -> ClauseElement:
-    for filter_clause in cast(List[FilterClause], state.filter):
-        if isinstance(filter_clause, dict):
-            for filter_col, filter_value in filter_clause.items():
+    expressions = []
+    for lookup in lookups:
+        if isinstance(lookup, dict):
+            for filter_col, filter_value in lookup.items():
                 if "__" in filter_col:
                     col_name, clause = filter_col.split("__")
                     col = get_column(state, col_name, in_join)
-                    query = query.where(
-                        get_filter_expression(col, clause, filter_value)
-                    )
+                    expressions.append(get_filter_expression(col, clause, filter_value))
                 else:
                     col = get_column(state, filter_col, in_join)
                     if filter_value is True:
-                        query = query.where(col.is_(True))
+                        expressions.append(col.is_(True))
                     elif filter_value is False:
-                        query = query.where(col.is_(False))
+                        expressions.append(col.is_(False))
                     elif filter_value is None:
-                        query = query.where(col.is_(None))
+                        expressions.append(col.is_(None))
                     else:
-                        query = query.where(col == filter_value)
+                        expressions.append(col == filter_value)
         else:
-            query = query.where(filter_clause)
+            expressions.append(lookup)
 
-    return query
+    return expressions
 
 
-def get_filter_expression(col: ColumnElement, clause: str, value: Any) -> ClauseElement:
+def get_filter_expression(
+    col: ColumnElement,
+    clause: str,
+    value: Any,
+) -> ClauseElement:
     # pylint: disable=too-many-return-statements
     if clause == "in":
         if hasattr(value, "as_select_expression"):
@@ -95,36 +116,40 @@ def get_filter_expression(col: ColumnElement, clause: str, value: Any) -> Clause
     raise ValueError(f"Unknown clause '{clause}'")
 
 
-def apply_excludes(
-    state: QueryState, query: ClauseElement, in_join: bool
+def get_exclude_expressions(
+    state: QueryState,
+    lookups: Iterable[Lookup],
+    in_join: bool,
 ) -> ClauseElement:
-    # pylint: disable=too-many-nested-blocks
-    for exclude_clause in cast(List[FilterClause], state.exclude):
-        if isinstance(exclude_clause, dict):
-            for filter_col, filter_value in exclude_clause.items():
+    expressions = []
+    for lookup in lookups:
+        if isinstance(lookup, dict):
+            for filter_col, filter_value in lookup.items():
                 if "__" in filter_col:
                     col_name, clause = filter_col.split("__")
                     col = get_column(state, col_name, in_join)
-                    query = query.where(
+                    expressions.append(
                         get_exclude_expression(col, clause, filter_value)
                     )
                 else:
                     col = get_column(state, filter_col, in_join)
                     if filter_value is True or filter_value is False:
-                        query = query.where(col == (not filter_value))
+                        expressions.append(col == (not filter_value))
                     elif filter_value is None:
-                        query = query.where(col.isnot(None))
+                        expressions.append(col.isnot(None))
                     else:
                         # col != 3 OR col IS NULL
-                        query = query.where(or_(col != filter_value, col.is_(None)))
+                        expressions.append(or_(col != filter_value, col.is_(None)))
         else:
-            query = query.where(not_(exclude_clause))
+            expressions.append(not_(lookup))
 
-    return query
+    return expressions
 
 
 def get_exclude_expression(
-    col: ColumnElement, clause: str, value: Any
+    col: ColumnElement,
+    clause: str,
+    value: Any,
 ) -> ClauseElement:
     # pylint: disable=too-many-return-statements
     if clause == "in":
