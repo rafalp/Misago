@@ -517,13 +517,111 @@ all_admins = await User.query.filter(is_admin=True).exclude(is_mod=True).all()
 ```
 
 
+### Or
+
+By default lookups are added to query using `AND` SQL. To add them with `OR`, use `or_filter` and `or_exclude`:
+
+```python
+from misago.users.models import User
+
+# Admins that aren't moderators or moderators that aren't admins
+users = await (
+    User.query
+    .filter(is_admin=True, is_moderator=False)
+    .or_filter(is_admin=False, is_moderator=True)
+    .all()
+)
+```
+
+
 ### Equals
 
-`column=value` will produce `col = val` SQL expression for `filter` and `cal = val OR col is None` for exclude.
+`column=value` will produce `column = value` SQL expression for `filter` and `column = value OR column is None` for exclude.
 
-If value is `None`, `IS NULL` and `NOT IS NULL` expression will be produced instead.
+If value is `True` or `False`, `IS TRUE` or `IS FALSE` SQL expression will be produced instead.
+
+If value is `None`, `IS NULL` SQL expression will be used instead.
 
 If value is an SQL Alchemy expression, `IN ()` expression with subquery will be created instead.
+
+
+### Greater than
+
+`column__gt=value` will produce `column > value` SQL expression.
+
+
+### Greater than or equal
+
+`column__gte=value` will produce `column >= value` SQL expression.
+
+
+### Lesser than
+
+`column__lt=value` will produce `column < value` SQL expression.
+
+
+### Lesser than or equal
+
+`column__lte=value` will produce `column <= value` SQL expression.
+
+
+### In
+
+`column__in=value` will produce `column IN value` SQL expression.
+
+
+### Content search
+
+Tests if column value contains substring.
+
+`column__contains=value` will produce `column LIKE '%value%'` case sensitive SQL expression.
+
+`column__icontains=value` will produce `column ILIKE '%value%'` case insensitive SQL expression.
+
+
+### Prefix
+
+Tests if column value starts with string.
+
+`column__startswith=value` will produce `column LIKE 'value%'` case sensitive SQL expression.
+
+`column__istartswith=value` will produce `column ILIKE 'value%'` case insensitive SQL expression.
+
+
+### Suffix
+
+Tests if column value ends with string.
+
+`column__endswith=value` will produce `column LIKE '%value'` case sensitive SQL expression.
+
+`column__iendswith=value` will produce `column ILIKE '%value'` case insensitive SQL expression.
+
+
+### Case insensitive string comparison 
+
+`column__ilike=value` will produce `column ILIKE 'value'` case insensitive SQL expression.
+
+
+### Simple search
+
+`simplesearch` lookup is intended for simple searching of text columns in admin API. Its shorthand lookup that constructs either contains, starts or ends SQL expression depending on search string containing `*` at beginning or end:
+
+`column__simplesearch="name"` will produce `column LIKE 'name'`
+
+`column__simplesearch="*name"` will produce `column LIKE '%name'`
+
+`column__simplesearch="name*"` will produce `column LIKE 'name%'`
+
+`column__simplesearch="*name*"` will produce `column LIKE '%name%'`
+
+To make search case insensitive use prefix the lookup with `i` (`isimplesearch` vs `simplesearch`).
+
+
+### Null test
+
+`column__isnull=True` will produce `column IS NULL` SQL expression.
+
+`column__isnull=False` will produce `column IS NOT NULL` SQL expression.
 
 
 ## Transactions

@@ -204,4 +204,4 @@ def ilike(column: ColumnElement, value: str) -> ClauseElement:
 
 
 def escape_value(value) -> str:
-    return value.replace(ESCAPE_CHARACTER, ESCAPE_CHARACTER * 2).replace(r"%", r"\%")
+    return value.replace(ESCAPE_CHARACTER, ESCAPE_CHARACTER * 2).replace(r"%", r"\%").replace(r"_", r"\_")
