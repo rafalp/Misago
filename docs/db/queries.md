@@ -269,6 +269,22 @@ for thread, starter in await Thread.query.join_on("starter_id").all("id", "start
     print(starter)  # <Result(name="Aerith")> or None
 ```
 
+Tables in join queries are aliased. To retrieve aliased table for use in SQL Alchemy expression access Query's `state.join_root` attribute for main table and `state.join_tables` dict for joined tables:
+
+```python
+query = Thread.query.join_on("starter_id")
+users_join = query.state.join_tables["starter_id"]
+query = query.filter(users_join.c.slug == "admin")
+```
+
+For lookups spanning joins you can also use shortcut:
+
+```python
+query = Thread.query.join_on("starter_id").filter(**{"starter_id.slug": "admin"})
+```
+
+Note that lookups spanning joins may be very inefficient and are generally discouraged.
+
 
 ### Ordering results
 
@@ -351,6 +367,41 @@ categories_with_threads = await Thread.query.distinct().all_flat("category_id")
 
 
 ### Using selects in subqueries
+
+Use `subquery("column")` method to make your query work as subquery:
+
+```python
+from misago.threads.models import Thread, Post
+
+user_posted_in_threads_ids = (
+    Post.query
+    .filter(poster_id=123)
+    .distinct()
+    .subquery("thread_id")
+)
+threads_with_user_posts = Thread.query.filter(id__in=user_posted_in_threads_ids)
+
+async for thread in threads_with_user_posts.batch():
+    print(thread)  # <Thread(...)>
+```
+
+If you want to convert subquery to SQL Alchemy expression, use `as_select_expression`:
+
+```python
+from misago.threads.models import Thread, Post
+
+user_posted_in_threads_ids = (
+    Post.query
+    .filter(poster_id=123)
+    .distinct()
+    .subquery("thread_id")
+    .as_select_expression()
+)
+threads_with_user_posts = Thread.query.filter(id=user_posted_in_threads_ids)
+
+async for thread in threads_with_user_posts.batch():
+    print(thread)  # <Thread(...)>
+```
 
 
 ## Insert

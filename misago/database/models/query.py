@@ -267,6 +267,11 @@ class Query:
 
     def as_select_expression(self):
         subquery = self.state.subquery
+        if not subquery:
+            raise ValueError(
+                "Call 'subquery()' on query before using 'as_select_expression'()"
+            )
+
         if self.state.join:
             if "." in subquery:
                 join_name, column = subquery.rsplit(".", 1)
