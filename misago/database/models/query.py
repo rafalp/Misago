@@ -27,6 +27,9 @@ if TYPE_CHECKING:
     from .registry import MapperRegistry
 
 
+def list_copy_or_init(value: list | None) -> list:
+    return list(value) if value else []
+
 class Query:
     mapper_registry: "MapperRegistry"
     state: QueryState
@@ -47,7 +50,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def filter(self, *expressions, **conditions) -> "Query":
-        filters = list(self.state.filter or [])
+        filters = list_copy_or_init(self.state.filter)
         if expressions:
             filters.extend(expressions)
         if conditions:
@@ -57,7 +60,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def exclude(self, *expressions, **conditions) -> "Query":
-        excludes = list(self.state.exclude or [])
+        excludes = list_copy_or_init(self.state.exclude)
         if expressions:
             excludes.extend(expressions)
         if conditions:
@@ -67,7 +70,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def or_filter(self, *expressions, **conditions) -> "Query":
-        or_filter: List[LookupsList] = list(self.state.or_filter or [])
+        or_filter: List[LookupsList] = list_copy_or_init(self.state.or_filter)
         filters: LookupsList = []
         if expressions:
             filters.extend(expressions)
@@ -78,7 +81,7 @@ class Query:
         return Query(self.mapper_registry, new_state)
 
     def or_exclude(self, *expressions, **conditions) -> "Query":
-        or_exclude: List[LookupsList] = list(self.state.or_exclude or [])
+        or_exclude: List[LookupsList] = list_copy_or_init(self.state.or_exclude)
         filters: LookupsList = []
         if expressions:
             filters.extend(expressions)
