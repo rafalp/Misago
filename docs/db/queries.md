@@ -229,7 +229,7 @@ If model's table specifies foreign keys, you can include related objects in quer
 ```python
 from misago.threads.models import Thread
 
-async for thread, starter in Thread.query.join_on("starter_id"):
+for thread, starter in await Thread.query.join_on("starter_id").all():
     print(thread)  # <Thread(...)>
     print(starter)  # <User(...)> or None
 ```
@@ -239,15 +239,34 @@ To follow deep relations, separate join steps with dot (`.`):
 ```python
 from misago.threads.models import Thread
 
-async for thread, starter in Thread.query.join_on("first_post_id.poster_id"):
+for thread, starter in await Thread.query.join_on("first_post_id.poster_id").all():
     print(thread)  # <Thread(...)>
     print(starter)  # <User(...)> or None
 
 
-async for thread, starter, post in Thread.query.join_on("first_post_id.poster_id", "first_post_id"):
+for thread, starter, post in await Thread.query.join_on("first_post_id.poster_id", "first_post_id").all():
     print(thread)  # <Thread(...)>
     print(starter)  # <User(...)> or None
     print(post)  # <Post(...)> or None
+```
+
+To limit select only to some columns, prepend column name with join name:
+
+```python
+from misago.threads.models import Thread
+
+for thread_id, starter_name in await Thread.query.join_on("starter_id").all("id", "starter_id.name"):
+    ...
+```
+
+If you use `named=True` option, columns will be grouped by object:
+
+```python
+from misago.threads.models import Thread
+
+for thread, starter in await Thread.query.join_on("starter_id").all("id", "starter_id.name", named=True):
+    print(thread)  # <Result(id=1)>
+    print(starter)  # <Result(name="Aerith")> or None
 ```
 
 
