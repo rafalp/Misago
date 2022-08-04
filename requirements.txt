@@ -15,7 +15,7 @@ anyio==3.6.1
     #   httpcore
     #   starlette
     #   watchfiles
-ariadne[asgi-file-uploads]==0.15.1
+ariadne[asgi-file-uploads]==0.15.0b1
     # via
     #   -r requirements.in
     #   ariadne-graphql-modules
