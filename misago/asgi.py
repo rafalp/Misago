@@ -38,7 +38,7 @@ app.add_middleware(
 )
 
 app.mount("/graphql/", public_graphql)
-app.add_websocket_route("/graphql/", public_graphql.websocket_server)
+app.add_websocket_route("/graphql/", public_graphql.websocket_handler)
 
 app.mount("/admin/graphql/", admin_graphql)
 
