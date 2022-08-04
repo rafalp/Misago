@@ -54,7 +54,7 @@ install_plugins() {
 
 migrate_database() {
     wait_for_db
-    python misagocli.py migrate
+    python manage.py migrate
 }
 
 makemessages() {
