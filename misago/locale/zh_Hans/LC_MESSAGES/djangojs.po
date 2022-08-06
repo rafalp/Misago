@@ -9,6 +9,7 @@
 # Mayne <dreama9ain@gmail.com>, 2017
 # cxgreat2014 <fwy1998@gmail.com>, 2018
 # 蚂蚁先生 <pzf_karl@hotmail.com>, 2019
+# Percy <scvoet@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-25 19:34+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
-"Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
+"Last-Translator: Percy <scvoet@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 
 #: static/misago/admin/index.js:16
 msgid "defineLocaleOverride"
-msgstr "defineLocaleOverride"
+msgstr "定义本地覆盖"
 
 #: static/misago/js/misago.js:1
 msgid "the terms of service"
@@ -145,7 +146,7 @@ msgstr "这个板块已开启隐蔽模式。你仅可以看到你自己的话题
 
 #: static/misago/js/misago.js:1
 msgid "This category is protected. You can't browse its contents."
-msgstr ""
+msgstr "此版块受保护，你不能浏览它的内容。"
 
 #: static/misago/js/misago.js:1
 msgid "%(threads)s thread"
