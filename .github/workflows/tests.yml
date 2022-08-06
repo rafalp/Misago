@@ -33,5 +33,5 @@ jobs:
           POSTGRES_PASSWORD: misago
           POSTGRES_HOST: localhost
         run: |
-        - pytest --cov=misago
+          pytest --cov=misago
           coveralls
