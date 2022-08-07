@@ -1,10 +1,10 @@
 import re
+from xml import etree
 
 import markdown
 from django.utils.crypto import get_random_string
 from markdown.blockprocessors import BlockProcessor
 from markdown.preprocessors import Preprocessor
-from markdown.util import etree
 
 SPOILER_START = get_random_string(32)
 SPOILER_END = get_random_string(32)

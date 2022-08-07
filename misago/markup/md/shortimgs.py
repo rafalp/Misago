@@ -1,6 +1,7 @@
+from xml import etree
+
 import markdown
-from markdown.inlinepatterns import LinkPattern
-from markdown.util import etree
+from markdown.inlinepatterns import LinkInlineProcessor
 
 IMAGES_RE = r"\!\((<.*?>|([^\)]*))\)"
 
@@ -13,7 +14,7 @@ class ShortImagesExtension(markdown.Extension):
         )
 
 
-class ShortImagePattern(LinkPattern):
+class ShortImagePattern(LinkInlineProcessor):
     def handleMatch(self, m):
         img_src = m.groups()[2].strip()
         if img_src:

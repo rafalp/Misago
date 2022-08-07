@@ -2,14 +2,14 @@
 Supported inline BBCodes: b, u, i
 """
 import re
+from xml import etree
 
 from markdown.inlinepatterns import (
-    ImagePattern,
-    LinkPattern,
+    ImageInlineProcessor,
+    LinkInlineProcessor,
+    Pattern,
     SimpleTagPattern,
     dequote,
-    handleAttributes,
-    util,
 )
 
 
@@ -36,21 +36,21 @@ italics = SimpleBBCodePattern("i")
 underline = SimpleBBCodePattern("u")
 
 
-class BBcodePattern:
-    def __init__(self, pattern, markdown_instance=None):
+class BBcodeProcessor(Pattern):
+    def __init__(self, pattern, md=None):
         self.pattern = pattern
         self.compiled_re = re.compile(
             "^(.*?)%s(.*)$" % pattern, re.DOTALL | re.UNICODE | re.IGNORECASE
         )
 
         self.safe_mode = False
-        if markdown_instance:
-            self.markdown = markdown_instance
+        if md:
+            self.md = md
 
 
-class BBCodeImagePattern(BBcodePattern, ImagePattern):
+class BBCodeImageProcessor(BBcodeProcessor, ImageInlineProcessor):
     def handleMatch(self, m):
-        el = util.etree.Element("img")
+        el = etree.Element("img")
         src_parts = m.group(2).split()
         if src_parts:
             src = src_parts[0]
@@ -62,7 +62,7 @@ class BBCodeImagePattern(BBcodePattern, ImagePattern):
         if len(src_parts) > 1:
             el.set("title", dequote(self.unescape(" ".join(src_parts[1:]))))
 
-        if self.markdown.enable_attributes:
+        if self.md.enable_attributes:
             truealt = handleAttributes(m.group(2), el)
         else:
             truealt = m.group(2)
@@ -75,12 +75,12 @@ IMAGE_PATTERN = r"\[img\](.*?)\[/img\]"
 
 
 def image(md):
-    return BBCodeImagePattern(IMAGE_PATTERN, md)
+    return BBCodeImageProcessor(IMAGE_PATTERN, md)
 
 
-class BBCodeUrlPattern(BBcodePattern, LinkPattern):
+class BBCodeUrlPattern(BBcodeProcessor, LinkInlineProcessor):
     def handleMatch(self, m):
-        el = util.etree.Element("a")
+        el = etree.Element("a")
 
         if m.group("arg"):
             el.text = m.group("content")
