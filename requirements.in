@@ -1,7 +1,7 @@
 ariadne
 ariadne_django
 beautifulsoup4<4.8
-bleach<3.2
+bleach
 celery[redis]
 django<4
 djangorestframework
