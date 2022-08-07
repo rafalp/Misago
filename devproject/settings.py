@@ -175,7 +175,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # 3rd party apps used by Misago
-    "ariadne.contrib.django",
+    "ariadne_django",
     "celery",
     "debug_toolbar",
     "mptt",
