@@ -1,4 +1,4 @@
-from ariadne.contrib.django.views import GraphQLView
+from ariadne_django.views import GraphQLView
 from django.conf.urls import url
 
 from .schema import schema

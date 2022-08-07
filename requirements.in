@@ -1,4 +1,5 @@
 ariadne
+ariadne_django
 beautifulsoup4<4.8
 bleach<3.2
 celery[redis]

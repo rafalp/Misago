@@ -9,6 +9,10 @@ amqp==5.1.1
 anyio==3.6.1
     # via starlette
 ariadne==0.15.1
+    # via
+    #   -r requirements.in
+    #   ariadne-django
+ariadne-django==0.3.0
     # via -r requirements.in
 asgiref==3.5.2
     # via django
@@ -55,6 +59,7 @@ deprecated==1.2.13
 django==3.2.15
     # via
     #   -r requirements.in
+    #   ariadne-django
     #   django-debug-toolbar
     #   django-js-asset
     #   django-simple-sso
