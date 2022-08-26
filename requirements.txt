@@ -15,7 +15,7 @@ anyio==3.6.1
     #   httpcore
     #   starlette
     #   watchfiles
-ariadne[asgi-file-uploads]==0.15.0b1
+ariadne[asgi-file-uploads]==0.16.0b1
     # via
     #   -r requirements.in
     #   ariadne-graphql-modules
@@ -43,7 +43,7 @@ click==8.1.3
     # via
     #   -r requirements.in
     #   uvicorn
-databases[postgresql]==0.6.0
+databases[postgresql]==0.6.1
     # via -r requirements.in
 dnspython==2.2.1
     # via email-validator

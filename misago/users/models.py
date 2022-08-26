@@ -13,7 +13,7 @@ from ..passwords import check_password, hash_password
 from ..tables import user_groups, user_group_memberships, users
 from ..utils import timezone
 from ..utils.strings import slugify
-from .aclkey import create_acl_key
+from .permissions import create_perms_id
 from .email import get_email_hash, normalize_email
 
 
@@ -28,7 +28,8 @@ class User(Model):
     full_name: Optional[str]
     password: Optional[str]
     group_id: int
-    acl_key: str
+    groups_ids: List[int]
+    perms_id: str
     avatar_type: AvatarType
     avatars: List[dict]
     is_active: bool
@@ -74,7 +75,7 @@ class User(Model):
         groups_ids = [group.id]
         if secondary_groups:
             groups_ids += [secondary_group.id for secondary_group in secondary_groups]
-        acl_key = create_acl_key(groups_ids)
+        perms_id = create_perms_id(groups_ids)
 
         data: Dict[str, Any] = {
             "name": name,
@@ -83,7 +84,8 @@ class User(Model):
             "email_hash": get_email_hash(email),
             "full_name": full_name,
             "group_id": group.id,
-            "acl_key": acl_key,
+            "groups_ids": sorted(groups_ids),
+            "perms_id": perms_id,
             "password": password_hash,
             "avatar_type": avatar_type or AvatarType.GRAVATAR,
             "avatars": avatars or [],
@@ -216,8 +218,9 @@ class User(Model):
             await database.execute(new_memberships)
 
             changes = {
-                "acl_key": create_acl_key(groups_ids),
+                "perms_id": create_perms_id(groups_ids),
                 "group_id": main.id,
+                "groups_ids": groups_ids,
             }
 
             await User.query.filter(id=self.id).update(**changes)

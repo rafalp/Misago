@@ -11,6 +11,7 @@ from ..conf.cache import SETTINGS_CACHE
 from ..conf.dynamicsettings import get_dynamic_settings
 from ..database import database
 from ..database.testdatabase import create_test_database, teardown_test_database
+from ..permissions.cache import MODERATORS_CACHE, PERMISSIONS_CACHE
 
 
 def pytest_configure():
@@ -56,7 +57,11 @@ def mock_subscribe(mocker):
 
 @pytest.fixture
 def cache_versions():
-    return {SETTINGS_CACHE: "settings-cache"}
+    return {
+        MODERATORS_CACHE: "mods-cache",
+        PERMISSIONS_CACHE: "perms-cache",
+        SETTINGS_CACHE: "settings-cache",
+    }
 
 
 @pytest_asyncio.fixture

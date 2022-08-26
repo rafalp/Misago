@@ -28,7 +28,8 @@ def upgrade():
         sa.Column("full_name", sa.String(length=150), nullable=True),
         sa.Column("password", sa.String(length=255), nullable=True),
         sa.Column("group_id", sa.BigInteger(), nullable=False),
-        sa.Column("acl_key", sa.String(length=255), nullable=False),
+        sa.Column("groups_ids", sa.JSON(), nullable=False),
+        sa.Column("perms_id", sa.String(length=255), nullable=False),
         sa.Column(
             "avatar_type",
             sa.Enum("GRAVATAR", "UPLOAD", name="avatartype"),

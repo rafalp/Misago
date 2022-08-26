@@ -16,7 +16,12 @@ down_revision = None
 branch_labels = ("misago",)
 depends_on = None
 
-cache_versions = ("acl", "categories", "settings")
+cache_versions = (
+    "categories",
+    "moderators",
+    "permissions",
+    "settings",
+)
 
 
 def upgrade():
