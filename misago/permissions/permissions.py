@@ -12,3 +12,4 @@ class CategoryPermission:
     REPLY = "REPLY"
     UPLOAD = "UPLOAD"
     DOWNLOAD = "DOWNLOAD"
+    MODERATOR = "MODERATOR"

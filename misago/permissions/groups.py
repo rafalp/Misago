@@ -46,6 +46,7 @@ async def get_groups_permissions_action(
         if group.is_moderator:
             append_unique(groups_permissions["core"], CorePermission.MODERATOR)
 
+    # Set core permissions
     core_perms = await permissions_query.filter(
         group_id__in=state["groups_ids"]
     ).all_flat("permission")
@@ -53,13 +54,17 @@ async def get_groups_permissions_action(
         sorted(set(groups_permissions["core"] + core_perms))
     )
 
+    # Get categories permissions
     categories_perms = defaultdict(set)
     categories_perms_query = await categories_permissions_query.filter(
         group_id__in=state["groups_ids"]
     ).all("category_id", "permission")
+
+    # Merge categories permissions from all groups
     for category_id, permission in categories_perms_query:
         categories_perms[category_id].add(permission)
 
+    # Set categories permissions
     for category in state["categories"]:
         # Skip categories with parent we can't read
         if (
