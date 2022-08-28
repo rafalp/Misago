@@ -1,4 +1,4 @@
-from typing import Awaitable, Callable, Optional
+from typing import Awaitable, Callable
 
 from ...context import Context
 from ...hooks import FilterHook

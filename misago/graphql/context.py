@@ -11,7 +11,6 @@ from ..context import Context
 from ..permissions.users import get_user_permissions, get_anonymous_permissions
 from ..threads.loaders import posts_loader, threads_loader
 from ..users.loaders import users_groups_loader, users_loader
-from ..users.models import User
 from .hooks import graphql_context_hook
 
 
