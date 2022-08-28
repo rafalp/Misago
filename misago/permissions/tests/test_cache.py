@@ -13,6 +13,7 @@ from ..cache import (
     set_moderators_cache,
     set_permissions_cache,
 )
+from ..users import get_user_permissions
 
 PERMS_ID = "perms_id"
 
@@ -25,8 +26,10 @@ async def cache(mocker):
 
 
 @pytest.mark.asyncio
-async def test_permissions_are_cached_and_returned(cache, cache_versions):
-    perms = {"core": "TEST"}
+async def test_permissions_are_cached_and_returned(
+    cache, cache_versions, context, user
+):
+    perms = await get_user_permissions(context, user)
     await set_permissions_cache(cache_versions, PERMS_ID, perms)
     cached_perms = await get_permissions_cache(cache_versions, PERMS_ID)
     assert cached_perms == perms

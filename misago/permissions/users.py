@@ -5,9 +5,8 @@ from ..users.models import User, UserGroup
 from .cache import get_permissions_cache, set_permissions_cache
 from .groups import get_groups_permissions
 from .hooks import get_anonymous_permissions_hook, get_user_permissions_hook
-from .permissions import CorePermission
+from .permissions import CategoryPermission, CorePermission
 from .queries import moderators_query
-from .utils import add_permission
 
 
 async def get_user_permissions(context: Context, user: User) -> dict:
@@ -25,9 +24,12 @@ async def get_user_permissions_action(context: Context, user: User) -> dict:
         )
 
     if user.is_moderator:
-        add_permission(permissions["core"], CorePermission.MODERATOR)
+        set_user_root_moderator_perms(permissions)
+    else:
+        await set_user_category_moderator_perms(user, permissions)
+
     if user.is_admin:
-        add_permission(permissions["core"], CorePermission.ADMIN)
+        permissions["core"].add(CorePermission.ADMIN)
 
     return permissions
 
@@ -40,6 +42,35 @@ async def build_user_permissions(context: Context, user: User) -> dict:
     return await get_groups_permissions(
         context, user_groups, moderated_categories=moderated_categories
     )
+
+
+def set_user_root_moderator_perms(permissions: dict):
+    permissions["core"].add(CorePermission.MODERATOR)
+
+    if (
+        permissions["category"][CategoryPermission.READ]
+        != permissions["category"][CategoryPermission.MODERATOR]
+    ):
+        # Make user moderator of all categories they can see
+        permissions["category"][CategoryPermission.MODERATOR] = permissions["category"][
+            CategoryPermission.READ
+        ]
+
+
+async def set_user_category_moderator_perms(user: User, permissions: dict):
+    # Fill in missing moderator perm on categories user can read
+    if (
+        permissions["category"][CategoryPermission.READ]
+        != permissions["category"][CategoryPermission.MODERATOR]
+    ):
+        categories_ids = await moderators_query.filter(
+            user_id=user.id,
+            category_id__in=permissions["category"][CategoryPermission.READ],
+        ).all_flat("category_id")
+        if categories_ids:
+            permissions["category"][CategoryPermission.MODERATOR] = permissions[
+                "category"
+            ][CategoryPermission.MODERATOR].union(categories_ids)
 
 
 ANONYMOUS_PERMS_ID = "anon"
