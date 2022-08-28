@@ -5,7 +5,7 @@ import pytest_asyncio
 
 from ..categories.index import get_categories_index
 from ..categories.loaders import categories_children_loader, categories_loader
-from ..permissions.users import get_user_permissions
+from ..permissions.users import get_anonymous_permissions, get_user_permissions
 from ..threads.loaders import posts_loader, threads_loader
 from ..users.loaders import users_groups_loader, users_loader
 
@@ -22,6 +22,8 @@ async def setup_context(context: dict):
 
     if context.get("user"):
         context["permissions"] = await get_user_permissions(context, context["user"])
+    else:
+        context["permissions"] = await get_anonymous_permissions(context)
 
     return context
 

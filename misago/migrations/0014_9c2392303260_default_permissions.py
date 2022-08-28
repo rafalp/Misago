@@ -35,9 +35,9 @@ category_permissions = table(
 
 # permissions
 default_permissions = {
-    "administrators": ["ADMIN", "MODERATOR"],
-    "moderators": ["MODERATOR"],
-    "members": [],
+    "administrators": ["PRIVATE_THREADS"],
+    "moderators": ["PRIVATE_THREADS"],
+    "members": ["PRIVATE_THREADS"],
     "guests": [],
 }
 
