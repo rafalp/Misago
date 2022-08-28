@@ -6,6 +6,7 @@ from ..context import Context
 from ..users.models import UserGroup
 from .permissions import CategoryPermission, CorePermission
 from .queries import categories_permissions_query, permissions_query
+from .utils import add_permission
 
 GroupsPermissions = dict
 
@@ -29,15 +30,15 @@ async def get_groups_permissions(
     )
 
     groups_permissions: GroupsPermissions = {
-        "core": set(),
+        "core": [],
         "category": {
-            CategoryPermission.SEE: set(),
-            CategoryPermission.READ: set(),
-            CategoryPermission.START: set(),
-            CategoryPermission.REPLY: set(),
-            CategoryPermission.UPLOAD: set(),
-            CategoryPermission.DOWNLOAD: set(),
-            CategoryPermission.MODERATOR: set(),
+            CategoryPermission.SEE: [],
+            CategoryPermission.READ: [],
+            CategoryPermission.START: [],
+            CategoryPermission.REPLY: [],
+            CategoryPermission.UPLOAD: [],
+            CategoryPermission.DOWNLOAD: [],
+            CategoryPermission.MODERATOR: [],
         },
     }
 
@@ -61,15 +62,15 @@ async def get_groups_permissions_action(
     for group in state["groups"]:
         if not anonymous:
             if group.is_admin:
-                groups_permissions["core"].add(CorePermission.ADMIN)
+                add_permission(groups_permissions["core"], CorePermission.ADMIN)
             if group.is_moderator:
-                groups_permissions["core"].add(CorePermission.MODERATOR)
+                add_permission(groups_permissions["core"], CorePermission.MODERATOR)
 
     # Set core permissions
     core_perms = await permissions_query.filter(
         group_id__in=state["groups_ids"]
     ).all_flat("permission")
-    groups_permissions["core"] = groups_permissions["core"].union(core_perms)
+    groups_permissions["core"] = list(set(groups_permissions["core"] + core_perms))
 
     # Get categories permissions
     categories_perms = defaultdict(set)
@@ -95,31 +96,46 @@ async def get_groups_permissions_action(
         if CategoryPermission.SEE not in categories_perms[category.id]:
             continue
 
-        groups_permissions["category"][CategoryPermission.SEE].add(category.id)
+        add_permission(
+            groups_permissions["category"][CategoryPermission.SEE], category.id
+        )
 
         # Skip perms for unreadable category
         if CategoryPermission.READ not in categories_perms[category.id]:
             continue
 
-        groups_permissions["category"][CategoryPermission.READ].add(category.id)
+        add_permission(
+            groups_permissions["category"][CategoryPermission.READ], category.id
+        )
 
         # Set remaining permissions
         if not anonymous:
             # Only anonymous may publish content
             if CategoryPermission.START in categories_perms[category.id]:
-                groups_permissions["category"][CategoryPermission.START].add(
-                    category.id
+                add_permission(
+                    groups_permissions["category"][CategoryPermission.START],
+                    category.id,
                 )
 
             if CategoryPermission.REPLY in categories_perms[category.id]:
-                groups_permissions["category"][CategoryPermission.REPLY].add(
-                    category.id
+                add_permission(
+                    groups_permissions["category"][CategoryPermission.REPLY],
+                    category.id,
                 )
 
             if CategoryPermission.UPLOAD in categories_perms[category.id]:
-                groups_permissions["category"][CategoryPermission.UPLOAD].add(
-                    category.id
+                add_permission(
+                    groups_permissions["category"][CategoryPermission.UPLOAD],
+                    category.id,
+                )
+
+            if category.id in state["moderated_categories"]:
+                add_permission(
+                    groups_permissions["category"][CategoryPermission.MODERATOR],
+                    category.id,
                 )
 
         if CategoryPermission.DOWNLOAD in categories_perms[category.id]:
-            groups_permissions["category"][CategoryPermission.DOWNLOAD].add(category.id)
+            add_permission(
+                groups_permissions["category"][CategoryPermission.DOWNLOAD], category.id
+            )

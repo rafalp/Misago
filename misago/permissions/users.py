@@ -7,6 +7,7 @@ from .groups import get_groups_permissions
 from .hooks import get_anonymous_permissions_hook, get_user_permissions_hook
 from .permissions import CategoryPermission, CorePermission
 from .queries import moderators_query
+from .utils import add_permission
 
 
 async def get_user_permissions(context: Context, user: User) -> dict:
@@ -29,7 +30,7 @@ async def get_user_permissions_action(context: Context, user: User) -> dict:
         await set_user_category_moderator_perms(user, permissions)
 
     if user.is_admin:
-        permissions["core"].add(CorePermission.ADMIN)
+        add_permission(permissions["core"], CorePermission.ADMIN)
 
     return permissions
 
@@ -45,7 +46,7 @@ async def build_user_permissions(context: Context, user: User) -> dict:
 
 
 def set_user_root_moderator_perms(permissions: dict):
-    permissions["core"].add(CorePermission.MODERATOR)
+    add_permission(permissions["core"], CorePermission.MODERATOR)
 
     if (
         permissions["category"][CategoryPermission.READ]
@@ -68,9 +69,7 @@ async def set_user_category_moderator_perms(user: User, permissions: dict):
             category_id__in=permissions["category"][CategoryPermission.READ],
         ).all_flat("category_id")
         if categories_ids:
-            permissions["category"][CategoryPermission.MODERATOR] = permissions[
-                "category"
-            ][CategoryPermission.MODERATOR].union(categories_ids)
+            permissions["category"][CategoryPermission.MODERATOR] += categories_ids
 
 
 ANONYMOUS_PERMS_ID = "anon"
