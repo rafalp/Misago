@@ -17,7 +17,18 @@ async def test_user_without_admin_permission(context, user):
 
 
 @pytest.mark.asyncio
-async def test_user_with_admin_permission_from_group(context, user, members, admins):
+async def test_user_with_admin_permission_from_primary_group(
+    context, user, members, admins
+):
+    user = await user.update_groups(admins, [])
+    perms = await get_user_permissions(context, user)
+    assert CorePermission.ADMIN in perms["core"]
+
+
+@pytest.mark.asyncio
+async def test_user_with_admin_permission_from_secondary_group(
+    context, user, members, admins
+):
     user = await user.update_groups(members, [admins])
     perms = await get_user_permissions(context, user)
     assert CorePermission.ADMIN in perms["core"]
@@ -37,7 +48,16 @@ async def test_user_without_moderator_permission(context, user):
 
 
 @pytest.mark.asyncio
-async def test_user_with_moderator_permission_from_group(
+async def test_user_with_moderator_permission_from_primary_group(
+    context, user, members, moderators
+):
+    user = await user.update_groups(moderators, [])
+    perms = await get_user_permissions(context, user)
+    assert CorePermission.MODERATOR in perms["core"]
+
+
+@pytest.mark.asyncio
+async def test_user_with_moderator_permission_from_secondary_group(
     context, user, members, moderators
 ):
     user = await user.update_groups(members, [moderators])
