@@ -109,7 +109,9 @@ def goto_patterns(prefix, **views):
 
     post_view = views.pop("post", None)
     if post_view:
-        url_pattern = "%s/<slug:slug>/<int:pk>/post/<int:post>/" % prefix[0]
+        url_pattern = (
+            "%s/<slug:slug>/<int:pk>/post/<int:post>/" % prefix[0]
+        )
         url_name = "%s-post" % prefix
         urls.append(path(url_pattern, post_view.as_view(), name=url_name))
 

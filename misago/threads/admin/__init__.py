@@ -28,7 +28,9 @@ class MisagoAdminExtension:
             path("", AttachmentTypesList.as_view(), name="index"),
             path("new/", NewAttachmentType.as_view(), name="new"),
             path("edit/<int:pk>/", EditAttachmentType.as_view(), name="edit"),
-            path("delete/<int:pk>/", DeleteAttachmentType.as_view(), name="delete"),
+            path(
+                "delete/<int:pk>/", DeleteAttachmentType.as_view(), name="delete"
+            ),
         )
 
     def register_navigation_nodes(self, site):
