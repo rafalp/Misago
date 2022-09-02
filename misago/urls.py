@@ -28,7 +28,7 @@ urlpatterns = hooks.urlpatterns + [
     # any request with path that falls below this one is assumed to be directed
     # at Misago and will be handled by misago.views.exceptionhandler if it
     # results in Http404 or PermissionDenied exception
-    path(r"", forum_index, name="index"),
+    path("", forum_index, name="index"),
 ]
 
 

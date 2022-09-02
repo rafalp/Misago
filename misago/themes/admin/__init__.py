@@ -43,17 +43,17 @@ class MisagoAdminExtension:
                 name="delete-css",
             ),
             path(
-                "assets/<int:pk>/delete-media/$",
+                "assets/<int:pk>/delete-media/",
                 DeleteThemeMedia.as_view(),
                 name="delete-media",
             ),
             path(
-                "assets/<int:pk>/upload-css/$",
+                "assets/<int:pk>/upload-css/",
                 UploadThemeCss.as_view(),
                 name="upload-css",
             ),
             path(
-                "assets/<int:pk>/upload-media/$",
+                "assets/<int:pk>/upload-media/",
                 UploadThemeMedia.as_view(),
                 name="upload-media",
             ),
@@ -68,7 +68,7 @@ class MisagoAdminExtension:
                 name="move-css-up",
             ),
             path(
-                "assets/<int:pk>/new-css/$",
+                "assets/<int:pk>/new-css/",
                 NewThemeCss.as_view(),
                 name="new-css-file",
             ),
@@ -78,7 +78,7 @@ class MisagoAdminExtension:
                 name="edit-css-file",
             ),
             path(
-                "assets/<int:pk>/new-css-link/$",
+                "assets/<int:pk>/new-css-link/",
                 NewThemeCssLink.as_view(),
                 name="new-css-link",
             ),

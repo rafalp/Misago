@@ -28,7 +28,7 @@ class MisagoAdminExtension:
         urlpatterns.patterns(
             "categories",
             path("", CategoriesList.as_view(), name="index"),
-            path("new/$", NewCategory.as_view(), name="new"),
+            path("new/", NewCategory.as_view(), name="new"),
             path("edit/<int:pk>/", EditCategory.as_view(), name="edit"),
             path(
                 "permissions/<int:pk>/",
@@ -45,7 +45,7 @@ class MisagoAdminExtension:
         urlpatterns.patterns(
             "permissions:categories",
             path("", CategoryRolesList.as_view(), name="index"),
-            path("new/$", NewCategoryRole.as_view(), name="new"),
+            path("new/", NewCategoryRole.as_view(), name="new"),
             path("edit/<int:pk>/", EditCategoryRole.as_view(), name="edit"),
             path("delete/<int:pk>/", DeleteCategoryRole.as_view(), name="delete"),
         )

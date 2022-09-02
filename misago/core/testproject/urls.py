@@ -18,7 +18,7 @@ urlpatterns = [
     path("forum/", include("misago.urls", namespace="misago")),
     path("django-admin/", admin.site.urls),
     path(
-        "django-i18n.js$",
+        "django-i18n.js",
         cache_page(86400 * 2, key_prefix="misagojsi18n")(
             last_modified(lambda req, **kw: timezone.now())(
                 JavaScriptCatalog.as_view(packages=["misago"])
