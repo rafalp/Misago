@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views.categories import (
@@ -27,34 +27,34 @@ class MisagoAdminExtension:
         # Nodes
         urlpatterns.patterns(
             "categories",
-            url(r"^$", CategoriesList.as_view(), name="index"),
-            url(r"^new/$", NewCategory.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditCategory.as_view(), name="edit"),
-            url(
-                r"^permissions/(?P<pk>\d+)/$",
+            path("", CategoriesList.as_view(), name="index"),
+            path("new/$", NewCategory.as_view(), name="new"),
+            path("edit/<int:pk>/", EditCategory.as_view(), name="edit"),
+            path(
+                "permissions/<int:pk>/",
                 CategoryPermissions.as_view(),
                 name="permissions",
             ),
-            url(r"^move/down/(?P<pk>\d+)/$", MoveDownCategory.as_view(), name="down"),
-            url(r"^move/up/(?P<pk>\d+)/$", MoveUpCategory.as_view(), name="up"),
-            url(r"^delete/(?P<pk>\d+)/$", DeleteCategory.as_view(), name="delete"),
+            path("move/down/<int:pk>/", MoveDownCategory.as_view(), name="down"),
+            path("move/up/<int:pk>/", MoveUpCategory.as_view(), name="up"),
+            path("delete/<int:pk>/", DeleteCategory.as_view(), name="delete"),
         )
 
         # Category Roles
         urlpatterns.namespace(r"^categories/", "categories", "permissions")
         urlpatterns.patterns(
             "permissions:categories",
-            url(r"^$", CategoryRolesList.as_view(), name="index"),
-            url(r"^new/$", NewCategoryRole.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditCategoryRole.as_view(), name="edit"),
-            url(r"^delete/(?P<pk>\d+)/$", DeleteCategoryRole.as_view(), name="delete"),
+            path("", CategoryRolesList.as_view(), name="index"),
+            path("new/$", NewCategoryRole.as_view(), name="new"),
+            path("edit/<int:pk>/", EditCategoryRole.as_view(), name="edit"),
+            path("delete/<int:pk>/", DeleteCategoryRole.as_view(), name="delete"),
         )
 
         # Change Role Category Permissions
         urlpatterns.patterns(
             "permissions",
-            url(
-                r"^categories/(?P<pk>\d+)/$",
+            path(
+                "categories/<int:pk>/",
                 RoleCategoriesACL.as_view(),
                 name="categories",
             ),

@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 
 from ..api import submit_agreement
 
 urlpatterns = [
-    url(r"^submit-agreement/(?P<pk>\d+)/$", submit_agreement, name="submit-agreement")
+    path("submit-agreement/<int:pk>/", submit_agreement, name="submit-agreement")
 ]

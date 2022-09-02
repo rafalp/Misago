@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import path
 
 from ..views import landing, search
 
 urlpatterns = [
-    url(r"^search/$", landing, name="search"),
-    url(r"^search/(?P<search_provider>[-a-zA-Z0-9]+)/$", search, name="search"),
+    path("search/", landing, name="search"),
+    path("search/<slug:search_provider>/", search, name="search"),
 ]

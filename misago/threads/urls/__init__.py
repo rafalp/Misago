@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from ...conf import settings
 
@@ -28,7 +28,7 @@ def threads_list_patterns(prefix, view, patterns):
             url_name = prefix
 
         urls.append(
-            url(
+            path(
                 pattern,
                 view.as_view(),
                 name=url_name,
@@ -42,19 +42,19 @@ if settings.MISAGO_THREADS_ON_INDEX:
     urlpatterns = threads_list_patterns(
         "threads",
         ForumThreadsList,
-        (r"^$", r"^my/$", r"^new/$", r"^unread/$", r"^subscribed/$", r"^unapproved/$"),
+        ("", "my/", "new/", "unread/", "subscribed/", "unapproved/"),
     )
 else:
     urlpatterns = threads_list_patterns(
         "threads",
         ForumThreadsList,
         (
-            r"^threads/$",
-            r"^threads/my/$",
-            r"^threads/new/$",
-            r"^threads/unread/$",
-            r"^threads/subscribed/$",
-            r"^threads/unapproved/$",
+            "threads/",
+            "threads/my/",
+            "threads/new/",
+            "threads/unread/",
+            "threads/subscribed/",
+            "threads/unapproved/",
         ),
     )
 
@@ -62,12 +62,12 @@ urlpatterns += threads_list_patterns(
     "category",
     CategoryThreadsList,
     (
-        r"^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$",
-        r"^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/my/$",
-        r"^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/new/$",
-        r"^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/unread/$",
-        r"^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/subscribed/$",
-        r"^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/unapproved/$",
+        "c/<slug:slug>/<int:pk>/",
+        "c/<slug:slug>/<int:pk>/my/",
+        "c/<slug:slug>/<int:pk>/new/",
+        "c/<slug:slug>/<int:pk>/unread/",
+        "c/<slug:slug>/<int:pk>/subscribed/",
+        "c/<slug:slug>/<int:pk>/unapproved/",
     ),
 )
 
@@ -75,24 +75,24 @@ urlpatterns += threads_list_patterns(
     "private-threads",
     PrivateThreadsList,
     (
-        r"^private-threads/$",
-        r"^private-threads/my/$",
-        r"^private-threads/new/$",
-        r"^private-threads/unread/$",
-        r"^private-threads/subscribed/$",
+        "private-threads/",
+        "private-threads/my/",
+        "private-threads/new/",
+        "private-threads/unread/",
+        "private-threads/subscribed/",
     ),
 )
 
 
 def thread_view_patterns(prefix, view):
     urls = [
-        url(
-            r"^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$" % prefix[0],
+        path(
+            "%s/<slug:slug>/<int:pk>/" % prefix[0],
             view.as_view(),
             name=prefix,
         ),
-        url(
-            r"^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/(?P<page>\d+)/$" % prefix[0],
+        path(
+            "%s/<slug:slug>/<int:pk>/<int:page>/" % prefix[0],
             view.as_view(),
             name=prefix,
         ),
@@ -110,19 +110,19 @@ def goto_patterns(prefix, **views):
     post_view = views.pop("post", None)
     if post_view:
         url_pattern = (
-            r"^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/post/(?P<post>\d+)/$" % prefix[0]
+            "%s/<slug:slug>/<int:pk>/post/<int:post>/" % prefix[0]
         )
         url_name = "%s-post" % prefix
-        urls.append(url(url_pattern, post_view.as_view(), name=url_name))
+        urls.append(path(url_pattern, post_view.as_view(), name=url_name))
 
     for name, view in views.items():
         name = name.replace("_", "-")
-        url_pattern = r"^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/%s/$" % (
+        url_pattern = "%s/<slug:slug>/<int:pk>/%s/" % (
             prefix[0],
             name,
         )
         url_name = "%s-%s" % (prefix, name)
-        urls.append(url(url_pattern, view.as_view(), name=url_name))
+        urls.append(path(url_pattern, view.as_view(), name=url_name))
 
     return urls
 
@@ -144,13 +144,13 @@ urlpatterns += goto_patterns(
 )
 
 urlpatterns += [
-    url(
-        r"^a/(?P<secret>[-a-zA-Z0-9]+)/(?P<pk>\d+)/",
+    path(
+        "a/<slug:secret>/<int:pk>/",
         attachment_server,
         name="attachment",
     ),
-    url(
-        r"^a/thumb/(?P<secret>[-a-zA-Z0-9]+)/(?P<pk>\d+)/",
+    path(
+        "a/thumb/<slug:secret>/<int:pk>/",
         attachment_server,
         name="attachment-thumbnail",
         kwargs={"thumbnail": True},

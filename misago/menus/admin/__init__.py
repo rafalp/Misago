@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.utils.translation import gettext_lazy as _
 
 from .views import (
@@ -17,13 +17,13 @@ class MisagoAdminExtension:
         urlpatterns.namespace(r"^menu-items/", "menu-items", "settings")
         urlpatterns.patterns(
             "settings:menu-items",
-            url(r"^$", MenuItemsList.as_view(), name="index"),
-            url(r"^(?P<page>\d+)/$", MenuItemsList.as_view(), name="index"),
-            url(r"^new/$", NewMenuItem.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditMenuItem.as_view(), name="edit"),
-            url(r"^delete/(?P<pk>\d+)/$", DeleteMenuItem.as_view(), name="delete"),
-            url(r"^down/(?P<pk>(\w|-)+)/$", MoveDownMenuItem.as_view(), name="down"),
-            url(r"^up/(?P<pk>(\w|-)+)/$", MoveUpMenuItem.as_view(), name="up"),
+            path("", MenuItemsList.as_view(), name="index"),
+            path("<int:page>/", MenuItemsList.as_view(), name="index"),
+            path("new/", NewMenuItem.as_view(), name="new"),
+            path("edit/<int:pk>/", EditMenuItem.as_view(), name="edit"),
+            path("delete/<int:pk>/", DeleteMenuItem.as_view(), name="delete"),
+            re_path("down/(?P<pk>(\w|-)+)/$", MoveDownMenuItem.as_view(), name="down"),
+            re_path("up/(?P<pk>(\w|-)+)/$", MoveUpMenuItem.as_view(), name="up"),
         )
 
     def register_navigation_nodes(self, site):

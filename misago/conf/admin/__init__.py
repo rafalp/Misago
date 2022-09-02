@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views import index
@@ -16,7 +16,7 @@ class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         urlpatterns.namespace(r"^settings/", "settings")
 
-        urlpatterns.patterns("settings", url(r"^$", index, name="index"))
+        urlpatterns.patterns("settings", path("", index, name="index"))
 
         urlpatterns.single_pattern(
             r"^analytics/",

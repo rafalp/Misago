@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.views.generic import TemplateView
 
 from . import hooks
@@ -9,17 +9,17 @@ app_name = "misago"
 
 # Register Misago Apps
 urlpatterns = hooks.urlpatterns + [
-    url(r"^", include("misago.analytics.urls")),
-    url(r"^", include("misago.legal.urls")),
-    url(r"^", include("misago.users.urls")),
-    url(r"^", include("misago.categories.urls")),
-    url(r"^", include("misago.threads.urls")),
-    url(r"^", include("misago.search.urls")),
-    url(r"^", include("misago.socialauth.urls")),
-    url(r"^", include("misago.healthcheck.urls")),
+    path("", include("misago.analytics.urls")),
+    path("", include("misago.legal.urls")),
+    path("", include("misago.users.urls")),
+    path("", include("misago.categories.urls")),
+    path("", include("misago.threads.urls")),
+    path("", include("misago.search.urls")),
+    path("", include("misago.socialauth.urls")),
+    path("", include("misago.healthcheck.urls")),
     # default robots.txt
-    url(
-        r"^robots.txt$",
+    path(
+        "robots.txt",
         TemplateView.as_view(
             content_type="text/plain", template_name="misago/robots.txt"
         ),
@@ -28,29 +28,29 @@ urlpatterns = hooks.urlpatterns + [
     # any request with path that falls below this one is assumed to be directed
     # at Misago and will be handled by misago.views.exceptionhandler if it
     # results in Http404 or PermissionDenied exception
-    url(r"^$", forum_index, name="index"),
+    path(r"", forum_index, name="index"),
 ]
 
 
 # Register API
 apipatterns = hooks.apipatterns + [
-    url(r"^", include("misago.categories.urls.api")),
-    url(r"^", include("misago.legal.urls.api")),
-    url(r"^", include("misago.markup.urls")),
-    url(r"^", include("misago.threads.urls.api")),
-    url(r"^", include("misago.users.urls.api")),
-    url(r"^", include("misago.search.urls.api")),
+    path("", include("misago.categories.urls.api")),
+    path("", include("misago.legal.urls.api")),
+    path("", include("misago.markup.urls")),
+    path("", include("misago.threads.urls.api")),
+    path("", include("misago.users.urls.api")),
+    path("", include("misago.search.urls.api")),
 ]
 
-urlpatterns += [url(r"^api/", include((apipatterns, "api"), namespace="api"))]
+urlpatterns += [path("api/", include((apipatterns, "api"), namespace="api"))]
 
 
 # Register Misago ACP
 if settings.MISAGO_ADMIN_PATH:
     # Admin patterns recognised by Misago
-    adminpatterns = [url(r"^", include("misago.admin.urls"))]
+    adminpatterns = [path("", include("misago.admin.urls"))]
 
-    admin_prefix = r"^%s/" % settings.MISAGO_ADMIN_PATH
+    admin_prefix = f"{settings.MISAGO_ADMIN_PATH}/"
     urlpatterns += [
-        url(admin_prefix, include((adminpatterns, "admin"), namespace="admin"))
+        path(admin_prefix, include((adminpatterns, "admin"), namespace="admin"))
     ]
