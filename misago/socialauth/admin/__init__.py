@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4fc0ceb27... changed re_path to path
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
@@ -28,7 +31,13 @@ class MisagoAdminExtension:
                 MoveDownSocialAuthProvider.as_view(),
                 name="down",
             ),
+<<<<<<< HEAD
             path("up/<slug:pk>/", MoveUpSocialAuthProvider.as_view(), name="up"),
+=======
+            path(
+                "up/<slug:pk>/", MoveUpSocialAuthProvider.as_view(), name="up"
+            ),
+>>>>>>> 4fc0ceb27... changed re_path to path
             path(
                 "disable/<slug:pk>/",
                 DisableSocialAuthProvider.as_view(),
