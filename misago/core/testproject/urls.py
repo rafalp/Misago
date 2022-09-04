@@ -1,4 +1,4 @@
-from django.urls import include, path, re_path
+from django.urls import include, path
 
 # Setup Django admin to work with Misago auth
 from django.contrib import admin
@@ -29,8 +29,8 @@ urlpatterns = [
     # django-simple-sso doesn't have namespaces, we can't use namespace here
     path("sso/", include("misago.sso.urls")),
     path("forum/test-pagination/", views.test_pagination, name="test-pagination"),
-    re_path(
-        "forum/test-pagination/(?P<page>[1-9][0-9]*)/",
+    path(
+        "forum/test-pagination/<int:page>/",
         views.test_pagination,
         name="test-pagination",
     ),

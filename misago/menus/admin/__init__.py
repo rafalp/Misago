@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views import (
@@ -22,8 +22,8 @@ class MisagoAdminExtension:
             path("new/", NewMenuItem.as_view(), name="new"),
             path("edit/<int:pk>/", EditMenuItem.as_view(), name="edit"),
             path("delete/<int:pk>/", DeleteMenuItem.as_view(), name="delete"),
-            re_path("down/(?P<pk>(\w|-)+)/$", MoveDownMenuItem.as_view(), name="down"),
-            re_path("up/(?P<pk>(\w|-)+)/$", MoveUpMenuItem.as_view(), name="up"),
+            path("down/<int:pk>/", MoveDownMenuItem.as_view(), name="down"),
+            path("up/<int:pk>/", MoveUpMenuItem.as_view(), name="up"),
         )
 
     def register_navigation_nodes(self, site):

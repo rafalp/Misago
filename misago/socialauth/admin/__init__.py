@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views import (
@@ -17,21 +17,21 @@ class MisagoAdminExtension:
         urlpatterns.patterns(
             "settings:socialauth",
             path("", SocialAuthProvidersList.as_view(), name="index"),
-            re_path(
-                "edit/(?P<pk>(\w|-)+)/$",
+            path(
+                "edit/<slug:pk>/",
                 EditSocialAuthProvider.as_view(),
                 name="edit",
             ),
-            re_path(
-                "down/(?P<pk>(\w|-)+)/$",
+            path(
+                "down/<slug:pk>/",
                 MoveDownSocialAuthProvider.as_view(),
                 name="down",
             ),
-            re_path(
-                "up/(?P<pk>(\w|-)+)/$", MoveUpSocialAuthProvider.as_view(), name="up"
+            path(
+                "up/<slug:pk>/", MoveUpSocialAuthProvider.as_view(), name="up"
             ),
-            re_path(
-                "disable/(?P<pk>(\w|-)+)/$",
+            path(
+                "disable/<slug:pk>/",
                 DisableSocialAuthProvider.as_view(),
                 name="disable",
             ),
