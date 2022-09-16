@@ -7,7 +7,7 @@ from .schema import schema
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # GraphQL API
-        urlpatterns.namespace(r"^graphql/", "graphql")
+        urlpatterns.namespace("graphql/", "graphql")
         urlpatterns.patterns(
             "graphql", path("", GraphQLView.as_view(schema=schema), name="index")
         )

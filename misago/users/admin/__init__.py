@@ -24,7 +24,7 @@ djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminM
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Users section
-        urlpatterns.namespace(r"^users/", "users")
+        urlpatterns.namespace("users/", "users")
 
         # Accounts
         urlpatterns.patterns(
@@ -36,7 +36,7 @@ class MisagoAdminExtension:
         )
 
         # Bans
-        urlpatterns.namespace(r"^bans/", "bans", "users")
+        urlpatterns.namespace("bans/", "bans", "users")
         urlpatterns.patterns(
             "users:bans",
             path("", BansList.as_view(), name="index"),
@@ -47,7 +47,7 @@ class MisagoAdminExtension:
         )
 
         # Data Downloads
-        urlpatterns.namespace(r"^data-downloads/", "data-downloads", "users")
+        urlpatterns.namespace("data-downloads/", "data-downloads", "users")
         urlpatterns.patterns(
             "users:data-downloads",
             path("", DataDownloadsList.as_view(), name="index"),
@@ -56,7 +56,7 @@ class MisagoAdminExtension:
         )
 
         # Ranks
-        urlpatterns.namespace(r"^ranks/", "ranks")
+        urlpatterns.namespace("ranks/", "ranks")
         urlpatterns.patterns(
             "ranks",
             path("", RanksList.as_view(), name="index"),

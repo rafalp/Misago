@@ -14,30 +14,30 @@ from .views import (
 
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
-        urlpatterns.namespace(r"^settings/", "settings")
+        urlpatterns.namespace("settings/", "settings")
 
         urlpatterns.patterns("settings", path("", index, name="index"))
 
         urlpatterns.single_pattern(
-            r"^analytics/",
+            "analytics/",
             "analytics",
             "settings",
             ChangeAnalyticsSettingsView.as_view(),
         )
         urlpatterns.single_pattern(
-            r"^captcha/", "captcha", "settings", ChangeCaptchaSettingsView.as_view()
+            "captcha/", "captcha", "settings", ChangeCaptchaSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^general/", "general", "settings", ChangeGeneralSettingsView.as_view()
+            "general/", "general", "settings", ChangeGeneralSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^sso/", "sso", "settings", ChangeSSOSettingsView.as_view()
+            "sso/", "sso", "settings", ChangeSSOSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
+            "threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^users/", "users", "settings", ChangeUsersSettingsView.as_view()
+            "users/", "users", "settings", ChangeUsersSettingsView.as_view()
         )
 
     def register_navigation_nodes(self, site):

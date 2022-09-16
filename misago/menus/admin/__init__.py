@@ -14,7 +14,7 @@ from .views import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Menu items
-        urlpatterns.namespace(r"^menu-items/", "menu-items", "settings")
+        urlpatterns.namespace("menu-items/", "menu-items", "settings")
         urlpatterns.patterns(
             "settings:menu-items",
             path("", MenuItemsList.as_view(), name="index"),

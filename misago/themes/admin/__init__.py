@@ -26,7 +26,7 @@ from .views import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Themes
-        urlpatterns.namespace(r"^themes/", "themes")
+        urlpatterns.namespace("themes/", "themes")
         urlpatterns.patterns(
             "themes",
             path("", ThemesList.as_view(), name="index"),

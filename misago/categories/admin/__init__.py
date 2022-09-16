@@ -22,7 +22,7 @@ from .views.perms import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Categories section
-        urlpatterns.namespace(r"^categories/", "categories")
+        urlpatterns.namespace("categories/", "categories")
 
         # Nodes
         urlpatterns.patterns(
@@ -41,7 +41,7 @@ class MisagoAdminExtension:
         )
 
         # Category Roles
-        urlpatterns.namespace(r"^categories/", "categories", "permissions")
+        urlpatterns.namespace("categories/", "categories", "permissions")
         urlpatterns.patterns(
             "permissions:categories",
             path("", CategoryRolesList.as_view(), name="index"),

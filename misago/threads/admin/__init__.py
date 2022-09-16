@@ -13,7 +13,7 @@ from .views.attachmenttypes import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Attachment
-        urlpatterns.namespace(r"^attachments/", "attachments")
+        urlpatterns.namespace("attachments/", "attachments")
         urlpatterns.patterns(
             "attachments",
             path("", AttachmentsList.as_view(), name="index"),
@@ -22,7 +22,7 @@ class MisagoAdminExtension:
         )
 
         # AttachmentType
-        urlpatterns.namespace(r"^attachment-types/", "attachment-types", "settings")
+        urlpatterns.namespace("attachment-types/", "attachment-types", "settings")
         urlpatterns.patterns(
             "settings:attachment-types",
             path("", AttachmentTypesList.as_view(), name="index"),

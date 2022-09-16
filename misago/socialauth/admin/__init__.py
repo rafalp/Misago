@@ -13,7 +13,7 @@ from .views import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Social auth providers
-        urlpatterns.namespace(r"^social-auth/", "socialauth", "settings")
+        urlpatterns.namespace("social-auth/", "socialauth", "settings")
         urlpatterns.patterns(
             "settings:socialauth",
             path("", SocialAuthProvidersList.as_view(), name="index"),

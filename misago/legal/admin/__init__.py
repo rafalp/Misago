@@ -14,7 +14,7 @@ from .views import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Legal Agreements
-        urlpatterns.namespace(r"^agreements/", "agreements", "settings")
+        urlpatterns.namespace("agreements/", "agreements", "settings")
         urlpatterns.patterns(
             "settings:agreements",
             path("", AgreementsList.as_view(), name="index"),

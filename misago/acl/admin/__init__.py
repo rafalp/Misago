@@ -7,7 +7,7 @@ from .views import DeleteRole, EditRole, NewRole, RolesList, RoleUsers
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Permissions section
-        urlpatterns.namespace(r"^permissions/", "permissions")
+        urlpatterns.namespace("permissions/", "permissions")
 
         # Roles
         urlpatterns.patterns(
