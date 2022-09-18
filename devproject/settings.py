@@ -264,7 +264,7 @@ SOCIAL_AUTH_PIPELINE = (
     "misago.socialauth.pipeline.require_activation",
 )
 
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 TEMPLATES = [
     {
@@ -426,3 +426,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
 }
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
