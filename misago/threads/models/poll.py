@@ -2,7 +2,6 @@ from datetime import timedelta
 from math import ceil
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 
@@ -20,7 +19,7 @@ class Poll(models.Model):
     length = models.PositiveIntegerField(default=0)
 
     question = models.CharField(max_length=255)
-    choices = JSONField()
+    choices = models.JSONField()
     allowed_choices = models.PositiveIntegerField(default=1)
     allow_revotes = models.BooleanField(default=False)
 

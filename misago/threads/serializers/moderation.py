@@ -217,7 +217,7 @@ class MovePostsSerializer(serializers.Serializer):
         thread = self.context["thread"]
         viewmodel = self.context["viewmodel"]
 
-        new_thread_id = get_thread_id_from_url(request, data)
+        new_thread_id = get_thread_id_from_url(equest, data)
         if not new_thread_id:
             raise serializers.ValidationError(_("This is not a valid thread link."))
         if new_thread_id == thread.pk:
@@ -289,8 +289,8 @@ class NewThreadSerializer(serializers.Serializer):
         max_value=Thread.WEIGHT_GLOBAL,
         min_value=Thread.WEIGHT_DEFAULT,
     )
-    is_hidden = serializers.NullBooleanField(required=False)
-    is_closed = serializers.NullBooleanField(required=False)
+    is_hidden = serializers.BooleanField(required=False, allow_null=True)
+    is_closed = serializers.BooleanField(required=False, allow_null=True)
 
     def validate_title(self, title):
         settings = self.context["settings"]
@@ -483,7 +483,7 @@ class MergeThreadSerializer(serializers.Serializer):
         thread = self.context["thread"]
         viewmodel = self.context["viewmodel"]
 
-        other_thread_id = get_thread_id_from_url(request, data)
+        other_thread_id = get_thread_id_from_url(equest, data)
         if not other_thread_id:
             raise ValidationError(_("This is not a valid thread link."))
         if other_thread_id == thread.pk:

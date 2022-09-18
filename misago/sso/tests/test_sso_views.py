@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 
-from itsdangerous.timed import TimedSerializer, TimestampSigner
+from itsdangerous import TimedSerializer, TimestampSigner
 from requests import Response
 from requests.sessions import Session
 

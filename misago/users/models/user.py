@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
-from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
+from django.contrib.postgres.fields import ArrayField, HStoreField
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
@@ -173,7 +173,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255, upload_to=avatars_store.upload_to, null=True, blank=True
     )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
-    avatars = JSONField(null=True, blank=True)
+    avatars = models.JSONField(null=True, blank=True)
     is_avatar_locked = models.BooleanField(default=False)
     avatar_lock_user_message = models.TextField(null=True, blank=True)
     avatar_lock_staff_message = models.TextField(null=True, blank=True)
