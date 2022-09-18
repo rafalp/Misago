@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import html, timezone
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.module_loading import import_string
 
 MISAGO_SLUGIFY = getattr(settings, "MISAGO_SLUGIFY", "misago.core.slugify.default")
@@ -27,7 +27,7 @@ ISO8601_FORMATS = ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f")
 
 def parse_iso8601_string(value):
     """turns ISO 8601 string into datetime object"""
-    value = force_text(value, strings_only=True).rstrip("Z")
+    value = force_str(value, strings_only=True).rstrip("Z")
 
     for format_str in ISO8601_FORMATS:
         try:
