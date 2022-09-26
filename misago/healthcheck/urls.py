@@ -1,5 +1,5 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import healthcheck
 
-urlpatterns = [url(r"^healthcheck/$", healthcheck, name="healthcheck")]
+urlpatterns = [path("healthcheck/", healthcheck, name="healthcheck")]

@@ -14,9 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.urls import include, path
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
@@ -30,10 +30,10 @@ admin.site.login_form = AdminAuthenticationForm
 
 
 urlpatterns = [
-    url(r"^", include("misago.urls", namespace="misago")),
+    path("", include("misago.urls", namespace="misago")),
     # Javascript translations
-    url(
-        r"^django-i18n.js$",
+    path(
+        "django-i18n.js",
         last_modified(lambda req, **kw: timezone.now())(
             cache_page(86400 * 2, key_prefix="misagojsi18n")(
                 JavaScriptCatalog.as_view(packages=["misago"])
@@ -42,9 +42,9 @@ urlpatterns = [
         name="django-i18n",
     ),
     # Uncomment next line if you plan to use Django admin for 3rd party apps
-    url(r"^django-admin/", admin.site.urls),
+    path("django-admin/", admin.site.urls),
     # django-simple-sso doesn't have namespaces, we can't use namespace here
-    url(r"^sso/", include("misago.sso.urls")),
+    path("sso/", include("misago.sso.urls")),
 ]
 
 
@@ -52,7 +52,7 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
+    urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
 
 # Use static file server for static and media files (debug only)

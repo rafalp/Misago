@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.template.context_processors import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 

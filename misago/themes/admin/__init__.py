@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views import (
@@ -26,64 +26,64 @@ from .views import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Themes
-        urlpatterns.namespace(r"^themes/", "themes")
+        urlpatterns.namespace("themes/", "themes")
         urlpatterns.patterns(
             "themes",
-            url(r"^$", ThemesList.as_view(), name="index"),
-            url(r"^new/$", NewTheme.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditTheme.as_view(), name="edit"),
-            url(r"^delete/(?P<pk>\d+)/$", DeleteTheme.as_view(), name="delete"),
-            url(r"^activate/(?P<pk>\d+)/$", ActivateTheme.as_view(), name="activate"),
-            url(r"^export/(?P<pk>\d+)/$", ExportTheme.as_view(), name="export"),
-            url(r"^import/$", ImportTheme.as_view(), name="import"),
-            url(r"^assets/(?P<pk>\d+)/$", ThemeAssets.as_view(), name="assets"),
-            url(
-                r"^assets/(?P<pk>\d+)/delete-css/$",
+            path("", ThemesList.as_view(), name="index"),
+            path("new/", NewTheme.as_view(), name="new"),
+            path("edit/<int:pk>/", EditTheme.as_view(), name="edit"),
+            path("delete/<int:pk>/", DeleteTheme.as_view(), name="delete"),
+            path("activate/<int:pk>/", ActivateTheme.as_view(), name="activate"),
+            path("export/<int:pk>/", ExportTheme.as_view(), name="export"),
+            path("import/", ImportTheme.as_view(), name="import"),
+            path("assets/<int:pk>/", ThemeAssets.as_view(), name="assets"),
+            path(
+                "assets/<int:pk>/delete-css/",
                 DeleteThemeCss.as_view(),
                 name="delete-css",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/delete-media/$",
+            path(
+                "assets/<int:pk>/delete-media/",
                 DeleteThemeMedia.as_view(),
                 name="delete-media",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/upload-css/$",
+            path(
+                "assets/<int:pk>/upload-css/",
                 UploadThemeCss.as_view(),
                 name="upload-css",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/upload-media/$",
+            path(
+                "assets/<int:pk>/upload-media/",
                 UploadThemeMedia.as_view(),
                 name="upload-media",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/move-css-down/(?P<css_pk>\d+)/$",
+            path(
+                "assets/<int:pk>/move-css-down/<int:css_pk>/",
                 MoveThemeCssDown.as_view(),
                 name="move-css-down",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/move-css-up/(?P<css_pk>\d+)/$",
+            path(
+                "assets/<int:pk>/move-css-up/<int:css_pk>/",
                 MoveThemeCssUp.as_view(),
                 name="move-css-up",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/new-css/$",
+            path(
+                "assets/<int:pk>/new-css/",
                 NewThemeCss.as_view(),
                 name="new-css-file",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/edit-css/(?P<css_pk>\d+)/$",
+            path(
+                "assets/<int:pk>/edit-css/<int:css_pk>/",
                 EditThemeCss.as_view(),
                 name="edit-css-file",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/new-css-link/$",
+            path(
+                "assets/<int:pk>/new-css-link/",
                 NewThemeCssLink.as_view(),
                 name="new-css-link",
             ),
-            url(
-                r"^assets/(?P<pk>\d+)/edit-css-link/(?P<css_pk>\d+)/$",
+            path(
+                "assets/<int:pk>/edit-css-link/<int:css_pk>/",
                 EditThemeCssLink.as_view(),
                 name="edit-css-link",
             ),

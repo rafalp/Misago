@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.urls import include, path as djpath
 
 
 class URLPatterns:
@@ -18,7 +18,7 @@ class URLPatterns:
 
     def single_pattern(self, path, namespace, parent, view):
         self.namespace(path, namespace, parent)
-        self.patterns(":".join((parent, namespace)), url(r"^$", view, name="index"))
+        self.patterns(":".join((parent, namespace)), djpath("", view, name="index"))
 
     def get_child_patterns(self, parent):
         prefix = "%s:" % parent if parent else ""
@@ -32,7 +32,7 @@ class URLPatterns:
                     (child_patterns, namespace["namespace"]),
                     namespace=namespace["namespace"],
                 )
-                namespace_urlpatterns.append(url(namespace["path"], included_patterns))
+                namespace_urlpatterns.append(djpath(namespace["path"], included_patterns))
 
         return namespace_urlpatterns
 
@@ -54,7 +54,7 @@ class URLPatterns:
                     (child_patterns, namespace["namespace"]),
                     namespace=namespace["namespace"],
                 )
-                root_urlpatterns.append(url(namespace["path"], included_patterns))
+                root_urlpatterns.append(djpath(namespace["path"], included_patterns))
 
         return root_urlpatterns
 
