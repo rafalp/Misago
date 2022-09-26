@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.contrib import admin as djadmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -24,49 +24,49 @@ djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminM
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Users section
-        urlpatterns.namespace(r"^users/", "users")
+        urlpatterns.namespace("users/", "users")
 
         # Accounts
         urlpatterns.patterns(
             "users",
-            url(r"^$", UsersList.as_view(), name="index"),
-            url(r"^(?P<page>\d+)/$", UsersList.as_view(), name="index"),
-            url(r"^new/$", NewUser.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditUser.as_view(), name="edit"),
+            path("", UsersList.as_view(), name="index"),
+            path("<int:page>/", UsersList.as_view(), name="index"),
+            path("new/", NewUser.as_view(), name="new"),
+            path("edit/<int:pk>/", EditUser.as_view(), name="edit"),
         )
 
         # Bans
-        urlpatterns.namespace(r"^bans/", "bans", "users")
+        urlpatterns.namespace("bans/", "bans", "users")
         urlpatterns.patterns(
             "users:bans",
-            url(r"^$", BansList.as_view(), name="index"),
-            url(r"^(?P<page>\d+)/$", BansList.as_view(), name="index"),
-            url(r"^new/$", NewBan.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditBan.as_view(), name="edit"),
-            url(r"^delete/(?P<pk>\d+)/$", DeleteBan.as_view(), name="delete"),
+            path("", BansList.as_view(), name="index"),
+            path("<int:page>/", BansList.as_view(), name="index"),
+            path("new/", NewBan.as_view(), name="new"),
+            path("edit/<int:pk>/", EditBan.as_view(), name="edit"),
+            path("delete/<int:pk>/", DeleteBan.as_view(), name="delete"),
         )
 
         # Data Downloads
-        urlpatterns.namespace(r"^data-downloads/", "data-downloads", "users")
+        urlpatterns.namespace("data-downloads/", "data-downloads", "users")
         urlpatterns.patterns(
             "users:data-downloads",
-            url(r"^$", DataDownloadsList.as_view(), name="index"),
-            url(r"^(?P<page>\d+)/$", DataDownloadsList.as_view(), name="index"),
-            url(r"^request/$", RequestDataDownloads.as_view(), name="request"),
+            path("", DataDownloadsList.as_view(), name="index"),
+            path("<int:page>/", DataDownloadsList.as_view(), name="index"),
+            path("request/", RequestDataDownloads.as_view(), name="request"),
         )
 
         # Ranks
-        urlpatterns.namespace(r"^ranks/", "ranks")
+        urlpatterns.namespace("ranks/", "ranks")
         urlpatterns.patterns(
             "ranks",
-            url(r"^$", RanksList.as_view(), name="index"),
-            url(r"^new/$", NewRank.as_view(), name="new"),
-            url(r"^edit/(?P<pk>\d+)/$", EditRank.as_view(), name="edit"),
-            url(r"^default/(?P<pk>\d+)/$", DefaultRank.as_view(), name="default"),
-            url(r"^move/down/(?P<pk>\d+)/$", MoveDownRank.as_view(), name="down"),
-            url(r"^move/up/(?P<pk>\d+)/$", MoveUpRank.as_view(), name="up"),
-            url(r"^users/(?P<pk>\d+)/$", RankUsers.as_view(), name="users"),
-            url(r"^delete/(?P<pk>\d+)/$", DeleteRank.as_view(), name="delete"),
+            path("", RanksList.as_view(), name="index"),
+            path("new/", NewRank.as_view(), name="new"),
+            path("edit/<int:pk>/", EditRank.as_view(), name="edit"),
+            path("default/<int:pk>/", DefaultRank.as_view(), name="default"),
+            path("move/down/<int:pk>/", MoveDownRank.as_view(), name="down"),
+            path("move/up/<int:pk>/", MoveUpRank.as_view(), name="up"),
+            path("users/<int:pk>/", RankUsers.as_view(), name="users"),
+            path("delete/<int:pk>/", DeleteRank.as_view(), name="delete"),
         )
 
     def register_navigation_nodes(self, site):
