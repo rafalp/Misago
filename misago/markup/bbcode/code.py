@@ -8,8 +8,8 @@ class CodeBlockExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
 
-        md.preprocessors.add(
-            "misago_code_bbcode", CodeBlockPreprocessor(md), ">normalize_whitespace"
+        md.preprocessors.register(
+            CodeBlockPreprocessor(md, self.getConfigs()), "misago_code_bbcode", 24
         )
 
 

@@ -19,9 +19,6 @@ class MisagoUsersConfig(AppConfig):
         self.register_default_user_profile_pages()
 
     def register_default_usercp_pages(self):
-        def sso_is_disabled(request):
-            return not request.settings.enable_sso
-
         usercp.add_section(
             link="misago:usercp-change-forum-options",
             name=_("Forum options"),
@@ -39,14 +36,12 @@ class MisagoUsersConfig(AppConfig):
             name=_("Change username"),
             component="change-username",
             icon="card_membership",
-            visible_if=sso_is_disabled,
         )
         usercp.add_section(
             link="misago:usercp-change-email-password",
             name=_("Change email or password"),
             component="sign-in-credentials",
             icon="vpn_key",
-            visible_if=sso_is_disabled,
         )
 
         def can_download_own_data(request):
@@ -61,9 +56,6 @@ class MisagoUsersConfig(AppConfig):
         )
 
         def can_delete_own_account(request):
-            if request.settings.enable_sso:
-                return False
-
             return request.settings.allow_delete_own_account
 
         usercp.add_section(
@@ -71,7 +63,6 @@ class MisagoUsersConfig(AppConfig):
             name=_("Delete account"),
             component="delete-account",
             icon="cancel",
-            visible_if=can_delete_own_account,
         )
 
     def register_default_users_list_pages(self):

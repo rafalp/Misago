@@ -56,8 +56,6 @@ export function select(store) {
 }
 
 export function paths() {
-  const SSO_ENABLED = misago.get("SETTINGS").enable_sso
-
   const paths = [
     {
       path: misago.get("USERCP_URL") + "forum-options/",
@@ -69,16 +67,14 @@ export function paths() {
     }
   ]
 
-  if (!SSO_ENABLED) {
-    paths.push({
-      path: misago.get("USERCP_URL") + "change-username/",
-      component: connect(select)(ChangeUsername)
-    })
-    paths.push({
-      path: misago.get("USERCP_URL") + "sign-in-credentials/",
-      component: connect(select)(ChangeSignInCredentials)
-    })
-  }
+  paths.push({
+    path: misago.get("USERCP_URL") + "change-username/",
+    component: connect(select)(ChangeUsername)
+  })
+  paths.push({
+    path: misago.get("USERCP_URL") + "sign-in-credentials/",
+    component: connect(select)(ChangeSignInCredentials)
+  })
 
   if (misago.get("ENABLE_DOWNLOAD_OWN_DATA")) {
     paths.push({
@@ -87,7 +83,7 @@ export function paths() {
     })
   }
 
-  if (!SSO_ENABLED && misago.get("ENABLE_DELETE_OWN_ACCOUNT")) {
+  if (misago.get("ENABLE_DELETE_OWN_ACCOUNT")) {
     paths.push({
       path: misago.get("USERCP_URL") + "delete-account/",
       component: connect(select)(DeleteAccount)

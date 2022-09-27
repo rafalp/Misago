@@ -7,6 +7,6 @@ STRIKETHROUGH_RE = r"(~{2})(.+?)\2"
 class StrikethroughExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
-        md.inlinePatterns.add(
-            "misago_strikethrough", SimpleTagPattern(STRIKETHROUGH_RE, "del"), "_end"
+        md.inlinePatterns.register(
+            SimpleTagPattern(STRIKETHROUGH_RE, "del"), "misago_strikethrough", 100
         )

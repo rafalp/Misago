@@ -6,7 +6,6 @@ from .views import (
     ChangeAnalyticsSettingsView,
     ChangeCaptchaSettingsView,
     ChangeGeneralSettingsView,
-    ChangeSSOSettingsView,
     ChangeThreadsSettingsView,
     ChangeUsersSettingsView,
 )
@@ -29,9 +28,6 @@ class MisagoAdminExtension:
         )
         urlpatterns.single_pattern(
             "general/", "general", "settings", ChangeGeneralSettingsView.as_view()
-        )
-        urlpatterns.single_pattern(
-            "sso/", "sso", "settings", ChangeSSOSettingsView.as_view()
         )
         urlpatterns.single_pattern(
             "threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
@@ -73,21 +69,11 @@ class MisagoAdminExtension:
             after="users:index",
         )
         site.add_node(
-            name=_("Single Sign-On"),
-            description=_(
-                "SSO enables you to delegate user login and registration from Misago to"
-                "the third party site."
-            ),
-            parent="settings",
-            namespace="sso",
-            after="captcha:index",
-        )
-        site.add_node(
             name=_("Analytics"),
             description=_("Enable Google Analytics or setup Google Site Verification."),
             parent="settings",
             namespace="analytics",
-            after="sso:index",
+            after="captcha:index",
         )
         site.add_node(
             name=_("Threads"),

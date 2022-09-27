@@ -200,7 +200,6 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.graphql",
     "misago.faker",
     "misago.menus",
-    "misago.sso",
     "misago.plugins",
 ]
 

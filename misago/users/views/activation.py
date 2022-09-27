@@ -16,11 +16,6 @@ def activation_view(f):
     @deny_authenticated
     @deny_banned_ips
     def decorator(request, *args, **kwargs):
-        if request.settings.enable_sso:
-            raise PermissionDenied(
-                _("Please use the 3rd party site to activate your account.")
-            )
-
         return f(request, *args, **kwargs)
 
     return decorator
