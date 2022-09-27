@@ -14,9 +14,9 @@ class QuoteExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
 
-        md.preprocessors.add("misago_bbcode_quote", QuotePreprocessor(md), "_end")
-        md.parser.blockprocessors.add(
-            "misago_bbcode_quote", QuoteBlockProcessor(md.parser), ">code"
+        md.preprocessors.register(QuotePreprocessor(md), "misago_bbcode_quote", 200)
+        md.parser.blockprocessors.register(
+            QuoteBlockProcessor(md.parser), "misago_bbcode_quote", 90
         )
 
 

@@ -9,8 +9,8 @@ IMAGES_RE = r"\!\((<.*?>|([^\)]*))\)"
 class ShortImagesExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
-        md.inlinePatterns.add(
-            "misago_short_images", ShortImagePattern(IMAGES_RE, md), "_end"
+        md.inlinePatterns.register(
+            ShortImagePattern(IMAGES_RE, md), "misago_short_images", 200
         )
 
 

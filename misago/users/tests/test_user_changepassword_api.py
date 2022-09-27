@@ -68,14 +68,6 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
             },
         )
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_password_change_fails_when_sso_is_enabled(self):
-        response = self.client.post(
-            self.link,
-            data={"new_password": "N3wP@55w0rd", "password": self.USER_PASSWORD},
-        )
-        self.assertEqual(response.status_code, 403)
-
     @override_dynamic_settings(forum_address="http://test.com/")
     def test_change_password(self):
         """api allows users to change their passwords"""

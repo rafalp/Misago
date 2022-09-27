@@ -4,12 +4,6 @@
 
 {% block form-body %}
 <div class="form-fieldset">
-  {% if settings.enable_sso %}  
-    <div class="alert alert-warning" role="alert">
-      <strong>{% trans "Note" %}:</strong> {% trans "Single Sign-On is enabled. Site's registration, password and deletion features have been disabled and delegated to the third-party site." %}
-    </div>
-  {% endif %}
-
   <fieldset>
     <legend>{% trans "New accounts" %}</legend>
 

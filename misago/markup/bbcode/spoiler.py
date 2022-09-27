@@ -14,9 +14,9 @@ class SpoilerExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
 
-        md.preprocessors.add("misago_bbcode_spoiler", SpoilerPreprocessor(md), "_end")
-        md.parser.blockprocessors.add(
-            "misago_bbcode_spoiler", SpoilerBlockProcessor(md.parser), ">code"
+        md.preprocessors.register(SpoilerPreprocessor(md), "misago_bbcode_spoiler", 200)
+        md.parser.blockprocessors.register(
+            SpoilerBlockProcessor(md.parser), "misago_bbcode_spoiler", 85
         )
 
 
