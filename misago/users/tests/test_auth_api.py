@@ -227,6 +227,7 @@ class GatewayTests(TestCase):
         user_json = response.json()
         self.assertIsNone(user_json["id"])
 
+
 class UserCredentialsTests(TestCase):
     def test_edge_returns_response(self):
         """api edge has no showstoppers"""

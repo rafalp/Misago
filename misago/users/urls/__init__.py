@@ -44,7 +44,8 @@ urlpatterns += [
     path("options/forum-options/", options.index, name="usercp-change-forum-options"),
     path("options/edit-details/", options.index, name="usercp-edit-details"),
     path("options/change-username/", options.index, name="usercp-change-username"),
-    path("options/sign-in-credentials/",
+    path(
+        "options/sign-in-credentials/",
         options.index,
         name="usercp-change-email-password",
     ),
@@ -95,7 +96,8 @@ urlpatterns += [
             [
                 path("", profile.LandingView.as_view(), name="user"),
                 path("posts/", profile.UserPostsView.as_view(), name="user-posts"),
-                path("threads/",
+                path(
+                    "threads/",
                     profile.UserThreadsView.as_view(),
                     name="user-threads",
                 ),
