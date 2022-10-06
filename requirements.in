@@ -3,6 +3,7 @@ ariadne_django
 beautifulsoup4<4.8
 bleach
 celery[redis]
+coveralls
 django<4
 djangorestframework
 django-debug-toolbar
@@ -20,7 +21,6 @@ pytest
 pytest-cov
 pytest-django
 pytest-mock
-python-coveralls
 pytz
 requests
 responses
