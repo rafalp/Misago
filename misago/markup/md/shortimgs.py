@@ -1,4 +1,4 @@
-from xml import etree
+from xml.etree.ElementTree import Element
 
 import markdown
 from markdown.inlinepatterns import LinkInlineProcessor
@@ -15,10 +15,12 @@ class ShortImagesExtension(markdown.Extension):
 
 
 class ShortImagePattern(LinkInlineProcessor):
-    def handleMatch(self, m):
-        img_src = m.groups()[2].strip()
-        if img_src:
-            img = etree.Element("img")
-            img.set("src", img_src)
-            img.set("alt", img_src)
-            return img
+    def handleMatch(self, m, _):
+        img_src = m.groups()[1].strip()
+        if not img_src:
+            return None, None, None
+
+        img = Element("img")
+        img.set("src", img_src)
+        img.set("alt", img_src)
+        return img, m.start(0), m.end(0)

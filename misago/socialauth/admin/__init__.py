@@ -27,9 +27,7 @@ class MisagoAdminExtension:
                 MoveDownSocialAuthProvider.as_view(),
                 name="down",
             ),
-            path(
-                "up/<slug:pk>/", MoveUpSocialAuthProvider.as_view(), name="up"
-            ),
+            path("up/<slug:pk>/", MoveUpSocialAuthProvider.as_view(), name="up"),
             path(
                 "disable/<slug:pk>/",
                 DisableSocialAuthProvider.as_view(),

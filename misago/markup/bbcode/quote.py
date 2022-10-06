@@ -1,5 +1,5 @@
 import re
-from xml import etree
+from xml.etree.ElementTree import SubElement
 
 import markdown
 from django.utils.crypto import get_random_string
@@ -81,13 +81,13 @@ class QuoteBlockProcessor(BlockProcessor):
             children, self._children = self._children[1:-1], []
             title, self._title = self._title, None
 
-            aside = etree.SubElement(parent, "aside")
+            aside = SubElement(parent, "aside")
             aside.set("class", "quote-block")
 
-            heading = etree.SubElement(aside, "div")
+            heading = SubElement(aside, "div")
             heading.set("class", "quote-heading")
 
-            blockquote = etree.SubElement(aside, "blockquote")
+            blockquote = SubElement(aside, "blockquote")
             blockquote.set("class", "quote-body")
 
             if title:

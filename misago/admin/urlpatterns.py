@@ -32,7 +32,9 @@ class URLPatterns:
                     (child_patterns, namespace["namespace"]),
                     namespace=namespace["namespace"],
                 )
-                namespace_urlpatterns.append(djpath(namespace["path"], included_patterns))
+                namespace_urlpatterns.append(
+                    djpath(namespace["path"], included_patterns)
+                )
 
         return namespace_urlpatterns
 
