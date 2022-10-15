@@ -10,6 +10,5 @@ class CategoryPermission:
     READ = "READ"
     START = "START"
     REPLY = "REPLY"
-    UPLOAD = "UPLOAD"
     DOWNLOAD = "DOWNLOAD"
     MODERATOR = "MODERATOR"

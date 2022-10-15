@@ -36,7 +36,6 @@ async def get_groups_permissions(
             CategoryPermission.READ: [],
             CategoryPermission.START: [],
             CategoryPermission.REPLY: [],
-            CategoryPermission.UPLOAD: [],
             CategoryPermission.DOWNLOAD: [],
             CategoryPermission.MODERATOR: [],
         },
@@ -120,12 +119,6 @@ async def get_groups_permissions_action(
             if CategoryPermission.REPLY in categories_perms[category.id]:
                 add_permission(
                     groups_permissions["category"][CategoryPermission.REPLY],
-                    category.id,
-                )
-
-            if CategoryPermission.UPLOAD in categories_perms[category.id]:
-                add_permission(
-                    groups_permissions["category"][CategoryPermission.UPLOAD],
                     category.id,
                 )
 
