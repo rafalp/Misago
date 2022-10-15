@@ -4,6 +4,7 @@ from typing import Iterable, List
 from ..categories.models import Category, CategoryType
 from ..context import Context
 from ..users.models import UserGroup
+from .hooks import get_groups_permissions_hook
 from .permissions import CategoryPermission, CorePermission
 from .queries import categories_permissions_query, permissions_query
 from .utils import add_permission
@@ -41,7 +42,8 @@ async def get_groups_permissions(
         },
     }
 
-    await get_groups_permissions_action(
+    await get_groups_permissions_hook.call_action(
+        get_groups_permissions_action,
         context,
         state,
         groups_permissions,
