@@ -22,3 +22,12 @@ async def delete_user(user: User):
 ```
 
 Next filter or built-in function used to delete user account from the database.
+
+
+### `user`
+
+```python
+User
+```
+
+`User` dataclass representing user to delete.

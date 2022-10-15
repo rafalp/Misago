@@ -19,14 +19,14 @@ async def get_groups_permissions(
     anonymous: bool = False,
     moderated_categories: List[int] | None = None,
 ) -> GroupsPermissions:
-    state: dict = {
+    data: dict = {
         "groups": groups,
         "groups_ids": [group.id for group in groups],
         "categories": [],
         "moderated_categories": moderated_categories or [],
     }
 
-    state["categories"] = (
+    data["categories"] = (
         await Category.query.filter(type=CategoryType.THREADS).order_by("left").all()
     )
 
@@ -45,7 +45,7 @@ async def get_groups_permissions(
     await get_groups_permissions_hook.call_action(
         get_groups_permissions_action,
         context,
-        state,
+        data,
         groups_permissions,
         anonymous=anonymous,
     )
@@ -55,12 +55,12 @@ async def get_groups_permissions(
 
 async def get_groups_permissions_action(
     context: Context,
-    state: dict,
+    data: dict,
     groups_permissions: GroupsPermissions,
     *,
     anonymous: bool = False,
 ):
-    for group in state["groups"]:
+    for group in data["groups"]:
         if not anonymous:
             if group.is_admin:
                 add_permission(groups_permissions["core"], CorePermission.ADMIN)
@@ -69,14 +69,14 @@ async def get_groups_permissions_action(
 
     # Set core permissions
     core_perms = await permissions_query.filter(
-        group_id__in=state["groups_ids"]
+        group_id__in=data["groups_ids"]
     ).all_flat("permission")
     groups_permissions["core"] = list(set(groups_permissions["core"] + core_perms))
 
     # Get categories permissions
     categories_perms = defaultdict(set)
     categories_perms_query = await categories_permissions_query.filter(
-        group_id__in=state["groups_ids"]
+        group_id__in=data["groups_ids"]
     ).all("category_id", "permission")
 
     # Merge categories permissions from all groups
@@ -84,7 +84,7 @@ async def get_groups_permissions_action(
         categories_perms[category_id].add(permission)
 
     # Set categories permissions
-    for category in state["categories"]:
+    for category in data["categories"]:
         # Skip categories with parent we can't read
         if (
             category.parent_id
@@ -124,7 +124,7 @@ async def get_groups_permissions_action(
                     category.id,
                 )
 
-            if category.id in state["moderated_categories"]:
+            if category.id in data["moderated_categories"]:
                 add_permission(
                     groups_permissions["category"][CategoryPermission.MODERATOR],
                     category.id,

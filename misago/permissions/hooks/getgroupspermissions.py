@@ -8,7 +8,7 @@ class GetGroupsPermissionsAction(Protocol):
     async def __call__(
         self,
         context: Context,
-        state: dict,
+        data: dict,
         groups_permissions: dict,
         *,
         anonymous: bool = False,
@@ -21,7 +21,7 @@ class GetGroupsPermissionsFilter(Protocol):
         self,
         action: GetGroupsPermissionsAction,
         context: Context,
-        state: dict,
+        data: dict,
         groups_permissions: dict,
         *,
         anonymous: bool = False,
@@ -36,7 +36,7 @@ class GetGroupsPermissionsHook(
         self,
         action: GetGroupsPermissionsAction,
         context: Context,
-        state: dict,
+        data: dict,
         groups_permissions: dict,
         *,
         anonymous: bool = False,
@@ -44,7 +44,7 @@ class GetGroupsPermissionsHook(
         return self.filter(
             action,
             context,
-            state,
+            data,
             groups_permissions,
             anonymous=anonymous,
         )

@@ -153,6 +153,13 @@ Standard hooks
 - [`user_create_input_model_hook`](./user-create-input-model-hook.md)
 
 
+### `misago.permissions.hooks`
+
+- [`get_anonymous_permissions_hook`](./get-anonymous-permissions-hook.md)
+- [`get_groups_permissions_hook`](./get-groups-permissions-hook.md)
+- [`get_user_permissions_hook`](./get-user-permissions-hook.md)
+
+
 ### `misago.richtext.hooks`
 
 - [`convert_block_ast_to_rich_text_hook`](./convert-block-ast-to-rich-text-hook.md)

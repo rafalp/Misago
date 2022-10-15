@@ -22,3 +22,12 @@ async def delete_user_content(user: User):
 ```
 
 Next filter or built-in function used to delete user content from the database.
+
+
+### `user`
+
+```python
+User
+```
+
+`User` dataclass representing user to delete.
