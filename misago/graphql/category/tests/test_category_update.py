@@ -1,6 +1,8 @@
 import pytest
 
 from ....categories.get import get_all_categories
+from ....permissions.cache import PERMISSIONS_CACHE
+from ....testing import assert_invalidates_cache
 
 CATEGORY_UPDATE_MUTATION = """
     mutation CategoryUpdate($category: ID!, $input: CategoryUpdateInput!) {
@@ -619,6 +621,35 @@ async def test_admin_category_update_mutation_fails_if_category_has_children(
             }
         ],
     }
+
+
+@pytest.mark.asyncio
+async def test_admin_category_update_mutation_invalidates_permissions_cache_on_mode(
+    query_admin_api, child_category
+):
+    async with assert_invalidates_cache(PERMISSIONS_CACHE):
+        result = await query_admin_api(
+            CATEGORY_UPDATE_MUTATION,
+            {
+                "category": str(child_category.id),
+                "input": {
+                    "parent": None,
+                },
+            },
+        )
+
+        assert result["data"]["categoryUpdate"] == {
+            "category": {
+                "id": str(child_category.id),
+                "name": "Child Category",
+                "slug": "child-category",
+                "icon": None,
+                "color": "#0F0",
+                "parent": None,
+                "isClosed": False,
+            },
+            "errors": None,
+        }
 
 
 @pytest.mark.asyncio

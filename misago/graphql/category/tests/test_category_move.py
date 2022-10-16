@@ -3,6 +3,8 @@ from unittest.mock import ANY
 import pytest
 
 from ....categories.get import get_all_categories
+from ....permissions.cache import MODERATORS_CACHE, PERMISSIONS_CACHE
+from ....testing import assert_invalidates_cache
 
 CATEGORY_MOVE_MUTATION = """
     mutation CategoryMove(
@@ -612,6 +614,48 @@ async def test_admin_category_move_mutation_fails_if_child_is_moved_after_root(
             }
         ],
     }
+
+
+@pytest.mark.asyncio
+async def test_admin_category_move_mutation_invalidates_permission_caches(
+    query_admin_api, category, child_category, sibling_category, closed_category
+):
+    async with assert_invalidates_cache(PERMISSIONS_CACHE):
+        async with assert_invalidates_cache(MODERATORS_CACHE):
+            result = await query_admin_api(
+                CATEGORY_MOVE_MUTATION,
+                {
+                    "category": str(sibling_category.id),
+                    "before": str(category.id),
+                },
+            )
+
+            assert result["data"]["categoryMove"] == {
+                "category": {
+                    "id": str(sibling_category.id),
+                    "parent": None,
+                },
+                "categories": [
+                    ANY,
+                    {
+                        "id": str(sibling_category.id),
+                        "depth": 0,
+                    },
+                    {
+                        "id": str(category.id),
+                        "depth": 0,
+                    },
+                    {
+                        "id": str(child_category.id),
+                        "depth": 1,
+                    },
+                    {
+                        "id": str(closed_category.id),
+                        "depth": 0,
+                    },
+                ],
+                "errors": None,
+            }
 
 
 @pytest.mark.asyncio

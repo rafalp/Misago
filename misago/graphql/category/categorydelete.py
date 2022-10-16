@@ -11,6 +11,7 @@ from ...categories.loaders import categories_loader
 from ...categories.models import Category
 from ...categories.tree import delete_category, move_category
 from ...categories.validators import CategoryExistsValidator
+from ...permissions.cache import clear_moderators_cache, clear_permissions_cache
 from ...validation import (
     ROOT_LOCATION,
     ErrorsList,
@@ -97,6 +98,9 @@ class AdminCategoryDeleteMutation(AdminMutationType):
             )
 
         categories = await delete_category(categories, category_obj)
+
+        await clear_permissions_cache()
+        await clear_moderators_cache()
 
         categories_loader.unload_all(info.context)
 

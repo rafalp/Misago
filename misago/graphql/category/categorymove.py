@@ -10,6 +10,7 @@ from ...categories.loaders import categories_loader
 from ...categories.models import Category
 from ...categories.tree import move_category
 from ...categories.validators import CategoryExistsValidator
+from ...permissions.cache import clear_moderators_cache, clear_permissions_cache
 from ...validation import ROOT_LOCATION, root_validator, validate_data, validate_model
 from ..mutation import AdminMutationType, ErrorType
 from .category import AdminCategoryType
@@ -74,6 +75,9 @@ class AdminCategoryMoveMutation(AdminMutationType):
             parent=cleaned_data.get("parent"),
             before=cleaned_data.get("before"),
         )
+
+        await clear_permissions_cache()
+        await clear_moderators_cache()
 
         categories_loader.unload_all(info.context)
 

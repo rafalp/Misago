@@ -8,6 +8,7 @@ from ...categories.get import get_all_categories
 from ...categories.models import Category
 from ...categories.tree import move_category
 from ...categories.validators import CategoryExistsValidator, validate_category_parent
+from ...permissions.cache import clear_moderators_cache, clear_permissions_cache
 from ...validation import (
     ROOT_LOCATION,
     color_validator,
@@ -87,6 +88,9 @@ class AdminCategoryUpdateMutation(AdminMutationType):
                 updated_category, _ = await move_category(
                     categories, updated_category, parent=new_parent
                 )
+
+                await clear_permissions_cache()
+                await clear_moderators_cache()
 
         return {
             "updated": updated_category != category_obj,

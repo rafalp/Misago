@@ -10,6 +10,7 @@ from ...categories.get import get_all_categories
 from ...categories.models import Category
 from ...categories.tree import insert_category
 from ...categories.validators import CategoryExistsValidator
+from ...permissions.cache import clear_permissions_cache
 from ...validation import color_validator, validate_data, validate_model
 from ..mutation import AdminMutationType, ErrorType
 from .category import AdminCategoryType
@@ -77,6 +78,7 @@ class AdminCategoryCreateMutation(AdminMutationType):
             is_closed=cleaned_data.get("is_closed") or False,
         )
         category_obj, _ = await insert_category(categories, category_obj, parent)
+        await clear_permissions_cache()
 
         return {"category": category_obj}
 

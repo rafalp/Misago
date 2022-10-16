@@ -1,6 +1,8 @@
 import pytest
 
 from ....categories.get import get_all_categories
+from ....permissions.cache import MODERATORS_CACHE, PERMISSIONS_CACHE
+from ....testing import assert_invalidates_cache
 from ....threads.models import Post, Thread
 
 CATEGORY_DELETE_MUTATION = """
@@ -420,6 +422,25 @@ async def test_admin_category_delete_mutation_fails_if_children_are_moved_to_chi
             },
         ],
     }
+
+
+@pytest.mark.asyncio
+async def test_admin_category_delete_mutation_invalidates_permission_caches(
+    query_admin_api, category
+):
+    async with assert_invalidates_cache(PERMISSIONS_CACHE):
+        async with assert_invalidates_cache(MODERATORS_CACHE):
+            result = await query_admin_api(
+                CATEGORY_DELETE_MUTATION,
+                {
+                    "category": str(category.id),
+                },
+            )
+
+            assert result["data"]["categoryDelete"] == {
+                "deleted": True,
+                "errors": None,
+            }
 
 
 @pytest.mark.asyncio
