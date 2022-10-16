@@ -165,7 +165,7 @@ Standard hooks
 - [`convert_block_ast_to_rich_text_hook`](./convert-block-ast-to-rich-text-hook.md)
 - [`convert_inline_ast_to_text_hook`](./convert-inline-ast-to-text-hook.md)
 - [`convert_rich_text_block_to_html_hook`](./convert-rich-text-block-to-html-hook.md)
-- [`convert_rich_text_to_html_hook`](./convert-rich-text-to-html-hook.
+- [`convert_rich_text_to_html_hook`](./convert-rich-text-to-html-hook.md)
 - [`create_markdown_hook`](./create-markdown-hook.md)
 - [`markdown_hook`](./markdown-hook.md)
 - [`parse_markup_hook`](./parse-markup-hook.md)
