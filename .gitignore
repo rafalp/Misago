@@ -55,3 +55,6 @@ pylint.txt
 # Django stuff:
 *.log
 *.pot
+
+# Docker Compose Override
+docker-compose.override.yml
