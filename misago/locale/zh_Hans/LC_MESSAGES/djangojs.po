@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # ZZLL <zhuolun1996@gmail.com>, 2017
 # Paradox506 <Renyi_14@whu.edu.cn>, 2017
@@ -10,20 +10,21 @@
 # cxgreat2014 <fwy1998@gmail.com>, 2018
 # 蚂蚁先生 <pzf_karl@hotmail.com>, 2019
 # Percy <scvoet@gmail.com>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Percy <scvoet@gmail.com>, 2020\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: static/misago/admin/index.js:16
@@ -380,8 +381,8 @@ msgstr "最佳答案"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be"
-" deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
 msgstr "请为新合并的话题选择最佳答案。合并期间不会删除帖子。"
 
 #: static/misago/js/misago.js:1
@@ -468,9 +469,11 @@ msgstr "删除帐号"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will"
-" result in following data being deleted:"
-msgstr "你正准备删除你的账户，此操作是不可逆的，请再考虑一下！如果你执意要删除账户，我必须提醒你，如下数据将被删除："
+"You are going to delete your account. This action is nonreversible, and will "
+"result in following data being deleted:"
+msgstr ""
+"你正准备删除你的账户，此操作是不可逆的，请再考虑一下！如果你执意要删除账户，"
+"我必须提醒你，如下数据将被删除："
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -490,9 +493,11 @@ msgstr "你的电子邮件将可用于新帐户注册。"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it"
-" will be changed to one shared by all deleted accounts."
-msgstr "你发布的所有内容都不会被删除，但与其关联的用户名将被更改为由所有已删除帐户共享的用户名。"
+"All your posted content will NOT be deleted, but username associated with it "
+"will be changed to one shared by all deleted accounts."
+msgstr ""
+"你发布的所有内容都不会被删除，但与其关联的用户名将被更改为由所有已删除帐户共"
+"享的用户名。"
 
 #: static/misago/js/misago.js:1
 msgid "Delete my account"
@@ -514,8 +519,9 @@ msgid ""
 "your download to be prepared. An e-mail with notification will be sent to "
 "you when your data is ready to be downloaded."
 msgstr ""
-"要从网站下载数据, 请单击 \"请求数据下载\" 按钮。根据要存档的数据量以及希望在同一时间下载数据的用户数, "
-"你的下载准备就绪可能需要几天时间。当你的数据准备好下载时, 将向你发送带有通知的电子邮件。"
+"要从网站下载数据, 请单击 \"请求数据下载\" 按钮。根据要存档的数据量以及希望在"
+"同一时间下载数据的用户数, 你的下载准备就绪可能需要几天时间。当你的数据准备好"
+"下载时, 将向你发送带有通知的电子邮件。"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -684,16 +690,16 @@ msgid "Change forgotten password"
 msgstr "忘记密码"
 
 #: static/misago/js/misago.js:1
+msgid "%(user)s has been made new thread owner."
+msgstr "%(user)s 已经成为话题的新拥有者。"
+
+#: static/misago/js/misago.js:1
 msgid "You have left this thread."
 msgstr "你已经离开了这个话题。"
 
 #: static/misago/js/misago.js:1
 msgid "%(user)s has been removed from this thread."
 msgstr "已从话题中移除了 %(user)s 。"
-
-#: static/misago/js/misago.js:1
-msgid "%(user)s has been made new thread owner."
-msgstr "%(user)s 已经成为话题的新拥有者。"
 
 #: static/misago/js/misago.js:1
 msgid "See profile"
@@ -836,7 +842,9 @@ msgid ""
 "showing which users voted for which choices and at which times. This option "
 "can't be changed after poll's creation. Moderators may see voting details "
 "for all polls."
-msgstr "设为公开将允许所有人查看投票详情，将显示哪些用户在哪些时间投票选择了哪些选项。这个选项在投票建立后无法更改。版主可以查看所有投票的详情。"
+msgstr ""
+"设为公开将允许所有人查看投票详情，将显示哪些用户在哪些时间投票选择了哪些选"
+"项。这个选项在投票建立后无法更改。版主可以查看所有投票的详情。"
 
 #: static/misago/js/misago.js:1
 msgid "Votes are public"
@@ -945,8 +953,7 @@ msgstr "还原"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 msgstr "你确定还原这个帖子为编辑之前的状态嘛？"
 
 #: static/misago/js/misago.js:1
@@ -1097,7 +1104,8 @@ msgid ""
 msgid_plural ""
 "Thread title should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
-msgstr[0] "话题名称至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"话题名称至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1106,7 +1114,8 @@ msgid ""
 msgid_plural ""
 "Thread title cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "话题名称最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"话题名称最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1115,7 +1124,8 @@ msgid ""
 msgid_plural ""
 "Posted message should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
-msgstr[0] "发帖内容至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"发帖内容至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1124,7 +1134,8 @@ msgid ""
 msgid_plural ""
 "Posted message cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "发帖内容最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"发帖内容最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: static/misago/js/misago.js:1
 msgid "Hide"
@@ -1350,14 +1361,14 @@ msgid "This post is hidden. Only users with permission may see its contents."
 msgstr "这个帖子是隐藏的。只有拥有相关权限的用户才可以看到其内容。"
 
 #: static/misago/js/misago.js:1
-msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
-msgstr "此帖子未批准。只有拥有审批帖子权限的用户及作者可以看到它的内容。"
-
-#: static/misago/js/misago.js:1
 msgid "This post is protected. Only moderators may change it."
 msgstr "此贴已锁定，只有版主可修改。"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
+msgstr "此帖子未批准。只有拥有审批帖子权限的用户及作者可以看到它的内容。"
 
 #: static/misago/js/misago.js:1
 msgid "Liked"
@@ -1455,32 +1466,6 @@ msgid "%(username)s's details have been updated."
 msgstr "%(username)s 的资料已更新。"
 
 #: static/misago/js/misago.js:1
-msgid "You have no started threads."
-msgstr "你还没有发起过话题。"
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s started no threads."
-msgstr "%(username)s 还没有发起过话题。"
-
-#: static/misago/js/misago.js:1
-msgid "You have started %(threads)s thread."
-msgid_plural "You have started %(threads)s threads."
-msgstr[0] "你已经发起了 %(threads)s 个话题。"
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s has started %(threads)s thread."
-msgid_plural "%(username)s has started %(threads)s threads."
-msgstr[0] "%(username)s 已发起 %(threads)s 个话题。"
-
-#: static/misago/js/misago.js:1
-msgid "Loading..."
-msgstr "正在加载..."
-
-#: static/misago/js/misago.js:1
-msgid "Threads"
-msgstr "话题"
-
-#: static/misago/js/misago.js:1
 msgid "You have posted no messages."
 msgstr "你还没有发布信息。"
 
@@ -1499,8 +1484,34 @@ msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] "%(username)s 发布了 %(posts)s 条信息。"
 
 #: static/misago/js/misago.js:1
+msgid "Loading..."
+msgstr "正在加载..."
+
+#: static/misago/js/misago.js:1
 msgid "Posts"
 msgstr "帖子"
+
+#: static/misago/js/misago.js:1
+msgid "You have no started threads."
+msgstr "你还没有发起过话题。"
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s started no threads."
+msgstr "%(username)s 还没有发起过话题。"
+
+#: static/misago/js/misago.js:1
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] "你已经发起了 %(threads)s 个话题。"
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] "%(username)s 已发起 %(threads)s 个话题。"
+
+#: static/misago/js/misago.js:1
+msgid "Threads"
+msgstr "话题"
 
 #: static/misago/js/misago.js:1
 msgid "Show older activity"
@@ -1776,7 +1787,8 @@ msgstr "%(username)s 你好，你的帐号已创建，但你需要激活它之�
 msgid ""
 "%(username)s, your account has been created but board administrator will "
 "have to activate it before you will be able to sign in."
-msgstr "%(username)s 你好，你的帐号已创建，但必须在管理员激活它之后才可以登录。"
+msgstr ""
+"%(username)s 你好，你的帐号已创建，但必须在管理员激活它之后才可以登录。"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1957,8 +1969,7 @@ msgstr "%(user)s 最后回复于 %(date)s"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr "你确定要合并选定的帖子吗？这个操作是不可逆的！"
 
 #: static/misago/js/misago.js:1
@@ -2294,8 +2305,8 @@ msgstr "你不可以移动话题，因为没有接收你移动话题的版块。
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
 msgstr "你必须有权限在版块中发起话题，才可以向相应版块中合并话题。"
 
 #: static/misago/js/misago.js:1
@@ -2550,17 +2561,21 @@ msgid "You are banned"
 msgstr "你被封禁了"
 
 #: static/misago/js/misago.js:1
-msgid "You have to accept the terms of service."
-msgstr "你需要接受服务条款。"
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgstr[0] "有效的密码最少需要 %(limit_value)s 字符。"
 
 #: static/misago/js/misago.js:1
 msgid "You have to accept the privacy policy."
 msgstr "你需要接受隐私政策。"
 
 #: static/misago/js/misago.js:1
-msgid "Username must be at least %(limit_value)s character long."
-msgid_plural "Username must be at least %(limit_value)s characters long."
-msgstr[0] "用户名至少需要 %(limit_value)s 个字符。"
+msgid "You have to accept the terms of service."
+msgstr "你需要接受服务条款。"
+
+#: static/misago/js/misago.js:1
+msgid "Username can only contain latin alphabet letters and digits."
+msgstr "用户名只可以包含拉丁字母和数字。"
 
 #: static/misago/js/misago.js:1
 msgid "Username cannot be longer than %(limit_value)s character."
@@ -2568,14 +2583,9 @@ msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] "用户名不可以超过 %(limit_value)s 个字符。"
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr "用户名只可以包含拉丁字母和数字。"
-
-#: static/misago/js/misago.js:1
-msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural ""
-"Valid password must be at least %(limit_value)s characters long."
-msgstr[0] "有效的密码最少需要 %(limit_value)s 字符。"
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
+msgstr[0] "用户名至少需要 %(limit_value)s 个字符。"
 
 #: static/misago/js/misago.js:1
 msgid "This field is required."

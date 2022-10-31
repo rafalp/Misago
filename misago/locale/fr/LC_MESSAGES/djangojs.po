@@ -2,26 +2,26 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Amandine G <amandyfriendly@msn.com>, 2017
 # Olivier Cortès <olive@deep-ocean.net>, 2018
 # Palimpseste, 2018
 # Jorg722, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Jorg722, 2019\n"
 "Language-Team: French (https://www.transifex.com/misago/teams/65369/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: static/misago/admin/index.js:16
@@ -83,8 +83,8 @@ msgid ""
 "You have signed in as %(username)s. Please refresh the page before "
 "continuing."
 msgstr ""
-"Vous êtes identifié comme %(username)s. Merci de rafraichir la page avant de"
-" continuer."
+"Vous êtes identifié comme %(username)s. Merci de rafraichir la page avant de "
+"continuer."
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -142,8 +142,8 @@ msgstr "Cette catégorie a de nouvelles publications."
 #: static/misago/js/misago.js:1
 msgid "This category is empty. No threads were posted within it so far."
 msgstr ""
-"Cette catégorie est vide. Pour l'instant, aucun fils de discussion n'y a été"
-" créé."
+"Cette catégorie est vide. Pour l'instant, aucun fils de discussion n'y a été "
+"créé."
 
 #: static/misago/js/misago.js:1
 msgid "This category is private. You can see only your own threads within it."
@@ -391,8 +391,8 @@ msgstr "Meilleure réponse"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be"
-" deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -491,8 +491,8 @@ msgstr "Supprimer le compte"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will"
-" result in following data being deleted:"
+"You are going to delete your account. This action is nonreversible, and will "
+"result in following data being deleted:"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -513,8 +513,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it"
-" will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it "
+"will be changed to one shared by all deleted accounts."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -707,17 +707,17 @@ msgid "Change forgotten password"
 msgstr "Changer le mot de passe oublié"
 
 #: static/misago/js/misago.js:1
+msgid "%(user)s has been made new thread owner."
+msgstr ""
+"%(user)s est désormais le nouveau propriétaire de ce fil de discussion."
+
+#: static/misago/js/misago.js:1
 msgid "You have left this thread."
 msgstr "Vous avez quitté ce fils de discussion"
 
 #: static/misago/js/misago.js:1
 msgid "%(user)s has been removed from this thread."
 msgstr "%(user)s a été évincé du fil de discussion."
-
-#: static/misago/js/misago.js:1
-msgid "%(user)s has been made new thread owner."
-msgstr ""
-"%(user)s est désormais le nouveau propriétaire de ce fil de discussion."
 
 #: static/misago/js/misago.js:1
 msgid "See profile"
@@ -982,11 +982,10 @@ msgstr "Rétablir"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 msgstr ""
-"Êtes-vous sûr de vouloir rétablir la version précédente de cette publication"
-" ?"
+"Êtes-vous sûr de vouloir rétablir la version précédente de cette "
+"publication ?"
 
 #: static/misago/js/misago.js:1
 msgid "Post has been reverted to previous state."
@@ -1417,21 +1416,21 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgid "This post is hidden. Only users with permission may see its contents."
 msgstr ""
-"Cette publication est masquée. Seuls les utilisateurs autorisés peuvent voir"
-" son contenu."
-
-#: static/misago/js/misago.js:1
-msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
-msgstr ""
-"Cette publication n'est pas approuvée. Seuls son auteur et les utilisateurs "
-"autorisés peuvent voir son contenu."
+"Cette publication est masquée. Seuls les utilisateurs autorisés peuvent voir "
+"son contenu."
 
 #: static/misago/js/misago.js:1
 msgid "This post is protected. Only moderators may change it."
 msgstr ""
 "Cette publication est protégée. Seuls les modérateurs peuvent la modifier."
+
+#: static/misago/js/misago.js:1
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
+msgstr ""
+"Cette publication n'est pas approuvée. Seuls son auteur et les utilisateurs "
+"autorisés peuvent voir son contenu."
 
 #: static/misago/js/misago.js:1
 msgid "Liked"
@@ -1532,34 +1531,6 @@ msgid "%(username)s's details have been updated."
 msgstr "Les informations de %(username)s ont été mises à jour."
 
 #: static/misago/js/misago.js:1
-msgid "You have no started threads."
-msgstr "Vous n'avez démarré aucun fil de discussion."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s started no threads."
-msgstr "%(username)s n'a démarré aucun fil de discussion."
-
-#: static/misago/js/misago.js:1
-msgid "You have started %(threads)s thread."
-msgid_plural "You have started %(threads)s threads."
-msgstr[0] "Vous avez démarré %(threads)s fil de discussion."
-msgstr[1] "Vous avez démarré %(threads)s fils de discussion."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s has started %(threads)s thread."
-msgid_plural "%(username)s has started %(threads)s threads."
-msgstr[0] "%(username)s a démarré %(threads)s fil de discussion."
-msgstr[1] "%(username)s a démarré %(threads)s fils de discussion."
-
-#: static/misago/js/misago.js:1
-msgid "Loading..."
-msgstr "Chargement…"
-
-#: static/misago/js/misago.js:1
-msgid "Threads"
-msgstr "Fils de discussion"
-
-#: static/misago/js/misago.js:1
 msgid "You have posted no messages."
 msgstr "Vous n'avez posté aucun message."
 
@@ -1580,8 +1551,36 @@ msgstr[0] "%(username)s a posté %(posts)s message."
 msgstr[1] "%(username)s a posté %(posts)s messages."
 
 #: static/misago/js/misago.js:1
+msgid "Loading..."
+msgstr "Chargement…"
+
+#: static/misago/js/misago.js:1
 msgid "Posts"
 msgstr "Publications"
+
+#: static/misago/js/misago.js:1
+msgid "You have no started threads."
+msgstr "Vous n'avez démarré aucun fil de discussion."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s started no threads."
+msgstr "%(username)s n'a démarré aucun fil de discussion."
+
+#: static/misago/js/misago.js:1
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] "Vous avez démarré %(threads)s fil de discussion."
+msgstr[1] "Vous avez démarré %(threads)s fils de discussion."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] "%(username)s a démarré %(threads)s fil de discussion."
+msgstr[1] "%(username)s a démarré %(threads)s fils de discussion."
+
+#: static/misago/js/misago.js:1
+msgid "Threads"
+msgstr "Fils de discussion"
 
 #: static/misago/js/misago.js:1
 msgid "Show older activity"
@@ -1732,8 +1731,8 @@ msgid ""
 "Optional message for forum team members explaining why user is prohibited "
 "form changing avatar."
 msgstr ""
-"Message facultatif pour les membres de l'équipe du forum expliquant pourquoi"
-" l'utilisateur ne peut modifier son avatar."
+"Message facultatif pour les membres de l'équipe du forum expliquant pourquoi "
+"l'utilisateur ne peut modifier son avatar."
 
 #: static/misago/js/misago.js:1
 msgid "Avatar controls"
@@ -1950,8 +1949,8 @@ msgstr "%(username)s, votre mot de passe a été modifié avec succes."
 #: static/misago/js/misago.js:1
 msgid "You will have to sign in using new password before continuing."
 msgstr ""
-"Vous devez vous authentifier en utilisant votre nouveau mot de passe afin de"
-" continuer."
+"Vous devez vous authentifier en utilisant votre nouveau mot de passe afin de "
+"continuer."
 
 #: static/misago/js/misago.js:1
 msgid "Sign in"
@@ -2071,8 +2070,7 @@ msgstr "Dernière réponse par %(user)s  le %(date)s"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
 "Êtes-vous sûr de vouloir fusionner les publications sélectionnées ? Cette "
 "action est irréversible !"
@@ -2424,11 +2422,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
 msgstr ""
-"Vous devez disposer des droits de création de fils dans cette catégorie afin"
-" de pouvoir les fusionner."
+"Vous devez disposer des droits de création de fils dans cette catégorie afin "
+"de pouvoir les fusionner."
 
 #: static/misago/js/misago.js:1
 msgid "Selected threads were moved."
@@ -2439,8 +2437,8 @@ msgid ""
 "You need permission to start threads in category to be able to move threads "
 "to it."
 msgstr ""
-"Vous devez disposer des droits de création de fils dans cette catégorie afin"
-" de pouvoir les déplacer."
+"Vous devez disposer des droits de création de fils dans cette catégorie afin "
+"de pouvoir les déplacer."
 
 #: static/misago/js/misago.js:1
 msgid "Select all"
@@ -2497,8 +2495,7 @@ msgstr "Vous naviguez en tant qu'invité."
 #: static/misago/js/misago.js:1
 msgid "Sign in or register to start and participate in discussions."
 msgstr ""
-"Connectez-vous ou inscrivez-vous pour commencer et participer aux "
-"discussions"
+"Connectez-vous ou inscrivez-vous pour commencer et participer aux discussions"
 
 #: static/misago/js/misago.js:1
 msgid "Are you sure you want to sign out?"
@@ -2695,20 +2692,26 @@ msgid "You are banned"
 msgstr "Vous êtes banni⋅e"
 
 #: static/misago/js/misago.js:1
-msgid "You have to accept the terms of service."
-msgstr ""
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgstr[0] ""
+"Un mot de passe valide doit comporter au moins %(limit_value)s caractère."
+msgstr[1] ""
+"Un mot de passe valide doit comporter au moins %(limit_value)s caractères."
 
 #: static/misago/js/misago.js:1
 msgid "You have to accept the privacy policy."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Username must be at least %(limit_value)s character long."
-msgid_plural "Username must be at least %(limit_value)s characters long."
-msgstr[0] ""
-"Le nom d'utilisateur doit comporter au moins %(limit_value)s caractère."
-msgstr[1] ""
-"Le nom d'utilisateur doit comporter au moins %(limit_value)s caractères."
+msgid "You have to accept the terms of service."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Username can only contain latin alphabet letters and digits."
+msgstr ""
+"Le nom d'utilisateur ne peut contenir que des lettres et des chiffres de "
+"l'alphabet latin."
 
 #: static/misago/js/misago.js:1
 msgid "Username cannot be longer than %(limit_value)s character."
@@ -2719,19 +2722,12 @@ msgstr[1] ""
 "Le nom d'utilisateur peut comporter au plus %(limit_value)s caractères."
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr ""
-"Le nom d'utilisateur ne peut contenir que des lettres et des chiffres de "
-"l'alphabet latin."
-
-#: static/misago/js/misago.js:1
-msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural ""
-"Valid password must be at least %(limit_value)s characters long."
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
-"Un mot de passe valide doit comporter au moins %(limit_value)s caractère."
+"Le nom d'utilisateur doit comporter au moins %(limit_value)s caractère."
 msgstr[1] ""
-"Un mot de passe valide doit comporter au moins %(limit_value)s caractères."
+"Le nom d'utilisateur doit comporter au moins %(limit_value)s caractères."
 
 #: static/misago/js/misago.js:1
 msgid "This field is required."

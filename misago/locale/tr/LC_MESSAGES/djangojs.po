@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Mesut GÜLECEN <mesutgulecen@hotmail.com>, 2017
 # Yiğit Tanrıverdi <x_game92@hotmail.com>, 2017
@@ -13,20 +13,21 @@
 # Bilal Akgül <billakgl@gmail.com>, 2018
 # gülce abatay <gulceabatay@gmail.com>, 2018
 # Arda Asik (Student) <ardaasik@sabanciuniv.edu>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Arda Asik (Student) <ardaasik@sabanciuniv.edu>, 2020\n"
-"Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/teams/65369/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/"
+"teams/65369/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: static/misago/admin/index.js:16
@@ -393,8 +394,8 @@ msgstr "En iyi cevap"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be"
-" deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
 msgstr ""
 "Lütfen yeni birleştirdiğiniz konu için en iyi cevabı seçin. Birleştirme "
 "sırasında iletiler silinmez."
@@ -496,8 +497,8 @@ msgstr "Hesabı sil"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will"
-" result in following data being deleted:"
+"You are going to delete your account. This action is nonreversible, and will "
+"result in following data being deleted:"
 msgstr ""
 "Hesabınızı silmek üzeresiniz. Bu aksiyon geri alınamaz ve aşağıdaki "
 "verilerin kaybolmasına sebep olur:"
@@ -520,8 +521,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it"
-" will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it "
+"will be changed to one shared by all deleted accounts."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -632,8 +633,8 @@ msgid ""
 "If you hide your presence, only members with permission to see hidden users "
 "will see when you are online."
 msgstr ""
-"Gizliliğinizi aktifleştirirseniz, sadece gizli kullanıcıları görmeye yetkisi"
-" olan üyeler sizi çevrimiçi görebileceklerdir."
+"Gizliliğinizi aktifleştirirseniz, sadece gizli kullanıcıları görmeye yetkisi "
+"olan üyeler sizi çevrimiçi görebileceklerdir."
 
 #: static/misago/js/misago.js:1
 msgid "Hide my presence from other users"
@@ -716,16 +717,16 @@ msgid "Change forgotten password"
 msgstr "Unutulan şifreni değiştir"
 
 #: static/misago/js/misago.js:1
+msgid "%(user)s has been made new thread owner."
+msgstr "1%(kullanıcı)lar bu konuya yönetici atandı."
+
+#: static/misago/js/misago.js:1
 msgid "You have left this thread."
 msgstr "Bu konuyu terkettiniz"
 
 #: static/misago/js/misago.js:1
 msgid "%(user)s has been removed from this thread."
 msgstr "1%(kullanıcı)lar bu konudan silindi."
-
-#: static/misago/js/misago.js:1
-msgid "%(user)s has been made new thread owner."
-msgstr "1%(kullanıcı)lar bu konuya yönetici atandı."
 
 #: static/misago/js/misago.js:1
 msgid "See profile"
@@ -742,8 +743,8 @@ msgstr "Bu konuyu sonlandırmak istediğinize emin misiniz?"
 #: static/misago/js/misago.js:1
 msgid "Are you sure you want to change thread owner to %(user)s?"
 msgstr ""
-"Konunun yöneticisini 1%(kullanıcı)lar olarak degiştirmek istediğinizden emin"
-" misiniz?"
+"Konunun yöneticisini 1%(kullanıcı)lar olarak degiştirmek istediğinizden emin "
+"misiniz?"
 
 #: static/misago/js/misago.js:1
 msgid "Make owner"
@@ -990,8 +991,7 @@ msgstr "Geriye almak"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 msgstr "Bu ileti düzenlemeden önceki haline döner emin misiniz?"
 
 #: static/misago/js/misago.js:1
@@ -1420,16 +1420,16 @@ msgstr ""
 "görebilir."
 
 #: static/misago/js/misago.js:1
-msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
-msgstr ""
-"Bu ileti onaylanmamıştır. Sadece yayınları ve yazarını onaylama iznine sahip"
-" kullanıcılar iletiler görebilir."
-
-#: static/misago/js/misago.js:1
 msgid "This post is protected. Only moderators may change it."
 msgstr "Korunan ileti. Yalnızca moderatörler değiştirebilir."
+
+#: static/misago/js/misago.js:1
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
+msgstr ""
+"Bu ileti onaylanmamıştır. Sadece yayınları ve yazarını onaylama iznine sahip "
+"kullanıcılar iletiler görebilir."
 
 #: static/misago/js/misago.js:1
 msgid "Liked"
@@ -1530,34 +1530,6 @@ msgid "%(username)s's details have been updated."
 msgstr "%(username)skullanıcısının detayları güncellendi."
 
 #: static/misago/js/misago.js:1
-msgid "You have no started threads."
-msgstr "Başlatılmış sana ait konular yok."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s started no threads."
-msgstr "%(username)s kullanıcısına ait başlatılmış konular yok"
-
-#: static/misago/js/misago.js:1
-msgid "You have started %(threads)s thread."
-msgid_plural "You have started %(threads)s threads."
-msgstr[0] "Sana ait %(threads)s adet başlatılmış konular var."
-msgstr[1] "Sana ait %(threads)s adet başlatılmış konular var."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s has started %(threads)s thread."
-msgid_plural "%(username)s has started %(threads)s threads."
-msgstr[0] "%(username)s adlı kullanıcı %(threads)skonular ını başlattı."
-msgstr[1] "%(username)s adlı kullanıcı %(threads)skonular ını başlattı."
-
-#: static/misago/js/misago.js:1
-msgid "Loading..."
-msgstr "Yükleniyor..."
-
-#: static/misago/js/misago.js:1
-msgid "Threads"
-msgstr "Konular"
-
-#: static/misago/js/misago.js:1
 msgid "You have posted no messages."
 msgstr "Gönderilmiş bir mesaj yok."
 
@@ -1578,8 +1550,36 @@ msgstr[0] "%(username)s kullanıcısının %(posts)s mesajı var."
 msgstr[1] "%(username)s kullanıcısının %(posts)s mesajı var."
 
 #: static/misago/js/misago.js:1
+msgid "Loading..."
+msgstr "Yükleniyor..."
+
+#: static/misago/js/misago.js:1
 msgid "Posts"
 msgstr "İletiler"
+
+#: static/misago/js/misago.js:1
+msgid "You have no started threads."
+msgstr "Başlatılmış sana ait konular yok."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s started no threads."
+msgstr "%(username)s kullanıcısına ait başlatılmış konular yok"
+
+#: static/misago/js/misago.js:1
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] "Sana ait %(threads)s adet başlatılmış konular var."
+msgstr[1] "Sana ait %(threads)s adet başlatılmış konular var."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] "%(username)s adlı kullanıcı %(threads)skonular ını başlattı."
+msgstr[1] "%(username)s adlı kullanıcı %(threads)skonular ını başlattı."
+
+#: static/misago/js/misago.js:1
+msgid "Threads"
+msgstr "Konular"
 
 #: static/misago/js/misago.js:1
 msgid "Show older activity"
@@ -2060,8 +2060,7 @@ msgstr "%(user)s tarafından son cevaplama tarihi %(date)s"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
 "Seçilen iletiler i birleştirmek istediğinizden emin misiniz? Bu eylem geri "
 "alınamaz!"
@@ -2071,8 +2070,7 @@ msgid ""
 "Are you sure you want to delete selected posts? This action is not "
 "reversible!"
 msgstr ""
-"Seçilen iletileri silmek istediğinizden emin misiniz? Bu eylem geri "
-"alınamaz!"
+"Seçilen iletileri silmek istediğinizden emin misiniz? Bu eylem geri alınamaz!"
 
 #: static/misago/js/misago.js:1
 msgid "Merge"
@@ -2410,8 +2408,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
 msgstr ""
 "Konular ı birleştirmek için bölüm içindeki konular a başlatma izni almanız "
 "gerekir."
@@ -2677,20 +2675,23 @@ msgid "You are banned"
 msgstr "Yasaklandin."
 
 #: static/misago/js/misago.js:1
-msgid "You have to accept the terms of service."
-msgstr "Servis şartlarını kabul etmelisiniz."
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgstr[0] "Geçerli şifre en az %(limit_value)s karakter uzunluğunda olmalıdır."
+msgstr[1] "Geçerli şifre en az %(limit_value)s karakter uzunluğunda olmalıdır."
 
 #: static/misago/js/misago.js:1
 msgid "You have to accept the privacy policy."
 msgstr "Gizlilik ilke sini kabul etmelisiniz"
 
 #: static/misago/js/misago.js:1
-msgid "Username must be at least %(limit_value)s character long."
-msgid_plural "Username must be at least %(limit_value)s characters long."
-msgstr[0] ""
-"Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
-msgstr[1] ""
-"Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
+msgid "You have to accept the terms of service."
+msgstr "Servis şartlarını kabul etmelisiniz."
+
+#: static/misago/js/misago.js:1
+msgid "Username can only contain latin alphabet letters and digits."
+msgstr ""
+"Kullanıcı adı sadece latin alfabesindeki harfleri ve rakamları içerebilir."
 
 #: static/misago/js/misago.js:1
 msgid "Username cannot be longer than %(limit_value)s character."
@@ -2699,18 +2700,10 @@ msgstr[0] "Kullanıcı adı %(limit_value)s karakterden uzun olamaz."
 msgstr[1] "Kullanıcı adı %(limit_value)s karakterden uzun olamaz."
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr ""
-"Kullanıcı adı sadece latin alfabesindeki harfleri ve rakamları içerebilir."
-
-#: static/misago/js/misago.js:1
-msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural ""
-"Valid password must be at least %(limit_value)s characters long."
-msgstr[0] ""
-"Geçerli şifre en az %(limit_value)s karakter uzunluğunda olmalıdır."
-msgstr[1] ""
-"Geçerli şifre en az %(limit_value)s karakter uzunluğunda olmalıdır."
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
+msgstr[0] "Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
+msgstr[1] "Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
 
 #: static/misago/js/misago.js:1
 msgid "This field is required."

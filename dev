@@ -205,15 +205,20 @@ makemessages() {
 # Docker part of makemessages
 makemessages_in_docker() {
     require_in_docker
-    
-    echo "Extracting messages for $1 language:"
     cd ./misago
 
-    echo "Processing .py and .html files..."
-    django-admin.py makemessages -l $1 -e html,txt,py > /dev/null
+    if [[ $1 ]]; then
+        echo "Extracting messages for $1 language:"
+        echo "Processing .py and .html files..."
+        django-admin makemessages -l $1 --no-obsolete -e html,txt,py > /dev/null
 
-    echo "Processing .js files..."
-    django-admin.py makemessages -l $1 -d djangojs > /dev/null
+        echo "Processing .js files..."
+        django-admin makemessages -l $1 --no-obsolete -d djangojs > /dev/null
+    else
+        echo "Extracting messages for all languages:"
+        django-admin makemessages --all --no-obsolete -e html,txt,py > /dev/null
+        django-admin makemessages --all --no-obsolete -d djangojs > /dev/null
+    fi
 }
 
 # Compile messages
@@ -225,7 +230,7 @@ compilemessages() {
 compilemessages_in_docker() {
     require_in_docker
     cd ./misago
-    django-admin.py compilemessages
+    django-admin compilemessages
 }
 
 # Pull translation files from transifex
@@ -297,7 +302,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "test" ]]; then
         test $@
     elif [[ $1 = "makemessages" ]]; then
-        makemessages ${2:-en}
+        makemessages $2
     elif [[ $1 = "makemessages_in_docker" ]]; then
         makemessages_in_docker $2
     elif [[ $1 = "compilemessages" ]]; then

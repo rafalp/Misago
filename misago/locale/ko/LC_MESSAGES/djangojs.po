@@ -2,23 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # miiiji <alwldmsrk@gmail.com>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: miiiji <alwldmsrk@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/misago/teams/65369/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: static/misago/admin/index.js:16
@@ -41,7 +41,8 @@ msgstr "%(agreement)s 읽고 동의합니다."
 msgid ""
 "Declining will result in immediate deactivation and deletion of your "
 "account. This action is not reversible."
-msgstr "거절하면 계정이 즉시 비활성화되고 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
+msgstr ""
+"거절하면 계정이 즉시 비활성화되고 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Decline"
@@ -303,7 +304,8 @@ msgstr "테두리 삽입"
 
 #: static/misago/js/misago.js:1
 msgid "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s."
-msgstr " %(filetype)s, %(size)s, %(uploader)s사용자가 %(uploaded_on)s에 업로드 함."
+msgstr ""
+" %(filetype)s, %(size)s, %(uploader)s사용자가 %(uploaded_on)s에 업로드 함."
 
 #: static/misago/js/misago.js:1
 msgid "Insert"
@@ -375,9 +377,11 @@ msgstr "Best 답변"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be"
-" deleted during the merge."
-msgstr "새로 병합 된 스레드에 대한 최고의 답변을 선택하세요. 병합 중에는 게시물이 삭제되지 않습니다."
+"Please select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
+msgstr ""
+"새로 병합 된 스레드에 대한 최고의 답변을 선택하세요. 병합 중에는 게시물이 삭"
+"제되지 않습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Poll"
@@ -387,7 +391,9 @@ msgstr "설문조사"
 msgid ""
 "Please select the poll for your newly merged thread. Rejected polls will be "
 "permanently deleted and cannot be recovered."
-msgstr "새로 병합 된 스레드에 대한 설문조사를 선택하세요. 거부 된 설문 조사는 영구적으로 삭제되며 복구 할 수 없습니다."
+msgstr ""
+"새로 병합 된 스레드에 대한 설문조사를 선택하세요. 거부 된 설문 조사는 영구적"
+"으로 삭제되며 복구 할 수 없습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Search returned no results."
@@ -463,9 +469,11 @@ msgstr "계정삭제"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will"
-" result in following data being deleted:"
-msgstr "계정을 삭제하려는 경우, 이 작업은 복구할 수 없으며 다음과 같은 데이터들은 삭제됩니다:"
+"You are going to delete your account. This action is nonreversible, and will "
+"result in following data being deleted:"
+msgstr ""
+"계정을 삭제하려는 경우, 이 작업은 복구할 수 없으며 다음과 같은 데이터들은 삭"
+"제됩니다:"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -477,7 +485,9 @@ msgstr "게시한 글과 연관된 IP주소가 삭제됩니다."
 msgid ""
 "Your username will become available for other user to rename to or for new "
 "user to register their account with."
-msgstr "유저 이름은 다른 사용자가 자신의 계정을 등록하거나 새 사용자가 자신의 계정을 등록하는데 사용됩니다."
+msgstr ""
+"유저 이름은 다른 사용자가 자신의 계정을 등록하거나 새 사용자가 자신의 계정을 "
+"등록하는데 사용됩니다."
 
 #: static/misago/js/misago.js:1
 msgid "Your e-mail will become available for use in new account registration."
@@ -485,10 +495,11 @@ msgstr "귀하의 이메일은 새 계정 등록에 사용할 수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it"
-" will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it "
+"will be changed to one shared by all deleted accounts."
 msgstr ""
-"게시된 모든 글들은 삭제되지 않지만, 게시된 콘텐츠와 관련된 사용자 이름은 삭제된 모든 계정에서 공유하는 사용자 이름으로 변경됩니다."
+"게시된 모든 글들은 삭제되지 않지만, 게시된 콘텐츠와 관련된 사용자 이름은 삭제"
+"된 모든 계정에서 공유하는 사용자 이름으로 변경됩니다."
 
 #: static/misago/js/misago.js:1
 msgid "Delete my account"
@@ -510,14 +521,18 @@ msgid ""
 "your download to be prepared. An e-mail with notification will be sent to "
 "you when your data is ready to be downloaded."
 msgstr ""
-"사이트에서 다운로드를 하려면, \"데이터 다운로드 요청\" 버튼을 클릭하세요. 보관할 데이터의 양과 동시에 다운로드하려는 사용자 수에 "
-"따라 다운로드가 준비되는 데 최대 며칠이 걸릴 수 있습니다. 데이터가 다운로드 될 준비가 되면 이메일이 전송됩니다."
+"사이트에서 다운로드를 하려면, \"데이터 다운로드 요청\" 버튼을 클릭하세요. 보"
+"관할 데이터의 양과 동시에 다운로드하려는 사용자 수에 따라 다운로드가 준비되"
+"는 데 최대 며칠이 걸릴 수 있습니다. 데이터가 다운로드 될 준비가 되면 이메일"
+"이 전송됩니다."
 
 #: static/misago/js/misago.js:1
 msgid ""
 "The download will only be available for limited amount of time, after which "
 "it will be deleted from the site and marked as expired."
-msgstr "다운로드는 제한된 시간 동안만 사용할 수 있으며, 그 후에는 사이트에서 삭제되고 만료됨으로 표시됩니다."
+msgstr ""
+"다운로드는 제한된 시간 동안만 사용할 수 있으며, 그 후에는 사이트에서 삭제되"
+"고 만료됨으로 표시됩니다."
 
 #: static/misago/js/misago.js:1
 msgid "Requested on"
@@ -599,7 +614,9 @@ msgstr "내 상태 숨기기"
 msgid ""
 "If you hide your presence, only members with permission to see hidden users "
 "will see when you are online."
-msgstr "만약 현재 상태를 숨기면, 숨겨진 사용자를 볼 수있는 권한이있는 구성원만 온라인 상태일 때 볼 수 있습니다."
+msgstr ""
+"만약 현재 상태를 숨기면, 숨겨진 사용자를 볼 수있는 권한이있는 구성원만 온라"
+"인 상태일 때 볼 수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Hide my presence from other users"
@@ -680,16 +697,16 @@ msgid "Change forgotten password"
 msgstr "비밀번호 변경"
 
 #: static/misago/js/misago.js:1
+msgid "%(user)s has been made new thread owner."
+msgstr "%(user)s 사용자는 새 스레드 소유자로 지정되었습니다."
+
+#: static/misago/js/misago.js:1
 msgid "You have left this thread."
 msgstr "이 스레드에서 나갔습니다. "
 
 #: static/misago/js/misago.js:1
 msgid "%(user)s has been removed from this thread."
 msgstr "%(user)s 사용자는 이 스레드에서 삭제되었습니다."
-
-#: static/misago/js/misago.js:1
-msgid "%(user)s has been made new thread owner."
-msgstr "%(user)s 사용자는 새 스레드 소유자로 지정되었습니다."
 
 #: static/misago/js/misago.js:1
 msgid "See profile"
@@ -800,7 +817,9 @@ msgstr "설문조사 길이"
 msgid ""
 "Enter number of days for which voting in this poll should be possible or "
 "zero to run this poll indefinitely."
-msgstr "이 설문조사에 투표 가능한 일 수를 입력하거나 무기한으로 투표하려면 0을 입력하십시오."
+msgstr ""
+"이 설문조사에 투표 가능한 일 수를 입력하거나 무기한으로 투표하려면 0을 입력하"
+"십시오."
 
 #: static/misago/js/misago.js:1
 msgid "Allowed choices"
@@ -833,8 +852,10 @@ msgid ""
 "can't be changed after poll's creation. Moderators may see voting details "
 "for all polls."
 msgstr ""
-"투표를 공개하면 투표 목록에 접근한 모든 사용자에게 어떤 사용자가 어떤 선택을,  어떤 시간에 투표하였는지 표시할 수 있게 허용됩니다. "
-"이 옵션은 설문 조사를 만든 후에는 변경할 수 없습니다. 중재자는 모든 투표에 대한 투표 세부 정보를 볼 수 있습니다."
+"투표를 공개하면 투표 목록에 접근한 모든 사용자에게 어떤 사용자가 어떤 선택"
+"을,  어떤 시간에 투표하였는지 표시할 수 있게 허용됩니다. 이 옵션은 설문 조사"
+"를 만든 후에는 변경할 수 없습니다. 중재자는 모든 투표에 대한 투표 세부 정보"
+"를 볼 수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Votes are public"
@@ -943,8 +964,7 @@ msgstr "되돌리기"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 msgstr "편집하기 전의 상태로 되돌리시겠습니까?"
 
 #: static/misago/js/misago.js:1
@@ -1095,7 +1115,9 @@ msgid ""
 msgid_plural ""
 "Thread title should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
-msgstr[0] "스레드의 제목은 () 글자 이상이어야 합니다. ( %(show_value)s 를 포함 해야합니다.)"
+msgstr[0] ""
+"스레드의 제목은 () 글자 이상이어야 합니다. ( %(show_value)s 를 포함 해야합니"
+"다.)"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1104,7 +1126,9 @@ msgid ""
 msgid_plural ""
 "Thread title cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "스레드의 제목은 %(limit_value)s글자 이하여야 합니다. (%(show_value)s를 포함 해야합니다.) "
+msgstr[0] ""
+"스레드의 제목은 %(limit_value)s글자 이하여야 합니다. (%(show_value)s를 포함 "
+"해야합니다.) "
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1113,7 +1137,9 @@ msgid ""
 msgid_plural ""
 "Posted message should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
-msgstr[0] "등록된 메시지는 %(limit_value)s글자 이상이어야 합니다. (%(show_value)s를 포함 해야합니다.)"
+msgstr[0] ""
+"등록된 메시지는 %(limit_value)s글자 이상이어야 합니다. (%(show_value)s를 포"
+"함 해야합니다.)"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1122,7 +1148,9 @@ msgid ""
 msgid_plural ""
 "Posted message cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "등록된 메시지는 %(limit_value)s이하여야 합니다.(%(show_value)s를 포함 해야합니다.)"
+msgstr[0] ""
+"등록된 메시지는 %(limit_value)s이하여야 합니다.(%(show_value)s를 포함 해야합"
+"니다.)"
 
 #: static/misago/js/misago.js:1
 msgid "Hide"
@@ -1348,14 +1376,16 @@ msgid "This post is hidden. Only users with permission may see its contents."
 msgstr "이 게시글은 비공개입니다. 허가된 사용자만 볼 수 있습니다."
 
 #: static/misago/js/misago.js:1
-msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
-msgstr "이 게시글은 승인되지 않았습니다. 게시글 승인에 권한이 있는 사용자와 작성자만 볼 수 있습니다."
-
-#: static/misago/js/misago.js:1
 msgid "This post is protected. Only moderators may change it."
 msgstr "이 게시글은 보호되고있습니다. 중재자만이 수정할 수 있습니다. "
+
+#: static/misago/js/misago.js:1
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
+msgstr ""
+"이 게시글은 승인되지 않았습니다. 게시글 승인에 권한이 있는 사용자와 작성자만 "
+"볼 수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Liked"
@@ -1453,32 +1483,6 @@ msgid "%(username)s's details have been updated."
 msgstr "%(username)s사용자의 세부정보가 업데이트 되었습니다."
 
 #: static/misago/js/misago.js:1
-msgid "You have no started threads."
-msgstr "시작된 스레드가 없습니다."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s started no threads."
-msgstr "%(username)s사용자의 시작된 스레드가 없습니다."
-
-#: static/misago/js/misago.js:1
-msgid "You have started %(threads)s thread."
-msgid_plural "You have started %(threads)s threads."
-msgstr[0] "습%(threads)s스레드를 시작 했습니다."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s has started %(threads)s thread."
-msgid_plural "%(username)s has started %(threads)s threads."
-msgstr[0] "%(username)s사용자가 %(threads)s스레드를 시작했습니다."
-
-#: static/misago/js/misago.js:1
-msgid "Loading..."
-msgstr "Loading..."
-
-#: static/misago/js/misago.js:1
-msgid "Threads"
-msgstr "스레드"
-
-#: static/misago/js/misago.js:1
 msgid "You have posted no messages."
 msgstr "작성한 메시지가 없습니다. "
 
@@ -1497,8 +1501,34 @@ msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] "%(username)s사용자는 %(posts)s개의 메시지를 작성하셨습니다."
 
 #: static/misago/js/misago.js:1
+msgid "Loading..."
+msgstr "Loading..."
+
+#: static/misago/js/misago.js:1
 msgid "Posts"
 msgstr "게시글"
+
+#: static/misago/js/misago.js:1
+msgid "You have no started threads."
+msgstr "시작된 스레드가 없습니다."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s started no threads."
+msgstr "%(username)s사용자의 시작된 스레드가 없습니다."
+
+#: static/misago/js/misago.js:1
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] "습%(threads)s스레드를 시작 했습니다."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] "%(username)s사용자가 %(threads)s스레드를 시작했습니다."
+
+#: static/misago/js/misago.js:1
+msgid "Threads"
+msgstr "스레드"
 
 #: static/misago/js/misago.js:1
 msgid "Show older activity"
@@ -1609,7 +1639,9 @@ msgstr "아바타 잠금"
 msgid ""
 "Locking user avatar will prohibit user from changing his avatar and will "
 "reset his/her avatar to default one."
-msgstr "사용자 아바타를 잠그면 사용자가 자신의 아바타를 변경할 수 없으며 기본 아바타로 재설정됩니다."
+msgstr ""
+"사용자 아바타를 잠그면 사용자가 자신의 아바타를 변경할 수 없으며 기본 아바타"
+"로 재설정됩니다."
 
 #: static/misago/js/misago.js:1
 msgid "Disallow user from changing avatar"
@@ -1637,7 +1669,9 @@ msgstr "스태프 메시지"
 msgid ""
 "Optional message for forum team members explaining why user is prohibited "
 "form changing avatar."
-msgstr "사용자가 아바타 변경할 수 없는 이유를 포럼팀 멤버들에게 설명하는 선택적인 메시지"
+msgstr ""
+"사용자가 아바타 변경할 수 없는 이유를 포럼팀 멤버들에게 설명하는 선택적인 메"
+"시지"
 
 #: static/misago/js/misago.js:1
 msgid "Avatar controls"
@@ -1650,7 +1684,8 @@ msgstr "사용자 이름이 변경되었습니다."
 #: static/misago/js/misago.js:1
 msgid ""
 "%(username)s's account, threads, posts and other content has been deleted."
-msgstr "%(username)s사용자의 계정, 스레드, 게시물 및 기타 컨텐츠가 삭제되었습니다."
+msgstr ""
+"%(username)s사용자의 계정, 스레드, 게시물 및 기타 컨텐츠가 삭제되었습니다."
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -1768,19 +1803,24 @@ msgstr "계정등록"
 msgid ""
 "%(username)s, your account has been created but you need to activate it "
 "before you will be able to sign in."
-msgstr "%(username)s사용자의 계정이 생성되었지만, 로그인하려면 활성화해야 합니다."
+msgstr ""
+"%(username)s사용자의 계정이 생성되었지만, 로그인하려면 활성화해야 합니다."
 
 #: static/misago/js/misago.js:1
 msgid ""
 "%(username)s, your account has been created but board administrator will "
 "have to activate it before you will be able to sign in."
-msgstr "%(username)s사용자의 계정이 생성되었지만, 보드 관리자가 활성화해야 로그인할 수 있습니다."
+msgstr ""
+"%(username)s사용자의 계정이 생성되었지만, 보드 관리자가 활성화해야 로그인할 "
+"수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid ""
 "We have sent an e-mail to %(email)s with link that you have to click to "
 "activate your account."
-msgstr "귀하의 계정을 활성화하기 위해 클릭해야하는 링크가 포함된 메일을 %(email)s로 보냈습니다."
+msgstr ""
+"귀하의 계정을 활성화하기 위해 클릭해야하는 링크가 포함된 메일을 %(email)s로 "
+"보냈습니다."
 
 #: static/misago/js/misago.js:1
 msgid "We will send an e-mail to %(email)s when this takes place."
@@ -1955,8 +1995,7 @@ msgstr "%(user)s사용자의 마지막 답글 %(date)s"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr "선택한 게시물을 병합하시겠습니까? 이 작업은 되돌릴 수 없습니다!"
 
 #: static/misago/js/misago.js:1
@@ -2049,7 +2088,8 @@ msgstr "병합하기 원하는 스레드에 연결"
 msgid ""
 "Merge will delete current thread and move its contents to the thread "
 "specified here."
-msgstr "병합하면 현재 스레드가 삭제되고 그 내용이 여기에 지정된 스레드로 이동된다."
+msgstr ""
+"병합하면 현재 스레드가 삭제되고 그 내용이 여기에 지정된 스레드로 이동된다."
 
 #: static/misago/js/misago.js:1
 msgid "Merge thread"
@@ -2154,7 +2194,9 @@ msgid ""
 msgid_plural ""
 "There are %(threads)s new or updated threads. Click this message to show "
 "them."
-msgstr[0] "%(threads)s개의 새 스레드 또는 업데이트 된 스레드가 있습니다. 확인하려면 이 메시지를 클릭하세요."
+msgstr[0] ""
+"%(threads)s개의 새 스레드 또는 업데이트 된 스레드가 있습니다. 확인하려면 이 "
+"메시지를 클릭하세요."
 
 #: static/misago/js/misago.js:1
 msgid "New posts"
@@ -2292,9 +2334,10 @@ msgstr "스레드를 이동할 카테고리가 없기 때문에 스레드를 이
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
-msgstr "카테고리에 스레드를 병합하려면, 스레드를 시작할 수 있는 권한이 있어야합니다."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
+msgstr ""
+"카테고리에 스레드를 병합하려면, 스레드를 시작할 수 있는 권한이 있어야합니다."
 
 #: static/misago/js/misago.js:1
 msgid "Selected threads were moved."
@@ -2304,7 +2347,8 @@ msgstr "선택한 스레드가 이동되었습니다."
 msgid ""
 "You need permission to start threads in category to be able to move threads "
 "to it."
-msgstr "카테고리로 스레드를 이동하려면, 스레드를 시작할 수 있는 권한이 있어야합니다."
+msgstr ""
+"카테고리로 스레드를 이동하려면, 스레드를 시작할 수 있는 권한이 있어야합니다."
 
 #: static/misago/js/misago.js:1
 msgid "Select all"
@@ -2493,7 +2537,8 @@ msgstr "아니요"
 msgid ""
 "Private threads are threads which only those that started them and those "
 "they have invited may see and participate in."
-msgstr "비공개 스레드는 시작한 사람과 초대받은 사람만이 보고 참여할 수 있습니다."
+msgstr ""
+"비공개 스레드는 시작한 사람과 초대받은 사람만이 보고 참여할 수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid "You aren't participating in any private threads."
@@ -2548,17 +2593,21 @@ msgid "You are banned"
 msgstr "금지되었습니다."
 
 #: static/misago/js/misago.js:1
-msgid "You have to accept the terms of service."
-msgstr "서비스 약관에 동의해야합니다."
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgstr[0] "비밀번호는 최소한 %(limit_value)s글자보다 길어야합니다."
 
 #: static/misago/js/misago.js:1
 msgid "You have to accept the privacy policy."
 msgstr "개인 정보 보호 정책에 동의해야합니다"
 
 #: static/misago/js/misago.js:1
-msgid "Username must be at least %(limit_value)s character long."
-msgid_plural "Username must be at least %(limit_value)s characters long."
-msgstr[0] "사용자 이름은 %(limit_value)s글자 이상이어야합니다."
+msgid "You have to accept the terms of service."
+msgstr "서비스 약관에 동의해야합니다."
+
+#: static/misago/js/misago.js:1
+msgid "Username can only contain latin alphabet letters and digits."
+msgstr "사용자이름은 알파벳 문자와 숫자만 포함할 수 있습니다."
 
 #: static/misago/js/misago.js:1
 msgid "Username cannot be longer than %(limit_value)s character."
@@ -2566,14 +2615,9 @@ msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] "사용자 이름은 %(limit_value)s글자 이하여야합니다."
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr "사용자이름은 알파벳 문자와 숫자만 포함할 수 있습니다."
-
-#: static/misago/js/misago.js:1
-msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural ""
-"Valid password must be at least %(limit_value)s characters long."
-msgstr[0] "비밀번호는 최소한 %(limit_value)s글자보다 길어야합니다."
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
+msgstr[0] "사용자 이름은 %(limit_value)s글자 이상이어야합니다."
 
 #: static/misago/js/misago.js:1
 msgid "This field is required."
@@ -2586,7 +2630,9 @@ msgid ""
 msgid_plural ""
 "Ensure this value has at least %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "이 값은 %(limit_value)s 글자 이상이어야 합니다. (%(show_value)s를 포함 해야합니다.)"
+msgstr[0] ""
+"이 값은 %(limit_value)s 글자 이상이어야 합니다. (%(show_value)s를 포함 해야합"
+"니다.)"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -2596,4 +2642,5 @@ msgid_plural ""
 "Ensure this value has at most %(limit_value)s characters (it has "
 "%(show_value)s)."
 msgstr[0] ""
-"스레드의 제목은 %(limit_value)s 글자 이상이어야 합니다. ( %(show_value)s 를 포함 해야합니다.)"
+"스레드의 제목은 %(limit_value)s 글자 이상이어야 합니다. ( %(show_value)s 를 "
+"포함 해야합니다.)"
