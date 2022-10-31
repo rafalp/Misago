@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from ..core.utils import get_file_hash

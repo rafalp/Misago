@@ -1,7 +1,6 @@
 import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVectorField
 from django.db import migrations, models
 
@@ -35,7 +34,7 @@ class Migration(migrations.Migration):
                 ("original", models.TextField()),
                 ("parsed", models.TextField()),
                 ("checksum", models.CharField(max_length=64, default="-")),
-                ("attachments_cache", JSONField(null=True, blank=True)),
+                ("attachments_cache", models.JSONField(null=True, blank=True)),
                 ("posted_on", models.DateTimeField()),
                 ("updated_on", models.DateTimeField()),
                 ("edits", models.PositiveIntegerField(default=0)),
@@ -105,9 +104,9 @@ class Migration(migrations.Migration):
                 ),
                 ("is_event", models.BooleanField(default=False, db_index=True)),
                 ("event_type", models.CharField(max_length=255, null=True, blank=True)),
-                ("event_context", JSONField(null=True, blank=True)),
+                ("event_context", models.JSONField(null=True, blank=True)),
                 ("likes", models.PositiveIntegerField(default=0)),
-                ("last_likes", JSONField(blank=True, null=True)),
+                ("last_likes", models.JSONField(blank=True, null=True)),
                 ("search_document", models.TextField(blank=True, null=True)),
                 ("search_vector", SearchVectorField()),
             ],
@@ -517,7 +516,7 @@ class Migration(migrations.Migration):
                 ("posted_on", models.DateTimeField(default=django.utils.timezone.now)),
                 ("length", models.PositiveIntegerField(default=0)),
                 ("question", models.CharField(max_length=255)),
-                ("choices", django.contrib.postgres.fields.jsonb.JSONField()),
+                ("choices", models.JSONField()),
                 ("allowed_choices", models.PositiveIntegerField(default=1)),
                 ("allow_revotes", models.BooleanField(default=False)),
                 ("votes", models.PositiveIntegerField(default=0)),

@@ -35,7 +35,6 @@ class URLPatterns:
                 namespace_urlpatterns.append(
                     djpath(namespace["path"], included_patterns)
                 )
-
         return namespace_urlpatterns
 
     def sum_registered_patters(self):

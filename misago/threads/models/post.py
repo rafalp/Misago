@@ -1,6 +1,5 @@
 import copy
 
-from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
@@ -28,7 +27,7 @@ class Post(models.Model):
         settings.AUTH_USER_MODEL, related_name="mention_set"
     )
 
-    attachments_cache = JSONField(null=True, blank=True)
+    attachments_cache = models.JSONField(null=True, blank=True)
 
     posted_on = models.DateTimeField(db_index=True)
     updated_on = models.DateTimeField()
@@ -63,10 +62,10 @@ class Post(models.Model):
 
     is_event = models.BooleanField(default=False, db_index=True)
     event_type = models.CharField(max_length=255, null=True, blank=True)
-    event_context = JSONField(null=True, blank=True)
+    event_context = models.JSONField(null=True, blank=True)
 
     likes = models.PositiveIntegerField(default=0)
-    last_likes = JSONField(null=True, blank=True)
+    last_likes = models.JSONField(null=True, blank=True)
 
     liked_by = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

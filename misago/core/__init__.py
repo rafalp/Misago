@@ -20,6 +20,3 @@ def check_db_engine(app_configs, **kwargs):
         )
 
     return errors
-
-
-default_app_config = "misago.core.apps.MisagoCoreConfig"

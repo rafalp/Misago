@@ -1,7 +1,6 @@
 import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
 import misago.users.avatars.store
@@ -123,7 +122,7 @@ class Migration(migrations.Migration):
                     "avatar_crop",
                     models.CharField(max_length=255, null=True, blank=True),
                 ),
-                ("avatars", JSONField(null=True, blank=True)),
+                ("avatars", models.JSONField(null=True, blank=True)),
                 ("is_avatar_locked", models.BooleanField(default=False)),
                 ("avatar_lock_user_message", models.TextField(null=True, blank=True)),
                 ("avatar_lock_staff_message", models.TextField(null=True, blank=True)),
