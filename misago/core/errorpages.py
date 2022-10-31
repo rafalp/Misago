@@ -9,6 +9,15 @@ from .exceptions import SocialAuthBanned, SocialAuthFailed
 from .utils import get_exception_message, is_request_to_misago
 
 
+def _is_ajax(request):
+    # Request is AJAX when done with XMLHttpRequest
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return True
+
+    # Assume that request is AJAX when it has JSON payload
+    return "application/json" in request.headers.get("content-type", "")
+
+
 def _ajax_error(code, exception=None, default_message=None):
     return JsonResponse(
         {"detail": get_exception_message(exception, default_message)}, status=code
@@ -38,13 +47,13 @@ def banned(request, exception):
 
 
 def permission_denied(request, exception):
-    if request.is_ajax():
+    if _is_ajax(request):
         return _ajax_error(403, exception, _("Permission denied."))
     return _error_page(request, 403, exception)
 
 
 def page_not_found(request, exception):
-    if request.is_ajax():
+    if _is_ajax(request):
         return _ajax_error(404, exception, "Not found.")
     return _error_page(request, 404, exception)
 
@@ -106,7 +115,7 @@ def social_auth_failed(request, exception):
 
 @admin_csrf_failure
 def csrf_failure(request, reason=""):
-    if request.is_ajax():
+    if _is_ajax(request):
         return JsonResponse(
             {
                 "detail": _(

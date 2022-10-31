@@ -20,8 +20,8 @@ from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 delete_post = Signal()
 delete_thread = Signal()
-merge_post = Signal(providing_args=["other_post"])
-merge_thread = Signal(providing_args=["other_thread"])
+merge_post = Signal()
+merge_thread = Signal()
 move_post = Signal()
 move_thread = Signal()
 
