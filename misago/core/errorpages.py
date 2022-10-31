@@ -11,7 +11,7 @@ from .utils import get_exception_message, is_request_to_misago
 
 def _is_ajax(request):
     # Request is AJAX when done with XMLHttpRequest
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
         return True
 
     # Assume that request is AJAX when it has JSON payload

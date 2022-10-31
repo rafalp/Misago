@@ -32,9 +32,7 @@ class URLPatterns:
                     (child_patterns, namespace["namespace"]),
                     namespace=namespace["namespace"],
                 )
-                namespace_urlpatterns.append(
-                    path(namespace["path"], included_patterns)
-                )
+                namespace_urlpatterns.append(path(namespace["path"], included_patterns))
         return namespace_urlpatterns
 
     def sum_registered_patters(self):
