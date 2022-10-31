@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.http import HttpResponse
 
 from ..middleware import FrontendContextMiddleware
 
@@ -7,10 +7,11 @@ class MockRequest:
     pass
 
 
-class FrontendContextMiddlewareTests(TestCase):
-    def test_middleware_frontend_context_dict(self):
-        """Middleware sets frontend_context dict on request"""
-        request = MockRequest()
+def get_response(*_):
+    return HttpResponse("OK!")
 
-        FrontendContextMiddleware().process_request(request)
-        self.assertEqual(request.frontend_context, {})
+
+def test_frontend_middleware_sets_frontend_context_dict_on_request():
+    request = MockRequest()
+    FrontendContextMiddleware(get_response)(request)
+    assert request.frontend_context == {}

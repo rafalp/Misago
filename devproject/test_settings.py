@@ -1,18 +1,4 @@
-import os
-
 from .settings import *  # pylint: disable-all
-
-# Use test DB
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.environ.get("POSTGRES_TEST_DB"),
-        "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": os.environ.get("POSTGRES_HOST"),
-        "PORT": 5432,
-    }
-}
 
 # Use in-memory cache
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
@@ -54,18 +40,3 @@ MISAGO_POST_SEARCH_FILTERS = ["misago.core.testproject.searchfilters.test_filter
 
 # Default test name
 TEST_NAME = "miasago_test"
-
-# Additional overrides for Travis-CI
-if os.environ.get("TRAVIS"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "travis_ci_test",
-            "USER": "postgres",
-            "PASSWORD": "",
-            "HOST": "127.0.0.1",
-            "PORT": "",
-        }
-    }
-
-    TEST_NAME = "travis_ci_test"

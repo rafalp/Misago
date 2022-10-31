@@ -43,9 +43,6 @@ def confirm_change_view(f):
 
 @confirm_change_view
 def confirm_email_change(request, token):
-    if request.settings.enable_sso:
-        raise PermissionDenied(_("Please use the 3rd party site to change e-mail."))
-
     new_credential = read_new_credential(request, "email", token)
     if not new_credential:
         raise ChangeError()
@@ -66,9 +63,6 @@ def confirm_email_change(request, token):
 
 @confirm_change_view
 def confirm_password_change(request, token):
-    if request.settings.enable_sso:
-        raise PermissionDenied(_("Please use the 3rd party site to change password."))
-
     new_credential = read_new_credential(request, "password", token)
     if not new_credential:
         raise ChangeError()

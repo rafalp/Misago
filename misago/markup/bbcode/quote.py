@@ -1,10 +1,10 @@
 import re
+from xml.etree.ElementTree import SubElement
 
 import markdown
 from django.utils.crypto import get_random_string
 from markdown.blockprocessors import BlockProcessor
 from markdown.preprocessors import Preprocessor
-from markdown.util import etree
 
 QUOTE_START = get_random_string(32)
 QUOTE_END = get_random_string(32)
@@ -14,9 +14,9 @@ class QuoteExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
 
-        md.preprocessors.add("misago_bbcode_quote", QuotePreprocessor(md), "_end")
-        md.parser.blockprocessors.add(
-            "misago_bbcode_quote", QuoteBlockProcessor(md.parser), ">code"
+        md.preprocessors.register(QuotePreprocessor(md), "misago_bbcode_quote", 200)
+        md.parser.blockprocessors.register(
+            QuoteBlockProcessor(md.parser), "misago_bbcode_quote", 90
         )
 
 
@@ -81,13 +81,13 @@ class QuoteBlockProcessor(BlockProcessor):
             children, self._children = self._children[1:-1], []
             title, self._title = self._title, None
 
-            aside = etree.SubElement(parent, "aside")
+            aside = SubElement(parent, "aside")
             aside.set("class", "quote-block")
 
-            heading = etree.SubElement(aside, "div")
+            heading = SubElement(aside, "div")
             heading.set("class", "quote-heading")
 
-            blockquote = etree.SubElement(aside, "blockquote")
+            blockquote = SubElement(aside, "blockquote")
             blockquote.set("class", "quote-body")
 
             if title:

@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 
 urlpatterns = [
-    url(r"^login/(?P<backend>[^/]+)/$", views.auth, name="social-begin"),
-    url(r"^complete/(?P<backend>[^/]+)/$", views.complete, name="social-complete"),
+    path("login/<str:backend>/", views.auth, name="social-begin"),
+    path("complete/<str:backend>/", views.complete, name="social-complete"),
 ]

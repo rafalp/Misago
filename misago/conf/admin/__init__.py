@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views import index
@@ -6,7 +6,6 @@ from .views import (
     ChangeAnalyticsSettingsView,
     ChangeCaptchaSettingsView,
     ChangeGeneralSettingsView,
-    ChangeSSOSettingsView,
     ChangeThreadsSettingsView,
     ChangeUsersSettingsView,
 )
@@ -14,30 +13,27 @@ from .views import (
 
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
-        urlpatterns.namespace(r"^settings/", "settings")
+        urlpatterns.namespace("settings/", "settings")
 
-        urlpatterns.patterns("settings", url(r"^$", index, name="index"))
+        urlpatterns.patterns("settings", path("", index, name="index"))
 
         urlpatterns.single_pattern(
-            r"^analytics/",
+            "analytics/",
             "analytics",
             "settings",
             ChangeAnalyticsSettingsView.as_view(),
         )
         urlpatterns.single_pattern(
-            r"^captcha/", "captcha", "settings", ChangeCaptchaSettingsView.as_view()
+            "captcha/", "captcha", "settings", ChangeCaptchaSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^general/", "general", "settings", ChangeGeneralSettingsView.as_view()
+            "general/", "general", "settings", ChangeGeneralSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^sso/", "sso", "settings", ChangeSSOSettingsView.as_view()
+            "threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            r"^threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
-        )
-        urlpatterns.single_pattern(
-            r"^users/", "users", "settings", ChangeUsersSettingsView.as_view()
+            "users/", "users", "settings", ChangeUsersSettingsView.as_view()
         )
 
     def register_navigation_nodes(self, site):
@@ -73,21 +69,11 @@ class MisagoAdminExtension:
             after="users:index",
         )
         site.add_node(
-            name=_("Single Sign-On"),
-            description=_(
-                "SSO enables you to delegate user login and registration from Misago to"
-                "the third party site."
-            ),
-            parent="settings",
-            namespace="sso",
-            after="captcha:index",
-        )
-        site.add_node(
             name=_("Analytics"),
             description=_("Enable Google Analytics or setup Google Site Verification."),
             parent="settings",
             namespace="analytics",
-            after="sso:index",
+            after="captcha:index",
         )
         site.add_node(
             name=_("Threads"),

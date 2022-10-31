@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from ...conf import settings
 from ...core.views import home_redirect
@@ -6,12 +6,12 @@ from ...core.views import home_redirect
 from ..views import categories
 
 if settings.MISAGO_THREADS_ON_INDEX:
-    URL_PATH = r"^categories/$"
+    URL_PATH = "categories/"
 else:
-    URL_PATH = r"^$"
+    URL_PATH = ""
 
 urlpatterns = [
-    url(URL_PATH, categories, name="categories"),
+    path(URL_PATH, categories, name="categories"),
     # fallback for after we changed index setting
-    url(r"^categories/$", home_redirect),
+    path("categories/", home_redirect),
 ]

@@ -227,15 +227,6 @@ class GatewayTests(TestCase):
         user_json = response.json()
         self.assertIsNone(user_json["id"])
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_login_api_is_disabled_when_sso_is_enabled(self):
-        user = create_test_user("User", "user@example.com", "password")
-
-        response = self.client.post(
-            "/api/auth/", data={"username": "User", "password": "password"}
-        )
-        self.assertEqual(response.status_code, 403)
-
 
 class UserCredentialsTests(TestCase):
     def test_edge_returns_response(self):
@@ -361,11 +352,6 @@ class SendActivationApiTests(TestCase):
 
         self.assertTrue(mail.outbox)
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_send_activation_api_is_disabled_when_sso_is_enabled(self):
-        response = self.client.post(self.link, data={"email": self.user.email})
-        self.assertEqual(response.status_code, 403)
-
 
 class SendPasswordFormApiTests(TestCase):
     def setUp(self):
@@ -476,11 +462,6 @@ class SendPasswordFormApiTests(TestCase):
         )
 
         self.assertTrue(not mail.outbox)
-
-    @override_dynamic_settings(enable_sso=True)
-    def test_send_password_change_link_api_is_disabled_when_sso_is_enabled(self):
-        response = self.client.post(self.link, data={"email": self.user.email})
-        self.assertEqual(response.status_code, 403)
 
 
 class ChangePasswordApiTests(TestCase):
@@ -606,8 +587,3 @@ class ChangePasswordApiTests(TestCase):
                 )
             },
         )
-
-    @override_dynamic_settings(enable_sso=True)
-    def test_password_change_api_is_disabled_when_sso_is_enabled(self):
-        response = self.client.post(self.link % (self.user.pk, "asda7ad89sa7d9s789as"))
-        self.assertEqual(response.status_code, 403)

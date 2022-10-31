@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: acl/admin/__init__.py:24 templates/misago/acl_debug.html:16
@@ -214,7 +214,7 @@ msgstr "Closed category"
 msgid "Only members with valid permissions can post in closed categories."
 msgstr "Only members with valid permissions can post in closed categories."
 
-#: categories/admin/forms.py:70 conf/admin/__init__.py:93
+#: categories/admin/forms.py:70 conf/admin/__init__.py:79
 #: templates/misago/admin/categories/list.html:19
 #: templates/misago/admin/dashboard/totals.html:19
 #: templates/misago/navbar.html:20 templates/misago/navbar.html:36
@@ -228,7 +228,7 @@ msgstr "Only members with valid permissions can post in closed categories."
 #: templates/misago/threadslist/threads.html:42
 #: templates/misago/threadslist/threads.html:66
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
-#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:106
+#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:97
 msgid "Threads"
 msgstr "Threads"
 
@@ -262,11 +262,11 @@ msgstr "Thread age"
 
 #: categories/admin/forms.py:95
 msgid ""
-"Prune thread if number of days since its creation is greater than specified."
-" Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified. "
+"Enter 0 to disable this pruning criteria."
 msgstr ""
-"Prune thread if number of days since its creation is greater than specified."
-" Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified. "
+"Enter 0 to disable this pruning criteria."
 
 #: categories/admin/forms.py:100
 msgid "Last reply"
@@ -314,11 +314,9 @@ msgstr "Archive"
 
 #: categories/admin/forms.py:173
 msgid ""
-"Instead of being deleted, pruned threads can be moved to designated "
-"category."
+"Instead of being deleted, pruned threads can be moved to designated category."
 msgstr ""
-"Instead of being deleted, pruned threads can be moved to designated "
-"category."
+"Instead of being deleted, pruned threads can be moved to designated category."
 
 #: categories/admin/forms.py:177
 msgid "Don't archive pruned threads"
@@ -349,8 +347,7 @@ msgid "Move child categories to"
 msgstr "Move child categories to"
 
 #: categories/admin/forms.py:249 categories/admin/forms.py:264
-#: templates/misago/acl_debug.html:15
-#: templates/misago/admin/roles/list.html:16
+#: templates/misago/acl_debug.html:15 templates/misago/admin/roles/list.html:16
 msgid "Role"
 msgstr "Role"
 
@@ -460,20 +457,20 @@ msgstr "Can see category contents"
 msgid "You don't have permission to browse \"%(category)s\" contents."
 msgstr "You don't have permission to browse \"%(category)s\" contents."
 
-#: conf/admin/__init__.py:45 templates/misago/admin/conf/index.html:5
+#: conf/admin/__init__.py:41 templates/misago/admin/conf/index.html:5
 #: templates/misago/admin/themes/form.html:48
 msgid "Settings"
 msgstr "Settings"
 
-#: conf/admin/__init__.py:52 templates/misago/admin/socialauth/form.html:27
+#: conf/admin/__init__.py:48 templates/misago/admin/socialauth/form.html:27
 msgid "General"
 msgstr "General"
 
-#: conf/admin/__init__.py:53
+#: conf/admin/__init__.py:49
 msgid "Change forum details like name, description or footer."
 msgstr "Change forum details like name, description or footer."
 
-#: conf/admin/__init__.py:58 templates/misago/admin/dashboard/totals.html:7
+#: conf/admin/__init__.py:54 templates/misago/admin/dashboard/totals.html:7
 #: templates/misago/admin/users/ban.html:22 templates/misago/navbar.html:42
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin/__init__.py:74
@@ -481,40 +478,28 @@ msgstr "Change forum details like name, description or footer."
 msgid "Users"
 msgstr "Users"
 
-#: conf/admin/__init__.py:60
+#: conf/admin/__init__.py:56
 msgid "Customize user accounts default behavior and features availability."
 msgstr "Customize user accounts default behavior and features availability."
 
-#: conf/admin/__init__.py:67
+#: conf/admin/__init__.py:63
 msgid "Captcha"
 msgstr "Captcha"
 
-#: conf/admin/__init__.py:69
+#: conf/admin/__init__.py:65
 msgid "Setup protection against automatic registrations on the site."
 msgstr "Setup protection against automatic registrations on the site."
 
-#: conf/admin/__init__.py:76
-msgid "Single Sign-On"
-msgstr "Single Sign-On"
-
-#: conf/admin/__init__.py:78
-msgid ""
-"SSO enables you to delegate user login and registration from Misago tothe "
-"third party site."
-msgstr ""
-"SSO enables you to delegate user login and registration from Misago tothe "
-"third party site."
-
-#: conf/admin/__init__.py:86 templates/misago/admin/dashboard/analytics.html:7
+#: conf/admin/__init__.py:72 templates/misago/admin/dashboard/analytics.html:7
 #: templates/misago/admin/dashboard/index.html:40
 msgid "Analytics"
 msgstr "Analytics"
 
-#: conf/admin/__init__.py:87
+#: conf/admin/__init__.py:73
 msgid "Enable Google Analytics or setup Google Site Verification."
 msgstr "Enable Google Analytics or setup Google Site Verification."
 
-#: conf/admin/__init__.py:94
+#: conf/admin/__init__.py:80
 msgid "Threads, posts, polls and attachments options."
 msgstr "Threads, posts, polls and attachments options."
 
@@ -536,11 +521,11 @@ msgstr "Site verification token"
 
 #: conf/admin/forms/analytics.py:27
 msgid ""
-"This token was extracted from uploaded site verification file. To change it,"
-" upload new verification file."
+"This token was extracted from uploaded site verification file. To change it, "
+"upload new verification file."
 msgstr ""
-"This token was extracted from uploaded site verification file. To change it,"
-" upload new verification file."
+"This token was extracted from uploaded site verification file. To change it, "
+"upload new verification file."
 
 #: conf/admin/forms/analytics.py:34
 msgid "Upload site verification file"
@@ -772,44 +757,6 @@ msgstr ""
 "Misago uses this setting to build links in e-mails sent to site users. "
 "Address under which site is running appears to be \"%(address)s\"."
 
-#: conf/admin/forms/sso.py:13
-msgid "Enable Single Sign-On"
-msgstr "Enable Single Sign-On"
-
-#: conf/admin/forms/sso.py:15
-msgid ""
-"Enabling SSO will make login option redirect users to the server URL "
-"configured below. It will also disable option to register on forum, change "
-"username, email or passward, as those features will be delegated to the 3rd "
-"party site."
-msgstr ""
-"Enabling SSO will make login option redirect users to the server URL "
-"configured below. It will also disable option to register on forum, change "
-"username, email or passward, as those features will be delegated to the 3rd "
-"party site."
-
-#: conf/admin/forms/sso.py:22
-msgid "Public key"
-msgstr "Public key"
-
-#: conf/admin/forms/sso.py:24 conf/admin/forms/sso.py:32
-msgid ""
-"Leave this field empty for Misago to generate this key on form submission."
-msgstr ""
-"Leave this field empty for Misago to generate this key on form submission."
-
-#: conf/admin/forms/sso.py:30
-msgid "Private key"
-msgstr "Private key"
-
-#: conf/admin/forms/sso.py:37
-msgid "Server URL"
-msgstr "Server URL"
-
-#: conf/admin/forms/sso.py:50
-msgid "You need to enter server URL to enable SSO."
-msgstr "You need to enter server URL to enable SSO."
-
 #: conf/admin/forms/threads.py:27
 msgid "Daily post limit per user"
 msgstr "Daily post limit per user"
@@ -876,15 +823,15 @@ msgstr "Read-tracker cutoff"
 
 #: conf/admin/forms/threads.py:71
 msgid ""
-"Controls amount of data used by read-tracking system. All content older than"
-" number of days specified in this setting is considered old and read, even "
-"if the opposite is true for the user. Active forums can try lowering this "
-"value while less active ones may wish to increase it instead. "
+"Controls amount of data used by read-tracking system. All content older than "
+"number of days specified in this setting is considered old and read, even if "
+"the opposite is true for the user. Active forums can try lowering this value "
+"while less active ones may wish to increase it instead. "
 msgstr ""
-"Controls amount of data used by read-tracking system. All content older than"
-" number of days specified in this setting is considered old and read, even "
-"if the opposite is true for the user. Active forums can try lowering this "
-"value while less active ones may wish to increase it instead. "
+"Controls amount of data used by read-tracking system. All content older than "
+"number of days specified in this setting is considered old and read, even if "
+"the opposite is true for the user. Active forums can try lowering this value "
+"while less active ones may wish to increase it instead. "
 
 #: conf/admin/forms/threads.py:80
 msgid "Number of threads displayed on a single page"
@@ -970,11 +917,11 @@ msgstr "Disable new registrations"
 
 #: conf/admin/forms/users.py:48
 msgid ""
-"Delete new inactive accounts if they weren't activated within this number of"
-" days"
+"Delete new inactive accounts if they weren't activated within this number of "
+"days"
 msgstr ""
-"Delete new inactive accounts if they weren't activated within this number of"
-" days"
+"Delete new inactive accounts if they weren't activated within this number of "
+"days"
 
 #: conf/admin/forms/users.py:51
 msgid "Enter 0 to never delete inactive new accounts."
@@ -1030,11 +977,11 @@ msgstr "Fallback for default gravatar"
 
 #: conf/admin/forms/users.py:86
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their "
-"e-mail address."
+"Select which avatar to use when user has no gravatar associated with their e-"
+"mail address."
 msgstr ""
-"Select which avatar to use when user has no gravatar associated with their "
-"e-mail address."
+"Select which avatar to use when user has no gravatar associated with their e-"
+"mail address."
 
 #: conf/admin/forms/users.py:96
 msgid "Blank avatar"
@@ -1156,48 +1103,48 @@ msgstr "Uploaded image's edge should be at least %(size)s pixels long."
 msgid "This value must be lower than number of users per page."
 msgstr "This value must be lower than number of users per page."
 
-#: conf/admin/views.py:40
+#: conf/admin/views.py:39
 msgid "Settings have been saved."
 msgstr "Settings have been saved."
 
-#: core/errorpages.py:42
+#: core/errorpages.py:51
 msgid "Permission denied."
 msgstr "Permission denied."
 
-#: core/errorpages.py:71
-msgid ""
-"A problem was encountered when disconnecting your account from the remote "
-"site."
-msgstr ""
-"A problem was encountered when disconnecting your account from the remote "
-"site."
-
-#: core/errorpages.py:75
-msgid ""
-"You are not allowed to disconnect your account from the other site, because "
-"currently it's the only way to sign in to your account."
-msgstr ""
-"You are not allowed to disconnect your account from the other site, because "
-"currently it's the only way to sign in to your account."
-
 #: core/errorpages.py:80
+msgid ""
+"A problem was encountered when disconnecting your account from the remote "
+"site."
+msgstr ""
+"A problem was encountered when disconnecting your account from the remote "
+"site."
+
+#: core/errorpages.py:84
+msgid ""
+"You are not allowed to disconnect your account from the other site, because "
+"currently it's the only way to sign in to your account."
+msgstr ""
+"You are not allowed to disconnect your account from the other site, because "
+"currently it's the only way to sign in to your account."
+
+#: core/errorpages.py:89
 #, python-format
 msgid "A problem was encountered when signing you in using %(backend)s."
 msgstr "A problem was encountered when signing you in using %(backend)s."
 
-#: core/errorpages.py:84
+#: core/errorpages.py:93
 msgid "The sign in process has been canceled by user."
 msgstr "The sign in process has been canceled by user."
 
-#: core/errorpages.py:86
+#: core/errorpages.py:95
 msgid "The other service could not be reached."
 msgstr "The other service could not be reached."
 
-#: core/errorpages.py:92
+#: core/errorpages.py:101
 msgid "Unexpected problem has been encountered during sign in process."
 msgstr "Unexpected problem has been encountered during sign in process."
 
-#: core/errorpages.py:113
+#: core/errorpages.py:122
 msgid ""
 "Your request was rejected because your browser didn't send the CSRF cookie, "
 "or the cookie sent was invalid."
@@ -1248,11 +1195,11 @@ msgstr "Failed to connect to pypi.org API. Try again later."
 #: templates/misago/admin/dashboard/checks.html:17
 #: templates/misago/admin/dashboard/index.html:33
 msgid ""
-"Version check feature relies on the API operated by the Python Package Index"
-" (pypi.org) API to retrieve latest Misago release version."
+"Version check feature relies on the API operated by the Python Package Index "
+"(pypi.org) API to retrieve latest Misago release version."
 msgstr ""
-"Version check feature relies on the API operated by the Python Package Index"
-" (pypi.org) API to retrieve latest Misago release version."
+"Version check feature relies on the API operated by the Python Package Index "
+"(pypi.org) API to retrieve latest Misago release version."
 
 #: graphql/admin/versioncheck.py:70
 msgid "The site is running updated version of Misago."
@@ -1585,11 +1532,11 @@ msgstr "Search"
 msgid "Can search site"
 msgstr "Can search site"
 
-#: socialauth/admin/__init__.py:42
+#: socialauth/admin/__init__.py:40
 msgid "Social login"
 msgstr "Social login"
 
-#: socialauth/admin/__init__.py:44
+#: socialauth/admin/__init__.py:42
 msgid "Enable users to sign on and login using their social profile."
 msgstr "Enable users to sign on and login using their social profile."
 
@@ -1612,14 +1559,14 @@ msgstr "Associate existing users by email"
 #: socialauth/admin/forms/base.py:39
 msgid ""
 "Enabling this option will result in the user being signed in if their forum "
-"account was registered using same e-mail address as used on the social site."
-" Otherwise they will be asked to specify a different e-mail to continue sign"
-" in using social site."
+"account was registered using same e-mail address as used on the social site. "
+"Otherwise they will be asked to specify a different e-mail to continue sign "
+"in using social site."
 msgstr ""
 "Enabling this option will result in the user being signed in if their forum "
-"account was registered using same e-mail address as used on the social site."
-" Otherwise they will be asked to specify a different e-mail to continue sign"
-" in using social site."
+"account was registered using same e-mail address as used on the social site. "
+"Otherwise they will be asked to specify a different e-mail to continue sign "
+"in using social site."
 
 #: socialauth/admin/forms/base.py:51 socialauth/admin/forms/base.py:53
 #: threads/admin/forms.py:97
@@ -1677,11 +1624,11 @@ msgstr "Login with %(provider)s has been moved before %(other)s."
 #: socialauth/pipeline.py:88
 #, python-format
 msgid ""
-"The e-mail address associated with your %(backend)s account is not available"
-" for use on this site."
+"The e-mail address associated with your %(backend)s account is not available "
+"for use on this site."
 msgstr ""
-"The e-mail address associated with your %(backend)s account is not available"
-" for use on this site."
+"The e-mail address associated with your %(backend)s account is not available "
+"for use on this site."
 
 #: socialauth/pipeline.py:98
 #, python-format
@@ -1695,18 +1642,6 @@ msgstr ""
 #: socialauth/pipeline.py:223 users/api/userendpoints/create.py:60
 msgid "Please try resubmitting the form."
 msgstr "Please try resubmitting the form."
-
-#: socialauth/views.py:23
-msgid "Please use the 3rd party site to login."
-msgstr "Please use the 3rd party site to login."
-
-#: sso/validators.py:24 users/forms/register.py:34 users/validators.py:80
-msgid "This username is not allowed."
-msgstr "This username is not allowed."
-
-#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:52
-msgid "This e-mail address is not allowed."
-msgstr "This e-mail address is not allowed."
 
 #: templates/misago/acl_debug.html:5
 #, python-format
@@ -1762,11 +1697,11 @@ msgstr "Request activation link"
 
 #: templates/misago/activation/request.html:25
 msgid ""
-"The site administrator may impose a requirement on newly registered accounts"
-" to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts "
+"to be activated before users will be able to sign in."
 msgstr ""
-"The site administrator may impose a requirement on newly registered accounts"
-" to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts "
+"to be activated before users will be able to sign in."
 
 #: templates/misago/activation/request.html:28
 msgid ""
@@ -2141,7 +2076,7 @@ msgstr "Category"
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
-#: templates/misago/profile/posts.html:9 users/apps.py:102
+#: templates/misago/profile/posts.html:9 users/apps.py:93
 msgid "Posts"
 msgstr "Posts"
 
@@ -2285,58 +2220,45 @@ msgstr "Read-tracker"
 msgid "Attachment error images"
 msgstr "Attachment error images"
 
-#: templates/misago/admin/conf/users_settings.html:9
-#: templates/misago/admin/socialauth/list.html:97
-msgid "Note"
-msgstr "Note"
-
-#: templates/misago/admin/conf/users_settings.html:9
-msgid ""
-"Single Sign-On is enabled. Site's registration, password and deletion "
-"features have been disabled and delegated to the third-party site."
-msgstr ""
-"Single Sign-On is enabled. Site's registration, password and deletion "
-"features have been disabled and delegated to the third-party site."
-
-#: templates/misago/admin/conf/users_settings.html:14
+#: templates/misago/admin/conf/users_settings.html:8
 msgid "New accounts"
 msgstr "New accounts"
 
-#: templates/misago/admin/conf/users_settings.html:23 users/admin/forms.py:484
+#: templates/misago/admin/conf/users_settings.html:17 users/admin/forms.py:484
 #: users/admin/forms.py:573
 msgid "Usernames"
 msgstr "Usernames"
 
-#: templates/misago/admin/conf/users_settings.html:33
+#: templates/misago/admin/conf/users_settings.html:27
 msgid "Avatars"
 msgstr "Avatars"
 
-#: templates/misago/admin/conf/users_settings.html:49
+#: templates/misago/admin/conf/users_settings.html:43
 msgid "Signatures"
 msgstr "Signatures"
 
-#: templates/misago/admin/conf/users_settings.html:57
+#: templates/misago/admin/conf/users_settings.html:51
 #: users/admin/__init__.py:80
 msgid "Data downloads"
 msgstr "Data downloads"
 
-#: templates/misago/admin/conf/users_settings.html:66
+#: templates/misago/admin/conf/users_settings.html:60
 msgid "Own account deletion"
 msgstr "Own account deletion"
 
-#: templates/misago/admin/conf/users_settings.html:74 users/admin/forms.py:492
+#: templates/misago/admin/conf/users_settings.html:68 users/admin/forms.py:492
 msgid "IP addresses"
 msgstr "IP addresses"
 
-#: templates/misago/admin/conf/users_settings.html:82
+#: templates/misago/admin/conf/users_settings.html:76
 msgid "Default subscription preferences"
 msgstr "Default subscription preferences"
 
-#: templates/misago/admin/conf/users_settings.html:91
+#: templates/misago/admin/conf/users_settings.html:85
 msgid "Users lists"
 msgstr "Users lists"
 
-#: templates/misago/admin/conf/users_settings.html:100
+#: templates/misago/admin/conf/users_settings.html:94
 msgid "Top posters ranking"
 msgstr "Top posters ranking"
 
@@ -2470,9 +2392,8 @@ msgstr "Data download requests"
 msgid "Site analytics are currently unavailable due to an error."
 msgstr "Site analytics are currently unavailable due to an error."
 
-#: templates/misago/admin/dashboard/totals.html:43
-#: threads/admin/__init__.py:38 threads/permissions/attachments.py:11
-#: threads/permissions/attachments.py:29
+#: templates/misago/admin/dashboard/totals.html:43 threads/admin/__init__.py:36
+#: threads/permissions/attachments.py:11 threads/permissions/attachments.py:29
 msgid "Attachments"
 msgstr "Attachments"
 
@@ -2592,27 +2513,27 @@ msgstr "Your browser is configured to don't accept or send any cookies."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgid ""
-"The form was sent after being opened in the browser for a long time (eg. few"
-" days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few "
+"days) and cookie token has expired."
 msgstr ""
-"The form was sent after being opened in the browser for a long time (eg. few"
-" days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few "
+"days) and cookie token has expired."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgid ""
-"The site is configured to use the HTTPS, but this form was sent over the the"
-" HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the "
+"HTTP."
 msgstr ""
-"The site is configured to use the HTTPS, but this form was sent over the the"
-" HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the "
+"HTTP."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgid ""
-"If you are an owner of this site, please check if the HTTPS certificate used"
-" by the site is valid and accepted by the browser."
+"If you are an owner of this site, please check if the HTTPS certificate used "
+"by the site is valid and accepted by the browser."
 msgstr ""
-"If you are an owner of this site, please check if the HTTPS certificate used"
-" by the site is valid and accepted by the browser."
+"If you are an owner of this site, please check if the HTTPS certificate used "
+"by the site is valid and accepted by the browser."
 
 #: templates/misago/admin/generic/filter_form.html:7
 msgid "Filter"
@@ -2872,8 +2793,7 @@ msgstr "Display and visibility"
 #: templates/misago/admin/ranks/list.html:17
 #: templates/misago/admin/users/list.html:19
 #: templates/misago/userslists/active_posters.html:112
-#: templates/misago/userslists/active_posters.html:123
-#: users/admin/forms.py:238
+#: templates/misago/userslists/active_posters.html:123 users/admin/forms.py:238
 msgid "Rank"
 msgstr "Rank"
 
@@ -2938,7 +2858,7 @@ msgid "Enabled login methods"
 msgstr "Enabled login methods"
 
 #: templates/misago/admin/socialauth/list.html:15
-#: templates/misago/admin/socialauth/list.html:112
+#: templates/misago/admin/socialauth/list.html:106
 msgid "Provider"
 msgstr "Provider"
 
@@ -2954,27 +2874,19 @@ msgstr "No social login methods are enabled."
 msgid "Are you sure you want to disable this social login provider?"
 msgstr "Are you sure you want to disable this social login provider?"
 
-#: templates/misago/admin/socialauth/list.html:97
-msgid ""
-"Single Sign-On is enabled. Social authentication has been disabled and "
-"delegated to the third-party site."
-msgstr ""
-"Single Sign-On is enabled. Social authentication has been disabled and "
-"delegated to the third-party site."
-
-#: templates/misago/admin/socialauth/list.html:106
+#: templates/misago/admin/socialauth/list.html:100
 msgid "Setup new login method"
 msgstr "Setup new login method"
 
-#: templates/misago/admin/socialauth/list.html:125
+#: templates/misago/admin/socialauth/list.html:119
 msgid "Setup login with this provider"
 msgstr "Setup login with this provider"
 
-#: templates/misago/admin/socialauth/list.html:126
+#: templates/misago/admin/socialauth/list.html:120
 msgid "Setup"
 msgstr "Setup"
 
-#: templates/misago/admin/socialauth/list.html:133
+#: templates/misago/admin/socialauth/list.html:127
 msgid "No new login providers are available for setup at this time."
 msgstr "No new login providers are available for setup at this time."
 
@@ -3279,7 +3191,7 @@ msgstr ""
 msgid "Signature"
 msgstr "Signature"
 
-#: templates/misago/admin/users/edit.html:228 users/apps.py:27
+#: templates/misago/admin/users/edit.html:228 users/apps.py:24
 msgid "Forum options"
 msgstr "Forum options"
 
@@ -3301,11 +3213,9 @@ msgstr ""
 
 #: templates/misago/admin/users/edit.html:251
 msgid ""
-"No additional action is required. This account will be deleted "
-"automatically."
+"No additional action is required. This account will be deleted automatically."
 msgstr ""
-"No additional action is required. This account will be deleted "
-"automatically."
+"No additional action is required. This account will be deleted automatically."
 
 #: templates/misago/admin/users/edit.html:294
 msgid "Agreements"
@@ -3347,7 +3257,8 @@ msgstr "\"*chan\" will match both \"chan\" and \"marichan\"."
 
 #: templates/misago/admin/users/list.html:120
 msgid "\"*son*\" will match \"son\", \"song\", \"firstson\" and \"firstsong\"."
-msgstr "\"*son*\" will match \"son\", \"song\", \"firstson\" and \"firstsong\"."
+msgstr ""
+"\"*son*\" will match \"son\", \"song\", \"firstson\" and \"firstsong\"."
 
 #: templates/misago/admin/users/new.html:47
 msgid "Save user"
@@ -3453,8 +3364,7 @@ msgstr "This category is empty. No threads were posted within it so far."
 
 #: templates/misago/categories/last_thread.html:68
 msgid "This category is private. You can see only your own threads within it."
-msgstr ""
-"This category is private. You can see only your own threads within it."
+msgstr "This category is private. You can see only your own threads within it."
 
 #: templates/misago/categories/last_thread.html:82
 msgid "This category is protected. You can't browse it's contents."
@@ -3496,11 +3406,11 @@ msgstr "Activate my account!"
 #: templates/misago/emails/change_email.txt:6
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because you have changed your "
-"e-mail address."
+"%(user)s, you are receiving this message because you have changed your e-"
+"mail address."
 msgstr ""
-"%(user)s, you are receiving this message because you have changed your "
-"e-mail address."
+"%(user)s, you are receiving this message because you have changed your e-"
+"mail address."
 
 #: templates/misago/emails/change_email.html:11
 #: templates/misago/emails/change_email.txt:10
@@ -3552,7 +3462,7 @@ msgstr ""
 "%(user)s, you are receiving this message because your data is ready for "
 "download."
 
-#: templates/misago/emails/data_download.html:11 users/apps.py:57
+#: templates/misago/emails/data_download.html:11 users/apps.py:52
 msgid "Download data"
 msgstr "Download data"
 
@@ -3638,11 +3548,11 @@ msgstr ""
 #: templates/misago/emails/register/inactive.html:12
 #: templates/misago/emails/register/inactive.txt:15
 msgid ""
-"This may take a while, but you will receive e-mail with notification once it"
-" happens."
+"This may take a while, but you will receive e-mail with notification once it "
+"happens."
 msgstr ""
-"This may take a while, but you will receive e-mail with notification once it"
-" happens."
+"This may take a while, but you will receive e-mail with notification once it "
+"happens."
 
 #: templates/misago/emails/register/inactive.html:17
 #: templates/misago/emails/register/inactive.txt:20
@@ -3855,12 +3765,12 @@ msgstr ""
 
 #: templates/misago/forgottenpassword/request.html:39
 msgid ""
-"Instead, you can change your password using special secure form that will be"
-" available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be "
+"available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
-"Instead, you can change your password using special secure form that will be"
-" available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be "
+"available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 
 #: templates/misago/forgottenpassword/request.html:42
@@ -3986,7 +3896,7 @@ msgstr "See results"
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
 #: templates/misago/profile/ban_details.html:9
-#: templates/misago/profile/ban_details.html:16 users/apps.py:137
+#: templates/misago/profile/ban_details.html:16 users/apps.py:128
 msgid "Ban details"
 msgstr "Ban details"
 
@@ -4035,7 +3945,7 @@ msgstr[1] "Started %(threads)s threads."
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
 #: templates/misago/profile/details.html:9
-#: templates/misago/profile/details.html:19 users/apps.py:124
+#: templates/misago/profile/details.html:19 users/apps.py:115
 msgid "Details"
 msgstr "Details"
 
@@ -4064,7 +3974,7 @@ msgstr "This error is caused by invalid post content manipulation."
 
 #: templates/misago/profile/followers.html:5
 #: templates/misago/profile/followers.html:8
-#: templates/misago/profile/followers.html:9 users/apps.py:112
+#: templates/misago/profile/followers.html:9 users/apps.py:103
 msgid "Followers"
 msgstr "Followers"
 
@@ -4093,7 +4003,7 @@ msgstr "%(username)s has no followers."
 
 #: templates/misago/profile/follows.html:5
 #: templates/misago/profile/follows.html:8
-#: templates/misago/profile/follows.html:9 users/apps.py:118
+#: templates/misago/profile/follows.html:9 users/apps.py:109
 msgid "Follows"
 msgstr "Follows"
 
@@ -4181,7 +4091,7 @@ msgstr "%(username)s started no threads."
 
 #: templates/misago/profile/username_history.html:5
 #: templates/misago/profile/username_history.html:8
-#: templates/misago/profile/username_history.html:9 users/apps.py:130
+#: templates/misago/profile/username_history.html:9 users/apps.py:121
 msgid "Username history"
 msgstr "Username history"
 
@@ -4366,11 +4276,11 @@ msgstr "This post is hidden. Only users with permission may see its contents."
 
 #: templates/misago/thread/posts/post/flags.html:29
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
 msgstr ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
 
 #: templates/misago/thread/posts/post/flags.html:35
 msgid "This post is protected. Only moderators may change it."
@@ -4456,8 +4366,7 @@ msgstr "last reply by %(user)s %(date)s"
 #: templates/misago/thread/thread.html:30
 #, python-format
 msgid "Started by %(starter)s on %(started_on)s in the %(category)s category."
-msgstr ""
-"Started by %(starter)s on %(started_on)s in the %(category)s category."
+msgstr "Started by %(starter)s on %(started_on)s in the %(category)s category."
 
 #: templates/misago/thread/thread.html:21
 #: templates/misago/thread/thread.html:32
@@ -4561,7 +4470,7 @@ msgstr "Poll"
 
 #: templates/misago/userslists/active_posters.html:5
 #: templates/misago/userslists/active_posters.html:23
-#: templates/misago/userslists/active_posters.html:24 users/apps.py:81
+#: templates/misago/userslists/active_posters.html:24 users/apps.py:72
 msgid "Top posters"
 msgstr "Top posters"
 
@@ -4877,11 +4786,11 @@ msgstr "CSS link \"%(name)s\" has been updated."
 msgid "Default Misago Theme"
 msgstr "Default Misago Theme"
 
-#: threads/admin/__init__.py:45
+#: threads/admin/__init__.py:43
 msgid "Attachment types"
 msgstr "Attachment types"
 
-#: threads/admin/__init__.py:46
+#: threads/admin/__init__.py:44
 msgid "Specify what files may be uploaded on the forum."
 msgstr "Specify what files may be uploaded on the forum."
 
@@ -4931,11 +4840,9 @@ msgstr "Limit downloads to"
 
 #: threads/admin/forms.py:64
 msgid ""
-"List of comma separated file extensions associated with this attachment "
-"type."
+"List of comma separated file extensions associated with this attachment type."
 msgstr ""
-"List of comma separated file extensions associated with this attachment "
-"type."
+"List of comma separated file extensions associated with this attachment type."
 
 #: threads/admin/forms.py:68
 msgid ""
@@ -5045,11 +4952,9 @@ msgstr "Attachment type \"%(name)s\" has been edited."
 #: threads/admin/views/attachmenttypes.py:47
 #, python-format
 msgid ""
-"Attachment type \"%(name)s\" has associated attachments and can't be "
-"deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
 msgstr ""
-"Attachment type \"%(name)s\" has associated attachments and can't be "
-"deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
 
 #: threads/admin/views/attachmenttypes.py:54
 #, python-format
@@ -5266,11 +5171,9 @@ msgstr "This post is already marked as thread's best answer."
 
 #: threads/api/threadendpoints/patch.py:273
 msgid ""
-"This post can't be unmarked because it's not currently marked as best "
-"answer."
+"This post can't be unmarked because it's not currently marked as best answer."
 msgstr ""
-"This post can't be unmarked because it's not currently marked as best "
-"answer."
+"This post can't be unmarked because it's not currently marked as best answer."
 
 #: threads/api/threadendpoints/patch.py:301
 msgid "You have to enter new participant's username."
@@ -5376,8 +5279,10 @@ msgstr "You can't delete original post without deleting thread."
 
 #: threads/participants.py:142
 #, python-format
-msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
-msgstr "%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgid ""
+"%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgstr ""
+"%(user)s has invited you to participate in private thread \"%(thread)s\""
 
 #: threads/permissions/attachments.py:14
 msgid "Max attached file size (in kb)"
@@ -5424,8 +5329,7 @@ msgstr "Can change marked answers"
 
 #: threads/permissions/bestanswers.py:44
 msgid "Time limit for changing marked best answer in owned thread, in minutes"
-msgstr ""
-"Time limit for changing marked best answer in owned thread, in minutes"
+msgstr "Time limit for changing marked best answer in owned thread, in minutes"
 
 #: threads/permissions/bestanswers.py:47
 msgid ""
@@ -5477,11 +5381,11 @@ msgstr ""
 #: threads/permissions/bestanswers.py:188
 #, python-format
 msgid ""
-"You don't have permission to change this thread's marked answer because it's"
-" in the \"%(category)s\" category."
+"You don't have permission to change this thread's marked answer because it's "
+"in the \"%(category)s\" category."
 msgstr ""
-"You don't have permission to change this thread's marked answer because it's"
-" in the \"%(category)s\" category."
+"You don't have permission to change this thread's marked answer because it's "
+"in the \"%(category)s\" category."
 
 #: threads/permissions/bestanswers.py:198
 msgid ""
@@ -5561,11 +5465,11 @@ msgstr ""
 
 #: threads/permissions/bestanswers.py:274
 msgid ""
-"You can't unmark this thread's best answer because it's closed and you don't"
-" have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't "
+"have permission to open it."
 msgstr ""
-"You can't unmark this thread's best answer because it's closed and you don't"
-" have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't "
+"have permission to open it."
 
 #: threads/permissions/bestanswers.py:282
 msgid ""
@@ -5783,11 +5687,11 @@ msgstr "Can report private threads"
 
 #: threads/permissions/privatethreads.py:52
 msgid ""
-"Allows user to report private threads they are participating in, making them"
-" accessible to moderators."
+"Allows user to report private threads they are participating in, making them "
+"accessible to moderators."
 msgstr ""
-"Allows user to report private threads they are participating in, making them"
-" accessible to moderators."
+"Allows user to report private threads they are participating in, making them "
+"accessible to moderators."
 
 #: threads/permissions/privatethreads.py:57
 msgid "Can moderate private threads"
@@ -5865,13 +5769,13 @@ msgstr "Can see unapproved content list"
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging"
-" to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging "
+"to categories in which the user has permission to approve content."
 msgstr ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging"
-" to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging "
+"to categories in which the user has permission to approve content."
 
 #: threads/permissions/threads.py:87
 msgid "Can see reported content list"
@@ -6777,8 +6681,7 @@ msgstr[1] ""
 
 #: threads/serializers/poll.py:134
 msgid "Number of allowed choices can't be greater than number of all choices."
-msgstr ""
-"Number of allowed choices can't be greater than number of all choices."
+msgstr "Number of allowed choices can't be greater than number of all choices."
 
 #: threads/serializers/pollvote.py:15
 #, python-format
@@ -7005,12 +6908,12 @@ msgstr "Is administrator"
 #: users/admin/forms.py:78
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to"
-" admin Django modules."
+"is enabled, this user will need additional permissions assigned within it to "
+"admin Django modules."
 msgstr ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to"
-" admin Django modules."
+"is enabled, this user will need additional permissions assigned within it to "
+"admin Django modules."
 
 #: users/admin/forms.py:84
 msgid "Is superuser"
@@ -7186,11 +7089,11 @@ msgstr "User title"
 
 #: users/admin/forms.py:397
 msgid ""
-"Optional, singular version of rank name displayed by user names. For example"
-" \"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example "
+"\"GM\" or \"Dev\"."
 msgstr ""
-"Optional, singular version of rank name displayed by user names. For example"
-" \"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example "
+"\"GM\" or \"Dev\"."
 
 #: users/admin/forms.py:407
 msgid ""
@@ -7337,13 +7240,13 @@ msgstr "Usernames or emails"
 
 #: users/admin/forms.py:624
 msgid ""
-"Enter every item in new line. Duplicates will be ignored. This field is case"
-" insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case "
+"insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 msgstr ""
-"Enter every item in new line. Duplicates will be ignored. This field is case"
-" insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case "
+"insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 
@@ -7585,26 +7488,21 @@ msgstr "New user \"%(user)s\" has been registered."
 msgid "User \"%(user)s\" has been edited."
 msgstr "User \"%(user)s\" has been edited."
 
-#: users/api/auth.py:42 users/api/auth.py:92 users/api/auth.py:130
-#: users/api/auth.py:174
-msgid "Please use the 3rd party site to authenticate."
-msgstr "Please use the 3rd party site to authenticate."
-
-#: users/api/auth.py:100
+#: users/api/auth.py:94
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "Activate %(user)s account on %(forum_name)s forums"
 
-#: users/api/auth.py:138
+#: users/api/auth.py:129
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "Change %(user)s password on %(forum_name)s forums"
 
-#: users/api/auth.py:176
+#: users/api/auth.py:164
 msgid "Form link is invalid. Please try again."
 msgstr "Form link is invalid. Please try again."
 
-#: users/api/auth.py:177
+#: users/api/auth.py:165
 msgid "Your link has expired. Please request new one."
 msgstr "Your link has expired. Please request new one."
 
@@ -7707,83 +7605,63 @@ msgstr "You don't have permission to see other users name history."
 msgid "You have to sign in to perform this action."
 msgstr "You have to sign in to perform this action."
 
-#: users/api/users.py:90
-msgid "Please use the 3rd party site to register."
-msgstr "Please use the 3rd party site to register."
-
-#: users/api/users.py:113
+#: users/api/users.py:110
 msgid "You can't change other users avatars."
 msgstr "You can't change other users avatars."
 
-#: users/api/users.py:125
+#: users/api/users.py:122
 msgid "You can't change other users options."
 msgstr "You can't change other users options."
 
-#: users/api/users.py:130
+#: users/api/users.py:127
 msgid "Your forum options have been changed."
 msgstr "Your forum options have been changed."
 
-#: users/api/users.py:137
-msgid "Please use the 3rd party site to change your username."
-msgstr "Please use the 3rd party site to change your username."
-
-#: users/api/users.py:141
+#: users/api/users.py:133
 msgid "You can't change other users names."
 msgstr "You can't change other users names."
 
-#: users/api/users.py:148
+#: users/api/users.py:140
 msgid "You can't change other users signatures."
 msgstr "You can't change other users signatures."
 
-#: users/api/users.py:161
-msgid "Please use the 3rd party site to change your password."
-msgstr "Please use the 3rd party site to change your password."
-
-#: users/api/users.py:165
+#: users/api/users.py:152
 msgid "You can't change other users passwords."
 msgstr "You can't change other users passwords."
 
-#: users/api/users.py:175
-msgid "Please use the 3rd party site to change your e-mail."
-msgstr "Please use the 3rd party site to change your e-mail."
-
-#: users/api/users.py:180
+#: users/api/users.py:162
 msgid "You can't change other users e-mail addresses."
 msgstr "You can't change other users e-mail addresses."
 
-#: users/api/users.py:211
-msgid "Please use the 3rd party site to delete account."
-msgstr "Please use the 3rd party site to delete account."
-
-#: users/api/users.py:292
+#: users/api/users.py:269
 msgid "You can't request data downloads for other users."
 msgstr "You can't request data downloads for other users."
 
-#: users/api/users.py:296
+#: users/api/users.py:273
 msgid "You can't download your data."
 msgstr "You can't download your data."
 
-#: users/api/users.py:301
+#: users/api/users.py:278
 msgid "You can't have more than one data download request at a single time."
 msgstr "You can't have more than one data download request at a single time."
 
-#: users/api/users.py:358
+#: users/api/users.py:335
 msgid "You can't see other users data downloads."
 msgstr "You can't see other users data downloads."
 
-#: users/apps.py:33
+#: users/apps.py:30
 msgid "Edit details"
 msgstr "Edit details"
 
-#: users/apps.py:39
+#: users/apps.py:36
 msgid "Change username"
 msgstr "Change username"
 
-#: users/apps.py:46
+#: users/apps.py:42
 msgid "Change email or password"
 msgstr "Change email or password"
 
-#: users/apps.py:71
+#: users/apps.py:63
 msgid "Delete account"
 msgstr "Delete account"
 
@@ -7864,7 +7742,7 @@ msgstr "Entered e-mail is invalid."
 msgid "No user with this e-mail exists."
 msgstr "No user with this e-mail exists."
 
-#: users/forms/auth.py:150 users/views/activation.py:51
+#: users/forms/auth.py:150 users/views/activation.py:46
 #, python-format
 msgid "%(user)s, your account is already active."
 msgstr "%(user)s, your account is already active."
@@ -7889,6 +7767,14 @@ msgid ""
 msgstr ""
 "Administrator has to activate your account before you will be able to "
 "request new password."
+
+#: users/forms/register.py:34 users/validators.py:80
+msgid "This username is not allowed."
+msgstr "This username is not allowed."
+
+#: users/forms/register.py:45 users/validators.py:52
+msgid "This e-mail address is not allowed."
+msgstr "This e-mail address is not allowed."
 
 #: users/forms/register.py:51
 msgid "This agreement is required."
@@ -8066,8 +7952,7 @@ msgstr "You can't delete administrators."
 msgid "You can't delete users that are members for more than %(days)s day."
 msgid_plural ""
 "You can't delete users that are members for more than %(days)s days."
-msgstr[0] ""
-"You can't delete users that are members for more than %(days)s day."
+msgstr[0] "You can't delete users that are members for more than %(days)s day."
 msgstr[1] ""
 "You can't delete users that are members for more than %(days)s days."
 
@@ -8297,13 +8182,13 @@ msgstr "Website"
 
 #: users/profilefields/default.py:41
 msgid ""
-"If you own website in the internet you wish to share on your profile you may"
-" enter its address here. Remember to for it to be valid http address "
-"starting with either \"http://\" or \"https://\"."
+"If you own website in the internet you wish to share on your profile you may "
+"enter its address here. Remember to for it to be valid http address starting "
+"with either \"http://\" or \"https://\"."
 msgstr ""
-"If you own website in the internet you wish to share on your profile you may"
-" enter its address here. Remember to for it to be valid http address "
-"starting with either \"http://\" or \"https://\"."
+"If you own website in the internet you wish to share on your profile you may "
+"enter its address here. Remember to for it to be valid http address starting "
+"with either \"http://\" or \"https://\"."
 
 #: users/profilefields/default.py:49
 msgid "Skype ID"
@@ -8324,13 +8209,13 @@ msgstr "Twitter handle"
 #: users/profilefields/default.py:62
 #, python-format
 msgid ""
-"If you own Twitter account, here you may enter your Twitter handle for other"
-" users to find you. Starting your handle with \"@\" sign is optional. Either"
-" \"@%(slug)s\" or \"%(slug)s\" are valid values."
+"If you own Twitter account, here you may enter your Twitter handle for other "
+"users to find you. Starting your handle with \"@\" sign is optional. Either "
+"\"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
-"If you own Twitter account, here you may enter your Twitter handle for other"
-" users to find you. Starting your handle with \"@\" sign is optional. Either"
-" \"@%(slug)s\" or \"%(slug)s\" are valid values."
+"If you own Twitter account, here you may enter your Twitter handle for other "
+"users to find you. Starting your handle with \"@\" sign is optional. Either "
+"\"@%(slug)s\" or \"%(slug)s\" are valid values."
 
 #: users/profilefields/default.py:73
 msgid "This is not a valid twitter handle."
@@ -8432,11 +8317,7 @@ msgstr "Data entered was found in spammers database."
 msgid "This email is not allowed."
 msgstr "This email is not allowed."
 
-#: users/views/activation.py:21
-msgid "Please use the 3rd party site to activate your account."
-msgstr "Please use the 3rd party site to activate your account."
-
-#: users/views/activation.py:56
+#: users/views/activation.py:51
 #, python-format
 msgid ""
 "%(user)s, your activation link is invalid. Try again or request new "
@@ -8445,37 +8326,28 @@ msgstr ""
 "%(user)s, your activation link is invalid. Try again or request new "
 "activation link."
 
-#: users/views/activation.py:74
+#: users/views/activation.py:69
 #, python-format
 msgid "%(user)s, your account has been activated!"
 msgstr "%(user)s, your account has been activated!"
 
-#: users/views/forgottenpassword.py:18 users/views/options.py:70
-msgid "Please use the 3rd party site to change password."
-msgstr "Please use the 3rd party site to change password."
-
-#: users/views/forgottenpassword.py:45
+#: users/views/forgottenpassword.py:31
 #, python-format
-msgid ""
-"%(user)s, your link has expired. Please request new link and try again."
+msgid "%(user)s, your link has expired. Please request new link and try again."
 msgstr ""
 "%(user)s, your link has expired. Please request new link and try again."
 
-#: users/views/forgottenpassword.py:52
+#: users/views/forgottenpassword.py:38
 #, python-format
 msgid "%(user)s, your link is invalid. Please try again or request new link."
 msgstr "%(user)s, your link is invalid. Please try again or request new link."
 
-#: users/views/options.py:47
-msgid "Please use the 3rd party site to change e-mail."
-msgstr "Please use the 3rd party site to change e-mail."
-
-#: users/views/options.py:59
+#: users/views/options.py:56
 #, python-format
 msgid "%(user)s, your e-mail has been changed."
 msgstr "%(user)s, your e-mail has been changed."
 
-#: users/views/options.py:80
+#: users/views/options.py:74
 #, python-format
 msgid "%(user)s, your password has been changed."
 msgstr "%(user)s, your password has been changed."

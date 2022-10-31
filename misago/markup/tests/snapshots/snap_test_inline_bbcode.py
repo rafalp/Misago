@@ -9,14 +9,6 @@ snapshots = Snapshot()
 
 snapshots["test_bold_bbcode 1"] = "<p>Lorem <b>ipsum</b>!</p>"
 
-snapshots["test_italics_bbcode 1"] = "<p>Lorem <i>ipsum</i>!</p>"
-
-snapshots["test_underline_bbcode 1"] = "<p>Lorem <u>ipsum</u>!</p>"
-
-snapshots[
-    "test_inline_bbcode_can_be_mixed_with_markdown 1"
-] = "<p>Lorem <b><strong>ipsum</strong></b>!</p>"
-
 snapshots[
     "test_image_bbcode 1"
 ] = '<p>Lorem <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500"/> ipsum</p>'
@@ -26,8 +18,34 @@ snapshots[
 ] = '<p>Lorem <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500"/> ipsum</p>'
 
 snapshots[
+    "test_image_bbcode_is_escaped 1"
+] = "<p>Lorem <img alt='&lt;script language=\"application/javascript\"&gt;' src='http://&lt;script language=\"application/javascript\"&gt;'/> ipsum</p>"
+
+snapshots["test_inline_bbcode_can_be_mixed 1"] = "<p>Lorem <b><u>ipsum</u></b>!</p>"
+
+snapshots[
+    "test_inline_bbcode_can_be_mixed_with_markdown 1"
+] = "<p>Lorem <b><strong>ipsum</strong></b>!</p>"
+
+snapshots["test_italics_bbcode 1"] = "<p>Lorem <i>ipsum</i>!</p>"
+
+snapshots[
+    "test_simple_inline_bbcode_is_escaped 1"
+] = '<p>Lorem <b>ips &lt;script language="application/javascript"&gt; um</b>!</p>'
+
+snapshots["test_underline_bbcode 1"] = "<p>Lorem <u>ipsum</u>!</p>"
+
+snapshots[
     "test_url_bbcode 1"
 ] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">placekitten.com/g/1200/500</a> ipsum</p>'
+
+snapshots[
+    "test_url_bbcode_is_escaped 1"
+] = '<p>Lorem <a href=\'http://&lt;script language="application/javascript"&gt;\' rel="nofollow noopener">&lt;script language="application/javascript"&gt;</a> ipsum</p>'
+
+snapshots[
+    "test_url_bbcode_link_text_is_escaped 1"
+] = '<p>Lorem <a href=\'http://&lt;script language="application/javascript"&gt;\' rel="nofollow noopener">&lt;script language="application/javascript"&gt;</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_with_link_text 1"

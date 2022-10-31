@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -10,20 +9,7 @@ from ..decorators import deny_banned_ips
 from ..tokens import is_password_change_token_valid
 
 
-def reset_view(f):
-    @deny_banned_ips
-    def decorator(request, *args, **kwargs):
-        if request.settings.enable_sso:
-            raise PermissionDenied(
-                _("Please use the 3rd party site to change password.")
-            )
-
-        return f(request, *args, **kwargs)
-
-    return decorator
-
-
-@reset_view
+@deny_banned_ips
 def request_reset(request):
     request.frontend_context.update(
         {"SEND_PASSWORD_RESET_API": reverse("misago:api:send-password-form")}
@@ -35,7 +21,7 @@ class ResetError(Exception):
     pass
 
 
-@reset_view
+@deny_banned_ips
 def reset_password_form(request, pk, token):
     requesting_user = get_object_or_404(get_user_model(), pk=pk)
 

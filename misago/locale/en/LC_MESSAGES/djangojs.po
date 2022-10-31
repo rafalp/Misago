@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: static/misago/admin/index.js:16
@@ -140,8 +140,7 @@ msgstr "This category is empty. No threads were posted within it so far."
 
 #: static/misago/js/misago.js:1
 msgid "This category is private. You can see only your own threads within it."
-msgstr ""
-"This category is private. You can see only your own threads within it."
+msgstr "This category is private. You can see only your own threads within it."
 
 #: static/misago/js/misago.js:1
 msgid "This category is protected. You can't browse its contents."
@@ -381,11 +380,11 @@ msgstr "Best answer"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be"
-" deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
 msgstr ""
-"Please select the best answer for your newly merged thread. No posts will be"
-" deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
 
 #: static/misago/js/misago.js:1
 msgid "Poll"
@@ -478,11 +477,11 @@ msgstr "Delete account"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will"
-" result in following data being deleted:"
+"You are going to delete your account. This action is nonreversible, and will "
+"result in following data being deleted:"
 msgstr ""
-"You are going to delete your account. This action is nonreversible, and will"
-" result in following data being deleted:"
+"You are going to delete your account. This action is nonreversible, and will "
+"result in following data being deleted:"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -502,16 +501,15 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Your e-mail will become available for use in new account registration."
-msgstr ""
-"Your e-mail will become available for use in new account registration."
+msgstr "Your e-mail will become available for use in new account registration."
 
 #: static/misago/js/misago.js:1
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it"
-" will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it "
+"will be changed to one shared by all deleted accounts."
 msgstr ""
-"All your posted content will NOT be deleted, but username associated with it"
-" will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it "
+"will be changed to one shared by all deleted accounts."
 
 #: static/misago/js/misago.js:1
 msgid "Delete my account"
@@ -712,16 +710,16 @@ msgid "Change forgotten password"
 msgstr "Change forgotten password"
 
 #: static/misago/js/misago.js:1
+msgid "%(user)s has been made new thread owner."
+msgstr "%(user)s has been made new thread owner."
+
+#: static/misago/js/misago.js:1
 msgid "You have left this thread."
 msgstr "You have left this thread."
 
 #: static/misago/js/misago.js:1
 msgid "%(user)s has been removed from this thread."
 msgstr "%(user)s has been removed from this thread."
-
-#: static/misago/js/misago.js:1
-msgid "%(user)s has been made new thread owner."
-msgstr "%(user)s has been made new thread owner."
 
 #: static/misago/js/misago.js:1
 msgid "See profile"
@@ -985,11 +983,9 @@ msgstr "Revert"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 msgstr ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 
 #: static/misago/js/misago.js:1
 msgid "Post has been reverted to previous state."
@@ -1416,16 +1412,16 @@ msgid "This post is hidden. Only users with permission may see its contents."
 msgstr "This post is hidden. Only users with permission may see its contents."
 
 #: static/misago/js/misago.js:1
-msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
-msgstr ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
-
-#: static/misago/js/misago.js:1
 msgid "This post is protected. Only moderators may change it."
 msgstr "This post is protected. Only moderators may change it."
+
+#: static/misago/js/misago.js:1
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
+msgstr ""
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
 
 #: static/misago/js/misago.js:1
 msgid "Liked"
@@ -1526,34 +1522,6 @@ msgid "%(username)s's details have been updated."
 msgstr "%(username)s's details have been updated."
 
 #: static/misago/js/misago.js:1
-msgid "You have no started threads."
-msgstr "You have no started threads."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s started no threads."
-msgstr "%(username)s started no threads."
-
-#: static/misago/js/misago.js:1
-msgid "You have started %(threads)s thread."
-msgid_plural "You have started %(threads)s threads."
-msgstr[0] "You have started %(threads)s thread."
-msgstr[1] "You have started %(threads)s threads."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s has started %(threads)s thread."
-msgid_plural "%(username)s has started %(threads)s threads."
-msgstr[0] "%(username)s has started %(threads)s thread."
-msgstr[1] "%(username)s has started %(threads)s threads."
-
-#: static/misago/js/misago.js:1
-msgid "Loading..."
-msgstr "Loading..."
-
-#: static/misago/js/misago.js:1
-msgid "Threads"
-msgstr "Threads"
-
-#: static/misago/js/misago.js:1
 msgid "You have posted no messages."
 msgstr "You have posted no messages."
 
@@ -1574,8 +1542,36 @@ msgstr[0] "%(username)s has posted %(posts)s message."
 msgstr[1] "%(username)s has posted %(posts)s messages."
 
 #: static/misago/js/misago.js:1
+msgid "Loading..."
+msgstr "Loading..."
+
+#: static/misago/js/misago.js:1
 msgid "Posts"
 msgstr "Posts"
+
+#: static/misago/js/misago.js:1
+msgid "You have no started threads."
+msgstr "You have no started threads."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s started no threads."
+msgstr "%(username)s started no threads."
+
+#: static/misago/js/misago.js:1
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] "You have started %(threads)s thread."
+msgstr[1] "You have started %(threads)s threads."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] "%(username)s has started %(threads)s thread."
+msgstr[1] "%(username)s has started %(threads)s threads."
+
+#: static/misago/js/misago.js:1
+msgid "Threads"
+msgstr "Threads"
 
 #: static/misago/js/misago.js:1
 msgid "Show older activity"
@@ -2057,11 +2053,9 @@ msgstr "last reply by %(user)s %(date)s"
 
 #: static/misago/js/misago.js:1
 msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -2407,11 +2401,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
 msgstr ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
 
 #: static/misago/js/misago.js:1
 msgid "Selected threads were moved."
@@ -2672,18 +2666,22 @@ msgid "You are banned"
 msgstr "You are banned"
 
 #: static/misago/js/misago.js:1
-msgid "You have to accept the terms of service."
-msgstr "You have to accept the terms of service."
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgstr[0] "Valid password must be at least %(limit_value)s character long."
+msgstr[1] "Valid password must be at least %(limit_value)s characters long."
 
 #: static/misago/js/misago.js:1
 msgid "You have to accept the privacy policy."
 msgstr "You have to accept the privacy policy."
 
 #: static/misago/js/misago.js:1
-msgid "Username must be at least %(limit_value)s character long."
-msgid_plural "Username must be at least %(limit_value)s characters long."
-msgstr[0] "Username must be at least %(limit_value)s character long."
-msgstr[1] "Username must be at least %(limit_value)s characters long."
+msgid "You have to accept the terms of service."
+msgstr "You have to accept the terms of service."
+
+#: static/misago/js/misago.js:1
+msgid "Username can only contain latin alphabet letters and digits."
+msgstr "Username can only contain latin alphabet letters and digits."
 
 #: static/misago/js/misago.js:1
 msgid "Username cannot be longer than %(limit_value)s character."
@@ -2692,15 +2690,10 @@ msgstr[0] "Username cannot be longer than %(limit_value)s character."
 msgstr[1] "Username cannot be longer than %(limit_value)s characters."
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr "Username can only contain latin alphabet letters and digits."
-
-#: static/misago/js/misago.js:1
-msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural ""
-"Valid password must be at least %(limit_value)s characters long."
-msgstr[0] "Valid password must be at least %(limit_value)s character long."
-msgstr[1] "Valid password must be at least %(limit_value)s characters long."
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
+msgstr[0] "Username must be at least %(limit_value)s character long."
+msgstr[1] "Username must be at least %(limit_value)s characters long."
 
 #: static/misago/js/misago.js:1
 msgid "This field is required."

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import auth
 from django.shortcuts import redirect
 from django.urls import NoReverseMatch
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
@@ -17,7 +17,7 @@ def login(request):
     if request.method == "POST":
         redirect_to = request.POST.get("redirect_to")
         if redirect_to:
-            is_redirect_safe = is_safe_url(
+            is_redirect_safe = url_has_allowed_host_and_scheme(
                 url=redirect_to,
                 allowed_hosts={request.get_host()},
                 require_https=request.is_secure(),

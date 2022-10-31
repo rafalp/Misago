@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -12,7 +11,7 @@ def permissions_default():
 class BaseRole(models.Model):
     name = models.CharField(max_length=255)
     special_role = models.CharField(max_length=255, null=True, blank=True)
-    permissions = JSONField(default=permissions_default)
+    permissions = models.JSONField(default=permissions_default)
 
     class Meta:
         abstract = True

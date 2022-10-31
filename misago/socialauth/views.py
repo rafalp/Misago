@@ -19,9 +19,6 @@ def get_provider_from_request(request, backend):
 
 def social_auth_view(f):
     def social_auth_view_wrapper(request, backend, *args, **kwargs):
-        if request.settings.enable_sso:
-            raise PermissionDenied(_("Please use the 3rd party site to login."))
-
         provider = get_provider_from_request(request, backend)
         request.strategy = load_strategy(request)
 

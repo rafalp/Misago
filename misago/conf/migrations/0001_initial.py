@@ -1,5 +1,4 @@
 import django.db.models.deletion
-from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
 
@@ -33,7 +32,7 @@ class Migration(migrations.Migration):
                 ("is_public", models.BooleanField(default=False)),
                 ("is_lazy", models.BooleanField(default=False)),
                 ("form_field", models.CharField(default="text", max_length=255)),
-                ("field_extra", JSONField()),
+                ("field_extra", models.JSONField()),
             ],
             options={},
             bases=(models.Model,),

@@ -1,10 +1,10 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import google_site_verification
 
 urlpatterns = [
-    url(
-        r"^google(?P<token>[a-z0-9]+)\.html$",
+    path(
+        "google(<slug:token>\.html",
         google_site_verification,
         name="google-site-verification",
     )

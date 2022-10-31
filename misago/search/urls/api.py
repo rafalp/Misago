@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .. import api
 
 urlpatterns = [
-    url(r"^search/$", api.search, name="search"),
-    url(r"^search/(?P<search_provider>[-a-zA-Z0-9]+)/$", api.search, name="search"),
+    path("search/", api.search, name="search"),
+    path("search/<slug:search_provider>/", api.search, name="search"),
 ]
