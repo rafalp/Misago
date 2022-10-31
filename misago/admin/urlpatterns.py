@@ -1,4 +1,4 @@
-from django.urls import include, path as djpath
+from django.urls import include, path
 
 
 class URLPatterns:
@@ -8,17 +8,17 @@ class URLPatterns:
         self._patterns = []
         self._urlpatterns = None
 
-    def namespace(self, path, namespace, parent=None):
+    def namespace(self, url_path, namespace, parent=None):
         self._namespaces.append(
-            {"path": path, "parent": parent, "namespace": namespace}
+            {"path": url_path, "parent": parent, "namespace": namespace}
         )
 
     def patterns(self, namespace, *new_patterns):
         self._patterns.append({"namespace": namespace, "urlpatterns": new_patterns})
 
-    def single_pattern(self, path, namespace, parent, view):
-        self.namespace(path, namespace, parent)
-        self.patterns(":".join((parent, namespace)), djpath("", view, name="index"))
+    def single_pattern(self, url_path, namespace, parent, view):
+        self.namespace(url_path, namespace, parent)
+        self.patterns(":".join((parent, namespace)), path("", view, name="index"))
 
     def get_child_patterns(self, parent):
         prefix = "%s:" % parent if parent else ""
@@ -33,7 +33,7 @@ class URLPatterns:
                     namespace=namespace["namespace"],
                 )
                 namespace_urlpatterns.append(
-                    djpath(namespace["path"], included_patterns)
+                    path(namespace["path"], included_patterns)
                 )
         return namespace_urlpatterns
 
@@ -55,7 +55,7 @@ class URLPatterns:
                     (child_patterns, namespace["namespace"]),
                     namespace=namespace["namespace"],
                 )
-                root_urlpatterns.append(djpath(namespace["path"], included_patterns))
+                root_urlpatterns.append(path(namespace["path"], included_patterns))
 
         return root_urlpatterns
 

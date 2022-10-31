@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-settings = (
+sso_settings = (
     "enable_sso",
     "sso_public_key",
     "sso_private_key",
@@ -12,7 +12,7 @@ settings = (
 
 def delete_settings(apps, _):
     Setting = apps.get_model("misago_conf", "Setting")
-    Setting.objects.filter(setting__in=settings).delete()
+    Setting.objects.filter(setting__in=sso_settings).delete()
 
 
 class Migration(migrations.Migration):
