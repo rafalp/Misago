@@ -1,29 +1,14 @@
 {
   "name": "misago",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Misago Frontend",
-  "main": "index.js",
+  "main": ".",
   "scripts": {
-    "test": "gulp test"
+    "build": "webpack --mode production --progress",
+    "watch": "webpack --watch --progress"
   },
   "author": "Rafal Piton",
   "license": "GPL-2.0",
-  "private": true,
-  "browser": {
-    "jquery-mockjax": "./node_modules/jquery-mockjax/dist/jquery.mockjax.js",
-    "bootstrap-transition": "./node_modules/bootstrap/js/transition.js",
-    "bootstrap-affix": "./node_modules/bootstrap/js/affix.js",
-    "bootstrap-modal": "./node_modules/bootstrap/js/modal.js",
-    "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js",
-    "dropzone": "./node_modules/dropzone/dist/dropzone.js",
-    "waypoints": "./node_modules/waypoints/lib/jquery.waypoints.js",
-    "jquery-caret": "./node_modules/jquery.caret/dist/jquery.caret.min.js",
-    "at-js": "./node_modules/at.js/dist/js/jquery.atwho.min.js",
-    "highlight": "./highlight/highlight.pack.js"
-  },
-  "browserify-shim": {
-    "jquery": "jQuery"
-  },
   "dependencies": {
     "at.js": "^1.5.3",
     "bootstrap": "^3.3.6",
@@ -44,34 +29,25 @@
     "zxcvbn": "^4.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.9.6",
-    "@babel/preset-react": "^7.9.4",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "babelify": "^10.0.0",
-    "browserify": "^16.5.1",
-    "browserify-shim": "^3.8.14",
-    "del": "^2.1.0",
-    "eslint": "^7.32.0",
-    "eslint-config-react-app": "^6.0.0",
-    "glob": "^7.0.3",
-    "gulp": "^4.0.2",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-eslint": "^5.0.0",
-    "gulp-image": "^6.1.0",
-    "gulp-jshint": "^2.0.0",
-    "gulp-less": "^4.0.1",
-    "gulp-rename": "^2.0.0",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-uglify": "^3.0.2",
-    "gulp-util": "^3.0.7",
-    "mochify": "^2.14.3",
-    "react-addons-test-utils": "^15.0.0",
-    "vinyl": "^2.2.0",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.7.0"
+    "@babel/core": "^7.19.6",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-react-constant-elements": "^7.18.12",
+    "@babel/plugin-transform-react-inline-elements": "^7.18.6",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/runtime": "^7.20.1",
+    "babel-loader": "^9.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^4.2.2",
+    "glob": "^8.0.3",
+    "less": "^4.1.3",
+    "less-loader": "^11.1.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "style-loader": "^3.3.1",
+    "webpack-cli": "^4.10.0"
   }
 }
