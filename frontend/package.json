@@ -5,7 +5,8 @@
   "main": ".",
   "scripts": {
     "build": "webpack --mode production --progress",
-    "watch": "webpack --watch --progress"
+    "watch": "webpack --watch --progress",
+    "eslint": "eslint src"
   },
   "author": "Rafal Piton",
   "license": "GPL-2.0",
@@ -43,6 +44,9 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
+    "eslint": "^8.26.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-webpack-plugin": "^3.2.0",
     "glob": "^8.0.3",
     "less": "^3.13.1",
     "less-loader": "^11.1.0",

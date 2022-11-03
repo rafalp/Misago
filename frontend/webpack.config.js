@@ -5,8 +5,9 @@ const glob = require('glob');
 
 const { ProvidePlugin } = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const misago = path.resolve(__dirname, "../misago/static/misago/");
 const modules = path.resolve(__dirname, "node_modules");
@@ -14,7 +15,6 @@ const modules = path.resolve(__dirname, "node_modules");
 const getEntries = () => {
   const entry = ["./src/index.js"];
   glob.sync("./src/initializers/**/*.js").forEach((path) => entry.push(path));
-  // entry.push("./src/index.js");
   return entry;
 };
 
@@ -90,6 +90,12 @@ module.exports = (env, argv) => {
       extensions: [".js", ".jsx"],
     },
     plugins: [
+      new ESLintPlugin(
+        {
+          extensions: ["js", "jsx"],
+          files: "./src/"
+        },
+      ),
       new CopyPlugin(
         {
           patterns: [
