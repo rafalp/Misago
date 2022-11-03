@@ -1,6 +1,7 @@
   {
   "extends": "react-app",
   "globals": {
+    "misago": "readonly",
     "gettext": "readonly",
     "ngettext": "readonly",
     "gettext_noop": "readonly",

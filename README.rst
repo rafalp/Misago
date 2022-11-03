@@ -107,12 +107,13 @@ You may skip `./dev init` and setup dev instance manually, running those command
 Frontend
 --------
 
-With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks:
+With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application uses webpack for building.
 
-* **build** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory
-* **watch** does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes
-* **watchstyle** does quick build of less files, and re-builds them when they change
-* **test** runs Mocha.js tests suite for Misago's javascript
+Currently Misago defines following taks:
+
+* **npm run build** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory.
+* **npm run watch** does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes.
+* **npm run eslint** lints code with eslint.
 
 To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in ``frontend`` directory, however special care should be taken when changing source javascripts.
 
