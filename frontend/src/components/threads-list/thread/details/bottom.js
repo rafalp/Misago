@@ -28,7 +28,7 @@ export default function({ category, isBusy, showOptions, isSelected, thread }) {
     <div className="row thread-details-bottom">
       <div className={className}>
         <Category
-          className="item-title thread-detail-category hidden-xs"
+          className="thread-detail-category hidden-xs"
           category={category}
         />
         <HiddenLabel textClassName={textClassName} display={thread.is_hidden} />

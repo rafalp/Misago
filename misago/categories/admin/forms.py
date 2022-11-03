@@ -1,4 +1,7 @@
+import re
+
 from django import forms
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -44,6 +47,26 @@ class AdminCategoryMultipleChoiceField(
 
 class CategoryFormBase(forms.ModelForm):
     name = forms.CharField(label=_("Name"), validators=[validate_sluggable()])
+    short_name = forms.CharField(
+        label=_("Short name"),
+        required=False,
+        help_text=_(
+            "Optional, alternative or abbreviated name (eg. abbreviation) used on threads list."
+        ),
+        validators=[validate_sluggable()],
+    )
+    color = forms.CharField(
+        label=_("Color"),
+        required=False,
+        help_text=_("Optional but recommended, should be in hex format, eg. #F5A9B8."),
+        validators=[
+            RegexValidator(
+                r"^#[0-9a-f][0-9a-f][0-9a-f]([0-9a-f][0-9a-f][0-9a-f]?)$",
+                flags=re.MULTILINE | re.IGNORECASE,
+                message=_("Entered value is not a valid color."),
+            ),
+        ],
+    )
     description = forms.CharField(
         label=_("Description"),
         max_length=2048,
@@ -109,6 +132,8 @@ class CategoryFormBase(forms.ModelForm):
         model = Category
         fields = [
             "name",
+            "short_name",
+            "color",
             "description",
             "css_class",
             "is_closed",

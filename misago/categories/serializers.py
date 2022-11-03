@@ -45,6 +45,8 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "id",
             "parent",
             "name",
+            "short_name",
+            "color",
             "description",
             "is_closed",
             "threads",
