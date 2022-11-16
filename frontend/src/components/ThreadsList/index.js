@@ -1,11 +1,3 @@
-import React from "react"
+import ThreadsList from "./ThreadsList";
 
-const ThreadsList = ({ threads, isLoaded }) => {
-  if (isLoaded) {
-    return <div>LOADING THREADS</div>
-  }
-
-  return <div>{"Threads: " + (threads.length)}</div>
-}
-
-export default ThreadsList
+export default ThreadsList;

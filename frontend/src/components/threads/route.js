@@ -12,7 +12,7 @@ import {
   getPageTitle,
   getTitle
 } from "misago/components/threads/utils"
-import ThreadsList from "misago/components/threads-list"
+import ThreadsList from "misago/components/ThreadsList"
 import ThreadsListEmpty from "misago/components/threads/list-empty"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago/index"

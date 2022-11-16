@@ -33,7 +33,11 @@ export default function({ thread }) {
 
 export function Timestamp({ datetime, url }) {
   return (
-    <a className="thread-last-reply" href={url} title={datetime.format("LLL")}>
+    <a
+      className="thread-last-reply"
+      href={url}
+      title={datetime.format("LLL")}
+    >
       {datetime.fromNow(true)}
     </a>
   )

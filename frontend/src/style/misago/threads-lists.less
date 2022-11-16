@@ -8,200 +8,64 @@
 }
 
 
-// Thread layout
-// --------------------------------------------------
-.threads-list .thread-title {
-  &, &:link, &:active, &:visited, &:focus, &:hover {
-    font-size: @font-size-large;
-    font-weight: normal;
+// Make list row flexbox row
+.threads-list-item {
+  display: flex;
+  align-items: center;
+}
+
+// Thread icon
+.threads-list-item-col-icon {
+  padding-right: @grid-gutter-width / 2;
+}
+
+.threads-list-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: @thread-read-block-size;
+  height: @thread-read-block-size;
+
+  border-radius: @border-radius-small;
+  font-size: @thread-read-icon-size;
+  line-height: @thread-read-icon-size;
+
+  &:link, &:active, &:focus, &:hover, &:visited {
+    background-color: @thread-read-icon-bg;
+    color: @thread-read-icon-color;
+    text-decoration: none;
   }
 }
 
-.thread-last-action {
-  .media-left, .media-body {
-    padding-top: 2px;
+.threads-list-icon-new {
+  &:link, &:active, &:focus, &:hover, &:visited {
+    background-color: @thread-new-icon-bg;
+    color: @thread-new-icon-color;
   }
 }
 
-.threads-list .thread-options {
-  padding-top: @padding-base-vertical - 1px;
-}
-
-
-// Thread starter
-// --------------------------------------------------
-.threads-list .thread-main {
-  .media-left {
-    padding-top: 2px;
-    padding-bottom: 1px;
-  }
-}
-
-
-// Thread details
-// --------------------------------------------------
-.threads-list .thread-details-top {
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.threads-list .thread-details-bottom div,
-.threads-list .thread-details-top {
-  &>a, &>span {
-    margin-right: @padding-large-horizontal;
-
-    font-size: @font-size-small;
-    font-weight: normal;
-
-    &>.material-icon {
-      position: relative;
-      top: -1px;
-    }
-
-    .detail-text {
-      margin-left: 2px;
-    }
-
-    @media screen and (max-width: @screen-sm-max) {
-      margin-right: @padding-base-horizontal;
-    }
-  }
-
-  .thread-detail-category {
-    padding: .0em .3em;
-  }
-}
-
-@media screen and (max-width: @screen-xs-max) {
-  .threads-list .thread-details-bottom {
-    margin-top: @padding-large-vertical - 2px;
-  }
-
-  .threads-list .thread-details-top {
-    margin-bottom: @padding-base-vertical;
-  }
-}
-
-@media screen and (min-width: @screen-sm-min) {
-  .threads-list .thread-details-top {
-    margin-left: 50px;
-  }
-}
-
-
-// Last action
-// --------------------------------------------------
-.thread-last-action {
-  padding-top: 1px;
-
-  .thread-last-poster {
-    display: block;
-  }
-}
-
-
-// Thread options
-// --------------------------------------------------
-.thread-options-xs {
-  margin-top: @line-height-computed * -0.5;
-  margin-bottom: @line-height-computed * -1;
-
-  position: relative;
-  top: @padding-base-vertical - 1px;
-
-  .btn {
-    padding: 0px 2px;
-
-    font-size: @font-size-small;
-
-    .material-icon {
-      width: 14px;
-      height: 14px;
-
-      font-size: 14px;
-      line-height: 14px;
-    }
-  }
-}
-
-
-// Threads diff message
-// --------------------------------------------------
-.threads-diff-message {
-  padding: 0px;
-}
-
-.threads-diff-message .btn {
-  border: none;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  padding: @padding-large-vertical @padding-large-horizontal;
+// Thread title
+.threads-list-item-col-title {
   width: 100%;
+}
 
-  overflow: none;
-
-  text-align: left;
-
-  .material-icon {
-    margin-right: 4px;
-
-    width: 24px;
-    height: 24px;
-
-    font-size: 24px;
-    height: 24px;
-  }
-
-  @media screen and (max-width: @screen-sm-max) {
-    text-align: center;
-    white-space: normal;
-    word-wrap: break-word;
-
-    .material-icon {
-      display: none;
-    }
+a.threads-list-item-title {
+  &:link, &:active, &:focus, &:hover, &:visited {
+    color: @thread-read-color;
   }
 }
 
-
-// UI Preview
-// --------------------------------------------------
-.threads-list .thread-preview {
-  .ui-preview-text {
-    margin-right: @padding-large-horizontal;
-  }
-
-  .thread-details-bottom div, .thread-details-top {
-    .ui-preview-text {
-      height: @font-size-small * 0.8;
-    }
-  }
-
-  .thread-details-bottom {
-    margin-top: @padding-base-vertical;
-  }
-
-  .thread-details-top {
-    margin-bottom: @padding-base-vertical;
+a.threads-list-item-title-new {
+  &:link, &:active, &:focus, &:hover, &:visited {
+    color: @thread-new-color;
   }
 }
 
-// Pulse busy threads
-// --------------------------------------------------
-.threads-list .thread-busy {
-  .thread-row {
-    .animation(thread-busy-animation 600ms linear infinite);
-  }
-}
+// Last activity
+.threads-list-item-col-last-activity {
+  width: 120px;
 
-@keyframes thread-busy-animation {
-  0% {
-    .opacity(0.2);
-  }
-  50% {
-    .opacity(0.5);
-  }
-  100% {
-    .opacity(0.2);
-  }
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
