@@ -1,7 +1,18 @@
 import React from "react"
+import Avatar from "../avatar"
+import ThreadsListItemActivity from "./ThreadsListItemActivity"
+import ThreadsListItemCategory from "./ThreadsListItemCategory"
 import ThreadsListItemIcon from "./ThreadListItemIcon"
+import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
+import ThreadsListItemReplies from "./ThreadsListItemReplies"
 
-const ThreadsListItem = ({ thread }) => {
+const ThreadsListItem = ({ activeCategory, categories, thread }) => {
+  let category = null
+  if (activeCategory.id !== thread.category) {
+    category = categories[thread.category]
+  }
+  console.log(category)
+
   return (
     <li className="list-group-item threads-list-item">
       <div className="threads-list-item-col-icon">
@@ -15,14 +26,19 @@ const ThreadsListItem = ({ thread }) => {
           {thread.title}
         </a>
       </div>
+      {!!category && (
+        <div className="threads-list-item-col-category">
+          <ThreadsListItemCategory category={category} />
+        </div>
+      )}
+      <div className="threads-list-item-col-replies">
+        <ThreadsListItemReplies thread={thread} />
+      </div>
+      <div className="threads-list-item-col-last-poster">
+        <ThreadsListItemLastPoster thread={thread} />
+      </div>
       <div className="threads-list-item-col-last-activity">
-        <a
-          href={thread.url.last_post}
-          className="threads-list-item-last-activity"
-          title={gettext("Last activity:") + " " + thread.last_post_on.format("LLL")}
-        >
-          {thread.last_post_on.fromNow(true)}
-        </a>
+        <ThreadsListItemActivity thread={thread} />
       </div>
     </li>
   )

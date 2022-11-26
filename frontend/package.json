@@ -5,7 +5,7 @@
   "main": ".",
   "scripts": {
     "build": "webpack --mode production --progress",
-    "watch": "webpack --watch --progress",
+    "start": "webpack --watch --progress",
     "eslint": "eslint src"
   },
   "author": "Rafal Piton",

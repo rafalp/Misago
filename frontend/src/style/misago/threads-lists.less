@@ -12,6 +12,11 @@
 .threads-list-item {
   display: flex;
   align-items: center;
+
+  img {
+    width: @thread-read-block-size;
+    height: @thread-read-block-size;
+  }
 }
 
 // Thread icon
@@ -46,12 +51,15 @@
 
 // Thread title
 .threads-list-item-col-title {
-  width: 100%;
+  flex: 1;
 }
 
 a.threads-list-item-title {
   &:link, &:active, &:focus, &:hover, &:visited {
+    font-size: @threads-list-title-size;
+
     color: @thread-read-color;
+    overflow-wrap: break-word;
   }
 }
 
@@ -61,11 +69,76 @@ a.threads-list-item-title-new {
   }
 }
 
+// Thread label
+.threads-list-category-label {
+  padding: 3px 6px;
+
+  border-radius: @border-radius-small;
+
+  font-size: @font-size-small;
+  font-weight: bold;
+
+  &, &:link, &:active, &:hover, &:focus, &:visited {
+    color: @category-label-default-color;
+    background: @category-label-default-bg;
+    text-decoration: none;
+  }
+
+  &.threads-list-category-label-color {
+    &, &:link, &:active, &:hover, &:focus, &:visited {
+      color: #fff;
+      background: var(--label-color);
+    }
+  }
+}
+
+// Category
+.threads-list-item-col-category {
+  padding-left: @grid-gutter-width / 2;
+
+  white-space: nowrap;
+}
+
+// Replies
+.threads-list-item-col-replies {
+  width: 80px;
+  padding-left: @grid-gutter-width / 2;
+}
+
+.threads-list-item-replies {
+  display: flex;
+  align-items: center;
+
+  color: @thread-replies-color;
+  font-size: @thread-replies-size;
+  font-weight: bold;
+
+  .material-icon {
+    margin-right: @grid-gutter-width / 4;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+  }
+}
+
+// Last poster
+.threads-list-item-col-last-poster {
+  padding-left: @grid-gutter-width / 2;
+
+  img {
+    border-radius: @border-radius-small;
+  }
+}
+
 // Last activity
 .threads-list-item-col-last-activity {
   width: 120px;
+  padding-left: @grid-gutter-width / 2;
 
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  a:link, a:hover, a:active, a:visited, a:focus {
+    color: @thread-last-activity-color;
+    font-size: @thread-last-activity-size;
+  }
 }
