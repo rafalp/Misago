@@ -69,7 +69,83 @@ a.threads-list-item-title-new {
   }
 }
 
-// Thread label
+// Thread status flags
+.threads-list-item-col-flags {
+  padding-left: @grid-gutter-width / 2;
+}
+
+.threads-list-item-flags {
+  display: flex;
+  align-items: center;
+
+  opacity: @thread-flag-icon-opacity;
+
+  margin: 0;
+  padding: 0;
+
+  li {
+    text-align: center;
+    vertical-align: center;
+
+    width: @thread-flag-icon-size + 6px;
+    height: @thread-flag-icon-size + 6px;
+
+    border-radius: @border-radius-small;
+    list-style-type: none;
+  }
+
+  li + li {
+    margin-left: @grid-gutter-width / 4;
+  }
+
+  .material-icon {
+    font-size: @thread-flag-icon-size;
+  }
+}
+
+.threads-list-item:hover,
+.threads-list-item:focus {
+  .threads-list-item-flags {
+    opacity: @thread-flag-icon-opacity-hover;
+  }
+}
+
+.threads-list-item-flag-pinned-globally {
+  color: @thread-flag-pinned-globally-color;
+  background: @thread-flag-pinned-globally-bg;
+}
+
+.threads-list-item-flag-pinned-locally {
+  color: @thread-flag-pinned-locally-color;
+  background: @thread-flag-pinned-locally-bg;
+}
+
+.threads-list-item-flag-answered {
+  color: @thread-flag-answered-color;
+  background: @thread-flag-answered-bg;
+}
+
+.threads-list-item-flag-poll {
+  color: @thread-flag-poll-color;
+  background: @thread-flag-poll-bg;
+}
+
+.threads-list-item-flag-unapproved {
+  color: @thread-flag-unapproved-color;
+  background: @thread-flag-unapproved-bg;
+}
+
+.threads-list-item-flag-closed {
+  color: @thread-flag-closed-color;
+  background: @thread-flag-closed-bg;
+}
+
+.threads-list-item-flag-hidden {
+  color: @thread-flag-hidden-color;
+  background: @thread-flag-hidden-bg;
+}
+
+// Thread category
 .threads-list-category-label {
   padding: 3px 6px;
 

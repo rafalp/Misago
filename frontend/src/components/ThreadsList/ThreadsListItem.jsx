@@ -1,8 +1,8 @@
 import React from "react"
-import Avatar from "../avatar"
 import ThreadsListItemActivity from "./ThreadsListItemActivity"
 import ThreadsListItemCategory from "./ThreadsListItemCategory"
-import ThreadsListItemIcon from "./ThreadListItemIcon"
+import ThreadsListItemFlags from "./ThreadsListItemFlags"
+import ThreadsListItemIcon from "./ThreadsListItemIcon"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
 import ThreadsListItemReplies from "./ThreadsListItemReplies"
 
@@ -11,7 +11,16 @@ const ThreadsListItem = ({ activeCategory, categories, thread }) => {
   if (activeCategory.id !== thread.category) {
     category = categories[thread.category]
   }
-  console.log(category)
+
+  const hasFlags = (
+    thread.is_closed ||
+    thread.is_hidden ||
+    thread.is_unapproved ||
+    thread.weight > 0 ||
+    thread.best_answer ||
+    thread.has_poll ||
+    thread.has_unapproved_posts
+  )
 
   return (
     <li className="list-group-item threads-list-item">
@@ -21,11 +30,16 @@ const ThreadsListItem = ({ activeCategory, categories, thread }) => {
       <div className="threads-list-item-col-title">
         <a
           href={thread.is_read ? thread.url.index : thread.url.new_post}
-          className={"item-title threads-list-item-title" + (!thread.is_read ? " threads-list-item-title-new" : "")}
+          className={"threads-list-item-title" + (!thread.is_read ? " threads-list-item-title-new" : "")}
         >
           {thread.title}
         </a>
       </div>
+      {hasFlags && (
+        <div className="threads-list-item-col-flags">
+          <ThreadsListItemFlags thread={thread} />
+        </div>
+      )}
       {!!category && (
         <div className="threads-list-item-col-category">
           <ThreadsListItemCategory category={category} />
