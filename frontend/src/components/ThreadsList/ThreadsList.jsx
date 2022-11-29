@@ -5,11 +5,16 @@ const ThreadsList = ({
   category,
   categories,
   threads,
+  busyThreads,
   isLoaded,
+  showOptions,
+  selection,
 }) => {
   if (!isLoaded) {
     return <div>LOADING THREADS</div>
   }
+
+  console.log(selection)
 
   return (
     <div className="threads-list">

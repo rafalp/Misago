@@ -6,12 +6,19 @@ import ThreadsListItemIcon from "./ThreadsListItemIcon"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
 import ThreadsListItemReplies from "./ThreadsListItemReplies"
 
-const ThreadsListItem = ({ activeCategory, categories, thread }) => {
+const ThreadsListItem = ({
+  activeCategory,
+  categories,
+  showOptions,
+  thread,
+  isBusy,
+  isSelected,
+}) => {
   let category = null
   if (activeCategory.id !== thread.category) {
     category = categories[thread.category]
   }
-
+  console.log(showOptions)
   const hasFlags = (
     thread.is_closed ||
     thread.is_hidden ||

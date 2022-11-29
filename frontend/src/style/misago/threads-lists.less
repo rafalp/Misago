@@ -84,11 +84,12 @@ a.threads-list-item-title-new {
   padding: 0;
 
   li {
-    text-align: center;
-    vertical-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    width: @thread-flag-icon-size + 6px;
-    height: @thread-flag-icon-size + 6px;
+    width: @thread-flag-block-size;
+    height: @thread-flag-block-size;
 
     border-radius: @border-radius-small;
     list-style-type: none;
@@ -100,6 +101,7 @@ a.threads-list-item-title-new {
 
   .material-icon {
     font-size: @thread-flag-icon-size;
+    line-height: @thread-flag-icon-size;
   }
 }
 
