@@ -1,6 +1,7 @@
 import React from "react"
 import ThreadsListItemActivity from "./ThreadsListItemActivity"
 import ThreadsListItemCategory from "./ThreadsListItemCategory"
+import ThreadsListItemCheckbox from "./ThreadsListItemCheckbox"
 import ThreadsListItemFlags from "./ThreadsListItemFlags"
 import ThreadsListItemIcon from "./ThreadsListItemIcon"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
@@ -18,7 +19,7 @@ const ThreadsListItem = ({
   if (activeCategory.id !== thread.category) {
     category = categories[thread.category]
   }
-  console.log(showOptions)
+
   const hasFlags = (
     thread.is_closed ||
     thread.is_hidden ||
@@ -61,6 +62,15 @@ const ThreadsListItem = ({
       <div className="threads-list-item-col-last-activity">
         <ThreadsListItemActivity thread={thread} />
       </div>
+      {(showOptions && thread.moderation.length > 0) && (
+        <div className="threads-list-item-col-checkbox">
+          <ThreadsListItemCheckbox
+            checked={isSelected}
+            disabled={isBusy}
+            thread={thread}
+          />
+        </div>
+      )}
     </li>
   )
 }

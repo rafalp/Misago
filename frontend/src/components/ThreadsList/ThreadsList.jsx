@@ -14,8 +14,6 @@ const ThreadsList = ({
     return <div>LOADING THREADS</div>
   }
 
-  console.log(selection)
-
   return (
     <div className="threads-list">
       <ul className="list-group">
@@ -26,6 +24,9 @@ const ThreadsList = ({
               activeCategory={category}
               categories={categories}
               thread={thread}
+              showOptions={showOptions}
+              isBusy={busyThreads.indexOf(thread.id) >= 0}
+              isSelected={selection.indexOf(thread.id) >= 0}
             />
           )
         )}
