@@ -1,6 +1,6 @@
 import React from "react"
-import * as select from "misago/reducers/selection"
-import store from "misago/services/store"
+import * as select from "../../reducers/selection"
+import store from "../../services/store"
 
 const ThreadsListItemCheckbox = ({ checked, disabled, thread }) => (
   <button

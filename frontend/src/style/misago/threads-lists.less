@@ -148,6 +148,12 @@ a.threads-list-item-title-new {
 }
 
 // Thread category
+.threads-list-item-col-category {
+  padding-left: @grid-gutter-width / 2;
+
+  white-space: nowrap;
+}
+
 .threads-list-category-label {
   padding: 3px 6px;
 
@@ -168,13 +174,6 @@ a.threads-list-item-title-new {
       background: var(--label-color);
     }
   }
-}
-
-// Category
-.threads-list-item-col-category {
-  padding-left: @grid-gutter-width / 2;
-
-  white-space: nowrap;
 }
 
 // Replies
@@ -219,4 +218,10 @@ a.threads-list-item-title-new {
     color: @thread-last-activity-color;
     font-size: @thread-last-activity-size;
   }
+}
+
+// Subscription and checkbox
+.threads-list-item-col-checkbox,
+.threads-list-item-col-subscription {
+  padding-left: @grid-gutter-width / 2;
 }

@@ -6,6 +6,7 @@ import ThreadsListItemFlags from "./ThreadsListItemFlags"
 import ThreadsListItemIcon from "./ThreadsListItemIcon"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
 import ThreadsListItemReplies from "./ThreadsListItemReplies"
+import ThreadsListItemSubscription from "./ThreadsListItemSubscription"
 
 const ThreadsListItem = ({
   activeCategory,
@@ -30,15 +31,19 @@ const ThreadsListItem = ({
     thread.has_unapproved_posts
   )
 
+  const isNew = showOptions ? thread.is_new : true
+
   return (
     <li className="list-group-item threads-list-item">
-      <div className="threads-list-item-col-icon">
-        <ThreadsListItemIcon thread={thread} />
-      </div>
+      {showOptions && (
+        <div className="threads-list-item-col-icon">
+          <ThreadsListItemIcon thread={thread} />
+        </div>
+      )}
       <div className="threads-list-item-col-title">
         <a
-          href={thread.is_read ? thread.url.index : thread.url.new_post}
-          className={"threads-list-item-title" + (!thread.is_read ? " threads-list-item-title-new" : "")}
+          href={isNew ? thread.url.new_post : thread.url.index}
+          className={"threads-list-item-title" + (isNew ? " threads-list-item-title-new" : "")}
         >
           {thread.title}
         </a>
@@ -62,6 +67,14 @@ const ThreadsListItem = ({
       <div className="threads-list-item-col-last-activity">
         <ThreadsListItemActivity thread={thread} />
       </div>
+      {showOptions && (
+        <div className="threads-list-item-col-subscription">
+          <ThreadsListItemSubscription
+            disabled={isBusy}
+            thread={thread}
+          />
+        </div>
+      )}
       {(showOptions && thread.moderation.length > 0) && (
         <div className="threads-list-item-col-checkbox">
           <ThreadsListItemCheckbox

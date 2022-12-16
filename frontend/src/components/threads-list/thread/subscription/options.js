@@ -1,5 +1,4 @@
 import React from "react"
-import Button from "misago/components/button"
 import { patch } from "misago/reducers/threads"
 import ajax from "misago/services/ajax"
 import modal from "misago/services/modal"

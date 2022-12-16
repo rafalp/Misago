@@ -7,7 +7,7 @@ const ThreadsListItemFlags = ({ thread }) => (
         className="threads-list-item-flag-pinned-globally"
         title={gettext("Pinned globally")}
       >
-        <span className="material-icon">star</span>
+        <span className="material-icon">bookmark</span>
       </li>
     )}
     {thread.weight == 1 && (
@@ -15,7 +15,7 @@ const ThreadsListItemFlags = ({ thread }) => (
         className="threads-list-item-flag-pinned-locally"
         title={gettext("Pinned in category")}
       >
-        <span className="material-icon">star_half</span>
+        <span className="material-icon">bookmark_outline</span>
       </li>
     )}
     {thread.best_answer && (
