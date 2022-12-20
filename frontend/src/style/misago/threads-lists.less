@@ -250,7 +250,7 @@ a.threads-list-item-title-new {
 
 // Make list responsive
 .threads-list-item-title-sm,
-.threads-list-item-checkbox-sm {
+.threads-list-item-col-checkbox-sm {
   display: none;
 }
 
@@ -323,5 +323,17 @@ a.threads-list-item-title-new {
         font-size: 16px;
       }
     }
+  }
+}
+
+// Make thread buttons flash when thread is busy
+.threads-list-item-is-busy .btn-icon {
+  opacity: .8;
+  animation: busy .75s linear infinite;
+}
+
+@keyframes busy {
+  50% {
+    opacity: .5;
   }
 }

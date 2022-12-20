@@ -34,7 +34,11 @@ const ThreadsListItem = ({
   const isNew = showOptions ? thread.is_new : true
 
   return (
-    <li className="list-group-item threads-list-item">
+    <li
+      className={
+        "list-group-item threads-list-item" + (isBusy ? " threads-list-item-is-busy" : "")
+      }
+    >
       <div className="threads-list-item-top-row">
         {showOptions && (
           <div className="threads-list-item-col-icon">
