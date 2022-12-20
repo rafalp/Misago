@@ -1,5 +1,6 @@
 import React from "react"
 import ThreadsListItem from "./ThreadsListItem";
+import ThreadsListLoader from "./ThreadsListLoader";
 
 const ThreadsList = ({
   category,
@@ -11,7 +12,7 @@ const ThreadsList = ({
   selection,
 }) => {
   if (!isLoaded) {
-    return <div>LOADING THREADS</div>
+    return <ThreadsListLoader showOptions={showOptions} />
   }
 
   return (
