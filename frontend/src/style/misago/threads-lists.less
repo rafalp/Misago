@@ -19,6 +19,19 @@
   }
 }
 
+.threads-list-item-top-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.threads-list-item-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 // Thread icon
 .threads-list-item-col-icon {
   padding-right: @grid-gutter-width / 2;
@@ -58,6 +71,15 @@ a.threads-list-item-title {
   &:link, &:active, &:focus, &:hover, &:visited {
     font-size: @threads-list-title-size;
 
+    color: @thread-color;
+    overflow-wrap: break-word;
+  }
+}
+
+a.threads-list-item-title-sm {
+  font-size: @threads-list-title-size-sm;
+
+  &:link, &:active, &:focus, &:hover, &:visited {
     color: @thread-read-color;
     overflow-wrap: break-word;
   }
@@ -224,4 +246,82 @@ a.threads-list-item-title-new {
 .threads-list-item-col-checkbox,
 .threads-list-item-col-subscription {
   padding-left: @grid-gutter-width / 2;
+}
+
+// Make list responsive
+.threads-list-item-title-sm,
+.threads-list-item-checkbox-sm {
+  display: none;
+}
+
+@media (max-width: (@grid-float-breakpoint - 1)) {
+  // Make card full-width
+  .threads-list {
+    margin-left: @grid-gutter-width  * -.5;
+    margin-right: @grid-gutter-width  * -.5;
+
+    .list-group, .list-group-item {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+
+  // Use two rows per item
+  .threads-list-item {
+    display: block;
+
+    // Make avatar same size as flag icons
+    img {
+      width: @thread-flag-block-size;
+      height: @thread-flag-block-size;
+    }
+  }
+
+  // Insert bottom marin to top row, align itss contents to top
+  .threads-list-item-top-row {
+    align-items: start;
+    margin-bottom: @grid-gutter-width / 4;
+  }
+
+  // Make all cols in second row auto, align them to right
+  .threads-list-item-bottom-row {
+    justify-content: end;
+    flex: 0;
+
+    &>div {
+      width: auto;
+      padding: 0 0 0 @grid-gutter-width / 2;
+    }
+  }
+
+  // Swap title with sm one
+  .threads-list-item-title {
+    display: none;
+  }
+
+  .threads-list-item-title-sm {
+    display: inline-block;
+  }
+
+  // Make thread status and subscription icons disappear
+  .threads-list-item-col-icon,
+  .threads-list-item-col-subscription,
+  .threads-list-item-col-checkbox {
+    display: none;
+  }
+
+  // Reveal checkbox in top row, make it smol
+  .threads-list-item-col-checkbox-sm {
+    display: block;
+    padding-left: @grid-gutter-width / 2;
+
+    .btn-icon {
+      padding: 4px;
+
+      .material-icon {
+        font-size: 16px;
+      }
+    }
+  }
 }

@@ -35,55 +35,71 @@ const ThreadsListItem = ({
 
   return (
     <li className="list-group-item threads-list-item">
-      {showOptions && (
-        <div className="threads-list-item-col-icon">
-          <ThreadsListItemIcon thread={thread} />
+      <div className="threads-list-item-top-row">
+        {showOptions && (
+          <div className="threads-list-item-col-icon">
+            <ThreadsListItemIcon thread={thread} />
+          </div>
+        )}
+        <div className="threads-list-item-col-title">
+          <a href={thread.url.index} className="threads-list-item-title">
+            {thread.title}
+          </a>
+          <a
+            href={isNew ? thread.url.new_post : thread.url.index}
+            className={"threads-list-item-title-sm" + (isNew ? " threads-list-item-title-new" : "")}
+          >
+            {thread.title}
+          </a>
         </div>
-      )}
-      <div className="threads-list-item-col-title">
-        <a
-          href={isNew ? thread.url.new_post : thread.url.index}
-          className={"threads-list-item-title" + (isNew ? " threads-list-item-title-new" : "")}
-        >
-          {thread.title}
-        </a>
+        {(showOptions && thread.moderation.length > 0) && (
+          <div className="threads-list-item-col-checkbox-sm">
+            <ThreadsListItemCheckbox
+              checked={isSelected}
+              disabled={isBusy}
+              thread={thread}
+            />
+          </div>
+        )}
       </div>
-      {hasFlags && (
-        <div className="threads-list-item-col-flags">
-          <ThreadsListItemFlags thread={thread} />
+      <div className="threads-list-item-bottom-row">
+        {hasFlags && (
+          <div className="threads-list-item-col-flags">
+            <ThreadsListItemFlags thread={thread} />
+          </div>
+        )}
+        {!!category && (
+          <div className="threads-list-item-col-category">
+            <ThreadsListItemCategory category={category} />
+          </div>
+        )}
+        <div className="threads-list-item-col-replies">
+          <ThreadsListItemReplies thread={thread} />
         </div>
-      )}
-      {!!category && (
-        <div className="threads-list-item-col-category">
-          <ThreadsListItemCategory category={category} />
+        <div className="threads-list-item-col-last-poster">
+          <ThreadsListItemLastPoster thread={thread} />
         </div>
-      )}
-      <div className="threads-list-item-col-replies">
-        <ThreadsListItemReplies thread={thread} />
+        <div className="threads-list-item-col-last-activity">
+          <ThreadsListItemActivity thread={thread} />
+        </div>
+        {showOptions && (
+          <div className="threads-list-item-col-subscription">
+            <ThreadsListItemSubscription
+              disabled={isBusy}
+              thread={thread}
+            />
+          </div>
+        )}
+        {(showOptions && thread.moderation.length > 0) && (
+          <div className="threads-list-item-col-checkbox">
+            <ThreadsListItemCheckbox
+              checked={isSelected}
+              disabled={isBusy}
+              thread={thread}
+            />
+          </div>
+        )}
       </div>
-      <div className="threads-list-item-col-last-poster">
-        <ThreadsListItemLastPoster thread={thread} />
-      </div>
-      <div className="threads-list-item-col-last-activity">
-        <ThreadsListItemActivity thread={thread} />
-      </div>
-      {showOptions && (
-        <div className="threads-list-item-col-subscription">
-          <ThreadsListItemSubscription
-            disabled={isBusy}
-            thread={thread}
-          />
-        </div>
-      )}
-      {(showOptions && thread.moderation.length > 0) && (
-        <div className="threads-list-item-col-checkbox">
-          <ThreadsListItemCheckbox
-            checked={isSelected}
-            disabled={isBusy}
-            thread={thread}
-          />
-        </div>
-      )}
     </li>
   )
 }
