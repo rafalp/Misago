@@ -61,12 +61,6 @@ def test_url_bbcode(request_mock, user, snapshot):
     snapshot.assert_match(result["parsed_text"])
 
 
-def test_url_bbcode_includes_nofollow_and_noopener(request_mock, user, snapshot):
-    text = "Lorem [url]https://placekitten.com/g/1200/500[/url] ipsum"
-    result = parse(text, request_mock, user, minify=False)
-    assert 'rel="nofollow noopener"' in result["parsed_text"]
-
-
 def test_url_bbcode_is_escaped(request_mock, user, snapshot):
     text = 'Lorem [url]<script language="application/javascript">[/url] ipsum'
     result = parse(text, request_mock, user, minify=False)

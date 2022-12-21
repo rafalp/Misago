@@ -87,6 +87,12 @@ def test_outgoing_link_is_added_to_outgoing_links_list(request_mock, user):
     assert result["outgoing_links"] == ["other.com"]
 
 
+def test_outgoing_llink_includes_external_nofollow_and_noopener(request_mock, user):
+    text = "Lorem [url]https://placekitten.com/g/1200/500[/url] ipsum"
+    result = parse(text, request_mock, user, minify=False)
+    assert 'rel="external nofollow noopener"' in result["parsed_text"]
+
+
 def test_outgoing_link_without_scheme_is_added_to_outgoing_links_list(
     request_mock, user
 ):
