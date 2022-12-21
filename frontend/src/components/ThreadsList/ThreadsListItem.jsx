@@ -12,13 +12,24 @@ const ThreadsListItem = ({
   activeCategory,
   categories,
   showOptions,
+  showSubscription,
   thread,
   isBusy,
   isSelected,
 }) => {
+  let parent = null
   let category = null
+
   if (activeCategory.id !== thread.category) {
     category = categories[thread.category]
+
+    if (
+      category.parent &&
+      categories[category.parent] &&
+      !categories[category.parent].special_role
+    ) {
+      parent = categories[category.parent]
+    }
   }
 
   const hasFlags = (
@@ -74,7 +85,7 @@ const ThreadsListItem = ({
         )}
         {!!category && (
           <div className="threads-list-item-col-category">
-            <ThreadsListItemCategory category={category} />
+            <ThreadsListItemCategory parent={parent} category={category} />
           </div>
         )}
         <div className="threads-list-item-col-replies">
@@ -86,7 +97,7 @@ const ThreadsListItem = ({
         <div className="threads-list-item-col-last-activity">
           <ThreadsListItemActivity thread={thread} />
         </div>
-        {showOptions && (
+        {showOptions && showSubscription && (
           <div className="threads-list-item-col-subscription">
             <ThreadsListItemSubscription
               disabled={isBusy}

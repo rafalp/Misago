@@ -20,9 +20,8 @@ const ThreadsList = ({
 
   return (
     <div className="threads-list">
-      <ul className="list-group">
-        {threads.length > 21370 ? (
-          <React.Fragment>
+        {threads.length > 0 ? (
+          <ul className="list-group">
             {threads.map(
               thread => (
                 <ThreadsListItem
@@ -31,20 +30,22 @@ const ThreadsList = ({
                   categories={categories}
                   thread={thread}
                   showOptions={showOptions}
+                  showSubscription={showOptions && list.type === "subscribed"}
                   isBusy={busyThreads.indexOf(thread.id) >= 0}
                   isSelected={selection.indexOf(thread.id) >= 0}
                 />
               )
             )}
-          </React.Fragment>
+          </ul>
         ) : (
-          <ThreadsListEmpty
-            category={category}
-            list={list}
-            message={emptyMessage}
-          />
+          <ul className="list-group">
+            <ThreadsListEmpty
+              category={category}
+              list={list}
+              message={emptyMessage}
+            />
+          </ul>
         )}
-      </ul>
     </div>
   )
 }
