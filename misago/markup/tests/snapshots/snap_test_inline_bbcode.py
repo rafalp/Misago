@@ -37,28 +37,28 @@ snapshots["test_underline_bbcode 1"] = "<p>Lorem <u>ipsum</u>!</p>"
 
 snapshots[
     "test_url_bbcode 1"
-] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">placekitten.com/g/1200/500</a> ipsum</p>'
+] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">placekitten.com/g/1200/500</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_is_escaped 1"
-] = '<p>Lorem <a href=\'http://&lt;script language="application/javascript"&gt;\' rel="nofollow noopener">&lt;script language="application/javascript"&gt;</a> ipsum</p>'
+] = '<p>Lorem <a href=\'http://&lt;script language="application/javascript"&gt;\' rel="external nofollow noopener" target="_blank">&lt;script language="application/javascript"&gt;</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_link_text_is_escaped 1"
-] = '<p>Lorem <a href=\'http://&lt;script language="application/javascript"&gt;\' rel="nofollow noopener">&lt;script language="application/javascript"&gt;</a> ipsum</p>'
+] = '<p>Lorem <a href=\'http://&lt;script language="application/javascript"&gt;\' rel="external nofollow noopener" target="_blank">&lt;script language="application/javascript"&gt;</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_with_link_text 1"
-] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">dolor</a> ipsum</p>'
+] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_with_long_link_text 1"
-] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">dolor met</a> ipsum</p>'
+] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor met</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_with_quotes_and_link_text 1"
-] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">dolor</a> ipsum</p>'
+] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor</a> ipsum</p>'
 
 snapshots[
     "test_url_bbcode_with_quotes_and_long_link_text 1"
-] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">dolor met</a> ipsum</p>'
+] = '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor met</a> ipsum</p>'
