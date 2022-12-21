@@ -13,7 +13,6 @@ import {
   getTitle
 } from "misago/components/threads/utils"
 import ThreadsList from "misago/components/ThreadsList"
-import ThreadsListEmpty from "misago/components/threads/list-empty"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago/index"
 import * as select from "misago/reducers/selection"
@@ -311,14 +310,8 @@ export default class extends WithDropdown {
             showOptions={!!this.props.user.id}
             isLoaded={this.state.isLoaded}
             busyThreads={this.state.busyThreads}
-          >
-            <ThreadsListEmpty
-              category={this.props.route.category}
-              emptyMessage={this.props.options.emptyMessage}
-              list={this.props.route.list}
-            />
-          </ThreadsList>
-
+            emptyMessage={this.props.options.emptyMessage}
+          />
           {this.getMoreButton()}
         </Container>
       </div>

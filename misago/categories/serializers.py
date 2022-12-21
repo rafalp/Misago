@@ -65,6 +65,12 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "url",
         ]
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.special_role:
+            data["special_role"] = instance.special_role
+        return data
+
     def get_description(self, obj):
         if obj.description:
             return {

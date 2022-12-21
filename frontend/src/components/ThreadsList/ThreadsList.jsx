@@ -1,15 +1,18 @@
 import React from "react"
+import ThreadsListEmpty from "./ThreadsListEmpty";
 import ThreadsListItem from "./ThreadsListItem";
 import ThreadsListLoader from "./ThreadsListLoader";
 
 const ThreadsList = ({
-  category,
+  list,
   categories,
+  category,
   threads,
   busyThreads,
+  selection,
   isLoaded,
   showOptions,
-  selection,
+  emptyMessage,
 }) => {
   if (!isLoaded) {
     return <ThreadsListLoader showOptions={showOptions} />
@@ -18,18 +21,28 @@ const ThreadsList = ({
   return (
     <div className="threads-list">
       <ul className="list-group">
-        {threads.map(
-          thread => (
-            <ThreadsListItem
-              key={thread.id}
-              activeCategory={category}
-              categories={categories}
-              thread={thread}
-              showOptions={showOptions}
-              isBusy={busyThreads.indexOf(thread.id) >= 0}
-              isSelected={selection.indexOf(thread.id) >= 0}
-            />
-          )
+        {threads.length > 21370 ? (
+          <React.Fragment>
+            {threads.map(
+              thread => (
+                <ThreadsListItem
+                  key={thread.id}
+                  activeCategory={category}
+                  categories={categories}
+                  thread={thread}
+                  showOptions={showOptions}
+                  isBusy={busyThreads.indexOf(thread.id) >= 0}
+                  isSelected={selection.indexOf(thread.id) >= 0}
+                />
+              )
+            )}
+          </React.Fragment>
+        ) : (
+          <ThreadsListEmpty
+            category={category}
+            list={list}
+            message={emptyMessage}
+          />
         )}
       </ul>
     </div>
