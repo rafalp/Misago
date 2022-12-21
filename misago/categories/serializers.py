@@ -45,6 +45,8 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "id",
             "parent",
             "name",
+            "short_name",
+            "color",
             "description",
             "is_closed",
             "threads",
@@ -62,6 +64,12 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "rght",
             "url",
         ]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.special_role:
+            data["special_role"] = instance.special_role
+        return data
 
     def get_description(self, obj):
         if obj.description:

@@ -13,6 +13,8 @@ BasicCategorySerializer = CategorySerializer.subset_fields(
     "id",
     "parent",
     "name",
+    "short_name",
+    "color",
     "description",
     "is_closed",
     "css_class",

@@ -60,6 +60,8 @@ class Category(MPTTModel):
     special_role = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=255, null=True, blank=True)
+    color = models.CharField(max_length=7, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     is_closed = models.BooleanField(default=False)
     threads = models.PositiveIntegerField(default=0)

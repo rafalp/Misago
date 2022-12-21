@@ -8,196 +8,366 @@
 }
 
 
-// Thread layout
-// --------------------------------------------------
-.threads-list .thread-title {
-  &, &:link, &:active, &:visited, &:focus, &:hover {
-    font-size: @font-size-large;
-    font-weight: normal;
+// Make list row flexbox row
+.threads-list-item {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: @thread-read-block-size;
+    height: @thread-read-block-size;
   }
 }
 
-.thread-last-action {
-  .media-left, .media-body {
-    padding-top: 2px;
+.threads-list-item-top-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.threads-list-item-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Thread icon
+.threads-list-item-col-icon {
+  padding-right: @grid-gutter-width / 2;
+}
+
+.threads-list-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: @thread-read-block-size;
+  height: @thread-read-block-size;
+
+  border-radius: @border-radius-small;
+  font-size: @thread-read-icon-size;
+  line-height: @thread-read-icon-size;
+
+  &:link, &:active, &:focus, &:hover, &:visited {
+    background-color: @thread-read-icon-bg;
+    color: @thread-read-icon-color;
+    text-decoration: none;
   }
 }
 
-.threads-list .thread-options {
-  padding-top: @padding-base-vertical - 1px;
-}
-
-
-// Thread starter
-// --------------------------------------------------
-.threads-list .thread-main {
-  .media-left {
-    padding-top: 2px;
-    padding-bottom: 1px;
+.threads-list-icon-new {
+  &:link, &:active, &:focus, &:hover, &:visited {
+    background-color: @thread-new-icon-bg;
+    color: @thread-new-icon-color;
   }
 }
 
+// Thread title
+.threads-list-item-col-title {
+  flex: 1;
+}
 
-// Thread details
-// --------------------------------------------------
-.threads-list .thread-details-top {
-  overflow-x: auto;
+a.threads-list-item-title {
+  &:link, &:active, &:focus, &:hover, &:visited {
+    font-size: @threads-list-title-size;
+
+    color: @thread-color;
+    overflow-wrap: break-word;
+  }
+}
+
+a.threads-list-item-title-sm {
+  font-size: @threads-list-title-size-sm;
+
+  &:link, &:active, &:focus, &:hover, &:visited {
+    color: @thread-read-color;
+    overflow-wrap: break-word;
+  }
+}
+
+a.threads-list-item-title-new {
+  &:link, &:active, &:focus, &:hover, &:visited {
+    color: @thread-new-color;
+  }
+}
+
+// Thread status flags
+.threads-list-item-col-flags {
+  padding-left: @grid-gutter-width / 2;
+}
+
+.threads-list-item-flags {
+  display: flex;
+  align-items: center;
+
+  opacity: @thread-flag-icon-opacity;
+
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: @thread-flag-block-size;
+    height: @thread-flag-block-size;
+
+    border-radius: @border-radius-small;
+    list-style-type: none;
+  }
+
+  li + li {
+    margin-left: @grid-gutter-width / 4;
+  }
+
+  .material-icon {
+    font-size: @thread-flag-icon-size;
+    line-height: @thread-flag-icon-size;
+  }
+}
+
+.threads-list-item:hover,
+.threads-list-item:focus {
+  .threads-list-item-flags {
+    opacity: @thread-flag-icon-opacity-hover;
+  }
+}
+
+.threads-list-item-flag-pinned-globally {
+  color: @thread-flag-pinned-globally-color;
+  background: @thread-flag-pinned-globally-bg;
+}
+
+.threads-list-item-flag-pinned-locally {
+  color: @thread-flag-pinned-locally-color;
+  background: @thread-flag-pinned-locally-bg;
+}
+
+.threads-list-item-flag-answered {
+  color: @thread-flag-answered-color;
+  background: @thread-flag-answered-bg;
+}
+
+.threads-list-item-flag-poll {
+  color: @thread-flag-poll-color;
+  background: @thread-flag-poll-bg;
+}
+
+.threads-list-item-flag-unapproved {
+  color: @thread-flag-unapproved-color;
+  background: @thread-flag-unapproved-bg;
+}
+
+.threads-list-item-flag-closed {
+  color: @thread-flag-closed-color;
+  background: @thread-flag-closed-bg;
+}
+
+.threads-list-item-flag-hidden {
+  color: @thread-flag-hidden-color;
+  background: @thread-flag-hidden-bg;
+}
+
+// Thread category
+.threads-list-item-col-category {
+  padding-left: @grid-gutter-width / 2;
+
   white-space: nowrap;
 }
 
-.threads-list .thread-details-bottom div,
-.threads-list .thread-details-top {
-  &>a, &>span {
-    margin-right: @padding-large-horizontal;
+.threads-list-category-label {
+  padding: 3px 6px;
 
-    font-size: @font-size-small;
-    font-weight: normal;
+  border-radius: @border-radius-small;
 
-    &>.material-icon {
-      position: relative;
-      top: -1px;
-    }
+  font-size: @font-size-small;
+  font-weight: bold;
 
-    .detail-text {
-      margin-left: 2px;
-    }
-
-    @media screen and (max-width: @screen-sm-max) {
-      margin-right: @padding-base-horizontal;
-    }
-  }
-}
-
-@media screen and (max-width: @screen-xs-max) {
-  .threads-list .thread-details-bottom {
-    margin-top: @padding-large-vertical - 2px;
+  &, &:link, &:active, &:hover, &:focus, &:visited {
+    color: @category-label-default-color;
+    background: @category-label-default-bg;
+    text-decoration: none;
   }
 
-  .threads-list .thread-details-top {
-    margin-bottom: @padding-base-vertical;
-  }
-}
-
-@media screen and (min-width: @screen-sm-min) {
-  .threads-list .thread-details-top {
-    margin-left: 50px;
-  }
-}
-
-
-// Last action
-// --------------------------------------------------
-.thread-last-action {
-  padding-top: 1px;
-
-  .thread-last-poster {
-    display: block;
-  }
-}
-
-
-// Thread options
-// --------------------------------------------------
-.thread-options-xs {
-  margin-top: @line-height-computed * -0.5;
-  margin-bottom: @line-height-computed * -1;
-
-  position: relative;
-  top: @padding-base-vertical - 1px;
-
-  .btn {
-    padding: 0px 2px;
-
-    font-size: @font-size-small;
-
-    .material-icon {
-      width: 14px;
-      height: 14px;
-
-      font-size: 14px;
-      line-height: 14px;
+  &.threads-list-category-label-color {
+    &, &:link, &:active, &:hover, &:focus, &:visited {
+      color: #fff;
+      background: var(--label-color);
     }
   }
 }
 
-
-// Threads diff message
-// --------------------------------------------------
-.threads-diff-message {
-  padding: 0px;
+.threads-list-item-parent-category {
+  border-radius: @border-radius-small 0 0 @border-radius-small;
+  margin-right: 2px;
 }
 
-.threads-diff-message .btn {
-  border: none;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  padding: @padding-large-vertical @padding-large-horizontal;
-  width: 100%;
+.threads-list-item-parent-category + .threads-list-category-label {
+  border-radius: 0 @border-radius-small @border-radius-small 0;
+}
 
-  overflow: none;
+// Replies
+.threads-list-item-col-replies {
+  width: 80px;
+  padding-left: @grid-gutter-width / 2;
+}
 
-  text-align: left;
+.threads-list-item-replies {
+  display: flex;
+  align-items: center;
+
+  color: @thread-replies-color;
+  font-size: @thread-replies-size;
+  font-weight: bold;
 
   .material-icon {
-    margin-right: 4px;
+    margin-right: @grid-gutter-width / 4;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+  }
+}
 
-    width: 24px;
-    height: 24px;
+// Last poster
+.threads-list-item-col-last-poster {
+  padding-left: @grid-gutter-width / 2;
 
-    font-size: 24px;
-    height: 24px;
+  img {
+    border-radius: @border-radius-small;
+  }
+}
+
+// Last activity
+.threads-list-item-col-last-activity {
+  width: 120px;
+  padding-left: @grid-gutter-width / 2;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  a:link, a:hover, a:active, a:visited, a:focus {
+    color: @thread-last-activity-color;
+    font-size: @thread-last-activity-size;
+  }
+}
+
+// Subscription and checkbox
+.threads-list-item-col-checkbox,
+.threads-list-item-col-subscription {
+  padding-left: @grid-gutter-width / 2;
+}
+
+// Make list responsive
+.threads-list-item-title-sm,
+.threads-list-item-col-checkbox-sm {
+  display: none;
+}
+
+@media (max-width: (@grid-float-breakpoint - 1)) {
+  // Make card full-width
+  .threads-list {
+    margin-left: @grid-gutter-width  * -.5;
+    margin-right: @grid-gutter-width  * -.5;
+
+    .list-group, .list-group-item {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
   }
 
-  @media screen and (max-width: @screen-sm-max) {
-    text-align: center;
-    white-space: normal;
-    word-wrap: break-word;
+  // Use two rows per item
+  .threads-list-item {
+    display: block;
 
-    .material-icon {
-      display: none;
+    // Make avatar same size as flag icons
+    img {
+      width: @thread-flag-block-size;
+      height: @thread-flag-block-size;
+    }
+  }
+
+  // Insert bottom marin to top row, align itss contents to top
+  .threads-list-item-top-row {
+    align-items: start;
+    margin-bottom: @grid-gutter-width / 4;
+  }
+
+  // Make all cols in second row auto, align them to right
+  .threads-list-item-bottom-row {
+    justify-content: end;
+    flex: 0;
+
+    &>div {
+      width: auto;
+      padding: 0 0 0 @grid-gutter-width / 2;
+    }
+  }
+
+  // Swap title with sm one
+  .threads-list-item-title {
+    display: none;
+  }
+
+  .threads-list-item-title-sm {
+    display: inline-block;
+  }
+
+  // Make thread status and subscription icons disappear
+  .threads-list-item-col-icon,
+  .threads-list-item-col-subscription,
+  .threads-list-item-col-checkbox {
+    display: none;
+  }
+
+  // Reveal checkbox in top row, make it smol
+  .threads-list-item-col-checkbox-sm {
+    display: block;
+    padding-left: @grid-gutter-width / 2;
+
+    .btn-icon {
+      padding: 4px;
+
+      .material-icon {
+        font-size: 16px;
+      }
     }
   }
 }
 
-
-// UI Preview
-// --------------------------------------------------
-.threads-list .thread-preview {
-  .ui-preview-text {
-    margin-right: @padding-large-horizontal;
-  }
-
-  .thread-details-bottom div, .thread-details-top {
-    .ui-preview-text {
-      height: @font-size-small * 0.8;
-    }
-  }
-
-  .thread-details-bottom {
-    margin-top: @padding-base-vertical;
-  }
-
-  .thread-details-top {
-    margin-bottom: @padding-base-vertical;
-  }
+// Make thread buttons flash when thread is busy
+.threads-list-item-is-busy .btn-icon {
+  opacity: .8;
+  animation: busy .75s linear infinite;
 }
 
-// Pulse busy threads
-// --------------------------------------------------
-.threads-list .thread-busy {
-  .thread-row {
-    .animation(thread-busy-animation 600ms linear infinite);
-  }
-}
-
-@keyframes thread-busy-animation {
-  0% {
-    .opacity(0.2);
-  }
+@keyframes busy {
   50% {
-    .opacity(0.5);
+    opacity: .5;
   }
-  100% {
-    .opacity(0.2);
-  }
+}
+
+// Threads list update prompt
+.threads-list-update-prompt {
+  padding: 0;
+}
+
+.threads-list-update-prompt-btn {
+  padding: @padding-large-vertical @padding-large-horizontal;
+
+  background: @update-threads-prompt-bg;
+  color: @update-threads-prompt-color;
+  border: none;
+  border-radius: @list-group-border-radius @list-group-border-radius 0 0;
+}
+
+.threads-list-update-prompt-btn:hover,
+.threads-list-update-prompt-btn:focus {
+  background: @update-threads-prompt-hover-bg;
+  color: @update-threads-prompt-hover-color;
+}
+
+.threads-list-update-prompt-btn:active {
+  background: @update-threads-prompt-active-bg;
+  color: @update-threads-prompt-active-color;
 }
