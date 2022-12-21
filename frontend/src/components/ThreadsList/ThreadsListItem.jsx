@@ -25,6 +25,7 @@ const ThreadsListItem = ({
 
     if (
       category.parent &&
+      category.parent !== activeCategory.id &&
       categories[category.parent] &&
       !categories[category.parent].special_role
     ) {

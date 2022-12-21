@@ -24,8 +24,7 @@ const ThreadsListItemCategory = ({ parent, category }) => (
 )
 
 const getClassName = (category) => {
-  let className = "threads-list-item-category"
-  className += " threads-list-category-label"
+  let className = "threads-list-item-category threads-list-category-label"
 
   if (category.color) {
     className += " threads-list-category-label-color"

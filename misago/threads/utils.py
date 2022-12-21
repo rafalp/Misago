@@ -9,6 +9,8 @@ def add_categories_to_items(root_category, categories, items):
     categories_dict = {}
     for category in categories:
         categories_dict[category.pk] = category
+        if category.parent_id:
+            category.parent = categories_dict[category.parent_id]
 
     for item in items:
         item.category = categories_dict[item.category_id]

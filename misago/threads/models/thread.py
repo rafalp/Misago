@@ -215,6 +215,10 @@ class Thread(models.Model):
         return bool(self.best_answer_id)
 
     @property
+    def replies_in_ks(self):
+        return "%sK" % round(self.replies / 1000, 0)
+
+    @property
     def thread_type(self):
         return self.category.thread_type
 
