@@ -305,8 +305,8 @@ export default class extends WithDropdown {
             list={this.props.route.list}
             selection={this.props.selection}
             threads={this.props.threads}
-            diffSize={this.state.diff.results.length}
-            applyDiff={this.applyDiff}
+            updatedThreads={this.state.diff.results.length}
+            applyUpdate={this.applyDiff}
             showOptions={!!this.props.user.id}
             isLoaded={this.state.isLoaded}
             busyThreads={this.state.busyThreads}

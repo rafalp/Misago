@@ -346,3 +346,28 @@ a.threads-list-item-title-new {
     opacity: .5;
   }
 }
+
+// Threads list update prompt
+.threads-list-update-prompt {
+  padding: 0;
+}
+
+.threads-list-update-prompt-btn {
+  padding: @padding-large-vertical @padding-large-horizontal;
+
+  background: @update-threads-prompt-bg;
+  color: @update-threads-prompt-color;
+  border: none;
+  border-radius: @list-group-border-radius @list-group-border-radius 0 0;
+}
+
+.threads-list-update-prompt-btn:hover,
+.threads-list-update-prompt-btn:focus {
+  background: @update-threads-prompt-hover-bg;
+  color: @update-threads-prompt-hover-color;
+}
+
+.threads-list-update-prompt-btn:active {
+  background: @update-threads-prompt-active-bg;
+  color: @update-threads-prompt-active-color;
+}

@@ -2,6 +2,7 @@ import React from "react"
 import ThreadsListEmpty from "./ThreadsListEmpty";
 import ThreadsListItem from "./ThreadsListItem";
 import ThreadsListLoader from "./ThreadsListLoader";
+import ThreadsListUpdatePrompt from "./ThreadsListUpdatePrompt"
 
 const ThreadsList = ({
   list,
@@ -12,6 +13,8 @@ const ThreadsList = ({
   selection,
   isLoaded,
   showOptions,
+  updatedThreads,
+  applyUpdate,
   emptyMessage,
 }) => {
   if (!isLoaded) {
@@ -22,6 +25,9 @@ const ThreadsList = ({
     <div className="threads-list">
         {threads.length > 0 ? (
           <ul className="list-group">
+            {updatedThreads > 0 && (
+              <ThreadsListUpdatePrompt threads={updatedThreads} onClick={applyUpdate} />
+            )}
             {threads.map(
               thread => (
                 <ThreadsListItem
@@ -39,6 +45,9 @@ const ThreadsList = ({
           </ul>
         ) : (
           <ul className="list-group">
+            {updatedThreads > 0 && (
+              <ThreadsListUpdatePrompt threads={updatedThreads} onClick={applyUpdate} />
+            )}
             <ThreadsListEmpty
               category={category}
               list={list}
