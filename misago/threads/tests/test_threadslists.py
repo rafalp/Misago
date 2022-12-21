@@ -481,13 +481,6 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertContains(response, "subcategory-%s" % self.category_a.css_class)
         self.assertContains(response, "subcategory-%s" % self.category_e.css_class)
 
-        self.assertNotContains(
-            response, "thread-detail-category-%s" % self.category_a.css_class
-        )
-        self.assertContains(
-            response, "thread-detail-category-%s" % self.category_c.css_class
-        )
-
         # api displays same data
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -503,13 +496,6 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         # thread displays
         self.assertContainsThread(response, test_thread)
-
-        self.assertNotContains(
-            response, "thread-detail-category-%s" % self.category_b.css_class
-        )
-        self.assertContains(
-            response, "thread-detail-category-%s" % self.category_c.css_class
-        )
 
         # api displays same data
         response = self.client.get(
