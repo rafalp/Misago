@@ -280,11 +280,10 @@ export default class extends WithDropdown {
           route={this.props.route}
           user={this.props.user}
         />
-
         <Container
           api={this.props.options.api}
+          root={this.props.route.categories[0]}
           route={this.props.route}
-          subcategories={this.state.subcategories}
           user={this.props.user}
           pageLead={this.props.options.pageLead}
           threads={this.props.threads}
@@ -293,6 +292,7 @@ export default class extends WithDropdown {
           selection={this.props.selection}
           busyThreads={this.state.busyThreads}
           addThreads={this.addThreads}
+          startThread={this.props.options.startThread}
           freezeThread={this.freezeThread}
           deleteThread={this.deleteThread}
           updateThread={this.updateThread}

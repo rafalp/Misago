@@ -2,75 +2,44 @@
 // Misago Toolbar
 // --------------------------------------------------
 
-
 .toolbar {
   display: block;
-  min-height: 34px;
-  margin-bottom: @line-height-computed;
-
-  &.toolbar-bottom {
-    margin-top: @padding-large-vertical;
-    margin-bottom: @line-height-computed;
-  }
-
-  &>h3 {
-    font-size: @font-size-large;
-  }
-
-  &>p {
-    padding: @padding-base-vertical 0px;
-
-    text-align: center;
-  }
+  margin: 0 floor(@grid-gutter-width * -.5);
 }
 
-
-// Full displays
-@media screen and (min-width: @screen-md-min) {
-  .toolbar-left {
-    float: left;
-    margin-right: @padding-large-horizontal;
-  }
-
-  .toolbar-right {
-    float: right;
-    margin-left: @padding-large-horizontal;
-  }
-
-  .toolbar {
-    .toolbar-control, .toolbar-bottom>.form-control {
-      margin: 0px;
-      width: auto;
-    }
-
-    &>p, &>h3 {
-      min-height: @input-height-base;
-      margin: 0px;
-      padding-top: @padding-base-vertical;
-
-      text-align: left;
-    }
-
-    &>p {
-      padding-top: @padding-base-vertical + 1px;
-    }
-  }
-}
-
-
-// Toolbar spacing utils
-.row-toolbar .toolbar-vertical-spacer {
-  margin-top: @line-height-computed / 2;
-}
-
-.row-toolbar-bottom-margin {
+.toolbar-section {
+  display: flex;
+  flex: 1;
   margin-bottom: @line-height-computed;
 }
 
+.toolbar-item {
+  flex: 1;
+  padding: 0 floor(@grid-gutter-width * .5);
+}
 
-// even some paddings in row with buttons
+.toolbar-item-shrink {
+  flex: 0;
+}
+
+.toolbar-spacer {
+  display: none;
+}
+
 @media screen and (min-width: @screen-sm-min) {
-  .row-toolbar p {
-    padding-top: @padding-base-vertical + 1px;
+  .toolbar {
+    display: flex;
+  }
+
+  .toolbar-section,
+  .toolbar-item {
+    flex: 0;
+
+    align-items: center;
+  }
+
+  .toolbar-spacer {
+    display: block;
+    flex: 1;
   }
 }

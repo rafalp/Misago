@@ -263,7 +263,7 @@ a.threads-list-item-title-new {
   display: none;
 }
 
-@media (max-width: (@grid-float-breakpoint - 1)) {
+@media screen and (max-width: @screen-xs-max) {
   // Make card full-width
   .threads-list {
     margin-left: @grid-gutter-width  * -.5;
@@ -276,6 +276,22 @@ a.threads-list-item-title-new {
     }
   }
 
+  // Swap title with sm one
+  .threads-list-item-title {
+    display: none;
+  }
+
+  .threads-list-item-title-sm {
+    display: inline-block;
+  }
+
+  // Make thread read icon disappear
+  .threads-list-item-col-icon {
+    display: none;
+  }
+}
+
+@media screen and (max-width: @screen-sm-max) {
   // Use two rows per item
   .threads-list-item {
     display: block;
@@ -304,17 +320,7 @@ a.threads-list-item-title-new {
     }
   }
 
-  // Swap title with sm one
-  .threads-list-item-title {
-    display: none;
-  }
-
-  .threads-list-item-title-sm {
-    display: inline-block;
-  }
-
-  // Make thread status and subscription icons disappear
-  .threads-list-item-col-icon,
+  // Make thread subscription and checkbox icons disappear
   .threads-list-item-col-subscription,
   .threads-list-item-col-checkbox {
     display: none;
