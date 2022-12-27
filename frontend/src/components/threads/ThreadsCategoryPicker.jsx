@@ -5,7 +5,7 @@ const ThreadsCategoryPicker = ({ allItems, parentUrl, category, categories, list
   <div className="dropdown threads-category-picker">
     <button
       type="button"
-      className="btn btn-default btn-outline dropdown-toggle btn-block"
+      className="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis"
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
@@ -26,7 +26,7 @@ const ThreadsCategoryPicker = ({ allItems, parentUrl, category, categories, list
         </span>
       ): allItems}
     </button>
-    <ul className="dropdown-menu stick-to-bottom">
+    <ul className="dropdown-menu">
       <li>
         <Link to={parentUrl + list.path}>
           {allItems}

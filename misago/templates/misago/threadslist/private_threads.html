@@ -29,19 +29,18 @@ page-private-threads
       </div>
     </div>
   </div>
-  {% if user.is_authenticated %}
-    {% include "misago/threadslist/tabs.html" with hide_unapproved=True %}
-  {% endif %}
 </div>
 {% endblock page-header %}
 
 
 {% block list-container %}
 <div class="category-description">
-  <div class="page-lead">
+  <div class="page-lead lead">
     <p>{% trans "Private threads are threads which only those that started them and those they have invited may see and participate in." %}</p>
   </div>
 </div>
+
+{% include "misago/threadslist/toolbar.html" with hide_categories=True %}
 
 {{ block.super }}
 {% endblock list-container%}

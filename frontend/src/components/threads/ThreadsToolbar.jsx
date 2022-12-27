@@ -32,7 +32,7 @@ const ThreadsToolbar = ({
 }) => (
   <Toolbar>
     {topCategories.length > 0 && (
-      <ToolbarSection className="hidden-xs">
+      <ToolbarSection>
         <ToolbarItem>
           <ThreadsCategoryPicker
             allItems={gettext("All categories")}
@@ -56,7 +56,7 @@ const ThreadsToolbar = ({
       </ToolbarSection>
     )}
     {lists.length > 1 && (
-      <ToolbarSection>
+      <ToolbarSection className="hidden-xs">
         <ToolbarItem>
           <ThreadsListPicker
             baseUrl={baseUrl}

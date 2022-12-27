@@ -7,7 +7,7 @@ export default class extends React.Component {
     if (this.props.pageLead) {
       return (
         <div className="category-description">
-          <div className="page-lead">
+          <div className="page-lead lead">
             <p>{this.props.pageLead}</p>
           </div>
         </div>

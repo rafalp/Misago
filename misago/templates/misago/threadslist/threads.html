@@ -70,8 +70,12 @@
       </div>
     </div>
   </div>
-  {% if user.is_authenticated %}
-    {% include "misago/threadslist/tabs.html" %}
-  {% endif %}
 </div>
 {% endblock page-header %}
+
+
+{% block list-container %}
+{% include "misago/threadslist/toolbar.html" %}
+
+{{ block.super }}
+{% endblock list-container%}
