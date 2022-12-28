@@ -4,29 +4,16 @@
 
 
 .misago-pagination {
-  overflow: auto;
+  display: flex;
 
-  .pagination {
-    float: left;
-    margin: 0px;
-    margin-right: @line-height-computed / 2;
-
-    li>a, li>span {
-      padding: 2px; // 28 px + Xpx = 30px
-    }
-
-    .material-icon {
-      width: 28px;
-      height: 28px;
-
-      font-size: 28px;
-      line-height: 28px;
-    }
+  .btn + .btn{
+    margin-left: @grid-gutter-width;
   }
+}
 
-  p {
-    float: left;
-    margin: 0px;
-    padding: @padding-base-vertical + 1px;
+// Make it full width on small screens (in toolbars)
+@media screen and (max-width: @screen-xs-max) {
+  .toolbar-item .misago-pagination {
+    flex: 1;
   }
 }
