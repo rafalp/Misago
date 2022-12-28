@@ -1,0 +1,12 @@
+{% load i18n %}
+<p>
+  {% if paginator.more %}
+    {% blocktrans trimmed count more=paginator.more %}
+      There is {{ more }} more post in this thread.
+    {% plural %}
+      There are {{ more }} more posts in this thread.
+    {% endblocktrans %}
+  {% else %}
+    {% trans "There are no more posts in this thread." %}
+  {% endif %}
+</p>

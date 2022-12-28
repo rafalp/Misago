@@ -1,0 +1,34 @@
+{% load i18n %}
+<div class="toolbar">
+  <div class="toolbar-section">
+    <div class="toolbar-item">
+      {% include "misago/thread/pagination.html" %}
+    </div>
+  </div>
+  <div class="toolbar-section toolbar-section-auto hidden-xs hidden-sm">
+    <div class="toolbar-item">
+      {% include "misago/thread/posts_left.html" %}
+    </div>
+  </div>
+  <div class="toolbar-spacer hidden-md hidden-lg"></div>
+  {% if user.is_authenticated %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        <div class="dropdown">
+          <button class="btn btn-default btn-outline btn-block" type="button" disabled>
+            <span class="material-icon">star_border</span>
+            {% trans "Disabled" %}
+          </button>
+        </div>
+      </div>
+      {% if thread.acl.can_reply %}
+        <div class="toolbar-item">
+          <button class="btn btn-primary btn-outline btn-block" type="button" disabled>
+            <span class="material-icon">chat</span>
+            {% trans "Reply" %}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

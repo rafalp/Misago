@@ -15,7 +15,7 @@ const ThreadPagination = ({ baseUrl, posts }) => (
       <button
         className="btn btn-default btn-outline btn-icon"
         title={gettext("Go to first page")}
-        role="button"
+        type="button"
         disabled
       >
         <span className="material-icon">first_page</span>
@@ -33,7 +33,7 @@ const ThreadPagination = ({ baseUrl, posts }) => (
       <button
         className="btn btn-default btn-outline btn-icon"
         title={gettext("Go to previous page")}
-        role="button"
+        type="button"
         disabled
       >
         <span className="material-icon">chevron_left</span>
@@ -51,7 +51,7 @@ const ThreadPagination = ({ baseUrl, posts }) => (
       <button
         className="btn btn-default btn-outline btn-icon"
         title={gettext("Go to next page")}
-        role="button"
+        type="button"
         disabled
       >
         <span className="material-icon">chevron_right</span>
@@ -69,7 +69,7 @@ const ThreadPagination = ({ baseUrl, posts }) => (
       <button
         className="btn btn-default btn-outline btn-icon"
         title={gettext("Go to last page")}
-        role="button"
+        type="button"
         disabled
       >
         <span className="material-icon">last_page</span>
