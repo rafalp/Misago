@@ -1,9 +1,9 @@
 import React from "react"
 import { Link } from "react-router"
 
-const ThreadPagination = ({ baseUrl, posts }) => (
+const RankUsersPagination = ({ baseUrl, users }) => (
   <div className="misago-pagination">
-    {posts.isLoaded && posts.first ? (
+    {users.isLoaded && users.first ? (
       <Link
         className="btn btn-default btn-outline btn-icon"
         to={baseUrl}
@@ -21,10 +21,10 @@ const ThreadPagination = ({ baseUrl, posts }) => (
         <span className="material-icon">first_page</span>
       </button>
     )}
-    {posts.isLoaded && posts.previous ? (
+    {users.isLoaded && users.previous ? (
       <Link
         className="btn btn-default btn-outline btn-icon"
-        to={baseUrl + (posts.previous > 1 ? posts.previous + "/" : "")}
+        to={baseUrl + (users.previous > 1 ? users.previous + "/" : "")}
         title={gettext("Go to previous page")}
       >
         <span className="material-icon">chevron_left</span>
@@ -39,10 +39,10 @@ const ThreadPagination = ({ baseUrl, posts }) => (
         <span className="material-icon">chevron_left</span>
       </button>
     )}
-    {posts.isLoaded && posts.next ? (
+    {users.isLoaded && users.next ? (
       <Link
         className="btn btn-default btn-outline btn-icon"
-        to={baseUrl + posts.next + "/"}
+        to={baseUrl + users.next + "/"}
         title={gettext("Go to next page")}
       >
         <span className="material-icon">chevron_right</span>
@@ -57,10 +57,10 @@ const ThreadPagination = ({ baseUrl, posts }) => (
         <span className="material-icon">chevron_right</span>
       </button>
     )}
-    {posts.isLoaded && posts.last ? (
+    {users.isLoaded && users.last ? (
       <Link
         className="btn btn-default btn-outline btn-icon"
-        to={baseUrl + posts.last + "/"}
+        to={baseUrl + users.last + "/"}
         title={gettext("Go to last page")}
       >
         <span className="material-icon">last_page</span>
@@ -78,4 +78,4 @@ const ThreadPagination = ({ baseUrl, posts }) => (
   </div>
 )
 
-export default ThreadPagination
+export default RankUsersPagination

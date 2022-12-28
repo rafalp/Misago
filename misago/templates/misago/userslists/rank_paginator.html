@@ -1,14 +1,14 @@
 {% load i18n misago_capture %}
 <nav class="misago-pagination" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
   {% if paginator.first %}
-    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to first page' %}" href="{% url url_name slug=thread.slug pk=thread.pk %}">
+    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to first page' %}" href="{% url 'misago:users-rank' slug=rank.slug %}">
       <span class="material-icon">first_page</span>
     </a>
     {% capture trimmed as previous_url %}
       {% if paginator.previous > 1%}
-        {% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}
+        {% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}
       {% else %}
-        {% url url_name slug=thread.slug pk=thread.pk %}
+        {% url 'misago:users-rank' slug=rank.slug %}
       {% endif %}
     {% endcapture %}
     <a class="btn btn-default btn-outline btn-icon" rel="prev" title="{% trans 'Go to previous page' %}" href="{{ previous_url }}">
@@ -23,10 +23,10 @@
     </button>
   {% endif %}
   {% if paginator.last %}
-    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to next page' %}" rel="next" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}">
+    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to next page' %}" rel="next" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}">
       <span class="material-icon">chevron_right</span>
     </a>
-    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to last page' %}" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.last %}">
+    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to last page' %}" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.last %}">
       <span class="material-icon">last_page</span>
     </a>
   {% else %}

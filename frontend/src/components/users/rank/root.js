@@ -1,12 +1,13 @@
 import React from "react"
 import PageLead from "misago/components/page-lead"
-import List from "misago/components/users/rank/list"
-import ListLoading from "misago/components/users/rank/list-loading"
 import misago from "misago/index"
 import { hydrate } from "misago/reducers/users"
 import polls from "misago/services/polls"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import RankUsersList from "./RankUsersList"
+import RankUsersListLoader from "./RankUsersListLoader"
+import RankUsersToolbar from "./RankUsersToolbar"
 
 export default class extends React.Component {
   constructor(props) {
@@ -106,10 +107,8 @@ export default class extends React.Component {
   getComponent() {
     if (this.state.isLoaded) {
       if (this.state.count > 0) {
-        let baseUrl =
-          misago.get("USERS_LIST_URL") + this.props.route.rank.slug + "/"
         return (
-          <List baseUrl={baseUrl} users={this.props.users} {...this.state} />
+          <RankUsersList users={this.props.users} />
         )
       } else {
         return (
@@ -119,7 +118,7 @@ export default class extends React.Component {
         )
       }
     } else {
-      return <ListLoading />
+      return <RankUsersListLoader />
     }
   }
 
@@ -129,6 +128,10 @@ export default class extends React.Component {
         <div className="container">
           {this.getRankDescription()}
           {this.getComponent()}
+          <RankUsersToolbar
+            baseUrl={misago.get("USERS_LIST_URL") + this.props.route.rank.slug + "/"}
+            users={this.state}
+          />
         </div>
       </div>
     )
