@@ -3,7 +3,7 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import store from "misago/services/store"
 
-export default function(Component, rootElementId, connected = true) {
+export default function (Component, rootElementId, connected = true) {
   let rootElement = document.getElementById(rootElementId)
 
   let finalComponent = Component.props ? Component : <Component />

@@ -1,7 +1,7 @@
 export var initialState = {
   type: "info",
   message: "",
-  isVisible: false
+  isVisible: false,
 }
 
 export const SHOW_SNACKBAR = "SHOW_SNACKBAR"
@@ -11,13 +11,13 @@ export function showSnackbar(message, type) {
   return {
     type: SHOW_SNACKBAR,
     message,
-    messageType: type
+    messageType: type,
   }
 }
 
 export function hideSnackbar() {
   return {
-    type: HIDE_SNACKBAR
+    type: HIDE_SNACKBAR,
   }
 }
 
@@ -26,11 +26,11 @@ export default function snackbar(state = initialState, action = null) {
     return {
       type: action.messageType,
       message: action.message,
-      isVisible: true
+      isVisible: true,
     }
   } else if (action.type === HIDE_SNACKBAR) {
     return Object.assign({}, state, {
-      isVisible: false
+      isVisible: false,
     })
   } else {
     return state

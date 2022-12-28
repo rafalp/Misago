@@ -15,40 +15,40 @@ export function hydrate(json) {
       ? moment(json.best_answer_marked_on)
       : null,
 
-    isBusy: false
+    isBusy: false,
   })
 }
 
 export function busy() {
   return {
-    type: BUSY_THREAD
+    type: BUSY_THREAD,
   }
 }
 
 export function release() {
   return {
-    type: RELEASE_THREAD
+    type: RELEASE_THREAD,
   }
 }
 
 export function replace(newState, hydrated = false) {
   return {
     type: REPLACE_THREAD,
-    state: hydrated ? newState : hydrate(newState)
+    state: hydrated ? newState : hydrate(newState),
   }
 }
 
 export function update(data) {
   return {
     type: UPDATE_THREAD,
-    data
+    data,
   }
 }
 
 export function updateAcl(data) {
   return {
     type: UPDATE_THREAD_ACL,
-    data
+    data,
   }
 }
 

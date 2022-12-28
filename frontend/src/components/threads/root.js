@@ -3,13 +3,13 @@ import Route from "misago/components/threads/route"
 import misago from "misago/index"
 
 export function getSelect(options) {
-  return function(store) {
+  return function (store) {
     return {
       options: options,
       selection: store.selection,
       threads: store.threads,
       tick: store.tick.tick,
-      user: store.auth.user
+      user: store.auth.user,
     }
   }
 }
@@ -20,8 +20,8 @@ export function getLists(user) {
       type: "all",
       path: "",
       name: gettext("All"),
-      longName: gettext("All threads")
-    }
+      longName: gettext("All threads"),
+    },
   ]
 
   if (user.id) {
@@ -29,25 +29,25 @@ export function getLists(user) {
       type: "my",
       path: "my/",
       name: gettext("My"),
-      longName: gettext("My threads")
+      longName: gettext("My threads"),
     })
     lists.push({
       type: "new",
       path: "new/",
       name: gettext("New"),
-      longName: gettext("New threads")
+      longName: gettext("New threads"),
     })
     lists.push({
       type: "unread",
       path: "unread/",
       name: gettext("Unread"),
-      longName: gettext("Unread threads")
+      longName: gettext("Unread threads"),
     })
     lists.push({
       type: "subscribed",
       path: "subscribed/",
       name: gettext("Subscribed"),
-      longName: gettext("Subscribed threads")
+      longName: gettext("Subscribed threads"),
     })
 
     if (user.acl.can_see_unapproved_content_lists) {
@@ -55,7 +55,7 @@ export function getLists(user) {
         type: "unapproved",
         path: "unapproved/",
         name: gettext("Unapproved"),
-        longName: gettext("Unapproved content")
+        longName: gettext("Unapproved content"),
       })
     }
   }
@@ -68,8 +68,8 @@ export function paths(user, mode) {
   let routes = []
   let categoriesMap = {}
 
-  misago.get("CATEGORIES").forEach(function(category) {
-    lists.forEach(function(list) {
+  misago.get("CATEGORIES").forEach(function (category) {
+    lists.forEach(function (list) {
       categoriesMap[category.id] = category
 
       routes.push({
@@ -81,7 +81,7 @@ export function paths(user, mode) {
         category,
 
         lists,
-        list
+        list,
       })
     })
   })

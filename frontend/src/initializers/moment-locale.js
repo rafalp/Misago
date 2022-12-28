@@ -7,5 +7,5 @@ export default function initializer() {
 
 misago.addInitializer({
   name: "moment",
-  initializer: initializer
+  initializer: initializer,
 })

@@ -5,7 +5,7 @@ import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 
 export default class extends React.Component {
-  onChange = event => {
+  onChange = (event) => {
     const file = event.target.files[0]
     if (!file) {
       return
@@ -16,7 +16,7 @@ export default class extends React.Component {
       key: getRandomKey(),
       progress: 0,
       error: null,
-      filename: file.name
+      filename: file.name,
     }
 
     this.props.onAttachmentsChange([upload].concat(this.props.attachments))
@@ -25,17 +25,17 @@ export default class extends React.Component {
     data.append("upload", file)
 
     ajax
-      .upload(misago.get("ATTACHMENTS_API"), data, progress => {
+      .upload(misago.get("ATTACHMENTS_API"), data, (progress) => {
         upload.progress = progress
         this.props.onAttachmentsChange(this.props.attachments.concat())
       })
       .then(
-        data => {
+        (data) => {
           data.uploaded_on = moment(data.uploaded_on)
           Object.assign(upload, data)
           this.props.onAttachmentsChange(this.props.attachments.concat())
         },
-        rejection => {
+        (rejection) => {
           if (rejection.status === 400 || rejection.status === 413) {
             upload.error = rejection.detail
             this.props.onAttachmentsChange(this.props.attachments.concat())

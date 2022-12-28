@@ -7,7 +7,7 @@ const DATE_URL = '<a href="%(url)s" title="%(absolute)s">%(relative)s</a>'
 const USER_SPAN = '<span class="item-title">%(user)s</span>'
 const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>'
 
-export default function(props) {
+export default function (props) {
   return (
     <ul className="list-inline event-info">
       <Hidden {...props} />
@@ -25,7 +25,7 @@ export function Hidden(props) {
         USER_URL,
         {
           url: escapeHtml(props.post.url.hidden_by),
-          user: escapeHtml(props.post.hidden_by_name)
+          user: escapeHtml(props.post.hidden_by_name),
         },
         true
       )
@@ -33,7 +33,7 @@ export function Hidden(props) {
       user = interpolate(
         USER_SPAN,
         {
-          user: escapeHtml(props.post.hidden_by_name)
+          user: escapeHtml(props.post.hidden_by_name),
         },
         true
       )
@@ -43,7 +43,7 @@ export function Hidden(props) {
       DATE_ABBR,
       {
         absolute: escapeHtml(props.post.hidden_on.format("LLL")),
-        relative: escapeHtml(props.post.hidden_on.fromNow())
+        relative: escapeHtml(props.post.hidden_on.fromNow()),
       },
       true
     )
@@ -52,7 +52,7 @@ export function Hidden(props) {
       escapeHtml(gettext("Hidden by %(event_by)s %(event_on)s.")),
       {
         event_by: user,
-        event_on: date
+        event_on: date,
       },
       true
     )
@@ -75,7 +75,7 @@ export function Poster(props) {
       USER_URL,
       {
         url: escapeHtml(props.post.poster.url),
-        user: escapeHtml(props.post.poster_name)
+        user: escapeHtml(props.post.poster_name),
       },
       true
     )
@@ -83,7 +83,7 @@ export function Poster(props) {
     user = interpolate(
       USER_SPAN,
       {
-        user: escapeHtml(props.post.poster_name)
+        user: escapeHtml(props.post.poster_name),
       },
       true
     )
@@ -94,7 +94,7 @@ export function Poster(props) {
     {
       url: escapeHtml(props.post.url.index),
       absolute: escapeHtml(props.post.posted_on.format("LLL")),
-      relative: escapeHtml(props.post.posted_on.fromNow())
+      relative: escapeHtml(props.post.posted_on.fromNow()),
     },
     true
   )
@@ -103,7 +103,7 @@ export function Poster(props) {
     escapeHtml(gettext("By %(event_by)s %(event_on)s.")),
     {
       event_by: user,
-      event_on: date
+      event_on: date,
     },
     true
   )

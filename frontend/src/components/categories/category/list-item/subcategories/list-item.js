@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ category }) {
+export default function ({ category }) {
   let className = "btn btn-default btn-block btn-sm btn-subcategory"
   if (!category.is_read) {
     className += " btn-subcategory-new"

@@ -4,9 +4,9 @@ import * as moderation from "./actions"
 import MoveModal from "./move"
 import SplitModal from "./split"
 
-export default function(props) {
+export default function (props) {
   return (
-    <ul className="dropdown-menu">
+    <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
       <Approve {...props} />
       <Merge {...props} />
       <Move {...props} />
@@ -26,7 +26,7 @@ export class Approve extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.acl.can_approve && post.is_unapproved
     })
 
@@ -51,7 +51,7 @@ export class Merge extends React.Component {
   render() {
     const isVisible =
       this.props.selection.length > 1 &&
-      this.props.selection.find(post => {
+      this.props.selection.find((post) => {
         return post.acl.can_merge
       })
 
@@ -74,7 +74,7 @@ export class Move extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.acl.can_move
     })
 
@@ -97,7 +97,7 @@ export class Split extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.acl.can_move
     })
 
@@ -120,7 +120,7 @@ export class Protect extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return !post.is_protected && post.acl.can_protect
     })
 
@@ -143,7 +143,7 @@ export class Unprotect extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.is_protected && post.acl.can_protect
     })
 
@@ -166,7 +166,7 @@ export class Hide extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.acl.can_hide && !post.is_hidden
     })
 
@@ -189,7 +189,7 @@ export class Unhide extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.acl.can_unhide && post.is_hidden
     })
 
@@ -212,7 +212,7 @@ export class Delete extends React.Component {
   }
 
   render() {
-    const isVisible = this.props.selection.find(post => {
+    const isVisible = this.props.selection.find((post) => {
       return post.acl.can_delete
     })
 

@@ -1,9 +1,9 @@
 import React from "react"
 
-export default function(props) {
+export default function (props) {
   return (
     <ul className="list-unstyled poll-select-choices">
-      {props.choices.map(choice => {
+      {props.choices.map((choice) => {
         return (
           <ChoiceSelect
             choice={choice}

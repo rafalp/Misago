@@ -10,7 +10,7 @@ export default class extends React.Component {
 
     this.state = {
       isLoading: false,
-      deviceRatio: 1
+      deviceRatio: 1,
     }
   }
 
@@ -48,7 +48,7 @@ export default class extends React.Component {
       height: cropperWidth,
       exportZoom: deviceRatio,
       imageState: {
-        src: this.getImagePath()
+        src: this.getImagePath(),
       },
       onImageLoaded: () => {
         if (this.props.upload) {
@@ -63,7 +63,7 @@ export default class extends React.Component {
 
             cropit.cropit("offset", {
               x: offsetX,
-              y: 0
+              y: 0,
             })
           } else if (imageSize.width < imageSize.height) {
             let displayedHeight = imageSize.height * zoomLevel
@@ -71,12 +71,12 @@ export default class extends React.Component {
 
             cropit.cropit("offset", {
               x: 0,
-              y: offsetY
+              y: offsetY,
             })
           } else {
             cropit.cropit("offset", {
               x: 0,
-              y: 0
+              y: 0,
             })
           }
         } else {
@@ -87,11 +87,11 @@ export default class extends React.Component {
             cropit.cropit("zoom", crop.zoom)
             cropit.cropit("offset", {
               x: crop.x,
-              y: crop.y
+              y: crop.y,
             })
           }
         }
-      }
+      },
     })
   }
 
@@ -105,7 +105,7 @@ export default class extends React.Component {
     }
 
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
 
     let avatarType = this.props.upload ? "crop_tmp" : "crop_src"
@@ -120,21 +120,21 @@ export default class extends React.Component {
         crop: {
           offset: {
             x: cropitOffset.x * deviceRatio,
-            y: cropitOffset.y * deviceRatio
+            y: cropitOffset.y * deviceRatio,
           },
-          zoom: cropit.cropit("zoom") * deviceRatio
-        }
+          zoom: cropit.cropit("zoom") * deviceRatio,
+        },
       })
       .then(
-        data => {
+        (data) => {
           this.props.onComplete(data)
           snackbar.success(data.detail)
         },
-        rejection => {
+        (rejection) => {
           if (rejection.status === 400) {
             snackbar.error(rejection.detail)
             this.setState({
-              isLoading: false
+              isLoading: false,
             })
           } else {
             this.props.showError(rejection)

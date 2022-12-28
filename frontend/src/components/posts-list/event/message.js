@@ -17,13 +17,13 @@ const MESSAGE = {
   tookover: gettext("Took thread over."),
 
   owner_left: gettext("Owner has left thread. This thread is now closed."),
-  participant_left: gettext("Participant has left thread.")
+  participant_left: gettext("Participant has left thread."),
 }
 
 const ITEM_LINK = '<a href="%(url)s" class="item-title">%(name)s</a>'
 const ITEM_SPAN = '<span class="item-title">%(name)s</span>'
 
-export default function(props) {
+export default function (props) {
   if (MESSAGE[props.post.event_type]) {
     return <p className="event-message">{MESSAGE[props.post.event_type]}</p>
   } else if (props.post.event_type === "changed_title") {
@@ -50,14 +50,14 @@ export function ChangedTitle(props) {
   const oldTitle = interpolate(
     ITEM_SPAN,
     {
-      name: escapeHtml(props.post.event_context.old_title)
+      name: escapeHtml(props.post.event_context.old_title),
     },
     true
   )
   const message = interpolate(
     msgstring,
     {
-      old_title: oldTitle
+      old_title: oldTitle,
     },
     true
   )
@@ -78,7 +78,7 @@ export function Moved(props) {
     ITEM_LINK,
     {
       url: escapeHtml(props.post.event_context.from_category.url),
-      name: escapeHtml(props.post.event_context.from_category.name)
+      name: escapeHtml(props.post.event_context.from_category.name),
     },
     true
   )
@@ -86,7 +86,7 @@ export function Moved(props) {
   const message = interpolate(
     msgstring,
     {
-      from_category: fromCategory
+      from_category: fromCategory,
     },
     true
   )
@@ -106,7 +106,7 @@ export function Merged(props) {
   const mergedThread = interpolate(
     ITEM_SPAN,
     {
-      name: escapeHtml(props.post.event_context.merged_thread)
+      name: escapeHtml(props.post.event_context.merged_thread),
     },
     true
   )
@@ -114,7 +114,7 @@ export function Merged(props) {
   const message = interpolate(
     msgstring,
     {
-      merged_thread: mergedThread
+      merged_thread: mergedThread,
     },
     true
   )
@@ -133,7 +133,7 @@ export function ChangedOwner(props) {
     ITEM_LINK,
     {
       url: escapeHtml(props.post.event_context.user.url),
-      name: escapeHtml(props.post.event_context.user.username)
+      name: escapeHtml(props.post.event_context.user.username),
     },
     true
   )
@@ -141,7 +141,7 @@ export function ChangedOwner(props) {
   const message = interpolate(
     msgstring,
     {
-      user: newOwner
+      user: newOwner,
     },
     true
   )
@@ -160,7 +160,7 @@ export function AddedParticipant(props) {
     ITEM_LINK,
     {
       url: escapeHtml(props.post.event_context.user.url),
-      name: escapeHtml(props.post.event_context.user.username)
+      name: escapeHtml(props.post.event_context.user.username),
     },
     true
   )
@@ -168,7 +168,7 @@ export function AddedParticipant(props) {
   const message = interpolate(
     msgstring,
     {
-      user: newOwner
+      user: newOwner,
     },
     true
   )
@@ -187,7 +187,7 @@ export function RemovedParticipant(props) {
     ITEM_LINK,
     {
       url: escapeHtml(props.post.event_context.user.url),
-      name: escapeHtml(props.post.event_context.user.username)
+      name: escapeHtml(props.post.event_context.user.username),
     },
     true
   )
@@ -195,7 +195,7 @@ export function RemovedParticipant(props) {
   const message = interpolate(
     msgstring,
     {
-      user: newOwner
+      user: newOwner,
     },
     true
   )

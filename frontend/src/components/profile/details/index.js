@@ -12,14 +12,14 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      editing: false
+      editing: false,
     }
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Details"),
-      parent: this.props.profile.username
+      parent: this.props.profile.username,
     })
   }
 
@@ -31,7 +31,7 @@ export default class extends React.Component {
     this.setState({ editing: true })
   }
 
-  onSuccess = newDetails => {
+  onSuccess = (newDetails) => {
     const { dispatch, isAuthenticated, profile } = this.props
 
     let message = null
@@ -41,7 +41,7 @@ export default class extends React.Component {
       message = interpolate(
         gettext("%(username)s's details have been updated."),
         {
-          username: profile.username
+          username: profile.username,
         },
         true
       )

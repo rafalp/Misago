@@ -4,7 +4,7 @@ import LastThread from "./last-thread"
 import Stats from "./stats"
 import Subcategories from "./subcategories"
 
-export default function({ category, isFirst }) {
+export default function ({ category, isFirst }) {
   let className = "list-group-item"
 
   if (category.description) {

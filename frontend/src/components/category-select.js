@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function(props) {
+export default function (props) {
   return (
     <select
       className={props.className || "form-control"}
@@ -9,7 +9,7 @@ export default function(props) {
       onChange={props.onChange}
       value={props.value}
     >
-      {props.choices.map(item => {
+      {props.choices.map((item) => {
         return (
           <option
             disabled={item.disabled || false}

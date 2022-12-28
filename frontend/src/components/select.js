@@ -3,7 +3,7 @@ import React from "react"
 export default class extends React.Component {
   getChoice() {
     let choice = null
-    this.props.choices.map(item => {
+    this.props.choices.map((item) => {
       if (item.value === this.props.value) {
         choice = item
       }
@@ -19,12 +19,12 @@ export default class extends React.Component {
     return this.getChoice().label
   }
 
-  change = value => {
+  change = (value) => {
     return () => {
       this.props.onChange({
         target: {
-          value: value
-        }
+          value: value,
+        },
       })
     }
   }

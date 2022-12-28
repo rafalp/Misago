@@ -4,7 +4,7 @@ import LikesModal from "misago/components/post-likes"
 import modal from "misago/services/modal"
 import posting from "misago/services/posting"
 
-export default function(props) {
+export default function (props) {
   if (!isVisible(props.post)) return null
 
   return (
@@ -172,13 +172,13 @@ export class LikesCompact extends Likes {
 }
 
 export function getLikesMessage(likes, users) {
-  const usernames = users.slice(0, 3).map(u => u.username)
+  const usernames = users.slice(0, 3).map((u) => u.username)
 
   if (usernames.length == 1) {
     return interpolate(
       gettext("%(user)s likes this."),
       {
-        user: usernames[0]
+        user: usernames[0],
       },
       true
     )
@@ -193,7 +193,7 @@ export function getLikesMessage(likes, users) {
     gettext("%(users)s and %(last_user)s"),
     {
       users: otherUsers,
-      last_user: lastUser
+      last_user: lastUser,
     },
     true
   )
@@ -202,7 +202,7 @@ export function getLikesMessage(likes, users) {
     return interpolate(
       gettext("%(users)s like this."),
       {
-        users: usernamesList
+        users: usernamesList,
       },
       true
     )
@@ -218,7 +218,7 @@ export function getLikesMessage(likes, users) {
     message,
     {
       users: usernames.join(", "),
-      likes: hiddenLikes
+      likes: hiddenLikes,
     },
     true
   )
@@ -233,8 +233,8 @@ export class Reply extends React.Component {
       submit: this.props.thread.api.posts.index,
 
       context: {
-        reply: this.props.post.id
-      }
+        reply: this.props.post.id,
+      },
     })
   }
 
@@ -261,7 +261,7 @@ export class Edit extends React.Component {
       mode: "EDIT",
 
       config: this.props.post.api.editor,
-      submit: this.props.post.api.index
+      submit: this.props.post.api.index,
     })
   }
 

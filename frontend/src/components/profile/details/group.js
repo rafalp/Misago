@@ -1,7 +1,7 @@
 import React from "react"
 import Field from "./field"
 
-export default function({ fields, name }) {
+export default function ({ fields, name }) {
   return (
     <div className="panel panel-default panel-profile-details-group">
       <div className="panel-heading">

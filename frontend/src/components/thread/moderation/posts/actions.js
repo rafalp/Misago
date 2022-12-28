@@ -13,17 +13,17 @@ export function approve(props) {
 
   const ops = [{ op: "replace", path: "is-unapproved", value: false }]
 
-  const newState = selection.map(post => {
+  const newState = selection.map((post) => {
     return {
       id: post.id,
-      is_unapproved: false
+      is_unapproved: false,
     }
   })
 
-  const previousState = selection.map(post => {
+  const previousState = selection.map((post) => {
     return {
       id: post.id,
-      is_unapproved: post.is_unapproved
+      is_unapproved: post.is_unapproved,
     }
   })
 
@@ -35,17 +35,17 @@ export function protect(props) {
 
   const ops = [{ op: "replace", path: "is-protected", value: true }]
 
-  const newState = selection.map(post => {
+  const newState = selection.map((post) => {
     return {
       id: post.id,
-      is_protected: true
+      is_protected: true,
     }
   })
 
-  const previousState = selection.map(post => {
+  const previousState = selection.map((post) => {
     return {
       id: post.id,
-      is_protected: post.is_protected
+      is_protected: post.is_protected,
     }
   })
 
@@ -57,17 +57,17 @@ export function unprotect(props) {
 
   const ops = [{ op: "replace", path: "is-protected", value: false }]
 
-  const newState = selection.map(post => {
+  const newState = selection.map((post) => {
     return {
       id: post.id,
-      is_protected: false
+      is_protected: false,
     }
   })
 
-  const previousState = selection.map(post => {
+  const previousState = selection.map((post) => {
     return {
       id: post.id,
-      is_protected: post.is_protected
+      is_protected: post.is_protected,
     }
   })
 
@@ -79,25 +79,25 @@ export function hide(props) {
 
   const ops = [{ op: "replace", path: "is-hidden", value: true }]
 
-  const newState = selection.map(post => {
+  const newState = selection.map((post) => {
     return {
       id: post.id,
       is_hidden: true,
       hidden_on: moment(),
       hidden_by_name: props.user.username,
       url: Object.assign(post.url, {
-        hidden_by: props.user.url
-      })
+        hidden_by: props.user.url,
+      }),
     }
   })
 
-  const previousState = selection.map(post => {
+  const previousState = selection.map((post) => {
     return {
       id: post.id,
       is_hidden: post.is_hidden,
       hidden_on: post.hidden_on,
       hidden_by_name: post.hidden_by_name,
-      url: post.url
+      url: post.url,
     }
   })
 
@@ -109,25 +109,25 @@ export function unhide(props) {
 
   const ops = [{ op: "replace", path: "is-hidden", value: false }]
 
-  const newState = selection.map(post => {
+  const newState = selection.map((post) => {
     return {
       id: post.id,
       is_hidden: false,
       hidden_on: moment(),
       hidden_by_name: props.user.username,
       url: Object.assign(post.url, {
-        hidden_by: props.user.url
-      })
+        hidden_by: props.user.url,
+      }),
     }
   })
 
-  const previousState = selection.map(post => {
+  const previousState = selection.map((post) => {
     return {
       id: post.id,
       is_hidden: post.is_hidden,
       hidden_on: post.hidden_on,
       hidden_by_name: post.hidden_by_name,
-      url: post.url
+      url: post.url,
     }
   })
 
@@ -138,7 +138,7 @@ export function patch(props, ops, newState, previousState) {
   const { selection, thread } = props
 
   // patch selected items
-  newState.forEach(item => {
+  newState.forEach((item) => {
     post.patch(item, item)
   })
 
@@ -149,21 +149,21 @@ export function patch(props, ops, newState, previousState) {
   const data = {
     ops,
 
-    ids: selection.map(post => {
+    ids: selection.map((post) => {
       return post.id
-    })
+    }),
   }
 
   ajax.patch(thread.api.posts.index, data).then(
-    data => {
-      data.forEach(item => {
+    (data) => {
+      data.forEach((item) => {
         store.dispatch(post.patch(item, item))
       })
     },
-    rejection => {
+    (rejection) => {
       if (rejection.status !== 400) {
         // rollback all
-        previousState.forEach(item => {
+        previousState.forEach((item) => {
           store.dispatch(post.patch(item, item))
         })
         return snackbar.apiError(rejection)
@@ -172,7 +172,7 @@ export function patch(props, ops, newState, previousState) {
       let errors = []
       let rollback = []
 
-      rejection.forEach(item => {
+      rejection.forEach((item) => {
         if (item.detail) {
           errors.push(item)
           rollback.push(item.id)
@@ -180,7 +180,7 @@ export function patch(props, ops, newState, previousState) {
           store.dispatch(post.patch(item, item))
         }
 
-        previousState.forEach(item => {
+        previousState.forEach((item) => {
           if (rollback.indexOf(item) !== -1) {
             store.dispatch(post.patch(item, item))
           }
@@ -188,7 +188,7 @@ export function patch(props, ops, newState, previousState) {
       })
 
       let posts = {}
-      selection.forEach(item => {
+      selection.forEach((item) => {
         posts[item.id] = item
       })
 
@@ -207,33 +207,33 @@ export function merge(props) {
     return
   }
 
-  props.selection.slice(1).map(selection => {
+  props.selection.slice(1).map((selection) => {
     store.dispatch(
       post.patch(selection, {
-        isDeleted: true
+        isDeleted: true,
       })
     )
   })
 
   ajax
     .post(props.thread.api.posts.merge, {
-      posts: props.selection.map(post => post.id)
+      posts: props.selection.map((post) => post.id),
     })
     .then(
-      data => {
+      (data) => {
         store.dispatch(post.patch(data, post.hydrate(data)))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
           snackbar.error(rejection.detail)
         } else {
           snackbar.apiError(rejection)
         }
 
-        props.selection.slice(1).map(selection => {
+        props.selection.slice(1).map((selection) => {
           store.dispatch(
             post.patch(selection, {
-              isDeleted: false
+              isDeleted: false,
             })
           )
         })
@@ -253,15 +253,15 @@ export function remove(props) {
     return
   }
 
-  props.selection.map(selection => {
+  props.selection.map((selection) => {
     store.dispatch(
       post.patch(selection, {
-        isDeleted: true
+        isDeleted: true,
       })
     )
   })
 
-  const ids = props.selection.map(post => {
+  const ids = props.selection.map((post) => {
     return post.id
   })
 
@@ -269,17 +269,17 @@ export function remove(props) {
     () => {
       return
     },
-    rejection => {
+    (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail)
       } else {
         snackbar.apiError(rejection)
       }
 
-      props.selection.map(selection => {
+      props.selection.map((selection) => {
         store.dispatch(
           post.patch(selection, {
-            isDeleted: false
+            isDeleted: false,
           })
         )
       })

@@ -4,14 +4,14 @@ import Button from "misago/components/button"
 import MisagoMarkup from "misago/components/misago-markup"
 import {
   update as updatePosts,
-  append as appendPosts
+  append as appendPosts,
 } from "misago/reducers/posts"
 import { updateProvider } from "misago/reducers/search"
 import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 
-export default function(props) {
+export default function (props) {
   return (
     <div>
       <PostFeed isReady={true} posts={props.results} />
@@ -24,18 +24,18 @@ export class LoadMore extends React.Component {
   onClick = () => {
     store.dispatch(
       updatePosts({
-        isBusy: true
+        isBusy: true,
       })
     )
 
     ajax
       .get(this.props.provider.api, {
         q: this.props.query,
-        page: this.props.next
+        page: this.props.next,
       })
       .then(
-        providers => {
-          providers.forEach(provider => {
+        (providers) => {
+          providers.forEach((provider) => {
             if (provider.id !== "threads") return
             store.dispatch(appendPosts(provider.results))
             store.dispatch(updateProvider(provider))
@@ -43,16 +43,16 @@ export class LoadMore extends React.Component {
 
           store.dispatch(
             updatePosts({
-              isBusy: false
+              isBusy: false,
             })
           )
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
 
           store.dispatch(
             updatePosts({
-              isBusy: false
+              isBusy: false,
             })
           )
         }

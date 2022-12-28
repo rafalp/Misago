@@ -28,8 +28,8 @@ export default class extends React.Component {
   toggle = () => {
     this.props.onChange({
       target: {
-        value: !this.props.value
-      }
+        value: !this.props.value,
+      },
     })
   }
 

@@ -5,19 +5,19 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      dropdown: false
+      dropdown: false,
     }
   }
 
   toggleNav = () => {
     this.setState({
-      dropdown: !this.state.dropdown
+      dropdown: !this.state.dropdown,
     })
   }
 
   hideNav = () => {
     this.setState({
-      dropdown: false
+      dropdown: false,
     })
   }
 

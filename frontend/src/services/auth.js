@@ -18,22 +18,22 @@ export class Auth {
     if (state.isAuthenticated) {
       this._local.set("auth", {
         isAuthenticated: true,
-        username: state.user.username
+        username: state.user.username,
       })
     } else {
       this._local.set("auth", {
-        isAuthenticated: false
+        isAuthenticated: false,
       })
     }
   }
 
   watchState() {
     const state = this._store.getState().auth
-    this._local.watch("auth", newState => {
+    this._local.watch("auth", (newState) => {
       if (newState.isAuthenticated) {
         this._store.dispatch(
           signIn({
-            username: newState.username
+            username: newState.username,
           })
         )
       } else if (state.isAuthenticated) {
@@ -51,7 +51,7 @@ export class Auth {
     this._store.dispatch(signIn(user))
     this._local.set("auth", {
       isAuthenticated: true,
-      username: user.username
+      username: user.username,
     })
     this._modal.hide()
   }
@@ -59,7 +59,7 @@ export class Auth {
   signOut() {
     this._store.dispatch(signOut())
     this._local.set("auth", {
-      isAuthenticated: false
+      isAuthenticated: false,
     })
     this._modal.hide()
   }
@@ -67,7 +67,7 @@ export class Auth {
   softSignOut() {
     this._store.dispatch(signOut(true))
     this._local.set("auth", {
-      isAuthenticated: false
+      isAuthenticated: false,
     })
     this._modal.hide()
   }

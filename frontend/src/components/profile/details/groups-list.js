@@ -3,12 +3,12 @@ import EmptyMessage from "./empty-message"
 import Group from "./group"
 import Loader from "misago/components/loader"
 
-export default function({
+export default function ({
   display,
   groups,
   isAuthenticated,
   loading,
-  profile
+  profile,
 }) {
   if (!display) return null
 

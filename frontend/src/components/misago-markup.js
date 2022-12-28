@@ -21,7 +21,7 @@ export default class extends React.Component {
       <article
         className="misago-markup"
         dangerouslySetInnerHTML={{ __html: this.props.markup }}
-        ref={node => {
+        ref={(node) => {
           this.documentNode = node
         }}
       />

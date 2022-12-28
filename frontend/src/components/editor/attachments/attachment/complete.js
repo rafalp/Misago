@@ -44,18 +44,18 @@ export default class extends React.Component {
 
   onRemove = () => {
     this.updateItem({
-      isRemoved: true
+      isRemoved: true,
     })
   }
 
   onUndo = () => {
     this.updateItem({
-      isRemoved: false
+      isRemoved: false,
     })
   }
 
-  updateItem = newState => {
-    const updatedAttachments = this.props.attachments.map(item => {
+  updateItem = (newState) => {
+    const updatedAttachments = this.props.attachments.map((item) => {
       if (item.id === this.props.item.id) {
         return Object.assign({}, item, newState)
       } else {
@@ -141,7 +141,7 @@ export function Details(props) {
       USER_URL,
       {
         url: escapeHtml(props.item.url.uploader),
-        user: escapeHtml(props.item.uploader_name)
+        user: escapeHtml(props.item.uploader_name),
       },
       true
     )
@@ -149,7 +149,7 @@ export function Details(props) {
     user = interpolate(
       USER_SPAN,
       {
-        user: escapeHtml(props.item.uploader_name)
+        user: escapeHtml(props.item.uploader_name),
       },
       true
     )
@@ -159,7 +159,7 @@ export function Details(props) {
     DATE_ABBR,
     {
       absolute: escapeHtml(props.item.uploaded_on.format("LLL")),
-      relative: escapeHtml(props.item.uploaded_on.fromNow())
+      relative: escapeHtml(props.item.uploaded_on.fromNow()),
     },
     true
   )
@@ -174,7 +174,7 @@ export function Details(props) {
       filetype: props.item.filetype,
       size: formatFilesize(props.item.size),
       uploader: user,
-      uploaded_on: date
+      uploaded_on: date,
     },
     true
   )

@@ -3,7 +3,6 @@ import Participants from "misago/components/participants"
 import { Poll } from "misago/components/poll"
 import PostsList from "misago/components/posts-list"
 import Header from "./header"
-import ToolbarBottom from "./toolbar-bottom"
 import * as participants from "misago/reducers/participants"
 import * as poll from "misago/reducers/poll"
 import * as posts from "misago/reducers/posts"
@@ -55,15 +54,15 @@ export default class extends React.Component {
       .get(
         this.props.thread.api.posts.index,
         {
-          page: this.props.params.page || 1
+          page: this.props.params.page || 1,
         },
         "posts"
       )
       .then(
-        data => {
+        (data) => {
           this.update(data)
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
         }
       )
@@ -75,12 +74,12 @@ export default class extends React.Component {
 
       url: this.props.thread.api.posts.index,
       data: {
-        page: this.props.params.page || 1
+        page: this.props.params.page || 1,
       },
       update: this.update,
 
       frequency: 120 * 1000,
-      delayed: true
+      delayed: true,
     })
   }
 
@@ -92,11 +91,11 @@ export default class extends React.Component {
     title.set({
       title: this.props.thread.title,
       parent: this.props.thread.category.name,
-      page: (this.props.params.page || 1) * 1
+      page: (this.props.params.page || 1) * 1,
     })
   }
 
-  update = data => {
+  update = (data) => {
     store.dispatch(thread.replace(data))
     store.dispatch(posts.load(data.post_set))
 
@@ -117,7 +116,7 @@ export default class extends React.Component {
       submit: this.props.thread.api.poll,
 
       thread: this.props.thread,
-      poll: null
+      poll: null,
     })
   }
 
@@ -126,7 +125,7 @@ export default class extends React.Component {
       mode: "REPLY",
 
       config: this.props.thread.api.editor,
-      submit: this.props.thread.api.posts.index
+      submit: this.props.thread.api.posts.index,
     })
   }
 
@@ -136,7 +135,11 @@ export default class extends React.Component {
       className += " page-thread-" + this.props.thread.category.css_class
     }
 
-    const postsModeration = getPostsModeration(this.props.posts, this.props.user)
+    const postsModeration = getPostsModeration(
+      this.props.posts.results,
+      this.props.user
+    )
+    const selection = this.props.posts.results.filter((post) => post.isSelected)
 
     return (
       <div className={className}>
@@ -148,6 +151,7 @@ export default class extends React.Component {
             thread={this.props.thread}
             posts={this.props.posts}
             user={this.props.user}
+            selection={selection}
             moderation={postsModeration}
             onPoll={this.openPollForm}
             onReply={this.openReplyForm}
@@ -163,21 +167,21 @@ export default class extends React.Component {
             user={this.props.user}
           />
           <PostsList {...this.props} />
-          <ThreadToolbarBottom 
+          <ThreadToolbarBottom
             thread={this.props.thread}
             posts={this.props.posts}
             user={this.props.user}
+            selection={selection}
             moderation={postsModeration}
             onReply={this.openReplyForm}
           />
-          <ToolbarBottom openReplyForm={this.openReplyForm} {...this.props} />
         </div>
       </div>
     )
   }
 }
 
-const getPostsModeration = ({ posts, user }) => {
+const getPostsModeration = (posts, user) => {
   const moderation = {
     enabled: false,
     approve: false,
@@ -190,7 +194,7 @@ const getPostsModeration = ({ posts, user }) => {
 
   if (!user.is_authenticated) return moderation
 
-  posts.forEach(post => {
+  posts.forEach((post) => {
     if (!post.is_event) {
       if (post.acl.can_approve && post.is_unapproved) {
         moderation.approve = true
@@ -205,7 +209,14 @@ const getPostsModeration = ({ posts, user }) => {
       }
       if (post.acl.can_delete) moderation.delete = true
 
-      if (moderation.approve || moderation.move || moderation.merge || moderation.protect || moderation.hide || moderation.delete) {
+      if (
+        moderation.approve ||
+        moderation.move ||
+        moderation.merge ||
+        moderation.protect ||
+        moderation.hide ||
+        moderation.delete
+      ) {
         moderation.enabled = true
       }
     }

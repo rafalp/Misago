@@ -27,7 +27,7 @@ export function getTitleLengthMin() {
         message,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )
@@ -49,7 +49,7 @@ export function getTitleLengthMax() {
         message,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )
@@ -71,7 +71,7 @@ export function validatePostLengthMin() {
         message,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )
@@ -93,7 +93,7 @@ export function validatePostLengthMax() {
         message,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )

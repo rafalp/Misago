@@ -2,7 +2,6 @@
 // Change Avatar Modal
 // --------------------------------------------------
 
-
 // Index
 .modal-change-avatar .modal-avatar-index {
   .avatar-preview {
@@ -70,7 +69,6 @@
   }
 }
 
-
 // Upload
 .modal-change-avatar .modal-avatar-upload {
   text-align: center;
@@ -86,17 +84,18 @@
     font-size: @font-size-large;
     text-align: center;
 
-    &>.material-icon {
+    & > .material-icon {
       display: block;
       margin: 0px auto;
-      margin-bottom: @line-height-computed * .66;
+      margin-bottom: @line-height-computed * 0.66;
 
       font-size: @line-height-computed * 2.5;
       width: @line-height-computed * 2.5;
       height: @line-height-computed * 2.5;
     }
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       border-color: @brand-primary;
       color: @brand-primary;
     }
@@ -121,7 +120,6 @@
     }
   }
 }
-
 
 // Crop
 .modal-avatar-crop .crop-form {
@@ -182,7 +180,7 @@
     }
 
     /*hide the outline behind the border*/
-    &:-moz-focusring{
+    &:-moz-focusring {
       outline: 1px solid white;
       outline-offset: -1px;
     }
@@ -230,7 +228,6 @@
   }
 }
 
-
 // Gallery
 .modal-change-avatar .modal-avatar-gallery {
   padding-bottom: 0px;
@@ -255,11 +252,13 @@
       padding: 2px;
       position: relative;
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         border-color: @gray-light;
       }
 
-      &.avatar-selected, &:active {
+      &.avatar-selected,
+      &:active {
         border-color: @link-color;
       }
 

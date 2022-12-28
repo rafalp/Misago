@@ -1,6 +1,6 @@
 import { HEADER, RESULT, FOOTER } from "./constants"
 
-export default function(results) {
+export default function (results) {
   const flatlist = []
   flattenProviders(results, flatlist)
   return flatlist
@@ -13,7 +13,7 @@ function flattenProviders(results, flatlist) {
 
     flatlist.push({
       provider,
-      type: HEADER
+      type: HEADER,
     })
 
     flattenProvider(provider, flatlist)
@@ -27,12 +27,12 @@ function flattenProvider(provider, flatlist) {
     flatlist.push({
       provider,
       result,
-      type: RESULT
+      type: RESULT,
     })
   }
 
   flatlist.push({
     provider,
-    type: FOOTER
+    type: FOOTER,
   })
 }

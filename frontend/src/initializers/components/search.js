@@ -5,7 +5,7 @@ import mount from "misago/utils/routed-component"
 export default function initializer(context) {
   if (context.get("CURRENT_LINK") === "misago:search") {
     mount({
-      paths: paths(misago.get("SEARCH_PROVIDERS"))
+      paths: paths(misago.get("SEARCH_PROVIDERS")),
     })
   }
 }
@@ -13,5 +13,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:search",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

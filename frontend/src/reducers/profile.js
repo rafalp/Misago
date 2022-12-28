@@ -2,7 +2,7 @@ import moment from "moment"
 import {
   UPDATE_AVATAR,
   UPDATE_USERNAME,
-  hydrateStatus
+  hydrateStatus,
 } from "misago/reducers/users"
 
 export const HYDRATE_PROFILE = "HYDRATE_PROFILE"
@@ -11,14 +11,14 @@ export const PATCH_PROFILE = "PATCH_PROFILE"
 export function hydrate(profile) {
   return {
     type: HYDRATE_PROFILE,
-    profile
+    profile,
   }
 }
 
 export function patch(patch) {
   return {
     type: PATCH_PROFILE,
-    patch
+    patch,
   }
 }
 
@@ -27,7 +27,7 @@ export default function auth(state = {}, action = null) {
     case HYDRATE_PROFILE:
       return Object.assign({}, action.profile, {
         joined_on: moment(action.profile.joined_on),
-        status: hydrateStatus(action.profile.status)
+        status: hydrateStatus(action.profile.status),
       })
 
     case PATCH_PROFILE:
@@ -36,7 +36,7 @@ export default function auth(state = {}, action = null) {
     case UPDATE_AVATAR:
       if (state.id === action.userId) {
         return Object.assign({}, state, {
-          avatars: action.avatars
+          avatars: action.avatars,
         })
       }
       return state
@@ -45,7 +45,7 @@ export default function auth(state = {}, action = null) {
       if (state.id === action.userId) {
         return Object.assign({}, state, {
           username: action.username,
-          slug: action.slug
+          slug: action.slug,
         })
       }
       return state

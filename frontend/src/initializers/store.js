@@ -8,5 +8,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "store",
   initializer: initializer,
-  before: "_end"
+  before: "_end",
 })

@@ -38,7 +38,7 @@ export function mockUser(overrides) {
       change_email: "/test-api/users/42/change-email/",
       change_password: "/test-api/users/42/change-password/",
       options: "/test-api/users/42/forum-options/",
-      username: "/test-api/users/42/username/"
+      username: "/test-api/users/42/username/",
     },
     avatar_hash: "5c6a04b4",
     email: "test@example.com",
@@ -56,7 +56,7 @@ export function mockUser(overrides) {
       is_tab: true,
       name: "Forum team",
       slug: "forum-team",
-      title: "Team"
+      title: "Team",
     },
     slug: "loremipsum",
     subscribe_to_replied_threads: 2,
@@ -68,7 +68,7 @@ export function mockUser(overrides) {
 
     status: null,
 
-    acl: {}
+    acl: {},
   }
 
   if (overrides) {
@@ -85,8 +85,8 @@ export function contextGuest(misago) {
     user: {
       id: null,
 
-      acl: {}
-    }
+      acl: {},
+    },
   })
 }
 
@@ -94,7 +94,7 @@ export function contextAuthenticated(misago, overrides) {
   misago._context = Object.assign({}, misago._context, {
     isAuthenticated: true,
 
-    user: mockUser(overrides)
+    user: mockUser(overrides),
   })
 }
 
@@ -103,7 +103,7 @@ export function initEmptyStore(store) {
   store.constructor()
   store.addReducer(
     "tick",
-    function(state = {}, action = null) {
+    function (state = {}, action = null) {
       return {}
     },
     {}
@@ -116,15 +116,15 @@ export function snackbarStoreMock() {
     message: null,
     _callback: null,
 
-    callback: function(callback) {
+    callback: function (callback) {
       this._callback = callback
     },
 
-    dispatch: function(action) {
+    dispatch: function (action) {
       if (action.type === "SHOW_SNACKBAR") {
         this.message = {
           message: action.message,
-          type: action.messageType
+          type: action.messageType,
         }
 
         if (this._callback) {
@@ -133,7 +133,7 @@ export function snackbarStoreMock() {
           }, 100)
         }
       }
-    }
+    },
   }
 }
 
@@ -186,14 +186,14 @@ export function simulateChange(selector, value) {
 }
 
 export function afterAjax(callback) {
-  window.setTimeout(function() {
+  window.setTimeout(function () {
     callback()
   }, 200)
 }
 
 export function onElement(selector, callback) {
-  let _getElement = function() {
-    window.setTimeout(function() {
+  let _getElement = function () {
+    window.setTimeout(function () {
       let element = $(selector)
       if (element.length >= 1) {
         callback(element)

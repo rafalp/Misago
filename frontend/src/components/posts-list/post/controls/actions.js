@@ -8,14 +8,14 @@ import store from "misago/services/store"
 export function approve(props) {
   store.dispatch(
     post.patch(props.post, {
-      is_unapproved: false
+      is_unapproved: false,
     })
   )
 
   const ops = [{ op: "replace", path: "is-unapproved", value: false }]
 
   const previousState = {
-    is_unapproved: props.post.is_unapproved
+    is_unapproved: props.post.is_unapproved,
   }
 
   patch(props, ops, previousState)
@@ -24,14 +24,14 @@ export function approve(props) {
 export function protect(props) {
   store.dispatch(
     post.patch(props.post, {
-      is_protected: true
+      is_protected: true,
     })
   )
 
   const ops = [{ op: "replace", path: "is-protected", value: true }]
 
   const previousState = {
-    is_protected: props.post.is_protected
+    is_protected: props.post.is_protected,
   }
 
   patch(props, ops, previousState)
@@ -40,14 +40,14 @@ export function protect(props) {
 export function unprotect(props) {
   store.dispatch(
     post.patch(props.post, {
-      is_protected: false
+      is_protected: false,
     })
   )
 
   const ops = [{ op: "replace", path: "is-protected", value: false }]
 
   const previousState = {
-    is_protected: props.post.is_protected
+    is_protected: props.post.is_protected,
   }
 
   patch(props, ops, previousState)
@@ -60,8 +60,8 @@ export function hide(props) {
       hidden_on: moment(),
       hidden_by_name: props.user.username,
       url: Object.assign(props.post.url, {
-        hidden_by: props.user.url
-      })
+        hidden_by: props.user.url,
+      }),
     })
   )
 
@@ -71,7 +71,7 @@ export function hide(props) {
     is_hidden: props.post.is_hidden,
     hidden_on: props.post.hidden_on,
     hidden_by_name: props.post.hidden_by_name,
-    url: props.post.url
+    url: props.post.url,
   }
 
   patch(props, ops, previousState)
@@ -80,14 +80,14 @@ export function hide(props) {
 export function unhide(props) {
   store.dispatch(
     post.patch(props.post, {
-      is_hidden: false
+      is_hidden: false,
     })
   )
 
   const ops = [{ op: "replace", path: "is-hidden", value: false }]
 
   const previousState = {
-    is_hidden: props.post.is_hidden
+    is_hidden: props.post.is_hidden,
   }
 
   patch(props, ops, previousState)
@@ -103,7 +103,7 @@ export function like(props) {
     post.patch(props.post, {
       is_liked: true,
       likes: props.post.likes + 1,
-      last_likes: finalLikes
+      last_likes: finalLikes,
     })
   )
 
@@ -112,7 +112,7 @@ export function like(props) {
   const previousState = {
     is_liked: props.post.is_liked,
     likes: props.post.likes,
-    last_likes: props.post.last_likes
+    last_likes: props.post.last_likes,
   }
 
   patch(props, ops, previousState)
@@ -123,9 +123,9 @@ export function unlike(props) {
     post.patch(props.post, {
       is_liked: false,
       likes: props.post.likes - 1,
-      last_likes: props.post.last_likes.filter(user => {
+      last_likes: props.post.last_likes.filter((user) => {
         return !user.id || user.id !== props.user.id
-      })
+      }),
     })
   )
 
@@ -134,7 +134,7 @@ export function unlike(props) {
   const previousState = {
     is_liked: props.post.is_liked,
     likes: props.post.likes,
-    last_likes: props.post.last_likes
+    last_likes: props.post.last_likes,
   }
 
   patch(props, ops, previousState)
@@ -142,10 +142,10 @@ export function unlike(props) {
 
 export function patch(props, ops, previousState) {
   ajax.patch(props.post.api.index, ops).then(
-    newState => {
+    (newState) => {
       store.dispatch(post.patch(props.post, newState))
     },
-    rejection => {
+    (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail[0])
       } else {
@@ -169,7 +169,7 @@ export function remove(props) {
 
   store.dispatch(
     post.patch(props.post, {
-      isDeleted: true
+      isDeleted: true,
     })
   )
 
@@ -177,7 +177,7 @@ export function remove(props) {
     () => {
       snackbar.success(gettext("Post has been deleted."))
     },
-    rejection => {
+    (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail)
       } else {
@@ -186,7 +186,7 @@ export function remove(props) {
 
       store.dispatch(
         post.patch(props.post, {
-          isDeleted: false
+          isDeleted: false,
         })
       )
     }
@@ -203,13 +203,13 @@ export function markAsBestAnswer(props) {
       best_answer_marked_on: moment(),
       best_answer_marked_by: user.id,
       best_answer_marked_by_name: user.username,
-      best_answer_marked_by_slug: user.slug
+      best_answer_marked_by_slug: user.slug,
     })
   )
 
   const ops = [
     { op: "replace", path: "best-answer", value: post.id },
-    { op: "add", path: "acl", value: true }
+    { op: "add", path: "acl", value: true },
   ]
 
   const previousState = {
@@ -218,7 +218,7 @@ export function markAsBestAnswer(props) {
     best_answer_marked_on: props.thread.best_answer_marked_on,
     best_answer_marked_by: props.thread.best_answer_marked_by,
     best_answer_marked_by_name: props.thread.best_answer_marked_by_name,
-    best_answer_marked_by_slug: props.thread.best_answer_marked_by_slug
+    best_answer_marked_by_slug: props.thread.best_answer_marked_by_slug,
   }
 
   patchThread(props, ops, previousState)
@@ -234,13 +234,13 @@ export function unmarkBestAnswer(props) {
       best_answer_marked_on: null,
       best_answer_marked_by: null,
       best_answer_marked_by_name: null,
-      best_answer_marked_by_slug: null
+      best_answer_marked_by_slug: null,
     })
   )
 
   const ops = [
     { op: "remove", path: "best-answer", value: post.id },
-    { op: "add", path: "acl", value: true }
+    { op: "add", path: "acl", value: true },
   ]
 
   const previousState = {
@@ -249,7 +249,7 @@ export function unmarkBestAnswer(props) {
     best_answer_marked_on: props.thread.best_answer_marked_on,
     best_answer_marked_by: props.thread.best_answer_marked_by,
     best_answer_marked_by_name: props.thread.best_answer_marked_by_name,
-    best_answer_marked_by_slug: props.thread.best_answer_marked_by_slug
+    best_answer_marked_by_slug: props.thread.best_answer_marked_by_slug,
   }
 
   patchThread(props, ops, previousState)
@@ -257,13 +257,13 @@ export function unmarkBestAnswer(props) {
 
 export function patchThread(props, ops, previousState) {
   ajax.patch(props.thread.api.index, ops).then(
-    newState => {
+    (newState) => {
       if (newState.best_answer_marked_on) {
         newState.best_answer_marked_on = moment(newState.best_answer_marked_on)
       }
       store.dispatch(thread.update(newState))
     },
-    rejection => {
+    (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail[0])
       } else {

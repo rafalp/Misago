@@ -26,9 +26,9 @@ export default class extends Form {
       canProtect: false,
 
       validators: {
-        post: getPostValidators()
+        post: getPostValidators(),
       },
-      errors: {}
+      errors: {},
     }
   }
 
@@ -36,7 +36,7 @@ export default class extends Form {
     ajax.get(this.props.config).then(this.loadSuccess, this.loadError)
   }
 
-  loadSuccess = data => {
+  loadSuccess = (data) => {
     this.setState({
       isReady: true,
 
@@ -44,18 +44,20 @@ export default class extends Form {
       attachments: attachments.hydrate(data.attachments),
       protect: data.is_protected,
 
-      canProtect: data.can_protect
+      canProtect: data.can_protect,
     })
   }
 
-  loadError = rejection => {
+  loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail
+      isErrored: rejection.detail,
     })
   }
 
   onCancel = () => {
-    const cancel = window.confirm(gettext("Are you sure you want to discard changes?"))
+    const cancel = window.confirm(
+      gettext("Are you sure you want to discard changes?")
+    )
     if (cancel) {
       posting.close()
     }
@@ -63,23 +65,23 @@ export default class extends Form {
 
   onProtect = () => {
     this.setState({
-      protect: true
+      protect: true,
     })
   }
 
   onUnprotect = () => {
     this.setState({
-      protect: false
+      protect: false,
     })
   }
 
-  onPostChange = event => {
+  onPostChange = (event) => {
     this.changeValue("post", event.target.value)
   }
 
-  onAttachmentsChange = attachments => {
+  onAttachmentsChange = (attachments) => {
     this.setState({
-      attachments
+      attachments,
     })
   }
 
@@ -103,7 +105,7 @@ export default class extends Form {
     return ajax.put(this.props.submit, {
       post: this.state.post,
       attachments: attachments.clean(this.state.attachments),
-      protect: this.state.protect
+      protect: this.state.protect,
     })
   }
 
@@ -113,7 +115,7 @@ export default class extends Form {
 
     // keep form loading
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
   }
 

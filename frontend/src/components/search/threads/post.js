@@ -2,7 +2,7 @@ import React from "react"
 import PostFooter from "./footer"
 import MisagoMarkup from "misago/components/misago-markup"
 
-export default function(props) {
+export default function (props) {
   return (
     <li id={"post-" + props.post.id} className="post post-infeed">
       <div className="post-border">

@@ -12,5 +12,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "component:categories",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

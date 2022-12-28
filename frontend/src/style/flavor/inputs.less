@@ -2,9 +2,9 @@
 // Inputs Flavor
 // --------------------------------------------------
 
-
 // default input
-input.form-control, textarea.form-control {
+input.form-control,
+textarea.form-control {
   border-color: @input-border;
   box-shadow: inset 0px 0px 0px 1px @input-border;
 
@@ -34,14 +34,13 @@ input.form-control, textarea.form-control {
   }
 }
 
-
 // password strenght marker
 .password-strength {
   margin-top: @line-height-computed / 2;
 
   .text-small {
     margin-top: @line-height-computed / 5;
-    
+
     color: lighten(@text-color, 25%);
     font-size: @font-size-small;
   }

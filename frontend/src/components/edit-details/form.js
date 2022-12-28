@@ -12,7 +12,7 @@ export default class extends Form {
     this.state = {
       isLoading: false,
 
-      errors: {}
+      errors: {},
     }
 
     const groups = props.groups.length
@@ -30,7 +30,7 @@ export default class extends Form {
   send() {
     const data = Object.assign({}, this.state, {
       errors: null,
-      isLoading: null
+      isLoading: null,
     })
 
     return ajax.post(this.props.api, data)
@@ -51,7 +51,7 @@ export default class extends Form {
 
   onChange = (name, value) => {
     this.setState({
-      [name]: value
+      [name]: value,
     })
   }
 

@@ -3,10 +3,10 @@ import React from "react"
 
 const ThreadPollButton = ({ compact, onClick }) => (
   <button
-    className={classnames(
-      "btn btn-default btn-outline",
-      {"btn-block": !compact, "btn-icon": compact}
-    )}
+    className={classnames("btn btn-default btn-outline", {
+      "btn-block": !compact,
+      "btn-icon": compact,
+    })}
     type="button"
     title={compact ? gettext("Add poll") : null}
     onClick={onClick}

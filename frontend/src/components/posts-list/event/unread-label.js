@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ post }) {
+export default function ({ post }) {
   if (post.is_read) return null
 
   return (

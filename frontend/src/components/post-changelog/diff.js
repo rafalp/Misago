@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="modal-body post-changelog-diff">
       <ul className="list-unstyled">

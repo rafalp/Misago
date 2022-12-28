@@ -18,8 +18,8 @@ export class RequestResetForm extends Form {
       email: "",
 
       validators: {
-        email: [validators.email()]
-      }
+        email: [validators.email()],
+      },
     }
   }
 
@@ -34,7 +34,7 @@ export class RequestResetForm extends Form {
 
   send() {
     return ajax.post(misago.get("SEND_PASSWORD_RESET_API"), {
-      email: this.state.email
+      email: this.state.email,
     })
   }
 
@@ -86,7 +86,7 @@ export class LinkSent extends React.Component {
     return interpolate(
       gettext("Reset password link was sent to %(email)s"),
       {
-        email: this.props.user.email
+        email: this.props.user.email,
       },
       true
     )
@@ -156,19 +156,19 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      complete: false
+      complete: false,
     }
   }
 
-  complete = apiResponse => {
+  complete = (apiResponse) => {
     this.setState({
-      complete: apiResponse
+      complete: apiResponse,
     })
   }
 
   reset = () => {
     this.setState({
-      complete: false
+      complete: false,
     })
   }
 

@@ -7,5 +7,5 @@ export default function initializer() {
 
 misago.addInitializer({
   name: "local-storage",
-  initializer: initializer
+  initializer: initializer,
 })

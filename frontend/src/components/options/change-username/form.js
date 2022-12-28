@@ -17,11 +17,11 @@ export default class extends Form {
         username: [
           validators.usernameContent(),
           validators.usernameMinLength(props.options.length_min),
-          validators.usernameMaxLength(props.options.length_max)
-        ]
+          validators.usernameMaxLength(props.options.length_max),
+        ],
       },
 
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -39,7 +39,7 @@ export default class extends Form {
         interpolate(
           message,
           {
-            changes_left: this.props.options.changes_left
+            changes_left: this.props.options.changes_left,
           },
           true
         )
@@ -57,7 +57,7 @@ export default class extends Form {
         interpolate(
           message,
           {
-            name_changes_expire: this.props.user.acl.name_changes_expire
+            name_changes_expire: this.props.user.acl.name_changes_expire,
           },
           true
         )
@@ -83,13 +83,13 @@ export default class extends Form {
 
   send() {
     return ajax.post(this.props.user.api.username, {
-      username: this.state.username
+      username: this.state.username,
     })
   }
 
   handleSuccess(success) {
     this.setState({
-      username: ""
+      username: "",
     })
 
     this.props.complete(success.username, success.slug, success.options)

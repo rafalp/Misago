@@ -6,13 +6,13 @@ import BannedPage from "misago/components/banned-page"
 import misago from "misago/index"
 import store from "misago/services/store"
 
-let select = function(state) {
+let select = function (state) {
   return state.tick
 }
 
 let RedrawedBannedPage = connect(select)(BannedPage)
 
-export default function(ban, changeState) {
+export default function (ban, changeState) {
   ReactDOM.render(
     <Provider store={store.getStore()}>
       <RedrawedBannedPage

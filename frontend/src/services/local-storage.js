@@ -5,9 +5,9 @@ export class LocalStorage {
     this._prefix = prefix
     this._watchers = []
 
-    window.addEventListener("storage", e => {
+    window.addEventListener("storage", (e) => {
       let newValueJson = JSON.parse(e.newValue)
-      this._watchers.forEach(function(watcher) {
+      this._watchers.forEach(function (watcher) {
         if (watcher.key === e.key && e.oldValue !== e.newValue) {
           watcher.callback(newValueJson)
         }
@@ -31,7 +31,7 @@ export class LocalStorage {
   watch(key, callback) {
     this._watchers.push({
       key: this._prefix + key,
-      callback: callback
+      callback: callback,
     })
   }
 }

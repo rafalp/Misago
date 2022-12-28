@@ -42,7 +42,7 @@ const ThreadsToolbar = ({
             list={list}
           />
         </ToolbarItem>
-        {(topCategory && subCategories.length > 0) && (
+        {topCategory && subCategories.length > 0 && (
           <ToolbarItem>
             <ThreadsCategoryPicker
               allItems={gettext("All subcategories")}
@@ -58,11 +58,7 @@ const ThreadsToolbar = ({
     {lists.length > 1 && (
       <ToolbarSection className="hidden-xs">
         <ToolbarItem>
-          <ThreadsListPicker
-            baseUrl={baseUrl}
-            list={list}
-            lists={lists}
-          />
+          <ThreadsListPicker baseUrl={baseUrl} list={list} lists={lists} />
         </ToolbarItem>
       </ToolbarSection>
     )}
@@ -77,11 +73,11 @@ const ThreadsToolbar = ({
               posting.open(
                 startThread || {
                   mode: "START",
-          
+
                   config: misago.get("THREAD_EDITOR_API"),
                   submit: misago.get("THREADS_API"),
-          
-                  category: category.id
+
+                  category: category.id,
                 }
               )
             }}

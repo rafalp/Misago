@@ -3,7 +3,7 @@ import Body from "./body"
 import Header from "./header"
 import PostSide from "./post-side"
 
-export default function({ post, poster }) {
+export default function ({ post, poster }) {
   const user = poster || post.poster
 
   let className = "post"

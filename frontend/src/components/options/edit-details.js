@@ -7,7 +7,7 @@ export default class extends React.Component {
   componentDidMount() {
     title.set({
       title: gettext("Edit details"),
-      parent: gettext("Change your options")
+      parent: gettext("Change your options"),
     })
   }
 

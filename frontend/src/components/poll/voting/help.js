@@ -5,7 +5,7 @@ const DATE_ABBR = '<abbr title="%(absolute)s">%(relative)s</abbr>'
 const USER_SPAN = '<span class="item-title">%(user)s</span>'
 const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>'
 
-export default function(props) {
+export default function (props) {
   return (
     <ul className="list-unstyled list-inline poll-help">
       <PollChoicesLeft choicesLeft={props.choicesLeft} />
@@ -32,7 +32,7 @@ export function PollChoicesLeft({ choicesLeft }) {
   const label = interpolate(
     message,
     {
-      choices: choicesLeft
+      choices: choicesLeft,
     },
     true
   )

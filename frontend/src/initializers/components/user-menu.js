@@ -3,7 +3,7 @@ import misago from "misago/index"
 import {
   UserMenu,
   CompactUserMenu,
-  select
+  select,
 } from "misago/components/user-menu/root"
 import mount from "misago/utils/mount-component"
 
@@ -15,5 +15,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "component:user-menu",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

@@ -5,11 +5,11 @@ import ChangeUsername from "misago/components/profile/moderation/change-username
 import DeleteAccount from "misago/components/profile/moderation/delete-account"
 import modal from "misago/services/modal"
 
-let select = function(store) {
+let select = function (store) {
   return {
     tick: store.tick,
     user: store.auth,
-    profile: store.profile
+    profile: store.profile,
   }
 }
 

@@ -13,7 +13,7 @@ export default class extends React.Component {
     if (this.props.post.is_read) return // don't register read tracker
 
     $(this.documentNode).waypoint({
-      handler: direction => {
+      handler: (direction) => {
         if (direction !== "down" || this.props.post.is_read) return
 
         // after 1500ms run flag post as read logic
@@ -30,26 +30,26 @@ export default class extends React.Component {
           // mark post as read
           store.dispatch(
             post.patch(this.props.post, {
-              is_read: true
+              is_read: true,
             })
           )
 
           // call API to let it know we have unread post
           ajax.post(this.props.post.api.read).then(
-            data => {
+            (data) => {
               store.dispatch(
                 thread.update(this.props.thread, {
-                  is_read: data.thread_is_read
+                  is_read: data.thread_is_read,
                 })
               )
             },
-            rejection => {
+            (rejection) => {
               snackbar.apiError(rejection)
             }
           )
         }, 1000)
       },
-      offset: "bottom-in-view"
+      offset: "bottom-in-view",
     })
   }
 
@@ -57,7 +57,7 @@ export default class extends React.Component {
     return (
       <div
         className={this.props.className}
-        ref={node => {
+        ref={(node) => {
           this.documentNode = node
         }}
       >

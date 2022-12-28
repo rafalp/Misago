@@ -58,7 +58,7 @@ export default class extends React.Component {
     let title = interpolate(
       gettext("Joined on %(joined_on)s"),
       {
-        joined_on: this.props.profile.joined_on.format("LL, LT")
+        joined_on: this.props.profile.joined_on.format("LL, LT"),
       },
       true
     )
@@ -66,7 +66,7 @@ export default class extends React.Component {
     let age = interpolate(
       gettext("Joined %(joined_on)s"),
       {
-        joined_on: this.props.profile.joined_on.fromNow()
+        joined_on: this.props.profile.joined_on.fromNow(),
       },
       true
     )

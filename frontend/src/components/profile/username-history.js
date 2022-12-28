@@ -31,7 +31,7 @@ export default class extends React.Component {
       more: data.more,
 
       page: data.page,
-      pages: data.pages
+      pages: data.pages,
     }
 
     store.dispatch(hydrate(data.results))
@@ -48,7 +48,7 @@ export default class extends React.Component {
       more: 0,
 
       page: 1,
-      pages: 1
+      pages: 1,
     }
 
     this.loadChanges()
@@ -61,12 +61,12 @@ export default class extends React.Component {
         {
           user: this.props.profile.id,
           search: search,
-          page: page || 1
+          page: page || 1,
         },
         "search-username-history"
       )
       .then(
-        data => {
+        (data) => {
           if (page === 1) {
             store.dispatch(hydrate(data.results))
           } else {
@@ -81,10 +81,10 @@ export default class extends React.Component {
             more: data.more,
 
             page: data.page,
-            pages: data.pages
+            pages: data.pages,
           })
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
         }
       )
@@ -93,19 +93,19 @@ export default class extends React.Component {
   componentDidMount() {
     title.set({
       title: gettext("Username history"),
-      parent: this.props.profile.username
+      parent: this.props.profile.username,
     })
   }
 
   loadMore = () => {
     this.setState({
-      isBusy: true
+      isBusy: true,
     })
 
     this.loadChanges(this.state.page + 1, this.state.search)
   }
 
-  search = ev => {
+  search = (ev) => {
     this.setState({
       isLoaded: false,
       isBusy: true,
@@ -116,7 +116,7 @@ export default class extends React.Component {
       more: 0,
 
       page: 1,
-      pages: 1
+      pages: 1,
     })
 
     this.loadChanges(1, ev.target.value)
@@ -135,7 +135,7 @@ export default class extends React.Component {
       return interpolate(
         message,
         {
-          changes: this.state.count
+          changes: this.state.count,
         },
         true
       )
@@ -149,7 +149,7 @@ export default class extends React.Component {
       return interpolate(
         message,
         {
-          changes: this.state.count
+          changes: this.state.count,
         },
         true
       )
@@ -164,7 +164,7 @@ export default class extends React.Component {
         message,
         {
           username: this.props.profile.username,
-          changes: this.state.count
+          changes: this.state.count,
         },
         true
       )
@@ -182,7 +182,7 @@ export default class extends React.Component {
       return interpolate(
         gettext("%(username)s's username was never changed."),
         {
-          username: this.props.profile.username
+          username: this.props.profile.username,
         },
         true
       )
@@ -202,7 +202,7 @@ export default class extends React.Component {
           {interpolate(
             gettext("Show older (%(more)s)"),
             {
-              more: this.state.more
+              more: this.state.more,
             },
             true
           )}

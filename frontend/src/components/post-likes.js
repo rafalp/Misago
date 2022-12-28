@@ -13,22 +13,22 @@ export default class extends React.Component {
       isReady: false,
 
       error: null,
-      likes: []
+      likes: [],
     }
   }
 
   componentDidMount() {
     ajax.get(this.props.post.api.likes).then(
-      data => {
+      (data) => {
         this.setState({
           isReady: true,
-          likes: data.map(hydrateLike)
+          likes: data.map(hydrateLike),
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
           isReady: true,
-          error: rejection.detail
+          error: rejection.detail,
         })
       }
     )
@@ -67,7 +67,7 @@ export default class extends React.Component {
 
 export function hydrateLike(data) {
   return Object.assign({}, data, {
-    liked_on: moment(data.liked_on)
+    liked_on: moment(data.liked_on),
   })
 }
 
@@ -104,7 +104,7 @@ export function LikesList(props) {
   return (
     <div className="modal-body modal-post-likers">
       <ul className="media-list">
-        {props.likes.map(like => {
+        {props.likes.map((like) => {
           return <LikeDetails key={like.id} {...like} />
         })}
       </ul>
@@ -116,7 +116,7 @@ export function LikeDetails(props) {
   if (props.url) {
     const user = {
       id: props.liker_id,
-      avatars: props.avatars
+      avatars: props.avatars,
     }
 
     return (

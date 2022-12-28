@@ -33,5 +33,5 @@ Button.defaultProps = {
   loading: false,
   disabled: false,
 
-  onClick: null
+  onClick: null,
 }

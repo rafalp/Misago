@@ -7,7 +7,7 @@ export default function initializer(context) {
     mount({
       root: misago.get("USERCP_URL"),
       component: Options,
-      paths: paths()
+      paths: paths(),
     })
   }
 }
@@ -15,5 +15,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:options",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

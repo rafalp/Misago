@@ -1,7 +1,7 @@
 import React from "react"
 import Dropdown from "./dropdown"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="pull-right dropdown">
       <button

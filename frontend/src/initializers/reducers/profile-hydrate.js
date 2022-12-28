@@ -11,5 +11,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "reducer:profile-hydrate",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

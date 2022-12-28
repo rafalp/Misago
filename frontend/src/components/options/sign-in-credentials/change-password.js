@@ -17,10 +17,10 @@ export default class extends Form {
       validators: {
         new_password: [],
         repeat_password: [],
-        password: []
+        password: [],
       },
 
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -29,7 +29,7 @@ export default class extends Form {
     let lengths = [
       this.state.new_password.trim().length,
       this.state.repeat_password.trim().length,
-      this.state.password.trim().length
+      this.state.password.trim().length,
     ]
 
     if (lengths.indexOf(0) !== -1) {
@@ -53,7 +53,7 @@ export default class extends Form {
   send() {
     return ajax.post(this.props.user.api.change_password, {
       new_password: this.state.new_password,
-      password: this.state.password
+      password: this.state.password,
     })
   }
 
@@ -61,7 +61,7 @@ export default class extends Form {
     this.setState({
       new_password: "",
       repeat_password: "",
-      password: ""
+      password: "",
     })
 
     snackbar.success(response.detail)

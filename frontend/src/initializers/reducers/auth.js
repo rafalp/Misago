@@ -11,7 +11,7 @@ export default function initializer(context) {
         isAuthenticated: context.get("isAuthenticated"),
         isAnonymous: !context.get("isAuthenticated"),
 
-        user: context.get("user")
+        user: context.get("user"),
       },
       initialState
     )
@@ -21,5 +21,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "reducer:auth",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

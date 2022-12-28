@@ -5,7 +5,7 @@ import store from "misago/services/store"
 const TICK_PERIOD = 50 * 1000 //do the tick every 50s
 
 export default function initializer() {
-  window.setInterval(function() {
+  window.setInterval(function () {
     store.dispatch(doTick())
   }, TICK_PERIOD)
 }
@@ -13,5 +13,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "tick-start",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

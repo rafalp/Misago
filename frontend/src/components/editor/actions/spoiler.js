@@ -2,9 +2,13 @@ import React from "react"
 import Action from "./action"
 import isUrl from "misago/utils/is-url"
 
-export default function(props) {
+export default function (props) {
   return (
-    <Action execAction={insertSpoiler} title={gettext("Insert spoiler")} {...props}>
+    <Action
+      execAction={insertSpoiler}
+      title={gettext("Insert spoiler")}
+      {...props}
+    >
       <span className="material-icon">not_interested</span>
     </Action>
   )

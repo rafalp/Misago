@@ -21,8 +21,8 @@ export default class extends Form {
 
       validators: {
         username: [],
-        password: []
-      }
+        password: [],
+      },
     }
   }
 
@@ -38,7 +38,7 @@ export default class extends Form {
   send() {
     return ajax.post(misago.get("AUTH_API"), {
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password,
     })
   }
 
@@ -59,7 +59,7 @@ export default class extends Form {
 
     // keep form loading
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
   }
 
@@ -70,7 +70,7 @@ export default class extends Form {
       } else if (rejection.code === "inactive_user") {
         snackbar.info(rejection.detail)
         this.setState({
-          showActivation: true
+          showActivation: true,
         })
       } else if (rejection.code === "banned") {
         showBannedPage(rejection.detail)

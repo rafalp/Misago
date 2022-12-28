@@ -3,7 +3,7 @@ import Avatar from "misago/components/avatar"
 import GoToButton from "./button"
 import UserTitle from "./user-title"
 
-export default function({ post, poster }) {
+export default function ({ post, poster }) {
   return (
     <div className="post-side post-side-registered">
       <GoToButton post={post} />

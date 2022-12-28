@@ -5,7 +5,7 @@ const DATE_ABBR = '<abbr title="%(absolute)s">%(relative)s</abbr>'
 const USER_SPAN = '<span class="item-title">%(user)s</span>'
 const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>'
 
-export default function(props) {
+export default function (props) {
   return (
     <ul className="list-unstyled list-inline poll-details">
       <PollVotes votes={props.poll.votes} />
@@ -21,7 +21,7 @@ export function PollCreation(props) {
     escapeHtml(gettext("Posted by %(poster)s %(posted_on)s.")),
     {
       poster: getPoster(props.poll),
-      posted_on: getPostedOn(props.poll)
+      posted_on: getPostedOn(props.poll),
     },
     true
   )
@@ -40,7 +40,7 @@ export function getPoster(poll) {
       USER_URL,
       {
         url: escapeHtml(poll.url.poster),
-        user: escapeHtml(poll.poster_name)
+        user: escapeHtml(poll.poster_name),
       },
       true
     )
@@ -49,7 +49,7 @@ export function getPoster(poll) {
   return interpolate(
     USER_SPAN,
     {
-      user: escapeHtml(poll.poster_name)
+      user: escapeHtml(poll.poster_name),
     },
     true
   )
@@ -60,7 +60,7 @@ export function getPostedOn(poll) {
     DATE_ABBR,
     {
       absolute: escapeHtml(poll.posted_on.format("LLL")),
-      relative: escapeHtml(poll.posted_on.fromNow())
+      relative: escapeHtml(poll.posted_on.fromNow()),
     },
     true
   )
@@ -74,7 +74,7 @@ export function PollLength(props) {
   const message = interpolate(
     escapeHtml(gettext("Voting ends %(ends_on)s.")),
     {
-      ends_on: getEndsOn(props.poll)
+      ends_on: getEndsOn(props.poll),
     },
     true
   )
@@ -92,7 +92,7 @@ export function getEndsOn(poll) {
     DATE_ABBR,
     {
       absolute: escapeHtml(poll.endsOn.format("LLL")),
-      relative: escapeHtml(poll.endsOn.fromNow())
+      relative: escapeHtml(poll.endsOn.fromNow()),
     },
     true
   )
@@ -103,7 +103,7 @@ export function PollVotes(props) {
   const label = interpolate(
     message,
     {
-      votes: props.votes
+      votes: props.votes,
     },
     true
   )

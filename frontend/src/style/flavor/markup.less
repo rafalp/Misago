@@ -2,12 +2,10 @@
 // Markup Flavor
 // --------------------------------------------------
 
-
 // Round images
 .misago-markup img {
   border-radius: @border-radius-base;
 }
-
 
 // Quote block
 .misago-markup .quote-block,
@@ -24,11 +22,15 @@
 
     color: #795548;
 
-    a, a:link, a:visited {
+    a,
+    a:link,
+    a:visited {
       color: #5d4037;
     }
 
-    a:hover, a:focus, a:active {
+    a:hover,
+    a:focus,
+    a:active {
       color: #3e2723;
     }
   }
@@ -38,13 +40,13 @@
   }
 }
 
-.misago-markup>.quote-block,
-.misago-markup>blockquote {
+.misago-markup > .quote-block,
+.misago-markup > blockquote {
   background: #ffecb3;
   border: none;
   border-radius: @border-radius-base;
 
-  .quote-block { 
+  .quote-block {
     background: #ffecb3;
   }
 }
@@ -52,12 +54,12 @@
 .misago-markup .quote-body {
   background: #ffecb3;
 
-  &>.quote-block, &>blockquote {
+  & > .quote-block,
+  & > blockquote {
     border-color: #ffe082;
     border-radius: @border-radius-base;
   }
 }
-
 
 // Spoiler block
 .misago-markup .spoiler-block {
@@ -81,13 +83,13 @@
   color: @text-color;
 }
 
-  .misago-markup .spoiler-block.revealed .spoiler-body {
-    -webkit-filter: none;
-    -moz-filter: none;
-    -o-filter: none;
-    -ms-filter: none;
-    filter: none;
-  }
+.misago-markup .spoiler-block.revealed .spoiler-body {
+  -webkit-filter: none;
+  -moz-filter: none;
+  -o-filter: none;
+  -ms-filter: none;
+  filter: none;
+}
 
 .misago-markup .spoiler-overlay {
   position: absolute;

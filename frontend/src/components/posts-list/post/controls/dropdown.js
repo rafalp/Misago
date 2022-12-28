@@ -6,7 +6,7 @@ import MoveModal from "./move"
 import PostChangelog from "misago/components/post-changelog"
 import SplitModal from "./split"
 
-export default function(props) {
+export default function (props) {
   return (
     <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
       <Permalink {...props} />
@@ -53,7 +53,7 @@ export class Edit extends React.Component {
       mode: "EDIT",
 
       config: this.props.post.api.editor,
-      submit: this.props.post.api.index
+      submit: this.props.post.api.index,
     })
   }
 
@@ -137,7 +137,7 @@ export class PostEdits extends React.Component {
     const title = interpolate(
       message,
       {
-        edits: this.props.post.edits
+        edits: this.props.post.edits,
       },
       true
     )

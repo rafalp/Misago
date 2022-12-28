@@ -5,7 +5,7 @@ import escapeHtml from "misago/utils/escape-html"
 const CATEGORY_SPAN = '<span class="category-name">%(name)s</span>'
 const ITEM_SPAN = '<span class="item-title">%(name)s</span>'
 
-export default function(props) {
+export default function (props) {
   const template = gettext(
     '%(user)s, %(posted_on)s in "%(thread)s", %(category)s'
   )
@@ -23,25 +23,25 @@ export default function(props) {
       category: interpolate(
         CATEGORY_SPAN,
         {
-          name: escapeHtml(props.category.name)
+          name: escapeHtml(props.category.name),
         },
         true
       ),
       thread: interpolate(
         ITEM_SPAN,
         {
-          name: escapeHtml(props.thread.title)
+          name: escapeHtml(props.thread.title),
         },
         true
       ),
       user: interpolate(
         ITEM_SPAN,
         {
-          name: escapeHtml(username)
+          name: escapeHtml(username),
         },
         true
       ),
-      posted_on: escapeHtml(props.post.hidden_on.fromNow())
+      posted_on: escapeHtml(props.post.hidden_on.fromNow()),
     },
     true
   )

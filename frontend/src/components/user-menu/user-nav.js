@@ -77,7 +77,9 @@ export class UserMenu extends React.Component {
         <li className="dropdown-buttons">
           <button
             className="btn btn-default btn-block"
-            onClick={() => document.getElementById("hidden-logout-form").submit()}
+            onClick={() =>
+              document.getElementById("hidden-logout-form").submit()
+            }
             type="button"
           >
             {gettext("Log out")}
@@ -146,7 +148,7 @@ export function UserPrivateThreadsLink({ user }) {
 
 export function selectUserMenu(state) {
   return {
-    user: state.auth.user
+    user: state.auth.user,
   }
 }
 

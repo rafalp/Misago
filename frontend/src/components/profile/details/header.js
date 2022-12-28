@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ onEdit, showEditButton }) {
+export default function ({ onEdit, showEditButton }) {
   return (
     <div>
       <nav className="toolbar">

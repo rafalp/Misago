@@ -2,17 +2,26 @@ import React from "react"
 import { Toolbar, ToolbarItem, ToolbarSection, ToolbarSpacer } from "../Toolbar"
 import ThreadPagination from "./ThreadPagination"
 import ThreadPollButton from "./ThreadPollButton"
+import ThreadPostsModeration from "./ThreadPostsModeration"
 import ThreadReplyButton from "./ThreadReplyButton"
 import ThreadShortcutsButton from "./ThreadShortcutsButton"
 import ThreadSubscriptionButton from "./ThreadSubscriptionButton"
 
-const ThreadToolbarTop = ({ thread, posts, user, onPoll, onReply }) => (
+const ThreadToolbarTop = ({
+  thread,
+  posts,
+  user,
+  selection,
+  moderation,
+  onPoll,
+  onReply,
+}) => (
   <Toolbar>
     <ToolbarSection className="hidden-xs">
       <ToolbarItem>
         <ThreadShortcutsButton thread={thread} user={user} />
       </ToolbarItem>
-      <ToolbarItem>
+      <ToolbarItem className="hidden-xs hidden-sm">
         <ThreadPagination baseUrl={thread.url.index} posts={posts} />
       </ToolbarItem>
     </ToolbarSection>
@@ -44,6 +53,15 @@ const ThreadToolbarTop = ({ thread, posts, user, onPoll, onReply }) => (
             <ThreadPollButton onClick={onPoll} compact />
           </ToolbarItem>
         )}
+        {moderation.enabled && (
+          <ToolbarItem className="hidden-xs" shrink>
+            <ThreadPostsModeration
+              thread={thread}
+              user={user}
+              selection={selection}
+            />
+          </ToolbarItem>
+        )}
       </ToolbarSection>
     ) : (
       <ToolbarSection>
@@ -53,6 +71,15 @@ const ThreadToolbarTop = ({ thread, posts, user, onPoll, onReply }) => (
         {thread.acl.can_start_poll && !thread.poll && (
           <ToolbarItem>
             <ThreadPollButton onClick={onPoll} />
+          </ToolbarItem>
+        )}
+        {moderation.enabled && (
+          <ToolbarItem shrink>
+            <ThreadPostsModeration
+              thread={thread}
+              user={user}
+              selection={selection}
+            />
           </ToolbarItem>
         )}
       </ToolbarSection>

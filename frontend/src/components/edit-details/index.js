@@ -11,20 +11,20 @@ export default class extends React.Component {
 
     this.state = {
       loading: true,
-      groups: null
+      groups: null,
     }
   }
 
   componentDidMount() {
     ajax.get(this.props.api).then(
-      groups => {
+      (groups) => {
         this.setState({
           loading: false,
 
-          groups
+          groups,
         })
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
         if (this.props.cancel) {
           this.props.cancel()

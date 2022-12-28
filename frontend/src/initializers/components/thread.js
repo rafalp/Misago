@@ -5,7 +5,7 @@ import mount from "misago/utils/routed-component"
 export default function initializer(context) {
   if (context.has("THREAD") && context.has("POSTS")) {
     mount({
-      paths: paths()
+      paths: paths(),
     })
   }
 }
@@ -13,5 +13,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:thread",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

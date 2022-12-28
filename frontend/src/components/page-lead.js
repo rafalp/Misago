@@ -21,7 +21,7 @@ export default class extends React.Component {
         <div
           className={this.getClassName()}
           dangerouslySetInnerHTML={{
-            __html: this.props.copy
+            __html: this.props.copy,
           }}
         />
       )

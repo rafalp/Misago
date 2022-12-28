@@ -15,7 +15,7 @@ export class Include {
     $.ajax({
       url: (!remote ? this._staticUrl : "") + script,
       cache: true,
-      dataType: "script"
+      dataType: "script",
     })
   }
 }

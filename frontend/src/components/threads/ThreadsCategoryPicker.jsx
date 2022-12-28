@@ -1,7 +1,13 @@
 import React from "react"
 import { Link } from "react-router"
 
-const ThreadsCategoryPicker = ({ allItems, parentUrl, category, categories, list }) => (
+const ThreadsCategoryPicker = ({
+  allItems,
+  parentUrl,
+  category,
+  categories,
+  list,
+}) => (
   <div className="dropdown threads-category-picker">
     <button
       type="button"
@@ -11,7 +17,10 @@ const ThreadsCategoryPicker = ({ allItems, parentUrl, category, categories, list
       aria-expanded="false"
     >
       {category && (
-        <span className="material-icon" style={{ color: category.color || "inherit"}}>
+        <span
+          className="material-icon"
+          style={{ color: category.color || "inherit" }}
+        >
           label
         </span>
       )}
@@ -24,19 +33,22 @@ const ThreadsCategoryPicker = ({ allItems, parentUrl, category, categories, list
         <span className={category.short_name && "hidden-xs hidden-sm"}>
           {category.name}
         </span>
-      ): allItems}
+      ) : (
+        allItems
+      )}
     </button>
     <ul className="dropdown-menu">
       <li>
-        <Link to={parentUrl + list.path}>
-          {allItems}
-        </Link>
+        <Link to={parentUrl + list.path}>{allItems}</Link>
       </li>
       <li role="separator" className="divider" />
       {categories.map((choice) => (
         <li key={choice.id}>
           <Link to={choice.url.index + list.path}>
-            <span className="material-icon" style={{ color: choice.color || "inherit"}}>
+            <span
+              className="material-icon"
+              style={{ color: choice.color || "inherit" }}
+            >
               label
             </span>
             {choice.name}

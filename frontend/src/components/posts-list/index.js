@@ -3,7 +3,7 @@ import Event from "./event"
 import Post from "./post"
 import PostPreview from "./post/preview"
 
-export default function(props) {
+export default function (props) {
   if (!props.posts.isLoaded) {
     return (
       <ul className="posts-list ui-preview">
@@ -14,7 +14,7 @@ export default function(props) {
 
   return (
     <ul className="posts-list ui-ready">
-      {props.posts.results.map(post => {
+      {props.posts.results.map((post) => {
         return <ListItem key={post.id} post={post} {...props} />
       })}
     </ul>

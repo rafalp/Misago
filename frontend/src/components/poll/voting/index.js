@@ -19,11 +19,11 @@ export default class extends Form {
       isLoading: false,
 
       choices: props.poll.choices,
-      choicesLeft: getChoicesLeft(props.poll, props.poll.choices)
+      choicesLeft: getChoicesLeft(props.poll, props.poll.choices),
     }
   }
 
-  toggleChoice = hash => {
+  toggleChoice = (hash) => {
     const choice = getChoiceFromHash(this.state.choices, hash)
 
     let choices = null
@@ -35,7 +35,7 @@ export default class extends Form {
 
     this.setState({
       choices,
-      choicesLeft: getChoicesLeft(this.props.poll, choices)
+      choicesLeft: getChoicesLeft(this.props.poll, choices),
     })
   }
 
@@ -52,17 +52,17 @@ export default class extends Form {
       }
     }
 
-    return this.state.choices.map(choice => {
+    return this.state.choices.map((choice) => {
       return Object.assign({}, choice, {
-        selected: choice.hash == hash ? true : choice.selected
+        selected: choice.hash == hash ? true : choice.selected,
       })
     })
   }
 
   deselectChoice = (choice, hash) => {
-    return this.state.choices.map(choice => {
+    return this.state.choices.map((choice) => {
       return Object.assign({}, choice, {
-        selected: choice.hash == hash ? false : choice.selected
+        selected: choice.hash == hash ? false : choice.selected,
       })
     })
   }

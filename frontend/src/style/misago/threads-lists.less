@@ -2,11 +2,9 @@
 // Threads Lists
 // --------------------------------------------------
 
-
 .threads-list {
   margin-bottom: @line-height-computed;
 }
-
 
 // Make list row flexbox row
 .threads-list-item {
@@ -48,7 +46,11 @@
   font-size: @thread-read-icon-size;
   line-height: @thread-read-icon-size;
 
-  &:link, &:active, &:focus, &:hover, &:visited {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
     background-color: @thread-read-icon-bg;
     color: @thread-read-icon-color;
     text-decoration: none;
@@ -56,7 +58,11 @@
 }
 
 .threads-list-icon-new {
-  &:link, &:active, &:focus, &:hover, &:visited {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
     background-color: @thread-new-icon-bg;
     color: @thread-new-icon-color;
   }
@@ -68,7 +74,11 @@
 }
 
 a.threads-list-item-title {
-  &:link, &:active, &:focus, &:hover, &:visited {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
     font-size: @threads-list-title-size;
 
     color: @thread-color;
@@ -79,14 +89,22 @@ a.threads-list-item-title {
 a.threads-list-item-title-sm {
   font-size: @threads-list-title-size-sm;
 
-  &:link, &:active, &:focus, &:hover, &:visited {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
     color: @thread-read-color;
     overflow-wrap: break-word;
   }
 }
 
 a.threads-list-item-title-new {
-  &:link, &:active, &:focus, &:hover, &:visited {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
     color: @thread-new-color;
   }
 }
@@ -184,14 +202,24 @@ a.threads-list-item-title-new {
   font-size: @font-size-small;
   font-weight: bold;
 
-  &, &:link, &:active, &:hover, &:focus, &:visited {
+  &,
+  &:link,
+  &:active,
+  &:hover,
+  &:focus,
+  &:visited {
     color: @category-label-default-color;
     background: @category-label-default-bg;
     text-decoration: none;
   }
 
   &.threads-list-category-label-color {
-    &, &:link, &:active, &:hover, &:focus, &:visited {
+    &,
+    &:link,
+    &:active,
+    &:hover,
+    &:focus,
+    &:visited {
       color: #fff;
       background: var(--label-color);
     }
@@ -245,7 +273,11 @@ a.threads-list-item-title-new {
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  a:link, a:hover, a:active, a:visited, a:focus {
+  a:link,
+  a:hover,
+  a:active,
+  a:visited,
+  a:focus {
     color: @thread-last-activity-color;
     font-size: @thread-last-activity-size;
   }
@@ -266,10 +298,11 @@ a.threads-list-item-title-new {
 @media screen and (max-width: @screen-xs-max) {
   // Make card full-width
   .threads-list {
-    margin-left: @grid-gutter-width  * -.5;
-    margin-right: @grid-gutter-width  * -.5;
+    margin-left: @grid-gutter-width * -0.5;
+    margin-right: @grid-gutter-width * -0.5;
 
-    .list-group, .list-group-item {
+    .list-group,
+    .list-group-item {
       border-radius: 0;
       border-left: 0;
       border-right: 0;
@@ -314,7 +347,7 @@ a.threads-list-item-title-new {
     justify-content: end;
     flex: 0;
 
-    &>div {
+    & > div {
       width: auto;
       padding: 0 0 0 @grid-gutter-width / 2;
     }
@@ -343,13 +376,13 @@ a.threads-list-item-title-new {
 
 // Make thread buttons flash when thread is busy
 .threads-list-item-is-busy .btn-icon {
-  opacity: .8;
-  animation: busy .75s linear infinite;
+  opacity: 0.8;
+  animation: busy 0.75s linear infinite;
 }
 
 @keyframes busy {
   50% {
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 

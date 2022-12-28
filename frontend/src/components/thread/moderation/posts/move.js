@@ -18,9 +18,9 @@ export default class extends Form {
       url: "",
 
       validators: {
-        url: []
+        url: [],
       },
-      errors: {}
+      errors: {},
     }
   }
 
@@ -36,15 +36,15 @@ export default class extends Form {
   send() {
     return ajax.post(this.props.thread.api.posts.move, {
       new_thread: this.state.url,
-      posts: this.props.selection.map(post => post.id)
+      posts: this.props.selection.map((post) => post.id),
     })
   }
 
   handleSuccess(success) {
-    this.props.selection.forEach(selection => {
+    this.props.selection.forEach((selection) => {
       store.dispatch(
         post.patch(selection, {
-          isDeleted: true
+          isDeleted: true,
         })
       )
     })
@@ -62,7 +62,7 @@ export default class extends Form {
     }
   }
 
-  onUrlChange = event => {
+  onUrlChange = (event) => {
     this.changeValue("url", event.target.value)
   }
 

@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router"
 
-export default function(props) {
+export default function (props) {
   return (
     <nav className="misago-pagination pull-left">
       <Pager {...props} />

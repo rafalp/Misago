@@ -2,7 +2,7 @@ import React from "react"
 import SearchPage from "../page"
 import Results from "./results"
 
-export default function(props) {
+export default function (props) {
   return (
     <SearchPage provider={props.route.provider} search={props.search}>
       <Blankslate query={props.search.query} posts={props.posts}>

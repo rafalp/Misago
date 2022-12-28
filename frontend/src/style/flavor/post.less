@@ -2,13 +2,11 @@
 // Posts Flavor
 // --------------------------------------------------
 
-
 // Post body
 .panel-post {
   background: @post-bg;
   border: 1px solid @post-border;
 }
-
 
 // Post side
 .post-side {
@@ -21,13 +19,16 @@
   .user-title {
     color: @gray;
 
-    a, a:link, a:visited,
-    a:focus, a:hover, a:active {
+    a,
+    a:link,
+    a:visited,
+    a:focus,
+    a:hover,
+    a:active {
       color: @gray;
     }
   }
 }
-
 
 // Header
 .post-heading {
@@ -56,15 +57,20 @@
     }
   }
 
-  &>.btn-link {
+  & > .btn-link {
     padding-left: 0px;
     padding-right: 0px;
 
-    &, &:link, &:visited {
+    &,
+    &:link,
+    &:visited {
       color: @gray-light;
     }
 
-    &:hover, &:focus, &:focus:active, &:active {
+    &:hover,
+    &:focus,
+    &:focus:active,
+    &:active {
       color: @text-color;
       text-decoration: none;
     }
@@ -75,13 +81,12 @@
   }
 }
 
-
 // Status
 .post-status-message {
   border-radius: @border-radius-base;
   margin-top: @line-height-computed / 2;
   padding: @padding-base-vertical @padding-base-horizontal;
-  
+
   @media screen and (max-width: @screen-xs-max) {
     font-size: @font-size-small;
 
@@ -95,12 +100,10 @@
   }
 }
 
-
 // Post body
 .post-body:last-child {
   padding-bottom: @line-height-computed / 2;
 }
-
 
 // Attachments
 .post-attachments {
@@ -120,18 +123,22 @@
   }
 }
 
-
 // Footer
 .post-footer {
-  &>.btn-link {
+  & > .btn-link {
     padding-left: 0px;
     padding-right: 0px;
 
-    &, &:link, &:visited {
+    &,
+    &:link,
+    &:visited {
       color: @gray-light;
     }
 
-    &:hover, &:focus, &:focus:active, &:active {
+    &:hover,
+    &:focus,
+    &:focus:active,
+    &:active {
       color: @text-color;
       text-decoration: none;
     }
@@ -143,12 +150,12 @@
   }
 }
 
-
 // Hidden and invalid messages
-.post-body-hidden, .post-body-invalid {
+.post-body-hidden,
+.post-body-invalid {
   padding-top: @line-height-computed / 2;
   padding-bottom: @line-height-computed / 2;
-  
+
   .lead {
     margin-bottom: @line-height-computed / 2;
   }
@@ -159,7 +166,6 @@
     font-size: @font-size-small;
   }
 }
-
 
 // Fade out hidden posts a little
 .post-hidden {

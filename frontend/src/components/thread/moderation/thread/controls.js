@@ -15,12 +15,12 @@ export default class extends React.Component {
     ops.push({ op: "add", path: "acl", value: true })
 
     ajax.patch(this.props.thread.api.index, ops).then(
-      data => {
+      (data) => {
         store.dispatch(thread.update(data))
         store.dispatch(thread.release())
         snackbar.success(successMessage)
       },
-      rejection => {
+      (rejection) => {
         store.dispatch(thread.release())
         if (rejection.status === 400) {
           snackbar.error(rejection.detail[0])
@@ -37,8 +37,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 2
-        }
+          value: 2,
+        },
       ],
       gettext("Thread has been pinned globally.")
     )
@@ -50,8 +50,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 1
-        }
+          value: 1,
+        },
       ],
       gettext("Thread has been pinned locally.")
     )
@@ -63,8 +63,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 0
-        }
+          value: 0,
+        },
       ],
       gettext("Thread has been unpinned.")
     )
@@ -76,8 +76,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-unapproved",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Thread has been approved.")
     )
@@ -89,8 +89,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-closed",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Thread has been opened.")
     )
@@ -102,8 +102,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-closed",
-          value: true
-        }
+          value: true,
+        },
       ],
       gettext("Thread has been closed.")
     )
@@ -115,8 +115,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-hidden",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Thread has been made visible.")
     )
@@ -128,8 +128,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-hidden",
-          value: true
-        }
+          value: true,
+        },
       ],
       gettext("Thread has been made hidden.")
     )
@@ -146,18 +146,20 @@ export default class extends React.Component {
   }
 
   delete = () => {
-    if (!window.confirm(gettext("Are you sure you want to delete this thread?"))) {
+    if (
+      !window.confirm(gettext("Are you sure you want to delete this thread?"))
+    ) {
       return
     }
 
     store.dispatch(thread.busy())
 
     ajax.delete(this.props.thread.api.index).then(
-      data => {
+      (data) => {
         snackbar.success(gettext("Thread has been deleted."))
         window.location = this.props.thread.category.url.index
       },
-      rejection => {
+      (rejection) => {
         store.dispatch(thread.release())
         snackbar.apiError(rejection)
       }

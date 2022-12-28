@@ -19,7 +19,7 @@ export default class extends React.Component {
     }
 
     return (
-      <div className="pull-right hidden-xs">
+      <div className="pull-right">
         <button
           className="btn btn-default btn-icon"
           onClick={this.onClick}

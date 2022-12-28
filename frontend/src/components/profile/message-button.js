@@ -8,7 +8,7 @@ export default class extends React.Component {
       mode: "START_PRIVATE",
       submit: misago.get("PRIVATE_THREADS_API"),
 
-      to: [this.props.profile]
+      to: [this.props.profile],
     })
   }
 

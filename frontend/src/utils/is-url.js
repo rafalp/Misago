@@ -3,6 +3,6 @@ const URL_PATTERN = new RegExp(
   "i"
 )
 
-export default function(str) {
+export default function (str) {
   return URL_PATTERN.test($.trim(str))
 }

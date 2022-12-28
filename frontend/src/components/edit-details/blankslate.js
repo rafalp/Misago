@@ -1,7 +1,7 @@
 import React from "react"
 import PanelMessage from "misago/components/panel-message"
 
-export default function({ display }) {
+export default function ({ display }) {
   if (!display) return null
 
   return (

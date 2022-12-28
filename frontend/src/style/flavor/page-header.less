@@ -2,7 +2,6 @@
 // Flavor Header
 // --------------------------------------------------
 
-
 // Graphic background
 .page-header {
   background: none; // we'll use header handler for that
@@ -12,18 +11,16 @@
 .page-header-bg {
   background: @page-header-bg;
   background-size: cover;
-  
+
   @media screen and (min-width: @screen-md-min) {
     margin-bottom: @line-height-computed * 2;
   }
 }
 
-
 // Min-height the line on headless pages
 .page-header-bg {
   min-height: @page-header-min-height;
 }
-
 
 // Item colors
 .page-header {
@@ -32,7 +29,6 @@
     font-weight: 400;
   }
 }
-
 
 // Buttons
 .page-header .btn-outline {
@@ -63,17 +59,20 @@
   }
 }
 
-
 // Stats
 .header-stats {
   color: @page-header-text-color;
 
   li {
-    a, a:link, a:visited {
+    a,
+    a:link,
+    a:visited {
       color: @page-header-link-color;
     }
 
-    a:hover, a:focus, a:active {
+    a:hover,
+    a:focus,
+    a:active {
       color: @page-header-link-hover-color;
     }
 
@@ -85,28 +84,34 @@
   }
 }
 
-
 // Go back
 .page-header .go-back-sm {
-  &, &:link, &:visited {
+  &,
+  &:link,
+  &:visited {
     color: @page-header-text-color;
   }
 
-  &:hover, &:focus, &:active {
+  &:hover,
+  &:focus,
+  &:active {
     color: @page-header-link-hover-color;
   }
 }
 
-
 // Breadcrumbs
 .page-header .breadcrumb {
   color: @page-header-text-color;
-  
-  a, a:link, a:visited {
+
+  a,
+  a:link,
+  a:visited {
     color: @page-header-text-color;
   }
 
-  a:hover, a:focus, a:active {
+  a:hover,
+  a:focus,
+  a:active {
     color: @page-header-link-color;
   }
 
@@ -114,7 +119,6 @@
     color: @page-header-text-color;
   }
 }
-
 
 // Header tabs
 .page-header .page-tabs {
@@ -124,18 +128,21 @@
   li a {
     font-weight: bold;
 
-    &, &:link, &:visited {
+    &,
+    &:link,
+    &:visited {
       background-color: @page-tabs-link-bg;
       border-radius: @border-radius-small @border-radius-small 0 0;
 
       color: @page-tabs-link-color;
     }
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: @page-tabs-link-hover-bg;
 
       color: @page-tabs-link-hover-color;
-  
+
       @media screen and (max-width: @screen-sm-max) {
         // sticky hover on touch devices is confusing, so don.t add it
         background-color: @page-tabs-link-bg;
@@ -146,7 +153,12 @@
   }
 
   li.active a {
-    &, &:link, &:active, &:visited, &:hover, &:focus {
+    &,
+    &:link,
+    &:active,
+    &:visited,
+    &:hover,
+    &:focus {
       background-color: @page-tabs-link-active-bg;
 
       color: @page-tabs-link-active-color;

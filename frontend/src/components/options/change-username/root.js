@@ -18,20 +18,22 @@ export default class extends React.Component {
 
     this.state = {
       isLoaded: false,
-      options: null
+      options: null,
     }
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Change username"),
-      parent: gettext("Change your options")
+      parent: gettext("Change your options"),
     })
 
     Promise.all([
       ajax.get(this.props.user.api.username),
-      ajax.get(misago.get("USERNAME_CHANGES_API"), { user: this.props.user.id })
-    ]).then(data => {
+      ajax.get(misago.get("USERNAME_CHANGES_API"), {
+        user: this.props.user.id,
+      }),
+    ]).then((data) => {
       store.dispatch(hydrate(data[1].results))
 
       this.setState({
@@ -40,15 +42,15 @@ export default class extends React.Component {
           changes_left: data[0].changes_left,
           length_min: data[0].length_min,
           length_max: data[0].length_max,
-          next_on: data[0].next_on ? moment(data[0].next_on) : null
-        }
+          next_on: data[0].next_on ? moment(data[0].next_on) : null,
+        },
       })
     })
   }
 
   onComplete = (username, slug, options) => {
     this.setState({
-      options
+      options,
     })
 
     store.dispatch(

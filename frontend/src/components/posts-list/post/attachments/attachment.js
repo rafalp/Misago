@@ -7,7 +7,7 @@ const DATE_ABBR = '<abbr title="%(absolute)s">%(relative)s</abbr>'
 const USER_SPAN = '<span class="item-title">%(user)s</span>'
 const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>'
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="col-xs-12 col-md-6">
       <AttachmentPreview {...props} />
@@ -66,7 +66,7 @@ export function AttachmentDetails(props) {
       USER_URL,
       {
         url: escapeHtml(props.attachment.url.uploader),
-        user: escapeHtml(props.attachment.uploader_name)
+        user: escapeHtml(props.attachment.uploader_name),
       },
       true
     )
@@ -74,7 +74,7 @@ export function AttachmentDetails(props) {
     user = interpolate(
       USER_SPAN,
       {
-        user: escapeHtml(props.attachment.uploader_name)
+        user: escapeHtml(props.attachment.uploader_name),
       },
       true
     )
@@ -84,7 +84,7 @@ export function AttachmentDetails(props) {
     DATE_ABBR,
     {
       absolute: escapeHtml(props.attachment.uploaded_on.format("LLL")),
-      relative: escapeHtml(props.attachment.uploaded_on.fromNow())
+      relative: escapeHtml(props.attachment.uploaded_on.fromNow()),
     },
     true
   )
@@ -99,7 +99,7 @@ export function AttachmentDetails(props) {
       filetype: props.attachment.filetype,
       size: formatFilesize(props.attachment.size),
       uploader: user,
-      uploaded_on: date
+      uploaded_on: date,
     },
     true
   )

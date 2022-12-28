@@ -44,10 +44,12 @@ export default class extends React.Component {
           categories={categories}
           categoriesMap={categoriesMap}
           topCategory={topCategory}
-          topCategories={categories.filter(cat => cat.parent === root.id)}
-          subCategories={!!topCategory ? categories.filter(
-            cat => cat.parent === topCategory.id
-          ) : []}
+          topCategories={categories.filter((cat) => cat.parent === root.id)}
+          subCategories={
+            !!topCategory
+              ? categories.filter((cat) => cat.parent === topCategory.id)
+              : []
+          }
           subCategory={category.level === 2 ? category : null}
           subcategories={this.props.subcategories}
           list={this.props.route.list}
@@ -62,7 +64,11 @@ export default class extends React.Component {
           moderation={this.props.moderation}
           route={this.props.route}
           user={this.props.user}
-          disabled={!this.props.isLoaded || this.props.isBusy || this.props.busyThreads.length}
+          disabled={
+            !this.props.isLoaded ||
+            this.props.isBusy ||
+            this.props.busyThreads.length
+          }
         />
         {this.props.children}
       </div>

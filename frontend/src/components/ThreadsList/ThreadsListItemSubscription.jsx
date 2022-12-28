@@ -16,10 +16,7 @@ const ThreadsListItemSubscription = ({ disabled, thread }) => (
         {getSubscriptionIcon(thread.subscription)}
       </span>
     </button>
-    <ThreadsListItemSubscriptionOptions
-      disabled={disabled}
-      thread={thread}
-    />
+    <ThreadsListItemSubscriptionOptions disabled={disabled} thread={thread} />
   </div>
 )
 

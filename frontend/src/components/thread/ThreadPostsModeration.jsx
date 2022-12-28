@@ -1,6 +1,7 @@
 import React from "react"
+import { ThreadPostsModerationOptions } from "./moderation/posts"
 
-const ThreadPostsModeration = ({ disabled, dropup }) => (
+const ThreadPostsModeration = ({ thread, user, selection, dropup }) => (
   <div className={dropup ? "dropup" : "dropdown"}>
     <button
       type="button"
@@ -9,13 +10,15 @@ const ThreadPostsModeration = ({ disabled, dropup }) => (
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
-      disabled={disabled}
+      disabled={selection.length === 0}
     >
       <span className="material-icon">settings</span>
     </button>
-    <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
-      <li>HER</li>
-    </ul>
+    <ThreadPostsModerationOptions
+      thread={thread}
+      user={user}
+      selection={selection}
+    />
   </div>
 )
 

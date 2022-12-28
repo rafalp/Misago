@@ -1,10 +1,10 @@
 import React from "react"
 import { Link } from "react-router"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="list-group nav-side">
-      {props.providers.map(provider => {
+      {props.providers.map((provider) => {
         return (
           <Link
             activeClassName="active"

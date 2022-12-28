@@ -22,8 +22,8 @@ export default class extends Form {
 
       username: "",
       validators: {
-        username: [validators.usernameContent()]
-      }
+        username: [validators.usernameContent()],
+      },
     }
   }
 
@@ -31,13 +31,13 @@ export default class extends Form {
     ajax.get(this.props.profile.api.moderate_username).then(
       () => {
         this.setState({
-          isLoaded: true
+          isLoaded: true,
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
           isLoaded: true,
-          error: rejection.detail
+          error: rejection.detail,
         })
       }
     )
@@ -54,13 +54,13 @@ export default class extends Form {
 
   send() {
     return ajax.post(this.props.profile.api.moderate_username, {
-      username: this.state.username
+      username: this.state.username,
     })
   }
 
   handleSuccess(apiResponse) {
     this.setState({
-      username: ""
+      username: "",
     })
 
     store.dispatch(

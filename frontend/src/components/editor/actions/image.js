@@ -2,7 +2,7 @@ import React from "react"
 import Action from "./action"
 import isUrl from "misago/utils/is-url"
 
-export default function(props) {
+export default function (props) {
   return (
     <Action execAction={insertImage} title={gettext("Insert image")} {...props}>
       <span className="material-icon">insert_photo</span>

@@ -9,7 +9,7 @@ export default function initializer() {
   } else {
     initialState = {
       isLoaded: false,
-      isBusy: false
+      isBusy: false,
     }
   }
 
@@ -19,5 +19,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "reducer:posts",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

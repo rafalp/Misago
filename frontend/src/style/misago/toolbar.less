@@ -4,10 +4,11 @@
 
 .toolbar {
   display: block;
-  margin: 0 floor(@grid-gutter-width * -.5);
+  margin: 0 floor(@grid-gutter-width * -0.5);
 }
 
 .toolbar-section {
+  justify-items: center;
   display: flex;
   flex: 1;
   margin-bottom: @line-height-computed;
@@ -15,7 +16,12 @@
 
 .toolbar-item {
   flex: 1;
-  padding: 0 floor(@grid-gutter-width * .5);
+  padding: 0 floor(@grid-gutter-width * 0.5);
+
+  h3,
+  p {
+    margin: 0;
+  }
 }
 
 .toolbar-item-shrink {
@@ -36,6 +42,11 @@
     flex: 0;
 
     align-items: center;
+  }
+
+  .toolbar-section.toolbar-section-auto,
+  .toolbar-section.toolbar-section-auto .toolbar-item {
+    flex: 1;
   }
 
   .toolbar-spacer {

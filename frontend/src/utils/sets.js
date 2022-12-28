@@ -10,7 +10,7 @@ export function push(array, value) {
 
 export function remove(array, value) {
   if (array.indexOf(value) >= 0) {
-    return array.filter(function(i) {
+    return array.filter(function (i) {
       return i !== value
     })
   } else {
@@ -24,7 +24,7 @@ export function toggle(array, value) {
     copy.push(value)
     return copy
   } else {
-    return array.filter(function(i) {
+    return array.filter(function (i) {
       return i !== value
     })
   }

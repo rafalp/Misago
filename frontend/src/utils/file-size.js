@@ -1,4 +1,4 @@
-export default function(bytes) {
+export default function (bytes) {
   if (bytes > 1024 * 1024 * 1024) {
     return roundSize(bytes / (1024 * 1024 * 1024)) + " GB"
   } else if (bytes > 1024 * 1024) {

@@ -13,7 +13,7 @@ export class BaseCaptcha {
 
 export class NoCaptcha extends BaseCaptcha {
   load() {
-    return new Promise(function(resolve) {
+    return new Promise(function (resolve) {
       // immediately resolve as we don't have anything to validate
       resolve()
     })
@@ -33,12 +33,12 @@ export class QACaptcha extends BaseCaptcha {
     var self = this
     return new Promise((resolve, reject) => {
       self._ajax.get(self._context.get("CAPTCHA_API")).then(
-        function(data) {
+        function (data) {
           self.question = data.question
           self.helpText = data.help_text
           resolve()
         },
-        function() {
+        function () {
           self._snackbar.error(gettext("Failed to load CAPTCHA."))
           reject()
         }
@@ -78,14 +78,14 @@ export class ReCaptchaComponent extends React.Component {
   componentDidMount() {
     grecaptcha.render("recaptcha", {
       sitekey: this.props.siteKey,
-      callback: response => {
+      callback: (response) => {
         // fire fakey event to binding
         this.props.binding({
           target: {
-            value: response
-          }
+            value: response,
+          },
         })
-      }
+      },
     })
   }
 
@@ -98,10 +98,10 @@ export class ReCaptcha extends BaseCaptcha {
   load() {
     this._include.include("https://www.google.com/recaptcha/api.js", true)
 
-    return new Promise(function(resolve) {
-      var wait = function() {
+    return new Promise(function (resolve) {
+      var wait = function () {
         if (typeof grecaptcha === "undefined") {
-          window.setTimeout(function() {
+          window.setTimeout(function () {
             wait()
           }, 200)
         } else {

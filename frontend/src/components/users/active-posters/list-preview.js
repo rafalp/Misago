@@ -22,7 +22,7 @@ export default class extends React.Component {
 
           <div className="active-posters ui-preview">
             <ul className="list-group">
-              {[0, 1, 2].map(i => {
+              {[0, 1, 2].map((i) => {
                 return <ItemPreview hiddenOnMobile={i > 0} key={i} />
               })}
             </ul>

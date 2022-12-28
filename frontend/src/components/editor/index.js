@@ -23,7 +23,7 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      isPreviewLoading: false
+      isPreviewLoading: false,
     }
   }
 
@@ -34,10 +34,10 @@ export default class extends React.Component {
       insertTpl: "@${username}",
       searchKey: "username",
       callbacks: {
-        remoteFilter: function(query, callback) {
+        remoteFilter: function (query, callback) {
           $.getJSON(misago.get("MENTION_API"), { q: query }, callback)
-        }
-      }
+        },
+      },
     })
 
     $("#editor-textarea").on("inserted.atwho", (event, flag, query) => {
@@ -51,18 +51,18 @@ export default class extends React.Component {
     }
 
     this.setState({
-      isPreviewLoading: true
+      isPreviewLoading: true,
     })
 
     ajax.post(misago.get("PARSE_MARKUP_API"), { post: this.props.value }).then(
-      data => {
+      (data) => {
         modal.show(<MarkupPreview markup={data.parsed} />)
 
         this.setState({
-          isPreviewLoading: false
+          isPreviewLoading: false,
         })
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
           snackbar.error(rejection.detail)
         } else {
@@ -70,21 +70,21 @@ export default class extends React.Component {
         }
 
         this.setState({
-          isPreviewLoading: false
+          isPreviewLoading: false,
         })
       }
     )
   }
 
-  replaceSelection = operation => {
+  replaceSelection = (operation) => {
     operation(textUtils.getSelectionText(), this._replaceSelection)
   }
 
-  _replaceSelection = newValue => {
+  _replaceSelection = (newValue) => {
     this.props.onChange({
       target: {
-        value: textUtils.replace(newValue)
-      }
+        value: textUtils.replace(newValue),
+      },
     })
   }
 

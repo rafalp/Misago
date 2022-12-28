@@ -57,6 +57,6 @@ export function select(state) {
   return {
     user: state.auth.user,
     signedIn: state.auth.signedIn,
-    signedOut: state.auth.signedOut
+    signedOut: state.auth.signedOut,
   }
 }

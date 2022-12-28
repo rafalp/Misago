@@ -14,13 +14,13 @@ const ThreadSubscriptionButton = ({ stickToBottom, thread }) => (
       data-toggle="dropdown"
       type="button"
     >
-      <span className="material-icon">
-        {getIcon(thread.subscription)}
-      </span>
+      <span className="material-icon">{getIcon(thread.subscription)}</span>
       {getLabel(thread.subscription)}
     </button>
     <ul
-      className={classnames("dropdown-menu dropdown-menu-right", {"stick-to-bottom": stickToBottom})}
+      className={classnames("dropdown-menu dropdown-menu-right", {
+        "stick-to-bottom": stickToBottom,
+      })}
     >
       <li>
         <button className="btn btn-link" onClick={() => unsubscribe(thread)}>
@@ -78,24 +78,24 @@ function unsubscribe(thread) {
 
 function update(thread, newState, value) {
   const oldState = {
-    subscription: thread.subscription
+    subscription: thread.subscription,
   }
 
   store.dispatch(
     actions.update({
-      subscription: newState
+      subscription: newState,
     })
   )
 
   ajax
     .patch(thread.api.index, [
-      { op: "replace", path: "subscription", value: value }
+      { op: "replace", path: "subscription", value: value },
     ])
     .then(
-      finalState => {
+      (finalState) => {
         store.dispatch(actions.update(finalState))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
           snackbar.error(rejection.detail[0])
         } else {

@@ -3,7 +3,7 @@ import MakeOwner from "./make-owner"
 import Remove from "./remove"
 import Avatar from "misago/components/avatar"
 
-export default function(props) {
+export default function (props) {
   const participant = props.participant
 
   let className = "btn btn-default"

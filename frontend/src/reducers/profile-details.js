@@ -4,7 +4,7 @@ export function load(newState) {
   return {
     type: LOAD_DETAILS,
 
-    newState
+    newState,
   }
 }
 

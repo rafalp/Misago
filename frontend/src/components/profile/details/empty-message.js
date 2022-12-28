@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ isAuthenticated, profile }) {
+export default function ({ isAuthenticated, profile }) {
   let message = null
   if (isAuthenticated) {
     message = gettext("You are not sharing any details with others.")
@@ -8,7 +8,7 @@ export default function({ isAuthenticated, profile }) {
     message = interpolate(
       gettext("%(username)s is not sharing any details with others."),
       {
-        username: profile.username
+        username: profile.username,
       },
       true
     )

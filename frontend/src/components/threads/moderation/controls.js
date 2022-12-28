@@ -11,12 +11,12 @@ import store from "misago/services/store"
 export default class extends React.Component {
   callApi = (ops, successMessage, onSuccess = null) => {
     // freeze threads
-    this.props.threads.forEach(thread => {
+    this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id)
     })
 
     // list ids
-    const ids = this.props.threads.map(thread => {
+    const ids = this.props.threads.map((thread) => {
       return thread.id
     })
 
@@ -24,14 +24,14 @@ export default class extends React.Component {
     ops.push({ op: "add", path: "acl", value: true })
 
     ajax.patch(this.props.api, { ids, ops }).then(
-      data => {
+      (data) => {
         // unfreeze
-        this.props.threads.forEach(thread => {
+        this.props.threads.forEach((thread) => {
           this.props.freezeThread(thread.id)
         })
 
         // update threads
-        data.forEach(thread => {
+        data.forEach((thread) => {
           this.props.updateThread(thread)
         })
 
@@ -41,9 +41,9 @@ export default class extends React.Component {
           onSuccess()
         }
       },
-      rejection => {
+      (rejection) => {
         // unfreeze
-        this.props.threads.forEach(thread => {
+        this.props.threads.forEach((thread) => {
           this.props.freezeThread(thread.id)
         })
 
@@ -56,7 +56,7 @@ export default class extends React.Component {
         let errors = []
         let threadsMap = {}
 
-        this.props.threads.forEach(thread => {
+        this.props.threads.forEach((thread) => {
           threadsMap[thread.id] = thread
         })
 
@@ -64,7 +64,7 @@ export default class extends React.Component {
           if (typeof threadsMap[id] !== "undefined") {
             errors.push({
               errors: detail,
-              thread: threadsMap[id]
+              thread: threadsMap[id],
             })
           }
         })
@@ -80,8 +80,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 2
-        }
+          value: 2,
+        },
       ],
       gettext("Selected threads were pinned globally.")
     )
@@ -93,8 +93,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 1
-        }
+          value: 1,
+        },
       ],
       gettext("Selected threads were pinned locally.")
     )
@@ -106,8 +106,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 0
-        }
+          value: 0,
+        },
       ],
       gettext("Selected threads were unpinned.")
     )
@@ -119,8 +119,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-unapproved",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Selected threads were approved.")
     )
@@ -132,8 +132,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-closed",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Selected threads were opened.")
     )
@@ -145,8 +145,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-closed",
-          value: true
-        }
+          value: true,
+        },
       ],
       gettext("Selected threads were closed.")
     )
@@ -158,8 +158,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-hidden",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Selected threads were unhidden.")
     )
@@ -171,8 +171,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-hidden",
-          value: true
-        }
+          value: true,
+        },
       ],
       gettext("Selected threads were hidden.")
     )
@@ -192,7 +192,7 @@ export default class extends React.Component {
 
   merge = () => {
     const errors = []
-    this.props.threads.forEach(thread => {
+    this.props.threads.forEach((thread) => {
       if (!thread.acl.can_merge) {
         errors.append({
           id: thread.id,
@@ -200,8 +200,8 @@ export default class extends React.Component {
           errors: [
             gettext(
               "You don't have permission to merge this thread with others."
-            )
-          ]
+            ),
+          ],
         })
       }
     })
@@ -220,35 +220,37 @@ export default class extends React.Component {
 
   delete = () => {
     if (
-      !window.confirm(gettext("Are you sure you want to delete selected threads?"))
+      !window.confirm(
+        gettext("Are you sure you want to delete selected threads?")
+      )
     ) {
       return
     }
 
-    this.props.threads.map(thread => {
+    this.props.threads.map((thread) => {
       this.props.freezeThread(thread.id)
     })
 
-    const ids = this.props.threads.map(thread => {
+    const ids = this.props.threads.map((thread) => {
       return thread.id
     })
 
     ajax.delete(this.props.api, ids).then(
       () => {
-        this.props.threads.map(thread => {
+        this.props.threads.map((thread) => {
           this.props.freezeThread(thread.id)
           this.props.deleteThread(thread)
         })
 
         snackbar.success(gettext("Selected threads were deleted."))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
-          const failedThreads = rejection.map(thread => {
+          const failedThreads = rejection.map((thread) => {
             return thread.id
           })
 
-          this.props.threads.map(thread => {
+          this.props.threads.map((thread) => {
             this.props.freezeThread(thread.id)
             if (failedThreads.indexOf(thread.id) === -1) {
               this.props.deleteThread(thread)
@@ -273,7 +275,7 @@ export default class extends React.Component {
           <button
             className="btn btn-link"
             type="button"
-            onClick={() => store.dispatch(select.all(threads.map(t => t.id)))}
+            onClick={() => store.dispatch(select.all(threads.map((t) => t.id)))}
           >
             <span className="material-icon">check_box</span>
             {gettext("Select all")}

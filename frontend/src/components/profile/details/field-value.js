@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ html, text, url }) {
+export default function ({ html, text, url }) {
   if (html) {
     return (
       <div

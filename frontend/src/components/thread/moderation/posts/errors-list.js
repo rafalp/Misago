@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ errors, posts }) {
+export default function ({ errors, posts }) {
   return (
     <div className="modal-dialog" role="document">
       <div className="modal-content">
@@ -21,7 +21,7 @@ export default function({ errors, posts }) {
           </p>
 
           <ul className="list-unstyled list-errored-items">
-            {errors.map(post => {
+            {errors.map((post) => {
               return (
                 <PostErrors
                   errors={post.detail}
@@ -42,7 +42,7 @@ export function PostErrors({ errors, post }) {
     gettext("%(username)s on %(posted_on)s"),
     {
       posted_on: post.posted_on.format("LL, LT"),
-      username: post.poster_name
+      username: post.poster_name,
     },
     true
   )

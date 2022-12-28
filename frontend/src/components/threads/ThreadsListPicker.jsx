@@ -15,9 +15,7 @@ const ThreadsListPicker = ({ baseUrl, list, lists }) => (
     <ul className="dropdown-menu stick-to-bottom">
       {lists.map((choice) => (
         <li key={choice.type}>
-          <Link to={baseUrl + choice.path}>
-            {choice.longName}
-          </Link>
+          <Link to={baseUrl + choice.path}>{choice.longName}</Link>
         </li>
       ))}
     </ul>

@@ -21,25 +21,25 @@ export default class extends Form {
 
       is_avatar_locked: "",
       avatar_lock_user_message: "",
-      avatar_lock_staff_message: ""
+      avatar_lock_staff_message: "",
     }
   }
 
   componentDidMount() {
     ajax.get(this.props.profile.api.moderate_avatar).then(
-      options => {
+      (options) => {
         this.setState({
           isLoaded: true,
 
           is_avatar_locked: options.is_avatar_locked,
           avatar_lock_user_message: options.avatar_lock_user_message || "",
-          avatar_lock_staff_message: options.avatar_lock_staff_message || ""
+          avatar_lock_staff_message: options.avatar_lock_staff_message || "",
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
           isLoaded: true,
-          error: rejection.detail
+          error: rejection.detail,
         })
       }
     )
@@ -58,7 +58,7 @@ export default class extends Form {
     return ajax.post(this.props.profile.api.moderate_avatar, {
       is_avatar_locked: this.state.is_avatar_locked,
       avatar_lock_user_message: this.state.avatar_lock_user_message,
-      avatar_lock_staff_message: this.state.avatar_lock_staff_message
+      avatar_lock_staff_message: this.state.avatar_lock_staff_message,
     })
   }
 

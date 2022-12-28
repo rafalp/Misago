@@ -9,7 +9,7 @@ export function getParticipantsCopy(participants) {
   return interpolate(
     message,
     {
-      users: count
+      users: count,
     },
     true
   )

@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router"
 import resetScroll from "misago/utils/reset-scroll"
 
-export default function(props) {
+export default function (props) {
   if (props.pages === 1) return null
 
   return (

@@ -11,7 +11,7 @@ export function getValue() {
 export function getSelectionRange(start, end) {
   return {
     start,
-    end
+    end,
   }
 }
 

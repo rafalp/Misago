@@ -1,11 +1,11 @@
 import React from "react"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="page-breadcrumbs">
       <div className="container">
         <ol className="breadcrumb hidden-xs">
-          {props.path.map(item => {
+          {props.path.map((item) => {
             return <Breadcrumb key={item.id} node={item} />
           })}
         </ol>

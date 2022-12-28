@@ -2,7 +2,7 @@ import React from "react"
 import Container from "./container"
 import posting from "misago/services/posting"
 
-export default function(props) {
+export default function (props) {
   return (
     <Container className="posting-message">
       <div className="message-body">

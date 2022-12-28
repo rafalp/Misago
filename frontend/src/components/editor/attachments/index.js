@@ -3,7 +3,7 @@ import List from "./list"
 import Uploader from "./uploader"
 import misago from "misago"
 
-export default function(props) {
+export default function (props) {
   if (!misago.get("user").acl.max_attachment_size) {
     return null
   }

@@ -12,17 +12,17 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      isLoading: false
+      isLoading: false,
     }
   }
 
   loadItems(start = 0) {
     ajax
       .get(this.props.api, {
-        start: start || 0
+        start: start || 0,
       })
       .then(
-        data => {
+        (data) => {
           if (start === 0) {
             store.dispatch(posts.load(data))
           } else {
@@ -30,12 +30,12 @@ export default class extends React.Component {
           }
 
           this.setState({
-            isLoading: false
+            isLoading: false,
           })
         },
-        rejection => {
+        (rejection) => {
           this.setState({
-            isLoading: false
+            isLoading: false,
           })
 
           snackbar.apiError(rejection)
@@ -45,7 +45,7 @@ export default class extends React.Component {
 
   loadMore = () => {
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
 
     this.loadItems(this.props.posts.next)
@@ -54,7 +54,7 @@ export default class extends React.Component {
   componentDidMount() {
     title.set({
       title: this.props.title,
-      parent: this.props.profile.username
+      parent: this.props.profile.username,
     })
 
     this.loadItems()

@@ -2,12 +2,14 @@
 // Buttons Flavor
 // --------------------------------------------------
 
-
 // mixins
 .misago-btn(@color, @bg, @color-hover, @bg-hover, @color-active, @bg-active) {
   &,
-  &:disabled, &:disabled:hover,
-  &.disabled, &.disabled:hover, &.disabled:active {
+  &:disabled,
+  &:disabled:hover,
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active {
     background: @bg;
     border: 1px solid @bg;
 
@@ -16,21 +18,26 @@
     .box-shadow(none);
   }
 
-  &:disabled, &:disabled:hover,
-  &.disabled, &.disabled:hover, &.disabled:active {
+  &:disabled,
+  &:disabled:hover,
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active {
     .opacity(0.25);
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: @bg-hover;
     border: 1px solid @bg-hover;
 
     color: @color-hover;
-  
+
     .box-shadow(none);
   }
 
-  &:active:focus, &:active,
+  &:active:focus,
+  &:active,
   .dropdown.open .dropdown-toggle &,
   .dropdown.open .dropdown-toggle &:focus,
   .dropdown.open .dropdown-toggle &:active:focus,
@@ -44,9 +51,13 @@
   }
 
   &.btn-loading {
-    &, &:disabled, &:disabled:hover,
-    &:hover, &:focus,
-    &:active:focus, &:active {
+    &,
+    &:disabled,
+    &:disabled:hover,
+    &:hover,
+    &:focus,
+    &:active:focus,
+    &:active {
       color: transparent;
     }
   }
@@ -55,8 +66,12 @@
 .misago-btn-outline(@color, @bg, @border,
                     @color-hover, @bg-hover, @border-hover,
                     @color-active, @bg-active, @border-active) {
-  &, &:disabled, &:disabled:hover,
-  &.disabled, &.disabled:hover, &.disabled:active {
+  &,
+  &:disabled,
+  &:disabled:hover,
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active {
     background: @bg;
     border: 1px solid @border;
 
@@ -65,12 +80,16 @@
     .box-shadow(none);
   }
 
-  &:disabled, &:disabled:hover,
-  &.disabled, &.disabled:hover, &.disabled:active {
+  &:disabled,
+  &:disabled:hover,
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active {
     .opacity(0.25);
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: @bg-hover;
     border: 1px solid @border-hover;
 
@@ -79,7 +98,8 @@
     .box-shadow(none);
   }
 
-  &:active:focus, &:active,
+  &:active:focus,
+  &:active,
   .dropdown.open &,
   .dropdown.open &:focus,
   .dropdown.open &:active:focus,
@@ -93,9 +113,13 @@
   }
 
   &.btn-loading {
-    &, &:disabled, &:disabled:hover,
-    &:hover, &:focus,
-    &:active:focus, &:active {
+    &,
+    &:disabled,
+    &:disabled:hover,
+    &:hover,
+    &:focus,
+    &:active:focus,
+    &:active {
       background: @bg;
       border: 1px solid @border;
 
@@ -105,7 +129,6 @@
     }
   }
 }
-
 
 // button styles
 .btn-default {
@@ -160,7 +183,6 @@
   );
 }
 
-
 // outlined button styles
 .btn-default.btn-outline {
   .misago-btn-outline(
@@ -193,7 +215,6 @@
     @btn-primary-outline-active-border
   );
 }
-
 
 // sign in and register buttons in navbar
 .navbar-misago {

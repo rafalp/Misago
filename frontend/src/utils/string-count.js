@@ -1,4 +1,4 @@
-export default function(string, subString) {
+export default function (string, subString) {
   string = (string + "").toLowerCase()
   subString = (subString + "").toLowerCase()
 

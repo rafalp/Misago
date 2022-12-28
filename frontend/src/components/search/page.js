@@ -2,7 +2,7 @@ import React from "react"
 import SearchForm from "./form"
 import SideNav from "./sidenav"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="page page-search">
       <SearchForm provider={props.provider} search={props.search} />
@@ -23,7 +23,7 @@ export default function(props) {
 
 export function SearchTime(props) {
   let time = null
-  props.search.providers.forEach(p => {
+  props.search.providers.forEach((p) => {
     if (p.id === props.provider.id) {
       time = p.time
     }

@@ -37,32 +37,32 @@ export function select(store) {
   return {
     tick: store.tick.tick,
     user: store.auth.user,
-    users: store.users
+    users: store.users,
   }
 }
 
 export function paths() {
   let paths = []
 
-  misago.get("USERS_LISTS").forEach(function(item) {
+  misago.get("USERS_LISTS").forEach(function (item) {
     if (item.component === "rank") {
       paths.push({
         path: misago.get("USERS_LIST_URL") + item.slug + "/:page/",
         component: connect(select)(Rank),
-        rank: item
+        rank: item,
       })
       paths.push({
         path: misago.get("USERS_LIST_URL") + item.slug + "/",
         component: connect(select)(Rank),
-        rank: item
+        rank: item,
       })
     } else if (item.component === "active-posters") {
       paths.push({
         path: misago.get("USERS_LIST_URL") + item.component + "/",
         component: connect(select)(ActivePosters),
         extra: {
-          name: item.name
-        }
+          name: item.name,
+        },
       })
     }
   })

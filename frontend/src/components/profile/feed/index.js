@@ -9,7 +9,7 @@ export function Threads(props) {
     emptyMessage = interpolate(
       gettext("%(username)s started no threads."),
       {
-        username: props.profile.username
+        username: props.profile.username,
       },
       true
     )
@@ -28,7 +28,7 @@ export function Threads(props) {
     header = interpolate(
       message,
       {
-        threads: props.profile.threads
+        threads: props.profile.threads,
       },
       true
     )
@@ -43,7 +43,7 @@ export function Threads(props) {
       message,
       {
         username: props.profile.username,
-        threads: props.profile.threads
+        threads: props.profile.threads,
       },
       true
     )
@@ -68,7 +68,7 @@ export function Posts(props) {
     emptyMessage = interpolate(
       gettext("%(username)s posted no messages."),
       {
-        username: props.profile.username
+        username: props.profile.username,
       },
       true
     )
@@ -87,7 +87,7 @@ export function Posts(props) {
     header = interpolate(
       message,
       {
-        posts: props.profile.posts
+        posts: props.profile.posts,
       },
       true
     )
@@ -102,7 +102,7 @@ export function Posts(props) {
       message,
       {
         username: props.profile.username,
-        posts: props.profile.posts
+        posts: props.profile.posts,
       },
       true
     )

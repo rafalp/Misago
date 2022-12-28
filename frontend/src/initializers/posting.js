@@ -9,5 +9,5 @@ export default function initializer() {
 
 misago.addInitializer({
   name: "posting",
-  initializer: initializer
+  initializer: initializer,
 })

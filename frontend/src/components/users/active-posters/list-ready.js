@@ -13,7 +13,7 @@ export default class extends React.Component {
       message,
       {
         posters: this.props.count,
-        days: this.props.trackedPeriod
+        days: this.props.trackedPeriod,
       },
       true
     )

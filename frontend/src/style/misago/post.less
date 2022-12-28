@@ -2,7 +2,6 @@
 // Posts List Post
 // --------------------------------------------------
 
-
 // Post side
 .post-side {
   font-size: @font-size-small;
@@ -74,7 +73,6 @@
   }
 }
 
-
 // Heading
 .post-heading {
   height: 36px;
@@ -87,7 +85,7 @@
     margin-left: @padding-large-horizontal;
   }
 
-  &>.btn-link {
+  & > .btn-link {
     padding-left: 0px;
     padding-right: 0px;
   }
@@ -106,7 +104,6 @@
   }
 }
 
-
 // Move controls up
 @media screen and (min-width: @screen-md-min) {
   .post-side .pull-right {
@@ -120,13 +117,11 @@
   }
 }
 
-
 // Body
 .post-body {
   padding-top: @line-height-computed;
   padding-bottom: @line-height-computed * 1.5;
 }
-
 
 // Status
 .post-status-message {
@@ -146,13 +141,11 @@
   }
 }
 
-
 .post-status-best-answer {
   background-color: @brand-success;
 
   color: #fff;
 }
-
 
 .post-status-hidden {
   background-color: @brand-danger;
@@ -160,20 +153,17 @@
   color: #fff;
 }
 
-
 .post-status-unapproved {
   background-color: @brand-primary;
 
   color: #fff;
 }
 
-
 .post-status-protected {
   background-color: @gray;
 
   color: #fff;
 }
-
 
 // Footer
 .post-footer {
@@ -192,7 +182,6 @@
   }
 }
 
-
 // Attachments
 .post-attachments {
   @post-preview-width: 40px;
@@ -208,7 +197,7 @@
     word-wrap: break-word;
   }
 
-  .row>div {
+  .row > div {
     margin: @padding-large-vertical 0px;
   }
 
@@ -243,7 +232,11 @@
     font-size: 28px;
     line-height: 28px;
 
-    &:link, &:active, &:visited, &:hover, &:focus {
+    &:link,
+    &:active,
+    &:visited,
+    &:hover,
+    &:focus {
       color: @gray-darker;
       text-decoration: none;
     }

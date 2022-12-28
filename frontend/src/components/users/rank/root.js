@@ -23,14 +23,14 @@ export default class extends React.Component {
 
   initWithPreloadedData(data) {
     this.state = Object.assign(data, {
-      isLoaded: true
+      isLoaded: true,
     })
     store.dispatch(hydrate(data.results))
   }
 
   initWithoutPreloadedData() {
     this.state = {
-      isLoaded: false
+      isLoaded: false,
     }
   }
 
@@ -40,14 +40,14 @@ export default class extends React.Component {
       url: misago.get("USERS_API"),
       data: {
         rank: this.props.route.rank.id,
-        page: page
+        page: page,
       },
       frequency: 90 * 1000,
-      update: this.update
+      update: this.update,
     })
   }
 
-  update = data => {
+  update = (data) => {
     store.dispatch(hydrate(data.results))
 
     data.isLoaded = true
@@ -58,7 +58,7 @@ export default class extends React.Component {
     title.set({
       title: this.props.route.rank.name,
       page: this.props.params.page || null,
-      parent: gettext("Users")
+      parent: gettext("Users"),
     })
   }
 
@@ -71,11 +71,11 @@ export default class extends React.Component {
       title.set({
         title: this.props.route.rank.name,
         page: nextProps.params.page || null,
-        parent: gettext("Users")
+        parent: gettext("Users"),
       })
 
       this.setState({
-        isLoaded: false
+        isLoaded: false,
       })
 
       polls.stop("rank-users")

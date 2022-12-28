@@ -25,10 +25,10 @@ const ICON = {
 
   owner_left: "person_outline",
   participant_left: "person_outline",
-  removed_participant: "remove_circle_outline"
+  removed_participant: "remove_circle_outline",
 }
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="post-avatar">
       <span className="material-icon">{ICON[props.post.event_type]}</span>

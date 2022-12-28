@@ -4,7 +4,7 @@ import SearchUsers from "./users"
 
 const components = {
   threads: SearchThreads,
-  users: SearchUsers
+  users: SearchUsers,
 }
 
 export function select(store) {
@@ -13,16 +13,16 @@ export function select(store) {
     search: store.search,
     tick: store.tick.tick,
     user: store.auth.user,
-    users: store.users
+    users: store.users,
   }
 }
 
-export default function(providers) {
-  return providers.map(provider => {
+export default function (providers) {
+  return providers.map((provider) => {
     return {
       path: provider.url,
       component: connect(select)(components[provider.id]),
-      provider: provider
+      provider: provider,
     }
   })
 }

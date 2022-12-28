@@ -7,5 +7,5 @@ export default function initializer(context) {
 
 misago.addInitializer({
   name: "include",
-  initializer: initializer
+  initializer: initializer,
 })

@@ -2,7 +2,7 @@ import React from "react"
 import Avatar from "misago/components/avatar"
 import * as random from "misago/utils/random"
 
-export default function(props) {
+export default function (props) {
   return (
     <li className="post">
       <div className="post-border">

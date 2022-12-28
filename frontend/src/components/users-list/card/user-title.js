@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ rank, title }) {
+export default function ({ rank, title }) {
   let userTitle = title || rank.title || rank.name
 
   let className = "user-title"

@@ -1,12 +1,12 @@
-import "bootstrap/js/transition";
-import "bootstrap/js/affix";
-import "bootstrap/js/modal";
-import "bootstrap/js/dropdown";
-import "at-js";
-import "cropit";
-import "waypoints";
-import "jquery-caret";
-import "highlight";
+import "bootstrap/js/transition"
+import "bootstrap/js/affix"
+import "bootstrap/js/modal"
+import "bootstrap/js/dropdown"
+import "at-js"
+import "cropit"
+import "waypoints"
+import "jquery-caret"
+import "highlight"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 
@@ -23,7 +23,7 @@ export class Misago {
       item: initializer.initializer,
 
       after: initializer.after,
-      before: initializer.before
+      before: initializer.before,
     })
   }
 
@@ -31,7 +31,7 @@ export class Misago {
     this._context = context
 
     var initOrder = new OrderedList(this._initializers).orderedValues()
-    initOrder.forEach(initializer => {
+    initOrder.forEach((initializer) => {
       initializer(this)
     })
   }

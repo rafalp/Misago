@@ -2,7 +2,6 @@
 // Misago Navbar
 // --------------------------------------------------
 
-
 // Remove bottom margin from navbar
 .navbar {
   margin-bottom: 0px;
@@ -17,7 +16,7 @@
 
     font-size: @font-size-base * 1.5;
 
-    &>* {
+    & > * {
       display: inline-block;
       vertical-align: middle;
     }
@@ -42,7 +41,8 @@
 
     color: @navbar-default-link-color;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       color: @navbar-default-link-hover-color;
       background-color: @navbar-default-link-hover-bg;
     }
@@ -67,15 +67,18 @@
   }
 
   .open .navbar-icon {
-    &, &:hover, &:focus {
+    &,
+    &:hover,
+    &:focus {
       background-color: @navbar-default-link-active-bg;
-      
+
       color: @navbar-default-link-active-color;
     }
   }
 
   // Pull Guest and User menus to right
-  .nav-guest, .nav-user {
+  .nav-guest,
+  .nav-user {
     float: right;
 
     .navbar-btn {
@@ -94,21 +97,21 @@
   }
 }
 
-
 // Compact (mobile) navbar
 .navbar ul.navbar-compact-nav {
-  border-collapse:collapse;
+  border-collapse: collapse;
   display: table;
   margin: 0px;
   table-layout: fixed;
   width: 100%;
 
-  &>li {
+  & > li {
     display: table-cell;
     width: 100%;
   }
 
-  &>li>a, &>li>button {
+  & > li > a,
+  & > li > button {
     background: none;
     border: none;
     display: block;
@@ -120,22 +123,24 @@
     color: @navbar-compact-link-color;
     text-align: center;
 
-    &.active, &:hover, &:focus {
+    &.active,
+    &:hover,
+    &:focus {
       color: @navbar-compact-link-hover-color;
       background-color: @navbar-compact-link-hover-bg;
     }
 
-    &>img {
+    & > img {
       width: @navbar-compact-item-size;
       height: @navbar-compact-item-size;
     }
   }
 
-  &>li>button {
+  & > li > button {
     display: inline-block;
   }
 
-  &>li>a>.material-icon {
+  & > li > a > .material-icon {
     font-size: @navbar-compact-item-size;
     line-height: @navbar-compact-item-size;
   }
@@ -147,7 +152,6 @@
     min-height: auto;
   }
 }
-
 
 // Hide compact navbar above breakpoint
 .navbar-misago .navbar-desktop-nav {

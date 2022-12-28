@@ -91,7 +91,7 @@ export function getStatusDescription(user, status) {
         gettext("%(username)s is banned until %(ban_expires)s"),
         {
           username: user.username,
-          ban_expires: status.banned_until.format("LL, LT")
+          ban_expires: status.banned_until.format("LL, LT"),
         },
         true
       )
@@ -99,7 +99,7 @@ export function getStatusDescription(user, status) {
       return interpolate(
         gettext("%(username)s is banned"),
         {
-          username: user.username
+          username: user.username,
         },
         true
       )
@@ -108,7 +108,7 @@ export function getStatusDescription(user, status) {
     return interpolate(
       gettext("%(username)s is hiding presence"),
       {
-        username: user.username
+        username: user.username,
       },
       true
     )
@@ -116,7 +116,7 @@ export function getStatusDescription(user, status) {
     return interpolate(
       gettext("%(username)s is online (hidden)"),
       {
-        username: user.username
+        username: user.username,
       },
       true
     )
@@ -125,7 +125,7 @@ export function getStatusDescription(user, status) {
       gettext("%(username)s was last seen %(last_click)s (hidden)"),
       {
         username: user.username,
-        last_click: status.last_click.fromNow()
+        last_click: status.last_click.fromNow(),
       },
       true
     )
@@ -133,7 +133,7 @@ export function getStatusDescription(user, status) {
     return interpolate(
       gettext("%(username)s is online"),
       {
-        username: user.username
+        username: user.username,
       },
       true
     )
@@ -142,7 +142,7 @@ export function getStatusDescription(user, status) {
       gettext("%(username)s was last seen %(last_click)s"),
       {
         username: user.username,
-        last_click: status.last_click.fromNow()
+        last_click: status.last_click.fromNow(),
       },
       true
     )

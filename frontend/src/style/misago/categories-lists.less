@@ -2,7 +2,6 @@
 // Categories Lists
 // --------------------------------------------------
 
-
 // Category Block
 // --------------------------------------------------
 
@@ -14,7 +13,6 @@
 .category-main .read-status.item-new .material-icon {
   color: @category-new-color;
 }
-
 
 // Last thread
 .category-last-thread .media-heading {
@@ -38,7 +36,6 @@
   }
 }
 
-
 // Last thread message
 .category-thread-message {
   .material-icon {
@@ -54,7 +51,6 @@
   }
 }
 
-
 // Subcategories list
 // --------------------------------------------------
 .list-inline.subcategories-list {
@@ -65,7 +61,12 @@
     display: block;
     float: left;
 
-    a, a:link, a:visited, a:active, a:hover, a:focus {
+    a,
+    a:link,
+    a:visited,
+    a:active,
+    a:hover,
+    a:focus {
       background-color: @gray-lighter;
       border: 1px solid darken(@gray-lighter, 5%);
       border-radius: @border-radius-base;
@@ -76,7 +77,9 @@
       color: @gray;
     }
 
-    &:focus, a:hover, a:active {
+    &:focus,
+    a:hover,
+    a:active {
       background-color: darken(@gray-lighter, 5%);
 
       color: @text-color;

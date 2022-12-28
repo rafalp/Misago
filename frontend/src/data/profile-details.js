@@ -9,10 +9,10 @@ export default class extends React.Component {
     if (data && data.id === user.id) return
 
     ajax.get(this.props.user.api.details).then(
-      data => {
+      (data) => {
         dispatch(load(data))
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
       }
     )

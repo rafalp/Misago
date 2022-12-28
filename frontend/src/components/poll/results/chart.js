@@ -1,9 +1,9 @@
 import React from "react"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="poll-choices-bars">
-      {props.poll.choices.map(choice => {
+      {props.poll.choices.map((choice) => {
         return (
           <PollChoice choice={choice} key={choice.hash} poll={props.poll} />
         )
@@ -64,7 +64,7 @@ export function getVotesLabel(votes, proc) {
     message,
     {
       votes: votes,
-      proc: proc
+      proc: proc,
     },
     true
   )
