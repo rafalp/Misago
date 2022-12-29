@@ -6,6 +6,7 @@ import title from "misago/services/page-title"
 import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
+import { Toolbar, ToolbarItem, ToolbarSection } from "../../Toolbar"
 
 export default class extends React.Component {
   constructor(props) {
@@ -63,9 +64,13 @@ export default class extends React.Component {
   render() {
     return (
       <div className="profile-feed">
-        <nav className="toolbar">
-          <h3 className="toolbar-left">{this.props.header}</h3>
-        </nav>
+        <Toolbar>
+          <ToolbarSection auto>
+            <ToolbarItem auto>
+              <h3>{this.props.header}</h3>
+            </ToolbarItem>
+          </ToolbarSection>
+        </Toolbar>
         <Feed
           isLoading={this.state.isLoading}
           loadMore={this.loadMore}
@@ -77,7 +82,7 @@ export default class extends React.Component {
 }
 
 export function Feed(props) {
-  if (!props.posts.results.length) {
+  if (props.posts.isLoaded && !props.posts.results.length) {
     return <p className="lead">{props.emptyMessage}</p>
   }
 

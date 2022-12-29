@@ -11,24 +11,25 @@
 
 {% block section %}
 <div class="profile-details">
-  <div>
-    <nav class="toolbar">
-      <div class="row">
-        <div class="col-sm-8 col-md-10">
-          <h3 class="md-margin-top-no">
-            {% trans "Details" %}
-          </h3>
-        </div>
-        {% if profile_details.edit %}
-          <div class="col-sm-4 col-md-2">
-            <button type="button" class="btn btn-default btn-outline btn-block" disabled>
-              {% trans "Edit" %}
-            </button>
-          </div>
-        {% endif %}
+
+  <nav class="toolbar">
+    <div class="toolbar-section toolbar-section-auto">
+      <div class="toolbar-item">
+        <h3>
+          {% trans "Details" %}
+        </h3>
       </div>
-    </nav>
-  </div>
+    </div>
+    {% if profile_details.edit %}
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          <button type="button" class="btn btn-default btn-outline btn-block" disabled>
+            {% trans "Edit" %}
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </nav>
 
   {% if profile_details.groups %}
     <div>

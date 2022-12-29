@@ -8,6 +8,7 @@ import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import { Toolbar, ToolbarItem, ToolbarSection } from "../Toolbar"
 
 export default class extends React.Component {
   constructor(props) {
@@ -214,16 +215,22 @@ export default class extends React.Component {
   render() {
     return (
       <div className="profile-username-history">
-        <nav className="toolbar">
-          <h3 className="toolbar-left">{this.getLabel()}</h3>
-
-          <Search
-            className="toolbar-right"
-            value={this.state.search}
-            onChange={this.search}
-            placeholder={gettext("Search history...")}
-          />
-        </nav>
+        <Toolbar>
+          <ToolbarSection auto>
+            <ToolbarItem auto>
+              <h3>{this.getLabel()}</h3>
+            </ToolbarItem>
+          </ToolbarSection>
+          <ToolbarSection>
+            <ToolbarItem>
+              <Search
+                value={this.state.search}
+                onChange={this.search}
+                placeholder={gettext("Search history...")}
+              />
+            </ToolbarItem>
+          </ToolbarSection>
+        </Toolbar>
 
         <UsernameHistory
           isLoaded={this.state.isLoaded}

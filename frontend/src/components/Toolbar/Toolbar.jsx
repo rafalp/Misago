@@ -1,5 +1,5 @@
 import React from "react"
 
-const Toolbar = ({ children }) => <div className="toolbar">{children}</div>
+const Toolbar = ({ children }) => <nav className="toolbar">{children}</nav>
 
 export default Toolbar

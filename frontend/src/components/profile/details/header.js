@@ -1,32 +1,27 @@
 import React from "react"
+import { Toolbar, ToolbarItem, ToolbarSection } from "../../Toolbar"
 
-export default function ({ onEdit, showEditButton }) {
-  return (
-    <div>
-      <nav className="toolbar">
-        <div className="row">
-          <div className="col-sm-8 col-md-10">
-            <h3 className="md-margin-top-no">{gettext("Details")}</h3>
-          </div>
-          <EditButton onEdit={onEdit} showEditButton={showEditButton} />
-        </div>
-      </nav>
-    </div>
-  )
-}
+const ProfileDetailsHeader = ({ onEdit, showEditButton }) => (
+  <Toolbar>
+    <ToolbarSection auto>
+      <ToolbarItem auto>
+        <h3>{gettext("Details")}</h3>
+      </ToolbarItem>
+    </ToolbarSection>
+    {showEditButton && (
+      <ToolbarSection>
+        <ToolbarItem>
+          <button
+            className="btn btn-default btn-outline btn-block"
+            onClick={onEdit}
+            type="button"
+          >
+            {gettext("Edit")}
+          </button>
+        </ToolbarItem>
+      </ToolbarSection>
+    )}
+  </Toolbar>
+)
 
-export function EditButton({ onEdit, showEditButton }) {
-  if (!showEditButton) return null
-
-  return (
-    <div className="col-sm-4 col-md-2">
-      <button
-        className="btn btn-default btn-outline btn-block"
-        onClick={onEdit}
-        type="button"
-      >
-        {gettext("Edit")}
-      </button>
-    </div>
-  )
-}
+export default ProfileDetailsHeader
