@@ -1,7 +1,7 @@
 import moment from "moment"
 import React from "react"
 
-export default function({ result }) {
+export default function ({ result }) {
   const { poster, thread } = result
   const footer = gettext(
     "Posted by %(poster)s on %(posted_on)s in %(category)s."
@@ -20,7 +20,7 @@ export default function({ result }) {
             {
               category: result.category.name,
               posted_on: moment(result.posted_on).format("LL"),
-              poster: result.poster_name
+              poster: result.poster_name,
             },
             true
           )}

@@ -8,7 +8,7 @@ export default function initializer() {
     reducer,
     Object.assign({}, initialState, {
       providers: misago.get("SEARCH_PROVIDERS") || [],
-      query: misago.get("SEARCH_QUERY") || ""
+      query: misago.get("SEARCH_QUERY") || "",
     })
   )
 }
@@ -16,5 +16,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "reducer:search",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

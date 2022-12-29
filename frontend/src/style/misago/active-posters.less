@@ -2,8 +2,6 @@
 // Active posters list
 // --------------------------------------------------
 
-
-
 // List layout
 .active-posters {
   li {
@@ -11,7 +9,6 @@
     overflow: auto;
   }
 }
-
 
 // User avatar
 .active-posters .rank-user-avatar {
@@ -30,14 +27,13 @@
   }
 }
 
-
 // User
 .active-posters .rank-user {
   float: left;
   margin-top: 3px;
 
   @media screen and (max-width: @screen-sm-max) {
-    margin-left: @line-height-computed * .66;
+    margin-left: @line-height-computed * 0.66;
     width: 40%;
   }
 
@@ -48,7 +44,7 @@
   }
 
   @media screen and (min-width: @screen-md-min) {
-    margin-left: @line-height-computed * .8;
+    margin-left: @line-height-computed * 0.8;
     width: 25%;
 
     .user-name {
@@ -57,14 +53,15 @@
   }
 }
 
-
 // User details
 .active-posters .user-details {
   overflow: auto;
 
   font-family: Sans-Serif;
 
-  .user-status, .rank-name, .user-title {
+  .user-status,
+  .rank-name,
+  .user-title {
     display: block;
     float: left;
     margin-right: 3px;
@@ -83,7 +80,8 @@
   @media screen and (min-width: @screen-md-min) {
     overflow: visible;
 
-    .rank-name, .user-title {
+    .rank-name,
+    .user-title {
       height: 14px;
       overflow: hidden;
 
@@ -97,12 +95,12 @@
   @media screen and (max-width: @screen-xs-max) {
     margin-top: @padding-base-vertical / 2;
 
-    .rank-name, .user-title {
+    .rank-name,
+    .user-title {
       font-weight: normal;
     }
   }
 }
-
 
 // User status
 .active-posters .user-status {
@@ -148,7 +146,6 @@
   }
 }
 
-
 // User status UI preview
 .active-posters {
   .status-label.ui-preview-text,
@@ -164,28 +161,32 @@
   }
 
   // even rank/title preview with status
-  .rank-name, .user-title {
+  .rank-name,
+  .user-title {
     .ui-preview-text {
       position: static;
     }
   }
 }
 
-
 // Rank stats
 .active-posters {
-  .rank-position, .rank-posts-counted, .rank-posts-total {
-    strong, small {
+  .rank-position,
+  .rank-posts-counted,
+  .rank-posts-total {
+    strong,
+    small {
       display: block;
     }
 
     @media screen and (max-width: @screen-sm-max) {
       overflow: auto;
 
-      strong, small {
+      strong,
+      small {
         float: left;
 
-        font-size: @font-size-base * .75;
+        font-size: @font-size-base * 0.75;
       }
 
       strong {
@@ -223,8 +224,10 @@
 }
 
 .user-compact-stats {
-  .rank-position, .rank-posts-counted {
-    strong, small {
+  .rank-position,
+  .rank-posts-counted {
+    strong,
+    small {
       display: inline-block;
       float: none;
     }
@@ -239,7 +242,6 @@
   }
 }
 
-
 // Tablet displays
 @media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
   // Margin top first state so its even with username
@@ -247,13 +249,11 @@
     margin-top: 6px;
   }
 
-
   // Hide rank-posts-total on small displays (cos it overflows for crazy posters)
   .active-posters .rank-posts-total {
     display: none;
   }
 }
-
 
 // Mobile displays
 @media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
@@ -261,7 +261,6 @@
   .active-posters .rank-position {
     margin-top: 6px;
   }
-
 
   // Hide rank-posts-total on small displays (cos it overflows for crazy posters)
   .active-posters .rank-posts-total {

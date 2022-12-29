@@ -2,7 +2,6 @@
 // Agreement overlay
 // --------------------------------------------------
 
-
 .agreement-overlay {
   position: fixed;
   width: 100%;
@@ -13,7 +12,7 @@
 
   background-color: fadeOut(@modal-backdrop-bg, @modal-backdrop-opacity * 100);
   overflow-x: scroll;
-  
+
   .container {
     max-width: @modal-lg;
     padding: @line-height-computed @grid-gutter-width;
@@ -25,7 +24,7 @@
   border: 1px solid @modal-content-fallback-border-color; //old browsers fallback (ie8 etc)
   border: 1px solid @modal-content-border-color;
   border-radius: @border-radius-large;
-  .box-shadow(0 3px 9px rgba(0,0,0,.5));
+  .box-shadow(0 3px 9px rgba(0,0,0,0.5));
   background-clip: padding-box;
   outline: 0;
 

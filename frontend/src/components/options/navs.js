@@ -6,7 +6,7 @@ import misago from "misago/index"
 export function SideNav(props) {
   return (
     <div className="list-group nav-side">
-      {props.options.map(option => {
+      {props.options.map((option) => {
         return (
           <Link
             to={props.baseUrl + option.component + "/"}
@@ -29,7 +29,7 @@ export function CompactNav(props) {
       className={props.className || "dropdown-menu stick-to-bottom"}
       role="menu"
     >
-      {props.options.map(option => {
+      {props.options.map((option) => {
         return (
           <Li
             path={props.baseUrl + option.component + "/"}

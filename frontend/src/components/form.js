@@ -13,7 +13,7 @@ export default class extends React.Component {
 
     let validators = {
       required: this.state.validators.required || this.state.validators,
-      optional: this.state.validators.optional || {}
+      optional: this.state.validators.optional || {},
     }
 
     let validatedFields = []
@@ -74,7 +74,7 @@ export default class extends React.Component {
 
     let validators = {
       required: (this.state.validators.required || this.state.validators)[name],
-      optional: (this.state.validators.optional || {})[name]
+      optional: (this.state.validators.optional || {})[name],
     }
 
     let requiredError = validateRequired(value) || false
@@ -106,15 +106,15 @@ export default class extends React.Component {
     return false // false === field wasn't validated
   }
 
-  bindInput = name => {
-    return event => {
+  bindInput = (name) => {
+    return (event) => {
       this.changeValue(name, event.target.value)
     }
   }
 
   changeValue = (name, value) => {
     let newState = {
-      [name]: value
+      [name]: value,
     }
 
     const formErrors = this.state.errors || {}
@@ -140,7 +140,7 @@ export default class extends React.Component {
     snackbar.apiError(rejection)
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     // we don't reload page on submissions
     if (event) {
       event.preventDefault()
@@ -156,11 +156,11 @@ export default class extends React.Component {
 
       if (promise) {
         promise.then(
-          success => {
+          (success) => {
             this.setState({ isLoading: false })
             this.handleSuccess(success)
           },
-          rejection => {
+          (rejection) => {
             this.setState({ isLoading: false })
             this.handleError(rejection)
           }

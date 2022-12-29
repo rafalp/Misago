@@ -7,7 +7,7 @@ import UserPostcount from "./user-postcount"
 import UserStatusLabel from "./user-status"
 import UserTitle from "./user-title"
 
-export default function({ post, thread }) {
+export default function ({ post, thread }) {
   const { poster } = post
 
   return (

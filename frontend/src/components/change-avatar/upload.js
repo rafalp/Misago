@@ -14,7 +14,7 @@ export default class extends React.Component {
       preview: null,
       progress: 0,
       uploaded: null,
-      dataUrl: null
+      dataUrl: null,
     }
   }
 
@@ -23,7 +23,7 @@ export default class extends React.Component {
       return interpolate(
         gettext("Selected file is too big. (%(filesize)s)"),
         {
-          filesize: fileSize(image.size)
+          filesize: fileSize(image.size),
         },
         true
       )
@@ -38,7 +38,7 @@ export default class extends React.Component {
 
     let extensionFound = false
     let loweredFilename = image.name.toLowerCase()
-    this.props.options.upload.allowed_extensions.map(function(extension) {
+    this.props.options.upload.allowed_extensions.map(function (extension) {
       if (loweredFilename.substr(extension.length * -1) === extension) {
         extensionFound = true
       }
@@ -68,7 +68,7 @@ export default class extends React.Component {
     this.setState({
       image,
       preview: URL.createObjectURL(image),
-      progress: 0
+      progress: 0,
     })
 
     let data = new FormData()
@@ -76,29 +76,29 @@ export default class extends React.Component {
     data.append("image", image)
 
     ajax
-      .upload(this.props.user.api.avatar, data, progress => {
+      .upload(this.props.user.api.avatar, data, (progress) => {
         this.setState({
-          progress
+          progress,
         })
       })
       .then(
-        data => {
+        (data) => {
           this.setState({
             options: data,
-            uploaded: data.detail
+            uploaded: data.detail,
           })
 
           snackbar.info(
             gettext("Your image has been uploaded and you may now crop it.")
           )
         },
-        rejection => {
+        (rejection) => {
           if (rejection.status === 400 || rejection.status === 413) {
             snackbar.error(rejection.detail)
             this.setState({
               isLoading: false,
               image: null,
-              progress: 0
+              progress: 0,
             })
           } else {
             this.props.showError(rejection)
@@ -108,7 +108,7 @@ export default class extends React.Component {
   }
 
   getUploadRequirements(options) {
-    let extensions = options.allowed_extensions.map(function(extension) {
+    let extensions = options.allowed_extensions.map(function (extension) {
       return extension.substr(1)
     })
 
@@ -116,7 +116,7 @@ export default class extends React.Component {
       gettext("%(files)s files smaller than %(limit)s"),
       {
         files: extensions.join(", "),
-        limit: fileSize(options.limit)
+        limit: fileSize(options.limit),
       },
       true
     )
@@ -140,7 +140,7 @@ export default class extends React.Component {
     return interpolate(
       gettext("%(progress)s % complete"),
       {
-        progress: this.state.progress
+        progress: this.state.progress,
       },
       true
     )

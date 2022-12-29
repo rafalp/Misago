@@ -15,7 +15,7 @@ export default class extends Form {
     this.state = {
       isLoading: false,
 
-      query: props.search.query
+      query: props.search.query,
     }
   }
 
@@ -25,7 +25,7 @@ export default class extends Form {
     }
   }
 
-  onQueryChange = event => {
+  onQueryChange = (event) => {
     this.changeValue("query", event.target.value)
   }
 
@@ -41,12 +41,12 @@ export default class extends Form {
   send() {
     store.dispatch(
       updateSearch({
-        isLoading: true
+        isLoading: true,
       })
     )
 
     return ajax.get(misago.get("SEARCH_API"), {
-      q: this.state.query.trim()
+      q: this.state.query.trim(),
     })
   }
 
@@ -55,11 +55,11 @@ export default class extends Form {
       updateSearch({
         query: this.state.query.trim(),
         isLoading: false,
-        providers
+        providers,
       })
     )
 
-    providers.forEach(provider => {
+    providers.forEach((provider) => {
       if (provider.id === "users") {
         store.dispatch(updateUsers(provider.results.results))
       } else if (provider.id === "threads") {
@@ -73,7 +73,7 @@ export default class extends Form {
 
     store.dispatch(
       updateSearch({
-        isLoading: false
+        isLoading: false,
       })
     )
   }

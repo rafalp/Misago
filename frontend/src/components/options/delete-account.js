@@ -12,22 +12,22 @@ export default class extends React.Component {
 
     this.state = {
       isLoading: false,
-      password: ""
+      password: "",
     }
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Delete account"),
-      parent: gettext("Change your options")
+      parent: gettext("Change your options"),
     })
   }
 
-  onPasswordChange = event => {
+  onPasswordChange = (event) => {
     this.setState({ password: event.target.value })
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault()
 
     const { isLoading, password } = this.state
@@ -44,10 +44,10 @@ export default class extends React.Component {
     this.setState({ isLoading: true })
 
     ajax.post(user.api.delete, { password }).then(
-      success => {
+      (success) => {
         window.location.href = misago.get("MISAGO_PATH")
       },
-      rejection => {
+      (rejection) => {
         this.setState({ isLoading: false })
         if (rejection.password) {
           snackbar.error(rejection.password[0])

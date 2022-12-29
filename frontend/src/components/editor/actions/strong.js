@@ -1,7 +1,7 @@
 import React from "react"
 import Action from "./action"
 
-export default function(props) {
+export default function (props) {
   return (
     <Action
       execAction={makeStrong}

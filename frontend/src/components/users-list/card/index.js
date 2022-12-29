@@ -3,7 +3,7 @@ import Avatar from "misago/components/avatar"
 import Stats from "./stats"
 import UserTitle from "./user-title"
 
-export default function({ showStatus, user }) {
+export default function ({ showStatus, user }) {
   const { rank } = user
 
   let className = "panel user-card"

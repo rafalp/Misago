@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ value, onChange }) {
+export default function ({ value, onChange }) {
   return (
     <input
       aria-haspopup="true"

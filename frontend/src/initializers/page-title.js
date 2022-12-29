@@ -10,5 +10,5 @@ export default function initializer(context) {
 
 misago.addInitializer({
   name: "page-title",
-  initializer: initializer
+  initializer: initializer,
 })

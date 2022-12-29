@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function(props) {
+export default function (props) {
   if (!props.showOptions) return null
 
   const { columns } = props

@@ -20,7 +20,7 @@ export class PageTitle {
       const pageLabel = interpolate(
         gettext("page: %(page)s"),
         {
-          page: title.page
+          page: title.page,
         },
         true
       )

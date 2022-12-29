@@ -5,7 +5,7 @@ const STRONG = "<strong>%(name)s</strong>"
 
 export default class extends React.Component {
   onClick = () => {
-    const filteredAttachments = this.props.attachments.filter(item => {
+    const filteredAttachments = this.props.attachments.filter((item) => {
       return item.key !== this.props.item.key
     })
     this.props.onAttachmentsChange(filteredAttachments)
@@ -15,7 +15,7 @@ export default class extends React.Component {
     const filename = interpolate(
       STRONG,
       {
-        name: escapeHtml(this.props.item.filename)
+        name: escapeHtml(this.props.item.filename),
       },
       true
     )
@@ -24,7 +24,7 @@ export default class extends React.Component {
       gettext("Error uploading %(filename)s"),
       {
         filename,
-        progress: this.props.item.progress + "%"
+        progress: this.props.item.progress + "%",
       },
       true
     )

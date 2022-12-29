@@ -6,7 +6,7 @@ export const STYLES = [
   "progress-bar-warning",
   "progress-bar-warning",
   "progress-bar-primary",
-  "progress-bar-success"
+  "progress-bar-success",
 ]
 
 export const LABELS = [
@@ -14,7 +14,7 @@ export const LABELS = [
   gettext("Entered password is weak."),
   gettext("Entered password is average."),
   gettext("Entered password is strong."),
-  gettext("Entered password is very strong.")
+  gettext("Entered password is very strong."),
 ]
 
 export default class extends React.Component {
@@ -26,7 +26,7 @@ export default class extends React.Component {
     this._inputs = []
 
     this.state = {
-      loaded: false
+      loaded: false,
     }
   }
 
@@ -56,7 +56,7 @@ export default class extends React.Component {
     if (cacheStale) {
       this._score = zxcvbn.scorePassword(password, inputs)
       this._password = password
-      this._inputs = inputs.map(function(value) {
+      this._inputs = inputs.map(function (value) {
         return value.trim()
       })
     }

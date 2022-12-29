@@ -2,12 +2,12 @@
 // Panels Flavor
 // --------------------------------------------------
 
-
 .panel {
   border: none;
   border-radius: @border-radius-base;
 
-  .panel-heading, .panel-footer {
+  .panel-heading,
+  .panel-footer {
     background: @panel-bg;
   }
 
@@ -15,11 +15,11 @@
     color: @panel-title-color;
   }
 
-  .form-group+.form-group {
+  .form-group + .form-group {
     margin-top: @line-height-computed;
   }
 
-  .panel-body>.form-group:first-child {
+  .panel-body > .form-group:first-child {
     margin-top: @line-height-computed / 2;
   }
 
@@ -38,7 +38,6 @@
     }
   }
 }
-
 
 // use default message icon color for panel messages
 .panel-message-body .message-icon {

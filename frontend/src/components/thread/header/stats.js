@@ -95,7 +95,7 @@ export function LastReply(props) {
       LAST_POSTER_URL,
       {
         url: escapeHtml(props.thread.url.last_poster),
-        user: escapeHtml(props.thread.last_poster_name)
+        user: escapeHtml(props.thread.last_poster_name),
       },
       true
     )
@@ -103,7 +103,7 @@ export function LastReply(props) {
     user = interpolate(
       LAST_POSTER_SPAN,
       {
-        user: escapeHtml(props.thread.last_poster_name)
+        user: escapeHtml(props.thread.last_poster_name),
       },
       true
     )
@@ -113,7 +113,7 @@ export function LastReply(props) {
     LAST_REPLY,
     {
       absolute: escapeHtml(props.thread.last_post_on.format("LLL")),
-      relative: escapeHtml(props.thread.last_post_on.fromNow())
+      relative: escapeHtml(props.thread.last_post_on.fromNow()),
     },
     true
   )
@@ -122,7 +122,7 @@ export function LastReply(props) {
     escapeHtml(gettext("last reply by %(user)s %(date)s")),
     {
       date,
-      user
+      user,
     },
     true
   )
@@ -135,7 +135,7 @@ export function LastReply(props) {
   )
 }
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="header-stats">
       <div className="container">

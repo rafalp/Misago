@@ -87,13 +87,13 @@
   </div>
   <div class="container">
 
-    {% include "misago/thread/toolbar-top.html" %}
+    {% include "misago/thread/toolbar_top.html" %}
     {% if thread.poll %}
       {% include "misago/poll/index.html" with poll=thread.poll %}
     {% endif %}
 
     {% include "misago/thread/posts/index.html" %}
-    {% include "misago/thread/paginator.html" %}
+    {% include "misago/thread/toolbar_bottom.html" %}
 
   </div>
 </div>

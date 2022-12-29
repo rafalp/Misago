@@ -7,41 +7,38 @@ import store from "../../services/store"
 const SUBSCRIPTION = {
   unsubscribe: null,
   notify: false,
-  email: true
+  email: true,
 }
 
-class ThreadsListItemSubscriptionOptions extends React.Component { 
+class ThreadsListItemSubscriptionOptions extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      loading: false
+      loading: false,
     }
   }
 
   update = (value) => {
     const { thread } = this.props
 
-    this.setState({loading: true})
-    store.dispatch(
-      patch(thread, { subscription: SUBSCRIPTION[value] })
-    )
+    this.setState({ loading: true })
+    store.dispatch(patch(thread, { subscription: SUBSCRIPTION[value] }))
 
     ajax
-      .patch(thread.api.index, [
-        { op: "replace", path: "subscription", value }
-      ])
+      .patch(thread.api.index, [{ op: "replace", path: "subscription", value }])
       .then(
         () => {},
-        rejection => {
+        (rejection) => {
           store.dispatch(
             patch(thread, {
-              subscription: SUBSCRIPTION[thread.subscription]
+              subscription: SUBSCRIPTION[thread.subscription],
             })
           )
           snackbar.apiError(rejection)
         }
-      ).then(() => this.setState({loading: false}))
+      )
+      .then(() => this.setState({ loading: false }))
   }
 
   render = () => {

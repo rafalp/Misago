@@ -14,17 +14,11 @@ const ThreadsListLoader = ({ showOptions }) => (
           )}
           <div className="threads-list-item-col-title">
             <span className="threads-list-item-title">
-              <UIPreviewText width="90" />
-              {" "}
-              <UIPreviewText width="40" />
-              {" "}
+              <UIPreviewText width="90" /> <UIPreviewText width="40" />{" "}
               <UIPreviewText width="120" />
             </span>
             <span className="threads-list-item-title-sm">
-              <UIPreviewText width="90" />
-              {" "}
-              <UIPreviewText width="40" />
-              {" "}
+              <UIPreviewText width="90" /> <UIPreviewText width="40" />{" "}
               <UIPreviewText width="120" />
             </span>
           </div>
@@ -57,17 +51,11 @@ const ThreadsListLoader = ({ showOptions }) => (
           )}
           <div className="threads-list-item-col-title">
             <span className="threads-list-item-title">
-              <UIPreviewText width="120" />
-              {" "}
-              <UIPreviewText width="30" />
-              {" "}
+              <UIPreviewText width="120" /> <UIPreviewText width="30" />{" "}
               <UIPreviewText width="60" />
             </span>
             <span className="threads-list-item-title-sm">
-              <UIPreviewText width="120" />
-              {" "}
-              <UIPreviewText width="30" />
-              {" "}
+              <UIPreviewText width="120" /> <UIPreviewText width="30" />{" "}
               <UIPreviewText width="60" />
             </span>
           </div>
@@ -100,17 +88,11 @@ const ThreadsListLoader = ({ showOptions }) => (
           )}
           <div className="threads-list-item-col-title">
             <span className="threads-list-item-title">
-              <UIPreviewText width="40" />
-              {" "}
-              <UIPreviewText width="120" />
-              {" "}
+              <UIPreviewText width="40" /> <UIPreviewText width="120" />{" "}
               <UIPreviewText width="80" />
             </span>
             <span className="threads-list-item-title-sm">
-              <UIPreviewText width="40" />
-              {" "}
-              <UIPreviewText width="120" />
-              {" "}
+              <UIPreviewText width="40" /> <UIPreviewText width="120" />{" "}
               <UIPreviewText width="80" />
             </span>
           </div>

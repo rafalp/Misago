@@ -2,7 +2,7 @@ import React from "react"
 import SearchPage from "../page"
 import UsersList from "misago/components/users-list"
 
-export default function(props) {
+export default function (props) {
   return (
     <SearchPage provider={props.route.provider} search={props.search}>
       <Blankslate query={props.search.query} users={props.users}>

@@ -10,7 +10,7 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -40,36 +40,36 @@ export default class extends React.Component {
 
   action = () => {
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
 
     if (this.props.profile.is_followed) {
       store.dispatch(
         patch({
           is_followed: false,
-          followers: this.props.profile.followers - 1
+          followers: this.props.profile.followers - 1,
         })
       )
     } else {
       store.dispatch(
         patch({
           is_followed: true,
-          followers: this.props.profile.followers + 1
+          followers: this.props.profile.followers + 1,
         })
       )
     }
 
     ajax.post(this.props.profile.api.follow).then(
-      data => {
+      (data) => {
         this.setState({
-          isLoading: false
+          isLoading: false,
         })
 
         store.dispatch(patch(data))
       },
-      rejection => {
+      (rejection) => {
         this.setState({
-          isLoading: false
+          isLoading: false,
         })
         snackbar.apiError(rejection)
       }

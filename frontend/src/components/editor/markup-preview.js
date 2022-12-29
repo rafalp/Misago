@@ -1,7 +1,7 @@
 import React from "react"
 import MisagoMarkup from "misago/components/misago-markup"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="modal-dialog" role="document">
       <div className="modal-content">

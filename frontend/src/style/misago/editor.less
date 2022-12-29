@@ -16,11 +16,12 @@
   resize: none;
 
   // remove shadow from control
-  &, &:focus, &:active {
+  &,
+  &:focus,
+  &:active {
     .box-shadow(none);
   }
 }
-
 
 // Footer styles
 .editor-footer {
@@ -39,7 +40,6 @@
   .btn-icon .material-icon {
     margin-bottom: -2px;
   }
-
 
   // center buttons on small devices
   @media screen and (max-width: @screen-sm-max) {
@@ -101,7 +101,6 @@
   }
 }
 
-
 // Attachments list
 .editor-attachments-list {
   margin: 0px;
@@ -154,7 +153,8 @@
   .editor-attachment-details {
     margin-left: 50px;
 
-    h4, p {
+    h4,
+    p {
       margin: 0px;
       padding: 0px;
 
@@ -174,7 +174,6 @@
   }
 }
 
-
 .editor-attachment-actions {
   @media screen and (min-width: @screen-sm-min) {
     padding-top: 3px;
@@ -185,7 +184,6 @@
     padding-right: @padding-base-horizontal;
   }
 }
-
 
 .editor-attachment-error {
   border-top: 1px solid @editor-border;
@@ -216,7 +214,8 @@
   padding: @padding-base-vertical 0px;
   position: relative;
 
-  h4, p {
+  h4,
+  p {
     margin: 0px;
     padding: 0px;
 
@@ -232,7 +231,7 @@
     position: absolute;
     top: @padding-base-vertical + 3px;
     right: @padding-base-horizontal;
-  
+
     @media screen and (max-width: @screen-xs-max) {
       display: block;
 
@@ -259,14 +258,12 @@
   padding: @padding-base-vertical @padding-base-horizontal;
 }
 
-
 // Hide file input outside of viewport
 #editor-upload-field {
   position: absolute;
   left: -1000px;
   top: -1000px;
 }
-
 
 // Scale avatar in at.js suggestion
 .atwho-view ul li img {

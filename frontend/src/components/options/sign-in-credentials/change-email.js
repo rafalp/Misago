@@ -16,10 +16,10 @@ export default class extends Form {
 
       validators: {
         new_email: [validators.email()],
-        password: []
+        password: [],
       },
 
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -27,7 +27,7 @@ export default class extends Form {
     let errors = this.validate()
     let lengths = [
       this.state.new_email.trim().length,
-      this.state.password.trim().length
+      this.state.password.trim().length,
     ]
 
     if (lengths.indexOf(0) !== -1) {
@@ -46,14 +46,14 @@ export default class extends Form {
   send() {
     return ajax.post(this.props.user.api.change_email, {
       new_email: this.state.new_email,
-      password: this.state.password
+      password: this.state.password,
     })
   }
 
   handleSuccess(response) {
     this.setState({
       new_email: "",
-      password: ""
+      password: "",
     })
 
     snackbar.success(response.detail)

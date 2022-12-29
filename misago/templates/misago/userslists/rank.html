@@ -90,40 +90,28 @@
           <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderAscending">
         </div>
 
-        {% if paginator.pages > 1 %}
-          <div class="pager-undercontent">
-            <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
-              <ul class="pager">
-                {% if paginator.previous > 1 %}
-                  <li class="previous">
-                    <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" rel="prev" title="{% trans 'Go to previous page' %}">
-                      <span aria-hidden="true" class="material-icon">
-                        arrow_back
-                      </span>
-                    </a>
-                  </li>
-                {% elif paginator.first %}
-                  <li class="previous">
-                    <a href="{% url 'misago:users-rank' slug=rank.slug %}" rel="prev" title="{% trans 'Go to previous page' %}">
-                      <span aria-hidden="true" class="material-icon">
-                        arrow_back
-                      </span>
-                    </a>
-                  </li>
-                {% endif %}
-                {% if paginator.next %}
-                  <li class="next">
-                    <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" rel="next" title="{% trans 'Go to next page' %}">
-                      <span aria-hidden="true" class="material-icon">
-                        arrow_forward
-                      </span>
-                    </a>
-                  </li>
-                {% endif %}
-              </ul>
-            </nav>
+        <div class="toolbar">
+          <div class="toolbar-section">
+            <div class="toolbar-item">
+              {% include "misago/userslists/rank_paginator.html" %}
+            </div>
           </div>
-        {% endif %}
+          <div class="toolbar-section toolbar-section-auto">
+            <div class="toolbar-item">
+              <p>
+                {% if paginator.more %}
+                  {% blocktrans trimmed count more=paginator.more %}
+                    There is {{ more }} more members with this role.
+                  {% plural %}
+                    There are {{ more }} more members with this role.
+                  {% endblocktrans %}
+                {% else %}
+                  {% trans "There are no more members with this role." %}
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     {% else %}
       <p class="lead">

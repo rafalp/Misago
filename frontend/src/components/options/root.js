@@ -51,7 +51,7 @@ export function select(store) {
   return {
     tick: store.tick.tick,
     user: store.auth.user,
-    "username-history": store["username-history"]
+    "username-history": store["username-history"],
   }
 }
 
@@ -59,34 +59,34 @@ export function paths() {
   const paths = [
     {
       path: misago.get("USERCP_URL") + "forum-options/",
-      component: connect(select)(ChangeForumOptions)
+      component: connect(select)(ChangeForumOptions),
     },
     {
       path: misago.get("USERCP_URL") + "edit-details/",
-      component: connect(select)(EditDetails)
-    }
+      component: connect(select)(EditDetails),
+    },
   ]
 
   paths.push({
     path: misago.get("USERCP_URL") + "change-username/",
-    component: connect(select)(ChangeUsername)
+    component: connect(select)(ChangeUsername),
   })
   paths.push({
     path: misago.get("USERCP_URL") + "sign-in-credentials/",
-    component: connect(select)(ChangeSignInCredentials)
+    component: connect(select)(ChangeSignInCredentials),
   })
 
   if (misago.get("ENABLE_DOWNLOAD_OWN_DATA")) {
     paths.push({
       path: misago.get("USERCP_URL") + "download-data/",
-      component: connect(select)(DownloadData)
+      component: connect(select)(DownloadData),
     })
   }
 
   if (misago.get("ENABLE_DELETE_OWN_ACCOUNT")) {
     paths.push({
       path: misago.get("USERCP_URL") + "delete-account/",
-      component: connect(select)(DeleteAccount)
+      component: connect(select)(DeleteAccount),
     })
   }
 

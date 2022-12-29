@@ -13,20 +13,24 @@
 <div class="profile-follows">
 
   <nav class="toolbar">
-    <h3 class="toolbar-left">
-      {% if is_authenticated_user %}
-        {% blocktrans trimmed count users=count %}
-          You are following {{ users }} user.
-        {% plural %}
-          You are following {{ users }} users.
-        {% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed count users=count with username=profile %}
-          {{ username }} is following {{ users }} user.
-        {% plural %}
-          {{ username }} is following {{ users }} users.
-        {% endblocktrans %}
-      {% endif %}
+    <div class="toolbar-section toolbar-section-auto">
+      <div class="toolbar-item">
+        <h3>
+          {% if is_authenticated_user %}
+            {% blocktrans trimmed count users=count %}
+              You are following {{ users }} user.
+            {% plural %}
+              You are following {{ users }} users.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed count users=count with username=profile %}
+              {{ username }} is following {{ users }} user.
+            {% plural %}
+              {{ username }} is following {{ users }} users.
+            {% endblocktrans %}
+          {% endif %}
+        </div>
+      </div>
     </h3>
   </nav>
 

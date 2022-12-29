@@ -15,7 +15,8 @@ const ThreadsListUpdatePrompt = ({ threads, onClick }) => (
             "There are %(threads)s new or updated threads. Click here to show them.",
             threads
           ),
-          {threads}, true
+          { threads },
+          true
         )}
       </span>
     </button>

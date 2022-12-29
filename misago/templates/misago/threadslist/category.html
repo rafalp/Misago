@@ -65,7 +65,7 @@
               <span class="material-icon">
                 chevron_left
               </span>
-              {% if parent.parent %}{{ parent.name }}{% else %}{% trans "Threads" %}{% endif %}
+              {% if category.parent and not category.parent.special_role %}{{ category.parent.name }}{% else %}{% trans "Threads" %}{% endif %}
             </a>
             <h1>{{ category }}</h1>
           </div>
@@ -73,9 +73,6 @@
       </div>
     </div>
   </div>
-  {% if user.is_authenticated %}
-    {% include "misago/threadslist/tabs.html" %}
-  {% endif %}
 </div>
 {% endblock page-header %}
 
@@ -88,6 +85,8 @@
       </div>
     </div>
   {% endif %}
+
+  {% include "misago/threadslist/toolbar.html" %}
 
   {{ block.super }}
 {% endblock list-container%}

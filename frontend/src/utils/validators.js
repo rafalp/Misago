@@ -1,8 +1,9 @@
-const EMAIL = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+const EMAIL =
+  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 const USERNAME = new RegExp("^[0-9a-z]+$", "i")
 
 export function required(message) {
-  return function(value) {
+  return function (value) {
     if (value === false || value === null || $.trim(value).length === 0) {
       return message || gettext("This field is required.")
     }
@@ -20,7 +21,7 @@ export function requiredPrivacyPolicy(message) {
 }
 
 export function email(message) {
-  return function(value) {
+  return function (value) {
     if (!EMAIL.test(value)) {
       return message || gettext("Enter a valid email address.")
     }
@@ -28,7 +29,7 @@ export function email(message) {
 }
 
 export function minLength(limitValue, message) {
-  return function(value) {
+  return function (value) {
     var returnMessage = ""
     var length = $.trim(value).length
 
@@ -46,7 +47,7 @@ export function minLength(limitValue, message) {
         returnMessage,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )
@@ -55,7 +56,7 @@ export function minLength(limitValue, message) {
 }
 
 export function maxLength(limitValue, message) {
-  return function(value) {
+  return function (value) {
     var returnMessage = ""
     var length = $.trim(value).length
 
@@ -73,7 +74,7 @@ export function maxLength(limitValue, message) {
         returnMessage,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )
@@ -82,7 +83,7 @@ export function maxLength(limitValue, message) {
 }
 
 export function usernameMinLength(lengthMin) {
-  var message = function(lengthMin) {
+  var message = function (lengthMin) {
     return ngettext(
       "Username must be at least %(limit_value)s character long.",
       "Username must be at least %(limit_value)s characters long.",
@@ -93,7 +94,7 @@ export function usernameMinLength(lengthMin) {
 }
 
 export function usernameMaxLength(lengthMax) {
-  var message = function(lengthMax) {
+  var message = function (lengthMax) {
     return ngettext(
       "Username cannot be longer than %(limit_value)s character.",
       "Username cannot be longer than %(limit_value)s characters.",
@@ -104,7 +105,7 @@ export function usernameMaxLength(lengthMax) {
 }
 
 export function usernameContent() {
-  return function(value) {
+  return function (value) {
     if (!USERNAME.test($.trim(value))) {
       return gettext(
         "Username can only contain latin alphabet letters and digits."
@@ -114,7 +115,7 @@ export function usernameContent() {
 }
 
 export function passwordMinLength(limitValue) {
-  return function(value) {
+  return function (value) {
     const length = value.length
 
     if (length < limitValue) {
@@ -128,7 +129,7 @@ export function passwordMinLength(limitValue) {
         returnMessage,
         {
           limit_value: limitValue,
-          show_value: length
+          show_value: length,
         },
         true
       )

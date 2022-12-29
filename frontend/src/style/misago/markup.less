@@ -2,25 +2,34 @@
 // Markup styles
 // --------------------------------------------------
 
-
 // Force word wrap for user text
 .misago-markup {
-  h1, h2, h3, h4, h5, h6, p {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
     word-wrap: break-word;
   }
 }
 
-
 // Add upper margins for headers
 .misago-markup {
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: @line-height-computed * 2;
   }
 }
 
-
 // Even out blocks
-.misago-markup>*, .misago-markup blockquote>* {
+.misago-markup > *,
+.misago-markup blockquote > * {
   margin: @line-height-computed 0px;
 
   &:first-child {
@@ -32,13 +41,11 @@
   }
 }
 
-
 // Downscale images so they don't expand area
 .misago-markup img {
   max-width: 100%;
   max-height: 500px;
 }
-
 
 // Make quotes stand out a little
 .misago-markup .quote-block,
@@ -57,8 +64,8 @@
   }
 }
 
-.misago-markup>.quote-block,
-.misago-markup>blockquote {
+.misago-markup > .quote-block,
+.misago-markup > blockquote {
   border: 1px solid darken(@gray-lighter, 8%);
 }
 
@@ -67,11 +74,11 @@
   margin: 0px;
   padding: @line-height-computed;
 
-  &>.quote-block, &>blockquote {
+  & > .quote-block,
+  & > blockquote {
     border: 1px solid darken(@gray-lighter, 8%);
   }
 }
-
 
 // Style spoilers
 .misago-markup .spoiler-block {
@@ -81,7 +88,7 @@
   font-size: @font-size-base;
 }
 
-.misago-markup>.spoiler-block {
+.misago-markup > .spoiler-block {
   border: 1px solid darken(@gray-lighter, 8%);
   position: relative;
 }
@@ -104,9 +111,9 @@
   background: @body-bg;
 }
 
-  .misago-markup .spoiler-block.revealed .spoiler-overlay {
-    display: none;
-  }
+.misago-markup .spoiler-block.revealed .spoiler-overlay {
+  display: none;
+}
 
 // Add bullets to lists
 .misago-markup ul {
@@ -124,7 +131,6 @@
     list-style-type: decimal;
   }
 }
-
 
 // Expand code blocks a little
 .misago-markup pre {

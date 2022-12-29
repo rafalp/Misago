@@ -2,20 +2,18 @@
 // User Card Flavor
 // --------------------------------------------------
 
-
 // Background color
 .user-card {
   background: @user-card-bg;
 }
 
-
 // Round avatar corners
-.user-card-small-avatar, .user-card-avatar {
+.user-card-small-avatar,
+.user-card-avatar {
   img {
     border-radius: @border-radius-base;
   }
 }
-
 
 // Sizing and spacing on large avatar
 .user-card-avatar {
@@ -27,28 +25,35 @@
   }
 }
 
-
 // Upsize the user name
 .user-card-username {
-  a, a:link, a:visited, a:hover, a:focus, a:active {
+  a,
+  a:link,
+  a:visited,
+  a:hover,
+  a:focus,
+  a:active {
     color: @text-color;
     font-size: @font-size-large;
     font-weight: bold;
   }
 }
 
-
 // User title
 .user-card-title {
-  span, a, a:link, a:visited {
+  span,
+  a,
+  a:link,
+  a:visited {
     color: @gray;
   }
 
-  a:focus, a:hover, a:active {
+  a:focus,
+  a:hover,
+  a:active {
     color: @text-color;
   }
 }
-
 
 // User stats
 .user-card-stats {
@@ -97,7 +102,6 @@
     min-height: 60px;
   }
 }
-
 
 // Reduce gutter on small grid
 @media screen and (max-width: @screen-xs-max) {

@@ -13,5 +13,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:social-auth",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

@@ -3,10 +3,10 @@ import { Link } from "react-router"
 import Li from "misago/components/li"
 import misago from "misago/index"
 
-export default function({ baseUrl, lists }) {
+export default function ({ baseUrl, lists }) {
   return (
     <ul className="nav nav-pills">
-      {lists.map(list => {
+      {lists.map((list) => {
         const url = listUrl(baseUrl, list)
         return (
           <Li path={url} key={url}>
@@ -18,7 +18,7 @@ export default function({ baseUrl, lists }) {
   )
 }
 
-const listUrl = function(baseUrl, list) {
+const listUrl = function (baseUrl, list) {
   let url = baseUrl
   if (list.component === "rank") {
     url += list.slug

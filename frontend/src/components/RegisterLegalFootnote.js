@@ -4,13 +4,13 @@ import escapeHtml from "misago/utils/escape-html"
 
 const AGREEMENT_URL = '<a href="%(url)s" target="_blank">%(agreement)s</a>'
 
-const RegisterLegalFootnote = props => {
+const RegisterLegalFootnote = (props) => {
   const {
     errors,
     privacyPolicy,
     termsOfService,
     onPrivacyPolicyChange,
-    onTermsOfServiceChange
+    onTermsOfServiceChange,
   } = props
 
   const termsOfServiceId = misago.get("TERMS_OF_SERVICE_ID")
@@ -43,7 +43,7 @@ const RegisterLegalFootnote = props => {
   )
 }
 
-const LegalAgreement = props => {
+const LegalAgreement = (props) => {
   const { agreement, checked, errors, url, value, onChange } = props
 
   if (!url) return null

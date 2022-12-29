@@ -2,12 +2,11 @@
 // Dropdowns
 // --------------------------------------------------
 
-
 // Unify .btn-link appearance with anchors
-.dropdown-menu>li>a,
-.dropdown-menu>li>.btn-link,
-.modal-menu>li>a,
-.modal-menu>li>.btn-link {
+.dropdown-menu > li > a,
+.dropdown-menu > li > .btn-link,
+.modal-menu > li > a,
+.modal-menu > li > .btn-link {
   display: block;
   border: none;
   clear: both;
@@ -21,7 +20,8 @@
   text-align: left;
   white-space: nowrap;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: @dropdown-link-hover-bg;
 
     color: @dropdown-link-hover-color;
@@ -42,7 +42,7 @@
   // Set material icons in dropdown menus
   .material-icon {
     margin: -2px 0px;
-    margin-right: @line-height-computed * .35;
+    margin-right: @line-height-computed * 0.35;
 
     position: relative;
     bottom: 1px;
@@ -58,32 +58,28 @@
   }
 }
 
-
 // Extra overrides for modal nav
 .modal-menu {
   margin: @line-height-computed 0px;
   padding: 0px;
 }
 
-.modal-menu>li {
+.modal-menu > li {
   margin: @line-height-computed / 3 0px;
   padding: 0px;
 
   list-style: none;
 }
 
-
 // Bump min dropdown width to 210px
 .dropdown-menu {
   width: 210px;
 }
 
-
 // Dropdown footer
 .dropdown-menu .dropdown-footer {
   padding: 6px 20px;
 }
-
 
 // Dropdown buttons container
 .dropdown-menu .dropdown-buttons {
@@ -95,13 +91,13 @@
   }
 }
 
-
 // Navbar's dropdown
 .mobile-dropdown {
   position: relative;
 }
 
-.mobile-dropdown.open>.dropdown-menu, .compact-nav.open>.dropdown-menu {
+.mobile-dropdown.open > .dropdown-menu,
+.compact-nav.open > .dropdown-menu {
   border: none;
   border-radius: 0;
 
@@ -109,7 +105,6 @@
   margin: 0px;
   width: 100%;
 }
-
 
 // Guest menu
 .user-dropdown .guest-preview {
@@ -119,7 +114,6 @@
     margin: 0px;
   }
 }
-
 
 // User menu
 .navbar .user-dropdown {
@@ -136,7 +130,6 @@
   }
 }
 
-
 // Category picker
 .category-picker .dropdown-menu {
   // Make category picker wider on desktops
@@ -145,11 +138,10 @@
   }
 }
 
-.category-picker .dropdown-menu>li>.btn-link {
+.category-picker .dropdown-menu > li > .btn-link {
   white-space: normal;
   word-wrap: break-word;
 }
-
 
 // Stick to bottom on mobile
 @media screen and (max-width: @screen-xs-max) {
@@ -181,7 +173,8 @@
 
       clear: both;
 
-      &>a, &>.btn {
+      & > a,
+      & > .btn {
         padding-top: @line-height-computed * 0.75;
         padding-bottom: @line-height-computed * 0.75;
 

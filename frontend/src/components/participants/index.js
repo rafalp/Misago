@@ -3,7 +3,7 @@ import AddParticipant from "./add-participant"
 import CardsList from "./cards-list"
 import * as utils from "./utils"
 
-export default function(props) {
+export default function (props) {
   if (!props.participants.length) return null
 
   return (

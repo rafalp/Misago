@@ -16,21 +16,21 @@ export const MODERATION_PERMISSIONS = [
   "can_move",
   "can_merge",
   "can_pin",
-  "can_review"
+  "can_review",
 ]
 
 export function append(items, sorting) {
   return {
     type: APPEND_THREADS,
     items,
-    sorting
+    sorting,
   }
 }
 
 export function deleteThread(thread) {
   return {
     type: DELETE_THREAD,
-    thread
+    thread,
   }
 }
 
@@ -38,14 +38,14 @@ export function filterThreads(category, categoriesMap) {
   return {
     type: FILTER_THREADS,
     category,
-    categoriesMap
+    categoriesMap,
   }
 }
 
 export function hydrate(items) {
   return {
     type: HYDRATE_THREADS,
-    items
+    items,
   }
 }
 
@@ -54,20 +54,20 @@ export function patch(thread, patch, sorting = null) {
     type: PATCH_THREAD,
     thread,
     patch,
-    sorting
+    sorting,
   }
 }
 
 export function sort(sorting) {
   return {
     type: SORT_THREADS,
-    sorting
+    sorting,
   }
 }
 
 export function getThreadModerationOptions(thread_acl) {
   let options = []
-  MODERATION_PERMISSIONS.forEach(function(perm) {
+  MODERATION_PERMISSIONS.forEach(function (perm) {
     if (thread_acl[perm]) {
       options.push(perm)
     }
@@ -79,7 +79,7 @@ export function hydrateThread(thread) {
   return Object.assign({}, thread, {
     started_on: moment(thread.started_on),
     last_post_on: moment(thread.last_post_on),
-    moderation: getThreadModerationOptions(thread.acl)
+    moderation: getThreadModerationOptions(thread.acl),
   })
 }
 
@@ -90,12 +90,12 @@ export default function thread(state = [], action = null) {
       return mergedState.sort(action.sorting)
 
     case DELETE_THREAD:
-      return state.filter(function(item) {
+      return state.filter(function (item) {
         return item.id !== action.thread.id
       })
 
     case FILTER_THREADS:
-      return state.filter(function(item) {
+      return state.filter(function (item) {
         const itemCategory = action.categoriesMap[item.category]
         if (
           itemCategory.lft >= action.category.lft &&
@@ -116,7 +116,7 @@ export default function thread(state = [], action = null) {
       return action.items.map(hydrateThread)
 
     case PATCH_THREAD:
-      const patchedState = state.map(function(item) {
+      const patchedState = state.map(function (item) {
         if (item.id === action.thread.id) {
           return Object.assign({}, item, action.patch)
         } else {

@@ -5,13 +5,13 @@ import {
   FlagBestAnswer,
   FlagHidden,
   FlagUnapproved,
-  FlagProtected
+  FlagProtected,
 } from "./flags"
 import Footer from "./footer"
 import Header from "./header"
 import PostSide from "./post-side"
 
-export default function(props) {
+export default function (props) {
   let className = "post"
   if (props.post.isDeleted) {
     className = "hide"

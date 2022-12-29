@@ -20,19 +20,19 @@ export default class extends Form {
       title: props.thread.title,
 
       validators: {
-        title: getTitleValidators()
+        title: getTitleValidators(),
       },
-      errors: {}
+      errors: {},
     }
   }
 
-  onChange = event => {
+  onChange = (event) => {
     this.changeValue("title", event.target.value)
   }
 
   onEdit = () => {
     this.setState({
-      isEditing: true
+      isEditing: true,
     })
   }
 
@@ -40,7 +40,7 @@ export default class extends Form {
     this.setState({
       title: this.props.thread.title,
 
-      isEditing: false
+      isEditing: false,
     })
   }
 
@@ -62,7 +62,7 @@ export default class extends Form {
 
   send() {
     return ajax.patch(this.props.thread.api.index, [
-      { op: "replace", path: "title", value: this.state.title }
+      { op: "replace", path: "title", value: this.state.title },
     ])
   }
 
@@ -70,7 +70,7 @@ export default class extends Form {
     store.dispatch(thread.update(data))
 
     this.setState({
-      isEditing: false
+      isEditing: false,
     })
   }
 

@@ -15,11 +15,11 @@ export default class extends Form {
     this.state = {
       isLoading: false,
 
-      username: ""
+      username: "",
     }
   }
 
-  onUsernameChange = event => {
+  onUsernameChange = (event) => {
     this.changeValue("username", event.target.value)
   }
 
@@ -35,7 +35,7 @@ export default class extends Form {
   send() {
     return ajax.patch(this.props.thread.api.index, [
       { op: "add", path: "participants", value: this.state.username },
-      { op: "add", path: "acl", value: 1 }
+      { op: "add", path: "acl", value: 1 },
     ])
   }
 

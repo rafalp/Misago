@@ -2,10 +2,10 @@
 // Message Pages
 // --------------------------------------------------
 
-
 // Small displays
 @media screen and (max-width: @screen-xs-max) {
-  .page-message, .page-error {
+  .page-message,
+  .page-error {
     .message-panel {
       text-align: center;
     }
@@ -17,13 +17,13 @@
   }
 }
 
-
 // Full displays
 @media screen and (min-width: @screen-sm-min) {
-  .page-message, .page-error {
+  .page-message,
+  .page-error {
     .message-panel {
       margin: @line-height-computed * 3 auto;
-      max-width: @screen-md-max * .65;
+      max-width: @screen-md-max * 0.65;
       overflow: auto;
     }
 

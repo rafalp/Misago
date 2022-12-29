@@ -6,7 +6,7 @@ const ThreadsListItemCategory = ({ parent, category }) => (
       <a
         href={parent.url.index}
         className={getClassName(parent) + " threads-list-item-parent-category"}
-        style={parent.color ? {"--label-color": parent.color} : null}
+        style={parent.color ? { "--label-color": parent.color } : null}
         title={!!parent.short_name ? parent.name : null}
       >
         {parent.short_name || parent.name}
@@ -15,7 +15,7 @@ const ThreadsListItemCategory = ({ parent, category }) => (
     <a
       href={category.url.index}
       className={getClassName(category)}
-      style={category.color ? {"--label-color": category.color} : null}
+      style={category.color ? { "--label-color": category.color } : null}
       title={!!category.short_name ? category.name : null}
     >
       {category.short_name || category.name}

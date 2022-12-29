@@ -1,3 +1,3 @@
-import ThreadsList from "./ThreadsList";
+import ThreadsList from "./ThreadsList"
 
-export default ThreadsList;
+export default ThreadsList

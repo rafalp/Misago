@@ -3,8 +3,6 @@ import Participants from "misago/components/participants"
 import { Poll } from "misago/components/poll"
 import PostsList from "misago/components/posts-list"
 import Header from "./header"
-import ToolbarTop from "./toolbar-top"
-import ToolbarBottom from "./toolbar-bottom"
 import * as participants from "misago/reducers/participants"
 import * as poll from "misago/reducers/poll"
 import * as posts from "misago/reducers/posts"
@@ -15,6 +13,8 @@ import snackbar from "misago/services/snackbar"
 import posting from "misago/services/posting"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import ThreadToolbarBottom from "./ThreadToolbarBottom"
+import ThreadToolbarTop from "./ThreadToolbarTop"
 
 export default class extends React.Component {
   componentDidMount() {
@@ -54,15 +54,15 @@ export default class extends React.Component {
       .get(
         this.props.thread.api.posts.index,
         {
-          page: this.props.params.page || 1
+          page: this.props.params.page || 1,
         },
         "posts"
       )
       .then(
-        data => {
+        (data) => {
           this.update(data)
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
         }
       )
@@ -74,12 +74,12 @@ export default class extends React.Component {
 
       url: this.props.thread.api.posts.index,
       data: {
-        page: this.props.params.page || 1
+        page: this.props.params.page || 1,
       },
       update: this.update,
 
       frequency: 120 * 1000,
-      delayed: true
+      delayed: true,
     })
   }
 
@@ -91,11 +91,11 @@ export default class extends React.Component {
     title.set({
       title: this.props.thread.title,
       parent: this.props.thread.category.name,
-      page: (this.props.params.page || 1) * 1
+      page: (this.props.params.page || 1) * 1,
     })
   }
 
-  update = data => {
+  update = (data) => {
     store.dispatch(thread.replace(data))
     store.dispatch(posts.load(data.post_set))
 
@@ -110,12 +110,22 @@ export default class extends React.Component {
     this.setPageTitle()
   }
 
+  openPollForm = () => {
+    posting.open({
+      mode: "POLL",
+      submit: this.props.thread.api.poll,
+
+      thread: this.props.thread,
+      poll: null,
+    })
+  }
+
   openReplyForm = () => {
     posting.open({
       mode: "REPLY",
 
       config: this.props.thread.api.editor,
-      submit: this.props.thread.api.posts.index
+      submit: this.props.thread.api.posts.index,
     })
   }
 
@@ -125,13 +135,27 @@ export default class extends React.Component {
       className += " page-thread-" + this.props.thread.category.css_class
     }
 
+    const postsModeration = getPostsModeration(
+      this.props.posts.results,
+      this.props.user
+    )
+    const selection = this.props.posts.results.filter((post) => post.isSelected)
+
     return (
       <div className={className}>
         <div className="page-header-bg">
           <Header {...this.props} />
         </div>
         <div className="container">
-          <ToolbarTop openReplyForm={this.openReplyForm} {...this.props} />
+          <ThreadToolbarTop
+            thread={this.props.thread}
+            posts={this.props.posts}
+            user={this.props.user}
+            selection={selection}
+            moderation={postsModeration}
+            onPoll={this.openPollForm}
+            onReply={this.openReplyForm}
+          />
           <Poll
             poll={this.props.poll}
             thread={this.props.thread}
@@ -143,9 +167,60 @@ export default class extends React.Component {
             user={this.props.user}
           />
           <PostsList {...this.props} />
-          <ToolbarBottom openReplyForm={this.openReplyForm} {...this.props} />
+          <ThreadToolbarBottom
+            thread={this.props.thread}
+            posts={this.props.posts}
+            user={this.props.user}
+            selection={selection}
+            moderation={postsModeration}
+            onReply={this.openReplyForm}
+          />
         </div>
       </div>
     )
   }
+}
+
+const getPostsModeration = (posts, user) => {
+  const moderation = {
+    enabled: false,
+    approve: false,
+    move: false,
+    merge: false,
+    protect: false,
+    hide: false,
+    delete: false,
+  }
+
+  if (!user.is_authenticated) return moderation
+
+  posts.forEach((post) => {
+    if (!post.is_event) {
+      if (post.acl.can_approve && post.is_unapproved) {
+        moderation.approve = true
+      }
+      if (post.acl.can_move) moderation.move = true
+      if (post.acl.can_merge) moderation.merge = true
+      if (post.acl.can_protect || post.acl.can_unprotect) {
+        moderation.protect = true
+      }
+      if (post.acl.can_hide || post.acl.can_unhide) {
+        moderation.hide = true
+      }
+      if (post.acl.can_delete) moderation.delete = true
+
+      if (
+        moderation.approve ||
+        moderation.move ||
+        moderation.merge ||
+        moderation.protect ||
+        moderation.hide ||
+        moderation.delete
+      ) {
+        moderation.enabled = true
+      }
+    }
+  })
+
+  return moderation
 }

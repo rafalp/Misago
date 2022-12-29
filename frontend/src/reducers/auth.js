@@ -2,7 +2,7 @@ import { UPDATE_AVATAR, UPDATE_USERNAME } from "misago/reducers/users"
 
 export var initialState = {
   signedIn: false,
-  signedOut: false
+  signedOut: false,
 }
 
 export const PATCH_USER = "PATCH_USER"
@@ -12,21 +12,21 @@ export const SIGN_OUT = "SIGN_OUT"
 export function patch(patch) {
   return {
     type: PATCH_USER,
-    patch
+    patch,
   }
 }
 
 export function signIn(user) {
   return {
     type: SIGN_IN,
-    user
+    user,
   }
 }
 
 export function signOut(soft = false) {
   return {
     type: SIGN_OUT,
-    soft
+    soft,
   }
 }
 
@@ -39,21 +39,21 @@ export default function auth(state = initialState, action = null) {
 
     case SIGN_IN:
       return Object.assign({}, state, {
-        signedIn: action.user
+        signedIn: action.user,
       })
 
     case SIGN_OUT:
       return Object.assign({}, state, {
         isAuthenticated: false,
         isAnonymous: true,
-        signedOut: !action.soft
+        signedOut: !action.soft,
       })
 
     case UPDATE_AVATAR:
       if (state.isAuthenticated && state.user.id === action.userId) {
         let newState = Object.assign({}, state)
         newState.user = Object.assign({}, state.user, {
-          avatars: action.avatars
+          avatars: action.avatars,
         })
         return newState
       }
@@ -64,7 +64,7 @@ export default function auth(state = initialState, action = null) {
         let newState = Object.assign({}, state)
         newState.user = Object.assign({}, state.user, {
           username: action.username,
-          slug: action.slug
+          slug: action.slug,
         })
         return newState
       }

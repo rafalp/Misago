@@ -2,7 +2,7 @@ import React from "react"
 import Select from "misago/components/select"
 
 export default class extends React.Component {
-  onChange = ev => {
+  onChange = (ev) => {
     const { field, onChange } = this.props
     onChange(field.fieldname, ev.target.value)
   }

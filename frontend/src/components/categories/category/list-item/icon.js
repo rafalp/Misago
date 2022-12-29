@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ category }) {
+export default function ({ category }) {
   return (
     <div className={getClassName(category)} title={getTitle(category)}>
       <span className="material-icon">{getIcon(category)}</span>

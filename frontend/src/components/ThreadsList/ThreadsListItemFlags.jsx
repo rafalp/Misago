@@ -27,34 +27,29 @@ const ThreadsListItemFlags = ({ thread }) => (
       </li>
     )}
     {thread.has_poll && (
-      <li
-        className="threads-list-item-flag-poll"
-        title={gettext("Poll")}
-      >
+      <li className="threads-list-item-flag-poll" title={gettext("Poll")}>
         <span className="material-icon">poll</span>
       </li>
     )}
     {(thread.is_unapproved || thread.has_unapproved_posts) && (
       <li
         className="threads-list-item-flag-unapproved"
-        title={thread.is_unapproved ? gettext("Awaiting approval") : gettext("Has unapproved posts")}
+        title={
+          thread.is_unapproved
+            ? gettext("Awaiting approval")
+            : gettext("Has unapproved posts")
+        }
       >
         <span className="material-icon">visibility</span>
       </li>
     )}
     {thread.is_closed && (
-      <li
-        className="threads-list-item-flag-closed"
-        title={gettext("Closed")}
-      >
+      <li className="threads-list-item-flag-closed" title={gettext("Closed")}>
         <span className="material-icon">lock</span>
       </li>
     )}
     {thread.is_hidden && (
-      <li
-        className="threads-list-item-flag-hidden"
-        title={gettext("Hidden")}
-      >
+      <li className="threads-list-item-flag-hidden" title={gettext("Hidden")}>
         <span className="material-icon">visibility_off</span>
       </li>
     )}

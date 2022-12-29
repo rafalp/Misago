@@ -7,17 +7,16 @@ import ajax from "misago/services/ajax"
 import modal from "misago/services/modal"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
-import Countdown from "misago/utils/countdown"
 
 export default class extends React.Component {
   callApi = (ops, successMessage, onSuccess = null) => {
     // freeze threads
-    this.props.threads.forEach(thread => {
+    this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id)
     })
 
     // list ids
-    const ids = this.props.threads.map(thread => {
+    const ids = this.props.threads.map((thread) => {
       return thread.id
     })
 
@@ -25,14 +24,14 @@ export default class extends React.Component {
     ops.push({ op: "add", path: "acl", value: true })
 
     ajax.patch(this.props.api, { ids, ops }).then(
-      data => {
+      (data) => {
         // unfreeze
-        this.props.threads.forEach(thread => {
+        this.props.threads.forEach((thread) => {
           this.props.freezeThread(thread.id)
         })
 
         // update threads
-        data.forEach(thread => {
+        data.forEach((thread) => {
           this.props.updateThread(thread)
         })
 
@@ -42,9 +41,9 @@ export default class extends React.Component {
           onSuccess()
         }
       },
-      rejection => {
+      (rejection) => {
         // unfreeze
-        this.props.threads.forEach(thread => {
+        this.props.threads.forEach((thread) => {
           this.props.freezeThread(thread.id)
         })
 
@@ -57,7 +56,7 @@ export default class extends React.Component {
         let errors = []
         let threadsMap = {}
 
-        this.props.threads.forEach(thread => {
+        this.props.threads.forEach((thread) => {
           threadsMap[thread.id] = thread
         })
 
@@ -65,7 +64,7 @@ export default class extends React.Component {
           if (typeof threadsMap[id] !== "undefined") {
             errors.push({
               errors: detail,
-              thread: threadsMap[id]
+              thread: threadsMap[id],
             })
           }
         })
@@ -81,8 +80,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 2
-        }
+          value: 2,
+        },
       ],
       gettext("Selected threads were pinned globally.")
     )
@@ -94,8 +93,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 1
-        }
+          value: 1,
+        },
       ],
       gettext("Selected threads were pinned locally.")
     )
@@ -107,8 +106,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "weight",
-          value: 0
-        }
+          value: 0,
+        },
       ],
       gettext("Selected threads were unpinned.")
     )
@@ -120,8 +119,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-unapproved",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Selected threads were approved.")
     )
@@ -133,8 +132,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-closed",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Selected threads were opened.")
     )
@@ -146,8 +145,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-closed",
-          value: true
-        }
+          value: true,
+        },
       ],
       gettext("Selected threads were closed.")
     )
@@ -159,8 +158,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-hidden",
-          value: false
-        }
+          value: false,
+        },
       ],
       gettext("Selected threads were unhidden.")
     )
@@ -172,8 +171,8 @@ export default class extends React.Component {
         {
           op: "replace",
           path: "is-hidden",
-          value: true
-        }
+          value: true,
+        },
       ],
       gettext("Selected threads were hidden.")
     )
@@ -193,7 +192,7 @@ export default class extends React.Component {
 
   merge = () => {
     const errors = []
-    this.props.threads.forEach(thread => {
+    this.props.threads.forEach((thread) => {
       if (!thread.acl.can_merge) {
         errors.append({
           id: thread.id,
@@ -201,8 +200,8 @@ export default class extends React.Component {
           errors: [
             gettext(
               "You don't have permission to merge this thread with others."
-            )
-          ]
+            ),
+          ],
         })
       }
     })
@@ -221,35 +220,37 @@ export default class extends React.Component {
 
   delete = () => {
     if (
-      !window.confirm(gettext("Are you sure you want to delete selected threads?"))
+      !window.confirm(
+        gettext("Are you sure you want to delete selected threads?")
+      )
     ) {
       return
     }
 
-    this.props.threads.map(thread => {
+    this.props.threads.map((thread) => {
       this.props.freezeThread(thread.id)
     })
 
-    const ids = this.props.threads.map(thread => {
+    const ids = this.props.threads.map((thread) => {
       return thread.id
     })
 
     ajax.delete(this.props.api, ids).then(
       () => {
-        this.props.threads.map(thread => {
+        this.props.threads.map((thread) => {
           this.props.freezeThread(thread.id)
           this.props.deleteThread(thread)
         })
 
         snackbar.success(gettext("Selected threads were deleted."))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
-          const failedThreads = rejection.map(thread => {
+          const failedThreads = rejection.map((thread) => {
             return thread.id
           })
 
-          this.props.threads.map(thread => {
+          this.props.threads.map((thread) => {
             this.props.freezeThread(thread.id)
             if (failedThreads.indexOf(thread.id) === -1) {
               this.props.deleteThread(thread)
@@ -264,171 +265,177 @@ export default class extends React.Component {
     )
   }
 
-  getPinGloballyButton() {
-    if (!this.props.moderation.can_pin_globally) return null
-
-    return (
-      <li>
-        <button
-          className="btn btn-link"
-          onClick={this.pinGlobally}
-          type="button"
-        >
-          <span className="material-icon">bookmark</span>
-          {gettext("Pin threads globally")}
-        </button>
-      </li>
-    )
-  }
-
-  getPinLocallyButton() {
-    if (!this.props.moderation.can_pin) return null
-
-    return (
-      <li>
-        <button
-          className="btn btn-link"
-          onClick={this.pinLocally}
-          type="button"
-        >
-          <span className="material-icon">bookmark_border</span>
-          {gettext("Pin threads locally")}
-        </button>
-      </li>
-    )
-  }
-
-  getUnpinButton() {
-    if (!this.props.moderation.can_pin) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.unpin} type="button">
-          <span className="material-icon">panorama_fish_eye</span>
-          {gettext("Unpin threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getMoveButton() {
-    if (!this.props.moderation.can_move) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.move} type="button">
-          <span className="material-icon">arrow_forward</span>
-          {gettext("Move threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getMergeButton() {
-    if (!this.props.moderation.can_merge) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.merge} type="button">
-          <span className="material-icon">call_merge</span>
-          {gettext("Merge threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getApproveButton() {
-    if (!this.props.moderation.can_approve) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.approve} type="button">
-          <span className="material-icon">done</span>
-          {gettext("Approve threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getOpenButton() {
-    if (!this.props.moderation.can_close) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.open} type="button">
-          <span className="material-icon">lock_open</span>
-          {gettext("Open threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getCloseButton() {
-    if (!this.props.moderation.can_close) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.close} type="button">
-          <span className="material-icon">lock_outline</span>
-          {gettext("Close threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getUnhideButton() {
-    if (!this.props.moderation.can_unhide) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.unhide} type="button">
-          <span className="material-icon">visibility</span>
-          {gettext("Unhide threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getHideButton() {
-    if (!this.props.moderation.can_hide) return null
-
-    return (
-      <li>
-        <button onClick={this.hide} type="button" className="btn btn-link">
-          <span className="material-icon">visibility_off</span>
-          {gettext("Hide threads")}
-        </button>
-      </li>
-    )
-  }
-
-  getDeleteButton() {
-    if (!this.props.moderation.can_delete) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.delete} type="button">
-          <span className="material-icon">clear</span>
-          {gettext("Delete threads")}
-        </button>
-      </li>
-    )
-  }
-
   render() {
+    const { moderation, threads } = this.props
+    const noSelection = this.props.selection.length == 0
+
     return (
-      <ul className={this.props.className}>
-        {this.getPinGloballyButton()}
-        {this.getPinLocallyButton()}
-        {this.getUnpinButton()}
-        {this.getMoveButton()}
-        {this.getMergeButton()}
-        {this.getApproveButton()}
-        {this.getOpenButton()}
-        {this.getCloseButton()}
-        {this.getUnhideButton()}
-        {this.getHideButton()}
-        {this.getDeleteButton()}
+      <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
+        <li>
+          <button
+            className="btn btn-link"
+            type="button"
+            onClick={() => store.dispatch(select.all(threads.map((t) => t.id)))}
+          >
+            <span className="material-icon">check_box</span>
+            {gettext("Select all")}
+          </button>
+        </li>
+        <li>
+          <button
+            className="btn btn-link"
+            type="button"
+            disabled={noSelection}
+            onClick={() => store.dispatch(select.none())}
+          >
+            <span className="material-icon">check_box_outline_blank</span>
+            {gettext("Select none")}
+          </button>
+        </li>
+        <li role="separator" className="divider" />
+        {moderation.can_pin_globally && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.pinGlobally}
+            >
+              <span className="material-icon">bookmark</span>
+              {gettext("Pin threads globally")}
+            </button>
+          </li>
+        )}
+        {moderation.can_pin && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.pinLocally}
+            >
+              <span className="material-icon">bookmark_border</span>
+              {gettext("Pin threads locally")}
+            </button>
+          </li>
+        )}
+        {moderation.can_pin && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.unpin}
+            >
+              <span className="material-icon">panorama_fish_eye</span>
+              {gettext("Unpin threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_move && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.move}
+            >
+              <span className="material-icon">arrow_forward</span>
+              {gettext("Move threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_merge && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.merge}
+            >
+              <span className="material-icon">call_merge</span>
+              {gettext("Merge threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_approve && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.approve}
+            >
+              <span className="material-icon">done</span>
+              {gettext("Approve threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_close && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.open}
+            >
+              <span className="material-icon">lock_open</span>
+              {gettext("Open threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_close && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.close}
+            >
+              <span className="material-icon">lock_outline</span>
+              {gettext("Close threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_unhide && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.unhide}
+            >
+              <span className="material-icon">visibility</span>
+              {gettext("Unhide threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_hide && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.hide}
+            >
+              <span className="material-icon">visibility_off</span>
+              {gettext("Hide threads")}
+            </button>
+          </li>
+        )}
+        {moderation.can_delete && (
+          <li>
+            <button
+              className="btn btn-link"
+              type="button"
+              disabled={noSelection}
+              onClick={this.delete}
+            >
+              <span className="material-icon">clear</span>
+              {gettext("Delete threads")}
+            </button>
+          </li>
+        )}
       </ul>
     )
   }

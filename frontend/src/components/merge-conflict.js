@@ -13,7 +13,7 @@ export default class extends Form {
       isLoading: false,
 
       bestAnswer: "0",
-      poll: "0"
+      poll: "0",
     }
   }
 
@@ -31,26 +31,26 @@ export default class extends Form {
   send() {
     const data = Object.assign({}, this.props.data, {
       best_answer: this.state.bestAnswer,
-      poll: this.state.poll
+      poll: this.state.poll,
     })
 
     return ajax.post(this.props.api, data)
   }
 
-  handleSuccess = success => {
+  handleSuccess = (success) => {
     this.props.onSuccess(success)
     modal.hide()
   }
 
-  handleError = rejection => {
+  handleError = (rejection) => {
     this.props.onError(rejection)
   }
 
-  onBestAnswerChange = event => {
+  onBestAnswerChange = (event) => {
     this.changeValue("bestAnswer", event.target.value)
   }
 
-  onPollChange = event => {
+  onPollChange = (event) => {
     this.changeValue("poll", event.target.value)
   }
 
@@ -119,7 +119,7 @@ export function BestAnswerSelect({ choices, onChange, value }) {
         onChange={onChange}
         value={value}
       >
-        {choices.map(choice => {
+        {choices.map((choice) => {
           return (
             <option value={choice[0]} key={choice[0]}>
               {choice[1]}
@@ -148,7 +148,7 @@ export function PollSelect({ choices, onChange, value }) {
         onChange={onChange}
         value={value}
       >
-        {choices.map(choice => {
+        {choices.map((choice) => {
           return (
             <option value={choice[0]} key={choice[0]}>
               {choice[1]}

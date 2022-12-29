@@ -21,7 +21,7 @@ export default class extends Followers {
       return interpolate(
         message,
         {
-          users: this.state.count
+          users: this.state.count,
         },
         true
       )
@@ -35,7 +35,7 @@ export default class extends Followers {
       return interpolate(
         message,
         {
-          users: this.state.count
+          users: this.state.count,
         },
         true
       )
@@ -50,7 +50,7 @@ export default class extends Followers {
         message,
         {
           username: this.props.profile.username,
-          users: this.state.count
+          users: this.state.count,
         },
         true
       )
@@ -66,7 +66,7 @@ export default class extends Followers {
       return interpolate(
         gettext("%(username)s is not following any users."),
         {
-          username: this.props.profile.username
+          username: this.props.profile.username,
         },
         true
       )

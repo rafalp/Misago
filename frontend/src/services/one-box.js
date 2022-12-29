@@ -7,7 +7,7 @@ export class OneBox {
     this._youtube = {}
   }
 
-  render = domnode => {
+  render = (domnode) => {
     if (!domnode) return
     this.highlightCode(domnode)
     this.embedYoutubePlayers(domnode)
@@ -68,7 +68,7 @@ export function parseYoutubeUrl(url) {
   let start = 0
   if (cleanedUrl.indexOf("?") > 0) {
     const query = cleanedUrl.substr(cleanedUrl.indexOf("?") + 1)
-    const timebit = query.split("&").filter(i => {
+    const timebit = query.split("&").filter((i) => {
       return i.substr(0, 2) === "t="
     })[0]
 
@@ -87,7 +87,7 @@ export function parseYoutubeUrl(url) {
 
   return {
     start,
-    video
+    video,
   }
 }
 

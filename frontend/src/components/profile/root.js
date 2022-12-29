@@ -28,11 +28,11 @@ export default class extends WithDropdown {
       poll: "user-profile",
       url: api,
       frequency: 90 * 1000,
-      update: this.update
+      update: this.update,
     })
   }
 
-  update = data => {
+  update = (data) => {
     store.dispatch(hydrate(data))
   }
 
@@ -81,7 +81,7 @@ export function select(store) {
     posts: store.posts,
     profile: store.profile,
     profileDetails: store["profile-details"],
-    "username-history": store["username-history"]
+    "username-history": store["username-history"],
   }
 }
 
@@ -92,16 +92,16 @@ const COMPONENTS = {
   follows: Follows,
   details: Details,
   "username-history": UsernameHistory,
-  "ban-details": BanDetails
+  "ban-details": BanDetails,
 }
 
 export function paths() {
   let paths = []
-  misago.get("PROFILE_PAGES").forEach(function(item) {
+  misago.get("PROFILE_PAGES").forEach(function (item) {
     paths.push(
       Object.assign({}, item, {
         path: misago.get("PROFILE").url + item.component + "/",
-        component: connect(select)(COMPONENTS[item.component])
+        component: connect(select)(COMPONENTS[item.component]),
       })
     )
   })

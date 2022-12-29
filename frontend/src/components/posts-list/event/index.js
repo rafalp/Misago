@@ -5,7 +5,7 @@ import Message from "./message"
 import UnreadLabel from "./unread-label"
 import Waypoint from "../waypoint"
 
-export default function(props) {
+export default function (props) {
   let className = "event"
   if (props.post.isDeleted) {
     className = "hide"

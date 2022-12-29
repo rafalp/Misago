@@ -4,12 +4,12 @@ import Select from "./select"
 import {
   StatusIcon,
   getStatusClassName,
-  getStatusDescription
+  getStatusDescription,
 } from "misago/components/user-status"
 import PostChangelog from "misago/components/post-changelog"
 import modal from "misago/services/modal"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="post-heading">
       <UnreadLabel {...props} />
@@ -47,7 +47,7 @@ export function PostedOn(props) {
   const tooltip = interpolate(
     gettext("posted %(posted_on)s"),
     {
-      posted_on: props.post.posted_on.format("LL, LT")
+      posted_on: props.post.posted_on.format("LL, LT"),
     },
     true
   )
@@ -94,7 +94,7 @@ export class PostEdits extends React.Component {
     const title = interpolate(
       tooltip,
       {
-        edits: this.props.post.edits
+        edits: this.props.post.edits,
       },
       true
     )
@@ -115,7 +115,7 @@ export class PostEdits extends React.Component {
         {interpolate(
           label,
           {
-            edits: this.props.post.edits
+            edits: this.props.post.edits,
           },
           true
         )}
@@ -146,7 +146,7 @@ export class PostEditsCompacts extends PostEdits {
         {interpolate(
           label,
           {
-            edits: this.props.post.edits
+            edits: this.props.post.edits,
           },
           true
         )}

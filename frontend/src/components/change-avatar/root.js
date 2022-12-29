@@ -42,55 +42,55 @@ export class ChangeAvatarError extends React.Component {
 export default class extends React.Component {
   componentDidMount() {
     ajax.get(this.props.user.api.avatar).then(
-      options => {
+      (options) => {
         this.setState({
           component: AvatarIndex,
           options: options,
-          error: null
+          error: null,
         })
       },
-      rejection => {
+      (rejection) => {
         this.showError(rejection)
       }
     )
   }
 
-  showError = error => {
+  showError = (error) => {
     this.setState({
-      error
+      error,
     })
   }
 
   showIndex = () => {
     this.setState({
-      component: AvatarIndex
+      component: AvatarIndex,
     })
   }
 
   showUpload = () => {
     this.setState({
-      component: AvatarUpload
+      component: AvatarUpload,
     })
   }
 
   showCrop = () => {
     this.setState({
-      component: AvatarCrop
+      component: AvatarCrop,
     })
   }
 
   showGallery = () => {
     this.setState({
-      component: AvatarGallery
+      component: AvatarGallery,
     })
   }
 
-  completeFlow = options => {
+  completeFlow = (options) => {
     store.dispatch(updateAvatar(this.props.user, options.avatars))
 
     this.setState({
       component: AvatarIndex,
-      options
+      options,
     })
   }
 
@@ -155,6 +155,6 @@ export default class extends React.Component {
 
 export function select(state) {
   return {
-    user: state.auth.user
+    user: state.auth.user,
   }
 }

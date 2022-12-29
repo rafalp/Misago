@@ -8,7 +8,7 @@ export default class extends React.Component {
         <div
           className="lead"
           dangerouslySetInnerHTML={{
-            __html: this.props.message.html
+            __html: this.props.message.html,
           }}
         />
       )
@@ -23,7 +23,7 @@ export default class extends React.Component {
         let title = interpolate(
           gettext("This ban expires on %(expires_on)s."),
           {
-            expires_on: this.props.expires.format("LL, LT")
+            expires_on: this.props.expires.format("LL, LT"),
           },
           true
         )
@@ -31,7 +31,7 @@ export default class extends React.Component {
         let message = interpolate(
           gettext("This ban expires %(expires_on)s."),
           {
-            expires_on: this.props.expires.fromNow()
+            expires_on: this.props.expires.fromNow(),
           },
           true
         )

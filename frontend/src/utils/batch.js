@@ -1,8 +1,8 @@
-export default function(list, rowWidth, padding = false) {
+export default function (list, rowWidth, padding = false) {
   let rows = []
   let row = []
 
-  list.forEach(function(element) {
+  list.forEach(function (element) {
     row.push(element)
     if (row.length === rowWidth) {
       rows.push(row)

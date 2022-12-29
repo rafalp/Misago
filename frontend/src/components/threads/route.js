@@ -2,7 +2,7 @@ import React from "react"
 import Button from "misago/components/button"
 import {
   compareGlobalWeight,
-  compareWeight
+  compareWeight,
 } from "misago/components/threads/compare"
 import Container from "misago/components/threads/container"
 import Header from "misago/components/threads/header"
@@ -10,7 +10,7 @@ import {
   diffThreads,
   getModerationActions,
   getPageTitle,
-  getTitle
+  getTitle,
 } from "misago/components/threads/utils"
 import ThreadsList from "misago/components/ThreadsList"
 import WithDropdown from "misago/components/with-dropdown"
@@ -35,7 +35,7 @@ export default class extends WithDropdown {
       isBusy: false,
 
       diff: {
-        results: []
+        results: [],
       },
 
       moderation: [],
@@ -43,7 +43,7 @@ export default class extends WithDropdown {
 
       dropdown: false,
       subcategories: [],
-      
+
       next: 0,
     }
 
@@ -68,7 +68,7 @@ export default class extends WithDropdown {
     this.state = Object.assign(this.state, {
       moderation: getModerationActions(data.results),
       subcategories: data.subcategories,
-      next: data.next
+      next: data.next,
     })
 
     this.startPolling(category)
@@ -85,12 +85,12 @@ export default class extends WithDropdown {
         {
           category: category,
           list: this.props.route.list.type,
-          start: next || 0
+          start: next || 0,
         },
         "threads"
       )
       .then(
-        data => {
+        (data) => {
           if (!this.state.isMounted) {
             // user changed route before loading completion
             return
@@ -115,7 +115,7 @@ export default class extends WithDropdown {
 
           this.startPolling(category)
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
         }
       )
@@ -127,10 +127,10 @@ export default class extends WithDropdown {
       url: this.props.options.api,
       data: {
         category: category,
-        list: this.props.route.list.type
+        list: this.props.route.list.type,
       },
       frequency: 120 * 1000,
-      update: this.pollResponse
+      update: this.pollResponse,
     })
   }
 
@@ -143,7 +143,7 @@ export default class extends WithDropdown {
       store.dispatch(hydrate(misago.pop("THREADS").results))
 
       this.setState({
-        isLoaded: true
+        isLoaded: true,
       })
     }
 
@@ -189,21 +189,21 @@ export default class extends WithDropdown {
 
   loadMore = () => {
     this.setState({
-      isBusy: true
+      isBusy: true,
     })
 
     this.loadThreads(this.getCategory(), this.state.next)
   }
 
-  pollResponse = data => {
+  pollResponse = (data) => {
     this.setState({
       diff: Object.assign({}, data, {
-        results: diffThreads(this.props.threads, data.results)
-      })
+        results: diffThreads(this.props.threads, data.results),
+      }),
     })
   }
 
-  addThreads = threads => {
+  addThreads = (threads) => {
     store.dispatch(append(threads, this.getSorting()))
   }
 
@@ -215,27 +215,27 @@ export default class extends WithDropdown {
         moderation: getModerationActions(store.getState().threads),
 
         diff: {
-          results: []
-        }
+          results: [],
+        },
       })
     )
   }
 
   // Thread state utils
 
-  freezeThread = thread => {
-    this.setState(function(currentState) {
+  freezeThread = (thread) => {
+    this.setState(function (currentState) {
       return {
-        busyThreads: sets.toggle(currentState.busyThreads, thread)
+        busyThreads: sets.toggle(currentState.busyThreads, thread),
       }
     })
   }
 
-  updateThread = thread => {
+  updateThread = (thread) => {
     store.dispatch(patch(thread, thread, this.getSorting()))
   }
 
-  deleteThread = thread => {
+  deleteThread = (thread) => {
     store.dispatch(deleteThread(thread))
   }
 
@@ -280,11 +280,10 @@ export default class extends WithDropdown {
           route={this.props.route}
           user={this.props.user}
         />
-
         <Container
           api={this.props.options.api}
+          root={this.props.route.categories[0]}
           route={this.props.route}
-          subcategories={this.state.subcategories}
           user={this.props.user}
           pageLead={this.props.options.pageLead}
           threads={this.props.threads}
@@ -293,6 +292,7 @@ export default class extends WithDropdown {
           selection={this.props.selection}
           busyThreads={this.state.busyThreads}
           addThreads={this.addThreads}
+          startThread={this.props.options.startThread}
           freezeThread={this.freezeThread}
           deleteThread={this.deleteThread}
           updateThread={this.updateThread}
@@ -320,7 +320,8 @@ export default class extends WithDropdown {
 }
 
 function isIndex(props) {
-  if (props.route.category.level || !misago.get("THREADS_ON_INDEX")) return false
+  if (props.route.category.level || !misago.get("THREADS_ON_INDEX"))
+    return false
   if (props.options.title) return false
 
   return true

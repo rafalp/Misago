@@ -53,7 +53,7 @@ export class Posting {
 
     $("html, body").animate(
       {
-        scrollTop: this._placeholder.offset().top
+        scrollTop: this._placeholder.offset().top,
       },
       1000
     )

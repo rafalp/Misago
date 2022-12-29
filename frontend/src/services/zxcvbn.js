@@ -26,13 +26,13 @@ export class Zxcvbn {
   _loadingPromise() {
     const self = this
 
-    return new Promise(function(resolve, reject) {
-      var wait = function(tries = 0) {
+    return new Promise(function (resolve, reject) {
+      var wait = function (tries = 0) {
         tries += 1
         if (tries > 200) {
           reject()
         } else if (typeof zxcvbn === "undefined") {
-          window.setTimeout(function() {
+          window.setTimeout(function () {
             wait(tries)
           }, 200)
         } else {
@@ -46,7 +46,7 @@ export class Zxcvbn {
 
   _loadedPromise() {
     // we have already loaded zxcvbn.js, resolve away!
-    return new Promise(function(resolve) {
+    return new Promise(function (resolve) {
       resolve()
     })
   }

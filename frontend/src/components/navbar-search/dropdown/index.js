@@ -6,7 +6,7 @@ import Loader from "./loader"
 import Result from "./result"
 import flattenResults from "./flatten-results"
 
-export default function({ isLoading, onChange, results, query }) {
+export default function ({ isLoading, onChange, results, query }) {
   if (!query.trim().length) {
     return <DropdownMenu onChange={onChange} query={query} />
   }
@@ -16,7 +16,7 @@ export default function({ isLoading, onChange, results, query }) {
 
     return (
       <DropdownMenu onChange={onChange} query={query}>
-        {flatResults.map(props => {
+        {flatResults.map((props) => {
           const { type, provider, result } = props
 
           if (type === RESULT) {

@@ -2,7 +2,7 @@ import React from "react"
 import Description from "./description"
 import Icon from "./icon"
 
-export default function({ category }) {
+export default function ({ category }) {
   return (
     <div className="col-xs-12 col-sm-6 col-md-6 category-main">
       <div className="media">

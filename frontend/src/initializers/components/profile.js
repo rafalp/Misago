@@ -8,7 +8,7 @@ export default function initializer(context) {
     mount({
       root: misago.get("PROFILE").url,
       component: connect(select)(Profile),
-      paths: paths()
+      paths: paths(),
     })
   }
 }
@@ -16,5 +16,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:profile",
   initializer: initializer,
-  after: "reducer:profile-hydrate"
+  after: "reducer:profile-hydrate",
 })

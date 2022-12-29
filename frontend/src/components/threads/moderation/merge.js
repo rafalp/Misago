@@ -29,10 +29,10 @@ export default class extends Form {
       is_closed: false,
 
       validators: {
-        title: [validators.required()]
+        title: [validators.required()],
       },
 
-      errors: {}
+      errors: {},
     }
 
     this.acl = {}
@@ -46,7 +46,7 @@ export default class extends Form {
     }
 
     this.categoryChoices = []
-    props.categories.forEach(category => {
+    props.categories.forEach((category) => {
       if (category.level > 0) {
         const acl = this.acl[category.id]
         const disabled =
@@ -57,7 +57,7 @@ export default class extends Form {
           value: category.id,
           disabled: disabled,
           level: category.level - 1,
-          label: category.name
+          label: category.name,
         })
 
         if (!disabled && !this.state.category) {
@@ -70,26 +70,26 @@ export default class extends Form {
       {
         value: 0,
         icon: "visibility",
-        label: gettext("No")
+        label: gettext("No"),
       },
       {
         value: 1,
         icon: "visibility_off",
-        label: gettext("Yes")
-      }
+        label: gettext("Yes"),
+      },
     ]
 
     this.isClosedChoices = [
       {
         value: false,
         icon: "lock_outline",
-        label: gettext("No")
+        label: gettext("No"),
       },
       {
         value: true,
         icon: "lock",
-        label: gettext("Yes")
-      }
+        label: gettext("Yes"),
+      },
     ]
   }
 
@@ -99,7 +99,7 @@ export default class extends Form {
     } else {
       snackbar.error(gettext("Form contains errors."))
       this.setState({
-        errors: this.validate()
+        errors: this.validate(),
       })
       return false
     }
@@ -111,18 +111,18 @@ export default class extends Form {
 
   getFormdata = () => {
     return {
-      threads: this.props.threads.map(thread => thread.id),
+      threads: this.props.threads.map((thread) => thread.id),
       title: this.state.title,
       category: this.state.category,
       weight: this.state.weight,
       is_hidden: this.state.is_hidden,
-      is_closed: this.state.is_closed
+      is_closed: this.state.is_closed,
     }
   }
 
-  handleSuccess = apiResponse => {
+  handleSuccess = (apiResponse) => {
     // unfreeze and remove merged threads
-    this.props.threads.forEach(thread => {
+    this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id)
       this.props.deleteThread(thread)
     })
@@ -140,7 +140,7 @@ export default class extends Form {
     modal.hide()
   }
 
-  handleError = rejection => {
+  handleError = (rejection) => {
     if (rejection.status === 400) {
       if (rejection.best_answers || rejection.polls) {
         modal.show(
@@ -155,7 +155,7 @@ export default class extends Form {
         )
       } else {
         this.setState({
-          errors: Object.assign({}, this.state.errors, rejection)
+          errors: Object.assign({}, this.state.errors, rejection),
         })
         snackbar.error(gettext("Form contains errors."))
       }
@@ -170,10 +170,10 @@ export default class extends Form {
     }
   }
 
-  onCategoryChange = ev => {
+  onCategoryChange = (ev) => {
     const categoryId = ev.target.value
     const newState = {
-      category: categoryId
+      category: categoryId,
     }
 
     if (this.acl[categoryId].can_pin_threads < newState.weight) {
@@ -196,20 +196,20 @@ export default class extends Form {
       {
         value: 0,
         icon: "remove",
-        label: gettext("Not pinned")
+        label: gettext("Not pinned"),
       },
       {
         value: 1,
         icon: "bookmark_border",
-        label: gettext("Pinned locally")
-      }
+        label: gettext("Pinned locally"),
+      },
     ]
 
     if (this.acl[this.state.category].can_pin_threads == 2) {
       choices.push({
         value: 2,
         icon: "bookmark",
-        label: gettext("Pinned globally")
+        label: gettext("Pinned globally"),
       })
     }
 

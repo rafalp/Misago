@@ -15,7 +15,7 @@ export default class Register extends Form {
 
     const formValidators = {
       email: [validators.email()],
-      username: [validators.usernameContent()]
+      username: [validators.usernameContent()],
     }
 
     if (!!misago.get("TERMS_OF_SERVICE_ID")) {
@@ -37,7 +37,7 @@ export default class Register extends Form {
       validators: formValidators,
       errors: {},
 
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -45,7 +45,7 @@ export default class Register extends Form {
     let errors = this.validate()
     let lengths = [
       this.state.email.trim().length,
-      this.state.username.trim().length
+      this.state.username.trim().length,
     ]
 
     if (lengths.indexOf(0) !== -1) {
@@ -76,7 +76,7 @@ export default class Register extends Form {
       email: this.state.email,
       username: this.state.username,
       terms_of_service: this.state.termsOfService,
-      privacy_policy: this.state.privacyPolicy
+      privacy_policy: this.state.privacyPolicy,
     })
   }
 
@@ -102,12 +102,12 @@ export default class Register extends Form {
     }
   }
 
-  handlePrivacyPolicyChange = event => {
+  handlePrivacyPolicyChange = (event) => {
     const value = event.target.value
     this.handleToggleAgreement("privacyPolicy", value)
   }
 
-  handleTermsOfServiceChange = event => {
+  handleTermsOfServiceChange = (event) => {
     const value = event.target.value
     this.handleToggleAgreement("termsOfService", value)
   }

@@ -80,13 +80,13 @@ export default class extends React.Component {
 
     this.state = {
       selection: null,
-      isLoading: false
+      isLoading: false,
     }
   }
 
-  select = image => {
+  select = (image) => {
     this.setState({
-      selection: image
+      selection: image,
     })
   }
 
@@ -96,29 +96,29 @@ export default class extends React.Component {
     }
 
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
 
     ajax
       .post(this.props.user.api.avatar, {
         avatar: "galleries",
-        image: this.state.selection
+        image: this.state.selection,
       })
       .then(
-        response => {
+        (response) => {
           this.setState({
-            isLoading: false
+            isLoading: false,
           })
 
           snackbar.success(response.detail)
           this.props.onComplete(response)
           this.props.showIndex()
         },
-        rejection => {
+        (rejection) => {
           if (rejection.status === 400) {
             snackbar.error(rejection.detail)
             this.setState({
-              isLoading: false
+              isLoading: false,
             })
           } else {
             this.props.showError(rejection)

@@ -129,7 +129,7 @@ export function Label(props) {
       USER_URL,
       {
         url: escapeHtml(props.edit.url.editor),
-        user: escapeHtml(props.edit.editor_name)
+        user: escapeHtml(props.edit.editor_name),
       },
       true
     )
@@ -137,7 +137,7 @@ export function Label(props) {
     user = interpolate(
       USER_SPAN,
       {
-        user: escapeHtml(props.edit.editor_name)
+        user: escapeHtml(props.edit.editor_name),
       },
       true
     )
@@ -147,7 +147,7 @@ export function Label(props) {
     DATE_ABBR,
     {
       absolute: escapeHtml(props.edit.edited_on.format("LLL")),
-      relative: escapeHtml(props.edit.edited_on.fromNow())
+      relative: escapeHtml(props.edit.edited_on.fromNow()),
     },
     true
   )
@@ -156,7 +156,7 @@ export function Label(props) {
     escapeHtml(gettext("By %(edited_by)s %(edited_on)s.")),
     {
       edited_by: user,
-      edited_on: date
+      edited_on: date,
     },
     true
   )

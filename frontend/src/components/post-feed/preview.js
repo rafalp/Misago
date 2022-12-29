@@ -2,7 +2,7 @@ import React from "react"
 import Avatar from "misago/components/avatar"
 import * as random from "misago/utils/random"
 
-export default function() {
+export default function () {
   return (
     <ul className="posts-list post-feed ui-preview">
       <li className="post">

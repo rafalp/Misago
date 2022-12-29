@@ -12,10 +12,10 @@
 {% block section %}
 <div class="profile-threads">
 
-  {% if posts %}
-    <div>
-      <nav class="toolbar">
-        <h3 class="toolbar-left">
+  <nav class="toolbar">
+    <div class="toolbar-section toolbar-section-auto">
+      <div class="toolbar-item">
+        <h3>
           {% if is_authenticated_user %}
             {% blocktrans trimmed count threads=profile.threads %}
               You have started {{ threads }} thread.
@@ -30,10 +30,12 @@
             {% endblocktrans %}
           {% endif %}
         </h3>
-      </nav>
-
-      {% include "misago/profile/feed.html" %}
+      </div>
     </div>
+  </nav>
+
+  {% if posts %}
+    {% include "misago/profile/feed.html" %}
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}

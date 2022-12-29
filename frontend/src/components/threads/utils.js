@@ -5,17 +5,17 @@ export function getPageTitle(route) {
     if (route.list.path) {
       return {
         title: route.list.longName,
-        parent: route.category.name
+        parent: route.category.name,
       }
     } else {
       return {
-        title: route.category.name
+        title: route.category.name,
       }
     }
   } else if (misago.get("THREADS_ON_INDEX")) {
     if (route.list.path) {
       return {
-        title: route.list.longName
+        title: route.list.longName,
       }
     } else {
       return null
@@ -24,11 +24,11 @@ export function getPageTitle(route) {
     if (route.list.path) {
       return {
         title: route.list.longName,
-        parent: gettext("Threads")
+        parent: gettext("Threads"),
       }
     } else {
       return {
-        title: gettext("Threads")
+        title: gettext("Threads"),
       }
     }
   }
@@ -55,18 +55,18 @@ export function isThreadChanged(current, fromDb) {
       current.weight === fromDb.weight,
       current.category === fromDb.category,
       current.last_post === fromDb.last_post,
-      current.last_poster_name === fromDb.last_poster_name
+      current.last_poster_name === fromDb.last_poster_name,
     ].indexOf(false) >= 0
   )
 }
 
 export function diffThreads(current, fromDb) {
   let currentMap = {}
-  current.forEach(function(thread) {
+  current.forEach(function (thread) {
     currentMap[thread.id] = thread
   })
 
-  return fromDb.filter(function(thread) {
+  return fromDb.filter(function (thread) {
     if (currentMap[thread.id]) {
       return isThreadChanged(currentMap[thread.id], thread)
     } else {
@@ -87,10 +87,10 @@ export function getModerationActions(threads) {
     can_move: 0,
     can_pin: 0,
     can_pin_globally: 0,
-    can_unhide: 0
+    can_unhide: 0,
   }
 
-  threads.forEach(function(thread) {
+  threads.forEach(function (thread) {
     if (
       thread.is_unapproved &&
       thread.acl.can_approve > moderation.can_approve

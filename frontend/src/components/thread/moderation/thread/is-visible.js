@@ -1,4 +1,4 @@
-export default function(thread) {
+export default function (thread) {
   return !!(
     (thread.acl.can_approve && thread.is_unapproved) ||
     thread.acl.can_close ||

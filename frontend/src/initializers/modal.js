@@ -11,5 +11,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "modal",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

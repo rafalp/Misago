@@ -22,7 +22,7 @@ export default class extends React.Component {
         interpolate(
           message,
           {
-            user: this.props.participant.username
+            user: this.props.participant.username,
           },
           true
         )

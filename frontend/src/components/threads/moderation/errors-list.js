@@ -22,7 +22,7 @@ export default class extends React.Component {
             </p>
 
             <ul className="list-unstyled list-errored-items">
-              {this.props.errors.map(item => {
+              {this.props.errors.map((item) => {
                 return (
                   <ThreadErrors
                     errors={item.errors}

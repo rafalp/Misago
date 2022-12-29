@@ -2,7 +2,7 @@ import moment from "moment"
 import React from "react"
 import Avatar from "misago/components/avatar"
 
-export default function({ result }) {
+export default function ({ result }) {
   const { rank } = result
 
   const detail = gettext("%(title)s, joined on %(joined_on)s")
@@ -22,7 +22,7 @@ export default function({ result }) {
                 detail,
                 {
                   title,
-                  joined_on: moment(result.joined_on).format("LL")
+                  joined_on: moment(result.joined_on).format("LL"),
                 },
                 true
               )}

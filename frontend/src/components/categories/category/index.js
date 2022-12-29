@@ -1,7 +1,7 @@
 import React from "react"
 import ListItem from "./list-item"
 
-export default function({ category }) {
+export default function ({ category }) {
   let className = "list-group list-group-category"
   if (category.css_class) {
     className += " list-group-category-has-flavor"
@@ -11,7 +11,7 @@ export default function({ category }) {
   return (
     <ul className={className}>
       <ListItem category={category} isFirst={true} />
-      {category.subcategories.map(category => {
+      {category.subcategories.map((category) => {
         return (
           <ListItem category={category} isFirst={false} key={category.id} />
         )

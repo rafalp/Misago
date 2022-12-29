@@ -21,23 +21,23 @@ export class Ajax {
 
   request(method, url, data) {
     let self = this
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       let xhr = {
         url: url,
         method: method,
         headers: {
-          "X-CSRFToken": self.getCsrfToken()
+          "X-CSRFToken": self.getCsrfToken(),
         },
 
         data: data ? JSON.stringify(data) : null,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
-        success: function(data) {
+        success: function (data) {
           resolve(data)
         },
 
-        error: function(jqXHR) {
+        error: function (jqXHR) {
           let rejection = jqXHR.responseJSON || {}
 
           rejection.status = jqXHR.status
@@ -59,7 +59,7 @@ export class Ajax {
           rejection.statusText = jqXHR.statusText
 
           reject(rejection)
-        }
+        },
       }
 
       $.ajax(xhr)
@@ -83,20 +83,20 @@ export class Ajax {
       // we are already waiting for existing response to resolve
       if (this._locks[lock] && this._locks[lock].waiter) {
         return {
-          then: function() {
+          then: function () {
             return
-          }
+          },
         }
 
         // return promise that will begin when original one resolves
       } else if (this._locks[lock] && this._locks[lock].wait) {
         this._locks[lock].waiter = true
 
-        return new Promise(function(resolve, reject) {
-          let wait = function(url) {
+        return new Promise(function (resolve, reject) {
+          let wait = function (url) {
             // keep waiting on promise
             if (self._locks[lock].wait) {
-              window.setTimeout(function() {
+              window.setTimeout(function () {
                 wait(url)
               }, 300)
 
@@ -108,7 +108,7 @@ export class Ajax {
             } else {
               self._locks[lock].waiter = false
               self.request("GET", self._locks[lock].url).then(
-                function(data) {
+                function (data) {
                   if (self._locks[lock].url === url) {
                     resolve(data)
                   } else {
@@ -116,7 +116,7 @@ export class Ajax {
                     wait(self._locks[lock].url)
                   }
                 },
-                function(rejection) {
+                function (rejection) {
                   if (self._locks[lock].url === url) {
                     reject(rejection)
                   } else {
@@ -128,7 +128,7 @@ export class Ajax {
             }
           }
 
-          window.setTimeout(function() {
+          window.setTimeout(function () {
             wait(url)
           }, 300)
         })
@@ -138,18 +138,18 @@ export class Ajax {
         this._locks[lock] = {
           url,
           wait: true,
-          waiter: false
+          waiter: false,
         }
 
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
           self.request("GET", url).then(
-            function(data) {
+            function (data) {
               self._locks[lock].wait = false
               if (self._locks[lock].url === url) {
                 resolve(data)
               }
             },
-            function(rejection) {
+            function (rejection) {
               self._locks[lock].wait = false
               if (self._locks[lock].url === url) {
                 reject(rejection)
@@ -181,23 +181,23 @@ export class Ajax {
 
   upload(url, data, progress) {
     let self = this
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       let xhr = {
         url: url,
         method: "POST",
         headers: {
-          "X-CSRFToken": self.getCsrfToken()
+          "X-CSRFToken": self.getCsrfToken(),
         },
 
         data: data,
         contentType: false,
         processData: false,
 
-        xhr: function() {
+        xhr: function () {
           let xhr = new window.XMLHttpRequest()
           xhr.upload.addEventListener(
             "progress",
-            function(evt) {
+            function (evt) {
               if (evt.lengthComputable) {
                 progress(Math.round((evt.loaded / evt.total) * 100))
               }
@@ -207,11 +207,11 @@ export class Ajax {
           return xhr
         },
 
-        success: function(response) {
+        success: function (response) {
           resolve(response)
         },
 
-        error: function(jqXHR) {
+        error: function (jqXHR) {
           let rejection = jqXHR.responseJSON || {}
 
           rejection.status = jqXHR.status
@@ -239,7 +239,7 @@ export class Ajax {
           rejection.statusText = jqXHR.statusText
 
           reject(rejection)
-        }
+        },
       }
 
       $.ajax(xhr)

@@ -9,5 +9,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "reducer:snackbar",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

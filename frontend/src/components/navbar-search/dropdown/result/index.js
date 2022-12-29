@@ -4,7 +4,7 @@ import Footer from "./footer"
 import Header from "./header"
 import Result from "./result"
 
-export default function({ provider, result, type, query }) {
+export default function ({ provider, result, type, query }) {
   if (type === HEADER) {
     return <Header provider={provider} />
   } else if (type === FOOTER) {

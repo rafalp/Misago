@@ -8,7 +8,7 @@ export class SideNav extends React.Component {
   render() {
     return (
       <div className="list-group nav-side">
-        {this.props.pages.map(page => {
+        {this.props.pages.map((page) => {
           return (
             <Link
               to={this.props.baseUrl + page.component + "/"}
@@ -31,7 +31,7 @@ export function CompactNav(props) {
     <div className="page-tabs hidden-md hidden-lg">
       <div className="container">
         <ul className="nav nav-pills" role="menu">
-          {props.pages.map(page => {
+          {props.pages.map((page) => {
             return (
               <Li
                 path={props.baseUrl + page.component + "/"}

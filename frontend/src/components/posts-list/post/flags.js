@@ -10,7 +10,7 @@ export function FlagBestAnswer({ post, thread, user }) {
     message = interpolate(
       gettext("Marked as best answer by you %(marked_on)s."),
       {
-        marked_on: thread.best_answer_marked_on.fromNow()
+        marked_on: thread.best_answer_marked_on.fromNow(),
       },
       true
     )
@@ -19,7 +19,7 @@ export function FlagBestAnswer({ post, thread, user }) {
       gettext("Marked as best answer by %(marked_by)s %(marked_on)s."),
       {
         marked_by: thread.best_answer_marked_by_name,
-        marked_on: thread.best_answer_marked_on.fromNow()
+        marked_on: thread.best_answer_marked_on.fromNow(),
       },
       true
     )

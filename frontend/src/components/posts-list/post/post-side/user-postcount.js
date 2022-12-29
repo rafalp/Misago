@@ -1,7 +1,7 @@
 import React from "react"
 import hasVisibleTitle from "./has-visible-title"
 
-export default function({ poster }) {
+export default function ({ poster }) {
   const message = ngettext("%(posts)s post", "%(posts)s posts", poster.posts)
 
   let className = "user-postcount"
@@ -14,7 +14,7 @@ export default function({ poster }) {
       {interpolate(
         message,
         {
-          posts: poster.posts
+          posts: poster.posts,
         },
         true
       )}
