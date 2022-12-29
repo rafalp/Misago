@@ -1,5 +1,6 @@
 import React from "react"
 import PageLead from "misago/components/page-lead"
+import PageContainer from "../PageContainer"
 import ThreadsToolbar from "./ThreadsToolbar"
 
 export default class extends React.Component {
@@ -35,7 +36,7 @@ export default class extends React.Component {
     const topCategory = getTopCategory(root, category, categoriesMap)
 
     return (
-      <div className="container">
+      <PageContainer>
         {this.getCategoryDescription()}
         <ThreadsToolbar
           api={this.props.api}
@@ -71,7 +72,7 @@ export default class extends React.Component {
           }
         />
         {this.props.children}
-      </div>
+      </PageContainer>
     )
   }
 }

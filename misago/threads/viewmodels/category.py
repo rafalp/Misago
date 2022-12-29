@@ -13,6 +13,8 @@ __all__ = ["ThreadsRootCategory", "ThreadsCategory", "PrivateThreadsCategory"]
 
 class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
+        self.request = request
+
         self._categories = self.get_categories(request)
         add_acl_to_obj(request.user_acl, self._categories)
 
@@ -44,7 +46,11 @@ class ViewModel(BaseViewModel):
         return categories[0]
 
     def get_frontend_context(self):
-        return {"CATEGORIES": BasicCategorySerializer(self._categories, many=True).data}
+        return {
+            "CATEGORIES": BasicCategorySerializer(
+                self._categories, context=self.request, many=True
+            ).data
+        }
 
     def get_template_context(self):
         top_category = None

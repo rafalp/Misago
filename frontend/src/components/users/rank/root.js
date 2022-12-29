@@ -107,9 +107,7 @@ export default class extends React.Component {
   getComponent() {
     if (this.state.isLoaded) {
       if (this.state.count > 0) {
-        return (
-          <RankUsersList users={this.props.users} />
-        )
+        return <RankUsersList users={this.props.users} />
       } else {
         return (
           <p className="lead">
@@ -129,7 +127,9 @@ export default class extends React.Component {
           {this.getRankDescription()}
           {this.getComponent()}
           <RankUsersToolbar
-            baseUrl={misago.get("USERS_LIST_URL") + this.props.route.rank.slug + "/"}
+            baseUrl={
+              misago.get("USERS_LIST_URL") + this.props.route.rank.slug + "/"
+            }
             users={this.state}
           />
         </div>
