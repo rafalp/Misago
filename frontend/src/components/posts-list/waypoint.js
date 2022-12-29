@@ -12,14 +12,14 @@ export default class extends React.Component {
   componentDidMount() {
     if (this.props.post.is_read) return // don't register read tracker
 
-    $(this.documentNode).waypoint({
+    $(this.element).waypoint({
       handler: (direction) => {
         if (direction !== "down" || this.props.post.is_read) return
 
         // after 1500ms run flag post as read logic
         window.setTimeout(() => {
           // check if post's bottom edge is still in viewport
-          const boundingClientRect = this.documentNode.getBoundingClientRect()
+          const boundingClientRect = this.element.getBoundingClientRect()
           const offsetBottom =
             boundingClientRect.height + boundingClientRect.top
           const clientHeight = document.documentElement.clientHeight
@@ -58,7 +58,7 @@ export default class extends React.Component {
       <div
         className={this.props.className}
         ref={(node) => {
-          this.documentNode = node
+          if (node) this.element = node
         }}
       >
         {this.props.children}
