@@ -22,7 +22,11 @@ import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
 import * as sets from "misago/utils/sets"
-import { PageHeaderHTMLMessage, PageHeaderMessage, PageHeaderPlain } from "../PageHeader"
+import {
+  PageHeaderHTMLMessage,
+  PageHeaderMessage,
+  PageHeaderPlain,
+} from "../PageHeader"
 
 export default class extends WithDropdown {
   constructor(props) {
@@ -268,9 +272,10 @@ export default class extends WithDropdown {
   }
 
   render() {
-    const { category } = this.props.route
+    const root = this.props.route.categories[0]
+    const { category, list } = this.props.route
     const specialRole = category.special_role
-    console.log(category)
+
     return (
       <div className={this.getClassName()}>
         {specialRole == "root_category" &&
@@ -278,7 +283,11 @@ export default class extends WithDropdown {
           misago.get("SETTINGS").index_header && (
             <PageHeaderPlain
               header={misago.get("SETTINGS").index_header}
-              message={category.description && <PageHeaderHTMLMessage message={category.description.html} />}
+              message={
+                category.description && (
+                  <PageHeaderHTMLMessage message={category.description.html} />
+                )
+              }
               styleName="forum-index"
             />
           )}
@@ -302,14 +311,16 @@ export default class extends WithDropdown {
           <PageHeaderPlain
             header={category.name}
             message={
-              category.description && <PageHeaderHTMLMessage message={category.description.html} />
+              category.description && (
+                <PageHeaderHTMLMessage message={category.description.html} />
+              )
             }
             styleName={category.css_class || "category-threads"}
           />
         )}
         <Container
           api={this.props.options.api}
-          root={this.props.route.categories[0]}
+          root={root}
           route={this.props.route}
           user={this.props.user}
           pageLead={this.props.options.pageLead}
@@ -329,7 +340,7 @@ export default class extends WithDropdown {
           <ThreadsList
             category={category}
             categories={this.props.route.categoriesMap}
-            list={this.props.route.list}
+            list={list}
             selection={this.props.selection}
             threads={this.props.threads}
             updatedThreads={this.state.diff.results.length}

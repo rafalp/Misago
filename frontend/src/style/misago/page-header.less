@@ -2,7 +2,18 @@
 // Page Header
 // --------------------------------------------------
 
-// Remove bottom margin from header
+// Remove margins from header
 .page-header {
-  margin-bottom: 0;
+  margin: 0;
+  margin-top: @line-height-computed;
+}
+
+// Add padding to header's banner and message
+.page-header-banner-bg-overlay {
+  padding: @line-height-computed 0;
+}
+
+// Don't rely on header's margins for spacing
+.page-header h1 {
+  margin: 0;
 }

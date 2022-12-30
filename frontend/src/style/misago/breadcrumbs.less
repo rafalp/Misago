@@ -1,0 +1,44 @@
+// Breadcrumbs component
+
+.breadcrumbs {
+  display: block;
+
+  padding: 0;
+  margin-bottom: @line-height-computed / 2;
+}
+
+.breadcrumbs-item {
+  display: inline-block;
+  margin-right: @breadcrumbs-gutter;
+  margin-bottom: @line-height-computed / 2;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumbs-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  &,
+  &:visited {
+    color: @breadcrumbs-color;
+  }
+
+  &:hover,
+  &:focus {
+    color: @breadcrumbs-color-hover;
+
+    .breadcrumbs-item-name {
+      text-decoration: underline;
+    }
+  }
+
+  &:active {
+    color: @breadcrumbs-color-active;
+  }
+}
+
+.breadcrumbs-item .material-icon {
+  margin-right: 4px;
+}
