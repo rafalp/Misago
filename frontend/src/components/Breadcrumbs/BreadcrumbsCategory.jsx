@@ -1,10 +1,9 @@
 import classnames from "classnames"
 import React from "react"
-import { Link } from "react-router"
 
-const BreadcrumbsCategory = ({ category, list, className }) => (
+const BreadcrumbsCategory = ({ category, className }) => (
   <li className={classnames("breadcrumbs-item", className)}>
-    <Link to={category.url.index + (list ? list.path : "")}>
+    <a href={category.url.index}>
       <span
         className="material-icon"
         style={{ color: category.color || "inherit" }}
@@ -12,7 +11,7 @@ const BreadcrumbsCategory = ({ category, list, className }) => (
         label
       </span>
       <span className="breadcrumbs-item-name">{category.name}</span>
-    </Link>
+    </a>
   </li>
 )
 

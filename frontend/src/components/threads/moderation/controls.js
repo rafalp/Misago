@@ -293,7 +293,7 @@ export default class extends React.Component {
           </button>
         </li>
         <li role="separator" className="divider" />
-        {moderation.can_pin_globally && (
+        {!!moderation.can_pin_globally && (
           <li>
             <button
               className="btn btn-link"
@@ -306,7 +306,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_pin && (
+        {!!moderation.can_pin && (
           <li>
             <button
               className="btn btn-link"
@@ -319,7 +319,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_pin && (
+        {!!moderation.can_pin && (
           <li>
             <button
               className="btn btn-link"
@@ -332,7 +332,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_move && (
+        {!!moderation.can_move && (
           <li>
             <button
               className="btn btn-link"
@@ -345,7 +345,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_merge && (
+        {!!moderation.can_merge && (
           <li>
             <button
               className="btn btn-link"
@@ -358,7 +358,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_approve && (
+        {!!moderation.can_approve && (
           <li>
             <button
               className="btn btn-link"
@@ -371,7 +371,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_close && (
+        {!!moderation.can_close && (
           <li>
             <button
               className="btn btn-link"
@@ -384,7 +384,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_close && (
+        {!!moderation.can_close && (
           <li>
             <button
               className="btn btn-link"
@@ -397,7 +397,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_unhide && (
+        {!!moderation.can_unhide && (
           <li>
             <button
               className="btn btn-link"
@@ -410,7 +410,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_hide && (
+        {!!moderation.can_hide && (
           <li>
             <button
               className="btn btn-link"
@@ -423,7 +423,7 @@ export default class extends React.Component {
             </button>
           </li>
         )}
-        {moderation.can_delete && (
+        {!!moderation.can_delete && (
           <li>
             <button
               className="btn btn-link"

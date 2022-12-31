@@ -1,0 +1,67 @@
+.thread-flags {
+  display: flex;
+  align-items: center;
+
+  opacity: @thread-flag-icon-opacity;
+
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: @thread-flag-block-size;
+    height: @thread-flag-block-size;
+
+    border-radius: @border-radius-small;
+    list-style-type: none;
+
+    cursor: default;
+  }
+
+  li + li {
+    margin-left: @grid-gutter-width / 4;
+  }
+
+  .material-icon {
+    font-size: @thread-flag-icon-size;
+    line-height: @thread-flag-icon-size;
+  }
+}
+
+.thread-flag-pinned-globally {
+  color: @thread-flag-pinned-globally-color;
+  background: @thread-flag-pinned-globally-bg;
+}
+
+.thread-flag-pinned-locally {
+  color: @thread-flag-pinned-locally-color;
+  background: @thread-flag-pinned-locally-bg;
+}
+
+.thread-flag-answered {
+  color: @thread-flag-answered-color;
+  background: @thread-flag-answered-bg;
+}
+
+.thread-flag-poll {
+  color: @thread-flag-poll-color;
+  background: @thread-flag-poll-bg;
+}
+
+.thread-flag-unapproved {
+  color: @thread-flag-unapproved-color;
+  background: @thread-flag-unapproved-bg;
+}
+
+.thread-flag-closed {
+  color: @thread-flag-closed-color;
+  background: @thread-flag-closed-bg;
+}
+
+.thread-flag-hidden {
+  color: @thread-flag-hidden-color;
+  background: @thread-flag-hidden-bg;
+}

@@ -5,7 +5,6 @@ import ThreadPollButton from "./ThreadPollButton"
 import ThreadPostsModeration from "./ThreadPostsModeration"
 import ThreadReplyButton from "./ThreadReplyButton"
 import ThreadShortcutsButton from "./ThreadShortcutsButton"
-import ThreadSubscriptionButton from "./ThreadSubscriptionButton"
 
 const ThreadToolbarTop = ({
   thread,
@@ -26,13 +25,6 @@ const ThreadToolbarTop = ({
       </ToolbarItem>
     </ToolbarSection>
     <ToolbarSpacer />
-    {user.is_authenticated && (
-      <ToolbarSection>
-        <ToolbarItem>
-          <ThreadSubscriptionButton thread={thread} />
-        </ToolbarItem>
-      </ToolbarSection>
-    )}
     {thread.acl.can_start_poll && !thread.poll && (
       <ToolbarSection className="hidden-xs">
         <ToolbarItem>

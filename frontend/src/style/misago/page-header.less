@@ -13,7 +13,9 @@
   padding: @line-height-computed 0;
 }
 
-// Don't rely on header's margins for spacing
+// Don't rely on header's margins for spacing, force word break
 .page-header h1 {
   margin: 0;
+
+  overflow-wrap: break-word;
 }

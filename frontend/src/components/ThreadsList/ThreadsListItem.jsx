@@ -1,8 +1,8 @@
 import React from "react"
+import ThreadFlags from "../ThreadFlags"
 import ThreadsListItemActivity from "./ThreadsListItemActivity"
 import ThreadsListItemCategory from "./ThreadsListItemCategory"
 import ThreadsListItemCheckbox from "./ThreadsListItemCheckbox"
-import ThreadsListItemFlags from "./ThreadsListItemFlags"
 import ThreadsListItemIcon from "./ThreadsListItemIcon"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
 import ThreadsListItemReplies from "./ThreadsListItemReplies"
@@ -84,7 +84,7 @@ const ThreadsListItem = ({
       <div className="threads-list-item-bottom-row">
         {hasFlags && (
           <div className="threads-list-item-col-flags">
-            <ThreadsListItemFlags thread={thread} />
+            <ThreadFlags thread={thread} />
           </div>
         )}
         {!!category && (

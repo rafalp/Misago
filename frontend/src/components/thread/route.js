@@ -13,6 +13,7 @@ import snackbar from "misago/services/snackbar"
 import posting from "misago/services/posting"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import ThreadHeader from "./ThreadHeader"
 import ThreadToolbarBottom from "./ThreadToolbarBottom"
 import ThreadToolbarTop from "./ThreadToolbarTop"
 
@@ -143,10 +144,14 @@ export default class extends React.Component {
 
     return (
       <div className={className}>
+        <ThreadHeader
+          thread={this.props.thread}
+          user={this.props.user}
+        />
         <div className="page-header-bg">
           <Header {...this.props} />
         </div>
-        <div className="container">
+        <div className="container page-container">
           <ThreadToolbarTop
             thread={this.props.thread}
             posts={this.props.posts}
