@@ -1,11 +1,12 @@
 import React from "react"
-import MergeModal from "./merge"
-import MoveModal from "./move"
 import * as thread from "misago/reducers/thread"
 import ajax from "misago/services/ajax"
 import modal from "misago/services/modal"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
+import ThreadChangeTitleModal from "./ThreadChangeTitleModal"
+import MergeModal from "./merge"
+import MoveModal from "./move"
 
 export default class extends React.Component {
   callApi = (ops, successMessage) => {
@@ -29,6 +30,10 @@ export default class extends React.Component {
         }
       }
     )
+  }
+
+  changeTitle = () => {
+    modal.show(<ThreadChangeTitleModal thread={this.props.thread} />)
   }
 
   pinGlobally = () => {
@@ -166,179 +171,119 @@ export default class extends React.Component {
     )
   }
 
-  getPinGloballyButton() {
-    if (this.props.thread.weight === 2) return null
-    if (!this.props.thread.acl.can_pin_globally) return null
-
-    return (
-      <li>
-        <button
-          className="btn btn-link"
-          onClick={this.pinGlobally}
-          type="button"
-        >
-          <span className="material-icon">bookmark</span>
-          {gettext("Pin globally")}
-        </button>
-      </li>
-    )
-  }
-
-  getPinLocallyButton() {
-    if (this.props.thread.weight === 1) return null
-    if (!this.props.thread.acl.can_pin) return null
-
-    return (
-      <li>
-        <button
-          className="btn btn-link"
-          onClick={this.pinLocally}
-          type="button"
-        >
-          <span className="material-icon">bookmark_border</span>
-          {gettext("Pin locally")}
-        </button>
-      </li>
-    )
-  }
-
-  getUnpinButton() {
-    if (this.props.thread.weight === 0) return null
-    if (!this.props.thread.acl.can_pin) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.unpin} type="button">
-          <span className="material-icon">panorama_fish_eye</span>
-          {gettext("Unpin")}
-        </button>
-      </li>
-    )
-  }
-
-  getMoveButton() {
-    if (!this.props.thread.acl.can_move) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.move} type="button">
-          <span className="material-icon">arrow_forward</span>
-          {gettext("Move")}
-        </button>
-      </li>
-    )
-  }
-
-  getMergeButton() {
-    if (!this.props.thread.acl.can_merge) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.merge} type="button">
-          <span className="material-icon">call_merge</span>
-          {gettext("Merge")}
-        </button>
-      </li>
-    )
-  }
-
-  getApproveButton() {
-    if (!this.props.thread.is_unapproved) return null
-    if (!this.props.thread.acl.can_approve) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.approve} type="button">
-          <span className="material-icon">done</span>
-          {gettext("Approve")}
-        </button>
-      </li>
-    )
-  }
-
-  getOpenButton() {
-    if (!this.props.thread.is_closed) return null
-    if (!this.props.thread.acl.can_close) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.open} type="button">
-          <span className="material-icon">lock_open</span>
-          {gettext("Open")}
-        </button>
-      </li>
-    )
-  }
-
-  getCloseButton() {
-    if (this.props.thread.is_closed) return null
-    if (!this.props.thread.acl.can_close) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.close} type="button">
-          <span className="material-icon">lock_outline</span>
-          {gettext("Close")}
-        </button>
-      </li>
-    )
-  }
-
-  getUnhideButton() {
-    if (!this.props.thread.is_hidden) return null
-    if (!this.props.thread.acl.can_unhide) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.unhide} type="button">
-          <span className="material-icon">visibility</span>
-          {gettext("Unhide")}
-        </button>
-      </li>
-    )
-  }
-
-  getHideButton() {
-    if (this.props.thread.is_hidden) return null
-    if (!this.props.thread.acl.can_hide) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.hide} type="button">
-          <span className="material-icon">visibility_off</span>
-          {gettext("Hide")}
-        </button>
-      </li>
-    )
-  }
-
-  getDeleteButton() {
-    if (!this.props.thread.acl.can_delete) return null
-
-    return (
-      <li>
-        <button className="btn btn-link" onClick={this.delete} type="button">
-          <span className="material-icon">clear</span>
-          {gettext("Delete")}
-        </button>
-      </li>
-    )
-  }
-
   render() {
+    const { moderation } = this.props
+
     return (
       <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
-        {this.getPinGloballyButton()}
-        {this.getPinLocallyButton()}
-        {this.getUnpinButton()}
-        {this.getMoveButton()}
-        {this.getMergeButton()}
-        {this.getApproveButton()}
-        {this.getOpenButton()}
-        {this.getCloseButton()}
-        {this.getUnhideButton()}
-        {this.getHideButton()}
-        {this.getDeleteButton()}
+        {!!moderation.edit && (
+          <li>
+            <button
+              className="btn btn-link"
+              onClick={this.changeTitle}
+              type="button"
+            >
+              <span className="material-icon">edit</span>
+              {gettext("Change title")}
+            </button>
+          </li>
+        )}
+        {!!moderation.pinGlobally && (
+          <li>
+            <button
+              className="btn btn-link"
+              onClick={this.pinGlobally}
+              type="button"
+            >
+              <span className="material-icon">bookmark</span>
+              {gettext("Pin globally")}
+            </button>
+          </li>
+        )}
+        {!!moderation.pinLocally && (
+          <li>
+            <button
+              className="btn btn-link"
+              onClick={this.pinLocally}
+              type="button"
+            >
+              <span className="material-icon">bookmark_border</span>
+              {gettext("Pin locally")}
+            </button>
+          </li>
+        )}
+        {!!moderation.unpin && (
+          <li>
+            <button className="btn btn-link" onClick={this.unpin} type="button">
+              <span className="material-icon">panorama_fish_eye</span>
+              {gettext("Unpin")}
+            </button>
+          </li>
+        )}
+        {!!moderation.move && (
+          <li>
+            <button className="btn btn-link" onClick={this.move} type="button">
+              <span className="material-icon">arrow_forward</span>
+              {gettext("Move")}
+            </button>
+          </li>
+        )}
+        {!!moderation.merge && (
+          <li>
+            <button className="btn btn-link" onClick={this.merge} type="button">
+              <span className="material-icon">call_merge</span>
+              {gettext("Merge")}
+            </button>
+          </li>
+        )}
+        {!!moderation.approve && (
+          <li>
+            <button className="btn btn-link" onClick={this.approve} type="button">
+              <span className="material-icon">done</span>
+              {gettext("Approve")}
+            </button>
+          </li>
+        )}
+        {!!moderation.open && (
+          <li>
+            <button className="btn btn-link" onClick={this.open} type="button">
+              <span className="material-icon">lock_open</span>
+              {gettext("Open")}
+            </button>
+          </li>
+        )}
+        {!!moderation.close && (
+          <li>
+            <button className="btn btn-link" onClick={this.close} type="button">
+              <span className="material-icon">lock_outline</span>
+              {gettext("Close")}
+            </button>
+          </li>
+        )}
+        {!!moderation.unhide && (
+          <li>
+            <button className="btn btn-link" onClick={this.unhide} type="button">
+              <span className="material-icon">visibility</span>
+              {gettext("Unhide")}
+            </button>
+          </li>
+        )}
+        {!!moderation.hide && (
+          <li>
+            <button className="btn btn-link" onClick={this.hide} type="button">
+              <span className="material-icon">visibility_off</span>
+              {gettext("Hide")}
+            </button>
+          </li>
+        )}
+        {!!moderation.delete && (
+          <li>
+            <button className="btn btn-link" onClick={this.delete} type="button">
+              <span className="material-icon">clear</span>
+              {gettext("Delete")}
+            </button>
+          </li>
+        )}
       </ul>
     )
   }

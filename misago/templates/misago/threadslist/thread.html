@@ -27,10 +27,10 @@
   <div class="threads-list-item-bottom-row">
     {% if thread.is_closed or thread.is_hidden or thread.is_unapproved or thread.weight > 0 or thread.best_answer or thread.has_poll %}
       <div class="threads-list-item-col-flags">
-        <ul class="threads-list-item-flags">
+        <ul class="thread-flags">
           {% if thread.weight == 2 %}
             <li
-              class="threads-list-item-flag-pinned-globally"
+              class="thread-flag-pinned-globally"
               title="{% trans 'Pinned globally' %}"
             >
               <span class="material-icon">bookmark</span>
@@ -38,7 +38,7 @@
           {% endif %}
           {% if thread.weight == 1 %}
             <li
-              class="threads-list-item-flag-pinned-locally"
+              class="thread-flag-pinned-locally"
               title="{% trans 'Pinned in category' %}"
             >
               <span class="material-icon">bookmark_outline</span>
@@ -46,7 +46,7 @@
           {% endif %}
           {% if thread.best_answer %}
             <li
-              class="threads-list-item-flag-answered"
+              class="thread-flag-answered"
               title="{% trans 'Answered' %}"
             >
               <span class="material-icon">check_circle</span>
@@ -54,7 +54,7 @@
           {% endif %}
           {% if thread.has_poll %}
             <li
-              class="threads-list-item-flag-poll"
+              class="thread-flag-poll"
               title="{% trans 'Poll' %}"
             >
               <span class="material-icon">poll</span>
@@ -62,7 +62,7 @@
           {% endif %}
           {% if thread.is_closed %}
             <li
-              class="threads-list-item-flag-closed"
+              class="thread-flag-closed"
               title="{% trans 'Closed' %}"
             >
               <span class="material-icon">lock</span>
@@ -70,7 +70,7 @@
           {% endif %}
           {% if thread.is_hidden %}
             <li
-              class="threads-list-item-flag-hidden"
+              class="thread-flag-hidden"
               title="{% trans 'Hidden' %}"
             >
               <span class="material-icon">visibility_off</span>
@@ -104,7 +104,7 @@
       </div>
     {% endif %}
     <div class="threads-list-item-col-replies">
-      <span class="threads-list-item-replies"
+      <span class="threads-replies"
         title="{% blocktrans trimmed count replies=thread.replies %}
         {{ replies }} reply
         {% plural %}

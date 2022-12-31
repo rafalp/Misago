@@ -129,7 +129,7 @@ export default class extends Form {
                 </button>
                 <button
                   className="btn btn-primary"
-                  loading={this.state.isLoading || this.props.thread.isBusy}
+                  disabled={this.state.isLoading || this.props.thread.isBusy}
                 >
                   {gettext("Move thread")}
                 </button>

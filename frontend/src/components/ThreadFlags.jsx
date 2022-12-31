@@ -19,10 +19,7 @@ const ThreadFlags = ({ thread }) => (
       </li>
     )}
     {thread.best_answer && (
-      <li
-        className="thread-flag-answered"
-        title={gettext("Answered")}
-      >
+      <li className="thread-flag-answered" title={gettext("Answered")}>
         <span className="material-icon">check_circle</span>
       </li>
     )}

@@ -1,8 +1,8 @@
 import React from "react"
 
-const ThreadsListItemReplies = ({ thread }) => (
+const ThreadReplies = ({ thread }) => (
   <span
-    className="threads-list-item-replies"
+    className="threads-replies"
     title={interpolate(
       ngettext("%(replies)s reply", "%(replies)s replies", thread.replies),
       { replies: thread.replies },
@@ -16,4 +16,4 @@ const ThreadsListItemReplies = ({ thread }) => (
   </span>
 )
 
-export default ThreadsListItemReplies
+export default ThreadReplies

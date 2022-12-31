@@ -2,7 +2,6 @@ import React from "react"
 import Participants from "misago/components/participants"
 import { Poll } from "misago/components/poll"
 import PostsList from "misago/components/posts-list"
-import Header from "./header"
 import * as participants from "misago/reducers/participants"
 import * as poll from "misago/reducers/poll"
 import * as posts from "misago/reducers/posts"
@@ -136,6 +135,11 @@ export default class extends React.Component {
       className += " page-thread-" + this.props.thread.category.css_class
     }
 
+    const threadModeration = getThreadModeration(
+      this.props.thread,
+      this.props.user
+    )
+
     const postsModeration = getPostsModeration(
       this.props.posts.results,
       this.props.user
@@ -146,11 +150,10 @@ export default class extends React.Component {
       <div className={className}>
         <ThreadHeader
           thread={this.props.thread}
+          posts={this.props.posts}
           user={this.props.user}
+          moderation={threadModeration}
         />
-        <div className="page-header-bg">
-          <Header {...this.props} />
-        </div>
         <div className="container page-container">
           <ThreadToolbarTop
             thread={this.props.thread}
@@ -184,6 +187,59 @@ export default class extends React.Component {
       </div>
     )
   }
+}
+
+const getThreadModeration = (thread, user) => {
+  const moderation = {
+    enabled: false,
+    edit: false,
+    approve: false,
+    close: false,
+    open: false,
+    hide: false,
+    unhide: false,
+    move: false,
+    merge: false,
+    pinGlobally: false,
+    pinLocally: false,
+    unpin: false,
+    delete: false,
+  }
+
+  if (!user.is_authenticated) return moderation
+
+  moderation.edit = thread.acl.can_edit
+  moderation.approve = thread.acl.can_approve && thread.is_unapproved
+  moderation.close = thread.acl.can_close && !thread.is_closed
+  moderation.open = thread.acl.can_close && thread.is_closed
+  moderation.hide = thread.acl.can_hide && !thread.is_hidden
+  moderation.unhide = thread.acl.can_unhide && thread.is_hidden
+  moderation.move = thread.acl.can_move
+  moderation.merge = thread.acl.can_merge
+  moderation.pinGlobally = thread.acl.can_pin_globally && thread.weight < 2
+  moderation.pinLocally = thread.acl.can_pin && thread.weight !== 1
+  moderation.unpin = (
+    thread.acl.can_pin && thread.weight === 1 ||
+    thread.acl.can_pin_globally && thread.weight === 2
+  )
+  moderation.delete = thread.acl.can_delete
+
+  moderation.enabled = (
+    moderation.edit ||
+    moderation.approve ||
+    moderation.close ||
+    moderation.open ||
+    moderation.hide ||
+    moderation.unhide ||
+    moderation.move ||
+    moderation.merge ||
+    moderation.pinGlobally ||
+    moderation.pinLocally ||
+    moderation.unpin ||
+    moderation.delete
+  )
+
+  return moderation
 }
 
 const getPostsModeration = (posts, user) => {

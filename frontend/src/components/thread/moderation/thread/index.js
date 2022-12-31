@@ -1,4 +1,3 @@
-import ModerationControls from "./controls"
-import isModerationVisible from "./is-visible"
+import ThreadModerationOptions from "./controls"
 
-export { ModerationControls, isModerationVisible }
+export default ThreadModerationOptions

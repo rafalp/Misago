@@ -1,8 +1,8 @@
 import React from "react"
-import Button from "misago/components/button"
 import Form from "misago/components/form"
 import FormGroup from "misago/components/form-group"
-import * as post from "misago/reducers/post"
+import { getTitleValidators } from "misago/components/posting/utils/validators"
+import * as thread from "misago/reducers/thread"
 import ajax from "misago/services/ajax"
 import modal from "misago/services/modal"
 import snackbar from "misago/services/snackbar"
@@ -15,18 +15,25 @@ export default class extends Form {
     this.state = {
       isLoading: false,
 
-      url: "",
+      title: props.thread.title,
 
       validators: {
-        url: [],
+        title: getTitleValidators(),
       },
       errors: {},
     }
   }
 
   clean() {
-    if (!this.state.url.trim().length) {
-      snackbar.error(gettext("You have to enter link to the other thread."))
+    if (!this.state.title.trim().length) {
+      snackbar.error(gettext("You have to enter thread title."))
+      return false
+    }
+
+    const errors = this.validate()
+
+    if (errors.title) {
+      snackbar.error(errors.title[0])
       return false
     }
 
@@ -34,36 +41,42 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.thread.api.posts.move, {
-      new_thread: this.state.url,
-      posts: this.props.selection.map((post) => post.id),
-    })
+    // freeze thread
+    store.dispatch(thread.busy())
+
+    return ajax.patch(this.props.thread.api.index, [
+      { op: "replace", path: "title", value: this.state.title },
+    ])
   }
 
-  handleSuccess(success) {
-    this.props.selection.forEach((selection) => {
-      store.dispatch(
-        post.patch(selection, {
-          isDeleted: true,
-        })
-      )
+  handleSuccess = (data) => {
+    this.handleSuccessUnmounted(data)
+
+    // keep form loading
+    this.setState({
+      isLoading: true,
     })
 
     modal.hide()
-
-    snackbar.success(gettext("Selected posts were moved to the other thread."))
   }
 
-  handleError(rejection) {
+  handleSuccessUnmounted = (data) => {
+    store.dispatch(thread.release())
+    store.dispatch(thread.update(data))
+  }
+
+  handleError = (rejection) => {
+    store.dispatch(thread.release())
+
     if (rejection.status === 400) {
-      snackbar.error(rejection.detail)
+      snackbar.error(rejection.detail[0])
     } else {
       snackbar.apiError(rejection)
     }
   }
 
-  onUrlChange = (event) => {
-    this.changeValue("url", event.target.value)
+  onChange = (event) => {
+    this.changeValue("title", event.target.value)
   }
 
   render() {
@@ -74,15 +87,15 @@ export default class extends Form {
             <ModalHeader />
             <div className="modal-body">
               <FormGroup
-                for="id_url"
-                label={gettext("Link to thread you want to move posts to")}
+                for="id_modal_title"
+                label={gettext("Thread title")}
               >
                 <input
                   className="form-control"
-                  disabled={this.state.isLoading}
-                  id="id_url"
-                  onChange={this.onUrlChange}
-                  value={this.state.url}
+                  disabled={this.state.isLoading || this.props.thread.isBusy}
+                  id="id_modal_title"
+                  onChange={this.onChange}
+                  value={this.state.title}
                 />
               </FormGroup>
             </div>
@@ -97,9 +110,9 @@ export default class extends Form {
               </button>
               <button
                 className="btn btn-primary"
-                disabled={this.state.isLoading}
+                disabled={this.state.isLoading || this.props.thread.isBusy}
               >
-                {gettext("Move posts")}
+                {gettext("Change title")}
               </button>
             </div>
           </div>
@@ -120,7 +133,7 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Move posts")}</h4>
+      <h4 className="modal-title">{gettext("Change title")}</h4>
     </div>
   )
 }

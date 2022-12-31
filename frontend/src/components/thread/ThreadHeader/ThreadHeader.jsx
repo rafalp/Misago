@@ -1,12 +1,19 @@
 import React from "react"
-import Avatar from "../../avatar"
 import { FlexRow, FlexRowCol, FlexRowSection } from "../../FlexRow"
 import ThreadFlags from "../../ThreadFlags"
-import { PageHeader, PageHeaderBanner, PageHeaderContainer, PageHeaderDetails } from "../../PageHeader"
+import ThreadReplies from "../../ThreadReplies"
+import ThreadStarterCard from "../../ThreadStarterCard"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+  PageHeaderDetails,
+} from "../../PageHeader"
+import ThreadModeration from "../ThreadModeration"
 import ThreadSubscriptionButton from "../ThreadSubscriptionButton"
 import ThreadHeaderBreadcrumbs from "./ThreadHeaderBreadcrumbs"
 
-const ThreadHeader = ({ thread, user }) => (
+const ThreadHeader = ({ thread, posts, user, moderation }) => (
   <PageHeaderContainer>
     <PageHeader>
       <PageHeaderBanner>
@@ -17,19 +24,14 @@ const ThreadHeader = ({ thread, user }) => (
         <FlexRow>
           <FlexRowSection auto>
             <FlexRowCol shrink>
-              {thread.starter ? (
-                <a href={thread.url.starter}>
-                  <Avatar size={32} user={thread.starter} />
-                </a>
-              ) : <Avatar size={32} />}
+              <ThreadStarterCard thread={thread} />
             </FlexRowCol>
-            <FlexRowCol>
-              {thread.starter ? (
-                <a href={thread.url.starter}>
-                  {thread.starter.username}
-                </a>
-              ) : thread.starter_name}
-            </FlexRowCol>
+            <FlexRowCol auto />
+            {thread.replies > 0 && (
+              <FlexRowCol shrink>
+                <ThreadReplies thread={thread} />
+              </FlexRowCol>
+            )}
             <FlexRowCol shrink>
               <ThreadFlags thread={thread} />
             </FlexRowCol>
@@ -39,7 +41,15 @@ const ThreadHeader = ({ thread, user }) => (
               <FlexRowCol>
                 <ThreadSubscriptionButton thread={thread} />
               </FlexRowCol>
-              <FlexRowCol shrink>[MOD]</FlexRowCol>
+              {moderation.enabled && (
+                <FlexRowCol shrink>
+                  <ThreadModeration
+                    thread={thread}
+                    posts={posts}
+                    moderation={moderation}
+                  />
+                </FlexRowCol>
+              )}
             </FlexRowSection>
           )}
         </FlexRow>

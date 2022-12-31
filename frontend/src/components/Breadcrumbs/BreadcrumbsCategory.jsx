@@ -10,7 +10,20 @@ const BreadcrumbsCategory = ({ category, className }) => (
       >
         label
       </span>
-      <span className="breadcrumbs-item-name">{category.name}</span>
+      {!!category.short_name && (
+        <span
+          className="breadcrumbs-item-name hidden-sm hidden-md hidden-lg"
+          title={category.name}
+        >
+          {category.short_name}
+        </span>
+      )}
+      {!!category.short_name && (
+        <span className="breadcrumbs-item-name hidden-xs">{category.name}</span>
+      )}
+      {!category.short_name && (
+        <span className="breadcrumbs-item-name">{category.name}</span>
+      )}
     </a>
   </li>
 )
