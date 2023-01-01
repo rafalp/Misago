@@ -130,10 +130,14 @@ export default class extends React.Component {
   }
 
   render() {
+    const category = this.props.thread.category
+
     let className = "page page-thread"
-    if (this.props.thread.category.css_class) {
-      className += " page-thread-" + this.props.thread.category.css_class
+    if (category.css_class) {
+      className += " page-thread-" + category.css_class
     }
+
+    const styleName = category.special_role === "private_threads" ? "private-threads" : (category.css_class || "category-threads")
 
     const threadModeration = getThreadModeration(
       this.props.thread,
@@ -149,12 +153,18 @@ export default class extends React.Component {
     return (
       <div className={className}>
         <ThreadHeader
+          styleName={styleName}
           thread={this.props.thread}
           posts={this.props.posts}
           user={this.props.user}
           moderation={threadModeration}
         />
         <div className="container page-container">
+          <Participants
+            participants={this.props.participants}
+            thread={this.props.thread}
+            user={this.props.user}
+          />
           <ThreadToolbarTop
             thread={this.props.thread}
             posts={this.props.posts}
@@ -166,11 +176,6 @@ export default class extends React.Component {
           />
           <Poll
             poll={this.props.poll}
-            thread={this.props.thread}
-            user={this.props.user}
-          />
-          <Participants
-            participants={this.props.participants}
             thread={this.props.thread}
             user={this.props.user}
           />

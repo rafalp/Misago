@@ -13,14 +13,14 @@ import ThreadModeration from "../ThreadModeration"
 import ThreadSubscriptionButton from "../ThreadSubscriptionButton"
 import ThreadHeaderBreadcrumbs from "./ThreadHeaderBreadcrumbs"
 
-const ThreadHeader = ({ thread, posts, user, moderation }) => (
+const ThreadHeader = ({ styleName, thread, posts, user, moderation }) => (
   <PageHeaderContainer>
-    <PageHeader>
-      <PageHeaderBanner>
+    <PageHeader styleName={styleName}>
+      <PageHeaderBanner styleName={styleName}>
         <ThreadHeaderBreadcrumbs breadcrumbs={thread.path} />
         <h1>{thread.title}</h1>
       </PageHeaderBanner>
-      <PageHeaderDetails>
+      <PageHeaderDetails className="page-header-thread-details">
         <FlexRow>
           <FlexRowSection auto>
             <FlexRowCol shrink>
@@ -32,9 +32,11 @@ const ThreadHeader = ({ thread, posts, user, moderation }) => (
                 <ThreadReplies thread={thread} />
               </FlexRowCol>
             )}
-            <FlexRowCol shrink>
-              <ThreadFlags thread={thread} />
-            </FlexRowCol>
+            {hasFlags(thread) && (
+              <FlexRowCol shrink>
+                <ThreadFlags thread={thread} />
+              </FlexRowCol>
+            )}
           </FlexRowSection>
           {user.is_authenticated && (
             <FlexRowSection>
@@ -57,5 +59,17 @@ const ThreadHeader = ({ thread, posts, user, moderation }) => (
     </PageHeader>
   </PageHeaderContainer>
 )
+
+const hasFlags = (thread) => {
+  return (
+    thread.is_closed ||
+    thread.is_hidden ||
+    thread.is_unapproved ||
+    thread.weight > 0 ||
+    thread.best_answer ||
+    thread.has_poll ||
+    thread.has_unapproved_posts
+  )
+}
 
 export default ThreadHeader
