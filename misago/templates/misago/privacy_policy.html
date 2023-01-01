@@ -15,15 +15,23 @@
 
 {% block content %}
 <div class="page page-legal legal-privacy-policy">
-  <div class="page-header-bg">
-    <div class="page-header">
-      <div class="container">
-        <h1>{{ title }}</h1>
+  <div class="container page-header-container">
+    <div class="page-header page-header-privacy-policy">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-privacy-policy">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <h1>{{ title }}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="legal-body container">
+  <div class="legal-body container page-container">
     <article class="misago-markup">
       {{ text|safe }}
     </article>
