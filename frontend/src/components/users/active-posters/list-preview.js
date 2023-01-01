@@ -1,6 +1,7 @@
 import React from "react"
 import ItemPreview from "misago/components/users/active-posters/list-item-preview"
 import * as random from "misago/utils/random"
+import PageContainer from "../../PageContainer"
 
 export default class extends React.Component {
   shouldComponentUpdate() {
@@ -10,7 +11,7 @@ export default class extends React.Component {
   render() {
     return (
       <div className="active-posters-list">
-        <div className="container">
+        <PageContainer>
           <p className="lead ui-preview">
             <span
               className="ui-preview-text"
@@ -27,7 +28,7 @@ export default class extends React.Component {
               })}
             </ul>
           </div>
-        </div>
+        </PageContainer>
       </div>
     )
   }

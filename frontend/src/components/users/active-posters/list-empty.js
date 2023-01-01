@@ -1,4 +1,5 @@
 import React from "react"
+import PageContainer from "../../PageContainer"
 
 export default class extends React.Component {
   getEmptyMessage() {
@@ -14,9 +15,9 @@ export default class extends React.Component {
   render() {
     return (
       <div className="active-posters-list">
-        <div className="container">
+        <PageContainer>
           <p className="lead">{this.getEmptyMessage()}</p>
-        </div>
+        </PageContainer>
       </div>
     )
   }

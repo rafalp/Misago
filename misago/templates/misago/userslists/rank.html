@@ -61,11 +61,9 @@
 {% block twitter-url %}{% absoluteurl rank.get_absolute_url %}{% endblock %}
 
 
-{% block content %}
-{{ block.super }}
-
+{% block page-content %}
 <div class="rank-users-list{% if rank.css_class %} rank-users-{{ rank.css_class }}{% endif %}">
-  <div class="container">
+  <div class="container page-container">
 
     {% if rank.description %}
       <section class="rank-description">
@@ -121,4 +119,4 @@
 
   </div>
 </div>
-{% endblock content %}
+{% endblock page-content %}

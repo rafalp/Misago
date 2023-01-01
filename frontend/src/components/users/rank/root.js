@@ -5,6 +5,7 @@ import { hydrate } from "misago/reducers/users"
 import polls from "misago/services/polls"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import PageContainer from "../../PageContainer"
 import RankUsersList from "./RankUsersList"
 import RankUsersListLoader from "./RankUsersListLoader"
 import RankUsersToolbar from "./RankUsersToolbar"
@@ -123,7 +124,7 @@ export default class extends React.Component {
   render() {
     return (
       <div className={this.getClassName()}>
-        <div className="container">
+        <PageContainer>
           {this.getRankDescription()}
           {this.getComponent()}
           <RankUsersToolbar
@@ -132,7 +133,7 @@ export default class extends React.Component {
             }
             users={this.state}
           />
-        </div>
+        </PageContainer>
       </div>
     )
   }
