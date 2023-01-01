@@ -12,6 +12,7 @@ import snackbar from "misago/services/snackbar"
 import posting from "misago/services/posting"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import PageContainer from "../PageContainer"
 import ThreadHeader from "./ThreadHeader"
 import ThreadToolbarBottom from "./ThreadToolbarBottom"
 import ThreadToolbarTop from "./ThreadToolbarTop"
@@ -159,7 +160,7 @@ export default class extends React.Component {
           user={this.props.user}
           moderation={threadModeration}
         />
-        <div className="container page-container">
+        <PageContainer>
           <Participants
             participants={this.props.participants}
             thread={this.props.thread}
@@ -188,7 +189,7 @@ export default class extends React.Component {
             moderation={postsModeration}
             onReply={this.openReplyForm}
           />
-        </div>
+        </PageContainer>
       </div>
     )
   }
