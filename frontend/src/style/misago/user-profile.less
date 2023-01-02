@@ -1,114 +1,57 @@
 //
-// Forum Profile
+// User Profile
 // --------------------------------------------------
 
-.page-user-profile .page-header {
-  padding-top: @line-height-computed;
-
-  .alert {
-    margin-bottom: @line-height-computed;
-  }
-
-  h1 {
-    margin-bottom: 0px;
-  }
-
-  .btn-aligned {
-    margin-top: 0px;
-  }
+.profile-header-card {
+  border: @user-profile-card-border;
+  border-radius: @border-radius-base;
+  margin-bottom: @line-height-computed;
 }
 
-// Small displays header
-@media screen and (max-width: @screen-xs-max) {
-  .page-user-profile .page-header {
-    text-align: center;
+.profile-header-card-avatar {
+  padding: @padding-base-horizontal;
 
-    img {
-      clear: both;
-      margin-top: @line-height-computed;
-
-      width: 100px;
-      height: 100px;
-    }
-
-    h1 {
-      margin-top: @line-height-computed;
-
-      font-size: @font-size-base * 2;
-    }
-
-    .header-stats ul {
-      text-align: center;
-
-      li {
-        display: inline-block;
-
-        white-space: nowrap;
-      }
-    }
-  }
-
-  .page-user-profile .profile-side-avatar {
-    display: none;
-  }
-}
-
-// Tablet displays
-@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-  .page-user-profile .page-header {
-    img,
-    h1 {
-      float: left;
-    }
-
-    img {
-      margin-top: @line-height-computed;
-      margin-right: 24px;
-
-      width: 80px;
-      height: 80px;
-    }
-
-    h1 {
-      position: relative;
-      top: @line-height-computed * 1.25;
-    }
-
-    .header-stats {
-      margin-left: 80px + 32px;
-      margin-top: @line-height-computed * 1.25;
-      margin-bottom: @line-height-computed * -2.25;
-
-      position: relative;
-      bottom: @line-height-computed * 2.5;
-    }
-  }
-}
-
-// Dekstops header
-@media screen and (min-width: @screen-md-min) {
-  .page-user-profile .page-header {
-    .user-avatar-sm {
-      display: none;
-    }
-
-    h1 {
-      position: relative;
-      top: 5px;
-    }
-
-    .header-stats ul {
-      li {
-        display: block;
-        float: left;
-      }
-    }
-  }
-
-  .page-user-profile .profile-side-avatar img {
+  img {
     width: 100%;
     height: auto;
-    margin-top: @line-height-computed * -7;
+
+    border-radius: @border-radius-base;
+  }
+}
+
+.profile-header-card-body {
+  padding: @line-height-computed @padding-base-horizontal;
+
+  border-top: @user-profile-card-border;
+
+  h1 {
+    margin: 0;
     margin-bottom: @line-height-computed;
+
+    font-size: @font-size-base * 1.5;
+  }
+
+  .btn-default {
+    margin-top: @line-height-computed;
+  }
+}
+
+.profile-data-list {
+  display: block;
+  padding: 0;
+  margin: 0 (@padding-base-horizontal * -1);
+
+  li {
+    display: inline-block;
+    list-style: none;
+    padding: floor(@line-height-computed / 4) @padding-base-horizontal;
+
+    font-size: @font-size-small;
+  }
+
+  .status-icon {
+    margin-right: 3px;
+    position: relative;
+    bottom: 1px;
   }
 }

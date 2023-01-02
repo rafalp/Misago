@@ -1,6 +1,5 @@
 import React from "react"
 import Avatar from "misago/components/avatar"
-import DropdownToggle from "misago/components/dropdown-toggle"
 import FollowButton from "./follow-button"
 import MessageButton from "./message-button"
 import ModerationNav from "./moderation/nav"

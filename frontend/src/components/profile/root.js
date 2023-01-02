@@ -7,7 +7,6 @@ import Followers from "./followers"
 import Follows from "./follows"
 import UsernameHistory from "./username-history"
 import Header from "./header"
-import ModerationNav from "./moderation/nav"
 import { SideNav, CompactNav } from "./navs"
 import Avatar from "misago/components/avatar"
 import WithDropdown from "misago/components/with-dropdown"
@@ -15,6 +14,8 @@ import misago from "misago"
 import { hydrate } from "misago/reducers/profile"
 import polls from "misago/services/polls"
 import store from "misago/services/store"
+import PageContainer from "../PageContainer"
+import ProfileHeaderCard from "./ProfileHeaderCard"
 
 export default class extends WithDropdown {
   constructor(props) {
@@ -39,24 +40,36 @@ export default class extends WithDropdown {
   render() {
     const baseUrl = misago.get("PROFILE").url
     const pages = misago.get("PROFILE_PAGES")
+    const { profile, user } = this.props
+    const moderation = getModeration(profile, user)
+    const message =
+      false && user.acl.can_start_private_threads && profile.id !== user.id
+    const follow = false && profile.acl.can_follow && profile.id !== user.id
 
     return (
       <div className="page page-user-profile">
-        <Header
+        {/* <Header
           baseUrl={baseUrl}
           pages={pages}
           profile={this.props.profile}
           toggleNav={this.toggleNav}
           toggleModeration={this.toggleModeration}
           user={this.props.user}
-        />
-        <div className="container">
+        /> */}
+        <PageContainer>
           <div className="row">
-            <div className="col-md-3 hidden-xs hidden-sm">
-              <div className="profile-side-avatar">
+            <div className="col-md-3 hidden-sm">
+              {/* <div className="profile-side-avatar">
                 <Avatar user={this.props.profile} size="400" />
-              </div>
+              </div> */}
 
+              <ProfileHeaderCard
+                profile={this.props.profile}
+                user={this.props.user}
+                moderation={moderation}
+                message={message}
+                follow={follow}
+              />
               <SideNav
                 baseUrl={baseUrl}
                 pages={pages}
@@ -65,10 +78,29 @@ export default class extends WithDropdown {
             </div>
             <div className="col-md-9">{this.props.children}</div>
           </div>
-        </div>
+        </PageContainer>
       </div>
     )
   }
+}
+
+const getModeration = (profile, user) => {
+  const moderation = {
+    available: false,
+    rename: false,
+    avatar: false,
+    delete: false,
+  }
+
+  if (user.is_anonumous) return moderation
+
+  moderation.rename = profile.acl.can_rename
+  moderation.avatar = profile.acl.can_moderate_avatar
+  moderation.delete = profile.acl.can_delete
+  moderation.available =
+    moderation.rename || moderation.avatar || moderation.delete
+
+  return moderation
 }
 
 export function select(store) {
