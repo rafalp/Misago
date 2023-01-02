@@ -238,7 +238,11 @@ export default class extends React.Component {
         )}
         {!!moderation.approve && (
           <li>
-            <button className="btn btn-link" onClick={this.approve} type="button">
+            <button
+              className="btn btn-link"
+              onClick={this.approve}
+              type="button"
+            >
               <span className="material-icon">done</span>
               {gettext("Approve")}
             </button>
@@ -262,7 +266,11 @@ export default class extends React.Component {
         )}
         {!!moderation.unhide && (
           <li>
-            <button className="btn btn-link" onClick={this.unhide} type="button">
+            <button
+              className="btn btn-link"
+              onClick={this.unhide}
+              type="button"
+            >
               <span className="material-icon">visibility</span>
               {gettext("Unhide")}
             </button>
@@ -278,7 +286,11 @@ export default class extends React.Component {
         )}
         {!!moderation.delete && (
           <li>
-            <button className="btn btn-link" onClick={this.delete} type="button">
+            <button
+              className="btn btn-link"
+              onClick={this.delete}
+              type="button"
+            >
               <span className="material-icon">clear</span>
               {gettext("Delete")}
             </button>

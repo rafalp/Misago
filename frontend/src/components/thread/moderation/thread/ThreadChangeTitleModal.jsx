@@ -86,10 +86,7 @@ export default class extends Form {
           <div className="modal-content">
             <ModalHeader />
             <div className="modal-body">
-              <FormGroup
-                for="id_modal_title"
-                label={gettext("Thread title")}
-              >
+              <FormGroup for="id_modal_title" label={gettext("Thread title")}>
                 <input
                   className="form-control"
                   disabled={this.state.isLoading || this.props.thread.isBusy}

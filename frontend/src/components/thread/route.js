@@ -138,7 +138,10 @@ export default class extends React.Component {
       className += " page-thread-" + category.css_class
     }
 
-    const styleName = category.special_role === "private_threads" ? "private-threads" : (category.css_class || "category-threads")
+    const styleName =
+      category.special_role === "private_threads"
+        ? "private-threads"
+        : category.css_class || "category-threads"
 
     const threadModeration = getThreadModeration(
       this.props.thread,
@@ -224,13 +227,12 @@ const getThreadModeration = (thread, user) => {
   moderation.merge = thread.acl.can_merge
   moderation.pinGlobally = thread.acl.can_pin_globally && thread.weight < 2
   moderation.pinLocally = thread.acl.can_pin && thread.weight !== 1
-  moderation.unpin = (
-    thread.acl.can_pin && thread.weight === 1 ||
-    thread.acl.can_pin_globally && thread.weight === 2
-  )
+  moderation.unpin =
+    (thread.acl.can_pin && thread.weight === 1) ||
+    (thread.acl.can_pin_globally && thread.weight === 2)
   moderation.delete = thread.acl.can_delete
 
-  moderation.enabled = (
+  moderation.enabled =
     moderation.edit ||
     moderation.approve ||
     moderation.close ||
@@ -243,7 +245,6 @@ const getThreadModeration = (thread, user) => {
     moderation.pinLocally ||
     moderation.unpin ||
     moderation.delete
-  )
 
   return moderation
 }

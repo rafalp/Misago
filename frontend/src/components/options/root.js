@@ -11,7 +11,11 @@ import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago/index"
 import { FlexRow, FlexRowCol, FlexRowSection } from "../FlexRow"
 import PageContainer from "../PageContainer"
-import { PageHeader, PageHeaderBanner, PageHeaderContainer } from "../PageHeader"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+} from "../PageHeader"
 
 export default class extends WithDropdown {
   render() {

@@ -24,10 +24,7 @@ export function SideNav(props) {
 
 export function CompactNav(props) {
   return (
-    <ul
-      className={props.className || "dropdown-menu"}
-      role="menu"
-    >
+    <ul className={props.className || "dropdown-menu"} role="menu">
       {props.options.map((option) => {
         return (
           <Li

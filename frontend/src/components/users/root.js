@@ -5,7 +5,12 @@ import ActivePosters from "misago/components/users/active-posters/root"
 import Rank from "misago/components/users/rank/root"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago/index"
-import { PageHeader, PageHeaderBanner, PageHeaderContainer, PageHeaderDetails } from "../PageHeader"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+  PageHeaderDetails,
+} from "../PageHeader"
 
 export default class extends WithDropdown {
   render() {
