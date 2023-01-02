@@ -7,6 +7,13 @@ import { hydrate as updateUsers } from "misago/reducers/users"
 import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
+import { FlexRow, FlexRowCol, FlexRowSection } from "../FlexRow"
+import {
+  PageHeader,
+  PageHeaderContainer,
+  PageHeaderBanner,
+  PageHeaderDetails,
+} from "../PageHeader"
 
 export default class extends Form {
   constructor(props) {
@@ -14,7 +21,6 @@ export default class extends Form {
 
     this.state = {
       isLoading: false,
-
       query: props.search.query,
     }
   }
@@ -45,9 +51,16 @@ export default class extends Form {
       })
     )
 
-    return ajax.get(misago.get("SEARCH_API"), {
-      q: this.state.query.trim(),
-    })
+    const query = this.state.query.trim()
+
+    let url = window.location.href
+    const urlQuery = url.indexOf("?q=")
+    if (urlQuery > 0) {
+      url = url.substring(0, urlQuery + 3)
+    }
+    window.history.pushState({}, "", url + encodeURIComponent(query))
+
+    return ajax.get(misago.get("SEARCH_API"), { q: query })
   }
 
   handleSuccess(providers) {
@@ -80,46 +93,39 @@ export default class extends Form {
 
   render() {
     return (
-      <div className="page-header-bg">
-        <div className="page-header page-search-form">
-          <form onSubmit={this.handleSubmit}>
-            <div className="container">
-              <div className="row">
-                <div className="col-xs-12 col-md-3">
-                  <h1>{gettext("Search")}</h1>
-                </div>
-                <div className="col-xs-12 col-md-9">
-                  <div className="row xs-margin-top sm-margin-top">
-                    <div className="col-xs-12 col-sm-8 col-md-9">
-                      <div className="form-group">
-                        <input
-                          className="form-control"
-                          disabled={
-                            this.props.search.isLoading || this.state.isLoading
-                          }
-                          onChange={this.onQueryChange}
-                          type="text"
-                          value={this.state.query}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-xs-12 col-sm-4 col-md-3">
-                      <button
-                        className="btn btn-primary btn-block btn-outline"
-                        disabled={
-                          this.props.search.isLoading || this.state.isLoading
-                        }
-                      >
-                        {gettext("Search")}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <PageHeaderContainer>
+          <PageHeader styleName="site-search">
+            <PageHeaderBanner styleName="site-search">
+              <h1>{gettext("Search")}</h1>
+            </PageHeaderBanner>
+            <PageHeaderDetails className="page-header-search-form">
+              <FlexRow>
+                <FlexRowSection auto>
+                  <FlexRowCol>
+                    <input
+                      className="form-control"
+                      disabled={this.state.isLoading}
+                      type="text"
+                      value={this.state.query}
+                      placeholder={gettext("Search")}
+                      onChange={this.onQueryChange}
+                    />
+                  </FlexRowCol>
+                  <FlexRowCol shrink>
+                    <button
+                      className="btn btn-secondary btn-icon btn-outline"
+                      disabled={this.state.isLoading}
+                    >
+                      <span className="material-icon">search</span>
+                    </button>
+                  </FlexRowCol>
+                </FlexRowSection>
+              </FlexRow>
+            </PageHeaderDetails>
+          </PageHeader>
+        </PageHeaderContainer>
+      </form>
     )
   }
 }

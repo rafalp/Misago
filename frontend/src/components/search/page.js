@@ -1,4 +1,5 @@
 import React from "react"
+import PageContainer from "../PageContainer"
 import SearchForm from "./form"
 import SideNav from "./sidenav"
 
@@ -6,7 +7,7 @@ export default function (props) {
   return (
     <div className="page page-search">
       <SearchForm provider={props.provider} search={props.search} />
-      <div className="container">
+      <PageContainer>
         <div className="row">
           <div className="col-md-3">
             <SideNav providers={props.search.providers} />
@@ -16,7 +17,7 @@ export default function (props) {
             <SearchTime provider={props.provider} search={props.search} />
           </div>
         </div>
-      </div>
+      </PageContainer>
     </div>
   )
 }
