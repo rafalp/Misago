@@ -86,7 +86,7 @@ const ThreadsToolbar = ({
             {gettext("Start thread")}
           </Button>
         </ToolbarItem>
-        {moderation.allow && (
+        {!!moderation.allow && (
           <ToolbarItem shrink>
             <ThreadsToolbarModeration
               api={api}
