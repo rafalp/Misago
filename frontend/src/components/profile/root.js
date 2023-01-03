@@ -6,16 +6,14 @@ import { Posts, Threads } from "./feed"
 import Followers from "./followers"
 import Follows from "./follows"
 import UsernameHistory from "./username-history"
-import Header from "./header"
 import { SideNav, CompactNav } from "./navs"
-import Avatar from "misago/components/avatar"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago"
 import { hydrate } from "misago/reducers/profile"
 import polls from "misago/services/polls"
 import store from "misago/services/store"
 import PageContainer from "../PageContainer"
-import ProfileHeaderCard from "./ProfileHeaderCard"
+import ProfileHeader from "./ProfileHeader"
 
 export default class extends WithDropdown {
   constructor(props) {
@@ -42,34 +40,21 @@ export default class extends WithDropdown {
     const pages = misago.get("PROFILE_PAGES")
     const { profile, user } = this.props
     const moderation = getModeration(profile, user)
-    const message =
-      false && user.acl.can_start_private_threads && profile.id !== user.id
-    const follow = false && profile.acl.can_follow && profile.id !== user.id
+    const message = user.acl.can_start_private_threads && profile.id !== user.id
+    const follow = profile.acl.can_follow && profile.id !== user.id
 
     return (
       <div className="page page-user-profile">
-        {/* <Header
-          baseUrl={baseUrl}
-          pages={pages}
+        <ProfileHeader
           profile={this.props.profile}
-          toggleNav={this.toggleNav}
-          toggleModeration={this.toggleModeration}
           user={this.props.user}
-        /> */}
+          moderation={moderation}
+          message={message}
+          follow={follow}
+        />
         <PageContainer>
           <div className="row">
             <div className="col-md-3 hidden-sm">
-              {/* <div className="profile-side-avatar">
-                <Avatar user={this.props.profile} size="400" />
-              </div> */}
-
-              <ProfileHeaderCard
-                profile={this.props.profile}
-                user={this.props.user}
-                moderation={moderation}
-                message={message}
-                follow={follow}
-              />
               <SideNav
                 baseUrl={baseUrl}
                 pages={pages}

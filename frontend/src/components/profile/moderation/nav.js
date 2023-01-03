@@ -1,4 +1,3 @@
-import classnames from "classnames"
 import React from "react"
 import { connect } from "react-redux"
 import AvatarControls from "misago/components/profile/moderation/avatar-controls"
@@ -28,17 +27,10 @@ export default class extends React.Component {
   }
 
   render() {
-    const { moderation, right } = this.props
+    const { moderation } = this.props
 
     return (
-      <ul
-        className={classnames(
-          "dropdown-menu",
-          { "dropdown-menu-right": right },
-          "stick-to-bottom"
-        )}
-        role="menu"
-      >
+      <ul className="dropdown-menu dropdown-menu-right" role="menu">
         {!!moderation.avatar && (
           <li>
             <button

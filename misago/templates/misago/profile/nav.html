@@ -1,8 +1,4 @@
 {% load misago_avatars misago_shorthands %}
-<div class="profile-side-avatar">
-  <img src="{{ profile|avatar:400 }}" alt="">
-</div>
-
 <div class="list-group nav-side">
   {% for section in sections %}
     <a href="{% url section.link slug=profile.slug pk=profile.pk %}" class="list-group-item{{ section.is_active|iftrue:' active' }}">
