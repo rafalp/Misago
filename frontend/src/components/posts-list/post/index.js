@@ -31,18 +31,16 @@ export default function (props) {
     <li id={"post-" + props.post.id} className={className}>
       <div className="panel panel-default panel-post">
         <div className="panel-body">
-          <div className="row">
-            <PostSide {...props} />
-            <div className="col-xs-12 col-md-9">
-              <Header {...props} />
-              <FlagBestAnswer {...props} />
-              <FlagUnapproved {...props} />
-              <FlagProtected {...props} />
-              <FlagHidden {...props} />
-              <Body {...props} />
-              <Attachments {...props} />
-              <Footer {...props} />
-            </div>
+          <PostSide {...props} />
+          <div className="panel-content">
+            <Header {...props} />
+            <FlagBestAnswer {...props} />
+            <FlagUnapproved {...props} />
+            <FlagProtected {...props} />
+            <FlagHidden {...props} />
+            <Body {...props} />
+            <Attachments {...props} />
+            <Footer {...props} />
           </div>
         </div>
       </div>

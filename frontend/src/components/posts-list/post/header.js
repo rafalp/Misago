@@ -69,7 +69,7 @@ export function PostedOnCompact(props) {
       href={props.post.url.index}
       className="btn btn-link posted-on visible-xs-inline-block"
     >
-      {props.post.posted_on.fromNow(true)}
+      {props.post.posted_on.fromNow()}
     </a>
   )
 }

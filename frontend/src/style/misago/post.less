@@ -2,6 +2,22 @@
 // Posts List Post
 // --------------------------------------------------
 
+@media screen and (min-width: @screen-md-min) {
+  .panel-post .panel-body {
+    display: flex;
+  }
+
+  .post-side {
+    flex-shrink: 0;
+    width: @post-side-width;
+    padding-right: @post-side-padding;
+  }
+
+  .panel-content {
+    flex: 1 0;
+  }
+}
+
 // Post side
 .post-side {
   font-size: @font-size-small;
