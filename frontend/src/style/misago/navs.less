@@ -24,7 +24,13 @@
 }
 
 .nav-pills > li > a {
+  display: flex;
+  align-items: center;
   padding: @nav-pills-padding-vertical @nav-pills-padding-horizontal;
+
+  .material-icon {
+    margin-right: 3px;
+  }
 
   &,
   &:link,
