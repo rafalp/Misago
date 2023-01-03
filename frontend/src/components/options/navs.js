@@ -1,7 +1,6 @@
 import React from "react"
 import { Link } from "react-router"
 import Li from "misago/components/li"
-import misago from "misago/index"
 
 export function SideNav(props) {
   return (
@@ -25,10 +24,7 @@ export function SideNav(props) {
 
 export function CompactNav(props) {
   return (
-    <ul
-      className={props.className || "dropdown-menu stick-to-bottom"}
-      role="menu"
-    >
+    <ul className={props.className || "dropdown-menu"} role="menu">
       {props.options.map((option) => {
         return (
           <Li

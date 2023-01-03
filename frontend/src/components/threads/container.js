@@ -1,42 +1,15 @@
 import React from "react"
-import PageLead from "misago/components/page-lead"
+import PageContainer from "../PageContainer"
 import ThreadsToolbar from "./ThreadsToolbar"
 
 export default class extends React.Component {
-  getCategoryDescription() {
-    if (this.props.pageLead) {
-      return (
-        <div className="category-description">
-          <div className="page-lead lead">
-            <p>{this.props.pageLead}</p>
-          </div>
-        </div>
-      )
-    } else if (this.props.route.category.description) {
-      return (
-        <div className="category-description">
-          <PageLead copy={this.props.route.category.description.html} />
-        </div>
-      )
-    } else {
-      return null
-    }
-  }
-
-  getDisableToolbar() {
-    return (
-      !this.props.isLoaded || this.props.isBusy || this.props.busyThreads.length
-    )
-  }
-
   render() {
     const { root } = this.props
     const { category, categories, categoriesMap } = this.props.route
     const topCategory = getTopCategory(root, category, categoriesMap)
 
     return (
-      <div className="container">
-        {this.getCategoryDescription()}
+      <PageContainer>
         <ThreadsToolbar
           api={this.props.api}
           baseUrl={category.url.index}
@@ -71,7 +44,7 @@ export default class extends React.Component {
           }
         />
         {this.props.children}
-      </div>
+      </PageContainer>
     )
   }
 }

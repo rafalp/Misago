@@ -1,0 +1,50 @@
+//
+// Simple flex row util, inspired by toolbar
+// --------------------------------------------------
+
+.flex-row {
+  display: block;
+  margin: 0 floor(@grid-gutter-width * -0.5);
+}
+
+.flex-row-section {
+  align-items: center;
+  display: flex;
+  flex: 1;
+}
+
+.flex-row-section + .flex-row-section {
+  margin-top: @line-height-computed;
+}
+
+.flex-row-col {
+  flex: 1;
+  padding: 0 floor(@grid-gutter-width * 0.5);
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .flex-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .flex-row-section + .flex-row-section {
+    margin: 0;
+  }
+
+  .flex-row-section,
+  .flex-row-col {
+    flex: 0;
+
+    align-items: center;
+  }
+
+  .flex-row-section.flex-row-section-auto,
+  .flex-row-section.flex-row-section-auto > .flex-row-col {
+    flex: 1;
+  }
+}
+
+.flex-row-col-shrink {
+  flex: 0 !important;
+}

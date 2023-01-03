@@ -11,6 +11,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         "forum_address",
         "index_header",
         "index_title",
+        "index_message",
         "index_meta_description",
         "logo",
         "logo_small",
@@ -25,12 +26,6 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
     forum_name = forms.CharField(label=_("Forum name"), min_length=2, max_length=255)
     forum_address = forms.URLField(label=_("Forum address"), max_length=255)
 
-    index_header = forms.CharField(
-        label=_("Header text"),
-        help_text=_("This text will replace forum name in page header."),
-        max_length=255,
-        required=False,
-    )
     index_title = forms.CharField(label=_("Page title"), max_length=255, required=False)
     index_meta_description = forms.CharField(
         label=_("Meta Description"),
@@ -39,6 +34,22 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
             "display next to link to your forum's index."
         ),
         max_length=255,
+        required=False,
+    )
+    index_header = forms.CharField(
+        label=_("Header text"),
+        help_text=_("This text will be displayed in page header on forum index."),
+        max_length=255,
+        required=False,
+    )
+    index_message = forms.CharField(
+        label=_("Header message"),
+        help_text=_(
+            "This message will be displayed in page header on forum index, "
+            "under the header text."
+        ),
+        max_length=2048,
+        widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
 

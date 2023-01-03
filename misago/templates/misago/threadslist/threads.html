@@ -54,23 +54,48 @@
 
 
 {% block page-header %}
-<div class="page-header">
-  <div class="container">
-    <div class="row">
-      <div class="{{ user.is_authenticated|yesno:'col-md-8,col-xs-12' }}">
-        <div class="row">
-          <div class="col-xs-12">
-            {% if THREADS_ON_INDEX %}
-              <h1>{{ settings.index_header|default:settings.forum_name }}</h1>
-            {% else %}
+{% if THREADS_ON_INDEX and settings.index_header %}
+<div class="container page-header-container">
+  <div class="page-header page-header-forum-index">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-forum-index">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              <h1>{{ settings.index_header }}</h1>
+            </div>
+          </div>
+        </div>
+        {% if settings.index_message %}
+          <div class="page-header-details">
+            <div class="page-header-message">
+              {{ settings.index_message|force_escape|urlize|linebreaks|safe }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% elif not THREADS_ON_INDEX %}
+<div class="container page-header-container">
+  <div class="page-header page-header-threads">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-threads">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
               <h1>{% trans "Threads" %}</h1>
-            {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+{% endif %}
 {% endblock page-header %}
 
 

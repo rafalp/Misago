@@ -27,56 +27,7 @@
   <div class="threads-list-item-bottom-row">
     {% if thread.is_closed or thread.is_hidden or thread.is_unapproved or thread.weight > 0 or thread.best_answer or thread.has_poll %}
       <div class="threads-list-item-col-flags">
-        <ul class="threads-list-item-flags">
-          {% if thread.weight == 2 %}
-            <li
-              class="threads-list-item-flag-pinned-globally"
-              title="{% trans 'Pinned globally' %}"
-            >
-              <span class="material-icon">bookmark</span>
-            </li>
-          {% endif %}
-          {% if thread.weight == 1 %}
-            <li
-              class="threads-list-item-flag-pinned-locally"
-              title="{% trans 'Pinned in category' %}"
-            >
-              <span class="material-icon">bookmark_outline</span>
-            </li>
-          {% endif %}
-          {% if thread.best_answer %}
-            <li
-              class="threads-list-item-flag-answered"
-              title="{% trans 'Answered' %}"
-            >
-              <span class="material-icon">check_circle</span>
-            </li>
-          {% endif %}
-          {% if thread.has_poll %}
-            <li
-              class="threads-list-item-flag-poll"
-              title="{% trans 'Poll' %}"
-            >
-              <span class="material-icon">poll</span>
-            </li>
-          {% endif %}
-          {% if thread.is_closed %}
-            <li
-              class="threads-list-item-flag-closed"
-              title="{% trans 'Closed' %}"
-            >
-              <span class="material-icon">lock</span>
-            </li>
-          {% endif %}
-          {% if thread.is_hidden %}
-            <li
-              class="threads-list-item-flag-hidden"
-              title="{% trans 'Hidden' %}"
-            >
-              <span class="material-icon">visibility_off</span>
-            </li>
-          {% endif %}
-        </ul>
+        {% include "misago/thread_flags.html" %}
       </div>
     {% endif %}
     {% if thread.category != category %}
@@ -104,15 +55,7 @@
       </div>
     {% endif %}
     <div class="threads-list-item-col-replies">
-      <span class="threads-list-item-replies"
-        title="{% blocktrans trimmed count replies=thread.replies %}
-        {{ replies }} reply
-        {% plural %}
-          {{ replies }} replies
-        {% endblocktrans %}">
-        <span class="material-icon">chat_bubble_outline</span>
-        {% if thread.replies > 980 %}{{ thread.replies_in_ks }}{% else %}{{ thread.replies }}{% endif %}
-      </span>
+      {% include "misago/thread_replies.html" %}
     </div>
     <div class="threads-list-item-col-last-poster">
       {% if thread.last_poster_id %}

@@ -97,7 +97,7 @@ export default class extends Form {
               </button>
               <button
                 className="btn btn-primary"
-                loading={this.state.isLoading}
+                disabled={this.state.isLoading}
               >
                 {gettext("Move posts")}
               </button>

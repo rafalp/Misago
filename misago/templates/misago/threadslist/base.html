@@ -15,12 +15,9 @@
   {% block extra-css %}{% endblock extra-css %}
 {% endspaceless %}">
 
-  <div class="page-header-bg">
-    {% block page-header %}
-    {% endblock page-header %}
-  </div>
+  {% block page-header %}{% endblock page-header %}
 
-  <div class="container">
+  <div class="container page-container">
     {% block list-container %}
       {% if subcategories %}
         <noscript>
@@ -39,7 +36,7 @@
       {% endif %}
 
       <section>
-        <div className="threads-list">
+        <div class="threads-list">
           {% block threads-list %}
             <ul class="list-group" itemscope itemtype="http://schema.org/ItemList">
               <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
@@ -48,7 +45,7 @@
                   {% include "misago/threadslist/thread.html" %}
                 {% endblock thread %}
               {% empty %}
-                <li className="list-group-item empty-message">
+                <li class="list-group-item empty-message">
                   {% block list-empty-message %}
                     {% if list_type == 'all' %}
                       <p class="lead">

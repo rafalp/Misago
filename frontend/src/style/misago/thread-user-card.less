@@ -1,0 +1,21 @@
+.thread-user-card {
+  display: flex;
+  align-items: center;
+}
+
+.thread-user-card-media {
+  flex: 0;
+  margin-right: floor(@grid-gutter-width * .5;);
+
+  img {
+    border-radius: @border-radius-small;
+  }
+}
+
+.thread-user-card-body {
+  flex: 1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

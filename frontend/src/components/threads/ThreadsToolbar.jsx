@@ -92,7 +92,9 @@ const ThreadsToolbar = ({
               api={api}
               categories={categories}
               categoriesMap={categoriesMap}
-              threads={threads}
+              threads={threads.filter(
+                (thread) => selection.indexOf(thread.id) !== -1
+              )}
               addThreads={addThreads}
               freezeThread={freezeThread}
               updateThread={updateThread}

@@ -14,16 +14,6 @@
   </div>
   <div class="toolbar-spacer"></div>
   {% if user.is_authenticated %}
-    <div class="toolbar-section">
-      <div class="toolbar-item">
-        <div class="dropdown">
-          <button class="btn btn-default btn-outline btn-block" type="button" disabled>
-            <span class="material-icon">star_border</span>
-            {% trans "Disabled" %}
-          </button>
-        </div>
-      </div>
-    </div>
     {% if thread.acl.can_start_poll %}
       <div class="toolbar-section hidden-xs">
         <div class="toolbar-item">

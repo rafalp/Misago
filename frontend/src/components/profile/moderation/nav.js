@@ -18,80 +18,55 @@ export default class extends React.Component {
     modal.show(connect(select)(AvatarControls))
   }
 
-  getAvatarButton() {
-    if (this.props.profile.acl.can_moderate_avatar) {
-      return (
-        <li>
-          <button
-            type="button"
-            className="btn btn-link"
-            onClick={this.showAvatarDialog}
-          >
-            <span className="material-icon">portrait</span>
-            {gettext("Avatar controls")}
-          </button>
-        </li>
-      )
-    } else {
-      return null
-    }
-  }
-
   showRenameDialog = () => {
     modal.show(connect(select)(ChangeUsername))
-  }
-
-  getRenameButton() {
-    if (this.props.profile.acl.can_rename) {
-      return (
-        <li>
-          <button
-            type="button"
-            className="btn btn-link"
-            onClick={this.showRenameDialog}
-          >
-            <span className="material-icon">credit_card</span>
-            {gettext("Change username")}
-          </button>
-        </li>
-      )
-    } else {
-      return null
-    }
   }
 
   showDeleteDialog = () => {
     modal.show(connect(select)(DeleteAccount))
   }
 
-  getDeleteButton() {
-    if (this.props.profile.acl.can_delete) {
-      return (
-        <li>
-          <button
-            type="button"
-            className="btn btn-link"
-            onClick={this.showDeleteDialog}
-          >
-            <span className="material-icon">clear</span>
-            {gettext("Delete account")}
-          </button>
-        </li>
-      )
-    } else {
-      return null
-    }
-  }
-
   render() {
+    const { moderation } = this.props
+
     return (
-      <ul
-        className="dropdown-menu dropdown-menu-right stick-to-bottom"
-        role="menu"
-      >
-        {this.getAvatarButton()}
-        {this.getRenameButton()}
-        {this.getDeleteButton()}
+      <ul className="dropdown-menu dropdown-menu-right" role="menu">
+        {!!moderation.avatar && (
+          <li>
+            <button
+              type="button"
+              className="btn btn-link"
+              onClick={this.showAvatarDialog}
+            >
+              <span className="material-icon">portrait</span>
+              {gettext("Avatar controls")}
+            </button>
+          </li>
+        )}
+        {!!moderation.rename && (
+          <li>
+            <button
+              type="button"
+              className="btn btn-link"
+              onClick={this.showRenameDialog}
+            >
+              <span className="material-icon">credit_card</span>
+              {gettext("Change username")}
+            </button>
+          </li>
+        )}
+        {!!moderation.delete && (
+          <li>
+            <button
+              type="button"
+              className="btn btn-link"
+              onClick={this.showDeleteDialog}
+            >
+              <span className="material-icon">clear</span>
+              {gettext("Delete account")}
+            </button>
+          </li>
+        )}
       </ul>
     )
   }

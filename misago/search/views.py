@@ -28,6 +28,9 @@ def search(request, search_provider):
         raise Http404()
 
     if "q" in request.GET:
-        request.frontend_context["SEARCH_QUERY"] = request.GET.get("q")
+        search_query = request.GET.get("q").strip()
+        request.frontend_context["SEARCH_QUERY"] = search_query
+    else:
+        search_query = ""
 
-    return render(request, "misago/search.html")
+    return render(request, "misago/search.html", {"search_query": search_query})

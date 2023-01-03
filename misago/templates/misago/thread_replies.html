@@ -1,0 +1,11 @@
+{% load i18n %}
+<span class="threads-replies"
+  title="{% blocktrans trimmed count replies=thread.replies %}
+  {{ replies }} reply
+  {% plural %}
+    {{ replies }} replies
+  {% endblocktrans %}"
+>
+  <span class="material-icon">chat_bubble_outline</span>
+  {% if thread.replies > 980 %}{{ thread.replies_in_ks }}{% else %}{{ thread.replies }}{% endif %}
+</span>

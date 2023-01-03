@@ -15,24 +15,35 @@
 
 {% block content %}
 <div class="page page-search">
-  <div class="page-header-bg">
-    <div class="page-header page-search-form">
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-12 col-md-3">
-            <h1>{% trans "Search" %}</h1>
-          </div>
-          <div class="col-xs-12 col-md-9">
-            <div class="row xs-margin-top sm-margin-top">
-              <div class="col-xs-12 col-sm-8 col-md-9">
-                <div class="form-group">
-                  <input class="form-control" type="text" disabled/>
-                </div>
+  <div class="container page-header-container">
+    <div class="page-header page-header-site-search">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-site-search">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <h1>{% trans "Search" %}</h1>
               </div>
-              <div class="col-xs-12 col-sm-4 col-md-3">
-                <button class="btn btn-primary btn-block btn-outline" disabled>
-                  {% trans "Search" %}
-                </button>
+            </div>
+          </div>
+          <div class="page-header-details page-header-search-form">
+            <div class="flex-row">
+              <div class="flex-row-section flex-row-section-auto">
+                <div class="flex-row-col">
+                  <input
+                    class="form-control"
+                    type="text"
+                    value="{{ search_query }}"
+                    placeholder="{% trans 'Search' %}"
+                    disabled
+                  />
+                </div>
+                <div class="flex-row-col flex-row-col-shrink">
+                  <button class="btn btn-secondary btn-icon btn-outline" disabled>
+                    <span class="material-icon">search</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -41,12 +52,10 @@
     </div>
   </div>
 
-  <div class="container">
-
+  <div class="container page-container">
     <p class="lead text-center xs-margin-top sm-margin-top">
       {% trans "Loading search..." %}
     </p>
-
   </div>
 </div>
 {% endblock content %}

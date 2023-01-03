@@ -3,10 +3,7 @@ import { Toolbar, ToolbarItem, ToolbarSection } from "../../Toolbar"
 import RankUsersLeft from "./RankUsersLeft"
 import RankUsersPagination from "./RankUsersPagination"
 
-const RankUsersToolbar = ({
-  baseUrl,
-  users
-}) => (
+const RankUsersToolbar = ({ baseUrl, users }) => (
   <Toolbar>
     <ToolbarSection>
       <ToolbarItem>

@@ -1,18 +1,20 @@
-<div class="page-breadcrumbs">
-  <div class="container">
-    <ol class="breadcrumb hidden-xs" itemscope itemtype="http://schema.org/BreadcrumbList">
-      {% for node in breadcrumbs %}
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <a href="{{ node.get_absolute_url }}" itemscope itemtype="http://schema.org/Thing" itemprop="item">
-            <span itemprop="name">{{ node.name }}</span>
-          </a>
-          <meta itemprop="position" content="{{ forloop.counter }}" />
-        </li>
-      {% endfor %}
-    </ol>
-    <a href="{{ thread.category.get_absolute_url }}" class="go-back-sm visible-xs-block">
-      <span class="material-icon">chevron_left</span>
-      {{ thread.category }}
-    </a>
-  </div>
-</div>
+<ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+  {% for node in breadcrumbs %}
+    <li id="thread-breadcrumb-{{ node.id }}" class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+      <a href="{{ node.get_absolute_url }}">
+        {% if node.special_role %}
+          <span class="material-icon">chevron_right</span>
+          <span class="breadcrumbs-item-name">{{ node.name }} </span>
+        {% else %}
+          <span class="material-icon"{% if node.color %} style="color: {{ node.color }};"{% endif %}>label</span>
+          {% if node.short_name %}
+            <span class="breadcrumbs-item-name hidden-sm hidden-md hidden-lg" title="{{ node.name }}">{{ node.short_name }}</span>
+            <span class="breadcrumbs-item-name hidden-xs">{{ node.name }}</span>
+          {% else %}
+            <span class="breadcrumbs-item-name">{{ node.name }}</span>
+          {% endif %}
+        {% endif %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

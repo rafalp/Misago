@@ -63,6 +63,7 @@ class MisagoUsersConfig(AppConfig):
             name=_("Delete account"),
             component="delete-account",
             icon="cancel",
+            visible_if=can_delete_own_account,
         )
 
     def register_default_users_list_pages(self):

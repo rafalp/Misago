@@ -6,9 +6,7 @@ class RankUsersListLoader extends React.Component {
     return false
   }
 
-  render = () => (
-    <UsersList cols={4} isReady={false} />
-  )
+  render = () => <UsersList cols={4} isReady={false} />
 }
 
 export default RankUsersListLoader

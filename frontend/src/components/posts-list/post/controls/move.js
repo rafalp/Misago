@@ -87,7 +87,7 @@ export default class extends Form {
             <div className="modal-footer">
               <button
                 className="btn btn-primary"
-                loading={this.state.isLoading}
+                disabled={this.state.isLoading}
               >
                 {gettext("Move post")}
               </button>

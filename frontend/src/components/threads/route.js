@@ -5,7 +5,6 @@ import {
   compareWeight,
 } from "misago/components/threads/compare"
 import Container from "misago/components/threads/container"
-import Header from "misago/components/threads/header"
 import {
   diffThreads,
   getModerationActions,
@@ -23,6 +22,11 @@ import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
 import * as sets from "misago/utils/sets"
+import {
+  PageHeaderHTMLMessage,
+  PageHeaderMessage,
+  PageHeaderPlain,
+} from "../PageHeader"
 
 export default class extends WithDropdown {
   constructor(props) {
@@ -268,21 +272,55 @@ export default class extends WithDropdown {
   }
 
   render() {
+    const root = this.props.route.categories[0]
+    const { category, list } = this.props.route
+    const specialRole = category.special_role
+
     return (
       <div className={this.getClassName()}>
-        <Header
-          categories={this.props.route.categoriesMap}
-          disabled={!this.state.isLoaded}
-          startThread={this.props.options.startThread}
-          threads={this.props.threads}
-          title={this.getTitle()}
-          toggleNav={this.toggleNav}
-          route={this.props.route}
-          user={this.props.user}
-        />
+        {specialRole == "root_category" &&
+          misago.get("THREADS_ON_INDEX") &&
+          misago.get("SETTINGS").index_header && (
+            <PageHeaderPlain
+              header={misago.get("SETTINGS").index_header}
+              message={
+                category.description && (
+                  <PageHeaderHTMLMessage message={category.description.html} />
+                )
+              }
+              styleName="forum-index"
+            />
+          )}
+        {specialRole == "root_category" && !misago.get("THREADS_ON_INDEX") && (
+          <PageHeaderPlain header={gettext("Threads")} styleName="threads" />
+        )}
+        {specialRole == "private_threads" && (
+          <PageHeaderPlain
+            header={this.props.options.title}
+            message={
+              this.props.options.pageLead && (
+                <PageHeaderMessage>
+                  <p>{this.props.options.pageLead}</p>
+                </PageHeaderMessage>
+              )
+            }
+            styleName="private-threads"
+          />
+        )}
+        {!specialRole && (
+          <PageHeaderPlain
+            header={category.name}
+            message={
+              category.description && (
+                <PageHeaderHTMLMessage message={category.description.html} />
+              )
+            }
+            styleName={category.css_class || "category-threads"}
+          />
+        )}
         <Container
           api={this.props.options.api}
-          root={this.props.route.categories[0]}
+          root={root}
           route={this.props.route}
           user={this.props.user}
           pageLead={this.props.options.pageLead}
@@ -300,9 +338,9 @@ export default class extends WithDropdown {
           isBusy={this.state.isBusy}
         >
           <ThreadsList
-            category={this.props.route.category}
+            category={category}
             categories={this.props.route.categoriesMap}
-            list={this.props.route.list}
+            list={list}
             selection={this.props.selection}
             threads={this.props.threads}
             updatedThreads={this.state.diff.results.length}

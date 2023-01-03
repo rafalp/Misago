@@ -1,114 +1,68 @@
 //
-// Forum Profile
+// User Profile
 // --------------------------------------------------
 
-.page-user-profile .page-header {
-  padding-top: @line-height-computed;
+.profile-page-header-avatar {
+  text-align: center;
+  margin: @line-height-computed 0;
 
-  .alert {
-    margin-bottom: @line-height-computed;
-  }
-
-  h1 {
-    margin-bottom: 0px;
-  }
-
-  .btn-aligned {
-    margin-top: 0px;
+  .user-avatar {
+    border-radius: @border-radius-base;
   }
 }
 
-// Small displays header
-@media screen and (max-width: @screen-xs-max) {
-  .page-user-profile .page-header {
-    text-align: center;
+// Make profile data horizontal and insert space between elements
+.profile-data-list {
+  display: block;
+  padding: 0;
+  margin: 0 (@padding-base-horizontal * -1);
 
-    img {
-      clear: both;
-      margin-top: @line-height-computed;
+  font-size: @font-size-small;
 
-      width: 100px;
-      height: 100px;
-    }
-
-    h1 {
-      margin-top: @line-height-computed;
-
-      font-size: @font-size-base * 2;
-    }
-
-    .header-stats ul {
-      text-align: center;
-
-      li {
-        display: inline-block;
-
-        white-space: nowrap;
-      }
-    }
+  li {
+    display: inline-block;
+    list-style: none;
+    padding: floor(@line-height-computed / 4) @padding-base-horizontal;
   }
 
-  .page-user-profile .profile-side-avatar {
-    display: none;
+  .status-icon {
+    margin-right: 3px;
+    position: relative;
+    bottom: 1px;
+  }
+
+  .user-account-disabled {
+    color: @brand-danger;
+    font-weight: bold;
   }
 }
 
-// Tablet displays
-@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-  .page-user-profile .page-header {
-    img,
-    h1 {
-      float: left;
-    }
+// On tablets and up make layout horizontal
+@media screen and (min-width: @screen-sm-min) {
+  .profile-page-header {
+    display: flex;
+    align-items: flex-end;
+  }
 
-    img {
-      margin-top: @line-height-computed;
-      margin-right: 24px;
-
-      width: 80px;
-      height: 80px;
-    }
-
-    h1 {
-      position: relative;
-      top: @line-height-computed * 1.25;
-    }
-
-    .header-stats {
-      margin-left: 80px + 32px;
-      margin-top: @line-height-computed * 1.25;
-      margin-bottom: @line-height-computed * -2.25;
-
-      position: relative;
-      bottom: @line-height-computed * 2.5;
-    }
+  .profile-page-header-avatar {
+    margin: 0;
+    margin-right: @grid-gutter-width;
   }
 }
 
-// Dekstops header
+// On desktops make avatar overlap on details, make details larger
 @media screen and (min-width: @screen-md-min) {
-  .page-user-profile .page-header {
-    .user-avatar-sm {
-      display: none;
-    }
-
-    h1 {
-      position: relative;
-      top: 5px;
-    }
-
-    .header-stats ul {
-      li {
-        display: block;
-        float: left;
-      }
-    }
+  .profile-page-header-avatar {
+    position: relative;
+    top: @profile-header-avatar-offset;
+    margin-top: @profile-header-avatar-offset * -1;
   }
 
-  .page-user-profile .profile-side-avatar img {
-    width: 100%;
-    height: auto;
-    margin-top: @line-height-computed * -7;
-    margin-bottom: @line-height-computed;
+  .profile-page-header-details {
+    padding-left: 128px + @grid-gutter-width;
+  }
+
+  .profile-data-list {
+    font-size: @font-size-base;
   }
 }

@@ -2,7 +2,6 @@ import React from "react"
 import Participants from "misago/components/participants"
 import { Poll } from "misago/components/poll"
 import PostsList from "misago/components/posts-list"
-import Header from "./header"
 import * as participants from "misago/reducers/participants"
 import * as poll from "misago/reducers/poll"
 import * as posts from "misago/reducers/posts"
@@ -13,6 +12,8 @@ import snackbar from "misago/services/snackbar"
 import posting from "misago/services/posting"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import PageContainer from "../PageContainer"
+import ThreadHeader from "./ThreadHeader"
 import ThreadToolbarBottom from "./ThreadToolbarBottom"
 import ThreadToolbarTop from "./ThreadToolbarTop"
 
@@ -130,10 +131,22 @@ export default class extends React.Component {
   }
 
   render() {
+    const category = this.props.thread.category
+
     let className = "page page-thread"
-    if (this.props.thread.category.css_class) {
-      className += " page-thread-" + this.props.thread.category.css_class
+    if (category.css_class) {
+      className += " page-thread-" + category.css_class
     }
+
+    const styleName =
+      category.special_role === "private_threads"
+        ? "private-threads"
+        : category.css_class || "category-threads"
+
+    const threadModeration = getThreadModeration(
+      this.props.thread,
+      this.props.user
+    )
 
     const postsModeration = getPostsModeration(
       this.props.posts.results,
@@ -143,10 +156,19 @@ export default class extends React.Component {
 
     return (
       <div className={className}>
-        <div className="page-header-bg">
-          <Header {...this.props} />
-        </div>
-        <div className="container">
+        <ThreadHeader
+          styleName={styleName}
+          thread={this.props.thread}
+          posts={this.props.posts}
+          user={this.props.user}
+          moderation={threadModeration}
+        />
+        <PageContainer>
+          <Participants
+            participants={this.props.participants}
+            thread={this.props.thread}
+            user={this.props.user}
+          />
           <ThreadToolbarTop
             thread={this.props.thread}
             posts={this.props.posts}
@@ -161,11 +183,6 @@ export default class extends React.Component {
             thread={this.props.thread}
             user={this.props.user}
           />
-          <Participants
-            participants={this.props.participants}
-            thread={this.props.thread}
-            user={this.props.user}
-          />
           <PostsList {...this.props} />
           <ThreadToolbarBottom
             thread={this.props.thread}
@@ -175,10 +192,61 @@ export default class extends React.Component {
             moderation={postsModeration}
             onReply={this.openReplyForm}
           />
-        </div>
+        </PageContainer>
       </div>
     )
   }
+}
+
+const getThreadModeration = (thread, user) => {
+  const moderation = {
+    enabled: false,
+    edit: false,
+    approve: false,
+    close: false,
+    open: false,
+    hide: false,
+    unhide: false,
+    move: false,
+    merge: false,
+    pinGlobally: false,
+    pinLocally: false,
+    unpin: false,
+    delete: false,
+  }
+
+  if (!user.is_authenticated) return moderation
+
+  moderation.edit = thread.acl.can_edit
+  moderation.approve = thread.acl.can_approve && thread.is_unapproved
+  moderation.close = thread.acl.can_close && !thread.is_closed
+  moderation.open = thread.acl.can_close && thread.is_closed
+  moderation.hide = thread.acl.can_hide && !thread.is_hidden
+  moderation.unhide = thread.acl.can_unhide && thread.is_hidden
+  moderation.move = thread.acl.can_move
+  moderation.merge = thread.acl.can_merge
+  moderation.pinGlobally = thread.acl.can_pin_globally && thread.weight < 2
+  moderation.pinLocally = thread.acl.can_pin && thread.weight !== 1
+  moderation.unpin =
+    (thread.acl.can_pin && thread.weight === 1) ||
+    (thread.acl.can_pin_globally && thread.weight === 2)
+  moderation.delete = thread.acl.can_delete
+
+  moderation.enabled =
+    moderation.edit ||
+    moderation.approve ||
+    moderation.close ||
+    moderation.open ||
+    moderation.hide ||
+    moderation.unhide ||
+    moderation.move ||
+    moderation.merge ||
+    moderation.pinGlobally ||
+    moderation.pinLocally ||
+    moderation.unpin ||
+    moderation.delete
+
+  return moderation
 }
 
 const getPostsModeration = (posts, user) => {

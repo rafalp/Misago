@@ -22,3 +22,33 @@
     top: 1px;
   }
 }
+
+.nav-pills > li > a {
+  padding: @nav-pills-padding-vertical @nav-pills-padding-horizontal;
+
+  &,
+  &:link,
+  &:visited {
+    background-color: @nav-pills-bg;
+    color: @nav-pills-color;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    background-color: @nav-pills-hover-bg;
+    color: @nav-pills-hover-color;
+  }
+}
+
+.nav-pills > li.active > a {
+  &,
+  &:link,
+  &:visited,
+  &:focus,
+  &:hover,
+  &:active {
+    background-color: @nav-pills-active-bg;
+    color: @nav-pills-active-color;
+  }
+}

@@ -1,6 +1,5 @@
 import React from "react"
 import { connect } from "react-redux"
-import DropdownToggle from "misago/components/dropdown-toggle"
 import { SideNav, CompactNav } from "misago/components/options/navs"
 import DeleteAccount from "misago/components/options/delete-account"
 import EditDetails from "misago/components/options/edit-details"
@@ -10,28 +9,72 @@ import ChangeUsername from "misago/components/options/change-username/root"
 import ChangeSignInCredentials from "misago/components/options/sign-in-credentials/root"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago/index"
+import { FlexRow, FlexRowCol, FlexRowSection } from "../FlexRow"
+import PageContainer from "../PageContainer"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+} from "../PageHeader"
 
 export default class extends WithDropdown {
   render() {
     return (
       <div className="page page-options">
-        <div className="page-header-bg">
-          <div className="page-header">
-            <div className="container">
-              <h1>{gettext("Change your options")}</h1>
-            </div>
-            <div className="page-tabs visible-xs-block visible-sm-block">
-              <div className="container">
-                <CompactNav
-                  className="nav nav-pills"
-                  baseUrl={misago.get("USERCP_URL")}
-                  options={misago.get("USER_OPTIONS")}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="container">
+        <PageHeaderContainer>
+          <PageHeader styleName="options">
+            <PageHeaderBanner styleName="options">
+              <FlexRow>
+                <FlexRowSection auto>
+                  <FlexRowCol auto>
+                    <h1>{gettext("Change your options")}</h1>
+                  </FlexRowCol>
+                  <FlexRowCol className="hidden-xs hidden-md hidden-lg" shrink>
+                    <div className="dropdown">
+                      <button
+                        type="button"
+                        className="btn btn-default btn-outline btn-icon dropdown-toggle"
+                        title={gettext("Menu")}
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <span className="material-icon">menu</span>
+                      </button>
+                      <CompactNav
+                        className="dropdown-menu dropdown-menu-right"
+                        baseUrl={misago.get("USERCP_URL")}
+                        options={misago.get("USER_OPTIONS")}
+                      />
+                    </div>
+                  </FlexRowCol>
+                </FlexRowSection>
+                <FlexRowSection className="hidden-sm hidden-md hidden-lg">
+                  <FlexRowCol>
+                    <div className="dropdown">
+                      <button
+                        type="button"
+                        className="btn btn-default btn-outline btn-block dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <span className="material-icon">menu</span>
+                        {gettext("Menu")}
+                      </button>
+                      <CompactNav
+                        className="dropdown-menu"
+                        baseUrl={misago.get("USERCP_URL")}
+                        options={misago.get("USER_OPTIONS")}
+                      />
+                    </div>
+                  </FlexRowCol>
+                </FlexRowSection>
+              </FlexRow>
+            </PageHeaderBanner>
+          </PageHeader>
+        </PageHeaderContainer>
+        <PageContainer>
           <div className="row">
             <div className="col-md-3 hidden-xs hidden-sm">
               <SideNav
@@ -41,7 +84,7 @@ export default class extends WithDropdown {
             </div>
             <div className="col-md-9">{this.props.children}</div>
           </div>
-        </div>
+        </PageContainer>
       </div>
     )
   }
@@ -65,16 +108,15 @@ export function paths() {
       path: misago.get("USERCP_URL") + "edit-details/",
       component: connect(select)(EditDetails),
     },
+    {
+      path: misago.get("USERCP_URL") + "change-username/",
+      component: connect(select)(ChangeUsername),
+    },
+    {
+      path: misago.get("USERCP_URL") + "sign-in-credentials/",
+      component: connect(select)(ChangeSignInCredentials),
+    },
   ]
-
-  paths.push({
-    path: misago.get("USERCP_URL") + "change-username/",
-    component: connect(select)(ChangeUsername),
-  })
-  paths.push({
-    path: misago.get("USERCP_URL") + "sign-in-credentials/",
-    component: connect(select)(ChangeSignInCredentials),
-  })
 
   if (misago.get("ENABLE_DOWNLOAD_OWN_DATA")) {
     paths.push({
