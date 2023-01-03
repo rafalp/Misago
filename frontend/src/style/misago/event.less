@@ -7,14 +7,17 @@
   margin-bottom: @line-height-computed;
 
   color: @text-muted;
+}
 
-  .media {
-    margin-top: @line-height-computed / 4;
-  }
+.posts-list .event .event-body {
+  display: flex;
+  align-items: flex-start;
 }
 
 // Event label
 .posts-list .event-label {
+  margin-left: @event-icon-size + 8px + @post-side-padding;
+
   .label-unread {
     background-color: @brand-success;
 
@@ -23,27 +26,34 @@
 }
 
 // Event icon
-.posts-list .event .text-right {
-  padding-right: 0px;
+.posts-list .event .event-icon {
+  padding-right: @post-side-padding;
 
-  text-align: right;
+  .event-icon-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: @event-icon-size + 8px;
+    width: @event-icon-size + 8px;
+
+    background: @event-icon-bg;
+    border-radius: @border-radius-base;
+    color: @event-icon-color;
+  }
 
   .material-icon {
-    margin-right: -12px;
-
-    height: @event-icon-size;
-    width: @event-icon-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     font-size: @event-icon-size;
-    line-height: @event-icon-size;
-
-    text-align: center;
   }
 }
 
-// Align event content with post's content
-.posts-list .event .text-left {
-  padding-left: 24px;
+// Event content
+.posts-list .event .event-content {
+  flex: 1 0;
 }
 
 // Event first and second rows
@@ -85,16 +95,6 @@
 
 // Mobile tweaks
 @media screen and (max-width: @screen-xs-max) {
-  .posts-list .event .text-right {
-    width: @event-icon-size;
-
-    text-align: right;
-  }
-
-  .posts-list .event .text-left:first-child {
-    padding-left: 0px;
-  }
-
   .posts-list .event .event-info {
     margin-top: @line-height-computed / 4;
   }
@@ -112,5 +112,23 @@
         margin-right: 0px;
       }
     }
+  }
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .posts-list .event .event-icon {
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    display: flex;
+    width: @post-side-width + @panel-body-padding;
+  }
+
+  .event-content {
+    flex: 1 0;
+  }
+
+  .posts-list .event-label {
+    margin-left: @post-side-width + @panel-body-padding;
   }
 }

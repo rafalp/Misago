@@ -11,7 +11,7 @@ export default function ({ post, thread }) {
   const { poster } = post
 
   return (
-    <div className="col-xs-12 col-md-3 post-side post-side-registered">
+    <div className="post-side post-side-registered">
       <Select post={post} thread={thread} />
       <Controls post={post} thread={thread} />
       <div className="media">
