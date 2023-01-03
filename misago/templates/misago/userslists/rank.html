@@ -64,6 +64,7 @@
 {% block page-content %}
 <div class="rank-users-list{% if rank.css_class %} rank-users-{{ rank.css_class }}{% endif %}">
   <div class="container page-container">
+    {% include "misago/userslists/nav.html" %}
 
     {% if rank.description %}
       <section class="rank-description">

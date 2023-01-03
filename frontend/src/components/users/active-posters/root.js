@@ -73,20 +73,25 @@ export default class extends React.Component {
   }
 
   render() {
+    const page = { name: this.props.route.extra.name }
+
     if (this.state.isLoaded) {
       if (this.state.count > 0) {
         return (
           <ListReady
+            page={page}
             users={this.props.users}
             trackedPeriod={this.state.trackedPeriod}
             count={this.state.count}
           />
         )
       } else {
-        return <ListEmpty trackedPeriod={this.state.trackedPeriod} />
+        return (
+          <ListEmpty page={page} trackedPeriod={this.state.trackedPeriod} />
+        )
       }
     } else {
-      return <ListPreview />
+      return <ListPreview page={page} />
     }
   }
 }

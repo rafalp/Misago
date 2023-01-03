@@ -50,7 +50,6 @@ export default class DownloadData extends React.Component {
         this.setState({ isSubmiting: false })
       },
       (rejection) => {
-        console.log(rejection)
         snackbar.apiError(rejection)
         this.setState({ isSubmiting: false })
       }

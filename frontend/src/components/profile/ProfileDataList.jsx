@@ -5,7 +5,11 @@ const ProfileDataList = ({ profile }) => (
   <ul className="profile-data-list">
     {profile.is_active === false && (
       <li className="user-account-disabled">
-        <abbr title={gettext("This user's account has been disabled by administrator.")}>
+        <abbr
+          title={gettext(
+            "This user's account has been disabled by administrator."
+          )}
+        >
           {gettext("Account disabled")}
         </abbr>
       </li>

@@ -9,6 +9,7 @@ import PageContainer from "../../PageContainer"
 import RankUsersList from "./RankUsersList"
 import RankUsersListLoader from "./RankUsersListLoader"
 import RankUsersToolbar from "./RankUsersToolbar"
+import UsersNav from "../UsersNav"
 
 export default class extends React.Component {
   constructor(props) {
@@ -125,6 +126,11 @@ export default class extends React.Component {
     return (
       <div className={this.getClassName()}>
         <PageContainer>
+          <UsersNav
+            baseUrl={misago.get("USERS_LIST_URL")}
+            page={{ name: this.props.route.rank.name }}
+            pages={misago.get("USERS_LISTS")}
+          />
           {this.getRankDescription()}
           {this.getComponent()}
           <RankUsersToolbar

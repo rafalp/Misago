@@ -2,6 +2,7 @@ import React from "react"
 import ItemPreview from "misago/components/users/active-posters/list-item-preview"
 import * as random from "misago/utils/random"
 import PageContainer from "../../PageContainer"
+import UsersNav from "../UsersNav"
 
 export default class extends React.Component {
   shouldComponentUpdate() {
@@ -12,6 +13,11 @@ export default class extends React.Component {
     return (
       <div className="active-posters-list">
         <PageContainer>
+          <UsersNav
+            baseUrl={misago.get("USERS_LIST_URL")}
+            page={this.props.page}
+            pages={misago.get("USERS_LISTS")}
+          />
           <p className="lead ui-preview">
             <span
               className="ui-preview-text"

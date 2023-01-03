@@ -1,6 +1,5 @@
 import React from "react"
 import { connect } from "react-redux"
-import Nav from "misago/components/users/nav"
 import ActivePosters from "misago/components/users/active-posters/root"
 import Rank from "misago/components/users/rank/root"
 import WithDropdown from "misago/components/with-dropdown"
@@ -9,7 +8,6 @@ import {
   PageHeader,
   PageHeaderBanner,
   PageHeaderContainer,
-  PageHeaderDetails,
 } from "../PageHeader"
 
 export default class extends WithDropdown {
@@ -21,12 +19,6 @@ export default class extends WithDropdown {
             <PageHeaderBanner styleName="users-lists">
               <h1>{gettext("Users")}</h1>
             </PageHeaderBanner>
-            <PageHeaderDetails className="page-header-details-tabs">
-              <Nav
-                lists={misago.get("USERS_LISTS")}
-                baseUrl={misago.get("USERS_LIST_URL")}
-              />
-            </PageHeaderDetails>
           </PageHeader>
         </PageHeaderContainer>
         {this.props.children}

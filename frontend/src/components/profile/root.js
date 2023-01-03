@@ -6,7 +6,6 @@ import { Posts, Threads } from "./feed"
 import Followers from "./followers"
 import Follows from "./follows"
 import UsernameHistory from "./username-history"
-import { SideNav, CompactNav } from "./navs"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago"
 import { hydrate } from "misago/reducers/profile"
@@ -14,6 +13,7 @@ import polls from "misago/services/polls"
 import store from "misago/services/store"
 import PageContainer from "../PageContainer"
 import ProfileHeader from "./ProfileHeader"
+import ProfileNav from "./ProfileNav"
 
 export default class extends WithDropdown {
   constructor(props) {
@@ -38,6 +38,10 @@ export default class extends WithDropdown {
   render() {
     const baseUrl = misago.get("PROFILE").url
     const pages = misago.get("PROFILE_PAGES")
+    const page = pages.filter((page) => {
+      const url = baseUrl + page.component + "/"
+      return this.props.location.pathname === url
+    })[0]
     const { profile, user } = this.props
     const moderation = getModeration(profile, user)
     const message = user.acl.can_start_private_threads && profile.id !== user.id
@@ -53,16 +57,9 @@ export default class extends WithDropdown {
           follow={follow}
         />
         <PageContainer>
-          <div className="row">
-            <div className="col-md-3 hidden-sm">
-              <SideNav
-                baseUrl={baseUrl}
-                pages={pages}
-                profile={this.props.profile}
-              />
-            </div>
-            <div className="col-md-9">{this.props.children}</div>
-          </div>
+          <ProfileNav baseUrl={baseUrl} page={page} pages={pages} />
+
+          {this.props.children}
         </PageContainer>
       </div>
     )
