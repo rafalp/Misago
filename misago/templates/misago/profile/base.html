@@ -67,19 +67,12 @@
 
 {% block content %}
 <div class="page page-user-profile">
-
   {% include "misago/profile/header.html" %}
-
+  
   <div class="container page-container">
-    {% include "misago/profile/nav-sm.html" %}
-    <div class="row">
-      <div class="col-md-3 hidden-xs hidden-sm">
-        {% include "misago/profile/nav.html" %}
-      </div>
-      <div class="col-xs-12 col-md-9">
-        {% block section %}{% endblock section %}
-      </div>
-    </div>
+    {% include "misago/profile/nav.html" %}
+
+    {% block section %}{% endblock section %}
   </div>
 </div>
 {% endblock content %}

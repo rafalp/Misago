@@ -19,6 +19,11 @@ import {
 
 export default class extends WithDropdown {
   render() {
+    const page = misago.get("USER_OPTIONS").filter((page) => {
+      const url = misago.get("USERCP_URL") + page.component + "/"
+      return this.props.location.pathname.substr(0, url.length) === url
+    })[0]
+
     return (
       <div className="page page-options">
         <PageHeaderContainer>
@@ -59,8 +64,8 @@ export default class extends WithDropdown {
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <span className="material-icon">menu</span>
-                        {gettext("Menu")}
+                        <span className="material-icon">{page.icon}</span>
+                        {page.name}
                       </button>
                       <CompactNav
                         className="dropdown-menu"

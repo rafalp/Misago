@@ -1,18 +1,13 @@
 <div class="nav-container">
   <button class="btn btn-default btn-block btn-placeholder hidden-xs hidden-sm hidden-md hidden-lg" disabled>
-    <span class="material-icon">
-      {{ active_section.icon }}
-    </span>
+    <span class="material-icon">menu</span>
     {{ active_section.name }}
   </button>
-  <ul class="nav nav-pills" role="menu">
-    {% for section in sections %}
-      <li{% if section.is_active %} class="active"{% endif %}>
-        <a href="{% url section.link slug=profile.slug pk=profile.pk %}">
-          <span class="material-icon">
-            {{ section.icon }}
-          </span>
-          {{ section.name }}
+  <ul class="nav nav-pills" role="menu" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    {% for page in pages %}
+      <li{% if page.is_active %} class="active"{% endif %}>
+        <a href="{{ page.reversed_link }}">
+          {{ page.name }}
         </a>
       </li>
     {% endfor %}

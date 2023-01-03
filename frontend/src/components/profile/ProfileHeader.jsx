@@ -1,7 +1,12 @@
 import React from "react"
 import Avatar from "../avatar"
 import { FlexRow, FlexRowCol, FlexRowSection } from "../FlexRow"
-import { PageHeader, PageHeaderBanner, PageHeaderContainer, PageHeaderDetails } from "../PageHeader"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+  PageHeaderDetails,
+} from "../PageHeader"
 import FollowButton from "./follow-button"
 import MessageButton from "./message-button"
 import ModerationOptions from "./moderation/nav"
@@ -9,13 +14,36 @@ import ProfileDataList from "./ProfileDataList"
 
 const ProfileHeader = ({ profile, user, moderation, message, follow }) => (
   <PageHeaderContainer>
-    <PageHeader styleName={profile.rank.css_class ? "rank-" + profile.rank.css_class : "profile"}>
-      <PageHeaderBanner styleName={profile.rank.css_class ? "rank-" + profile.rank.css_class : "profile"}>
+    <PageHeader
+      styleName={
+        profile.rank.css_class ? "rank-" + profile.rank.css_class : "profile"
+      }
+    >
+      <PageHeaderBanner
+        styleName={
+          profile.rank.css_class ? "rank-" + profile.rank.css_class : "profile"
+        }
+      >
         <div className="profile-page-header">
           <div className="profile-page-header-avatar">
-            <Avatar className="user-avatar hidden-sm hidden-md hidden-lg" user={profile} size={200} size2x={400} />
-            <Avatar className="user-avatar hidden-xs hidden-md hidden-lg" user={profile} size={64} size2x={128} />
-            <Avatar className="user-avatar hidden-xs hidden-sm" user={profile} size={128} size2x={256} />
+            <Avatar
+              className="user-avatar hidden-sm hidden-md hidden-lg"
+              user={profile}
+              size={200}
+              size2x={400}
+            />
+            <Avatar
+              className="user-avatar hidden-xs hidden-md hidden-lg"
+              user={profile}
+              size={64}
+              size2x={128}
+            />
+            <Avatar
+              className="user-avatar hidden-xs hidden-sm"
+              user={profile}
+              size={128}
+              size2x={256}
+            />
           </div>
           <h1>{profile.username}</h1>
         </div>
@@ -93,7 +121,10 @@ const ProfileHeader = ({ profile, user, moderation, message, follow }) => (
                     <span className="material-icon">settings</span>
                     {gettext("Options")}
                   </button>
-                  <ModerationOptions profile={profile} moderation={moderation} />
+                  <ModerationOptions
+                    profile={profile}
+                    moderation={moderation}
+                  />
                 </div>
               </FlexRowCol>
             </FlexRowSection>

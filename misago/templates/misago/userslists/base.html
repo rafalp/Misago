@@ -19,17 +19,6 @@
               </div>
             </div>
           </div>
-          <div class="page-header-details page-header-details-tabs">
-            <ul class="nav nav-pills" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
-              {% for page in pages %}
-                <li{% if page.is_active %} class="active"{% endif %}>
-                  <a href="{{ page.reversed_link }}">
-                    {{ page.name }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
         </div>
       </div>
     </div>

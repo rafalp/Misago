@@ -24,7 +24,13 @@
 }
 
 .nav-pills > li > a {
+  display: flex;
+  align-items: center;
   padding: @nav-pills-padding-vertical @nav-pills-padding-horizontal;
+
+  .material-icon {
+    margin-right: 3px;
+  }
 
   &,
   &:link,
@@ -50,5 +56,21 @@
   &:active {
     background-color: @nav-pills-active-bg;
     color: @nav-pills-active-color;
+  }
+}
+
+.nav-container {
+  .btn-block {
+    margin-bottom: @line-height-computed;
+  }
+
+  .nav {
+    margin-right: floor(@line-height-computed / -2);
+    margin-bottom: floor(@line-height-computed * 1.5);
+  }
+
+  li {
+    margin-right: floor(@line-height-computed / 2);
+    margin-bottom: floor(@line-height-computed / 2);
   }
 }
