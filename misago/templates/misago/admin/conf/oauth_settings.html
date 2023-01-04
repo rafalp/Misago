@@ -1,0 +1,57 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic settings" %}</legend>
+
+    {% form_row form.enable_oauth2_client %}
+    {% form_row form.oauth2_client_id %}
+    {% form_row form.oauth2_client_secret %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Initializing login" %}</legend>
+
+    {% form_row form.oauth2_login_url %}
+    {% form_row form.oauth2_scopes %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Retrieving access token" %}</legend>
+
+    {% form_row form.oauth2_token_url %}
+    {% form_row form.oauth2_token_method %}
+    {% form_row form.oauth2_json_token_path %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Retrieving user data" %}</legend>
+
+    {% form_row form.oauth2_user_url %}
+    {% form_row form.oauth2_user_method %}
+    {% form_row form.oauth2_user_auth_location %}
+    {% form_row form.oauth2_user_auth_name %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User JSON mappings" %}</legend>
+
+    {% form_row form.oauth2_json_id_path %}
+    {% form_row form.oauth2_json_name_path %}
+    {% form_row form.oauth2_json_email_path %}
+    {% form_row form.oauth2_json_avatar_path %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

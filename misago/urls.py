@@ -15,6 +15,7 @@ urlpatterns = hooks.urlpatterns + [
     path("", include("misago.categories.urls")),
     path("", include("misago.threads.urls")),
     path("", include("misago.search.urls")),
+    path("", include("misago.oauth.urls")),
     path("", include("misago.socialauth.urls")),
     path("", include("misago.healthcheck.urls")),
     # default robots.txt

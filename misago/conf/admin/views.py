@@ -9,6 +9,7 @@ from .forms import (
     ChangeAnalyticsSettingsForm,
     ChangeCaptchaSettingsForm,
     ChangeGeneralSettingsForm,
+    ChangeOAuthSettingsForm,
     ChangeThreadsSettingsForm,
     ChangeUsersSettingsForm,
 )
@@ -73,6 +74,11 @@ class ChangeCaptchaSettingsView(ChangeSettingsView):
 class ChangeGeneralSettingsView(ChangeSettingsView):
     form_class = ChangeGeneralSettingsForm
     template_name = "misago/admin/conf/general_settings.html"
+
+
+class ChangeOAuthSettingsView(ChangeSettingsView):
+    form_class = ChangeOAuthSettingsForm
+    template_name = "misago/admin/conf/oauth_settings.html"
 
 
 class ChangeThreadsSettingsView(ChangeSettingsView):
