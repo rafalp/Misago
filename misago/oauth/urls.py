@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import oauth_start, oauth_redirect
+from .views import oauth_login, oauth_complete
 
 urlpatterns = [
-    path("oauth/start/", oauth_start, name="oauth-start"),
-    path("oauth/redirect/", oauth_redirect, name="oauth-redirect"),
+    path("oauth/login/", oauth_login, name="oauth-login"),
+    path("oauth/complete/", oauth_complete, name="oauth-complete"),
 ]

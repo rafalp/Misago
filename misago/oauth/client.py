@@ -116,7 +116,7 @@ def retrieve_user_data(request, access_token):
 
 
 def get_redirect_uri(request):
-    return request.build_absolute_uri(reverse("misago:oauth-redirect"))
+    return request.build_absolute_uri(reverse("misago:oauth-complete"))
 
 
 def get_value_from_json(path, json):
