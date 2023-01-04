@@ -88,11 +88,11 @@ def retrieve_user_data(request, access_token):
     headers = None
     user_url = request.settings.oauth2_user_url
 
-    if request.settings.oauth2_user_auth_location == "QUERY":
+    if request.settings.oauth2_user_token_location == "QUERY":
         user_url += "&" if "?" in user_url else "?"
-        user_url += urlencode({request.settings.oauth2_user_auth_name: access_token})
+        user_url += urlencode({request.settings.oauth2_user_token_name: access_token})
     else:
-        headers = {request.settings.oauth2_user_auth_name: access_token}
+        headers = {request.settings.oauth2_user_token_name: access_token}
 
     if request.settings.oauth2_user_method == "GET":
         r = requests.get(user_url, headers=headers)

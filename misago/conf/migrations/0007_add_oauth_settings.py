@@ -24,15 +24,15 @@ settings = [
     },
     {"setting": "oauth2_user_url", "is_public": False},
     {"setting": "oauth2_user_method", "dry_value": "GET", "is_public": False},
-    {"setting": "oauth2_user_auth_location", "dry_value": "HEADER", "is_public": False},
+    {"setting": "oauth2_user_token_location", "dry_value": "HEADER", "is_public": False},
     {
-        "setting": "oauth2_user_auth_name",
+        "setting": "oauth2_user_token_name",
         "dry_value": "access_token",
         "is_public": False,
     },
-    {"setting": "oauth2_json_id_path", "is_public": False},
-    {"setting": "oauth2_json_name_path", "is_public": False},
-    {"setting": "oauth2_json_email_path", "is_public": False},
+    {"setting": "oauth2_json_id_path", "dry_value": "id", "is_public": False},
+    {"setting": "oauth2_json_name_path", "dry_value": "name", "is_public": False},
+    {"setting": "oauth2_json_email_path", "dry_value": "email", "is_public": False},
     {"setting": "oauth2_json_avatar_path", "is_public": False},
 ]
 

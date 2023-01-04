@@ -1,5 +1,4 @@
-from django.contrib.auth import authenticate, get_user_model, login
-from django.http import HttpResponseRedirect
+from django.contrib.auth import get_user_model, login
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -20,7 +19,7 @@ User = get_user_model()
 
 def oauth_start(request):
     redirect_to = start_flow(request)
-    return HttpResponseRedirect(redirect_to)
+    return redirect(redirect_to)
 
 
 def oauth_redirect(request):

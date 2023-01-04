@@ -17,8 +17,8 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
         "oauth2_json_token_path",
         "oauth2_user_url",
         "oauth2_user_method",
-        "oauth2_user_auth_location",
-        "oauth2_user_auth_name",
+        "oauth2_user_token_location",
+        "oauth2_user_token_name",
         "oauth2_json_id_path",
         "oauth2_json_name_path",
         "oauth2_json_email_path",
@@ -66,7 +66,8 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
         help_text=_(
             "URL that will be called after user completes the login process "
             "and authorization code is sent back to your site. This URL "
-            "is expected to take this code and return access token."
+            "is expected to take this code and return the access token that "
+            "will be next used to retrieve user data."
         ),
         max_length=500,
         required=False,
@@ -80,13 +81,18 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
         widget=forms.RadioSelect(),
     )
     oauth2_json_token_path = forms.CharField(
-        label=_("JSON path to authorization token"),
+        label=_("JSON path to access token"),
+        help_text=_(
+            "Name of key containing the access token in JSON returned by the provider "
+            "If token is nested, use period (\".\") for path, eg: \"result.token\" "
+            "will retrieve the token from \"token\" key nested in \"result\"."
+        ),
         max_length=500,
         required=False,
     )
 
     oauth2_user_url = forms.URLField(
-        label=_("User URL"),
+        label=_("User data URL"),
         max_length=500,
         required=False,
     )
@@ -98,16 +104,16 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
-    oauth2_user_auth_location = forms.ChoiceField(
-        label=_("Authorization location"),
+    oauth2_user_token_location = forms.ChoiceField(
+        label=_("Access token location"),
         choices=[
             ("HEADER", _("HTTP header")),
             ("QUERY", _("Query string")),
         ],
         widget=forms.RadioSelect(),
     )
-    oauth2_user_auth_name = forms.CharField(
-        label=_("Authorization variable"),
+    oauth2_user_token_name = forms.CharField(
+        label=_("Access token name"),
         max_length=200,
         required=False,
     )
