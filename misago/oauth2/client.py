@@ -61,7 +61,7 @@ def exchange_code_for_token(request, code_grant):
             token_url += urlencode(data)
             r = requests.get(token_url, timeout=REQUESTS_TIMEOUT)
         else:
-            r = request.post(token_url, data=data, timeout=REQUESTS_TIMEOUT)
+            r = requests.post(token_url, data=data, timeout=REQUESTS_TIMEOUT)
     except RequestException:
         raise exceptions.OAuth2AccessTokenRequestError()
 

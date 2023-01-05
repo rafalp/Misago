@@ -15,7 +15,7 @@ def test_oauth2_login_url_is_created(dynamic_settings):
     request = Mock(
         session={},
         settings=dynamic_settings,
-        build_absolute_uri=lambda x: f"http://mysite.com{x or ''}",
+        build_absolute_uri=lambda url: f"http://mysite.com{url or ''}",
     )
 
     login_url = create_login_url(request)
