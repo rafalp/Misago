@@ -67,3 +67,7 @@ class OAuth2UserDataJSONError(OAuth2ProviderError):
     message = _(
         "OAuth2 provider did not respond with a valid JSON for user profile request."
     )
+
+
+class OAuth2UserIdNotProvidedError(OAuth2Error):
+    message = _("JSON sent by OAuth2 provider did not contain a user id.")

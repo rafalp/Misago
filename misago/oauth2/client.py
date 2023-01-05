@@ -139,7 +139,7 @@ def get_value_from_json(path, json):
         return None
 
     if "." not in path:
-        return json.get(path)
+        return str(json.get(path, "")).strip() or None
 
     data = json
     for path_part in path.split("."):
