@@ -120,6 +120,9 @@ def get_redirect_uri(request):
 
 
 def get_value_from_json(path, json):
+    if not path:
+        return None
+
     if "." not in path:
         return json.get(path)
 

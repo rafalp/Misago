@@ -18,7 +18,7 @@ def delete_sso_settings(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_conf", "0007_add_oauth_settings"),
+        ("misago_conf", "0007_add_oauth2_settings"),
     ]
 
     operations = [migrations.RunPython(delete_sso_settings)]

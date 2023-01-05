@@ -7,7 +7,7 @@ CHUNK_SIZE = 50
 
 
 def create_settings(apps, _):
-    Subject = apps.get_model("misago_oauth", "Subject")
+    Subject = apps.get_model("misago_oauth2", "Subject")
     User = apps.get_model("misago_users", "User")
 
     tz_now = timezone.now()
@@ -36,7 +36,7 @@ def create_settings(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_oauth", "0001_initial"),
+        ("misago_oauth2", "0001_initial"),
         ("misago_users", "0022_deleteduser"),
     ]
 

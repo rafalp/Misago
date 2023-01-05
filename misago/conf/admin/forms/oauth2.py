@@ -1,11 +1,12 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
+from django.utils.translation import gettext, gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
 from .base import ChangeSettingsForm
 
 
-class ChangeOAuthSettingsForm(ChangeSettingsForm):
+class ChangeOAuth2SettingsForm(ChangeSettingsForm):
     settings = [
         "enable_oauth2_client",
         "oauth2_client_id",
@@ -26,9 +27,9 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
     ]
 
     enable_oauth2_client = YesNoSwitch(
-        label=_("Enable OAuth Client"),
+        label=_("Enable OAuth2 client"),
         help_text=_(
-            "Enabling OAuth client will make login option redirect users to the OAuth provider "
+            "Enabling OAuth2 will make login option redirect users to the OAuth provider "
             "configured below. It will also disable option to register on forum, "
             "change username, email or password, as those features will be delegated "
             "to the 3rd party site."
@@ -84,8 +85,8 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
         label=_("JSON path to access token"),
         help_text=_(
             "Name of key containing the access token in JSON returned by the provider "
-            "If token is nested, use period (\".\") for path, eg: \"result.token\" "
-            "will retrieve the token from \"token\" key nested in \"result\"."
+            'If token is nested, use period (".") for path, eg: "result.token" '
+            'will retrieve the token from "token" key nested in "result".'
         ),
         max_length=500,
         required=False,
@@ -134,18 +135,41 @@ class ChangeOAuthSettingsForm(ChangeSettingsForm):
         required=False,
     )
     oauth2_json_avatar_path = forms.CharField(
-        label=_("User avatar path"),
+        label=_("User avatar URL path"),
+        help_text=_("Optional, leave empty to don't download avatar from provider."),
         max_length=200,
         required=False,
     )
 
-    def clean_scopes(self):
+    def clean_oauth2_scopes(self):
+        # Remove duplicates and extra spaces
         scopes = set(
             [
-                scope.trim()
-                for scope in self.cleaned_data["scopes"].split(" ")
-                if scope.trim()
+                scope.strip()
+                for scope in self.cleaned_data["oauth2_scopes"].split()
+                if scope.strip()
             ]
         )
 
         return " ".join(scopes) or None
+
+    def clean(self):
+        data = super().clean()
+
+        if not data.get("enable_oauth2_client"):
+            return data
+
+        required_data = [data[key] for key in data if key != "oauth2_json_avatar_path"]
+
+        if not all(required_data):
+            data["enable_oauth2_client"] = False
+
+            messages.error(
+                self.request,
+                gettext(
+                    "You need to complete the configuration before you will be able to "
+                    "enable OAuth 2 on your site."
+                ),
+            )
+
+        return data

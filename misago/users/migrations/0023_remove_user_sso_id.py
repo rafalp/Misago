@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("misago_users", "0022_deleteduser"),
-        ("misago_oauth", "0002_copy_sso_subjects"),
+        ("misago_oauth2", "0002_copy_sso_subjects"),
     ]
 
     operations = [

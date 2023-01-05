@@ -6,7 +6,7 @@ from .views import (
     ChangeAnalyticsSettingsView,
     ChangeCaptchaSettingsView,
     ChangeGeneralSettingsView,
-    ChangeOAuthSettingsView,
+    ChangeOAuth2SettingsView,
     ChangeThreadsSettingsView,
     ChangeUsersSettingsView,
 )
@@ -31,7 +31,7 @@ class MisagoAdminExtension:
             "general/", "general", "settings", ChangeGeneralSettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            "oauth/", "oauth", "settings", ChangeOAuthSettingsView.as_view()
+            "oauth2/", "oauth2", "settings", ChangeOAuth2SettingsView.as_view()
         )
         urlpatterns.single_pattern(
             "threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
@@ -87,11 +87,11 @@ class MisagoAdminExtension:
             after="analytics:index",
         )
         site.add_node(
-            name=_("OAuth"),
+            name=_("OAuth2"),
             description=_(
-                "Enable OAuth client and connect your site to existing auth provider."
+                "Enable OAuth2 client and connect your site to existing auth provider."
             ),
             parent="settings",
-            namespace="oauth",
+            namespace="oauth2",
             after="threads:index",
         )

@@ -17,12 +17,12 @@ from .models import Subject
 User = get_user_model()
 
 
-def oauth_login(request):
+def oauth2_login(request):
     redirect_to = start_flow(request)
     return redirect(redirect_to)
 
 
-def oauth_complete(request):
+def oauth2_complete(request):
     code = receive_code(request)
     token = exchange_code_for_token(request, code)
     user_data = retrieve_user_data(request, token)

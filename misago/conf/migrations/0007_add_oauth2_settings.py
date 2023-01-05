@@ -24,7 +24,11 @@ settings = [
     },
     {"setting": "oauth2_user_url", "is_public": False},
     {"setting": "oauth2_user_method", "dry_value": "GET", "is_public": False},
-    {"setting": "oauth2_user_token_location", "dry_value": "HEADER", "is_public": False},
+    {
+        "setting": "oauth2_user_token_location",
+        "dry_value": "HEADER",
+        "is_public": False,
+    },
     {
         "setting": "oauth2_user_token_name",
         "dry_value": "access_token",
