@@ -3,6 +3,9 @@ from urllib.parse import urlencode
 import requests
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from requests.exceptions import RequestException
+
+from . import exceptions
 
 SESSION_STATE = "oauth2_state"
 STATE_LENGTH = 40
@@ -24,50 +27,53 @@ def create_login_url(request):
     return "%s?%s" % (request.settings.oauth2_login_url, urlencode(quote))
 
 
-def receive_code(request):
-    state = request.session.pop(SESSION_STATE, None)
-    if not state:
-        raise ValueError("'state' is missing from Misago session")
+def receive_code_grant(request):
+    session_state = request.session.pop(SESSION_STATE, None)
+    if not session_state:
+        raise exceptions.OAuth2StateNotSetError()
 
-    redirect_state = request.GET.get("state")
-    if not redirect_state:
-        raise ValueError("'state' is missing from redirect URL")
-    if redirect_state != state:
-        raise ValueError("'state' is different from one in session")
+    provider_state = request.GET.get("state")
+    if not provider_state:
+        raise exceptions.OAuth2StateNotProvidedError()
+    if provider_state != session_state:
+        raise exceptions.OAuth2StateMismatchError()
 
-    redirect_code = request.GET.get("code")
-    if not redirect_code:
-        raise ValueError("'code' is missing from redirect URL")
+    code_grant = request.GET.get("code")
+    if not code_grant:
+        raise exceptions.OAuth2CodeNotProvidedError()
 
-    return redirect_code
+    return code_grant
 
 
-def exchange_code_for_token(request, code):
+def exchange_code_for_token(request, code_grant):
     token_url = request.settings.oauth2_token_url
     data = {
         "grant_type": "authorization_code",
         "client_id": request.settings.oauth2_client_id,
         "client_secret": request.settings.oauth2_client_secret,
         "redirect_uri": get_redirect_uri(request),
-        "code": code,
+        "code": code_grant,
     }
 
-    if request.settings.oauth2_token_method == "GET":
-        token_url += "&" if "?" in token_url else "?"
-        token_url += urlencode(data)
-        r = requests.get(token_url, timeout=REQUESTS_TIMEOUT)
-    else:
-        r = request.post(token_url, data=data, timeout=REQUESTS_TIMEOUT)
+    try:
+        if request.settings.oauth2_token_method == "GET":
+            token_url += "&" if "?" in token_url else "?"
+            token_url += urlencode(data)
+            r = requests.get(token_url, timeout=REQUESTS_TIMEOUT)
+        else:
+            r = request.post(token_url, data=data, timeout=REQUESTS_TIMEOUT)
+    except RequestException:
+        raise exceptions.OAuth2AccessTokenRequestError()
 
     if r.status_code != 200:
-        raise ValueError(
-            f"Failed to exchange code for token: '{r.content}' ({r.status_code})"
-        )
+        raise exceptions.OAuth2AccessTokenResponseError()
 
     try:
         response_json = r.json()
+        if not isinstance(response_json, dict):
+            raise TypeError()
     except (ValueError, TypeError):
-        raise ValueError(f"Could not parse response as JSON: '{r.content}'")
+        raise exceptions.OAuth2AccessTokenJSONError()
 
     access_token = get_value_from_json(
         request.settings.oauth2_json_token_path,
@@ -75,7 +81,7 @@ def exchange_code_for_token(request, code):
     )
 
     if not access_token:
-        raise ValueError(f"Could not find access token in the response: '{r.content}'")
+        raise exceptions.OAuth2AccessTokenNotProvidedError()
 
     return access_token
 
@@ -100,20 +106,23 @@ def retrieve_user_data(request, access_token):
     else:
         headers = {request.settings.oauth2_user_token_name: access_token}
 
-    if request.settings.oauth2_user_method == "GET":
-        r = requests.get(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
-    else:
-        r = requests.post(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
+    try:
+        if request.settings.oauth2_user_method == "GET":
+            r = requests.get(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
+        else:
+            r = requests.post(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
+    except RequestException:
+        raise exceptions.OAuth2UserProfileRequestError()
 
     if r.status_code != 200:
-        raise ValueError(
-            f"Failed to retrieve user data: '{r.content}' ({r.status_code})"
-        )
+        raise exceptions.OAuth2UserProfileResponseError()
 
     try:
         response_json = r.json()
+        if not isinstance(response_json, dict):
+            raise TypeError()
     except (ValueError, TypeError):
-        raise ValueError(f"Could not parse response as JSON: '{r.content}'")
+        raise exceptions.OAuth2UserProfileJSONError()
 
     return {
         key: get_value_from_json(getattr(request.settings, setting), response_json)

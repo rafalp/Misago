@@ -1,0 +1,56 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% blocktrans trimmed with provider=settings.oauth2_provider %}
+Could not sign in with {{ provider }}
+{% endblocktrans %} | {{ block.super }}{% endblock %}
+
+
+{% block meta-description %}{{ message }}{% endblock %}
+
+
+{% block og-title %}{% blocktrans trimmed with provider=settings.oauth2_provider %}
+Could not sign in with {{ provider }}
+{% endblocktrans %}{% endblock %}
+{% block twitter-title %}{% blocktrans trimmed with provider=settings.oauth2_provider %}
+Could not sign in with {{ provider }}
+{% endblocktrans %}{% endblock %}
+
+
+{% block og-description %}{{ message }}{% endblock %}
+{% block twitter-description %}{{ message }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-error page-error-social">
+  <div class="container page-container">
+    <div class="message-panel">
+
+      <div class="message-icon">
+        <span class="material-icon">sync_problem</span>
+      </div>
+
+      <div class="message-body">
+          <p class="lead">
+            {% blocktrans trimmed with provider=settings.oauth2_provider %}
+              Could not sign in with {{ provider }}
+            {% endblocktrans %}
+          </p>
+          {% if error.message %}
+            <p>{{ error.message }}</p>
+          {% endif %}
+          {% if error.recoverable %}
+            <p>
+              {% trans "Please try again." %}
+            </p>
+            <p>
+              <a class="btn btn-primary" href="{% url 'misago:oauth2-login' %}">{% trans "Sign in" %}</a>
+            </p>
+          {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

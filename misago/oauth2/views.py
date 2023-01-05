@@ -1,8 +1,9 @@
 from functools import wraps
+from logging import getLogger
 
 from django.contrib.auth import get_user_model, login
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -14,10 +15,13 @@ from ..users.setupnewuser import setup_new_user
 from .client import (
     create_login_url,
     exchange_code_for_token,
-    receive_code,
+    receive_code_grant,
     retrieve_user_data,
 )
+from .exceptions import OAuth2Error
 from .models import Subject
+
+logger = getLogger("misago.oauth2")
 
 User = get_user_model()
 
@@ -44,9 +48,13 @@ def oauth2_login(request):
 
 @oauth2_view
 def oauth2_complete(request):
-    code = receive_code(request)
-    token = exchange_code_for_token(request, code)
-    user_data = retrieve_user_data(request, token)
+    try:
+        code_grant = receive_code_grant(request)
+        token = exchange_code_for_token(request, code_grant)
+        user_data = retrieve_user_data(request, token)
+    except OAuth2Error as error:
+        logger.exception("OAuth2 Error")
+        return render(request, "misago/errorpages/oauth2.html", {"error": error})
 
     if user_data["name"]:
         user_data["name"] = convert_name(user_data["id"], user_data["name"])
