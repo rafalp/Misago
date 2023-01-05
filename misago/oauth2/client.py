@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 
 SESSION_STATE = "oauth2_state"
 STATE_LENGTH = 40
+REQUESTS_TIMEOUT = 30
 
 
 def create_login_url(request):
@@ -54,9 +55,9 @@ def exchange_code_for_token(request, code):
     if request.settings.oauth2_token_method == "GET":
         token_url += "&" if "?" in token_url else "?"
         token_url += urlencode(data)
-        r = requests.get(token_url)
+        r = requests.get(token_url, timeout=REQUESTS_TIMEOUT)
     else:
-        r = request.post(token_url, data=data)
+        r = request.post(token_url, data=data, timeout=REQUESTS_TIMEOUT)
 
     if r.status_code != 200:
         raise ValueError(
@@ -100,9 +101,9 @@ def retrieve_user_data(request, access_token):
         headers = {request.settings.oauth2_user_token_name: access_token}
 
     if request.settings.oauth2_user_method == "GET":
-        r = requests.get(user_url, headers=headers)
+        r = requests.get(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
     else:
-        r = requests.post(user_url, headers=headers)
+        r = requests.post(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
 
     if r.status_code != 200:
         raise ValueError(

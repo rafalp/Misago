@@ -1,10 +1,14 @@
+from functools import wraps
+
 from django.contrib.auth import get_user_model, login
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
 from unidecode import unidecode
 
+from ..users.decorators import deny_banned_ips
 from ..users.registration import send_welcome_email
 from ..users.setupnewuser import setup_new_user
 from .client import (
@@ -18,18 +22,28 @@ from .models import Subject
 User = get_user_model()
 
 
-def oauth2_login(request):
-    if not request.settings.enable_oauth2_client:
-        raise Http404()
+def oauth2_view(f):
+    f = deny_banned_ips(f)
 
+    @wraps(f)
+    @never_cache
+    def wrapped_oauth2_view(request):
+        if not request.settings.enable_oauth2_client:
+            raise Http404()
+
+        return f(request)
+
+    return wrapped_oauth2_view
+
+
+@oauth2_view
+def oauth2_login(request):
     redirect_to = create_login_url(request)
     return redirect(redirect_to)
 
 
+@oauth2_view
 def oauth2_complete(request):
-    if not request.settings.enable_oauth2_client:
-        raise Http404()
-
     code = receive_code(request)
     token = exchange_code_for_token(request, code)
     user_data = retrieve_user_data(request, token)
