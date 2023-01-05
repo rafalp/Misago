@@ -142,16 +142,14 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
     )
 
     def clean_oauth2_scopes(self):
-        # Remove duplicates and extra spaces
-        scopes = set(
-            [
-                scope.strip()
-                for scope in self.cleaned_data["oauth2_scopes"].split()
-                if scope.strip()
-            ]
-        )
+        # Remove duplicates and extra spaces, keep order of scopes
+        clean_scopes = []
+        for scope in self.cleaned_data["oauth2_scopes"].split():
+            scope = scope.strip()
+            if scope and scope not in clean_scopes:
+                clean_scopes.append(scope)
 
-        return " ".join(scopes) or None
+        return " ".join(clean_scopes) or None
 
     def clean(self):
         data = super().clean()

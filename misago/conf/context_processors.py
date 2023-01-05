@@ -37,11 +37,19 @@ def og_image(request):
 def preload_settings_json(request):
     preloaded_settings = request.settings.get_public_settings()
 
+    delegate_auth = request.settings.enable_oauth2_client
+
+    if request.settings.enable_oauth2_client:
+        login_url = reverse("misago:oauth2-login")
+    else:
+        login_url = reverse(settings.LOGIN_URL)
+
     preloaded_settings.update(
         {
+            "DELEGATE_AUTH": delegate_auth,
             "LOGIN_API_URL": settings.MISAGO_LOGIN_API_URL,
             "LOGIN_REDIRECT_URL": reverse(settings.LOGIN_REDIRECT_URL),
-            "LOGIN_URL": reverse(settings.LOGIN_URL),
+            "LOGIN_URL": login_url,
             "LOGOUT_URL": reverse(settings.LOGOUT_URL),
         }
     )
@@ -52,7 +60,9 @@ def preload_settings_json(request):
                 request.settings.blank_avatar or static(settings.MISAGO_BLANK_AVATAR)
             ),
             "CSRF_COOKIE_NAME": settings.CSRF_COOKIE_NAME,
-            "ENABLE_DELETE_OWN_ACCOUNT": request.settings.allow_delete_own_account,
+            "ENABLE_DELETE_OWN_ACCOUNT": (
+                not delegate_auth and request.settings.allow_delete_own_account
+            ),
             "ENABLE_DOWNLOAD_OWN_DATA": request.settings.allow_data_downloads,
             "MISAGO_PATH": reverse("misago:index"),
             "SETTINGS": preloaded_settings,
