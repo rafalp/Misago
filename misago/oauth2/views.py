@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, login
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -7,10 +8,10 @@ from unidecode import unidecode
 from ..users.registration import send_welcome_email
 from ..users.setupnewuser import setup_new_user
 from .client import (
+    create_login_url,
     exchange_code_for_token,
     receive_code,
     retrieve_user_data,
-    start_flow,
 )
 from .models import Subject
 
@@ -18,11 +19,17 @@ User = get_user_model()
 
 
 def oauth2_login(request):
-    redirect_to = start_flow(request)
+    if not request.settings.enable_oauth2_client:
+        raise Http404()
+
+    redirect_to = create_login_url(request)
     return redirect(redirect_to)
 
 
 def oauth2_complete(request):
+    if not request.settings.enable_oauth2_client:
+        raise Http404()
+
     code = receive_code(request)
     token = exchange_code_for_token(request, code)
     user_data = retrieve_user_data(request, token)

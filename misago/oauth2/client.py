@@ -4,10 +4,13 @@ import requests
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 
+SESSION_STATE = "oauth2_state"
+STATE_LENGTH = 40
 
-def start_flow(request):
-    state = get_random_string(20)
-    request.session["oauth_state"] = state
+
+def create_login_url(request):
+    state = get_random_string(STATE_LENGTH)
+    request.session[SESSION_STATE] = state
 
     quote = {
         "response_type": "code",
@@ -21,7 +24,7 @@ def start_flow(request):
 
 
 def receive_code(request):
-    state = request.session.pop("oauth_state", None)
+    state = request.session.pop(SESSION_STATE, None)
     if not state:
         raise ValueError("'state' is missing from Misago session")
 
@@ -116,7 +119,7 @@ def retrieve_user_data(request, access_token):
 
 
 def get_redirect_uri(request):
-    return request.build_absolute_uri(reverse("misago:oauth-complete"))
+    return request.build_absolute_uri(reverse("misago:oauth2-complete"))
 
 
 def get_value_from_json(path, json):
