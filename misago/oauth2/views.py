@@ -14,9 +14,9 @@ from ..users.registration import send_welcome_email
 from ..users.setupnewuser import setup_new_user
 from .client import (
     create_login_url,
-    exchange_code_for_token,
-    receive_code_grant,
-    retrieve_user_data,
+    get_access_token,
+    get_code_grant,
+    get_user_data,
 )
 from .exceptions import OAuth2Error
 from .models import Subject
@@ -49,9 +49,9 @@ def oauth2_login(request):
 @oauth2_view
 def oauth2_complete(request):
     try:
-        code_grant = receive_code_grant(request)
-        token = exchange_code_for_token(request, code_grant)
-        user_data = retrieve_user_data(request, token)
+        code_grant = get_code_grant(request)
+        token = get_access_token(request, code_grant)
+        user_data = get_user_data(request, token)
     except OAuth2Error as error:
         logger.exception("OAuth2 Error")
         return render(request, "misago/errorpages/oauth2.html", {"error": error})

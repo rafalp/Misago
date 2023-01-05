@@ -5,7 +5,7 @@ from requests.exceptions import Timeout
 
 from ...conf.test import override_dynamic_settings
 from .. import exceptions
-from ..client import REQUESTS_TIMEOUT, exchange_code_for_token
+from ..client import REQUESTS_TIMEOUT, get_access_token
 
 ACCESS_TOKEN = "acc3ss-t0k3n"
 CODE_GRANT = "valid-code"
@@ -39,7 +39,7 @@ def test_access_token_is_returned_using_get_request(mock_request):
     )
 
     with patch("requests.get", get_mock):
-        assert exchange_code_for_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
+        assert get_access_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
 
         get_mock.assert_called_once_with(
             (
@@ -61,7 +61,7 @@ def test_access_token_is_returned_using_get_request(mock_request):
     oauth2_token_url="https://example.com/oauth2/token?exchange=1",
     oauth2_token_method="GET",
 )
-def test_access_token_exchange_get_request_url_respects_existing_querystring(
+def test_access_token_get_request_url_respects_existing_querystring(
     mock_request,
 ):
     get_mock = Mock(
@@ -76,7 +76,7 @@ def test_access_token_exchange_get_request_url_respects_existing_querystring(
     )
 
     with patch("requests.get", get_mock):
-        assert exchange_code_for_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
+        assert get_access_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
 
         get_mock.assert_called_once_with(
             (
@@ -111,7 +111,7 @@ def test_access_token_is_returned_using_post_request(mock_request):
     )
 
     with patch("requests.post", post_mock):
-        assert exchange_code_for_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
+        assert get_access_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
 
         post_mock.assert_called_once_with(
             "https://example.com/oauth2/token",
@@ -151,7 +151,7 @@ def test_access_token_is_extracted_from_json(mock_request):
     )
 
     with patch("requests.post", post_mock):
-        assert exchange_code_for_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
+        assert get_access_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
 
         post_mock.assert_called_once()
 
@@ -168,7 +168,7 @@ def test_exception_is_raised_if_access_token_request_times_out(mock_request):
 
     with patch("requests.post", post_mock):
         with pytest.raises(exceptions.OAuth2AccessTokenRequestError):
-            exchange_code_for_token(mock_request, CODE_GRANT)
+            get_access_token(mock_request, CODE_GRANT)
 
         post_mock.assert_called_once()
 
@@ -189,7 +189,7 @@ def test_exception_is_raised_if_access_token_request_response_is_not_200(mock_re
 
     with patch("requests.post", post_mock):
         with pytest.raises(exceptions.OAuth2AccessTokenResponseError):
-            exchange_code_for_token(mock_request, CODE_GRANT)
+            get_access_token(mock_request, CODE_GRANT)
 
         post_mock.assert_called_once()
 
@@ -213,7 +213,7 @@ def test_exception_is_raised_if_access_token_request_response_is_not_json(mock_r
 
     with patch("requests.post", post_mock):
         with pytest.raises(exceptions.OAuth2AccessTokenJSONError):
-            exchange_code_for_token(mock_request, CODE_GRANT)
+            get_access_token(mock_request, CODE_GRANT)
 
         post_mock.assert_called_once()
 
@@ -239,7 +239,7 @@ def test_exception_is_raised_if_access_token_request_response_json_is_not_object
 
     with patch("requests.post", post_mock):
         with pytest.raises(exceptions.OAuth2AccessTokenJSONError):
-            exchange_code_for_token(mock_request, CODE_GRANT)
+            get_access_token(mock_request, CODE_GRANT)
 
         post_mock.assert_called_once()
 
@@ -267,6 +267,6 @@ def test_exception_is_raised_if_access_token_request_response_json_misses_token(
 
     with patch("requests.post", post_mock):
         with pytest.raises(exceptions.OAuth2AccessTokenNotProvidedError):
-            exchange_code_for_token(mock_request, CODE_GRANT)
+            get_access_token(mock_request, CODE_GRANT)
 
         post_mock.assert_called_once()

@@ -27,7 +27,7 @@ def create_login_url(request):
     return "%s?%s" % (request.settings.oauth2_login_url, urlencode(quote))
 
 
-def receive_code_grant(request):
+def get_code_grant(request):
     session_state = request.session.pop(SESSION_STATE, None)
     if not session_state:
         raise exceptions.OAuth2StateNotSetError()
@@ -45,7 +45,7 @@ def receive_code_grant(request):
     return code_grant
 
 
-def exchange_code_for_token(request, code_grant):
+def get_access_token(request, code_grant):
     token_url = request.settings.oauth2_token_url
     data = {
         "grant_type": "authorization_code",
@@ -94,7 +94,7 @@ JSON_MAPPING = {
 }
 
 
-def retrieve_user_data(request, access_token):
+def get_user_data(request, access_token):
     headers = None
     user_url = request.settings.oauth2_user_url
 
