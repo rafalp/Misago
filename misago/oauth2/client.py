@@ -112,17 +112,17 @@ def get_user_data(request, access_token):
         else:
             r = requests.post(user_url, headers=headers, timeout=REQUESTS_TIMEOUT)
     except RequestException:
-        raise exceptions.OAuth2UserProfileRequestError()
+        raise exceptions.OAuth2UserDataRequestError()
 
     if r.status_code != 200:
-        raise exceptions.OAuth2UserProfileResponseError()
+        raise exceptions.OAuth2UserDataResponseError()
 
     try:
         response_json = r.json()
         if not isinstance(response_json, dict):
             raise TypeError()
     except (ValueError, TypeError):
-        raise exceptions.OAuth2UserProfileJSONError()
+        raise exceptions.OAuth2UserDataJSONError()
 
     return {
         key: get_value_from_json(getattr(request.settings, setting), response_json)

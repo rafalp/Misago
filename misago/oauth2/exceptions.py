@@ -55,15 +55,15 @@ class OAuth2AccessTokenNotProvidedError(OAuth2ProviderError):
     message = _("JSON sent by OAuth2 provider did not contain an access token.")
 
 
-class OAuth2UserProfileRequestError(OAuth2ProviderError):
+class OAuth2UserDataRequestError(OAuth2ProviderError):
     message = _("Failed to connect to OAuth2 provider to retrieve user profile.")
 
 
-class OAuth2UserProfileResponseError(OAuth2ProviderError):
+class OAuth2UserDataResponseError(OAuth2ProviderError):
     message = _("OAuth2 provider responded with error for user profile request.")
 
 
-class OAuth2UserProfileJSONError(OAuth2ProviderError):
+class OAuth2UserDataJSONError(OAuth2ProviderError):
     message = _(
         "OAuth2 provider did not respond with a valid JSON for user profile request."
     )

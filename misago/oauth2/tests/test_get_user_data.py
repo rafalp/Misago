@@ -1,6 +1,7 @@
 from unittest.mock import Mock, patch
 
 import pytest
+from requests.exceptions import Timeout
 
 from ...conf.test import override_dynamic_settings
 from .. import exceptions
@@ -11,14 +12,10 @@ ACCESS_TOKEN = "acc3ss-t0k3n"
 
 @pytest.fixture
 def mock_request(dynamic_settings):
-    return Mock(
-        settings=dynamic_settings,
-        build_absolute_uri=lambda url: f"http://mysite.com{url or ''}",
-    )
+    return Mock(settings=dynamic_settings)
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/user",
     oauth2_user_method="GET",
     oauth2_user_token_name="atoken",
@@ -58,7 +55,6 @@ def test_user_data_is_returned_using_get_request_with_token_in_query_string(
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/user",
     oauth2_user_method="GET",
     oauth2_user_token_name="Authentication",
@@ -96,7 +92,6 @@ def test_user_data_is_returned_using_get_request_with_token_in_header(mock_reque
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/user",
     oauth2_user_method="GET",
     oauth2_user_token_name="Authentication",
@@ -136,7 +131,6 @@ def test_user_data_is_returned_using_get_request_with_bearer_token_in_header(
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/user",
     oauth2_user_method="POST",
     oauth2_user_token_name="atoken",
@@ -176,7 +170,6 @@ def test_user_data_is_returned_using_post_request_with_token_in_query_string(
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/user",
     oauth2_user_method="POST",
     oauth2_user_token_name="Authentication",
@@ -214,7 +207,6 @@ def test_user_data_is_returned_using_post_request_with_token_in_header(mock_requ
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/user",
     oauth2_user_method="POST",
     oauth2_user_token_name="Authentication",
@@ -254,7 +246,6 @@ def test_user_data_is_returned_using_post_request_with_bearer_token_in_header(
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/data?type=user",
     oauth2_user_method="GET",
     oauth2_user_token_name="atoken",
@@ -294,7 +285,6 @@ def test_user_data_request_with_token_in_url_respects_existing_querystring(
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/data?type=user",
     oauth2_user_method="GET",
     oauth2_user_token_name="atoken",
@@ -341,7 +331,6 @@ def test_user_data_json_values_are_mapped_to_result(mock_request):
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_user_url="https://example.com/oauth2/data?type=user",
     oauth2_user_method="GET",
     oauth2_user_token_name="atoken",
@@ -385,3 +374,87 @@ def test_user_data_skips_avatar_if_path_is_not_set(mock_request):
             headers=None,
             timeout=REQUESTS_TIMEOUT,
         )
+
+
+@override_dynamic_settings(
+    oauth2_user_url="https://example.com/oauth2/data",
+    oauth2_user_method="POST",
+    oauth2_user_token_name="atoken",
+    oauth2_user_token_location="QUERY",
+)
+def test_exception_is_raised_if_user_data_request_times_out(mock_request):
+    post_mock = Mock(side_effect=Timeout())
+
+    with patch("requests.post", post_mock):
+        with pytest.raises(exceptions.OAuth2UserDataRequestError):
+            get_user_data(mock_request, ACCESS_TOKEN)
+
+        post_mock.assert_called_once()
+
+
+@override_dynamic_settings(
+    oauth2_user_url="https://example.com/oauth2/data",
+    oauth2_user_method="POST",
+    oauth2_user_token_name="atoken",
+    oauth2_user_token_location="QUERY",
+)
+def test_exception_is_raised_if_user_data_request_response_is_not_200(mock_request):
+    post_mock = Mock(
+        return_value=Mock(
+            status_code=400,
+        ),
+    )
+
+    with patch("requests.post", post_mock):
+        with pytest.raises(exceptions.OAuth2UserDataResponseError):
+            get_user_data(mock_request, ACCESS_TOKEN)
+
+        post_mock.assert_called_once()
+
+
+@override_dynamic_settings(
+    oauth2_user_url="https://example.com/oauth2/data",
+    oauth2_user_method="POST",
+    oauth2_user_token_name="atoken",
+    oauth2_user_token_location="QUERY",
+)
+def test_exception_is_raised_if_user_data_request_response_is_not_json(mock_request):
+    post_mock = Mock(
+        return_value=Mock(
+            status_code=200,
+            json=Mock(
+                side_effect=ValueError(),
+            ),
+        ),
+    )
+
+    with patch("requests.post", post_mock):
+        with pytest.raises(exceptions.OAuth2UserDataJSONError):
+            get_user_data(mock_request, ACCESS_TOKEN)
+
+        post_mock.assert_called_once()
+
+
+@override_dynamic_settings(
+    oauth2_user_url="https://example.com/oauth2/data",
+    oauth2_user_method="POST",
+    oauth2_user_token_name="atoken",
+    oauth2_user_token_location="QUERY",
+)
+def test_exception_is_raised_if_user_data_request_response_json_is_not_object(
+    mock_request,
+):
+    post_mock = Mock(
+        return_value=Mock(
+            status_code=200,
+            json=Mock(
+                return_value=["json", "list"],
+            ),
+        ),
+    )
+
+    with patch("requests.post", post_mock):
+        with pytest.raises(exceptions.OAuth2UserDataJSONError):
+            get_user_data(mock_request, ACCESS_TOKEN)
+
+        post_mock.assert_called_once()

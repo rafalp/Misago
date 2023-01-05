@@ -20,7 +20,6 @@ def mock_request(dynamic_settings):
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -55,7 +54,6 @@ def test_access_token_is_returned_using_get_request(mock_request):
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token?exchange=1",
@@ -92,7 +90,6 @@ def test_access_token_get_request_url_respects_existing_querystring(
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -127,7 +124,6 @@ def test_access_token_is_returned_using_post_request(mock_request):
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -157,7 +153,6 @@ def test_access_token_is_extracted_from_json(mock_request):
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -174,7 +169,6 @@ def test_exception_is_raised_if_access_token_request_times_out(mock_request):
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -195,7 +189,6 @@ def test_exception_is_raised_if_access_token_request_response_is_not_200(mock_re
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -219,7 +212,6 @@ def test_exception_is_raised_if_access_token_request_response_is_not_json(mock_r
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
@@ -245,7 +237,6 @@ def test_exception_is_raised_if_access_token_request_response_json_is_not_object
 
 
 @override_dynamic_settings(
-    enable_oauth2_client=True,
     oauth2_client_id="clientid123",
     oauth2_client_secret="secr3t",
     oauth2_token_url="https://example.com/oauth2/token",
