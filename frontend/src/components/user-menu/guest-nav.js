@@ -31,7 +31,7 @@ export class GuestMenu extends React.Component {
             <div className="row">
               <div className="col-xs-12">
                 <a
-                  className="btn btn-primary btn-register btn-block"
+                  className="btn btn-default btn-sign-in btn-block"
                   href={misago.get("SETTINGS").LOGIN_URL}
                 >
                   {gettext("Sign in")}

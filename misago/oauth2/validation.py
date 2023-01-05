@@ -44,7 +44,11 @@ def filter_name(user, name):
 
     clean_name_root = clean_name
     while True:
-        db_user = User.objects.get_by_username(clean_name)
+        try:
+            db_user = User.objects.get_by_username(clean_name)
+        except User.DoesNotExist:
+            return clean_name
+
         if not user or user.pk != db_user.pk:
             clean_name = f"{clean_name_root}_{get_random_string(4)}"
         else:
