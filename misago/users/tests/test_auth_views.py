@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
+
 
 class AuthViewsTests(TestCase):
     def test_auth_views_return_302(self):
@@ -84,3 +86,12 @@ class AuthViewsTests(TestCase):
 
         user_json = response.json()
         self.assertIsNone(user_json["id"])
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_login_view_returns_403_if_oauth_is_enabled(db, client):
+    response = client.get(reverse("misago:login"))
+    assert response.status_code == 403

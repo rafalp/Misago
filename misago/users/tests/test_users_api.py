@@ -545,6 +545,23 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_deleting_account)
 
 
+@override_dynamic_settings(
+    allow_delete_own_account=True,
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_delete_own_account_api_returns_403_if_oauth_is_enabled(
+    user, user_password, user_client
+):
+    response = user_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": user.pk}),
+        {
+            "password": user_password,
+        },
+    )
+    assert response.status_code == 403
+
+
 class UserDeleteTests(AuthenticatedUserTestCase):
     """tests for user delete RPC (POST to /api/users/1/delete/)"""
 

@@ -9,6 +9,7 @@ from .base import ChangeSettingsForm
 class ChangeOAuth2SettingsForm(ChangeSettingsForm):
     settings = [
         "enable_oauth2_client",
+        "oauth2_provider",
         "oauth2_client_id",
         "oauth2_client_secret",
         "oauth2_scopes",
@@ -34,6 +35,12 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
             "change username, email or password, as those features will be delegated "
             "to the 3rd party site."
         ),
+    )
+    oauth2_provider = forms.CharField(
+        label=_("Provider name"),
+        help_text=_("Name of the OAuth 2 provider to be displayed by interface."),
+        max_length=255,
+        required=False,
     )
     oauth2_client_id = forms.CharField(
         label=_("Client ID"),
@@ -108,8 +115,9 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
     oauth2_user_token_location = forms.ChoiceField(
         label=_("Access token location"),
         choices=[
-            ("HEADER", _("HTTP header")),
             ("QUERY", _("Query string")),
+            ("HEADER", _("HTTP header")),
+            ("HEADER_BEARER", _("HTTP header (Bearer)")),
         ],
         widget=forms.RadioSelect(),
     )

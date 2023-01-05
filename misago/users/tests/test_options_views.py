@@ -55,6 +55,14 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertEqual(self.user.email, "n3w@email.com")
 
+    @override_dynamic_settings(
+        enable_oauth2_client=True,
+        oauth2_provider="Lorem",
+    )
+    def test_change_email_view_returns_403_if_oauth_is_enabled(self):
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
+
 
 class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
     def setUp(self):
@@ -94,3 +102,11 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertFalse(self.user.check_password(self.USER_PASSWORD))
         self.assertTrue(self.user.check_password("n3wp4ssword"))
+
+    @override_dynamic_settings(
+        enable_oauth2_client=True,
+        oauth2_provider="Lorem",
+    )
+    def test_change_password_view_returns_403_if_oauth_is_enabled(self):
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)

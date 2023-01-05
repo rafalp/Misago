@@ -11,6 +11,7 @@ settings = [
         "dry_value": False,
         "is_public": True,
     },
+    {"setting": "oauth2_provider", "is_public": True},
     {"setting": "oauth2_client_id", "is_public": False},
     {"setting": "oauth2_client_secret", "is_public": False},
     {"setting": "oauth2_scopes", "is_public": False},
@@ -26,7 +27,7 @@ settings = [
     {"setting": "oauth2_user_method", "dry_value": "GET", "is_public": False},
     {
         "setting": "oauth2_user_token_location",
-        "dry_value": "HEADER",
+        "dry_value": "QUERY",
         "is_public": False,
     },
     {

@@ -1,5 +1,6 @@
 from django.core import mail
 from django.test import TestCase
+from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ..models import Ban
@@ -228,6 +229,27 @@ class GatewayTests(TestCase):
         self.assertIsNone(user_json["id"])
 
 
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_login_api_returns_403_if_oauth_is_enabled(user, user_password, client):
+    response = client.post(
+        reverse("misago:api:auth"),
+        {"username": user.username, "password": user_password},
+    )
+    assert response.status_code == 403
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_auth_api_returns_user_if_oauth_is_enabled(user_client):
+    response = user_client.get(reverse("misago:api:auth"))
+    assert response.status_code == 200
+
+
 class UserCredentialsTests(TestCase):
     def test_edge_returns_response(self):
         """api edge has no showstoppers"""
@@ -353,6 +375,18 @@ class SendActivationApiTests(TestCase):
         self.assertTrue(mail.outbox)
 
 
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_send_activation_api_returns_403_if_oauth_is_enabled(user, client):
+    response = client.post(
+        reverse("misago:api:send-activation"),
+        {"email": user.email},
+    )
+    assert response.status_code == 403
+
+
 class SendPasswordFormApiTests(TestCase):
     def setUp(self):
         self.user = create_test_user("User", "user@example.com", "password")
@@ -462,6 +496,18 @@ class SendPasswordFormApiTests(TestCase):
         )
 
         self.assertTrue(not mail.outbox)
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_send_password_reset_api_returns_403_if_oauth_is_enabled(user, client):
+    response = client.post(
+        reverse("misago:api:send-password-form"),
+        {"email": user.email},
+    )
+    assert response.status_code == 403
 
 
 class ChangePasswordApiTests(TestCase):
@@ -587,3 +633,17 @@ class ChangePasswordApiTests(TestCase):
                 )
             },
         )
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_reset_password_api_returns_403_if_oauth_is_enabled(user, client):
+    token = make_password_change_token(user)
+
+    response = client.post(
+        reverse("misago:api:change-forgotten-password", args=[user.pk, token]),
+        {"password": "n33wP4SSW00ird!!"},
+    )
+    assert response.status_code == 403

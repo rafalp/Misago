@@ -94,6 +94,8 @@ def retrieve_user_data(request, access_token):
     if request.settings.oauth2_user_token_location == "QUERY":
         user_url += "&" if "?" in user_url else "?"
         user_url += urlencode({request.settings.oauth2_user_token_name: access_token})
+    elif request.settings.oauth2_user_token_location == "HEADER_BEARER":
+        headers = {request.settings.oauth2_user_token_name: f"Bearer {access_token}"}
     else:
         headers = {request.settings.oauth2_user_token_name: access_token}
 

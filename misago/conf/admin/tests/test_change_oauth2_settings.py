@@ -8,6 +8,7 @@ def test_oauth2_can_be_enabled(admin_client):
         reverse("misago:admin:settings:oauth2:index"),
         {
             "enable_oauth2_client": "1",
+            "oauth2_provider": "Lorem",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
             "oauth2_scopes": "some scope",
@@ -31,6 +32,7 @@ def test_oauth2_can_be_enabled(admin_client):
     settings = {row.setting: row.value for row in Setting.objects.all()}
 
     assert settings["enable_oauth2_client"] is True
+    assert settings["oauth2_provider"] == "Lorem"
     assert settings["oauth2_client_id"] == "id"
     assert settings["oauth2_client_secret"] == "secret"
     assert settings["oauth2_scopes"] == "some scope"
@@ -53,6 +55,7 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
         reverse("misago:admin:settings:oauth2:index"),
         {
             "enable_oauth2_client": "1",
+            "oauth2_provider": "Lorem",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
             "oauth2_scopes": "some scope",
@@ -76,6 +79,7 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
     settings = {row.setting: row.value for row in Setting.objects.all()}
 
     assert settings["enable_oauth2_client"] is True
+    assert settings["oauth2_provider"] == "Lorem"
     assert settings["oauth2_client_id"] == "id"
     assert settings["oauth2_client_secret"] == "secret"
     assert settings["oauth2_scopes"] == "some scope"
@@ -96,6 +100,7 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
 def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
     data = {
         "enable_oauth2_client": "1",
+        "oauth2_provider": "Lorem",
         "oauth2_client_id": "id",
         "oauth2_client_secret": "secret",
         "oauth2_scopes": "some scope",

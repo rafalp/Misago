@@ -1,5 +1,7 @@
 import json
 
+from django.urls import reverse
+
 from ...acl.test import patch_user_acl
 from ...conf.test import override_dynamic_settings
 from ..test import AuthenticatedUserTestCase, create_test_user
@@ -87,6 +89,20 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.username != old_username)
 
         self.assertEqual(self.user.namechanges.last().new_username, new_username)
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_change_username_api_returns_403_if_oauth_is_enabled(user, user_client):
+    response = user_client.post(
+        reverse("misago:api:user-username", kwargs={"pk": user.pk}),
+        {
+            "username": "totallyNew",
+        },
+    )
+    assert response.status_code == 403
 
 
 class UserUsernameModerationTests(AuthenticatedUserTestCase):

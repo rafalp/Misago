@@ -92,6 +92,14 @@
 
 
 {% block view %}
+{% if settings.enable_oauth2_client %}  
+  <div class="alert alert-warning" role="alert">
+    <strong>{% trans "Note" %}:</strong> {% blocktrans trimmed with provider=settings.oauth2_provider %}
+    OAuth2 client is enabled. Social authentication has been disabled with login and registration delegated to the {{ provider }}.
+    {% endblocktrans %}
+  </div>
+{% endif %}
+
 {{ block.super }}
 
 <div class="card card-admin-table mt-3">

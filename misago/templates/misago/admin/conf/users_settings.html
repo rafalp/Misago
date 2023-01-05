@@ -4,6 +4,13 @@
 
 {% block form-body %}
 <div class="form-fieldset">
+  {% if settings.enable_oauth2_client %}  
+    <div class="alert alert-warning" role="alert">
+      <strong>{% trans "Note" %}:</strong> {% blocktrans trimmed with provider=settings.oauth2_provider %}
+      OAuth2 client is enabled. On site registration, password and account deletion features have been disabled and delegated to the {{ provider }}.
+      {% endblocktrans %}
+    </div>
+  {% endif %}
   <fieldset>
     <legend>{% trans "New accounts" %}</legend>
 
