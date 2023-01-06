@@ -32,15 +32,18 @@ def filter_user_data_with_filters(request, user, user_data, filters):
 
 
 def filter_name(user, name):
+    if user and user.username == name:
+        return name
+
     clean_name = "".join(
         [c for c in unidecode(name.replace(" ", "_")) if c.isalnum() or c == "_"]
     )
 
-    if not clean_name:
-        clean_name = "User_%s" % get_random_string(4)
-
     if user and user.username == clean_name:
         return clean_name  # No change in name
+
+    if not clean_name.replace("_", ""):
+        clean_name = "User_%s" % get_random_string(4)
 
     clean_name_root = clean_name
     while True:
