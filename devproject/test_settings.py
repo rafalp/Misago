@@ -32,7 +32,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Use english search config
 MISAGO_SEARCH_CONFIG = "english"
 
-# Test assertions expect an english responses
+# Test assertions expect english locale
 LANGUAGE_CODE = "en-us"
 
 # Register test post validator
