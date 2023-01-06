@@ -14,6 +14,9 @@ def get_user_from_data(request, user_data):
         raise OAuth2UserIdNotProvidedError()
 
     user = get_user_by_subject(user_data["id"])
+    if not user and user_data["email"]:
+        user = get_user_by_email(user_data["id"], user_data["email"])
+
     is_created = bool(user)
 
     cleaned_data = validate_user_data(request, user, user_data)
@@ -33,6 +36,14 @@ def get_user_by_subject(user_id):
         subject.save(update_fields=["last_used_on"])
         return subject.user
     except Subject.DoesNotExist:
+        return None
+
+
+def get_user_by_email(user_id, user_email):
+    try:
+        user = User.objects.get_by_email(user_email)
+        Subject.objects.create(sub=user_id, user=user)
+    except User.DoesNotExist:
         return None
 
 

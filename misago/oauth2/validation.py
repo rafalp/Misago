@@ -18,8 +18,7 @@ def filter_user_data(request, user, user_data):
         return filter_user_data_with_filters(
             request, user, user_data, oauth2_user_data_filters
         )
-
-    if user_data["name"]:
+    else:
         user_data["name"] = filter_name(user, user_data["name"])
 
     return user_data
