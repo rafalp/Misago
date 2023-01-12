@@ -21,6 +21,7 @@ def get_user_from_data(request, user_data):
 
     cleaned_data = validate_user_data(request, user, user_data)
 
+    # TODO: recover from email conflict error!
     if not user:
         user = create_new_user(request, cleaned_data)
     else:

@@ -1,14 +1,34 @@
 from django.contrib.auth import get_user_model
+from django.forms import ValidationError
 from django.utils.crypto import get_random_string
 from unidecode import unidecode
 
 from ..hooks import oauth2_user_data_filters
+from ..users.validators import validate_new_registration
 
 User = get_user_model()
 
 
 def validate_user_data(request, user, user_data):
     filtered_data = filter_user_data(request, user, user_data)
+
+    try:
+        errors = {}
+
+        def add_error(field: str, error: str | ValidationError):
+            errors.setdefault(field or "__root__", []).append(error)
+
+        validate_new_registration(request, filtered_data, add_error)
+    except ValidationError as exc:
+        # TODO: log validation error
+        # raise "user data invalid" error
+        ...
+
+    if errors:
+        # TODO:
+        # log validation errors
+        # raise "user data invalid" error
+        ...
 
     return filtered_data
 
@@ -25,8 +45,8 @@ def filter_user_data(request, user, user_data):
 
 
 def filter_user_data_with_filters(request, user, user_data, filters):
-    for filter_ in filters:
-        user_data = filter_(request, user, user_data) or user_data
+    for filter_user_data in filters:
+        user_data = filter_user_data(request, user, user_data) or user_data
     return user_data
 
 
