@@ -36,7 +36,9 @@ def get_user_from_data(request, user_data):
 
 def get_user_by_subject(user_id):
     try:
-        subject = Subject.objects.select_related("user").get(sub=user_id)
+        subject = Subject.objects.select_related("user", "user__ban_cache").get(
+            sub=user_id
+        )
         subject.last_used_on = timezone.now()
         subject.save(update_fields=["last_used_on"])
         return subject.user
