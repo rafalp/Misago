@@ -1,23 +1,19 @@
-from ...conf import settings
-from . import store, gravatar, dynamic, gallery, uploaded
+from . import store, gravatar, downloaded, dynamic, gallery, uploaded
+from .default import set_default_avatar, set_default_avatar_from_url
+
+__all__ = [
+    "AVATAR_TYPES",
+    "delete_avatar",
+    "downloaded",
+    "dynamic",
+    "gallery",
+    "gravatar",
+    "set_default_avatar",
+    "set_default_avatar_from_url",
+    "store",
+    "uploaded",
+]
 
 AVATAR_TYPES = ("gravatar", "dynamic", "gallery", "uploaded")
-
-SET_DEFAULT_AVATAR = {
-    "gravatar": gravatar.set_avatar,
-    "dynamic": dynamic.set_avatar,
-    "gallery": gallery.set_random_avatar,
-}
-
-
-def set_default_avatar(user, default_avatar, gravatar_fallback):
-    try:
-        SET_DEFAULT_AVATAR[default_avatar](user)
-    except RuntimeError:
-        if gallery.galleries_exist():
-            SET_DEFAULT_AVATAR[gravatar_fallback](user)
-        else:
-            dynamic.set_avatar(user)
-
 
 delete_avatar = store.delete_avatar

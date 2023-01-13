@@ -1,14 +1,17 @@
 from .audittrail import create_user_audit_trail
-from .avatars import set_default_avatar
+from .avatars import set_default_avatar, set_default_avatar_from_url
 from .models import User
 
 
-def setup_new_user(settings, user):
+def setup_new_user(settings, user, *, avatar_url=None):
     set_default_subscription_options(settings, user)
 
-    set_default_avatar(
-        user, settings.default_avatar, settings.default_gravatar_fallback
-    )
+    if avatar_url:
+        set_default_avatar_from_url(user, avatar_url)
+    else:
+        set_default_avatar(
+            user, settings.default_avatar, settings.default_gravatar_fallback
+        )
 
     if user.joined_from_ip:
         create_user_audit_trail(user, user.joined_from_ip, user)

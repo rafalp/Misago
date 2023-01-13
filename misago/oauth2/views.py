@@ -49,7 +49,7 @@ def oauth2_complete(request):
         code_grant = get_code_grant(request)
         token = get_access_token(request, code_grant)
         user_data = get_user_data(request, token)
-        user, is_created = get_user_from_data(request, user_data)
+        user, created = get_user_from_data(request, user_data)
     except OAuth2UserDataValidationError as error:
         logger.exception(
             "OAuth2 Profile Error",
@@ -70,7 +70,7 @@ def oauth2_complete(request):
         logger.exception("OAuth2 Error")
         return render(request, "misago/errorpages/oauth2.html", {"error": error})
 
-    if is_created:
+    if created:
         send_welcome_email(request, user)
 
     if not user.requires_activation and user.is_active:

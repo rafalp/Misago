@@ -17,7 +17,7 @@ def get_user_from_data(request, user_data):
     if not user and user_data["email"]:
         user = get_user_by_email(user_data["id"], user_data["email"])
 
-    is_created = bool(user)
+    created = not bool(user)
 
     cleaned_data = validate_user_data(request, user, user_data)
 
@@ -27,7 +27,7 @@ def get_user_from_data(request, user_data):
     else:
         update_existing_user(request, user, cleaned_data)
 
-    return user, is_created
+    return user, created
 
 
 def get_user_by_subject(user_id):
@@ -60,7 +60,7 @@ def create_new_user(request, user_data):
         **activation_kwargs,
     )
 
-    setup_new_user(request.settings, user)
+    setup_new_user(request.settings, user, avatar_url=user_data["avatar"])
     Subject.objects.create(sub=user_data["id"], user=user)
 
     return user
