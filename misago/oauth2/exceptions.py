@@ -73,6 +73,14 @@ class OAuth2UserIdNotProvidedError(OAuth2Error):
     message = _("JSON sent by OAuth2 provider did not contain a user id.")
 
 
+class OAuth2UserAccountDeactivatedError(OAuth2Error):
+    recoverable = False
+    message = _(
+        "User account associated with the profile from OAuth2 provider was "
+        "deactivated by the site administrator."
+    )
+
+
 class OAuth2UserDataValidationError(OAuth2ProviderError):
     recoverable = False
     error_list: list[str]

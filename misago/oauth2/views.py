@@ -7,6 +7,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
 
+from ..core.exceptions import Banned
+from ..users.bans import get_user_ban
 from ..users.decorators import deny_banned_ips
 from ..users.registration import send_welcome_email
 from .client import (
@@ -15,7 +17,11 @@ from .client import (
     get_code_grant,
     get_user_data,
 )
-from .exceptions import OAuth2Error, OAuth2UserDataValidationError
+from .exceptions import (
+    OAuth2Error,
+    OAuth2UserAccountDeactivatedError,
+    OAuth2UserDataValidationError,
+)
 from .user import get_user_from_data
 
 logger = getLogger("misago.oauth2")
@@ -50,6 +56,13 @@ def oauth2_complete(request):
         token = get_access_token(request, code_grant)
         user_data = get_user_data(request, token)
         user, created = get_user_from_data(request, user_data)
+
+        if not user.is_active:
+            raise OAuth2UserAccountDeactivatedError()
+
+        if not user.is_staff:
+            if user_ban := get_user_ban(user, request.cache_versions):
+                raise Banned(user_ban)
     except OAuth2UserDataValidationError as error:
         logger.exception(
             "OAuth2 Profile Error",
@@ -73,7 +86,7 @@ def oauth2_complete(request):
     if created:
         send_welcome_email(request, user)
 
-    if not user.requires_activation and user.is_active:
+    if not user.requires_activation:
         login(request, user)
 
     return redirect(reverse("misago:index"))
