@@ -52,6 +52,7 @@ def user_noop_filter(*args):
 
 def test_error_was_raised_for_user_data_with_without_name(db, dynamic_settings):
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
+        # Custom filters disable build in filters
         with patch(
             "misago.oauth2.validation.oauth2_user_data_filters",
             [user_noop_filter],
@@ -74,6 +75,7 @@ def test_error_was_raised_for_user_data_with_without_name(db, dynamic_settings):
 
 def test_error_was_raised_for_user_data_with_invalid_name(db, dynamic_settings):
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
+        # Custom filters disable build in filters
         with patch(
             "misago.oauth2.validation.oauth2_user_data_filters",
             [user_noop_filter],
@@ -96,6 +98,7 @@ def test_error_was_raised_for_user_data_with_invalid_name(db, dynamic_settings):
 
 def test_error_was_raised_for_user_data_with_too_long_name(db, dynamic_settings):
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
+        # Custom filters disable build in filters
         with patch(
             "misago.oauth2.validation.oauth2_user_data_filters",
             [user_noop_filter],

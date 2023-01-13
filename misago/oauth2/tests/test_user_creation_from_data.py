@@ -1,8 +1,10 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
+import pytest
 from django.contrib.auth import get_user_model
 
 from ...conf.test import override_dynamic_settings
+from ..exceptions import OAuth2UserDataValidationError
 from ..models import Subject
 from ..user import get_user_from_data
 
@@ -84,3 +86,46 @@ def test_user_is_created_with_admin_activation_from_valid_data(db, dynamic_setti
     assert created
     assert user
     assert user.requires_activation == User.ACTIVATION_ADMIN
+
+
+def user_noop_filter(*args):
+    pass
+
+
+def test_user_name_conflict_during_creation_from_valid_data_is_handled(
+    user, dynamic_settings
+):
+    with pytest.raises(OAuth2UserDataValidationError) as excinfo:
+        # Custom filters disable build in filters
+        with patch(
+            "misago.oauth2.validation.oauth2_user_data_filters",
+            [user_noop_filter],
+        ):
+            get_user_from_data(
+                Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
+                {
+                    "id": "1234",
+                    "name": user.username,
+                    "email": "test@example.com",
+                    "avatar": None,
+                },
+            )
+
+    assert excinfo.value.error_list == ["This username is not available."]
+
+
+def test_user_email_conflict_during_creation_from_valid_data_is_handled(
+    user, dynamic_settings
+):
+    with pytest.raises(OAuth2UserDataValidationError) as excinfo:
+        get_user_from_data(
+            Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
+            {
+                "id": "1234",
+                "name": "NewUser",
+                "email": user.email,
+                "avatar": None,
+            },
+        )
+
+    assert excinfo.value.error_list == ["This e-mail address is not available."]

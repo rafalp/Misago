@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from ..users.setupnewuser import setup_new_user
-from .exceptions import OAuth2UserIdNotProvidedError
+from .exceptions import OAuth2UserDataValidationError, OAuth2UserIdNotProvidedError
 from .models import Subject
 from .validation import validate_user_data
 
@@ -21,11 +23,13 @@ def get_user_from_data(request, user_data):
 
     cleaned_data = validate_user_data(request, user, user_data)
 
-    # TODO: recover from email conflict error!
-    if not user:
-        user = create_new_user(request, cleaned_data)
-    else:
-        update_existing_user(request, user, cleaned_data)
+    try:
+        if not user:
+            user = create_new_user(request, cleaned_data)
+        else:
+            update_existing_user(request, user, cleaned_data)
+    except IntegrityError as error:
+        raise_validation_error_from_integrity_error(error)
 
     return user, created
 
@@ -79,3 +83,17 @@ def update_existing_user(request, user, user_data):
 
     if save_changes:
         user.save()
+
+
+def raise_validation_error_from_integrity_error(error):
+    error_str = str(error)
+
+    if "misago_users_user_email_hash_key" in error_str:
+        raise OAuth2UserDataValidationError(
+            error_list=[_("This e-mail address is not available.")]
+        )
+
+    if "misago_users_user_slug_key" in error_str:
+        raise OAuth2UserDataValidationError(
+            error_list=[_("This username is not available.")]
+        )
