@@ -15,7 +15,7 @@ from .client import (
     get_code_grant,
     get_user_data,
 )
-from .exceptions import OAuth2Error
+from .exceptions import OAuth2Error, OAuth2UserDataValidationError
 from .user import get_user_from_data
 
 logger = getLogger("misago.oauth2")
@@ -50,6 +50,22 @@ def oauth2_complete(request):
         token = get_access_token(request, code_grant)
         user_data = get_user_data(request, token)
         user, is_created = get_user_from_data(request, user_data)
+    except OAuth2UserDataValidationError as error:
+        logger.exception(
+            "OAuth2 Profile Error",
+            extra={
+                f"error[{error_index}]": str(error_msg)
+                for error_index, error_msg in enumerate(error.error_list)
+            },
+        )
+        return render(
+            request,
+            "misago/errorpages/oauth2_profile.html",
+            {
+                "error": error,
+                "error_list": error.error_list,
+            },
+        )
     except OAuth2Error as error:
         logger.exception("OAuth2 Error")
         return render(request, "misago/errorpages/oauth2.html", {"error": error})

@@ -81,7 +81,7 @@ def validate_username_banned(value):
 
 
 def validate_username_content(value):
-    if not USERNAME_RE.match(value):
+    if not USERNAME_RE.match(value.replace("_", "")):
         raise ValidationError(
             _("Username can only contain latin alphabet letters and digits.")
         )

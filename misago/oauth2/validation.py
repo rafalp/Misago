@@ -1,34 +1,49 @@
+from dataclasses import dataclass
+
 from django.contrib.auth import get_user_model
+from django.core.validators import validate_email
 from django.forms import ValidationError
 from django.utils.crypto import get_random_string
 from unidecode import unidecode
 
 from ..hooks import oauth2_user_data_filters
-from ..users.validators import validate_new_registration
+from ..users.validators import (
+    validate_new_registration,
+    validate_username_content,
+    validate_username_length,
+)
+from .exceptions import OAuth2UserDataValidationError
 
 User = get_user_model()
+
+
+class UsernameSettings:
+    username_length_max: int = 200
+    username_length_min: int = 1
 
 
 def validate_user_data(request, user, user_data):
     filtered_data = filter_user_data(request, user, user_data)
 
     try:
-        errors = {}
+        errors_list = []
 
-        def add_error(field: str, error: str | ValidationError):
-            errors.setdefault(field or "__root__", []).append(error)
+        def add_error(_field_unused: str | None, error: str | ValidationError):
+            if isinstance(error, ValidationError):
+                error = error.message
+
+            errors_list.append(str(error))
+
+        validate_username_content(user_data["name"])
+        validate_username_length(UsernameSettings, user_data["name"])
+        validate_email(user_data["email"])
 
         validate_new_registration(request, filtered_data, add_error)
     except ValidationError as exc:
-        # TODO: log validation error
-        # raise "user data invalid" error
-        ...
+        raise OAuth2UserDataValidationError(error_list=[str(exc.message)])
 
-    if errors:
-        # TODO:
-        # log validation errors
-        # raise "user data invalid" error
-        ...
+    if errors_list:
+        raise OAuth2UserDataValidationError(error_list=errors_list)
 
     return filtered_data
 

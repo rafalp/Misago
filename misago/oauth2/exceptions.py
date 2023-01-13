@@ -71,3 +71,12 @@ class OAuth2UserDataJSONError(OAuth2ProviderError):
 
 class OAuth2UserIdNotProvidedError(OAuth2Error):
     message = _("JSON sent by OAuth2 provider did not contain a user id.")
+
+
+class OAuth2UserDataValidationError(OAuth2ProviderError):
+    recoverable = False
+    error_list: list[str]
+    message = _("User profile retrieved from OAuth2 provider did not validate.")
+
+    def __init__(self, error_list: list[str]):
+        self.error_list = error_list

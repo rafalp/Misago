@@ -60,8 +60,11 @@ class ValidateUsernameTests(TestCase):
         """validate_username has no crashes"""
         settings = Mock(username_length_min=1, username_length_max=5)
         validate_username(settings, "LeBob")
+        validate_username(settings, "Le_Bob")
         with self.assertRaises(ValidationError):
             validate_username(settings, "*")
+        with self.assertRaises(ValidationError):
+            validate_username(settings, "___")
 
 
 class ValidateUsernameAvailableTests(TestCase):
