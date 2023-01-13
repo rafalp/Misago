@@ -27,7 +27,7 @@ def get_user_from_data(request, user_data):
         if not user:
             user = create_new_user(request, cleaned_data)
         else:
-            update_existing_user(request, user, cleaned_data)
+            update_existing_user(user, cleaned_data)
     except IntegrityError as error:
         raise_validation_error_from_integrity_error(error)
 
@@ -70,7 +70,7 @@ def create_new_user(request, user_data):
     return user
 
 
-def update_existing_user(request, user, user_data):
+def update_existing_user(user, user_data):
     save_changes = False
 
     if user.username != user_data["name"]:
