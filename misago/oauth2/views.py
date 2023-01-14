@@ -89,7 +89,7 @@ def oauth2_complete(request):
             status=400,
         )
 
-    if created:
+    if created and request.settings.oauth2_send_welcome_email:
         send_welcome_email(request, user)
 
     if not user.requires_activation:

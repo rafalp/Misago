@@ -18,6 +18,7 @@ settings = [
     {"setting": "oauth2_login_url", "is_public": False},
     {"setting": "oauth2_token_url", "is_public": False},
     {"setting": "oauth2_token_method", "dry_value": "POST", "is_public": False},
+    {"setting": "oauth2_token_extra_headers", "is_public": False},
     {
         "setting": "oauth2_json_token_path",
         "dry_value": "access_token",
@@ -33,6 +34,13 @@ settings = [
     {
         "setting": "oauth2_user_token_name",
         "dry_value": "access_token",
+        "is_public": False,
+    },
+    {"setting": "oauth2_user_extra_headers", "is_public": False},
+    {
+        "setting": "oauth2_send_welcome_email",
+        "python_type": "bool",
+        "dry_value": False,
         "is_public": False,
     },
     {"setting": "oauth2_json_id_path", "dry_value": "id", "is_public": False},

@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -24,10 +24,11 @@ def get_user_from_data(request, user_data):
     cleaned_data = validate_user_data(request, user, user_data)
 
     try:
-        if not user:
-            user = create_new_user(request, cleaned_data)
-        else:
-            update_existing_user(user, cleaned_data)
+        with transaction.atomic():
+            if not user:
+                user = create_new_user(request, cleaned_data)
+            else:
+                update_existing_user(user, cleaned_data)
     except IntegrityError as error:
         raise_validation_error_from_integrity_error(error)
 

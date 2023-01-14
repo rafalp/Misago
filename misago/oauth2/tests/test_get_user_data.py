@@ -49,7 +49,7 @@ def test_user_data_is_returned_using_get_request_with_token_in_query_string(
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/user?atoken={ACCESS_TOKEN}",
-            headers=None,
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 
@@ -164,7 +164,7 @@ def test_user_data_is_returned_using_post_request_with_token_in_query_string(
 
         post_mock.assert_called_once_with(
             f"https://example.com/oauth2/user?atoken={ACCESS_TOKEN}",
-            headers=None,
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 
@@ -246,6 +246,50 @@ def test_user_data_is_returned_using_post_request_with_bearer_token_in_header(
 
 
 @override_dynamic_settings(
+    oauth2_user_url="https://example.com/oauth2/user",
+    oauth2_user_method="POST",
+    oauth2_user_token_name="Authentication",
+    oauth2_user_token_location="HEADER_BEARER",
+    oauth2_user_extra_headers="Accept: application/json\nApi-Ver:1234",
+    oauth2_json_id_path="id",
+    oauth2_json_name_path="name",
+    oauth2_json_email_path="email",
+    oauth2_json_avatar_path="avatar",
+)
+def test_user_data_is_returned_using_post_request_with_extra_headers(
+    mock_request,
+):
+    user_data = {
+        "id": "7dds8a7dd89sa",
+        "name": "Aerith",
+        "email": "aerith@example.com",
+        "avatar": "https://example.com/avatar.png",
+    }
+
+    post_mock = Mock(
+        return_value=Mock(
+            status_code=200,
+            json=Mock(
+                return_value=user_data,
+            ),
+        ),
+    )
+
+    with patch("requests.post", post_mock):
+        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+
+        post_mock.assert_called_once_with(
+            f"https://example.com/oauth2/user",
+            headers={
+                "Authentication": f"Bearer {ACCESS_TOKEN}",
+                "Accept": "application/json",
+                "Api-Ver": "1234",
+            },
+            timeout=REQUESTS_TIMEOUT,
+        )
+
+
+@override_dynamic_settings(
     oauth2_user_url="https://example.com/oauth2/data?type=user",
     oauth2_user_method="GET",
     oauth2_user_token_name="atoken",
@@ -279,7 +323,7 @@ def test_user_data_request_with_token_in_url_respects_existing_querystring(
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
-            headers=None,
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 
@@ -325,7 +369,7 @@ def test_user_data_json_values_are_mapped_to_result(mock_request):
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
-            headers=None,
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 
@@ -371,7 +415,7 @@ def test_user_data_skips_avatar_if_path_is_not_set(mock_request):
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
-            headers=None,
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 

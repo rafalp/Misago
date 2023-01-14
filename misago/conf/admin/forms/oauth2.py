@@ -5,6 +5,13 @@ from django.utils.translation import gettext, gettext_lazy as _
 from ....admin.forms import YesNoSwitch
 from .base import ChangeSettingsForm
 
+OAUTH2_OPTIONAL_FIELDS = (
+    "oauth2_token_extra_headers",
+    "oauth2_user_extra_headers",
+    "oauth2_send_welcome_email",
+    "oauth2_json_avatar_path",
+)
+
 
 class ChangeOAuth2SettingsForm(ChangeSettingsForm):
     settings = [
@@ -16,11 +23,14 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
         "oauth2_login_url",
         "oauth2_token_url",
         "oauth2_token_method",
+        "oauth2_token_extra_headers",
         "oauth2_json_token_path",
         "oauth2_user_url",
         "oauth2_user_method",
         "oauth2_user_token_location",
         "oauth2_user_token_name",
+        "oauth2_user_extra_headers",
+        "oauth2_send_welcome_email",
         "oauth2_json_id_path",
         "oauth2_json_name_path",
         "oauth2_json_email_path",
@@ -88,6 +98,17 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+    oauth2_token_extra_headers = forms.CharField(
+        label=_("Extra HTTP headers in token request"),
+        help_text=_(
+            "List of extra headers to include in a HTTP request made to retrieve "
+            'the access token. Example header is "Header-name: value". Specify each '
+            "header on separate line."
+        ),
+        widget=forms.Textarea(attrs={"rows": 4}),
+        max_length=500,
+        required=False,
+    )
     oauth2_json_token_path = forms.CharField(
         label=_("JSON path to access token"),
         help_text=_(
@@ -126,6 +147,22 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
         max_length=200,
         required=False,
     )
+    oauth2_user_extra_headers = forms.CharField(
+        label=_("Extra HTTP headers in user request"),
+        help_text=_(
+            "List of extra headers to include in a HTTP request made to retrieve "
+            'the user profile. Example header is "Header-name: value". Specify each '
+            "header on separate line."
+        ),
+        widget=forms.Textarea(attrs={"rows": 4}),
+        max_length=500,
+        required=False,
+    )
+
+    oauth2_send_welcome_email = YesNoSwitch(
+        label=_("Send a welcoming e-mail to users on their first sign-ons"),
+        required=False,
+    )
 
     oauth2_json_id_path = forms.CharField(
         label=_("User ID path"),
@@ -159,13 +196,19 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
 
         return " ".join(clean_scopes) or None
 
+    def clean_oauth2_token_extra_headers(self):
+        return clean_headers(self.cleaned_data["oauth2_token_extra_headers"])
+
+    def clean_oauth2_user_extra_headers(self):
+        return clean_headers(self.cleaned_data["oauth2_user_extra_headers"])
+
     def clean(self):
         data = super().clean()
 
         if not data.get("enable_oauth2_client"):
             return data
 
-        required_data = [data[key] for key in data if key != "oauth2_json_avatar_path"]
+        required_data = [data[key] for key in data if key not in OAUTH2_OPTIONAL_FIELDS]
 
         if not all(required_data):
             data["enable_oauth2_client"] = False
@@ -179,3 +222,49 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
             )
 
         return data
+
+
+def clean_headers(headers_value):
+    clean_headers = {}
+    for header in headers_value.splitlines():
+        header = header.strip()
+        if not header:
+            continue
+        if ":" not in header:
+            raise forms.ValidationError(
+                gettext(
+                    '"%(header)s" is not a valid header. '
+                    'It\'s missing a colon (":").'
+                )
+                % {"header": header},
+            )
+
+        name, value = [part.strip() for part in header.split(":", 1)]
+
+        if not name:
+            raise forms.ValidationError(
+                gettext(
+                    '"%(header)s" is not a valid header. '
+                    'It\'s missing a header name before the colon (":").'
+                )
+                % {"header": header},
+            )
+
+        if name in clean_headers:
+            raise forms.ValidationError(
+                gettext('"%(header)s" header is entered more than once.')
+                % {"header": name},
+            )
+
+        if not value:
+            raise forms.ValidationError(
+                gettext(
+                    '"%(header)s" is not a valid header. '
+                    'It\'s missing a header value after the colon (":").'
+                )
+                % {"header": header},
+            )
+
+        clean_headers[name] = value
+
+    return "\n".join([f"{key}: {value}" for key, value in clean_headers.items()])

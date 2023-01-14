@@ -25,7 +25,7 @@ def mock_request(dynamic_settings):
     oauth2_token_url="https://example.com/oauth2/token",
     oauth2_token_method="GET",
 )
-def test_access_token_is_returned_using_get_request(mock_request):
+def test_access_token_is_retrieved_using_get_request(mock_request):
     get_mock = Mock(
         return_value=Mock(
             status_code=200,
@@ -49,6 +49,7 @@ def test_access_token_is_returned_using_get_request(mock_request):
                 "&redirect_uri=http%3A%2F%2Fmysite.com%2Foauth2%2Fcomplete%2F"
                 "&code=valid-code"
             ),
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 
@@ -85,6 +86,7 @@ def test_access_token_get_request_url_respects_existing_querystring(
                 "&redirect_uri=http%3A%2F%2Fmysite.com%2Foauth2%2Fcomplete%2F"
                 "&code=valid-code"
             ),
+            headers={},
             timeout=REQUESTS_TIMEOUT,
         )
 
@@ -95,7 +97,7 @@ def test_access_token_get_request_url_respects_existing_querystring(
     oauth2_token_url="https://example.com/oauth2/token",
     oauth2_token_method="POST",
 )
-def test_access_token_is_returned_using_post_request(mock_request):
+def test_access_token_is_retrieved_using_post_request(mock_request):
     post_mock = Mock(
         return_value=Mock(
             status_code=200,
@@ -118,6 +120,46 @@ def test_access_token_is_returned_using_post_request(mock_request):
                 "client_secret": "secr3t",
                 "redirect_uri": "http://mysite.com/oauth2/complete/",
                 "code": CODE_GRANT,
+            },
+            headers={},
+            timeout=REQUESTS_TIMEOUT,
+        )
+
+
+@override_dynamic_settings(
+    oauth2_client_id="clientid123",
+    oauth2_client_secret="secr3t",
+    oauth2_token_url="https://example.com/oauth2/token",
+    oauth2_token_method="POST",
+    oauth2_token_extra_headers="Accept: application/json\nApi-Ver:1234",
+)
+def test_access_token_is_retrieved_using_extra_headers(mock_request):
+    post_mock = Mock(
+        return_value=Mock(
+            status_code=200,
+            json=Mock(
+                return_value={
+                    "access_token": ACCESS_TOKEN,
+                },
+            ),
+        ),
+    )
+
+    with patch("requests.post", post_mock):
+        assert get_access_token(mock_request, CODE_GRANT) == ACCESS_TOKEN
+
+        post_mock.assert_called_once_with(
+            "https://example.com/oauth2/token",
+            data={
+                "grant_type": "authorization_code",
+                "client_id": "clientid123",
+                "client_secret": "secr3t",
+                "redirect_uri": "http://mysite.com/oauth2/complete/",
+                "code": CODE_GRANT,
+            },
+            headers={
+                "Accept": "application/json",
+                "Api-Ver": "1234",
             },
             timeout=REQUESTS_TIMEOUT,
         )

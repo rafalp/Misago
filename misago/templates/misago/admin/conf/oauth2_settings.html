@@ -29,6 +29,7 @@
 
     {% form_row form.oauth2_token_url %}
     {% form_row form.oauth2_token_method %}
+    {% form_row form.oauth2_token_extra_headers %}
     {% form_row form.oauth2_json_token_path %}
 
   </fieldset>
@@ -41,6 +42,15 @@
     {% form_row form.oauth2_user_method %}
     {% form_row form.oauth2_user_token_location %}
     {% form_row form.oauth2_user_token_name %}
+    {% form_row form.oauth2_user_extra_headers %}
+    
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "New user sign-ons" %}</legend>
+
+    {% form_row form.oauth2_send_welcome_email %}
 
   </fieldset>
 </div>

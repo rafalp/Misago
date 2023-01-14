@@ -1,6 +1,6 @@
 from django.urls import reverse
 from ...models import Setting
-from ....test import ERROR, assert_has_message
+from ....test import ERROR, assert_has_message, assert_contains
 
 
 def test_oauth2_can_be_enabled(admin_client):
@@ -15,11 +15,14 @@ def test_oauth2_can_be_enabled(admin_client):
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
             "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
             "oauth2_user_method": "GET",
             "oauth2_user_token_location": "HEADER",
             "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": "",
+            "oauth2_send_welcome_email": "",
             "oauth2_json_id_path": "id",
             "oauth2_json_name_path": "name",
             "oauth2_json_email_path": "email",
@@ -39,11 +42,14 @@ def test_oauth2_can_be_enabled(admin_client):
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
     assert settings["oauth2_token_method"] == "POST"
+    assert settings["oauth2_token_extra_headers"] == ""
     assert settings["oauth2_json_token_path"] == "access_token"
     assert settings["oauth2_user_url"] == "https://example.com/user/"
     assert settings["oauth2_user_method"] == "GET"
     assert settings["oauth2_user_token_location"] == "HEADER"
     assert settings["oauth2_user_token_name"] == "access_token"
+    assert settings["oauth2_user_extra_headers"] == ""
+    assert settings["oauth2_send_welcome_email"] is False
     assert settings["oauth2_json_id_path"] == "id"
     assert settings["oauth2_json_name_path"] == "name"
     assert settings["oauth2_json_email_path"] == "email"
@@ -62,11 +68,14 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
             "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
             "oauth2_user_method": "GET",
             "oauth2_user_token_location": "HEADER",
             "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": "",
+            "oauth2_send_welcome_email": "",
             "oauth2_json_id_path": "id",
             "oauth2_json_name_path": "name",
             "oauth2_json_email_path": "email",
@@ -86,11 +95,14 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
     assert settings["oauth2_token_method"] == "POST"
+    assert settings["oauth2_token_extra_headers"] == ""
     assert settings["oauth2_json_token_path"] == "access_token"
     assert settings["oauth2_user_url"] == "https://example.com/user/"
     assert settings["oauth2_user_method"] == "GET"
     assert settings["oauth2_user_token_location"] == "HEADER"
     assert settings["oauth2_user_token_name"] == "access_token"
+    assert settings["oauth2_user_extra_headers"] == ""
+    assert settings["oauth2_send_welcome_email"] == False
     assert settings["oauth2_json_id_path"] == "id"
     assert settings["oauth2_json_name_path"] == "name"
     assert settings["oauth2_json_email_path"] == "email"
@@ -107,11 +119,14 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         "oauth2_login_url": "https://example.com/login/",
         "oauth2_token_url": "https://example.com/token/",
         "oauth2_token_method": "POST",
+        "oauth2_token_extra_headers": "",
         "oauth2_json_token_path": "access_token",
         "oauth2_user_url": "https://example.com/user/",
         "oauth2_user_method": "GET",
         "oauth2_user_token_location": "HEADER",
         "oauth2_user_token_name": "access_token",
+        "oauth2_user_extra_headers": "",
+        "oauth2_send_welcome_email": "",
         "oauth2_json_id_path": "id",
         "oauth2_json_name_path": "name",
         "oauth2_json_email_path": "email",
@@ -122,8 +137,11 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         "enable_oauth2_client",
         "oauth2_json_avatar_path",
         "oauth2_token_method",
+        "oauth2_token_extra_headers",
         "oauth2_user_method",
         "oauth2_user_token_location",
+        "oauth2_user_extra_headers",
+        "oauth2_send_welcome_email",
     )
 
     for setting in data:
@@ -190,11 +208,13 @@ def test_oauth2_scopes_are_normalized(admin_client):
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
             "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
             "oauth2_user_method": "GET",
             "oauth2_user_token_location": "HEADER",
             "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": "",
             "oauth2_json_id_path": "id",
             "oauth2_json_name_path": "name",
             "oauth2_json_email_path": "email",
@@ -206,3 +226,249 @@ def test_oauth2_scopes_are_normalized(admin_client):
 
     setting = Setting.objects.get(setting="oauth2_scopes")
     assert setting.value == "some scope"
+
+
+def test_oauth2_extra_token_headers_are_normalized(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": ("Lorem:   ipsum\n   Dolor: Met-elit"),
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": "",
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert response.status_code == 302
+
+    setting = Setting.objects.get(setting="oauth2_token_extra_headers")
+    assert setting.value == "Lorem: ipsum\nDolor: Met-elit"
+
+
+def test_oauth2_extra_token_headers_are_validated(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": (
+                "Lorem:   ipsum\n   Dolor-amet\n Dolor: Met-elit"
+            ),
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": "",
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert_contains(response, "is not a valid header")
+
+
+def test_oauth2_extra_user_headers_are_normalized(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": ("Lorem:   ipsum\n   Dolor: Met-amet"),
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert response.status_code == 302
+
+    setting = Setting.objects.get(setting="oauth2_user_extra_headers")
+    assert setting.value == "Lorem: ipsum\nDolor: Met-amet"
+
+
+def test_oauth2_extra_user_headers_are_validated(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": ("Lorem:   ipsum\n   Dolor-met"),
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert_contains(response, "is not a valid header")
+
+
+def test_oauth2_extra_headers_are_validated_to_have_colons(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": ("Lorem:   ipsum\n   Dolor-met"),
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert_contains(response, "is not a valid header. It&#x27;s missing a colon")
+
+
+def test_oauth2_extra_headers_are_validated_to_have_names(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": ("Lorem:   ipsum\n   :Dolor-met"),
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert_contains(
+        response,
+        "is not a valid header. It&#x27;s missing a header name before the colon",
+    )
+
+
+def test_oauth2_extra_headers_are_validated_to_have_values(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": ("Lorem:   ipsum\n   Dolor-met:"),
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert_contains(
+        response,
+        "is not a valid header. It&#x27;s missing a header value after the colon",
+    )
+
+
+def test_oauth2_extra_headers_are_validated_to_be_unique(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "0",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_scopes": "some some    scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_method": "POST",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": ("Accept:b\nLorem:   ipsum\n   Accept: a"),
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "",
+        },
+    )
+
+    assert_contains(response, "&quot;Accept&quot; header is entered more than once.")

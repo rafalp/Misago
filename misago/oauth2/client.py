@@ -29,6 +29,10 @@ def create_login_url(request):
 
 def get_code_grant(request):
     session_state = request.session.pop(SESSION_STATE, None)
+
+    if request.GET.get("error") == "access_denied":
+        raise exceptions.OAuth2AccessDeniedError()
+
     if not session_state:
         raise exceptions.OAuth2StateNotSetError()
 
@@ -54,14 +58,24 @@ def get_access_token(request, code_grant):
         "redirect_uri": get_redirect_uri(request),
         "code": code_grant,
     }
+    headers = get_headers_dict(request.settings.oauth2_token_extra_headers)
 
     try:
         if request.settings.oauth2_token_method == "GET":
             token_url += "&" if "?" in token_url else "?"
             token_url += urlencode(data)
-            r = requests.get(token_url, timeout=REQUESTS_TIMEOUT)
+            r = requests.get(
+                token_url,
+                headers=headers,
+                timeout=REQUESTS_TIMEOUT,
+            )
         else:
-            r = requests.post(token_url, data=data, timeout=REQUESTS_TIMEOUT)
+            r = requests.post(
+                token_url,
+                data=data,
+                headers=headers,
+                timeout=REQUESTS_TIMEOUT,
+            )
     except RequestException:
         raise exceptions.OAuth2AccessTokenRequestError()
 
@@ -95,16 +109,16 @@ JSON_MAPPING = {
 
 
 def get_user_data(request, access_token):
-    headers = {}
+    headers = get_headers_dict(request.settings.oauth2_user_extra_headers)
     user_url = request.settings.oauth2_user_url
 
     if request.settings.oauth2_user_token_location == "QUERY":
         user_url += "&" if "?" in user_url else "?"
         user_url += urlencode({request.settings.oauth2_user_token_name: access_token})
     elif request.settings.oauth2_user_token_location == "HEADER_BEARER":
-        headers = {request.settings.oauth2_user_token_name: f"Bearer {access_token}"}
+        headers[request.settings.oauth2_user_token_name] = f"Bearer {access_token}"
     else:
-        headers = {request.settings.oauth2_user_token_name: access_token}
+        headers[request.settings.oauth2_user_token_name] = access_token
 
     try:
         if request.settings.oauth2_user_method == "GET":
@@ -132,6 +146,23 @@ def get_user_data(request, access_token):
 
 def get_redirect_uri(request):
     return request.build_absolute_uri(reverse("misago:oauth2-complete"))
+
+
+def get_headers_dict(headers_str):
+    headers = {}
+    if not headers_str:
+        return headers
+
+    for header in headers_str.splitlines():
+        header = header.strip()
+        if ":" not in header:
+            continue
+
+        header_name, header_value = [part.strip() for part in header.split(":", 1)]
+        if header_name and header_value:
+            headers[header_name] = header_value
+
+    return headers
 
 
 def get_value_from_json(path, json):
