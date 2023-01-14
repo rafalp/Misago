@@ -78,10 +78,16 @@ def oauth2_complete(request):
                 "error": error,
                 "error_list": error.error_list,
             },
+            status=400,
         )
     except OAuth2Error as error:
         logger.exception("OAuth2 Error")
-        return render(request, "misago/errorpages/oauth2.html", {"error": error})
+        return render(
+            request,
+            "misago/errorpages/oauth2.html",
+            {"error": error},
+            status=400,
+        )
 
     if created:
         send_welcome_email(request, user)

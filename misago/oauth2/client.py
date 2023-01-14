@@ -95,7 +95,7 @@ JSON_MAPPING = {
 
 
 def get_user_data(request, access_token):
-    headers = None
+    headers = {}
     user_url = request.settings.oauth2_user_url
 
     if request.settings.oauth2_user_token_location == "QUERY":
