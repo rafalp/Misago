@@ -7,7 +7,16 @@ from django.utils.crypto import get_random_string
 from PIL import Image
 
 from ...conf import settings
-from ..avatars import dynamic, gallery, gravatar, set_default_avatar, store, uploaded
+from ..avatars import (
+    downloaded,
+    dynamic,
+    gallery,
+    gravatar,
+    set_default_avatar,
+    set_default_avatar_from_url,
+    store,
+    uploaded,
+)
 from ..models import Avatar, AvatarGallery
 from ..test import create_test_user
 
@@ -137,8 +146,38 @@ class AvatarSetterTests(TestCase):
         gallery.set_avatar(self.user, test_avatar)
         self.assertAvatarWasSet()
 
+    def test_downloaded(self):
+        """specific image is downloaded"""
+        self.assertNoAvatarIsSet()
+        downloaded.set_avatar(self.user, "http://placekitten.com/500/500")
+        self.assertAvatarWasSet()
+
+    def test_downloaded_width_greater_than_height(self):
+        """specific image is downloaded and cropped into square"""
+        self.assertNoAvatarIsSet()
+        downloaded.set_avatar(self.user, "http://placekitten.com/700/500")
+        self.assertAvatarWasSet()
+
+    def test_downloaded_height_greater_than_width(self):
+        """specific image is downloaded and cropped into square"""
+        self.assertNoAvatarIsSet()
+        downloaded.set_avatar(self.user, "http://placekitten.com/500/700")
+        self.assertAvatarWasSet()
+
+    def test_default_avatar_downloaded(self):
+        """default downloaded avatar is set"""
+        self.assertNoAvatarIsSet()
+        set_default_avatar_from_url(self.user, "http://placekitten.com/500/500")
+        self.assertAvatarWasSet()
+
+    def test_default_avatar_downloaded(self):
+        """default download fails but fallback dynamic works"""
+        self.assertNoAvatarIsSet()
+        set_default_avatar_from_url(self.user, "https://example.com/404")
+        self.assertAvatarWasSet()
+
     def test_gravatar(self):
-        """dynamic avatar gets created"""
+        """gravatar is downloaded"""
         self.assertNoAvatarIsSet()
         self.user.set_email("rafio.xudb@gmail.com")
         gravatar.set_avatar(self.user)

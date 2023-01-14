@@ -1,3 +1,5 @@
+from functools import wraps
+
 from django.contrib import auth
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -29,8 +31,26 @@ def gateway(request):
     return session_user(request)
 
 
+def check_delegated_auth(f):
+    @wraps(f)
+    def view_disabled_if_auth_is_delegated(request, *args, **kwargs):
+        if request.settings.enable_oauth2_client:
+            raise PermissionDenied(
+                _(
+                    "This feature has been disabled. "
+                    "Please use %(provider)s to sign in."
+                )
+                % {"provider": request.settings.oauth2_provider}
+            )
+
+        return f(request, *args, **kwargs)
+
+    return view_disabled_if_auth_is_delegated
+
+
 @api_view(["POST"])
 @permission_classes((UnbannedAnonOnly,))
+@check_delegated_auth
 @csrf_protect
 @require_dict_data
 def login(request):
@@ -78,6 +98,7 @@ def get_criteria(request):
 
 @api_view(["POST"])
 @permission_classes((UnbannedAnonOnly,))
+@check_delegated_auth
 @csrf_protect
 @require_dict_data
 def send_activation(request):
@@ -113,6 +134,7 @@ def send_activation(request):
 
 @api_view(["POST"])
 @permission_classes((UnbannedOnly,))
+@check_delegated_auth
 @csrf_protect
 @require_dict_data
 def send_password_form(request):
@@ -154,6 +176,7 @@ class PasswordChangeFailed(Exception):
 
 @api_view(["POST"])
 @permission_classes((UnbannedOnly,))
+@check_delegated_auth
 @csrf_protect
 @require_dict_data
 def change_forgotten_password(request, pk, token):

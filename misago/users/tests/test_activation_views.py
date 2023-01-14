@@ -98,3 +98,29 @@ class ActivationViewsTests(TestCase):
 
         user = User.objects.get(pk=user.pk)
         self.assertEqual(user.requires_activation, 0)
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_request_activatiom_view_returns_403_if_oauth_is_enabled(db, client):
+    response = client.get(reverse("misago:request-activation"))
+    assert response.status_code == 403
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_activate_with_token_view_returns_403_if_oauth_is_enabled(db, client):
+    user = create_test_user("User", "user@example.com", requires_activation=1)
+    activation_token = make_activation_token(user)
+
+    response = client.post(
+        reverse(
+            "misago:activate-by-token",
+            kwargs={"pk": user.pk, "token": activation_token},
+        )
+    )
+    assert response.status_code == 403

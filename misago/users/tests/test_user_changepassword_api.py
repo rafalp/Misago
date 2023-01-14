@@ -128,3 +128,50 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertTrue(self.user.check_password(new_password))
+
+    @override_dynamic_settings(
+        enable_oauth2_client=True,
+        oauth2_provider="Lorem",
+    )
+    def test_change_password_api_returns_403_if_oauth_is_enabled(self):
+        new_password = " N3wP@55w0rd "
+
+        self.login_user(self.user)
+
+        response = self.client.post(
+            self.link,
+            data={"new_password": new_password, "password": self.USER_PASSWORD},
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_dynamic_settings(forum_address="http://test.com/")
+    def test_confirm_change_password_view_returns_403_if_oauth_is_enabled(self):
+        new_password = " N3wP@55w0rd "
+
+        self.login_user(self.user)
+
+        response = self.client.post(
+            self.link,
+            data={"new_password": new_password, "password": self.USER_PASSWORD},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn("Confirm password change", mail.outbox[0].subject)
+        for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
+            if line.startswith("http://"):
+                token = line.rstrip("/").split("/")[-1]
+                break
+        else:
+            self.fail("E-mail sent didn't contain confirmation url")
+
+        with override_dynamic_settings(
+            enable_oauth2_client=True, oauth2_provider="Lorem"
+        ):
+            response = self.client.get(
+                reverse(
+                    "misago:options-confirm-password-change", kwargs={"token": token}
+                )
+            )
+
+            self.assertEqual(response.status_code, 403)

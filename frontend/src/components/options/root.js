@@ -113,15 +113,19 @@ export function paths() {
       path: misago.get("USERCP_URL") + "edit-details/",
       component: connect(select)(EditDetails),
     },
-    {
+  ]
+
+  const delegateAuth = misago.get("SETTINGS").DELEGATE_AUTH
+  if (!delegateAuth)  {
+    paths.push({
       path: misago.get("USERCP_URL") + "change-username/",
       component: connect(select)(ChangeUsername),
-    },
-    {
+    })
+    paths.push({
       path: misago.get("USERCP_URL") + "sign-in-credentials/",
       component: connect(select)(ChangeSignInCredentials),
-    },
-  ]
+    })
+  }
 
   if (misago.get("ENABLE_DOWNLOAD_OWN_DATA")) {
     paths.push({
@@ -130,7 +134,7 @@ export function paths() {
     })
   }
 
-  if (misago.get("ENABLE_DELETE_OWN_ACCOUNT")) {
+  if (!delegateAuth && misago.get("ENABLE_DELETE_OWN_ACCOUNT")) {
     paths.push({
       path: misago.get("USERCP_URL") + "delete-account/",
       component: connect(select)(DeleteAccount),

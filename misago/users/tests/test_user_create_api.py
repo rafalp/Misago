@@ -555,9 +555,29 @@ def test_new_registrations_validators_hook_is_used_by_registration_api(
     )
 
     response = client.post(
-        "/api/users/",
-        {"username": "User", "email": "user@example.com", "password": "PASSW0RD123"},
+        reverse("misago:api:user-list"),
+        {
+            "username": "User",
+            "email": "user@example.com",
+            "password": "PASSW0RD123",
+        },
     )
 
     assert response.status_code == 400
     assert response.json() == {"username": ["ERROR FROM PLUGIN"]}
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_registration_api_returns_403_if_oauth_is_enabled(db, client):
+    response = client.post(
+        reverse("misago:api:user-list"),
+        {
+            "username": "totallyNew",
+            "email": "loremipsum@dolor.met",
+            "password": "PASSW0RD123",
+        },
+    )
+    assert response.status_code == 403

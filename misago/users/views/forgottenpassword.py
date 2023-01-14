@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -11,6 +12,12 @@ from ..tokens import is_password_change_token_valid
 
 @deny_banned_ips
 def request_reset(request):
+    if request.settings.enable_oauth2_client:
+        raise PermissionDenied(
+            _("Please use %(provider)s to reset your password.")
+            % {"provider": request.settings.oauth2_provider}
+        )
+
     request.frontend_context.update(
         {"SEND_PASSWORD_RESET_API": reverse("misago:api:send-password-form")}
     )
@@ -23,6 +30,12 @@ class ResetError(Exception):
 
 @deny_banned_ips
 def reset_password_form(request, pk, token):
+    if request.settings.enable_oauth2_client:
+        raise PermissionDenied(
+            _("Please use %(provider)s to reset your password.")
+            % {"provider": request.settings.oauth2_provider}
+        )
+
     requesting_user = get_object_or_404(get_user_model(), pk=pk)
 
     try:

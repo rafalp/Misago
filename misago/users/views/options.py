@@ -43,6 +43,12 @@ def confirm_change_view(f):
 
 @confirm_change_view
 def confirm_email_change(request, token):
+    if request.settings.enable_oauth2_client:
+        raise PermissionDenied(
+            _("Please use %(provider)s to change your e-mail.")
+            % {"provider": request.settings.oauth2_provider}
+        )
+
     new_credential = read_new_credential(request, "email", token)
     if not new_credential:
         raise ChangeError()
@@ -63,6 +69,12 @@ def confirm_email_change(request, token):
 
 @confirm_change_view
 def confirm_password_change(request, token):
+    if request.settings.enable_oauth2_client:
+        raise PermissionDenied(
+            _("Please use %(provider)s to change your password.")
+            % {"provider": request.settings.oauth2_provider}
+        )
+
     new_credential = read_new_credential(request, "password", token)
     if not new_credential:
         raise ChangeError()

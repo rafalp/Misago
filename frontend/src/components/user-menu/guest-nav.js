@@ -13,6 +13,8 @@ export class GuestMenu extends React.Component {
   }
 
   render() {
+    const delegateAuth = misago.get("SETTINGS").DELEGATE_AUTH
+  
     return (
       <ul
         className="dropdown-menu user-dropdown dropdown-menu-right"
@@ -25,22 +27,35 @@ export class GuestMenu extends React.Component {
               "Sign in or register to start and participate in discussions."
             )}
           </p>
-          <div className="row">
-            <div className="col-xs-6">
-              <button
-                className="btn btn-default btn-sign-in btn-block"
-                onClick={this.showSignInModal}
-                type="button"
-              >
-                {gettext("Sign in")}
-              </button>
+          {delegateAuth ? (
+            <div className="row">
+              <div className="col-xs-12">
+                <a
+                  className="btn btn-default btn-sign-in btn-block"
+                  href={misago.get("SETTINGS").LOGIN_URL}
+                >
+                  {gettext("Sign in")}
+                </a>
+              </div>
             </div>
-            <div className="col-xs-6">
-              <RegisterButton className="btn-primary btn-register btn-block">
-                {gettext("Register")}
-              </RegisterButton>
+          ) : (
+            <div className="row">
+              <div className="col-xs-6">
+                <button
+                  className="btn btn-default btn-sign-in btn-block"
+                  onClick={this.showSignInModal}
+                  type="button"
+                >
+                  {gettext("Sign in")}
+                </button>
+              </div>
+              <div className="col-xs-6">
+                <RegisterButton className="btn-primary btn-register btn-block">
+                  {gettext("Register")}
+                </RegisterButton>
+              </div>
             </div>
-          </div>
+          )}
         </li>
       </ul>
     )
@@ -49,6 +64,22 @@ export class GuestMenu extends React.Component {
 
 export class GuestNav extends GuestMenu {
   render() {
+    if (misago.get("SETTINGS").DELEGATE_AUTH)  {
+      return (
+        <div className="nav nav-guest">
+          <a
+            className="btn navbar-btn btn-default btn-sign-in"
+            href={misago.get("SETTINGS").LOGIN_URL}
+          >
+            {gettext("Sign in")}
+          </a>
+          <div className="navbar-left">
+            <NavbarSearch />
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="nav nav-guest">
         <button

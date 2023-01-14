@@ -40,7 +40,7 @@ def get_user_ban(user, cache_versions):
     """
     This function checks if user is banned
 
-    When user model is available, this is preffered to calling
+    When user model is available, this is preferred to calling
     get_email_ban(user.email) and get_username_ban(user.username)
     because it sets ban cache on user model
     """
