@@ -12,7 +12,7 @@ Misago
 
 .. image:: https://img.shields.io/badge/release-0.28.0-brightgreen.svg
    :target: https://pypi.org/project/Misago/
-   :alt: Release 0.28.0
+   :alt: Release 0.28.1
 
 .. image:: https://img.shields.io/badge/python-3.11-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
