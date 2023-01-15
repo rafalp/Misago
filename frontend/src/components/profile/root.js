@@ -44,8 +44,8 @@ export default class extends WithDropdown {
     })[0]
     const { profile, user } = this.props
     const moderation = getModeration(profile, user)
-    const message = user.acl.can_start_private_threads && profile.id !== user.id
-    const follow = profile.acl.can_follow && profile.id !== user.id
+    const message = !!user.acl.can_start_private_threads && profile.id !== user.id
+    const follow = !!profile.acl.can_follow && profile.id !== user.id
 
     return (
       <div className="page page-user-profile">
@@ -74,14 +74,16 @@ const getModeration = (profile, user) => {
     delete: false,
   }
 
-  if (user.is_anonymouse) return moderation
+  if (user.is_anonymous) return moderation
 
   moderation.rename = profile.acl.can_rename
   moderation.avatar = profile.acl.can_moderate_avatar
   moderation.delete = profile.acl.can_delete
-  moderation.available = (
+  moderation.available = !!(
     moderation.rename || moderation.avatar || moderation.delete
   )
+
+  console.log(moderation.available)
 
   return moderation
 }
