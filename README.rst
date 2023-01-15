@@ -35,11 +35,11 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Screenshots
 ===========
 
-.. image:: https://misago-project.org/media/mporg-home-small.png?01062018
+.. image:: https://user-images.githubusercontent.com/750553/212570745-fff596f8-ff7d-45f2-a7c2-505e56d80a04.png
    :target: https://misago-project.org
    :alt: Forum index
 
-.. image:: https://misago-project.org/media/mporg-thread-small.png?01062018
+.. image:: https://user-images.githubusercontent.com/750553/212570742-52fa8c2c-a86e-4dd4-84b2-933ed7db41d3.png
    :target: https://misago-project.org
    :alt: Thread view
 
