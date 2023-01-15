@@ -74,13 +74,14 @@ const getModeration = (profile, user) => {
     delete: false,
   }
 
-  if (user.is_anonumous) return moderation
+  if (user.is_anonymouse) return moderation
 
   moderation.rename = profile.acl.can_rename
   moderation.avatar = profile.acl.can_moderate_avatar
   moderation.delete = profile.acl.can_delete
-  moderation.available =
+  moderation.available = (
     moderation.rename || moderation.avatar || moderation.delete
+  )
 
   return moderation
 }

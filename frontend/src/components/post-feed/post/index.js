@@ -15,9 +15,11 @@ export default function ({ post, poster }) {
     <li className={className} id={"post-" + post.id}>
       <div className="panel panel-default panel-post">
         <div className="panel-body">
-          <PostSide post={post} poster={user} />
-          <Header post={post} />
-          <Body post={post} />
+          <div className="panel-content">
+            <PostSide post={post} poster={user} />
+            <Header post={post} />
+            <Body post={post} />
+          </div>
         </div>
       </div>
     </li>
