@@ -66,9 +66,9 @@ As of now Misago implements all features considered "must have" on live internet
 * Mark post in question thread as best answer, bringing basic Q&A functionality.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
-* Custom theme developed over bootstrap.
+* Custom theme developed with bootstrap.
 * Features and settings for achieving GDPR compliance.
-* Integrate forum with your site using implemented Single Sign On client and JSON API.
+* Integrate forum with your site using implemented OAuth2 client and JSON API.
 
 Even more features will follow in future releases:
 
