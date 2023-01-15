@@ -83,8 +83,6 @@ const getModeration = (profile, user) => {
     moderation.rename || moderation.avatar || moderation.delete
   )
 
-  console.log(moderation.available)
-
   return moderation
 }
 
