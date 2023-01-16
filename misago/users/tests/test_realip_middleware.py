@@ -1,6 +1,10 @@
-from django.test import TestCase
+from django.http import HttpResponse
 
 from ..middleware import RealIPMiddleware
+
+
+def get_response(*_):
+    return HttpResponse("OK!")
 
 
 class MockRequest:
@@ -11,17 +15,15 @@ class MockRequest:
             self.META["HTTP_X_FORWARDED_FOR"] = forwarded_for
 
 
-class RealIPMiddlewareTests(TestCase):
-    def test_middleware_sets_ip_from_remote_add(self):
-        """Middleware sets ip from remote_addr header"""
-        request = MockRequest("83.42.13.77")
-        RealIPMiddleware().process_request(request)
+def test_user_ip_middleware_sets_ip_from_remote_add_on_request():
+    request = MockRequest("83.42.13.77")
+    RealIPMiddleware(get_response)(request)
 
-        self.assertEqual(request.user_ip, request.META["REMOTE_ADDR"])
+    assert request.user_ip == request.META["REMOTE_ADDR"]
 
-    def test_middleware_sets_ip_from_forwarded_for(self):
-        """Middleware sets ip from forwarded_for header"""
-        request = MockRequest("127.0.0.1", "83.42.13.77")
-        RealIPMiddleware().process_request(request)
 
-        self.assertEqual(request.user_ip, request.META["HTTP_X_FORWARDED_FOR"])
+def test_user_ip_middleware_sets_ip_from_forwarded_for_on_request():
+    request = MockRequest("127.0.0.1", "83.42.13.77")
+    RealIPMiddleware(get_response)(request)
+
+    assert request.user_ip == request.META["HTTP_X_FORWARDED_FOR"]

@@ -15,9 +15,10 @@
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
 <th>{% trans "Category" %}</th>
+<th>{% trans "Label" %}</th>
 <th>{% trans "CSS class" %}</th>
-<th>{% trans "Threads" %}</th>
-<th>{% trans "Posts" %}</th>
+<th style="width: 1px;">{% trans "Threads" %}</th>
+<th style="width: 1px;">{% trans "Posts" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
@@ -37,6 +38,13 @@
   <a href="{% url 'misago:admin:categories:edit' pk=item.pk %}" class="item-name small">
     {{ item }}
   </a>
+</td>
+<td>
+  {% if item.color %}
+    <span class="badge badge-dark" style="background: {{ item.color }};">{{ item.short_name|default:item.name }}</span>
+  {% else %}
+    <span class="badge badge-light">{{ item.short_name|default:item.name }}</span>
+  {% endif %}
 </td>
 <td class="small">
   {% if item.css_class %}

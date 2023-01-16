@@ -2,10 +2,14 @@ import React from "react"
 import SearchPage from "../page"
 import Results from "./results"
 
-export default function(props) {
+export default function (props) {
   return (
     <SearchPage provider={props.route.provider} search={props.search}>
-      <Blankslate query={props.search.query} posts={props.posts}>
+      <Blankslate
+        loading={props.search.isLoading}
+        query={props.search.query}
+        posts={props.posts}
+      >
         <Results
           provider={props.route.provider}
           query={props.search.query}
@@ -16,13 +20,15 @@ export default function(props) {
   )
 }
 
-export function Blankslate(props) {
-  if (props.posts && props.posts.count) return props.children
+export function Blankslate({ children, loading, posts, query }) {
+  if (posts && posts.count) return children
 
-  if (props.query.length) {
+  if (query.length) {
     return (
       <p className="lead">
-        {gettext("No threads matching search query have been found.")}
+        {loading
+          ? gettext("Loading results...")
+          : gettext("No threads matching search query have been found.")}
       </p>
     )
   }

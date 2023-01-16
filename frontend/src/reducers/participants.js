@@ -3,7 +3,7 @@ export const REPLACE_PARTICIPANTS = "REPLACE_PARTICIPANTS"
 export function replace(newState) {
   return {
     type: REPLACE_PARTICIPANTS,
-    state: newState
+    state: newState,
   }
 }
 

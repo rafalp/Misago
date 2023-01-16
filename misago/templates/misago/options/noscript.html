@@ -7,9 +7,38 @@
 
 {% block content %}
 <div class="page page-options page-error page-noscript">
-  <div class="page-header-bg"></div>
+  <div class="container page-header-container">
+    <div class="page-header page-header-options">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-options">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <div class="flex-row">
+                  <div class="flex-row-section flex-row-section-auto">
+                    <div class="flex-row-col">
+                      <h1>{% trans "Change your options" %}</h1>
+                    </div>
+                    <div class="flex-row-col hidden-xs hidden-md hidden-lg flex-row-col-shrink">
+                      <div class="dropdown">
+                        <button type="button" class="btn btn-default btn-outline btn-icon dropdown-toggle" disabled>
+                          <span class="material-icon">menu</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <noscript>
-    <div class="container">
+    <div class="container page-container">
       <div class="message-panel">
 
         <div class="message-icon">
@@ -24,5 +53,14 @@
       </div>
     </div>
   </noscript>
+  <div class="container page-container page-placeholder hidden">
+    <div class="lead lead-placeholder">
+      <p>{% trans "Loading..." %}</p>
+    </div>
+  </div>
+  <script type="text/javascript">
+    const lead = document.querySelectorAll('.page-placeholder')[0]
+    if (lead) lead.classList.remove("hidden");
+  </script>
 </div>
 {% endblock content %}

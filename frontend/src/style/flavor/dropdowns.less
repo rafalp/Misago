@@ -1,0 +1,65 @@
+//
+// Dropdown Flavor
+// --------------------------------------------------
+
+.dropdown-menu {
+  border: none;
+
+  .shadow-4dp();
+}
+
+// Navbar dropdown
+.user-dropdown .dropdown-header {
+  strong {
+    display: block;
+
+    color: @text-color;
+    font-weight: bold;
+  }
+
+  .user-stats {
+    margin-top: @line-height-computed / 2;
+
+    font-size: @font-size-small;
+
+    .material-icon {
+      margin-right: 3px;
+
+      position: relative;
+      bottom: 1px;
+
+      width: 14px;
+      height: 14px;
+
+      font-size: 14px;
+    }
+  }
+}
+
+.user-dropdown .guest-preview {
+  padding-bottom: @padding-large-vertical;
+}
+
+.user-dropdown .badge {
+  background-color: @brand-danger;
+}
+
+.user-dropdown {
+  a:hover,
+  a:focus,
+  a:active,
+  .btn-link:hover,
+  .btn-link:focus,
+  .btn-link:active {
+    .badge {
+      background-color: #fff;
+
+      color: @brand-danger;
+    }
+  }
+}
+
+// Mobile dropdown
+.mobile-dropdown.open {
+  margin: 0px;
+}

@@ -8,7 +8,7 @@ import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 
-export default function(props) {
+export default function (props) {
   const { isPollOver, poll, showVoting, thread } = props
 
   if (!isVisible(isPollOver, poll.acl, poll)) return null
@@ -118,7 +118,7 @@ export class Edit extends React.Component {
       thread: this.props.thread,
       poll: this.props.poll,
 
-      mode: "POLL"
+      mode: "POLL",
     })
   }
 
@@ -142,7 +142,7 @@ export class Edit extends React.Component {
 
 export class Delete extends React.Component {
   onClick = () => {
-    const deletePoll = confirm(
+    const deletePoll = window.confirm(
       gettext(
         "Are you sure you want to delete this poll? This action is not reversible."
       )
@@ -156,13 +156,13 @@ export class Delete extends React.Component {
       .then(this.handleSuccess, this.handleError)
   }
 
-  handleSuccess = newThreadAcl => {
+  handleSuccess = (newThreadAcl) => {
     snackbar.success("Poll has been deleted")
     store.dispatch(poll.remove())
     store.dispatch(thread.updateAcl(newThreadAcl))
   }
 
-  handleError = rejection => {
+  handleError = (rejection) => {
     snackbar.apiError(rejection)
     store.dispatch(poll.release())
   }

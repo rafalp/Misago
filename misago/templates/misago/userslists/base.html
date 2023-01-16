@@ -7,27 +7,22 @@
 
 {% block content %}
 <div class="page page-users-lists">
-
-  <div class="page-header-bg">
-    <div class="page-header">
-      <div class="container">
-        <h1>{% trans "Users" %}</h1>
-      </div>
-      <div class="page-tabs">
-        <div class="container">
-          <ul class="nav nav-pills" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
-            {% for page in pages %}
-              <li{% if page.is_active %} class="active"{% endif %}>
-                <a href="{{ page.reversed_link }}">
-                  {{ page.name }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
+  <div class="container page-header-container">
+    <div class="page-header page-header-users-lists">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-users-lists">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <h1>Users</h1>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
+  {% block page-content %}{% endblock page-content %}
 </div>
 {% endblock content %}

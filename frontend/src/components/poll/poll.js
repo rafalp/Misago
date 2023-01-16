@@ -13,19 +13,19 @@ export default class extends React.Component {
     }
 
     this.state = {
-      showResults
+      showResults,
     }
   }
 
   showResults = () => {
     this.setState({
-      showResults: true
+      showResults: true,
     })
   }
 
   showVoting = () => {
     this.setState({
-      showResults: false
+      showResults: false,
     })
   }
 

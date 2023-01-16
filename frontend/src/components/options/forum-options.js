@@ -23,53 +23,53 @@ export default class extends Form {
       subscribe_to_started_threads: props.user.subscribe_to_started_threads,
       subscribe_to_replied_threads: props.user.subscribe_to_replied_threads,
 
-      errors: {}
+      errors: {},
     }
 
     this.privateThreadInvitesChoices = [
       {
         value: 0,
         icon: "help_outline",
-        label: gettext("Everybody")
+        label: gettext("Everybody"),
       },
       {
         value: 1,
         icon: "done_all",
-        label: gettext("Users I follow")
+        label: gettext("Users I follow"),
       },
       {
         value: 2,
         icon: "highlight_off",
-        label: gettext("Nobody")
-      }
+        label: gettext("Nobody"),
+      },
     ]
 
     this.subscribeToChoices = [
       {
         value: 0,
         icon: "star_border",
-        label: gettext("No")
+        label: gettext("No"),
       },
       {
         value: 1,
         icon: "star_half",
-        label: gettext("Notify")
+        label: gettext("Notify"),
       },
       {
         value: 2,
         icon: "star",
-        label: gettext("Notify with e-mail")
-      }
+        label: gettext("Notify with e-mail"),
+      },
     ]
   }
 
   send() {
     return ajax.post(this.props.user.api.options, {
       is_hiding_presence: this.state.is_hiding_presence,
-      limits_private_thread_invites_to: this.state
-        .limits_private_thread_invites_to,
+      limits_private_thread_invites_to:
+        this.state.limits_private_thread_invites_to,
       subscribe_to_started_threads: this.state.subscribe_to_started_threads,
-      subscribe_to_replied_threads: this.state.subscribe_to_replied_threads
+      subscribe_to_replied_threads: this.state.subscribe_to_replied_threads,
     })
   }
 
@@ -77,10 +77,10 @@ export default class extends Form {
     store.dispatch(
       patch({
         is_hiding_presence: this.state.is_hiding_presence,
-        limits_private_thread_invites_to: this.state
-          .limits_private_thread_invites_to,
+        limits_private_thread_invites_to:
+          this.state.limits_private_thread_invites_to,
         subscribe_to_started_threads: this.state.subscribe_to_started_threads,
-        subscribe_to_replied_threads: this.state.subscribe_to_replied_threads
+        subscribe_to_replied_threads: this.state.subscribe_to_replied_threads,
       })
     )
     snackbar.success(gettext("Your forum options have been changed."))
@@ -97,7 +97,7 @@ export default class extends Form {
   componentDidMount() {
     title.set({
       title: gettext("Forum options"),
-      parent: gettext("Change your options")
+      parent: gettext("Change your options"),
     })
   }
 

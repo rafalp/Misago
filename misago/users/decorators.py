@@ -1,3 +1,5 @@
+from functools import wraps
+
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
@@ -9,6 +11,7 @@ from .models import Ban
 
 
 def deny_authenticated(f):
+    @wraps(f)
     def decorator(request, *args, **kwargs):
         if request.user.is_authenticated:
             raise PermissionDenied(_("This page is not available to signed in users."))
@@ -19,6 +22,7 @@ def deny_authenticated(f):
 
 
 def deny_guests(f):
+    @wraps(f)
     def decorator(request, *args, **kwargs):
         if request.user.is_anonymous:
             if request.GET.get("ref") == "login":
@@ -31,6 +35,7 @@ def deny_guests(f):
 
 
 def deny_banned_ips(f):
+    @wraps(f)
     def decorator(request, *args, **kwargs):
         ban = get_request_ip_ban(request)
         if ban:

@@ -10,5 +10,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:banmed-page",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

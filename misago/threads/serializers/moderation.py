@@ -289,8 +289,8 @@ class NewThreadSerializer(serializers.Serializer):
         max_value=Thread.WEIGHT_GLOBAL,
         min_value=Thread.WEIGHT_DEFAULT,
     )
-    is_hidden = serializers.NullBooleanField(required=False)
-    is_closed = serializers.NullBooleanField(required=False)
+    is_hidden = serializers.BooleanField(required=False, allow_null=True)
+    is_closed = serializers.BooleanField(required=False, allow_null=True)
 
     def validate_title(self, title):
         settings = self.context["settings"]

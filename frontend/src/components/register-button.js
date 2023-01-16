@@ -14,7 +14,7 @@ export default class extends React.Component {
       isLoading: false,
       isLoaded: false,
 
-      criteria: null
+      criteria: null,
     }
   }
 
@@ -28,13 +28,13 @@ export default class extends React.Component {
 
       Promise.all([
         captcha.load(),
-        ajax.get(misago.get("AUTH_CRITERIA_API"))
+        ajax.get(misago.get("AUTH_CRITERIA_API")),
       ]).then(
-        result => {
+        (result) => {
           this.setState({
             isLoading: false,
             isLoaded: true,
-            criteria: result[1]
+            criteria: result[1],
           })
 
           modal.show(<RegisterForm criteria={result[1]} />)

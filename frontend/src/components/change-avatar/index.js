@@ -10,7 +10,7 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -20,27 +20,27 @@ export default class extends React.Component {
     }
 
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
 
     ajax
       .post(this.props.user.api.avatar, {
-        avatar: avatarType
+        avatar: avatarType,
       })
       .then(
-        response => {
+        (response) => {
           this.setState({
-            isLoading: false
+            isLoading: false,
           })
 
           snackbar.success(response.detail)
           this.props.onComplete(response)
         },
-        rejection => {
+        (rejection) => {
           if (rejection.status === 400) {
             snackbar.error(rejection.detail)
             this.setState({
-              isLoading: false
+              isLoading: false,
             })
           } else {
             this.props.showError(rejection)
@@ -118,7 +118,7 @@ export default class extends React.Component {
   getAvatarPreview() {
     let userPeview = {
       id: this.props.user.id,
-      avatars: this.props.options.avatars
+      avatars: this.props.options.avatars,
     }
 
     if (this.state.isLoading) {

@@ -8,5 +8,5 @@ export default function initializer() {
 
 misago.addInitializer({
   name: "zxcvbn",
-  initializer: initializer
+  initializer: initializer,
 })

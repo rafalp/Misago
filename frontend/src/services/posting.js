@@ -31,7 +31,7 @@ export class Posting {
         )
       }
 
-      const changeForm = confirm(message)
+      const changeForm = window.confirm(message)
       if (changeForm) {
         this._mode = props.mode
         this._isOpen = props.submit
@@ -53,7 +53,7 @@ export class Posting {
 
     $("html, body").animate(
       {
-        scrollTop: this._placeholder.offset().top
+        scrollTop: this._placeholder.offset().top,
       },
       1000
     )

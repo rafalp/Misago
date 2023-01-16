@@ -11,7 +11,7 @@ export default class AcceptAgreement extends React.Component {
   handleDecline = () => {
     if (this.state.submiting) return
 
-    const confirmation = confirm(
+    const confirmation = window.confirm(
       gettext(
         "Declining will result in immediate deactivation and deletion of your account. This action is not reversible."
       )
@@ -21,7 +21,7 @@ export default class AcceptAgreement extends React.Component {
     this.setState({ submiting: true })
 
     ajax.post(this.props.api, { accept: false }).then(() => {
-      location.reload(true)
+      window.location.reload(true)
     })
   }
 
@@ -31,7 +31,7 @@ export default class AcceptAgreement extends React.Component {
     this.setState({ submiting: true })
 
     ajax.post(this.props.api, { accept: true }).then(() => {
-      location.reload(true)
+      window.location.reload(true)
     })
   }
 

@@ -12,14 +12,14 @@ export default class DownloadData extends React.Component {
     this.state = {
       isLoading: false,
       isSubmiting: false,
-      downloads: []
+      downloads: [],
     }
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Download your data"),
-      parent: gettext("Change your options")
+      parent: gettext("Change your options"),
     })
 
     this.handleLoadDownloads()
@@ -27,13 +27,13 @@ export default class DownloadData extends React.Component {
 
   handleLoadDownloads = () => {
     ajax.get(this.props.user.api.data_downloads).then(
-      data => {
+      (data) => {
         this.setState({
           isLoading: false,
-          downloads: data
+          downloads: data,
         })
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
       }
     )
@@ -49,8 +49,7 @@ export default class DownloadData extends React.Component {
         )
         this.setState({ isSubmiting: false })
       },
-      rejection => {
-        console.log(rejection)
+      (rejection) => {
         snackbar.apiError(rejection)
         this.setState({ isSubmiting: false })
       }
@@ -85,7 +84,7 @@ export default class DownloadData extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.downloads.map(item => {
+              {this.state.downloads.map((item) => {
                 return (
                   <tr key={item.id}>
                     <td style={rowStyle}>
@@ -124,7 +123,7 @@ export default class DownloadData extends React.Component {
 }
 
 const rowStyle = {
-  verticalAlign: "middle"
+  verticalAlign: "middle",
 }
 
 const STATUS_PENDING = 0

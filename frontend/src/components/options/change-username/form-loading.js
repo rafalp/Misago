@@ -1,7 +1,7 @@
 import React from "react"
 import PanelLoader from "misago/components/panel-loader"
 
-export default function() {
+export default function () {
   return (
     <div className="panel panel-default panel-form">
       <div className="panel-heading">

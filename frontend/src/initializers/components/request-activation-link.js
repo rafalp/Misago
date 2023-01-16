@@ -11,5 +11,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "component:request-activation-link",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

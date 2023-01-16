@@ -17,31 +17,32 @@ page-private-threads
 
 
 {% block page-header %}
-<div class="page-header">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="col-xs-12">
-            <h1>{{ category }}</h1>
+<div class="container page-header-container">
+  <div class="page-header page-header-private-threads">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-private-threads">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              <h1>{{ category }}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="page-header-details">
+          <div class="page-header-message">
+            <p>{% trans "Private threads are threads which only those that started them and those they have invited may see and participate in." %}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  {% if user.is_authenticated %}
-    {% include "misago/threadslist/tabs.html" with hide_unapproved=True %}
-  {% endif %}
 </div>
 {% endblock page-header %}
 
 
 {% block list-container %}
-<div class="category-description">
-  <div class="page-lead">
-    <p>{% trans "Private threads are threads which only those that started them and those they have invited may see and participate in." %}</p>
-  </div>
-</div>
+{% include "misago/threadslist/toolbar.html" with hide_categories=True %}
 
 {{ block.super }}
 {% endblock list-container%}

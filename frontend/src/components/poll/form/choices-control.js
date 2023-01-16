@@ -5,14 +5,14 @@ export default class extends React.Component {
     let choices = this.props.choices.slice()
     choices.push({
       hash: generateRandomHash(),
-      label: ""
+      label: "",
     })
 
     this.props.setChoices(choices)
   }
 
   onChange = (hash, label) => {
-    const choices = this.props.choices.map(choice => {
+    const choices = this.props.choices.map((choice) => {
       if (choice.hash === hash) {
         choice.label = label
       }
@@ -22,8 +22,8 @@ export default class extends React.Component {
     this.props.setChoices(choices)
   }
 
-  onDelete = hash => {
-    const choices = this.props.choices.filter(choice => {
+  onDelete = (hash) => {
+    const choices = this.props.choices.filter((choice) => {
       return choice.hash !== hash
     })
     this.props.setChoices(choices)
@@ -33,7 +33,7 @@ export default class extends React.Component {
     return (
       <div className="poll-choices-control">
         <ul className="list-group">
-          {this.props.choices.map(choice => {
+          {this.props.choices.map((choice) => {
             return (
               <PollChoice
                 canDelete={this.props.choices.length > 2}
@@ -60,12 +60,12 @@ export default class extends React.Component {
 }
 
 export class PollChoice extends React.Component {
-  onChange = event => {
+  onChange = (event) => {
     this.props.onChange(this.props.choice.hash, event.target.value)
   }
 
   onDelete = () => {
-    const deleteItem = confirm(
+    const deleteItem = window.confirm(
       gettext("Are you sure you want to delete this choice?")
     )
     if (deleteItem) {

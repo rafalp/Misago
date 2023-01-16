@@ -18,9 +18,9 @@ export default class extends Form {
       url: "",
 
       validators: {
-        url: []
+        url: [],
       },
-      errors: {}
+      errors: {},
     }
   }
 
@@ -38,25 +38,25 @@ export default class extends Form {
     store.dispatch(thread.busy())
 
     return ajax.post(this.props.thread.api.merge, {
-      other_thread: this.state.url
+      other_thread: this.state.url,
     })
   }
 
-  handleSuccess = success => {
+  handleSuccess = (success) => {
     this.handleSuccessUnmounted(success)
 
     // keep form loading
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
   }
 
-  handleSuccessUnmounted = success => {
+  handleSuccessUnmounted = (success) => {
     snackbar.success(gettext("Thread has been merged with other one."))
     window.location = success.url
   }
 
-  handleError = rejection => {
+  handleError = (rejection) => {
     store.dispatch(thread.release())
 
     if (rejection.status === 400) {
@@ -83,7 +83,7 @@ export default class extends Form {
     }
   }
 
-  onUrlChange = event => {
+  onUrlChange = (event) => {
     this.changeValue("url", event.target.value)
   }
 
@@ -121,7 +121,7 @@ export default class extends Form {
               </button>
               <button
                 className="btn btn-primary"
-                loading={this.state.isLoading || this.props.thread.isBusy}
+                disabled={this.state.isLoading || this.props.thread.isBusy}
               >
                 {gettext("Merge thread")}
               </button>

@@ -13,6 +13,8 @@ export class GuestMenu extends React.Component {
   }
 
   render() {
+    const delegateAuth = misago.get("SETTINGS").DELEGATE_AUTH
+  
     return (
       <ul
         className="dropdown-menu user-dropdown dropdown-menu-right"
@@ -25,17 +27,19 @@ export class GuestMenu extends React.Component {
               "Sign in or register to start and participate in discussions."
             )}
           </p>
-          <div className="row">
-            {misago.get("SETTINGS").enable_sso ? (
+          {delegateAuth ? (
+            <div className="row">
               <div className="col-xs-12">
                 <a
-                  className="btn btn-primary btn-register btn-block"
-                  href={misago.get("SETTINGS").SSO_LOGIN_URL}
+                  className="btn btn-default btn-sign-in btn-block"
+                  href={misago.get("SETTINGS").LOGIN_URL}
                 >
                   {gettext("Sign in")}
                 </a>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="row">
               <div className="col-xs-6">
                 <button
                   className="btn btn-default btn-sign-in btn-block"
@@ -45,15 +49,13 @@ export class GuestMenu extends React.Component {
                   {gettext("Sign in")}
                 </button>
               </div>
-            )}
-            {!misago.get("SETTINGS").enable_sso && (
               <div className="col-xs-6">
                 <RegisterButton className="btn-primary btn-register btn-block">
                   {gettext("Register")}
                 </RegisterButton>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </li>
       </ul>
     )
@@ -62,29 +64,34 @@ export class GuestMenu extends React.Component {
 
 export class GuestNav extends GuestMenu {
   render() {
-    return (
-      <div className="nav nav-guest">
-        {misago.get("SETTINGS").enable_sso ? (
+    if (misago.get("SETTINGS").DELEGATE_AUTH)  {
+      return (
+        <div className="nav nav-guest">
           <a
-            className="btn navbar-btn btn-primary btn-register"
-            href={misago.get("SETTINGS").SSO_LOGIN_URL}
+            className="btn navbar-btn btn-default btn-sign-in"
+            href={misago.get("SETTINGS").LOGIN_URL}
           >
             {gettext("Sign in")}
           </a>
-        ) : (
-          <button
-            className="btn navbar-btn btn-default btn-sign-in"
-            onClick={this.showSignInModal}
-            type="button"
-          >
-            {gettext("Sign in")}
-          </button>
-        )}
-        {!misago.get("SETTINGS").enable_sso && (
-          <RegisterButton className="navbar-btn btn-primary btn-register">
-            {gettext("Register")}
-          </RegisterButton>
-        )}
+          <div className="navbar-left">
+            <NavbarSearch />
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div className="nav nav-guest">
+        <button
+          className="btn navbar-btn btn-default btn-sign-in"
+          onClick={this.showSignInModal}
+          type="button"
+        >
+          {gettext("Sign in")}
+        </button>
+        <RegisterButton className="navbar-btn btn-primary btn-register">
+          {gettext("Register")}
+        </RegisterButton>
         <div className="navbar-left">
           <NavbarSearch />
         </div>

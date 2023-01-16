@@ -8,12 +8,12 @@ const AUTH_SYNC_RATE = 45 // sync user with backend every 45 seconds
 
 export default function initializer(context) {
   if (context.get("isAuthenticated")) {
-    window.setInterval(function() {
+    window.setInterval(function () {
       ajax.get(context.get("AUTH_API")).then(
-        function(data) {
+        function (data) {
           store.dispatch(patch(data))
         },
-        function(rejection) {
+        function (rejection) {
           snackbar.apiError(rejection)
         }
       )
@@ -24,5 +24,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "auth-sync",
   initializer: initializer,
-  after: "auth"
+  after: "auth",
 })

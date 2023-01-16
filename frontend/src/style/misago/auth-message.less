@@ -1,0 +1,39 @@
+//
+// Auth changed message
+// --------------------------------------------------
+
+.auth-message {
+  background-color: @auth-changed-bg;
+  padding: @line-height-computed 0px;
+  width: 100%;
+
+  position: fixed;
+  top: -100%;
+  left: 0px;
+
+  z-index: @zindex-auth-message;
+
+  transition: top 300ms ease;
+
+  &.show {
+    top: 0px;
+    bottom: auto;
+  }
+
+  p {
+    padding: @line-height-computed / 4 0px;
+
+    color: @auth-changed-color;
+  }
+
+  // Small displays
+  @media screen and (max-width: @screen-sm-max) {
+    text-align: center;
+
+    .btn {
+      padding: @padding-large-vertical @padding-large-horizontal;
+
+      font-size: @font-size-large;
+    }
+  }
+}

@@ -1,0 +1,116 @@
+//
+// Markup Flavor
+// --------------------------------------------------
+
+// Round images
+.misago-markup img {
+  border-radius: @border-radius-base;
+}
+
+// Quote block
+.misago-markup .quote-block,
+.misago-markup blockquote {
+  background-color: #ffecb3;
+  border-color: #b3e5fc;
+  overflow: hidden;
+
+  color: #3e2723;
+
+  .quote-heading {
+    background-color: #ffe082;
+    border: none;
+
+    color: #795548;
+
+    a,
+    a:link,
+    a:visited {
+      color: #5d4037;
+    }
+
+    a:hover,
+    a:focus,
+    a:active {
+      color: #3e2723;
+    }
+  }
+
+  hr {
+    border-color: #ffca28;
+  }
+}
+
+.misago-markup > .quote-block,
+.misago-markup > blockquote {
+  background: #ffecb3;
+  border: none;
+  border-radius: @border-radius-base;
+
+  .quote-block {
+    background: #ffecb3;
+  }
+}
+
+.misago-markup .quote-body {
+  background: #ffecb3;
+
+  & > .quote-block,
+  & > blockquote {
+    border-color: #ffe082;
+    border-radius: @border-radius-base;
+  }
+}
+
+// Spoiler block
+.misago-markup .spoiler-block {
+  background: repeating-linear-gradient(
+    45deg,
+    fadeout(@gray-lighter, 50%),
+    fadeout(@gray-lighter, 50%) 10px,
+    @post-bg 10px,
+    @post-bg 20px
+  );
+  border: none;
+}
+
+.misago-markup .spoiler-body {
+  background: transparent;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+  color: @text-color;
+}
+
+.misago-markup .spoiler-block.revealed .spoiler-body {
+  -webkit-filter: none;
+  -moz-filter: none;
+  -o-filter: none;
+  -ms-filter: none;
+  filter: none;
+}
+
+.misago-markup .spoiler-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: fadeout(@post-bg, 90%);
+}
+
+.misago-markup .spoiler-reveal {
+  .btn-default();
+}
+
+.misago-markup .spoiler-reveal,
+.misago-markup .spoiler-reveal:active,
+.misago-markup .spoiler-reveal:hover {
+  border-radius: 4px;
+  box-shadow: 0px 0px 0px 4px @post-bg;
+  padding: @padding-base-vertical @padding-base-horizontal;
+}

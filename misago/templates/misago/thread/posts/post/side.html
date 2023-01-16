@@ -1,5 +1,5 @@
 {% load i18n misago_avatars %}
-<div class="col-xs-12 col-md-3 post-side post-side-{% if post.poster %}registered{% else %}anonymous{% endif %}">
+<div class="post-side post-side-{% if post.poster %}registered{% else %}anonymous{% endif %}">
   <div class="pull-right">
     <a href="{{ post.get_absolute_url }}" title="{% trans 'Post link' %}" class="btn btn-default btn-icon">
       <span class="material-icon">

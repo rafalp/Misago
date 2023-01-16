@@ -74,26 +74,16 @@
 
 {% block content %}
 <div class="page page-thread {% if category.css_class %}page-thread-{{ category.css_class }}{% endif %}">
-  <div class="page-header-bg">
-    <div class="page-header">
+  {% include "misago/thread/header.html" %}
+  <div class="container page-container">
 
-      {% include "misago/thread/breadcrumbs.html" %}
-      <div class="container">
-        <h1>{{ thread.title }}</h1>
-      </div>
-      {% include "misago/thread/stats.html" %}
-
-    </div>
-  </div>
-  <div class="container">
-
-    {% include "misago/thread/toolbar-top.html" %}
+    {% include "misago/thread/toolbar_top.html" %}
     {% if thread.poll %}
       {% include "misago/poll/index.html" with poll=thread.poll %}
     {% endif %}
 
     {% include "misago/thread/posts/index.html" %}
-    {% include "misago/thread/paginator.html" %}
+    {% include "misago/thread/toolbar_bottom.html" %}
 
   </div>
 </div>

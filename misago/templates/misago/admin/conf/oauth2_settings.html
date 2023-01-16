@@ -1,0 +1,100 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic settings" %}</legend>
+
+    {% form_row form.enable_oauth2_client %}
+    {% form_row form.oauth2_provider %}
+    {% form_row form.oauth2_client_id %}
+    {% form_row form.oauth2_client_secret %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Initializing login" %}</legend>
+
+    {% form_row form.oauth2_login_url %}
+    {% form_row form.oauth2_scopes %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Retrieving access token" %}</legend>
+
+    {% form_row form.oauth2_token_url %}
+    {% form_row form.oauth2_token_method %}
+    {% form_row form.oauth2_token_extra_headers %}
+    {% form_row form.oauth2_json_token_path %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Retrieving user data" %}</legend>
+
+    {% form_row form.oauth2_user_url %}
+    {% form_row form.oauth2_user_method %}
+    {% form_row form.oauth2_user_token_location %}
+    {% form_row form.oauth2_user_token_name %}
+    {% form_row form.oauth2_user_extra_headers %}
+    
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "New user sign-ons" %}</legend>
+
+    {% form_row form.oauth2_send_welcome_email %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User JSON mappings" %}</legend>
+
+    <p>
+      {% blocktrans trimmed %}
+        Path to value is a key under which it can be found in the JSON with user data returned by the provider. If this key is nested under other key, use full path and separate keys with periods ("<code>.</code>").
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% trans "For example, for given JSON with user data:" %}
+    </p>
+    <p>
+      <code>
+        {<br />
+          &nbsp;&nbsp;"id": "380422",<br />
+          &nbsp;&nbsp;"name": "Bob",<br />
+          &nbsp;&nbsp;"email": "bob@example.com",<br />
+          &nbsp;&nbsp;"picture": {<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;"url": "http://exmaple.com/users/avatars/f7s6a8d68sa68sa.jpg"<br />
+          &nbsp;&nbsp;}<br />
+        }
+      </code>
+    </p>
+    <p>
+      {% blocktrans trimmed %}
+        Those paths should be used:
+      {% endblocktrans %}
+    </p>
+    <ul class="list-unstyled">
+      <li>{% trans "User ID" %}: <code>id</code></li>
+      <li>{% trans "User name" %}: <code>name</code></li>
+      <li>{% trans "User e-mail" %}: <code>email</code></li>
+      <li>{% trans "User avatar" %}: <code>picture.url</code></li>
+    </ul>
+
+    {% form_row form.oauth2_json_id_path %}
+    {% form_row form.oauth2_json_name_path %}
+    {% form_row form.oauth2_json_email_path %}
+    {% form_row form.oauth2_json_avatar_path %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

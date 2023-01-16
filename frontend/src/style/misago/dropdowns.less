@@ -1,0 +1,185 @@
+//
+// Dropdowns
+// --------------------------------------------------
+
+// Unify .btn-link appearance with anchors
+.dropdown-menu > li > a,
+.dropdown-menu > li > .btn-link,
+.modal-menu > li > a,
+.modal-menu > li > .btn-link {
+  display: block;
+  border: none;
+  clear: both;
+  float: none;
+  padding: 6px 20px;
+  width: 100%;
+
+  color: @dropdown-link-color;
+  font-weight: normal;
+  line-height: @line-height-base;
+  text-align: left;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    background-color: @dropdown-link-hover-bg;
+
+    color: @dropdown-link-hover-color;
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: @dropdown-link-hover-bg;
+
+    color: @dropdown-link-hover-color;
+    text-decoration: none;
+  }
+
+  &:disabled {
+    color: fadeOut(@dropdown-link-color, 50);
+  }
+
+  // Set material icons in dropdown menus
+  .material-icon {
+    margin: -2px 0px;
+    margin-right: @line-height-computed * 0.35;
+
+    position: relative;
+    bottom: 1px;
+
+    font-size: 18px;
+  }
+
+  .badge {
+    float: right;
+
+    position: relative;
+    top: 1px;
+  }
+}
+
+// Extra overrides for modal nav
+.modal-menu {
+  margin: @line-height-computed 0px;
+  padding: 0px;
+}
+
+.modal-menu > li {
+  margin: @line-height-computed / 3 0px;
+  padding: 0px;
+
+  list-style: none;
+}
+
+// Bump min dropdown width to 210px
+.dropdown-menu {
+  min-width: 210px;
+}
+
+// Dropdown footer
+.dropdown-menu .dropdown-footer {
+  padding: 6px 20px;
+}
+
+// Dropdown buttons container
+.dropdown-menu .dropdown-buttons {
+  padding: 2px 20px;
+  padding-bottom: 7px;
+
+  .btn {
+    margin: 4px 0px;
+  }
+}
+
+// Navbar's dropdown
+.mobile-dropdown {
+  position: relative;
+}
+
+.mobile-dropdown.open > .dropdown-menu,
+.compact-nav.open > .dropdown-menu {
+  border: none;
+  border-radius: 0;
+
+  display: block;
+  margin: 0px;
+  width: 100%;
+}
+
+// Guest menu
+.user-dropdown .guest-preview {
+  text-align: center;
+
+  .row {
+    margin: 0px;
+  }
+}
+
+// User menu
+.navbar .user-dropdown {
+  width: 240px;
+}
+
+.user-dropdown .dropdown-header {
+  padding: 6px 20px;
+
+  font-size: @font-size-large;
+
+  strong {
+    font-weight: normal;
+  }
+}
+
+// Category picker
+.category-picker .dropdown-menu {
+  // Make category picker wider on desktops
+  @media screen and (min-width: @screen-md-min) {
+    width: 300px;
+  }
+}
+
+.category-picker .dropdown-menu > li > .btn-link {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+// Stick to bottom on mobile
+@media screen and (max-width: @screen-xs-max) {
+  .dropdown-menu.stick-to-bottom {
+    border-radius: 0px;
+    border: none;
+
+    max-height: 300px;
+    overflow-y: auto;
+
+    .box-shadow(0px 0px @line-height-computed * 1.5 @gray-light);
+
+    clear: both;
+    top: auto;
+    width: 100%;
+
+    position: fixed;
+    bottom: 0px;
+
+    margin: 0px;
+    padding: 0px;
+
+    padding-bottom: @line-height-computed;
+
+    li {
+      float: none;
+
+      margin: 0px;
+
+      clear: both;
+
+      & > a,
+      & > .btn {
+        padding-top: @line-height-computed * 0.75;
+        padding-bottom: @line-height-computed * 0.75;
+
+        border-bottom: 1px solid @dropdown-divider-bg;
+      }
+    }
+  }
+}

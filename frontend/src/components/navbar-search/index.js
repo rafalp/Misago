@@ -13,7 +13,7 @@ export default class extends React.Component {
       isLoading: false,
       isOpen: false,
       query: "",
-      results: []
+      results: [],
     }
 
     this.intervalId = null
@@ -29,7 +29,7 @@ export default class extends React.Component {
     document.removeEventListener("keydown", this.onEscape)
   }
 
-  onToggle = ev => {
+  onToggle = (ev) => {
     this.setState((prevState, props) => {
       if (!prevState.isOpen) {
         window.setTimeout(() => {
@@ -41,7 +41,7 @@ export default class extends React.Component {
     })
   }
 
-  onDocumentMouseDown = ev => {
+  onDocumentMouseDown = (ev) => {
     let closeResults = true
     let node = ev.target
 
@@ -59,13 +59,13 @@ export default class extends React.Component {
     }
   }
 
-  onEscape = ev => {
+  onEscape = (ev) => {
     if (ev.key === "Escape") {
       this.setState({ isOpen: false })
     }
   }
 
-  onChange = ev => {
+  onChange = (ev) => {
     const query = ev.target.value
 
     this.setState({ query })
@@ -85,20 +85,20 @@ export default class extends React.Component {
 
     this.intervalId = window.setTimeout(() => {
       ajax.get(misago.get("SEARCH_API"), { q: query }).then(
-        data => {
+        (data) => {
           this.setState({
             intervalId: null,
             isLoading: false,
-            results: cleanResults(data)
+            results: cleanResults(data),
           })
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
 
           this.setState({
             intervalId: null,
             isLoading: false,
-            results: []
+            results: [],
           })
         }
       )
@@ -112,7 +112,7 @@ export default class extends React.Component {
     return (
       <div
         className={className}
-        ref={container => (this.container = container)}
+        ref={(container) => (this.container = container)}
       >
         <a
           aria-haspopup="true"

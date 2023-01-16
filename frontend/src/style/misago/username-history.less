@@ -1,0 +1,78 @@
+//
+// Username History
+// --------------------------------------------------
+
+// Change tabular on larger displays
+.username-history li {
+  @media screen and (min-width: @screen-md-min) {
+    display: block;
+    overflow: auto;
+  }
+}
+
+// Change avatar
+.username-history .change-avatar {
+  float: left;
+
+  a,
+  span {
+    margin-right: @line-height-computed / 2;
+
+    img {
+      width: 42px;
+      height: 42px;
+    }
+  }
+
+  @media screen and (min-width: @screen-md-min) {
+    a,
+    span {
+      img {
+        width: 18px;
+        height: 18px;
+
+        position: relative;
+        bottom: 1px;
+      }
+    }
+  }
+}
+
+// Change author
+.username-history .change-author {
+  @media screen and (min-width: @screen-md-min) {
+    float: left;
+    width: 30%;
+  }
+}
+
+// Old to new name change
+.username-history .change {
+  min-height: @line-height-computed; // we need that for ui-preview-text
+  overflow: auto;
+
+  span {
+    display: block;
+    float: left;
+  }
+
+  .material-icon {
+    margin: 0px @font-size-base / 2;
+
+    position: relative;
+    top: 4px;
+  }
+
+  @media screen and (min-width: @screen-md-min) {
+    float: left;
+    width: 40%;
+  }
+}
+
+// Date
+.username-history .change-date {
+  @media screen and (min-width: @screen-md-min) {
+    float: left;
+    width: 20%;
+  }
+}

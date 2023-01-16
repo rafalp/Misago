@@ -16,13 +16,13 @@ export function hydrate(json) {
 
     isSelected: false,
     isBusy: false,
-    isDeleted: false
+    isDeleted: false,
   })
 }
 
 export function hydrateAttachment(json) {
   return Object.assign({}, json, {
-    uploaded_on: moment(json.uploaded_on)
+    uploaded_on: moment(json.uploaded_on),
   })
 }
 
@@ -30,7 +30,7 @@ export function patch(post, patch) {
   return {
     type: PATCH_POST,
     post,
-    patch
+    patch,
   }
 }
 

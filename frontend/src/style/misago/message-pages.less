@@ -1,0 +1,49 @@
+//
+// Message Pages
+// --------------------------------------------------
+
+// Small displays
+@media screen and (max-width: @screen-xs-max) {
+  .page-message,
+  .page-error {
+    .message-panel {
+      text-align: center;
+    }
+
+    .message-icon {
+      margin: @line-height-computed * 1.5;
+      font-size: @message-page-icon-size;
+    }
+  }
+}
+
+// Full displays
+@media screen and (min-width: @screen-sm-min) {
+  .page-message,
+  .page-error {
+    .message-panel {
+      margin: @line-height-computed * 3 auto;
+      max-width: @screen-md-max * 0.65;
+      overflow: auto;
+    }
+
+    .message-icon {
+      float: left;
+
+      .material-icon {
+        font-size: @message-page-icon-size;
+      }
+    }
+
+    .message-body {
+      margin-top: @message-page-icon-size / 5;
+      margin-left: @message-page-icon-size + @line-height-computed;
+
+      font-size: @font-size-large;
+
+      p.lead {
+        font-size: @font-size-large * 2;
+      }
+    }
+  }
+}

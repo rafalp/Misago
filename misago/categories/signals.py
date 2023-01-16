@@ -4,7 +4,7 @@ from ..users.signals import anonymize_user_data, username_changed
 from .models import Category
 
 delete_category_content = Signal()
-move_category_content = Signal(providing_args=["new_category"])
+move_category_content = Signal()
 
 
 @receiver([anonymize_user_data, username_changed])

@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function({ provider, query }) {
+export default function ({ provider, query }) {
   const url = provider.url + "?q=" + encodeURI(query)
   const label = ngettext(
     'See full "%(provider)s" results page with %(count)s result.',
@@ -15,7 +15,7 @@ export default function({ provider, query }) {
           label,
           {
             count: provider.count,
-            provider: provider.name
+            provider: provider.name,
           },
           true
         )}

@@ -25,7 +25,8 @@ setup(
     description=(
         "Misago is modern, fully featured forum application written in "
         "Python and ES6, powered by Django and React.js. It works out of "
-        "the box and plays nicely with other projects like Django-CMS."
+        "the box and can be run alone or be connected to existing site "
+        "with built in OAuth 2 client."
     ),
     long_description=README,
     url="http://www.misago-project.org/",
@@ -43,7 +44,7 @@ setup(
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Internet :: WWW/HTTP :: WSGI",

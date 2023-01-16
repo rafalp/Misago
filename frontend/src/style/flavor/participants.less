@@ -1,0 +1,40 @@
+//
+// Thread Participants Flavor
+// --------------------------------------------------
+
+.panel-participants {
+  border: 1px solid @panel-form-border;
+}
+
+.participant-card .btn-user {
+  border: 0px !important;
+}
+
+.participant-card .dropdown-header-owner {
+  color: @brand-primary;
+
+  .material-icon {
+    width: 14px;
+    height: 14px;
+
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .icon-text {
+    margin-left: 4px;
+
+    position: relative;
+    top: 2px;
+  }
+}
+
+.panel-participants p {
+  color: @gray-light;
+
+  @media screen and (max-width: @screen-xs-max) {
+    margin-top: @line-height-computed / 2;
+
+    text-align: center;
+  }
+}

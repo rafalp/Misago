@@ -1,0 +1,97 @@
+//
+// Categories Lists
+// --------------------------------------------------
+
+// Category Block
+// --------------------------------------------------
+
+// Thread unread state icon
+.category-main .read-status .material-icon {
+  color: @category-read-color;
+}
+
+.category-main .read-status.item-new .material-icon {
+  color: @category-new-color;
+}
+
+// Last thread
+.category-last-thread .media-heading {
+  a {
+    display: inline-block;
+    overflow: hidden;
+
+    white-space: nowrap;
+    width: 290px; // md-3 - avatar column
+
+    text-overflow: ellipsis;
+    vertical-align: top;
+
+    @media screen and (max-width: @screen-sm-max) {
+      width: 275px; // md-3 - avatar column
+    }
+
+    @media screen and (max-width: @screen-xs-max) {
+      width: 260px; // md-3 - avatar column
+    }
+  }
+}
+
+// Last thread message
+.category-thread-message {
+  .material-icon {
+    width: 28px;
+    height: 28px;
+
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  p {
+    margin: 0px;
+  }
+}
+
+// Subcategories list
+// --------------------------------------------------
+.list-inline.subcategories-list {
+  overflow: auto;
+  margin-top: @line-height-computed / -2;
+
+  li {
+    display: block;
+    float: left;
+
+    a,
+    a:link,
+    a:visited,
+    a:active,
+    a:hover,
+    a:focus {
+      background-color: @gray-lighter;
+      border: 1px solid darken(@gray-lighter, 5%);
+      border-radius: @border-radius-base;
+      display: inline-block;
+      margin-top: @line-height-computed / 2;
+      padding: @padding-base-vertical @padding-base-horizontal;
+
+      color: @gray;
+    }
+
+    &:focus,
+    a:hover,
+    a:active {
+      background-color: darken(@gray-lighter, 5%);
+
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+}
+
+.row.subcategories-list {
+  .btn {
+    margin-top: @line-height-computed;
+
+    text-align: left;
+  }
+}

@@ -9,7 +9,7 @@ export function select(store) {
     posts: store.posts,
     thread: store.thread,
     tick: store.tick.tick,
-    user: store.auth.user
+    user: store.auth.user,
   }
 }
 
@@ -23,11 +23,11 @@ export function paths() {
   return [
     {
       path: basePath,
-      component: connect(select)(Route)
+      component: connect(select)(Route),
     },
     {
       path: basePath + ":page/",
-      component: connect(select)(Route)
-    }
+      component: connect(select)(Route),
+    },
   ]
 }

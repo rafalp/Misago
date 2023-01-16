@@ -5,7 +5,7 @@ import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 
-export default function(props) {
+export default function (props) {
   if (isVisible(props.post.acl)) {
     return (
       <li className="event-controls">
@@ -31,18 +31,18 @@ export class Hide extends React.Component {
         hidden_on: moment(),
         hidden_by_name: this.props.user.username,
         url: Object.assign(this.props.post.url, {
-          hidden_by: this.props.user.url
-        })
+          hidden_by: this.props.user.url,
+        }),
       })
     )
 
     const op = { op: "replace", path: "is-hidden", value: true }
 
     ajax.patch(this.props.post.api.index, [op]).then(
-      patch => {
+      (patch) => {
         store.dispatch(post.patch(this.props.post, patch))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
           snackbar.error(rejection.detail[0])
         } else {
@@ -51,7 +51,7 @@ export class Hide extends React.Component {
 
         store.dispatch(
           post.patch(this.props.post, {
-            is_hidden: false
+            is_hidden: false,
           })
         )
       }
@@ -75,17 +75,17 @@ export class Unhide extends React.Component {
   onClick = () => {
     store.dispatch(
       post.patch(this.props.post, {
-        is_hidden: false
+        is_hidden: false,
       })
     )
 
     const op = { op: "replace", path: "is-hidden", value: false }
 
     ajax.patch(this.props.post.api.index, [op]).then(
-      patch => {
+      (patch) => {
         store.dispatch(post.patch(this.props.post, patch))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
           snackbar.error(rejection.detail[0])
         } else {
@@ -94,7 +94,7 @@ export class Unhide extends React.Component {
 
         store.dispatch(
           post.patch(this.props.post, {
-            is_hidden: true
+            is_hidden: true,
           })
         )
       }
@@ -116,7 +116,7 @@ export class Unhide extends React.Component {
 
 export class Delete extends React.Component {
   onClick = () => {
-    const decision = confirm(
+    const decision = window.confirm(
       gettext(
         "Are you sure you wish to delete this event? This action is not reversible!"
       )
@@ -129,7 +129,7 @@ export class Delete extends React.Component {
   delete = () => {
     store.dispatch(
       post.patch(this.props.post, {
-        isDeleted: true
+        isDeleted: true,
       })
     )
 
@@ -137,7 +137,7 @@ export class Delete extends React.Component {
       () => {
         snackbar.success(gettext("Event has been deleted."))
       },
-      rejection => {
+      (rejection) => {
         if (rejection.status === 400) {
           snackbar.error(rejection.detail[0])
         } else {
@@ -146,7 +146,7 @@ export class Delete extends React.Component {
 
         store.dispatch(
           post.patch(this.props.post, {
-            isDeleted: false
+            isDeleted: false,
           })
         )
       }

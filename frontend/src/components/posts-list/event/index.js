@@ -5,7 +5,7 @@ import Message from "./message"
 import UnreadLabel from "./unread-label"
 import Waypoint from "../waypoint"
 
-export default function(props) {
+export default function (props) {
   let className = "event"
   if (props.post.isDeleted) {
     className = "hide"
@@ -16,16 +16,14 @@ export default function(props) {
   return (
     <li id={"post-" + props.post.id} className={className}>
       <UnreadLabel post={props.post} />
-      <div className="row">
-        <div className="col-xs-2 col-sm-3 text-right">
+      <div className="event-body">
+        <div className="event-icon">
           <Icon {...props} />
         </div>
-        <div className="col-xs-10 col-sm-9 text-left">
-          <Waypoint post={props.post}>
-            <Message {...props} />
-            <Info {...props} />
-          </Waypoint>
-        </div>
+        <Waypoint className="event-content" post={props.post}>
+          <Message {...props} />
+          <Info {...props} />
+        </Waypoint>
       </div>
     </li>
   )

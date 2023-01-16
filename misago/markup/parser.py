@@ -82,19 +82,19 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     md = markdown.Markdown(extensions=["markdown.extensions.nl2br"])
 
     # Remove HTML allowances
-    del md.preprocessors["html_block"]
-    del md.inlinePatterns["html"]
+    md.preprocessors.deregister("html_block")
+    md.inlinePatterns.deregister("html")
 
     # Remove references
-    del md.preprocessors["reference"]
-    del md.inlinePatterns["reference"]
-    del md.inlinePatterns["image_reference"]
-    del md.inlinePatterns["short_reference"]
+    md.parser.blockprocessors.deregister("reference")
+    md.inlinePatterns.deregister("reference")
+    md.inlinePatterns.deregister("image_reference")
+    md.inlinePatterns.deregister("short_reference")
 
     # Add [b], [i], [u]
-    md.inlinePatterns.add("bb_b", bold, "<strong")
-    md.inlinePatterns.add("bb_i", italics, "<emphasis")
-    md.inlinePatterns.add("bb_u", underline, "<emphasis2")
+    md.inlinePatterns.register(bold, "bb_b", 55)
+    md.inlinePatterns.register(italics, "bb_i", 55)
+    md.inlinePatterns.register(underline, "bb_u", 55)
 
     # Add ~~deleted~~
     strikethrough_md = StrikethroughExtension()
@@ -102,28 +102,28 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_links:
         # Add [url]
-        md.inlinePatterns.add("bb_url", url(md), "<link")
+        md.inlinePatterns.register(url(md), "bb_url", 155)
     else:
         # Remove links
-        del md.inlinePatterns["link"]
-        del md.inlinePatterns["autolink"]
-        del md.inlinePatterns["automail"]
+        md.inlinePatterns.deregister("link")
+        md.inlinePatterns.deregister("autolink")
+        md.inlinePatterns.deregister("automail")
 
     if allow_images:
         # Add [img]
-        md.inlinePatterns.add("bb_img", image(md), "<image_link")
+        md.inlinePatterns.register(image(md), "bb_img", 145)
         short_images_md = ShortImagesExtension()
         short_images_md.extendMarkdown(md)
     else:
         # Remove images
-        del md.inlinePatterns["image_link"]
+        md.inlinePatterns.deregister("image_link")
 
     if allow_blocks:
         # Add [hr] and [quote] blocks
-        md.parser.blockprocessors.add("bb_hr", BBCodeHRProcessor(md.parser), ">hr")
+        md.parser.blockprocessors.register(BBCodeHRProcessor(md.parser), "bb_hr", 45)
 
-        fenced_code = FencedCodeExtension()
-        fenced_code.extendMarkdown(md, None)
+        fenced_code = FencedCodeExtension(lang_prefix="")
+        fenced_code.extendMarkdown(md)
 
         code_bbcode = CodeBlockExtension()
         code_bbcode.extendMarkdown(md)
@@ -135,13 +135,13 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
         spoiler_bbcode.extendMarkdown(md)
     else:
         # Remove blocks
-        del md.parser.blockprocessors["hashheader"]
-        del md.parser.blockprocessors["setextheader"]
-        del md.parser.blockprocessors["code"]
-        del md.parser.blockprocessors["quote"]
-        del md.parser.blockprocessors["hr"]
-        del md.parser.blockprocessors["olist"]
-        del md.parser.blockprocessors["ulist"]
+        md.parser.blockprocessors.deregister("hashheader")
+        md.parser.blockprocessors.deregister("setextheader")
+        md.parser.blockprocessors.deregister("code")
+        md.parser.blockprocessors.deregister("quote")
+        md.parser.blockprocessors.deregister("hr")
+        md.parser.blockprocessors.deregister("olist")
+        md.parser.blockprocessors.deregister("ulist")
 
     return pipeline.extend_markdown(md)
 
@@ -167,7 +167,9 @@ def clean_links(request, result, force_shva=False):
         else:
             result["outgoing_links"].append(clean_link_prefix(link["href"]))
             link["href"] = assert_link_prefix(link["href"])
-            link["rel"] = "nofollow noopener"
+            link["rel"] = "external nofollow noopener"
+
+        link["target"] = "_blank"
 
         if link.string:
             link.string = clean_link_prefix(link.string)

@@ -1,0 +1,104 @@
+//
+// Modal Flavor
+// --------------------------------------------------
+
+// Custom header styles
+.modal-header {
+  background: @modal-header-bg;
+  border-bottom-color: @modal-header-border-color;
+  border-radius: @border-radius-large @border-radius-large 0px 0px;
+
+  color: @modal-header-color;
+
+  .close {
+    padding: 0px 6px;
+
+    color: @modal-header-color;
+    font-size: 24px;
+    line-height: 24px;
+    text-shadow: none;
+  }
+}
+
+// Color message icon
+.modal-message .message-icon {
+  color: @message-icon-color;
+}
+
+// Even out space between form fields
+.modal-body > .form-group {
+  margin: @line-height-computed 0px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+// Sign in modal
+.modal-sign-in {
+  .modal-body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    & > .form-group {
+      margin: @line-height-computed 0px;
+    }
+  }
+}
+
+// Register modal
+.legal-footnote {
+  label {
+    font-weight: bold;
+  }
+
+  .help-block {
+    margin-left: 20px;
+
+    color: @brand-danger;
+  }
+}
+
+// Avatar crop
+.modal-avatar-index {
+  .avatar-preview {
+    background: #fff;
+    border-radius: @border-radius-large;
+  }
+}
+
+.modal-avatar-crop {
+  .cropit-preview {
+    background: #fff;
+    margin: @line-height-computed 0px;
+  }
+
+  .cropit-image-zoom-input {
+    margin-top: @line-height-computed * 2;
+    margin-bottom: @line-height-computed;
+  }
+}
+
+// Post likes
+.modal-post-likers {
+  .media {
+    border-bottom: 1px solid @gray-lighter;
+    padding-bottom: 15px; // hardcoded in BS less
+
+    img {
+      border-radius: @border-radius-base;
+
+      width: 40px;
+      height: 40px;
+    }
+
+    &:last-child {
+      border: none;
+      padding-bottom: 0px;
+    }
+  }
+}

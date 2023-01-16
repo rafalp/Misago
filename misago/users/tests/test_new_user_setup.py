@@ -16,6 +16,12 @@ def test_default_avatar_is_set_for_user(dynamic_settings, user):
     assert user.avatar_set.exists()
 
 
+def test_avatar_from_url_is_set_for_user(dynamic_settings, user):
+    setup_new_user(dynamic_settings, user, avatar_url="https://placekitten.com/600/500")
+    assert user.avatars
+    assert user.avatar_set.exists()
+
+
 def test_default_started_threads_subscription_option_is_set_for_user(
     dynamic_settings, user
 ):

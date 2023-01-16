@@ -8,7 +8,7 @@ import store from "misago/services/store"
 export function leave(thread, participant) {
   ajax
     .patch(thread.api.index, [
-      { op: "remove", path: "participants", value: participant.id }
+      { op: "remove", path: "participants", value: participant.id },
     ])
     .then(
       () => {
@@ -17,7 +17,7 @@ export function leave(thread, participant) {
           window.location = misago.get("PRIVATE_THREADS_URL")
         }, 3 * 1000)
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
       }
     )
@@ -27,10 +27,10 @@ export function remove(thread, participant) {
   ajax
     .patch(thread.api.index, [
       { op: "remove", path: "participants", value: participant.id },
-      { op: "add", path: "acl", value: 1 }
+      { op: "add", path: "acl", value: 1 },
     ])
     .then(
-      data => {
+      (data) => {
         store.dispatch(updateAcl(data))
         store.dispatch(participants.replace(data.participants))
 
@@ -39,13 +39,13 @@ export function remove(thread, participant) {
           interpolate(
             message,
             {
-              user: participant.username
+              user: participant.username,
             },
             true
           )
         )
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
       }
     )
@@ -55,10 +55,10 @@ export function changeOwner(thread, participant) {
   ajax
     .patch(thread.api.index, [
       { op: "replace", path: "owner", value: participant.id },
-      { op: "add", path: "acl", value: 1 }
+      { op: "add", path: "acl", value: 1 },
     ])
     .then(
-      data => {
+      (data) => {
         store.dispatch(updateAcl(data))
         store.dispatch(participants.replace(data.participants))
 
@@ -67,13 +67,13 @@ export function changeOwner(thread, participant) {
           interpolate(
             message,
             {
-              user: participant.username
+              user: participant.username,
             },
             true
           )
         )
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
       }
     )

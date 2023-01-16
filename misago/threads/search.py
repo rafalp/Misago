@@ -65,10 +65,13 @@ class SearchThreads(SearchProvider):
 
 def search_threads(request, query, visible_threads):
     max_hits = request.settings.posts_per_page * 5
+    clean_query = filter_search(query)
 
-    search_query = SearchQuery(
-        filter_search(query), config=settings.MISAGO_SEARCH_CONFIG
-    )
+    if not clean_query:
+        # Short-circuit search due to empty cleaned query
+        return Post.objects.none()
+
+    search_query = SearchQuery(clean_query, config=settings.MISAGO_SEARCH_CONFIG)
     search_vector = SearchVector(
         "search_document", config=settings.MISAGO_SEARCH_CONFIG
     )

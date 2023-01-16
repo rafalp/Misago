@@ -1,7 +1,7 @@
 import React from "react"
 import Avatar from "misago/components/avatar"
 
-export default function({ category }) {
+export default function ({ category }) {
   return (
     <div className="col-xs-12 col-sm-6 col-md-4 category-last-thread">
       <LastThread category={category} />

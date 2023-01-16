@@ -86,8 +86,14 @@ class UserViewSet(viewsets.GenericViewSet):
         return list_endpoint(request)
 
     def create(self, request):
-        if request.settings.enable_sso:
-            raise PermissionDenied(_("Please use the 3rd party site to register."))
+        if request.settings.enable_oauth2_client:
+            raise PermissionDenied(
+                _(
+                    "This feature has been disabled. "
+                    "Please use %(provider)s to sign in."
+                )
+                % {"provider": request.settings.oauth2_provider}
+            )
 
         return create_endpoint(request)
 
@@ -132,9 +138,13 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @action(methods=["get", "post"], detail=True)
     def username(self, request, pk=None):
-        if request.settings.enable_sso:
+        if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _("Please use the 3rd party site to change your username.")
+                _(
+                    "This feature has been disabled. "
+                    "Please use %(provider)s to change your name."
+                )
+                % {"provider": request.settings.oauth2_provider}
             )
 
         get_int_or_404(pk)
@@ -156,9 +166,13 @@ class UserViewSet(viewsets.GenericViewSet):
         url_name="change-password",
     )
     def change_password(self, request, pk=None):
-        if request.settings.enable_sso:
+        if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _("Please use the 3rd party site to change your password.")
+                _(
+                    "This feature has been disabled. "
+                    "Please use %(provider)s to change your password."
+                )
+                % {"provider": request.settings.oauth2_provider}
             )
 
         get_int_or_404(pk)
@@ -170,9 +184,13 @@ class UserViewSet(viewsets.GenericViewSet):
         methods=["post"], detail=True, url_path="change-email", url_name="change-email"
     )
     def change_email(self, request, pk=None):
-        if request.settings.enable_sso:
+        if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _("Please use the 3rd party site to change your e-mail.")
+                _(
+                    "This feature has been disabled. "
+                    "Please use %(provider)s to change your e-mail."
+                )
+                % {"provider": request.settings.oauth2_provider}
             )
 
         get_int_or_404(pk)
@@ -206,9 +224,13 @@ class UserViewSet(viewsets.GenericViewSet):
         url_name="delete-own-account",
     )
     def delete_own_account(self, request, pk=None):
-        if request.settings.enable_sso:
+        if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _("Please use the 3rd party site to delete account.")
+                _(
+                    "This feature has been disabled. "
+                    "Please use %(provider)s to delete your account."
+                )
+                % {"provider": request.settings.oauth2_provider}
             )
 
         serializer = DeleteOwnAccountSerializer(

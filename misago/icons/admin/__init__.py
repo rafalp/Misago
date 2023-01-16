@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
 from .views import icons_admin
@@ -7,8 +7,8 @@ from .views import icons_admin
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Icons
-        urlpatterns.namespace(r"^icons/", "icons", "settings")
-        urlpatterns.patterns("settings:icons", url(r"^$", icons_admin, name="index"))
+        urlpatterns.namespace("icons/", "icons", "settings")
+        urlpatterns.patterns("settings:icons", path("", icons_admin, name="index"))
 
     def register_navigation_nodes(self, site):
         site.add_node(

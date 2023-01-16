@@ -7,7 +7,7 @@ export default function initializer(context) {
     mount({
       root: misago.get("USERS_LIST_URL"),
       component: Users,
-      paths: paths()
+      paths: paths(),
     })
   }
 }
@@ -15,5 +15,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:users",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

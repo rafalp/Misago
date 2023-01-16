@@ -18,9 +18,9 @@ export default class extends Form {
       url: "",
 
       validators: {
-        url: []
+        url: [],
       },
-      errors: {}
+      errors: {},
     }
   }
 
@@ -36,14 +36,14 @@ export default class extends Form {
   send() {
     return ajax.post(this.props.thread.api.posts.move, {
       new_thread: this.state.url,
-      posts: [this.props.post.id]
+      posts: [this.props.post.id],
     })
   }
 
   handleSuccess(success) {
     store.dispatch(
       post.patch(this.props.post, {
-        isDeleted: true
+        isDeleted: true,
       })
     )
 
@@ -60,7 +60,7 @@ export default class extends Form {
     }
   }
 
-  onUrlChange = event => {
+  onUrlChange = (event) => {
     this.changeValue("url", event.target.value)
   }
 
@@ -87,7 +87,7 @@ export default class extends Form {
             <div className="modal-footer">
               <button
                 className="btn btn-primary"
-                loading={this.state.isLoading}
+                disabled={this.state.isLoading}
               >
                 {gettext("Move post")}
               </button>

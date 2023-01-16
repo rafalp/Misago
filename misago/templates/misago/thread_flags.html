@@ -1,0 +1,52 @@
+{% load i18n %}
+
+<ul class="thread-flags">
+  {% if thread.weight == 2 %}
+    <li
+      class="thread-flag-pinned-globally"
+      title="{% trans 'Pinned globally' %}"
+    >
+      <span class="material-icon">bookmark</span>
+    </li>
+  {% endif %}
+  {% if thread.weight == 1 %}
+    <li
+      class="thread-flag-pinned-locally"
+      title="{% trans 'Pinned in category' %}"
+    >
+      <span class="material-icon">bookmark_outline</span>
+    </li>
+  {% endif %}
+  {% if thread.best_answer %}
+    <li
+      class="thread-flag-answered"
+      title="{% trans 'Answered' %}"
+    >
+      <span class="material-icon">check_circle</span>
+    </li>
+  {% endif %}
+  {% if thread.has_poll %}
+    <li
+      class="thread-flag-poll"
+      title="{% trans 'Poll' %}"
+    >
+      <span class="material-icon">poll</span>
+    </li>
+  {% endif %}
+  {% if thread.is_closed %}
+    <li
+      class="thread-flag-closed"
+      title="{% trans 'Closed' %}"
+    >
+      <span class="material-icon">lock</span>
+    </li>
+  {% endif %}
+  {% if thread.is_hidden %}
+    <li
+      class="thread-flag-hidden"
+      title="{% trans 'Hidden' %}"
+    >
+      <span class="material-icon">visibility_off</span>
+    </li>
+  {% endif %}
+</ul>

@@ -11,7 +11,7 @@ export default class SocialAuth extends React.Component {
 
       activation: props.activation || "",
       email: props.email || "",
-      username: props.username || ""
+      username: props.username || "",
     }
   }
 

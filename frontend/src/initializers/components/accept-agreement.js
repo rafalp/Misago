@@ -16,5 +16,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: "component:accept-agreement",
   initializer: initializer,
-  after: "store"
+  after: "store",
 })

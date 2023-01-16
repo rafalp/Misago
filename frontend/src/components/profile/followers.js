@@ -8,6 +8,7 @@ import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import { Toolbar, ToolbarItem, ToolbarSection } from "../Toolbar"
 
 export default class extends React.Component {
   constructor(props) {
@@ -39,7 +40,7 @@ export default class extends React.Component {
       more: data.more,
 
       page: data.page,
-      pages: data.pages
+      pages: data.pages,
     }
 
     store.dispatch(hydrate(data.results))
@@ -56,7 +57,7 @@ export default class extends React.Component {
       more: 0,
 
       page: 1,
-      pages: 1
+      pages: 1,
     }
 
     this.loadUsers()
@@ -70,12 +71,12 @@ export default class extends React.Component {
         apiUrl,
         {
           search: search,
-          page: page || 1
+          page: page || 1,
         },
         "user-" + this.API_FILTER
       )
       .then(
-        data => {
+        (data) => {
           if (page === 1) {
             store.dispatch(hydrate(data.results))
           } else {
@@ -90,10 +91,10 @@ export default class extends React.Component {
             more: data.more,
 
             page: data.page,
-            pages: data.pages
+            pages: data.pages,
           })
         },
-        rejection => {
+        (rejection) => {
           snackbar.apiError(rejection)
         }
       )
@@ -102,19 +103,19 @@ export default class extends React.Component {
   componentDidMount() {
     title.set({
       title: this.TITLE,
-      parent: this.props.profile.username
+      parent: this.props.profile.username,
     })
   }
 
   loadMore = () => {
     this.setState({
-      isBusy: true
+      isBusy: true,
     })
 
     this.loadUsers(this.state.page + 1, this.state.search)
   }
 
-  search = ev => {
+  search = (ev) => {
     this.setState({
       isLoaded: false,
       isBusy: true,
@@ -125,7 +126,7 @@ export default class extends React.Component {
       more: 0,
 
       page: 1,
-      pages: 1
+      pages: 1,
     })
 
     this.loadUsers(1, ev.target.value)
@@ -144,7 +145,7 @@ export default class extends React.Component {
       return interpolate(
         message,
         {
-          users: this.state.count
+          users: this.state.count,
         },
         true
       )
@@ -158,7 +159,7 @@ export default class extends React.Component {
       return interpolate(
         message,
         {
-          users: this.state.count
+          users: this.state.count,
         },
         true
       )
@@ -173,7 +174,7 @@ export default class extends React.Component {
         message,
         {
           username: this.props.profile.username,
-          users: this.state.count
+          users: this.state.count,
         },
         true
       )
@@ -189,7 +190,7 @@ export default class extends React.Component {
       return interpolate(
         gettext("%(username)s has no followers."),
         {
-          username: this.props.profile.username
+          username: this.props.profile.username,
         },
         true
       )
@@ -209,7 +210,7 @@ export default class extends React.Component {
           {interpolate(
             gettext("Show more (%(more)s)"),
             {
-              more: this.state.more
+              more: this.state.more,
             },
             true
           )}
@@ -243,16 +244,22 @@ export default class extends React.Component {
   render() {
     return (
       <div className={this.getClassName()}>
-        <nav className="toolbar">
-          <h3 className="toolbar-left">{this.getLabel()}</h3>
-
-          <Search
-            className="toolbar-right"
-            value={this.state.search}
-            onChange={this.search}
-            placeholder={gettext("Search users...")}
-          />
-        </nav>
+        <Toolbar>
+          <ToolbarSection auto>
+            <ToolbarItem auto>
+              <h3>{this.getLabel()}</h3>
+            </ToolbarItem>
+          </ToolbarSection>
+          <ToolbarSection>
+            <ToolbarItem>
+              <Search
+                value={this.state.search}
+                onChange={this.search}
+                placeholder={gettext("Search users...")}
+              />
+            </ToolbarItem>
+          </ToolbarSection>
+        </Toolbar>
 
         {this.getListBody()}
       </div>

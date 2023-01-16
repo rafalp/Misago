@@ -8,13 +8,6 @@ import dropdown from "misago/services/mobile-navbar-dropdown"
 import modal from "misago/services/modal"
 
 export class UserMenu extends React.Component {
-  logout() {
-    let decision = confirm(gettext("Are you sure you want to sign out?"))
-    if (decision) {
-      $("#hidden-logout-form").submit()
-    }
-  }
-
   changeAvatar() {
     modal.show(connect(select)(ChangeAvatarModal))
   }
@@ -84,7 +77,9 @@ export class UserMenu extends React.Component {
         <li className="dropdown-buttons">
           <button
             className="btn btn-default btn-block"
-            onClick={this.logout}
+            onClick={() =>
+              document.getElementById("hidden-logout-form").submit()
+            }
             type="button"
           >
             {gettext("Log out")}
@@ -153,7 +148,7 @@ export function UserPrivateThreadsLink({ user }) {
 
 export function selectUserMenu(state) {
   return {
-    user: state.auth.user
+    user: state.auth.user,
   }
 }
 

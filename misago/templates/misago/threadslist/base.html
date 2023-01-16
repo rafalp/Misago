@@ -15,13 +15,9 @@
   {% block extra-css %}{% endblock extra-css %}
 {% endspaceless %}">
 
-  <div class="page-header-bg">
-    {% block page-header %}
-    {% endblock page-header %}
-  </div>
+  {% block page-header %}{% endblock page-header %}
 
-  <div class="container">
-
+  <div class="container page-container">
     {% block list-container %}
       {% if subcategories %}
         <noscript>
@@ -40,7 +36,7 @@
       {% endif %}
 
       <section>
-        <div class="threads-list ui-ready">
+        <div class="threads-list">
           {% block threads-list %}
             <ul class="list-group" itemscope itemtype="http://schema.org/ItemList">
               <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">

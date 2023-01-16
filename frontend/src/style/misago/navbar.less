@@ -1,0 +1,169 @@
+//
+// Misago Navbar
+// --------------------------------------------------
+
+// Remove bottom margin from navbar
+.navbar {
+  margin-bottom: 0px;
+}
+
+// Desktop navbar
+.navbar .navbar-full {
+  // Brand
+  .navbar-brand {
+    padding-top: (@navbar-height - @navbar-icon-height) / 2;
+    padding-bottom: (@navbar-height - @navbar-icon-height) / 2;
+
+    font-size: @font-size-base * 1.5;
+
+    & > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    img {
+      height: @navbar-icon-height;
+      margin-right: @padding-base-horizontal / 2;
+    }
+  }
+
+  .navbar-nav > li > a {
+    font-size: @font-size-base * 1.2;
+  }
+
+  .navbar-icon {
+    display: block;
+    height: @navbar-height;
+    padding: @nav-link-padding;
+    padding-top: (@navbar-height - 28px) / 2;
+    padding-bottom: (@navbar-height - 28px) / 2;
+    position: relative;
+
+    color: @navbar-default-link-color;
+
+    &:hover,
+    &:focus {
+      color: @navbar-default-link-hover-color;
+      background-color: @navbar-default-link-hover-bg;
+    }
+
+    .material-icon {
+      width: 28px;
+      height: 28px;
+
+      font-size: 28px;
+      line-height: 28px;
+    }
+
+    .badge {
+      background-color: @brand-danger;
+      position: absolute;
+
+      top: 6px;
+      right: 6px;
+
+      font-size: 9px;
+    }
+  }
+
+  .open .navbar-icon {
+    &,
+    &:hover,
+    &:focus {
+      background-color: @navbar-default-link-active-bg;
+
+      color: @navbar-default-link-active-color;
+    }
+  }
+
+  // Pull Guest and User menus to right
+  .nav-guest,
+  .nav-user {
+    float: right;
+
+    .navbar-btn {
+      margin-left: @navbar-padding-horizontal;
+    }
+  }
+
+  // User avatar size
+  .nav-user .dropdown-toggle {
+    padding: (@navbar-height - @navbar-avatar-size) / 2;
+
+    img {
+      width: @navbar-avatar-size;
+      height: @navbar-avatar-size;
+    }
+  }
+}
+
+// Compact (mobile) navbar
+.navbar ul.navbar-compact-nav {
+  border-collapse: collapse;
+  display: table;
+  margin: 0px;
+  table-layout: fixed;
+  width: 100%;
+
+  & > li {
+    display: table-cell;
+    width: 100%;
+  }
+
+  & > li > a,
+  & > li > button {
+    background: none;
+    border: none;
+    display: block;
+    padding-top: 13px;
+    padding-bottom: 13px;
+
+    width: 100%;
+
+    color: @navbar-compact-link-color;
+    text-align: center;
+
+    &.active,
+    &:hover,
+    &:focus {
+      color: @navbar-compact-link-hover-color;
+      background-color: @navbar-compact-link-hover-bg;
+    }
+
+    & > img {
+      width: @navbar-compact-item-size;
+      height: @navbar-compact-item-size;
+    }
+  }
+
+  & > li > button {
+    display: inline-block;
+  }
+
+  & > li > a > .material-icon {
+    font-size: @navbar-compact-item-size;
+    line-height: @navbar-compact-item-size;
+  }
+}
+
+// Make navbar's height match compact nav
+@media (max-width: @grid-float-breakpoint) {
+  .navbar.navbar-misago {
+    min-height: auto;
+  }
+}
+
+// Hide compact navbar above breakpoint
+.navbar-misago .navbar-desktop-nav {
+  display: none;
+}
+
+@media (min-width: @grid-float-breakpoint) {
+  .navbar-misago ul.navbar-compact-nav {
+    display: none;
+  }
+
+  .navbar-misago .navbar-desktop-nav {
+    display: block;
+  }
+}

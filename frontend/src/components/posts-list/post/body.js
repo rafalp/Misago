@@ -8,7 +8,7 @@ const HIDDEN_BY_SPAN = '<span class="item-title">%(user)s</span>'
 const HIDDEN_ON =
   '<abbr class="last-title" title="%(absolute)s">%(relative)s</abbr>'
 
-export default function(props) {
+export default function (props) {
   if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
     return <Hidden {...props} />
   } else if (props.post.content) {
@@ -33,7 +33,7 @@ export function Hidden(props) {
       HIDDEN_BY_URL,
       {
         url: escapeHtml(props.post.url.hidden_by),
-        user: escapeHtml(props.post.hidden_by_name)
+        user: escapeHtml(props.post.hidden_by_name),
       },
       true
     )
@@ -41,7 +41,7 @@ export function Hidden(props) {
     user = interpolate(
       HIDDEN_BY_SPAN,
       {
-        user: escapeHtml(props.post.hidden_by_name)
+        user: escapeHtml(props.post.hidden_by_name),
       },
       true
     )
@@ -51,7 +51,7 @@ export function Hidden(props) {
     HIDDEN_ON,
     {
       absolute: escapeHtml(props.post.hidden_on.format("LLL")),
-      relative: escapeHtml(props.post.hidden_on.fromNow())
+      relative: escapeHtml(props.post.hidden_on.fromNow()),
     },
     true
   )
@@ -60,7 +60,7 @@ export function Hidden(props) {
     escapeHtml(gettext("Hidden by %(hidden_by)s %(hidden_on)s.")),
     {
       hidden_by: user,
-      hidden_on: date
+      hidden_on: date,
     },
     true
   )

@@ -69,8 +69,8 @@ def draw_avatar_flavour(user, image):
     size = int(image_size * 0.7)
     font = ImageFont.truetype(FONT_FILE, size=size)
 
-    text_size = font.getsize(string)
-    text_pos = ((image_size - text_size[0]) / 2, (image_size - text_size[1]) / 2)
+    text_box = font.getbbox(string)
+    text_pos = ((image_size - text_box[2]) / 2, (image_size - text_box[3]) / 2)
 
     writer = ImageDraw.Draw(image)
     writer.text(text_pos, string, font=font)

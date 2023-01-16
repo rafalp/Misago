@@ -21,7 +21,7 @@ export class RegisterForm extends Form {
     const { username, password } = this.props.criteria
 
     let passwordMinLength = 0
-    password.forEach(item => {
+    password.forEach((item) => {
       if (item.name === "MinimumLengthValidator") {
         passwordMinLength = item.min_length
       }
@@ -31,11 +31,11 @@ export class RegisterForm extends Form {
       username: [
         validators.usernameContent(),
         validators.usernameMinLength(username.min_length),
-        validators.usernameMaxLength(username.max_length)
+        validators.usernameMaxLength(username.max_length),
       ],
       email: [validators.email()],
       password: [validators.passwordMinLength(passwordMinLength)],
-      captcha: captcha.validator()
+      captcha: captcha.validator(),
     }
 
     if (!!misago.get("TERMS_OF_SERVICE_ID")) {
@@ -58,7 +58,7 @@ export class RegisterForm extends Form {
       privacyPolicy: null,
 
       validators: formValidators,
-      errors: {}
+      errors: {},
     }
   }
 
@@ -68,7 +68,7 @@ export class RegisterForm extends Form {
     } else {
       snackbar.error(gettext("Form contains errors."))
       this.setState({
-        errors: this.validate()
+        errors: this.validate(),
       })
       return false
     }
@@ -81,7 +81,7 @@ export class RegisterForm extends Form {
       password: this.state.password,
       captcha: this.state.captcha,
       terms_of_service: this.state.termsOfService,
-      privacy_policy: this.state.privacyPolicy
+      privacy_policy: this.state.privacyPolicy,
     })
   }
 
@@ -92,7 +92,7 @@ export class RegisterForm extends Form {
   handleError(rejection) {
     if (rejection.status === 400) {
       this.setState({
-        errors: Object.assign({}, this.state.errors, rejection)
+        errors: Object.assign({}, this.state.errors, rejection),
       })
 
       if (rejection.__all__ && rejection.__all__.length > 0) {
@@ -108,12 +108,12 @@ export class RegisterForm extends Form {
     }
   }
 
-  handlePrivacyPolicyChange = event => {
+  handlePrivacyPolicyChange = (event) => {
     const value = event.target.value
     this.handleToggleAgreement("privacyPolicy", value)
   }
 
-  handleTermsOfServiceChange = event => {
+  handleTermsOfServiceChange = (event) => {
     const value = event.target.value
     this.handleToggleAgreement("termsOfService", value)
   }
@@ -211,7 +211,7 @@ export class RegisterForm extends Form {
               </FormGroup>
 
               {captcha.component({
-                form: this
+                form: this,
               })}
 
               <RegisterLegalFootnote
@@ -324,17 +324,17 @@ export default class extends React.Component {
     super(props)
 
     this.state = {
-      complete: false
+      complete: false,
     }
   }
 
-  completeRegistration = apiResponse => {
+  completeRegistration = (apiResponse) => {
     if (apiResponse.activation === "active") {
       modal.hide()
       auth.signIn(apiResponse)
     } else {
       this.setState({
-        complete: apiResponse
+        complete: apiResponse,
       })
     }
   }

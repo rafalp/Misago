@@ -23,9 +23,9 @@ export default class extends Form {
       attachments: [],
 
       validators: {
-        post: getPostValidators()
+        post: getPostValidators(),
       },
-      errors: {}
+      errors: {},
     }
   }
 
@@ -46,23 +46,23 @@ export default class extends Form {
       .then(this.appendData, snackbar.apiError)
   }
 
-  loadSuccess = data => {
+  loadSuccess = (data) => {
     this.setState({
       isReady: true,
 
       post: data.post
         ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]"
-        : ""
+        : "",
     })
   }
 
-  loadError = rejection => {
+  loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail
+      isErrored: rejection.detail,
     })
   }
 
-  appendData = data => {
+  appendData = (data) => {
     const newPost = data.post
       ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]\n\n"
       : ""
@@ -70,18 +70,18 @@ export default class extends Form {
     this.setState((prevState, props) => {
       if (prevState.post.length > 0) {
         return {
-          post: prevState.post + "\n\n" + newPost
+          post: prevState.post + "\n\n" + newPost,
         }
       }
 
       return {
-        post: newPost
+        post: newPost,
       }
     })
   }
 
   onCancel = () => {
-    const cancel = confirm(
+    const cancel = window.confirm(
       gettext("Are you sure you want to discard your reply?")
     )
     if (cancel) {
@@ -89,13 +89,13 @@ export default class extends Form {
     }
   }
 
-  onPostChange = event => {
+  onPostChange = (event) => {
     this.changeValue("post", event.target.value)
   }
 
-  onAttachmentsChange = attachments => {
+  onAttachmentsChange = (attachments) => {
     this.setState({
-      attachments
+      attachments,
     })
   }
 
@@ -118,7 +118,7 @@ export default class extends Form {
   send() {
     return ajax.post(this.props.submit, {
       post: this.state.post,
-      attachments: attachments.clean(this.state.attachments)
+      attachments: attachments.clean(this.state.attachments),
     })
   }
 
@@ -128,7 +128,7 @@ export default class extends Form {
 
     // keep form loading
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
   }
 

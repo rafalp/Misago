@@ -17,7 +17,7 @@ export class ResetPasswordForm extends Form {
     this.state = {
       isLoading: false,
 
-      password: ""
+      password: "",
     }
   }
 
@@ -32,7 +32,7 @@ export class ResetPasswordForm extends Form {
 
   send() {
     return ajax.post(misago.get("CHANGE_PASSWORD_API"), {
-      password: this.state.password
+      password: this.state.password,
     })
   }
 
@@ -82,7 +82,7 @@ export class PasswordChangedPage extends React.Component {
     return interpolate(
       gettext("%(username)s, your password has been changed successfully."),
       {
-        username: this.props.user.username
+        username: this.props.user.username,
       },
       true
     )
@@ -126,7 +126,7 @@ export class PasswordChangedPage extends React.Component {
 }
 
 export default class extends React.Component {
-  complete = apiResponse => {
+  complete = (apiResponse) => {
     auth.softSignOut()
 
     // nuke "redirect_to" field so we don't end

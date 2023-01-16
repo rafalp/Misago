@@ -14,7 +14,7 @@ export default class extends Form {
   constructor(props) {
     super(props)
 
-    const to = (props.to || []).map(user => user.username).join(", ")
+    const to = (props.to || []).map((user) => user.username).join(", ")
 
     this.state = {
       isLoading: false,
@@ -26,14 +26,14 @@ export default class extends Form {
 
       validators: {
         title: getTitleValidators(),
-        post: getPostValidators()
+        post: getPostValidators(),
       },
-      errors: {}
+      errors: {},
     }
   }
 
   onCancel = () => {
-    const cancel = confirm(
+    const cancel = window.confirm(
       gettext("Are you sure you want to discard private thread?")
     )
     if (cancel) {
@@ -41,21 +41,21 @@ export default class extends Form {
     }
   }
 
-  onToChange = event => {
+  onToChange = (event) => {
     this.changeValue("to", event.target.value)
   }
 
-  onTitleChange = event => {
+  onTitleChange = (event) => {
     this.changeValue("title", event.target.value)
   }
 
-  onPostChange = event => {
+  onPostChange = (event) => {
     this.changeValue("post", event.target.value)
   }
 
-  onAttachmentsChange = attachments => {
+  onAttachmentsChange = (attachments) => {
     this.setState({
-      attachments
+      attachments,
     })
   }
 
@@ -95,7 +95,7 @@ export default class extends Form {
       to: cleanUsernames(this.state.to),
       title: this.state.title,
       post: this.state.post,
-      attachments: attachments.clean(this.state.attachments)
+      attachments: attachments.clean(this.state.attachments),
     })
   }
 
@@ -105,7 +105,7 @@ export default class extends Form {
 
     // keep form loading
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
   }
 

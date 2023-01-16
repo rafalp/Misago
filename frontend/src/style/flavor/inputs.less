@@ -1,0 +1,51 @@
+//
+// Inputs Flavor
+// --------------------------------------------------
+
+// default input
+input.form-control,
+textarea.form-control {
+  border-color: @input-border;
+  box-shadow: inset 0px 0px 0px 1px @input-border;
+
+  &:focus {
+    border-color: @input-border-focus;
+    box-shadow: inset 0px 0px 0px 1px @input-border-focus;
+  }
+}
+
+.has-error input.form-control {
+  border-color: @state-danger-border;
+  box-shadow: inset 0px 0px 0px 1px @state-danger-border;
+
+  &:focus {
+    border-color: lighten(@state-danger-border, 20%);
+    box-shadow: inset 0px 0px 0px 1px lighten(@state-danger-border, 20%);
+  }
+}
+
+.has-success input.form-control {
+  border-color: @state-success-border;
+  box-shadow: inset 0px 0px 0px 1px @state-success-border;
+
+  &:focus {
+    border-color: lighten(@state-success-border, 20%);
+    box-shadow: inset 0px 0px 0px 1px lighten(@state-success-border, 20%);
+  }
+}
+
+// password strenght marker
+.password-strength {
+  margin-top: @line-height-computed / 2;
+
+  .text-small {
+    margin-top: @line-height-computed / 5;
+
+    color: lighten(@text-color, 25%);
+    font-size: @font-size-small;
+  }
+
+  .progress {
+    margin: 0px;
+  }
+}

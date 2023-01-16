@@ -1,0 +1,23 @@
+//
+// Misago pagination
+// --------------------------------------------------
+
+.misago-pagination {
+  display: flex;
+
+  .btn {
+    display: block;
+    width: 100%;
+  }
+
+  .btn + .btn {
+    margin-left: @grid-gutter-width;
+  }
+}
+
+// Make it full width on small screens (in toolbars)
+@media screen and (max-width: @screen-xs-max) {
+  .toolbar-item .misago-pagination {
+    flex: 1;
+  }
+}

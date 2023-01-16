@@ -26,13 +26,13 @@ export default class extends React.Component {
 
     this.state = {
       isLoaded: true,
-      ban
+      ban,
     }
   }
 
   initWithoutPreloadedData() {
     this.state = {
-      isLoaded: false
+      isLoaded: false,
     }
   }
 
@@ -42,11 +42,11 @@ export default class extends React.Component {
       url: api,
       frequency: 90 * 1000,
       update: this.update,
-      error: this.error
+      error: this.error,
     })
   }
 
-  update = ban => {
+  update = (ban) => {
     if (ban.expires_on) {
       ban.expires_on = moment(ban.expires_on)
     }
@@ -55,22 +55,22 @@ export default class extends React.Component {
       isLoaded: true,
       error: null,
 
-      ban
+      ban,
     })
   }
 
-  error = error => {
+  error = (error) => {
     this.setState({
       isLoaded: true,
       error: error.detail,
-      ban: null
+      ban: null,
     })
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Ban details"),
-      parent: this.props.profile.username
+      parent: this.props.profile.username,
     })
   }
 
@@ -86,7 +86,7 @@ export default class extends React.Component {
           <div
             className="lead"
             dangerouslySetInnerHTML={{
-              __html: this.state.ban.user_message.html
+              __html: this.state.ban.user_message.html,
             }}
           />
         </div>
@@ -104,7 +104,7 @@ export default class extends React.Component {
           <div
             className="lead"
             dangerouslySetInnerHTML={{
-              __html: this.state.ban.staff_message.html
+              __html: this.state.ban.staff_message.html,
             }}
           />
         </div>
@@ -120,7 +120,7 @@ export default class extends React.Component {
         let title = interpolate(
           gettext("This ban expires on %(expires_on)s."),
           {
-            expires_on: this.state.ban.expires_on.format("LL, LT")
+            expires_on: this.state.ban.expires_on.format("LL, LT"),
           },
           true
         )
@@ -128,7 +128,7 @@ export default class extends React.Component {
         let message = interpolate(
           gettext("This ban expires %(expires_on)s."),
           {
-            expires_on: this.state.ban.expires_on.fromNow()
+            expires_on: this.state.ban.expires_on.fromNow(),
           },
           true
         )
@@ -141,7 +141,7 @@ export default class extends React.Component {
       return interpolate(
         gettext("%(username)s's ban is permanent."),
         {
-          username: this.props.profile.username
+          username: this.props.profile.username,
         },
         true
       )

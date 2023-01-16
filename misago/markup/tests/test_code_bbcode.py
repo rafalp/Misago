@@ -10,9 +10,9 @@ def test_single_line_code(request_mock, user, snapshot):
 def test_multi_line_code(request_mock, user, snapshot):
     text = """
 [code]
-echo("Hello!");
-
-echo("World!");
+<script>
+alert("!")
+</script>
 [/code]
     """
     result = parse(text, request_mock, user, minify=False)

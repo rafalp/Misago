@@ -12,7 +12,7 @@ import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import * as validators from "misago/utils/validators"
 
-export default function(props) {
+export default function (props) {
   return <PostingConfig {...props} Form={ModerationForm} />
 }
 
@@ -24,31 +24,31 @@ export class PostingConfig extends React.Component {
       isLoaded: false,
       isError: false,
 
-      categories: []
+      categories: [],
     }
   }
 
   componentDidMount() {
     ajax.get(misago.get("THREAD_EDITOR_API")).then(
-      data => {
+      (data) => {
         // hydrate categories, extract posting options
-        const categories = data.map(item => {
+        const categories = data.map((item) => {
           return Object.assign(item, {
             disabled: item.post === false,
             label: item.name,
             value: item.id,
-            post: item.post
+            post: item.post,
           })
         })
 
         this.setState({
           isLoaded: true,
-          categories
+          categories,
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
-          isError: rejection.detail
+          isError: rejection.detail,
         })
       }
     )
@@ -82,40 +82,40 @@ export class ModerationForm extends Form {
       is_closed: false,
 
       validators: {
-        title: [validators.required()]
+        title: [validators.required()],
       },
 
-      errors: {}
+      errors: {},
     }
 
     this.isHiddenChoices = [
       {
         value: 0,
         icon: "visibility",
-        label: gettext("No")
+        label: gettext("No"),
       },
       {
         value: 1,
         icon: "visibility_off",
-        label: gettext("Yes")
-      }
+        label: gettext("Yes"),
+      },
     ]
 
     this.isClosedChoices = [
       {
         value: false,
         icon: "lock_outline",
-        label: gettext("No")
+        label: gettext("No"),
       },
       {
         value: true,
         icon: "lock",
-        label: gettext("Yes")
-      }
+        label: gettext("Yes"),
+      },
     ]
 
     this.acl = {}
-    this.props.categories.forEach(category => {
+    this.props.categories.forEach((category) => {
       if (category.post) {
         if (!this.state.category) {
           this.state.category = category.id
@@ -124,7 +124,7 @@ export class ModerationForm extends Form {
         this.acl[category.id] = {
           can_pin_threads: category.post.pin,
           can_close_threads: category.post.close,
-          can_hide_threads: category.post.hide
+          can_hide_threads: category.post.hide,
         }
       }
     })
@@ -136,7 +136,7 @@ export class ModerationForm extends Form {
     } else {
       snackbar.error(gettext("Form contains errors."))
       this.setState({
-        errors: this.validate()
+        errors: this.validate(),
       })
       return false
     }
@@ -149,14 +149,14 @@ export class ModerationForm extends Form {
       weight: this.state.weight,
       is_hidden: this.state.is_hidden,
       is_closed: this.state.is_closed,
-      posts: [this.props.post.id]
+      posts: [this.props.post.id],
     })
   }
 
   handleSuccess(apiResponse) {
     store.dispatch(
       post.patch(this.props.post, {
-        isDeleted: true
+        isDeleted: true,
       })
     )
 
@@ -168,20 +168,18 @@ export class ModerationForm extends Form {
   handleError(rejection) {
     if (rejection.status === 400) {
       this.setState({
-        errors: Object.assign({}, this.state.errors, rejection)
+        errors: Object.assign({}, this.state.errors, rejection),
       })
       snackbar.error(gettext("Form contains errors."))
-    } else if (rejection.status === 403 && Array.isArray(rejection)) {
-      modal.show(<ErrorsModal errors={rejection} />)
     } else {
       snackbar.apiError(rejection)
     }
   }
 
-  onCategoryChange = ev => {
+  onCategoryChange = (ev) => {
     const categoryId = ev.target.value
     const newState = {
-      category: categoryId
+      category: categoryId,
     }
 
     if (this.acl[categoryId].can_pin_threads < newState.weight) {
@@ -204,20 +202,20 @@ export class ModerationForm extends Form {
       {
         value: 0,
         icon: "remove",
-        label: gettext("Not pinned")
+        label: gettext("Not pinned"),
       },
       {
         value: 1,
         icon: "bookmark_border",
-        label: gettext("Pinned locally")
-      }
+        label: gettext("Pinned locally"),
+      },
     ]
 
     if (this.acl[this.state.category].can_pin_threads == 2) {
       choices.push({
         value: 2,
         icon: "bookmark",
-        label: gettext("Pinned globally")
+        label: gettext("Pinned globally"),
       })
     }
 

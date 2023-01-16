@@ -24,39 +24,39 @@ export function hydrate(json) {
       ? moment(json.posted_on).add(json.length, "days")
       : null,
 
-    isBusy: false
+    isBusy: false,
   })
 }
 
 export function busy() {
   return {
-    type: BUSY_POLL
+    type: BUSY_POLL,
   }
 }
 
 export function release() {
   return {
-    type: RELEASE_POLL
+    type: RELEASE_POLL,
   }
 }
 
 export function replace(newState, hydrated = false) {
   return {
     type: REPLACE_POLL,
-    state: hydrated ? newState : hydrate(newState)
+    state: hydrated ? newState : hydrate(newState),
   }
 }
 
 export function update(data) {
   return {
     type: UPDATE_POLL,
-    data
+    data,
   }
 }
 
 export function remove() {
   return {
-    type: REMOVE_POLL
+    type: REMOVE_POLL,
   }
 }
 
@@ -70,7 +70,7 @@ export default function poll(state = {}, action = null) {
 
     case REMOVE_POLL:
       return {
-        isBusy: false
+        isBusy: false,
       }
 
     case REPLACE_POLL:

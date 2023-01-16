@@ -1,0 +1,148 @@
+//
+// Markup styles
+// --------------------------------------------------
+
+// Force word wrap for user text
+.misago-markup {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    word-wrap: break-word;
+  }
+}
+
+// Add upper margins for headers
+.misago-markup {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: @line-height-computed * 2;
+  }
+}
+
+// Even out blocks
+.misago-markup > *,
+.misago-markup blockquote > * {
+  margin: @line-height-computed 0px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+// Downscale images so they don't expand area
+.misago-markup img {
+  max-width: 100%;
+  max-height: 500px;
+}
+
+// Make quotes stand out a little
+.misago-markup .quote-block,
+.misago-markup blockquote {
+  background: @gray-lighter;
+  border: none;
+
+  font-size: @font-size-base;
+
+  .quote-heading {
+    border-bottom: 1px solid darken(@gray-lighter, 8%);
+    padding: (@line-height-computed / 2) @line-height-computed;
+
+    font-size: @font-size-small;
+    font-weight: bold;
+  }
+}
+
+.misago-markup > .quote-block,
+.misago-markup > blockquote {
+  border: 1px solid darken(@gray-lighter, 8%);
+}
+
+.misago-markup .quote-body {
+  background: @body-bg;
+  margin: 0px;
+  padding: @line-height-computed;
+
+  & > .quote-block,
+  & > blockquote {
+    border: 1px solid darken(@gray-lighter, 8%);
+  }
+}
+
+// Style spoilers
+.misago-markup .spoiler-block {
+  background: @gray-lighter;
+  border: none;
+
+  font-size: @font-size-base;
+}
+
+.misago-markup > .spoiler-block {
+  border: 1px solid darken(@gray-lighter, 8%);
+  position: relative;
+}
+
+.misago-markup .spoiler-body {
+  background: @body-bg;
+  margin: 0px;
+  padding: @line-height-computed;
+}
+
+.misago-markup .spoiler-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: @body-bg;
+}
+
+.misago-markup .spoiler-block.revealed .spoiler-overlay {
+  display: none;
+}
+
+// Add bullets to lists
+.misago-markup ul {
+  list-style-type: square;
+
+  li {
+    list-style-type: square;
+  }
+}
+
+.misago-markup ol {
+  list-style-type: decimal;
+
+  li {
+    list-style-type: decimal;
+  }
+}
+
+// Expand code blocks a little
+.misago-markup pre {
+  background: #eee;
+  border: none;
+  padding: @padding-large-vertical;
+  overflow: hidden;
+
+  color: #000;
+
+  code.hljs {
+    margin: @padding-large-vertical * -1;
+    padding: ((@line-height-computed - 1) / 2);
+  }
+}

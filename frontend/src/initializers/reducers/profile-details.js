@@ -14,5 +14,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "reducer:profile-details",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

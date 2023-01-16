@@ -1,0 +1,49 @@
+//
+// UI Preview
+// --------------------------------------------------
+
+// Animation
+.ui-preview {
+  color: @ui-preview;
+
+  .animation(ui-preview-animation @ui-preview-frequency linear infinite);
+}
+
+@keyframes ui-preview-animation {
+  0% {
+    .opacity(@ui-preview-in);
+  }
+  50% {
+    .opacity(@ui-preview-out);
+  }
+  100% {
+    .opacity(@ui-preview-in);
+  }
+}
+
+// Text
+.ui-preview-text {
+  background: @ui-preview;
+  border-radius: 100px;
+  display: inline-block;
+  height: @font-size-base;
+
+  position: relative;
+  top: (@line-height-computed - @font-size-base) / 2;
+}
+
+.ui-preview-paragraph {
+  .ui-preview-text {
+    margin-right: 6px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}
+
+// Image
+.ui-preview-img {
+  background: @ui-preview;
+  border-radius: @border-radius-base + 1px;
+}

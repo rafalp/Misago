@@ -22,7 +22,7 @@ export default class extends React.Component {
       canRevert: props.post.acl.can_edit,
 
       error: null,
-      edit: null
+      edit: null,
     }
   }
 
@@ -32,7 +32,7 @@ export default class extends React.Component {
 
   goToEdit = (edit = null) => {
     this.setState({
-      isBusy: true
+      isBusy: true,
     })
 
     let url = this.props.post.api.edits
@@ -41,27 +41,27 @@ export default class extends React.Component {
     }
 
     ajax.get(url).then(
-      data => {
+      (data) => {
         this.setState({
           isReady: true,
           isBusy: false,
-          edit: hydrateEdit(data)
+          edit: hydrateEdit(data),
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
           isReady: true,
           isBusy: false,
-          error: rejection.detail
+          error: rejection.detail,
         })
       }
     )
   }
 
-  revertEdit = edit => {
+  revertEdit = (edit) => {
     if (this.state.isBusy) return
 
-    const confirmation = confirm(
+    const confirmation = window.confirm(
       gettext(
         "Are you sure you with to revert this post to the state from before this edit?"
       )
@@ -69,23 +69,23 @@ export default class extends React.Component {
     if (!confirmation) return
 
     this.setState({
-      isBusy: true
+      isBusy: true,
     })
 
     const url = this.props.post.api.edits + "?edit=" + edit
     ajax.post(url).then(
-      data => {
+      (data) => {
         const hydratedPost = post.hydrate(data)
         store.dispatch(post.patch(data, hydratedPost))
 
         snackbar.success(gettext("Post has been reverted to previous state."))
         modal.hide()
       },
-      rejection => {
+      (rejection) => {
         snackbar.apiError(rejection)
 
         this.setState({
-          isBusy: false
+          isBusy: false,
         })
       }
     )

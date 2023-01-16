@@ -116,18 +116,18 @@ class ForgottenPasswordViewsTests(UserTestCase):
         )
         self.assertContains(response, password_token)
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_change_password_form_is_not_available_when_sso_is_enabled(self):
-        user = create_test_user(
-            "OtherUser", "otheruser@example.com", self.USER_PASSWORD
-        )
 
-        password_token = make_password_change_token(user)
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_forgotten_password_view_returns_403_if_oauth_is_enabled(user, client):
+    password_token = make_password_change_token(user)
 
-        response = self.client.get(
-            reverse(
-                "misago:forgotten-password-change-form",
-                kwargs={"pk": user.pk, "token": password_token},
-            )
+    response = client.get(
+        reverse(
+            "misago:forgotten-password-change-form",
+            kwargs={"pk": user.pk, "token": password_token},
         )
-        self.assertEqual(response.status_code, 403)
+    )
+    assert response.status_code == 403

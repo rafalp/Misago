@@ -8,7 +8,7 @@ export default function initializer() {
     initialState = hydrate(misago.get("THREAD"))
   } else {
     initialState = {
-      isBusy: false
+      isBusy: false,
     }
   }
 
@@ -18,5 +18,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "reducer:thread",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

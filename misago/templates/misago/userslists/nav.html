@@ -1,0 +1,23 @@
+<div class="nav-container">
+  <button class="btn btn-default btn-block btn-placeholder hidden-xs hidden-sm hidden-md hidden-lg" disabled>
+    <span class="material-icon">menu</span>
+    {{ active_section.name }}
+  </button>
+  <ul class="nav nav-pills" role="menu" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    {% for page in pages %}
+      <li{% if page.is_active %} class="active"{% endif %}>
+        <a href="{{ page.reversed_link }}">
+          {{ page.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<script type="text/javascript">
+  const btn = document.querySelectorAll('.btn-placeholder')[0]
+  if (btn) btn.classList.remove("hidden-xs");
+
+  const pills = document.querySelectorAll('.nav-pills')[0]
+  if (pills) pills.classList.add("hidden-xs");
+</script>

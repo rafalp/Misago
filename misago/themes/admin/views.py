@@ -35,9 +35,9 @@ class ThemesList(ThemeAdmin, generic.ListView):
 class NewTheme(ThemeAdmin, generic.ModelFormView):
     message_submit = _('New theme "%(name)s" has been saved.')
 
-    def get_form(self, form_class, request, _):
+    def get_form(self, form_class, request, target):
         if request.method == "POST":
-            return form_class(request.POST, request.FILES)
+            return form_class(request.POST, request.FILES, instance=target)
 
         try:
             initial = {"parent": int(request.GET.get("parent"))}

@@ -35,9 +35,9 @@ export default class extends Form {
 
       validators: {
         title: getTitleValidators(),
-        post: getPostValidators()
+        post: getPostValidators(),
       },
-      errors: {}
+      errors: {},
     }
   }
 
@@ -45,13 +45,13 @@ export default class extends Form {
     ajax.get(this.props.config).then(this.loadSuccess, this.loadError)
   }
 
-  loadSuccess = data => {
+  loadSuccess = (data) => {
     let category = null
     let showOptions = false
     let categoryOptions = null
 
     // hydrate categories, extract posting options
-    const categories = data.map(item => {
+    const categories = data.map((item) => {
       // pick first category that allows posting and if it may, override it with initial one
       if (
         item.post !== false &&
@@ -68,7 +68,7 @@ export default class extends Form {
       return Object.assign(item, {
         disabled: item.post === false,
         label: item.name,
-        value: item.id
+        value: item.id,
       })
     })
 
@@ -78,29 +78,31 @@ export default class extends Form {
 
       categories,
       category,
-      categoryOptions
+      categoryOptions,
     })
   }
 
-  loadError = rejection => {
+  loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail
+      isErrored: rejection.detail,
     })
   }
 
   onCancel = () => {
-    const cancel = confirm(gettext("Are you sure you want to discard thread?"))
+    const cancel = window.confirm(
+      gettext("Are you sure you want to discard thread?")
+    )
     if (cancel) {
       posting.close()
     }
   }
 
-  onTitleChange = event => {
+  onTitleChange = (event) => {
     this.changeValue("title", event.target.value)
   }
 
-  onCategoryChange = event => {
-    const category = this.state.categories.find(item => {
+  onCategoryChange = (event) => {
+    const category = this.state.categories.find((item) => {
       return event.target.value == item.value
     })
 
@@ -114,17 +116,17 @@ export default class extends Form {
       category: category.id,
       categoryOptions: category.post,
 
-      pin
+      pin,
     })
   }
 
-  onPostChange = event => {
+  onPostChange = (event) => {
     this.changeValue("post", event.target.value)
   }
 
-  onAttachmentsChange = attachments => {
+  onAttachmentsChange = (attachments) => {
     this.setState({
-      attachments
+      attachments,
     })
   }
 
@@ -190,7 +192,7 @@ export default class extends Form {
       attachments: attachments.clean(this.state.attachments),
       close: this.state.close,
       hide: this.state.hide,
-      pin: this.state.pin
+      pin: this.state.pin,
     })
   }
 
@@ -200,7 +202,7 @@ export default class extends Form {
 
     // keep form loading
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
   }
 

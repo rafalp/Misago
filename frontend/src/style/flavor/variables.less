@@ -1,0 +1,411 @@
+//
+// Flavor Theme Variables
+// --------------------------------------------------
+
+//== Colors
+//
+//## Gray and brand colors for use across Bootstrap.
+
+@gray-darker: #172b4d; // #222
+@gray-dark: #344563; // #333
+@gray: #5e6c84; // #555
+@gray-light: #7a869a; // #777
+@gray-lighter: #ebecf0; // #eee
+
+@brand-primary: #0052cc;
+@brand-success: #36b37e;
+@brand-info: #3d5afe;
+@brand-warning: #ffab00;
+@brand-danger: #ff5630;
+
+//== Scaffolding
+//
+//## Settings for some of the most global styles.
+
+//** Global text color on `<body>`.
+@text-color: #172b4d;
+
+//** Global textual link color.
+@link-color: #0065ff;
+//** Link hover color set via `darken()` function.
+@link-hover-color: #0747a6;
+//** Link hover decoration.
+@link-hover-decoration: underline;
+
+//** Shadows
+@shadow-key-umbra-opacity: 0.06;
+@shadow-key-penumbra-opacity: 0.04;
+@shadow-ambient-shadow-opacity: 0.12;
+
+//** Global color for active items (e.g., navs or dropdowns).
+@component-active-color: #fff;
+//** Global background color for active items (e.g., navs or dropdowns).
+@component-active-bg: @link-color;
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+// Default - non primary
+@btn-default-color: @text-color;
+@btn-default-bg: #ebecf0;
+
+@btn-default-hover-color: @text-color;
+@btn-default-hover-bg: #dfe1e6;
+
+@btn-default-active-color: @text-color;
+@btn-default-active-bg: #c1c7d0;
+
+// Submit form
+@btn-primary-color: #fff;
+@btn-primary-bg: #6554c0;
+
+@btn-primary-hover-color: #fff;
+@btn-primary-hover-bg: #5243aa;
+
+@btn-primary-active-color: #fff;
+@btn-primary-active-bg: #403294;
+
+// Success button
+@btn-success-color: #fff;
+@btn-success-bg: #00c853;
+
+@btn-success-hover-color: #fff;
+@btn-success-hover-bg: darken(#00c853, 5%);
+
+@btn-success-active-color: #fff;
+@btn-success-active-bg: darken(#00c853, 15%);
+
+// Delete something
+@btn-danger-color: #fff;
+@btn-danger-bg: #ef5350;
+
+@btn-danger-hover-color: #fff;
+@btn-danger-hover-bg: #ff8a80;
+
+@btn-danger-active-color: #fff;
+@btn-danger-active-bg: #d32f2f;
+
+// Default outlined
+@btn-default-outline-color: @btn-default-color;
+@btn-default-outline-border: @btn-default-bg;
+@btn-default-outline-bg: @btn-default-bg;
+
+@btn-default-outline-hover-color: @btn-default-hover-color;
+@btn-default-outline-hover-border: @btn-default-hover-bg;
+@btn-default-outline-hover-bg: @btn-default-hover-bg;
+
+@btn-default-outline-active-color: @btn-default-active-color;
+@btn-default-outline-active-border: @btn-default-active-bg;
+@btn-default-outline-active-bg: @btn-default-active-bg;
+
+// Primary outlined
+@btn-primary-outline-color: @btn-primary-color;
+@btn-primary-outline-border: @btn-primary-bg;
+@btn-primary-outline-bg: @btn-primary-bg;
+
+@btn-primary-outline-hover-color: @btn-primary-hover-color;
+@btn-primary-outline-hover-border: @btn-primary-hover-bg;
+@btn-primary-outline-hover-bg: @btn-primary-hover-bg;
+
+@btn-primary-outline-active-color: @btn-primary-active-color;
+@btn-primary-outline-active-border: @btn-primary-active-bg;
+@btn-primary-outline-active-bg: @btn-primary-active-bg;
+
+//== Navbar
+//
+//##
+
+@navbar-default-color: #777;
+@navbar-default-bg: #ffffff;
+@navbar-default-border: #c1c7d0;
+
+// Navbar links
+@navbar-default-link-color: #8993a4;
+@navbar-default-link-hover-color: #505f79;
+@navbar-default-link-hover-bg: transparent;
+@navbar-default-link-active-color: #6b778c;
+@navbar-default-link-active-bg: #dfe1e6;
+@navbar-default-link-disabled-color: #c1c7d0;
+@navbar-default-link-disabled-bg: transparent;
+
+//** Compact navbar
+@navbar-compact-link-color: #8993a4;
+@navbar-compact-link-hover-color: #6b778c;
+@navbar-compact-link-hover-bg: #dfe1e6;
+
+// Navbar brand label
+@navbar-default-brand-color: #344563;
+@navbar-default-brand-hover-color: @navbar-default-brand-color;
+@navbar-default-brand-hover-bg: transparent;
+
+// Sign in button
+@navbar-btn-sign-in-color: #8993a4;
+@navbar-btn-sign-in-border: #c1c7d0;
+@navbar-btn-sign-in-bg: transparent;
+
+@navbar-btn-sign-in-hover-color: @text-color;
+@navbar-btn-sign-in-hover-border: #ebecf0;
+@navbar-btn-sign-in-hover-bg: #ebecf0;
+
+@navbar-btn-sign-in-active-color: @text-color;
+@navbar-btn-sign-in-active-border: #dfe1e6;
+@navbar-btn-sign-in-active-bg: #dfe1e6;
+
+@navbar-btn-sign-in-radius: 4px;
+
+// Register button
+@navbar-btn-register-color: #fff;
+@navbar-btn-register-border: #6554c0;
+@navbar-btn-register-bg: #6554c0;
+
+@navbar-btn-register-hover-color: #fff;
+@navbar-btn-register-hover-border: #5243aa;
+@navbar-btn-register-hover-bg: #5243aa;
+
+@navbar-btn-register-active-color: #fff;
+@navbar-btn-register-active-border: #403294;
+@navbar-btn-register-active-bg: #403294;
+
+@navbar-btn-register-radius: 4px;
+
+//== Footer
+//
+//##
+@page-footer-text-color: #a5adba;
+
+@page-footer-link-color: @page-footer-text-color;
+@page-footer-link-hover-color: darken(@page-footer-text-color, 15%);
+
+@page-footer-brand-color: @page-footer-link-color;
+@page-footer-brand-hover-color: @page-footer-link-hover-color;
+
+//== Auth Message
+//
+//##
+@auth-message-bg: #091e42;
+@auth-message-text-color: #fff;
+
+@auth-message-btn-default-color: @text-color;
+@auth-message-btn-default-border: #f4f5f7;
+@auth-message-btn-default-bg: #f4f5f7;
+
+@auth-message-btn-default-hover-color: @text-color;
+@auth-message-btn-default-hover-border: #dfe1e6;
+@auth-message-btn-default-hover-bg: #dfe1e6;
+
+@auth-message-btn-default-active-color: @text-color;
+@auth-message-btn-default-active-border: #b3bac5;
+@auth-message-btn-default-active-bg: #b3bac5;
+
+//== Forms
+//
+//##
+
+//** Text color for `<input>`s
+@input-color: @gray-darker;
+//** `<input>` border color
+@input-border: darken(@gray-lighter, 10%);
+
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
+
+@state-success-border: #36b37e;
+
+@state-danger-border: #ff5630;
+
+//== Alerts
+//
+//## Define alert colors, border radius, and padding.
+
+@alert-success-bg: #00875a;
+@alert-success-text: #fff;
+@alert-success-border: @alert-success-bg;
+
+@alert-info-bg: #448aff;
+@alert-info-text: #fff;
+@alert-info-border: @alert-info-bg;
+
+@alert-warning-bg: #ff8b00;
+@alert-warning-text: #fff;
+@alert-warning-border: @alert-warning-bg;
+
+@alert-danger-bg: #de350b;
+@alert-danger-text: #fff;
+@alert-danger-border: @alert-danger-bg;
+
+//== Modals
+//
+//##
+
+@modal-header-color: @text-color;
+@modal-header-bg: #fff;
+//** Modal header border color
+@modal-header-border-color: darken(@gray-lighter, 10%);
+//** Modal footer border color
+@modal-footer-border-color: @modal-header-border-color;
+
+//** Modal backdrop background color
+@modal-backdrop-bg: #091e42;
+
+//== Dropdowns
+//
+//## Dropdown menu container and contents.
+
+//** Background for the dropdown menu.
+@dropdown-bg: #fff;
+//** Divider color for between dropdown items.
+@dropdown-divider-bg: @gray-lighter;
+
+//** Dropdown link text color.
+@dropdown-link-color: @text-color;
+//** Hover color for dropdown links.
+@dropdown-link-hover-color: @text-color;
+//** Hover background for dropdown links.
+@dropdown-link-hover-bg: @gray-lighter;
+
+//** Active dropdown menu item text color.
+@dropdown-link-active-color: #fff;
+//** Active dropdown menu item background color.
+@dropdown-link-active-bg: @gray-darker;
+
+//== Progress bars
+//
+//##
+
+//** Background color of the whole progress component
+@progress-bg: @gray-lighter;
+//** Variable for setting rounded corners on progress bar.
+@progress-border-radius: @border-radius-small;
+
+//** Default progress bar color
+@progress-bar-bg: #6554c0;
+//** Success progress bar color
+@progress-bar-success-bg: #36b37e;
+//** Warning progress bar color
+@progress-bar-warning-bg: #ffab00;
+//** Danger progress bar color
+@progress-bar-danger-bg: #ff5630;
+
+//== Panels
+//
+//##
+@panel-heading-padding: 14px 15px;
+
+@panel-title-color: @gray;
+
+@panel-default-heading-bg: @panel-bg;
+@panel-inner-border: @gray-lighter;
+@panel-footer-bg: @panel-bg;
+
+@panel-fieldset-color: @gray;
+
+@panel-form-border: #ebecf0;
+
+//== List group
+//
+//##
+
+//** `.list-group-item` border color
+@list-group-border: @gray-lighter;
+
+@list-group-outer-border: #ebecf0;
+@list-group-border-radius: @border-radius-small;
+
+@list-group-link-color: @gray-light;
+@list-group-link-hover-color: @text-color;
+
+//** Background color of single list items on hover
+@list-group-hover-bg: @list-group-bg;
+//** Text color of active list items
+@list-group-active-color: @link-color;
+//** Background color of active list items
+@list-group-active-bg: @list-group-bg;
+//** Border color of active list elements
+@list-group-active-border: @list-group-border;
+
+//== Side nav
+//
+//##
+
+@side-nav-bg: #f4f5f7;
+@side-nav-color: @text-color;
+
+@side-nav-hover-bg: #ebecf0;
+@side-nav-hover-color: @text-color;
+
+@side-nav-active-bg: #091e42;
+@side-nav-active-color: #fff;
+
+//== Wells
+//
+//##
+
+@well-bg: #fff;
+@well-border: #ddd;
+
+//== Page messages
+//
+//##
+
+@error-icon-color: #ef5350;
+
+@message-icon-color: #9575cd;
+@message-info-icon-color: #9575cd;
+@message-success-icon-color: #81c784;
+
+//== User cards
+//
+//##
+
+@user-card-bg: #f4f5f7;
+
+//== Categories list
+//
+//##
+
+@category-read-color: @gray-lighter;
+@category-new-color: @brand-primary;
+
+//== Threads list
+//
+//##
+
+@thread-unread-badge-color: #aa00ff;
+
+@thread-global-badge-color: #3d5afe;
+@thread-pinned-badge-color: #8c9eff;
+
+@thread-answered-badge-color: #388e3c;
+
+@thread-unapproved-badge-color: #ef6c00;
+@thread-unapproved-posts-badge-color: #f4511e;
+
+// Diff message
+@threads-diff-color: #fff;
+@threads-diff-bg: #6554c0;
+
+@threads-diff-hover-color: #fff;
+@threads-diff-hover-bg: #5243aa;
+
+@threads-diff-active-color: #fff;
+@threads-diff-active-bg: #403294;
+
+//== Posts
+//
+//##
+
+@post-bg: @body-bg;
+@post-border: #ddd;
+
+@post-unread-label: #aa00ff;
+@post-protected-icon: #bdbdbd;
+
+//== User status colors
+//
+//##
+
+@user-status-banned: @brand-danger;
+@user-status-online: @brand-success;
+@user-status-offline: @gray-light;

@@ -45,6 +45,8 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "id",
             "parent",
             "name",
+            "short_name",
+            "color",
             "description",
             "is_closed",
             "threads",
@@ -63,12 +65,31 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "url",
         ]
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.special_role:
+            data["special_role"] = instance.special_role
+
+        return data
+
     def get_description(self, obj):
         if obj.description:
             return {
                 "plain": obj.description,
                 "html": format_plaintext_for_html(obj.description),
             }
+
+        # Serve root category's description
+        if obj.special_role == "root_category" and self.context:
+            settings = self.context.settings
+            if settings.index_message:
+                return {
+                    "plain": settings.index_message,
+                    "html": format_plaintext_for_html(settings.index_message),
+                }
+
+    def get_css_class(self, obj):
+        return obj.css_class or None
 
     def get_is_read(self, obj):
         try:
@@ -78,7 +99,9 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
 
     def get_subcategories(self, obj):
         try:
-            return CategorySerializer(obj.subcategories, many=True).data
+            return CategorySerializer(
+                obj.subcategories, context=self.context, many=True
+            ).data
         except AttributeError:
             return []
 

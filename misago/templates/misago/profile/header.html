@@ -1,54 +1,115 @@
 {% load i18n misago_avatars %}
-<div class="container">
 
-  {% if not profile.is_active or profile.is_deleting_account %}
-    <div class="alert alert-danger">
-      {% if profile.is_deleting_account %}
-        <p>{% trans "This user is deleting their account." %}</p>
-      {% else %}
-        <p>{% trans "This user's account has been disabled by administrator." %}</p>
-      {% endif %}
-    </div>
-  {% endif %}
-
-  <div class="row">
-    <div class="col-md-9 col-md-offset-3">
-
-      <img src="{{ profile|avatar:100 }}" class="user-avatar user-avatar-sm" alt="">
-      <h1>{{ profile.username }}</h1>
-
-    </div>
-  </div>
-</div>
-<div class="header-stats">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-9 col-md-offset-3">
-
-        <ul class="list-inline">
-          {% if profile.rank.is_tab %}
-            <li class="user-rank">
-              <a href="{% url 'misago:users-rank' slug=profile.rank.slug %}" class="item-title">
-                {{ profile.rank.name }}
-              </a>
-            </li>
-          {% else %}
-            <li class="user-rank">
-              <span class="item-title">{{ profile.rank.name }}</span>
-            </li>
+<div class="container page-header-container">
+  <div class="page-header {% if profile.rank.css_class %} page-header-rank-{{ profile.rank.css_class }}{% else %}page-header-profile{% endif %}">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner {% if profile.rank.css_class %} page-header-banner-rank-{{ profile.rank.css_class }}{% else %}page-header-banner-profile{% endif %}">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              <div class="profile-page-header">
+                <div class="profile-page-header-avatar">
+                  <img alt="" class="user-avatar hidden-sm hidden-md hidden-lg" src="{{ profile|avatar:200 }}" srcset="{{ profile|avatar:400 }}" width="200" height="200">
+                  <img alt="" class="user-avatar hidden-xs hidden-md hidden-lg" src="{{ profile|avatar:100 }}" srcset="{{ profile|avatar:200 }}" width="64" height="64">
+                  <img alt="" class="user-avatar hidden-xs hidden-sm" src="{{ profile|avatar:200 }}" srcset="{{ profile|avatar:400 }}" width="128" height="128">
+                </div>
+                <h1>{{ profile.username }}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-header-details profile-page-header-details">
+          <div class="flex-row">
+            <div class="flex-row-section flex-row-section-auto">
+              <div class="flex-row-col">
+                <ul class="profile-data-list">
+                  {% if not profile.is_active %}
+                    <li class="user-account-disabled">
+                      <abbr title="{% trans "This user's account has been disabled by administrator." %}">
+                        {% trans "Account disabled" %}
+                      </abbr>
+                    </li>
+                  {% endif %}
+                  {% if profile.rank.is_tab %}
+                    <li class="user-rank">
+                      <a href="{{ profile.rank.get_absolute_url }}" class="item-title">
+                        {{ profile.rank.name }}
+                      </a>
+                    </li>
+                  {% else %}
+                    <li class="user-rank">
+                      <span class="item-title">{{ profile.rank.name }}</span>
+                    </li>
+                  {% endif %}
+                  {% if profile.title %}
+                    <li class="user-title">
+                      {{ profile.title }}
+                    </li>
+                  {% elif profile.rank.title %}
+                    <li class="user-title">
+                      {{ profile.rank.title }}
+                    </li>
+                  {% endif %}
+                  <li class="user-joined-on">
+                    <abbr>
+                      {% blocktrans trimmed with joined_on=profile.joined_on|date %}
+                        Joined {{ joined_on }}
+                      {% endblocktrans %}
+                    </abbr>
+                  </li>
+                  {% if user_acl.can_see_users_emails or profile.id == user.id %}
+                    <li class="user-email">
+                      <a href="mailto:{{ profile.email }}" class="item-title">
+                        {{ profile.email }}
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+            {% if user.is_authenticated %}
+              {% if user_acl.can_start_private_threads and profile.id != user.id %}
+                <div class="flex-row-section">
+                  <div class="flex-row-col">
+                    <button class="btn btn-default btn-block btn-outline" type="button" disabled>
+                      <span class="material-icon">comment</span>
+                      {% trans "Message" %}
+                    </button>
+                  </div>
+                  {% if not profile.acl.can_follow and profile.acl.can_moderate %}
+                    <div class="flex-row-col flex-row-col-shrink">
+                      <div class="dropdown">
+                        <button class="btn btn-default btn-icon btn-outline dropdown-toggle" type="button" disabled>
+                          <span class="material-icon">settings</span>
+                        </button>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if profile.acl.can_follow %}
+                <div class="flex-row-section">
+                  <div class="flex-row-col">
+                    <button class="btn btn btn-block btn-outline btn-default btn-follow" type="button" disabled>
+                      <span class="material-icon">favorite_border</span>
+                      {% trans "Follow" %}
+                    </button>
+                  </div>
+                  {% if profile.acl.can_moderate %}
+                    <div class="flex-row-col flex-row-col-shrink">
+                      <div class="dropdown">
+                        <button class="btn btn-default btn-icon btn-outline dropdown-toggle" type="button" disabled>
+                          <span class="material-icon">settings</span>
+                        </button>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
           {% endif %}
-          {% if profile.title %}
-            <li class="user-title">{{ profile.title }}</li>
-          {% elif profile.rank.title %}
-            <li class="user-title">{{ profile.rank.title }}</li>
-          {% endif %}
-          <li class="user-joined-on">
-            {% blocktrans trimmed with joined_on=profile.joined_on|date %}
-              Member since {{ joined_on }}
-            {% endblocktrans %}
-          </li>
-        </ul>
-
+        </div>
       </div>
     </div>
   </div>

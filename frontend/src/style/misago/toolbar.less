@@ -1,0 +1,68 @@
+//
+// Misago Toolbar
+// --------------------------------------------------
+
+.toolbar {
+  display: block;
+  margin: 0 floor(@grid-gutter-width * -0.5);
+}
+
+.toolbar-section {
+  justify-items: center;
+  display: flex;
+  flex: 1;
+  margin-bottom: @line-height-computed;
+}
+
+.toolbar-item {
+  flex: 1;
+  padding: 0 floor(@grid-gutter-width * 0.5);
+
+  h3,
+  p {
+    margin: 0;
+  }
+}
+
+.toolbar-item-shrink {
+  flex: 0;
+}
+
+.toolbar-spacer {
+  display: none;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .toolbar {
+    display: flex;
+  }
+
+  .toolbar-section,
+  .toolbar-item {
+    flex: 0;
+
+    align-items: center;
+  }
+
+  .toolbar-section.toolbar-section-auto,
+  .toolbar-section.toolbar-section-auto .toolbar-item {
+    flex: 1;
+  }
+
+  .toolbar-spacer {
+    display: block;
+    flex: 1;
+  }
+
+  .toolbar-item .form-search {
+    width: 250px;
+  }
+}
+
+// Center paragraph of text on portrait phones
+// Used for pagination messages
+@media screen and (max-width: @screen-xs-max) {
+  .toolbar-item p {
+    text-align: center;
+  }
+}

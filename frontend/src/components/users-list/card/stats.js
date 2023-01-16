@@ -1,7 +1,7 @@
 import React from "react"
 import UserStatus, { StatusLabel } from "misago/components/user-status"
 
-export default function({ showStatus, user }) {
+export default function ({ showStatus, user }) {
   return (
     <ul className="list-unstyled">
       <Status showStatus={showStatus} user={user} />
@@ -32,7 +32,7 @@ export function JoinDate({ user }) {
   let title = interpolate(
     gettext("Joined on %(joined_on)s"),
     {
-      joined_on: joined_on.format("LL, LT")
+      joined_on: joined_on.format("LL, LT"),
     },
     true
   )
@@ -40,7 +40,7 @@ export function JoinDate({ user }) {
   let message = interpolate(
     gettext("Joined %(joined_on)s"),
     {
-      joined_on: joined_on.fromNow()
+      joined_on: joined_on.fromNow(),
     },
     true
   )
@@ -61,7 +61,7 @@ export function Posts({ user }) {
       {interpolate(
         message,
         {
-          posts: user.posts
+          posts: user.posts,
         },
         true
       )}
@@ -82,7 +82,7 @@ export function Threads({ user }) {
       {interpolate(
         message,
         {
-          threads: user.threads
+          threads: user.threads,
         },
         true
       )}
@@ -103,7 +103,7 @@ export function Followers({ user }) {
       {interpolate(
         message,
         {
-          followers: user.followers
+          followers: user.followers,
         },
         true
       )}

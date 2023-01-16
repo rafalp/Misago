@@ -3,11 +3,11 @@ import escapeHtml from "misago/utils/escape-html"
 
 const STRONG = "<strong>%(name)s</strong>"
 
-export default function(props) {
+export default function (props) {
   const filename = interpolate(
     STRONG,
     {
-      name: escapeHtml(props.item.filename)
+      name: escapeHtml(props.item.filename),
     },
     true
   )
@@ -16,7 +16,7 @@ export default function(props) {
     gettext("Uploading %(filename)s... %(progress)s"),
     {
       filename,
-      progress: props.item.progress + "%"
+      progress: props.item.progress + "%",
     },
     true
   )

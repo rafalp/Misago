@@ -12,14 +12,14 @@ export default class extends React.Component {
   componentDidMount() {
     if (this.props.post.is_read) return // don't register read tracker
 
-    $(this.documentNode).waypoint({
-      handler: direction => {
+    $(this.element).waypoint({
+      handler: (direction) => {
         if (direction !== "down" || this.props.post.is_read) return
 
         // after 1500ms run flag post as read logic
         window.setTimeout(() => {
           // check if post's bottom edge is still in viewport
-          const boundingClientRect = this.documentNode.getBoundingClientRect()
+          const boundingClientRect = this.element.getBoundingClientRect()
           const offsetBottom =
             boundingClientRect.height + boundingClientRect.top
           const clientHeight = document.documentElement.clientHeight
@@ -30,26 +30,26 @@ export default class extends React.Component {
           // mark post as read
           store.dispatch(
             post.patch(this.props.post, {
-              is_read: true
+              is_read: true,
             })
           )
 
           // call API to let it know we have unread post
           ajax.post(this.props.post.api.read).then(
-            data => {
+            (data) => {
               store.dispatch(
                 thread.update(this.props.thread, {
-                  is_read: data.thread_is_read
+                  is_read: data.thread_is_read,
                 })
               )
             },
-            rejection => {
+            (rejection) => {
               snackbar.apiError(rejection)
             }
           )
         }, 1000)
       },
-      offset: "bottom-in-view"
+      offset: "bottom-in-view",
     })
   }
 
@@ -57,8 +57,8 @@ export default class extends React.Component {
     return (
       <div
         className={this.props.className}
-        ref={node => {
-          this.documentNode = node
+        ref={(node) => {
+          if (node) this.element = node
         }}
       >
         {this.props.children}

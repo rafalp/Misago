@@ -92,9 +92,11 @@
 
 
 {% block view %}
-{% if settings.enable_sso %}  
+{% if settings.enable_oauth2_client %}  
   <div class="alert alert-warning" role="alert">
-    <strong>{% trans "Note" %}:</strong> {% trans "Single Sign-On is enabled. Social authentication has been disabled and delegated to the third-party site." %}
+    <strong>{% trans "Note" %}:</strong> {% blocktrans trimmed with provider=settings.oauth2_provider %}
+    OAuth2 client is enabled. Social authentication has been disabled with login and registration delegated to the {{ provider }}.
+    {% endblocktrans %}
   </div>
 {% endif %}
 

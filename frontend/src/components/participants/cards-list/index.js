@@ -1,11 +1,11 @@
 import React from "react"
 import Card from "./card"
 
-export default function({ participants, thread, user, userIsOwner }) {
+export default function ({ participants, thread, user, userIsOwner }) {
   return (
     <div className="participants-cards">
       <div className="row">
-        {participants.map(participant => {
+        {participants.map((participant) => {
           return (
             <Card
               key={participant.id}

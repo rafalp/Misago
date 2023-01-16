@@ -1,0 +1,30 @@
+//
+// Search Page
+// --------------------------------------------------
+
+.search-footer p {
+  margin-top: @line-height-computed;
+
+  color: @gray;
+  font-size: @font-size-small;
+  text-align: center;
+}
+
+.page-search-form {
+  @media screen and (min-width: @screen-sm-min) {
+    padding-top: @line-height-computed * 2;
+  }
+
+  @media screen and (min-width: @screen-md-min) {
+    padding-bottom: @line-height-computed * 2;
+
+    h1 {
+      position: relative;
+      top: @padding-small-vertical;
+    }
+
+    .form-group {
+      margin-bottom: 0px;
+    }
+  }
+}

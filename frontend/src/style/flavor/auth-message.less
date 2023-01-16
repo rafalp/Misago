@@ -1,0 +1,38 @@
+//
+// Flavor Auth Message
+// --------------------------------------------------
+
+.auth-message {
+  background: @auth-message-bg;
+  padding: @line-height-computed * 4 0px;
+
+  .shadow-8dp();
+
+  p {
+    color: @auth-message-text-color;
+  }
+
+  .btn {
+    & {
+      background: @auth-message-btn-default-bg;
+      border-color: @auth-message-btn-default-border;
+
+      color: @auth-message-btn-default-color;
+    }
+
+    &:hover,
+    &:focus {
+      background: @auth-message-btn-default-hover-bg;
+      border-color: @auth-message-btn-default-hover-border;
+
+      color: @auth-message-btn-default-hover-color;
+    }
+
+    &:active {
+      background: @auth-message-btn-default-active-bg;
+      border-color: @auth-message-btn-default-active-border;
+
+      color: @auth-message-btn-default-active-color;
+    }
+  }
+}

@@ -58,11 +58,11 @@
 {% block twitter-url %}{% absoluteurl request_path %}{% endblock %}
 
 
-{% block content %}
-{{ block.super }}
+{% block page-content %}
 
 <div class="active-posters-list">
-  <div class="container">
+  <div class="container page-container">
+    {% include "misago/userslists/nav.html" %}
 
     {% if users_count %}
       <p class="lead">
@@ -80,7 +80,7 @@
             <li class="list-group-item{% if ranked.rank.css_class %} list-group-rank-{{ ranked.rank.css_class }}{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
               <div class="rank-user-avatar">
                 <a href="{{ user_url }}">
-                  <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" %}" class="avatar">
+                  <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" %}" height="50" width="50" class="avatar">
                 </a>
               </div>
 
@@ -150,4 +150,4 @@
 
   </div>
 </div>
-{% endblock content %}
+{% endblock page-content %}

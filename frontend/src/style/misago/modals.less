@@ -1,0 +1,112 @@
+//
+// Misago Modals
+// --------------------------------------------------
+
+// Modal toolbar
+.modal-toolbar {
+  background: @gray-lighter;
+  border-bottom: 1px solid @modal-header-border-color;
+  overflow: auto;
+  padding: @padding-base-vertical @padding-base-horizontal;
+
+  .pull-left {
+    margin-right: 8px;
+  }
+
+  p {
+    padding: @padding-small-vertical 0px;
+    margin-bottom: 0px;
+  }
+}
+
+// Modals displaying messages
+
+// Small displays
+@media screen and (max-width: @screen-sm-max) {
+  .modal-message {
+    text-align: center;
+
+    .message-icon {
+      margin: @line-height-computed * 1.5;
+
+      .material-icon {
+        font-size: @message-page-icon-size * 2;
+      }
+    }
+  }
+}
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .modal-message {
+    .modal-body {
+      padding-top: @line-height-computed;
+      padding-bottom: @line-height-computed * 1.5;
+    }
+
+    .message-icon {
+      float: left;
+      position: relative;
+      left: 7px;
+
+      .material-icon {
+        font-size: @line-height-computed * 2.5;
+      }
+    }
+
+    .message-body {
+      margin-left: @line-height-computed * 3.75;
+      margin-top: @line-height-computed * 0.6 - 2px;
+
+      p {
+        margin-top: @line-height-computed;
+      }
+
+      .lead {
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+    }
+  }
+}
+
+// Modal loader
+.modal-loader {
+  padding: @line-height-computed * 2.5 0px;
+
+  .loader {
+    width: 100%;
+    height: @loader-size;
+    text-align: center;
+  }
+
+  .loader-spinning-wheel {
+    width: @loader-size;
+    height: @loader-size;
+  }
+}
+
+// Modal form
+.modal-body .form-group {
+  min-height: 34px;
+}
+
+// Errors modal
+.list-item-errors {
+  margin-bottom: @line-height-computed;
+}
+
+.list-errored-items li:last-child .list-item-errors {
+  margin-bottom: 0px;
+}
+
+// Post likes modal
+.modal-post-likers {
+  .media-list {
+    margin: 0px;
+  }
+
+  .item-title {
+    display: block;
+  }
+}

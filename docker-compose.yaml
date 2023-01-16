@@ -57,4 +57,3 @@ services:
       # Map in the entire project into the container
       # This makes sure files in the container updates on the fly as we were working locally
       - .:/srv/misago:Z
-  

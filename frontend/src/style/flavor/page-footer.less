@@ -1,0 +1,48 @@
+//
+// Flavor Footer
+// --------------------------------------------------
+
+// Make footer full width
+.misago-footer {
+  margin-top: @line-height-computed * 2;
+
+  .footer-content {
+    border-top: 1px solid @gray-lighter;
+    padding-top: @line-height-computed * 1;
+
+    color: @page-footer-text-color;
+
+    @media screen and (max-width: @screen-xs-max) {
+      text-align: center;
+
+      .site-footnote {
+        clear: both;
+        margin-bottom: @line-height-computed * 0.75;
+      }
+    }
+
+    a,
+    a:link,
+    a:visited {
+      color: @page-footer-link-color;
+    }
+
+    a:hover,
+    a:focus {
+      color: @page-footer-link-hover-color;
+    }
+
+    .misago-branding {
+      &,
+      &:link,
+      &:visited {
+        color: @page-footer-brand-color;
+      }
+
+      &:hover,
+      &:focus {
+        color: @page-footer-brand-hover-color;
+      }
+    }
+  }
+}

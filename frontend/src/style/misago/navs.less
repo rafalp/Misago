@@ -1,0 +1,76 @@
+//
+// Navs
+// --------------------------------------------------
+
+.nav-side > a {
+  & > .material-icon {
+    margin: -5px;
+    margin-right: @line-height-computed / 2;
+
+    position: relative;
+    bottom: 1px;
+
+    width: 24px;
+    height: 24px;
+
+    font-size: 24px;
+    line-height: 24px;
+  }
+
+  .badge {
+    position: relative;
+    top: 1px;
+  }
+}
+
+.nav-pills > li > a {
+  display: flex;
+  align-items: center;
+  padding: @nav-pills-padding-vertical @nav-pills-padding-horizontal;
+
+  .material-icon {
+    margin-right: 3px;
+  }
+
+  &,
+  &:link,
+  &:visited {
+    background-color: @nav-pills-bg;
+    color: @nav-pills-color;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    background-color: @nav-pills-hover-bg;
+    color: @nav-pills-hover-color;
+  }
+}
+
+.nav-pills > li.active > a {
+  &,
+  &:link,
+  &:visited,
+  &:focus,
+  &:hover,
+  &:active {
+    background-color: @nav-pills-active-bg;
+    color: @nav-pills-active-color;
+  }
+}
+
+.nav-container {
+  .btn-block {
+    margin-bottom: @line-height-computed;
+  }
+
+  .nav {
+    margin-right: floor(@line-height-computed / -2);
+    margin-bottom: floor(@line-height-computed * 1.5);
+  }
+
+  li {
+    margin-right: floor(@line-height-computed / 2);
+    margin-bottom: floor(@line-height-computed / 2);
+  }
+}

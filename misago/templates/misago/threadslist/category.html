@@ -48,46 +48,34 @@
 
 
 {% block page-header %}
-<div class="page-header">
-  <div class="container">
-    <div class="row">
-      <div class="{{ user.is_authenticated|yesno:'col-md-8,col-xs-12' }}">
-        <div class="row">
-          <div class="hidden-xs col-sm-2 col-lg-1">
-            <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-icon btn-aligned btn-go-back btn-block btn-outline">
-              <span class="material-icon">
-                keyboard_arrow_left
-              </span>
-            </a>
-          </div>
-          <div class="col-xs-12 col-sm-10 col-lg-11 sm-align-row-buttons">
-            <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="go-back-sm visible-xs-block btn-outline">
-              <span class="material-icon">
-                chevron_left
-              </span>
-              {% if parent.parent %}{{ parent.name }}{% else %}{% trans "Threads" %}{% endif %}
-            </a>
-            <h1>{{ category }}</h1>
+<div class="container page-header-container">
+  <div class="page-header page-header-{{ category.css_class|default:'category-threads' }}">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-{{ category.css_class|default:'category-threads' }}">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              <h1>{{ category }}</h1>
+            </div>
           </div>
         </div>
+        {% if category.description %}
+          <div class="page-header-details">
+            <div class="page-header-message">
+              {{ category.description|force_escape|urlize|linebreaks|safe }}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
-  {% if user.is_authenticated %}
-    {% include "misago/threadslist/tabs.html" %}
-  {% endif %}
 </div>
 {% endblock page-header %}
 
 
 {% block list-container %}
-  {% if category.description %}
-    <div class="category-description">
-      <div class="page-lead {{ category.description|force_escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
-        {{ category.description|force_escape|urlize|linebreaks|safe }}
-      </div>
-    </div>
-  {% endif %}
+  {% include "misago/threadslist/toolbar.html" %}
 
   {{ block.super }}
 {% endblock list-container%}

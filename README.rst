@@ -10,13 +10,13 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://img.shields.io/badge/release-0.26.0-brightgreen.svg
+.. image:: https://img.shields.io/badge/release-0.28.1-brightgreen.svg
    :target: https://pypi.org/project/Misago/
-   :alt: Release 0.26.0
+   :alt: Release 0.28.1
 
-.. image:: https://img.shields.io/badge/python-3.7-blue.svg
+.. image:: https://img.shields.io/badge/python-3.11-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
-   :alt: Works on Python 3.7
+   :alt: Works on Python 3.11
 
 .. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
    :target: https://discord.gg/fwvrZgB
@@ -35,11 +35,11 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Screenshots
 ===========
 
-.. image:: https://misago-project.org/media/mporg-home-small.png?01062018
+.. image:: https://user-images.githubusercontent.com/750553/212570745-fff596f8-ff7d-45f2-a7c2-505e56d80a04.png
    :target: https://misago-project.org
    :alt: Forum index
 
-.. image:: https://misago-project.org/media/mporg-thread-small.png?01062018
+.. image:: https://user-images.githubusercontent.com/750553/212570742-52fa8c2c-a86e-4dd4-84b2-933ed7db41d3.png
    :target: https://misago-project.org
    :alt: Thread view
 
@@ -66,9 +66,9 @@ As of now Misago implements all features considered "must have" on live internet
 * Mark post in question thread as best answer, bringing basic Q&A functionality.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
-* Custom theme developed over bootstrap.
+* Custom theme developed with bootstrap.
 * Features and settings for achieving GDPR compliance.
-* Integrate forum with your site using implemented Single Sign On client and JSON API.
+* Integrate forum with your site using implemented OAuth2 client and JSON API.
 
 Even more features will follow in future releases:
 
@@ -107,14 +107,16 @@ You may skip `./dev init` and setup dev instance manually, running those command
 Frontend
 --------
 
-With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks:
+With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application uses webpack for building.
 
-* **build** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory
-* **watch** does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes
-* **watchstyle** does quick build of less files, and re-builds them when they change
-* **test** runs Mocha.js tests suite for Misago's javascript
+Currently Misago defines following taks:
 
-To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifing assets in ``frontend`` directory, however special care should be taken when changing source javascripts.
+* **npm run build** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory.
+* **npm run start** does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes.
+* **npm run prettier** formats code with prettier.
+* **npm run eslint** lints code with eslint.
+
+To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in ``frontend`` directory, however special care should be taken when changing source javascripts.
 
 Misago defines template that allows you to include custom html and js code before Misago's JavaScript app is ran, named **scripts.html**.
 

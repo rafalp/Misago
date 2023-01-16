@@ -1,0 +1,35 @@
+//
+// Active Posters Flavor
+// --------------------------------------------------
+
+.active-posters .rank-user-avatar img {
+  border-radius: @border-radius-base;
+}
+
+.active-posters .user-details {
+  color: @gray-light;
+
+  a.rank-name {
+    &,
+    &:link,
+    &:visited {
+      color: @gray;
+      font-weight: normal;
+    }
+
+    &:focus,
+    &:hover,
+    &:active {
+      color: @text-color;
+    }
+  }
+
+  span.rank-name {
+    color: @gray;
+    font-weight: normal;
+  }
+}
+
+.active-posters small {
+  color: @gray-light;
+}

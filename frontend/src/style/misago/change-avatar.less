@@ -1,0 +1,272 @@
+//
+// Change Avatar Modal
+// --------------------------------------------------
+
+// Index
+.modal-change-avatar .modal-avatar-index {
+  .avatar-preview {
+    border-radius: @border-radius-large;
+    margin: 0px auto;
+    overflow: hidden;
+    position: relative;
+
+    width: 200px;
+    height: 200px;
+
+    .loader {
+      display: none;
+
+      position: absolute;
+      top: 50px;
+      height: 100px;
+
+      .loader-spinning-wheel {
+        border-width: 10px;
+        border-color: #fff;
+        border-left-color: transparent;
+        border-right-color: transparent;
+
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    &.preview-loading {
+      img {
+        .opacity(0.33);
+      }
+
+      .loader {
+        display: block;
+      }
+    }
+
+    @media (max-width: (@grid-float-breakpoint - 1)) {
+      margin-bottom: @line-height-computed;
+
+      width: 150px;
+      height: 150px;
+
+      img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .loader {
+        top: 25px;
+        height: 100px;
+
+        .loader-spinning-wheel {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
+  }
+
+  .btn {
+    text-align: left;
+  }
+}
+
+// Upload
+.modal-change-avatar .modal-avatar-upload {
+  text-align: center;
+
+  .btn-pick-file {
+    background: transparent;
+    border: 2px solid @gray-lighter;
+    border-radius: @border-radius-large;
+    padding: @padding-large-vertical @padding-large-horizontal * 1.5;
+    .box-shadow(none);
+
+    color: @gray-light;
+    font-size: @font-size-large;
+    text-align: center;
+
+    & > .material-icon {
+      display: block;
+      margin: 0px auto;
+      margin-bottom: @line-height-computed * 0.66;
+
+      font-size: @line-height-computed * 2.5;
+      width: @line-height-computed * 2.5;
+      height: @line-height-computed * 2.5;
+    }
+
+    &:hover,
+    &:active {
+      border-color: @brand-primary;
+      color: @brand-primary;
+    }
+  }
+
+  .text-muted {
+    margin-top: @line-height-computed * 0.66;
+  }
+
+  .upload-progress {
+    img {
+      border-radius: @border-radius-base;
+      margin-bottom: @line-height-computed;
+
+      max-height: 80px;
+      width: auto;
+    }
+
+    .progress {
+      width: 70%;
+      margin: 0px auto;
+    }
+  }
+}
+
+// Crop
+.modal-avatar-crop .crop-form {
+  margin: 0px auto;
+
+  .cropit-image-zoom-input {
+    margin-top: @line-height-computed / 2;
+
+    // removes default webkit styles
+    -webkit-appearance: none;
+
+    // fix for FF unable to apply focus style bug
+    border: 1px solid white;
+
+    // required for proper track sizing in FF
+    width: 100%;
+
+    &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      background: @gray-lighter;
+      border: none;
+      border-radius: 3px;
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: @gray-light;
+      margin-top: -6px;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus::-webkit-slider-runnable-track {
+      background: @gray-lighter;
+    }
+
+    &::-moz-range-track {
+      width: 100%;
+      height: 8px;
+      background: @gray-lighter;
+      border: none;
+      border-radius: 4px;
+    }
+
+    &::-moz-range-thumb {
+      border: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: @gray-light;
+    }
+
+    /*hide the outline behind the border*/
+    &:-moz-focusring {
+      outline: 1px solid white;
+      outline-offset: -1px;
+    }
+
+    &::-ms-track {
+      width: 100%;
+      height: 8px;
+
+      /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+      background: transparent;
+
+      /*leave room for the larger thumb to overflow with a transparent border */
+      border-color: transparent;
+      border-width: 8px 0;
+
+      /*remove default tick marks*/
+      color: transparent;
+    }
+
+    &::-ms-fill-lower {
+      background: @gray-lighter;
+      border-radius: 16px;
+    }
+
+    &::-ms-fill-upper {
+      background: @gray-lighter;
+      border-radius: 16px;
+    }
+
+    &::-ms-thumb {
+      border: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: @gray-light;
+    }
+
+    &:focus::-ms-fill-lower {
+      background: @gray-lighter;
+    }
+
+    &:focus::-ms-fill-upper {
+      background: @gray-lighter;
+    }
+  }
+}
+
+// Gallery
+.modal-change-avatar .modal-avatar-gallery {
+  padding-bottom: 0px;
+
+  .avatars-gallery {
+    margin-bottom: @line-height-computed;
+
+    h3 {
+      margin-top: 0px;
+    }
+  }
+
+  .avatars-gallery-images {
+    .row {
+      margin-bottom: @line-height-computed / 2;
+    }
+
+    .btn {
+      border-radius: @border-radius-base + 2px;
+      border: 2px solid @gray-lighter;
+      background: none;
+      padding: 2px;
+      position: relative;
+
+      &:hover,
+      &:focus {
+        border-color: @gray-light;
+      }
+
+      &.avatar-selected,
+      &:active {
+        border-color: @link-color;
+      }
+
+      img {
+        border-radius: @border-radius-base;
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}

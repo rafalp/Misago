@@ -73,14 +73,6 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             response.json(), {"new_email": ["This e-mail address is not available."]}
         )
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_email_change_fails_when_sso_is_enabled(self):
-        response = self.client.post(
-            self.link,
-            data={"new_email": "new@email.com", "password": self.USER_PASSWORD},
-        )
-        self.assertEqual(response.status_code, 403)
-
     @override_dynamic_settings(forum_address="http://test.com/")
     def test_change_email(self):
         """api allows users to change their e-mail addresses"""
@@ -140,3 +132,46 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertEqual(self.user.email, new_email)
+
+    @override_dynamic_settings(
+        enable_oauth2_client=True,
+        oauth2_provider="Lorem",
+    )
+    def test_change_email_api_returns_403_if_oauth_is_enabled(self):
+        new_email = "new@email.com"
+
+        self.login_user(self.user)
+
+        response = self.client.post(
+            self.link, data={"new_email": new_email, "password": self.USER_PASSWORD}
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_dynamic_settings(forum_address="http://test.com/")
+    def test_confirm_change_email_view_returns_403_if_oauth_is_enabled(self):
+        new_email = "new@email.com"
+
+        self.login_user(self.user)
+
+        response = self.client.post(
+            self.link, data={"new_email": new_email, "password": self.USER_PASSWORD}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
+        for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
+            if line.startswith("http://"):
+                token = line.rstrip("/").split("/")[-1]
+                break
+        else:
+            self.fail("E-mail sent didn't contain confirmation url")
+
+        with override_dynamic_settings(
+            enable_oauth2_client=True, oauth2_provider="Lorem"
+        ):
+            response = self.client.get(
+                reverse("misago:options-confirm-email-change", kwargs={"token": token})
+            )
+
+            self.assertEqual(response.status_code, 403)

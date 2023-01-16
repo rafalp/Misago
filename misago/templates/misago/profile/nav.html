@@ -1,15 +1,28 @@
-{% load misago_avatars misago_shorthands %}
-<div class="profile-side-avatar">
-  <img src="{{ profile|avatar:400 }}" alt="">
+<div class="nav-container">
+  <button class="btn btn-default btn-block btn-placeholder hidden-xs hidden-sm hidden-md hidden-lg" disabled>
+    <span class="material-icon">
+      {{ active_section.icon }}
+    </span>
+    {{ active_section.name }}
+  </button>
+  <ul class="nav nav-pills" role="menu">
+    {% for section in sections %}
+      <li{% if section.is_active %} class="active"{% endif %}>
+        <a href="{% url section.link slug=profile.slug pk=profile.pk %}">
+          <span class="material-icon">
+            {{ section.icon }}
+          </span>
+          {{ section.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 </div>
 
-<div class="list-group nav-side">
-  {% for section in sections %}
-    <a href="{% url section.link slug=profile.slug pk=profile.pk %}" class="list-group-item{{ section.is_active|iftrue:' active' }}">
-      <span class="material-icon">
-        {{ section.icon }}
-      </span>
-      {{ section.name }}
-    </a>
-  {% endfor %}
-</div>
+<script type="text/javascript">
+  const btn = document.querySelectorAll('.btn-placeholder')[0]
+  if (btn) btn.classList.remove("hidden-xs");
+
+  const pills = document.querySelectorAll('.nav-pills')[0]
+  if (pills) pills.classList.add("hidden-xs");
+</script>

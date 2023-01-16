@@ -1,7 +1,7 @@
 import React from "react"
 import Avatar from "misago/components/avatar"
 
-export default function({ category }) {
+export default function ({ category }) {
   return (
     <div className="col-md-2 hidden-xs hidden-sm">
       <ul className="list-unstyled category-stats">
@@ -20,7 +20,7 @@ export function Threads({ threads }) {
       {interpolate(
         message,
         {
-          threads: threads
+          threads: threads,
         },
         true
       )}
@@ -36,7 +36,7 @@ export function Posts({ posts }) {
       {interpolate(
         message,
         {
-          posts: posts
+          posts: posts,
         },
         true
       )}

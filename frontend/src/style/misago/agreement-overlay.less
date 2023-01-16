@@ -1,0 +1,67 @@
+//
+// Agreement overlay
+// --------------------------------------------------
+
+.agreement-overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: @zindex-modal + 10;
+
+  background-color: fadeOut(@modal-backdrop-bg, @modal-backdrop-opacity * 100);
+  overflow-x: scroll;
+
+  .container {
+    max-width: @modal-lg;
+    padding: @line-height-computed @grid-gutter-width;
+  }
+}
+
+.agreement-content {
+  background-color: @modal-content-bg;
+  border: 1px solid @modal-content-fallback-border-color; //old browsers fallback (ie8 etc)
+  border: 1px solid @modal-content-border-color;
+  border-radius: @border-radius-large;
+  .box-shadow(0 3px 9px rgba(0,0,0,0.5));
+  background-clip: padding-box;
+  outline: 0;
+
+  padding: @padding-large-vertical @padding-large-horizontal;
+}
+
+.agreement-header {
+  padding: @padding-large-vertical 0;
+
+  border-bottom: 1px solid @gray-lighter;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.agreement-body {
+  padding: @line-height-computed 0;
+
+  p.lead {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.agreement-footer {
+  .modal-footer();
+
+  padding: @padding-large-vertical 0;
+}
+
+// utility class disabling scroll on body
+body.agreement-overlay-visible {
+  overflow: hidden;
+}

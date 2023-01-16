@@ -8,8 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.encoding import force_str
 from django.utils.module_loading import import_string
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _, ngettext
 from requests.exceptions import RequestException
 
 from .. import hooks
@@ -81,7 +80,7 @@ def validate_username_banned(value):
 
 
 def validate_username_content(value):
-    if not USERNAME_RE.match(value):
+    if not USERNAME_RE.match(value.replace("_", "")):
         raise ValidationError(
             _("Username can only contain latin alphabet letters and digits.")
         )

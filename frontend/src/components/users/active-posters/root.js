@@ -26,7 +26,7 @@ export default class extends React.Component {
       isLoaded: true,
 
       trackedPeriod: data.tracked_period,
-      count: data.count
+      count: data.count,
     }
 
     store.dispatch(hydrate(data.results))
@@ -34,7 +34,7 @@ export default class extends React.Component {
 
   initWithoutPreloadedData() {
     this.state = {
-      isLoaded: false
+      isLoaded: false,
     }
   }
 
@@ -43,28 +43,28 @@ export default class extends React.Component {
       poll: "active-posters",
       url: misago.get("USERS_API"),
       data: {
-        list: "active"
+        list: "active",
       },
       frequency: 90 * 1000,
-      update: this.update
+      update: this.update,
     })
   }
 
-  update = data => {
+  update = (data) => {
     store.dispatch(hydrate(data.results))
 
     this.setState({
       isLoaded: true,
 
       trackedPeriod: data.tracked_period,
-      count: data.count
+      count: data.count,
     })
   }
 
   componentDidMount() {
     title.set({
       title: this.props.route.extra.name,
-      parent: gettext("Users")
+      parent: gettext("Users"),
     })
   }
 
@@ -73,20 +73,25 @@ export default class extends React.Component {
   }
 
   render() {
+    const page = { name: this.props.route.extra.name }
+
     if (this.state.isLoaded) {
       if (this.state.count > 0) {
         return (
           <ListReady
+            page={page}
             users={this.props.users}
             trackedPeriod={this.state.trackedPeriod}
             count={this.state.count}
           />
         )
       } else {
-        return <ListEmpty trackedPeriod={this.state.trackedPeriod} />
+        return (
+          <ListEmpty page={page} trackedPeriod={this.state.trackedPeriod} />
+        )
       }
     } else {
-      return <ListPreview />
+      return <ListPreview page={page} />
     }
   }
 }

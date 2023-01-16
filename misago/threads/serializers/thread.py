@@ -13,6 +13,8 @@ BasicCategorySerializer = CategorySerializer.subset_fields(
     "id",
     "parent",
     "name",
+    "short_name",
+    "color",
     "description",
     "is_closed",
     "css_class",
@@ -36,6 +38,8 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     best_answer = serializers.PrimaryKeyRelatedField(read_only=True)
     best_answer_marked_by = serializers.PrimaryKeyRelatedField(read_only=True)
     subscription = serializers.SerializerMethodField()
+    starter = serializers.SerializerMethodField()
+    last_poster = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -70,6 +74,8 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             "path",
             "poll",
             "subscription",
+            "starter",
+            "last_poster",
             "api",
             "url",
         ]
@@ -107,6 +113,24 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             return obj.subscription.send_email
         except AttributeError:
             return None
+
+    def get_starter(self, obj):
+        if obj.starter_id:
+            return {
+                "id": obj.starter_id,
+                "username": obj.starter.username,
+                "real_name": obj.starter.get_real_name(),
+                "avatars": obj.starter.avatars,
+            }
+
+    def get_last_poster(self, obj):
+        if obj.last_poster_id:
+            return {
+                "id": obj.last_poster_id,
+                "username": obj.last_poster.username,
+                "real_name": obj.last_poster.get_real_name(),
+                "avatars": obj.last_poster.avatars,
+            }
 
     def get_api(self, obj):
         return {
@@ -158,30 +182,10 @@ class PrivateThreadSerializer(ThreadSerializer):
 class ThreadsListSerializer(ThreadSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
     last_post = serializers.PrimaryKeyRelatedField(read_only=True)
-    starter = serializers.SerializerMethodField()
-    last_poster = serializers.SerializerMethodField()
 
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + ["has_poll", "starter", "last_poster"]
-
-    def get_starter(self, obj):
-        if obj.starter_id:
-            return {
-                "id": obj.starter_id,
-                "username": obj.starter.username,
-                "real_name": obj.starter.get_real_name(),
-                "avatars": obj.starter.avatars,
-            }
-
-    def get_last_poster(self, obj):
-        if obj.last_poster_id:
-            return {
-                "id": obj.last_poster_id,
-                "username": obj.last_poster.username,
-                "real_name": obj.last_poster.get_real_name(),
-                "avatars": obj.last_poster.avatars,
-            }
+        fields = ThreadSerializer.Meta.fields + ["has_poll"]
 
 
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields("path", "poll")

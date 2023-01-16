@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # ZZLL <zhuolun1996@gmail.com>, 2017
 # Paradox506 <Renyi_14@whu.edu.cn>, 2017
@@ -11,20 +11,21 @@
 # cxgreat2014 <fwy1998@gmail.com>, 2018
 # 沐子白 <yiveco@qq.com>, 2018
 # 蚂蚁先生 <pzf_karl@hotmail.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-10 16:34+0000\n"
+"POT-Creation-Date: 2022-10-31 23:26+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: acl/admin/__init__.py:24 templates/misago/acl_debug.html:16
@@ -219,7 +220,7 @@ msgstr "已关闭版块"
 msgid "Only members with valid permissions can post in closed categories."
 msgstr "只有具备特定权限的成员可以在已经关闭的版块中发帖。"
 
-#: categories/admin/forms.py:70 conf/admin/__init__.py:93
+#: categories/admin/forms.py:70 conf/admin/__init__.py:79
 #: templates/misago/admin/categories/list.html:19
 #: templates/misago/admin/dashboard/totals.html:19
 #: templates/misago/navbar.html:20 templates/misago/navbar.html:36
@@ -233,7 +234,7 @@ msgstr "只有具备特定权限的成员可以在已经关闭的版块中发帖
 #: templates/misago/threadslist/threads.html:42
 #: templates/misago/threadslist/threads.html:66
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
-#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:106
+#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:97
 msgid "Threads"
 msgstr "话题"
 
@@ -265,8 +266,8 @@ msgstr "话题寿命"
 
 #: categories/admin/forms.py:95
 msgid ""
-"Prune thread if number of days since its creation is greater than specified."
-" Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified. "
+"Enter 0 to disable this pruning criteria."
 msgstr "如果话题的创建时长超过指定的天数，直接删除话题。输入0禁用此功能。"
 
 #: categories/admin/forms.py:100
@@ -311,8 +312,7 @@ msgstr "归档"
 
 #: categories/admin/forms.py:173
 msgid ""
-"Instead of being deleted, pruned threads can be moved to designated "
-"category."
+"Instead of being deleted, pruned threads can be moved to designated category."
 msgstr "替换直接删除，你可以把超过寿命的话题归档到指定的版块中。"
 
 #: categories/admin/forms.py:177
@@ -327,7 +327,8 @@ msgstr "你正在移动话题到该话题本身的版块中。"
 msgid ""
 "You are trying to move this category threads to a child category that will "
 "be deleted together with this category."
-msgstr "你正在将当前版块话题移动到子版块中，如果父版块删除，子版块将会一起删除。"
+msgstr ""
+"你正在将当前版块话题移动到子版块中，如果父版块删除，子版块将会一起删除。"
 
 #: categories/admin/forms.py:213
 msgid "Move category threads to"
@@ -342,8 +343,7 @@ msgid "Move child categories to"
 msgstr "移动子版块到"
 
 #: categories/admin/forms.py:249 categories/admin/forms.py:264
-#: templates/misago/acl_debug.html:15
-#: templates/misago/admin/roles/list.html:16
+#: templates/misago/acl_debug.html:15 templates/misago/admin/roles/list.html:16
 msgid "Role"
 msgstr "身份"
 
@@ -453,20 +453,20 @@ msgstr "可查看版块内容"
 msgid "You don't have permission to browse \"%(category)s\" contents."
 msgstr "你无法浏览 \"%(category)s\" 版块中的内容。"
 
-#: conf/admin/__init__.py:45 templates/misago/admin/conf/index.html:5
+#: conf/admin/__init__.py:41 templates/misago/admin/conf/index.html:5
 #: templates/misago/admin/themes/form.html:48
 msgid "Settings"
 msgstr "设置"
 
-#: conf/admin/__init__.py:52 templates/misago/admin/socialauth/form.html:27
+#: conf/admin/__init__.py:48 templates/misago/admin/socialauth/form.html:27
 msgid "General"
 msgstr "通用"
 
-#: conf/admin/__init__.py:53
+#: conf/admin/__init__.py:49
 msgid "Change forum details like name, description or footer."
 msgstr "修改论坛信息，比如名称，描述信息，页脚信息等。"
 
-#: conf/admin/__init__.py:58 templates/misago/admin/dashboard/totals.html:7
+#: conf/admin/__init__.py:54 templates/misago/admin/dashboard/totals.html:7
 #: templates/misago/admin/users/ban.html:22 templates/misago/navbar.html:42
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin/__init__.py:74
@@ -474,38 +474,28 @@ msgstr "修改论坛信息，比如名称，描述信息，页脚信息等。"
 msgid "Users"
 msgstr "用户"
 
-#: conf/admin/__init__.py:60
+#: conf/admin/__init__.py:56
 msgid "Customize user accounts default behavior and features availability."
 msgstr "自定义用户账号的默认行为和功能。"
 
-#: conf/admin/__init__.py:67
+#: conf/admin/__init__.py:63
 msgid "Captcha"
 msgstr "验证码"
 
-#: conf/admin/__init__.py:69
+#: conf/admin/__init__.py:65
 msgid "Setup protection against automatic registrations on the site."
 msgstr "为站点上的自动注册设置保护措施。"
 
-#: conf/admin/__init__.py:76
-msgid "Single Sign-On"
-msgstr "单点登录"
-
-#: conf/admin/__init__.py:78
-msgid ""
-"SSO enables you to delegate user login and registration from Misago tothe "
-"third party site."
-msgstr "启用单点登录可以将你网站的登录和注册委派给第三方网站。"
-
-#: conf/admin/__init__.py:86 templates/misago/admin/dashboard/analytics.html:7
+#: conf/admin/__init__.py:72 templates/misago/admin/dashboard/analytics.html:7
 #: templates/misago/admin/dashboard/index.html:40
 msgid "Analytics"
 msgstr "分析"
 
-#: conf/admin/__init__.py:87
+#: conf/admin/__init__.py:73
 msgid "Enable Google Analytics or setup Google Site Verification."
 msgstr "启用谷歌分析或设置谷歌网站验证。"
 
-#: conf/admin/__init__.py:94
+#: conf/admin/__init__.py:80
 msgid "Threads, posts, polls and attachments options."
 msgstr "话题、帖子、投票和附件选项。"
 
@@ -517,7 +507,9 @@ msgstr "追踪 ID"
 msgid ""
 "Setting the Tracking ID will result in gtag.js file being included in your "
 "site's HTML markup, enabling Google Analytics integration."
-msgstr "设置追踪 ID，将在你网站的 HTML 标记中包含 gtag. js 文件，从而实现 Google 分析集成。"
+msgstr ""
+"设置追踪 ID，将在你网站的 HTML 标记中包含 gtag. js 文件，从而实现 Google 分析"
+"集成。"
 
 #: conf/admin/forms/analytics.py:25
 msgid "Site verification token"
@@ -525,8 +517,8 @@ msgstr "站点验证令牌"
 
 #: conf/admin/forms/analytics.py:27
 msgid ""
-"This token was extracted from uploaded site verification file. To change it,"
-" upload new verification file."
+"This token was extracted from uploaded site verification file. To change it, "
+"upload new verification file."
 msgstr "此令牌是从上传的网站验证文件中提取的。若要更改它，请上传新的验证文件。"
 
 #: conf/admin/forms/analytics.py:34
@@ -537,7 +529,9 @@ msgstr "上传网站验证文件"
 msgid ""
 "Site verification file can be downloaded from Search Console's \"Ownership "
 "verification\" page."
-msgstr "网站验证文件可以从搜索控制台的 “所有权验证(Ownership verification)\" 页面下载。"
+msgstr ""
+"网站验证文件可以从搜索控制台的 “所有权验证(Ownership verification)\" 页面下"
+"载。"
 
 #: conf/admin/forms/analytics.py:48
 msgid "Submitted file type is not HTML."
@@ -609,8 +603,9 @@ msgid ""
 "themselves. If this score is equal or higher than specified, Misago will "
 "block user from registering and ban their IP address for 24 hours."
 msgstr ""
-"SFS 将用户电子邮件和 IP 地址与已知垃圾邮件发送者的数据库进行比较,并将用户本身是垃圾邮件发送者的置信度评分分配在 0 到 100 "
-"之间。如果此分数等于或高于指定分数,系统将阻止用户注册并禁用其 IP 地址 24 小时。"
+"SFS 将用户电子邮件和 IP 地址与已知垃圾邮件发送者的数据库进行比较,并将用户本身"
+"是垃圾邮件发送者的置信度评分分配在 0 到 100 之间。如果此分数等于或高于指定分"
+"数,系统将阻止用户注册并禁用其 IP 地址 24 小时。"
 
 #: conf/admin/forms/captcha.py:79
 msgid "You need to enter site key if selected CAPTCHA type is reCaptcha."
@@ -693,7 +688,9 @@ msgstr "文本"
 msgid ""
 "Text displayed in forum navbar. If logo image was uploaded, text will be "
 "displayed right next to it. Never displayed by the compact navbar."
-msgstr "显示在论坛导航栏中的文本。如果上传了 logo 图片，该文本将显示在 logo 旁边。永远不会显示在移动端导航栏。"
+msgstr ""
+"显示在论坛导航栏中的文本。如果上传了 logo 图片，该文本将显示在 logo 旁边。永"
+"远不会显示在移动端导航栏。"
 
 #: conf/admin/forms/general.py:73
 msgid "Image"
@@ -704,7 +701,9 @@ msgid ""
 "Custom image that will appear next to links to your forum posted on social "
 "sites. Facebook recommends that this image should be 1200 pixels wide and "
 "630 pixels tall."
-msgstr "用于展示在社交站点上的网站图片。Facebook 建议该图片应该是 1200px 宽，630px 高。"
+msgstr ""
+"用于展示在社交站点上的网站图片。Facebook 建议该图片应该是 1200px 宽，630px "
+"高。"
 
 #: conf/admin/forms/general.py:81
 msgid "Delete image"
@@ -740,41 +739,9 @@ msgstr "由本论坛发送的电子邮件末尾的短消息。（可选）"
 msgid ""
 "Misago uses this setting to build links in e-mails sent to site users. "
 "Address under which site is running appears to be \"%(address)s\"."
-msgstr "系统使用此设置创建发送给用户邮件中的正确连接。当前站点的正确链接似乎是 “%(address)s”。"
-
-#: conf/admin/forms/sso.py:13
-msgid "Enable Single Sign-On"
-msgstr "启用单点登录"
-
-#: conf/admin/forms/sso.py:15
-msgid ""
-"Enabling SSO will make login option redirect users to the server URL "
-"configured below. It will also disable option to register on forum, change "
-"username, email or passward, as those features will be delegated to the 3rd "
-"party site."
 msgstr ""
-"启用单点登录将重定向网站的登录信息到下面设置的服务链接。并同时禁用网站的注册，修改用户名，电子邮件或密码，因为这些功能都委派给第3方网站了。"
-
-#: conf/admin/forms/sso.py:22
-msgid "Public key"
-msgstr "公钥"
-
-#: conf/admin/forms/sso.py:24 conf/admin/forms/sso.py:32
-msgid ""
-"Leave this field empty for Misago to generate this key on form submission."
-msgstr "留空将自动生成密钥。"
-
-#: conf/admin/forms/sso.py:30
-msgid "Private key"
-msgstr "私钥"
-
-#: conf/admin/forms/sso.py:37
-msgid "Server URL"
-msgstr "服务器链接"
-
-#: conf/admin/forms/sso.py:50
-msgid "You need to enter server URL to enable SSO."
-msgstr "你需要输入服务器链接以启用单点登录。"
+"系统使用此设置创建发送给用户邮件中的正确连接。当前站点的正确链接似乎是 "
+"“%(address)s”。"
 
 #: conf/admin/forms/threads.py:27
 msgid "Daily post limit per user"
@@ -785,7 +752,9 @@ msgid ""
 "Daily limit of posts that may be posted by single user. Fail-safe for "
 "situations when forum is flooded by spam bots. Change to 0 to remove the "
 "limit."
-msgstr "每个用户每日发帖的数量。如果论坛垃圾邮件过多的时候可在此调整数据量。设为0将删除限制。"
+msgstr ""
+"每个用户每日发帖的数量。如果论坛垃圾邮件过多的时候可在此调整数据量。设为0将删"
+"除限制。"
 
 #: conf/admin/forms/threads.py:36
 msgid "Hourly post limit per user"
@@ -796,7 +765,9 @@ msgid ""
 "Hourly limit of posts that may be posted by single user. Fail-safe for "
 "situations when forum is flooded by spam bots. Change to 0 to remove the "
 "limit."
-msgstr "每个用户每小时发帖的数量。如果论坛垃圾邮件过多的时候可在此调整数据量。设为 0 将移除限制。"
+msgstr ""
+"每个用户每小时发帖的数量。如果论坛垃圾邮件过多的时候可在此调整数据量。设为 0 "
+"将移除限制。"
 
 #: conf/admin/forms/threads.py:45
 msgid "Maximum number of attachments per post"
@@ -826,7 +797,9 @@ msgstr "未附加附件保存时限"
 msgid ""
 "Period of time (in hours) after which user-uploaded files that weren't "
 "attached to any post are deleted from disk."
-msgstr "删除用户上传的文件，如果在指定时间之内该文件未附加到任何帖子，该文件将被删除。"
+msgstr ""
+"删除用户上传的文件，如果在指定时间之内该文件未附加到任何帖子，该文件将被删"
+"除。"
 
 #: conf/admin/forms/threads.py:69
 msgid "Read-tracker cutoff"
@@ -834,13 +807,14 @@ msgstr "阅读跟踪截止时间"
 
 #: conf/admin/forms/threads.py:71
 msgid ""
-"Controls amount of data used by read-tracking system. All content older than"
-" number of days specified in this setting is considered old and read, even "
-"if the opposite is true for the user. Active forums can try lowering this "
-"value while less active ones may wish to increase it instead. "
+"Controls amount of data used by read-tracking system. All content older than "
+"number of days specified in this setting is considered old and read, even if "
+"the opposite is true for the user. Active forums can try lowering this value "
+"while less active ones may wish to increase it instead. "
 msgstr ""
-"控制阅读跟踪系统使用的数据量。超过此设置中指定天数的所有内容都被视为旧内容并读取,即使用户的情况正好相反也是如此。活跃的论坛可以尝试降低此值,而不太活跃的论坛可能希望增加此值。"
-" "
+"控制阅读跟踪系统使用的数据量。超过此设置中指定天数的所有内容都被视为旧内容并"
+"读取,即使用户的情况正好相反也是如此。活跃的论坛可以尝试降低此值,而不太活跃的"
+"论坛可能希望增加此值。 "
 
 #: conf/admin/forms/threads.py:80
 msgid "Number of threads displayed on a single page"
@@ -859,7 +833,9 @@ msgid ""
 "If number of posts to be displayed on the last page is less or equal to "
 "number specified in this setting, those posts will instead be displayed on "
 "previous page, reducing the total number of pages in thread."
-msgstr "如果最后一页的帖子数小于或等于该值，那么这些帖子将显示在上一页上，从而减少话题列表的总页数。"
+msgstr ""
+"如果最后一页的帖子数小于或等于该值，那么这些帖子将显示在上一页上，从而减少话"
+"题列表的总页数。"
 
 #: conf/admin/forms/threads.py:96
 msgid "Maximum number of events displayed on a single page"
@@ -919,8 +895,8 @@ msgstr "关闭新用户注册"
 
 #: conf/admin/forms/users.py:48
 msgid ""
-"Delete new inactive accounts if they weren't activated within this number of"
-" days"
+"Delete new inactive accounts if they weren't activated within this number of "
+"days"
 msgstr "如果新的未激活帐户未在此天数内激活,将被删除"
 
 #: conf/admin/forms/users.py:51
@@ -975,8 +951,8 @@ msgstr "Gravatar不可用时的备用项"
 
 #: conf/admin/forms/users.py:86
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their "
-"e-mail address."
+"Select which avatar to use when user has no gravatar associated with their e-"
+"mail address."
 msgstr "选择当用户没有与 Gravatar 相关联的电子邮件时使用的头像。"
 
 #: conf/admin/forms/users.py:96
@@ -988,7 +964,9 @@ msgid ""
 "Blank avatar is displayed in the interface when user's avatar is not "
 "available: when user was deleted or is guest. Uploaded image should be a "
 "square."
-msgstr "当用户的头像不可用，或已删除，或该用户是访客时，将使用此空白头像。上传的图片必须是方形的。"
+msgstr ""
+"当用户的头像不可用，或已删除，或该用户是访客时，将使用此空白头像。上传的图片"
+"必须是方形的。"
 
 #: conf/admin/forms/users.py:105
 msgid "Delete custom blank avatar"
@@ -1028,7 +1006,9 @@ msgid ""
 "If number of users to be displayed on the last page is less or equal to "
 "number specified in this setting, those users will instead be displayed on "
 "previous page, reducing the total number of pages on the list."
-msgstr "如果最后一页的用户数小于或等于该值，那么这些用户将显示在上一页上，从而减少用户列表的总页数。"
+msgstr ""
+"如果最后一页的用户数小于或等于该值，那么这些用户将显示在上一页上，从而减少用"
+"户列表的总页数。"
 
 #: conf/admin/forms/users.py:151
 msgid "Maximum age in days of posts that should count to the ranking"
@@ -1065,7 +1045,9 @@ msgid ""
 "Number of days for which users IP addresses are stored in forum database. "
 "Enter zero to store registered IP addresses forever. Deleting user account "
 "always deletes the IP addresses associated with it."
-msgstr "用户 IP 存放的网站数据库中的天数。输入 0 将永久保存 IP 地址。删除用户账户的同时将删除关联的 IP 地址。"
+msgstr ""
+"用户 IP 存放的网站数据库中的天数。输入 0 将永久保存 IP 地址。删除用户账户的同"
+"时将删除关联的 IP 地址。"
 
 #: conf/admin/forms/users.py:183
 msgid "Anonymous username"
@@ -1086,48 +1068,50 @@ msgstr "上传的图片的边长至少炫耀 %(size)s 像素。"
 msgid "This value must be lower than number of users per page."
 msgstr "此值必须低于每页的用户数。"
 
-#: conf/admin/views.py:40
+#: conf/admin/views.py:39
 msgid "Settings have been saved."
 msgstr "设置已保存。"
 
-#: core/errorpages.py:42
+#: core/errorpages.py:51
 msgid "Permission denied."
 msgstr "没有权限。"
 
-#: core/errorpages.py:71
+#: core/errorpages.py:80
 msgid ""
 "A problem was encountered when disconnecting your account from the remote "
 "site."
 msgstr "断开你的帐户与远程站点的连接时遇到问题。"
 
-#: core/errorpages.py:75
+#: core/errorpages.py:84
 msgid ""
 "You are not allowed to disconnect your account from the other site, because "
 "currently it's the only way to sign in to your account."
 msgstr "你无法断开此快捷登录，因为目前这是登录到你的帐户的唯一方式。"
 
-#: core/errorpages.py:80
+#: core/errorpages.py:89
 #, python-format
 msgid "A problem was encountered when signing you in using %(backend)s."
 msgstr "使用 %(backend)s 登录到你账户的时候遇到问题。"
 
-#: core/errorpages.py:84
+#: core/errorpages.py:93
 msgid "The sign in process has been canceled by user."
 msgstr "登录进程被用户取消。"
 
-#: core/errorpages.py:86
+#: core/errorpages.py:95
 msgid "The other service could not be reached."
 msgstr "无法连接到远程服务器。"
 
-#: core/errorpages.py:92
+#: core/errorpages.py:101
 msgid "Unexpected problem has been encountered during sign in process."
 msgstr "登录过程发生了错误。"
 
-#: core/errorpages.py:113
+#: core/errorpages.py:122
 msgid ""
 "Your request was rejected because your browser didn't send the CSRF cookie, "
 "or the cookie sent was invalid."
-msgstr "你的请求被拒绝，因为你的浏览器没有发送 CSRF cookie 信息，或者发送的 cookie 信息无效。"
+msgstr ""
+"你的请求被拒绝，因为你的浏览器没有发送 CSRF cookie 信息，或者发送的 cookie 信"
+"息无效。"
 
 #: core/rest_permissions.py:9
 msgid "This action is not available to guests."
@@ -1170,9 +1154,11 @@ msgstr "访问 pypi.org API 失败，请稍候尝试。"
 #: templates/misago/admin/dashboard/checks.html:17
 #: templates/misago/admin/dashboard/index.html:33
 msgid ""
-"Version check feature relies on the API operated by the Python Package Index"
-" (pypi.org) API to retrieve latest Misago release version."
-msgstr "版本检查功能依赖于由 Python 包索引 (pypi. org) 的 API 来检索最新的 Misago 版本。"
+"Version check feature relies on the API operated by the Python Package Index "
+"(pypi.org) API to retrieve latest Misago release version."
+msgstr ""
+"版本检查功能依赖于由 Python 包索引 (pypi. org) 的 API 来检索最新的 Misago 版"
+"本。"
 
 #: graphql/admin/versioncheck.py:70
 msgid "The site is running updated version of Misago."
@@ -1192,7 +1178,8 @@ msgstr "该网站正在运行旧版本的 Misago。"
 msgid ""
 "The site is running Misago version %(version)s while version %(latest)s is "
 "available."
-msgstr "该网站正在运行 Misago 版本是 %(version)s ，而当前最新版本是 %(latest)s 。"
+msgstr ""
+"该网站正在运行 Misago 版本是 %(version)s ，而当前最新版本是 %(latest)s 。"
 
 #: icons/admin/__init__.py:15
 msgid "Icons"
@@ -1261,7 +1248,9 @@ msgid ""
 "If other agreement is already active for this type, it will be unset and "
 "replaced with this one. Misago will ask users who didn't accept this "
 "agreement to do so before allowing them to continue using the site."
-msgstr "如果此类型存在已启用的协议，那么将强制替换成此协议。并且系统将强制要求所有用户接受此协议，然后才能继续使用网站服务。"
+msgstr ""
+"如果此类型存在已启用的协议，那么将强制替换成此协议。并且系统将强制要求所有用"
+"户接受此协议，然后才能继续使用网站服务。"
 
 #: legal/admin/forms.py:27 templates/misago/admin/themes/assets/css.html:17
 msgid "Link"
@@ -1498,11 +1487,11 @@ msgstr "搜索"
 msgid "Can search site"
 msgstr "可搜索站点"
 
-#: socialauth/admin/__init__.py:42
+#: socialauth/admin/__init__.py:40
 msgid "Social login"
 msgstr "社交登录"
 
-#: socialauth/admin/__init__.py:44
+#: socialauth/admin/__init__.py:42
 msgid "Enable users to sign on and login using their social profile."
 msgstr "允许用户通过社交网站登录和注册本站。"
 
@@ -1525,10 +1514,12 @@ msgstr "通过邮件关联现有用户"
 #: socialauth/admin/forms/base.py:39
 msgid ""
 "Enabling this option will result in the user being signed in if their forum "
-"account was registered using same e-mail address as used on the social site."
-" Otherwise they will be asked to specify a different e-mail to continue sign"
-" in using social site."
-msgstr "如果用户账户使用的电子邮件地址与该社交网站上的相同，那么将自动关联。否则将要求用户指定本地账户电子邮件，以便继续使用社交登录。"
+"account was registered using same e-mail address as used on the social site. "
+"Otherwise they will be asked to specify a different e-mail to continue sign "
+"in using social site."
+msgstr ""
+"如果用户账户使用的电子邮件地址与该社交网站上的相同，那么将自动关联。否则将要"
+"求用户指定本地账户电子邮件，以便继续使用社交登录。"
 
 #: socialauth/admin/forms/base.py:51 socialauth/admin/forms/base.py:53
 #: threads/admin/forms.py:97
@@ -1586,8 +1577,8 @@ msgstr "使用 %(provider)s 登录已移动到 %(other)s 之前。"
 #: socialauth/pipeline.py:88
 #, python-format
 msgid ""
-"The e-mail address associated with your %(backend)s account is not available"
-" for use on this site."
+"The e-mail address associated with your %(backend)s account is not available "
+"for use on this site."
 msgstr "关联到你 %(backend)s 账号的电子邮件无法在本站注册。"
 
 #: socialauth/pipeline.py:98
@@ -1600,18 +1591,6 @@ msgstr "你的账户必须通过网站管理员激活，才可以使用 %(backen
 #: socialauth/pipeline.py:223 users/api/userendpoints/create.py:60
 msgid "Please try resubmitting the form."
 msgstr "请重新尝试提交表单。"
-
-#: socialauth/views.py:23
-msgid "Please use the 3rd party site to login."
-msgstr "请使用第 3 方网站登录。"
-
-#: sso/validators.py:24 users/forms/register.py:34 users/validators.py:80
-msgid "This username is not allowed."
-msgstr "不允许使用此用户名。"
-
-#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:52
-msgid "This e-mail address is not allowed."
-msgstr "不能使用此电子邮件。"
 
 #: templates/misago/acl_debug.html:5
 #, python-format
@@ -1665,8 +1644,8 @@ msgstr "请求验证链接"
 
 #: templates/misago/activation/request.html:25
 msgid ""
-"The site administrator may impose a requirement on newly registered accounts"
-" to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts "
+"to be activated before users will be able to sign in."
 msgstr "此站点管理员可能会强制要求用户在登录之前激活新注册的账户。"
 
 #: templates/misago/activation/request.html:28
@@ -1674,7 +1653,9 @@ msgid ""
 "Depending on the time of registration, you will be able to activate your "
 "account by clicking a special activation link. This link will be valid only "
 "for your browser, for seven days or until your account is activated."
-msgstr "根据注册时间，你可以通过点击激活链接来激活你的账户，此链接有效期 7 天，且仅对你的浏览器有效，或直到你的账户被激活为止。"
+msgstr ""
+"根据注册时间，你可以通过点击激活链接来激活你的账户，此链接有效期 7 天，且仅对"
+"你的浏览器有效，或直到你的账户被激活为止。"
 
 #: templates/misago/activation/request.html:31
 msgid ""
@@ -2037,7 +2018,7 @@ msgstr "版块"
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
-#: templates/misago/profile/posts.html:9 users/apps.py:102
+#: templates/misago/profile/posts.html:9 users/apps.py:93
 msgid "Posts"
 msgstr "帖子"
 
@@ -2181,56 +2162,45 @@ msgstr "阅读跟踪器"
 msgid "Attachment error images"
 msgstr "附件错误图片"
 
-#: templates/misago/admin/conf/users_settings.html:9
-#: templates/misago/admin/socialauth/list.html:97
-msgid "Note"
-msgstr "注意"
-
-#: templates/misago/admin/conf/users_settings.html:9
-msgid ""
-"Single Sign-On is enabled. Site's registration, password and deletion "
-"features have been disabled and delegated to the third-party site."
-msgstr "已启用单点登录。已将此站点的注册，密码和删除功能委派给第 3 方网站。"
-
-#: templates/misago/admin/conf/users_settings.html:14
+#: templates/misago/admin/conf/users_settings.html:8
 msgid "New accounts"
 msgstr "新账号"
 
-#: templates/misago/admin/conf/users_settings.html:23 users/admin/forms.py:484
+#: templates/misago/admin/conf/users_settings.html:17 users/admin/forms.py:484
 #: users/admin/forms.py:573
 msgid "Usernames"
 msgstr "用户名"
 
-#: templates/misago/admin/conf/users_settings.html:33
+#: templates/misago/admin/conf/users_settings.html:27
 msgid "Avatars"
 msgstr "头像"
 
-#: templates/misago/admin/conf/users_settings.html:49
+#: templates/misago/admin/conf/users_settings.html:43
 msgid "Signatures"
 msgstr "签名"
 
-#: templates/misago/admin/conf/users_settings.html:57
+#: templates/misago/admin/conf/users_settings.html:51
 #: users/admin/__init__.py:80
 msgid "Data downloads"
 msgstr "下载数据"
 
-#: templates/misago/admin/conf/users_settings.html:66
+#: templates/misago/admin/conf/users_settings.html:60
 msgid "Own account deletion"
 msgstr "删除帐户"
 
-#: templates/misago/admin/conf/users_settings.html:74 users/admin/forms.py:492
+#: templates/misago/admin/conf/users_settings.html:68 users/admin/forms.py:492
 msgid "IP addresses"
 msgstr "IP 地址"
 
-#: templates/misago/admin/conf/users_settings.html:82
+#: templates/misago/admin/conf/users_settings.html:76
 msgid "Default subscription preferences"
 msgstr "默认订阅首选项"
 
-#: templates/misago/admin/conf/users_settings.html:91
+#: templates/misago/admin/conf/users_settings.html:85
 msgid "Users lists"
 msgstr "用户列表"
 
-#: templates/misago/admin/conf/users_settings.html:100
+#: templates/misago/admin/conf/users_settings.html:94
 msgid "Top posters ranking"
 msgstr "活跃用户排行榜"
 
@@ -2251,7 +2221,9 @@ msgstr "该站点正在 debug 模式下运行。"
 msgid ""
 "Error pages displayed in DEBUG mode will expose site configuration details "
 "like secrets and tokens to all visitors. This is MAJOR security risk."
-msgstr "在 DEBUG 模式下显示的错误页面将会暴露站点的设置细节给所有访问者，比如密钥和令牌。这是最致命的安全风险。"
+msgstr ""
+"在 DEBUG 模式下显示的错误页面将会暴露站点的设置细节给所有访问者，比如密钥和令"
+"牌。这是最致命的安全风险。"
 
 #: templates/misago/admin/dashboard/checks.html:48
 msgid "Forum address is not configured."
@@ -2270,7 +2242,9 @@ msgstr "设置的论坛链接似乎不正确。"
 msgid ""
 "Your forum address is set to %(configured_address)s while correct value "
 "appears to be %(correct_address)s."
-msgstr "你的论坛地址设置为 %(configured_address)s，而正确的值应该是 %(correct_address)s。"
+msgstr ""
+"你的论坛地址设置为 %(configured_address)s，而正确的值应该是 "
+"%(correct_address)s。"
 
 #: templates/misago/admin/dashboard/checks.html:82
 msgid "Links in e-mails sentby Misagoill be broken."
@@ -2284,7 +2258,9 @@ msgstr "此站点未启用 HTTPS。"
 msgid ""
 "Browsers may warn users visiting the site about it being insecure. Search "
 "engines will lower its position in search results."
-msgstr "当用户访问此站点时，浏览器可能会警告用户该网站是不安全的。并且搜索引擎将降低此站点在搜索结果中的位置。"
+msgstr ""
+"当用户访问此站点时，浏览器可能会警告用户该网站是不安全的。并且搜索引擎将降低"
+"此站点在搜索结果中的位置。"
 
 #: templates/misago/admin/dashboard/checks.html:117
 msgid "Cache is disabled."
@@ -2317,7 +2293,8 @@ msgstr[0] "有 %(users)s 个未激活的用户账号。"
 msgid ""
 "The site may be targeted by bots, is not sending activation e-mails, or is "
 "not configured to delete inactive user accounts."
-msgstr "该网站可能会成为机器人的目标，未发送激活电子邮件，或者未设置删除未激活用户。"
+msgstr ""
+"该网站可能会成为机器人的目标，未发送激活电子邮件，或者未设置删除未激活用户。"
 
 #: templates/misago/admin/dashboard/index.html:28
 msgid "Version check is currently unavailable due to an error."
@@ -2351,9 +2328,8 @@ msgstr "数据下载请求"
 msgid "Site analytics are currently unavailable due to an error."
 msgstr "由于出现错误，站点分析当前不可用。"
 
-#: templates/misago/admin/dashboard/totals.html:43
-#: threads/admin/__init__.py:38 threads/permissions/attachments.py:11
-#: threads/permissions/attachments.py:29
+#: templates/misago/admin/dashboard/totals.html:43 threads/admin/__init__.py:36
+#: threads/permissions/attachments.py:11 threads/permissions/attachments.py:29
 msgid "Attachments"
 msgstr "附件"
 
@@ -2458,7 +2434,9 @@ msgstr "拒绝提交表单"
 msgid ""
 "Your form submission was rejected because your browser didn't send the CSRF "
 "cookie, or the cookie sent was invalid."
-msgstr "你的表单提交被拒绝，因为你的浏览器没有发送 CSRF cookie，或者发送的 cookie 无效。"
+msgstr ""
+"你的表单提交被拒绝，因为你的浏览器没有发送 CSRF cookie，或者发送的 cookie 无"
+"效。"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:6
 msgid "This is usually a result of one of following problems:"
@@ -2470,21 +2448,22 @@ msgstr "你的浏览器配置为不接收或发送任何 cookie。"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgid ""
-"The form was sent after being opened in the browser for a long time (eg. few"
-" days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few "
+"days) and cookie token has expired."
 msgstr "表单是在打开浏览器后长时间 (例如几天) 之后发送的，cookie 令牌已过期。"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgid ""
-"The site is configured to use the HTTPS, but this form was sent over the the"
-" HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the "
+"HTTP."
 msgstr "该站点配置为使用 HTTPS，但此表单是通过 HTTP 发送的。"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgid ""
-"If you are an owner of this site, please check if the HTTPS certificate used"
-" by the site is valid and accepted by the browser."
-msgstr "如果你是本网站的所有者，请检查该网站使用的 HTTPS 证书是否有效并被浏览器接受。"
+"If you are an owner of this site, please check if the HTTPS certificate used "
+"by the site is valid and accepted by the browser."
+msgstr ""
+"如果你是本网站的所有者，请检查该网站使用的 HTTPS 证书是否有效并被浏览器接受。"
 
 #: templates/misago/admin/generic/filter_form.html:7
 msgid "Filter"
@@ -2740,8 +2719,7 @@ msgstr "显示和可见性"
 #: templates/misago/admin/ranks/list.html:17
 #: templates/misago/admin/users/list.html:19
 #: templates/misago/userslists/active_posters.html:112
-#: templates/misago/userslists/active_posters.html:123
-#: users/admin/forms.py:238
+#: templates/misago/userslists/active_posters.html:123 users/admin/forms.py:238
 msgid "Rank"
 msgstr "级别"
 
@@ -2806,7 +2784,7 @@ msgid "Enabled login methods"
 msgstr "已启用登录方式"
 
 #: templates/misago/admin/socialauth/list.html:15
-#: templates/misago/admin/socialauth/list.html:112
+#: templates/misago/admin/socialauth/list.html:106
 msgid "Provider"
 msgstr "服务商"
 
@@ -2822,25 +2800,19 @@ msgstr "未启用社交登录。"
 msgid "Are you sure you want to disable this social login provider?"
 msgstr "确定停用此社交登录服务？"
 
-#: templates/misago/admin/socialauth/list.html:97
-msgid ""
-"Single Sign-On is enabled. Social authentication has been disabled and "
-"delegated to the third-party site."
-msgstr "单点登录已启用。已禁用社交登录并委派给第 3 方网站。"
-
-#: templates/misago/admin/socialauth/list.html:106
+#: templates/misago/admin/socialauth/list.html:100
 msgid "Setup new login method"
 msgstr "设置新登录方式"
 
-#: templates/misago/admin/socialauth/list.html:125
+#: templates/misago/admin/socialauth/list.html:119
 msgid "Setup login with this provider"
 msgstr "设置此登录服务"
 
-#: templates/misago/admin/socialauth/list.html:126
+#: templates/misago/admin/socialauth/list.html:120
 msgid "Setup"
 msgstr "设置"
 
-#: templates/misago/admin/socialauth/list.html:133
+#: templates/misago/admin/socialauth/list.html:127
 msgid "No new login providers are available for setup at this time."
 msgstr "当前没有新的社交登录可设置。"
 
@@ -2947,7 +2919,9 @@ msgstr "选择要上传的媒体文件"
 msgid ""
 "Media files are primarily image and font files that can be linked to from "
 "the CSS, but files of any type can be uploaded using this option."
-msgstr "媒体文件主要是在 CSS 文件中链接到的图片和字体文件，但可以使用此选项上传任何类型的文件。"
+msgstr ""
+"媒体文件主要是在 CSS 文件中链接到的图片和字体文件，但可以使用此选项上传任何类"
+"型的文件。"
 
 #: templates/misago/admin/themes/assets/upload-media.html:21
 msgid ""
@@ -3135,7 +3109,7 @@ msgstr "此用户没有设置账户密码，使用社交账号登录。"
 msgid "Signature"
 msgstr "签名"
 
-#: templates/misago/admin/users/edit.html:228 users/apps.py:27
+#: templates/misago/admin/users/edit.html:228 users/apps.py:24
 msgid "Forum options"
 msgstr "论坛选项"
 
@@ -3155,8 +3129,7 @@ msgstr "此用户正在删除他的帐户。已停用该用户。"
 
 #: templates/misago/admin/users/edit.html:251
 msgid ""
-"No additional action is required. This account will be deleted "
-"automatically."
+"No additional action is required. This account will be deleted automatically."
 msgstr "无需其他操作。此账号将自动删除。"
 
 #: templates/misago/admin/users/edit.html:294
@@ -3342,9 +3315,10 @@ msgstr "激活我的账号！"
 #: templates/misago/emails/change_email.txt:6
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because you have changed your "
-"e-mail address."
-msgstr "%(user)s 你好, 你已修改了账号绑定的电子邮箱地址，因此，我们向你发送这封邮件。"
+"%(user)s, you are receiving this message because you have changed your e-"
+"mail address."
+msgstr ""
+"%(user)s 你好, 你已修改了账号绑定的电子邮箱地址，因此，我们向你发送这封邮件。"
 
 #: templates/misago/emails/change_email.html:11
 #: templates/misago/emails/change_email.txt:10
@@ -3359,7 +3333,9 @@ msgstr "确认此修改，请单击以下链接："
 msgid ""
 "%(user)s, you are receiving this message because you have changed your "
 "password."
-msgstr "%(user)s 你好, 当你收到这封邮件的时候，表示你已经成功修改了密码。友情提示，请妥善保管号密码哟。"
+msgstr ""
+"%(user)s 你好, 当你收到这封邮件的时候，表示你已经成功修改了密码。友情提示，请"
+"妥善保管号密码哟。"
 
 #: templates/misago/emails/change_password_form_link.html:6
 #: templates/misago/emails/change_password_form_link.txt:6
@@ -3367,7 +3343,9 @@ msgstr "%(user)s 你好, 当你收到这封邮件的时候，表示你已经成�
 msgid ""
 "%(user)s, you are receiving this message because you want to change "
 "forgotten password for your forum account."
-msgstr "%(user)s 你好，站点已响应你发起的忘记密码请求，如果该操作是你发起的，请按下方提示操作，否则请忽略。"
+msgstr ""
+"%(user)s 你好，站点已响应你发起的忘记密码请求，如果该操作是你发起的，请按下方"
+"提示操作，否则请忽略。"
 
 #: templates/misago/emails/change_password_form_link.html:11
 #: templates/misago/emails/change_password_form_link.txt:10
@@ -3388,9 +3366,11 @@ msgstr "设置新密码"
 msgid ""
 "%(user)s, you are receiving this message because your data is ready for "
 "download."
-msgstr "%(user)s, 你好，当你收到这封邮件的时候，表示系统已经准备好了你的数据，并且现在就可以下载了。"
+msgstr ""
+"%(user)s, 你好，当你收到这封邮件的时候，表示系统已经准备好了你的数据，并且现"
+"在就可以下载了。"
 
-#: templates/misago/emails/data_download.html:11 users/apps.py:57
+#: templates/misago/emails/data_download.html:11 users/apps.py:52
 msgid "Download data"
 msgstr "下载数据"
 
@@ -3414,7 +3394,9 @@ msgstr "请点击以下链接下载数据："
 msgid ""
 "%(user)s, you are receiving this message because %(sender)s has invited you "
 "to participate in private thread %(thread)s."
-msgstr "%(user)s 你好，%(sender)s 邀请你参与隐蔽话题 %(thread)s 的讨论，因此，我们向你发送这封邮件。"
+msgstr ""
+"%(user)s 你好，%(sender)s 邀请你参与隐蔽话题 %(thread)s 的讨论，因此，我们向"
+"你发送这封邮件。"
 
 #: templates/misago/emails/privatethread/added.html:14
 #: templates/misago/emails/privatethread/added.txt:10
@@ -3426,7 +3408,9 @@ msgstr "请点击以下链接参与讨论："
 msgid ""
 "%(user)s, you are receiving this message because %(sender)s has invited you "
 "to participate in private thread \"%(thread)s\"."
-msgstr "%(user)s 你好，%(sender)s 邀请你参与隐蔽话题 \"%(thread)s\" 的讨论。因此，我们向你发送这封邮件。"
+msgstr ""
+"%(user)s 你好，%(sender)s 邀请你参与隐蔽话题 \"%(thread)s\" 的讨论。因此，我"
+"们向你发送这封邮件。"
 
 #: templates/misago/emails/register/complete.html:6
 #: templates/misago/emails/register/complete.txt:6
@@ -3441,7 +3425,9 @@ msgid ""
 "You may now join discussion on our forums. Why not spend a minute or two to "
 "have a look around and share your opinions and knowledge with rest of "
 "community?"
-msgstr "你现在可以加入我们论坛的讨论。为什么不花一两分钟来逛逛，和社区其他人分享你的意见和知识？"
+msgstr ""
+"你现在可以加入我们论坛的讨论。为什么不花一两分钟来逛逛，和社区其他人分享你的"
+"意见和知识？"
 
 #: templates/misago/emails/register/complete.html:20
 #, python-format
@@ -3462,8 +3448,8 @@ msgstr "请耐心等待站点管理员激活你的账户，之后就可以登录
 #: templates/misago/emails/register/inactive.html:12
 #: templates/misago/emails/register/inactive.txt:15
 msgid ""
-"This may take a while, but you will receive e-mail with notification once it"
-" happens."
+"This may take a while, but you will receive e-mail with notification once it "
+"happens."
 msgstr "这可能需要一点时间，激活之后我们将向你发送一封邮件，请留意邮箱。"
 
 #: templates/misago/emails/register/inactive.html:17
@@ -3570,7 +3556,9 @@ msgstr "请求被拦截"
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies. Check your browser configuration and try again."
-msgstr "这通常是由你的浏览器不接受或使用过时的 Cookie 引起的。检查你的浏览器配置，然后重试。"
+msgstr ""
+"这通常是由你的浏览器不接受或使用过时的 Cookie 引起的。检查你的浏览器配置，然"
+"后重试。"
 
 #: templates/misago/errorpages/csrf_failure.html:24
 #: templates/misago/errorpages/csrf_failure_authenticated.html:19
@@ -3642,7 +3630,9 @@ msgid ""
 "To set password for your account, you can use special secure form that will "
 "be available by special link valid only for your browser, for seven days or "
 "until your password is set."
-msgstr "要为你的账号设置密码，你可以使用特殊的安全表单，该表单将通过仅对你的浏览器有效的特殊链接提供，链接有效期7天，请尽快设置。"
+msgstr ""
+"要为你的账号设置密码，你可以使用特殊的安全表单，该表单将通过仅对你的浏览器有"
+"效的特殊链接提供，链接有效期7天，请尽快设置。"
 
 #: templates/misago/forgottenpassword/request.html:38
 msgid ""
@@ -3653,10 +3643,12 @@ msgstr "我们使用加密存储的方式保护你的密码， 所以我们无�
 
 #: templates/misago/forgottenpassword/request.html:39
 msgid ""
-"Instead, you can change your password using special secure form that will be"
-" available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be "
+"available by special link valid only for your browser, for seven days or "
 "until your password is changed."
-msgstr "你可以在通过仅对你浏览器有效的安全密码重置链接来修改密码，链接有效期7天，请尽快修改。"
+msgstr ""
+"你可以在通过仅对你浏览器有效的安全密码重置链接来修改密码，链接有效期7天，请尽"
+"快修改。"
 
 #: templates/misago/forgottenpassword/request.html:42
 msgid ""
@@ -3773,7 +3765,7 @@ msgstr "查看结果"
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
 #: templates/misago/profile/ban_details.html:9
-#: templates/misago/profile/ban_details.html:16 users/apps.py:137
+#: templates/misago/profile/ban_details.html:16 users/apps.py:128
 msgid "Ban details"
 msgstr "封禁细节"
 
@@ -3820,7 +3812,7 @@ msgstr[0] "已发起 %(threads)s 个话题。"
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
 #: templates/misago/profile/details.html:9
-#: templates/misago/profile/details.html:19 users/apps.py:124
+#: templates/misago/profile/details.html:19 users/apps.py:115
 msgid "Details"
 msgstr "详细资料"
 
@@ -3849,7 +3841,7 @@ msgstr "此错误是由违规的操作引起的。"
 
 #: templates/misago/profile/followers.html:5
 #: templates/misago/profile/followers.html:8
-#: templates/misago/profile/followers.html:9 users/apps.py:112
+#: templates/misago/profile/followers.html:9 users/apps.py:103
 msgid "Followers"
 msgstr "关注者"
 
@@ -3876,7 +3868,7 @@ msgstr "%(username)s 没有关注者。"
 
 #: templates/misago/profile/follows.html:5
 #: templates/misago/profile/follows.html:8
-#: templates/misago/profile/follows.html:9 users/apps.py:118
+#: templates/misago/profile/follows.html:9 users/apps.py:109
 msgid "Follows"
 msgstr "关注"
 
@@ -3958,7 +3950,7 @@ msgstr "%(username)s 还没有发起过话题。"
 
 #: templates/misago/profile/username_history.html:5
 #: templates/misago/profile/username_history.html:8
-#: templates/misago/profile/username_history.html:9 users/apps.py:130
+#: templates/misago/profile/username_history.html:9 users/apps.py:121
 msgid "Username history"
 msgstr "用户名历史记录"
 
@@ -4138,8 +4130,8 @@ msgstr "这条帖子是隐藏的。只有拥有相应权限的用户才能看到
 
 #: templates/misago/thread/posts/post/flags.html:29
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
 msgstr "此帖子未审批。只有拥有审批帖子权限的用户及作者才能看到此内容。"
 
 #: templates/misago/thread/posts/post/flags.html:35
@@ -4326,7 +4318,7 @@ msgstr "投票"
 
 #: templates/misago/userslists/active_posters.html:5
 #: templates/misago/userslists/active_posters.html:23
-#: templates/misago/userslists/active_posters.html:24 users/apps.py:81
+#: templates/misago/userslists/active_posters.html:24 users/apps.py:72
 msgid "Top posters"
 msgstr "活跃用户"
 
@@ -4631,11 +4623,11 @@ msgstr "已更新 CSS 链接 \"%(name)s\"。"
 msgid "Default Misago Theme"
 msgstr "Misago 默认主题"
 
-#: threads/admin/__init__.py:45
+#: threads/admin/__init__.py:43
 msgid "Attachment types"
 msgstr "附件类型"
 
-#: threads/admin/__init__.py:46
+#: threads/admin/__init__.py:44
 msgid "Specify what files may be uploaded on the forum."
 msgstr "指定可在论坛中上传的文件。"
 
@@ -4685,8 +4677,7 @@ msgstr "可下载的用户权限"
 
 #: threads/admin/forms.py:64
 msgid ""
-"List of comma separated file extensions associated with this attachment "
-"type."
+"List of comma separated file extensions associated with this attachment type."
 msgstr "列出与此附件类型相关联的文件扩展名并用逗号分隔。"
 
 #: threads/admin/forms.py:68
@@ -4712,7 +4703,8 @@ msgid ""
 "to allow all users with permission to upload attachments to be able to "
 "upload attachments of this type."
 msgstr ""
-"如果你希望仅限特定身份的用户可上传此类型的文件，请在此列表中选中这些身份。若不选择任何身份，则允许所有拥有上传附件权限的用户上传该类型的附件。"
+"如果你希望仅限特定身份的用户可上传此类型的文件，请在此列表中选中这些身份。若"
+"不选择任何身份，则允许所有拥有上传附件权限的用户上传该类型的附件。"
 
 #: threads/admin/forms.py:83
 msgid ""
@@ -4721,7 +4713,8 @@ msgid ""
 "to allow all users with permission to download attachments to be able to "
 "download attachments of this type."
 msgstr ""
-"如果你希望仅限特定身份的用户可下载此类型的文件，请在此列表中选中这些身份。若不选择任何身份，则允许所有拥有下载附件权限的用户下载该类型的附件。"
+"如果你希望仅限特定身份的用户可下载此类型的文件，请在此列表中选中这些身份。若"
+"不选择任何身份，则允许所有拥有下载附件权限的用户下载该类型的附件。"
 
 #: threads/admin/views/attachments.py:14
 msgid "Requested attachment could not be found."
@@ -4787,8 +4780,7 @@ msgstr "已编辑附件类型 \"%(name)s\"。"
 #: threads/admin/views/attachmenttypes.py:47
 #, python-format
 msgid ""
-"Attachment type \"%(name)s\" has associated attachments and can't be "
-"deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
 msgstr "附件类型 \"%(name)s\" 已经关联了附件，不能被删除。"
 
 #: threads/admin/views/attachmenttypes.py:54
@@ -4873,7 +4865,8 @@ msgid ""
 msgid_plural ""
 "You can't attach more than %(limit_value)s flies to single post (added "
 "%(show_value)s)."
-msgstr[0] "每条帖子最多可添加 %(limit_value)s 个附件(已添加 %(show_value)s 个)。"
+msgstr[0] ""
+"每条帖子最多可添加 %(limit_value)s 个附件(已添加 %(show_value)s 个)。"
 
 #: threads/api/postingendpoint/category.py:45
 msgid "You have to select category to post thread in."
@@ -4928,7 +4921,8 @@ msgid ""
 msgid_plural ""
 "You can't add more than %(users)s users to private thread (you've added "
 "%(added)s)."
-msgstr[0] "你不能添加超过 %(users)s 名用户到隐蔽话题（已添加 %(added)s 名用户）"
+msgstr[0] ""
+"你不能添加超过 %(users)s 名用户到隐蔽话题（已添加 %(added)s 名用户）"
 
 #: threads/api/postingendpoint/participants.py:93
 #, python-format
@@ -4989,8 +4983,7 @@ msgstr "这篇帖子已被标记为该话题的最佳答案。"
 
 #: threads/api/threadendpoints/patch.py:273
 msgid ""
-"This post can't be unmarked because it's not currently marked as best "
-"answer."
+"This post can't be unmarked because it's not currently marked as best answer."
 msgstr "此帖子无法取消标记，因为它目前未被标记为最佳答案。"
 
 #: threads/api/threadendpoints/patch.py:301
@@ -5096,7 +5089,8 @@ msgstr "你不能删除帖子而不删除话题。"
 
 #: threads/participants.py:142
 #, python-format
-msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgid ""
+"%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr "%(user)s邀请你参与隐蔽话题 \"%(thread)s\""
 
 #: threads/permissions/attachments.py:14
@@ -5187,9 +5181,10 @@ msgstr "你无法在此话题中标记最佳答案，因为此话题已关闭且
 #: threads/permissions/bestanswers.py:188
 #, python-format
 msgid ""
-"You don't have permission to change this thread's marked answer because it's"
-" in the \"%(category)s\" category."
-msgstr "你无法修改此话题标记的最佳答案，因为 \"%(category)s\" 版块不允许执行此操作。"
+"You don't have permission to change this thread's marked answer because it's "
+"in the \"%(category)s\" category."
+msgstr ""
+"你无法修改此话题标记的最佳答案，因为 \"%(category)s\" 版块不允许执行此操作。"
 
 #: threads/permissions/bestanswers.py:198
 msgid ""
@@ -5249,8 +5244,8 @@ msgstr "你无法取消标记最佳答案，因为 \"%(category)s\" 版块已关
 
 #: threads/permissions/bestanswers.py:274
 msgid ""
-"You can't unmark this thread's best answer because it's closed and you don't"
-" have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't "
+"have permission to open it."
 msgstr "你无法取消该话题的最佳答案，因为该话题已关闭，且你无法重新开启话题。"
 
 #: threads/permissions/bestanswers.py:282
@@ -5463,8 +5458,8 @@ msgstr "可举报隐蔽话题"
 
 #: threads/permissions/privatethreads.py:52
 msgid ""
-"Allows user to report private threads they are participating in, making them"
-" accessible to moderators."
+"Allows user to report private threads they are participating in, making them "
+"accessible to moderators."
 msgstr "允许用户举报他们正在参与的隐蔽话题，使其能够被版主访问。"
 
 #: threads/permissions/privatethreads.py:57
@@ -5541,11 +5536,12 @@ msgstr "可查看未审批的内容列表"
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging"
-" to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging "
+"to categories in which the user has permission to approve content."
 msgstr ""
-"允许在话题列表中查看 “未审批” "
-"标签以便于列出那些包含未审批的帖子或未审批的话题。尽管该标签存在于所有版块话题中，但仅当用户有审批权限的时候，才显示含有 “未审批” 标签的话题或帖子。"
+"允许在话题列表中查看 “未审批” 标签以便于列出那些包含未审批的帖子或未审批的话"
+"题。尽管该标签存在于所有版块话题中，但仅当用户有审批权限的时候，才显示含有 "
+"“未审批” 标签的话题或帖子。"
 
 #: threads/permissions/threads.py:87
 msgid "Can see reported content list"
@@ -5558,8 +5554,9 @@ msgid ""
 "categories threads lists, it will only display threads belonging to "
 "categories in which the user has permission to see posts reports."
 msgstr ""
-"允许在话题列表中查看 “被举报” "
-"标签以便于列出那些包含被举报帖子的话题。尽管该标签存在于所有版块话题中，但其仅对有权限查看相应版块被举报帖子的用户展示相应话题。"
+"允许在话题列表中查看 “被举报” 标签以便于列出那些包含被举报帖子的话题。尽管该"
+"标签存在于所有版块话题中，但其仅对有权限查看相应版块被举报帖子的用户展示相应"
+"话题。"
 
 #: threads/permissions/threads.py:98
 msgid "Can omit flood protection"
@@ -6424,7 +6421,8 @@ msgid ""
 msgid_plural ""
 "You can't add more than %(limit_value)s options to a single poll (added "
 "%(show_value)s)."
-msgstr[0] "你不能在一次投票中加入多于 %(limit_value)s 个选项(已加入 %(show_value)s 个)."
+msgstr[0] ""
+"你不能在一次投票中加入多于 %(limit_value)s 个选项(已加入 %(show_value)s 个)."
 
 #: threads/serializers/poll.py:134
 msgid "Number of allowed choices can't be greater than number of all choices."
@@ -6505,7 +6503,8 @@ msgid ""
 msgid_plural ""
 "Thread title should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
-msgstr[0] "话题名称至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"话题名称至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: threads/validators.py:63
 #, python-format
@@ -6515,7 +6514,8 @@ msgid ""
 msgid_plural ""
 "Thread title cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "话题名称最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"话题名称最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: threads/validators.py:82
 #, python-format
@@ -6525,7 +6525,8 @@ msgid ""
 msgid_plural ""
 "Posted message should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
-msgstr[0] "发帖内容至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"发帖内容至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: threads/validators.py:93
 #, python-format
@@ -6535,7 +6536,8 @@ msgid ""
 msgid_plural ""
 "Posted message cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
-msgstr[0] "发帖内容最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
+msgstr[0] ""
+"发帖内容最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
 #: threads/viewmodels/threads.py:23
 msgid "Your threads"
@@ -6631,9 +6633,11 @@ msgstr "是管理员"
 #: users/admin/forms.py:78
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to"
-" admin Django modules."
-msgstr "指定用户是否可以登录到管理员站点。如果启用 Django 管理站点，用户将需要额外的 Django 模块的权限。"
+"is enabled, this user will need additional permissions assigned within it to "
+"admin Django modules."
+msgstr ""
+"指定用户是否可以登录到管理员站点。如果启用 Django 管理站点，用户将需要额外的 "
+"Django 模块的权限。"
 
 #: users/admin/forms.py:84
 msgid "Is superuser"
@@ -6643,7 +6647,8 @@ msgstr "是超级用户"
 msgid ""
 "Only administrators can access admin sites. In addition to admin site "
 "access, superadmins can also change other members admin levels."
-msgstr "只有管理员可以访问管理页面。另外，超级管理员可以改变其他成员的管理权限。"
+msgstr ""
+"只有管理员可以访问管理页面。另外，超级管理员可以改变其他成员的管理权限。"
 
 #: users/admin/forms.py:91
 msgid "Is active"
@@ -6653,7 +6658,9 @@ msgstr "已激活"
 msgid ""
 "Designates whether this user should be treated as active. Turning this off "
 "is non-destructible way to remove user accounts."
-msgstr "指定该用户是否应被视为激活状态。当需要删除用户账号时将它设为 “否” 来冻结用户账号即可保留数据。"
+msgstr ""
+"指定该用户是否应被视为激活状态。当需要删除用户账号时将它设为 “否” 来冻结用户"
+"账号即可保留数据。"
 
 #: users/admin/forms.py:97 users/admin/forms.py:128 users/admin/forms.py:158
 msgid "Staff message"
@@ -6790,8 +6797,8 @@ msgstr "用户外号"
 
 #: users/admin/forms.py:397
 msgid ""
-"Optional, singular version of rank name displayed by user names. For example"
-" \"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example "
+"\"GM\" or \"Dev\"."
 msgstr "可选，展示在用户名旁边的级别名称。例如 “游戏大师” 或 “开发”。"
 
 #: users/admin/forms.py:407
@@ -6820,7 +6827,9 @@ msgstr "将此级别显示到用户标签"
 msgid ""
 "Selecting this option will make users with this rank easily discoverable by "
 "others through dedicated page on forum users list."
-msgstr "选择此选项将使得具有此级别的用户可以轻松地被其他人在论坛用户列表专用页上发现。"
+msgstr ""
+"选择此选项将使得具有此级别的用户可以轻松地被其他人在论坛用户列表专用页上发"
+"现。"
 
 #: users/admin/forms.py:447
 msgid "This name collides with other rank."
@@ -6881,7 +6890,9 @@ msgid ""
 "registration step. This is good if you want to block certain registrations "
 "like ones from recently comprimised e-mail providers, without harming "
 "existing users."
-msgstr "设置为“是”可以使得该封禁只在注册步骤生效。这能帮助你阻止来自近期被攻击的电子邮件提供商的用户注册，而不影响现有的用户。"
+msgstr ""
+"设置为“是”可以使得该封禁只在注册步骤生效。这能帮助你阻止来自近期被攻击的电子"
+"邮件提供商的用户注册，而不影响现有的用户。"
 
 #: users/admin/forms.py:512
 msgid "Banned value"
@@ -6892,7 +6903,9 @@ msgid ""
 "This value is case-insensitive and accepts asterisk (*) for rought matches. "
 "For example, making IP ban for value \"83.*\" will ban all IP addresses "
 "beginning with \"83.\"."
-msgstr "这个值不区分大小写，并接受*作为通配符。例如，设置IP封禁为\"83.*\"，将会禁止所有以\"83.\"开头的 IP 地址。"
+msgstr ""
+"这个值不区分大小写，并接受*作为通配符。例如，设置IP封禁为\"83.*\"，将会禁止所"
+"有以\"83.\"开头的 IP 地址。"
 
 #: users/admin/forms.py:520
 msgid "Banned value can't be longer than 250 characters."
@@ -6928,12 +6941,14 @@ msgstr "用户名或电子邮件"
 
 #: users/admin/forms.py:624
 msgid ""
-"Enter every item in new line. Duplicates will be ignored. This field is case"
-" insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case "
+"insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 msgstr ""
-"在新行中输入每个项目。重复项将被忽略。此字段不区分大小写。根据站点配置和存档的数据量，请求最多可能需要几天时间才能完成。一旦每个用户的下载准备就绪，将向其发送电子邮件通知。"
+"在新行中输入每个项目。重复项将被忽略。此字段不区分大小写。根据站点配置和存档"
+"的数据量，请求最多可能需要几天时间才能完成。一旦每个用户的下载准备就绪，将向"
+"其发送电子邮件通知。"
 
 #: users/admin/forms.py:641
 #, python-format
@@ -7167,26 +7182,21 @@ msgstr "新用户 \"%(user)s\" 已成功注册。"
 msgid "User \"%(user)s\" has been edited."
 msgstr "已编辑用户 “%(user)s”。"
 
-#: users/api/auth.py:42 users/api/auth.py:92 users/api/auth.py:130
-#: users/api/auth.py:174
-msgid "Please use the 3rd party site to authenticate."
-msgstr "请使用第 3 方网站进行身份验证。"
-
-#: users/api/auth.py:100
+#: users/api/auth.py:94
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "在 %(forum_name)s 论坛中激活 %(user)s 的账号"
 
-#: users/api/auth.py:138
+#: users/api/auth.py:129
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "在 %(forum_name)s 论坛中修改 %(user)s 的密码"
 
-#: users/api/auth.py:176
+#: users/api/auth.py:164
 msgid "Form link is invalid. Please try again."
 msgstr "表单链接无效。请再试一次。"
 
-#: users/api/auth.py:177
+#: users/api/auth.py:165
 msgid "Your link has expired. Please request new one."
 msgstr "你的链接已过期，请重新申请。"
 
@@ -7289,83 +7299,63 @@ msgstr "你无法查看其他用户名称的历史记录。"
 msgid "You have to sign in to perform this action."
 msgstr "你必须登录才能执行此操作。"
 
-#: users/api/users.py:90
-msgid "Please use the 3rd party site to register."
-msgstr "请使用第 3 方网站注册。"
-
-#: users/api/users.py:113
+#: users/api/users.py:110
 msgid "You can't change other users avatars."
 msgstr "你无法修改其他用户的头像。"
 
-#: users/api/users.py:125
+#: users/api/users.py:122
 msgid "You can't change other users options."
 msgstr "你不能更改其他用户选项。"
 
-#: users/api/users.py:130
+#: users/api/users.py:127
 msgid "Your forum options have been changed."
 msgstr "你的论坛设置已修改。"
 
-#: users/api/users.py:137
-msgid "Please use the 3rd party site to change your username."
-msgstr "请使用第 3 方网站修改你的用户名。"
-
-#: users/api/users.py:141
+#: users/api/users.py:133
 msgid "You can't change other users names."
 msgstr "你不能修改其他用户的名称。"
 
-#: users/api/users.py:148
+#: users/api/users.py:140
 msgid "You can't change other users signatures."
 msgstr "你不能修改其他用户的签名。"
 
-#: users/api/users.py:161
-msgid "Please use the 3rd party site to change your password."
-msgstr "请使用第 3 方网站更改你的密码。"
-
-#: users/api/users.py:165
+#: users/api/users.py:152
 msgid "You can't change other users passwords."
 msgstr "你不能修改其他用户的密码。"
 
-#: users/api/users.py:175
-msgid "Please use the 3rd party site to change your e-mail."
-msgstr "请使用第 3 方网站更改你的邮箱。"
-
-#: users/api/users.py:180
+#: users/api/users.py:162
 msgid "You can't change other users e-mail addresses."
 msgstr "你不能修改其他用户的电子邮件地址。"
 
-#: users/api/users.py:211
-msgid "Please use the 3rd party site to delete account."
-msgstr "请使用第 3 方网站删除你的账号。"
-
-#: users/api/users.py:292
+#: users/api/users.py:269
 msgid "You can't request data downloads for other users."
 msgstr "你不能为其他用户请求数据下载。"
 
-#: users/api/users.py:296
+#: users/api/users.py:273
 msgid "You can't download your data."
 msgstr "你不能下载你的数据。"
 
-#: users/api/users.py:301
+#: users/api/users.py:278
 msgid "You can't have more than one data download request at a single time."
 msgstr "你不能一次请求多个数据下载。"
 
-#: users/api/users.py:358
+#: users/api/users.py:335
 msgid "You can't see other users data downloads."
 msgstr "你无法看到其他用户的数据下载。"
 
-#: users/apps.py:33
+#: users/apps.py:30
 msgid "Edit details"
 msgstr "编辑详情"
 
-#: users/apps.py:39
+#: users/apps.py:36
 msgid "Change username"
 msgstr "修改用户名"
 
-#: users/apps.py:46
+#: users/apps.py:42
 msgid "Change email or password"
 msgstr "修改电子邮件或密码"
 
-#: users/apps.py:71
+#: users/apps.py:63
 msgid "Delete account"
 msgstr "删除帐号"
 
@@ -7444,7 +7434,7 @@ msgstr "输入的电子邮件无效。"
 msgid "No user with this e-mail exists."
 msgstr "没有使用此电子邮件的用户。"
 
-#: users/forms/auth.py:150 users/views/activation.py:51
+#: users/forms/auth.py:150 users/views/activation.py:46
 #, python-format
 msgid "%(user)s, your account is already active."
 msgstr "%(user)s，你的账号已激活。"
@@ -7465,6 +7455,14 @@ msgid ""
 "Administrator has to activate your account before you will be able to "
 "request new password."
 msgstr "请耐心等待管理员激活你的账号，然后你才能申请新密码。"
+
+#: users/forms/register.py:34 users/validators.py:80
+msgid "This username is not allowed."
+msgstr "不允许使用此用户名。"
+
+#: users/forms/register.py:45 users/validators.py:52
+msgid "This e-mail address is not allowed."
+msgstr "不能使用此电子邮件。"
 
 #: users/forms/register.py:51
 msgid "This agreement is required."
@@ -7557,7 +7555,8 @@ msgstr "激活"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr "指定该用户是否应被视为激活状态。当需要删除账号请取消激活账号而不要删除它。"
+msgstr ""
+"指定该用户是否应被视为激活状态。当需要删除账号请取消激活账号而不要删除它。"
 
 #: users/permissions/account.py:10
 msgid "Account settings"
@@ -7863,10 +7862,12 @@ msgstr "网站"
 
 #: users/profilefields/default.py:41
 msgid ""
-"If you own website in the internet you wish to share on your profile you may"
-" enter its address here. Remember to for it to be valid http address "
-"starting with either \"http://\" or \"https://\"."
-msgstr "如果你想在个人资料内展示你的个人网站,你可以在这里填写你的网站地址.请保证它是有效的http地址,以http://或https://开头."
+"If you own website in the internet you wish to share on your profile you may "
+"enter its address here. Remember to for it to be valid http address starting "
+"with either \"http://\" or \"https://\"."
+msgstr ""
+"如果你想在个人资料内展示你的个人网站,你可以在这里填写你的网站地址.请保证它是"
+"有效的http地址,以http://或https://开头."
 
 #: users/profilefields/default.py:49
 msgid "Skype ID"
@@ -7885,12 +7886,12 @@ msgstr "推特用户名"
 #: users/profilefields/default.py:62
 #, python-format
 msgid ""
-"If you own Twitter account, here you may enter your Twitter handle for other"
-" users to find you. Starting your handle with \"@\" sign is optional. Either"
-" \"@%(slug)s\" or \"%(slug)s\" are valid values."
+"If you own Twitter account, here you may enter your Twitter handle for other "
+"users to find you. Starting your handle with \"@\" sign is optional. Either "
+"\"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
-"如果你拥有推特账户，你可以在此输入你的推特用户名，以便其他用户可以找到你。用户名开头的 “@” 是可选项，你可以输入 “@%(slug)s” 或者 "
-"“%(slug)s”。"
+"如果你拥有推特账户，你可以在此输入你的推特用户名，以便其他用户可以找到你。用"
+"户名开头的 “@” 是可选项，你可以输入 “@%(slug)s” 或者 “%(slug)s”。"
 
 #: users/profilefields/default.py:73
 msgid "This is not a valid twitter handle."
@@ -7990,47 +7991,34 @@ msgstr "输入的数据被禁止或不合法。"
 msgid "This email is not allowed."
 msgstr "此电子邮件不可用。"
 
-#: users/views/activation.py:21
-msgid "Please use the 3rd party site to activate your account."
-msgstr "请使用第 3 方网站激活你的账号。"
-
-#: users/views/activation.py:56
+#: users/views/activation.py:51
 #, python-format
 msgid ""
 "%(user)s, your activation link is invalid. Try again or request new "
 "activation link."
 msgstr "%(user)s，你的激活链接无效，请重试或者重新申请激活链接。"
 
-#: users/views/activation.py:74
+#: users/views/activation.py:69
 #, python-format
 msgid "%(user)s, your account has been activated!"
 msgstr "%(user)s，你的账号已激活！"
 
-#: users/views/forgottenpassword.py:18 users/views/options.py:70
-msgid "Please use the 3rd party site to change password."
-msgstr "请使用第 3 方网站修改密码。"
-
-#: users/views/forgottenpassword.py:45
+#: users/views/forgottenpassword.py:31
 #, python-format
-msgid ""
-"%(user)s, your link has expired. Please request new link and try again."
+msgid "%(user)s, your link has expired. Please request new link and try again."
 msgstr "%(user)s，你的链接已经过期，请申请一个新链接并重试。"
 
-#: users/views/forgottenpassword.py:52
+#: users/views/forgottenpassword.py:38
 #, python-format
 msgid "%(user)s, your link is invalid. Please try again or request new link."
 msgstr "%(user)s，你的链接不可用，请重试并申请一个新链接。"
 
-#: users/views/options.py:47
-msgid "Please use the 3rd party site to change e-mail."
-msgstr "请使用第 3 方网站修改邮箱。"
-
-#: users/views/options.py:59
+#: users/views/options.py:56
 #, python-format
 msgid "%(user)s, your e-mail has been changed."
 msgstr "%(user)s, 你的电子邮件已被修改。"
 
-#: users/views/options.py:80
+#: users/views/options.py:74
 #, python-format
 msgid "%(user)s, your password has been changed."
 msgstr "%(user)s，你的密码已被修改。"

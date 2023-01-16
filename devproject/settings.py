@@ -89,7 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE", "") or "en-us"
 
 TIME_ZONE = "UTC"
 
@@ -175,7 +175,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # 3rd party apps used by Misago
-    "ariadne.contrib.django",
+    "ariadne_django",
     "celery",
     "debug_toolbar",
     "mptt",
@@ -196,11 +196,11 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.threads",
     "misago.readtracker",
     "misago.search",
+    "misago.oauth2",
     "misago.socialauth",
     "misago.graphql",
     "misago.faker",
     "misago.menus",
-    "misago.sso",
     "misago.plugins",
 ]
 
@@ -265,7 +265,7 @@ SOCIAL_AUTH_PIPELINE = (
     "misago.socialauth.pipeline.require_activation",
 )
 
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 TEMPLATES = [
     {
@@ -427,3 +427,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
 }
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

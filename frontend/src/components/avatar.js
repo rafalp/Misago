@@ -1,7 +1,7 @@
 import React from "react"
 import misago from "misago"
 
-export default function(props) {
+export default function (props) {
   const size = props.size || 100
   const size2x = props.size2x || size
 
@@ -29,7 +29,7 @@ export function getSrc(user, size) {
 
 export function resolveAvatarForSize(avatars, size) {
   let avatar = avatars[0]
-  avatars.forEach(av => {
+  avatars.forEach((av) => {
     if (av.size >= size) {
       avatar = av
     }

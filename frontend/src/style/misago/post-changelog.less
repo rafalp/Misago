@@ -1,0 +1,36 @@
+//
+// Post Changelog Modal
+// --------------------------------------------------
+
+.post-changelog-diff {
+  padding: 0px;
+  margin: 0px;
+
+  .list-unstyled {
+    padding: 0px;
+    margin: @padding-small-vertical 0px;
+  }
+
+  .diff-item {
+    padding: @padding-small-vertical @padding-small-horizontal;
+  }
+
+  .diff-item-sub {
+    color: @brand-danger;
+  }
+
+  .diff-item-add {
+    color: @brand-success;
+  }
+}
+
+.post-changelog-toolbar .row {
+  margin-left: -12px;
+  margin-right: -12px;
+}
+
+.post-changelog-toolbar .post-change-label {
+  @media screen and (max-width: @screen-xs-max) {
+    text-align: center;
+  }
+}

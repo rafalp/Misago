@@ -1,0 +1,20 @@
+//
+// Misago pager
+// --------------------------------------------------
+
+.pager-undercontent {
+  margin-top: @line-height-computed * -1;
+}
+
+// "Load more" button
+.pager-more {
+  text-align: center;
+}
+
+// Large displays
+@media screen and (min-width: @screen-md-min) {
+  .pager-more .btn {
+    padding-left: @line-height-computed;
+    padding-right: @line-height-computed;
+  }
+}

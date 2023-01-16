@@ -10,5 +10,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "component:snackbar",
   initializer: initializer,
-  after: "snackbar"
+  after: "snackbar",
 })

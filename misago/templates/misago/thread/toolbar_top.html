@@ -1,0 +1,52 @@
+{% load i18n %}
+<div class="toolbar">
+  <div class="toolbar-section hidden-xs">
+    <div class="toolbar-item">
+      <div class="dropdown">
+        <button class="btn btn-default btn-outline btn-icon" title="{%trans 'Shortcuts' %}" type="button" disabled>
+          <span class="material-icon">bookmark</span>
+        </button>
+      </div>
+    </div>
+    <div class="toolbar-item hidden-xs hidden-sm">
+      {% include "misago/thread/pagination.html" %}
+    </div>
+  </div>
+  <div class="toolbar-spacer"></div>
+  {% if user.is_authenticated %}
+    {% if thread.acl.can_start_poll %}
+      <div class="toolbar-section hidden-xs">
+        <div class="toolbar-item">
+          <button class="btn btn-default btn-outline btn-block" type="button" disabled>
+            <span class="material-icon">poll</span>
+            {% trans 'Add poll' %}
+          </button>
+        </div>
+      </div>
+    {% endif %}
+    <div class="toolbar-section">
+      <div class="toolbar-item hidden-sm hidden-md hidden-lg toolbar-item-shrink">
+        <div class="dropdown">
+          <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Shortcuts' %}" type="button" disabled>
+            <span class="material-icon">bookmark</span>
+          </button>
+        </div>
+      </div>
+      {% if thread.acl.can_reply %}
+        <div class="toolbar-item">
+          <button class="btn btn-primary btn-outline btn-block" type="button" disabled>
+            <span class="material-icon">chat</span>
+            {% trans 'Reply' %}
+          </button>
+        </div>
+      {% endif %}
+      {% if thread.acl.can_start_poll %}
+        <div class="toolbar-item hidden-sm hidden-md hidden-lg toolbar-item-shrink">
+          <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Add poll' %}" type="button" disabled>
+            <span class="material-icon">poll</span>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

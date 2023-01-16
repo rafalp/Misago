@@ -1,0 +1,68 @@
+//
+// User Profile
+// --------------------------------------------------
+
+.profile-page-header-avatar {
+  text-align: center;
+  margin: @line-height-computed 0;
+
+  .user-avatar {
+    border-radius: @border-radius-base;
+  }
+}
+
+// Make profile data horizontal and insert space between elements
+.profile-data-list {
+  display: block;
+  padding: 0;
+  margin: 0 (@padding-base-horizontal * -1);
+
+  font-size: @font-size-small;
+
+  li {
+    display: inline-block;
+    list-style: none;
+    padding: floor(@line-height-computed / 4) @padding-base-horizontal;
+  }
+
+  .status-icon {
+    margin-right: 3px;
+    position: relative;
+    bottom: 1px;
+  }
+
+  .user-account-disabled {
+    color: @brand-danger;
+    font-weight: bold;
+  }
+}
+
+// On tablets and up make layout horizontal
+@media screen and (min-width: @screen-sm-min) {
+  .profile-page-header {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .profile-page-header-avatar {
+    margin: 0;
+    margin-right: @grid-gutter-width;
+  }
+}
+
+// On desktops make avatar overlap on details, make details larger
+@media screen and (min-width: @screen-md-min) {
+  .profile-page-header-avatar {
+    position: relative;
+    top: @profile-header-avatar-offset;
+    margin-top: @profile-header-avatar-offset * -1;
+  }
+
+  .profile-page-header-details {
+    padding-left: 128px + @grid-gutter-width;
+  }
+
+  .profile-data-list {
+    font-size: @font-size-base;
+  }
+}

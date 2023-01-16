@@ -6,20 +6,20 @@ import store from "misago/services/store"
 
 const rootElement = document.getElementById("page-mount")
 
-export default function(options) {
+export default function (options) {
   let routes = {
     component: options.component || null,
-    childRoutes: []
+    childRoutes: [],
   }
 
   if (options.root) {
     routes.childRoutes = [
       {
         path: options.root,
-        onEnter: function(nextState, replaceState) {
+        onEnter: function (nextState, replaceState) {
           replaceState(null, options.paths[0].path)
-        }
-      }
+        },
+      },
     ].concat(options.paths)
   } else {
     routes.childRoutes = options.paths

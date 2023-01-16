@@ -11,27 +11,27 @@ export function addNameChange(change, user, changedBy) {
     type: ADD_NAME_CHANGE,
     change,
     user,
-    changedBy
+    changedBy,
   }
 }
 
 export function append(items) {
   return {
     type: APPEND_HISTORY,
-    items: items
+    items: items,
   }
 }
 
 export function hydrate(items) {
   return {
     type: HYDRATE_HISTORY,
-    items: items
+    items: items,
   }
 }
 
 export function hydrateNamechange(namechange) {
   return Object.assign({}, namechange, {
-    changed_on: moment(namechange.changed_on)
+    changed_on: moment(namechange.changed_on),
   })
 }
 
@@ -45,7 +45,7 @@ export default function username(state = [], action = null) {
         changed_by_username: action.changedBy.username,
         changed_on: moment(),
         new_username: action.change.username,
-        old_username: action.user.username
+        old_username: action.user.username,
       })
       return newState
 
@@ -56,11 +56,11 @@ export default function username(state = [], action = null) {
       return action.items.map(hydrateNamechange)
 
     case UPDATE_AVATAR:
-      return state.map(function(item) {
+      return state.map(function (item) {
         item = Object.assign({}, item)
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
-            avatars: action.avatars
+            avatars: action.avatars,
           })
         }
 
@@ -68,12 +68,12 @@ export default function username(state = [], action = null) {
       })
 
     case UPDATE_USERNAME:
-      return state.map(function(item) {
+      return state.map(function (item) {
         item = Object.assign({}, item)
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
             username: action.username,
-            slug: action.slug
+            slug: action.slug,
           })
         }
 

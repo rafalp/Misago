@@ -19,17 +19,17 @@ export default class extends Form {
       choices: [
         {
           hash: "choice-10000",
-          label: ""
+          label: "",
         },
         {
           hash: "choice-20000",
-          label: ""
-        }
+          label: "",
+        },
       ],
       length: 0,
       allowed_choices: 1,
       allow_revotes: 0,
-      is_public: 0
+      is_public: 0,
     }
 
     this.state = {
@@ -47,24 +47,26 @@ export default class extends Form {
         question: [],
         choices: [],
         length: [],
-        allowed_choices: []
+        allowed_choices: [],
       },
 
-      errors: {}
+      errors: {},
     }
   }
 
-  setChoices = choices => {
+  setChoices = (choices) => {
     const errors = Object.assign({}, errors, { choices: null })
 
     this.setState({
       choices,
-      errors
+      errors,
     })
   }
 
   onCancel = () => {
-    const cancel = confirm(gettext("Are you sure you want to discard poll?"))
+    const cancel = window.confirm(
+      gettext("Are you sure you want to discard poll?")
+    )
     if (cancel) {
       posting.close()
     }
@@ -77,7 +79,7 @@ export default class extends Form {
       length: this.state.length,
       allowed_choices: this.state.allowed_choices,
       allow_revotes: this.state.allow_revotes,
-      is_public: this.state.is_public
+      is_public: this.state.is_public,
     }
 
     if (this.state.isEdit) {
@@ -106,7 +108,7 @@ export default class extends Form {
       }
 
       this.setState({
-        errors: Object.assign({}, rejection)
+        errors: Object.assign({}, rejection),
       })
 
       snackbar.error(gettext("Form contains errors."))

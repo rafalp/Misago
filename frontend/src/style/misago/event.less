@@ -1,0 +1,134 @@
+//
+// Posts List Event
+// --------------------------------------------------
+
+// Event style
+.posts-list .event {
+  margin-bottom: @line-height-computed;
+
+  color: @text-muted;
+}
+
+.posts-list .event .event-body {
+  display: flex;
+  align-items: flex-start;
+}
+
+// Event label
+.posts-list .event-label {
+  margin-left: @event-icon-size + 8px + @post-side-padding;
+
+  .label-unread {
+    background-color: @brand-success;
+
+    color: #fff;
+  }
+}
+
+// Event icon
+.posts-list .event .event-icon {
+  padding-right: @post-side-padding;
+
+  .event-icon-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: @event-icon-size + 8px;
+    width: @event-icon-size + 8px;
+
+    background: @event-icon-bg;
+    border-radius: @border-radius-base;
+    color: @event-icon-color;
+  }
+
+  .material-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: @event-icon-size;
+  }
+}
+
+// Event content
+.posts-list .event .event-content {
+  flex: 1 0;
+}
+
+// Event first and second rows
+.posts-list .event .event-message {
+  margin-bottom: @line-height-computed / 4;
+
+  font-size: @font-size-large;
+}
+
+.posts-list .event .event-info {
+  margin: 0px;
+
+  font-size: @font-size-small;
+
+  li {
+    margin-right: @padding-base-horizontal;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}
+
+// Event controls
+.posts-list .event .event-controls {
+  .btn-link {
+    border: 0px;
+    margin: 0px;
+    margin-right: @padding-base-horizontal;
+    padding: 0px;
+
+    font-size: @font-size-small;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}
+
+// Mobile tweaks
+@media screen and (max-width: @screen-xs-max) {
+  .posts-list .event .event-info {
+    margin-top: @line-height-computed / 4;
+  }
+
+  .posts-list .event .event-controls {
+    clear: both;
+    margin-top: @line-height-computed / 4;
+
+    .btn-link {
+      margin-right: @line-height-computed;
+
+      font-size: @font-size-base;
+
+      &:last-child {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .posts-list .event .event-icon {
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    display: flex;
+    width: @post-side-width + @panel-body-padding;
+  }
+
+  .event-content {
+    flex: 1 0;
+  }
+
+  .posts-list .event-label {
+    margin-left: @post-side-width + @panel-body-padding;
+  }
+}

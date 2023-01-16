@@ -1,0 +1,336 @@
+//
+// Threads Lists
+// --------------------------------------------------
+
+.threads-list {
+  margin-bottom: @line-height-computed;
+}
+
+// Make list row flexbox row
+.threads-list-item {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: @thread-read-block-size;
+    height: @thread-read-block-size;
+  }
+}
+
+.threads-list-item-top-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.threads-list-item-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Thread icon
+.threads-list-item-col-icon {
+  padding-right: @grid-gutter-width / 2;
+}
+
+.threads-list-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: @thread-read-block-size;
+  height: @thread-read-block-size;
+
+  border-radius: @border-radius-small;
+  font-size: @thread-read-icon-size;
+  line-height: @thread-read-icon-size;
+
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    background-color: @thread-read-icon-bg;
+    color: @thread-read-icon-color;
+    text-decoration: none;
+  }
+}
+
+.threads-list-icon-new {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    background-color: @thread-new-icon-bg;
+    color: @thread-new-icon-color;
+  }
+}
+
+// Thread title
+.threads-list-item-col-title {
+  flex: 1;
+}
+
+a.threads-list-item-title {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    font-size: @threads-list-title-size;
+
+    color: @thread-color;
+    overflow-wrap: break-word;
+  }
+}
+
+a.threads-list-item-title-sm {
+  font-size: @threads-list-title-size-sm;
+
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    color: @thread-read-color;
+    overflow-wrap: break-word;
+  }
+}
+
+a.threads-list-item-title-new {
+  &:link,
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    color: @thread-new-color;
+  }
+}
+
+// Thread status flags
+.threads-list-item-col-flags {
+  padding-left: @grid-gutter-width / 2;
+}
+
+.threads-list-item .thread-flags {
+  opacity: @thread-flag-icon-opacity;
+}
+
+.threads-list-item:hover,
+.threads-list-item:focus {
+  .thread-flags {
+    opacity: @thread-flag-icon-opacity-hover;
+  }
+}
+
+// Thread category
+.threads-list-item-col-category {
+  padding-left: @grid-gutter-width / 2;
+
+  white-space: nowrap;
+}
+
+.threads-list-category-label {
+  padding: 3px 6px;
+
+  border-radius: @border-radius-small;
+
+  font-size: @font-size-small;
+  font-weight: bold;
+
+  &,
+  &:link,
+  &:active,
+  &:hover,
+  &:focus,
+  &:visited {
+    color: @category-label-default-color;
+    background: @category-label-default-bg;
+    text-decoration: none;
+  }
+
+  &.threads-list-category-label-color {
+    &,
+    &:link,
+    &:active,
+    &:hover,
+    &:focus,
+    &:visited {
+      color: #fff;
+      background: var(--label-color);
+    }
+  }
+}
+
+.threads-list-item-parent-category {
+  border-radius: @border-radius-small 0 0 @border-radius-small;
+  margin-right: 2px;
+}
+
+.threads-list-item-parent-category + .threads-list-category-label {
+  border-radius: 0 @border-radius-small @border-radius-small 0;
+}
+
+// Replies
+.threads-list-item-col-replies {
+  width: 80px;
+  padding-left: @grid-gutter-width / 2;
+}
+
+// Last poster
+.threads-list-item-col-last-poster {
+  padding-left: @grid-gutter-width / 2;
+
+  img {
+    border-radius: @border-radius-small;
+  }
+}
+
+// Last activity
+.threads-list-item-col-last-activity {
+  width: 120px;
+  padding-left: @grid-gutter-width / 2;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  a:link,
+  a:hover,
+  a:active,
+  a:visited,
+  a:focus {
+    color: @thread-last-activity-color;
+    font-size: @thread-last-activity-size;
+  }
+}
+
+// Subscription and checkbox
+.threads-list-item-col-checkbox,
+.threads-list-item-col-subscription {
+  padding-left: @grid-gutter-width / 2;
+}
+
+// Make list responsive
+.threads-list-item-title-sm,
+.threads-list-item-col-checkbox-sm {
+  display: none;
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  // Make card full-width
+  .threads-list {
+    margin-left: @grid-gutter-width * -0.5;
+    margin-right: @grid-gutter-width * -0.5;
+
+    .list-group,
+    .list-group-item {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+
+  // Swap title with sm one
+  .threads-list-item-title {
+    display: none;
+  }
+
+  .threads-list-item-title-sm {
+    display: inline-block;
+  }
+
+  // Make thread read icon disappear
+  .threads-list-item-col-icon {
+    display: none;
+  }
+}
+
+@media screen and (max-width: @screen-sm-max) {
+  // Use two rows per item
+  .threads-list-item {
+    display: block;
+
+    // Make avatar same size as flag icons
+    img {
+      width: @thread-flag-block-size;
+      height: @thread-flag-block-size;
+    }
+  }
+
+  // Insert bottom marin to top row, align itss contents to top
+  .threads-list-item-top-row {
+    align-items: start;
+    margin-bottom: @grid-gutter-width / 4;
+  }
+
+  // Make all cols in second row auto, align them to right
+  .threads-list-item-bottom-row {
+    justify-content: end;
+    flex: 0;
+
+    & > div {
+      width: auto;
+      padding: 0 0 0 @grid-gutter-width / 2;
+    }
+  }
+
+  // Make thread subscription and checkbox icons disappear
+  .threads-list-item-col-subscription,
+  .threads-list-item-col-checkbox {
+    display: none;
+  }
+
+  // Reveal checkbox in top row, make it smol
+  .threads-list-item-col-checkbox-sm {
+    display: block;
+    padding-left: @grid-gutter-width / 2;
+
+    .btn-icon {
+      padding: 4px;
+
+      .material-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Make thread buttons flash when thread is busy
+.threads-list-item-is-busy .btn-icon {
+  opacity: 0.8;
+  animation: busy 0.75s linear infinite;
+}
+
+@keyframes busy {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Threads list update prompt
+.threads-list-update-prompt {
+  padding: 0;
+}
+
+.threads-list-update-prompt-btn {
+  padding: @padding-large-vertical @padding-large-horizontal;
+
+  background: @update-threads-prompt-bg;
+  color: @update-threads-prompt-color;
+  border: none;
+  border-radius: @list-group-border-radius @list-group-border-radius 0 0;
+}
+
+.threads-list-update-prompt-btn:hover,
+.threads-list-update-prompt-btn:focus {
+  background: @update-threads-prompt-hover-bg;
+  color: @update-threads-prompt-hover-color;
+}
+
+.threads-list-update-prompt-btn:active {
+  background: @update-threads-prompt-active-bg;
+  color: @update-threads-prompt-active-color;
+}

@@ -1,0 +1,32 @@
+{% extends "misago/errorpages/oauth2.html" %}
+{% load i18n %}
+
+
+{% block content %}
+<div class="page page-error page-error-social">
+  <div class="container page-container">
+    <div class="message-panel">
+
+      <div class="message-icon">
+        <span class="material-icon">sync_problem</span>
+      </div>
+
+      <div class="message-body">
+          <p class="lead">
+            {% blocktrans trimmed with provider=settings.oauth2_provider %}
+              Could not sign in with {{ provider }}
+            {% endblocktrans %}
+          </p>
+          {% if error.message %}
+            <p>{{ error.message }}</p>
+          {% endif %}
+          <p>{% trans "Found problems:" %}</p>
+          {% for validation_error in error_list %}
+            <p>&mdash; {{ validation_error }}</p>
+          {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

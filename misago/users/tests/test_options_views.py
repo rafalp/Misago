@@ -46,11 +46,6 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
             response, "Change confirmation link is invalid.", status_code=400
         )
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_email_change_fails_when_sso_is_enabled(self):
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-
     def test_change_email(self):
         """valid token changes email"""
         response = self.client.get(self.link)
@@ -59,6 +54,14 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertEqual(self.user.email, "n3w@email.com")
+
+    @override_dynamic_settings(
+        enable_oauth2_client=True,
+        oauth2_provider="Lorem",
+    )
+    def test_change_email_view_returns_403_if_oauth_is_enabled(self):
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
 
 
 class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
@@ -90,11 +93,6 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
             response, "Change confirmation link is invalid.", status_code=400
         )
 
-    @override_dynamic_settings(enable_sso=True)
-    def test_password_change_fails_when_sso_is_enabled(self):
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-
     def test_change_password(self):
         """valid token changes password"""
         response = self.client.get(self.link)
@@ -104,3 +102,11 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertFalse(self.user.check_password(self.USER_PASSWORD))
         self.assertTrue(self.user.check_password("n3wp4ssword"))
+
+    @override_dynamic_settings(
+        enable_oauth2_client=True,
+        oauth2_provider="Lorem",
+    )
+    def test_change_password_view_returns_403_if_oauth_is_enabled(self):
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)

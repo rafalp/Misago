@@ -1,0 +1,29 @@
+//
+// User Card
+// --------------------------------------------------
+
+// Center card's content on larger displays
+.user-card {
+  @media screen and (min-width: @screen-sm-min) {
+    text-align: center;
+  }
+}
+
+// Max out small avatar's width
+.user-card-small-avatar img {
+  width: 100%;
+  height: auto;
+}
+
+// Toggle avatar visibility
+@media screen and (min-width: @screen-sm-min) {
+  .user-card-small-avatar {
+    display: none;
+  }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .user-card-avatar {
+    display: none;
+  }
+}

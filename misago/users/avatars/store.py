@@ -4,7 +4,7 @@ from io import BytesIO
 
 from django.core.files.base import ContentFile
 from django.utils.crypto import get_random_string
-from PIL import Image
+from PIL.Image import Resampling
 
 from ...conf import settings
 
@@ -36,7 +36,7 @@ def store_avatar(user, image):
     for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
         image_stream = BytesIO()
 
-        image = image.resize((size, size), Image.ANTIALIAS)
+        image = image.resize((size, size), Resampling.LANCZOS)
         image.save(image_stream, "PNG")
 
         avatars.append(

@@ -7,20 +7,20 @@ export const SELECT_ITEM = "SELECT_ITEM"
 export function all(itemsIds) {
   return {
     type: SELECT_ALL,
-    items: itemsIds
+    items: itemsIds,
   }
 }
 
 export function none() {
   return {
-    type: SELECT_NONE
+    type: SELECT_NONE,
   }
 }
 
 export function item(itemId) {
   return {
     type: SELECT_ITEM,
-    item: itemId
+    item: itemId,
   }
 }
 

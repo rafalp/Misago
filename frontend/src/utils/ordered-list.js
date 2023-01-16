@@ -10,7 +10,7 @@ class OrderedList {
       item: item,
 
       after: order ? order.after || null : null,
-      before: order ? order.before || null : null
+      before: order ? order.before || null : null,
     })
   }
 
@@ -56,7 +56,7 @@ class OrderedList {
   _order(unordered) {
     // Index of unordered items
     var index = []
-    unordered.forEach(function(item) {
+    unordered.forEach(function (item) {
       index.push(item.key)
     })
 
@@ -66,7 +66,7 @@ class OrderedList {
 
     // First pass: register items that
     // don't specify their order
-    unordered.forEach(function(item) {
+    unordered.forEach(function (item) {
       if (!item.after && !item.before) {
         ordered.push(item)
         ordering.push(item.key)
@@ -75,7 +75,7 @@ class OrderedList {
 
     // Second pass: register items that
     // specify their before to "_end"
-    unordered.forEach(function(item) {
+    unordered.forEach(function (item) {
       if (item.before === "_end") {
         ordered.push(item)
         ordering.push(item.key)

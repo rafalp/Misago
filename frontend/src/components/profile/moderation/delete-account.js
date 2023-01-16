@@ -22,7 +22,7 @@ export default class extends Form {
       countdown: 5,
       confirm: false,
 
-      with_content: false
+      with_content: false,
     }
   }
 
@@ -30,15 +30,15 @@ export default class extends Form {
     ajax.get(this.props.profile.api.delete).then(
       () => {
         this.setState({
-          isLoaded: true
+          isLoaded: true,
         })
 
         this.countdown()
       },
-      rejection => {
+      (rejection) => {
         this.setState({
           isLoaded: true,
-          error: rejection.detail
+          error: rejection.detail,
         })
       }
     )
@@ -48,12 +48,12 @@ export default class extends Form {
     window.setTimeout(() => {
       if (this.state.countdown > 1) {
         this.setState({
-          countdown: this.state.countdown - 1
+          countdown: this.state.countdown - 1,
         })
         this.countdown()
       } else if (!this.state.confirm) {
         this.setState({
-          confirm: true
+          confirm: true,
         })
       }
     }, 1000)
@@ -61,7 +61,7 @@ export default class extends Form {
 
   send() {
     return ajax.post(this.props.profile.api.delete, {
-      with_content: this.state.with_content
+      with_content: this.state.with_content,
     })
   }
 
@@ -75,10 +75,10 @@ export default class extends Form {
             "%(username)s's account, threads, posts and other content has been deleted."
           ),
           {
-            username: this.props.profile.username
+            username: this.props.profile.username,
           },
           true
-        )
+        ),
       })
     } else {
       this.setState({
@@ -87,10 +87,10 @@ export default class extends Form {
             "%(username)s's account has been deleted and other content has been hidden."
           ),
           {
-            username: this.props.profile.username
+            username: this.props.profile.username,
           },
           true
-        )
+        ),
       })
     }
   }
@@ -100,7 +100,7 @@ export default class extends Form {
       return interpolate(
         gettext("Delete %(username)s"),
         {
-          username: this.props.profile.username
+          username: this.props.profile.username,
         },
         true
       )
@@ -108,7 +108,7 @@ export default class extends Form {
       return interpolate(
         gettext("Please wait... (%(countdown)ss)"),
         {
-          countdown: this.state.countdown
+          countdown: this.state.countdown,
         },
         true
       )

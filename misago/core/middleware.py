@@ -1,10 +1,14 @@
-from django.utils.deprecation import MiddlewareMixin
-
 from . import exceptionhandler
 from .utils import is_request_to_misago
 
 
-class ExceptionHandlerMiddleware(MiddlewareMixin):
+class ExceptionHandlerMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
+
     def process_exception(self, request, exception):
         request_is_to_misago = is_request_to_misago(request)
         misago_can_handle_exception = exceptionhandler.is_misago_exception(exception)
@@ -13,7 +17,11 @@ class ExceptionHandlerMiddleware(MiddlewareMixin):
             return exceptionhandler.handle_misago_exception(request, exception)
 
 
-class FrontendContextMiddleware(MiddlewareMixin):
-    def process_request(self, request):
+class FrontendContextMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         request.include_frontend_context = True
         request.frontend_context = {}
+        return self.get_response(request)

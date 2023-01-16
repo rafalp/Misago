@@ -11,5 +11,5 @@ export default function initializer() {
 misago.addInitializer({
   name: "dropdown",
   initializer: initializer,
-  before: "store"
+  before: "store",
 })

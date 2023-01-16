@@ -21,17 +21,17 @@ export default class extends Form {
       isError: false,
 
       category: null,
-      categories: []
+      categories: [],
     }
   }
 
   componentDidMount() {
     ajax.get(misago.get("THREAD_EDITOR_API")).then(
-      data => {
+      (data) => {
         let category = null
 
         // hydrate categories, extract posting options
-        const categories = data.map(item => {
+        const categories = data.map((item) => {
           // pick first category that allows posting and if it may, override it with initial one
           if (item.post !== false && !category) {
             category = item.id
@@ -40,7 +40,7 @@ export default class extends Form {
           return Object.assign(item, {
             disabled: item.post === false,
             label: item.name,
-            value: item.id
+            value: item.id,
           })
         })
 
@@ -48,12 +48,12 @@ export default class extends Form {
           isReady: true,
 
           category,
-          categories
+          categories,
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
-          isError: rejection.detail
+          isError: rejection.detail,
         })
       }
     )
@@ -64,7 +64,7 @@ export default class extends Form {
     store.dispatch(thread.busy())
 
     return ajax.patch(this.props.thread.api.index, [
-      { op: "replace", path: "category", value: this.state.category }
+      { op: "replace", path: "category", value: this.state.category },
     ])
   }
 
@@ -73,7 +73,7 @@ export default class extends Form {
     ajax
       .get(this.props.thread.api.posts.index, { page: this.props.posts.page })
       .then(
-        data => {
+        (data) => {
           store.dispatch(thread.replace(data))
           store.dispatch(posts.load(data.post_set))
           store.dispatch(thread.release())
@@ -81,7 +81,7 @@ export default class extends Form {
           snackbar.success(gettext("Thread has been moved."))
           modal.hide()
         },
-        rejection => {
+        (rejection) => {
           store.dispatch(thread.release())
           snackbar.apiError(rejection)
         }
@@ -96,7 +96,7 @@ export default class extends Form {
     }
   }
 
-  onCategoryChange = event => {
+  onCategoryChange = (event) => {
     this.changeValue("category", event.target.value)
   }
 
@@ -129,7 +129,7 @@ export default class extends Form {
                 </button>
                 <button
                   className="btn btn-primary"
-                  loading={this.state.isLoading || this.props.thread.isBusy}
+                  disabled={this.state.isLoading || this.props.thread.isBusy}
                 >
                   {gettext("Move thread")}
                 </button>

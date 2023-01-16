@@ -4,7 +4,7 @@ const TYPES_CLASSES = {
   info: "alert-info",
   success: "alert-success",
   warning: "alert-warning",
-  error: "alert-danger"
+  error: "alert-danger",
 }
 
 export class Snackbar extends React.Component {

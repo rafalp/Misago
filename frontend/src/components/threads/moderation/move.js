@@ -12,7 +12,7 @@ export default class extends Form {
     super(props)
 
     this.state = {
-      category: null
+      category: null,
     }
 
     const acls = {}
@@ -26,7 +26,7 @@ export default class extends Form {
     }
 
     this.categoryChoices = []
-    props.categories.forEach(category => {
+    props.categories.forEach((category) => {
       if (category.level > 0) {
         const acl = acls[category.id]
         const disabled =
@@ -37,7 +37,7 @@ export default class extends Form {
           value: category.id,
           disabled: disabled,
           level: category.level - 1,
-          label: category.name
+          label: category.name,
         })
 
         if (!disabled && !this.state.category) {
@@ -47,7 +47,7 @@ export default class extends Form {
     })
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     // we don't reload page on submissions
     event.preventDefault()
 
@@ -60,10 +60,10 @@ export default class extends Form {
 
       // deselect threads moved outside of visible scope
       const storeState = store.getState()
-      const leftThreads = storeState.threads.map(thread => thread.id)
+      const leftThreads = storeState.threads.map((thread) => thread.id)
       store.dispatch(
         select.all(
-          storeState.selection.filter(thread => {
+          storeState.selection.filter((thread) => {
             return leftThreads.indexOf(thread) !== -1
           })
         )
@@ -74,7 +74,7 @@ export default class extends Form {
       [
         { op: "replace", path: "category", value: this.state.category },
         { op: "replace", path: "flatten-categories", value: null },
-        { op: "add", path: "acl", value: true }
+        { op: "add", path: "acl", value: true },
       ],
       gettext("Selected threads were moved."),
       onSuccess

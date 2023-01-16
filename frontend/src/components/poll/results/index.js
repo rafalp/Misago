@@ -3,7 +3,7 @@ import Chart from "./chart"
 import Options from "./options"
 import PollInfo from "../info"
 
-export default function(props) {
+export default function (props) {
   return (
     <div className="panel panel-default panel-poll">
       <div className="panel-body">

@@ -1,0 +1,38 @@
+//
+// Events Flavor
+// --------------------------------------------------
+
+// Style label
+.posts-list .event .event-label {
+  margin-bottom: @line-height-computed / 4;
+}
+
+.posts-list .event .label-unread {
+  background-color: @post-unread-label;
+
+  color: #fff;
+}
+
+// Style info text
+.posts-list .event-info {
+  a,
+  a:link,
+  a:visited,
+  .btn-link {
+    color: @gray;
+  }
+
+  a:focus,
+  a:active,
+  a:focus:active,
+  .btn-link:focus,
+  .btn-link:active,
+  .btn-link:focus:active {
+    color: @text-color;
+  }
+}
+
+// Fade out hidden event
+.posts-list .event-hidden {
+  .opacity(0.33);
+}

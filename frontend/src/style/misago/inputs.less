@@ -1,0 +1,73 @@
+//
+// Inputs
+// --------------------------------------------------
+
+// Button-based inputs
+.btn.btn-yes-no,
+.btn.btn-select {
+  background: transparent;
+  border: 1px solid darken(@gray-lighter, 10%);
+
+  .material-icon {
+    margin: -4px 0px;
+    margin-right: 8px;
+
+    position: relative;
+    bottom: 1px;
+
+    width: 20px;
+    height: 20px;
+
+    font-size: 20px;
+    line-height: 20px;
+  }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .btn.btn-yes-no {
+    width: 100%;
+    overflow: auto;
+
+    .material-icon {
+      float: left;
+      margin-top: 1px;
+    }
+
+    .btn-text {
+      display: block;
+
+      margin-left: 30px;
+
+      text-align: left;
+      white-space: normal;
+    }
+  }
+}
+
+// Hidden file input
+input.hidden-file-upload {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+// Search field
+.form-search {
+  position: relative;
+
+  .form-control {
+    padding-right: 30px;
+  }
+
+  .material-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    color: @gray-light;
+    font-size: 24px;
+    line-height: 24px;
+
+    pointer-events: none;
+  }
+}

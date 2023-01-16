@@ -1,4 +1,6 @@
 import React from "react"
+import PageContainer from "../../PageContainer"
+import UsersNav from "../UsersNav"
 
 export default class extends React.Component {
   getEmptyMessage() {
@@ -14,9 +16,14 @@ export default class extends React.Component {
   render() {
     return (
       <div className="active-posters-list">
-        <div className="container">
+        <PageContainer>
+          <UsersNav
+            baseUrl={misago.get("USERS_LIST_URL")}
+            page={this.props.page}
+            pages={misago.get("USERS_LISTS")}
+          />
           <p className="lead">{this.getEmptyMessage()}</p>
-        </div>
+        </PageContainer>
       </div>
     )
   }

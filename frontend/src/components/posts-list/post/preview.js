@@ -2,54 +2,52 @@ import React from "react"
 import Avatar from "misago/components/avatar"
 import * as random from "misago/utils/random"
 
-export default function(props) {
-  return (
-    <li className="post">
-      <div className="post-border">
-        <div className="post-avatar">
-          <Avatar size="100" />
-        </div>
-        <div className="post-body">
-          <div className="panel panel-default panel-post">
-            <div className="panel-heading post-heading">
-              <span
-                className="ui-preview-text"
-                style={{ width: random.int(30, 100) + "px" }}
-              >
-                &nbsp;
-              </span>
-              <span
-                className="ui-preview-text"
-                style={{ width: random.int(30, 100) + "px" }}
-              >
-                &nbsp;
+const PostPreview = () => (
+  <li className="post">
+    <div className="panel panel-default panel-post">
+      <div className="panel-body">
+        <div className="post-side post-side-registered">
+          <div className="media">
+            <div className="media-left">
+              <span>
+                <Avatar className="poster-avatar" size="100" />
               </span>
             </div>
-            <div className="panel-body">
-              <article className="misago-markup">
-                <p
-                  className="ui-preview-text"
-                  style={{ width: random.int(50, 100) + "%" }}
-                >
+            <div className="media-body">
+              <span className="media-heading item-title">
+                <span className="ui-preview-text" style={{ width: "80px" }}>
                   &nbsp;
-                </p>
-                <p
-                  className="ui-preview-text"
-                  style={{ width: random.int(50, 100) + "%" }}
-                >
+                </span>
+              </span>
+              <span className="user-title user-title-anonymous">
+                <span className="ui-preview-text" style={{ width: "60px" }}>
                   &nbsp;
-                </p>
-                <p
-                  className="ui-preview-text"
-                  style={{ width: random.int(50, 100) + "%" }}
-                >
-                  &nbsp;
-                </p>
-              </article>
+                </span>
+              </span>
             </div>
           </div>
         </div>
+        <div className="panel-content">
+          <div className="post-body">
+            <article className="misago-markup">
+              <p className="ui-preview-text" style={{ width: "100%" }}>
+                &nbsp;
+              </p>
+              <p className="ui-preview-text" style={{ width: "70%" }}>
+                &nbsp;
+              </p>
+              <p
+                className="ui-preview-text hidden-xs hidden-sm"
+                style={{ width: "85%" }}
+              >
+                &nbsp;
+              </p>
+            </article>
+          </div>
+        </div>
       </div>
-    </li>
-  )
-}
+    </div>
+  </li>
+)
+
+export default PostPreview

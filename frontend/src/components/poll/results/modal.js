@@ -11,32 +11,32 @@ export default class extends React.Component {
     this.state = {
       isLoading: true,
       error: null,
-      data: []
+      data: [],
     }
   }
 
   componentDidMount() {
     ajax.get(this.props.poll.api.votes).then(
-      data => {
-        const hydratedData = data.map(choice => {
+      (data) => {
+        const hydratedData = data.map((choice) => {
           return Object.assign({}, choice, {
-            voters: choice.voters.map(voter => {
+            voters: choice.voters.map((voter) => {
               return Object.assign({}, voter, {
-                voted_on: moment(voter.voted_on)
+                voted_on: moment(voter.voted_on),
               })
-            })
+            }),
           })
         })
 
         this.setState({
           isLoading: false,
-          data: hydratedData
+          data: hydratedData,
         })
       },
-      rejection => {
+      (rejection) => {
         this.setState({
           isLoading: false,
-          error: rejection.detail
+          error: rejection.detail,
         })
       }
     )
@@ -88,7 +88,7 @@ export function ChoicesList(props) {
   return (
     <div className="modal-body modal-poll-votes">
       <ul className="list-unstyled votes-details">
-        {props.data.map(choice => {
+        {props.data.map((choice) => {
           return <ChoiceDetails key={choice.hash} {...choice} />
         })}
       </ul>
@@ -117,7 +117,7 @@ export function VotesCount(props) {
   const label = interpolate(
     message,
     {
-      votes: props.votes
+      votes: props.votes,
     },
     true
   )
@@ -130,7 +130,7 @@ export function VotesList(props) {
 
   return (
     <ul className="list-unstyled">
-      {props.voters.map(user => {
+      {props.voters.map((user) => {
         return <Voter key={user.username} {...user} />
       })}
     </ul>

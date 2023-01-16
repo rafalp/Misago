@@ -1,32 +1,26 @@
 import React from "react"
 import { connect } from "react-redux"
-import DropdownToggle from "misago/components/dropdown-toggle"
-import Nav from "misago/components/users/nav"
 import ActivePosters from "misago/components/users/active-posters/root"
 import Rank from "misago/components/users/rank/root"
 import WithDropdown from "misago/components/with-dropdown"
 import misago from "misago/index"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+} from "../PageHeader"
 
 export default class extends WithDropdown {
   render() {
     return (
       <div className="page page-users-lists">
-        <div className="page-header-bg">
-          <div className="page-header">
-            <div className="container">
+        <PageHeaderContainer>
+          <PageHeader styleName="users-lists">
+            <PageHeaderBanner styleName="users-lists">
               <h1>{gettext("Users")}</h1>
-            </div>
-            <div className="page-tabs">
-              <div className="container">
-                <Nav
-                  lists={misago.get("USERS_LISTS")}
-                  baseUrl={misago.get("USERS_LIST_URL")}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
+            </PageHeaderBanner>
+          </PageHeader>
+        </PageHeaderContainer>
         {this.props.children}
       </div>
     )
@@ -37,32 +31,32 @@ export function select(store) {
   return {
     tick: store.tick.tick,
     user: store.auth.user,
-    users: store.users
+    users: store.users,
   }
 }
 
 export function paths() {
   let paths = []
 
-  misago.get("USERS_LISTS").forEach(function(item) {
+  misago.get("USERS_LISTS").forEach(function (item) {
     if (item.component === "rank") {
       paths.push({
         path: misago.get("USERS_LIST_URL") + item.slug + "/:page/",
         component: connect(select)(Rank),
-        rank: item
+        rank: item,
       })
       paths.push({
         path: misago.get("USERS_LIST_URL") + item.slug + "/",
         component: connect(select)(Rank),
-        rank: item
+        rank: item,
       })
     } else if (item.component === "active-posters") {
       paths.push({
         path: misago.get("USERS_LIST_URL") + item.component + "/",
         component: connect(select)(ActivePosters),
         extra: {
-          name: item.name
-        }
+          name: item.name,
+        },
       })
     }
   })

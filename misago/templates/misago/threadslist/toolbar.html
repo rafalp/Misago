@@ -1,0 +1,83 @@
+{% load i18n %}
+<section>
+  <div class="toolbar">
+    {% if not hide_categories and categories %}
+      <div class="toolbar-section">
+        {% if category.special_role %}
+          <div class="toolbar-item">
+            <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis" disabled>
+              {% trans "All categories" %}
+            </button>
+          </div>
+        {% else %}
+          <div class="toolbar-item">
+            <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis" disabled>
+              <span class="material-icon"{% if top_category.color %} style="color: {{ top_category.color }};"{% endif %}>
+                label
+              </span>
+              {% if top_category.short_name %}
+                <span class="hidden-md hidden-lg">{{ top_category.short_name }}</span>
+                <span class="hidden-xs hidden-sm">{{ top_category.name }}</span>
+              {% else %}
+                <span>{{ top_category.name }}</span>
+              {% endif %}
+            </button>
+          </div>
+          {% if subcategories %}
+            <div class="toolbar-item">
+              <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis" disabled>
+                {% trans "All subcategories" %}
+              </button>
+            </div>
+          {% elif sub_category %}
+            <div class="toolbar-item">
+              <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis" disabled>
+                <span class="material-icon"{% if sub_category.color %} style="color: {{ sub_category.color }};"{% endif %}>
+                  label
+                </span>
+                {% if sub_category.short_name %}
+                  <span class="hidden-md hidden-lg">{{ sub_category.short_name }}</span>
+                  <span class="hidden-xs hidden-sm">{{ sub_category.name }}</span>
+                {% else %}
+                  <span>{{ sub_category.name }}</span>
+                {% endif %}
+              </button>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <div class="toolbar-section hidden-xs">
+        <div class="toolbar-item">
+          <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block" disabled>
+            {% if list_type == 'all' %}
+              {% trans "All threads" %}
+            {% elif list_type == 'my' %}
+              {% trans "My threads" %}
+            {% elif list_type == 'new' %}
+              {% trans "New threads" %}
+            {% elif list_type == 'unread' %}
+              {% trans "Unread threads" %}
+            {% elif list_type == 'subscribed' %}
+              {% trans "Subscribed threads" %}
+            {% elif list_type == 'unapproved' %}
+              {% trans "Unapproved threads" %}
+            {% endif %}
+          </button>
+        </div>
+      </div>
+    {% endif %}
+    <div class="toolbar-spacer"></div>
+    {% if user.is_authenticated %}
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          <button type="button" class="btn btn-primary btn-outline btn-block" disabled>
+            <span class="material-icon">chat</span>
+            {% trans "Start thread" %}
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,26 @@
+  {
+  "extends": "react-app",
+  "globals": {
+    "misago": "readonly",
+    "gettext": "readonly",
+    "ngettext": "readonly",
+    "gettext_noop": "readonly",
+    "pgettext": "readonly",
+    "npgettext": "readonly",
+    "interpolate": "readonly",
+    "beforeEach": "readonly",
+    "afterEach": "readonly",
+    "describe": "readonly",
+    "it": "readonly",
+    "$": "readonly",
+    "jQuery": "readonly",
+    "hljs": "readonly",
+    "phantom": "readonly"
+  },
+  "rules": {
+    "eqeqeq": 0,
+    "no-unused-vars": 0,
+    "array-callback-return": 0,
+    "import/no-anonymous-default-export": 0
+  }
+}

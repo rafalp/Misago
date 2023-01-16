@@ -1,5 +1,7 @@
 import React from "react"
 import ListItem from "misago/components/users/active-posters/list-item"
+import PageContainer from "../../PageContainer"
+import UsersNav from "../UsersNav"
 
 export default class extends React.Component {
   getLeadMessage() {
@@ -13,7 +15,7 @@ export default class extends React.Component {
       message,
       {
         posters: this.props.count,
-        days: this.props.trackedPeriod
+        days: this.props.trackedPeriod,
       },
       true
     )
@@ -22,7 +24,12 @@ export default class extends React.Component {
   render() {
     return (
       <div className="active-posters-list">
-        <div className="container">
+        <PageContainer>
+          <UsersNav
+            baseUrl={misago.get("USERS_LIST_URL")}
+            page={this.props.page}
+            pages={misago.get("USERS_LISTS")}
+          />
           <p className="lead">{this.getLeadMessage()}</p>
 
           <div className="active-posters ui-ready">
@@ -39,7 +46,7 @@ export default class extends React.Component {
               })}
             </ul>
           </div>
-        </div>
+        </PageContainer>
       </div>
     )
   }

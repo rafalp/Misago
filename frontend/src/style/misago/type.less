@@ -1,0 +1,47 @@
+//
+// Typography
+// --------------------------------------------------
+
+abbr {
+  border: none !important;
+}
+
+.item-title {
+  color: @text-color;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a.item-title {
+  &:link,
+  &:active,
+  &:visited,
+  &:hover {
+    color: @text-color;
+    font-weight: bold;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.message-line {
+  text-align: center;
+
+  .material-icon {
+    margin-right: @line-height-computed / 3;
+
+    font-size: 20px;
+    line-height: 20px;
+
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,12 +1,15 @@
 import React from "react"
 import PageLead from "misago/components/page-lead"
-import List from "misago/components/users/rank/list"
-import ListLoading from "misago/components/users/rank/list-loading"
 import misago from "misago/index"
 import { hydrate } from "misago/reducers/users"
 import polls from "misago/services/polls"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import PageContainer from "../../PageContainer"
+import RankUsersList from "./RankUsersList"
+import RankUsersListLoader from "./RankUsersListLoader"
+import RankUsersToolbar from "./RankUsersToolbar"
+import UsersNav from "../UsersNav"
 
 export default class extends React.Component {
   constructor(props) {
@@ -23,14 +26,14 @@ export default class extends React.Component {
 
   initWithPreloadedData(data) {
     this.state = Object.assign(data, {
-      isLoaded: true
+      isLoaded: true,
     })
     store.dispatch(hydrate(data.results))
   }
 
   initWithoutPreloadedData() {
     this.state = {
-      isLoaded: false
+      isLoaded: false,
     }
   }
 
@@ -40,14 +43,14 @@ export default class extends React.Component {
       url: misago.get("USERS_API"),
       data: {
         rank: this.props.route.rank.id,
-        page: page
+        page: page,
       },
       frequency: 90 * 1000,
-      update: this.update
+      update: this.update,
     })
   }
 
-  update = data => {
+  update = (data) => {
     store.dispatch(hydrate(data.results))
 
     data.isLoaded = true
@@ -58,7 +61,7 @@ export default class extends React.Component {
     title.set({
       title: this.props.route.rank.name,
       page: this.props.params.page || null,
-      parent: gettext("Users")
+      parent: gettext("Users"),
     })
   }
 
@@ -71,11 +74,11 @@ export default class extends React.Component {
       title.set({
         title: this.props.route.rank.name,
         page: nextProps.params.page || null,
-        parent: gettext("Users")
+        parent: gettext("Users"),
       })
 
       this.setState({
-        isLoaded: false
+        isLoaded: false,
       })
 
       polls.stop("rank-users")
@@ -106,11 +109,7 @@ export default class extends React.Component {
   getComponent() {
     if (this.state.isLoaded) {
       if (this.state.count > 0) {
-        let baseUrl =
-          misago.get("USERS_LIST_URL") + this.props.route.rank.slug + "/"
-        return (
-          <List baseUrl={baseUrl} users={this.props.users} {...this.state} />
-        )
+        return <RankUsersList users={this.props.users} />
       } else {
         return (
           <p className="lead">
@@ -119,17 +118,28 @@ export default class extends React.Component {
         )
       }
     } else {
-      return <ListLoading />
+      return <RankUsersListLoader />
     }
   }
 
   render() {
     return (
       <div className={this.getClassName()}>
-        <div className="container">
+        <PageContainer>
+          <UsersNav
+            baseUrl={misago.get("USERS_LIST_URL")}
+            page={{ name: this.props.route.rank.name }}
+            pages={misago.get("USERS_LISTS")}
+          />
           {this.getRankDescription()}
           {this.getComponent()}
-        </div>
+          <RankUsersToolbar
+            baseUrl={
+              misago.get("USERS_LIST_URL") + this.props.route.rank.slug + "/"
+            }
+            users={this.state}
+          />
+        </PageContainer>
       </div>
     )
   }
