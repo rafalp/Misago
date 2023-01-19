@@ -26,6 +26,10 @@ def validate_user_data(request, user, user_data):
     filtered_data = filter_user_data(request, user, user_data)
 
     try:
+        validate_username_content(filtered_data["name"])
+        validate_username_length(UsernameSettings, filtered_data["name"])
+        validate_email(filtered_data["email"])
+
         errors_list = []
 
         def add_error(_field_unused: str | None, error: str | ValidationError):
@@ -33,10 +37,6 @@ def validate_user_data(request, user, user_data):
                 error = error.message
 
             errors_list.append(str(error))
-
-        validate_username_content(user_data["name"])
-        validate_username_length(UsernameSettings, user_data["name"])
-        validate_email(user_data["email"])
 
         validate_new_registration(request, filtered_data, add_error)
     except ValidationError as exc:
@@ -49,14 +49,21 @@ def validate_user_data(request, user, user_data):
 
 
 def filter_user_data(request, user, user_data):
+    filtered_data = {
+        "id": user_data["id"],
+        "name": str(user_data["name"] or "").strip(),
+        "email": str(user_data["email"] or "").strip(),
+        "avatar": str(user_data["avatar"]).strip() if user_data["avatar"] else None,
+    }
+
     if oauth2_user_data_filters:
         return filter_user_data_with_filters(
-            request, user, user_data, oauth2_user_data_filters
+            request, user, filtered_data, oauth2_user_data_filters
         )
     else:
-        user_data["name"] = filter_name(user, user_data["name"])
+        filtered_data["name"] = filter_name(user, filtered_data["name"])
 
-    return user_data
+    return filtered_data
 
 
 def filter_user_data_with_filters(request, user, user_data, filters):
