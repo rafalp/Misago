@@ -80,7 +80,7 @@ def get_access_token(request, code_grant):
         raise exceptions.OAuth2AccessTokenRequestError()
 
     if r.status_code != 200:
-        raise exceptions.OAuth2AccessTokenResponseError()
+        raise exceptions.OAuth2AccessTokenResponseError(r)
 
     try:
         response_json = r.json()

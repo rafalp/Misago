@@ -40,6 +40,10 @@ Could not sign in with {{ provider }}
           {% if error.message %}
             <p>{{ error.message }}</p>
           {% endif %}
+          {% if error.response_text %}
+            <p>{% trans "OAuth provider response:" %}</p>
+            <p>{{ error.response_text }}</p>
+          {% endif %}
           {% if error.recoverable %}
             <p>
               {% trans "Please try again." %}

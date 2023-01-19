@@ -1,5 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 
+from ..conf import settings
+
 
 class OAuth2Error(Exception):
     pass
@@ -49,6 +51,10 @@ class OAuth2AccessTokenRequestError(OAuth2ProviderError):
 
 class OAuth2AccessTokenResponseError(OAuth2ProviderError):
     message = _("The OAuth2 provider responded with error for an access token request.")
+
+    def __init__(self, response):
+        if settings.DEBUG:
+            self.response_text = response.text
 
 
 class OAuth2AccessTokenJSONError(OAuth2ProviderError):
