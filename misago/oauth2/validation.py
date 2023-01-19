@@ -68,7 +68,7 @@ def filter_user_data(request, user, user_data):
 
 def filter_user_data_with_filters(request, user, user_data, filters):
     for filter_user_data in filters:
-        user_data = filter_user_data(request, user, user_data) or user_data
+        user_data = filter_user_data(request, user, user_data.copy()) or user_data
     return user_data
 
 
