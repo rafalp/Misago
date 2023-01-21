@@ -53,7 +53,7 @@ def filter_user_data(request, user, user_data):
         "id": user_data["id"],
         "name": str(user_data["name"] or "").strip(),
         "email": str(user_data["email"] or "").strip(),
-        "avatar": str(user_data["avatar"]).strip() if user_data["avatar"] else None,
+        "avatar": filter_user_avatar(user_data["avatar"]),
     }
 
     if oauth2_user_data_filters:
@@ -64,6 +64,12 @@ def filter_user_data(request, user, user_data):
         filtered_data["name"] = filter_name(user, filtered_data["name"])
 
     return filtered_data
+
+
+def filter_user_avatar(user_avatar):
+    if user_avatar:
+        return str(user_avatar).strip() or None
+    return None
 
 
 def filter_user_data_with_filters(request, user, user_data, filters):

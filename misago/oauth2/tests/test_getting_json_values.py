@@ -29,3 +29,21 @@ def test_json_value_is_returned_from_nested_objects():
         )
         == "ok"
     )
+
+
+def test_none_is_returned_from_nested_objects():
+    assert (
+        get_value_from_json(
+            "val.child.val3",
+            {
+                "val2": "nope",
+                "val": {
+                    "child": {
+                        "val2": "nope",
+                        "val": "ok",
+                    },
+                },
+            },
+        )
+        is None
+    )
