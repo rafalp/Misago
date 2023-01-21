@@ -382,6 +382,57 @@ def test_user_data_json_values_are_mapped_to_result(mock_request):
     oauth2_json_id_path="id",
     oauth2_json_name_path="user.profile.name",
     oauth2_json_email_path="user.profile.email",
+    oauth2_json_avatar_path="user.profile.avatar",
+)
+def test_user_data_json_values_are_none_when_not_found(mock_request):
+    user_data = {
+        "id": "7dds8a7dd89sa",
+        "name": "Aerith",
+        "email": "aerith@example.com",
+        "avatar": "https://example.com/avatar.png",
+    }
+
+    get_mock = Mock(
+        return_value=Mock(
+            status_code=200,
+            json=Mock(
+                return_value={
+                    "profile_id": user_data["id"],
+                    "user": {
+                        "data": {
+                            "name": user_data["name"],
+                            "email": user_data["email"],
+                            "avatar": user_data["avatar"],
+                        }
+                    },
+                },
+            ),
+        ),
+    )
+
+    with patch("requests.get", get_mock):
+        assert get_user_data(mock_request, ACCESS_TOKEN) == {
+            "id": None,
+            "name": None,
+            "email": None,
+            "avatar": None,
+        }
+
+        get_mock.assert_called_once_with(
+            f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
+            headers={},
+            timeout=REQUESTS_TIMEOUT,
+        )
+
+
+@override_dynamic_settings(
+    oauth2_user_url="https://example.com/oauth2/data?type=user",
+    oauth2_user_method="GET",
+    oauth2_user_token_name="atoken",
+    oauth2_user_token_location="QUERY",
+    oauth2_json_id_path="id",
+    oauth2_json_name_path="user.profile.name",
+    oauth2_json_email_path="user.profile.email",
     oauth2_json_avatar_path="",
 )
 def test_user_data_skips_avatar_if_path_is_not_set(mock_request):
