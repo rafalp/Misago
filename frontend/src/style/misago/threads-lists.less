@@ -214,6 +214,10 @@ a.threads-list-item-title-new {
 }
 
 // Make list responsive
+.threads-list-item-col-spacer-xs {
+  display: none;
+}
+
 .threads-list-item-title-sm,
 .threads-list-item-col-checkbox-sm {
   display: none;
@@ -245,6 +249,17 @@ a.threads-list-item-title-new {
   // Make thread read icon disappear
   .threads-list-item-col-icon {
     display: none;
+  }
+  
+  // Spread categories and other details
+  .threads-list-item-col-spacer-xs {
+    display: block;
+    flex: 1;
+  }
+
+  // Remove left padding from first item
+  .threads-list-item-bottom-row > div:first-child {
+    padding-left: 0;
   }
 }
 

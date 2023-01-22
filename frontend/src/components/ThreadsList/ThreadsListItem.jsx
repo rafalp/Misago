@@ -92,6 +92,7 @@ const ThreadsListItem = ({
             <ThreadsListItemCategory parent={parent} category={category} />
           </div>
         )}
+        <div className="threads-list-item-col-spacer-xs" />
         <div className="threads-list-item-col-replies">
           <ThreadReplies thread={thread} />
         </div>
