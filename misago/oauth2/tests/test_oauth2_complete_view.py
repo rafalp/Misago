@@ -658,7 +658,7 @@ def test_oauth2_complete_view_returns_error_400_if_access_token_is_rejected(
 
 @responses.activate
 @override_dynamic_settings(**TEST_SETTINGS)
-def test_oauth2_complete_view_returns_error_400_if_user_data_didnt_validate(
+def test_oauth2_complete_view_returns_error_400_if_user_email_was_missing(
     user, client, dynamic_settings
 ):
     assert dynamic_settings.enable_oauth2_client is True
@@ -699,7 +699,69 @@ def test_oauth2_complete_view_returns_error_400_if_user_data_didnt_validate(
             "id": 1234,
             "profile": {
                 "name": "John Doe",
-                "email": "",
+            },
+        },
+        match=[
+            header_matcher({"Authorization": f"Bearer {access_token}"}),
+        ],
+    )
+
+    response = client.get(
+        "%s?state=%s&code=%s"
+        % (
+            reverse("misago:oauth2-complete"),
+            session_state,
+            code_grant,
+        )
+    )
+
+    assert_contains(response, "Enter a valid email address.", 400)
+
+
+@responses.activate
+@override_dynamic_settings(**TEST_SETTINGS)
+def test_oauth2_complete_view_returns_error_400_if_user_email_was_invalid(
+    user, client, dynamic_settings
+):
+    assert dynamic_settings.enable_oauth2_client is True
+
+    Subject.objects.create(sub="1234", user=user)
+
+    code_grant = "12345grant"
+    session_state = "12345state"
+    access_token = "12345token"
+
+    session = client.session
+    session[SESSION_STATE] = session_state
+    session.save()
+
+    responses.post(
+        "https://example.com/oauth2/token",
+        json={
+            "token": {
+                "bearer": access_token,
+            },
+        },
+        match=[
+            urlencoded_params_matcher(
+                {
+                    "grant_type": "authorization_code",
+                    "client_id": "oauth2_client_id",
+                    "client_secret": "oauth2_client_secret",
+                    "redirect_uri": "http://testserver/oauth2/complete/",
+                    "code": code_grant,
+                },
+            ),
+        ],
+    )
+
+    responses.post(
+        "https://example.com/oauth2/user",
+        json={
+            "id": 1234,
+            "profile": {
+                "name": "John Doe",
+                "email": "invalid",
             },
         },
         match=[
