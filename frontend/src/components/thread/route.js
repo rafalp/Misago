@@ -125,6 +125,7 @@ export default class extends React.Component {
     posting.open({
       mode: "REPLY",
 
+      thread: this.props.thread,
       config: this.props.thread.api.editor,
       submit: this.props.thread.api.posts.index,
     })

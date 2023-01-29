@@ -1,0 +1,129 @@
+//
+// Posting dialog
+// --------------------------------------------------
+
+// Mount is the container for positioning posting dialog on the page
+#posting-mount {
+  display: none;
+
+  &.show {
+    display: block;
+  }
+
+  // Positioning override for easier dev
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+
+// Posting dialog
+.posting-dialog {
+  // Limit max width and add margin on sides
+  max-width: @posting-dialog-max-width;
+  margin: 0 auto;
+
+  background: @posting-dialog-bg;
+  border: 1px solid @posting-dialog-border;
+  border-radius: @border-radius-base @border-radius-base 0 0;
+  border-bottom: 0;
+
+  overflow: hidden;
+}
+
+// Posting dialog header
+.posting-dialog-header {
+  display: flex;
+  align-items: center;
+  padding: @posting-dialog-padding-vertical @posting-dialog-padding-horizontal;
+
+  border-bottom: 1px solid @posting-dialog-border;
+
+  &>:first-child {
+    width: 100%;
+  }
+}
+
+.btn-posting-dialog {
+  padding: @posting-dialog-btn-padding-vertical @posting-dialog-btn-padding-horizontal;
+
+  margin-left: @line-height-computed / 2;
+
+  .material-icon {
+    margin: 0;
+
+    font-size: @posting-dialog-btn-size;
+  }
+}
+
+// Posting dialog body
+.posting-dialog-body {
+  padding: @posting-dialog-padding-horizontal;
+}
+
+// Make form 100% height too
+.posting-dialog-body form {
+  height: 100%;
+}
+
+// Override styles when dialog is minimized
+.posting-dialog-minimized {
+  .posting-dialog-header {
+    border-bottom: 0;
+  }
+
+  .posting-dialog-body {
+    display: none;
+  }
+}
+
+// Fullscreen mode styles
+body.posting-fullscreen {
+  // Remove scroll from body
+  overflow: hidden;
+
+  // Hide root mount contents
+  #misago-container {
+    display: none;
+  }
+
+  // Remove posting spacer
+  .posting-spacer {
+    display: none;
+  }
+
+  // Make mount fullscreen
+  #posting-mount {
+    height: 100%;
+  }
+
+  // Make dialog fullscreen
+  .posting-dialog {
+    height: 100%;
+    width: 100%;
+    max-width: auto;
+
+    border: 0;
+  }
+
+  // Use dialog's container for fullscreen
+  .posting-dialog-container {
+    display: flex;
+    flex-direction: column;
+
+    max-width: @posting-dialog-max-width;
+    height: 100%;
+    margin: 0 auto;
+    padding: @line-height-computed @grid-gutter-width;
+  }
+
+  .posting-dialog-header {
+    padding: @line-height-computed 0;
+  }
+
+  .posting-dialog-body {
+    height: 100%;
+    padding: @line-height-computed 0;
+  }
+}

@@ -79,11 +79,12 @@
         {% block content %}{% endblock content %}
       </div>
 
-      {% include "misago/posting.html" %}
       {% include "misago/footer.html" %}
     </div>
     {% include "misago/auth.html" %}
 
+    <div id="posting-mount"></div>
+    <div id="posting-spacer"></div>
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
     {% if misago_agreement %}

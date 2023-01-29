@@ -116,7 +116,7 @@ export function paths() {
   ]
 
   const delegateAuth = misago.get("SETTINGS").DELEGATE_AUTH
-  if (!delegateAuth)  {
+  if (!delegateAuth) {
     paths.push({
       path: misago.get("USERCP_URL") + "change-username/",
       component: connect(select)(ChangeUsername),

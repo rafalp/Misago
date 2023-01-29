@@ -1,0 +1,73 @@
+//
+// Markup editor
+// --------------------------------------------------
+
+.markup-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  background: @markup-editor-bg;
+  border: 2px solid @markup-editor-border-color;
+  border-radius: @border-radius-base;
+}
+
+// Set different border when its focused
+.markup-editor.markup-editor-focused {
+  border: 2px solid @markup-editor-border-focus;
+}
+
+// Toolbar and footer paddings and items layout
+.markup-editor-toolbar,
+.markup-editor-footer {
+  display: flex;
+  padding: @markup-editor-padding-vertical @markup-editor-padding-horizontal;
+
+  // Add spacing between buttons
+  .btn + .btn {
+    margin-left: @markup-editor-padding-horizontal;
+  }
+}
+
+// Toolbar
+.markup-editor-toolbar {
+  background: @markup-editor-toolbar-bg;
+  border-bottom: 1px solid @markup-editor-toolbar-border-color;
+}
+
+// Footer
+.markup-editor-footer {
+  background: @markup-editor-footer-bg;
+  border-top: 1px solid @markup-editor-footer-border-color;
+}
+
+// Spacer that pushes items away from each other
+.markup-editor-spacer {
+  flex: 1;
+}
+
+// Textarea
+.markup-editor-textarea.form-control {
+  padding: @markup-editor-padding-horizontal;
+
+  border: 0;
+  border-radius: 0;
+
+  &,
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// Make editor area and preview same height
+.markup-editor-textarea,
+.markup-editor-preview {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.markup-editor-textarea {
+  resize: none;
+}

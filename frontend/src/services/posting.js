@@ -5,12 +5,16 @@ import PostingComponent from "misago/components/posting"
 import mount from "misago/utils/mount-component"
 
 export class Posting {
-  init(ajax, snackbar, placeholder) {
+  init(ajax, snackbar, mount) {
     this._ajax = ajax
     this._snackbar = snackbar
-    this._placeholder = $(placeholder)
+    this._mount = mount
 
     this._mode = null
+    this._spacer = document.getElementById("posting-spacer")
+    this._observer = new ResizeObserver((entries) => {
+      this._spacer.style.height = entries[0].contentRect.height + "px";
+    });
 
     this._isOpen = false
     this._isClosing = false
@@ -44,30 +48,26 @@ export class Posting {
 
   _realOpen(props) {
     if (props.mode == "POLL") {
-      mount(<PollForm {...props} />, "posting-mount")
+      mount(<PollForm {...props} />, this._mount.id)
     } else {
-      mount(<PostingComponent {...props} />, "posting-mount")
+      mount(<PostingComponent {...props} />, this._mount.id)
     }
 
-    this._placeholder.addClass("slide-in")
-
-    $("html, body").animate(
-      {
-        scrollTop: this._placeholder.offset().top,
-      },
-      1000
-    )
+    document.body.classList.add("posting-open");
+    this._mount.classList.add("show");
+    this._observer.observe(this._mount);
   }
 
   close = () => {
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true
-      this._placeholder.removeClass("slide-in")
+      this._mount.classList.remove("show");
+      document.body.classList.remove("posting-open");
 
       window.setTimeout(() => {
-        ReactDOM.unmountComponentAtNode(
-          document.getElementById("posting-mount")
-        )
+        ReactDOM.unmountComponentAtNode(this._mount)
+        this._observer.unobserve(this._mount);
+        this._spacer.style.height = "0px;"
         this._isClosing = false
         this._isOpen = false
       }, 300)

@@ -1,7 +1,6 @@
 import React from "react"
-import Editor from "misago/components/editor"
+import MarkupEditor from "misago/components/MarkupEditor"
 import Form from "misago/components/form"
-import Container from "./utils/container"
 import Loader from "./utils/loader"
 import Message from "./utils/message"
 import * as attachments from "./utils/attachments"
@@ -9,6 +8,9 @@ import { getPostValidators } from "./utils/validators"
 import ajax from "misago/services/ajax"
 import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
+import PostingDialog from "./PostingDialog"
+import PostingDialogBody from "./PostingDialogBody"
+import PostingDialogHeader from "./PostingDialogHeader"
 
 export default class extends Form {
   constructor(props) {
@@ -18,6 +20,9 @@ export default class extends Form {
       isReady: false,
       isLoading: false,
       isErrored: false,
+
+      minimized: false,
+      fullscreen: false,
 
       post: "",
       attachments: [],
@@ -85,6 +90,7 @@ export default class extends Form {
       gettext("Are you sure you want to discard your reply?")
     )
     if (cancel) {
+      document.body.classList.remove("posting-fullscreen")
       posting.close()
     }
   }
@@ -146,31 +152,101 @@ export default class extends Form {
     }
   }
 
-  render() {
-    if (this.state.isReady) {
-      return (
-        <Container className="posting-form">
-          <form onSubmit={this.handleSubmit} method="POST">
-            <div className="row">
-              <div className="col-md-12">
-                <Editor
-                  attachments={this.state.attachments}
-                  loading={this.state.isLoading}
-                  onAttachmentsChange={this.onAttachmentsChange}
-                  onCancel={this.onCancel}
-                  onChange={this.onPostChange}
-                  submitLabel={gettext("Post reply")}
-                  value={this.state.post}
-                />
-              </div>
-            </div>
-          </form>
-        </Container>
-      )
-    } else if (this.state.isErrored) {
-      return <Message message={this.state.isErrored} />
-    } else {
-      return <Loader />
+  minimize = () => {
+    this.setState({ fullscreen: false, minimized: true })
+    document.body.classList.remove("posting-fullscreen")
+  }
+
+  open = () => {
+    this.setState({ minimized: false })
+    if (this.state.fullscreen) {
+      document.body.classList.add("posting-fullscreen")
     }
   }
+
+  fullscreenEnter = () => {
+    this.setState({ fullscreen: true, minimized: false })
+    document.body.classList.add("posting-fullscreen")
+  }
+
+  fullscreenExit = () => {
+    this.setState({ fullscreen: false, minimized: false })
+    document.body.classList.remove("posting-fullscreen")
+  }
+
+  render() {
+    const dialogProps = {
+      thread: this.props.thread,
+
+      minimized: this.state.minimized,
+      minimize: this.minimize,
+      open: this.open,
+
+      fullscreen: this.state.fullscreen,
+      fullscreenEnter: this.fullscreenEnter,
+      fullscreenExit: this.fullscreenExit,
+
+      close: this.onCancel,
+    }
+
+    if (this.state.isErrored) {
+      return (
+        <PostingDialogReply {...dialogProps}>
+          <Message message={this.state.isErrored} />
+        </PostingDialogReply>
+      )
+    }
+
+    if (!this.state.isReady) {
+      return (
+        <PostingDialogReply {...dialogProps}>
+          <Loader />
+        </PostingDialogReply>
+      )
+    }
+
+    return (
+      <PostingDialogReply {...dialogProps}>
+        <form onSubmit={this.handleSubmit} method="POST">
+          <MarkupEditor
+            attachments={this.state.attachments}
+            disabled={this.state.isLoading}
+            onAttachmentsChange={this.onAttachmentsChange}
+            onChange={this.onPostChange}
+            submitText={gettext("Post reply")}
+            value={this.state.post}
+          />
+        </form>
+      </PostingDialogReply>
+    )
+  }
 }
+
+const PostingDialogReply = ({
+  children,
+  close,
+  minimized,
+  minimize,
+  open,
+  fullscreen,
+  fullscreenEnter,
+  fullscreenExit,
+  thread,
+}) => (
+  <PostingDialog fullscreen={fullscreen} minimized={minimized}>
+    <PostingDialogHeader
+      fullscreen={fullscreen}
+      fullscreenEnter={fullscreenEnter}
+      fullscreenExit={fullscreenExit}
+      minimized={minimized}
+      minimize={minimize}
+      open={open}
+      close={close}
+    >
+      <strong>{"Reply to: " + thread.title}</strong>
+    </PostingDialogHeader>
+    <PostingDialogBody>
+      {children}
+    </PostingDialogBody>
+  </PostingDialog>
+)

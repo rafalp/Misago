@@ -1,6 +1,6 @@
 import React from "react"
+import MarkupEditor from "misago/components/MarkupEditor"
 import CategorySelect from "misago/components/category-select"
-import Editor from "misago/components/editor"
 import Form from "misago/components/form"
 import Container from "./utils/container"
 import Loader from "./utils/loader"
@@ -293,7 +293,7 @@ export default class extends Form {
           </div>
           <div className="row">
             <div className="col-md-12">
-              <Editor
+              <MarkupEditor
                 attachments={this.state.attachments}
                 loading={this.state.isLoading}
                 onAttachmentsChange={this.onAttachmentsChange}
