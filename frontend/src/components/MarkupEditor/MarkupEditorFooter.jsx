@@ -11,15 +11,21 @@ const MarkupEditorFooter = ({
 }) => (
   <div className="markup-editor-footer">
     <div className="markup-editor-spacer" />
-    <Button
-      className="btn-default"
-      disabled={disabled || empty}
-      onClick={preview ? closePreview : showPreview}
-      type="button"
-    >
-      {preview ? gettext("Edit") : gettext("Preview")}
-    </Button>
-    <Button className="btn-primary" loading={disabled} disabled={empty}>
+    {preview ? (
+      <Button className="btn-default" onClick={closePreview} type="button">
+        {pgettext("markup editor", "Edit")}
+      </Button>
+    ) : (
+      <Button
+        className="btn-default"
+        disabled={disabled || empty}
+        onClick={showPreview}
+        type="button"
+      >
+        {pgettext("markup editor", "Preview")}
+      </Button>
+    )}
+    <Button className="btn-primary" disabled={disabled || empty}>
       {submitText || gettext("Post")}
     </Button>
   </div>

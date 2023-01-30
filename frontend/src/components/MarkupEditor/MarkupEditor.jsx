@@ -20,6 +20,7 @@ class MarkupEditor extends React.Component {
     super(props)
 
     this.state = {
+      element: null,
       focused: false,
       loading: false,
       preview: false,
@@ -30,7 +31,7 @@ class MarkupEditor extends React.Component {
   showPreview = () => {
     if (this.state.loading) return
 
-    this.setState({ loading: true, preview: true })
+    this.setState({ loading: true, preview: true, element: null })
 
     ajax.post(misago.get("PARSE_MARKUP_API"), { post: this.props.value }).then(
       (data) => {
@@ -58,7 +59,11 @@ class MarkupEditor extends React.Component {
         "markup-editor-focused": this.state.focused && !this.state.preview,
       })}
     >
-      <MarkupEditorToolbar />
+      <MarkupEditorToolbar
+        disabled={this.props.disabled || this.state.preview}
+        element={this.state.element}
+        update={(value) => this.props.onChange({ target: { value } })}
+      />
       {this.state.preview ? (
         <div className="markup-editor-preview">
           {this.state.loading ? (
@@ -70,8 +75,15 @@ class MarkupEditor extends React.Component {
       ) : (
         <textarea
           className="markup-editor-textarea form-control"
+          placeholder={this.props.placeholder}
           value={this.props.value}
           disabled={this.props.disabled || this.state.loading}
+          rows={6}
+          ref={(element) => {
+            if (element && !this.state.element) {
+              this.setState({ element })
+            }
+          }}
           onChange={this.props.onChange}
           onFocus={() => this.setState({ focused: true })}
           onBlur={() => this.setState({ focused: false })}

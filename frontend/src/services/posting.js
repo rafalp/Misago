@@ -13,8 +13,8 @@ export class Posting {
     this._mode = null
     this._spacer = document.getElementById("posting-spacer")
     this._observer = new ResizeObserver((entries) => {
-      this._spacer.style.height = entries[0].contentRect.height + "px";
-    });
+      this._spacer.style.height = entries[0].contentRect.height + "px"
+    })
 
     this._isOpen = false
     this._isClosing = false
@@ -53,20 +53,20 @@ export class Posting {
       mount(<PostingComponent {...props} />, this._mount.id)
     }
 
-    document.body.classList.add("posting-open");
-    this._mount.classList.add("show");
-    this._observer.observe(this._mount);
+    document.body.classList.add("posting-open")
+    this._mount.classList.add("show")
+    this._observer.observe(this._mount)
   }
 
   close = () => {
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true
-      this._mount.classList.remove("show");
-      document.body.classList.remove("posting-open");
+      this._mount.classList.remove("show")
+      document.body.classList.remove("posting-open")
 
       window.setTimeout(() => {
         ReactDOM.unmountComponentAtNode(this._mount)
-        this._observer.unobserve(this._mount);
+        this._observer.unobserve(this._mount)
         this._spacer.style.height = "0px;"
         this._isClosing = false
         this._isOpen = false

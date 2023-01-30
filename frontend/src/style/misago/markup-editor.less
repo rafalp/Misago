@@ -5,7 +5,8 @@
 .markup-editor {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  // height: 100%;
+  height: 300px;
   overflow: hidden;
 
   background: @markup-editor-bg;
@@ -58,6 +59,11 @@
   &:focus {
     box-shadow: none;
   }
+}
+
+// Preview area
+.markup-editor-preview {
+  padding: @markup-editor-padding-horizontal;
 }
 
 // Make editor area and preview same height

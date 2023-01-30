@@ -210,11 +210,11 @@ export default class extends Form {
         <form onSubmit={this.handleSubmit} method="POST">
           <MarkupEditor
             attachments={this.state.attachments}
+            value={this.state.post}
+            submitText={gettext("Post reply")}
             disabled={this.state.isLoading}
             onAttachmentsChange={this.onAttachmentsChange}
             onChange={this.onPostChange}
-            submitText={gettext("Post reply")}
-            value={this.state.post}
           />
         </form>
       </PostingDialogReply>
@@ -245,8 +245,6 @@ const PostingDialogReply = ({
     >
       <strong>{"Reply to: " + thread.title}</strong>
     </PostingDialogHeader>
-    <PostingDialogBody>
-      {children}
-    </PostingDialogBody>
+    <PostingDialogBody>{children}</PostingDialogBody>
   </PostingDialog>
 )
