@@ -77,8 +77,14 @@ class ViewModel:
                 )
             )
             threads = list(pinned_threads) + list(list_page.object_list)
-            if not list_page.has_next() and category_model.name == "Private":
-                update_unread_private_threads = True
+            if category_model.name == "Private":
+                if not list_page.has_next():
+                    update_unread_private_threads = True
+                elif threads and threads[-1].last_post_on < get_cutoff_date(
+                    request.settings, request.user
+                ):
+                    update_unread_private_threads = True
+
         else:
             threads = list(list_page.object_list)
 
