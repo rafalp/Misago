@@ -69,6 +69,7 @@ class ViewModel:
         except (EmptyPage, InvalidPage):
             raise Http404()
 
+        update_unread_private_threads = False
         if list_page.first:
             pinned_threads = list(
                 self.get_pinned_threads(
@@ -76,6 +77,8 @@ class ViewModel:
                 )
             )
             threads = list(pinned_threads) + list(list_page.object_list)
+            if not list_page.has_next() and category_model.name == "Private":
+                update_unread_private_threads = True
         else:
             threads = list(list_page.object_list)
 
@@ -89,7 +92,9 @@ class ViewModel:
                 thread.is_read = False
                 thread.is_new = True
         else:
-            threadstracker.make_read_aware(request, threads)
+            threadstracker.make_read_aware(
+                request, threads, update_unread_private_threads
+            )
 
         self.filter_threads(request, threads)
 

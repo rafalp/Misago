@@ -3,7 +3,7 @@ from ..threads.permissions import exclude_invisible_posts
 from .cutoffdate import get_cutoff_date
 
 
-def make_read_aware(request, threads):
+def make_read_aware(request, threads, update_unread_private_threads=False):
     if not threads:
         return
 
@@ -28,6 +28,9 @@ def make_read_aware(request, threads):
     queryset = exclude_invisible_posts(request.user_acl, categories, queryset)
 
     unread_threads = list(queryset)
+
+    if update_unread_private_threads:
+        request.user.unread_private_threads = len(unread_threads)
 
     for thread in threads:
         if thread.pk in unread_threads:
