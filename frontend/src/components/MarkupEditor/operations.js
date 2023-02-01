@@ -1,12 +1,12 @@
-const wrapSelection = (selection, update, wrap, def) => {
+const wrapSelection = (selection, update, prefix, suffix, def) => {
   const text = selection.text || def || ""
   let newValue = selection.prefix
-  newValue += wrap + text + wrap
+  newValue += prefix + text + suffix
   newValue += selection.suffix
   update(newValue)
 
   window.setTimeout(() => {
-    const caret = selection.start + wrap.length
+    const caret = selection.start + prefix.length
     selection.textarea.focus()
     selection.textarea.setSelectionRange(caret, caret + text.length)
   }, 250)

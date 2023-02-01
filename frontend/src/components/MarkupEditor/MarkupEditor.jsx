@@ -92,7 +92,10 @@ class MarkupEditor extends React.Component {
       <MarkupEditorFooter
         preview={this.state.preview}
         disabled={this.props.disabled}
-        empty={this.props.value.trim().length === 0 || this.state.loading}
+        empty={
+          this.props.value.trim().length <
+            misago.get("SETTINGS").post_length_min || this.state.loading
+        }
         showPreview={this.showPreview}
         closePreview={this.closePreview}
         submitText={this.props.submitText}

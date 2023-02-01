@@ -37,6 +37,37 @@
   border-bottom: 1px solid @markup-editor-toolbar-border-color;
 }
 
+.btn-markup-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: @markup-editor-btn-size;
+  width: @markup-editor-btn-size;
+
+  padding: 0;
+  font-size: @markup-editor-btn-icon-size;
+  line-height: @markup-editor-btn-icon-size;
+
+  &,
+  &:hover {
+    background-color: @markup-editor-btn-bg;
+    border: 1px solid @markup-editor-btn-border;
+    color: @markup-editor-btn-color;
+  }
+
+  &:active {
+    background-color: @markup-editor-btn-active-bg;
+    border: 1px solid @markup-editor-btn-active-border;
+    color: @markup-editor-btn-active-color;
+  }
+
+  .material-icon {
+    margin: 0;
+    bottom: 0;
+  }
+}
+
 // Footer
 .markup-editor-footer {
   background: @markup-editor-footer-bg;
