@@ -1,7 +1,9 @@
 import React from "react"
 import modal from "../../services/modal"
-import isUrl from "../../utils/is-url"
 import MarkupCodeModal from "./MarkupCodeModal"
+import MarkupImageModal from "./MarkupImageModal"
+import MarkupLinkModal from "./MarkupLinkModal"
+import MarkupQuoteModal from "./MarkupQuoteModal"
 import MarkupEditorButton from "./MarkupEditorButton"
 import { getSelection, replaceSelection, wrapSelection } from "./operations"
 
@@ -57,21 +59,42 @@ const MarkupEditorToolbar = ({ disabled, element, update }) => {
       name: pgettext("markup editor", "Link"),
       icon: "insert_link",
       onClick: () => {
-        insertLink(element, update)
+        const selection = getSelection(element)
+        modal.show(
+          <MarkupLinkModal
+            selection={selection}
+            element={element}
+            update={update}
+          />
+        )
       },
     },
     {
       name: pgettext("markup editor", "Image"),
       icon: "insert_photo",
       onClick: () => {
-        insertImage(element, update)
+        const selection = getSelection(element)
+        modal.show(
+          <MarkupImageModal
+            selection={selection}
+            element={element}
+            update={update}
+          />
+        )
       },
     },
     {
       name: pgettext("markup editor", "Quote"),
       icon: "format_quote",
       onClick: () => {
-        insertQuote(element, update)
+        const selection = getSelection(element)
+        modal.show(
+          <MarkupQuoteModal
+            selection={selection}
+            element={element}
+            update={update}
+          />
+        )
       },
     },
     {
@@ -119,97 +142,6 @@ const MarkupEditorToolbar = ({ disabled, element, update }) => {
   )
 }
 
-const insertLink = (element, update) => {
-  const selection = getSelection(element)
-
-  let url = ""
-  let label = ""
-
-  if (selection.text.length) {
-    if (isUrl(selection.text)) {
-      url = selection.text.trim()
-    } else {
-      label = selection.text.trim()
-    }
-  }
-
-  url =
-    prompt(pgettext("markup editor", "Enter link address") + ":", url).trim() ||
-    ""
-  if (url.length === 0) return false
-  label = prompt(
-    pgettext("markup editor", "Enter link label (optional)").trim() + ":",
-    label
-  )
-
-  if (url.length && label.length > 0) {
-    replaceSelection(selection, update, "[" + label + "](" + url + ")")
-  }
-}
-
-const insertImage = (element, update) => {
-  const selection = getSelection(element)
-
-  let url = ""
-  let label = ""
-
-  if (selection.text.length) {
-    if (isUrl(selection.text)) {
-      url = selection.text.trim()
-    } else {
-      label = selection.text.trim()
-    }
-  }
-
-  url =
-    prompt(
-      pgettext("markup editor", "Enter a link to image") + ":",
-      url
-    ).trim() || ""
-  if (url.length === 0) return false
-  label = prompt(
-    pgettext("markup editor", "Enter image label (optional)").trim() + ":",
-    label
-  )
-
-  if (url.length) {
-    if (label.length > 0) {
-      replaceSelection(selection, update, "![" + label + "](" + url + ")")
-    } else {
-      replaceSelection(selection, update, "!(" + url + ")")
-    }
-  }
-}
-
-const insertQuote = (element, update) => {
-  const selection = getSelection(element)
-
-  const title = prompt(
-    pgettext("markup editor", "Enter quote autor, prefix usernames with @") +
-      ":"
-  ).trim()
-
-  const prefix = selection.prefix.trim().length ? "\n\n" : ""
-
-  if (title) {
-    wrapSelection(
-      selection,
-      update,
-      prefix + '[quote="' + title + '"]\n',
-      "\n[/quote]\n\n",
-      pgettext("markup editor", "Quote text")
-    )
-  } else {
-    wrapSelection(
-      selection,
-      update,
-      prefix + "[quote]\n",
-      "\n[/quote]\n\n",
-      pgettext("markup editor", "Quote text")
-    )
-  }
-}
-
 const insertSpoiler = (element, update) => {
   const selection = getSelection(element)
   const prefix = selection.prefix.trim().length ? "\n\n" : ""
@@ -219,26 +151,6 @@ const insertSpoiler = (element, update) => {
     update,
     prefix + "[spoiler]\n",
     "\n[/spoiler]\n\n",
-    pgettext("markup editor", "Spoiler text")
-  )
-}
-
-const insertCode = (element, update) => {
-  const selection = getSelection(element)
-  const prefix = selection.prefix.trim().length ? "\n\n" : ""
-  const syntax =
-    prompt(
-      pgettext(
-        "markup editor",
-        "Enter name of syntax of your code (optional)"
-      ).trim() + ":"
-    ) || ""
-
-  wrapSelection(
-    selection,
-    update,
-    prefix + "```" + syntax + "\n",
-    "\n```\n\n",
     pgettext("markup editor", "Spoiler text")
   )
 }

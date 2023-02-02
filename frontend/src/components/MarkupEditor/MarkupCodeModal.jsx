@@ -8,6 +8,7 @@ class MarkupCodeModal extends React.Component {
     super(props)
 
     this.state = {
+      error: null,
       syntax: "",
       text: props.selection.text,
     }
@@ -16,16 +17,21 @@ class MarkupCodeModal extends React.Component {
   handleSubmit = (ev) => {
     ev.preventDefault()
 
-    const { syntax, text } = this.state
     const { selection, update } = this.props
-    const prefix = selection.prefix.trim().length ? "\n\n" : ""
+    const syntax = this.state.syntax.trim()
+    const text = this.state.text.trim()
 
-    const textFinal = text.trim() || pgettext("markup editor", "Code block")
+    if (text.length === 0) {
+      this.setState({ error: gettext("This field is required.") })
+      return false
+    }
+
+    const prefix = selection.prefix.trim().length ? "\n\n" : ""
 
     replaceSelection(
       Object.assign({}, selection, { text }),
       update,
-      prefix + "```" + syntax + "\n" + textFinal + "\n```\n\n"
+      prefix + "```" + syntax + "\n" + text + "\n```\n\n"
     )
 
     modal.hide()
@@ -46,9 +52,7 @@ class MarkupCodeModal extends React.Component {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">
-              {pgettext("markup editor", "Insert code")}
-            </h4>
+            <h4 className="modal-title">{pgettext("markup editor", "Code")}</h4>
           </div>
           <form onSubmit={this.handleSubmit}>
             <div className="modal-body">
@@ -77,6 +81,7 @@ class MarkupCodeModal extends React.Component {
               <FormGroup
                 for="markup_code_text"
                 label={pgettext("markup editor", "Code to insert")}
+                validation={!!this.state.error ? [this.state.error] : undefined}
               >
                 <textarea
                   id="markup_code_text"
