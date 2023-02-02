@@ -1,4 +1,5 @@
 import React from "react"
+import misago from "../../"
 import modal from "../../services/modal"
 import MarkupCodeModal from "./MarkupCodeModal"
 import MarkupImageModal from "./MarkupImageModal"
@@ -6,8 +7,14 @@ import MarkupLinkModal from "./MarkupLinkModal"
 import MarkupQuoteModal from "./MarkupQuoteModal"
 import MarkupEditorButton from "./MarkupEditorButton"
 import { getSelection, replaceSelection, wrapSelection } from "./operations"
+import uploadFile from "./uploadFile"
 
-const MarkupEditorToolbar = ({ disabled, element, update }) => {
+const MarkupEditorToolbar = ({
+  disabled,
+  element,
+  update,
+  updateAttachments,
+}) => {
   const actions = [
     {
       name: pgettext("markup editor", "Strong"),
@@ -118,14 +125,15 @@ const MarkupEditorToolbar = ({ disabled, element, update }) => {
         )
       },
     },
-    {
+  ]
+
+  if (misago.get("user").acl.max_attachment_size) {
+    actions.push({
       name: pgettext("markup editor", "Upload file"),
       icon: "file_upload",
-      onClick: () => {
-        console.log("TODO")
-      },
-    },
-  ]
+      onClick: () => uploadFiles(updateAttachments),
+    })
+  }
 
   return (
     <div className="markup-editor-toolbar">
@@ -153,6 +161,20 @@ const insertSpoiler = (element, update) => {
     "\n[/spoiler]\n\n",
     pgettext("markup editor", "Spoiler text")
   )
+}
+
+const uploadFiles = (setState) => {
+  const input = document.createElement("input")
+  input.type = "file"
+  input.multiple = "multiple"
+
+  input.addEventListener("change", function () {
+    for (let i = 0; i < input.files.length; i++) {
+      uploadFile(input.files[i], setState)
+    }
+  })
+
+  input.click()
 }
 
 export default MarkupEditorToolbar
