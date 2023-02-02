@@ -72,7 +72,7 @@ class CodeBlockPreprocessor(FencedBlockPreprocessor):
                 else:
                     id_attr = lang_attr = class_attr = kv_pairs = ""
                     if lang:
-                        lang_attr = f' class="{_escape_attrib_html(lang)}"'
+                        lang_attr = f' class="language-{_escape_attrib_html(lang)}"'
                     if classes:
                         class_attr = (
                             f' class="{_escape_attrib_html(" ".join(classes))}"'

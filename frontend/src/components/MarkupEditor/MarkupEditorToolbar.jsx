@@ -1,5 +1,7 @@
 import React from "react"
+import modal from "../../services/modal"
 import isUrl from "../../utils/is-url"
+import MarkupCodeModal from "./MarkupCodeModal"
 import MarkupEditorButton from "./MarkupEditorButton"
 import { getSelection, replaceSelection, wrapSelection } from "./operations"
 
@@ -83,7 +85,14 @@ const MarkupEditorToolbar = ({ disabled, element, update }) => {
       name: pgettext("markup editor", "Code"),
       icon: "code",
       onClick: () => {
-        insertCode(element, update)
+        const selection = getSelection(element)
+        modal.show(
+          <MarkupCodeModal
+            selection={selection}
+            element={element}
+            update={update}
+          />
+        )
       },
     },
     {

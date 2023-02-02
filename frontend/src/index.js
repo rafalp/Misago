@@ -6,7 +6,6 @@ import "at-js"
 import "cropit"
 import "waypoints"
 import "jquery-caret"
-import "highlight"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 

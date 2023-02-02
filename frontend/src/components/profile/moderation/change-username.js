@@ -134,7 +134,7 @@ export default class extends Form {
               type="button"
               className="close"
               data-dismiss="modal"
-              aria-label={gettext("Close")}
+              aria-label={pgettext("modal", "Close")}
             >
               <span aria-hidden="true">&times;</span>
             </button>
