@@ -53,7 +53,6 @@ export class Posting {
       mount(<PostingComponent {...props} />, this._mount.id)
     }
 
-    document.body.classList.add("posting-open")
     this._mount.classList.add("show")
     this._observer.observe(this._mount)
   }
@@ -62,7 +61,6 @@ export class Posting {
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true
       this._mount.classList.remove("show")
-      document.body.classList.remove("posting-open")
 
       window.setTimeout(() => {
         ReactDOM.unmountComponentAtNode(this._mount)

@@ -90,7 +90,6 @@ export default class extends Form {
       gettext("Are you sure you want to discard your reply?")
     )
     if (cancel) {
-      document.body.classList.remove("posting-fullscreen")
       posting.close()
     }
   }
@@ -152,24 +151,20 @@ export default class extends Form {
 
   minimize = () => {
     this.setState({ fullscreen: false, minimized: true })
-    document.body.classList.remove("posting-fullscreen")
   }
 
   open = () => {
     this.setState({ minimized: false })
     if (this.state.fullscreen) {
-      document.body.classList.add("posting-fullscreen")
     }
   }
 
   fullscreenEnter = () => {
     this.setState({ fullscreen: true, minimized: false })
-    document.body.classList.add("posting-fullscreen")
   }
 
   fullscreenExit = () => {
     this.setState({ fullscreen: false, minimized: false })
-    document.body.classList.remove("posting-fullscreen")
   }
 
   render() {
