@@ -90,6 +90,7 @@ export default class extends Form {
       gettext("Are you sure you want to discard your reply?")
     )
     if (cancel) {
+      this.minimize()
       posting.close()
     }
   }
@@ -200,7 +201,11 @@ export default class extends Form {
 
     return (
       <PostingDialogReply {...dialogProps}>
-        <form onSubmit={this.handleSubmit} method="POST">
+        <form
+          className="posting-form"
+          method="POST"
+          onSubmit={this.handleSubmit}
+        >
           <MarkupEditor
             attachments={this.state.attachments}
             value={this.state.post}

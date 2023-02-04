@@ -127,3 +127,58 @@ body.posting-fullscreen {
     padding: @line-height-computed 0;
   }
 }
+
+// Make standard posting dialog fullscreen on small displays
+@media screen and (max-width: @screen-sm-max) {
+  body.posting-default {
+    // Remove scroll from body
+    overflow: hidden;
+
+    // Hide root mount contents
+    #misago-container {
+      display: none;
+    }
+
+    // Make mount take full screen
+    #posting-mount {
+      height: 100%;
+    }
+
+    // Make dialog fullscreen
+    .posting-dialog {
+      height: 100%;
+      width: 100%;
+      max-width: auto;
+
+      border: 0;
+    }
+
+    .posting-dialog-container {
+      display: flex;
+      flex-direction: column;
+
+      max-width: @posting-dialog-max-width;
+      height: 100%;
+      margin: 0 auto;
+      padding: @line-height-computed @grid-gutter-width;
+    }
+
+    .posting-dialog-header {
+      padding: @line-height-computed 0;
+    }
+  
+    .posting-dialog-body {
+      height: 100%;
+      padding: @line-height-computed 0;
+    }
+
+    .markup-editor {
+      height: 100%;
+    }
+
+    // Hide spacer
+    #posting-spacer {
+      display: none;
+    }
+  }
+}
