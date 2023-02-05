@@ -229,6 +229,7 @@ export class Reply extends React.Component {
     posting.open({
       mode: "REPLY",
 
+      thread: this.props.thread,
       config: this.props.thread.api.editor,
       submit: this.props.thread.api.posts.index,
 
@@ -260,6 +261,8 @@ export class Edit extends React.Component {
     posting.open({
       mode: "EDIT",
 
+      thread: this.props.thread,
+      post: this.props.post,
       config: this.props.post.api.editor,
       submit: this.props.post.api.index,
     })

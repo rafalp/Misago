@@ -1,15 +1,14 @@
 import React from "react"
-import MarkupEditor from "misago/components/MarkupEditor"
 import Form from "misago/components/form"
-import Loader from "./utils/loader"
-import Message from "./utils/message"
 import * as attachments from "./utils/attachments"
 import { getPostValidators } from "./utils/validators"
 import ajax from "misago/services/ajax"
 import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
+import MarkupEditor from "../MarkupEditor"
 import PostingDialog from "./PostingDialog"
 import PostingDialogBody from "./PostingDialogBody"
+import PostingDialogError from "./PostingDialogError"
 import PostingDialogHeader from "./PostingDialogHeader"
 
 export default class extends Form {
@@ -19,7 +18,8 @@ export default class extends Form {
     this.state = {
       isReady: false,
       isLoading: false,
-      isErrored: false,
+
+      error: null,
 
       minimized: false,
       fullscreen: false,
@@ -63,7 +63,7 @@ export default class extends Form {
 
   loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail,
+      error: rejection.detail,
     })
   }
 
@@ -183,10 +183,10 @@ export default class extends Form {
       close: this.onCancel,
     }
 
-    if (this.state.isErrored) {
+    if (this.state.error) {
       return (
         <PostingDialogReply {...dialogProps}>
-          <Message message={this.state.isErrored} />
+          <PostingDialogError message={this.state.error} />
         </PostingDialogReply>
       )
     }
@@ -194,7 +194,16 @@ export default class extends Form {
     if (!this.state.isReady) {
       return (
         <PostingDialogReply {...dialogProps}>
-          <Loader />
+          <div className="posting-loading ui-preview">
+            <MarkupEditor
+              attachments={[]}
+              value={""}
+              submitText={pgettext("post reply", "Post reply")}
+              disabled={true}
+              onAttachmentsChange={() => {}}
+              onChange={() => {}}
+            />
+          </div>
         </PostingDialogReply>
       )
     }
@@ -202,14 +211,14 @@ export default class extends Form {
     return (
       <PostingDialogReply {...dialogProps}>
         <form
-          className="posting-form"
+          className="posting-dialog-form"
           method="POST"
           onSubmit={this.handleSubmit}
         >
           <MarkupEditor
             attachments={this.state.attachments}
             value={this.state.post}
-            submitText={gettext("Post reply")}
+            submitText={pgettext("post reply", "Post reply")}
             disabled={this.state.isLoading}
             onAttachmentsChange={this.onAttachmentsChange}
             onChange={this.onPostChange}
@@ -241,7 +250,11 @@ const PostingDialogReply = ({
       open={open}
       close={close}
     >
-      <strong>{"Reply to: " + thread.title}</strong>
+      {interpolate(
+        pgettext("post reply", "Reply to: %(thread)s"),
+        { thread: thread.title },
+        true
+      )}
     </PostingDialogHeader>
     <PostingDialogBody>{children}</PostingDialogBody>
   </PostingDialog>

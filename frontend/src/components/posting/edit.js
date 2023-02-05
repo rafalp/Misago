@@ -1,14 +1,15 @@
 import React from "react"
-import Editor from "misago/components/editor"
 import Form from "misago/components/form"
-import Container from "./utils/container"
-import Loader from "./utils/loader"
-import Message from "./utils/message"
 import * as attachments from "./utils/attachments"
 import { getPostValidators } from "./utils/validators"
 import ajax from "misago/services/ajax"
 import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
+import MarkupEditor from "../MarkupEditor"
+import PostingDialog from "./PostingDialog"
+import PostingDialogBody from "./PostingDialogBody"
+import PostingDialogError from "./PostingDialogError"
+import PostingDialogHeader from "./PostingDialogHeader"
 
 export default class extends Form {
   constructor(props) {
@@ -17,7 +18,11 @@ export default class extends Form {
     this.state = {
       isReady: false,
       isLoading: false,
-      isErrored: false,
+
+      error: false,
+
+      minimized: false,
+      fullscreen: false,
 
       post: "",
       attachments: [],
@@ -50,7 +55,7 @@ export default class extends Form {
 
   loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail,
+      error: rejection.detail,
     })
   }
 
@@ -59,6 +64,7 @@ export default class extends Form {
       gettext("Are you sure you want to discard changes?")
     )
     if (cancel) {
+      this.minimize()
       posting.close()
     }
   }
@@ -135,35 +141,115 @@ export default class extends Form {
     }
   }
 
-  render() {
-    if (this.state.isReady) {
-      return (
-        <Container className="posting-form">
-          <form onSubmit={this.handleSubmit} method="POST">
-            <div className="row">
-              <div className="col-md-12">
-                <Editor
-                  attachments={this.state.attachments}
-                  canProtect={this.state.canProtect}
-                  loading={this.state.isLoading}
-                  onAttachmentsChange={this.onAttachmentsChange}
-                  onCancel={this.onCancel}
-                  onChange={this.onPostChange}
-                  onProtect={this.onProtect}
-                  onUnprotect={this.onUnprotect}
-                  protect={this.state.protect}
-                  submitLabel={gettext("Edit reply")}
-                  value={this.state.post}
-                />
-              </div>
-            </div>
-          </form>
-        </Container>
-      )
-    } else if (this.state.isErrored) {
-      return <Message message={this.state.isErrored} />
-    } else {
-      return <Loader />
+  minimize = () => {
+    this.setState({ fullscreen: false, minimized: true })
+  }
+
+  open = () => {
+    this.setState({ minimized: false })
+    if (this.state.fullscreen) {
     }
   }
+
+  fullscreenEnter = () => {
+    this.setState({ fullscreen: true, minimized: false })
+  }
+
+  fullscreenExit = () => {
+    this.setState({ fullscreen: false, minimized: false })
+  }
+
+  render() {
+    const dialogProps = {
+      post: this.props.post,
+
+      minimized: this.state.minimized,
+      minimize: this.minimize,
+      open: this.open,
+
+      fullscreen: this.state.fullscreen,
+      fullscreenEnter: this.fullscreenEnter,
+      fullscreenExit: this.fullscreenExit,
+
+      close: this.onCancel,
+    }
+
+    if (this.state.error) {
+      return (
+        <PostingDialogEditReply {...dialogProps}>
+          <PostingDialogError message={this.state.error} />
+        </PostingDialogEditReply>
+      )
+    }
+
+    if (!this.state.isReady) {
+      return (
+        <PostingDialogEditReply {...dialogProps}>
+          <div className="posting-loading ui-preview">
+            <MarkupEditor
+              attachments={[]}
+              value={""}
+              submitText={pgettext("edit reply", "Edit reply")}
+              disabled={true}
+              onAttachmentsChange={() => {}}
+              onChange={() => {}}
+            />
+          </div>
+        </PostingDialogEditReply>
+      )
+    }
+
+    return (
+      <PostingDialogEditReply {...dialogProps}>
+        <form
+          className="posting-dialog-form"
+          method="POST"
+          onSubmit={this.handleSubmit}
+        >
+          <MarkupEditor
+            attachments={this.state.attachments}
+            value={this.state.post}
+            submitText={pgettext("edit reply", "Edit reply")}
+            disabled={this.state.isLoading}
+            onAttachmentsChange={this.onAttachmentsChange}
+            onChange={this.onPostChange}
+          />
+        </form>
+      </PostingDialogEditReply>
+    )
+  }
 }
+
+const PostingDialogEditReply = ({
+  children,
+  close,
+  minimized,
+  minimize,
+  open,
+  fullscreen,
+  fullscreenEnter,
+  fullscreenExit,
+  post,
+}) => (
+  <PostingDialog fullscreen={fullscreen} minimized={minimized}>
+    <PostingDialogHeader
+      fullscreen={fullscreen}
+      fullscreenEnter={fullscreenEnter}
+      fullscreenExit={fullscreenExit}
+      minimized={minimized}
+      minimize={minimize}
+      open={open}
+      close={close}
+    >
+      {interpolate(
+        pgettext("edit reply", "Edit reply by %(poster)s from %(date)s"),
+        {
+          poster: post.poster ? post.poster.username : post.poster_name,
+          date: post.posted_on.fromNow(),
+        },
+        true
+      )}
+    </PostingDialogHeader>
+    <PostingDialogBody>{children}</PostingDialogBody>
+  </PostingDialog>
+)

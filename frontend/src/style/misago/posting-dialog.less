@@ -27,8 +27,16 @@
   border: 1px solid @posting-dialog-border;
   border-radius: @border-radius-base @border-radius-base 0 0;
   border-bottom: 0;
+  box-shadow: @posting-dialog-shadow;
 
   overflow: hidden;
+}
+
+// Posting dialog container
+.posting-dialog-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 // Posting dialog header
@@ -44,26 +52,59 @@
   }
 }
 
-.btn-posting-dialog {
-  padding: @posting-dialog-btn-padding-vertical
-    @posting-dialog-btn-padding-horizontal;
+.posting-dialog-caption {
+  color: @posting-dialog-caption-color;
+  font-size: @posting-dialog-caption-size;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
+.btn-posting-dialog {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: @posting-dialog-btn-size;
+  height: @posting-dialog-btn-size;
   margin-left: @line-height-computed / 2;
+  padding: 0;
+
+  font-size: @posting-dialog-btn-icon-size;
+  line-height: @posting-dialog-btn-icon-size;
+
+  &,
+  &:hover {
+    background-color: @posting-dialog-btn-bg;
+    border: 1px solid @posting-dialog-btn-border;
+    color: @posting-dialog-btn-color;
+  }
+
+  &:active {
+    background-color: @posting-dialog-btn-active-bg;
+    border: 1px solid @posting-dialog-btn-active-border;
+    color: @posting-dialog-btn-active-color;
+  }
 
   .material-icon {
+    padding: 0;
     margin: 0;
-
-    font-size: @posting-dialog-btn-size;
+    bottom: 0;
   }
 }
 
 // Posting dialog body
 .posting-dialog-body {
   padding: @posting-dialog-padding-horizontal;
+  height: 100%;
 }
 
-// Make form 100% height too
-.posting-dialog-body form {
+// Make some other elements 100% height
+.posting-loading,
+.posting-loading .markup-editor,
+.posting-dialog-form,
+.posting-dialog-form .markup-editor {
   height: 100%;
 }
 
@@ -105,31 +146,45 @@ body.posting-fullscreen {
     max-width: auto;
 
     border: 0;
+    box-shadow: none;
   }
 
   // Use dialog's container for fullscreen
   .posting-dialog-container {
-    display: flex;
-    flex-direction: column;
-
     max-width: @posting-dialog-max-width;
-    height: 100%;
     margin: 0 auto;
-    padding: @line-height-computed @grid-gutter-width;
+    padding: 0 @grid-gutter-width;
   }
 
-  .posting-dialog-header {
-    padding: @line-height-computed 0;
-  }
-
+  .posting-dialog-header,
   .posting-dialog-body {
-    height: 100%;
     padding: @line-height-computed 0;
   }
 }
 
-// Make standard posting dialog fullscreen on small displays
-@media screen and (max-width: @screen-sm-max) {
+// Set heights for dialog
+body.posting-default .posting-dialog {
+  height: 370px;
+}
+
+@media screen and (min-width: @screen-sm-min) and (min-height: 700px) {
+  body.posting-default .posting-dialog {
+    height: 420px;
+  }
+}
+
+// Remove border radius and side borders from screens where dialog is full-width
+@media screen and (max-width: @posting-dialog-max-width) {
+  body.posting-default .posting-dialog,
+  body.posting-minimized .posting-dialog {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+}
+
+// Make standard posting dialog fullscreen on mobile displays
+@media screen and (max-width: @screen-xs-max) {
   body.posting-default {
     // Remove scroll from body
     overflow: hidden;
@@ -151,29 +206,18 @@ body.posting-fullscreen {
       max-width: auto;
 
       border: 0;
+      box-shadow: none;
     }
 
     .posting-dialog-container {
-      display: flex;
-      flex-direction: column;
-
       max-width: @posting-dialog-max-width;
-      height: 100%;
       margin: 0 auto;
-      padding: @line-height-computed @grid-gutter-width;
+      padding: 0 @grid-gutter-width;
     }
 
-    .posting-dialog-header {
-      padding: @line-height-computed 0;
-    }
-  
+    .posting-dialog-header,
     .posting-dialog-body {
-      height: 100%;
       padding: @line-height-computed 0;
-    }
-
-    .markup-editor {
-      height: 100%;
     }
 
     // Hide spacer
@@ -181,4 +225,26 @@ body.posting-fullscreen {
       display: none;
     }
   }
+}
+
+// Posting dialog error
+.posting-dialog-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  padding: @line-height-computed;
+
+  p {
+    font-size: @font-size-large;
+  }
+}
+
+.posting-dialog-error-icon {
+  margin-bottom: @line-height-computed;
+
+  font-size: 128px;
+  opacity: 0.5;
 }

@@ -5,6 +5,7 @@ import misago from "../../"
 import ajax from "../../services/ajax"
 import snackbar from "../../services/snackbar"
 import MisagoMarkup from "../misago-markup"
+import MarkupEditorAttachments from "./MarkupEditorAttachments"
 import MarkupEditorFooter from "./MarkupEditorFooter"
 import MarkupEditorToolbar from "./MarkupEditorToolbar"
 import uploadFile from "./uploadFile"
@@ -101,7 +102,13 @@ class MarkupEditor extends React.Component {
       {this.state.preview ? (
         <div className="markup-editor-preview">
           {this.state.loading ? (
-            "loading..."
+            <div className="ui-preview">
+              <span className="ui-preview-text" style={{ width: "140px" }} />{" "}
+              <span className="ui-preview-text" style={{ width: "60px" }} />{" "}
+              <span className="ui-preview-text" style={{ width: "100px" }} />{" "}
+              <span className="ui-preview-text" style={{ width: "40px" }} />{" "}
+              <span className="ui-preview-text" style={{ width: "80px" }} />
+            </div>
           ) : (
             <MisagoMarkup markup={this.state.parsed} />
           )}
@@ -125,12 +132,13 @@ class MarkupEditor extends React.Component {
           onBlur={() => this.setState({ focused: false })}
         />
       )}
-      {this.props.attachments.map((attachment) => (
-        <div key={attachment.key}>
-          {attachment.filename}
-          {attachment.progress + "%"}
-        </div>
-      ))}
+      {this.props.attachments.length > 0 && (
+        <MarkupEditorAttachments
+          attachments={this.props.attachments}
+          disabled={this.props.disabled || this.state.preview}
+          setState={this.props.onAttachmentsChange}
+        />
+      )}
       <MarkupEditorFooter
         preview={this.state.preview}
         disabled={this.props.disabled}

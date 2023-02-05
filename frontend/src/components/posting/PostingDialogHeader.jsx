@@ -11,7 +11,7 @@ const PostingDialogHeader = ({
   open,
 }) => (
   <div className="posting-dialog-header">
-    {children}
+    <div className="posting-dialog-caption">{children}</div>
     {minimized ? (
       <button
         className="btn btn-posting-dialog"
@@ -33,7 +33,7 @@ const PostingDialogHeader = ({
     )}
     {fullscreen ? (
       <button
-        className="btn btn-posting-dialog hidden-xs hidden-sm"
+        className="btn btn-posting-dialog hidden-xs"
         title={pgettext("dialog", "Exit the fullscreen mode")}
         type="button"
         onClick={fullscreenExit}
@@ -42,7 +42,7 @@ const PostingDialogHeader = ({
       </button>
     ) : (
       <button
-        className="btn btn-posting-dialog hidden-xs hidden-sm"
+        className="btn btn-posting-dialog hidden-xs"
         title={pgettext("dialog", "Enter the fullscreen mode")}
         type="button"
         onClick={fullscreenEnter}

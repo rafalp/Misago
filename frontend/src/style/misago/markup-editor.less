@@ -5,7 +5,6 @@
 .markup-editor {
   display: flex;
   flex-direction: column;
-  // height: 100%;
   height: 300px;
   overflow: hidden;
 
@@ -23,11 +22,11 @@
 .markup-editor-toolbar,
 .markup-editor-footer {
   display: flex;
-  padding: @markup-editor-padding-vertical @markup-editor-padding-horizontal;
+  padding: @markup-editor-padding;
 
   // Add spacing between buttons
   .btn + .btn {
-    margin-left: @markup-editor-padding-horizontal;
+    margin-left: @line-height-computed / 2;
   }
 }
 
@@ -44,8 +43,8 @@
 
   height: @markup-editor-btn-size;
   width: @markup-editor-btn-size;
-
   padding: 0;
+
   font-size: @markup-editor-btn-icon-size;
   line-height: @markup-editor-btn-icon-size;
 
@@ -81,7 +80,7 @@
 
 // Textarea
 .markup-editor-textarea.form-control {
-  padding: @markup-editor-padding-horizontal;
+  padding: @markup-editor-padding;
 
   border: 0;
   border-radius: 0;
@@ -94,7 +93,7 @@
 
 // Preview area
 .markup-editor-preview {
-  padding: @markup-editor-padding-horizontal;
+  padding: @markup-editor-padding;
 }
 
 // Make editor area and preview same height
@@ -107,4 +106,48 @@
 
 .markup-editor-textarea {
   resize: none;
+}
+
+// Attachments
+.markup-editor-attachments {
+  padding: floor(@markup-editor-padding / 2);
+  overflow: auto;
+}
+
+.markup-editor-attachments-item {
+  padding: floor(@markup-editor-padding / 2);
+}
+
+.markup-editor-attachment {
+  display: flex;
+  align-items: center;
+  padding: floor(@markup-editor-padding / 2);
+
+  border: 1px solid @markup-editor-attachment-border-color;
+  border-radius: @border-radius-small;
+}
+
+.markup-editor-attachment-details {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  strong {
+    display: block;
+  }
+}
+
+// Make attachments responsive
+@media screen and (min-width: @screen-sm-min) {
+  .markup-editor-attachments-item {
+    width: 50%;
+    float: left;
+  }
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .markup-editor-attachments-item {
+    width: 25%;
+  }
 }

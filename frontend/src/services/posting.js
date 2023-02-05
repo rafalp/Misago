@@ -68,6 +68,7 @@ export class Posting {
         this._spacer.style.height = "0px;"
         this._isClosing = false
         this._isOpen = false
+        this._mode = null
       }, 300)
     }
   }

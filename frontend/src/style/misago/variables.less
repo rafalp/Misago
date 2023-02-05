@@ -177,14 +177,25 @@
 @posting-dialog-border: @gray-lighter;
 @posting-dialog-radius: @border-radius-base;
 
-@posting-dialog-btn-size: 24px;
-@posting-dialog-btn-padding-vertical: @padding-small-vertical;
-@posting-dialog-btn-padding-horizontal: @padding-small-horizontal;
+@posting-dialog-shadow: 0 0 24px fadeOut(@gray, 75);
+
+@posting-dialog-caption-color: @text-color;
+@posting-dialog-caption-size: @font-size-large;
+
+@posting-dialog-btn-size: 32px;
+@posting-dialog-btn-icon-size: 24px;
+
+@posting-dialog-btn-bg: transparent;
+@posting-dialog-btn-border: transparent;
+@posting-dialog-btn-color: @text-color;
+
+@posting-dialog-btn-active-bg: @gray;
+@posting-dialog-btn-active-border: @gray;
+@posting-dialog-btn-active-color: #fff;
 
 //== Markup editor
 
-@markup-editor-padding-vertical: @padding-base-vertical;
-@markup-editor-padding-horizontal: floor(@grid-gutter-width / 2);
+@markup-editor-padding: floor(@grid-gutter-width / 2);
 
 @markup-editor-bg: @input-bg;
 @markup-editor-border-color: @input-border;
@@ -203,6 +214,8 @@
 @markup-editor-btn-active-bg: @gray;
 @markup-editor-btn-active-border: @gray;
 @markup-editor-btn-active-color: #fff;
+
+@markup-editor-attachment-border-color: @gray-lighter;
 
 @markup-editor-footer-bg: #fff;
 @markup-editor-footer-border-color: @gray-lighter;

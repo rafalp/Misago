@@ -46,6 +46,7 @@ const uploadFile = (file, setState) => {
       (rejection) => {
         if (rejection.status === 400 || rejection.status === 413) {
           upload.error = rejection.detail
+          snackbar.error(rejection.detail)
           refreshState()
         } else {
           snackbar.apiError(rejection)
