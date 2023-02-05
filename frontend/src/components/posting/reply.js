@@ -90,8 +90,7 @@ export default class extends Form {
       gettext("Are you sure you want to discard your reply?")
     )
     if (cancel) {
-      this.minimize()
-      posting.close()
+      this.close()
     }
   }
 
@@ -150,6 +149,11 @@ export default class extends Form {
     }
   }
 
+  close = () => {
+    this.minimize()
+    posting.close()
+  }
+
   minimize = () => {
     this.setState({ fullscreen: false, minimized: true })
   }
@@ -186,7 +190,7 @@ export default class extends Form {
     if (this.state.error) {
       return (
         <PostingDialogReply {...dialogProps}>
-          <PostingDialogError message={this.state.error} />
+          <PostingDialogError message={this.state.error} close={this.close} />
         </PostingDialogReply>
       )
     }
