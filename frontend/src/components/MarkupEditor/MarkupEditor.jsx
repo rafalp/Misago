@@ -123,6 +123,7 @@ class MarkupEditor extends React.Component {
           ref={(element) => {
             if (element && !this.state.element) {
               this.setState({ element })
+              setMentions(this.props, element)
             }
           }}
           onChange={this.props.onChange}
@@ -152,6 +153,24 @@ class MarkupEditor extends React.Component {
       />
     </div>
   )
+}
+
+function setMentions(props, element) {
+  $(element).atwho({
+    at: "@",
+    displayTpl: '<li><img src="${avatar}" alt="">${username}</li>',
+    insertTpl: "@${username}",
+    searchKey: "username",
+    callbacks: {
+      remoteFilter: function (query, callback) {
+        $.getJSON(misago.get("MENTION_API"), { q: query }, callback)
+      },
+    },
+  })
+
+  $(element).on("inserted.atwho", (event, flag, query) => {
+    props.onChange(event)
+  })
 }
 
 export default MarkupEditor
