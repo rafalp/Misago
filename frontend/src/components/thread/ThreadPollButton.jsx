@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-const ThreadPollButton = ({ compact, onClick }) => (
+const ThreadPollButton = ({ compact, disabled, onClick }) => (
   <button
     className={classnames("btn btn-default btn-outline", {
       "btn-block": !compact,
@@ -9,6 +9,7 @@ const ThreadPollButton = ({ compact, onClick }) => (
     })}
     type="button"
     title={compact ? gettext("Add poll") : null}
+    disabled={disabled}
     onClick={onClick}
   >
     <span className="material-icon">poll</span>

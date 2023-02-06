@@ -1,6 +1,5 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { PollForm } from "misago/components/poll"
 import PostingComponent from "misago/components/posting"
 import mount from "misago/utils/mount-component"
 
@@ -29,11 +28,6 @@ export class Posting {
       let message = gettext(
         "You are already working on other message. Do you want to discard it?"
       )
-      if (this._mode == "POLL") {
-        message = gettext(
-          "You are already working on a poll. Do you want to discard it?"
-        )
-      }
 
       const changeForm = window.confirm(message)
       if (changeForm) {
@@ -47,11 +41,7 @@ export class Posting {
   }
 
   _realOpen(props) {
-    if (props.mode == "POLL") {
-      mount(<PollForm {...props} />, this._mount.id)
-    } else {
-      mount(<PostingComponent {...props} />, this._mount.id)
-    }
+    mount(<PostingComponent {...props} />, this._mount.id)
 
     this._mount.classList.add("show")
     this._observer.observe(this._mount)

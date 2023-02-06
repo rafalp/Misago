@@ -60,7 +60,9 @@ export default class extends React.Component {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Poll votes")}</h4>
+            <h4 className="modal-title">
+              {pgettext("thread poll", "Poll votes")}
+            </h4>
           </div>
 
           <ModalBody
@@ -108,7 +110,8 @@ export function ChoiceDetails(props) {
 }
 
 export function VotesCount(props) {
-  const message = ngettext(
+  const message = npgettext(
+    "thread poll",
     "%(votes)s user has voted for this choice.",
     "%(votes)s users have voted for this choice.",
     props.votes

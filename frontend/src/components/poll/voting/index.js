@@ -151,6 +151,7 @@ export default class extends Form {
                 controls={controls}
                 poll={this.props.poll}
                 thread={this.props.thread}
+                onClick={this.props.edit}
               />
               <Delete controls={controls} poll={this.props.poll} />
             </div>

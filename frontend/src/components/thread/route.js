@@ -1,6 +1,6 @@
 import React from "react"
 import Participants from "misago/components/participants"
-import { Poll } from "misago/components/poll"
+import { Poll, PollForm } from "misago/components/poll"
 import PostsList from "misago/components/posts-list"
 import * as participants from "misago/reducers/participants"
 import * as poll from "misago/reducers/poll"
@@ -18,6 +18,14 @@ import ThreadToolbarBottom from "./ThreadToolbarBottom"
 import ThreadToolbarTop from "./ThreadToolbarTop"
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      editPoll: false,
+    }
+  }
+
   componentDidMount() {
     if (this.shouldFetchData()) {
       this.fetchData()
@@ -112,13 +120,11 @@ export default class extends React.Component {
   }
 
   openPollForm = () => {
-    posting.open({
-      mode: "POLL",
-      submit: this.props.thread.api.poll,
+    this.setState({ editPoll: true })
+  }
 
-      thread: this.props.thread,
-      poll: null,
-    })
+  closePollForm = () => {
+    this.setState({ editPoll: false })
   }
 
   openReplyForm = () => {
@@ -176,14 +182,24 @@ export default class extends React.Component {
             user={this.props.user}
             selection={selection}
             moderation={postsModeration}
+            pollDisabled={this.state.editPoll}
             onPoll={this.openPollForm}
             onReply={this.openReplyForm}
           />
-          <Poll
-            poll={this.props.poll}
-            thread={this.props.thread}
-            user={this.props.user}
-          />
+          {this.state.editPoll ? (
+            <PollForm
+              poll={this.props.poll}
+              thread={this.props.thread}
+              close={this.closePollForm}
+            />
+          ) : (
+            <Poll
+              poll={this.props.poll}
+              thread={this.props.thread}
+              user={this.props.user}
+              edit={this.openPollForm}
+            />
+          )}
           <PostsList {...this.props} />
           <ThreadToolbarBottom
             thread={this.props.thread}

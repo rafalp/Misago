@@ -52,7 +52,7 @@ export default class extends React.Component {
           onClick={this.onAdd}
           type="button"
         >
-          {gettext("Add choice")}
+          {pgettext("thread poll", "Add choice")}
         </button>
       </div>
     )
@@ -66,7 +66,7 @@ export class PollChoice extends React.Component {
 
   onDelete = () => {
     const deleteItem = window.confirm(
-      gettext("Are you sure you want to delete this choice?")
+      pgettext("thread poll", "Are you sure you want to remove this choice?")
     )
     if (deleteItem) {
       this.props.onDelete(this.props.choice.hash)
@@ -80,7 +80,7 @@ export class PollChoice extends React.Component {
           className="btn"
           disabled={!this.props.canDelete || this.props.disabled}
           onClick={this.onDelete}
-          title={gettext("Delete this choice")}
+          title={pgettext("thread poll", "Remove this choice")}
           type="button"
         >
           <span className="material-icon">close</span>
@@ -88,7 +88,7 @@ export class PollChoice extends React.Component {
         <input
           disabled={this.props.disabled}
           maxLength="255"
-          placeholder={gettext("choice label")}
+          placeholder={pgettext("thread poll", "Poll choice")}
           type="text"
           onChange={this.onChange}
           value={this.props.choice.label}

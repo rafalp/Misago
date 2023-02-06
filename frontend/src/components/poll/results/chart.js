@@ -54,7 +54,8 @@ export function ChoiceVotes(props) {
 }
 
 export function getVotesLabel(votes, proc) {
-  const message = ngettext(
+  const message = npgettext(
+    "thread poll",
     "%(votes)s vote, %(proc)s% of total.",
     "%(votes)s votes, %(proc)s% of total.",
     votes
@@ -76,7 +77,7 @@ export function UserChoice(props) {
   return (
     <li className="poll-chart-selected">
       <span className="material-icon">check_box</span>
-      {gettext("Your choice.")}
+      {pgettext("thread poll", "You've voted on this choice.")}
     </li>
   )
 }
