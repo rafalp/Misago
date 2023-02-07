@@ -87,7 +87,7 @@ export default class extends Form {
 
   onCancel = () => {
     const cancel = window.confirm(
-      gettext("Are you sure you want to discard your reply?")
+      pgettext("post reply", "Are you sure you want to discard your reply?")
     )
     if (cancel) {
       this.close()
@@ -126,7 +126,7 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Your reply has been posted."))
+    snackbar.success(pgettext("post reply", "Your reply has been posted."))
     window.location = success.url.index
 
     // keep form loading

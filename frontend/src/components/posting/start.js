@@ -1,16 +1,18 @@
 import React from "react"
-import MarkupEditor from "misago/components/MarkupEditor"
 import CategorySelect from "misago/components/category-select"
 import Form from "misago/components/form"
-import Container from "./utils/container"
-import Loader from "./utils/loader"
-import Message from "./utils/message"
-import Options from "./utils/options"
 import * as attachments from "./utils/attachments"
 import { getPostValidators, getTitleValidators } from "./utils/validators"
 import ajax from "misago/services/ajax"
 import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
+import MarkupEditor from "../MarkupEditor"
+import { Toolbar, ToolbarItem, ToolbarSection } from "../Toolbar"
+import PostingDialog from "./PostingDialog"
+import PostingDialogBody from "./PostingDialogBody"
+import PostingDialogError from "./PostingDialogError"
+import PostingDialogHeader from "./PostingDialogHeader"
+import PostingThreadOptions from "./PostingThreadOptions"
 
 export default class extends Form {
   constructor(props) {
@@ -19,10 +21,13 @@ export default class extends Form {
     this.state = {
       isReady: false,
       isLoading: false,
-      isErrored: false,
 
-      showOptions: false,
-      categoryOptions: null,
+      error: null,
+
+      minimized: false,
+      fullscreen: false,
+
+      options: null,
 
       title: "",
       category: props.category || null,
@@ -47,8 +52,7 @@ export default class extends Form {
 
   loadSuccess = (data) => {
     let category = null
-    let showOptions = false
-    let categoryOptions = null
+    let options = null
 
     // hydrate categories, extract posting options
     const categories = data.map((item) => {
@@ -58,11 +62,7 @@ export default class extends Form {
         (!category || item.id == this.state.category)
       ) {
         category = item.id
-        categoryOptions = item.post
-      }
-
-      if (item.post && (item.post.close || item.post.hide || item.post.pin)) {
-        showOptions = true
+        options = item.post
       }
 
       return Object.assign(item, {
@@ -74,23 +74,22 @@ export default class extends Form {
 
     this.setState({
       isReady: true,
-      showOptions,
+      options,
 
       categories,
       category,
-      categoryOptions,
     })
   }
 
   loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail,
+      error: rejection.detail,
     })
   }
 
   onCancel = () => {
     const cancel = window.confirm(
-      gettext("Are you sure you want to discard thread?")
+      pgettext("Are you sure you want to discard thread?")
     )
     if (cancel) {
       posting.close()
@@ -158,6 +157,29 @@ export default class extends Form {
     this.changeValue("hide", false)
   }
 
+  close = () => {
+    this.minimize()
+    posting.close()
+  }
+
+  minimize = () => {
+    this.setState({ fullscreen: false, minimized: true })
+  }
+
+  open = () => {
+    this.setState({ minimized: false })
+    if (this.state.fullscreen) {
+    }
+  }
+
+  fullscreenEnter = () => {
+    this.setState({ fullscreen: true, minimized: false })
+  }
+
+  fullscreenExit = () => {
+    this.setState({ fullscreen: false, minimized: false })
+  }
+
   clean() {
     if (!this.state.title.trim().length) {
       snackbar.error(gettext("You have to enter thread title."))
@@ -197,7 +219,7 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Your thread has been posted."))
+    snackbar.success(pgettext("post thread", "Your thread has been posted."))
     window.location = success.url
 
     // keep form loading
@@ -223,89 +245,151 @@ export default class extends Form {
   }
 
   render() {
-    if (this.state.isErrored) {
-      return <Message message={this.state.isErrored} />
+    const dialogProps = {
+      thread: this.props.thread,
+
+      minimized: this.state.minimized,
+      minimize: this.minimize,
+      open: this.open,
+
+      fullscreen: this.state.fullscreen,
+      fullscreenEnter: this.fullscreenEnter,
+      fullscreenExit: this.fullscreenExit,
+
+      close: this.onCancel,
+    }
+
+    if (this.state.error) {
+      return (
+        <PostingDialogStart {...dialogProps}>
+          <PostingDialogError message={this.state.error} close={this.close} />
+        </PostingDialogStart>
+      )
     }
 
     if (!this.state.isReady) {
-      return <Loader />
-    }
-
-    let columns = 0
-    if (this.state.categoryOptions.close) columns += 1
-    if (this.state.categoryOptions.hide) columns += 1
-    if (this.state.categoryOptions.pin) columns += 1
-
-    let titleStyle = null
-
-    if (columns === 1) {
-      titleStyle = "col-sm-6"
-    } else {
-      titleStyle = "col-sm-8"
-    }
-
-    if (columns === 3) {
-      titleStyle += " col-md-6"
-    } else if (columns) {
-      titleStyle += " col-md-7"
-    } else {
-      titleStyle += " col-md-9"
-    }
-
-    return (
-      <Container className="posting-form" withFirstRow={true}>
-        <form onSubmit={this.handleSubmit}>
-          <div className="row first-row">
-            <div className={titleStyle}>
-              <input
-                className="form-control"
-                disabled={this.state.isLoading}
-                onChange={this.onTitleChange}
-                placeholder={gettext("Thread title")}
-                type="text"
-                value={this.state.title}
-              />
-            </div>
-            <div className="col-xs-12 col-sm-4 col-md-3 xs-margin-top">
-              <CategorySelect
-                choices={this.state.categories}
-                disabled={this.state.isLoading}
-                onChange={this.onCategoryChange}
-                value={this.state.category}
-              />
-            </div>
-            <Options
-              close={this.state.close}
-              columns={columns}
-              disabled={this.state.isLoading}
-              hide={this.state.hide}
-              onClose={this.onClose}
-              onHide={this.onHide}
-              onOpen={this.onOpen}
-              onPinGlobally={this.onPinGlobally}
-              onPinLocally={this.onPinLocally}
-              onUnhide={this.onUnhide}
-              onUnpin={this.onUnpin}
-              options={this.state.categoryOptions}
-              pin={this.state.pin}
-              showOptions={this.state.showOptions}
+      return (
+        <PostingDialogStart {...dialogProps}>
+          <div className="posting-loading ui-preview">
+            <Toolbar className="posting-dialog-toolbar">
+              <ToolbarSection className="posting-dialog-thread-title" auto>
+                <ToolbarItem auto>
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    type="text"
+                  />
+                </ToolbarItem>
+              </ToolbarSection>
+              <ToolbarSection className="posting-dialog-category-select" auto>
+                <ToolbarItem>
+                  <input
+                    className="form-control"
+                    disabled={true}
+                    type="text"
+                  />
+                </ToolbarItem>
+              </ToolbarSection>
+            </Toolbar>
+            <MarkupEditor
+              attachments={[]}
+              value={""}
+              submitText={pgettext("post thread", "Post thread")}
+              disabled={true}
+              onAttachmentsChange={() => {}}
+              onChange={() => {}}
             />
           </div>
-          <div className="row">
-            <div className="col-md-12">
-              <MarkupEditor
-                attachments={this.state.attachments}
-                loading={this.state.isLoading}
-                onAttachmentsChange={this.onAttachmentsChange}
-                onCancel={this.onCancel}
-                onChange={this.onPostChange}
-                submitLabel={gettext("Post thread")}
-                value={this.state.post}
-              />
-            </div>
-          </div>
+        </PostingDialogStart>
+      )
+    }
+
+    const showOptions = !!(
+      this.state.options.close || this.state.options.hide || this.state.options.pin
+    )
+
+    return (
+      <PostingDialogStart {...dialogProps}>
+        <form className="posting-dialog-form" onSubmit={this.handleSubmit}>
+          <Toolbar className="posting-dialog-toolbar">
+            <ToolbarSection className="posting-dialog-thread-title" auto>
+              <ToolbarItem auto>
+                <input
+                  className="form-control"
+                  disabled={this.state.isLoading}
+                  onChange={this.onTitleChange}
+                  placeholder={pgettext("post thread", "Thread title")}
+                  type="text"
+                  value={this.state.title}
+                />
+              </ToolbarItem>
+            </ToolbarSection>
+            <ToolbarSection className="posting-dialog-category-select" auto>
+              <ToolbarItem>
+                <CategorySelect
+                  choices={this.state.categories}
+                  disabled={this.state.isLoading}
+                  onChange={this.onCategoryChange}
+                  value={this.state.category}
+                />
+              </ToolbarItem>
+              {showOptions && (
+                <ToolbarItem shrink>
+                  <PostingThreadOptions
+                    isClosed={this.state.close}
+                    isHidden={this.state.hide}
+                    isPinned={this.state.pin}
+                    disabled={this.state.isLoading}
+                    options={this.state.options}
+                    close={this.onClose}
+                    open={this.onOpen}
+                    hide={this.onHide}
+                    unhide={this.onUnhide}
+                    pinGlobally={this.onPinGlobally}
+                    pinLocally={this.onPinLocally}
+                    unpin={this.onUnpin}
+                  />
+                </ToolbarItem>
+              )}
+            </ToolbarSection>
+          </Toolbar>
+          <MarkupEditor
+            attachments={this.state.attachments}
+            value={this.state.post}
+            submitText={pgettext("post thread", "Post thread")}
+            disabled={this.state.isLoading}
+            onAttachmentsChange={this.onAttachmentsChange}
+            onChange={this.onPostChange}
+          />
         </form>
-      </Container>
+      </PostingDialogStart>
     )
   }
 }
+
+const PostingDialogStart = ({
+  children,
+  close,
+  minimized,
+  minimize,
+  open,
+  fullscreen,
+  fullscreenEnter,
+  fullscreenExit,
+  thread,
+}) => (
+  <PostingDialog fullscreen={fullscreen} minimized={minimized}>
+    <PostingDialogHeader
+      fullscreen={fullscreen}
+      fullscreenEnter={fullscreenEnter}
+      fullscreenExit={fullscreenExit}
+      minimized={minimized}
+      minimize={minimize}
+      open={open}
+      close={close}
+    >
+      {pgettext("post thread", "Start new thread")}
+    </PostingDialogHeader>
+    <PostingDialogBody>{children}</PostingDialogBody>
+  </PostingDialog>
+)

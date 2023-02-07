@@ -97,15 +97,31 @@
 // Posting dialog body
 .posting-dialog-body {
   padding: @posting-dialog-padding-horizontal;
+}
+
+// Posting dialog toolbar (used on new thread forms)
+@media screen and (min-width: @screen-md-min) {
+  .posting-dialog-category-select {
+    max-width: 400px;
+  }
+}
+
+// Make some elements 100% height
+.posting-loading,
+.posting-dialog-body,
+.posting-dialog-form {
   height: 100%;
 }
 
-// Make some other elements 100% height
+// Use flexbox for full-height contents
 .posting-loading,
-.posting-loading .markup-editor,
-.posting-dialog-form,
-.posting-dialog-form .markup-editor {
-  height: 100%;
+.posting-dialog-form {
+  display: flex;
+  flex-direction: column;
+
+  .markup-editor {
+    flex: 1
+  }
 }
 
 // Override styles when dialog is minimized
@@ -178,7 +194,7 @@ body.posting-default .posting-dialog {
 }
 
 // Make standard posting dialog fullscreen on mobile displays
-@media screen and (max-width: @screen-xs-max) {
+@media screen and (max-width: @screen-sm-max) {
   body.posting-default {
     // Remove scroll from body
     overflow: hidden;
