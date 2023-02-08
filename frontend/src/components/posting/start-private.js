@@ -1,6 +1,5 @@
 import React from "react"
 import Form from "misago/components/form"
-import Container from "./utils/container"
 import * as attachments from "./utils/attachments"
 import cleanUsernames from "./utils/usernames"
 import { getPostValidators, getTitleValidators } from "./utils/validators"
@@ -11,9 +10,7 @@ import MarkupEditor from "../MarkupEditor"
 import { Toolbar, ToolbarItem, ToolbarSection } from "../Toolbar"
 import PostingDialog from "./PostingDialog"
 import PostingDialogBody from "./PostingDialogBody"
-import PostingDialogError from "./PostingDialogError"
 import PostingDialogHeader from "./PostingDialogHeader"
-import PostingThreadOptions from "./PostingThreadOptions"
 
 export default class extends Form {
   constructor(props) {
