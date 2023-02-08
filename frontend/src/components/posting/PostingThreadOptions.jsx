@@ -15,7 +15,7 @@ export default function PostingThreadOptions({
   unpin,
 }) {
   const icons = getIcons(isClosed, isHidden, isPinned)
-  
+
   return (
     <div className="dropdown">
       <button
@@ -30,7 +30,9 @@ export default function PostingThreadOptions({
         {icons.length > 0 ? (
           <span className="btn-icons-family">
             {icons.map((icon) => (
-              <span key={icon} className="material-icon">{icon}</span>
+              <span key={icon} className="material-icon">
+                {icon}
+              </span>
             ))}
           </span>
         ) : (

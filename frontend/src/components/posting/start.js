@@ -92,6 +92,7 @@ export default class extends Form {
       pgettext("Are you sure you want to discard thread?")
     )
     if (cancel) {
+      this.minimize()
       posting.close()
     }
   }
@@ -246,8 +247,6 @@ export default class extends Form {
 
   render() {
     const dialogProps = {
-      thread: this.props.thread,
-
       minimized: this.state.minimized,
       minimize: this.minimize,
       open: this.open,
@@ -274,20 +273,12 @@ export default class extends Form {
             <Toolbar className="posting-dialog-toolbar">
               <ToolbarSection className="posting-dialog-thread-title" auto>
                 <ToolbarItem auto>
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    type="text"
-                  />
+                  <input className="form-control" disabled={true} type="text" />
                 </ToolbarItem>
               </ToolbarSection>
               <ToolbarSection className="posting-dialog-category-select" auto>
                 <ToolbarItem>
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    type="text"
-                  />
+                  <input className="form-control" disabled={true} type="text" />
                 </ToolbarItem>
               </ToolbarSection>
             </Toolbar>
@@ -305,7 +296,9 @@ export default class extends Form {
     }
 
     const showOptions = !!(
-      this.state.options.close || this.state.options.hide || this.state.options.pin
+      this.state.options.close ||
+      this.state.options.hide ||
+      this.state.options.pin
     )
 
     return (
@@ -356,7 +349,7 @@ export default class extends Form {
           <MarkupEditor
             attachments={this.state.attachments}
             value={this.state.post}
-            submitText={pgettext("post thread", "Post thread")}
+            submitText={pgettext("post thread", "Start thread")}
             disabled={this.state.isLoading}
             onAttachmentsChange={this.onAttachmentsChange}
             onChange={this.onPostChange}
@@ -376,7 +369,6 @@ const PostingDialogStart = ({
   fullscreen,
   fullscreenEnter,
   fullscreenExit,
-  thread,
 }) => (
   <PostingDialog fullscreen={fullscreen} minimized={minimized}>
     <PostingDialogHeader
