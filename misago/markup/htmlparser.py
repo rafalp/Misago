@@ -1,7 +1,5 @@
 import html
 from dataclasses import dataclass
-from typing import Optional
-from xml.etree.ElementTree import Element, tostring
 
 import html5lib
 
