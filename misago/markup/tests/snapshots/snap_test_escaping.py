@@ -8,6 +8,15 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots[
+    "test_code_in_quote_bbcode_header_is_escaped 1"
+] = """<aside class="quote-block">
+<div class="quote-heading">@Us"&gt;&lt;script&gt;alert("!")&lt;/script&gt;er</div>
+<blockquote class="quote-body">
+<p>Test</p>
+</blockquote>
+</aside>"""
+
+snapshots[
     "test_code_in_quote_bbcode_is_escaped 1"
 ] = """<aside class="quote-block">
 <div class="quote-heading"></div>

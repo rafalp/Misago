@@ -24,3 +24,9 @@ def test_code_in_quote_bbcode_is_escaped(request_mock, user, snapshot):
     text = '[quote]<script>alert("!")</script>[/quote]'
     result = parse(text, request_mock, user, minify=False)
     snapshot.assert_match(result["parsed_text"])
+
+
+def test_code_in_quote_bbcode_header_is_escaped(request_mock, user, snapshot):
+    text = '[quote="@Us"><script>alert("!")</script>er"]Test[/quote]'
+    result = parse(text, request_mock, user, minify=False)
+    snapshot.assert_match(result["parsed_text"])

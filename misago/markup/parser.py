@@ -1,9 +1,6 @@
-import bleach
 import markdown
-from bs4 import BeautifulSoup
 from django.http import Http404
 from django.urls import resolve
-from htmlmin.minify import html_minify
 from markdown.extensions.fenced_code import FencedCodeExtension
 
 from ..conf import settings
@@ -29,7 +26,6 @@ def parse(
     allow_images=True,
     allow_blocks=True,
     force_shva=False,
-    minify=True,
 ):
     """
     Message parser
@@ -67,13 +63,11 @@ def parse(
     parsing_result = pipeline.process_result(parsing_result)
 
     if allow_mentions:
-        add_mentions(request, parsing_result)
+        add_mentions(parsing_result)
 
     if allow_links or allow_images:
         clean_links(request, parsing_result, force_shva)
 
-    if minify:
-        minify_result(parsing_result)
     return parsing_result
 
 
@@ -246,13 +240,3 @@ def clean_attachment_link(link, force_shva=False):
         elif link.endswith("?shva=1"):
             link = link[:-7]
     return link
-
-
-def minify_result(result):
-    result["parsed_text"] = html_minify(result["parsed_text"])
-    result["parsed_text"] = strip_html_head_body(result["parsed_text"])
-
-
-def strip_html_head_body(parsed_text):
-    # [25:-14] trims <html><head></head><body> and </body></html>
-    return parsed_text[25:-14]
