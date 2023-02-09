@@ -8,9 +8,7 @@ import html5lib
 
 class Node:
     def __str__(self):
-        raise NotImplementedError(
-            "Subclasses of 'Node' need to implement __str__"
-        )
+        raise NotImplementedError("Subclasses of 'Node' need to implement __str__")
 
 
 @dataclass
@@ -42,9 +40,7 @@ class ElementNode(Node):
             if value is True or not value:
                 yield html.escape(str(name))
             else:
-                yield (
-                    f'{html.escape(str(name))}="{html.escape(str(value))}"'
-                )
+                yield (f'{html.escape(str(name))}="{html.escape(str(value))}"')
 
 
 @dataclass
@@ -61,7 +57,7 @@ def parse_html_string(string: str) -> RootNode:
         string,
         namespaceHTMLElements=False,
     )
-    
+
     body = element.find("body")
     root_node = RootNode(children=[])
 
@@ -85,7 +81,7 @@ def add_child_node(parent, element):
         node.children.append(TextNode(text=element.text))
 
     parent.children.append(node)
-    
+
     if element.tail:
         parent.children.append(TextNode(text=element.tail))
 

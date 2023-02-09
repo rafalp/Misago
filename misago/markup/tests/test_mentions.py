@@ -1,9 +1,7 @@
 from ..mentions import add_mentions
 
 
-def test_util_replaces_mention_with_link_to_user_profile_in_parsed_text(
-    user
-):
+def test_util_replaces_mention_with_link_to_user_profile_in_parsed_text(user):
     parsing_result = {"parsed_text": f"<p>Hello, @{user.username}!</p>", "mentions": []}
     add_mentions(parsing_result)
     assert parsing_result["parsed_text"] == (

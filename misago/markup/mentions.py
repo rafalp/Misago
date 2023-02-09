@@ -3,7 +3,13 @@ from typing import Union
 
 from django.contrib.auth import get_user_model
 
-from .htmlparser import ElementNode, RootNode, TextNode, parse_html_string, print_html_string
+from .htmlparser import (
+    ElementNode,
+    RootNode,
+    TextNode,
+    parse_html_string,
+    print_html_string,
+)
 
 EXCLUDE_ELEMENTS = ("pre", "code", "a")
 USERNAME_RE = re.compile(r"@[0-9a-z]+", re.IGNORECASE)
@@ -100,7 +106,7 @@ def add_mentions_to_text(text: str, users_data):
             return nodes
 
         start, end = match.span()
-        user_slug = text[start+1:end].lower()
+        user_slug = text[start + 1 : end].lower()
 
         # Append match string to nodes and keep scanning
         if user_slug not in users_data:

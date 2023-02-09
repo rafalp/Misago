@@ -34,7 +34,7 @@ def test_parser_handles_attributes():
 def test_parser_escapes_html_in_attributes_names():
     root_node = parse_html_string('<span data-a<tt>r="<br>">Hello!</span>')
     assert print_html_string(root_node) == (
-        '<span data-a&lt;tt>r=&quot;<br />&quot;&gt;Hello!</span>'
+        "<span data-a&lt;tt>r=&quot;<br />&quot;&gt;Hello!</span>"
     )
 
 
@@ -61,9 +61,7 @@ def test_parser_handles_escaped_attribute_values():
 
 def test_parser_escapes_quotes_in_attributes_values():
     root_node = parse_html_string('<span data-attr="\'">Hello!</span>')
-    assert print_html_string(root_node) == (
-        '<span data-attr="&#x27;">Hello!</span>'
-    )
+    assert print_html_string(root_node) == ('<span data-attr="&#x27;">Hello!</span>')
 
 
 def test_parser_handles_bool_attributes():
