@@ -10,6 +10,7 @@ import PostingDialog from "./PostingDialog"
 import PostingDialogBody from "./PostingDialogBody"
 import PostingDialogError from "./PostingDialogError"
 import PostingDialogHeader from "./PostingDialogHeader"
+import { clearGlobalState, setGlobalState } from "./globalState"
 
 export default class extends Form {
   constructor(props) {
@@ -39,6 +40,23 @@ export default class extends Form {
 
   componentDidMount() {
     ajax.get(this.props.config).then(this.loadSuccess, this.loadError)
+
+    setGlobalState(false, this.onQuote)
+  }
+
+  componentWillUnmount() {
+    clearGlobalState()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const context = this.props.context
+    const newContext = nextProps.context
+
+    if (context && newContext && context.reply === newContext.reply) return
+
+    ajax
+      .get(nextProps.config, nextProps.context || null)
+      .then(this.appendData, snackbar.apiError)
   }
 
   loadSuccess = (data) => {
@@ -57,6 +75,26 @@ export default class extends Form {
     this.setState({
       error: rejection.detail,
     })
+  }
+
+  appendData = (data) => {
+    const newPost = data.post
+      ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]\n\n"
+      : ""
+
+    this.setState((prevState, props) => {
+      if (prevState.post.length > 0) {
+        return {
+          post: prevState.post + "\n\n" + newPost,
+        }
+      }
+
+      return {
+        post: newPost,
+      }
+    })
+
+    this.open()
   }
 
   onCancel = () => {
@@ -90,6 +128,18 @@ export default class extends Form {
     })
   }
 
+  onQuote = (quote) => {
+    this.setState(({ post }) => {
+      if (post.length > 0) {
+        return { post: post.trim() + "\n\n" + quote }
+      }
+
+      return { post: quote }
+    })
+
+    this.open()
+  }
+
   clean() {
     if (!this.state.post.trim().length) {
       snackbar.error(gettext("You have to enter a message."))
@@ -107,6 +157,8 @@ export default class extends Form {
   }
 
   send() {
+    setGlobalState(true, this.onQuote)
+
     return ajax.put(this.props.submit, {
       post: this.state.post,
       attachments: attachments.clean(this.state.attachments),
@@ -122,6 +174,8 @@ export default class extends Form {
     this.setState({
       isLoading: true,
     })
+
+    setGlobalState(false, this.onQuote)
   }
 
   handleError(rejection) {
@@ -138,6 +192,8 @@ export default class extends Form {
     } else {
       snackbar.apiError(rejection)
     }
+
+    setGlobalState(false, this.onQuote)
   }
 
   close = () => {

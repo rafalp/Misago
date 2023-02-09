@@ -12,6 +12,7 @@ import snackbar from "misago/services/snackbar"
 import posting from "misago/services/posting"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import { PostingQuoteSelection } from "../posting"
 import PageContainer from "../PageContainer"
 import ThreadHeader from "./ThreadHeader"
 import ThreadToolbarBottom from "./ThreadToolbarBottom"
@@ -200,7 +201,21 @@ export default class extends React.Component {
               edit={this.openPollForm}
             />
           )}
-          <PostsList {...this.props} />
+          {this.props.thread.acl.can_reply ? (
+            <PostingQuoteSelection
+              posting={{
+                mode: "REPLY",
+
+                thread: this.props.thread,
+                config: this.props.thread.api.editor,
+                submit: this.props.thread.api.posts.index,
+              }}
+            >
+              <PostsList {...this.props} />
+            </PostingQuoteSelection>
+          ) : (
+            <PostsList {...this.props} />
+          )}
           <ThreadToolbarBottom
             thread={this.props.thread}
             posts={this.props.posts}

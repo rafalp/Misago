@@ -19,6 +19,10 @@ export class Posting {
     this._isClosing = false
   }
 
+  isOpen() {
+    return this._isOpen
+  }
+
   open(props) {
     if (this._isOpen === false) {
       this._mode = props.mode

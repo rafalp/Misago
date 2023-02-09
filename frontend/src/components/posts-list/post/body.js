@@ -18,10 +18,12 @@ export default function (props) {
   }
 }
 
-export function Default(props) {
+export function Default({ post }) {
+  const poster = "@" + (post.poster ? post.poster.username : post.poster_name)
+
   return (
-    <Waypoint className="post-body" post={props.post}>
-      <MisagoMarkup markup={props.post.content} />
+    <Waypoint className="post-body" post={post}>
+      <MisagoMarkup author={poster} markup={post.content} />
     </Waypoint>
   )
 }

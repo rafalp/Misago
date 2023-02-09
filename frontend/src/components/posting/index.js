@@ -1,4 +1,7 @@
 import React from "react"
+import PostingQuoteSelection from "./PostingQuoteSelection"
+import getQuoteMarkup from "./getQuoteMarkup"
+import { clearGlobalState, getGlobalState, setGlobalState } from "./globalState"
 import Start from "./start"
 import StartPrivate from "./start-private"
 import Reply from "./reply"
@@ -16,4 +19,12 @@ export default function (props) {
   } else {
     return null
   }
+}
+
+export {
+  PostingQuoteSelection,
+  clearGlobalState,
+  getGlobalState,
+  getQuoteMarkup,
+  setGlobalState,
 }

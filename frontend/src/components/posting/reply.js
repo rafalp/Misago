@@ -10,6 +10,7 @@ import PostingDialog from "./PostingDialog"
 import PostingDialogBody from "./PostingDialogBody"
 import PostingDialogError from "./PostingDialogError"
 import PostingDialogHeader from "./PostingDialogHeader"
+import { clearGlobalState, setGlobalState } from "./globalState"
 
 export default class extends Form {
   constructor(props) {
@@ -24,7 +25,7 @@ export default class extends Form {
       minimized: false,
       fullscreen: false,
 
-      post: "",
+      post: this.props.default || "",
       attachments: [],
 
       validators: {
@@ -38,6 +39,12 @@ export default class extends Form {
     ajax
       .get(this.props.config, this.props.context || null)
       .then(this.loadSuccess, this.loadError)
+
+    setGlobalState(false, this.onQuote)
+  }
+
+  componentWillUnmount() {
+    clearGlobalState()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +64,7 @@ export default class extends Form {
 
       post: data.post
         ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]"
-        : "",
+        : this.state.post,
     })
   }
 
@@ -83,6 +90,8 @@ export default class extends Form {
         post: newPost,
       }
     })
+
+    this.open()
   }
 
   onCancel = () => {
@@ -102,6 +111,18 @@ export default class extends Form {
     this.setState(attachments)
   }
 
+  onQuote = (quote) => {
+    this.setState(({ post }) => {
+      if (post.length > 0) {
+        return { post: post.trim() + "\n\n" + quote }
+      }
+
+      return { post: quote }
+    })
+
+    this.open()
+  }
+
   clean() {
     if (!this.state.post.trim().length) {
       snackbar.error(gettext("You have to enter a message."))
@@ -119,6 +140,8 @@ export default class extends Form {
   }
 
   send() {
+    setGlobalState(true, this.onQuote)
+
     return ajax.post(this.props.submit, {
       post: this.state.post,
       attachments: attachments.clean(this.state.attachments),
@@ -133,6 +156,8 @@ export default class extends Form {
     this.setState({
       isLoading: true,
     })
+
+    setGlobalState(false, this.onQuote)
   }
 
   handleError(rejection) {
@@ -147,6 +172,8 @@ export default class extends Form {
     } else {
       snackbar.apiError(rejection)
     }
+
+    setGlobalState(false, this.onQuote)
   }
 
   close = () => {
