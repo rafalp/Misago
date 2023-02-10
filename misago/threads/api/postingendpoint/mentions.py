@@ -8,9 +8,9 @@ class MentionsMiddleware(PostingMiddleware):
             existing_mentions = self.get_existing_mentions()
 
         new_mentions = []
-        for user in self.post.parsing_result["mentions"]:
-            if user.pk not in existing_mentions:
-                new_mentions.append(user)
+        for user_pk in self.post.parsing_result["mentions"]:
+            if user_pk not in existing_mentions:
+                new_mentions.append(user_pk)
 
         if new_mentions:
             self.post.mentions.add(*new_mentions)

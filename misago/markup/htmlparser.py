@@ -11,6 +11,7 @@ class Node:
 
 @dataclass
 class RootNode(Node):
+    tag = None
     children: list
 
     def __str__(self):
@@ -46,7 +47,6 @@ class TextNode(Node):
     text: str
 
     def __str__(self):
-        print(self.text)
         return html.escape(self.text)
 
 

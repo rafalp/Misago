@@ -7,8 +7,6 @@ from .htmlparser import (
     ElementNode,
     RootNode,
     TextNode,
-    parse_html_string,
-    print_html_string,
 )
 
 EXCLUDE_ELEMENTS = ("pre", "code", "a")
@@ -16,14 +14,13 @@ USERNAME_RE = re.compile(r"@[0-9a-z]+", re.IGNORECASE)
 MENTIONS_LIMIT = 32
 
 
-def add_mentions(result):
+def add_mentions(result, root_node):
     if "@" not in result["parsed_text"]:
         return
 
     mentions = set()
     nodes = []
 
-    root_node = parse_html_string(result["parsed_text"])
     find_mentions(root_node, mentions, nodes)
 
     if not mentions or len(mentions) > MENTIONS_LIMIT:
@@ -36,7 +33,6 @@ def add_mentions(result):
     for node in nodes:
         add_mentions_to_node(node, users_data)
 
-    result["parsed_text"] = print_html_string(root_node)
     result["mentions"] = [user[0] for user in users_data.values()]
 
 
@@ -108,15 +104,15 @@ def add_mentions_to_text(text: str, users_data):
         start, end = match.span()
         user_slug = text[start + 1 : end].lower()
 
+        # Append text between 0 and start to nodes
+        if start > 0:
+            nodes.append(TextNode(text=text[:start]))
+
         # Append match string to nodes and keep scanning
         if user_slug not in users_data:
             nodes.append(TextNode(text=text[:end]))
             text = text[end:]
             continue
-
-        # Append text between 0 and start to nodes
-        if start > 0:
-            nodes.append(TextNode(text=text[:start]))
 
         user_id, username = users_data[user_slug]
         nodes.append(

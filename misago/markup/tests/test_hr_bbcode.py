@@ -7,11 +7,11 @@ Lorem ipsum dolor met.
 [hr]
 Sit amet elit.
 """
-    result = parse(text, request_mock, user, minify=False)
+    result = parse(text, request_mock, user)
     snapshot.assert_match(result["parsed_text"])
 
 
 def test_hr_bbcode_is_skipped_if_its_part_of_paragraph(request_mock, user, snapshot):
     text = "Lorem ipsum[hr]dolor met."
-    result = parse(text, request_mock, user, minify=False)
+    result = parse(text, request_mock, user)
     assert result["parsed_text"] == "<p>Lorem ipsum[hr]dolor met.</p>"

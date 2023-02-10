@@ -3,7 +3,7 @@ from ..parser import parse
 
 def test_single_line_code_markdown(request_mock, user, snapshot):
     text = '```<script>alert("!")</script>```'
-    result = parse(text, request_mock, user, minify=False)
+    result = parse(text, request_mock, user)
     snapshot.assert_match(result["parsed_text"])
 
 
@@ -15,7 +15,7 @@ alert("!")
 </script>
 ```
     """
-    result = parse(text, request_mock, user, minify=False)
+    result = parse(text, request_mock, user)
     snapshot.assert_match(result["parsed_text"])
 
 
@@ -27,5 +27,5 @@ alert("!")
 </script>
 ```
     """
-    result = parse(text, request_mock, user, minify=False)
+    result = parse(text, request_mock, user)
     snapshot.assert_match(result["parsed_text"])

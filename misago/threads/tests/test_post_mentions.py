@@ -55,7 +55,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(post.mentions.all()[0], self.user)
 
     def test_mention_limit(self):
-        """endpoint mentions limits mentions to 24 users"""
+        """endpoint mentions over limit results in no mentions set"""
         users = []
 
         for i in range(MENTIONS_LIMIT + 5):
@@ -70,8 +70,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         post = self.user.post_set.order_by("id").last()
 
-        self.assertEqual(post.mentions.count(), 24)
-        self.assertEqual(list(post.mentions.order_by("id")), users[:24])
+        self.assertEqual(post.mentions.count(), 0)
 
     def test_mention_update(self):
         """edit post endpoint updates mentions"""
