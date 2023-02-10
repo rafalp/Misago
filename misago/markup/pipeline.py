@@ -1,9 +1,8 @@
 from importlib import import_module
 
-from bs4 import BeautifulSoup
-
 from .. import hooks
 from ..conf import settings
+from .htmlparser import parse_html_string, print_html_string
 
 
 class MarkupPipeline:
@@ -22,18 +21,23 @@ class MarkupPipeline:
         return md
 
     def process_result(self, result):
-        soup = BeautifulSoup(result["parsed_text"], "html5lib")
+        if (
+            not settings.MISAGO_MARKUP_EXTENSIONS
+            and not hooks.parsing_result_processors
+        ):
+            return result
+
+        html_tree = parse_html_string(result["parsed_text"])
         for extension in settings.MISAGO_MARKUP_EXTENSIONS:
             module = import_module(extension)
             if hasattr(module, "clean_parsed"):
                 hook = getattr(module, "clean_parsed")
-                hook.process_result(result, soup)
+                hook.process_result(result, html_tree)
 
         for extension in hooks.parsing_result_processors:
-            extension(result, soup)
+            extension(result, html_tree)
 
-        souped_text = str(soup.body).strip()[6:-7]
-        result["parsed_text"] = souped_text.strip()
+        result["parsed_text"] = print_html_string(html_tree)
         return result
 
 
