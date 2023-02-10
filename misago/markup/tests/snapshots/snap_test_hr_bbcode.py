@@ -10,5 +10,5 @@ snapshots = Snapshot()
 snapshots[
     "test_hr_bbcode_is_replaced_if_its_alone_in_paragraph 1"
 ] = """<p>Lorem ipsum dolor met.</p>
-<hr/>
+<hr />
 <p>Sit amet elit.</p>"""

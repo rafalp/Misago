@@ -22,6 +22,7 @@ SINGLETON_TAGS = (
     "wbr",
 )
 
+
 class Node:
     def __str__(self):
         raise NotImplementedError("Subclasses of 'Node' need to implement __str__")
@@ -47,7 +48,7 @@ class ElementNode(Node):
         attrs = " ".join(self.attrs_str())
 
         if self.tag in SINGLETON_TAGS:
-            return f"<{self.tag}{attrs_padding}{attrs}/>"
+            return f"<{self.tag}{attrs_padding}{attrs} />"
 
         children = "".join(str(child) for child in self.children)
         return f"<{self.tag}{attrs_padding}{attrs}>{children}</{self.tag}>"

@@ -8,6 +8,16 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots[
+    "test_multi_line_spoiler 1"
+] = """<aside class="spoiler-block">
+<blockquote class="spoiler-body">
+<p>Sit amet elit.</p>
+<p>Another line.</p>
+</blockquote>
+<div class="spoiler-overlay"><button class="spoiler-reveal" type="button"></button></div>
+</aside>"""
+
+snapshots[
     "test_single_line_spoiler 1"
 ] = """<aside class="spoiler-block">
 <blockquote class="spoiler-body">
@@ -21,16 +31,6 @@ snapshots[
 ] = """<aside class="spoiler-block">
 <blockquote class="spoiler-body">
 <p>Sit <strong>amet</strong> <u>elit</u>.</p>
-</blockquote>
-<div class="spoiler-overlay"><button class="spoiler-reveal" type="button"></button></div>
-</aside>"""
-
-snapshots[
-    "test_multi_line_spoiler 1"
-] = """<aside class="spoiler-block">
-<blockquote class="spoiler-body">
-<p>Sit amet elit.</p>
-<p>Another line.</p>
 </blockquote>
 <div class="spoiler-overlay"><button class="spoiler-reveal" type="button"></button></div>
 </aside>"""
@@ -55,7 +55,7 @@ snapshots[
 ] = """<aside class="spoiler-block">
 <blockquote class="spoiler-body">
 <p>Sit amet elit.</p>
-<hr/>
+<hr />
 <p>Another line.</p>
 </blockquote>
 <div class="spoiler-overlay"><button class="spoiler-reveal" type="button"></button></div>

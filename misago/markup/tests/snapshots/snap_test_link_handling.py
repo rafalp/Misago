@@ -21,7 +21,7 @@ snapshots[
 
 snapshots[
     "test_local_image_is_changed_to_relative_link 1"
-] = '<p>clean_links step cleans <img alt="example.com/media/img.png" src="/media/img.png"/></p>'
+] = '<p>clean_links step cleans <img alt="example.com/media/img.png" src="/media/img.png" /></p>'
 
 snapshots[
     "test_parser_converts_unmarked_links_to_hrefs 1"
@@ -33,7 +33,7 @@ snapshots[
 
 snapshots[
     "test_parser_skips_links_in_inline_code_bbcode 1"
-] = """<p>Lorem ipsum <br/>
+] = """<p>Lorem ipsum <br />
 </p><pre><code>http://test.com</code></pre><p></p>"""
 
 snapshots[

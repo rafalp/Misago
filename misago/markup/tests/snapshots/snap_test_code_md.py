@@ -10,17 +10,17 @@ snapshots = Snapshot()
 snapshots[
     "test_multi_line_code_markdown 1"
 ] = """<pre><code>&lt;script&gt;
-alert("!")
+alert(&quot;!&quot;)
 &lt;/script&gt;
 </code></pre>"""
 
 snapshots[
     "test_multi_line_code_markdown_with_language 1"
 ] = """<pre><code class="javascript">&lt;script&gt;
-alert("!")
+alert(&quot;!&quot;)
 &lt;/script&gt;
 </code></pre>"""
 
 snapshots[
     "test_single_line_code_markdown 1"
-] = '<p><code>&lt;script&gt;alert("!")&lt;/script&gt;</code></p>'
+] = "<p><code>&lt;script&gt;alert(&quot;!&quot;)&lt;/script&gt;</code></p>"
