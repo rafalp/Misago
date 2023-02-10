@@ -65,7 +65,7 @@ def parse(
             add_mentions(parsing_result, root_node)
 
         if allow_links or allow_images:
-            clean_links(request, parsing_result, root_node, force_shva=force_shva)
+            clean_links(request, parsing_result, root_node, force_shva)
 
         parsing_result["parsed_text"] = print_html_string(root_node)
 
