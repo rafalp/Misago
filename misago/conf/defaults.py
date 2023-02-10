@@ -36,11 +36,6 @@ MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
 MISAGO_MARKUP_EXTENSIONS = []
 
 
-# Bleach callbacks for linkifying paragraphs
-
-MISAGO_BLEACH_CALLBACKS = []
-
-
 # Custom post validators
 
 MISAGO_POST_VALIDATORS = []

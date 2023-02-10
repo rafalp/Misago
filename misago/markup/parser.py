@@ -1,23 +1,17 @@
-import bleach
 import markdown
-from bs4 import BeautifulSoup
-from django.http import Http404
-from django.urls import resolve
-from htmlmin.minify import html_minify
 from markdown.extensions.fenced_code import FencedCodeExtension
 
-from ..conf import settings
 from .bbcode.code import CodeBlockExtension
 from .bbcode.hr import BBCodeHRProcessor
 from .bbcode.inline import bold, image, italics, underline, url
 from .bbcode.quote import QuoteExtension
 from .bbcode.spoiler import SpoilerExtension
+from .htmlparser import parse_html_string, print_html_string
+from .links import clean_links, linkify_texts
 from .md.shortimgs import ShortImagesExtension
 from .md.strikethrough import StrikethroughExtension
 from .mentions import add_mentions
 from .pipeline import pipeline
-
-MISAGO_ATTACHMENT_VIEWS = ("misago:attachment", "misago:attachment-thumbnail")
 
 
 def parse(
@@ -29,7 +23,6 @@ def parse(
     allow_images=True,
     allow_blocks=True,
     force_shva=False,
-    minify=True,
 ):
     """
     Message parser
@@ -61,19 +54,24 @@ def parse(
     # Clean and store parsed text
     parsing_result["parsed_text"] = parsed_text.strip()
 
-    if allow_links:
-        linkify_paragraphs(parsing_result)
+    # Run additional operations
+    if allow_mentions or allow_links or allow_images:
+        root_node = parse_html_string(parsing_result["parsed_text"])
 
+        if allow_links:
+            linkify_texts(root_node)
+
+        if allow_mentions:
+            add_mentions(parsing_result, root_node)
+
+        if allow_links or allow_images:
+            clean_links(request, parsing_result, root_node, force_shva)
+
+        parsing_result["parsed_text"] = print_html_string(root_node)
+
+    # Let plugins do their magic
     parsing_result = pipeline.process_result(parsing_result)
 
-    if allow_mentions:
-        add_mentions(request, parsing_result)
-
-    if allow_links or allow_images:
-        clean_links(request, parsing_result, force_shva)
-
-    if minify:
-        minify_result(parsing_result)
     return parsing_result
 
 
@@ -144,115 +142,3 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
         md.parser.blockprocessors.deregister("ulist")
 
     return pipeline.extend_markdown(md)
-
-
-def linkify_paragraphs(result):
-    result["parsed_text"] = bleach.linkify(
-        result["parsed_text"],
-        callbacks=settings.MISAGO_BLEACH_CALLBACKS,
-        skip_tags=["a", "code", "pre"],
-        parse_email=True,
-    )
-
-
-def clean_links(request, result, force_shva=False):
-    host = request.get_host()
-
-    soup = BeautifulSoup(result["parsed_text"], "html5lib")
-    for link in soup.find_all("a"):
-        if is_internal_link(link["href"], host):
-            link["href"] = clean_internal_link(link["href"], host)
-            result["internal_links"].append(link["href"])
-            link["href"] = clean_attachment_link(link["href"], force_shva)
-        else:
-            result["outgoing_links"].append(clean_link_prefix(link["href"]))
-            link["href"] = assert_link_prefix(link["href"])
-            link["rel"] = "external nofollow noopener"
-
-        link["target"] = "_blank"
-
-        if link.string:
-            link.string = clean_link_prefix(link.string)
-
-    for img in soup.find_all("img"):
-        img["alt"] = clean_link_prefix(img["alt"])
-        if is_internal_link(img["src"], host):
-            img["src"] = clean_internal_link(img["src"], host)
-            result["images"].append(img["src"])
-            img["src"] = clean_attachment_link(img["src"], force_shva)
-        else:
-            result["images"].append(clean_link_prefix(img["src"]))
-            img["src"] = assert_link_prefix(img["src"])
-
-    # [6:-7] trims <body></body> wrap
-    result["parsed_text"] = str(soup.body)[6:-7]
-
-
-def is_internal_link(link, host):
-    if link.startswith("/") and not link.startswith("//"):
-        return True
-
-    link = clean_link_prefix(link).lstrip("www.").lower()
-    return link.lower().startswith(host.lstrip("www."))
-
-
-def clean_link_prefix(link):
-    if link.lower().startswith("https:"):
-        link = link[6:]
-    if link.lower().startswith("http:"):
-        link = link[5:]
-    if link.startswith("//"):
-        link = link[2:]
-    return link
-
-
-def assert_link_prefix(link):
-    if link.lower().startswith("https:"):
-        return link
-    if link.lower().startswith("http:"):
-        return link
-    if link.startswith("//"):
-        return "http:%s" % link
-
-    return "http://%s" % link
-
-
-def clean_internal_link(link, host):
-    link = clean_link_prefix(link)
-
-    if link.lower().startswith("www."):
-        link = link[4:]
-    if host.lower().startswith("www."):
-        host = host[4:]
-
-    if link.lower().startswith(host):
-        link = link[len(host) :]
-
-    return link or "/"
-
-
-def clean_attachment_link(link, force_shva=False):
-    try:
-        resolution = resolve(link)
-        if not resolution.namespaces:
-            return link
-        url_name = ":".join(resolution.namespaces + [resolution.url_name])
-    except (Http404, ValueError):
-        return link
-
-    if url_name in MISAGO_ATTACHMENT_VIEWS:
-        if force_shva:
-            link = "%s?shva=1" % link
-        elif link.endswith("?shva=1"):
-            link = link[:-7]
-    return link
-
-
-def minify_result(result):
-    result["parsed_text"] = html_minify(result["parsed_text"])
-    result["parsed_text"] = strip_html_head_body(result["parsed_text"])
-
-
-def strip_html_head_body(parsed_text):
-    # [25:-14] trims <html><head></head><body> and </body></html>
-    return parsed_text[25:-14]

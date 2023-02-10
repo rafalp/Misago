@@ -19,5 +19,5 @@ from ..parser import parse
     ],
 )
 def test_short_image_markdown(request_mock, user, snapshot, text):
-    result = parse(text, request_mock, user, minify=False)
+    result = parse(text, request_mock, user)
     snapshot.assert_match(result["parsed_text"])

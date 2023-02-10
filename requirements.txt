@@ -20,14 +20,8 @@ async-timeout==4.0.2
     # via redis
 attrs==22.1.0
     # via pytest
-beautifulsoup4==4.7.1
-    # via
-    #   -r requirements.in
-    #   django-htmlmin
 billiard==3.6.4.0
     # via celery
-bleach==5.0.1
-    # via -r requirements.in
 celery[redis]==5.2.7
     # via -r requirements.in
 certifi==2022.6.15
@@ -73,8 +67,6 @@ django==3.2.15
     #   webservices
 django-debug-toolbar==3.5.0
     # via -r requirements.in
-django-htmlmin==0.11.0
-    # via -r requirements.in
 django-js-asset==2.0.0
     # via django-mptt
 django-mptt==0.13.4
@@ -92,9 +84,7 @@ fastdiff==0.3.0
 graphql-core==3.2.1
     # via ariadne
 html5lib==1.1
-    # via
-    #   -r requirements.in
-    #   django-htmlmin
+    # via -r requirements.in
 idna==3.3
     # via
     #   anyio
@@ -173,7 +163,6 @@ responses==0.21.0
     # via -r requirements.in
 six==1.16.0
     # via
-    #   bleach
     #   click-repl
     #   html5lib
     #   python-dateutil
@@ -186,8 +175,6 @@ social-auth-app-django==5.0.0
     # via -r requirements.in
 social-auth-core==4.3.0
     # via social-auth-app-django
-soupsieve==2.3.2.post1
-    # via beautifulsoup4
 sqlparse==0.4.2
     # via
     #   django
@@ -220,9 +207,7 @@ wasmer-compiler-cranelift==1.1.0
 wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
-    # via
-    #   bleach
-    #   html5lib
+    # via html5lib
 webservices[django]==0.7
     # via django-simple-sso
 wrapt==1.14.1
