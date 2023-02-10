@@ -3,6 +3,24 @@ from dataclasses import dataclass
 
 import html5lib
 
+SINGLETON_TAGS = (
+    "area",
+    "base",
+    "br",
+    "col",
+    "command",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "keygen",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+)
 
 class Node:
     def __str__(self):
@@ -25,14 +43,14 @@ class ElementNode(Node):
     children: list
 
     def __str__(self):
-        attrs_prefix = " " if self.attrs else ""
+        attrs_padding = " " if self.attrs else ""
         attrs = " ".join(self.attrs_str())
 
-        if self.tag in ("br", "hr"):
-            return f"<{self.tag}{attrs_prefix}{attrs} />"
+        if self.tag in SINGLETON_TAGS:
+            return f"<{self.tag}{attrs_padding}{attrs}/>"
 
         children = "".join(str(child) for child in self.children)
-        return f"<{self.tag}{attrs_prefix}{attrs}>{children}</{self.tag}>"
+        return f"<{self.tag}{attrs_padding}{attrs}>{children}</{self.tag}>"
 
     def attrs_str(self):
         for name, value in self.attrs.items():
