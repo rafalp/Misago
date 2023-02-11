@@ -123,9 +123,7 @@ export default class extends Form {
   }
 
   onAttachmentsChange = (attachments) => {
-    this.setState({
-      attachments,
-    })
+    this.setState(attachments)
   }
 
   onQuote = (quote) => {

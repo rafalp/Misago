@@ -32,13 +32,6 @@
   overflow: hidden;
 }
 
-// Posting dialog container
-.posting-dialog-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 // Posting dialog header
 .posting-dialog-header {
   display: flex;
@@ -46,13 +39,10 @@
   padding: @posting-dialog-padding-vertical @posting-dialog-padding-horizontal;
 
   border-bottom: 1px solid @posting-dialog-border;
-
-  & > :first-child {
-    width: 100%;
-  }
 }
 
 .posting-dialog-caption {
+  flex: 1;
   color: @posting-dialog-caption-color;
   font-size: @posting-dialog-caption-size;
   white-space: nowrap;
@@ -107,24 +97,6 @@
   }
 }
 
-// Make some elements 100% height
-.posting-loading,
-.posting-dialog-body,
-.posting-dialog-form {
-  height: 100%;
-}
-
-// Use flexbox for full-height contents
-.posting-loading,
-.posting-dialog-form {
-  display: flex;
-  flex-direction: column;
-
-  .markup-editor {
-    flex: 1;
-  }
-}
-
 // Override styles when dialog is minimized
 .posting-dialog-minimized {
   .posting-dialog-header {
@@ -146,12 +118,7 @@ body.posting-fullscreen {
     display: none;
   }
 
-  // Remove posting spacer
-  .posting-spacer {
-    display: none;
-  }
-
-  // Make mount fullscreen
+  // Make mount take full screen
   #posting-mount {
     height: 100%;
   }
@@ -166,8 +133,10 @@ body.posting-fullscreen {
     box-shadow: none;
   }
 
-  // Use dialog's container for fullscreen
   .posting-dialog-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     max-width: @posting-dialog-max-width;
     margin: 0 auto;
     padding: 0 @grid-gutter-width;
@@ -177,11 +146,22 @@ body.posting-fullscreen {
   .posting-dialog-body {
     padding: @line-height-computed 0;
   }
-}
 
-// Set heights for dialog
-body.posting-default .posting-dialog {
-  height: 400px;
+  .posting-dialog-body,
+  .posting-loading {
+    height: 100%;
+  }
+
+  .posting-dialog-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  // Hide spacer
+  #posting-spacer {
+    display: none;
+  }
 }
 
 // Remove border radius and side borders from screens where dialog is full-width
@@ -221,14 +201,32 @@ body.posting-default .posting-dialog {
     }
 
     .posting-dialog-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       max-width: @posting-dialog-max-width;
       margin: 0 auto;
-      padding: 0 @grid-gutter-width;
+      padding: 0;
     }
 
     .posting-dialog-header,
     .posting-dialog-body {
-      padding: @line-height-computed 0;
+      padding: @posting-dialog-padding-xs;
+    }
+
+    .posting-dialog-body,
+    .posting-loading {
+      height: 100%;
+    }
+
+    .posting-dialog-form {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .posting-dialog .toolbar-section {
+      margin-bottom: @posting-dialog-padding-xs;
     }
 
     // Hide spacer

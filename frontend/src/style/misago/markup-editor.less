@@ -3,9 +3,6 @@
 // --------------------------------------------------
 
 .markup-editor {
-  display: flex;
-  flex-direction: column;
-  height: 300px;
   overflow: hidden;
 
   background: @markup-editor-bg;
@@ -18,20 +15,10 @@
   border: 2px solid @markup-editor-border-focus;
 }
 
-// Toolbar and footer paddings and items layout
-.markup-editor-toolbar,
-.markup-editor-footer {
-  display: flex;
-  padding: @markup-editor-padding;
-
-  // Add spacing between buttons
-  .btn + .btn {
-    margin-left: @line-height-computed / 2;
-  }
-}
-
 // Toolbar
 .markup-editor-toolbar {
+  padding: @markup-editor-toolbar-padding;
+
   background: @markup-editor-toolbar-bg;
   border-bottom: 1px solid @markup-editor-toolbar-border-color;
 }
@@ -40,6 +27,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 
   height: @markup-editor-btn-size;
   width: @markup-editor-btn-size;
@@ -51,13 +39,13 @@
   &,
   &:hover {
     background-color: @markup-editor-btn-bg;
-    border: 1px solid @markup-editor-btn-border;
+    border-color: @markup-editor-btn-border;
     color: @markup-editor-btn-color;
   }
 
   &:active {
     background-color: @markup-editor-btn-active-bg;
-    border: 1px solid @markup-editor-btn-active-border;
+    border-color: @markup-editor-btn-active-border;
     color: @markup-editor-btn-active-color;
   }
 
@@ -69,6 +57,8 @@
 
 // Footer
 .markup-editor-footer {
+  padding: @markup-editor-padding;
+
   background: @markup-editor-footer-bg;
   border-top: 1px solid @markup-editor-footer-border-color;
 }
@@ -78,9 +68,22 @@
   flex: 1;
 }
 
+// Toolbar and footer items layout
+.markup-editor-toolbar,
+.markup-editor-footer {
+  display: flex;
+
+  // Add spacing between buttons
+  .btn + .btn {
+    margin-left: @line-height-computed / 2;
+  }
+}
+
 // Textarea
 .markup-editor-textarea.form-control {
+  height: @markup-editor-height;
   padding: @markup-editor-padding;
+  resize: none;
 
   border: 0;
   border-radius: 0;
@@ -93,19 +96,9 @@
 
 // Preview area
 .markup-editor-preview {
+  height: @markup-editor-height;
   padding: @markup-editor-padding;
-}
-
-// Make editor area and preview same height
-.markup-editor-textarea,
-.markup-editor-preview {
-  width: 100%;
-  flex: 1;
   overflow-y: auto;
-}
-
-.markup-editor-textarea {
-  resize: none;
 }
 
 // Attachments
@@ -149,5 +142,31 @@
 @media screen and (min-width: @screen-md-min) {
   .markup-editor-attachments-item {
     width: 25%;
+  }
+}
+
+// Make editor take full height on full-screen mode
+.posting-fullscreen .markup-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .markup-editor-textarea,
+  .markup-editor-preview {
+    flex: 1;
+  }
+}
+
+// Make editor take full height on mobile devices
+@media screen and (max-width: @screen-sm-max) {
+  body.posting-default .markup-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .markup-editor-textarea,
+    .markup-editor-preview {
+      flex: 1;
+    }
   }
 }
