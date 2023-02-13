@@ -15,7 +15,7 @@ const uploadFile = (file, setState) => {
     filename: file.name,
     filetype: null,
     is_image: false,
-    size: 0,
+    size: file.size,
     url: null,
     uploader_name: null,
   }

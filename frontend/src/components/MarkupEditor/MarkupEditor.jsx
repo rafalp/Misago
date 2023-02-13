@@ -137,7 +137,9 @@ class MarkupEditor extends React.Component {
         <MarkupEditorAttachments
           attachments={this.props.attachments}
           disabled={this.props.disabled || this.state.preview}
+          element={this.state.element}
           setState={this.props.onAttachmentsChange}
+          update={(value) => this.props.onChange({ target: { value } })}
         />
       )}
       <MarkupEditorFooter

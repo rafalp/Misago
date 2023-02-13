@@ -129,6 +129,14 @@
   strong {
     display: block;
   }
+
+  .list-unstyled {
+    margin-bottom: 0;
+  }
+}
+
+.btn-markup-editor-attachment {
+  margin-left: floor(@markup-editor-padding / 2);
 }
 
 // Make attachments responsive
@@ -143,6 +151,36 @@
   .markup-editor-attachments-item {
     width: 25%;
   }
+}
+
+// Center attachment's image in modal
+.markup-editor-attachment-modal-preview {
+  margin: @line-height-computed 0 @line-height-computed * 2 0;
+
+  text-align: center;
+
+  a {
+    display: inline-block;
+    padding: @padding-base-horizontal;
+
+    background: #fff;
+    border: 1px solid @gray-lighter;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 50vh;
+  }
+}
+
+.markup-editor-attachment-modal-filename {
+  font-size: @font-size-base * 2;
+  font-weight: bold;
+  margin-bottom: @line-height-computed;
+}
+
+.markup-editor-attachment-modal-details {
+  margin-bottom: @line-height-computed;
 }
 
 // Make editor take full height on full-screen mode
