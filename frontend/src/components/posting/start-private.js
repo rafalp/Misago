@@ -41,7 +41,7 @@ export default class extends Form {
 
   onCancel = () => {
     const cancel = window.confirm(
-      gettext("Are you sure you want to discard private thread?")
+      pgettext("post thread", "Are you sure you want to discard private thread?")
     )
     if (cancel) {
       this.close()
@@ -105,7 +105,7 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Your thread has been posted."))
+    snackbar.success(pgettext("post thread", "Your thread has been posted."))
     window.location = success.url
 
     // keep form loading
@@ -201,7 +201,7 @@ export default class extends Form {
           <MarkupEditor
             attachments={this.state.attachments}
             value={this.state.post}
-            submitText={pgettext("post thread", "Start thread")}
+            submitText={pgettext("post thread submit", "Start thread")}
             disabled={this.state.isLoading}
             onAttachmentsChange={this.onAttachmentsChange}
             onChange={this.onPostChange}

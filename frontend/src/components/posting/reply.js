@@ -229,7 +229,7 @@ export default class extends Form {
             <MarkupEditor
               attachments={[]}
               value={""}
-              submitText={pgettext("post reply", "Post reply")}
+              submitText={pgettext("post reply submit", "Post reply")}
               disabled={true}
               onAttachmentsChange={() => {}}
               onChange={() => {}}
@@ -249,7 +249,7 @@ export default class extends Form {
           <MarkupEditor
             attachments={this.state.attachments}
             value={this.state.post}
-            submitText={pgettext("post reply", "Post reply")}
+            submitText={pgettext("post reply submit", "Post reply")}
             disabled={this.state.isLoading}
             onAttachmentsChange={this.onAttachmentsChange}
             onChange={this.onPostChange}

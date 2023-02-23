@@ -89,7 +89,7 @@ export default class extends Form {
 
   onCancel = () => {
     const cancel = window.confirm(
-      pgettext("Are you sure you want to discard thread?")
+      pgettext("post thread", "Are you sure you want to discard thread?")
     )
     if (cancel) {
       this.minimize()
@@ -283,7 +283,7 @@ export default class extends Form {
             <MarkupEditor
               attachments={[]}
               value={""}
-              submitText={pgettext("post thread", "Post thread")}
+              submitText={pgettext("post thread submit", "Post thread")}
               disabled={true}
               onAttachmentsChange={() => {}}
               onChange={() => {}}
@@ -347,7 +347,7 @@ export default class extends Form {
           <MarkupEditor
             attachments={this.state.attachments}
             value={this.state.post}
-            submitText={pgettext("post thread", "Start thread")}
+            submitText={pgettext("post thread submit", "Start thread")}
             disabled={this.state.isLoading}
             onAttachmentsChange={this.onAttachmentsChange}
             onChange={this.onPostChange}
