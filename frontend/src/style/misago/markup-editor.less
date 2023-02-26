@@ -103,6 +103,11 @@
 
 // Attachments
 .markup-editor-attachments {
+  max-height: @markup-editor-attachments-max-height;
+  overflow-y: auto;
+}
+
+.markup-editor-attachments-container {
   padding: floor(@markup-editor-padding / 2);
   overflow: auto;
 }
@@ -206,5 +211,12 @@
     .markup-editor-preview {
       flex: 1;
     }
+  }
+}
+
+
+@media screen and (max-width: @screen-xs-max) {
+  .markup-editor-attachments {
+    max-height: @markup-editor-attachments-max-height-xs;
   }
 }

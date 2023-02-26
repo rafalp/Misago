@@ -9,16 +9,18 @@ const MarkupEditorAttachments = ({
   update,
 }) => (
   <div className="markup-editor-attachments">
-    {attachments.map((attachment) => (
-      <MarkupEditorAttachment
-        key={attachment.key || attachment.id}
-        attachment={attachment}
-        disabled={disabled}
-        element={element}
-        setState={setState}
-        update={update}
-      />
-    ))}
+      <div className="markup-editor-attachments-container">
+      {attachments.map((attachment) => (
+        <MarkupEditorAttachment
+          key={attachment.key || attachment.id}
+          attachment={attachment}
+          disabled={disabled}
+          element={element}
+          setState={setState}
+          update={update}
+        />
+      ))}
+    </div>
   </div>
 )
 
