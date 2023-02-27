@@ -137,15 +137,53 @@ const MarkupEditorToolbar = ({
 
   return (
     <div className="markup-editor-toolbar">
-      {actions.map(({ name, icon, onClick }) => (
+      <div className="markup-editor-toolbar-left">
+        {actions.map(({ name, icon, onClick }) => (
+          <MarkupEditorButton
+            key={icon}
+            title={name}
+            icon={icon}
+            disabled={disabled || !element}
+            onClick={onClick}
+          />
+        ))}
+      </div>
+      <div className="markup-editor-toolbar-right">
+        <div className="markup-editor-controls-dropdown">
+          <button
+            type="button"
+            className="btn btn-markup-editor dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            disabled={disabled || !element}
+          >
+            <span className="material-icon">more_vert</span>
+          </button>
+          <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
+            {actions.map(({ name, icon, onClick }) => (
+              <li key={icon}>
+                <button
+                  type="button"
+                  className="btn-link"
+                  disabled={disabled || !element}
+                  onClick={onClick}
+                >
+                  <span className="material-icon">{icon}</span>
+                  {name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         <MarkupEditorButton
-          key={icon}
-          title={name}
-          icon={icon}
-          disabled={disabled || !element}
-          onClick={onClick}
+          title={pgettext("markup editor", "Formatting help")}
+          icon="help_outline"
+          onClick={() => {
+            console.log("FORMATTING HELP")
+          }}
         />
-      ))}
+      </div>
     </div>
   )
 }

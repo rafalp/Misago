@@ -41,7 +41,10 @@ export default class extends Form {
 
   onCancel = () => {
     const cancel = window.confirm(
-      pgettext("post thread", "Are you sure you want to discard private thread?")
+      pgettext(
+        "post thread",
+        "Are you sure you want to discard private thread?"
+      )
     )
     if (cancel) {
       this.close()
