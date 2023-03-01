@@ -13,7 +13,7 @@ export default class extends Form {
   constructor(props) {
     super(props)
 
-    const poll = props.poll || {
+    const poll = props.poll.id ? props.poll : {
       question: "",
       choices: [
         {
@@ -30,10 +30,10 @@ export default class extends Form {
       allow_revotes: 0,
       is_public: 0,
     }
-
+  
     this.state = {
       isLoading: false,
-      isEdit: !!poll.question,
+      isEdit: !!poll.id,
 
       question: poll.question,
       choices: poll.choices,
@@ -92,9 +92,9 @@ export default class extends Form {
 
     if (this.state.isEdit) {
       return ajax.put(this.props.poll.api.index, data)
-    } else {
-      return ajax.post(this.props.thread.api.poll, data)
     }
+
+    return ajax.post(this.props.thread.api.poll, data)
   }
 
   handleSuccess(data) {
@@ -132,7 +132,7 @@ export default class extends Form {
           <div className="panel panel-default panel-form">
             <div className="panel-heading">
               <h3 className="panel-title">
-                {!!this.props.poll
+                {this.state.isEdit
                   ? pgettext("thread poll", "Edit poll")
                   : pgettext("thread poll", "Add poll")}
               </h3>

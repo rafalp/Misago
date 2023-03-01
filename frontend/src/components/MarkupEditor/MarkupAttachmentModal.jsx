@@ -66,6 +66,15 @@ export default function MarkupAttachmentModal({ attachment }) {
             </div>
           </div>
         </div>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            data-dismiss="modal"
+            type="button"
+          >
+            {pgettext("modal", "Close")}
+          </button>
+        </div>
       </div>
     </div>
   )

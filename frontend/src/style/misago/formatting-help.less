@@ -1,0 +1,36 @@
+.formatting-help {
+  padding-bottom: 0;
+
+  &>h4 {
+    margin-bottom: @line-height-computed;
+  }
+}
+
+.formatting-help-item,
+.formatting-help-item pre {
+  margin-bottom: @line-height-computed;
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .formatting-help-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .formatting-help-item-markup,
+  .formatting-help-item-preview {
+    width: 50%;
+  }
+
+  .formatting-help-item-markup {
+    padding-right: floor(@grid-gutter-width / 2);
+
+    pre {
+      margin: 0;
+    }
+  }
+
+  .formatting-help-item-preview {
+    padding-left: floor(@grid-gutter-width / 2);
+  }
+}

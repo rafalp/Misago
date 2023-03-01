@@ -2,6 +2,11 @@
 // Markup styles
 // --------------------------------------------------
 
+// Set font-size
+.misago-markup {
+  font-size: @misago-markup-font-size;
+}
+
 // Force word wrap for user text
 .misago-markup {
   h1,
@@ -145,4 +150,10 @@
     margin: @padding-large-vertical * -1;
     padding: ((@line-height-computed - 1) / 2);
   }
+}
+
+// Align markup horizontally
+.misago-markup-example {
+  display: flex;
+  align-items: center;
 }

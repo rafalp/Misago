@@ -7,9 +7,7 @@ export default function initializer() {
   if (misago.has("THREAD") && misago.get("THREAD").poll) {
     initialState = hydrate(misago.get("THREAD").poll)
   } else {
-    initialState = {
-      isBusy: false,
-    }
+    initialState = {}
   }
 
   store.addReducer("poll", reducer, initialState)

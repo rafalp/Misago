@@ -19,7 +19,6 @@ export function paths() {
     thread.slug + "-" + thread.pk,
     ":slug"
   )
-
   return [
     {
       path: basePath,

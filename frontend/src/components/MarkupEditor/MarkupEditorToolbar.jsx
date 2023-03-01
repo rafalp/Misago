@@ -2,6 +2,7 @@ import React from "react"
 import misago from "../../"
 import modal from "../../services/modal"
 import MarkupCodeModal from "./MarkupCodeModal"
+import MarkupFormattingHelpModal from "./MarkupFormattingHelpModal"
 import MarkupImageModal from "./MarkupImageModal"
 import MarkupLinkModal from "./MarkupLinkModal"
 import MarkupQuoteModal from "./MarkupQuoteModal"
@@ -180,7 +181,7 @@ const MarkupEditorToolbar = ({
           title={pgettext("markup editor", "Formatting help")}
           icon="help_outline"
           onClick={() => {
-            console.log("FORMATTING HELP")
+            modal.show(<MarkupFormattingHelpModal />)
           }}
         />
       </div>
