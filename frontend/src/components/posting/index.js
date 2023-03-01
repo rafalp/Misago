@@ -8,7 +8,7 @@ import Reply from "./reply"
 import Edit from "./edit"
 
 export default function (props) {
-  switch(props.mode)  {
+  switch (props.mode) {
     case "START":
       return <Start {...props} />
 
@@ -17,10 +17,10 @@ export default function (props) {
 
     case "REPLY":
       return <Reply {...props} />
-    
+
     case "EDIT":
       return <Edit {...props} />
-    
+
     default:
       return null
   }

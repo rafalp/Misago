@@ -13,24 +13,26 @@ export default class extends Form {
   constructor(props) {
     super(props)
 
-    const poll = props.poll.id ? props.poll : {
-      question: "",
-      choices: [
-        {
-          hash: "choice-10000",
-          label: "",
-        },
-        {
-          hash: "choice-20000",
-          label: "",
-        },
-      ],
-      length: 0,
-      allowed_choices: 1,
-      allow_revotes: 0,
-      is_public: 0,
-    }
-  
+    const poll = props.poll.id
+      ? props.poll
+      : {
+          question: "",
+          choices: [
+            {
+              hash: "choice-10000",
+              label: "",
+            },
+            {
+              hash: "choice-20000",
+              label: "",
+            },
+          ],
+          length: 0,
+          allowed_choices: 1,
+          allow_revotes: 0,
+          is_public: 0,
+        }
+
     this.state = {
       isLoading: false,
       isEdit: !!poll.id,
