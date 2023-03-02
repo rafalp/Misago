@@ -1,5 +1,6 @@
 import React from "react"
 import modal from "../../services/modal"
+import snackbar from "../../services/snackbar"
 import formatFilesize from "../../utils/file-size"
 import MarkupAttachmentModal from "./MarkupAttachmentModal"
 import { getSelection, replaceSelection } from "./operations"
@@ -84,15 +85,14 @@ const MarkupEditorAttachment = ({
               className="btn btn-markup-editor-attachment btn-icon"
               title={pgettext("markup editor", "See error")}
               type="button"
-              disabled={disabled}
               onClick={() => {
-                setState(({ attachments }) => {
-                  return {
-                    attachments: attachments.filter(
-                      ({ key }) => key !== attachment.key
-                    ),
-                  }
-                })
+                snackbar.error(
+                  interpolate(
+                    pgettext("markup editor", "%(filename)s: %(error)s"),
+                    { filename: attachment.filename, error: attachment.error },
+                    true
+                  )
+                )
               }}
             >
               <span className="material-icon">warning</span>

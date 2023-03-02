@@ -38,25 +38,27 @@ const MarkupEditorFooter = ({
       </Button>
     )}
     {!!canProtect && (
-      <Button
-        className="btn-default hidden-xs"
-        type="button"
-        disabled={disabled}
-        onClick={() => {
-          if (isProtected) {
-            disableProtection()
-          } else {
-            enableProtection()
-          }
-        }}
-      >
-        <span className="material-icon">
-          {isProtected ? "lock" : "lock_open"}
-        </span>
-        {isProtected
-          ? pgettext("markup editor", "Protected")
-          : pgettext("markup editor", "Protect")}
-      </Button>
+      <div>
+        <Button
+          className="btn-default hidden-xs"
+          type="button"
+          disabled={disabled}
+          onClick={() => {
+            if (isProtected) {
+              disableProtection()
+            } else {
+              enableProtection()
+            }
+          }}
+        >
+          <span className="material-icon">
+            {isProtected ? "lock" : "lock_open"}
+          </span>
+          {isProtected
+            ? pgettext("markup editor", "Protected")
+            : pgettext("markup editor", "Protect")}
+        </Button>
+      </div>
     )}
     <div className="markup-editor-spacer" />
     {preview ? (
