@@ -144,11 +144,15 @@ class MarkupEditor extends React.Component {
       )}
       <MarkupEditorFooter
         preview={this.state.preview}
+        canProtect={this.props.canProtect}
+        isProtected={this.props.isProtected}
         disabled={this.props.disabled}
         empty={
           this.props.value.trim().length <
             misago.get("SETTINGS").post_length_min || this.state.loading
         }
+        enableProtection={this.props.enableProtection}
+        disableProtection={this.props.disableProtection}
         showPreview={this.showPreview}
         closePreview={this.closePreview}
         submitText={this.props.submitText}

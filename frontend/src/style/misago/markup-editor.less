@@ -240,10 +240,24 @@
   }
 }
 
-// Limit editor attachments list height on mobile devices
+// Some overrides for x-small mobile devices
 @media screen and (max-width: @screen-xs-max) {
+  // Limit editor attachments list height on small mobile devices
   .markup-editor-attachments {
     max-height: @markup-editor-attachments-max-height-xs;
+  }
+
+  // Make buttons in footer take whole width
+  .markup-editor-footer .btn-auto {
+    flex: 1;
+  }
+
+  .markup-editor-footer .btn-icon {
+    margin-right: @line-height-computed / 2;
+  }
+
+  .markup-editor-spacer {
+    display: none;
   }
 }
 

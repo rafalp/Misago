@@ -266,6 +266,10 @@ export default class extends Form {
         >
           <MarkupEditor
             attachments={this.state.attachments}
+            canProtect={this.state.canProtect}
+            isProtected={this.state.protect}
+            enableProtection={() => this.setState({ protect: true })}
+            disableProtection={() => this.setState({ protect: false })}
             value={this.state.post}
             submitText={pgettext("edit reply submit", "Edit reply")}
             disabled={this.state.isLoading}
