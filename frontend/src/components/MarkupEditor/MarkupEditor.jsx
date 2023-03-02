@@ -39,13 +39,13 @@ class MarkupEditor extends React.Component {
           snackbar.apiError(rejection)
         }
 
-        this.setState({ loading: false })
+        this.setState({ loading: false, preview: false })
       }
     )
   }
 
   closePreview = () => {
-    this.setState({ preview: false })
+    this.setState({ loading: false, preview: false })
   }
 
   onDrop = (event) => {
@@ -103,11 +103,7 @@ class MarkupEditor extends React.Component {
         <div className="markup-editor-preview">
           {this.state.loading ? (
             <div className="ui-preview">
-              <span className="ui-preview-text" style={{ width: "140px" }} />{" "}
-              <span className="ui-preview-text" style={{ width: "60px" }} />{" "}
-              <span className="ui-preview-text" style={{ width: "100px" }} />{" "}
-              <span className="ui-preview-text" style={{ width: "40px" }} />{" "}
-              <span className="ui-preview-text" style={{ width: "80px" }} />
+              <span className="ui-preview-text" style={{ width: "240px" }} />
             </div>
           ) : (
             <MisagoMarkup markup={this.state.parsed} />
