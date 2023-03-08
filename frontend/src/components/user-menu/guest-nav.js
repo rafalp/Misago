@@ -14,7 +14,7 @@ export class GuestMenu extends React.Component {
 
   render() {
     const delegateAuth = misago.get("SETTINGS").DELEGATE_AUTH
-  
+
     return (
       <ul
         className="dropdown-menu user-dropdown dropdown-menu-right"
@@ -64,7 +64,7 @@ export class GuestMenu extends React.Component {
 
 export class GuestNav extends GuestMenu {
   render() {
-    if (misago.get("SETTINGS").DELEGATE_AUTH)  {
+    if (misago.get("SETTINGS").DELEGATE_AUTH) {
       return (
         <div className="nav nav-guest">
           <a

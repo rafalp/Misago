@@ -120,7 +120,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
         # Add [hr] and [quote] blocks
         md.parser.blockprocessors.register(BBCodeHRProcessor(md.parser), "bb_hr", 45)
 
-        fenced_code = FencedCodeExtension(lang_prefix="")
+        fenced_code = FencedCodeExtension(lang_prefix="language-")
         fenced_code.extendMarkdown(md)
 
         code_bbcode = CodeBlockExtension()

@@ -1,0 +1,263 @@
+//
+// Posting dialog
+// --------------------------------------------------
+
+// Mount is the container for positioning posting dialog on the page
+#posting-mount {
+  display: none;
+
+  &.show {
+    display: block;
+  }
+
+  // Positioning override for easier dev
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+// Posting dialog
+.posting-dialog {
+  // Limit max width and add margin on sides
+  max-width: @posting-dialog-max-width;
+  margin: 0 auto;
+
+  background: @posting-dialog-bg;
+  border: 1px solid @posting-dialog-border;
+  border-radius: @border-radius-base @border-radius-base 0 0;
+  border-bottom: 0;
+  box-shadow: @posting-dialog-shadow;
+
+  overflow: hidden;
+}
+
+// Posting dialog header
+.posting-dialog-header {
+  display: flex;
+  align-items: center;
+  padding: @posting-dialog-padding-vertical @posting-dialog-padding-horizontal;
+
+  border-bottom: 1px solid @posting-dialog-border;
+}
+
+.posting-dialog-caption {
+  flex: 1;
+  color: @posting-dialog-caption-color;
+  font-size: @posting-dialog-caption-size;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-posting-dialog {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: @posting-dialog-btn-size;
+  height: @posting-dialog-btn-size;
+  margin-left: @line-height-computed / 2;
+  padding: 0;
+
+  font-size: @posting-dialog-btn-icon-size;
+  line-height: @posting-dialog-btn-icon-size;
+
+  &,
+  &:hover {
+    background-color: @posting-dialog-btn-bg;
+    border: 1px solid @posting-dialog-btn-border;
+    color: @posting-dialog-btn-color;
+  }
+
+  &:active {
+    background-color: @posting-dialog-btn-active-bg;
+    border: 1px solid @posting-dialog-btn-active-border;
+    color: @posting-dialog-btn-active-color;
+  }
+
+  .material-icon {
+    padding: 0;
+    margin: 0;
+    bottom: 0;
+  }
+}
+
+// Posting dialog body
+.posting-dialog-body {
+  padding: @posting-dialog-padding-horizontal;
+}
+
+// Posting dialog toolbar (used on new thread forms)
+@media screen and (min-width: @screen-md-min) {
+  .posting-dialog-thread-recipients,
+  .posting-dialog-category-select {
+    max-width: 400px;
+  }
+}
+
+// Override styles when dialog is minimized
+.posting-dialog-minimized {
+  .posting-dialog-header {
+    border-bottom: 0;
+  }
+
+  .posting-dialog-body {
+    display: none;
+  }
+}
+
+// Fullscreen mode styles
+body.posting-fullscreen {
+  // Remove scroll from body
+  overflow: hidden;
+
+  // Hide root mount contents
+  #misago-container {
+    display: none;
+  }
+
+  // Make mount take full screen
+  #posting-mount {
+    height: 100%;
+  }
+
+  // Make dialog fullscreen
+  .posting-dialog {
+    height: 100%;
+    width: 100%;
+    max-width: auto;
+
+    border: 0;
+    box-shadow: none;
+  }
+
+  .posting-dialog-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: @posting-dialog-max-width;
+    margin: 0 auto;
+    padding: 0 @grid-gutter-width;
+  }
+
+  .posting-dialog-header,
+  .posting-dialog-body {
+    padding: @line-height-computed 0;
+  }
+
+  .posting-dialog-body,
+  .posting-loading {
+    height: 100%;
+  }
+
+  .posting-dialog-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  // Hide spacer
+  #posting-spacer {
+    display: none;
+  }
+}
+
+// Remove border radius and side borders from screens where dialog is full-width
+@media screen and (max-width: @posting-dialog-max-width) {
+  body.posting-default .posting-dialog,
+  body.posting-minimized .posting-dialog {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+}
+
+// Make standard posting dialog fullscreen on mobile displays
+@media screen and (max-width: @screen-sm-max) {
+  body.posting-default {
+    // Remove scroll from body
+    overflow: hidden;
+
+    // Hide root mount contents
+    #misago-container {
+      display: none;
+    }
+
+    // Make mount take full screen
+    #posting-mount {
+      height: 100%;
+    }
+
+    // Make dialog fullscreen
+    .posting-dialog {
+      height: 100%;
+      width: 100%;
+      max-width: auto;
+
+      border: 0;
+      box-shadow: none;
+    }
+
+    .posting-dialog-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: @posting-dialog-max-width;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .posting-dialog-header,
+    .posting-dialog-body {
+      padding: @posting-dialog-padding-xs;
+    }
+
+    .posting-dialog-body,
+    .posting-loading {
+      height: 100%;
+    }
+
+    .posting-dialog-form {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .posting-dialog .toolbar-section {
+      margin-bottom: @posting-dialog-padding-xs;
+    }
+
+    // Hide spacer
+    #posting-spacer {
+      display: none;
+    }
+  }
+}
+
+// Posting dialog error
+.posting-dialog-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  padding: @line-height-computed;
+
+  p {
+    font-size: @font-size-large;
+  }
+}
+
+.posting-dialog-error-icon {
+  margin-bottom: @line-height-computed;
+
+  font-size: 128px;
+  opacity: 0.5;
+}
+
+.posting-dialog-error-detail {
+  text-align: center;
+}

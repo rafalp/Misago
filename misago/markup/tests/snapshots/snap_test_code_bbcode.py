@@ -13,11 +13,11 @@ snapshots[
 
 snapshots[
     "test_code_with_language_parameter 1"
-] = '<pre><code class="php">echo(&quot;Hello!&quot;);</code></pre>'
+] = '<pre><code class="language-php">echo(&quot;Hello!&quot;);</code></pre>'
 
 snapshots[
     "test_code_with_quoted_language_parameter 1"
-] = '<pre><code class="php">echo(&quot;Hello!&quot;);</code></pre>'
+] = '<pre><code class="language-php">echo(&quot;Hello!&quot;);</code></pre>'
 
 snapshots[
     "test_multi_line_code 1"

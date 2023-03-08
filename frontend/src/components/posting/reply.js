@@ -1,14 +1,16 @@
 import React from "react"
-import Editor from "misago/components/editor"
 import Form from "misago/components/form"
-import Container from "./utils/container"
-import Loader from "./utils/loader"
-import Message from "./utils/message"
 import * as attachments from "./utils/attachments"
 import { getPostValidators } from "./utils/validators"
 import ajax from "misago/services/ajax"
 import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
+import MarkupEditor from "../MarkupEditor"
+import PostingDialog from "./PostingDialog"
+import PostingDialogBody from "./PostingDialogBody"
+import PostingDialogError from "./PostingDialogError"
+import PostingDialogHeader from "./PostingDialogHeader"
+import { clearGlobalState, setGlobalState } from "./globalState"
 
 export default class extends Form {
   constructor(props) {
@@ -17,9 +19,13 @@ export default class extends Form {
     this.state = {
       isReady: false,
       isLoading: false,
-      isErrored: false,
 
-      post: "",
+      error: null,
+
+      minimized: false,
+      fullscreen: false,
+
+      post: this.props.default || "",
       attachments: [],
 
       validators: {
@@ -33,6 +39,12 @@ export default class extends Form {
     ajax
       .get(this.props.config, this.props.context || null)
       .then(this.loadSuccess, this.loadError)
+
+    setGlobalState(false, this.onQuote)
+  }
+
+  componentWillUnmount() {
+    clearGlobalState()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,13 +64,13 @@ export default class extends Form {
 
       post: data.post
         ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]"
-        : "",
+        : this.state.post,
     })
   }
 
   loadError = (rejection) => {
     this.setState({
-      isErrored: rejection.detail,
+      error: rejection.detail,
     })
   }
 
@@ -78,14 +90,16 @@ export default class extends Form {
         post: newPost,
       }
     })
+
+    this.open()
   }
 
   onCancel = () => {
     const cancel = window.confirm(
-      gettext("Are you sure you want to discard your reply?")
+      pgettext("post reply", "Are you sure you want to discard your reply?")
     )
     if (cancel) {
-      posting.close()
+      this.close()
     }
   }
 
@@ -94,9 +108,19 @@ export default class extends Form {
   }
 
   onAttachmentsChange = (attachments) => {
-    this.setState({
-      attachments,
+    this.setState(attachments)
+  }
+
+  onQuote = (quote) => {
+    this.setState(({ post }) => {
+      if (post.length > 0) {
+        return { post: post.trim() + "\n\n" + quote }
+      }
+
+      return { post: quote }
     })
+
+    this.open()
   }
 
   clean() {
@@ -116,6 +140,8 @@ export default class extends Form {
   }
 
   send() {
+    setGlobalState(true, this.onQuote)
+
     return ajax.post(this.props.submit, {
       post: this.state.post,
       attachments: attachments.clean(this.state.attachments),
@@ -123,13 +149,15 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Your reply has been posted."))
+    snackbar.success(pgettext("post reply", "Your reply has been posted."))
     window.location = success.url.index
 
     // keep form loading
     this.setState({
       isLoading: true,
     })
+
+    setGlobalState(false, this.onQuote)
   }
 
   handleError(rejection) {
@@ -144,33 +172,121 @@ export default class extends Form {
     } else {
       snackbar.apiError(rejection)
     }
+
+    setGlobalState(false, this.onQuote)
+  }
+
+  close = () => {
+    this.minimize()
+    posting.close()
+  }
+
+  minimize = () => {
+    this.setState({ fullscreen: false, minimized: true })
+  }
+
+  open = () => {
+    this.setState({ minimized: false })
+    if (this.state.fullscreen) {
+    }
+  }
+
+  fullscreenEnter = () => {
+    this.setState({ fullscreen: true, minimized: false })
+  }
+
+  fullscreenExit = () => {
+    this.setState({ fullscreen: false, minimized: false })
   }
 
   render() {
-    if (this.state.isReady) {
-      return (
-        <Container className="posting-form">
-          <form onSubmit={this.handleSubmit} method="POST">
-            <div className="row">
-              <div className="col-md-12">
-                <Editor
-                  attachments={this.state.attachments}
-                  loading={this.state.isLoading}
-                  onAttachmentsChange={this.onAttachmentsChange}
-                  onCancel={this.onCancel}
-                  onChange={this.onPostChange}
-                  submitLabel={gettext("Post reply")}
-                  value={this.state.post}
-                />
-              </div>
-            </div>
-          </form>
-        </Container>
-      )
-    } else if (this.state.isErrored) {
-      return <Message message={this.state.isErrored} />
-    } else {
-      return <Loader />
+    const dialogProps = {
+      thread: this.props.thread,
+
+      minimized: this.state.minimized,
+      minimize: this.minimize,
+      open: this.open,
+
+      fullscreen: this.state.fullscreen,
+      fullscreenEnter: this.fullscreenEnter,
+      fullscreenExit: this.fullscreenExit,
+
+      close: this.onCancel,
     }
+
+    if (this.state.error) {
+      return (
+        <PostingDialogReply {...dialogProps}>
+          <PostingDialogError message={this.state.error} close={this.close} />
+        </PostingDialogReply>
+      )
+    }
+
+    if (!this.state.isReady) {
+      return (
+        <PostingDialogReply {...dialogProps}>
+          <div className="posting-loading ui-preview">
+            <MarkupEditor
+              attachments={[]}
+              value={""}
+              submitText={pgettext("post reply submit", "Post reply")}
+              disabled={true}
+              onAttachmentsChange={() => {}}
+              onChange={() => {}}
+            />
+          </div>
+        </PostingDialogReply>
+      )
+    }
+
+    return (
+      <PostingDialogReply {...dialogProps}>
+        <form
+          className="posting-dialog-form"
+          method="POST"
+          onSubmit={this.handleSubmit}
+        >
+          <MarkupEditor
+            attachments={this.state.attachments}
+            value={this.state.post}
+            submitText={pgettext("post reply submit", "Post reply")}
+            disabled={this.state.isLoading}
+            onAttachmentsChange={this.onAttachmentsChange}
+            onChange={this.onPostChange}
+          />
+        </form>
+      </PostingDialogReply>
+    )
   }
 }
+
+const PostingDialogReply = ({
+  children,
+  close,
+  minimized,
+  minimize,
+  open,
+  fullscreen,
+  fullscreenEnter,
+  fullscreenExit,
+  thread,
+}) => (
+  <PostingDialog fullscreen={fullscreen} minimized={minimized}>
+    <PostingDialogHeader
+      fullscreen={fullscreen}
+      fullscreenEnter={fullscreenEnter}
+      fullscreenExit={fullscreenExit}
+      minimized={minimized}
+      minimize={minimize}
+      open={open}
+      close={close}
+    >
+      {interpolate(
+        pgettext("post reply", "Reply to: %(thread)s"),
+        { thread: thread.title },
+        true
+      )}
+    </PostingDialogHeader>
+    <PostingDialogBody>{children}</PostingDialogBody>
+  </PostingDialog>
+)

@@ -81,6 +81,10 @@
 @category-read-color: @gray-light;
 @category-new-color: @brand-success;
 
+//== Parsed markup size
+//
+@misago-markup-font-size: 16px;
+
 //== Category label colors
 //
 
@@ -164,6 +168,76 @@
 //== User profile header
 
 @profile-header-avatar-offset: @line-height-computed + 34px;
+
+// Quote control
+
+@quote-control-bg: fadeOut(@gray, 25);
+@quote-control-radius: @border-radius-large;
+@quote-control-padding: @padding-base-vertical;
+
+@quote-control-btn-bg: #fff;
+@quote-control-btn-color: @text-color;
+
+//== Posting dialog
+//
+
+@posting-dialog-max-width: 1240px;
+
+@posting-dialog-padding-vertical: @padding-base-vertical;
+@posting-dialog-padding-horizontal: @padding-base-horizontal;
+@posting-dialog-padding-xs: @padding-base-vertical;
+
+@posting-dialog-bg: #fff;
+@posting-dialog-border: @gray-lighter;
+@posting-dialog-radius: @border-radius-base;
+
+@posting-dialog-shadow: 0 0 24px fadeOut(@gray, 75);
+
+@posting-dialog-caption-color: @text-color;
+@posting-dialog-caption-size: @font-size-large;
+
+@posting-dialog-btn-size: 32px;
+@posting-dialog-btn-icon-size: 24px;
+
+@posting-dialog-btn-bg: transparent;
+@posting-dialog-btn-border: transparent;
+@posting-dialog-btn-color: @text-color;
+
+@posting-dialog-btn-active-bg: @gray-lighter;
+@posting-dialog-btn-active-border: @gray-lighter;
+@posting-dialog-btn-active-color: @text-color;
+
+//== Markup editor
+
+@markup-editor-height: 200px;
+@markup-editor-padding: floor(@grid-gutter-width / 2);
+
+@markup-editor-bg: @input-bg;
+@markup-editor-border-color: @input-border;
+@markup-editor-border-focus: @brand-primary;
+@markup-editor-font-size: @misago-markup-font-size;
+
+@markup-editor-toolbar-padding: floor(@grid-gutter-width / 4);
+@markup-editor-toolbar-bg: #fff;
+@markup-editor-toolbar-border-color: @gray-lighter;
+
+@markup-editor-btn-size: 34px;
+@markup-editor-btn-icon-size: 24px;
+
+@markup-editor-btn-bg: transparent;
+@markup-editor-btn-border: transparent;
+@markup-editor-btn-color: @text-color;
+
+@markup-editor-btn-active-bg: @gray-lighter;
+@markup-editor-btn-active-border: @gray-lighter;
+@markup-editor-btn-active-color: @text-color;
+
+@markup-editor-attachments-max-height: 170px;
+@markup-editor-attachments-max-height-xs: 120px;
+@markup-editor-attachment-border-color: @gray-lighter;
+
+@markup-editor-footer-bg: #fff;
+@markup-editor-footer-border-color: @gray-lighter;
 
 //-- Z-index master list
 //

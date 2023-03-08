@@ -1,0 +1,27 @@
+/*!
+  Highlight.js v11.7.0 (git: 82688fad18)
+  (c) 2006-2022 undefined and other contributors
+  License: BSD-3-Clause
+ */
+
+/*! `css` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `java` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `javascript` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `kotlin` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `less` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `plaintext` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `scss` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `shell` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `swift` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `typescript` grammar compiled for Highlight.js 11.7.0 */
+
+/*! `xml` grammar compiled for Highlight.js 11.7.0 */

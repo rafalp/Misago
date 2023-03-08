@@ -7,22 +7,23 @@ export class OneBox {
     this._youtube = {}
   }
 
-  render = (domnode) => {
-    if (!domnode) return
-    this.highlightCode(domnode)
-    this.embedYoutubePlayers(domnode)
+  render = (element) => {
+    if (!element) return
+    this.highlightCode(element)
+    this.embedYoutubePlayers(element)
   }
 
-  highlightCode(domnode) {
-    const codeblocks = domnode.querySelectorAll("pre>code")
-    for (let i = 0; i < codeblocks.length; i++) {
-      const code = codeblocks[i]
-      hljs.highlightBlock(code)
-    }
+  highlightCode(element) {
+    import("highlight").then(({ default: hljs }) => {
+      const codeblocks = element.querySelectorAll("pre>code")
+      for (let i = 0; i < codeblocks.length; i++) {
+        hljs.highlightElement(codeblocks[i])
+      }
+    })
   }
 
-  embedYoutubePlayers(domnode) {
-    const anchors = domnode.querySelectorAll("p>a")
+  embedYoutubePlayers(element) {
+    const anchors = element.querySelectorAll("p>a")
     for (let i = 0; i < anchors.length; i++) {
       const a = anchors[i]
       const p = a.parentNode

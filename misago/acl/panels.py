@@ -16,7 +16,7 @@ class MisagoACLPanel(Panel):
             return misago_user.username
         return _("Anonymous user")
 
-    def process_response(self, request, response):
+    def generate_stats(self, request, response):
         try:
             misago_user = request.user
         except AttributeError:

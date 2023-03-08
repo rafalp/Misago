@@ -81,7 +81,7 @@ export default class extends Form {
 
   render() {
     return (
-      <div className="modal-dialog" role="document">
+      <div className="modal-dialog modal-lg" role="document">
         <form onSubmit={this.handleSubmit}>
           <div className="modal-content">
             <ModalHeader />
@@ -123,7 +123,7 @@ export function ModalHeader(props) {
   return (
     <div className="modal-header">
       <button
-        aria-label={gettext("Close")}
+        aria-label={pgettext("modal", "Close")}
         className="close"
         data-dismiss="modal"
         type="button"

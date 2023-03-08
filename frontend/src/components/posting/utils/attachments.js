@@ -1,13 +1,13 @@
 import moment from "moment"
 
 export function clean(attachments) {
-  const completedAttachments = attachments.filter((attachment) => {
-    return attachment.id && !attachment.isRemoved
-  })
-
-  return completedAttachments.map((a) => {
-    return a.id
-  })
+  return attachments
+    .filter((attachment) => {
+      return attachment.id && !attachment.isRemoved
+    })
+    .map((a) => {
+      return a.id
+    })
 }
 
 export function hydrate(attachments) {

@@ -1,14 +1,16 @@
 import React from "react"
-import Editor from "misago/components/editor"
 import Form from "misago/components/form"
-import Container from "./utils/container"
-import Message from "./utils/message"
 import * as attachments from "./utils/attachments"
 import cleanUsernames from "./utils/usernames"
 import { getPostValidators, getTitleValidators } from "./utils/validators"
 import ajax from "misago/services/ajax"
 import posting from "misago/services/posting"
 import snackbar from "misago/services/snackbar"
+import MarkupEditor from "../MarkupEditor"
+import { Toolbar, ToolbarItem, ToolbarSection } from "../Toolbar"
+import PostingDialog from "./PostingDialog"
+import PostingDialogBody from "./PostingDialogBody"
+import PostingDialogHeader from "./PostingDialogHeader"
 
 export default class extends Form {
   constructor(props) {
@@ -18,6 +20,11 @@ export default class extends Form {
 
     this.state = {
       isLoading: false,
+
+      error: null,
+
+      minimized: false,
+      fullscreen: false,
 
       to: to,
       title: "",
@@ -34,10 +41,13 @@ export default class extends Form {
 
   onCancel = () => {
     const cancel = window.confirm(
-      gettext("Are you sure you want to discard private thread?")
+      pgettext(
+        "post thread",
+        "Are you sure you want to discard private thread?"
+      )
     )
     if (cancel) {
-      posting.close()
+      this.close()
     }
   }
 
@@ -54,9 +64,7 @@ export default class extends Form {
   }
 
   onAttachmentsChange = (attachments) => {
-    this.setState({
-      attachments,
-    })
+    this.setState(attachments)
   }
 
   clean() {
@@ -100,7 +108,7 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Your thread has been posted."))
+    snackbar.success(pgettext("post thread", "Your thread has been posted."))
     window.location = success.url
 
     // keep form loading
@@ -125,51 +133,110 @@ export default class extends Form {
     }
   }
 
+  close = () => {
+    this.minimize()
+    posting.close()
+  }
+
+  minimize = () => {
+    this.setState({ fullscreen: false, minimized: true })
+  }
+
+  open = () => {
+    this.setState({ minimized: false })
+    if (this.state.fullscreen) {
+    }
+  }
+
+  fullscreenEnter = () => {
+    this.setState({ fullscreen: true, minimized: false })
+  }
+
+  fullscreenExit = () => {
+    this.setState({ fullscreen: false, minimized: false })
+  }
+
   render() {
+    const dialogProps = {
+      minimized: this.state.minimized,
+      minimize: this.minimize,
+      open: this.open,
+
+      fullscreen: this.state.fullscreen,
+      fullscreenEnter: this.fullscreenEnter,
+      fullscreenExit: this.fullscreenExit,
+
+      close: this.onCancel,
+    }
+
     return (
-      <Container className="posting-form" withFirstRow={true}>
-        <form onSubmit={this.handleSubmit}>
-          <div className="row first-row">
-            <div className="col-xs-12">
-              <input
-                className="form-control"
-                disabled={this.state.isLoading}
-                onChange={this.onToChange}
-                placeholder={gettext(
-                  "Comma separated list of user names, eg.: Danny, Lisa"
-                )}
-                type="text"
-                value={this.state.to}
-              />
-            </div>
-          </div>
-          <div className="row first-row">
-            <div className="col-xs-12">
-              <input
-                className="form-control"
-                disabled={this.state.isLoading}
-                onChange={this.onTitleChange}
-                placeholder={gettext("Thread title")}
-                type="text"
-                value={this.state.title}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-xs-12">
-              <Editor
-                attachments={this.state.attachments}
-                loading={this.state.isLoading}
-                onAttachmentsChange={this.onAttachmentsChange}
-                onCancel={this.onCancel}
-                onChange={this.onPostChange}
-                submitLabel={gettext("Post thread")}
-                value={this.state.post}
-              />
-            </div>
-          </div>
+      <PostingDialogStartPrivate {...dialogProps}>
+        <form className="posting-dialog-form" onSubmit={this.handleSubmit}>
+          <Toolbar className="posting-dialog-toolbar">
+            <ToolbarSection className="posting-dialog-thread-recipients" auto>
+              <ToolbarItem auto>
+                <input
+                  className="form-control"
+                  disabled={this.state.isLoading}
+                  onChange={this.onToChange}
+                  placeholder={pgettext(
+                    "post thread",
+                    "Recipients, eg.: Danny, Lisa, Alice"
+                  )}
+                  type="text"
+                  value={this.state.to}
+                />
+              </ToolbarItem>
+            </ToolbarSection>
+            <ToolbarSection className="posting-dialog-thread-title" auto>
+              <ToolbarItem auto>
+                <input
+                  className="form-control"
+                  disabled={this.state.isLoading}
+                  onChange={this.onTitleChange}
+                  placeholder={pgettext("post thread", "Thread title")}
+                  type="text"
+                  value={this.state.title}
+                />
+              </ToolbarItem>
+            </ToolbarSection>
+          </Toolbar>
+          <MarkupEditor
+            attachments={this.state.attachments}
+            value={this.state.post}
+            submitText={pgettext("post thread submit", "Start thread")}
+            disabled={this.state.isLoading}
+            onAttachmentsChange={this.onAttachmentsChange}
+            onChange={this.onPostChange}
+          />
         </form>
-      </Container>
+      </PostingDialogStartPrivate>
     )
   }
 }
+
+const PostingDialogStartPrivate = ({
+  children,
+  close,
+  minimized,
+  minimize,
+  open,
+  fullscreen,
+  fullscreenEnter,
+  fullscreenExit,
+}) => (
+  <PostingDialog fullscreen={fullscreen} minimized={minimized}>
+    <PostingDialogHeader
+      fullscreen={fullscreen}
+      fullscreenEnter={fullscreenEnter}
+      fullscreenExit={fullscreenExit}
+      minimized={minimized}
+      minimize={minimize}
+      open={open}
+      close={close}
+    >
+      {pgettext("post thread", "Start private thread")}
+    </PostingDialogHeader>
+    <PostingDialogBody>{children}</PostingDialogBody>
+  </PostingDialog>
+)

@@ -1,6 +1,6 @@
 import React from "react"
 import Participants from "misago/components/participants"
-import { Poll } from "misago/components/poll"
+import { Poll, PollForm } from "misago/components/poll"
 import PostsList from "misago/components/posts-list"
 import * as participants from "misago/reducers/participants"
 import * as poll from "misago/reducers/poll"
@@ -12,12 +12,21 @@ import snackbar from "misago/services/snackbar"
 import posting from "misago/services/posting"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
+import { PostingQuoteSelection } from "../posting"
 import PageContainer from "../PageContainer"
 import ThreadHeader from "./ThreadHeader"
 import ThreadToolbarBottom from "./ThreadToolbarBottom"
 import ThreadToolbarTop from "./ThreadToolbarTop"
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      editPoll: false,
+    }
+  }
+
   componentDidMount() {
     if (this.shouldFetchData()) {
       this.fetchData()
@@ -112,19 +121,18 @@ export default class extends React.Component {
   }
 
   openPollForm = () => {
-    posting.open({
-      mode: "POLL",
-      submit: this.props.thread.api.poll,
+    this.setState({ editPoll: true })
+  }
 
-      thread: this.props.thread,
-      poll: null,
-    })
+  closePollForm = () => {
+    this.setState({ editPoll: false })
   }
 
   openReplyForm = () => {
     posting.open({
       mode: "REPLY",
 
+      thread: this.props.thread,
       config: this.props.thread.api.editor,
       submit: this.props.thread.api.posts.index,
     })
@@ -175,15 +183,39 @@ export default class extends React.Component {
             user={this.props.user}
             selection={selection}
             moderation={postsModeration}
+            pollDisabled={this.state.editPoll}
             onPoll={this.openPollForm}
             onReply={this.openReplyForm}
           />
-          <Poll
-            poll={this.props.poll}
-            thread={this.props.thread}
-            user={this.props.user}
-          />
-          <PostsList {...this.props} />
+          {this.state.editPoll ? (
+            <PollForm
+              poll={this.props.poll}
+              thread={this.props.thread}
+              close={this.closePollForm}
+            />
+          ) : (
+            <Poll
+              poll={this.props.poll}
+              thread={this.props.thread}
+              user={this.props.user}
+              edit={this.openPollForm}
+            />
+          )}
+          {this.props.thread.acl.can_reply ? (
+            <PostingQuoteSelection
+              posting={{
+                mode: "REPLY",
+
+                thread: this.props.thread,
+                config: this.props.thread.api.editor,
+                submit: this.props.thread.api.posts.index,
+              }}
+            >
+              <PostsList {...this.props} />
+            </PostingQuoteSelection>
+          ) : (
+            <PostsList {...this.props} />
+          )}
           <ThreadToolbarBottom
             thread={this.props.thread}
             posts={this.props.posts}

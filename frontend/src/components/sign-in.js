@@ -105,7 +105,7 @@ export default class extends Form {
         <div className="modal-content">
           <div className="modal-header">
             <button
-              aria-label={gettext("Close")}
+              aria-label={pgettext("modal", "Close")}
               className="close"
               data-dismiss="modal"
               type="button"

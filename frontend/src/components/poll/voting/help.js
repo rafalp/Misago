@@ -18,12 +18,13 @@ export function PollChoicesLeft({ choicesLeft }) {
   if (choicesLeft === 0) {
     return (
       <li className="poll-help-choices-left">
-        {gettext("You can't select any more choices.")}
+        {pgettext("thread poll", "You can't select any more choices.")}
       </li>
     )
   }
 
-  const message = ngettext(
+  const message = npgettext(
+    "thread poll",
     "You can select %(choices)s more choice.",
     "You can select %(choices)s more choices.",
     choicesLeft
@@ -44,10 +45,14 @@ export function PollAllowRevote(props) {
   if (props.poll.allow_revotes) {
     return (
       <li className="poll-help-allow-revotes">
-        {gettext("You can change your vote later.")}
+        {pgettext("thread poll", "You can change your vote later.")}
       </li>
     )
   }
 
-  return <li className="poll-help-no-revotes">{gettext("Votes are final.")}</li>
+  return (
+    <li className="poll-help-no-revotes">
+      {pgettext("thread poll", "Votes are final.")}
+    </li>
+  )
 }

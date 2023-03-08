@@ -1,0 +1,268 @@
+//
+// Markup editor
+// --------------------------------------------------
+
+.markup-editor {
+  overflow: hidden;
+
+  background: @markup-editor-bg;
+  border: 2px solid @markup-editor-border-color;
+  border-radius: @border-radius-base;
+}
+
+// Set different border when its focused
+.markup-editor.markup-editor-focused {
+  border: 2px solid @markup-editor-border-focus;
+}
+
+// Toolbar
+.markup-editor-toolbar {
+  position: relative;
+  padding: @markup-editor-toolbar-padding;
+
+  background: @markup-editor-toolbar-bg;
+  border-bottom: 1px solid @markup-editor-toolbar-border-color;
+}
+
+.markup-editor-toolbar-left {
+  display: flex;
+  flex-shrink: 0;
+  overflow-x: hidden;
+}
+
+.markup-editor-toolbar-right {
+  flex-shrink: 0;
+  padding: @markup-editor-toolbar-padding;
+  padding-right: 0;
+  margin-right: @line-height-computed / 2;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+
+  background: @markup-editor-toolbar-bg;
+}
+
+.btn-markup-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  height: @markup-editor-btn-size;
+  width: @markup-editor-btn-size;
+  padding: 0;
+
+  font-size: @markup-editor-btn-icon-size;
+  line-height: @markup-editor-btn-icon-size;
+
+  &,
+  &:hover {
+    background-color: @markup-editor-btn-bg;
+    border-color: @markup-editor-btn-border;
+    color: @markup-editor-btn-color;
+  }
+
+  &:active {
+    background-color: @markup-editor-btn-active-bg;
+    border-color: @markup-editor-btn-active-border;
+    color: @markup-editor-btn-active-color;
+  }
+
+  .material-icon {
+    margin: 0;
+    bottom: 0;
+  }
+}
+
+.markup-editor-controls-dropdown {
+  margin-right: @line-height-computed / 2;
+}
+
+// Footer
+.markup-editor-footer {
+  display: flex;
+  padding: @markup-editor-padding;
+
+  background: @markup-editor-footer-bg;
+  border-top: 1px solid @markup-editor-footer-border-color;
+}
+
+// Spacer that pushes items away from each other
+.markup-editor-spacer {
+  flex: 1;
+}
+
+// Toolbar and footer items layout
+.markup-editor-toolbar,
+.markup-editor-footer {
+  // Add spacing between buttons
+  .btn + .btn {
+    margin-left: @line-height-computed / 2;
+  }
+}
+
+// Textarea
+.markup-editor-textarea.form-control {
+  height: @markup-editor-height;
+  padding: @markup-editor-padding;
+  resize: none;
+
+  border: 0;
+  border-radius: 0;
+
+  font-size: @markup-editor-font-size;
+
+  &,
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// Preview area
+.markup-editor-preview {
+  height: @markup-editor-height;
+  padding: @markup-editor-padding;
+}
+
+// Attachments
+.markup-editor-attachments {
+  max-height: @markup-editor-attachments-max-height;
+  overflow-y: auto;
+}
+
+.markup-editor-attachments-container {
+  padding: floor(@markup-editor-padding / 2);
+  overflow: auto;
+}
+
+.markup-editor-attachments-item {
+  padding: floor(@markup-editor-padding / 2);
+}
+
+.markup-editor-attachment {
+  display: flex;
+  align-items: center;
+  padding: floor(@markup-editor-padding / 2);
+
+  border: 1px solid @markup-editor-attachment-border-color;
+  border-radius: @border-radius-small;
+}
+
+.markup-editor-attachment-details {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  strong {
+    display: block;
+  }
+
+  .list-unstyled {
+    margin-bottom: 0;
+  }
+}
+
+.btn-markup-editor-attachment {
+  margin-left: floor(@markup-editor-padding / 2);
+}
+
+// Make attachments responsive
+@media screen and (min-width: @screen-sm-min) {
+  .markup-editor-attachments-item {
+    width: 50%;
+    float: left;
+  }
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .markup-editor-attachments-item {
+    width: 25%;
+  }
+}
+
+// Center attachment's image in modal
+.markup-editor-attachment-modal-preview {
+  margin: @line-height-computed 0 @line-height-computed * 2 0;
+
+  text-align: center;
+
+  a {
+    display: inline-block;
+    padding: @padding-base-horizontal;
+
+    background: #fff;
+    border: 1px solid @gray-lighter;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 50vh;
+  }
+}
+
+.markup-editor-attachment-modal-filename {
+  font-size: @font-size-base * 2;
+  font-weight: bold;
+  margin-bottom: @line-height-computed;
+}
+
+.markup-editor-attachment-modal-details {
+  margin-bottom: @line-height-computed;
+}
+
+// Make editor take full height on full-screen mode
+.posting-fullscreen .markup-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .markup-editor-textarea,
+  .markup-editor-preview {
+    flex: 1;
+  }
+}
+
+// Make editor take full height on mobile devices
+@media screen and (max-width: @screen-sm-max) {
+  body.posting-default .markup-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .markup-editor-textarea,
+    .markup-editor-preview {
+      flex: 1;
+    }
+  }
+}
+
+// Some overrides for x-small mobile devices
+@media screen and (max-width: @screen-xs-max) {
+  // Limit editor attachments list height on small mobile devices
+  .markup-editor-attachments {
+    max-height: @markup-editor-attachments-max-height-xs;
+  }
+
+  // Make buttons in footer take whole width
+  .markup-editor-footer .btn-auto {
+    flex: 1;
+  }
+
+  .markup-editor-footer .btn-icon {
+    margin-right: @line-height-computed / 2;
+  }
+
+  .markup-editor-spacer {
+    display: none;
+  }
+}
+
+// Hide controls dropdown on larger displays
+@media screen and (min-width: @screen-md-min) {
+  .markup-editor-controls-dropdown {
+    display: none;
+  }
+}

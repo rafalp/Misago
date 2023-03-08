@@ -32,7 +32,12 @@ export default function (props) {
         showVoting={showVoting}
       />
       <SeeVotes controls={controls} poll={poll} />
-      <Edit controls={controls} poll={poll} thread={thread} />
+      <Edit
+        controls={controls}
+        poll={poll}
+        thread={thread}
+        onClick={props.edit}
+      />
       <Delete controls={controls} poll={poll} />
     </div>
   )
@@ -79,7 +84,7 @@ export function ChangeVote(props) {
         onClick={props.showVoting}
         type="button"
       >
-        {gettext("Vote")}
+        {pgettext("thread poll", "Vote")}
       </button>
     </div>
   )
@@ -103,47 +108,35 @@ export class SeeVotes extends React.Component {
           onClick={this.onClick}
           type="button"
         >
-          {gettext("See votes")}
+          {pgettext("thread poll", "See votes")}
         </button>
       </div>
     )
   }
 }
 
-export class Edit extends React.Component {
-  onClick = () => {
-    posting.open({
-      submit: this.props.poll.api.index,
+export function Edit(props) {
+  if (!props.poll.acl.can_edit) return null
 
-      thread: this.props.thread,
-      poll: this.props.poll,
-
-      mode: "POLL",
-    })
-  }
-
-  render() {
-    if (!this.props.poll.acl.can_edit) return null
-
-    return (
-      <div className={getClassName(this.props.controls, 2)}>
-        <button
-          className="btn btn-default btn-block btn-sm"
-          disabled={this.props.poll.isBusy}
-          onClick={this.onClick}
-          type="button"
-        >
-          {gettext("Edit")}
-        </button>
-      </div>
-    )
-  }
+  return (
+    <div className={getClassName(props.controls, 2)}>
+      <button
+        className="btn btn-default btn-block btn-sm"
+        disabled={props.poll.isBusy}
+        onClick={props.onClick}
+        type="button"
+      >
+        {pgettext("thread poll", "Edit")}
+      </button>
+    </div>
+  )
 }
 
 export class Delete extends React.Component {
   onClick = () => {
     const deletePoll = window.confirm(
-      gettext(
+      pgettext(
+        "thread poll",
         "Are you sure you want to delete this poll? This action is not reversible."
       )
     )
@@ -157,7 +150,7 @@ export class Delete extends React.Component {
   }
 
   handleSuccess = (newThreadAcl) => {
-    snackbar.success("Poll has been deleted")
+    snackbar.success(pgettext("thread poll", "Poll has been deleted"))
     store.dispatch(poll.remove())
     store.dispatch(thread.updateAcl(newThreadAcl))
   }
@@ -178,7 +171,7 @@ export class Delete extends React.Component {
           onClick={this.onClick}
           type="button"
         >
-          {gettext("Delete")}
+          {pgettext("thread poll", "Delete")}
         </button>
       </div>
     )

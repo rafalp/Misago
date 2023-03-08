@@ -32,7 +32,7 @@
 
 // Thread icon
 .threads-list-item-col-icon {
-  padding-right: @grid-gutter-width / 2;
+  padding-right: floor(@grid-gutter-width / 2);
 }
 
 .threads-list-icon {
@@ -250,7 +250,7 @@ a.threads-list-item-title-new {
   .threads-list-item-col-icon {
     display: none;
   }
-  
+
   // Spread categories and other details
   .threads-list-item-col-spacer-xs {
     display: block;

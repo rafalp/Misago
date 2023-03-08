@@ -1,19 +1,26 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { PollForm } from "misago/components/poll"
 import PostingComponent from "misago/components/posting"
 import mount from "misago/utils/mount-component"
 
 export class Posting {
-  init(ajax, snackbar, placeholder) {
+  init(ajax, snackbar, mount) {
     this._ajax = ajax
     this._snackbar = snackbar
-    this._placeholder = $(placeholder)
+    this._mount = mount
 
     this._mode = null
+    this._spacer = document.getElementById("posting-spacer")
+    this._observer = new ResizeObserver((entries) => {
+      this._spacer.style.height = entries[0].contentRect.height + "px"
+    })
 
     this._isOpen = false
     this._isClosing = false
+  }
+
+  isOpen() {
+    return this._isOpen
   }
 
   open(props) {
@@ -25,11 +32,6 @@ export class Posting {
       let message = gettext(
         "You are already working on other message. Do you want to discard it?"
       )
-      if (this._mode == "POLL") {
-        message = gettext(
-          "You are already working on a poll. Do you want to discard it?"
-        )
-      }
 
       const changeForm = window.confirm(message)
       if (changeForm) {
@@ -43,33 +45,24 @@ export class Posting {
   }
 
   _realOpen(props) {
-    if (props.mode == "POLL") {
-      mount(<PollForm {...props} />, "posting-mount")
-    } else {
-      mount(<PostingComponent {...props} />, "posting-mount")
-    }
+    mount(<PostingComponent {...props} />, this._mount.id)
 
-    this._placeholder.addClass("slide-in")
-
-    $("html, body").animate(
-      {
-        scrollTop: this._placeholder.offset().top,
-      },
-      1000
-    )
+    this._mount.classList.add("show")
+    this._observer.observe(this._mount)
   }
 
   close = () => {
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true
-      this._placeholder.removeClass("slide-in")
+      this._mount.classList.remove("show")
 
       window.setTimeout(() => {
-        ReactDOM.unmountComponentAtNode(
-          document.getElementById("posting-mount")
-        )
+        ReactDOM.unmountComponentAtNode(this._mount)
+        this._observer.unobserve(this._mount)
+        this._spacer.style.height = "0px;"
         this._isClosing = false
         this._isOpen = false
+        this._mode = null
       }, 300)
     }
   }

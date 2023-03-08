@@ -10,6 +10,7 @@ const ThreadToolbarTop = ({
   thread,
   posts,
   user,
+  pollDisabled,
   selection,
   moderation,
   onPoll,
@@ -28,7 +29,7 @@ const ThreadToolbarTop = ({
     {thread.acl.can_start_poll && !thread.poll && (
       <ToolbarSection className="hidden-xs">
         <ToolbarItem>
-          <ThreadPollButton onClick={onPoll} />
+          <ThreadPollButton disabled={pollDisabled} onClick={onPoll} />
         </ToolbarItem>
       </ToolbarSection>
     )}
@@ -42,7 +43,11 @@ const ThreadToolbarTop = ({
         </ToolbarItem>
         {thread.acl.can_start_poll && !thread.poll && (
           <ToolbarItem className="hidden-sm hidden-md hidden-lg" shrink>
-            <ThreadPollButton onClick={onPoll} compact />
+            <ThreadPollButton
+              disabled={pollDisabled}
+              onClick={onPoll}
+              compact
+            />
           </ToolbarItem>
         )}
         {moderation.enabled && (
@@ -62,7 +67,7 @@ const ThreadToolbarTop = ({
         </ToolbarItem>
         {thread.acl.can_start_poll && !thread.poll && (
           <ToolbarItem>
-            <ThreadPollButton onClick={onPoll} />
+            <ThreadPollButton disabled={pollDisabled} onClick={onPoll} />
           </ToolbarItem>
         )}
         {moderation.enabled && (

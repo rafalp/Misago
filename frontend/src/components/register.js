@@ -140,7 +140,7 @@ export class RegisterForm extends Form {
               type="button"
               className="close"
               data-dismiss="modal"
-              aria-label={gettext("Close")}
+              aria-label={pgettext("modal", "Close")}
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -279,7 +279,7 @@ export class RegisterComplete extends React.Component {
               type="button"
               className="close"
               data-dismiss="modal"
-              aria-label={gettext("Close")}
+              aria-label={pgettext("modal", "Close")}
             >
               <span aria-hidden="true">&times;</span>
             </button>

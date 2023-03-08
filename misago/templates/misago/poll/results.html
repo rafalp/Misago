@@ -18,7 +18,7 @@
               style="width: {{ choice.proc }}%""
             >
               <span class="sr-only">
-                {% blocktrans trimmed count votes=choice.votes with proc=choice.proc %}
+                {% blocktrans trimmed count votes=choice.votes with proc=choice.proc context "thread poll" %}
                   {{ votes }} vote, {{ proc }}% of total.
                 {% plural %}
                   {{ votes }} votes, {{ proc }}% of total.
@@ -28,7 +28,7 @@
           </div>
           <ul class="list-unstyled list-inline poll-chart">
             <li class="poll-chart-votes">
-              {% blocktrans trimmed count votes=choice.votes with proc=choice.proc %}
+              {% blocktrans trimmed count votes=choice.votes with proc=choice.proc context "thread poll" %}
                 {{ votes }} vote, {{ proc }}% of total.
               {% plural %}
                 {{ votes }} votes, {{ proc }}% of total.
@@ -38,7 +38,7 @@
               <li class="poll-chart-selected">
                 <span class="material-icon">
                   check_box
-                </span> {% trans "Your choice." %}
+                </span> {% trans "You've voted on this choice." context "thread poll" %}
               </li>
             {% endif %}
           </ul>
@@ -52,28 +52,28 @@
       {% if poll.acl.can_vote %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "Vote" %}
+            {% trans "Vote" context "thread poll" %}
           </button>
         </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "See votes" %}
+            {% trans "See votes" context "thread poll" %}
           </button>
         </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "Edit" %}
+            {% trans "Edit" context "thread poll" %}
           </button>
         </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "Delete" %}
+            {% trans "Delete" context "thread poll" %}
           </button>
         </div>
       {% endif %}
