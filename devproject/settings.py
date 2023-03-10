@@ -238,6 +238,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "devproject.urls"
 
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
 SOCIAL_AUTH_STRATEGY = "misago.socialauth.strategy.MisagoStrategy"
 
 SOCIAL_AUTH_PIPELINE = (

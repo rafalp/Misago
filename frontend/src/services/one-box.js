@@ -43,15 +43,16 @@ export class OneBox {
   swapYoutubePlayer(element, youtube) {
     let url = "https://www.youtube.com/embed/"
     url += youtube.video
-    url += "?rel=0"
+    url += "?feature=oembed"
     if (youtube.start) {
       url += "&start=" + youtube.start
     }
 
     const player = $(
-      '<iframe class="embed-responsive-item" src="' +
-        url +
-        '" allowfullscreen></iframe>'
+      '<iframe class="embed-responsive-item" frameborder="0" ' +
+      'src="' + url + '" ' +
+      'allow="encrypted-media; gyroscope; picture-in-picture" ' +
+      'allowfullscreen></iframe>'
     )
     $(element).replaceWith(player)
     player.wrap('<div class="embed-responsive embed-responsive-16by9"></div>')
