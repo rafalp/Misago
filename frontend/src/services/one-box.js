@@ -41,18 +41,17 @@ export class OneBox {
   }
 
   swapYoutubePlayer(element, youtube) {
-    let url = "https://www.youtube-nocookie.com/embed/"
+    let url = "https://www.youtube.com/embed/"
     url += youtube.video
     url += "?feature=oembed"
     if (youtube.start) {
       url += "&start=" + youtube.start
     }
-    console.log(url)
+
     const player = $(
       '<iframe class="embed-responsive-item" frameborder="0" ' +
       'src="' + url + '" ' +
-      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; ' +
-      'gyroscope; picture-in-picture; web-share" ' +
+      'allow="encrypted-media; gyroscope; picture-in-picture" ' +
       'allowfullscreen></iframe>'
     )
     $(element).replaceWith(player)
