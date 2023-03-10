@@ -42,15 +42,18 @@ export default class PostingQuoteSelection extends React.Component {
   }
 
   render = () => (
-    <div
-      ref={(element) => {
-        if (element) {
-          this.element = element
-        }
-      }}
-      onMouseUp={this.selected}
-    >
-      {this.props.children}
+    <div>
+      <div
+        ref={(element) => {
+          if (element) {
+            this.element = element
+          }
+        }}
+        onMouseUp={this.selected}
+        onTouchEnd={this.selected}
+      >
+        {this.props.children}
+      </div>
       {!!this.state.rect && (
         <div
           className="quote-control"
