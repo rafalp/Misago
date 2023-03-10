@@ -42,7 +42,7 @@ const ThreadsListItem = ({
     thread.has_poll ||
     thread.has_unapproved_posts
 
-  const isNew = showOptions ? thread.is_new : true
+  const isNew = showOptions ? thread.is_new : false
 
   return (
     <li
