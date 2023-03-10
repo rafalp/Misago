@@ -50,9 +50,11 @@ export class OneBox {
 
     const player = $(
       '<iframe class="embed-responsive-item" frameborder="0" ' +
-      'src="' + url + '" ' +
-      'allow="encrypted-media; gyroscope; picture-in-picture" ' +
-      'allowfullscreen></iframe>'
+        'src="' +
+        url +
+        '" ' +
+        'allow="encrypted-media; gyroscope; picture-in-picture" ' +
+        "allowfullscreen></iframe>"
     )
     $(element).replaceWith(player)
     player.wrap('<div class="embed-responsive embed-responsive-16by9"></div>')
