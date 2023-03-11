@@ -118,9 +118,9 @@ class Attachment(models.Model):
                 # normalize jpg to jpeg for Pillow
                 thumbnail.save(thumb_stream, "jpeg")
             else:
-                thumbnail.save(thumb_stream, fileformat)
+                thumbnail.save(thumb_stream, "png")
         elif strip_animation:
-            thumbnail.save(thumb_stream, fileformat)
+            thumbnail.save(thumb_stream, "png")
 
         if downscale_image or strip_animation:
             self.thumbnail = ContentFile(thumb_stream.getvalue(), upload.name)
