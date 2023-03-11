@@ -19,14 +19,16 @@ const ThreadToolbarBottom = ({
       <ToolbarItem>
         <ThreadPagination baseUrl={thread.url.index} posts={posts} />
       </ToolbarItem>
-      <ToolbarItem className="hidden-sm hidden-md hidden-lg" shrink>
-        <ThreadPostsModeration
-          thread={thread}
-          user={user}
-          selection={selection}
-          dropup
-        />
-      </ToolbarItem>
+      {moderation.enabled && (
+        <ToolbarItem className="hidden-sm hidden-md hidden-lg" shrink>
+          <ThreadPostsModeration
+            thread={thread}
+            user={user}
+            selection={selection}
+            dropup
+          />
+        </ToolbarItem>
+      )}
     </ToolbarSection>
     <ToolbarSection className="hidden-xs hidden-sm" auto>
       <ToolbarItem>
