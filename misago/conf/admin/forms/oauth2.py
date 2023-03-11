@@ -22,7 +22,6 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
         "oauth2_scopes",
         "oauth2_login_url",
         "oauth2_token_url",
-        "oauth2_token_method",
         "oauth2_token_extra_headers",
         "oauth2_json_token_path",
         "oauth2_user_url",
@@ -89,14 +88,6 @@ class ChangeOAuth2SettingsForm(ChangeSettingsForm):
         ),
         max_length=500,
         required=False,
-    )
-    oauth2_token_method = forms.ChoiceField(
-        label=_("Request method"),
-        choices=[
-            ("POST", "POST"),
-            ("GET", "GET"),
-        ],
-        widget=forms.RadioSelect(),
     )
     oauth2_token_extra_headers = forms.CharField(
         label=_("Extra HTTP headers in token request"),
