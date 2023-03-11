@@ -122,28 +122,6 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                 response.json(), {"detail": "You can't upload files of this type."}
             )
 
-    def test_upload_too_big_for_type(self):
-        """too big uploads are rejected"""
-        AttachmentType.objects.create(
-            name="Test extension",
-            extensions="png",
-            mimetypes="image/png",
-            size_limit=100,
-        )
-
-        with open(TEST_LARGEPNG_PATH, "rb") as upload:
-            response = self.client.post(self.api_link, data={"upload": upload})
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(
-                response.json(),
-                {
-                    "detail": (
-                        "You can't upload files of this type larger "
-                        "than 100.0\xa0KB (your file has 253.9\xa0KB)."
-                    )
-                },
-            )
-
     @patch_user_acl({"max_attachment_size": 100})
     def test_upload_too_big_for_user(self):
         """too big uploads are rejected"""

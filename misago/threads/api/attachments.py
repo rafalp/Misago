@@ -9,7 +9,7 @@ from ...users.audittrail import create_audit_trail
 from ..models import Attachment, AttachmentType
 from ..serializers import AttachmentSerializer
 
-IMAGE_EXTENSIONS = ("jpg", "jpeg", "png", "gif")
+IMAGE_EXTENSIONS = ("jpg", "jpeg", "png", "gif", "webp")
 
 
 class AttachmentViewSet(viewsets.ViewSet):
@@ -29,7 +29,7 @@ class AttachmentViewSet(viewsets.ViewSet):
 
         user_roles = set(r.pk for r in request.user.get_roles())
         filetype = validate_filetype(upload, user_roles)
-        validate_filesize(upload, filetype, request.user_acl["max_attachment_size"])
+        validate_filesize(upload, request.user_acl["max_attachment_size"])
 
         attachment = Attachment(
             secret=Attachment.generate_new_secret(),
@@ -86,8 +86,8 @@ def validate_filetype(upload, user_roles):
     raise ValidationError(_("You can't upload files of this type."))
 
 
-def validate_filesize(upload, filetype, hard_limit):
-    if upload.size > hard_limit * 1024:
+def validate_filesize(upload, upload_limit):
+    if upload.size > upload_limit * 1024:
         message = _(
             "You can't upload files larger than %(limit)s (your file has %(upload)s)."
         )
@@ -95,20 +95,7 @@ def validate_filesize(upload, filetype, hard_limit):
             message
             % {
                 "upload": filesizeformat(upload.size).rstrip(".0"),
-                "limit": filesizeformat(hard_limit * 1024).rstrip(".0"),
-            }
-        )
-
-    if filetype.size_limit and upload.size > filetype.size_limit * 1024:
-        message = _(
-            "You can't upload files of this type larger "
-            "than %(limit)s (your file has %(upload)s)."
-        )
-        raise ValidationError(
-            message
-            % {
-                "upload": filesizeformat(upload.size).rstrip(".0"),
-                "limit": filesizeformat(filetype.size_limit * 1024).rstrip(".0"),
+                "limit": filesizeformat(upload_limit * 1024).rstrip(".0"),
             }
         )
 

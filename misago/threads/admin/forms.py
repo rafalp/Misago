@@ -70,7 +70,8 @@ class AttachmentTypeForm(forms.ModelForm):
             ),
             "size_limit": _(
                 "Maximum allowed uploaded file size for this type, in kb. "
-                "May be overriden via user permission."
+                "This setting is deprecated and has no effect. It will be "
+                "deleted in Misago 1.0."
             ),
             "status": _("Controls this attachment type availability on your site."),
             "limit_uploads_to": _(
