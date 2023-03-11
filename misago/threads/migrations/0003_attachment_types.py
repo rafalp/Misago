@@ -21,6 +21,12 @@ ATTACHMENTS = [
         "size_limit": 3 * 1024,
     },
     {
+        "name": "WEBP",
+        "extensions": ("webp",),
+        "mimetypes": ("image/webp",),
+        "size_limit": 3 * 1024,
+    },
+    {
         "name": "PDF",
         "extensions": ("pdf",),
         "mimetypes": (
