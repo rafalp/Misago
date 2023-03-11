@@ -14,7 +14,6 @@ def test_oauth2_can_be_enabled(admin_client):
             "oauth2_scopes": "some scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -41,7 +40,6 @@ def test_oauth2_can_be_enabled(admin_client):
     assert settings["oauth2_scopes"] == "some scope"
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
-    assert settings["oauth2_token_method"] == "POST"
     assert settings["oauth2_token_extra_headers"] == ""
     assert settings["oauth2_json_token_path"] == "access_token"
     assert settings["oauth2_user_url"] == "https://example.com/user/"
@@ -67,7 +65,6 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
             "oauth2_scopes": "some scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -94,7 +91,6 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
     assert settings["oauth2_scopes"] == "some scope"
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
-    assert settings["oauth2_token_method"] == "POST"
     assert settings["oauth2_token_extra_headers"] == ""
     assert settings["oauth2_json_token_path"] == "access_token"
     assert settings["oauth2_user_url"] == "https://example.com/user/"
@@ -118,7 +114,6 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         "oauth2_scopes": "some scope",
         "oauth2_login_url": "https://example.com/login/",
         "oauth2_token_url": "https://example.com/token/",
-        "oauth2_token_method": "POST",
         "oauth2_token_extra_headers": "",
         "oauth2_json_token_path": "access_token",
         "oauth2_user_url": "https://example.com/user/",
@@ -136,7 +131,6 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
     skip_settings = (
         "enable_oauth2_client",
         "oauth2_json_avatar_path",
-        "oauth2_token_method",
         "oauth2_token_extra_headers",
         "oauth2_user_method",
         "oauth2_user_token_location",
@@ -207,7 +201,6 @@ def test_oauth2_scopes_are_normalized(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -238,7 +231,6 @@ def test_oauth2_extra_token_headers_are_normalized(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": ("Lorem:   ipsum\n   Dolor: Met-elit"),
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -270,7 +262,6 @@ def test_oauth2_extra_token_headers_are_validated(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": (
                 "Lorem:   ipsum\n   Dolor-amet\n Dolor: Met-elit"
             ),
@@ -301,7 +292,6 @@ def test_oauth2_extra_user_headers_are_normalized(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -333,7 +323,6 @@ def test_oauth2_extra_user_headers_are_validated(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -362,7 +351,6 @@ def test_oauth2_extra_headers_are_validated_to_have_colons(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -391,7 +379,6 @@ def test_oauth2_extra_headers_are_validated_to_have_names(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -423,7 +410,6 @@ def test_oauth2_extra_headers_are_validated_to_have_values(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
@@ -455,7 +441,6 @@ def test_oauth2_extra_headers_are_validated_to_be_unique(admin_client):
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
-            "oauth2_token_method": "POST",
             "oauth2_token_extra_headers": "",
             "oauth2_json_token_path": "access_token",
             "oauth2_user_url": "https://example.com/user/",
