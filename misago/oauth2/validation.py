@@ -6,9 +6,8 @@ from django.forms import ValidationError
 from django.utils.crypto import get_random_string
 from unidecode import unidecode
 
-from ..hooks import oauth2_user_data_filters
+from ..hooks import oauth2_validators, oauth2_user_data_filters
 from ..users.validators import (
-    validate_new_registration,
     validate_username_content,
     validate_username_length,
 )
@@ -22,7 +21,7 @@ class UsernameSettings:
     username_length_min: int = 1
 
 
-def validate_user_data(request, user, user_data):
+def validate_user_data(request, user, user_data, raw_data):
     filtered_data = filter_user_data(request, user, user_data)
 
     try:
@@ -30,20 +29,10 @@ def validate_user_data(request, user, user_data):
         validate_username_length(UsernameSettings, filtered_data["name"])
         validate_email(filtered_data["email"])
 
-        errors_list = []
-
-        def add_error(_field_unused: str | None, error: str | ValidationError):
-            if isinstance(error, ValidationError):
-                error = error.message
-
-            errors_list.append(str(error))
-
-        validate_new_registration(request, filtered_data, add_error)
+        for plugin_oauth2_validator in oauth2_validators:
+            plugin_oauth2_validator(request, user, user_data, raw_data)
     except ValidationError as exc:
         raise OAuth2UserDataValidationError(error_list=[str(exc.message)])
-
-    if errors_list:
-        raise OAuth2UserDataValidationError(error_list=errors_list)
 
     return filtered_data
 

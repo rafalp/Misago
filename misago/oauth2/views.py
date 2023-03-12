@@ -54,8 +54,8 @@ def oauth2_complete(request):
     try:
         code_grant = get_code_grant(request)
         token = get_access_token(request, code_grant)
-        user_data = get_user_data(request, token)
-        user, created = get_user_from_data(request, user_data)
+        user_data, raw_data = get_user_data(request, token)
+        user, created = get_user_from_data(request, user_data, raw_data)
 
         if not user.is_active:
             raise OAuth2UserAccountDeactivatedError()

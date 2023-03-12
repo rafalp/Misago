@@ -45,7 +45,7 @@ def test_user_data_is_returned_using_get_request_with_token_in_query_string(
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/user?atoken={ACCESS_TOKEN}",
@@ -82,7 +82,7 @@ def test_user_data_is_returned_using_get_request_with_token_in_header(mock_reque
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/user",
@@ -121,7 +121,7 @@ def test_user_data_is_returned_using_get_request_with_bearer_token_in_header(
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/user",
@@ -160,7 +160,7 @@ def test_user_data_is_returned_using_post_request_with_token_in_query_string(
     )
 
     with patch("requests.post", post_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         post_mock.assert_called_once_with(
             f"https://example.com/oauth2/user?atoken={ACCESS_TOKEN}",
@@ -197,7 +197,7 @@ def test_user_data_is_returned_using_post_request_with_token_in_header(mock_requ
     )
 
     with patch("requests.post", post_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         post_mock.assert_called_once_with(
             f"https://example.com/oauth2/user",
@@ -236,7 +236,7 @@ def test_user_data_is_returned_using_post_request_with_bearer_token_in_header(
     )
 
     with patch("requests.post", post_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         post_mock.assert_called_once_with(
             f"https://example.com/oauth2/user",
@@ -276,7 +276,7 @@ def test_user_data_is_returned_using_post_request_with_extra_headers(
     )
 
     with patch("requests.post", post_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         post_mock.assert_called_once_with(
             f"https://example.com/oauth2/user",
@@ -319,7 +319,7 @@ def test_user_data_request_with_token_in_url_respects_existing_querystring(
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, user_data)
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
@@ -346,26 +346,28 @@ def test_user_data_json_values_are_mapped_to_result(mock_request):
         "avatar": "https://example.com/avatar.png",
     }
 
+    json_response = {
+        "id": user_data["id"],
+        "user": {
+            "profile": {
+                "name": user_data["name"],
+                "email": user_data["email"],
+                "avatar": user_data["avatar"],
+            }
+        },
+    }
+
     get_mock = Mock(
         return_value=Mock(
             status_code=200,
             json=Mock(
-                return_value={
-                    "id": user_data["id"],
-                    "user": {
-                        "profile": {
-                            "name": user_data["name"],
-                            "email": user_data["email"],
-                            "avatar": user_data["avatar"],
-                        }
-                    },
-                },
+                return_value=json_response,
             ),
         ),
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, json_response)
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
@@ -392,31 +394,36 @@ def test_user_data_json_values_are_none_when_not_found(mock_request):
         "avatar": "https://example.com/avatar.png",
     }
 
+    json_response = {
+        "profile_id": user_data["id"],
+        "user": {
+            "data": {
+                "name": user_data["name"],
+                "email": user_data["email"],
+                "avatar": user_data["avatar"],
+            }
+        },
+    }
+
     get_mock = Mock(
         return_value=Mock(
             status_code=200,
             json=Mock(
-                return_value={
-                    "profile_id": user_data["id"],
-                    "user": {
-                        "data": {
-                            "name": user_data["name"],
-                            "email": user_data["email"],
-                            "avatar": user_data["avatar"],
-                        }
-                    },
-                },
+                return_value=json_response,
             ),
         ),
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == {
-            "id": None,
-            "name": None,
-            "email": None,
-            "avatar": None,
-        }
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (
+            {
+                "id": None,
+                "name": None,
+                "email": None,
+                "avatar": None,
+            },
+            json_response,
+        )
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
@@ -443,26 +450,28 @@ def test_user_data_skips_avatar_if_path_is_not_set(mock_request):
         "avatar": None,
     }
 
+    json_response = {
+        "id": user_data["id"],
+        "user": {
+            "profile": {
+                "name": user_data["name"],
+                "email": user_data["email"],
+                "avatar": "https://example.com/avatar.png",
+            }
+        },
+    }
+
     get_mock = Mock(
         return_value=Mock(
             status_code=200,
             json=Mock(
-                return_value={
-                    "id": user_data["id"],
-                    "user": {
-                        "profile": {
-                            "name": user_data["name"],
-                            "email": user_data["email"],
-                            "avatar": "https://example.com/avatar.png",
-                        }
-                    },
-                },
+                return_value=json_response,
             ),
         ),
     )
 
     with patch("requests.get", get_mock):
-        assert get_user_data(mock_request, ACCESS_TOKEN) == user_data
+        assert get_user_data(mock_request, ACCESS_TOKEN) == (user_data, json_response)
 
         get_mock.assert_called_once_with(
             f"https://example.com/oauth2/data?type=user&atoken={ACCESS_TOKEN}",
