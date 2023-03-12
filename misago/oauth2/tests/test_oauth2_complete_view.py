@@ -133,7 +133,6 @@ TEST_SETTINGS = {
     "oauth2_client_secret": "oauth2_client_secret",
     "oauth2_login_url": "https://example.com/oauth2/login",
     "oauth2_token_url": "https://example.com/oauth2/token",
-    "oauth2_token_method": "POST",
     "oauth2_json_token_path": "token.bearer",
     "oauth2_user_url": "https://example.com/oauth2/user",
     "oauth2_user_method": "POST",
