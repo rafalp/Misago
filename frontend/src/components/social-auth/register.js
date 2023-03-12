@@ -7,6 +7,7 @@ import FormGroup from "misago/components/form-group"
 import ajax from "misago/services/ajax"
 import snackbar from "misago/services/snackbar"
 import * as validators from "misago/utils/validators"
+import PageContainer from "../PageContainer"
 import Header from "./header"
 
 export default class Register extends Form {
@@ -142,9 +143,9 @@ export default class Register extends Form {
     }
 
     return (
-      <div className="page page-social-auth page-social-sauth-register">
+      <div className="page page-social-auth page-social-auth-register">
         <Header backendName={backend_name} />
-        <div className="container">
+        <PageContainer>
           <div className="row">
             <div className="col-md-6 col-md-offset-3">
               <form onSubmit={this.handleSubmit}>
@@ -206,7 +207,7 @@ export default class Register extends Form {
               </form>
             </div>
           </div>
-        </div>
+        </PageContainer>
       </div>
     )
   }
