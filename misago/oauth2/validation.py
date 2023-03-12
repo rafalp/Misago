@@ -21,7 +21,7 @@ class UsernameSettings:
     username_length_min: int = 1
 
 
-def validate_user_data(request, user, user_data, raw_data):
+def validate_user_data(request, user, user_data, response_json):
     filtered_data = filter_user_data(request, user, user_data)
 
     try:
@@ -30,7 +30,7 @@ def validate_user_data(request, user, user_data, raw_data):
         validate_email(filtered_data["email"])
 
         for plugin_oauth2_validator in oauth2_validators:
-            plugin_oauth2_validator(request, user, user_data, raw_data)
+            plugin_oauth2_validator(request, user, user_data, response_json)
     except ValidationError as exc:
         raise OAuth2UserDataValidationError(error_list=[str(exc.message)])
 
