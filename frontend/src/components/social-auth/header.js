@@ -1,17 +1,22 @@
 import React from "react"
+import {
+  PageHeader,
+  PageHeaderBanner,
+  PageHeaderContainer,
+} from "../PageHeader"
 
 const Header = ({ backendName }) => {
   const pageTitleTpl = gettext("Sign in with %(backend)s")
   const pageTitle = interpolate(pageTitleTpl, { backend: backendName }, true)
 
   return (
-    <div className="page-header-bg">
-      <div className="page-header">
-        <div className="container">
+    <PageHeaderContainer>
+      <PageHeader styleName="social-auth">
+        <PageHeaderBanner styleName="social-auth">
           <h1>{pageTitle}</h1>
-        </div>
-      </div>
-    </div>
+        </PageHeaderBanner>
+      </PageHeader>
+    </PageHeaderContainer>
   )
 }
 

@@ -1,6 +1,7 @@
 import React from "react"
-import Header from "./header"
 import misago from "misago"
+import PageContainer from "../PageContainer"
+import Header from "./header"
 
 const Complete = ({ activation, backend_name, username }) => {
   let icon = ""
@@ -26,9 +27,9 @@ const Complete = ({ activation, backend_name, username }) => {
   }
 
   return (
-    <div className="page page-social-auth page-social-sauth-register">
+    <div className="page page-social-auth page-social-auth-register">
       <Header backendName={backend_name} />
-      <div className="container">
+      <PageContainer>
         <div className="row">
           <div className="col-md-6 col-md-offset-3">
             <div className="panel panel-default panel-form">
@@ -58,7 +59,7 @@ const Complete = ({ activation, backend_name, username }) => {
             </div>
           </div>
         </div>
-      </div>
+      </PageContainer>
     </div>
   )
 }
