@@ -21,6 +21,7 @@ def test_user_is_updated_with_valid_data(user, dynamic_settings):
             "email": "updated@example.com",
             "avatar": None,
         },
+        {},
     )
 
     assert created is False
@@ -51,6 +52,7 @@ def test_user_is_not_updated_with_unchanged_valid_data(user, dynamic_settings):
             "email": user.email,
             "avatar": None,
         },
+        {},
     )
 
     assert created is False
@@ -93,6 +95,7 @@ def test_user_name_conflict_during_update_with_valid_data_is_handled(
                     "email": "test@example.com",
                     "avatar": None,
                 },
+                {},
             )
 
     assert excinfo.value.error_list == ["This username is not available."]
@@ -112,6 +115,7 @@ def test_user_email_conflict_during_update_with_valid_data_is_handled(
                 "email": other_user.email,
                 "avatar": None,
             },
+            {},
         )
 
     assert excinfo.value.error_list == ["This e-mail address is not available."]

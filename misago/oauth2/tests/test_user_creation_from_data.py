@@ -20,6 +20,7 @@ def test_activated_user_is_created_from_valid_data(db, dynamic_settings):
             "email": "user@example.com",
             "avatar": None,
         },
+        {},
     )
 
     assert created
@@ -45,6 +46,7 @@ def test_user_subject_is_created_from_valid_data(db, dynamic_settings):
             "email": "user@example.com",
             "avatar": None,
         },
+        {},
     )
 
     assert created
@@ -63,6 +65,7 @@ def test_user_is_created_with_avatar_from_valid_data(db, dynamic_settings):
             "email": "user@example.com",
             "avatar": "https://placekitten.com/600/500",
         },
+        {},
     )
 
     assert created
@@ -81,6 +84,7 @@ def test_user_is_created_with_admin_activation_from_valid_data(db, dynamic_setti
             "email": "user@example.com",
             "avatar": None,
         },
+        {},
     )
 
     assert created
@@ -109,6 +113,7 @@ def test_user_name_conflict_during_creation_from_valid_data_is_handled(
                     "email": "test@example.com",
                     "avatar": None,
                 },
+                {},
             )
 
     assert excinfo.value.error_list == ["This username is not available."]
@@ -126,6 +131,7 @@ def test_user_email_conflict_during_creation_from_valid_data_is_handled(
                 "email": user.email,
                 "avatar": None,
             },
+            {},
         )
 
     assert excinfo.value.error_list == ["This e-mail address is not available."]
