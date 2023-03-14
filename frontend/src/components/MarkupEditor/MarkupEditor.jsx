@@ -170,8 +170,18 @@ function setMentions(props, element) {
     },
   })
 
-  $(element).on("inserted.atwho", (event, flag, query) => {
+  $(element).on("inserted.atwho", (event, _storage, source, controller) => {
+    const { query } = controller
+    const username = source.target.innerText.trim()
+    const prefix = event.target.value.substr(0, query.headPos)
+    const suffix = event.target.value.substr(query.endPos)
+
+    event.target.value = prefix + username + suffix
     props.onChange(event)
+
+    const caret = query.headPos + username.length
+    event.target.setSelectionRange(caret, caret)
+    event.target.focus()
   })
 }
 
