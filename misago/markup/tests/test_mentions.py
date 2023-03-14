@@ -10,7 +10,8 @@ def test_util_replaces_mention_with_link_to_user_profile_in_parsed_text(user):
 
     parsing_result["parsed_text"] = print_html_string(root_node)
     assert parsing_result["parsed_text"] == (
-        f'<p>Hello, <a href="{user.get_absolute_url()}">@{user.username}</a>!</p>'
+        f'<p>Hello, <a href="{user.get_absolute_url()}" '
+        f'data-quote="@{user.username}">@{user.username}</a>!</p>'
     )
 
 
@@ -47,13 +48,13 @@ def test_util_replaces_multiple_mentions_with_link_to_user_profiles_in_parsed_te
 
     parsing_result["parsed_text"] = print_html_string(root_node)
     assert (
-        f'<a href="{user.get_absolute_url()}">@{user.username}</a>'
-        in parsing_result["parsed_text"]
-    )
+        f'<a href="{user.get_absolute_url()}" '
+        f'data-quote="@{user.username}">@{user.username}</a>'
+    ) in parsing_result["parsed_text"]
     assert (
-        f'<a href="{other_user.get_absolute_url()}">@{other_user.username}</a>'
-        in parsing_result["parsed_text"]
-    )
+        f'<a href="{other_user.get_absolute_url()}" '
+        f'data-quote="@{other_user.username}">@{other_user.username}</a>'
+    ) in parsing_result["parsed_text"]
 
 
 def test_util_adds_multiple_mentions_to_parsig_result(user, other_user):

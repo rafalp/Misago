@@ -10,8 +10,8 @@ snapshots = Snapshot()
 snapshots[
     "test_multi_line_quote 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading"></div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1"></div>
+<blockquote class="quote-body" data-block="quote">
 <p>Sit amet elit.</p>
 <p>Another line.</p>
 </blockquote>
@@ -20,8 +20,8 @@ snapshots[
 snapshots[
     "test_quote_can_contain_bbcode_or_markdown 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading"></div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1"></div>
+<blockquote class="quote-body" data-block="quote">
 <p>Sit <strong>amet</strong> <u>elit</u>.</p>
 </blockquote>
 </aside>"""
@@ -29,12 +29,12 @@ snapshots[
 snapshots[
     "test_quotes_can_be_nested 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading"></div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1"></div>
+<blockquote class="quote-body" data-block="quote">
 <p>Sit amet elit.</p>
 <aside class="quote-block">
-<div class="quote-heading"></div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1"></div>
+<blockquote class="quote-body" data-block="quote">
 <p>Nested quote</p>
 </blockquote>
 </aside>
@@ -44,8 +44,8 @@ snapshots[
 snapshots[
     "test_quotes_can_contain_hr_markdown 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading"></div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1"></div>
+<blockquote class="quote-body" data-block="quote">
 <p>Sit amet elit.</p>
 <hr />
 <p>Another line.</p>
@@ -55,8 +55,8 @@ snapshots[
 snapshots[
     "test_single_line_authored_quote 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading">@Bob</div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1">@Bob</div>
+<blockquote class="quote-body" data-author="@Bob" data-block="quote">
 <p>Sit amet elit.</p>
 </blockquote>
 </aside>"""
@@ -64,8 +64,8 @@ snapshots[
 snapshots[
     "test_single_line_authored_quote_without_quotations 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading">@Bob</div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1">@Bob</div>
+<blockquote class="quote-body" data-author="@Bob" data-block="quote">
 <p>Sit amet elit.</p>
 </blockquote>
 </aside>"""
@@ -73,8 +73,8 @@ snapshots[
 snapshots[
     "test_single_line_quote 1"
 ] = """<aside class="quote-block">
-<div class="quote-heading"></div>
-<blockquote class="quote-body">
+<div class="quote-heading" data-noquote="1"></div>
+<blockquote class="quote-body" data-block="quote">
 <p>Sit amet elit.</p>
 </blockquote>
 </aside>"""

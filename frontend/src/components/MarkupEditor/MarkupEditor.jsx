@@ -117,7 +117,7 @@ class MarkupEditor extends React.Component {
           disabled={this.props.disabled || this.state.loading}
           rows={6}
           ref={(element) => {
-            if (element && !this.state.element) {
+            if (element && this.state.element !== element) {
               this.setState({ element })
               setMentions(this.props, element)
             }

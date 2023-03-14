@@ -86,9 +86,14 @@ class QuoteBlockProcessor(BlockProcessor):
 
             heading = SubElement(aside, "div")
             heading.set("class", "quote-heading")
+            heading.set("data-noquote", "1")
 
             blockquote = SubElement(aside, "blockquote")
             blockquote.set("class", "quote-body")
+            blockquote.set("data-block", "quote")
+
+            if title:
+                blockquote.set("data-author", title)
 
             if title:
                 heading.text = title

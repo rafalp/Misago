@@ -120,6 +120,7 @@ def add_mentions_to_text(text: str, users_data):
                 tag="a",
                 attrs={
                     "href": f"/u/{user_slug}/{user_id}/",
+                    "data-quote": f"@{username}",
                 },
                 children=[TextNode(text=f"@{username}")],
             )
