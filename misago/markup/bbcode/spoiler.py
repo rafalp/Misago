@@ -66,9 +66,11 @@ class SpoilerBlockProcessor(BlockProcessor):
 
             blockquote = SubElement(aside, "blockquote")
             blockquote.set("class", "spoiler-body")
+            blockquote.set("data-block", "spoiler")
 
             overlay = SubElement(aside, "div")
             overlay.set("class", "spoiler-overlay")
+            overlay.set("data-noquote", "1")
 
             reveal_btn = SubElement(overlay, "button")
             reveal_btn.set("class", "spoiler-reveal")

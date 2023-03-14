@@ -158,10 +158,6 @@ const convertNodeToMarkup = (node, stack) => {
     return "\n\n- - -"
   }
 
-  if (node.nodeName === "BR") {
-    return "\n"
-  }
-
   if (SIMPLE_NODE_MAPPINGS[node.nodeName]) {
     const [prefix, suffix] = SIMPLE_NODE_MAPPINGS[node.nodeName]
     return (
@@ -194,8 +190,8 @@ const convertNodeToMarkup = (node, stack) => {
     }
   }
 
-  if (node.nodeName === "DIV") {
-    const block = dataset.block.toUpperCase()
+  if (node.nodeName === "DIV" || node.nodeName === "ASIDE") {
+    const block = dataset.block && dataset.block.toUpperCase()
     if (block && SIMPLE_NODE_MAPPINGS[block]) {
       const [prefix, suffix] = SIMPLE_NODE_MAPPINGS[block]
       return (
@@ -209,21 +205,6 @@ const convertNodeToMarkup = (node, stack) => {
   }
 
   if (node.nodeName === "BLOCKQUOTE") {
-    if (dataset.block === "quote") {
-      const content = convertNodesToMarkup(node.childNodes, [
-        ...stack,
-        "QUOTE",
-      ]).trim()
-
-      if (!content) return ""
-
-      const metadata = getQuoteMetadataFromNode(node)
-      let markup = metadata ? `\n\n[quote=${metadata}]\n` : "\n\n[quote]\n"
-      markup += content
-      markup += "\n[/quote]"
-      return markup
-    }
-
     if (dataset.block === "spoiler") {
       const content = convertNodesToMarkup(node.childNodes, [
         ...stack,
@@ -232,11 +213,24 @@ const convertNodeToMarkup = (node, stack) => {
 
       if (!content) return ""
 
-      let markup = "\n\n[spoiler]\n"
+      let markup = "\n[spoiler]\n"
       markup += content
       markup += "\n[/spoiler]"
       return markup
     }
+
+    const content = convertNodesToMarkup(node.childNodes, [
+      ...stack,
+      "QUOTE",
+    ]).trim()
+
+    if (!content) return ""
+
+    const metadata = getQuoteMetadataFromNode(node)
+    let markup = metadata ? `\n[quote=${metadata}]\n` : "\n\n[quote]\n"
+    markup += content
+    markup += "\n[/quote]"
+    return markup
   }
 
   if (node.nodeName === "PRE") {
@@ -246,9 +240,7 @@ const convertNodeToMarkup = (node, stack) => {
 
     if (!content.trim()) return ""
 
-    return (
-      "\n\n[code" + (syntax ? "=" + syntax : "") + "]" + content + "[/code]"
-    )
+    return "\n[code" + (syntax ? "=" + syntax : "") + "]" + content + "[/code]"
   }
 
   if (node.nodeName === "CODE") {
@@ -257,7 +249,7 @@ const convertNodeToMarkup = (node, stack) => {
 
   if (node.nodeName === "P") {
     return (
-      "\n\n" + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
+      "\n" + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
     )
   }
 
