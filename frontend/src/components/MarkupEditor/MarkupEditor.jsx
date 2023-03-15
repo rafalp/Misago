@@ -7,6 +7,7 @@ import snackbar from "../../services/snackbar"
 import MisagoMarkup from "../misago-markup"
 import MarkupEditorAttachments from "./MarkupEditorAttachments"
 import MarkupEditorFooter from "./MarkupEditorFooter"
+import MarkupEditorMention from "./MarkupEditorMention"
 import MarkupEditorToolbar from "./MarkupEditorToolbar"
 import uploadFile from "./uploadFile"
 
@@ -110,24 +111,29 @@ class MarkupEditor extends React.Component {
           )}
         </div>
       ) : (
-        <textarea
-          className="markup-editor-textarea form-control"
-          placeholder={this.props.placeholder}
+        <MarkupEditorMention
           value={this.props.value}
+          update={(value) => this.props.onChange({ target: { value } })}
           disabled={this.props.disabled || this.state.loading}
-          rows={6}
-          ref={(element) => {
-            if (element && this.state.element !== element) {
-              this.setState({ element })
-              setMentions(this.props, element)
-            }
-          }}
-          onChange={this.props.onChange}
-          onDrop={this.onDrop}
-          onFocus={() => this.setState({ focused: true })}
-          onPaste={this.onPaste}
-          onBlur={() => this.setState({ focused: false })}
-        />
+        >
+          <textarea
+            className="markup-editor-textarea form-control"
+            placeholder={this.props.placeholder}
+            value={this.props.value}
+            disabled={this.props.disabled || this.state.loading}
+            rows={6}
+            ref={(element) => {
+              if (element && this.state.element !== element) {
+                this.setState({ element })
+              }
+            }}
+            onChange={this.props.onChange}
+            onDrop={this.onDrop}
+            onFocus={() => this.setState({ focused: true })}
+            onPaste={this.onPaste}
+            onBlur={() => this.setState({ focused: false })}
+          />
+        </MarkupEditorMention>
       )}
       {this.props.attachments.length > 0 && (
         <MarkupEditorAttachments
@@ -155,34 +161,6 @@ class MarkupEditor extends React.Component {
       />
     </div>
   )
-}
-
-function setMentions(props, element) {
-  $(element).atwho({
-    at: "@",
-    displayTpl: '<li><img src="${avatar}" alt="">${username}</li>',
-    insertTpl: "@${username}",
-    searchKey: "username",
-    callbacks: {
-      remoteFilter: function (query, callback) {
-        $.getJSON(misago.get("MENTION_API"), { q: query }, callback)
-      },
-    },
-  })
-
-  $(element).on("inserted.atwho", (event, _storage, source, controller) => {
-    const { query } = controller
-    const username = source.target.innerText.trim()
-    const prefix = event.target.value.substr(0, query.headPos)
-    const suffix = event.target.value.substr(query.endPos)
-
-    event.target.value = prefix + username + suffix
-    props.onChange(event)
-
-    const caret = query.headPos + username.length
-    event.target.setSelectionRange(caret, caret)
-    event.target.focus()
-  })
 }
 
 export default MarkupEditor
