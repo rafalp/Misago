@@ -55,33 +55,29 @@
 // Make quotes stand out a little
 .misago-markup .quote-block,
 .misago-markup blockquote {
-  background: @gray-lighter;
-  border: none;
-
-  font-size: @font-size-base;
-
-  .quote-heading {
-    border-bottom: 1px solid darken(@gray-lighter, 8%);
-    padding: (@line-height-computed / 2) @line-height-computed;
-
-    font-size: @font-size-small;
-    font-weight: bold;
-  }
+  background-color: #f0f9ff;
+  border-left: 3px solid #0ea5e9;
+  border-radius: @border-radius-small;
+  overflow: hidden;
 }
 
-.misago-markup > .quote-block,
-.misago-markup > blockquote {
-  border: 1px solid darken(@gray-lighter, 8%);
+.misago-markup .quote-heading {
+  padding: @padding-large-vertical @padding-large-horizontal;
+
+  font-size: @font-size-base;
+  font-weight: bold;
 }
 
 .misago-markup .quote-body {
-  background: @body-bg;
-  margin: 0px;
-  padding: @line-height-computed;
+  border: none;
+  border-radius: 0;
+}
 
-  & > .quote-block,
-  & > blockquote {
-    border: 1px solid darken(@gray-lighter, 8%);
+.misago-markup blockquote {
+  padding: @padding-large-vertical @padding-large-horizontal;
+
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
