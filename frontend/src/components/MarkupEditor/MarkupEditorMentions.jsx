@@ -303,31 +303,3 @@ function getMentionPosition(textarea, phantom, value, mention) {
   phantom.innerText = ""
   return { top, left }
 }
-
-function setMentions(props, element) {
-  $(element).atwho({
-    at: "@",
-    displayTpl: '<li><img src="${avatar}" alt="">${username}</li>',
-    insertTpl: "@${username}",
-    searchKey: "username",
-    callbacks: {
-      remoteFilter: function (query, callback) {
-        $.getJSON(misago.get("MENTION_API"), { q: query }, callback)
-      },
-    },
-  })
-
-  $(element).on("inserted.atwho", (event, _storage, source, controller) => {
-    const { query } = controller
-    const username = source.target.innerText.trim()
-    const prefix = event.target.value.substr(0, query.headPos)
-    const suffix = event.target.value.substr(query.endPos)
-
-    event.target.value = prefix + username + suffix
-    props.onChange(event)
-
-    const caret = query.headPos + username.length
-    event.target.setSelectionRange(caret, caret)
-    event.target.focus()
-  })
-}
