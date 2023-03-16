@@ -7,7 +7,7 @@ import snackbar from "../../services/snackbar"
 import MisagoMarkup from "../misago-markup"
 import MarkupEditorAttachments from "./MarkupEditorAttachments"
 import MarkupEditorFooter from "./MarkupEditorFooter"
-import MarkupEditorMention from "./MarkupEditorMention"
+import MarkupEditorMentions from "./MarkupEditorMentions"
 import MarkupEditorToolbar from "./MarkupEditorToolbar"
 import uploadFile from "./uploadFile"
 
@@ -111,7 +111,7 @@ class MarkupEditor extends React.Component {
           )}
         </div>
       ) : (
-        <MarkupEditorMention
+        <MarkupEditorMentions
           value={this.props.value}
           update={(value) => this.props.onChange({ target: { value } })}
           disabled={this.props.disabled || this.state.loading}
@@ -133,7 +133,7 @@ class MarkupEditor extends React.Component {
             onPaste={this.onPaste}
             onBlur={() => this.setState({ focused: false })}
           />
-        </MarkupEditorMention>
+        </MarkupEditorMentions>
       )}
       {this.props.attachments.length > 0 && (
         <MarkupEditorAttachments

@@ -1,20 +1,29 @@
 import React from "react"
 
-const EVENTS = ["keyup", "focus", "mouseup", "touchend"]
+const SELECT_EVENTS = ["focus", "mouseup", "touchend"]
 const SCAN_RANGE = 50
 const ALPHANUMERIC = /^[\p{sc=Latn}\p{Nd}]$/u
 const NON_ALPHANUMERIC = /[^\p{sc=Latn}\p{Nd}]/u
 
-export default class MarkupEditorMention extends React.Component {
+const DEBOUNCING = 800
+
+const CACHE = {}
+
+export default class MarkupEditorMentions extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
       mention: null,
+      open: false,
+      query: null,
+      choices: [],
+      choice: -1,
     }
 
     this.element = null
     this.phantom = null
+    this.fetch = null
   }
 
   componentDidMount = () => {
@@ -22,9 +31,11 @@ export default class MarkupEditorMention extends React.Component {
 
     window.setTimeout(() => {
       const textarea = this.element.firstChild
-      EVENTS.forEach((event) => {
-        textarea.addEventListener(event, this.eventHandler)
+      SELECT_EVENTS.forEach((event) => {
+        textarea.addEventListener(event, this.handleSelect)
       })
+      
+      textarea.addEventListener("keydown", this.handleKeyDown)
 
       this.phantom = createPhantomElement(textarea)
     }, 500)
@@ -33,17 +44,25 @@ export default class MarkupEditorMention extends React.Component {
   componentWillUnmount = () => {
     if (this.element.firstChild) {
       const textarea = this.element.firstChild
-      EVENTS.forEach((event) => {
-        textarea.removeEventListener(event, this.eventHandler)
+      SELECT_EVENTS.forEach((event) => {
+        textarea.removeEventListener(event, this.handleSelect)
       })
+      
+      textarea.removeEventListener("keydown", this.handleKeyDown)
     }
 
     if (this.phantom) {
       document.body.removeChild(this.phantom)
+      this.phantom = null
+    }
+
+    if (this.fetch) {
+      window.clearTimeout(this.fetch)
+      this.fetch = null
     }
   }
 
-  eventHandler = (event) => {
+  handleSelect = (event) => {
     const mention = getMentionState(event.target, this.props.value)
     const position = getMentionPosition(
       this.element.firstChild,
@@ -51,12 +70,83 @@ export default class MarkupEditorMention extends React.Component {
       this.props.value,
       mention
     )
-    this.setState({ mention, position })
+
+    this.setState({
+      mention,
+      position,
+      choices: [],
+      choice: -1,
+      open: !!mention && !!position,
+      query: !!mention ? mention.prefix : null,
+    })
+
+    if (!!mention) {
+      this.fetchSuggestions(mention.prefix)
+    }
+  }
+
+  handleKeyDown = (event) => {
+    /* TODO
+    If UI is open and component is not disabled, up/down/esc/enter keys
+    channge function:
+
+    up - decrease choice
+    down - increase choice
+    enter - insert choice
+    escape - close UI
+    */
+    console.log("TODO!")
+  }
+
+  fetchSuggestions = (query) => {
+    if (CACHE[query]) {
+      this.setState({
+        choices: CACHE[query],
+        choice: -1,
+      })
+      return
+    }
+
+    if (this.fetch) {
+      window.clearTimeout(this.fetch)
+      this.fetch = null
+    }
+
+    this.fetch = window.setTimeout(() => {
+      $.getJSON(misago.get("MENTION_API"), { q: query }, (data) => {
+        CACHE[query] = data
+
+        this.setState({
+          choices: CACHE[query],
+          choice: -1,
+        })
+      })
+    }, DEBOUNCING)
+  }
+
+  insertMention = (username) => {
+    if (this.state.mention) {
+      const { start, end } = this.state.mention
+      const textarea = this.element.firstChild
+      const caret = start + username.length
+
+      this.props.update(
+        this.props.value.substr(0, start) +
+          username +
+          this.props.value.substr(end)
+      )
+
+      textarea.setSelectionRange(caret, caret)
+      textarea.focus()
+
+      this.setState({ open: false })
+    }
   }
 
   render = () => {
     return (
       <div
+        className="markup-editor-state.mentions-container"
         style={{ position: "relative" }}
         ref={(element) => {
           if (element) {
@@ -65,7 +155,7 @@ export default class MarkupEditorMention extends React.Component {
         }}
       >
         {this.props.children}
-        {!!this.state.position && (
+        {this.state.open && !this.props.disabled && (
           <div
             style={{
               position: "absolute",
@@ -73,11 +163,30 @@ export default class MarkupEditorMention extends React.Component {
               left: this.state.position.left,
               background: "#fff",
               border: "1px solid #ccc",
-              padding: "4px",
               boxShadow: "0px 0px 3px #999",
+              maxWidth: "150px",
             }}
           >
-            ...
+            {this.state.choices.map(({ avatar, username }, index) => (
+              <button
+                style={{
+                  display: "block",
+                  border: "none",
+                  background: "#fff",
+                  color: "#000",
+                  textAlign: "left",
+                  padding: "8px 12px",
+                  width: "100%",
+                }}
+                key={this.state.query + index}
+                type="button"
+                onClick={() => this.insertMention(username)}
+              >
+                <img src={avatar} width="16" height="16" />{" "}
+                <strong>{username.substr(0, this.state.mention.caret)}</strong>
+                {username.substr(this.state.mention.caret)}
+              </button>
+            ))}
           </div>
         )}
       </div>
@@ -108,9 +217,7 @@ function getMentionState(textarea, value) {
 }
 
 function getMentionData(caret, value) {
-  const position = caret > SCAN_RANGE ? caret - SCAN_RANGE : 0
-  const start = value.substr(position, caret).lastIndexOf("@")
-
+  const start = value.substr(0, caret).lastIndexOf("@")
   if (start === -1) {
     return null // Mention start sign not found
   }
@@ -140,6 +247,8 @@ function getMentionData(caret, value) {
     start: start + 1,
     end: start + 1 + mention.length,
     caret: prefix,
+    prefix: mention.substr(0, prefix),
+    suffix: mention.substr(prefix),
     mention,
   }
 }
