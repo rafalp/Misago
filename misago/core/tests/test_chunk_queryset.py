@@ -19,7 +19,7 @@ class ChunkQuerysetTest(TestCase):
         """chunk_queryset utility chunks queryset but returns all items"""
         chunked_pks = []
 
-        with self.assertNumQueries(11):
+        with self.assertNumQueries(1):
             queryset = CacheVersion.objects.order_by("cache")
             for obj in chunk_queryset(queryset, chunk_size=5):
                 chunked_pks.append(obj.pk)
@@ -28,7 +28,7 @@ class ChunkQuerysetTest(TestCase):
 
     def test_chunk_shrinking_queryset(self):
         """chunk_queryset utility chunks queryset in delete action"""
-        with self.assertNumQueries(61):
+        with self.assertNumQueries(51):
             queryset = CacheVersion.objects.all()
             for obj in chunk_queryset(queryset, chunk_size=5):
                 obj.delete()
