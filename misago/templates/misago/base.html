@@ -93,9 +93,6 @@
 
     <script src="{% url 'django-i18n' %}?{{ LANGUAGE_CODE }}"></script>
     <script src="{% static 'misago/js/vendor.js' %}"></script>
-    {% if LANGUAGE_CODE != "en-us" and MOMENTJS_LOCALE_URL %}
-      <script src="{% static MOMENTJS_LOCALE_URL %}"></script>
-    {% endif %}
     <script src="{% static 'misago/js/misago.js' %}"></script>
     {% include "misago/scripts.html" %}
     <script type="text/javascript">
