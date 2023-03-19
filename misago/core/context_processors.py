@@ -2,6 +2,7 @@ from django.utils.translation import get_language
 
 from .. import __version__
 from ..hooks import context_processors as context_processors_hooks
+from .momentjs import get_locale_url
 
 
 def misago_version(request):
@@ -26,6 +27,10 @@ def current_link(request):
     request.frontend_context.update({"CURRENT_LINK": link_name})
 
     return {}
+
+
+def momentjs_locale(request):
+    return {"MOMENTJS_LOCALE_URL": get_locale_url(get_language())}
 
 
 def frontend_context(request):
