@@ -2,29 +2,27 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # ReYHa <reha.akalan@gmail.com>, 2017
 # orkun bademli <orkunbademli@gmail.com>, 2017
 # Yiğitcan Uçan <ucanyiit@gmail.com>, 2017
 # Gökhan KURT <gokurt@bilkent.edu.tr>, 2018
 # bedirhan doğan yılmaz <bedirhandoganyilmaz@gmail.com>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-31 23:26+0000\n"
+"POT-Creation-Date: 2023-03-19 13:07+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
-"Last-Translator: bedirhan doğan yılmaz <bedirhandoganyilmaz@gmail.com>, "
-"2018\n"
-"Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/"
-"teams/65369/tr_TR/)\n"
-"Language: tr_TR\n"
+"Last-Translator: bedirhan doğan yılmaz <bedirhandoganyilmaz@gmail.com>, 2018\n"
+"Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/teams/65369/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: acl/admin/__init__.py:24 templates/misago/acl_debug.html:16
@@ -32,7 +30,7 @@ msgstr ""
 msgid "Permissions"
 msgstr "İzinler"
 
-#: acl/admin/forms.py:9 categories/admin/forms.py:238
+#: acl/admin/forms.py:9 categories/admin/forms.py:263
 msgid "Role name"
 msgstr "sıfat ismi"
 
@@ -175,7 +173,7 @@ msgstr "İşlem yapılmasına izin verilmiyor."
 #: categories/admin/__init__.py:65 templates/misago/categories/base.html:7
 #: templates/misago/categories/base.html:29
 #: templates/misago/categories/base.html:38
-#: templates/misago/categories/header.html:8 templates/misago/navbar.html:25
+#: templates/misago/categories/header.html:35 templates/misago/navbar.html:25
 #: templates/misago/navbar.html:31
 msgid "Categories"
 msgstr "Kategoriler"
@@ -184,77 +182,98 @@ msgstr "Kategoriler"
 msgid "Category permissions"
 msgstr "bölüm izni"
 
-#: categories/admin/forms.py:46
+#: categories/admin/forms.py:49
 #: templates/misago/admin/themes/assets/css.html:31
 #: templates/misago/admin/themes/assets/media.html:21 themes/admin/forms.py:26
 #: themes/admin/forms.py:53 themes/admin/forms.py:174 users/admin/forms.py:386
 msgid "Name"
 msgstr "İsim"
 
-#: categories/admin/forms.py:48 users/admin/forms.py:402
+#: categories/admin/forms.py:51
+msgid "Short name"
+msgstr ""
+
+#: categories/admin/forms.py:54
+msgid ""
+"Optional, alternative or abbreviated name (eg. abbreviation) used on threads"
+" list."
+msgstr ""
+
+#: categories/admin/forms.py:59
+msgid "Color"
+msgstr ""
+
+#: categories/admin/forms.py:61
+msgid "Optional but recommended, should be in hex format, eg. #F5A9B8."
+msgstr ""
+
+#: categories/admin/forms.py:66
+msgid "Entered value is not a valid color."
+msgstr ""
+
+#: categories/admin/forms.py:71 users/admin/forms.py:402
 msgid "Description"
 msgstr "Açıklama"
 
-#: categories/admin/forms.py:52
+#: categories/admin/forms.py:75
 msgid "Optional description explaining category intented purpose."
 msgstr "bölüm beyan edilen isteğe bağlı açıklama."
 
-#: categories/admin/forms.py:55 menus/admin/forms.py:20
-#: templates/misago/admin/categories/list.html:18
+#: categories/admin/forms.py:78 menus/admin/forms.py:20
+#: templates/misago/admin/categories/list.html:19
 #: templates/misago/admin/ranks/list.html:20 users/admin/forms.py:419
 msgid "CSS class"
 msgstr "CSS sınıfı"
 
-#: categories/admin/forms.py:58
+#: categories/admin/forms.py:81
 msgid ""
 "Optional CSS class used to customize this category's appearance from "
 "templates."
 msgstr ""
 
-#: categories/admin/forms.py:63
+#: categories/admin/forms.py:86
 msgid "Closed category"
 msgstr "Kapalı bölüm"
 
-#: categories/admin/forms.py:66
+#: categories/admin/forms.py:89
 msgid "Only members with valid permissions can post in closed categories."
 msgstr "Sadece geçerli izni olan üyeler kapalı kategorilerde ileti yapabilir."
 
-#: categories/admin/forms.py:70 conf/admin/__init__.py:79
-#: templates/misago/admin/categories/list.html:19
+#: categories/admin/forms.py:93 conf/admin/__init__.py:83
+#: templates/misago/admin/categories/list.html:20
 #: templates/misago/admin/dashboard/totals.html:19
 #: templates/misago/navbar.html:20 templates/misago/navbar.html:36
 #: templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
 #: templates/misago/profile/threads.html:9
-#: templates/misago/threadslist/category.html:68
 #: templates/misago/threadslist/threads.html:14
 #: templates/misago/threadslist/threads.html:16
 #: templates/misago/threadslist/threads.html:33
 #: templates/misago/threadslist/threads.html:42
-#: templates/misago/threadslist/threads.html:66
+#: templates/misago/threadslist/threads.html:90
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
-#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:97
+#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:106
 msgid "Threads"
 msgstr "Konular"
 
-#: categories/admin/forms.py:73
+#: categories/admin/forms.py:96
 msgid "All threads started in this category will require moderator approval."
 msgstr "Bu bölüm açılan tüm konular moderatorun onayını gerektirmektedir."
 
-#: categories/admin/forms.py:77
+#: categories/admin/forms.py:100
 msgid "Replies"
 msgstr "Cevaplar"
 
-#: categories/admin/forms.py:80
+#: categories/admin/forms.py:103
 msgid "All replies posted in this category will require moderator approval."
 msgstr ""
 "Bu bölüm paylaşılan tüm cevapların moderatörün onayını gerektirmektedir."
 
-#: categories/admin/forms.py:84
+#: categories/admin/forms.py:107
 msgid "Edits"
 msgstr "Düzenlemeler"
 
-#: categories/admin/forms.py:87
+#: categories/admin/forms.py:110
 msgid ""
 "Will make all edited replies return to unapproved state for moderator to "
 "review."
@@ -262,74 +281,77 @@ msgstr ""
 "Düzenlenen tüm yanıtlar moderatorün değerlendirmesi için onaylanmayan "
 "durumlara geri döner."
 
-#: categories/admin/forms.py:92
+#: categories/admin/forms.py:115
 msgid "Thread age"
 msgstr "Konu yaşı"
 
-#: categories/admin/forms.py:95
+#: categories/admin/forms.py:118
 msgid ""
-"Prune thread if number of days since its creation is greater than specified. "
-"Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified."
+" Enter 0 to disable this pruning criteria."
 msgstr ""
 "Eğer konu, oluşturulduğundan beri var olan gün sayısı, belirtilenden daha "
 "büyükse kısaltınız. Bu kısaltma kriterini etkisiz kılmak için 0 giriniz."
 
-#: categories/admin/forms.py:100
+#: categories/admin/forms.py:123
 msgid "Last reply"
 msgstr "Son cevap"
 
-#: categories/admin/forms.py:103
+#: categories/admin/forms.py:126
 msgid ""
 "Prune thread if number of days since last reply is greater than specified. "
 "Enter 0 to disable this pruning criteria."
 msgstr ""
-"Eğer konu, en son gelen yanıtlamadan beri var olan gün sayısı, belirtilenden "
-"daha büyükse kısaltınız. Bu kısaltma kriterini etkisiz kılmak için 0 giriniz."
+"Eğer konu, en son gelen yanıtlamadan beri var olan gün sayısı, belirtilenden"
+" daha büyükse kısaltınız. Bu kısaltma kriterini etkisiz kılmak için 0 "
+"giriniz."
 
-#: categories/admin/forms.py:126
+#: categories/admin/forms.py:151
 msgid "Permissions cannot be copied from category into itself."
 msgstr "bölüm kendine izin kopyalanamaz."
 
-#: categories/admin/forms.py:133
+#: categories/admin/forms.py:158
 msgid "Category cannot act as archive for itself."
 msgstr "Bölüm kendisi için arşiv olarak davranmamaktadır."
 
-#: categories/admin/forms.py:155
+#: categories/admin/forms.py:180
 msgid "Parent category"
 msgstr "Üst bölüm"
 
-#: categories/admin/forms.py:161
+#: categories/admin/forms.py:186
 msgid "Copy permissions"
 msgstr "İzinleri kopyalama"
 
-#: categories/admin/forms.py:163
+#: categories/admin/forms.py:188
 msgid ""
 "You can replace this category permissions with permissions copied from "
 "category selected here."
-msgstr "Bu bölüm iznini buradan seçilen bölüm izniyle yer değiştirebilirsiniz."
+msgstr ""
+"Bu bölüm iznini buradan seçilen bölüm izniyle yer değiştirebilirsiniz."
 
-#: categories/admin/forms.py:167
+#: categories/admin/forms.py:192
 msgid "Don't copy permissions"
 msgstr "İzinleri çoğaltma"
 
-#: categories/admin/forms.py:171
+#: categories/admin/forms.py:196
 msgid "Archive"
 msgstr "Kayıtlar"
 
-#: categories/admin/forms.py:173
+#: categories/admin/forms.py:198
 msgid ""
-"Instead of being deleted, pruned threads can be moved to designated category."
+"Instead of being deleted, pruned threads can be moved to designated "
+"category."
 msgstr "Kısaltılmış konular, silinmek yerine atanmış bölüm e taşınmaktadır."
 
-#: categories/admin/forms.py:177
+#: categories/admin/forms.py:202
 msgid "Don't archive pruned threads"
 msgstr "Kısaltılmış konuları arşivlemeyiniz."
 
-#: categories/admin/forms.py:194
+#: categories/admin/forms.py:219
 msgid "You are trying to move this category threads to itself."
 msgstr "Bu bölüm konularını kendisine taşımaya çalışıyorsunuz."
 
-#: categories/admin/forms.py:200
+#: categories/admin/forms.py:225
 msgid ""
 "You are trying to move this category threads to a child category that will "
 "be deleted together with this category."
@@ -337,24 +359,25 @@ msgstr ""
 "Bu bölüm konularını, bu bölüm ile birlikte silinecek bir ast bölüm e "
 "taşımaya çalışıyorsunuz."
 
-#: categories/admin/forms.py:213
+#: categories/admin/forms.py:238
 msgid "Move category threads to"
 msgstr "Bölüm konularını şuraya taşıyın."
 
-#: categories/admin/forms.py:216 categories/admin/forms.py:230
+#: categories/admin/forms.py:241 categories/admin/forms.py:255
 msgid "Delete with category"
 msgstr "bölüm ile beraber sil"
 
-#: categories/admin/forms.py:228
+#: categories/admin/forms.py:253
 msgid "Move child categories to"
 msgstr "ast kategorisini taşı"
 
-#: categories/admin/forms.py:249 categories/admin/forms.py:264
-#: templates/misago/acl_debug.html:15 templates/misago/admin/roles/list.html:16
+#: categories/admin/forms.py:274 categories/admin/forms.py:289
+#: templates/misago/acl_debug.html:15
+#: templates/misago/admin/roles/list.html:16
 msgid "Role"
 msgstr "sıfat"
 
-#: categories/admin/forms.py:253 categories/admin/forms.py:268
+#: categories/admin/forms.py:278 categories/admin/forms.py:293
 msgid "No access"
 msgstr "Erişim yok"
 
@@ -460,50 +483,57 @@ msgstr "bölüm içeriği görülüyor"
 msgid "You don't have permission to browse \"%(category)s\" contents."
 msgstr "%(category)s bölüm içeriklerini göz atmaya izniniz bulunmamaktadır."
 
-#: conf/admin/__init__.py:41 templates/misago/admin/conf/index.html:5
+#: conf/admin/__init__.py:45 templates/misago/admin/conf/index.html:5
 #: templates/misago/admin/themes/form.html:48
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: conf/admin/__init__.py:48 templates/misago/admin/socialauth/form.html:27
+#: conf/admin/__init__.py:52 templates/misago/admin/socialauth/form.html:27
 msgid "General"
 msgstr "Genel"
 
-#: conf/admin/__init__.py:49
+#: conf/admin/__init__.py:53
 msgid "Change forum details like name, description or footer."
 msgstr ""
 
-#: conf/admin/__init__.py:54 templates/misago/admin/dashboard/totals.html:7
+#: conf/admin/__init__.py:58 templates/misago/admin/dashboard/totals.html:7
 #: templates/misago/admin/users/ban.html:22 templates/misago/navbar.html:42
-#: templates/misago/userslists/base.html:5
-#: templates/misago/userslists/base.html:14 users/admin/__init__.py:74
+#: templates/misago/userslists/base.html:5 users/admin/__init__.py:74
 #: users/search.py:16
 msgid "Users"
 msgstr "Kullanicilar"
 
-#: conf/admin/__init__.py:56
+#: conf/admin/__init__.py:60
 msgid "Customize user accounts default behavior and features availability."
 msgstr ""
 
-#: conf/admin/__init__.py:63
+#: conf/admin/__init__.py:67
 msgid "Captcha"
 msgstr ""
 
-#: conf/admin/__init__.py:65
+#: conf/admin/__init__.py:69
 msgid "Setup protection against automatic registrations on the site."
 msgstr ""
 
-#: conf/admin/__init__.py:72 templates/misago/admin/dashboard/analytics.html:7
+#: conf/admin/__init__.py:76 templates/misago/admin/dashboard/analytics.html:7
 #: templates/misago/admin/dashboard/index.html:40
 msgid "Analytics"
 msgstr ""
 
-#: conf/admin/__init__.py:73
+#: conf/admin/__init__.py:77
 msgid "Enable Google Analytics or setup Google Site Verification."
 msgstr ""
 
-#: conf/admin/__init__.py:80
+#: conf/admin/__init__.py:84
 msgid "Threads, posts, polls and attachments options."
+msgstr ""
+
+#: conf/admin/__init__.py:90
+msgid "OAuth2"
+msgstr ""
+
+#: conf/admin/__init__.py:92
+msgid "Enable OAuth2 client and connect your site to existing auth provider."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:17
@@ -522,8 +552,8 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:27
 msgid ""
-"This token was extracted from uploaded site verification file. To change it, "
-"upload new verification file."
+"This token was extracted from uploaded site verification file. To change it,"
+" upload new verification file."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:34
@@ -624,120 +654,304 @@ msgstr ""
 msgid "You need to set question answers if selected CAPTCHA type is Q&A."
 msgstr ""
 
-#: conf/admin/forms/general.py:25
+#: conf/admin/forms/general.py:26
 msgid "Forum name"
 msgstr "Forum ismi"
 
-#: conf/admin/forms/general.py:26
+#: conf/admin/forms/general.py:27
 msgid "Forum address"
 msgstr ""
 
 #: conf/admin/forms/general.py:29
-msgid "Header text"
-msgstr ""
-
-#: conf/admin/forms/general.py:30
-msgid "This text will replace forum name in page header."
-msgstr ""
-
-#: conf/admin/forms/general.py:34
 msgid "Page title"
 msgstr ""
 
-#: conf/admin/forms/general.py:36
+#: conf/admin/forms/general.py:31
 msgid "Meta Description"
 msgstr "Meta açıklama"
 
-#: conf/admin/forms/general.py:38
+#: conf/admin/forms/general.py:33
 msgid ""
 "Short description of your forum that search and social sites may display "
 "next to link to your forum's index."
 msgstr ""
 
+#: conf/admin/forms/general.py:40
+msgid "Header text"
+msgstr ""
+
+#: conf/admin/forms/general.py:41
+msgid "This text will be displayed in page header on forum index."
+msgstr ""
+
 #: conf/admin/forms/general.py:46
+msgid "Header message"
+msgstr ""
+
+#: conf/admin/forms/general.py:48
+msgid ""
+"This message will be displayed in page header on forum index, under the "
+"header text."
+msgstr ""
+
+#: conf/admin/forms/general.py:57
 #: templates/misago/admin/conf/general_settings.html:17
 msgid "Logo"
 msgstr ""
 
-#: conf/admin/forms/general.py:47
+#: conf/admin/forms/general.py:58
 msgid "Image that will displayed in forum navbar."
 msgstr ""
 
-#: conf/admin/forms/general.py:50
+#: conf/admin/forms/general.py:61
 msgid "Delete logo image"
 msgstr ""
 
-#: conf/admin/forms/general.py:52
+#: conf/admin/forms/general.py:63
 msgid "Small logo"
 msgstr ""
 
-#: conf/admin/forms/general.py:54
+#: conf/admin/forms/general.py:65
 msgid ""
 "Image that will be displayed in compact forum navbar. When set, it will "
 "replace icon pointing to forum index."
 msgstr ""
 
-#: conf/admin/forms/general.py:60
+#: conf/admin/forms/general.py:71
 msgid "Delete small logo image"
 msgstr ""
 
-#: conf/admin/forms/general.py:63 legal/admin/forms.py:34
+#: conf/admin/forms/general.py:74 legal/admin/forms.py:34
 msgid "Text"
 msgstr ""
 
-#: conf/admin/forms/general.py:65
+#: conf/admin/forms/general.py:76
 msgid ""
 "Text displayed in forum navbar. If logo image was uploaded, text will be "
 "displayed right next to it. Never displayed by the compact navbar."
 msgstr ""
 
-#: conf/admin/forms/general.py:73
+#: conf/admin/forms/general.py:84
 msgid "Image"
 msgstr ""
 
-#: conf/admin/forms/general.py:75
+#: conf/admin/forms/general.py:86
 msgid ""
 "Custom image that will appear next to links to your forum posted on social "
 "sites. Facebook recommends that this image should be 1200 pixels wide and "
 "630 pixels tall."
 msgstr ""
 
-#: conf/admin/forms/general.py:81
+#: conf/admin/forms/general.py:92
 msgid "Delete image"
 msgstr ""
 
-#: conf/admin/forms/general.py:83
+#: conf/admin/forms/general.py:94
 msgid "Replace image with avatar on user profiles"
 msgstr ""
 
-#: conf/admin/forms/general.py:86
+#: conf/admin/forms/general.py:97
 msgid "Replace image with avatar on threads"
 msgstr ""
 
-#: conf/admin/forms/general.py:90
-#: templates/misago/admin/conf/general_settings.html:59
+#: conf/admin/forms/general.py:101
+#: templates/misago/admin/conf/general_settings.html:60
 msgid "Forum footnote"
 msgstr ""
 
-#: conf/admin/forms/general.py:91
+#: conf/admin/forms/general.py:102
 msgid "Short message displayed in forum footer."
 msgstr "Forum alt başlığında kısa ileti görüldü."
 
-#: conf/admin/forms/general.py:96
+#: conf/admin/forms/general.py:107
 msgid "E-mails footer"
 msgstr "E-mail altbilgisi"
 
-#: conf/admin/forms/general.py:98
+#: conf/admin/forms/general.py:109
 msgid "Optional short message included at the end of e-mails sent by forum."
 msgstr ""
 "Forum tarafindan gönderilen e-maillerin altinda opsiyonel kısa ileti "
 "dahildir."
 
-#: conf/admin/forms/general.py:109
+#: conf/admin/forms/general.py:120
 #, python-format
 msgid ""
 "Misago uses this setting to build links in e-mails sent to site users. "
 "Address under which site is running appears to be \"%(address)s\"."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:40
+msgid "Enable OAuth2 client"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:42
+msgid ""
+"Enabling OAuth2 will make login option redirect users to the OAuth provider "
+"configured below. It will also disable option to register on forum, change "
+"username, email or password, as those features will be delegated to the 3rd "
+"party site."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:49
+msgid "Provider name"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:50
+msgid "Name of the OAuth 2 provider to be displayed by interface."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:55 socialauth/admin/forms/github.py:8
+#: socialauth/admin/forms/google.py:8
+msgid "Client ID"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:60 socialauth/admin/forms/github.py:9
+#: socialauth/admin/forms/google.py:9
+msgid "Client Secret"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:65
+msgid "Scopes"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:66
+msgid "List of scopes to request from provider, separated with spaces."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:72
+msgid "Login form URL"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:74
+msgid ""
+"Address to login form on provider's server that users will be redirected to."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:82
+msgid "Access token retrieval URL"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:84
+msgid ""
+"URL that will be called after user completes the login process and "
+"authorization code is sent back to your site. This URL is expected to take "
+"this code and return the access token that will be next used to retrieve "
+"user data."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:93
+msgid "Extra HTTP headers in token request"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:95
+msgid ""
+"List of extra headers to include in a HTTP request made to retrieve the "
+"access token. Example header is \"Header-name: value\". Specify each header "
+"on separate line."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:104
+msgid "JSON path to access token"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:106
+msgid ""
+"Name of key containing the access token in JSON returned by the provider If "
+"token is nested, use period (\".\") for path, eg: \"result.token\" will "
+"retrieve the token from \"token\" key nested in \"result\"."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:115
+msgid "User data URL"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:120
+msgid "Request method"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:128
+msgid "Access token location"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:130
+msgid "Query string"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:131
+msgid "HTTP header"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:132
+msgid "HTTP header (Bearer)"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:137
+msgid "Access token name"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:142
+msgid "Extra HTTP headers in user request"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:144
+msgid ""
+"List of extra headers to include in a HTTP request made to retrieve the user"
+" profile. Example header is \"Header-name: value\". Specify each header on "
+"separate line."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:154
+msgid "Send a welcoming e-mail to users on their first sign-ons"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:159
+msgid "User ID path"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:164
+msgid "User name path"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:169
+msgid "User e-mail path"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:174
+msgid "User avatar URL path"
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:175
+msgid "Optional, leave empty to don't download avatar from provider."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:210
+msgid ""
+"You need to complete the configuration before you will be able to enable "
+"OAuth 2 on your site."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:227
+#, python-format
+msgid "\"%(header)s\" is not a valid header. It's missing a colon (\":\")."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:238
+#, python-format
+msgid ""
+"\"%(header)s\" is not a valid header. It's missing a header name before the "
+"colon (\":\")."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:246
+#, python-format
+msgid "\"%(header)s\" header is entered more than once."
+msgstr ""
+
+#: conf/admin/forms/oauth2.py:253
+#, python-format
+msgid ""
+"\"%(header)s\" is not a valid header. It's missing a header value after the "
+"colon (\":\")."
 msgstr ""
 
 #: conf/admin/forms/threads.py:27
@@ -798,10 +1012,10 @@ msgstr ""
 
 #: conf/admin/forms/threads.py:71
 msgid ""
-"Controls amount of data used by read-tracking system. All content older than "
-"number of days specified in this setting is considered old and read, even if "
-"the opposite is true for the user. Active forums can try lowering this value "
-"while less active ones may wish to increase it instead. "
+"Controls amount of data used by read-tracking system. All content older than"
+" number of days specified in this setting is considered old and read, even "
+"if the opposite is true for the user. Active forums can try lowering this "
+"value while less active ones may wish to increase it instead. "
 msgstr ""
 
 #: conf/admin/forms/threads.py:80
@@ -881,8 +1095,8 @@ msgstr ""
 
 #: conf/admin/forms/users.py:48
 msgid ""
-"Delete new inactive accounts if they weren't activated within this number of "
-"days"
+"Delete new inactive accounts if they weren't activated within this number of"
+" days"
 msgstr ""
 
 #: conf/admin/forms/users.py:51
@@ -939,8 +1153,8 @@ msgstr "Varsayılan gravatar için yedek"
 
 #: conf/admin/forms/users.py:86
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their e-"
-"mail address."
+"Select which avatar to use when user has no gravatar associated with their "
+"e-mail address."
 msgstr ""
 
 #: conf/admin/forms/users.py:96
@@ -1051,7 +1265,7 @@ msgstr ""
 msgid "This value must be lower than number of users per page."
 msgstr ""
 
-#: conf/admin/views.py:39
+#: conf/admin/views.py:40
 msgid "Settings have been saved."
 msgstr ""
 
@@ -1135,8 +1349,8 @@ msgstr ""
 #: templates/misago/admin/dashboard/checks.html:17
 #: templates/misago/admin/dashboard/index.html:33
 msgid ""
-"Version check feature relies on the API operated by the Python Package Index "
-"(pypi.org) API to retrieve latest Misago release version."
+"Version check feature relies on the API operated by the Python Package Index"
+" (pypi.org) API to retrieve latest Misago release version."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:70
@@ -1450,12 +1664,87 @@ msgstr ""
 msgid "Footer"
 msgstr ""
 
+#: oauth2/exceptions.py:13
+msgid "The OAuth2 process was canceled by the provider."
+msgstr ""
+
+#: oauth2/exceptions.py:21
+msgid "The OAuth2 session is missing state."
+msgstr ""
+
+#: oauth2/exceptions.py:25
+msgid "The OAuth2 state was not sent by the provider."
+msgstr ""
+
+#: oauth2/exceptions.py:30
+msgid ""
+"The OAuth2 state sent by the provider did not match one in the session."
+msgstr ""
+
+#: oauth2/exceptions.py:39
+msgid "The OAuth2 authorization code was not sent by the provider."
+msgstr ""
+
+#: oauth2/exceptions.py:47
+msgid "Failed to connect to the OAuth2 provider to retrieve an access token."
+msgstr ""
+
+#: oauth2/exceptions.py:51
+msgid "The OAuth2 provider responded with error for an access token request."
+msgstr ""
+
+#: oauth2/exceptions.py:56
+msgid ""
+"The OAuth2 provider did not respond with a valid JSON for an access token "
+"request."
+msgstr ""
+
+#: oauth2/exceptions.py:62
+msgid "JSON sent by the OAuth2 provider did not contain an access token."
+msgstr ""
+
+#: oauth2/exceptions.py:66
+msgid "Failed to connect to the OAuth2 provider to retrieve user profile."
+msgstr ""
+
+#: oauth2/exceptions.py:70
+msgid "The OAuth2 provider responded with error for user profile request."
+msgstr ""
+
+#: oauth2/exceptions.py:75
+msgid ""
+"The OAuth2 provider did not respond with a valid JSON for user profile "
+"request."
+msgstr ""
+
+#: oauth2/exceptions.py:81
+msgid "JSON sent by the OAuth2 provider did not contain a user id."
+msgstr ""
+
+#: oauth2/exceptions.py:87
+msgid ""
+"User account associated with the profile from the OAuth2 provider was "
+"deactivated by the site administrator."
+msgstr ""
+
+#: oauth2/exceptions.py:95
+msgid "User profile retrieved from the OAuth2 provider did not validate."
+msgstr ""
+
+#: oauth2/user.py:97 users/validators.py:39
+msgid "This e-mail address is not available."
+msgstr "Bu e-posta adresi mevcut değil."
+
+#: oauth2/user.py:102 users/validators.py:67
+msgid "This username is not available."
+msgstr "Bu kullanıcı adı mevcut değil."
+
 #: search/api.py:17 search/views.py:12 search/views.py:21
 msgid "You don't have permission to search site."
 msgstr "Sitede arama iznin yok"
 
-#: search/permissions.py:10 templates/misago/search.html:23
-#: templates/misago/search.html:34
+#: search/permissions.py:10 templates/misago/search.html:26
+#: templates/misago/search.html:38
 msgid "Search"
 msgstr "Ara"
 
@@ -1490,13 +1779,13 @@ msgstr ""
 #: socialauth/admin/forms/base.py:39
 msgid ""
 "Enabling this option will result in the user being signed in if their forum "
-"account was registered using same e-mail address as used on the social site. "
-"Otherwise they will be asked to specify a different e-mail to continue sign "
-"in using social site."
+"account was registered using same e-mail address as used on the social site."
+" Otherwise they will be asked to specify a different e-mail to continue sign"
+" in using social site."
 msgstr ""
 
 #: socialauth/admin/forms/base.py:51 socialauth/admin/forms/base.py:53
-#: threads/admin/forms.py:97
+#: threads/admin/forms.py:98
 msgid "This field is required."
 msgstr "Bu alan gerekli."
 
@@ -1506,14 +1795,6 @@ msgstr ""
 
 #: socialauth/admin/forms/facebook.py:9
 msgid "App Secret"
-msgstr ""
-
-#: socialauth/admin/forms/github.py:8 socialauth/admin/forms/google.py:8
-msgid "Client ID"
-msgstr ""
-
-#: socialauth/admin/forms/github.py:9 socialauth/admin/forms/google.py:9
-msgid "Client Secret"
 msgstr ""
 
 #: socialauth/admin/forms/twitter.py:8
@@ -1551,8 +1832,8 @@ msgstr ""
 #: socialauth/pipeline.py:88
 #, python-format
 msgid ""
-"The e-mail address associated with your %(backend)s account is not available "
-"for use on this site."
+"The e-mail address associated with your %(backend)s account is not available"
+" for use on this site."
 msgstr ""
 
 #: socialauth/pipeline.py:98
@@ -1565,6 +1846,11 @@ msgstr ""
 #: socialauth/pipeline.py:223 users/api/userendpoints/create.py:60
 msgid "Please try resubmitting the form."
 msgstr "Lütfen formu tekrar deneyin."
+
+#: socialauth/views.py:25 users/api/auth.py:40 users/api/users.py:92
+#, python-format
+msgid "This feature has been disabled. Please use %(provider)s to sign in."
+msgstr ""
 
 #: templates/misago/acl_debug.html:5
 #, python-format
@@ -1594,7 +1880,7 @@ msgstr "Değer"
 msgid "Account activated"
 msgstr "Hesap onaylandi"
 
-#: templates/misago/activation/done.html:20
+#: templates/misago/activation/done.html:19
 msgid ""
 "You can now sign in to finish setting up your account and to participate in "
 "or start new discussions."
@@ -1606,35 +1892,35 @@ msgstr ""
 msgid "Activation error"
 msgstr "Aktivasyon hatası"
 
-#: templates/misago/activation/error.html:19
+#: templates/misago/activation/error.html:18
 msgid "Can't activate account."
 msgstr "Hesap onaylanamiyor."
 
 #: templates/misago/activation/request.html:5
-#: templates/misago/activation/request.html:13
+#: templates/misago/activation/request.html:18
 msgid "Request activation link"
 msgstr "Onay linki iste"
 
-#: templates/misago/activation/request.html:25
+#: templates/misago/activation/request.html:32
 msgid ""
-"The site administrator may impose a requirement on newly registered accounts "
-"to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts"
+" to be activated before users will be able to sign in."
 msgstr ""
 
-#: templates/misago/activation/request.html:28
+#: templates/misago/activation/request.html:35
 msgid ""
 "Depending on the time of registration, you will be able to activate your "
 "account by clicking a special activation link. This link will be valid only "
 "for your browser, for seven days or until your account is activated."
 msgstr ""
 
-#: templates/misago/activation/request.html:31
+#: templates/misago/activation/request.html:38
 msgid ""
 "To receive this link, enter your account's e-mail address in the form and "
 "press the \"Send link\" button."
 msgstr ""
 
-#: templates/misago/activation/request.html:49
+#: templates/misago/activation/request.html:56
 msgid "To request a new activation link please enable JavaScript."
 msgstr ""
 
@@ -1642,7 +1928,7 @@ msgstr ""
 msgid "Activation failed"
 msgstr "Aktivasyon başarısız oldu"
 
-#: templates/misago/activation/stopped.html:20
+#: templates/misago/activation/stopped.html:19
 msgid "Your account can't be activated at this time."
 msgstr "Hesabın şuan aktive edilemiyor."
 
@@ -1668,6 +1954,7 @@ msgstr ""
 #: templates/misago/admin/agreements/form.html:48
 #: templates/misago/admin/categoryroles/form.html:36
 #: templates/misago/admin/conf/captcha_settings.html:8
+#: templates/misago/admin/conf/oauth2_settings.html:8
 #: templates/misago/admin/menuitems/form.html:41
 #: templates/misago/admin/roles/form.html:36
 msgid "Basic settings"
@@ -1771,7 +2058,6 @@ msgstr "Hiçbiri"
 
 #: templates/misago/admin/attachments/list.html:66
 #: templates/misago/admin/warnings/list.html:112
-#: templates/misago/poll/results.html:76
 msgid "Delete"
 msgstr "Sil"
 
@@ -1837,11 +2123,13 @@ msgstr ""
 #: templates/misago/admin/attachmenttypes/list.html:38
 #: templates/misago/admin/users/edit.html:67
 #: templates/misago/admin/users/list.html:70
+#: templates/misago/thread/header.html:65
+#: templates/misago/thread/toolbar_bottom.html:20
 msgid "Disabled"
 msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:57
-#: templates/misago/admin/categories/list.html:45
+#: templates/misago/admin/categories/list.html:53
 #: templates/misago/admin/menuitems/list.html:54
 #: templates/misago/admin/ranks/list.html:59
 #: templates/misago/admin/ranks/list.html:66
@@ -1940,7 +2228,7 @@ msgstr ""
 
 #: templates/misago/admin/categories/delete.html:21
 #: templates/misago/admin/categories/delete.html:39
-#: templates/misago/admin/categories/list.html:97
+#: templates/misago/admin/categories/list.html:105
 msgid "Delete category"
 msgstr "bölüm sil"
 
@@ -1959,7 +2247,7 @@ msgid "Edit permissions"
 msgstr ""
 
 #: templates/misago/admin/categories/form.html:44
-#: templates/misago/admin/categories/list.html:94
+#: templates/misago/admin/categories/list.html:102
 #: templates/misago/admin/categoryroles/categoryroles.html:24
 msgid "Edit category"
 msgstr ""
@@ -1968,15 +2256,15 @@ msgstr ""
 msgid "Display and position"
 msgstr "Görüntüle ve yerleştir"
 
-#: templates/misago/admin/categories/form.html:65
+#: templates/misago/admin/categories/form.html:67
 msgid "Behaviour"
 msgstr "Davranış"
 
-#: templates/misago/admin/categories/form.html:74
+#: templates/misago/admin/categories/form.html:76
 msgid "Content approval"
 msgstr "İçerik onayı"
 
-#: templates/misago/admin/categories/form.html:84
+#: templates/misago/admin/categories/form.html:86
 msgid "Prune threads"
 msgstr "Prune konuları"
 
@@ -1984,16 +2272,20 @@ msgstr "Prune konuları"
 msgid "Category"
 msgstr "bölüm"
 
-#: templates/misago/admin/categories/list.html:20
+#: templates/misago/admin/categories/list.html:18
+msgid "Label"
+msgstr ""
+
+#: templates/misago/admin/categories/list.html:21
 #: templates/misago/admin/dashboard/index.html:45
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
-#: templates/misago/profile/posts.html:9 users/apps.py:93
+#: templates/misago/profile/posts.html:9 users/apps.py:102
 msgid "Posts"
 msgstr "iletiler"
 
-#: templates/misago/admin/categories/list.html:58
+#: templates/misago/admin/categories/list.html:66
 #: templates/misago/admin/menuitems/list.html:72
 #: templates/misago/admin/ranks/list.html:74
 #: templates/misago/admin/socialauth/list.html:32
@@ -2002,7 +2294,7 @@ msgstr "iletiler"
 msgid "Move down"
 msgstr "Aşağı in"
 
-#: templates/misago/admin/categories/list.html:72
+#: templates/misago/admin/categories/list.html:80
 #: templates/misago/admin/menuitems/list.html:86
 #: templates/misago/admin/ranks/list.html:88
 #: templates/misago/admin/socialauth/list.html:46
@@ -2011,7 +2303,7 @@ msgstr "Aşağı in"
 msgid "Move up"
 msgstr "Yukarı çık"
 
-#: templates/misago/admin/categories/list.html:107
+#: templates/misago/admin/categories/list.html:115
 msgid "No categories are set."
 msgstr ""
 
@@ -2113,6 +2405,57 @@ msgstr ""
 msgid "Forum index"
 msgstr "Forum index"
 
+#: templates/misago/admin/conf/oauth2_settings.html:19
+msgid "Initializing login"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:28
+msgid "Retrieving access token"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:38
+msgid "Retrieving user data"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:50
+msgid "New user sign-ons"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:58
+msgid "User JSON mappings"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:61
+msgid ""
+"Path to value is a key under which it can be found in the JSON with user "
+"data returned by the provider. If this key is nested under other key, use "
+"full path and separate keys with periods (\"<code>.</code>\")."
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:66
+msgid "For example, for given JSON with user data:"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:81
+msgid "Those paths should be used:"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:86
+msgid "User ID"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:87
+msgid "User name"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:88
+msgid "User e-mail"
+msgstr ""
+
+#: templates/misago/admin/conf/oauth2_settings.html:89
+msgid "User avatar"
+msgstr ""
+
 #: templates/misago/admin/conf/threads_settings.html:8
 msgid "Posting"
 msgstr ""
@@ -2133,45 +2476,57 @@ msgstr ""
 msgid "Attachment error images"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:8
+#: templates/misago/admin/conf/users_settings.html:9
+#: templates/misago/admin/socialauth/list.html:97
+msgid "Note"
+msgstr ""
+
+#: templates/misago/admin/conf/users_settings.html:9
+#, python-format
+msgid ""
+"OAuth2 client is enabled. On site registration, password and account "
+"deletion features have been disabled and delegated to the %(provider)s."
+msgstr ""
+
+#: templates/misago/admin/conf/users_settings.html:15
 msgid "New accounts"
 msgstr "Yeni hesaplar"
 
-#: templates/misago/admin/conf/users_settings.html:17 users/admin/forms.py:484
+#: templates/misago/admin/conf/users_settings.html:24 users/admin/forms.py:484
 #: users/admin/forms.py:573
 msgid "Usernames"
 msgstr "Kullanıcı adları"
 
-#: templates/misago/admin/conf/users_settings.html:27
+#: templates/misago/admin/conf/users_settings.html:34
 msgid "Avatars"
 msgstr "Avatarlar"
 
-#: templates/misago/admin/conf/users_settings.html:43
+#: templates/misago/admin/conf/users_settings.html:50
 msgid "Signatures"
 msgstr "İmzalar"
 
-#: templates/misago/admin/conf/users_settings.html:51
+#: templates/misago/admin/conf/users_settings.html:58
 #: users/admin/__init__.py:80
 msgid "Data downloads"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:60
+#: templates/misago/admin/conf/users_settings.html:67
 msgid "Own account deletion"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:68 users/admin/forms.py:492
+#: templates/misago/admin/conf/users_settings.html:75 users/admin/forms.py:492
 msgid "IP addresses"
 msgstr "IP adresleri"
 
-#: templates/misago/admin/conf/users_settings.html:76
+#: templates/misago/admin/conf/users_settings.html:83
 msgid "Default subscription preferences"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:85
+#: templates/misago/admin/conf/users_settings.html:92
 msgid "Users lists"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:94
+#: templates/misago/admin/conf/users_settings.html:101
 msgid "Top posters ranking"
 msgstr ""
 
@@ -2294,8 +2649,9 @@ msgstr ""
 msgid "Site analytics are currently unavailable due to an error."
 msgstr ""
 
-#: templates/misago/admin/dashboard/totals.html:43 threads/admin/__init__.py:36
-#: threads/permissions/attachments.py:11 threads/permissions/attachments.py:29
+#: templates/misago/admin/dashboard/totals.html:43
+#: threads/admin/__init__.py:36 threads/permissions/attachments.py:11
+#: threads/permissions/attachments.py:29
 msgid "Attachments"
 msgstr "Ekler"
 
@@ -2364,7 +2720,7 @@ msgstr ""
 #: templates/misago/errorpages/403.html:12
 #: templates/misago/errorpages/403.html:25
 #: templates/misago/errorpages/403.html:34
-#: templates/misago/errorpages/403.html:54
+#: templates/misago/errorpages/403.html:53
 msgid "You don't have permission to access this page."
 msgstr "Bu sayfaya giriş izinin yok."
 
@@ -2412,20 +2768,20 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgid ""
-"The form was sent after being opened in the browser for a long time (eg. few "
-"days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few"
+" days) and cookie token has expired."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgid ""
-"The site is configured to use the HTTPS, but this form was sent over the the "
-"HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the"
+" HTTP."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgid ""
-"If you are an owner of this site, please check if the HTTPS certificate used "
-"by the site is valid and accepted by the browser."
+"If you are an owner of this site, please check if the HTTPS certificate used"
+" by the site is valid and accepted by the browser."
 msgstr ""
 
 #: templates/misago/admin/generic/filter_form.html:7
@@ -2486,7 +2842,10 @@ msgid "Change sorting to:"
 msgstr "Sıralanmayı değiştir"
 
 #: templates/misago/admin/generic/paginator.html:4
-#: templates/misago/thread/paginator.html:7
+#: templates/misago/thread/pagination.html:4
+#: templates/misago/thread/pagination.html:18
+#: templates/misago/userslists/rank_paginator.html:4
+#: templates/misago/userslists/rank_paginator.html:18
 msgid "Go to first page"
 msgstr "Ilk sayfaya git"
 
@@ -2496,27 +2855,31 @@ msgid "First"
 msgstr "Ilk"
 
 #: templates/misago/admin/generic/paginator.html:13
-#: templates/misago/thread/paginator.html:13
-#: templates/misago/thread/paginator.html:19
-#: templates/misago/userslists/rank.html:99
-#: templates/misago/userslists/rank.html:107
+#: templates/misago/thread/pagination.html:14
+#: templates/misago/thread/pagination.html:21
+#: templates/misago/userslists/rank_paginator.html:14
+#: templates/misago/userslists/rank_paginator.html:21
 msgid "Go to previous page"
 msgstr "Önceki sayfaya git"
 
 #: templates/misago/admin/generic/paginator.html:22
-#: templates/misago/thread/paginator.html:27
-#: templates/misago/userslists/rank.html:116
+#: templates/misago/thread/pagination.html:26
+#: templates/misago/thread/pagination.html:33
+#: templates/misago/userslists/rank_paginator.html:26
+#: templates/misago/userslists/rank_paginator.html:33
 msgid "Go to next page"
 msgstr "Bir sonraki sayfaya git"
 
 #: templates/misago/admin/generic/paginator.html:31
-#: templates/misago/thread/paginator.html:32
+#: templates/misago/thread/pagination.html:29
+#: templates/misago/thread/pagination.html:36
+#: templates/misago/userslists/rank_paginator.html:29
+#: templates/misago/userslists/rank_paginator.html:36
 msgid "Go to last page"
 msgstr "Son sayfaya git"
 
 #: templates/misago/admin/generic/paginator.html:32
 #: templates/misago/admin/generic/paginator.html:36
-#: templates/misago/thread/toolbar-top.html:20
 msgid "Last"
 msgstr "Son"
 
@@ -2557,7 +2920,8 @@ msgstr ""
 msgid "Administration"
 msgstr "Yönetim"
 
-#: templates/misago/admin/login.html:29 users/captcha.py:19
+#: templates/misago/admin/login.html:29
+#: templates/misago/errorpages/oauth2.html:45 users/captcha.py:19
 msgid "Please try again."
 msgstr "Lütfen sonra tekrar deneyin"
 
@@ -2571,6 +2935,7 @@ msgid "Password"
 msgstr "Şifre"
 
 #: templates/misago/admin/login.html:57 templates/misago/auth.html:5
+#: templates/misago/errorpages/oauth2.html:48
 msgid "Sign in"
 msgstr "Kayıt ol"
 
@@ -2682,7 +3047,8 @@ msgstr "Görüntülenme ve görünürlük"
 #: templates/misago/admin/ranks/list.html:17
 #: templates/misago/admin/users/list.html:19
 #: templates/misago/userslists/active_posters.html:112
-#: templates/misago/userslists/active_posters.html:123 users/admin/forms.py:238
+#: templates/misago/userslists/active_posters.html:123
+#: users/admin/forms.py:238
 msgid "Rank"
 msgstr "Rütbe"
 
@@ -2747,7 +3113,7 @@ msgid "Enabled login methods"
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:15
-#: templates/misago/admin/socialauth/list.html:106
+#: templates/misago/admin/socialauth/list.html:114
 msgid "Provider"
 msgstr ""
 
@@ -2763,19 +3129,26 @@ msgstr ""
 msgid "Are you sure you want to disable this social login provider?"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:100
+#: templates/misago/admin/socialauth/list.html:97
+#, python-format
+msgid ""
+"OAuth2 client is enabled. Social authentication has been disabled with login"
+" and registration delegated to the %(provider)s."
+msgstr ""
+
+#: templates/misago/admin/socialauth/list.html:108
 msgid "Setup new login method"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:119
+#: templates/misago/admin/socialauth/list.html:127
 msgid "Setup login with this provider"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:120
+#: templates/misago/admin/socialauth/list.html:128
 msgid "Setup"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:127
+#: templates/misago/admin/socialauth/list.html:135
 msgid "No new login providers are available for setup at this time."
 msgstr ""
 
@@ -2821,8 +3194,7 @@ msgstr ""
 #: templates/misago/admin/themes/assets/css.html:84
 #: templates/misago/admin/users/list.html:95
 #: templates/misago/admin/warnings/list.html:105
-#: templates/misago/poll/results.html:69
-#: templates/misago/profile/details.html:25
+#: templates/misago/profile/details.html:27
 #: templates/misago/thread/posts/post/footer.html:31
 #: users/admin/djangoadmin.py:72
 msgid "Edit"
@@ -3020,7 +3392,8 @@ msgid "Deleted"
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:66
-#: templates/misago/admin/users/list.html:69 users/admin/forms.py:317
+#: templates/misago/admin/users/list.html:69
+#: templates/misago/profile/header.html:30 users/admin/forms.py:317
 msgid "Account disabled"
 msgstr ""
 
@@ -3073,7 +3446,7 @@ msgstr ""
 msgid "Signature"
 msgstr "İmza"
 
-#: templates/misago/admin/users/edit.html:228 users/apps.py:24
+#: templates/misago/admin/users/edit.html:228 users/apps.py:27
 msgid "Forum options"
 msgstr "Forum ayarları"
 
@@ -3093,7 +3466,8 @@ msgstr ""
 
 #: templates/misago/admin/users/edit.html:251
 msgid ""
-"No additional action is required. This account will be deleted automatically."
+"No additional action is required. This account will be deleted "
+"automatically."
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:294
@@ -3283,8 +3657,8 @@ msgstr "hesabımı etkinleştir"
 #: templates/misago/emails/change_email.txt:6
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because you have changed your e-"
-"mail address."
+"%(user)s, you are receiving this message because you have changed your "
+"e-mail address."
 msgstr ""
 "%(user)s, e-posta adresinizi değiştirdiğiniz için bu ileti alıyorsunuz."
 
@@ -3320,9 +3694,9 @@ msgstr "Hesap şifrenizi değiştirmek için aşağıdaki bağlantıyı tıklay�
 
 #: templates/misago/emails/change_password_form_link.html:16
 #: templates/misago/forgottenpassword/form.html:7
-#: templates/misago/forgottenpassword/form.html:20
+#: templates/misago/forgottenpassword/form.html:25
 #: templates/misago/forgottenpassword/request.html:7
-#: templates/misago/forgottenpassword/request.html:20
+#: templates/misago/forgottenpassword/request.html:25
 msgid "Set new password"
 msgstr "Yeni şifre ayarla"
 
@@ -3334,7 +3708,7 @@ msgid ""
 "download."
 msgstr ""
 
-#: templates/misago/emails/data_download.html:11 users/apps.py:52
+#: templates/misago/emails/data_download.html:11 users/apps.py:57
 msgid "Download data"
 msgstr ""
 
@@ -3402,7 +3776,8 @@ msgstr "Her zaman hesabınızda %(login_form)s kullanarak oturum açabilirsiniz.
 
 #: templates/misago/emails/register/complete.txt:14
 msgid "You can always sign in to your account using the form below:"
-msgstr "Her zaman aşağıdaki formu kullanarak hesabınızda oturum açabilirsiniz:"
+msgstr ""
+"Her zaman aşağıdaki formu kullanarak hesabınızda oturum açabilirsiniz:"
 
 #: templates/misago/emails/register/inactive.html:7
 #: templates/misago/emails/register/inactive.txt:10
@@ -3410,14 +3785,14 @@ msgid ""
 "Before you will be able to join discussion on our forums, one of our "
 "administrators will have to activate your account."
 msgstr ""
-"Forumlarımıza tartışmaya başlamadan önce, yöneticilerimizden biri hesabınızı "
-"etkinleştirmek zorunda kalacaklar."
+"Forumlarımıza tartışmaya başlamadan önce, yöneticilerimizden biri hesabınızı"
+" etkinleştirmek zorunda kalacaklar."
 
 #: templates/misago/emails/register/inactive.html:12
 #: templates/misago/emails/register/inactive.txt:15
 msgid ""
-"This may take a while, but you will receive e-mail with notification once it "
-"happens."
+"This may take a while, but you will receive e-mail with notification once it"
+" happens."
 msgstr ""
 "Bu biraz zaman alabilir, ancak bir kez gerçekleştiğinde bildirimle birlikte "
 "e-posta alırsınız."
@@ -3476,15 +3851,15 @@ msgid ""
 "the thread \"%(thread)s\" that you are subscribed to."
 msgstr ""
 
-#: templates/misago/errorpages/403.html:50
+#: templates/misago/errorpages/403.html:49
 msgid "This page is not available."
 msgstr "Bu sayfa kullanılamaz."
 
-#: templates/misago/errorpages/404.html:38
+#: templates/misago/errorpages/404.html:37
 msgid "Requested page could not be found."
 msgstr "İstenilen sayfa bulunamıyor."
 
-#: templates/misago/errorpages/404.html:39
+#: templates/misago/errorpages/404.html:38
 msgid ""
 "The link you followed was incorrect or the page has been moved or deleted."
 msgstr "İzlediğiniz bağlantı yanlıştı veya sayfa taşındı veya silindi."
@@ -3498,11 +3873,11 @@ msgstr "Yanlış yol"
 #: templates/misago/errorpages/405.html:9
 #: templates/misago/errorpages/405.html:18
 #: templates/misago/errorpages/405.html:23
-#: templates/misago/errorpages/405.html:39
+#: templates/misago/errorpages/405.html:38
 msgid "This page should be reached via form submission or pressing button."
 msgstr "Bu sayfaya form gönderimi veya düğmesine basarak ulaşılmalıdır."
 
-#: templates/misago/errorpages/405.html:38
+#: templates/misago/errorpages/405.html:37
 msgid "Page reached in wrong way."
 msgstr "Sayfa yanlış yoldan ulaştı."
 
@@ -3537,13 +3912,13 @@ msgstr ""
 "kullanmamasından kaynaklanmaktadır. Tarayıcı yapılandırmanızı kontrol edin "
 "ve tekrar deneyin."
 
-#: templates/misago/errorpages/csrf_failure.html:24
-#: templates/misago/errorpages/csrf_failure_authenticated.html:19
+#: templates/misago/errorpages/csrf_failure.html:23
+#: templates/misago/errorpages/csrf_failure_authenticated.html:18
 msgid "Suspicious request blocked."
 msgstr "Şüpheli istek engellendi."
 
-#: templates/misago/errorpages/csrf_failure.html:25
-#: templates/misago/errorpages/csrf_failure_authenticated.html:20
+#: templates/misago/errorpages/csrf_failure.html:24
+#: templates/misago/errorpages/csrf_failure_authenticated.html:19
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies."
@@ -3551,10 +3926,23 @@ msgstr ""
 "Bu genellikle tarayıcınızın eski çerezleri kabul etmemesinden veya "
 "kullanmamasından kaynaklanmaktadır."
 
-#: templates/misago/errorpages/csrf_failure.html:26
-#: templates/misago/errorpages/csrf_failure_authenticated.html:21
+#: templates/misago/errorpages/csrf_failure.html:25
+#: templates/misago/errorpages/csrf_failure_authenticated.html:20
 msgid "Check your browser configuration and try again."
 msgstr "Tarayıcı ayarlarını kontrol et ve tekrar dene."
+
+#: templates/misago/errorpages/oauth2.html:5
+#: templates/misago/errorpages/oauth2.html:13
+#: templates/misago/errorpages/oauth2.html:16
+#: templates/misago/errorpages/oauth2.html:36
+#: templates/misago/errorpages/oauth2_profile.html:16
+#, python-format
+msgid "Could not sign in with %(provider)s"
+msgstr ""
+
+#: templates/misago/errorpages/oauth2_profile.html:23
+msgid "Found problems:"
+msgstr ""
 
 #: templates/misago/errorpages/social.html:5
 #: templates/misago/errorpages/social.html:11
@@ -3562,7 +3950,7 @@ msgstr "Tarayıcı ayarlarını kontrol et ve tekrar dene."
 msgid "Problem with sign in"
 msgstr ""
 
-#: templates/misago/errorpages/social.html:38
+#: templates/misago/errorpages/social.html:37
 msgid ""
 "Please try again or use another method to sign in if the problem persists."
 msgstr ""
@@ -3579,58 +3967,59 @@ msgstr ""
 msgid "Change forgotten password error"
 msgstr "Unutulan şifre hatasını değiştir"
 
-#: templates/misago/forgottenpassword/error.html:26
+#: templates/misago/forgottenpassword/error.html:25
 msgid "Can't set new password."
 msgstr ""
 
-#: templates/misago/forgottenpassword/error.html:28
+#: templates/misago/forgottenpassword/error.html:27
 msgid "Can't change forgotten password."
 msgstr "Unutulan şifre değiştirilemiyor."
 
 #: templates/misago/forgottenpassword/form.html:9
-#: templates/misago/forgottenpassword/form.html:22
+#: templates/misago/forgottenpassword/form.html:27
 #: templates/misago/forgottenpassword/request.html:9
-#: templates/misago/forgottenpassword/request.html:22
+#: templates/misago/forgottenpassword/request.html:27
 msgid "Change forgotten password"
 msgstr "Unutulan şifreyi değiştir"
 
-#: templates/misago/forgottenpassword/form.html:42
+#: templates/misago/forgottenpassword/form.html:50
 msgid "To reset your password please enable JavaScript."
 msgstr "Şifrenizi sıfırlamak için lütfen JavaScript'i etkinleştirin."
 
-#: templates/misago/forgottenpassword/request.html:35
+#: templates/misago/forgottenpassword/request.html:43
 msgid ""
 "Your user account has no password set for it because it was created with "
 "other service."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:36
+#: templates/misago/forgottenpassword/request.html:44
 msgid ""
 "To set password for your account, you can use special secure form that will "
 "be available by special link valid only for your browser, for seven days or "
 "until your password is set."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:38
+#: templates/misago/forgottenpassword/request.html:46
 msgid ""
 "Because user passwords are processed in an irreversible way before being "
 "saved to database, it is not possible for us to simply send you your "
 "password."
 msgstr ""
-"Kullanıcı şifreleri, veritabanına kaydedilmeden önce geri dönüşü olmayan bir "
-"şekilde işlendiğinden, şifrenizin size yalnızca gönderilmesi mümkün değildir."
+"Kullanıcı şifreleri, veritabanına kaydedilmeden önce geri dönüşü olmayan bir"
+" şekilde işlendiğinden, şifrenizin size yalnızca gönderilmesi mümkün "
+"değildir."
 
-#: templates/misago/forgottenpassword/request.html:39
+#: templates/misago/forgottenpassword/request.html:47
 msgid ""
-"Instead, you can change your password using special secure form that will be "
-"available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be"
+" available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
 "Bunun yerine, şifrenizi, yalnızca tarayıcınız için geçerli olan özel "
 "bağlantı ile yedi gün boyunca veya şifreniz değiştirilene kadar sağlanacak "
 "özel güvenli formu kullanarak değiştirebilirsiniz."
 
-#: templates/misago/forgottenpassword/request.html:42
+#: templates/misago/forgottenpassword/request.html:50
 msgid ""
 "To receive this link, enter your account's e-mail addres in form and press "
 "the \"Send link\" button."
@@ -3638,26 +4027,26 @@ msgstr ""
 "Bu bağlantıyı almak için hesabınızın e-posta adresini formuna girin ve "
 "\"Bağlantı gönder\" düğmesine basın."
 
-#: templates/misago/forgottenpassword/request.html:60
+#: templates/misago/forgottenpassword/request.html:68
 msgid "To request new password reset link please enable JavaScript."
 msgstr ""
-"Yeni parola sıfırlama bağlantısı isteğinde bulunmak için lütfen JavaScript'i "
-"etkinleştirin."
+"Yeni parola sıfırlama bağlantısı isteğinde bulunmak için lütfen JavaScript'i"
+" etkinleştirin."
 
 #: templates/misago/options/credentials_changed.html:5
 #: templates/misago/options/credentials_error.html:5
 msgid "Change sign-in credentials"
 msgstr "giriş yapmak kimlik bilgilerini değiştir"
 
-#: templates/misago/options/credentials_changed.html:20
+#: templates/misago/options/credentials_changed.html:19
 msgid "From now you will need to use new credentials when signing in."
 msgstr "Artık, oturum açarken yeni kimlik bilgilerini kullanmanız gerekecek."
 
-#: templates/misago/options/credentials_error.html:19
+#: templates/misago/options/credentials_error.html:18
 msgid "Change confirmation link is invalid."
 msgstr "Onay bağlantısını değiştirme geçersiz."
 
-#: templates/misago/options/credentials_error.html:20
+#: templates/misago/options/credentials_error.html:19
 msgid ""
 "The confirmation link belongs to other user, was already used, or has "
 "expired."
@@ -3666,19 +4055,24 @@ msgstr ""
 "süresi dolmuştur."
 
 #: templates/misago/options/noscript.html:5
+#: templates/misago/options/noscript.html:21
 msgid "Change your options"
 msgstr "Seçeneklerinizi değiştirin"
 
-#: templates/misago/options/noscript.html:20
-#: templates/misago/socialauth.html:22
+#: templates/misago/options/noscript.html:49
+#: templates/misago/socialauth.html:21
 msgid "Enable JavaScript"
 msgstr "JavaScript'i etkinleştir"
 
-#: templates/misago/options/noscript.html:21
+#: templates/misago/options/noscript.html:50
 msgid "You need to enable JavaScript in your browser to change your options."
 msgstr ""
-"Seçeneklerinizi değiştirmek için tarayıcınızda JavaScript'i etkinleştirmeniz "
-"gerekir."
+"Seçeneklerinizi değiştirmek için tarayıcınızda JavaScript'i etkinleştirmeniz"
+" gerekir."
+
+#: templates/misago/options/noscript.html:58
+msgid "Loading..."
+msgstr ""
 
 #: templates/misago/participants.html:30
 msgid "Add participant"
@@ -3693,71 +4087,94 @@ msgstr[1] "Bu konu%(users)s'ların katılımcılarına sahip. "
 
 #: templates/misago/poll/info.html:4
 #, python-format
+msgctxt "thread poll"
 msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
-msgstr[0] "%(votes)soy."
-msgstr[1] "%(votes)soy."
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/misago/poll/info.html:15
 #, python-format
+msgctxt "thread poll"
 msgid "Voting ends on %(ends_on)s."
-msgstr "Oy verme biter %(ends_on)s"
+msgstr ""
 
 #: templates/misago/poll/info.html:22
+msgctxt "thread poll"
 msgid "Votes are public."
-msgstr "Oylar halka açıktır."
+msgstr ""
 
 #: templates/misago/poll/info.html:36
 #, python-format
-msgid "Posted by %(poster)s on %(posted_on)s."
-msgstr "tarafından gönderildi %(poster)süzerinde%(posted_on)s"
+msgctxt "thread poll"
+msgid "Started by %(poster)s on %(posted_on)s."
+msgstr ""
 
 #: templates/misago/poll/results.html:21 templates/misago/poll/results.html:31
 #, python-format
+msgctxt "thread poll"
 msgid "%(votes)s vote, %(proc)s%% of total."
 msgid_plural "%(votes)s votes, %(proc)s%% of total."
-msgstr[0] "%(votes)s oy, %(proc)s%%Toplam."
-msgstr[1] "%(votes)s oy, %(proc)s%%Toplam."
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/misago/poll/results.html:41
-msgid "Your choice."
-msgstr "Senin seçimin."
+msgctxt "thread poll"
+msgid "You've voted on this choice."
+msgstr ""
 
 #: templates/misago/poll/results.html:55
+msgctxt "thread poll"
 msgid "Vote"
-msgstr "oy"
+msgstr ""
 
 #: templates/misago/poll/results.html:62
+msgctxt "thread poll"
 msgid "See votes"
-msgstr "Bkz. Oy"
+msgstr ""
+
+#: templates/misago/poll/results.html:69
+msgctxt "thread poll"
+msgid "Edit"
+msgstr ""
+
+#: templates/misago/poll/results.html:76
+msgctxt "thread poll"
+msgid "Delete"
+msgstr ""
 
 #: templates/misago/poll/voting.html:24
 #, python-format
+msgctxt "thread poll"
 msgid "You can select %(choices)s choice."
 msgid_plural "You can select %(choices)s choices."
-msgstr[0] "Seçenekleri %(choices)s seçebilirsiniz."
-msgstr[1] "Seçenekleri %(choices)s seçebilirsiniz."
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/misago/poll/voting.html:32
+msgctxt "thread poll"
 msgid "You can change your vote later."
-msgstr "Oyunuzu daha sonra değiştirebilirsiniz."
+msgstr ""
 
 #: templates/misago/poll/voting.html:36
+msgctxt "thread poll"
 msgid "Votes are final."
-msgstr "Oylar nihaidir."
+msgstr ""
 
 #: templates/misago/poll/voting.html:46
+msgctxt "thread poll"
 msgid "Save your vote"
-msgstr "Oyunuzu kaydedin"
+msgstr ""
 
 #: templates/misago/poll/voting.html:51
+msgctxt "thread poll"
 msgid "See results"
-msgstr "Sonuçlara bak"
+msgstr ""
 
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
 #: templates/misago/profile/ban_details.html:9
-#: templates/misago/profile/ban_details.html:16 users/apps.py:128
+#: templates/misago/profile/ban_details.html:16 users/apps.py:137
 msgid "Ban details"
 msgstr "Yasaklamak ayrıntıları"
 
@@ -3806,103 +4223,107 @@ msgstr[1] "%(threads)s dizilerini başlattı."
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
 #: templates/misago/profile/details.html:9
-#: templates/misago/profile/details.html:19 users/apps.py:115
+#: templates/misago/profile/details.html:19 users/apps.py:124
 msgid "Details"
 msgstr "ayrıntılar"
 
-#: templates/misago/profile/details.html:75
+#: templates/misago/profile/details.html:76
 msgid "You are not sharing any details with others."
 msgstr "Başkalarıyla herhangi bir ayrıntı paylaşmıyorsunuz."
 
-#: templates/misago/profile/details.html:77
+#: templates/misago/profile/details.html:78
 #, python-format
 msgid "%(username)s is not sharing any details with others."
 msgstr "%(username)sbaşkalarıyla herhangi bir ayrıntı paylaşmıyor."
 
-#: templates/misago/profile/feed.html:10
+#: templates/misago/profile/feed.html:11
 msgid "See post"
 msgstr "ileti gör"
 
-#: templates/misago/profile/feed.html:61
+#: templates/misago/profile/feed.html:62
 #: templates/misago/thread/posts/post/body.html:10
 msgid "This post's contents cannot be displayed."
 msgstr "Bu  ileti içeriği görüntülenemiyor."
 
-#: templates/misago/profile/feed.html:62
+#: templates/misago/profile/feed.html:63
 #: templates/misago/thread/posts/post/body.html:11
 msgid "This error is caused by invalid post content manipulation."
 msgstr "Bu hata, geçersiz ileti içeriği manipülasyonundan kaynaklanmaktadır."
 
 #: templates/misago/profile/followers.html:5
 #: templates/misago/profile/followers.html:8
-#: templates/misago/profile/followers.html:9 users/apps.py:103
+#: templates/misago/profile/followers.html:9 users/apps.py:112
 msgid "Followers"
 msgstr "Takipçiler"
 
-#: templates/misago/profile/followers.html:18
+#: templates/misago/profile/followers.html:20
 #, python-format
 msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
 msgstr[0] "%(users)skullanıcısının takipçileri var."
 msgstr[1] "%(users)skullanıcısının takipçileri var."
 
-#: templates/misago/profile/followers.html:24
+#: templates/misago/profile/followers.html:26
 #, python-format
 msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] "%(username)svar %(users)skullanıcısının takipçileri var."
 msgstr[1] "%(username)svar %(users)skullanıcısının takipçileri var."
 
-#: templates/misago/profile/followers.html:49
+#: templates/misago/profile/followers.html:53
 msgid "You have no followers."
 msgstr "Takipçileriniz yok."
 
-#: templates/misago/profile/followers.html:51
+#: templates/misago/profile/followers.html:55
 #, python-format
 msgid "%(username)s has no followers."
 msgstr "%(username)sTakipçisi yok."
 
 #: templates/misago/profile/follows.html:5
 #: templates/misago/profile/follows.html:8
-#: templates/misago/profile/follows.html:9 users/apps.py:109
+#: templates/misago/profile/follows.html:9 users/apps.py:118
 msgid "Follows"
 msgstr "Şöyledir"
 
-#: templates/misago/profile/follows.html:18
+#: templates/misago/profile/follows.html:20
 #, python-format
 msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
 msgstr[0] "%(users)skullanıcısını takip ediyorsunuz."
 msgstr[1] "%(users)skullanıcısını takip ediyorsunuz."
 
-#: templates/misago/profile/follows.html:24
+#: templates/misago/profile/follows.html:26
 #, python-format
 msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] "%(username)skullanıcısını %(users)s takip ediyor."
 msgstr[1] "%(username)skullanıcısını %(users)s takip ediyor."
 
-#: templates/misago/profile/follows.html:49
+#: templates/misago/profile/follows.html:53
 msgid "You are not following any users."
 msgstr "Hiçbir kullanıcıyı takip etmiyorsun."
 
-#: templates/misago/profile/follows.html:51
+#: templates/misago/profile/follows.html:55
 #, python-format
 msgid "%(username)s is not following any users."
 msgstr "%(username)sherhangi bir kullanıcıyı takip etmiyor."
 
-#: templates/misago/profile/header.html:7
-msgid "This user is deleting their account."
-msgstr ""
-
-#: templates/misago/profile/header.html:9
+#: templates/misago/profile/header.html:29
 msgid "This user's account has been disabled by administrator."
 msgstr "Bu kullanıcının hesabı yönetici tarafından devre dışı bırakıldı."
 
-#: templates/misago/profile/header.html:46
+#: templates/misago/profile/header.html:56
 #, python-format
-msgid "Member since %(joined_on)s"
-msgstr "Şu Tarihten Beri Üye %(joined_on)s"
+msgid "Joined %(joined_on)s"
+msgstr ""
+
+#: templates/misago/profile/header.html:77
+msgid "Message"
+msgstr ""
+
+#: templates/misago/profile/header.html:96
+msgid "Follow"
+msgstr ""
 
 #: templates/misago/profile/posts.html:20
 #, python-format
@@ -3918,11 +4339,11 @@ msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] "%(username)s iletiler olarak %(posts)sgönderdi."
 msgstr[1] "%(username)s iletiler olarak %(posts)sgönderdi."
 
-#: templates/misago/profile/posts.html:40
+#: templates/misago/profile/posts.html:42
 msgid "You have posted no messages"
 msgstr "Mesaj gönderdin mi"
 
-#: templates/misago/profile/posts.html:42
+#: templates/misago/profile/posts.html:44
 #, python-format
 msgid "%(username)s posted no messages."
 msgstr "%(username)smesaj gönderdi."
@@ -3941,40 +4362,40 @@ msgid_plural "%(username)s has started %(threads)s threads."
 msgstr[0] "%(username)sipliklerini başlattı.%(threads)s"
 msgstr[1] "%(username)sipliklerini başlattı.%(threads)s"
 
-#: templates/misago/profile/threads.html:40
+#: templates/misago/profile/threads.html:42
 msgid "You have no started threads."
 msgstr "Başında bir konu yok."
 
-#: templates/misago/profile/threads.html:42
+#: templates/misago/profile/threads.html:44
 #, python-format
 msgid "%(username)s started no threads."
 msgstr "%(username)sKonu başlatılmamış."
 
 #: templates/misago/profile/username_history.html:5
 #: templates/misago/profile/username_history.html:8
-#: templates/misago/profile/username_history.html:9 users/apps.py:121
+#: templates/misago/profile/username_history.html:9 users/apps.py:130
 msgid "Username history"
 msgstr "Kullanıcı adı geçmişi"
 
-#: templates/misago/profile/username_history.html:18
+#: templates/misago/profile/username_history.html:20
 #, python-format
 msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
 msgstr[0] "Kullanıcı adınız %(changes)s kez değiştirildi."
 msgstr[1] "Kullanıcı adınız %(changes)s kez değiştirildi."
 
-#: templates/misago/profile/username_history.html:24
+#: templates/misago/profile/username_history.html:26
 #, python-format
 msgid "%(username)s's username was changed %(changes)s time."
 msgid_plural "%(username)s's username was changed %(changes)s times."
 msgstr[0] "%(username)skullanıcısının adı %(changes)s kez değiştirildi."
 msgstr[1] "%(username)skullanıcısının adı %(changes)s kez değiştirildi."
 
-#: templates/misago/profile/username_history.html:79
+#: templates/misago/profile/username_history.html:83
 msgid "Your username was never changed."
 msgstr "Kullanıcı adınız hiçbir zaman değiştirilmedi."
 
-#: templates/misago/profile/username_history.html:81
+#: templates/misago/profile/username_history.html:85
 #, python-format
 msgid "%(username)s's username was never changed."
 msgstr "%(username)skullanıcının adı hiç değişmedi."
@@ -3998,7 +4419,7 @@ msgstr ""
 msgid "Search site"
 msgstr "Arama sitesi"
 
-#: templates/misago/search.html:47
+#: templates/misago/search.html:57
 msgid "Loading search..."
 msgstr "Aramay yükleniyor ..."
 
@@ -4007,94 +4428,92 @@ msgstr "Aramay yükleniyor ..."
 msgid "Sign in with %(backend)s"
 msgstr ""
 
-#: templates/misago/socialauth.html:24
+#: templates/misago/socialauth.html:23
 #, python-format
 msgid ""
 "You need to enable JavaScript in your browser to complete the sign in with "
 "%(backend)s."
 msgstr ""
 
-#: templates/misago/thread/paginator.html:41
+#: templates/misago/thread/header.html:38
 #, python-format
-msgid "There is %(more)s more post in this thread."
-msgid_plural "There are %(more)s more posts in this thread."
-msgstr[0] "Bu konu da%(more)s  daha fazla iletiler var."
-msgstr[1] "Bu konu da%(more)s  daha fazla iletiler var."
+msgid "Started on %(date)s"
+msgstr ""
 
-#: templates/misago/thread/paginator.html:47
-msgid "There are no more posts in this thread."
-msgstr "Bu konu daki başka iletiler yok."
+#: templates/misago/thread/posts/event/index.html:5
+msgid "New event"
+msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:48
+#: templates/misago/thread/posts/event/index.html:52
 #, python-format
 msgid "Thread title has been changed from %(old_title)s."
 msgstr "Konu başlığı değiştirildi %(old_title)s"
 
-#: templates/misago/thread/posts/event/index.html:52
+#: templates/misago/thread/posts/event/index.html:56
 msgid "Thread has been pinned globally."
 msgstr "Konu iğnelendirildi."
 
-#: templates/misago/thread/posts/event/index.html:54
+#: templates/misago/thread/posts/event/index.html:58
 msgid "Thread has been pinned locally."
 msgstr "Konu yerel olarak sabitlendi."
 
-#: templates/misago/thread/posts/event/index.html:56
+#: templates/misago/thread/posts/event/index.html:60
 msgid "Thread has been unpinned."
 msgstr "Konu iğnesi kaldırıldı."
 
-#: templates/misago/thread/posts/event/index.html:61
+#: templates/misago/thread/posts/event/index.html:65
 #, python-format
 msgid "Thread has been moved from %(from_category)s."
 msgstr "Konu %(from_category)s taşındı."
 
-#: templates/misago/thread/posts/event/index.html:68
+#: templates/misago/thread/posts/event/index.html:72
 #, python-format
 msgid "The %(merged_thread)s thread has been merged into this thread."
 msgstr "%(merged_thread)s'nin konu su bu konu da birleştirildi."
 
-#: templates/misago/thread/posts/event/index.html:72
+#: templates/misago/thread/posts/event/index.html:76
 msgid "Thread has been approved."
 msgstr "Konu onaylandı."
 
-#: templates/misago/thread/posts/event/index.html:74
+#: templates/misago/thread/posts/event/index.html:78
 msgid "Thread has been opened."
 msgstr "Konu Açıldı."
 
-#: templates/misago/thread/posts/event/index.html:76
+#: templates/misago/thread/posts/event/index.html:80
 msgid "Thread has been closed."
 msgstr "konu kapatıldı."
 
-#: templates/misago/thread/posts/event/index.html:78
+#: templates/misago/thread/posts/event/index.html:82
 msgid "Thread has been revealed."
 msgstr "konu ortaya çıkarıldı."
 
-#: templates/misago/thread/posts/event/index.html:80
+#: templates/misago/thread/posts/event/index.html:84
 msgid "Thread has been made hidden."
 msgstr "konu gizli hale getirildi."
 
-#: templates/misago/thread/posts/event/index.html:82
+#: templates/misago/thread/posts/event/index.html:86
 msgid "Took thread over."
 msgstr "konu devralındı."
 
-#: templates/misago/thread/posts/event/index.html:84
+#: templates/misago/thread/posts/event/index.html:88
 msgid "Owner has left thread. This thread is now closed."
 msgstr "konu sahibi bıraktı. konu devralındı."
 
-#: templates/misago/thread/posts/event/index.html:86
+#: templates/misago/thread/posts/event/index.html:90
 msgid "Participant has left thread."
 msgstr "konu katılımcı tarafından bırakıldı."
 
-#: templates/misago/thread/posts/event/index.html:91
+#: templates/misago/thread/posts/event/index.html:95
 #, python-format
 msgid "Changed thread owner to %(user)s."
 msgstr "Konu sahibi %(user)s olarak değiştirildi."
 
-#: templates/misago/thread/posts/event/index.html:98
+#: templates/misago/thread/posts/event/index.html:102
 #, python-format
 msgid "Added %(user)s to thread."
 msgstr "konu ya %(user)s eklendi."
 
-#: templates/misago/thread/posts/event/index.html:105
+#: templates/misago/thread/posts/event/index.html:109
 #, python-format
 msgid "Removed %(user)s from thread."
 msgstr "%(user)s konu yu kaldırdı"
@@ -4114,8 +4533,8 @@ msgstr "%(event_by)s tarafından %(event_on)s"
 #, python-format
 msgid "%(filetype)s, %(size)s, uploaded by %(uploader)s on %(uploaded_on)s."
 msgstr ""
-"%(filetype)s,%(size)s tarafından%(uploader)s tarihinde yüklendi."
-"%(uploaded_on)s"
+"%(filetype)s,%(size)s tarafından%(uploader)s tarihinde "
+"yüklendi.%(uploaded_on)s"
 
 #: templates/misago/thread/posts/post/body-hidden.html:4
 msgid "This post is hidden. You cannot not see its contents."
@@ -4138,11 +4557,11 @@ msgstr ""
 
 #: templates/misago/thread/posts/post/flags.html:29
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its "
-"author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
 msgstr ""
-"Bu ileti onaylanmamıştır. Sadece yayınları ve yazarını onaylama iznine sahip "
-"kullanıcılar iletiler görebilir."
+"Bu ileti onaylanmamıştır. Sadece yayınları ve yazarını onaylama iznine sahip"
+" kullanıcılar iletiler görebilir."
 
 #: templates/misago/thread/posts/post/flags.html:35
 msgid "This post is protected. Only moderators may change it."
@@ -4157,6 +4576,8 @@ msgid "Like"
 msgstr "beğen"
 
 #: templates/misago/thread/posts/post/footer.html:26
+#: templates/misago/thread/toolbar_bottom.html:28
+#: templates/misago/thread/toolbar_top.html:39
 msgid "Reply"
 msgstr "cevap"
 
@@ -4165,8 +4586,6 @@ msgid "New post"
 msgstr "Yeni ileti"
 
 #: templates/misago/thread/posts/post/header.html:8
-#: templates/misago/thread/toolbar-top.html:7
-#: templates/misago/threadslist/tabs.html:17
 msgid "New"
 msgstr "yeni"
 
@@ -4179,50 +4598,16 @@ msgstr "ileti gönder"
 msgid "Removed user"
 msgstr "Kaldırılan kullanıcı"
 
-#: templates/misago/thread/stats.html:11
-#: templates/misago/threadslist/thread.html:21
-msgid "Pinned globally"
-msgstr "Küresel olarak sabitlenmiş"
-
-#: templates/misago/thread/stats.html:20
-#: templates/misago/threadslist/thread.html:30
-msgid "Pinned locally"
-msgstr "Yerel olarak sabitlenmiş"
-
-#: templates/misago/thread/stats.html:30
-#: templates/misago/thread/toolbar-top.html:14
-#: templates/misago/threadslist/tabs.html:33
-#: templates/misago/threadslist/thread.html:40
-msgid "Unapproved"
-msgstr "onaylanmamış"
-
-#: templates/misago/thread/stats.html:39
-#: templates/misago/threadslist/thread.html:49
-msgid "Unapproved posts"
-msgstr "Onaylanmamış iletiler"
-
-#: templates/misago/thread/stats.html:49
-#: templates/misago/threadslist/thread.html:119
-msgid "Hidden"
-msgstr "gizli"
-
-#: templates/misago/thread/stats.html:59
-#: templates/misago/threadslist/thread.html:129
-msgid "Closed"
-msgstr "kapalı"
-
-#: templates/misago/thread/stats.html:68
-#: templates/misago/threadslist/thread.html:153
+#: templates/misago/thread/posts_left.html:4
 #, python-format
-msgid "%(replies)s reply"
-msgid_plural "%(replies)s replies"
-msgstr[0] "%(replies)scevaplar"
-msgstr[1] "%(replies)scevaplar"
+msgid "There is %(more)s more post in this thread."
+msgid_plural "There are %(more)s more posts in this thread."
+msgstr[0] "Bu konu da%(more)s  daha fazla iletiler var."
+msgstr[1] "Bu konu da%(more)s  daha fazla iletiler var."
 
-#: templates/misago/thread/stats.html:83
-#, python-format
-msgid "last reply by %(user)s %(date)s"
-msgstr "son cevap%(user)s %(date)s"
+#: templates/misago/thread/posts_left.html:10
+msgid "There are no more posts in this thread."
+msgstr "Bu konu daki başka iletiler yok."
 
 #: templates/misago/thread/thread.html:19
 #: templates/misago/thread/thread.html:30
@@ -4249,49 +4634,70 @@ msgstr ""
 msgid "Closed."
 msgstr ""
 
-#: templates/misago/thread/toolbar-top.html:6
-msgid "Go to first new post"
-msgstr "Birinci okunmamış ileti git"
-
-#: templates/misago/thread/toolbar-top.html:13
-msgid "Go to first unapproved post"
-msgstr "Ilk onaylanmamış ileti git"
-
-#: templates/misago/thread/toolbar-top.html:19
-msgid "Go to last post"
-msgstr "Son yazılan ileti göster"
-
-#: templates/misago/thread/toolbar-top.html:25
-msgid "Go to best answers"
+#: templates/misago/thread/toolbar_top.html:6
+#: templates/misago/thread/toolbar_top.html:30
+msgid "Shortcuts"
 msgstr ""
 
-#: templates/misago/thread/toolbar-top.html:26
-msgid "Best answer"
+#: templates/misago/thread/toolbar_top.html:22
+#: templates/misago/thread/toolbar_top.html:45
+msgid "Add poll"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:57
+#: templates/misago/thread_flags.html:7
+msgid "Pinned globally"
+msgstr "Küresel olarak sabitlenmiş"
+
+#: templates/misago/thread_flags.html:15
+msgid "Pinned in category"
+msgstr ""
+
+#: templates/misago/thread_flags.html:23
+msgid "Answered"
+msgstr ""
+
+#: templates/misago/thread_flags.html:31
+msgid "Poll"
+msgstr "Anket"
+
+#: templates/misago/thread_flags.html:39
+msgid "Closed"
+msgstr "kapalı"
+
+#: templates/misago/thread_flags.html:47
+msgid "Hidden"
+msgstr "gizli"
+
+#: templates/misago/thread_replies.html:3
+#, python-format
+msgid "%(replies)s reply"
+msgid_plural "%(replies)s replies"
+msgstr[0] "%(replies)scevaplar"
+msgstr[1] "%(replies)scevaplar"
+
+#: templates/misago/threadslist/base.html:53
 msgid "There are no threads in this category."
 msgstr "Bu bölüm de konu yok."
 
-#: templates/misago/threadslist/base.html:59
+#: templates/misago/threadslist/base.html:55
 msgid "There are no threads on this forum... yet!"
 msgstr "Bu forumda konu yok ... Henüz!"
 
-#: templates/misago/threadslist/base.html:63
-#: templates/misago/threadslist/private_threads.html:61
+#: templates/misago/threadslist/base.html:59
+#: templates/misago/threadslist/private_threads.html:62
 msgid "Why not start one yourself?"
 msgstr "Neden kendiniz başlatmıyorsunuz?"
 
-#: templates/misago/threadslist/base.html:67
-#: templates/misago/threadslist/private_threads.html:64
+#: templates/misago/threadslist/base.html:63
+#: templates/misago/threadslist/private_threads.html:65
 msgid "No threads matching specified criteria were found."
 msgstr "Belirtilen kriterlere uyan herhangi bir konu bulunamadı."
 
-#: templates/misago/threadslist/base.html:82
+#: templates/misago/threadslist/base.html:78
 msgid "Next page"
 msgstr "Sonraki Sayfa"
 
-#: templates/misago/threadslist/private_threads.html:42
+#: templates/misago/threadslist/private_threads.html:34
 msgid ""
 "Private threads are threads which only those that started them and those "
 "they have invited may see and participate in."
@@ -4299,41 +4705,74 @@ msgstr ""
 "Özel Konular, yalnızca kendilerine başlayan ve davet ettikleri kişilerin "
 "görebileceği ve katılabilecekleri iş parçacıklarıdır."
 
-#: templates/misago/threadslist/private_threads.html:58
+#: templates/misago/threadslist/private_threads.html:59
 msgid "You aren't participating in any private threads."
 msgstr "Özel konulara katılamazsın."
 
-#: templates/misago/threadslist/tabs.html:7 threads/admin/forms.py:27
-msgid "All"
-msgstr "Herşey"
+#: templates/misago/threadslist/thread.html:6
+msgid "No new posts"
+msgstr ""
 
-#: templates/misago/threadslist/tabs.html:12
-msgid "My"
-msgstr "Benim"
-
-#: templates/misago/threadslist/tabs.html:22
-msgid "Unread"
-msgstr "Okunmamış"
-
-#: templates/misago/threadslist/tabs.html:27
-msgid "Subscribed"
-msgstr "Abone"
-
-#: templates/misago/threadslist/thread.html:11
+#: templates/misago/threadslist/thread.html:6
 msgid "New posts"
 msgstr "Yeni iletiler"
 
-#: templates/misago/threadslist/thread.html:59
-msgid "Answered"
+#: templates/misago/threadslist/thread.html:66
+#: templates/misago/threadslist/thread.html:72
+#, python-format
+msgid "Last post by: %(last_poster)s"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:139
-msgid "Poll"
-msgstr "Anket"
+#: templates/misago/threadslist/thread.html:80
+#, python-format
+msgid "Last activity: %(last_activity)s"
+msgstr ""
+
+#: templates/misago/threadslist/toolbar.html:9
+msgid "All categories"
+msgstr ""
+
+#: templates/misago/threadslist/toolbar.html:29
+msgid "All subcategories"
+msgstr ""
+
+#: templates/misago/threadslist/toolbar.html:55
+#: threads/permissions/bestanswers.py:34 threads/permissions/bestanswers.py:40
+#: threads/permissions/polls.py:34 threads/permissions/threads.py:110
+#: threads/permissions/threads.py:120
+msgid "All threads"
+msgstr "Tüm konular"
+
+#: templates/misago/threadslist/toolbar.html:57
+msgid "My threads"
+msgstr ""
+
+#: templates/misago/threadslist/toolbar.html:59
+#: threads/viewmodels/threads.py:24
+msgid "New threads"
+msgstr "Yeni konular"
+
+#: templates/misago/threadslist/toolbar.html:61
+#: threads/viewmodels/threads.py:25
+msgid "Unread threads"
+msgstr "Okunmamış Konular"
+
+#: templates/misago/threadslist/toolbar.html:63
+#: threads/viewmodels/threads.py:26
+msgid "Subscribed threads"
+msgstr "Abone Olunan Konular"
+
+#: templates/misago/threadslist/toolbar.html:65
+msgid "Unapproved threads"
+msgstr ""
+
+#: templates/misago/threadslist/toolbar.html:77
+msgid "Start thread"
+msgstr ""
 
 #: templates/misago/userslists/active_posters.html:5
 #: templates/misago/userslists/active_posters.html:23
-#: templates/misago/userslists/active_posters.html:24 users/apps.py:72
+#: templates/misago/userslists/active_posters.html:24 users/apps.py:81
 msgid "Top posters"
 msgstr ""
 
@@ -4379,7 +4818,18 @@ msgid_plural "%(users)s users have this rank."
 msgstr[0] "%(users)sKullanıcıların bu sıralaması var."
 msgstr[1] "%(users)sKullanıcıların bu sıralaması var."
 
-#: templates/misago/userslists/rank.html:130
+#: templates/misago/userslists/rank.html:102
+#, python-format
+msgid "There is %(more)s more members with this role."
+msgid_plural "There are %(more)s more members with this role."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/userslists/rank.html:108
+msgid "There are no more members with this role."
+msgstr ""
+
+#: templates/misago/userslists/rank.html:117
 msgid "There are no users with this rank at the moment."
 msgstr "Şu anda bu rütbe sahibi kullanıcı yok."
 
@@ -4666,6 +5116,10 @@ msgstr "Dosya tipi"
 msgid "State"
 msgstr "Belirtmek, bildirmek"
 
+#: threads/admin/forms.py:27
+msgid "All"
+msgstr "Herşey"
+
 #: threads/admin/forms.py:28
 msgid "Only orphaned"
 msgstr "Yalnız kaldı"
@@ -4696,7 +5150,8 @@ msgstr "Indirmeyi sınırla"
 
 #: threads/admin/forms.py:64
 msgid ""
-"List of comma separated file extensions associated with this attachment type."
+"List of comma separated file extensions associated with this attachment "
+"type."
 msgstr ""
 "Bu ek türü ile ilişkilendirilmiş virgülle ayrılmış dosya uzantılarının "
 "dizelge."
@@ -4711,17 +5166,15 @@ msgstr ""
 
 #: threads/admin/forms.py:72
 msgid ""
-"Maximum allowed uploaded file size for this type, in kb. May be overriden "
-"via user permission."
+"Maximum allowed uploaded file size for this type, in kb. This setting is "
+"deprecated and has no effect. It will be deleted in Misago 1.0."
 msgstr ""
-"Bu tür için izin verilen maksimum dosya boyutu, kb olarak. Kullanıcı izniyle "
-"geçersiz kılınabilir."
 
-#: threads/admin/forms.py:75
+#: threads/admin/forms.py:76
 msgid "Controls this attachment type availability on your site."
 msgstr "Sitenizdeki bu eki türü kullanılabilirliğini denetler."
 
-#: threads/admin/forms.py:77
+#: threads/admin/forms.py:78
 msgid ""
 "If you wish to limit option to upload files of this type to users with "
 "specific roles, select them on this list. Otherwhise don't select any roles "
@@ -4730,10 +5183,10 @@ msgid ""
 msgstr ""
 "Bu türdeki dosyaları karşıya yükleme seçeneğini belirli rollerle "
 "sınırlandırmak isterseniz bunları bu dizelge seçin. Diğer, izinli tüm "
-"kullanıcıların bu tür ekleri yükleyebilmeleri için ek dosyalar yüklemek için "
-"herhangi bir rol seçmez."
+"kullanıcıların bu tür ekleri yükleyebilmeleri için ek dosyalar yüklemek için"
+" herhangi bir rol seçmez."
 
-#: threads/admin/forms.py:83
+#: threads/admin/forms.py:84
 msgid ""
 "If you wish to limit option to download files of this type to users with "
 "specific roles, select them on this list. Otherwhise don't select any roles "
@@ -4809,7 +5262,8 @@ msgstr "Ek türü \"%(name)s\" düzenlendi."
 #: threads/admin/views/attachmenttypes.py:47
 #, python-format
 msgid ""
-"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be "
+"deleted."
 msgstr "Ek türü \"%(name)s\", ilişkili ekleri var ve silinemiyor."
 
 #: threads/admin/views/attachmenttypes.py:54
@@ -4838,17 +5292,8 @@ msgstr "Bu tür dosyalar yükleyemezsiniz."
 msgid ""
 "You can't upload files larger than %(limit)s (your file has %(upload)s)."
 msgstr ""
-"%(limit)s daha büyük dosyaları karşıya yükleyemezsiniz (dosyanızın"
-"%(upload)sye sahip olduğu)."
-
-#: threads/api/attachments.py:104
-#, python-format
-msgid ""
-"You can't upload files of this type larger than %(limit)s (your file has "
-"%(upload)s)."
-msgstr ""
-"Bu türe%(limit)sden büyük dosya yükleyemezsiniz (dosyanızın%(upload)sye "
-"sahip olduğu)."
+"%(limit)s daha büyük dosyaları karşıya yükleyemezsiniz "
+"(dosyanızın%(upload)sye sahip olduğu)."
 
 #: threads/api/postendpoints/edits.py:87
 msgid "Edits record is unavailable for this post."
@@ -4900,11 +5345,11 @@ msgid_plural ""
 "You can't attach more than %(limit_value)s flies to single post (added "
 "%(show_value)s)."
 msgstr[0] ""
-"Tek gönderiye (%(show_value)seklendiğinde)%(limit_value)s sinden fazla ileti "
-"bağlayamazsınız."
+"Tek gönderiye (%(show_value)seklendiğinde)%(limit_value)s sinden fazla ileti"
+" bağlayamazsınız."
 msgstr[1] ""
-"Tek gönderiye (%(show_value)seklendiğinde)%(limit_value)s sinden fazla ileti "
-"bağlayamazsınız."
+"Tek gönderiye (%(show_value)seklendiğinde)%(limit_value)s sinden fazla ileti"
+" bağlayamazsınız."
 
 #: threads/api/postingendpoint/category.py:45
 msgid "You have to select category to post thread in."
@@ -4946,7 +5391,8 @@ msgstr ""
 msgid ""
 "You can't include yourself on the list of users to invite to new thread."
 msgstr ""
-"Kendinizi yeni konu ya davet edecek kullanıcıların dizelge dahil edemezsiniz."
+"Kendinizi yeni konu ya davet edecek kullanıcıların dizelge dahil "
+"edemezsiniz."
 
 #: threads/api/postingendpoint/participants.py:61
 msgid "You have to enter user names."
@@ -4961,11 +5407,11 @@ msgid_plural ""
 "You can't add more than %(users)s users to private thread (you've added "
 "%(added)s)."
 msgstr[0] ""
-"konu ya %(users)s 'dan fazla kullanıcı ekleyemezsiniz (%(added)s eklediğiniz "
-"kişileri eklediniz)."
+"konu ya %(users)s 'dan fazla kullanıcı ekleyemezsiniz (%(added)s eklediğiniz"
+" kişileri eklediniz)."
 msgstr[1] ""
-"konu ya %(users)s 'dan fazla kullanıcı ekleyemezsiniz (%(added)s eklediğiniz "
-"kişileri eklediniz)."
+"konu ya %(users)s 'dan fazla kullanıcı ekleyemezsiniz (%(added)s eklediğiniz"
+" kişileri eklediniz)."
 
 #: threads/api/postingendpoint/participants.py:93
 #, python-format
@@ -5027,7 +5473,8 @@ msgstr ""
 
 #: threads/api/threadendpoints/patch.py:273
 msgid ""
-"This post can't be unmarked because it's not currently marked as best answer."
+"This post can't be unmarked because it's not currently marked as best "
+"answer."
 msgstr ""
 
 #: threads/api/threadendpoints/patch.py:301
@@ -5136,8 +5583,7 @@ msgstr "Konu yu silmeden orijinal ileti silemezsiniz."
 
 #: threads/participants.py:142
 #, python-format
-msgid ""
-"%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr "%(user)s konu \"%(thread)s\" adlı özel konu davet etti."
 
 #: threads/permissions/attachments.py:14
@@ -5172,12 +5618,6 @@ msgstr ""
 #: threads/permissions/polls.py:34 threads/permissions/threads.py:120
 msgid "Own threads"
 msgstr "Kendi konularınız"
-
-#: threads/permissions/bestanswers.py:34 threads/permissions/bestanswers.py:40
-#: threads/permissions/polls.py:34 threads/permissions/threads.py:110
-#: threads/permissions/threads.py:120
-msgid "All threads"
-msgstr "Tüm konular"
 
 #: threads/permissions/bestanswers.py:37
 msgid "Can change marked answers"
@@ -5228,8 +5668,8 @@ msgstr ""
 #: threads/permissions/bestanswers.py:188
 #, python-format
 msgid ""
-"You don't have permission to change this thread's marked answer because it's "
-"in the \"%(category)s\" category."
+"You don't have permission to change this thread's marked answer because it's"
+" in the \"%(category)s\" category."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:198
@@ -5292,8 +5732,8 @@ msgstr ""
 
 #: threads/permissions/bestanswers.py:274
 msgid ""
-"You can't unmark this thread's best answer because it's closed and you don't "
-"have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't"
+" have permission to open it."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:282
@@ -5511,8 +5951,8 @@ msgstr "Özel konuları tutanak edebilir miyim "
 
 #: threads/permissions/privatethreads.py:52
 msgid ""
-"Allows user to report private threads they are participating in, making them "
-"accessible to moderators."
+"Allows user to report private threads they are participating in, making them"
+" accessible to moderators."
 msgstr ""
 "Kullanıcının katıldığı özel konuları tutanak edebilmesini ve bunları "
 "moderatörlerin erişebilmesini sağlar."
@@ -5583,7 +6023,8 @@ msgstr "%(user)sözel konulara davetiye vermiyor."
 #: threads/permissions/privatethreads.py:288
 #, python-format
 msgid "%(user)s limits invitations to private threads to followed users."
-msgstr "%(user)stakip eden kullanıcılara özel davetlerin davetlerini sınırlar."
+msgstr ""
+"%(user)stakip eden kullanıcılara özel davetlerin davetlerini sınırlar."
 
 #: threads/permissions/threads.py:76
 msgid "Can see unapproved content list"
@@ -5593,11 +6034,11 @@ msgstr "Onaylanmamış içerik dizelge görebilirsiniz"
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging "
-"to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging"
+" to categories in which the user has permission to approve content."
 msgstr ""
-"Onaylanmamış veya onaylanmamış iletiler içeren iş parçalarının kolay listesi "
-"için, konu listelerindeki \"onaylanmamış\" sekmesine erişim izni verir. "
+"Onaylanmamış veya onaylanmamış iletiler içeren iş parçalarının kolay listesi"
+" için, konu listelerindeki \"onaylanmamış\" sekmesine erişim izni verir. "
 "Sekmenin tüm ipliklerin listelerinde bulunmasına rağmen, yalnızca "
 "kullanıcının içeriği onaylama iznine sahip olduğu kategorilere ait konuları "
 "görüntüler."
@@ -5615,8 +6056,8 @@ msgid ""
 msgstr ""
 "Bildirilen iletiler içeren konular kolay listelendiği iş parçacıkları "
 "listelerindeki \"bildirilenler\" sekmesine erişim izni verir. Sekmenin tüm "
-"kategori konuları listelerinde mevcut olmasına rağmen, yalnızca kullanıcının "
-"iletiler raporlarını görme iznine sahip olduğu kategorilere ait konuları "
+"kategori konuları listelerinde mevcut olmasına rağmen, yalnızca kullanıcının"
+" iletiler raporlarını görme iznine sahip olduğu kategorilere ait konuları "
 "görüntüler."
 
 #: threads/permissions/threads.py:98
@@ -5767,7 +6208,8 @@ msgstr "iletiler korumak"
 
 #: threads/permissions/threads.py:200
 msgid "Only users with this permission can edit protected posts."
-msgstr "Yalnızca bu iznine sahip kullanıcılar korunan iletiler düzenleyebilir."
+msgstr ""
+"Yalnızca bu iznine sahip kullanıcılar korunan iletiler düzenleyebilir."
 
 #: threads/permissions/threads.py:203
 msgid "Can move posts"
@@ -6509,16 +6951,19 @@ msgstr[1] ""
 
 #: threads/serializers/poll.py:134
 msgid "Number of allowed choices can't be greater than number of all choices."
-msgstr "İzin verilen seçenek sayısı, tüm seçeneklerin sayısından büyük olamaz."
+msgstr ""
+"İzin verilen seçenek sayısı, tüm seçeneklerin sayısından büyük olamaz."
 
 #: threads/serializers/pollvote.py:15
 #, python-format
 msgid "This poll disallows voting for more than %(choices)s choice."
 msgid_plural "This poll disallows voting for more than %(choices)s choices."
 msgstr[0] ""
-"Bu anket oyların %(choices)s seçimlerin sayısından fazla olmasını engelliyor."
+"Bu anket oyların %(choices)s seçimlerin sayısından fazla olmasını "
+"engelliyor."
 msgstr[1] ""
-"Bu anket oyların %(choices)s seçimlerin sayısından fazla olmasını engelliyor."
+"Bu anket oyların %(choices)s seçimlerin sayısından fazla olmasını "
+"engelliyor."
 
 #: threads/serializers/pollvote.py:32
 msgid "One or more of poll choices were invalid."
@@ -6591,11 +7036,11 @@ msgid_plural ""
 "Thread title should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
 msgstr[0] ""
-"Konu başlığı en az %(limit_value)s karakter uzunluğunda "
-"olmalıdır(  %(show_value)s değerine sahiptir)."
+"Konu başlığı en az %(limit_value)s karakter uzunluğunda olmalıdır(  "
+"%(show_value)s değerine sahiptir)."
 msgstr[1] ""
-"Konu başlığı en az %(limit_value)s karakter uzunluğunda "
-"olmalıdır(  %(show_value)s değerine sahiptir)."
+"Konu başlığı en az %(limit_value)s karakter uzunluğunda olmalıdır(  "
+"%(show_value)s değerine sahiptir)."
 
 #: threads/validators.py:63
 #, python-format
@@ -6645,18 +7090,6 @@ msgstr[1] ""
 #: threads/viewmodels/threads.py:23
 msgid "Your threads"
 msgstr "Konularınız"
-
-#: threads/viewmodels/threads.py:24
-msgid "New threads"
-msgstr "Yeni konular"
-
-#: threads/viewmodels/threads.py:25
-msgid "Unread threads"
-msgstr "Okunmamış Konular"
-
-#: threads/viewmodels/threads.py:26
-msgid "Subscribed threads"
-msgstr "Abone Olunan Konular"
 
 #: threads/viewmodels/threads.py:27
 msgid "Unapproved content"
@@ -6742,8 +7175,8 @@ msgstr "Yönetici mi"
 #: users/admin/forms.py:78
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to "
-"admin Django modules."
+"is enabled, this user will need additional permissions assigned within it to"
+" admin Django modules."
 msgstr ""
 "Kullanıcının admin sitelerine giriş yapıp giriş yapamayacağını belirtir. "
 "Django admin sitesi etkinleştirilmişse, bu kullanıcının admin Django "
@@ -6772,8 +7205,8 @@ msgid ""
 "is non-destructible way to remove user accounts."
 msgstr ""
 "Bu kullanıcının aktif olarak muamele edilmesi gerekip gerekmediğini "
-"belirtir. Bu işlevi kapatmak, kullanıcı hesaplarını kaldırmanın yıkılmaz bir "
-"yoludur."
+"belirtir. Bu işlevi kapatmak, kullanıcı hesaplarını kaldırmanın yıkılmaz bir"
+" yoludur."
 
 #: users/admin/forms.py:97 users/admin/forms.py:128 users/admin/forms.py:158
 msgid "Staff message"
@@ -6800,8 +7233,8 @@ msgid ""
 "Setting this to yes will stop user from changing his/her avatar, and will "
 "reset his/her avatar to procedurally generated one."
 msgstr ""
-"Bunu evet olarak ayarlamak, kullanıcının avatarını değiştirmesini durduracak "
-"ve avatarını usulle üretilen birine sıfırlayacaktır."
+"Bunu evet olarak ayarlamak, kullanıcının avatarını değiştirmesini durduracak"
+" ve avatarını usulle üretilen birine sıfırlayacaktır."
 
 #: users/admin/forms.py:119 users/admin/forms.py:150 users/admin/forms.py:457
 #: users/admin/forms.py:524
@@ -6929,8 +7362,8 @@ msgstr "Kullanıcı başlığı"
 
 #: users/admin/forms.py:397
 msgid ""
-"Optional, singular version of rank name displayed by user names. For example "
-"\"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example"
+" \"GM\" or \"Dev\"."
 msgstr ""
 "Sıralama isminin isteğe bağlı, tekil hali kullanıcı adlarıyla gösterilir. "
 "Örneğin \"GM\" veya \"Dev\"."
@@ -7031,8 +7464,8 @@ msgid ""
 "existing users."
 msgstr ""
 "Bunu evet olarak değiştirmek, bu Yasaklamak kontrol ettirmek için sadece "
-"kayıt aşamasında yapılmalıdır. Bu, mevcut kullanıcılara zarar vermeden, kısa "
-"süre önce hesaplanan e-posta sağlayıcılarından gelen gibi bazı kayıtları "
+"kayıt aşamasında yapılmalıdır. Bu, mevcut kullanıcılara zarar vermeden, kısa"
+" süre önce hesaplanan e-posta sağlayıcılarından gelen gibi bazı kayıtları "
 "engellemek istiyorsanız iyi olur."
 
 #: users/admin/forms.py:512
@@ -7083,8 +7516,8 @@ msgstr ""
 
 #: users/admin/forms.py:624
 msgid ""
-"Enter every item in new line. Duplicates will be ignored. This field is case "
-"insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case"
+" insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 msgstr ""
@@ -7323,21 +7756,21 @@ msgstr "Yeni kullanıcı \"%(user)s\" kaydedildi."
 msgid "User \"%(user)s\" has been edited."
 msgstr "Kullanıcı \"%(user)s\" düzenlendi."
 
-#: users/api/auth.py:94
+#: users/api/auth.py:115
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "%(user)s hesabını %(forum_name)s forumlarında etkinleştir"
 
-#: users/api/auth.py:129
+#: users/api/auth.py:151
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "%(user)s 'un şifresini %(forum_name)s forumlarında değiştir"
 
-#: users/api/auth.py:164
+#: users/api/auth.py:187
 msgid "Form link is invalid. Please try again."
 msgstr "Form bağlantısı geçersiz. Lütfen tekrar deneyin."
 
-#: users/api/auth.py:165
+#: users/api/auth.py:188
 msgid "Your link has expired. Please request new one."
 msgstr "Bağlantınızın süresi doldu. Lütfen yeni bir tane talep edin."
 
@@ -7440,63 +7873,90 @@ msgstr "Diğer kullanıcıların ad geçmişini izlemek için izniniz yok."
 msgid "You have to sign in to perform this action."
 msgstr "Bu işlemi gerçekleştirmek için oturum açmanız gerekir."
 
-#: users/api/users.py:110
+#: users/api/users.py:119
 msgid "You can't change other users avatars."
 msgstr "Diğer avatarları değiştiremezsiniz."
 
-#: users/api/users.py:122
+#: users/api/users.py:131
 msgid "You can't change other users options."
 msgstr "Diğer kullanıcı seçeneklerini değiştiremezsiniz."
 
-#: users/api/users.py:127
+#: users/api/users.py:136
 msgid "Your forum options have been changed."
 msgstr "Forum seçenekleriniz değiştirildi."
 
-#: users/api/users.py:133
+#: users/api/users.py:144
+#, python-format
+msgid ""
+"This feature has been disabled. Please use %(provider)s to change your name."
+msgstr ""
+
+#: users/api/users.py:151
 msgid "You can't change other users names."
 msgstr "Diğer kullanıcı adlarını değiştiremezsiniz."
 
-#: users/api/users.py:140
+#: users/api/users.py:158
 msgid "You can't change other users signatures."
 msgstr "Diğer kullanıcı imzalarını değiştiremezsiniz."
 
-#: users/api/users.py:152
+#: users/api/users.py:172
+#, python-format
+msgid ""
+"This feature has been disabled. Please use %(provider)s to change your "
+"password."
+msgstr ""
+
+#: users/api/users.py:179
 msgid "You can't change other users passwords."
 msgstr "Diğer kullanıcıların şifrelerini değiştiremezsiniz."
 
-#: users/api/users.py:162
+#: users/api/users.py:190
+#, python-format
+msgid ""
+"This feature has been disabled. Please use %(provider)s to change your "
+"e-mail."
+msgstr ""
+
+#: users/api/users.py:198
 msgid "You can't change other users e-mail addresses."
 msgstr "Diğer kullanıcıların e-posta adreslerini değiştiremezsiniz."
 
-#: users/api/users.py:269
+#: users/api/users.py:230
+#, python-format
+msgid ""
+"This feature has been disabled. Please use %(provider)s to delete your "
+"account."
+msgstr ""
+
+#: users/api/users.py:314
 msgid "You can't request data downloads for other users."
 msgstr ""
 
-#: users/api/users.py:273
+#: users/api/users.py:318
 msgid "You can't download your data."
 msgstr ""
 
-#: users/api/users.py:278
+#: users/api/users.py:323
 msgid "You can't have more than one data download request at a single time."
 msgstr ""
 
-#: users/api/users.py:335
+#: users/api/users.py:380
 msgid "You can't see other users data downloads."
 msgstr ""
 
-#: users/apps.py:30
+#: users/apps.py:33
 msgid "Edit details"
 msgstr "Detayları düzenle"
 
-#: users/apps.py:36
+#: users/apps.py:39
 msgid "Change username"
 msgstr "Kullanıcı adını değiştir"
 
-#: users/apps.py:42
+#: users/apps.py:46
 msgid "Change email or password"
 msgstr "E-posta veya şifre değiştir"
 
-#: users/apps.py:63
+#: users/apps.py:71
 msgid "Delete account"
 msgstr ""
 
@@ -7533,11 +7993,11 @@ msgstr "ReCAPTCHA API'sına ulaşılamadı."
 msgid "Entered answer is incorrect."
 msgstr "Girilen cevap yanlış."
 
-#: users/decorators.py:14
+#: users/decorators.py:17
 msgid "This page is not available to signed in users."
 msgstr "Bu sayfa, oturum açmış kullanıcılar tarafından kullanılamaz."
 
-#: users/decorators.py:26
+#: users/decorators.py:30
 msgid "You have to sign in to access this page."
 msgstr "Bu sayfaya erişmek için oturum açmanız gerekmektedir."
 
@@ -7575,7 +8035,7 @@ msgstr "Email adresini gir."
 msgid "No user with this e-mail exists."
 msgstr "Bu e-postayla hiçbir kullanıcı mevcut değil."
 
-#: users/forms/auth.py:150 users/views/activation.py:46
+#: users/forms/auth.py:150 users/views/activation.py:52
 #, python-format
 msgid "%(user)s, your account is already active."
 msgstr "%(user)s, hesabınız zaten aktif."
@@ -7597,11 +8057,11 @@ msgid ""
 "request new password."
 msgstr "Yönetici, yeni şifre isteyebilmek için hesabınızı etkinleştirmelidir."
 
-#: users/forms/register.py:34 users/validators.py:80
+#: users/forms/register.py:34 users/validators.py:79
 msgid "This username is not allowed."
 msgstr "Bu kullanıcı adına izin verilmiyor."
 
-#: users/forms/register.py:45 users/validators.py:52
+#: users/forms/register.py:45 users/validators.py:51
 msgid "This e-mail address is not allowed."
 msgstr "Bu e-posta adresine izin verilmiyor."
 
@@ -8017,9 +8477,9 @@ msgstr "Websitesi"
 
 #: users/profilefields/default.py:41
 msgid ""
-"If you own website in the internet you wish to share on your profile you may "
-"enter its address here. Remember to for it to be valid http address starting "
-"with either \"http://\" or \"https://\"."
+"If you own website in the internet you wish to share on your profile you may"
+" enter its address here. Remember to for it to be valid http address "
+"starting with either \"http://\" or \"https://\"."
 msgstr ""
 "Kendi internet siteni kimlik paylaşmak istiyorsan adresini buraya "
 "girebilirsin.Unutma http adresi''http://'' ya da ''https://'' başlayarak "
@@ -8044,9 +8504,9 @@ msgstr "Twitter kolu"
 #: users/profilefields/default.py:62
 #, python-format
 msgid ""
-"If you own Twitter account, here you may enter your Twitter handle for other "
-"users to find you. Starting your handle with \"@\" sign is optional. Either "
-"\"@%(slug)s\" or \"%(slug)s\" are valid values."
+"If you own Twitter account, here you may enter your Twitter handle for other"
+" users to find you. Starting your handle with \"@\" sign is optional. Either"
+" \"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
 "Twitter hesabına sahipseniz, burada diğer kullanıcıların sizi bulması için "
 "Twitter tutamacını girebilirsiniz. Kolunuzu \"@\" işaretiyle başlatmak "
@@ -8118,42 +8578,41 @@ msgstr ""
 msgid "Old username"
 msgstr ""
 
-#: users/validators.py:40
-msgid "This e-mail address is not available."
-msgstr "Bu e-posta adresi mevcut değil."
-
-#: users/validators.py:68
-msgid "This username is not available."
-msgstr "Bu kullanıcı adı mevcut değil."
-
-#: users/validators.py:86
+#: users/validators.py:85
 msgid "Username can only contain latin alphabet letters and digits."
 msgstr ""
 "Kullanıcı adı yalnızca Latin alfabesi harfleri ve rakamları içerebilir."
 
-#: users/validators.py:93
+#: users/validators.py:92
 #, python-format
 msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
-msgstr[0] "Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
-msgstr[1] "Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
+msgstr[0] ""
+"Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
+msgstr[1] ""
+"Kullanıcı adı en az %(limit_value)s karakter uzunluğunda olmalıdır."
 
-#: users/validators.py:101
+#: users/validators.py:100
 #, python-format
 msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] "Kullanıcı adı %(limit_value)s karakterden uzun olamaz."
 msgstr[1] "Kullanıcı adı %(limit_value)s karakterden uzun olamaz."
 
-#: users/validators.py:137
+#: users/validators.py:136
 msgid "Data entered was found in spammers database."
 msgstr "Girilen veriler spam verici veritabanında bulundu."
 
-#: users/validators.py:147
+#: users/validators.py:146
 msgid "This email is not allowed."
 msgstr "Bu e-postaya izin verilmiyor."
 
-#: users/views/activation.py:51
+#: users/views/activation.py:21
+#, python-format
+msgid "Please use %(provider)s to activatee your account."
+msgstr ""
+
+#: users/views/activation.py:57
 #, python-format
 msgid ""
 "%(user)s, your activation link is invalid. Try again or request new "
@@ -8162,31 +8621,52 @@ msgstr ""
 "%(user)s, etkinleştirme bağlantınız geçersiz. Tekrar deneyin veya yeni "
 "etkinleştirme bağlantısı isteğinde bulunun."
 
-#: users/views/activation.py:69
+#: users/views/activation.py:75
 #, python-format
 msgid "%(user)s, your account has been activated!"
 msgstr "%(user)s, hesabınız aktive edildi!"
 
-#: users/views/forgottenpassword.py:31
+#: users/views/auth.py:21
 #, python-format
-msgid "%(user)s, your link has expired. Please request new link and try again."
+msgid "Please use %(provider)s to sign in."
 msgstr ""
-"%(user)s, bağlantınızın süresi doldu. Lütfen yeni bağlantı isteğinde bulunup "
-"tekrar deneyin."
 
-#: users/views/forgottenpassword.py:38
+#: users/views/forgottenpassword.py:17 users/views/forgottenpassword.py:35
+#, python-format
+msgid "Please use %(provider)s to reset your password."
+msgstr ""
+
+#: users/views/forgottenpassword.py:44
+#, python-format
+msgid ""
+"%(user)s, your link has expired. Please request new link and try again."
+msgstr ""
+"%(user)s, bağlantınızın süresi doldu. Lütfen yeni bağlantı isteğinde bulunup"
+" tekrar deneyin."
+
+#: users/views/forgottenpassword.py:51
 #, python-format
 msgid "%(user)s, your link is invalid. Please try again or request new link."
 msgstr ""
-"%(user)s, bağlantınız geçersiz. Lütfen tekrar deneyin veya yeni bir bağlantı "
-"isteğinde bulunun."
+"%(user)s, bağlantınız geçersiz. Lütfen tekrar deneyin veya yeni bir bağlantı"
+" isteğinde bulunun."
 
-#: users/views/options.py:56
+#: users/views/options.py:48
+#, python-format
+msgid "Please use %(provider)s to change your e-mail."
+msgstr ""
+
+#: users/views/options.py:62
 #, python-format
 msgid "%(user)s, your e-mail has been changed."
 msgstr "%(user)s, e-postanız değiştirildi."
 
 #: users/views/options.py:74
+#, python-format
+msgid "Please use %(provider)s to change your password."
+msgstr ""
+
+#: users/views/options.py:86
 #, python-format
 msgid "%(user)s, your password has been changed."
 msgstr "%(user)s, Şifreniz değiştirildi."
