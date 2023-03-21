@@ -6,8 +6,9 @@ const wrapSelection = (selection, update, prefix, suffix, def) => {
   update(newValue)
 
   window.setTimeout(() => {
+    focus(selection.textarea)
+
     const caret = selection.start + prefix.length
-    selection.textarea.focus()
     selection.textarea.setSelectionRange(caret, caret + text.length)
   }, 250)
 }
@@ -19,8 +20,9 @@ const replaceSelection = (selection, update, text) => {
   update(newValue)
 
   window.setTimeout(() => {
+    focus(selection.textarea)
+
     const caret = selection.end + text.length
-    selection.textarea.focus()
     selection.textarea.setSelectionRange(caret, caret)
   }, 250)
 }
@@ -48,6 +50,12 @@ const createRange = (textarea, start, end) => {
     prefix: textarea.value.substring(0, start),
     suffix: textarea.value.substring(end),
   }
+}
+
+export function focus(textarea) {
+  const scroll = textarea.scrollTop
+  textarea.focus()
+  textarea.scrollTop = scroll
 }
 
 export { getSelection, replaceSelection, wrapSelection }

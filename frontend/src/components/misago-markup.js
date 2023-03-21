@@ -1,3 +1,4 @@
+import classnames from "classnames"
 import React from "react"
 import onebox from "misago/services/one-box"
 
@@ -19,7 +20,7 @@ export default class extends React.Component {
   render() {
     return (
       <article
-        className="misago-markup"
+        className={classnames("misago-markup", this.props.className)}
         dangerouslySetInnerHTML={{ __html: this.props.markup }}
         data-author={this.props.author || undefined}
         ref={(node) => {

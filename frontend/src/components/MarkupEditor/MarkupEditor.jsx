@@ -102,11 +102,16 @@ class MarkupEditor extends React.Component {
       {this.state.preview ? (
         <div className="markup-editor-preview">
           {this.state.loading ? (
-            <div className="ui-preview">
-              <span className="ui-preview-text" style={{ width: "240px" }} />
+            <div className="markup-editor-preview-loading">
+              <div className="ui-preview">
+                <span className="ui-preview-text" style={{ width: "240px" }} />
+              </div>
             </div>
           ) : (
-            <MisagoMarkup markup={this.state.parsed} />
+            <MisagoMarkup
+              className="markup-editor-preview-contents"
+              markup={this.state.parsed}
+            />
           )}
         </div>
       ) : (
