@@ -121,8 +121,16 @@
 }
 
 // Preview area
+// Relative/absolute positioning is a fix for preview area changing height
+// when it's contents are too long.
 .markup-editor-preview {
+  position: relative;
   height: @markup-editor-height;
+  overflow-y: auto;
+}
+
+.markup-editor-preview-contents {
+  position: absolute;
   padding: @markup-editor-padding;
 }
 
@@ -222,6 +230,7 @@
   .markup-editor-textarea,
   .markup-editor-preview {
     flex: 1;
+    height: auto;
   }
 }
 
@@ -235,6 +244,7 @@
     .markup-editor-textarea,
     .markup-editor-preview {
       flex: 1;
+      height: 100%;
     }
   }
 }
