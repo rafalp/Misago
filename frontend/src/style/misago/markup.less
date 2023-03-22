@@ -83,6 +83,15 @@
   }
 }
 
+// Add extra styles to nested quotes
+.misago-markup .quote-body > blockquote,
+.misago-markup .quote-body > .quote-block,
+.misago-markup blockquote > blockquote,
+.misago-markup blockquote > .quote-block {
+  border: 1px solid #0ea5e9;
+  border-left: 3px solid #0ea5e9;
+}
+
 // Style spoilers
 .misago-markup .spoiler-block {
   background: @gray-lighter;
