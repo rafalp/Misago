@@ -19,7 +19,7 @@ class TwitterProfileFieldTests(AdminTestCase):
 
     def test_admin_clears_field(self):
         """admin form allows admins to clear field"""
-        self.user.profile_fields["twitter"] = "lorem_ipsum"
+        self.user.profile_fields = {"twitter": "lorem_ipsum"}
         self.user.save()
 
         self.reload_user()
@@ -105,7 +105,7 @@ class TwitterProfileFieldTests(AdminTestCase):
         response = self.client.get("%s?redirected=1&profilefields=ipsum" % test_link)
         self.assertContains(response, "No users matching criteria exist.")
 
-        self.user.profile_fields["twitter"] = "lorem_ipsum"
+        self.user.profile_fields = {"twitter": "ipsum"} #{"twitter": "lorem_ipsum"}
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=ipsum" % test_link)
@@ -120,7 +120,7 @@ class TwitterProfileFieldTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertNotContains(response, "Twitter")
 
-        self.user.profile_fields["twitter"] = "lorem_ipsum"
+        self.user.profile_fields = {"twitter": "lorem_ipsum"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -145,7 +145,7 @@ class TwitterProfileFieldTests(AdminTestCase):
             ],
         )
 
-        self.user.profile_fields["twitter"] = "lorem_ipsum"
+        self.user.profile_fields = {"twitter": "lorem_ipsum"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -204,7 +204,7 @@ class TwitterProfileFieldTests(AdminTestCase):
         """field can be cleared via api"""
         test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
-        self.user.profile_fields["twitter"] = "lorem_ipsum"
+        self.user.profile_fields = {"twitter": "lorem_ipsum"}
         self.user.save()
 
         self.reload_user()

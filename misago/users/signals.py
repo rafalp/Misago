@@ -40,7 +40,7 @@ def archive_user_profile_fields(sender, archive=None, **kwargs):
     clean_profile_fields = OrderedDict()
     for profile_fields_group in profilefields.get_fields_groups():
         for profile_field in profile_fields_group["fields"]:
-            if sender.profile_fields.get(profile_field.fieldname):
+            if sender.profile_fields and sender.profile_fields.get(profile_field.fieldname):
                 field_value = sender.profile_fields[profile_field.fieldname]
                 clean_profile_fields[str(profile_field.label)] = field_value
 

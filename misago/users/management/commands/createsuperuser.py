@@ -173,7 +173,7 @@ class Command(BaseCommand):
 
     def create_superuser(self, username, email, password, settings, verbosity):
         try:
-            user = User.objects.create_superuser(username, email, password)
+            user = User.objects.create_superuser(username, email, password, profile_fields={})
             setup_new_user(settings, user)
 
             if verbosity >= 1:

@@ -19,7 +19,7 @@ class GenderProfileFieldTests(AdminTestCase):
 
     def test_admin_clears_field(self):
         """admin form allows admins to clear field"""
-        self.user.profile_fields["gender"] = "female"
+        self.user.profile_fields = {"gender": "female"}
         self.user.save()
 
         self.reload_user()
@@ -108,14 +108,14 @@ class GenderProfileFieldTests(AdminTestCase):
         self.assertContains(response, "No users matching criteria exist.")
 
         # search by value
-        self.user.profile_fields["gender"] = "female"
+        self.user.profile_fields = {"gender": "female"}
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=female" % test_link)
         self.assertNotContains(response, "No users matching criteria exist.")
 
         # search by choice name
-        self.user.profile_fields["gender"] = "secret"
+        self.user.profile_fields = {"gender": "secret"}
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=telling" % test_link)
@@ -130,7 +130,7 @@ class GenderProfileFieldTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertNotContains(response, "Gender")
 
-        self.user.profile_fields["gender"] = "secret"
+        self.user.profile_fields = {"gender": "secret"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -146,7 +146,7 @@ class GenderProfileFieldTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertNotContains(response, "Gender")
 
-        self.user.profile_fields["gender"] = "not valid"
+        self.user.profile_fields = {"gender": "not valid"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -169,7 +169,7 @@ class GenderProfileFieldTests(AdminTestCase):
             ],
         )
 
-        self.user.profile_fields["gender"] = "male"
+        self.user.profile_fields = {"gender": "male"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -208,7 +208,7 @@ class GenderProfileFieldTests(AdminTestCase):
             ],
         )
 
-        self.user.profile_fields["gender"] = "invalid"
+        self.user.profile_fields = {"gender": "invalid"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -259,7 +259,7 @@ class GenderProfileFieldTests(AdminTestCase):
         """field can be cleared via api"""
         test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
-        self.user.profile_fields["gender"] = "secret"
+        self.user.profile_fields = {"gender": "secret"}
         self.user.save()
 
         self.reload_user()

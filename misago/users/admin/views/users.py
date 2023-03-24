@@ -1,17 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
-from django.db import transaction
-from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
 from ....acl.useracl import get_user_acl
 from ....admin.auth import authorize_admin
 from ....admin.views import generic
-from ....categories.models import Category
 from ....core.mail import mail_users
-from ....core.pgutils import chunk_queryset
-from ....threads.models import Thread
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
 from ...deletesrecord import record_user_deleted_by_staff
@@ -269,6 +264,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
             title=form.cleaned_data["title"],
             rank=form.cleaned_data.get("rank"),
             joined_from_ip=request.user_ip,
+            profile_fields={},
         )
 
         if form.cleaned_data.get("roles"):

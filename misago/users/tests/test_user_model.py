@@ -65,7 +65,7 @@ def test_email_setter_also_sets_email_hash():
 
 
 def test_real_name_getter_returns_name_entered_in_profile_field(user):
-    user.profile_fields["real_name"] = "John Doe"
+    user.profile_fields = {"real_name": "John Doe"}
     assert user.get_real_name() == "John Doe"
 
 

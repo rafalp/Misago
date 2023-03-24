@@ -163,9 +163,9 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
     except ValidationError:
         return None
 
-    activation_kwargs = {}
+    activation_kwargs = {"profile_fields": {}}
     if settings.account_activation == "admin":
-        activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
+        activation_kwargs["requires_activation"] = User.ACTIVATION_ADMIN
 
     new_user = User.objects.create_user(
         username, email, joined_from_ip=request.user_ip, **activation_kwargs
@@ -204,11 +204,11 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
         email_verified = form.cleaned_data["email"] == details.get("email")
 
-        activation_kwargs = {}
+        activation_kwargs = {"profile_fields": {}}
         if settings.account_activation == "admin":
-            activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
+            activation_kwargs["requires_activation"] = User.ACTIVATION_ADMIN
         elif settings.account_activation == "user" and not email_verified:
-            activation_kwargs = {"requires_activation": User.ACTIVATION_USER}
+            activation_kwargs["requires_activation"] = User.ACTIVATION_USER
 
         try:
             new_user = User.objects.create_user(

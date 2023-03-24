@@ -213,7 +213,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     last_posted_on = models.DateTimeField(null=True, blank=True)
 
-    profile_fields = HStoreField(default=dict)
+    profile_fields = models.JSONField()
     agreements = ArrayField(models.PositiveIntegerField(), default=list)
 
     USERNAME_FIELD = "slug"
@@ -326,43 +326,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def get_real_name(self):
-        # Bug: https://github.com/rafalp/Misago/issues/1352
-        # On some very rare cases self.profile_fields is deserialized as string
-        # by Django's ORM. I am unable to reproduce this, but in case when this
-        # bug occurs, this code branch will print extra information about it
-        if not isinstance(self.profile_fields, dict):
-            from django.db import connections
-            from django.db.backends.signals import connection_created
-            from django.contrib.postgres.signals import get_hstore_oids
-
-            receivers = ", ".join([str(r[1]()) for r in connection_created.receivers])
-            dead_receivers = "TRUE" if connection_created._dead_receivers else "FALSE"
-
-            valid_oids = None
-            cached_oids = get_hstore_oids("default")
-
-            with connections["default"].cursor() as cursor:
-                cursor.execute(
-                    "SELECT t.oid, typarray "
-                    "FROM pg_type t "
-                    "JOIN pg_namespace ns ON typnamespace = ns.oid "
-                    "WHERE typname = 'hstore'"
-                )
-                oids = []
-                array_oids = []
-                for row in cursor:
-                    oids.append(row[0])
-                    array_oids.append(row[1])
-                valid_oids = tuple(oids), tuple(array_oids)
-
-            raise RuntimeError(
-                f"'profile_fields' has wrong type! Please post this WHOLE message on https://github.com/rafalp/Misago/issues/1352 "
-                f"OID: '{cached_oids}' (valid: '{valid_oids}') "
-                f"Receivers: '{receivers}' (has dead: {dead_receivers}) "
-                f"Repr: {repr(self.profile_fields)}"
-            )
-
-        return self.profile_fields.get("real_name")
+        if self.profile_fields:
+            return self.profile_fields.get("real_name")
 
     def set_username(self, new_username, changed_by=None):
         new_username = self.normalize_username(new_username)

@@ -13,9 +13,10 @@ class Command(BaseCommand):
         keys = {}
 
         for user in chunk_queryset(User.objects.all()):
-            for key in user.profile_fields:
-                keys.setdefault(key, 0)
-                keys[key] += 1
+            if user.profile_fields:
+                for key in user.profile_fields:
+                    keys.setdefault(key, 0)
+                    keys[key] += 1
 
         if keys:
             max_len = max([len(k) for k in keys])

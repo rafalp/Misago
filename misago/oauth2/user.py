@@ -57,9 +57,9 @@ def get_user_by_email(user_id, user_email):
 
 
 def create_new_user(request, user_data):
-    activation_kwargs = {}
+    activation_kwargs = {"profile_fields": {}}
     if request.settings.account_activation == "admin":
-        activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
+        activation_kwargs["requires_activation"] = User.ACTIVATION_ADMIN
 
     user = User.objects.create_user(
         user_data["name"],

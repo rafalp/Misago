@@ -45,7 +45,7 @@ class ProfileField:
             "fieldname": self.fieldname,
             "label": self.get_label(user),
             "help_text": self.get_help_text(user),
-            "initial": user.profile_fields.get(self.fieldname, ""),
+            "initial": user.profile_fields.get(self.fieldname, "") if user.profile_fields else "",
             "input": self.get_input_json(request, user),
         }
 
@@ -56,7 +56,10 @@ class ProfileField:
         return data
 
     def get_display_data(self, request, user):
-        value = user.profile_fields.get(self.fieldname, "").strip()
+        value = None
+        if user.profile_fields:
+            value = user.profile_fields.get(self.fieldname, "").strip()
+
         if not self.readonly and not value:
             return None
 
@@ -74,7 +77,6 @@ class ProfileField:
     def search_users(self, criteria):
         if self.readonly:
             return None
-
         return Q(**{"profile_fields__%s__contains" % self.fieldname: criteria})
 
 
@@ -93,7 +95,7 @@ class ChoiceProfileField(ProfileField):
         return forms.ChoiceField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
-            initial=user.profile_fields.get(self.fieldname),
+            initial=user.profile_fields.get(self.fieldname) if user.profile_fields else "",
             choices=self.get_choices(user),
             disabled=self.readonly,
             required=False,
@@ -127,7 +129,7 @@ class TextProfileField(ProfileField):
         return forms.CharField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
-            initial=user.profile_fields.get(self.fieldname),
+            initial=user.profile_fields.get(self.fieldname) if user.profile_fields else None,
             max_length=250,
             disabled=self.readonly,
             required=False,
@@ -142,7 +144,7 @@ class TextareaProfileField(ProfileField):
         return forms.CharField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
-            initial=user.profile_fields.get(self.fieldname),
+            initial=user.profile_fields.get(self.fieldname) if user.profile_fields else None,
             max_length=500,
             widget=forms.Textarea(attrs={"rows": 4}),
             disabled=self.readonly,
@@ -166,7 +168,7 @@ class UrlProfileField(TextProfileField):
         return forms.URLField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
-            initial=user.profile_fields.get(self.fieldname),
+            initial=user.profile_fields.get(self.fieldname) if user.profile_fields else None,
             max_length=250,
             disabled=self.readonly,
             required=False,

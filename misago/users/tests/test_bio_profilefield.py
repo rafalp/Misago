@@ -19,7 +19,7 @@ class BioProfileFieldTests(AdminTestCase):
 
     def test_admin_clears_field(self):
         """admin form allows admins to clear field"""
-        self.user.profile_fields["bio"] = "Exists!"
+        self.user.profile_fields = {"bio": "Exists!"}
         self.user.save()
 
         self.reload_user()
@@ -81,7 +81,7 @@ class BioProfileFieldTests(AdminTestCase):
         response = self.client.get("%s?redirected=1&profilefields=Ipsum" % test_link)
         self.assertContains(response, "No users matching criteria exist.")
 
-        self.user.profile_fields["bio"] = "Lorem Ipsum Dolor Met"
+        self.user.profile_fields = {"bio": "Lorem Ipsum Dolor Met"}
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=Ipsum" % test_link)
@@ -96,7 +96,7 @@ class BioProfileFieldTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertNotContains(response, "Bio")
 
-        self.user.profile_fields["bio"] = "I am Bob!\n\nThis is <b>my</b> bio!"
+        self.user.profile_fields = {"bio": "I am Bob!\n\nThis is <b>my</b> bio!"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -121,7 +121,7 @@ class BioProfileFieldTests(AdminTestCase):
             ],
         )
 
-        self.user.profile_fields["bio"] = "I am Bob!\n\nThis is <b>my</b> bio!"
+        self.user.profile_fields = {"bio": "I am Bob!\n\nThis is <b>my</b> bio!"}
         self.user.save()
 
         response = self.client.get(test_link)
@@ -177,7 +177,7 @@ class BioProfileFieldTests(AdminTestCase):
         """field can be cleared via api"""
         test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
-        self.user.profile_fields["bio"] = "Exists!"
+        self.user.profile_fields = {"bio": "Exists!"}
         self.user.save()
 
         self.reload_user()

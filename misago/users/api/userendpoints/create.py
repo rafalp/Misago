@@ -41,11 +41,11 @@ def create_endpoint(request):
     if not form.is_valid():
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    activation_kwargs = {}
+    activation_kwargs = {"profile_fields": {}}
     if request.settings.account_activation == "user":
-        activation_kwargs = {"requires_activation": User.ACTIVATION_USER}
+        activation_kwargs["requires_activation"] = User.ACTIVATION_USER
     elif request.settings.account_activation == "admin":
-        activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
+        activation_kwargs["requires_activation"] = User.ACTIVATION_ADMIN
 
     try:
         new_user = User.objects.create_user(

@@ -56,7 +56,7 @@ def test_default_replied_threads_subscription_option_is_set_for_user(
 
 def test_if_user_ip_is_available_audit_trail_is_created_for_user(dynamic_settings):
     user = User.objects.create_user(
-        "User", "user@example.com", joined_from_ip="0.0.0.0"
+        "User", "user@example.com", joined_from_ip="0.0.0.0", profile_fields={},
     )
     setup_new_user(dynamic_settings, user)
     assert user.audittrail_set.count() == 1
