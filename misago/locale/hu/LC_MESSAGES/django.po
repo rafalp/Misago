@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 13:07+0000\n"
+"POT-Creation-Date: 2023-03-24 19:43+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Forró Balázs, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/misago/teams/65369/hu/)\n"
@@ -519,7 +519,7 @@ msgstr ""
 
 #: conf/admin/__init__.py:84
 msgid "Threads, posts, polls and attachments options."
-msgstr ""
+msgstr "Témák, bejegyzések, szavazások és csatolási lehetőségek."
 
 #: conf/admin/__init__.py:90
 msgid "OAuth2"
@@ -1131,7 +1131,7 @@ msgstr ""
 
 #: conf/admin/forms/users.py:77 conf/admin/forms/users.py:90
 msgid "Individual"
-msgstr ""
+msgstr "Egyedi"
 
 #: conf/admin/forms/users.py:78
 msgid "Gravatar"
@@ -3442,11 +3442,11 @@ msgstr ""
 
 #: templates/misago/admin/users/edit.html:205
 msgid "Signature"
-msgstr ""
+msgstr "Aláírás"
 
 #: templates/misago/admin/users/edit.html:228 users/apps.py:27
 msgid "Forum options"
-msgstr ""
+msgstr "Fórum opciók"
 
 #: templates/misago/admin/users/edit.html:237
 msgid "Automatic subscription preferences"
@@ -4025,7 +4025,7 @@ msgstr ""
 #: templates/misago/options/noscript.html:5
 #: templates/misago/options/noscript.html:21
 msgid "Change your options"
-msgstr ""
+msgstr "Módosítsa a beállításokat"
 
 #: templates/misago/options/noscript.html:49
 #: templates/misago/socialauth.html:21
@@ -5853,7 +5853,7 @@ msgstr[1] "A %(minutes)s percnél régebbi szavazásokat nem törölheti."
 
 #: threads/permissions/polls.py:202
 msgid "This poll is over. You can't delete it."
-msgstr ""
+msgstr "Ennek a szavazásnak vége. Nem tudod törölni."
 
 #: threads/permissions/polls.py:207
 msgid "This category is closed. You can't delete polls in it."
@@ -6138,7 +6138,7 @@ msgstr ""
 
 #: threads/permissions/threads.py:189
 msgid "Number only"
-msgstr ""
+msgstr "Csak szám"
 
 #: threads/permissions/threads.py:190
 msgid "Number and list of likers"
@@ -6190,7 +6190,7 @@ msgstr "Megtekintheti a jelentéseket"
 
 #: threads/permissions/threads.py:215
 msgid "Can hide events"
-msgstr ""
+msgstr "Elrejtheti az eseményeket"
 
 #: threads/permissions/threads.py:218
 msgid "Hide events"
@@ -6938,7 +6938,7 @@ msgstr ""
 #: threads/templatetags/misago_poststags.py:26
 #, python-format
 msgid "%(users)s like this."
-msgstr ""
+msgstr "%(users)s kedveli ezt."
 
 #: threads/templatetags/misago_poststags.py:29
 #, python-format
@@ -7070,7 +7070,7 @@ msgstr ""
 
 #: users/admin/__init__.py:87
 msgid "Ranks"
-msgstr ""
+msgstr "Rangok"
 
 #: users/admin/djangoadmin.py:42
 msgid "Misago user data"
@@ -7693,7 +7693,7 @@ msgstr "Ez az avatartípus nem engedélyezett."
 
 #: users/api/userendpoints/avatar.py:116
 msgid "Unknown avatar type."
-msgstr ""
+msgstr "Ismeretlen avátar típus."
 
 #: users/api/userendpoints/avatar.py:137
 msgid "New avatar based on your account was set."
@@ -7784,7 +7784,7 @@ msgstr "A többi felhasználó avatarját nem módosíthatja."
 
 #: users/api/users.py:131
 msgid "You can't change other users options."
-msgstr ""
+msgstr "A többi felhasználó beállításait nem módosíthatja."
 
 #: users/api/users.py:136
 msgid "Your forum options have been changed."
@@ -7997,7 +7997,7 @@ msgstr ""
 #: users/migrations/0004_default_ranks.py:22
 #: users/migrations/0004_default_ranks.py:23
 msgid "Members"
-msgstr ""
+msgstr "Felhasználók"
 
 #: users/models/datadownload.py:26
 msgid "Pending"
@@ -8057,7 +8057,7 @@ msgstr ""
 
 #: users/models/user.py:157
 msgid "active"
-msgstr ""
+msgstr "aktív"
 
 #: users/models/user.py:161
 msgid ""
@@ -8067,7 +8067,7 @@ msgstr ""
 
 #: users/permissions/account.py:10
 msgid "Account settings"
-msgstr ""
+msgstr "Fiók beállítások"
 
 #: users/permissions/account.py:13
 msgid "Allowed username changes number"
@@ -8293,7 +8293,7 @@ msgstr "Felhasználói profilok"
 
 #: users/permissions/profiles.py:46
 msgid "Can follow other users"
-msgstr ""
+msgstr "Követhet más felhasználókat"
 
 #: users/permissions/profiles.py:47
 msgid "Can be blocked by other users"

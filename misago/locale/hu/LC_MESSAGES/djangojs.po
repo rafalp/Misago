@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 13:05+0000\n"
+"POT-Creation-Date: 2023-03-24 19:43+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Forró Balázs, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/misago/teams/65369/hu/)\n"
@@ -43,7 +43,7 @@ msgstr "Globálisan rögzítve"
 
 #: static/misago/js/misago.js:1
 msgid "Pinned in category"
-msgstr ""
+msgstr "Kitűzve a kategóriában"
 
 #: static/misago/js/misago.js:1
 msgid "Answered"
@@ -167,12 +167,12 @@ msgstr "Felhasználó eltávolítva"
 #: static/misago/js/misago.js:1
 msgctxt "post reply"
 msgid "Quote"
-msgstr ""
+msgstr "Idézet"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Attachment details"
-msgstr ""
+msgstr "Melléklet részletei"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
@@ -187,7 +187,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Uploader"
-msgstr ""
+msgstr "Feltöltő"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
@@ -197,12 +197,12 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Remove attachment"
-msgstr ""
+msgstr "Mellékleteket törlése"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Remove this attachment?"
-msgstr ""
+msgstr "Eltávolítja ezt a mellékletet?"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
@@ -217,22 +217,22 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Protected"
-msgstr ""
+msgstr "Védve"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Protect"
-msgstr ""
+msgstr "Védés"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Edit"
-msgstr ""
+msgstr "Szerkesztés"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Preview"
-msgstr ""
+msgstr "Előnézet"
 
 #: static/misago/js/misago.js:1
 msgid "Post"
@@ -245,7 +245,7 @@ msgstr "Ez a mező kötelező."
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Code"
-msgstr ""
+msgstr "Kód"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
@@ -265,7 +265,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Insert code"
-msgstr ""
+msgstr "Írd be a kódot"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
@@ -290,37 +290,37 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "Bold text"
-msgstr ""
+msgstr "Vastag szöveg"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "**This text will be bold**"
-msgstr ""
+msgstr "**Ez a szöveg vastag lesz**"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "This text will be bold"
-msgstr ""
+msgstr "Ez a szöveg vastag lesz"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "Removed text"
-msgstr ""
+msgstr "Szöveg eltávolítva"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "~~This text will be removed~~"
-msgstr ""
+msgstr "~~Ez a szöveg el lesz távolítva~~"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "This text will be removed"
-msgstr ""
+msgstr "Ez a szöveg el lesz távolítva"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
 msgid "Bold text (BBCode)"
-msgstr ""
+msgstr "Vastag szöveg (BBCode)"
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
@@ -748,7 +748,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post thread"
 msgid "Options"
-msgstr ""
+msgstr "Opciók"
 
 #: static/misago/js/misago.js:1
 msgctxt "post thread"
@@ -1504,7 +1504,7 @@ msgstr[1] "Neked van %(users)s követőd."
 msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] "%(username)s felhasználónak van %(users)skövetője."
-msgstr[1] "%(username)s felhasználónak van %(users)skövetője"
+msgstr[1] "%(username)s felhasználónak van %(users)s követője"
 
 #: static/misago/js/misago.js:1
 msgid "Loading..."
@@ -2681,7 +2681,7 @@ msgstr "Megnyitva"
 
 #: static/misago/js/misago.js:1
 msgid "Thread options"
-msgstr ""
+msgstr "Téma opciók"
 
 #: static/misago/js/misago.js:1
 msgid "E-mail"
@@ -2960,11 +2960,11 @@ msgstr "Témák törlése"
 
 #: static/misago/js/misago.js:1
 msgid "All categories"
-msgstr ""
+msgstr "Összes kategória"
 
 #: static/misago/js/misago.js:1
 msgid "All subcategories"
-msgstr ""
+msgstr "Összes alkategória"
 
 #: static/misago/js/misago.js:1
 msgid "Start thread"
