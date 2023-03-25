@@ -21,7 +21,7 @@
   }
 }
 
-.card-rank-flavor(@border, @title, @color) {
+.card-rank-flavor(@border, @title) {
   .panel-body {
     background: @body-bg;
     border: 2px solid @border;
@@ -42,10 +42,6 @@
         color: @title;
       }
     }
-  }
-
-  .user-card-stats li {
-    color: @color;
   }
 }
 
@@ -86,7 +82,7 @@
 
 // Posts
 .post-primary {
-  .post-rank-flavor(#b388ff, #6200ea);
+  .post-rank-flavor(#c7d2fe, #4f46e5);
 }
 
 .post-success {
@@ -103,25 +99,25 @@
 
 // Cards
 .user-card-primary {
-  .card-rank-flavor(#b388ff, #6200ea, #9575cd);
+  .card-rank-flavor(#c7d2fe, #4f46e5);
 }
 
 .user-card-success {
-  .card-rank-flavor(#00c853, #388e3c, #66bb6a);
+  .card-rank-flavor(#00c853, #388e3c);
 }
 
 .user-card-warning {
-  .card-rank-flavor(#ffab40, #ff6d00, #ff6e40);
+  .card-rank-flavor(#ffab40, #ff6d00);
 }
 
 .user-card-danger {
-  .card-rank-flavor(#ff8a80, #d50000, #e57373);
+  .card-rank-flavor(#ff8a80, #d50000);
 }
 
 // Posters ranking
 .list-group {
   .list-group-rank-primary {
-    .list-group-rank-flavor(#7e57c2, #6200ea);
+    .list-group-rank-flavor(#c7d2fe, #4f46e5);
   }
 
   .list-group-rank-success {
@@ -139,7 +135,7 @@
 
 // User profiles
 .page-header-rank-primary {
-  .user-profile-rank-flavor(#6200ea);
+  .user-profile-rank-flavor(#4f46e5);
 }
 
 .page-header-rank-success {
