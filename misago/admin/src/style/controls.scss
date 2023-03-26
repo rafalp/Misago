@@ -57,7 +57,7 @@
     @extend .text-muted;
 
     position: relative;
-    bottom: $font-size-base / 4;
+    bottom: math.div($font-size-base, 4);
   }
 }
 
