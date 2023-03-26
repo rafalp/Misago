@@ -1,3 +1,8 @@
+// Add border to navbar
+.navbar {
+  border-bottom: $navbar-border;
+}
+
 // Size Misago logo in navbar
 .navbar-brand {
   display: flex;
@@ -5,7 +10,7 @@
 
   img {
     height: 2rem;
-    margin-right: $spacer / 2;
+    margin-right: math.div($spacer, 2);
     border-radius: $border-radius;
   }
 }

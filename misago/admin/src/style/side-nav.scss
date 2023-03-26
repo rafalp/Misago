@@ -18,6 +18,16 @@
 
   .nav-link {
     @extend .media;
+
+    color: $nav-side-link-color;
+  }
+
+  .nav-link:hover {
+    color: $nav-side-link-hover-color;
+  }
+
+  .nav-link:active {
+    color: $nav-side-link-active-color;
   }
 
   .nav-link.active {
