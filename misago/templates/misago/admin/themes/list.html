@@ -35,7 +35,7 @@
     {% for i in item.level_range %}
       &nbsp;&nbsp;&nbsp;&nbsp;
     {% endfor %}
-    <a href="{% url 'misago:admin:themes:edit' pk=item.pk %}" class="item-name small">
+    <a href="{% url 'misago:admin:themes:assets' pk=item.pk %}" class="item-name small">
       {{ item }}
     </a>
     {% if item.version %}
