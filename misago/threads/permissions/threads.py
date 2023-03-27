@@ -495,6 +495,7 @@ def add_acl_to_reply(user_acl, post):
             "can_see_reports": category_acl.get("can_see_reports", False),
             "can_see_likes": category_acl.get("can_see_posts_likes", 0),
             "can_like": False,
+            "can_see_protected": False,
         }
     )
 
@@ -502,6 +503,10 @@ def add_acl_to_reply(user_acl, post):
         post.acl["can_see_hidden"] = post.id == post.thread.first_post_id
     if user_acl["is_authenticated"] and post.acl["can_see_likes"]:
         post.acl["can_like"] = category_acl.get("can_like_posts", False)
+    if user_acl["is_authenticated"]:
+        post.acl["can_see_protected"] = (
+            post.acl["can_protect"] or user_acl["user_id"] == post.poster_id
+        )
 
 
 def register_with(registry):
