@@ -15,6 +15,7 @@ export default function (props) {
         <a
           href={props.attachment.url.index}
           className="attachment-name item-title"
+          target="_blank"
         >
           {props.attachment.filename}
         </a>
@@ -54,6 +55,7 @@ export function AttachmentThumbnail(props) {
     <a
       className="post-thumbnail"
       href={props.attachment.url.index}
+      target="_blank"
       style={{ backgroundImage: 'url("' + escapeHtml(url) + '")' }}
     />
   )
