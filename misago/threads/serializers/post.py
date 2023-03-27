@@ -32,6 +32,7 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
     is_read = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    is_protected = serializers.SerializerMethodField()
     last_likes = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
 
@@ -106,6 +107,15 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             return obj.is_read
         except AttributeError:
             return None
+
+    def get_is_protected(self, obj):
+        try:
+            if obj.acl["can_see_protected"]:
+                return obj.is_protected
+        except AttributeError:
+            pass
+
+        return None
 
     def get_last_likes(self, obj):
         if obj.is_event:
