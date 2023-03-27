@@ -109,6 +109,9 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             return None
 
     def get_is_protected(self, obj):
+        if obj.is_event:
+            return None
+
         try:
             if obj.acl["can_see_protected"]:
                 return obj.is_protected
