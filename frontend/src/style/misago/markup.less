@@ -94,19 +94,23 @@
 
 // Style spoilers
 .misago-markup .spoiler-block {
-  background: @gray-lighter;
-  border: none;
-
-  font-size: @font-size-base;
-}
-
-.misago-markup > .spoiler-block {
-  border: 1px solid darken(@gray-lighter, 8%);
   position: relative;
+
+  background: repeating-linear-gradient(
+    45deg,
+    fadeout(@gray-lighter, 50%),
+    fadeout(@gray-lighter, 50%) 10px,
+    @post-bg 10px,
+    @post-bg 20px
+  );
+  border: 3px solid @gray-lighter;
+  border-radius: @border-radius-base;
+  font-size: @font-size-base;
 }
 
 .misago-markup .spoiler-body {
   background: @body-bg;
+  border-width: 0;
   margin: 0px;
   padding: @line-height-computed;
 }
