@@ -165,15 +165,13 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Reply has been edited."))
-    window.location = success.url.index
-
-    // keep form loading
-    this.setState({
-      isLoading: true,
-    })
+    this.setState({ isLoading: true })
+    this.close()
 
     setGlobalState(false, this.onQuote)
+
+    snackbar.success(gettext("Reply has been edited."))
+    window.location = success.url.index
   }
 
   handleError(rejection) {

@@ -17,10 +17,29 @@ export class Posting {
 
     this._isOpen = false
     this._isClosing = false
+
+    this._beforeunloadSet = false
   }
 
   isOpen() {
     return this._isOpen
+  }
+
+  setBeforeUnload() {
+    if (!this._beforeunloadSet) {
+      window.addEventListener("beforeunload", this.beforeUnload, { capture: true })
+      this._beforeunloadSet = true
+    }
+  }
+
+  unsetBeforeUnload() {
+    window.removeEventListener("beforeunload", this.beforeUnload, { capture: true })
+    this._beforeunloadSet = false
+  }
+
+  beforeUnload(event) {
+    event.returnValue = "true"
+    return "true"
   }
 
   open(props) {
@@ -49,9 +68,12 @@ export class Posting {
 
     this._mount.classList.add("show")
     this._observer.observe(this._mount)
+    this.setBeforeUnload()
   }
 
   close = () => {
+    this.unsetBeforeUnload()
+
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true
       this._mount.classList.remove("show")

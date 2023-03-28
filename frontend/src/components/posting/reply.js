@@ -149,15 +149,13 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    snackbar.success(pgettext("post reply", "Your reply has been posted."))
-    window.location = success.url.index
-
-    // keep form loading
-    this.setState({
-      isLoading: true,
-    })
+    this.setState({ isLoading: true })
+    this.close()
 
     setGlobalState(false, this.onQuote)
+
+    snackbar.success(pgettext("post reply", "Your reply has been posted."))
+    window.location = success.url.index
   }
 
   handleError(rejection) {
