@@ -14,5 +14,5 @@ You may now join discussion on our forums. Why not spend a minute or two to have
 {% blocktrans trimmed %}
 You can always sign in to your account using the form below:
 {% endblocktrans %}
-{% absoluteurl LOGIN_URL %}
+{% absoluteurl LOGIN_URL %}?modal=login
 {% endblock content %}

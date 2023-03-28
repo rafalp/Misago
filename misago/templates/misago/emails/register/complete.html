@@ -15,7 +15,7 @@ You may now join discussion on our forums. Why not spend a minute or two to have
 <br>
 <br>
 {% capture trimmed as login_link %}
-<a href="{% absoluteurl LOGIN_URL %}">{% trans "this form" %}</a>
+<a href="{% absoluteurl LOGIN_URL %}?modal=login">{% trans "this form" %}</a>
 {% endcapture %}
 {% blocktrans trimmed with login_form=login_link|safe %}
 You can always sign in to your account using {{ login_form }}.

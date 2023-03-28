@@ -12,6 +12,14 @@ export class GuestMenu extends React.Component {
     modal.show(SignInModal)
   }
 
+  componentDidMount() {
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.get("modal") === "login") {
+      window.setTimeout(this.showSignInModal, 500)
+    }
+  }
+
   render() {
     const delegateAuth = misago.get("SETTINGS").DELEGATE_AUTH
 
