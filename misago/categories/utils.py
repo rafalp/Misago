@@ -46,13 +46,14 @@ def get_categories_tree(
                 if category.parent.last_post_on and category.last_post_on:
                     parent_last_post = category.parent.last_post_on
                     category_last_post = category.last_post_on
-                    update_last_thead = parent_last_post < category_last_post
+                    update_last_thread = parent_last_post < category_last_post
                 elif not category.parent.last_post_on and category.last_post_on:
-                    update_last_thead = True
+                    update_last_thread = True
                 else:
-                    update_last_thead = False
+                    update_last_thread = False
 
-                if update_last_thead:
+                if update_last_thread:
+                    category.parent.last_poster = category.last_poster
                     category.parent.last_post_on = category.last_post_on
                     category.parent.last_thread_id = category.last_thread_id
                     category.parent.last_thread_title = category.last_thread_title
