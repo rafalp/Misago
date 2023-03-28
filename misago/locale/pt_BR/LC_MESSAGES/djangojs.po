@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 13:08+0000\n"
+"POT-Creation-Date: 2023-03-28 20:37+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Luk3 Masters <luk3@hotmail.com.br>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/misago/teams/65369/pt_BR/)\n"
@@ -26,10 +26,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#: static/misago/admin/index.js:16
-msgid "defineLocaleOverride"
-msgstr "definirSobreposicaoLocal"
 
 #: static/misago/js/misago.js:1
 msgid "I have read and accept %(agreement)s."
@@ -115,19 +111,6 @@ msgid "(success)"
 msgstr "(sucesso)"
 
 #: static/misago/js/misago.js:1
-msgid "Are you sure you want to delete all polls?"
-msgstr "Você tem certeza que deseja excluir todas as votações?"
-
-#: static/misago/js/misago.js:1
-msgctxt "modal"
-msgid "Close"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "Merge threads"
-msgstr "Discussões combinadas"
-
-#: static/misago/js/misago.js:1
 msgid "Best answer"
 msgstr "Melhor resposta"
 
@@ -146,6 +129,19 @@ msgid ""
 msgstr ""
 "Por favor, selecione a votação para sua nova discussão combinada Votações "
 "rejeitadas serão permanentemente excluídas e não poderão ser recuperadas."
+
+#: static/misago/js/misago.js:1
+msgid "Are you sure you want to delete all polls?"
+msgstr "Você tem certeza que deseja excluir todas as votações?"
+
+#: static/misago/js/misago.js:1
+msgctxt "modal"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Merge threads"
+msgstr "Discussões combinadas"
 
 #: static/misago/js/misago.js:1
 msgid "Ok"
@@ -1570,32 +1566,6 @@ msgid "Search users..."
 msgstr "Buscar usuários..."
 
 #: static/misago/js/misago.js:1
-msgid "Follows"
-msgstr "Seguindo"
-
-#: static/misago/js/misago.js:1
-msgid "You are following %(users)s user."
-msgid_plural "You are following %(users)s users."
-msgstr[0] "Você está seguindo %(users)s usuários."
-msgstr[1] "Você está seguindo %(users)s usuários."
-msgstr[2] "Você está seguindo %(users)s usuários."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s is following %(users)s user."
-msgid_plural "%(username)s is following %(users)s users."
-msgstr[0] "O usuário %(username)s está seguindo %(users)s usuários."
-msgstr[1] "O usuário %(username)s está seguindo %(users)s usuários."
-msgstr[2] "O usuário %(username)s está seguindo %(users)s usuários."
-
-#: static/misago/js/misago.js:1
-msgid "You are not following any users."
-msgstr "Você não está seguindo nenhum usuário."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s is not following any users."
-msgstr "O usuário %(username)s não está seguindo nenhum usuário."
-
-#: static/misago/js/misago.js:1
 msgid "Username history"
 msgstr "Histórico do nome de usuário"
 
@@ -1818,6 +1788,32 @@ msgstr[2] "O usuário %(username)s  já iniciou %(threads)s discussões."
 #: static/misago/js/misago.js:1
 msgid "Threads"
 msgstr "Discussões"
+
+#: static/misago/js/misago.js:1
+msgid "Follows"
+msgstr "Seguindo"
+
+#: static/misago/js/misago.js:1
+msgid "You are following %(users)s user."
+msgid_plural "You are following %(users)s users."
+msgstr[0] "Você está seguindo %(users)s usuários."
+msgstr[1] "Você está seguindo %(users)s usuários."
+msgstr[2] "Você está seguindo %(users)s usuários."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s is following %(users)s user."
+msgid_plural "%(username)s is following %(users)s users."
+msgstr[0] "O usuário %(username)s está seguindo %(users)s usuários."
+msgstr[1] "O usuário %(username)s está seguindo %(users)s usuários."
+msgstr[2] "O usuário %(username)s está seguindo %(users)s usuários."
+
+#: static/misago/js/misago.js:1
+msgid "You are not following any users."
+msgstr "Você não está seguindo nenhum usuário."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s is not following any users."
+msgstr "O usuário %(username)s não está seguindo nenhum usuário."
 
 #: static/misago/js/misago.js:1
 msgid "Enter a valid email address."
@@ -2432,16 +2428,6 @@ msgid "This post is protected. Only moderators may change it."
 msgstr "Esta publicação está protegida. Apenas moderadores podem alterá-la."
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to delete this post? This action is not reversible!"
-msgstr ""
-"Você tem certeza que deseja excluir a postagem? Esta ação não é reversível!"
-
-#: static/misago/js/misago.js:1
-msgid "Post has been deleted."
-msgstr "Publicação excluída."
-
-#: static/misago/js/misago.js:1
 msgid "No users have liked this post."
 msgstr "Nenhum usuário curtiu esta publicação."
 
@@ -2635,6 +2621,16 @@ msgid "Remove protection"
 msgstr "Remover proteção"
 
 #: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to delete this post? This action is not reversible!"
+msgstr ""
+"Você tem certeza que deseja excluir a postagem? Esta ação não é reversível!"
+
+#: static/misago/js/misago.js:1
+msgid "Post has been deleted."
+msgstr "Publicação excluída."
+
+#: static/misago/js/misago.js:1
 msgid "New post"
 msgstr "Nova publicação"
 
@@ -2816,21 +2812,6 @@ msgid "%(username)s on %(posted_on)s"
 msgstr "%(username)s às %(posted_on)s"
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
-msgstr ""
-"Você tem certeza que deseja combinar as publicações selecionadas? Esta ação "
-"não é reversível!"
-
-#: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to delete selected posts? This action is not "
-"reversible!"
-msgstr ""
-"Você deseja excluir as publicações selecionadas? Esta ação não é reversível!"
-
-#: static/misago/js/misago.js:1
 msgid "Selected posts were moved to the other thread."
 msgstr "As publicações selecionadas foram movidas para outra discussão."
 
@@ -2859,8 +2840,23 @@ msgid "Split posts into new thread"
 msgstr "Dividir publicações em uma nova discussão"
 
 #: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Você tem certeza que deseja combinar as publicações selecionadas? Esta ação "
+"não é reversível!"
+
+#: static/misago/js/misago.js:1
 msgid "Unprotect"
 msgstr "Desproteger"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to delete selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Você deseja excluir as publicações selecionadas? Esta ação não é reversível!"
 
 #: static/misago/js/misago.js:1
 msgid "Posts options"
@@ -3094,18 +3090,6 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Private threads are threads which only those that started them and those "
-"they have invited may see and participate in."
-msgstr ""
-"Discusssões privadas são discussões que apenas aquele que a iniciou e "
-"aqueles que foram convidados podem ver e participar."
-
-#: static/misago/js/misago.js:1
-msgid "You aren't participating in any private threads."
-msgstr "Você não está participando de nenhuma discussão privada."
-
-#: static/misago/js/misago.js:1
 msgid "All"
 msgstr "Todos"
 
@@ -3148,6 +3132,18 @@ msgstr "Desaprovado"
 #: static/misago/js/misago.js:1
 msgid "Unapproved content"
 msgstr "Conteúdo desaprovado"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Private threads are threads which only those that started them and those "
+"they have invited may see and participate in."
+msgstr ""
+"Discusssões privadas são discussões que apenas aquele que a iniciou e "
+"aqueles que foram convidados podem ver e participar."
+
+#: static/misago/js/misago.js:1
+msgid "You aren't participating in any private threads."
+msgstr "Você não está participando de nenhuma discussão privada."
 
 #: static/misago/js/misago.js:1
 msgid "Search returned no results."

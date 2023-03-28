@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-24 19:43+0000\n"
+"POT-Creation-Date: 2023-03-28 20:37+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Forró Balázs, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/misago/teams/65369/hu/)\n"
@@ -20,10 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: static/misago/admin/index.js:16
-msgid "defineLocaleOverride"
-msgstr "definiálja a területi beállítások felülbírálását"
 
 #: static/misago/js/misago.js:1
 msgid "I have read and accept %(agreement)s."
@@ -108,19 +104,6 @@ msgid "(success)"
 msgstr "(sikeres)"
 
 #: static/misago/js/misago.js:1
-msgid "Are you sure you want to delete all polls?"
-msgstr "Biztos benne, hogy törölni szeretné az összes szavazást?"
-
-#: static/misago/js/misago.js:1
-msgctxt "modal"
-msgid "Close"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "Merge threads"
-msgstr "Egyesítse a témákat"
-
-#: static/misago/js/misago.js:1
 msgid "Best answer"
 msgstr "Legjobb válasz"
 
@@ -139,6 +122,19 @@ msgid ""
 msgstr ""
 "Kérjük, válassza ki az újonnan egyesített téma szavazását. Az elutasított "
 "szavazások véglegesen törlődnek, és nem állíthatók vissza."
+
+#: static/misago/js/misago.js:1
+msgid "Are you sure you want to delete all polls?"
+msgstr "Biztos benne, hogy törölni szeretné az összes szavazást?"
+
+#: static/misago/js/misago.js:1
+msgctxt "modal"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Merge threads"
+msgstr "Egyesítse a témákat"
 
 #: static/misago/js/misago.js:1
 msgid "Ok"
@@ -1533,30 +1529,6 @@ msgid "Search users..."
 msgstr "Felhasználók keresése..."
 
 #: static/misago/js/misago.js:1
-msgid "Follows"
-msgstr "Követések"
-
-#: static/misago/js/misago.js:1
-msgid "You are following %(users)s user."
-msgid_plural "You are following %(users)s users."
-msgstr[0] "Te követsz %(users)s felhasználót."
-msgstr[1] "Te követsz %(users)s felhasználót."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s is following %(users)s user."
-msgid_plural "%(username)s is following %(users)s users."
-msgstr[0] "%(username)s követ %(users)s felhasználót."
-msgstr[1] "%(username)s követ %(users)s felhasználót."
-
-#: static/misago/js/misago.js:1
-msgid "You are not following any users."
-msgstr "Egyetlen felhasználót sem követ."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s is not following any users."
-msgstr "%(username)s nem követ egyetlen felhasználót sem."
-
-#: static/misago/js/misago.js:1
 msgid "Username history"
 msgstr "Felhasználónév előzmények"
 
@@ -1766,6 +1738,30 @@ msgstr[1] "%(username)s indított %(threads)s témát."
 #: static/misago/js/misago.js:1
 msgid "Threads"
 msgstr "Témák"
+
+#: static/misago/js/misago.js:1
+msgid "Follows"
+msgstr "Követések"
+
+#: static/misago/js/misago.js:1
+msgid "You are following %(users)s user."
+msgid_plural "You are following %(users)s users."
+msgstr[0] "Te követsz %(users)s felhasználót."
+msgstr[1] "Te követsz %(users)s felhasználót."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s is following %(users)s user."
+msgid_plural "%(username)s is following %(users)s users."
+msgstr[0] "%(username)s követ %(users)s felhasználót."
+msgstr[1] "%(username)s követ %(users)s felhasználót."
+
+#: static/misago/js/misago.js:1
+msgid "You are not following any users."
+msgstr "Egyetlen felhasználót sem követ."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s is not following any users."
+msgstr "%(username)s nem követ egyetlen felhasználót sem."
 
 #: static/misago/js/misago.js:1
 msgid "Enter a valid email address."
@@ -2373,15 +2369,6 @@ msgid "This post is protected. Only moderators may change it."
 msgstr "Ez a bejegyzés védett. Csak a moderátorok módosíthatják."
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to delete this post? This action is not reversible!"
-msgstr "Biztosan törlöd ezt a bejegyzést? Ez a művelet nem visszafordítható!"
-
-#: static/misago/js/misago.js:1
-msgid "Post has been deleted."
-msgstr "A bejegyzés törölve lett."
-
-#: static/misago/js/misago.js:1
 msgid "No users have liked this post."
 msgstr "Egyetlen felhasználó sem kedvelte ezt a bejegyzést."
 
@@ -2572,6 +2559,15 @@ msgid "Remove protection"
 msgstr "Távolítsa el a védelmet"
 
 #: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to delete this post? This action is not reversible!"
+msgstr "Biztosan törlöd ezt a bejegyzést? Ez a művelet nem visszafordítható!"
+
+#: static/misago/js/misago.js:1
+msgid "Post has been deleted."
+msgstr "A bejegyzés törölve lett."
+
+#: static/misago/js/misago.js:1
 msgid "New post"
 msgstr "Új bejegyzés"
 
@@ -2750,22 +2746,6 @@ msgid "%(username)s on %(posted_on)s"
 msgstr "%(username)s %(posted_on)s dátumon"
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
-msgstr ""
-"Biztosan egyesíteni szeretné a kiválasztott bejegyzéseket? Ez a művelet nem "
-"visszafordítható!"
-
-#: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to delete selected posts? This action is not "
-"reversible!"
-msgstr ""
-"Biztosan törölni szeretnéd a kiválasztott bejegyzéseket? Ez a művelet nem "
-"visszafordítható!"
-
-#: static/misago/js/misago.js:1
 msgid "Selected posts were moved to the other thread."
 msgstr "A kiválasztott bejegyzések átkerültek a másik témába."
 
@@ -2795,8 +2775,24 @@ msgid "Split posts into new thread"
 msgstr "Bejegyzés felosztása új témára"
 
 #: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Biztosan egyesíteni szeretné a kiválasztott bejegyzéseket? Ez a művelet nem "
+"visszafordítható!"
+
+#: static/misago/js/misago.js:1
 msgid "Unprotect"
 msgstr "Védelem megszüntetése"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to delete selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Biztosan törölni szeretnéd a kiválasztott bejegyzéseket? Ez a művelet nem "
+"visszafordítható!"
 
 #: static/misago/js/misago.js:1
 msgid "Posts options"
@@ -3026,18 +3022,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Private threads are threads which only those that started them and those "
-"they have invited may see and participate in."
-msgstr ""
-"A privát témák olyan témák, amelyeket csak azok láthatnak és vehetnek részt,"
-" akik elindították őket, és akiket meghívtak."
-
-#: static/misago/js/misago.js:1
-msgid "You aren't participating in any private threads."
-msgstr "Ön nem vesz részt egyetlen privát témában sem."
-
-#: static/misago/js/misago.js:1
 msgid "All"
 msgstr "Minden"
 
@@ -3080,6 +3064,18 @@ msgstr "Nem jóváhagyott"
 #: static/misago/js/misago.js:1
 msgid "Unapproved content"
 msgstr "Jóvá nem hagyott tartalom"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Private threads are threads which only those that started them and those "
+"they have invited may see and participate in."
+msgstr ""
+"A privát témák olyan témák, amelyeket csak azok láthatnak és vehetnek részt,"
+" akik elindították őket, és akiket meghívtak."
+
+#: static/misago/js/misago.js:1
+msgid "You aren't participating in any private threads."
+msgstr "Ön nem vesz részt egyetlen privát témában sem."
 
 #: static/misago/js/misago.js:1
 msgid "Search returned no results."
