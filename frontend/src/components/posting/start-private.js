@@ -108,13 +108,11 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
+    this.setState({ isLoading: true })
+    this.close()
+
     snackbar.success(pgettext("post thread", "Your thread has been posted."))
     window.location = success.url
-
-    // keep form loading
-    this.setState({
-      isLoading: true,
-    })
   }
 
   handleError(rejection) {
