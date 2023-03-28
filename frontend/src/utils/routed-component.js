@@ -1,33 +1,36 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
-import { Router, browserHistory } from "react-router"
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import store from "misago/services/store"
 
 const rootElement = document.getElementById("page-mount")
 
-export default function (options) {
-  let routes = {
-    component: options.component || null,
-    childRoutes: [],
-  }
-
-  if (options.root) {
-    routes.childRoutes = [
+export default function mountRoutedComponent(options) {
+  let routes = []
+  if (options.basepath) {
+    routes.push(
       {
-        path: options.root,
-        onEnter: function (nextState, replaceState) {
-          replaceState(null, options.paths[0].path)
-        },
-      },
-    ].concat(options.paths)
-  } else {
-    routes.childRoutes = options.paths
+        path: options.basepath,
+        element: <Navigate to={options.paths[0].path} />
+      }
+    )
   }
+  
+  options.paths.map(( route ) => routes.push(route))
+  
+  const { Component } = options
+  const router = createBrowserRouter(routes)
 
   ReactDOM.render(
     <Provider store={store.getStore()}>
-      <Router routes={routes} history={browserHistory} />
+      {Component ? (
+        <Component>
+          <RouterProvider router={router}  />
+        </Component>
+      ) : (
+        <RouterProvider router={router}  />
+      )}
     </Provider>,
     rootElement
   )

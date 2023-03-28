@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 
 const ThreadPagination = ({ baseUrl, posts }) => (
   <div className="misago-pagination">

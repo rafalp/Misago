@@ -14,8 +14,9 @@ const modules = path.resolve(__dirname, "node_modules");
 
 const getEntries = () => {
   const entry = ["./src/index.js"];
-  glob.sync("./src/initializers/**/*.js").forEach((path) => entry.push(path));
-  return entry;
+  return entry.concat(
+    glob.sync("./src/initializers/**/*.js", { dotRelative: true })
+  );
 };
 
 module.exports = (env, argv) => {
@@ -69,7 +70,6 @@ module.exports = (env, argv) => {
         {
           test: /\.less$/i,
           use: [
-            "style-loader",
             "css-loader",
             "less-loader",
           ],

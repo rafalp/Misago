@@ -5,7 +5,7 @@ import mount from "misago/utils/routed-component"
 export default function initializer(context) {
   if (context.has("USER_OPTIONS")) {
     mount({
-      root: misago.get("USERCP_URL"),
+      basepath: misago.get("USERCP_URL"),
       component: Options,
       paths: paths(),
     })

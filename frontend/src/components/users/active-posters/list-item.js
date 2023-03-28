@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 import Avatar from "misago/components/avatar"
 import Status, { StatusIcon, StatusLabel } from "misago/components/user-status"
 import misago from "misago/index"

@@ -68,13 +68,15 @@ export function paths(user, mode) {
   let routes = []
   let categoriesMap = {}
 
+  const RouteConnected = connect(getSelect(mode))(Route)
+
   misago.get("CATEGORIES").forEach(function (category) {
     lists.forEach(function (list) {
       categoriesMap[category.id] = category
 
       routes.push({
         path: category.url.index + list.path,
-        component: connect(getSelect(mode))(Route),
+        element: <RouteConnected />,
 
         categories: misago.get("CATEGORIES"),
         categoriesMap,

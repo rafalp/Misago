@@ -5,7 +5,7 @@ import mount from "misago/utils/routed-component"
 export default function initializer(context) {
   if (context.has("USERS_LISTS")) {
     mount({
-      root: misago.get("USERS_LIST_URL"),
+      basepath: misago.get("USERS_LIST_URL"),
       component: Users,
       paths: paths(),
     })
