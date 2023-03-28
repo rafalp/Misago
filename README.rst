@@ -10,10 +10,6 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://img.shields.io/badge/release-0.28.2-brightgreen.svg
-   :target: https://pypi.org/project/Misago/
-   :alt: Release 0.28.2
-
 .. image:: https://img.shields.io/badge/python-3.11-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Works on Python 3.11
