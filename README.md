@@ -2,20 +2,14 @@
 Misago
 ======
 
-.. image:: https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master
-   :target: https://coveralls.io/github/rafalp/Misago?branch=master
-   :alt: Test Coverage
+[![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master)
 
-.. image:: https://img.shields.io/badge/python-3.11-blue.svg
-   :target: https://travis-ci.org/rafalp/Misago
-   :alt: Works on Python 3.11
+![Works on Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
 
-.. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
-   :target: https://discord.gg/fwvrZgB
-   :alt: Community Chat
+[![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB)
 
 
-**Development Status:** 🍌 `Bananas <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
+**Development Status:** 🍌 [Bananas](https://en.wikipedia.org/wiki/Perpetual_beta>) 🍌
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
@@ -27,13 +21,9 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Screenshots
 ===========
 
-.. image:: https://user-images.githubusercontent.com/750553/212570745-fff596f8-ff7d-45f2-a7c2-505e56d80a04.png
-   :target: https://misago-project.org
-   :alt: Forum index
+[![Forum index](https://user-images.githubusercontent.com/750553/212570745-fff596f8-ff7d-45f2-a7c2-505e56d80a04.png)](https://misago-project.org)
 
-.. image:: https://user-images.githubusercontent.com/750553/212570742-52fa8c2c-a86e-4dd4-84b2-933ed7db41d3.png
-   :target: https://misago-project.org
-   :alt: Thread view
+[![Thread view](https://user-images.githubusercontent.com/750553/212570742-52fa8c2c-a86e-4dd4-84b2-933ed7db41d3.png)](https://misago-project.org)
 
 
 Production use
@@ -43,7 +33,7 @@ As of now Misago implements all features considered "must have" on live internet
 
 * Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
 * Sign in with Facebook, Google, Github, Steam, Blizzard.net or any other over 50 supported OAuth providers.
-* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Pletora of settings are available to control user account behaviour, like username lengths or avatar restrictions.
+* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Pletora of settings are available to control user account behavior, like username lengths or avatar restrictions.
 * Create categories together with unlimited number and depth of subcategories.
 * Write messages using either GitHub flavoured markdown, BBCode subset, or both.
 * Presence features let site members know when other users are online, offline or banned. Individual users have setting to hide their activity from non-admins.
@@ -74,15 +64,15 @@ Even more features will follow in future releases:
 Development
 ===========
 
-Preferred way to run Misago development instances on your machine is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies besides each other.
+Preferred way to run Misago development instances on your machine is with [Docker](https://www.docker.com/community-edition#/download), which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies besides each other.
 
-To start, clone the repository and run ``./dev init`` command in your terminal. This will build necessary docker containers, install python dependencies and initialize the database. After command does its magic, you will be able to start development server using the ``docker-compose up`` command.
+To start, clone the repository and run `./dev init` command in your terminal. This will build necessary docker containers, install python dependencies and initialize the database. After command does its magic, you will be able to start development server using the `docker compose up` command.
 
-After development server starts, visit the ``http://127.0.0.1:8000/`` in your browser to see your Misago installation.
+After development server starts, visit the `http://127.0.0.1:8000/` in your browser to see your Misago installation.
 
-Admin Control Panel is available under the ``http://127.0.0.1:8000/admincp/`` address. To log in to it use ``Admin`` username and ``password`` password.
+Admin Control Panel is available under the `http://127.0.0.1:8000/admincp/` address. To log in to it use `Admin` username and `password` password.
 
-The ``./dev`` utility implements other features besides the ``init``. Run it without any arguments to get the list of available actions.
+The `./dev` utility implements other features besides the `init`. Run it without any arguments to get the list of available actions.
 
 
 Running Misago in development without `dev`
@@ -90,10 +80,10 @@ Running Misago in development without `dev`
 
 You may skip `./dev init` and setup dev instance manually, running those commands:
 
-1. `docker-compose build` - builds docker containers
-2. `docker-compose run --rm misago python manage.py migrate` - runs migrations
-3. `docker-compose run --rm misago python manage.py createsuperuser` - creates test user
-4. `docker-compose up` - starts dev server
+1. `docker compose build` - builds docker containers
+2. `docker compose run --rm misago python manage.py migrate` - runs migrations
+3. `docker compose run --rm misago python manage.py createsuperuser` - creates admin user
+4. `docker compose up` - starts dev server
 
 
 Frontend
@@ -108,17 +98,17 @@ Currently Misago defines following taks:
 * **npm run prettier** formats code with prettier.
 * **npm run eslint** lints code with eslint.
 
-To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in ``frontend`` directory, however special care should be taken when changing source javascripts.
+To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in `frontend` directory, however special care should be taken when changing source javascripts.
 
-Misago defines template that allows you to include custom html and js code before Misago's JavaScript app is ran, named **scripts.html**.
+Misago defines template that allows you to include custom html and js code before Misago's JavaScript app is ran, named `scripts.html`.
 
 
 Bug reports, features and feedback
 ==================================
 
-If you have found bug, please report it on `issue tracker <https://github.com/rafalp/Misago/issues>`_.
+If you have found bug, please report it on [issue tracker](https://github.com/rafalp/Misago/issues).
 
-For feature or support requests as well as general feedback please use `official forum <http://misago-project.org>`_ instead. Your feedback means much to the project so please do share your thoughts!
+For feature or support requests as well as general feedback please use [official forum](http://misago-project.org) instead. Your feedback means much to the project so please do share your thoughts!
 
 There's also Gitter for those looking for instant-messaging approach for discussing Misago development.
 
@@ -134,20 +124,20 @@ Many issues are open for takers. If you've found one you feel you could take car
 Authors
 =======
 
-**Rafał Pitoń**
+**Rafał Pitoń** and ❤️ [contributors](https://github.com/rafalp/misago/graphs/contributors).
 
 * http://rpiton.com
 * http://github.com/rafalp
 * https://twitter.com/RafalPiton
 
 
-English sentences used within ``misago.faker.phrases`` were extracted from `National Aeronautics and Space Administration Solar System Exploration Portal <http://solarsystem.nasa.gov/planets/>`_ and are not copyrighted as per `Media and content usage guidelines <https://www.nasa.gov/multimedia/guidelines/index.html>`_.
+English sentences used within `misago.faker.phrases` were extracted from [National Aeronautics and Space Administration Solar System Exploration Portal](http://solarsystem.nasa.gov/planets/) and are not copyrighted as per [Media and content usage guidelines](https://www.nasa.gov/multimedia/guidelines/index.html).
 
 
 Copyright and license
 =====================
 
-**Misago** - Copyright © 2018 `Rafał Pitoń <http://github.com/rafalp>`_
+**Misago** - Copyright © 2023 [Rafał Pitoń](http://github.com/rafalp)
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.
