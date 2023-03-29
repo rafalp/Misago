@@ -75,10 +75,10 @@ The `./dev` utility implements other features besides the `init`. Run it without
 
 You may skip `./dev init` and setup dev instance manually, running those commands:
 
-1. `docker compose build` - builds docker containers
-2. `docker compose run --rm misago python manage.py migrate` - runs migrations
-3. `docker compose run --rm misago python manage.py createsuperuser` - creates admin user
-4. `docker compose up` - starts dev server
+1. `docker compose build`: builds docker containers
+2. `docker compose run --rm misago python manage.py migrate`: runs migrations
+3. `docker compose run --rm misago python manage.py createsuperuser`: creates admin user
+4. `docker compose up`: starts dev server
 
 
 ### Frontend
@@ -87,10 +87,10 @@ With exception of Admin Panel, Misago frontend relies heavily on React.js compon
 
 Currently Misago defines following taks:
 
-* **npm run build** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory.
-* **npm run start** does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes.
-* **npm run prettier** formats code with prettier.
-* **npm run eslint** lints code with eslint.
+* `npm run build`: does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory.
+* `npm run start`: does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes.
+* `npm run prettier`: formats code with prettier.
+* `npm run eslint`: lints code with eslint.
 
 To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in `frontend` directory, however special care should be taken when changing source javascripts.
 
