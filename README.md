@@ -1,12 +1,7 @@
-======
 Misago
 ======
 
-[![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master)
-
-![Works on Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
-
-[![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB)
+[![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master) ![Works on Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg) [![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB)
 
 
 **Development Status:** 🍌 [Bananas](https://en.wikipedia.org/wiki/Perpetual_beta>) 🍌
@@ -19,7 +14,7 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 
 
 Screenshots
-===========
+-----------
 
 [![Forum index](https://user-images.githubusercontent.com/750553/212570745-fff596f8-ff7d-45f2-a7c2-505e56d80a04.png)](https://misago-project.org)
 
@@ -27,9 +22,9 @@ Screenshots
 
 
 Production use
-==============
+--------------
 
-As of now Misago implements all features considered "must have" on live internet forum:
+Misago implements all features considered "must have" on live internet forum:
 
 * Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
 * Sign in with Facebook, Google, Github, Steam, Blizzard.net or any other over 50 supported OAuth providers.
@@ -62,7 +57,7 @@ Even more features will follow in future releases:
 
 
 Development
-===========
+-----------
 
 Preferred way to run Misago development instances on your machine is with [Docker](https://www.docker.com/community-edition#/download), which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies besides each other.
 
@@ -75,8 +70,8 @@ Admin Control Panel is available under the `http://127.0.0.1:8000/admincp/` addr
 The `./dev` utility implements other features besides the `init`. Run it without any arguments to get the list of available actions.
 
 
-Running Misago in development without `dev`
--------------------------------------------
+### Running Misago in development without `dev`
+
 
 You may skip `./dev init` and setup dev instance manually, running those commands:
 
@@ -86,8 +81,7 @@ You may skip `./dev init` and setup dev instance manually, running those command
 4. `docker compose up` - starts dev server
 
 
-Frontend
---------
+### Frontend
 
 With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application uses webpack for building.
 
@@ -104,7 +98,7 @@ Misago defines template that allows you to include custom html and js code befor
 
 
 Bug reports, features and feedback
-==================================
+----------------------------------
 
 If you have found bug, please report it on [issue tracker](https://github.com/rafalp/Misago/issues).
 
@@ -114,7 +108,7 @@ There's also Gitter for those looking for instant-messaging approach for discuss
 
 
 Contributing
-============
+------------
 
 If you have corrected spelling, wrote new tests or fixed a bug, feel free to open pull request.
 
@@ -122,7 +116,7 @@ Many issues are open for takers. If you've found one you feel you could take car
 
 
 Authors
-=======
+-------
 
 **Rafał Pitoń** and ❤️ [contributors](https://github.com/rafalp/misago/graphs/contributors).
 
@@ -135,7 +129,7 @@ English sentences used within `misago.faker.phrases` were extracted from [Nation
 
 
 Copyright and license
-=====================
+---------------------
 
 **Misago** - Copyright © 2023 [Rafał Pitoń](http://github.com/rafalp)
 This program comes with ABSOLUTELY NO WARRANTY.
