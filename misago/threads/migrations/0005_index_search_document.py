@@ -5,7 +5,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_threads", "0004_update_settings")]
 
     operations = [

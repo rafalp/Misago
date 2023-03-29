@@ -8,7 +8,6 @@ import misago.threads.models.attachment
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [

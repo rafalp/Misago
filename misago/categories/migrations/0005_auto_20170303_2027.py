@@ -3,7 +3,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_categories", "0004_category_last_thread")]
 
     operations = [

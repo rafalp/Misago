@@ -4,6 +4,7 @@ from . import get_protected_namespace, protected_admin_view, render
 from ...core.utils import get_exception_message
 from ..auth import is_admin_authorized, update_admin_authorization
 
+
 # Magic error page used by admin
 @protected_admin_view
 def _error_page(request, code, exception=None, default_message=None):

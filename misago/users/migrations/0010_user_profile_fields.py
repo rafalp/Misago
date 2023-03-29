@@ -5,7 +5,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0009_redo_partial_indexes")]
 
     operations = [

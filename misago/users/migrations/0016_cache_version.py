@@ -5,7 +5,6 @@ from ...cache.operations import StartCacheVersioning
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_users", "0015_user_agreements"),
         ("misago_cache", "0001_initial"),

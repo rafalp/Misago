@@ -34,7 +34,6 @@ def create_settings(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_oauth2", "0001_initial"),
         ("misago_users", "0022_deleteduser"),

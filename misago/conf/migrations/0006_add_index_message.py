@@ -9,7 +9,6 @@ def create_index_message_setting(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0005_add_sso_settings"),
     ]

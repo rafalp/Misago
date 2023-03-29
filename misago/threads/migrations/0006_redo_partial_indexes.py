@@ -3,7 +3,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_threads", "0005_index_search_document")]
 
     operations = []

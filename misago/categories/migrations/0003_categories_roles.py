@@ -133,7 +133,6 @@ def create_default_categories_roles(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_categories", "0002_default_categories"),
         ("misago_acl", "0003_default_roles"),

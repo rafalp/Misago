@@ -5,7 +5,6 @@ import misago.users.models.user
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0004_default_ranks")]
 
     operations = [

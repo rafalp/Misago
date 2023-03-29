@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_categories", "0006_moderation_queue_roles"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

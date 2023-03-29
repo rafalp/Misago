@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_categories", "0007_best_answers_roles")]
 
     operations = [

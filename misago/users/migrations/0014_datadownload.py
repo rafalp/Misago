@@ -8,7 +8,6 @@ import misago.users.models.datadownload
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0013_auto_20180609_1523")]
 
     operations = [

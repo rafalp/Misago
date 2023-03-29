@@ -19,7 +19,6 @@ def create_default_theme(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_themes", "0001_initial")]
 
     operations = [

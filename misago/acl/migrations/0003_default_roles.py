@@ -202,7 +202,6 @@ def create_default_roles(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_acl", "0002_acl_version_tracker")]
 
     operations = [migrations.RunPython(create_default_roles)]

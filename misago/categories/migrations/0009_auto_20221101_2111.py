@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_categories", "0008_auto_20190518_1659"),
     ]

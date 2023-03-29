@@ -3,7 +3,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0008_ban_registration_only")]
 
     operations = []

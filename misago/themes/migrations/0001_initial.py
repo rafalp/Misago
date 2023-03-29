@@ -6,7 +6,6 @@ import mptt.fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = []

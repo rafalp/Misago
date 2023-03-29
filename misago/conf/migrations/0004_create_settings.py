@@ -130,7 +130,6 @@ def create_settings(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0003_simplify_models"),
         ("misago_core", "0003_delete_cacheversion"),

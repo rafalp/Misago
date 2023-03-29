@@ -7,7 +7,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0017_move_bans_to_cache_version")]
 
     operations = [

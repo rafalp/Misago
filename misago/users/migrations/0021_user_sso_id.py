@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0020_set_dj_partial_indexes")]
 
     operations = [

@@ -98,7 +98,6 @@ def create_attachment_types(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_threads", "0002_threads_settings")]
 
     operations = [migrations.RunPython(create_attachment_types)]

@@ -36,7 +36,6 @@ def create_default_ranks(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_users", "0003_bans_version_tracker"),
         ("misago_acl", "0003_default_roles"),

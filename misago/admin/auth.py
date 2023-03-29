@@ -10,6 +10,7 @@ from ..conf import settings
 TOKEN_KEY = "misago_admin_session_token"
 UPDATED_KEY = "misago_admin_session_updated"
 
+
 # Admin session state controls
 def is_admin_authorized(request):
     if request.user.is_anonymous:

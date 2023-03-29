@@ -6,6 +6,7 @@ from ...acl.models import Role
 from ...admin.forms import YesNoSwitch
 from ..models import Attachment
 
+
 # Admin Permissions Forms
 class PermissionsForm(forms.Form):
     legend = _("Attachments")

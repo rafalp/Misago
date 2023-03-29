@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_themes", "0002_create_default_theme_and_cache_version")]
 
     operations = [

@@ -3,7 +3,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0007_auto_20170219_1639")]
 
     operations = [

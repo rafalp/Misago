@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_threads", "0011_remove_custom_partial_indexes")]
 
     operations = [

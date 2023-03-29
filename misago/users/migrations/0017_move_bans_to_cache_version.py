@@ -10,7 +10,6 @@ def populate_cache_version(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0016_cache_version")]
 
     operations = [

@@ -3,7 +3,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_threads", "0001_initial"),
         ("misago_categories", "0003_categories_roles"),

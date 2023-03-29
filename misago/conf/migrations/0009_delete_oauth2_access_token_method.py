@@ -7,7 +7,6 @@ def delete_oauth2_token_method_setting(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0008_delete_sso_settings"),
     ]

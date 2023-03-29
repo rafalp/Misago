@@ -28,7 +28,6 @@ def create_settings(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_conf", "0004_create_settings")]
 
     operations = [migrations.RunPython(create_settings)]

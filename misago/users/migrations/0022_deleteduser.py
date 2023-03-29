@@ -5,7 +5,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_users", "0021_user_sso_id")]
 
     operations = [

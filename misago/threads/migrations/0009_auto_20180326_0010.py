@@ -3,7 +3,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_threads", "0008_auto_20180310_2234")]
 
     operations = []

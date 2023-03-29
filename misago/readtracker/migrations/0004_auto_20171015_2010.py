@@ -3,7 +3,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_readtracker", "0003_migrate_reads_to_posts")]
 
     operations = [

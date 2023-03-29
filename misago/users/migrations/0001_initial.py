@@ -7,7 +7,6 @@ import misago.users.avatars.store
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [("auth", "0001_initial"), ("misago_acl", "0001_initial")]

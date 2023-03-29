@@ -19,7 +19,6 @@ def create_default_categories_roles(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_categories", "0005_auto_20170303_2027")]
 
     operations = [migrations.RunPython(create_default_categories_roles)]

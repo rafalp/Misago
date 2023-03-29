@@ -11,7 +11,6 @@ def rename_google_provider(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_socialauth", "0002_cache_version")]
 
     operations = [migrations.RunPython(rename_google_provider)]

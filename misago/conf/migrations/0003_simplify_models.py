@@ -12,7 +12,6 @@ def set_default_dry_value(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("misago_conf", "0002_cache_version")]
 
     operations = [
