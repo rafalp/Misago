@@ -30,7 +30,7 @@ setup(
     ),
     long_description=README,
     url="http://www.misago-project.org/",
-    author=u"Rafał Pitoń",
+    author="Rafał Pitoń",
     author_email="kontakt@rpiton.com",
     install_requires=REQUIREMENTS,
     packages=find_packages(),
