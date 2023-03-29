@@ -2,10 +2,6 @@
 Misago
 ======
 
-.. image:: https://travis-ci.org/rafalp/Misago.svg?branch=master
-   :target: https://travis-ci.org/rafalp/Misago
-   :alt: Tests Result
-
 .. image:: https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
@@ -57,7 +53,7 @@ As of now Misago implements all features considered "must have" on live internet
 * Post accurate read tracker that lets your users spot threads with new posts as well as let moderators spot unapproved replies and non-moderators spot approved posts.
 * Private threads feature allowing users to create threads visible only to them and those they've invited. 
 * Python-based profile fields framework letting site owners to define custom fields for users to fill in complete with powerful customization options for custom requirements, display or validation logic.
-* Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
+* Rich polls system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
 * Post attachments complete thumbnailing and gif's animation removal.
 * Mark post in question thread as best answer, bringing basic Q&A functionality.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
