@@ -43,9 +43,9 @@ wait_for_db() {
     done
 }
 
-# Check if user has docker-compose
+# Check if user has docker compose
 if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
-    if ! command -v docker >/dev/null 2>&1; then
+    if ! docker version >/dev/null 2>&1; then
         error "You need to have Docker installed to use this tool."
         echo
         echo "Docker release for your system can be downloaded for free from this page:"
@@ -53,7 +53,7 @@ if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
         echo
         exit 1
     fi
-    if ! command -v docker-compose >/dev/null 2>&1; then
+    if ! docker compose version >/dev/null 2>&1; then
         error "You need to have Docker Compose installed to use this tool."
         echo
         echo "Docker release for your system can be downloaded for free from this page:"
@@ -76,7 +76,7 @@ intro() {
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
     echo "    ${BOLD}reset${NORMAL}             run clear followed by init."
     echo
-    echo "    Both init and rebuild args can be followed with any number of extra args and options that should be appended to docker-compose build."
+    echo "    Both init and rebuild args can be followed with any number of extra args and options that should be appended to docker compose build."
     echo
     echo "Testing:"
     echo
@@ -95,7 +95,7 @@ intro() {
     echo
     echo "    ${BOLD}manage.py${NORMAL}         runs \"python manage.py\" inside docker."
     echo "    ${BOLD}bash${NORMAL}              starts bash session inside running Misago container."
-    echo "    ${BOLD}run${NORMAL}               runs \"docker-compose run --rm misago\"."
+    echo "    ${BOLD}run${NORMAL}               runs \"docker compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
     echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
     echo "    ${BOLD}fakedata${NORMAL}          populates database with testing data."
@@ -128,9 +128,9 @@ init() {
         fi
     done
     
-    docker-compose stop
-    docker-compose build --pull --force-rm "${@:2}"
-    docker-compose run --rm misago ./dev init_in_docker
+    docker compose stop
+    docker compose build --pull --force-rm "${@:2}"
+    docker compose run --rm misago ./dev init_in_docker
 }
 
 # Initialization step that has to occur inside docker
@@ -153,7 +153,7 @@ after_init_message() {
     echo
     echo "You can now start the development server using:"
     echo
-    echo "    docker-compose up"
+    echo "    docker compose up"
     echo
     echo "Running server will be available in the browser under the http://127.0.0.1:${port_django} address."
     echo
@@ -185,8 +185,8 @@ clear() {
 
     read confirmation
     if [[ $confirmation = "y" ]]; then
-        docker-compose stop
-        docker-compose down --remove-orphans
+        docker compose stop
+        docker compose down --remove-orphans
         find $devproject_path/media -mindepth 1 ! -name '.gitignore' -delete
         find $devproject_path/userdata -mindepth 1 ! -name '.gitignore' -delete
     else
@@ -194,20 +194,41 @@ clear() {
     fi
 }
 
+# Reset containers
+reset() {
+    echo -e "${RED}Warning:${NORMAL} You are going to delete media files created during development and destroy docker containers."
+    echo
+
+    devproject_path="$(pwd)/devproject"
+
+    echo "Enter \"y\" to confirm:"
+
+    read confirmation
+    if [[ $confirmation = "y" ]]; then
+        docker compose stop
+        docker compose down --remove-orphans
+        find $devproject_path/media -mindepth 1 ! -name '.gitignore' -delete
+        find $devproject_path/userdata -mindepth 1 ! -name '.gitignore' -delete
+        init $@
+    else
+        echo "Operation canceled."
+    fi
+}
+
 # Rebuild docker containers
 rebuild() {
-    docker-compose stop
-    docker-compose build --pull --force-rm "${@:2}"
+    docker compose stop
+    docker compose build --pull --force-rm "${@:2}"
 }
 
 # Run tests suite
 test() {
-    docker-compose run --rm misago pytest "${@:2}"
+    docker compose run --rm misago pytest "${@:2}"
 }
 
 # Make messages
 makemessages() {
-    docker-compose run --rm --no-deps misago ./dev makemessages_in_docker $1
+    docker compose run --rm --no-deps misago ./dev makemessages_in_docker $1
 }
 
 # Docker part of makemessages
@@ -231,7 +252,7 @@ makemessages_in_docker() {
 
 # Compile messages
 compilemessages() {
-    docker-compose run --rm --no-deps misago ./dev compilemessages_in_docker
+    docker compose run --rm --no-deps misago ./dev compilemessages_in_docker
 }
 
 # Docker part of compile messages
@@ -257,19 +278,19 @@ run_bash() {
     docker exec -it misago_misago_1 bash
 }
 
-# Shortcut for docker-compose run --rm misago python manage.py
+# Shortcut for docker compose run --rm misago python manage.py
 run_managepy() {
-    docker-compose run --rm misago python manage.py "${@:2}"
+    docker compose run --rm misago python manage.py "${@:2}"
 }
 
-# Shortcut for docker-compose run --rm misago...
+# Shortcut for docker compose run --rm misago...
 docker_run() {
-    docker-compose run --rm misago "${@:2}"
+    docker compose run --rm misago "${@:2}"
 }
 
 # Shortcut for psql
 run_psql() {
-    docker-compose run --rm misago ./dev psql_in_docker
+    docker compose run --rm misago ./dev psql_in_docker
 }
 
 # Docker part of psql shortcut
@@ -280,16 +301,16 @@ psql_in_docker() {
 
 # Shortcut for creating small dev forum
 create_fake_data() {
-    docker-compose run --rm misago python manage.py createfakecategories 7
-    docker-compose run --rm misago python manage.py createfakecategories 12 1
-    docker-compose run --rm misago python manage.py createfakehistory 600
+    docker compose run --rm misago python manage.py createfakecategories 7
+    docker compose run --rm misago python manage.py createfakecategories 12 1
+    docker compose run --rm misago python manage.py createfakehistory 600
 }
 
 # Shortcut for creating big dev forum
 create_fake_bigdata() {
-    docker-compose run --rm misago python manage.py createfakecategories 48
-    docker-compose run --rm misago python manage.py createfakecategories 24 1
-    docker-compose run --rm misago python manage.py createfakehistory 2190 120
+    docker compose run --rm misago python manage.py createfakecategories 48
+    docker compose run --rm misago python manage.py createfakecategories 24 1
+    docker compose run --rm misago python manage.py createfakehistory 2190 120
 }
 
 # Command dispatcher
@@ -303,8 +324,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "clear" ]]; then
         clear
     elif [[ $1 = "reset" ]]; then
-        clear
-        init $@
+        reset $@
     elif [[ $1 = "rebuild" ]]; then
         rebuild $@
     elif [[ $1 = "test" ]]; then
