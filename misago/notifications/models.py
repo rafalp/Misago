@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Notification(models.Model):
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     verb = models.CharField(max_length=32)
@@ -35,6 +36,7 @@ class Notification(models.Model):
 
 
 class WatchedThread(models.Model):
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
