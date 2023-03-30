@@ -8,11 +8,23 @@ class Notification(models.Model):
     verb = models.CharField(max_length=32)
     is_read = models.BooleanField(default=False)
 
-    actor = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL, related_name="+")
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
     actor_name = models.CharField(max_length=255, blank=True, null=True)
-    category = models.ForeignKey("misago_categories.Category", blank=True, null=True, on_delete=models.CASCADE)
-    thread = models.ForeignKey("misago_threads.Thread", blank=True, null=True, on_delete=models.CASCADE)
-    post = models.ForeignKey("misago_threads.Post", blank=True, null=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        "misago_categories.Category", blank=True, null=True, on_delete=models.CASCADE
+    )
+    thread = models.ForeignKey(
+        "misago_threads.Thread", blank=True, null=True, on_delete=models.CASCADE
+    )
+    post = models.ForeignKey(
+        "misago_threads.Post", blank=True, null=True, on_delete=models.CASCADE
+    )
 
     # Used instead of repeating notifications, enables messages
     # like "[actor] and X others [verb] [target]"

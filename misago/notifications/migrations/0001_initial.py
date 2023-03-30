@@ -6,43 +6,115 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('misago_categories', '0009_auto_20221101_2111'),
+        ("misago_categories", "0009_auto_20221101_2111"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('misago_threads', '0012_set_dj_partial_indexes'),
+        ("misago_threads", "0012_set_dj_partial_indexes"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WatchedThread',
+            name="WatchedThread",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_created=True)),
-                ('send_email', models.BooleanField(default=False)),
-                ('read_at', models.DateTimeField()),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.category')),
-                ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.thread')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_created=True)),
+                ("send_email", models.BooleanField(default=False)),
+                ("read_at", models.DateTimeField()),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="misago_categories.category",
+                    ),
+                ),
+                (
+                    "thread",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="misago_threads.thread",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Notification',
+            name="Notification",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_created=True, db_index=True)),
-                ('verb', models.CharField(max_length=32)),
-                ('is_read', models.BooleanField(default=False)),
-                ('actor_name', models.CharField(blank=True, max_length=255, null=True)),
-                ('extra_actors', models.IntegerField(default=0)),
-                ('read_at', models.DateTimeField(blank=True, null=True)),
-                ('actor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='misago_categories.category')),
-                ('post', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='misago_threads.post')),
-                ('thread', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='misago_threads.thread')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_created=True, db_index=True)),
+                ("verb", models.CharField(max_length=32)),
+                ("is_read", models.BooleanField(default=False)),
+                ("actor_name", models.CharField(blank=True, max_length=255, null=True)),
+                ("extra_actors", models.IntegerField(default=0)),
+                ("read_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "actor",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="misago_categories.category",
+                    ),
+                ),
+                (
+                    "post",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="misago_threads.post",
+                    ),
+                ),
+                (
+                    "thread",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="misago_threads.thread",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
