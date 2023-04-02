@@ -1,16 +1,14 @@
+import React from "react"
 import { connect } from "react-redux"
 import Route from "misago/components/threads/route"
 import misago from "misago/index"
 
-export function getSelect(options) {
-  return function (store) {
-    return {
-      options: options,
-      selection: store.selection,
-      threads: store.threads,
-      tick: store.tick.tick,
-      user: store.auth.user,
-    }
+export function getSelect(store) {
+  return {
+    selection: store.selection,
+    threads: store.threads,
+    tick: store.tick.tick,
+    user: store.auth.user,
   }
 }
 
@@ -63,27 +61,32 @@ export function getLists(user) {
   return lists
 }
 
-export function paths(user, mode) {
+const RouteConnected = connect(getSelect)(Route)
+
+export function paths(user, options) {
+  const categories = misago.get("CATEGORIES")
   let lists = getLists(user)
+
   let routes = []
   let categoriesMap = {}
 
-  const RouteConnected = connect(getSelect(mode))(Route)
+  categories.forEach(function (category) {
+    categoriesMap[category.id] = category
 
-  misago.get("CATEGORIES").forEach(function (category) {
     lists.forEach(function (list) {
-      categoriesMap[category.id] = category
-
+      const path = category.url.index + list.path
       routes.push({
-        path: category.url.index + list.path,
-        element: <RouteConnected />,
-
-        categories: misago.get("CATEGORIES"),
-        categoriesMap,
-        category,
-
-        lists,
-        list,
+        path: path === "/" ? path : path.substring(1),
+        element: (
+          <RouteConnected
+            categories={categories}
+            categoriesMap={categoriesMap}
+            category={category}
+            lists={lists}
+            list={list}
+            options={options}
+          />
+        ),
       })
     })
   })

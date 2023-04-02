@@ -1,5 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import * as ReactDOM from "react-dom/client"
 import misago from "misago/index"
 import Button from "misago/components/button"
 import Form from "misago/components/form"
@@ -173,7 +173,7 @@ export default class extends React.Component {
   }
 
   showInactivePage(apiResponse) {
-    ReactDOM.render(
+    ReactDOM.createRoot(
       <AccountInactivePage
         activation={apiResponse.code}
         message={apiResponse.detail}

@@ -95,12 +95,6 @@ module.exports = (env, argv) => {
       extensions: [".js", ".jsx"],
     },
     plugins: [
-      new ESLintPlugin(
-        {
-          extensions: ["js", "jsx"],
-          files: "./src/"
-        },
-      ),
       new CopyPlugin(
         {
           patterns: [
@@ -128,6 +122,12 @@ module.exports = (env, argv) => {
         moment: "moment",
         "window.moment": "moment",
       }),
+      new ESLintPlugin(
+        {
+          extensions: ["js", "jsx"],
+          files: "./src/"
+        },
+      ),
     ],
     watchOptions: {
       ignored: "**/node_modules",

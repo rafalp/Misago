@@ -1,19 +1,19 @@
-import ReactDOM from "react-dom"
-import mount from "misago/utils/mount-component"
+import renderComponent from "../utils/renderComponent"
 
 export class Modal {
-  init(element) {
+  init(element, root) {
     this._element = element
+    this._root = root
 
     this._modal = $(element).modal({ show: false })
 
     this._modal.on("hidden.bs.modal", () => {
-      ReactDOM.unmountComponentAtNode(this._element)
+      this._root.unmount()
     })
   }
 
   show(component) {
-    mount(component, this._element.id)
+    renderComponent(component, this._root)
     this._modal.modal("show")
   }
 

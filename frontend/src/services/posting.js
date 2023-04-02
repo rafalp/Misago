@@ -1,13 +1,13 @@
 import React from "react"
-import ReactDOM from "react-dom"
-import PostingComponent from "misago/components/posting"
-import mount from "misago/utils/mount-component"
+import PostingComponent from "../components/posting"
+import renderComponent from "../utils/renderComponent"
 
 export class Posting {
-  init(ajax, snackbar, mount) {
+  init(ajax, snackbar, element, root) {
     this._ajax = ajax
     this._snackbar = snackbar
-    this._mount = mount
+    this._element = element
+    this._root = root
 
     this._mode = null
     this._spacer = document.getElementById("posting-spacer")
@@ -64,10 +64,9 @@ export class Posting {
   }
 
   _realOpen(props) {
-    mount(<PostingComponent {...props} />, this._mount.id)
-
-    this._mount.classList.add("show")
-    this._observer.observe(this._mount)
+    renderComponent(<PostingComponent {...props} />, this._root)
+    this._element.classList.add("show")
+    this._observer.observe(this._element)
     this.setBeforeUnload()
   }
 
@@ -76,11 +75,11 @@ export class Posting {
 
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true
-      this._mount.classList.remove("show")
+      this._element.classList.remove("show")
 
       window.setTimeout(() => {
-        ReactDOM.unmountComponentAtNode(this._mount)
-        this._observer.unobserve(this._mount)
+        this._root.unmount()
+        this._observer.unobserve(this._element)
         this._spacer.style.height = "0px;"
         this._isClosing = false
         this._isOpen = false

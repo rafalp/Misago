@@ -1,10 +1,11 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import * as ReactDOM from "react-dom/client"
 import { Provider } from "react-redux"
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import store from "misago/services/store"
 
-const rootElement = document.getElementById("page-mount")
+const rootNode = document.getElementById("page-mount")
+const root = ReactDOM.createRoot(rootNode)
 
 export default function mountRoutedComponent(options) {
   let routes = []
@@ -22,7 +23,7 @@ export default function mountRoutedComponent(options) {
   const { Component } = options
   const router = createBrowserRouter(routes)
 
-  ReactDOM.render(
+  root.render(
     <Provider store={store.getStore()}>
       {Component ? (
         <Component>
@@ -31,7 +32,6 @@ export default function mountRoutedComponent(options) {
       ) : (
         <RouterProvider router={router}  />
       )}
-    </Provider>,
-    rootElement
+    </Provider>
   )
 }

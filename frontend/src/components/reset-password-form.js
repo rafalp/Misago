@@ -1,5 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import * as ReactDOM from "react-dom/client"
 import misago from "misago/index"
 import Button from "misago/components/button"
 import Form from "misago/components/form"
@@ -89,7 +89,7 @@ export class PasswordChangedPage extends React.Component {
   }
 
   showSignIn() {
-    modal.show(SignInModal)
+    modal.show(<SignInModal />)
   }
 
   render() {
@@ -133,7 +133,7 @@ export default class extends React.Component {
     // coming back to error page after sign in
     $('#hidden-login-form input[name="redirect_to"]').remove()
 
-    ReactDOM.render(
+    ReactDOM.createRoot(
       <PasswordChangedPage user={apiResponse} />,
       document.getElementById("page-mount")
     )

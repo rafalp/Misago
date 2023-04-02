@@ -4,8 +4,7 @@ import ThreadsToolbar from "./ThreadsToolbar"
 
 export default class extends React.Component {
   render() {
-    const { root } = this.props
-    const { category, categories, categoriesMap } = this.props.route
+    const { category, categories, categoriesMap, root } = this.props
     const topCategory = getTopCategory(root, category, categoriesMap)
 
     return (
@@ -25,8 +24,8 @@ export default class extends React.Component {
           }
           subCategory={category.level === 2 ? category : null}
           subcategories={this.props.subcategories}
-          list={this.props.route.list}
-          lists={this.props.route.lists}
+          list={this.props.list}
+          lists={this.props.lists}
           threads={this.props.threads}
           addThreads={this.props.addThreads}
           startThread={this.props.startThread}
@@ -35,7 +34,6 @@ export default class extends React.Component {
           updateThread={this.props.updateThread}
           selection={this.props.selection}
           moderation={this.props.moderation}
-          route={this.props.route}
           user={this.props.user}
           disabled={
             !this.props.isLoaded ||

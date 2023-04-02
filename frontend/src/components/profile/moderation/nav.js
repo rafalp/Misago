@@ -15,15 +15,18 @@ let select = function (store) {
 
 export default class extends React.Component {
   showAvatarDialog = () => {
-    modal.show(connect(select)(AvatarControls))
+    const AvatarControlsConnected = connect(select)(AvatarControls)
+    modal.show(<AvatarControlsConnected />)
   }
 
   showRenameDialog = () => {
-    modal.show(connect(select)(ChangeUsername))
+    const ChangeUsernameConnected = connect(select)(ChangeUsername)
+    modal.show(<ChangeUsernameConnected />)
   }
 
   showDeleteDialog = () => {
-    modal.show(connect(select)(DeleteAccount))
+    const DeleteAccountConnected = connect(select)(DeleteAccount)
+    modal.show(<DeleteAccountConnected />)
   }
 
   render() {

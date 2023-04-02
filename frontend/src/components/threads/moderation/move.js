@@ -55,7 +55,7 @@ export default class extends Form {
 
     const onSuccess = () => {
       store.dispatch(
-        filterThreads(this.props.route.category, this.props.categoriesMap)
+        filterThreads(this.props.category, this.props.categoriesMap)
       )
 
       // deselect threads moved outside of visible scope

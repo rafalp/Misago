@@ -1,6 +1,6 @@
 import moment from "moment"
 import React from "react"
-import ReactDOM from "react-dom"
+import * as ReactDOM from "react-dom/client"
 import { Provider, connect } from "react-redux"
 import BannedPage from "misago/components/banned-page"
 import misago from "misago/index"
@@ -13,14 +13,13 @@ let select = function (state) {
 let RedrawedBannedPage = connect(select)(BannedPage)
 
 export default function (ban, changeState) {
-  ReactDOM.render(
+  ReactDOM.createRoot(
     <Provider store={store.getStore()}>
       <RedrawedBannedPage
         message={ban.message}
         expires={ban.expires_on ? moment(ban.expires_on) : null}
       />
     </Provider>,
-
     document.getElementById("page-mount")
   )
 

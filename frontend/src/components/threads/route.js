@@ -17,11 +17,11 @@ import misago from "misago/index"
 import * as select from "misago/reducers/selection"
 import { append, deleteThread, hydrate, patch } from "misago/reducers/threads"
 import ajax from "misago/services/ajax"
-import polls from "misago/services/polls"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import title from "misago/services/page-title"
-import * as sets from "misago/utils/sets"
+import polls from "../../services/polls"
+import * as sets from "../../utils/sets"
 import {
   PageHeaderHTMLMessage,
   PageHeaderMessage,
@@ -33,8 +33,6 @@ export default class extends WithDropdown {
     super(props)
 
     this.state = {
-      isMounted: true,
-
       isLoaded: false,
       isBusy: false,
 
@@ -51,51 +49,79 @@ export default class extends WithDropdown {
       next: 0,
     }
 
-    let category = this.getCategory()
-
+    const categoryId = this.getCategoryId()
     if (misago.has("THREADS")) {
-      this.initWithPreloadedData(category, misago.get("THREADS"))
+      this.initWithPreloadedData(categoryId, misago.get("THREADS"))
     } else {
-      this.initWithoutPreloadedData(category)
+      this.loadThreads(categoryId, this.props.list.type)
     }
   }
 
-  getCategory() {
-    if (!this.props.route.category.special_role) {
-      return this.props.route.category.id
+  componentDidMount() {
+    this.setPageTitle()
+
+    if (misago.has("THREADS")) {
+      // unlike in other components, routes are root components for threads
+      // so we can't dispatch store action from constructor
+      store.dispatch(hydrate(misago.pop("THREADS").results))
+
+      this.setState({ isLoaded: true })
+    }
+
+    store.dispatch(select.none())
+  }
+
+  componentDidUpdate(prevProps) {
+    const categoryUpdated = this.props.category.id !== prevProps.category.id
+    const listUpdated = this.props.list.path !== prevProps.list.path
+    
+    if (categoryUpdated || listUpdated) {
+      polls.stop("threads")
+      this.setPageTitle()
+      this.loadThreads(this.getCategoryId(), this.getListType())
+    }
+  }
+
+  getCategoryId() {
+    if (!this.props.category.special_role) {
+      return this.props.category.id
     } else {
       return null
     }
   }
 
-  initWithPreloadedData(category, data) {
+  getListType() {
+    return this.props.list.type
+  }
+
+  initWithPreloadedData(categoryId, data) {
     this.state = Object.assign(this.state, {
       moderation: getModerationActions(data.results),
       subcategories: data.subcategories,
       next: data.next,
     })
 
-    this.startPolling(category)
+    this.startPolling(categoryId, this.props.list.type)
   }
 
-  initWithoutPreloadedData(category) {
-    this.loadThreads(category)
-  }
+  loadThreads(categoryId, listType, next = 0) {
+    if (next === 0) {
+      this.setState({ isLoaded: false, isBusy: true })
+    }
 
-  loadThreads(category, next = 0) {
     ajax
       .get(
         this.props.options.api,
         {
-          category: category,
-          list: this.props.route.list.type,
+          category: categoryId,
+          list: listType,
           start: next || 0,
         },
         "threads"
       )
       .then(
         (data) => {
-          if (!this.state.isMounted) {
+          if (categoryId !== this.getCategoryId() || listType !== this.getListType()) {
             // user changed route before loading completion
             return
           }
@@ -117,7 +143,7 @@ export default class extends WithDropdown {
             next: data.next,
           })
 
-          this.startPolling(category)
+          this.startPolling(categoryId, listType)
         },
         (rejection) => {
           snackbar.apiError(rejection)
@@ -125,38 +151,17 @@ export default class extends WithDropdown {
       )
   }
 
-  startPolling(category) {
+  startPolling(categoryId, listType) {
     polls.start({
       poll: "threads",
       url: this.props.options.api,
       data: {
-        category: category,
-        list: this.props.route.list.type,
+        category: categoryId,
+        list: listType,
       },
       frequency: 120 * 1000,
       update: this.pollResponse,
     })
-  }
-
-  componentDidMount() {
-    this.setPageTitle()
-
-    if (misago.has("THREADS")) {
-      // unlike in other components, routes are root components for threads
-      // so we can't dispatch store action from constructor
-      store.dispatch(hydrate(misago.pop("THREADS").results))
-
-      this.setState({
-        isLoaded: true,
-      })
-    }
-
-    store.dispatch(select.none())
-  }
-
-  componentWillUnmount() {
-    this.state.isMounted = false
-    polls.stop("threads")
   }
 
   getTitle() {
@@ -164,25 +169,28 @@ export default class extends WithDropdown {
       return this.props.options.title
     }
 
-    return getTitle(this.props.route)
+    return getTitle(this.props.category)
   }
 
   setPageTitle() {
-    if (this.props.route.category.level || !misago.get("THREADS_ON_INDEX")) {
-      title.set(getPageTitle(this.props.route))
+    if (this.props.category.level || !misago.get("THREADS_ON_INDEX")) {
+      title.set(getPageTitle(this.props.category, this.props.list))
     } else if (this.props.options.title) {
       title.set(this.props.options.title)
     } else {
-      if (misago.get("SETTINGS").index_title) {
-        document.title = misago.get("SETTINGS").index_title
+      const settings = misago.get("SETTINGS")
+      const title = settings.index_title || settings.forum_name
+
+      if (this.props.list.path) {
+        document.title = this.props.list.longName + " | " + title
       } else {
-        document.title = misago.get("SETTINGS").forum_name
+        document.title = title
       }
     }
   }
 
   getSorting() {
-    if (this.props.route.category.level) {
+    if (this.props.category.level) {
       return compareWeight
     } else {
       return compareGlobalWeight
@@ -196,7 +204,7 @@ export default class extends WithDropdown {
       isBusy: true,
     })
 
-    this.loadThreads(this.getCategory(), this.state.next)
+    this.loadThreads(this.getCategoryId(), this.props.list.type, this.state.next)
   }
 
   pollResponse = (data) => {
@@ -261,19 +269,19 @@ export default class extends WithDropdown {
 
   getClassName() {
     let className = "page page-threads"
-    className += " page-threads-" + this.props.route.list.type
+    className += " page-threads-" + this.props.list.type
     if (isIndex(this.props)) {
       className += " page-threads-index"
     }
-    if (this.props.route.category.css_class) {
-      className += " page-threads-" + this.props.route.category.css_class
+    if (this.props.category.css_class) {
+      className += " page-threads-" + this.props.category.css_class
     }
     return className
   }
 
   render() {
-    const root = this.props.route.categories[0]
-    const { category, list } = this.props.route
+    const root = this.props.categories[0]
+    const { category, list } = this.props
     const specialRole = category.special_role
 
     return (
@@ -321,7 +329,11 @@ export default class extends WithDropdown {
         <Container
           api={this.props.options.api}
           root={root}
-          route={this.props.route}
+          category={this.props.category}
+          categories={this.props.categories}
+          categoriesMap={this.props.categoriesMap}
+          list={this.props.list}
+          lists={this.props.lists}
           user={this.props.user}
           pageLead={this.props.options.pageLead}
           threads={this.props.threads}
@@ -339,7 +351,7 @@ export default class extends WithDropdown {
         >
           <ThreadsList
             category={category}
-            categories={this.props.route.categoriesMap}
+            categories={this.props.categoriesMap}
             list={list}
             selection={this.props.selection}
             threads={this.props.threads}
@@ -358,7 +370,7 @@ export default class extends WithDropdown {
 }
 
 function isIndex(props) {
-  if (props.route.category.level || !misago.get("THREADS_ON_INDEX"))
+  if (props.category.level || !misago.get("THREADS_ON_INDEX"))
     return false
   if (props.options.title) return false
 

@@ -182,9 +182,9 @@ export default class extends React.Component {
     modal.show(
       <MoveThreads
         callApi={this.callApi}
+        category={this.props.category}
         categories={this.props.categories}
         categoriesMap={this.props.categoriesMap}
-        route={this.props.route}
         user={this.props.user}
       />
     )

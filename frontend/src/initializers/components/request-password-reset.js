@@ -1,10 +1,13 @@
+import * as React from "react"
 import misago from "misago/index"
-import RequestPasswordReset from "misago/components/request-password-reset"
-import mount from "misago/utils/mount-component"
+import RequestPasswordReset from "../../components/request-password-reset"
+import createRoot from "../../utils/createRoot"
+import renderComponent from "../../utils/renderComponent"
 
 export default function initializer() {
-  if (document.getElementById("request-password-reset-mount")) {
-    mount(RequestPasswordReset, "request-password-reset-mount", false)
+  const root = createRoot("request-password-reset-mount")
+  if (root) {
+    renderComponent(<RequestPasswordReset />, root, false)
   }
 }
 

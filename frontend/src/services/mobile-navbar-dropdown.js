@@ -1,8 +1,9 @@
-import mount from "misago/utils/mount-component"
+import renderComponent from "../utils/renderComponent"
 
 export class MobileNavbarDropdown {
-  init(element) {
+  init(element, root) {
     this._element = element
+    this._root = root
     this._component = null
   }
 
@@ -11,7 +12,7 @@ export class MobileNavbarDropdown {
       this.hide()
     } else {
       this._component = component
-      mount(component, this._element.id)
+      renderComponent(component, this._root)
       $(this._element).addClass("open")
     }
   }
@@ -21,13 +22,14 @@ export class MobileNavbarDropdown {
       this.hide()
     } else {
       this._component = name
-      mount(component, this._element.id, true)
+      renderComponent(component, this._root)
       $(this._element).addClass("open")
     }
   }
 
   hide() {
     $(this._element).removeClass("open")
+    this._root.unmount()
     this._component = null
   }
 }

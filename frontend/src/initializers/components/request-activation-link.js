@@ -1,10 +1,13 @@
+import * as React from "react"
 import misago from "misago/index"
-import RequestActivationLink from "misago/components/request-activation-link"
-import mount from "misago/utils/mount-component"
+import RequestActivationLink from "../../components/request-activation-link"
+import createRoot from "../../utils/createRoot"
+import renderComponent from "../../utils/renderComponent"
 
 export default function initializer() {
-  if (document.getElementById("request-activation-link-mount")) {
-    mount(RequestActivationLink, "request-activation-link-mount", false)
+  const root = createRoot("request-activation-link-mount")
+  if (root) {
+    renderComponent(<RequestActivationLink />, root, false)
   }
 }
 

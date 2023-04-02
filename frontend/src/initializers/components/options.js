@@ -1,6 +1,6 @@
-import Options, { paths } from "misago/components/options/root"
 import misago from "misago/index"
-import mount from "misago/utils/routed-component"
+import Options, { paths } from "../../components/options/root"
+import mount from "../../utils/routed-component"
 
 export default function initializer(context) {
   if (context.has("USER_OPTIONS")) {

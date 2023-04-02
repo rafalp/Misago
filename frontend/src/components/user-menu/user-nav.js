@@ -9,7 +9,8 @@ import modal from "misago/services/modal"
 
 export class UserMenu extends React.Component {
   changeAvatar() {
-    modal.show(connect(select)(ChangeAvatarModal))
+    const ChangeAvatarModalConnected = connect(select)(ChangeAvatarModal)
+    modal.show(<ChangeAvatarModalConnected />)
   }
 
   render() {

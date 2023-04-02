@@ -1,13 +1,15 @@
-import React from "react"
+import * as React from "react"
 import misago from "misago/index"
 import AcceptAgreement from "misago/components/accept-agreement"
-import mount from "misago/utils/mount-component"
+import createRoot from "../../utils/createRoot"
+import renderComponent from "../../utils/renderComponent"
 
 export default function initializer(context) {
-  if (document.getElementById("required-agreement-mount")) {
-    mount(
+  const root = createRoot("required-agreement-mount")
+  if (root) {
+    renderComponent(
       <AcceptAgreement api={context.get("REQUIRED_AGREEMENT_API")} />,
-      "required-agreement-mount",
+      root,
       false
     )
   }

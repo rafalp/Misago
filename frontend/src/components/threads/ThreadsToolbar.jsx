@@ -26,7 +26,6 @@ const ThreadsToolbar = ({
   deleteThread,
   selection,
   moderation,
-  route,
   user,
   disabled,
 }) => (
@@ -36,7 +35,7 @@ const ThreadsToolbar = ({
         <ToolbarItem>
           <ThreadsCategoryPicker
             allItems={gettext("All categories")}
-            parentUrl={list.path}
+            parentUrl={list.path || "/"}
             category={topCategory}
             categories={topCategories}
             list={list}
@@ -90,6 +89,7 @@ const ThreadsToolbar = ({
           <ToolbarItem shrink>
             <ThreadsToolbarModeration
               api={api}
+              category={category}
               categories={categories}
               categoriesMap={categoriesMap}
               threads={threads.filter(
@@ -101,7 +101,6 @@ const ThreadsToolbar = ({
               deleteThread={deleteThread}
               selection={selection}
               moderation={moderation}
-              route={route}
               user={user}
               disabled={disabled}
             />

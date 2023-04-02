@@ -1,5 +1,5 @@
 import misago from "misago/index"
-import showBannedPage from "misago/utils/banned-page"
+import showBannedPage from "../../utils/banned-page"
 
 export default function initializer(context) {
   if (context.has("BAN_MESSAGE")) {

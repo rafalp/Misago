@@ -3,6 +3,7 @@ import ModerationControls from "./moderation/controls"
 
 const ThreadsToolbarModeration = ({
   api,
+  category,
   categoriesMap,
   categories,
   threads,
@@ -12,7 +13,6 @@ const ThreadsToolbarModeration = ({
   deleteThread,
   selection,
   moderation,
-  route,
   user,
   disabled,
 }) => (
@@ -30,6 +30,7 @@ const ThreadsToolbarModeration = ({
     </button>
     <ModerationControls
       api={api}
+      category={category}
       categories={categories}
       categoriesMap={categoriesMap}
       threads={threads}
@@ -39,7 +40,6 @@ const ThreadsToolbarModeration = ({
       deleteThread={deleteThread}
       selection={selection}
       moderation={moderation}
-      route={route}
       user={user}
       disabled={disabled}
     />

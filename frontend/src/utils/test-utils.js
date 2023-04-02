@@ -1,16 +1,16 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import * as ReactDOM from "react-dom/client"
 import ReactTestUtils from "react-addons-test-utils"
 
 // clean test mounts from components
 export function render(containerOrComponent, Component) {
   if (Component) {
-    return ReactDOM.render(
+    return ReactDOM.createRoot(
       Component,
       document.getElementById(containerOrComponent + "-mount")
     )
   } else {
-    return ReactDOM.render(
+    return ReactDOM.createRoot(
       containerOrComponent,
       document.getElementById("test-mount")
     )

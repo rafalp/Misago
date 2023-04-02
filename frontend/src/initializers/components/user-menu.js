@@ -1,15 +1,26 @@
+import * as React from "react"
 import { connect } from "react-redux"
 import misago from "misago/index"
 import {
   UserMenu,
   CompactUserMenu,
   select,
-} from "misago/components/user-menu/root"
-import mount from "misago/utils/mount-component"
+} from "../../components/user-menu/root"
+import createRoot from "../../utils/createRoot"
+import renderComponent from "../../utils/renderComponent"
 
 export default function initializer() {
-  mount(connect(select)(UserMenu), "user-menu-mount")
-  mount(connect(select)(CompactUserMenu), "user-menu-compact-mount")
+  const userMenuRoot = createRoot("user-menu-mount")
+  if (userMenuRoot) {
+    const UserMenuConnected = connect(select)(UserMenu)
+    renderComponent(<UserMenuConnected />, userMenuRoot)
+  }
+
+  const userMenuCompactRoot = createRoot("user-menu-compact-mount")
+  if (userMenuCompactRoot) {
+    const CompactUserMenuConnected = connect(select)(CompactUserMenu)
+    renderComponent(<CompactUserMenuConnected />, userMenuCompactRoot)
+  }
 }
 
 misago.addInitializer({

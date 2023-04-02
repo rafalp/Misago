@@ -9,7 +9,7 @@ import modal from "misago/services/modal"
 
 export class GuestMenu extends React.Component {
   showSignInModal() {
-    modal.show(SignInModal)
+    modal.show(<SignInModal />)
   }
 
   componentDidMount() {

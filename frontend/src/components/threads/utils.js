@@ -1,29 +1,29 @@
 import misago from "misago/index"
 
-export function getPageTitle(route) {
-  if (route.category.level) {
-    if (route.list.path) {
+export function getPageTitle(category, list) {
+  if (category.level) {
+    if (list.path) {
       return {
-        title: route.list.longName,
-        parent: route.category.name,
+        title: list.longName,
+        parent: category.name,
       }
     } else {
       return {
-        title: route.category.name,
+        title: category.name,
       }
     }
   } else if (misago.get("THREADS_ON_INDEX")) {
-    if (route.list.path) {
+    if (list.path) {
       return {
-        title: route.list.longName,
+        title: list.longName,
       }
     } else {
       return null
     }
   } else {
-    if (route.list.path) {
+    if (list.path) {
       return {
-        title: route.list.longName,
+        title: list.longName,
         parent: gettext("Threads"),
       }
     } else {
@@ -34,9 +34,9 @@ export function getPageTitle(route) {
   }
 }
 
-export function getTitle(route) {
-  if (route.category.level) {
-    return route.category.name
+export function getTitle(category) {
+  if (category.level) {
+    return category.name
   } else if (misago.get("THREADS_ON_INDEX")) {
     if (misago.get("SETTINGS").index_header) {
       return misago.get("SETTINGS").index_header

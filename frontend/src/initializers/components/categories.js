@@ -1,11 +1,15 @@
+import * as React from "react"
 import { connect } from "react-redux"
-import Categories, { select } from "misago/components/categories"
 import misago from "misago/index"
-import mount from "misago/utils/mount-component"
+import Categories, { select } from "../../components/categories"
+import createRoot from "../../utils/createRoot"
+import renderComponent from "../../utils/renderComponent"
 
 export default function initializer() {
-  if (document.getElementById("categories-mount")) {
-    mount(connect(select)(Categories), "categories-mount")
+  const root = createRoot("categories-mount")
+  if (root) {
+    const CategoriesConnected = connect(select)(Categories)
+    renderComponent(<CategoriesConnected />, root)
   }
 }
 
