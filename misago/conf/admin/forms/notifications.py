@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import pgettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ....notifications.threads import ThreadNotifications
 from .base import SettingsForm
@@ -17,7 +17,7 @@ class NotificationsSettingsForm(SettingsForm):
     ]
 
     watch_started_threads = forms.TypedChoiceField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Notify about new replies in threads started by the user",
         ),
@@ -26,7 +26,7 @@ class NotificationsSettingsForm(SettingsForm):
         coerce=int,
     )
     watch_replied_threads = forms.TypedChoiceField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Notify about new replies in threads replied by the user",
         ),
@@ -36,7 +36,7 @@ class NotificationsSettingsForm(SettingsForm):
     )
 
     watch_new_private_threads_by_followed = forms.TypedChoiceField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Notify about new replies in new private threads started by followed users",
         ),
@@ -45,7 +45,7 @@ class NotificationsSettingsForm(SettingsForm):
         coerce=int,
     )
     watch_new_private_threads_by_other_users = forms.TypedChoiceField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Notify about new replies in new private threads started by other users",
         ),
@@ -55,7 +55,7 @@ class NotificationsSettingsForm(SettingsForm):
     )
 
     notify_new_private_threads_by_followed = forms.TypedChoiceField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Notify about new private threads started by followed users",
         ),
@@ -64,7 +64,7 @@ class NotificationsSettingsForm(SettingsForm):
         coerce=int,
     )
     notify_new_private_threads_by_other_users = forms.TypedChoiceField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Notify about new private threads started by other users",
         ),
@@ -74,11 +74,11 @@ class NotificationsSettingsForm(SettingsForm):
     )
 
     delete_notifications_older_than = forms.IntegerField(
-        label=_(
+        label=pgettext_lazy(
             "admin notifications",
             "Automatically delete notifications that are older than given number of days",
         ),
-        help_text=_(
+        help_text=pgettext_lazy(
             "admin notifications",
             "Old notifications filling the database table can have an negative impact on the notifications performance.",
         ),
