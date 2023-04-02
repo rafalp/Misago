@@ -2,10 +2,10 @@ from django import forms
 
 from ....cache.test import assert_invalidates_cache
 from ... import SETTINGS_CACHE
-from ..forms import ChangeSettingsForm
+from ..forms import SettingsForm
 
 
-class Form(ChangeSettingsForm):
+class Form(SettingsForm):
     settings = ["forum_name"]
 
     forum_name = forms.CharField(max_length=255)

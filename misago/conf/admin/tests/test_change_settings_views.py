@@ -4,8 +4,8 @@ from django.urls import reverse
 
 from ....cache.test import assert_invalidates_cache
 from ... import SETTINGS_CACHE
-from ..forms import ChangeSettingsForm
-from ..views import ChangeSettingsView
+from ..forms import SettingsForm
+from ..views import SettingsView
 
 
 @pytest.fixture(autouse=True)
@@ -13,13 +13,13 @@ def messages_mock(mocker):
     return mocker.patch("misago.conf.admin.views.messages")
 
 
-class Form(ChangeSettingsForm):
+class Form(SettingsForm):
     settings = ["forum_name"]
 
     forum_name = forms.CharField(max_length=255)
 
 
-class View(ChangeSettingsView):
+class View(SettingsView):
     form_class = Form
 
     def render(self, request, context):
