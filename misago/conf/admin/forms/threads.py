@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from .base import ChangeSettingsForm
+from .base import SettingsForm
 
 
-class ChangeThreadsSettingsForm(ChangeSettingsForm):
+class ThreadsSettingsForm(SettingsForm):
     settings = [
         "attachment_403_image",
         "attachment_404_image",

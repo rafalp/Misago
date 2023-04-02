@@ -7,7 +7,6 @@ from django.utils.translation import ngettext
 
 from ...acl.models import Role
 from ...admin.forms import IsoDateTimeField, YesNoSwitch
-from ...conf.admin.forms import ChangeSettingsForm
 from ...core.validators import validate_sluggable
 from ...search.filter_queryset import filter_queryset
 from ..models import Ban, DataDownload, Rank

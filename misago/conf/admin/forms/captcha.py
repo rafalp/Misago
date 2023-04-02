@@ -2,10 +2,10 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
-from .base import ChangeSettingsForm
+from .base import SettingsForm
 
 
-class ChangeCaptchaSettingsForm(ChangeSettingsForm):
+class CaptchaSettingsForm(SettingsForm):
     settings = [
         "captcha_type",
         "recaptcha_site_key",

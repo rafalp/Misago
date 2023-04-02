@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.utils.translation import gettext, gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
-from .base import ChangeSettingsForm
+from .base import SettingsForm
 
 OAUTH2_OPTIONAL_FIELDS = (
     "oauth2_token_extra_headers",
@@ -13,7 +13,7 @@ OAUTH2_OPTIONAL_FIELDS = (
 )
 
 
-class ChangeOAuth2SettingsForm(ChangeSettingsForm):
+class OAuth2SettingsForm(SettingsForm):
     settings = [
         "enable_oauth2_client",
         "oauth2_provider",

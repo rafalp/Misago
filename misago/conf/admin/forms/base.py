@@ -3,7 +3,7 @@ from django import forms
 from ...cache import clear_settings_cache
 
 
-class ChangeSettingsForm(forms.Form):
+class SettingsForm(forms.Form):
     settings = []
 
     def __init__(self, *args, **kwargs):
