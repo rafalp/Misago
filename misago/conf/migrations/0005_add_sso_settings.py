@@ -8,7 +8,7 @@ settings = [
     {
         "setting": "enable_sso",
         "python_type": "bool",
-        "dry_value": False,
+        "wet_value": False,
         "is_public": True,
     },
     {"setting": "sso_public_key", "is_public": False},
@@ -21,10 +21,12 @@ def create_settings(apps, _):
     Setting = apps.get_model("misago_conf", "Setting")
     for setting in settings:
         data = setting.copy()
-        if "python_type" in data and "dry_value" in data:
-            data["dry_value"] = dehydrate_value(data["python_type"], data["dry_value"])
+        if "python_type" in data and "wet_value" in data:
+            data["dry_value"] = dehydrate_value(
+                data["python_type"], data.pop("wet_value")
+            )
 
-        Setting.objects.create(**setting)
+        Setting.objects.create(**data)
 
 
 class Migration(migrations.Migration):

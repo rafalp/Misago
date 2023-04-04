@@ -7,11 +7,11 @@ from ..hydrators import dehydrate_value
 
 default_settings = [
     {"setting": "account_activation", "dry_value": "none", "is_public": True},
-    {"setting": "allow_custom_avatars", "python_type": "bool", "dry_value": True},
+    {"setting": "allow_custom_avatars", "python_type": "bool", "wet_value": True},
     {
         "setting": "avatar_upload_limit",
         "python_type": "int",
-        "dry_value": 1536,
+        "wet_value": 1536,
         "is_public": True,
     },
     {"setting": "attachment_403_image", "python_type": "image"},
@@ -20,7 +20,7 @@ default_settings = [
     {"setting": "captcha_type", "dry_value": "no", "is_public": True},
     {"setting": "default_avatar", "dry_value": "gravatar"},
     {"setting": "default_gravatar_fallback", "dry_value": "dynamic"},
-    {"setting": "unused_attachments_lifetime", "python_type": "int", "dry_value": 24},
+    {"setting": "unused_attachments_lifetime", "python_type": "int", "wet_value": 24},
     {"setting": "email_footer"},
     {
         "setting": "forum_address",
@@ -37,33 +37,33 @@ default_settings = [
     {"setting": "logo", "python_type": "image", "is_public": True},
     {"setting": "logo_small", "python_type": "image", "is_public": True},
     {"setting": "logo_text", "dry_value": "Misago", "is_public": True},
-    {"setting": "daily_post_limit", "python_type": "int", "dry_value": 600},
-    {"setting": "hourly_post_limit", "python_type": "int", "dry_value": 100},
-    {"setting": "post_attachments_limit", "python_type": "int", "dry_value": 16},
+    {"setting": "daily_post_limit", "python_type": "int", "wet_value": 600},
+    {"setting": "hourly_post_limit", "python_type": "int", "wet_value": 100},
+    {"setting": "post_attachments_limit", "python_type": "int", "wet_value": 16},
     {
         "setting": "post_length_max",
         "python_type": "int",
-        "dry_value": 60000,
+        "wet_value": 60000,
         "is_public": True,
     },
     {
         "setting": "post_length_min",
         "python_type": "int",
-        "dry_value": 5,
+        "wet_value": 5,
         "is_public": True,
     },
-    {"setting": "readtracker_cutoff", "python_type": "int", "dry_value": 40},
-    {"setting": "threads_per_page", "python_type": "int", "dry_value": 26},
-    {"setting": "posts_per_page", "python_type": "int", "dry_value": 18},
-    {"setting": "posts_per_page_orphans", "python_type": "int", "dry_value": 6},
-    {"setting": "events_per_page", "python_type": "int", "dry_value": 20},
+    {"setting": "readtracker_cutoff", "python_type": "int", "wet_value": 40},
+    {"setting": "threads_per_page", "python_type": "int", "wet_value": 26},
+    {"setting": "posts_per_page", "python_type": "int", "wet_value": 18},
+    {"setting": "posts_per_page_orphans", "python_type": "int", "wet_value": 6},
+    {"setting": "events_per_page", "python_type": "int", "wet_value": 20},
     {"setting": "og_image", "python_type": "image"},
     {
         "setting": "og_image_avatar_on_profile",
         "python_type": "bool",
-        "dry_value": False,
+        "wet_value": False,
     },
-    {"setting": "og_image_avatar_on_thread", "python_type": "bool", "dry_value": False},
+    {"setting": "og_image_avatar_on_thread", "python_type": "bool", "wet_value": False},
     {"setting": "qa_answers"},
     {"setting": "qa_help_text"},
     {"setting": "qa_question"},
@@ -72,7 +72,7 @@ default_settings = [
     {
         "setting": "signature_length_max",
         "python_type": "int",
-        "dry_value": 256,
+        "wet_value": 256,
         "is_public": True,
     },
     {"setting": "subscribe_reply", "dry_value": "watch_email"},
@@ -80,29 +80,29 @@ default_settings = [
     {
         "setting": "thread_title_length_max",
         "python_type": "int",
-        "dry_value": 90,
+        "wet_value": 90,
         "is_public": True,
     },
     {
         "setting": "thread_title_length_min",
         "python_type": "int",
-        "dry_value": 5,
+        "wet_value": 5,
         "is_public": True,
     },
-    {"setting": "username_length_min", "python_type": "int", "dry_value": 3},
-    {"setting": "username_length_max", "python_type": "int", "dry_value": 14},
+    {"setting": "username_length_min", "python_type": "int", "wet_value": 3},
+    {"setting": "username_length_max", "python_type": "int", "wet_value": 14},
     {"setting": "anonymous_username", "dry_value": "Deleted"},
-    {"setting": "enable_stop_forum_spam", "python_type": "bool", "dry_value": False},
-    {"setting": "stop_forum_spam_confidence", "python_type": "int", "dry_value": 80},
-    {"setting": "users_per_page", "python_type": "int", "dry_value": 12},
-    {"setting": "users_per_page_orphans", "python_type": "int", "dry_value": 4},
-    {"setting": "allow_data_downloads", "python_type": "bool", "dry_value": True},
-    {"setting": "data_downloads_expiration", "python_type": "int", "dry_value": 48},
-    {"setting": "allow_delete_own_account", "python_type": "bool", "dry_value": False},
-    {"setting": "top_posters_ranking_length", "python_type": "int", "dry_value": 30},
-    {"setting": "top_posters_ranking_size", "python_type": "int", "dry_value": 50},
-    {"setting": "new_inactive_accounts_delete", "python_type": "int", "dry_value": 0},
-    {"setting": "ip_storage_time", "python_type": "int", "dry_value": 90},
+    {"setting": "enable_stop_forum_spam", "python_type": "bool", "wet_value": False},
+    {"setting": "stop_forum_spam_confidence", "python_type": "int", "wet_value": 80},
+    {"setting": "users_per_page", "python_type": "int", "wet_value": 12},
+    {"setting": "users_per_page_orphans", "python_type": "int", "wet_value": 4},
+    {"setting": "allow_data_downloads", "python_type": "bool", "wet_value": True},
+    {"setting": "data_downloads_expiration", "python_type": "int", "wet_value": 48},
+    {"setting": "allow_delete_own_account", "python_type": "bool", "wet_value": False},
+    {"setting": "top_posters_ranking_length", "python_type": "int", "wet_value": 30},
+    {"setting": "top_posters_ranking_size", "python_type": "int", "wet_value": 50},
+    {"setting": "new_inactive_accounts_delete", "python_type": "int", "wet_value": 0},
+    {"setting": "ip_storage_time", "python_type": "int", "wet_value": 90},
 ]
 
 removed_settings = ["forum_branding_display", "forum_branding_text"]
@@ -120,10 +120,12 @@ def create_settings(apps, _):
             continue  # skip already existing setting (migration on existing forum)
 
         data = setting.copy()
-        if "python_type" in data and "dry_value" in data:
-            data["dry_value"] = dehydrate_value(data["python_type"], data["dry_value"])
+        if "python_type" in data and "wet_value" in data:
+            data["dry_value"] = dehydrate_value(
+                data["python_type"], data.pop("wet_value")
+            )
 
-        Setting.objects.create(**setting)
+        Setting.objects.create(**data)
 
     # Delete deprecated settings
     Setting.objects.filter(setting__in=removed_settings).delete()

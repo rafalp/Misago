@@ -21,6 +21,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         "og_image_avatar_on_thread",
         "forum_footnote",
         "email_footer",
+        "show_admin_panel_link_in_ui",
     ]
 
     forum_name = forms.CharField(label=_("Forum name"), min_length=2, max_length=255)
@@ -110,6 +111,18 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         ),
         max_length=255,
         required=False,
+    )
+
+    show_admin_panel_link_in_ui = YesNoSwitch(
+        label=_(
+            "Display the link to the Admin Control Panel in "
+            "the administrator's user menu"
+        ),
+        help_text=_(
+            "Hiding the link to the ACP from user menus reduces risk of malicious "
+            "actors gaining access to admin session for admin users who are sharing "
+            "their PC with others or who are logging in to the site in public spaces."
+        ),
     )
 
     def __init__(self, *args, **kwargs):

@@ -8,7 +8,7 @@ settings = [
     {
         "setting": "enable_oauth2_client",
         "python_type": "bool",
-        "dry_value": False,
+        "wet_value": False,
         "is_public": True,
     },
     {"setting": "oauth2_provider", "is_public": True},
@@ -40,7 +40,7 @@ settings = [
     {
         "setting": "oauth2_send_welcome_email",
         "python_type": "bool",
-        "dry_value": False,
+        "wet_value": False,
         "is_public": False,
     },
     {"setting": "oauth2_json_id_path", "dry_value": "id", "is_public": False},
@@ -54,10 +54,12 @@ def create_settings(apps, _):
     Setting = apps.get_model("misago_conf", "Setting")
     for setting in settings:
         data = setting.copy()
-        if "python_type" in data and "dry_value" in data:
-            data["dry_value"] = dehydrate_value(data["python_type"], data["dry_value"])
+        if "python_type" in data and "wet_value" in data:
+            data["dry_value"] = dehydrate_value(
+                data["python_type"], data.pop("wet_value")
+            )
 
-        Setting.objects.create(**setting)
+        Setting.objects.create(**data)
 
 
 class Migration(migrations.Migration):
