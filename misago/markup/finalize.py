@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 
 QUOTE_HEADER_RE = re.compile(
     r"""
-<div class="quote-heading">(?P<title>.*?)</div>
+<div class="quote-heading" data-noquote="1">(?P<title>.*?)</div>
 """.strip(),
     re.IGNORECASE | re.MULTILINE | re.DOTALL,
 )
@@ -24,16 +24,7 @@ def replace_quote_headers(matchobj):
         quote_title = _("%(title)s has written:") % {"title": title}
     else:
         quote_title = _("Quoted message:")
-    return '<div class="quote-heading">%s</div>' % quote_title
-
-
-def replace_spoiler_headers(matchobj):
-    title = matchobj.group("title")
-    if title:
-        spoiler_title = _("%(title)s:") % {"title": title}
-    else:
-        spoiler_title = _("Spoiler:")
-    return '<div class="spoiler-heading">%s</div>' % spoiler_title
+    return '<div class="quote-heading" data-noquote="1">%s</div>' % quote_title
 
 
 def replace_spoiler_reveal_buttons(post):
