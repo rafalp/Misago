@@ -19,6 +19,7 @@ export class Posting {
     this._isClosing = false
 
     this._beforeunloadSet = false
+    this._props = null
   }
 
   isOpen() {
@@ -27,13 +28,17 @@ export class Posting {
 
   setBeforeUnload() {
     if (!this._beforeunloadSet) {
-      window.addEventListener("beforeunload", this.beforeUnload, { capture: true })
+      window.addEventListener("beforeunload", this.beforeUnload, {
+        capture: true,
+      })
       this._beforeunloadSet = true
     }
   }
 
   unsetBeforeUnload() {
-    window.removeEventListener("beforeunload", this.beforeUnload, { capture: true })
+    window.removeEventListener("beforeunload", this.beforeUnload, {
+      capture: true,
+    })
     this._beforeunloadSet = false
   }
 
@@ -44,9 +49,23 @@ export class Posting {
 
   open(props) {
     if (this._isOpen === false) {
-      this._mode = props.mode
+      if (props.mode === "QUOTE") {
+        this._mode = "REPLY"
+      } else {
+        this._mode = props.mode
+      }
+
       this._isOpen = props.submit
-      this._realOpen(props)
+      this._realOpen(
+        Object.assign({}, props, {mode: this._mode})
+      )
+    } else if (props.mode === "QUOTE") {
+      this._realOpen(
+        Object.assign({}, this._props, {
+          config: props.config,
+          context: props.context,
+        })
+      )
     } else if (this._isOpen !== props.submit) {
       let message = gettext(
         "You are already working on other message. Do you want to discard it?"
@@ -66,6 +85,7 @@ export class Posting {
   _realOpen(props) {
     mount(<PostingComponent {...props} />, this._mount.id)
 
+    this._props = props
     this._mount.classList.add("show")
     this._observer.observe(this._mount)
     this.setBeforeUnload()
@@ -73,6 +93,7 @@ export class Posting {
 
   close = () => {
     this.unsetBeforeUnload()
+    this._props = null
 
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true

@@ -85,7 +85,7 @@ export default class extends Form {
     this.setState((prevState, props) => {
       if (prevState.post.length > 0) {
         return {
-          post: prevState.post + "\n\n" + newPost,
+          post: prevState.post.trim() + "\n\n" + newPost,
         }
       }
 

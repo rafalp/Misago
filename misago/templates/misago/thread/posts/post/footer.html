@@ -22,13 +22,16 @@
       </p>
     {% endif %}
     {% if post.acl.can_reply %}
-      <button type="button" class="btn btn-primary pull-right" disabled="disabled">
-        {% trans "Reply" %}
+      <button type="button" class="btn btn-default btn-sm pull-right" disabled="disabled">
+        {% trans "Reply" context "post control" %}
+      </button>
+      <button type="button" class="btn btn-default btn-sm pull-right" disabled="disabled">
+        {% trans "Quote" context "post control" %}
       </button>
     {% endif %}
     {% if post.acl.can_edit %}
-      <button type="button" class="btn btn-default pull-right" disabled="disabled">
-        {% trans "Edit" %}
+      <button type="button" class="hidden-xs  btn btn-default btn-sm pull-right" disabled="disabled">
+        {% trans "Edit" context "post control" %}
       </button>
     {% endif %}
   </div>

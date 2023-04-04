@@ -19,6 +19,7 @@ export default function (props) {
       />
       <LikesCompact likes={props.post.likes} {...props} />
       <Reply {...props} />
+      <Quote {...props} />
       <Edit {...props} />
     </div>
   )
@@ -54,7 +55,7 @@ export class MarkAsBestAnswer extends React.Component {
         type="button"
       >
         <span className="material-icon">check_box</span>
-        {gettext("Best answer")}
+        {pgettext("post control", "Best answer")}
       </button>
     )
   }
@@ -232,6 +233,34 @@ export class Reply extends React.Component {
       thread: this.props.thread,
       config: this.props.thread.api.editor,
       submit: this.props.thread.api.posts.index,
+    })
+  }
+
+  render() {
+    if (this.props.post.acl.can_reply) {
+      return (
+        <button
+          className="btn btn-default btn-sm pull-right"
+          type="button"
+          onClick={this.onClick}
+        >
+          {pgettext("post control", "Reply")}
+        </button>
+      )
+    } else {
+      return null
+    }
+  }
+}
+
+export class Quote extends React.Component {
+  onClick = () => {
+    posting.open({
+      mode: "QUOTE",
+
+      thread: this.props.thread,
+      config: this.props.thread.api.editor,
+      submit: this.props.thread.api.posts.index,
 
       context: {
         reply: this.props.post.id,
@@ -243,11 +272,11 @@ export class Reply extends React.Component {
     if (this.props.post.acl.can_reply) {
       return (
         <button
-          className="btn btn-primary btn-sm pull-right"
+          className="btn btn-default btn-sm pull-right"
           type="button"
           onClick={this.onClick}
         >
-          {gettext("Reply")}
+          {pgettext("post control", "Quote")}
         </button>
       )
     } else {
@@ -276,7 +305,7 @@ export class Edit extends React.Component {
           type="button"
           onClick={this.onClick}
         >
-          {gettext("Edit")}
+          {pgettext("post control", "Edit")}
         </button>
       )
     } else {
