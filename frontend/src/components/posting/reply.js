@@ -51,7 +51,8 @@ export default class extends Form {
     const context = this.props.context
     const newContext = nextProps.context
 
-    if (context && newContext && context.reply === newContext.reply) return
+    // User clicked "reply" instead of "quote"
+    if (context && newContext && !newContext.reply) return
 
     ajax
       .get(nextProps.config, nextProps.context || null)
@@ -82,7 +83,7 @@ export default class extends Form {
     this.setState((prevState, props) => {
       if (prevState.post.length > 0) {
         return {
-          post: prevState.post + "\n\n" + newPost,
+          post: prevState.post.trim() + "\n\n" + newPost,
         }
       }
 
