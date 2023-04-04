@@ -23,19 +23,19 @@ export class UserMenu extends React.Component {
         <li className="dropdown-header">
           <strong>{user.username}</strong>
           <div className="row user-stats">
-            <div className="col-sm-3">
+            <div className="col-xs-3">
               <span className="material-icon">message</span>
               {user.posts}
             </div>
-            <div className="col-sm-3">
+            <div className="col-xs-3">
               <span className="material-icon">forum</span>
               {user.threads}
             </div>
-            <div className="col-sm-3">
+            <div className="col-xs-3">
               <span className="material-icon">favorite</span>
               {user.followers}
             </div>
-            <div className="col-sm-3">
+            <div className="col-xs-3">
               <span className="material-icon">favorite_outline</span>
               {user.following}
             </div>
@@ -70,6 +70,14 @@ export class UserMenu extends React.Component {
               <span className="material-icon">message</span>
               {gettext("Private threads")}
               <PrivateThreadsBadge user={user} />
+            </a>
+          </li>
+        )}
+        {!!misago.get("ADMIN_URL") && (
+          <li>
+            <a href={misago.get("ADMIN_URL")} target="_blank">
+              <span className="material-icon">security</span>
+              {gettext("Admin control panel")}
             </a>
           </li>
         )}
