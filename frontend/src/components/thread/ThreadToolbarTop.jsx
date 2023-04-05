@@ -19,9 +19,9 @@ const ThreadToolbarTop = ({
   <Toolbar>
     <ToolbarSection className="hidden-xs">
       <ToolbarItem>
-        <ThreadShortcutsButton thread={thread} user={user} />
+        <ThreadShortcutsButton posts={posts} thread={thread} user={user} />
       </ToolbarItem>
-      <ToolbarItem className="hidden-xs hidden-sm">
+      <ToolbarItem>
         <ThreadPagination baseUrl={thread.url.index} posts={posts} />
       </ToolbarItem>
     </ToolbarSection>
@@ -36,7 +36,7 @@ const ThreadToolbarTop = ({
     {thread.acl.can_reply ? (
       <ToolbarSection>
         <ToolbarItem className="hidden-sm hidden-md hidden-lg" shrink>
-          <ThreadShortcutsButton thread={thread} user={user} />
+          <ThreadShortcutsButton posts={posts} thread={thread} user={user} />
         </ToolbarItem>
         <ToolbarItem>
           <ThreadReplyButton onClick={onReply} />
@@ -63,7 +63,7 @@ const ThreadToolbarTop = ({
     ) : (
       <ToolbarSection>
         <ToolbarItem className="hidden-sm hidden-md hidden-lg" shrink>
-          <ThreadShortcutsButton thread={thread} user={user} />
+          <ThreadShortcutsButton posts={posts} thread={thread} user={user} />
         </ToolbarItem>
         {thread.acl.can_start_poll && !thread.poll && (
           <ToolbarItem>

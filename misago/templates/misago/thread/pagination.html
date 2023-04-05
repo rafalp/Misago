@@ -1,5 +1,10 @@
 {% load i18n misago_capture %}
 <nav class="misago-pagination" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
+  {% if bottom %}
+    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to top' %}" href="#">
+      <span class="material-icon">arrow_upward</span>
+    </a>
+  {% endif %}
   {% if paginator.first %}
     <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to first page' %}" href="{% url url_name slug=thread.slug pk=thread.pk %}">
       <span class="material-icon">first_page</span>

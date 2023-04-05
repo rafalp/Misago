@@ -1,6 +1,7 @@
 import React from "react"
+import { Link } from "react-router"
 
-const ThreadShortcutsButton = ({ user, thread }) => (
+const ThreadShortcutsButton = ({ user, thread, posts }) => (
   <div className="dropdown">
     <button
       className="btn btn-default btn-outline btn-icon"
@@ -13,6 +14,14 @@ const ThreadShortcutsButton = ({ user, thread }) => (
       <span className="material-icon">bookmark</span>
     </button>
     <ul className="dropdown-menu">
+      {!!posts.first && (
+        <li>
+          <Link className="btn btn-link" href={thread.url.index}>
+            <span className="material-icon">place</span>
+            {gettext("Go to first post")}
+          </Link>
+        </li>
+      )}
       {user.is_authenticated && thread.is_new && (
         <li>
           <a className="btn btn-link" href={thread.url.new_post}>
