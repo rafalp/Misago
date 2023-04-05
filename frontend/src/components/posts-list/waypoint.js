@@ -1,9 +1,5 @@
 import React from "react"
-import * as post from "misago/reducers/post"
-import * as thread from "misago/reducers/thread"
 import ajax from "misago/services/ajax"
-import snackbar from "misago/services/snackbar"
-import store from "misago/services/store"
 
 export default class extends React.Component {
   constructor(props) {
@@ -49,6 +45,7 @@ export default class extends React.Component {
 
   render() {
     const ready = !this.initialized && !this.primed && !this.props.post.is_read
+
     return (
       <div
         className={this.props.className}
