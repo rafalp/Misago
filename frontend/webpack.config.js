@@ -89,7 +89,6 @@ module.exports = (env, argv) => {
         misago: path.resolve(__dirname, "src"),
         "at-js": path.resolve(modules, "at.js/dist/js/jquery.atwho.js"),
         "jquery-caret": path.resolve(modules, "jquery.caret/dist/jquery.caret.js"),
-        "waypoints": path.resolve(modules, "waypoints/lib/jquery.waypoints.js"),
         highlight: path.resolve(__dirname, "highlight/highlight.js"),
       },
       extensions: [".js", ".jsx"],

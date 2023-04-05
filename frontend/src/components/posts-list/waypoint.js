@@ -6,59 +6,56 @@ import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 
 export default class extends React.Component {
-  /*
-  Super naive and de-facto placeholder implementation for reading posts on scroll
-  */
-  componentDidMount() {
-    if (this.props.post.is_read) return // don't register read tracker
+  constructor(props) {
+    super(props)
 
-    $(this.element).waypoint({
-      handler: (direction) => {
-        if (direction !== "down" || this.props.post.is_read) return
+    this.initialized = false
+    this.primed = false
+    this.observer = null
+  }
 
-        // after 1500ms run flag post as read logic
-        window.setTimeout(() => {
-          // check if post's bottom edge is still in viewport
-          const boundingClientRect = this.element.getBoundingClientRect()
-          const offsetBottom =
-            boundingClientRect.height + boundingClientRect.top
-          const clientHeight = document.documentElement.clientHeight
+  initialize = (element) => {
+    this.initialized = true
 
-          if (offsetBottom < 5) return // scrolled past the post
-          if (offsetBottom > clientHeight) return // scrolled back up
+    this.observer = new IntersectionObserver((entries) =>
+      entries.forEach(this.callback)
+    )
+    this.observer.observe(element)
+  }
 
-          // mark post as read
-          store.dispatch(
-            post.patch(this.props.post, {
-              is_read: true,
-            })
-          )
+  callback = (entry) => {
+    if (!entry.isIntersecting || this.props.post.is_read || this.primed) {
+      return
+    }
 
-          // call API to let it know we have unread post
-          ajax.post(this.props.post.api.read).then(
-            (data) => {
-              store.dispatch(
-                thread.update(this.props.thread, {
-                  is_read: data.thread_is_read,
-                })
-              )
-            },
-            (rejection) => {
-              snackbar.apiError(rejection)
-            }
-          )
-        }, 1000)
-      },
-      offset: "bottom-in-view",
-    })
+    window.setTimeout(() => {
+      ajax.post(this.props.post.api.read)
+    }, 0)
+
+    this.primed = true
+    this.destroy()
+  }
+
+  destroy() {
+    if (this.observer) {
+      this.observer.disconnect()
+      this.observer = null
+    }
+  }
+
+  componentWillUnmount() {
+    this.destroy()
   }
 
   render() {
+    const ready = !this.initialized && !this.primed && !this.props.post.is_read
     return (
       <div
         className={this.props.className}
         ref={(node) => {
-          if (node) this.element = node
+          if (node && ready) {
+            this.initialize(node)
+          }
         }}
       >
         {this.props.children}

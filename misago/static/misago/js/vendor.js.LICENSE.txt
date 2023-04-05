@@ -35,13 +35,6 @@ object-assign
  * Date: 2016-05-20T17:23Z
  */
 
-/*!
-Waypoints - 4.0.1
-Copyright © 2011-2016 Caleb Troughton
-Licensed under the MIT license.
-https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
-*/
-
 /*! cropit - v0.5.0 <https://github.com/scottcheng/cropit> */
 
 /**
