@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-28 20:37+0000\n"
+"POT-Creation-Date: 2023-04-05 20:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2311,6 +2311,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:1
+msgctxt "post control"
+msgid "Best answer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgid "Liked"
 msgstr ""
 
@@ -2337,7 +2342,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:1
+msgctxt "post control"
 msgid "Reply"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post control"
+msgid "Quote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post control"
+msgid "Edit"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2631,6 +2647,10 @@ msgid "Private threads"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgid "Go to top"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgid "Go to first page"
 msgstr ""
 
@@ -2716,11 +2736,19 @@ msgid "Posts options"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgid "Reply"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgid "Add poll"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Shortcuts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Go to first post"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3144,6 +3172,10 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Change avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Admin control panel"
 msgstr ""
 
 #: static/misago/js/misago.js:1

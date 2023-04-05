@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-28 20:37+0000\n"
+"POT-Creation-Date: 2023-04-05 20:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,7 +113,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: admin/auth.py:29
+#: admin/auth.py:30
 msgid "Your admin session has expired."
 msgstr ""
 
@@ -633,124 +633,136 @@ msgstr ""
 msgid "You need to set question answers if selected CAPTCHA type is Q&A."
 msgstr ""
 
-#: conf/admin/forms/general.py:26
+#: conf/admin/forms/general.py:27
 msgid "Forum name"
 msgstr ""
 
-#: conf/admin/forms/general.py:27
+#: conf/admin/forms/general.py:28
 msgid "Forum address"
 msgstr ""
 
-#: conf/admin/forms/general.py:29
+#: conf/admin/forms/general.py:30
 msgid "Page title"
 msgstr ""
 
-#: conf/admin/forms/general.py:31
+#: conf/admin/forms/general.py:32
 msgid "Meta Description"
 msgstr ""
 
-#: conf/admin/forms/general.py:33
+#: conf/admin/forms/general.py:34
 msgid ""
 "Short description of your forum that search and social sites may display "
 "next to link to your forum's index."
 msgstr ""
 
-#: conf/admin/forms/general.py:40
+#: conf/admin/forms/general.py:41
 msgid "Header text"
 msgstr ""
 
-#: conf/admin/forms/general.py:41
+#: conf/admin/forms/general.py:42
 msgid "This text will be displayed in page header on forum index."
 msgstr ""
 
-#: conf/admin/forms/general.py:46
+#: conf/admin/forms/general.py:47
 msgid "Header message"
 msgstr ""
 
-#: conf/admin/forms/general.py:48
+#: conf/admin/forms/general.py:49
 msgid ""
 "This message will be displayed in page header on forum index, under the "
 "header text."
 msgstr ""
 
-#: conf/admin/forms/general.py:57
+#: conf/admin/forms/general.py:58
 #: templates/misago/admin/conf/general_settings.html:17
 msgid "Logo"
 msgstr ""
 
-#: conf/admin/forms/general.py:58
+#: conf/admin/forms/general.py:59
 msgid "Image that will displayed in forum navbar."
 msgstr ""
 
-#: conf/admin/forms/general.py:61
+#: conf/admin/forms/general.py:62
 msgid "Delete logo image"
 msgstr ""
 
-#: conf/admin/forms/general.py:63
+#: conf/admin/forms/general.py:64
 msgid "Small logo"
 msgstr ""
 
-#: conf/admin/forms/general.py:65
+#: conf/admin/forms/general.py:66
 msgid ""
 "Image that will be displayed in compact forum navbar. When set, it will "
 "replace icon pointing to forum index."
 msgstr ""
 
-#: conf/admin/forms/general.py:71
+#: conf/admin/forms/general.py:72
 msgid "Delete small logo image"
 msgstr ""
 
-#: conf/admin/forms/general.py:74 legal/admin/forms.py:34
+#: conf/admin/forms/general.py:75 legal/admin/forms.py:34
 msgid "Text"
 msgstr ""
 
-#: conf/admin/forms/general.py:76
+#: conf/admin/forms/general.py:77
 msgid ""
 "Text displayed in forum navbar. If logo image was uploaded, text will be "
 "displayed right next to it. Never displayed by the compact navbar."
 msgstr ""
 
-#: conf/admin/forms/general.py:84
+#: conf/admin/forms/general.py:85
 msgid "Image"
 msgstr ""
 
-#: conf/admin/forms/general.py:86
+#: conf/admin/forms/general.py:87
 msgid ""
 "Custom image that will appear next to links to your forum posted on social "
 "sites. Facebook recommends that this image should be 1200 pixels wide and "
 "630 pixels tall."
 msgstr ""
 
-#: conf/admin/forms/general.py:92
+#: conf/admin/forms/general.py:93
 msgid "Delete image"
 msgstr ""
 
-#: conf/admin/forms/general.py:94
+#: conf/admin/forms/general.py:95
 msgid "Replace image with avatar on user profiles"
 msgstr ""
 
-#: conf/admin/forms/general.py:97
+#: conf/admin/forms/general.py:98
 msgid "Replace image with avatar on threads"
 msgstr ""
 
-#: conf/admin/forms/general.py:101
+#: conf/admin/forms/general.py:102
 #: templates/misago/admin/conf/general_settings.html:60
 msgid "Forum footnote"
 msgstr ""
 
-#: conf/admin/forms/general.py:102
+#: conf/admin/forms/general.py:103
 msgid "Short message displayed in forum footer."
 msgstr ""
 
-#: conf/admin/forms/general.py:107
+#: conf/admin/forms/general.py:108
 msgid "E-mails footer"
 msgstr ""
 
-#: conf/admin/forms/general.py:109
+#: conf/admin/forms/general.py:110
 msgid "Optional short message included at the end of e-mails sent by forum."
 msgstr ""
 
-#: conf/admin/forms/general.py:120
+#: conf/admin/forms/general.py:118
+msgid ""
+"Display the link to the Admin Control Panel in the administrator's user menu"
+msgstr ""
+
+#: conf/admin/forms/general.py:122
+msgid ""
+"Hiding the link to the ACP from user menus reduces risk of malicious actors "
+"gaining access to admin session for admin users who are sharing their PC "
+"with others or who are logging in to the site in public spaces."
+msgstr ""
+
+#: conf/admin/forms/general.py:133
 #, python-format
 msgid ""
 "Misago uses this setting to build links in e-mails sent to site users. "
@@ -1526,16 +1538,7 @@ msgstr ""
 msgid "Quoted message:"
 msgstr ""
 
-#: markup/finalize.py:33
-#, python-format
-msgid "%(title)s:"
-msgstr ""
-
-#: markup/finalize.py:35
-msgid "Spoiler:"
-msgstr ""
-
-#: markup/finalize.py:40
+#: markup/finalize.py:31
 msgid "Reveal spoiler"
 msgstr ""
 
@@ -2376,6 +2379,10 @@ msgstr ""
 msgid "Forum index"
 msgstr ""
 
+#: templates/misago/admin/conf/general_settings.html:69
+msgid "Admin Control Panel"
+msgstr ""
+
 #: templates/misago/admin/conf/oauth2_settings.html:19
 msgid "Initializing login"
 msgstr ""
@@ -2621,7 +2628,7 @@ msgid "Site analytics are currently unavailable due to an error."
 msgstr ""
 
 #: templates/misago/admin/dashboard/totals.html:43 threads/admin/__init__.py:36
-#: threads/permissions/attachments.py:11 threads/permissions/attachments.py:29
+#: threads/permissions/attachments.py:12 threads/permissions/attachments.py:30
 msgid "Attachments"
 msgstr ""
 
@@ -2812,8 +2819,8 @@ msgid "Change sorting to:"
 msgstr ""
 
 #: templates/misago/admin/generic/paginator.html:4
-#: templates/misago/thread/pagination.html:4
-#: templates/misago/thread/pagination.html:18
+#: templates/misago/thread/pagination.html:9
+#: templates/misago/thread/pagination.html:23
 #: templates/misago/userslists/rank_paginator.html:4
 #: templates/misago/userslists/rank_paginator.html:18
 msgid "Go to first page"
@@ -2825,24 +2832,24 @@ msgid "First"
 msgstr ""
 
 #: templates/misago/admin/generic/paginator.html:13
-#: templates/misago/thread/pagination.html:14
-#: templates/misago/thread/pagination.html:21
+#: templates/misago/thread/pagination.html:19
+#: templates/misago/thread/pagination.html:26
 #: templates/misago/userslists/rank_paginator.html:14
 #: templates/misago/userslists/rank_paginator.html:21
 msgid "Go to previous page"
 msgstr ""
 
 #: templates/misago/admin/generic/paginator.html:22
-#: templates/misago/thread/pagination.html:26
-#: templates/misago/thread/pagination.html:33
+#: templates/misago/thread/pagination.html:31
+#: templates/misago/thread/pagination.html:38
 #: templates/misago/userslists/rank_paginator.html:26
 #: templates/misago/userslists/rank_paginator.html:33
 msgid "Go to next page"
 msgstr ""
 
 #: templates/misago/admin/generic/paginator.html:31
-#: templates/misago/thread/pagination.html:29
-#: templates/misago/thread/pagination.html:36
+#: templates/misago/thread/pagination.html:34
+#: templates/misago/thread/pagination.html:41
 #: templates/misago/userslists/rank_paginator.html:29
 #: templates/misago/userslists/rank_paginator.html:36
 msgid "Go to last page"
@@ -3163,9 +3170,7 @@ msgstr ""
 #: templates/misago/admin/themes/assets/css.html:84
 #: templates/misago/admin/users/list.html:95
 #: templates/misago/admin/warnings/list.html:105
-#: templates/misago/profile/details.html:27
-#: templates/misago/thread/posts/post/footer.html:31
-#: users/admin/djangoadmin.py:72
+#: templates/misago/profile/details.html:27 users/admin/djangoadmin.py:72
 msgid "Edit"
 msgstr ""
 
@@ -4364,6 +4369,10 @@ msgstr ""
 msgid "Started on %(date)s"
 msgstr ""
 
+#: templates/misago/thread/pagination.html:4
+msgid "Go to top"
+msgstr ""
+
 #: templates/misago/thread/posts/event/index.html:5
 msgid "New event"
 msgstr ""
@@ -4495,9 +4504,18 @@ msgid "Like"
 msgstr ""
 
 #: templates/misago/thread/posts/post/footer.html:26
-#: templates/misago/thread/toolbar_bottom.html:28
-#: templates/misago/thread/toolbar_top.html:39
+msgctxt "post control"
 msgid "Reply"
+msgstr ""
+
+#: templates/misago/thread/posts/post/footer.html:29
+msgctxt "post control"
+msgid "Quote"
+msgstr ""
+
+#: templates/misago/thread/posts/post/footer.html:34
+msgctxt "post control"
+msgid "Edit"
 msgstr ""
 
 #: templates/misago/thread/posts/post/header.html:5
@@ -4550,6 +4568,11 @@ msgstr ""
 #: templates/misago/thread/thread.html:25
 #: templates/misago/thread/thread.html:36
 msgid "Closed."
+msgstr ""
+
+#: templates/misago/thread/toolbar_bottom.html:28
+#: templates/misago/thread/toolbar_top.html:39
+msgid "Reply"
 msgstr ""
 
 #: templates/misago/thread/toolbar_top.html:6
@@ -5473,23 +5496,23 @@ msgid ""
 "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr ""
 
-#: threads/permissions/attachments.py:14
+#: threads/permissions/attachments.py:15
 msgid "Max attached file size (in kb)"
 msgstr ""
 
-#: threads/permissions/attachments.py:15
+#: threads/permissions/attachments.py:16
 msgid "Enter 0 to don't allow uploading end deleting attachments."
 msgstr ""
 
-#: threads/permissions/attachments.py:21
+#: threads/permissions/attachments.py:22
 msgid "Can download other users attachments"
 msgstr ""
 
-#: threads/permissions/attachments.py:24
+#: threads/permissions/attachments.py:25
 msgid "Can delete other users attachments"
 msgstr ""
 
-#: threads/permissions/attachments.py:32
+#: threads/permissions/attachments.py:33
 msgid "Can download attachments"
 msgstr ""
 
