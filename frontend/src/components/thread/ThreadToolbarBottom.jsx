@@ -17,7 +17,11 @@ const ThreadToolbarBottom = ({
   <Toolbar>
     <ToolbarSection>
       <ToolbarItem>
-        <ThreadPagination baseUrl={thread.url.index} posts={posts} />
+        <ThreadPagination
+          baseUrl={thread.url.index}
+          posts={posts}
+          scrollToTop
+        />
       </ToolbarItem>
       {moderation.enabled && (
         <ToolbarItem className="hidden-sm hidden-md hidden-lg" shrink>
