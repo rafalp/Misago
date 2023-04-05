@@ -28,7 +28,6 @@
     "react-router": "^2.2.4",
     "redux": "^3.0.5",
     "redux-batched-actions": "^0.1.2",
-    "waypoints": "^4.0.1",
     "zxcvbn": "^4.2.0"
   },
   "devDependencies": {

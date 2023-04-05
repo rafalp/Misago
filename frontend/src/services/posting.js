@@ -56,9 +56,7 @@ export class Posting {
       }
 
       this._isOpen = props.submit
-      this._realOpen(
-        Object.assign({}, props, {mode: this._mode})
-      )
+      this._realOpen(Object.assign({}, props, { mode: this._mode }))
     } else if (props.mode === "QUOTE") {
       this._realOpen(
         Object.assign({}, this._props, {
