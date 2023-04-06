@@ -1,9 +1,12 @@
 from django.contrib.auth import get_user_model
 
 from ...conf.test import override_dynamic_settings
-from ..setupnewuser import set_default_subscription_options, setup_new_user
+from ...notifications.threads import ThreadNotifications
+from ..setupnewuser import setup_new_user
 
 User = get_user_model()
+
+AVATAR_URL = "https://placekitten.com/600/500"
 
 
 def user(db):
@@ -17,7 +20,7 @@ def test_default_avatar_is_set_for_user(dynamic_settings, user):
 
 
 def test_avatar_from_url_is_set_for_user(dynamic_settings, user):
-    setup_new_user(dynamic_settings, user, avatar_url="https://placekitten.com/600/500")
+    setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
     assert user.avatars
     assert user.avatar_set.exists()
 
@@ -26,15 +29,15 @@ def test_default_started_threads_subscription_option_is_set_for_user(
     dynamic_settings, user
 ):
     with override_dynamic_settings(subscribe_start="no"):
-        set_default_subscription_options(dynamic_settings, user)
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.subscribe_to_started_threads == User.SUBSCRIPTION_NONE
 
     with override_dynamic_settings(subscribe_start="watch"):
-        set_default_subscription_options(dynamic_settings, user)
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.subscribe_to_started_threads == User.SUBSCRIPTION_NOTIFY
 
     with override_dynamic_settings(subscribe_start="watch_email"):
-        set_default_subscription_options(dynamic_settings, user)
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.subscribe_to_started_threads == User.SUBSCRIPTION_ALL
 
 
@@ -42,16 +45,164 @@ def test_default_replied_threads_subscription_option_is_set_for_user(
     dynamic_settings, user
 ):
     with override_dynamic_settings(subscribe_reply="no"):
-        set_default_subscription_options(dynamic_settings, user)
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_NONE
 
     with override_dynamic_settings(subscribe_reply="watch"):
-        set_default_subscription_options(dynamic_settings, user)
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_NOTIFY
 
     with override_dynamic_settings(subscribe_reply="watch_email"):
-        set_default_subscription_options(dynamic_settings, user)
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_ALL
+
+
+def test_default_watch_started_threads_option_is_set_for_user(dynamic_settings, user):
+    with override_dynamic_settings(watch_started_threads=ThreadNotifications.NONE):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_started_threads == ThreadNotifications.NONE
+
+    with override_dynamic_settings(
+        watch_started_threads=ThreadNotifications.DONT_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_started_threads == ThreadNotifications.DONT_EMAIL
+
+    with override_dynamic_settings(
+        watch_started_threads=ThreadNotifications.SEND_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_started_threads == ThreadNotifications.SEND_EMAIL
+
+
+def test_default_watch_replied_threads_option_is_set_for_user(dynamic_settings, user):
+    with override_dynamic_settings(watch_replied_threads=ThreadNotifications.NONE):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_replied_threads == ThreadNotifications.NONE
+
+    with override_dynamic_settings(
+        watch_replied_threads=ThreadNotifications.DONT_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_replied_threads == ThreadNotifications.DONT_EMAIL
+
+    with override_dynamic_settings(
+        watch_replied_threads=ThreadNotifications.SEND_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_replied_threads == ThreadNotifications.SEND_EMAIL
+
+
+def test_default_watch_new_private_threads_by_followed_option_is_set_for_user(
+    dynamic_settings, user
+):
+    with override_dynamic_settings(
+        watch_new_private_threads_by_followed=ThreadNotifications.NONE
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_new_private_threads_by_followed == ThreadNotifications.NONE
+
+    with override_dynamic_settings(
+        watch_new_private_threads_by_followed=ThreadNotifications.DONT_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.watch_new_private_threads_by_followed == ThreadNotifications.DONT_EMAIL
+        )
+
+    with override_dynamic_settings(
+        watch_new_private_threads_by_followed=ThreadNotifications.SEND_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.watch_new_private_threads_by_followed == ThreadNotifications.SEND_EMAIL
+        )
+
+
+def test_default_watch_new_private_threads_by_other_users_option_is_set_for_user(
+    dynamic_settings, user
+):
+    with override_dynamic_settings(
+        watch_new_private_threads_by_other_users=ThreadNotifications.NONE
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.watch_new_private_threads_by_other_users == ThreadNotifications.NONE
+
+    with override_dynamic_settings(
+        watch_new_private_threads_by_other_users=ThreadNotifications.DONT_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.watch_new_private_threads_by_other_users
+            == ThreadNotifications.DONT_EMAIL
+        )
+
+    with override_dynamic_settings(
+        watch_new_private_threads_by_other_users=ThreadNotifications.SEND_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.watch_new_private_threads_by_other_users
+            == ThreadNotifications.SEND_EMAIL
+        )
+
+
+def test_default_notify_new_private_threads_by_followed_option_is_set_for_user(
+    dynamic_settings, user
+):
+    with override_dynamic_settings(
+        notify_new_private_threads_by_followed=ThreadNotifications.NONE
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert user.notify_new_private_threads_by_followed == ThreadNotifications.NONE
+
+    with override_dynamic_settings(
+        notify_new_private_threads_by_followed=ThreadNotifications.DONT_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.notify_new_private_threads_by_followed
+            == ThreadNotifications.DONT_EMAIL
+        )
+
+    with override_dynamic_settings(
+        notify_new_private_threads_by_followed=ThreadNotifications.SEND_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.notify_new_private_threads_by_followed
+            == ThreadNotifications.SEND_EMAIL
+        )
+
+
+def test_default_notify_new_private_threads_by_other_users_option_is_set_for_user(
+    dynamic_settings, user
+):
+    with override_dynamic_settings(
+        notify_new_private_threads_by_other_users=ThreadNotifications.NONE
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.notify_new_private_threads_by_other_users == ThreadNotifications.NONE
+        )
+
+    with override_dynamic_settings(
+        notify_new_private_threads_by_other_users=ThreadNotifications.DONT_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.notify_new_private_threads_by_other_users
+            == ThreadNotifications.DONT_EMAIL
+        )
+
+    with override_dynamic_settings(
+        notify_new_private_threads_by_other_users=ThreadNotifications.SEND_EMAIL
+    ):
+        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
+        assert (
+            user.notify_new_private_threads_by_other_users
+            == ThreadNotifications.SEND_EMAIL
+        )
 
 
 def test_if_user_ip_is_available_audit_trail_is_created_for_user(dynamic_settings):

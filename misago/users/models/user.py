@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
+from ...notifications.threads import ThreadNotifications
 from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
@@ -206,6 +207,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
         default=SUBSCRIPTION_NONE, choices=SUBSCRIPTION_CHOICES
+    )
+
+    unread_notifications = models.PositiveIntegerField(default=0)
+
+    watch_started_threads = models.PositiveIntegerField(
+        default=ThreadNotifications.SEND_EMAIL
+    )
+    watch_replied_threads = models.PositiveIntegerField(
+        default=ThreadNotifications.SEND_EMAIL
+    )
+    watch_new_private_threads_by_followed = models.PositiveIntegerField(
+        default=ThreadNotifications.SEND_EMAIL
+    )
+    watch_new_private_threads_by_other_users = models.PositiveIntegerField(
+        default=ThreadNotifications.SEND_EMAIL
+    )
+    notify_new_private_threads_by_followed = models.PositiveIntegerField(
+        default=ThreadNotifications.SEND_EMAIL
+    )
+    notify_new_private_threads_by_other_users = models.PositiveIntegerField(
+        default=ThreadNotifications.SEND_EMAIL
     )
 
     threads = models.PositiveIntegerField(default=0)

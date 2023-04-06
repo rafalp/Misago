@@ -70,7 +70,7 @@ def delete_settings(apps, _):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("misago_conf", "0009_delete_oauth2_access_token_method"),
+        ("misago_conf", "0010_add_admin_link_setting"),
     ]
 
     operations = [
