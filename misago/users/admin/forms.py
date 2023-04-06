@@ -2,12 +2,12 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.db.models import Q
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _, ngettext, pgettext_lazy
 
 from ...acl.models import Role
 from ...admin.forms import IsoDateTimeField, YesNoSwitch
 from ...core.validators import validate_sluggable
+from ...notifications.threads import ThreadNotifications
 from ...search.filter_queryset import filter_queryset
 from ..models import Ban, DataDownload, Rank
 from ..profilefields import profilefields
@@ -174,7 +174,54 @@ class EditUserForm(UserBaseForm):
         label=_("Started threads"), coerce=int, choices=User.SUBSCRIPTION_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        label=_("Replid threads"), coerce=int, choices=User.SUBSCRIPTION_CHOICES
+        label=_("Replied threads"), coerce=int, choices=User.SUBSCRIPTION_CHOICES
+    )
+
+    watch_started_threads = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin user form", "Automatically watch threads user has started"
+        ),
+        coerce=int,
+        choices=ThreadNotifications.choices,
+    )
+    watch_replied_threads = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin user form", "Automatically watch threads user has replied to"
+        ),
+        coerce=int,
+        choices=ThreadNotifications.choices,
+    )
+    watch_new_private_threads_by_followed = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin user form",
+            "Automatically watch private threads user was invited to user they are following",
+        ),
+        coerce=int,
+        choices=ThreadNotifications.choices,
+    )
+    watch_new_private_threads_by_other_users = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin user form",
+            "Automatically watch private threads user was invited to by other users",
+        ),
+        coerce=int,
+        choices=ThreadNotifications.choices,
+    )
+    notify_new_private_threads_by_followed = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin user form",
+            "Notify about new private threads invitations from users this user is following",
+        ),
+        coerce=int,
+        choices=ThreadNotifications.choices,
+    )
+    notify_new_private_threads_by_other_users = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin user form",
+            "Notify about new private threads invitations from other users",
+        ),
+        coerce=int,
+        choices=ThreadNotifications.choices,
     )
 
     class Meta:
@@ -194,6 +241,12 @@ class EditUserForm(UserBaseForm):
             "signature_lock_staff_message",
             "subscribe_to_started_threads",
             "subscribe_to_replied_threads",
+            "watch_started_threads",
+            "watch_replied_threads",
+            "watch_new_private_threads_by_followed",
+            "watch_new_private_threads_by_other_users",
+            "notify_new_private_threads_by_followed",
+            "notify_new_private_threads_by_other_users",
         ]
 
     def __init__(self, *args, **kwargs):

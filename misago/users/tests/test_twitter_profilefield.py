@@ -41,6 +41,12 @@ class TwitterProfileFieldTests(AdminTestCase):
                 "signature_lock_user_message": "",
                 "subscribe_to_started_threads": "2",
                 "subscribe_to_replied_threads": "2",
+                "watch_started_threads": "0",
+                "watch_replied_threads": "0",
+                "watch_new_private_threads_by_followed": "0",
+                "watch_new_private_threads_by_other_users": "0",
+                "notify_new_private_threads_by_followed": "0",
+                "notify_new_private_threads_by_other_users": "0",
             },
         )
         self.assertEqual(response.status_code, 302)
@@ -67,6 +73,12 @@ class TwitterProfileFieldTests(AdminTestCase):
                 "signature_lock_user_message": "",
                 "subscribe_to_started_threads": "2",
                 "subscribe_to_replied_threads": "2",
+                "watch_started_threads": "0",
+                "watch_replied_threads": "0",
+                "watch_new_private_threads_by_followed": "0",
+                "watch_new_private_threads_by_other_users": "0",
+                "notify_new_private_threads_by_followed": "0",
+                "notify_new_private_threads_by_other_users": "0",
             },
         )
 
@@ -91,6 +103,12 @@ class TwitterProfileFieldTests(AdminTestCase):
                 "signature_lock_user_message": "",
                 "subscribe_to_started_threads": "2",
                 "subscribe_to_replied_threads": "2",
+                "watch_started_threads": "0",
+                "watch_replied_threads": "0",
+                "watch_new_private_threads_by_followed": "0",
+                "watch_new_private_threads_by_other_users": "0",
+                "notify_new_private_threads_by_followed": "0",
+                "notify_new_private_threads_by_other_users": "0",
             },
         )
         self.assertEqual(response.status_code, 302)
