@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Notification(models.Model):
@@ -23,6 +24,7 @@ class Notification(models.Model):
     thread = models.ForeignKey(
         "misago_threads.Thread", blank=True, null=True, on_delete=models.CASCADE
     )
+    thread_title = models.CharField(max_length=255, blank=True, null=True)
     post = models.ForeignKey(
         "misago_threads.Post", blank=True, null=True, on_delete=models.CASCADE
     )
@@ -31,7 +33,7 @@ class Notification(models.Model):
     # like "[actor] and X others [verb] [target]"
     extra_actors = models.IntegerField(default=0)
 
-    created_at = models.DateTimeField(auto_created=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     read_at = models.DateTimeField(blank=True, null=True)
 
 
@@ -41,7 +43,7 @@ class WatchedThread(models.Model):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
 
-    send_email = models.BooleanField(default=False)
+    notifications = models.PositiveIntegerField(default=0)
 
-    created_at = models.DateTimeField(auto_created=True)
-    read_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    read_at = models.DateTimeField(default=timezone.now)

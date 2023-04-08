@@ -155,12 +155,22 @@ def root_category(db):
 
 
 @pytest.fixture
+def private_threads_category(db):
+    return Category.objects.private_threads()
+
+
+@pytest.fixture
 def default_category(db):
     return Category.objects.get(slug="first-category")
 
 
 @pytest.fixture
 def thread(default_category):
+    return post_thread(default_category)
+
+
+@pytest.fixture
+def other_thread(default_category):
     return post_thread(default_category)
 
 
@@ -207,3 +217,8 @@ def other_user_hidden_thread(default_category, other_user):
 @pytest.fixture
 def other_user_unapproved_thread(default_category, other_user):
     return post_thread(default_category, poster=other_user, is_unapproved=True)
+
+
+@pytest.fixture
+def private_thread(private_threads_category):
+    return post_thread(private_threads_category)

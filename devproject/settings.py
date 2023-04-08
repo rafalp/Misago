@@ -205,6 +205,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.faker",
     "misago.menus",
     "misago.plugins",
+    "misago.apiv2",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]

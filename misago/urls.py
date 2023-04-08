@@ -43,7 +43,10 @@ apipatterns = hooks.apipatterns + [
     path("", include("misago.search.urls.api")),
 ]
 
-urlpatterns += [path("api/", include((apipatterns, "api"), namespace="api"))]
+urlpatterns += [
+    path("api/", include((apipatterns, "api"), namespace="api")),
+    path("api/v2/", include("misago.apiv2.urls")),
+]
 
 
 # Register Misago ACP

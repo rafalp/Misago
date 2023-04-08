@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             fields=[
                 ("created_at", models.DateTimeField(auto_created=True)),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
-                ("send_email", models.BooleanField(default=False)),
+                ("notifications", models.PositiveIntegerField(default=0)),
                 ("read_at", models.DateTimeField()),
                 (
                     "category",
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                 ("verb", models.CharField(max_length=32)),
                 ("is_read", models.BooleanField(default=False)),
                 ("actor_name", models.CharField(blank=True, max_length=255, null=True)),
-                ("extra_actors", models.IntegerField(default=0)),
+                ("extra_actors", models.PositiveIntegerField(default=0)),
                 ("read_at", models.DateTimeField(blank=True, null=True)),
                 (
                     "actor",
@@ -91,6 +91,10 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         to="misago_threads.thread",
                     ),
+                ),
+                (
+                    "thread_title",
+                    models.CharField(blank=True, max_length=255, null=True),
                 ),
                 (
                     "user",
