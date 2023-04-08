@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-05 20:00+0000\n"
+"POT-Creation-Date: 2023-04-08 12:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5331,11 +5331,11 @@ msgstr[1] ""
 msgid "One or more users could not be found: %(usernames)s"
 msgstr ""
 
-#: threads/api/postingendpoint/reply.py:81 threads/validators.py:77
+#: threads/api/postingendpoint/reply.py:85 threads/validators.py:77
 msgid "You have to enter a message."
 msgstr ""
 
-#: threads/api/postingendpoint/reply.py:106
+#: threads/api/postingendpoint/reply.py:110
 msgid "You have to enter thread title."
 msgstr ""
 
