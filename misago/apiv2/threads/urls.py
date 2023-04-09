@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .watch import watch_private_thread, watch_thread
+from .views import watch_private_thread, watch_thread
 
 urlpatterns = [
     path(

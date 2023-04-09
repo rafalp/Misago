@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -14,6 +13,7 @@ from ...threads.permissions import (
     allow_see_thread,
     allow_use_private_threads,
 )
+from ..decorators import require_auth
 
 
 class ThreadWatchSerializer(serializers.Serializer):
@@ -23,7 +23,7 @@ class ThreadWatchSerializer(serializers.Serializer):
 
 
 @api_view(["POST"])
-@login_required
+@require_auth
 def watch_thread(request, thread_id: int):
     thread = get_object_or_404(Thread.objects.select_related("category"), id=thread_id)
     if not Category.objects.root_category().has_child(thread.category):
@@ -34,7 +34,7 @@ def watch_thread(request, thread_id: int):
 
 
 @api_view(["POST"])
-@login_required
+@require_auth
 def watch_private_thread(request, thread_id: int):
     allow_use_private_threads(request.user_acl)
 
