@@ -14,6 +14,7 @@ urlpatterns = hooks.urlpatterns + [
     path("", include("misago.users.urls")),
     path("", include("misago.categories.urls")),
     path("", include("misago.threads.urls")),
+    path("", include("misago.notifications.urls")),
     path("", include("misago.search.urls")),
     path("", include("misago.oauth2.urls")),
     path("", include("misago.socialauth.urls")),

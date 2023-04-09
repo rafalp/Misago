@@ -1,4 +1,4 @@
-from django.http import JsonResponse, Http404
+from django.http import HttpRequest, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.decorators import api_view
@@ -24,7 +24,7 @@ class ThreadWatchSerializer(serializers.Serializer):
 
 @api_view(["POST"])
 @require_auth
-def watch_thread(request, thread_id: int):
+def watch_thread(request: HttpRequest, thread_id: int) -> JsonResponse:
     thread = get_object_or_404(Thread.objects.select_related("category"), id=thread_id)
     if not Category.objects.root_category().has_child(thread.category):
         raise Http404()
@@ -35,7 +35,7 @@ def watch_thread(request, thread_id: int):
 
 @api_view(["POST"])
 @require_auth
-def watch_private_thread(request, thread_id: int):
+def watch_private_thread(request: HttpRequest, thread_id: int) -> JsonResponse:
     allow_use_private_threads(request.user_acl)
 
     thread = get_object_or_404(Thread, id=thread_id)
@@ -48,7 +48,7 @@ def watch_private_thread(request, thread_id: int):
     return watch_thread_shared_logic(request, thread)
 
 
-def watch_thread_shared_logic(request, thread):
+def watch_thread_shared_logic(request: HttpRequest, thread: Thread) -> JsonResponse:
     serializer = ThreadWatchSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     notifications = serializer.data["notifications"]

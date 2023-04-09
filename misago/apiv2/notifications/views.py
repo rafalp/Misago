@@ -1,8 +1,8 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 
 from ...notifications.models import Notification
-from ..decorators import require_auth
+from ...notifications.permissions import allow_use_notifications
 from ..pagination import paginate_queryset
 from .serializers import NotificationSerializer
 
@@ -11,8 +11,9 @@ MAX_LIMIT = 50
 
 
 @api_view(["GET"])
-@require_auth
-def notifications(request):
+def notifications(request: HttpRequest) -> JsonResponse:
+    allow_use_notifications(request.user)
+
     queryset = (
         Notification.objects.filter(user=request.user)
         .select_related("actor")
@@ -48,8 +49,9 @@ def notifications(request):
 
 
 @api_view(["POST"])
-@require_auth
-def notifications_read_all(request):
+def notifications_read_all(request: HttpRequest) -> HttpResponse:
+    allow_use_notifications(request.user)
+
     Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
     request.user.unread_notifications = 0
     request.user.save(update_fields=["unread_notifications"])
