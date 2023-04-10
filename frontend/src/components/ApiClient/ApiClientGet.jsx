@@ -34,7 +34,6 @@ export default class ApiClientGet extends React.Component {
     ajax.get(url).then(
       (data) => {
         if (url === this.props.url) {
-          console.log(data)
           this.setState({ loading: false, data })
         }
       },

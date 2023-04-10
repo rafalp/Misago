@@ -1,5 +1,5 @@
 import React from "react"
-import { ApiClientGet } from "../ApiClient"
+import NotificationsDropdown from "../NotificationsDropdown"
 
 export default class UserNotifications extends React.Component {
   constructor(props) {
@@ -63,34 +63,7 @@ export default class UserNotifications extends React.Component {
           className="dropdown-menu notifications-dropdown dropdown-menu-right"
           role="menu"
         >
-          <ApiClientGet
-            url={misago.get("NOTIFICATIONS_API") + "?filter=unread"}
-            disabled={!this.state.open}
-          >
-            {({ data, loading, error }) => {
-              if (loading) {
-                return <div>Loading notifications...</div>
-              }
-
-              if (error) {
-                return <div>Error!</div>
-              }
-
-              if (data) {
-                return (
-                  <div>
-                    {data.results.map((notification) => (
-                      <div key={notification.id}>
-                        <a href={notification.url}>{notification.message}</a>
-                      </div>
-                    ))}
-                  </div>
-                )
-              }
-
-              return null
-            }}
-          </ApiClientGet>
+          <NotificationsDropdown disabled={!this.state.open} />
         </div>
       </li>
     )
