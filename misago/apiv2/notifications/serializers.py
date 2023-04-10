@@ -40,5 +40,5 @@ class NotificationSerializer(serializers.ModelSerializer):
             "actor": actor_data,
             "actorName": obj.actor_name,
             "message": message_factory.get_message(obj),
-            "url": reverse("misago:notification", kwargs={"notification_id": obj.id}),
+            "url": obj.get_absolute_url(),
         }
