@@ -6,6 +6,7 @@ import NavbarSearch from "misago/components/navbar-search"
 import misago from "misago"
 import dropdown from "misago/services/mobile-navbar-dropdown"
 import modal from "misago/services/modal"
+import UserNotifications from "./UserNotifications"
 
 export class UserMenu extends React.Component {
   changeAvatar() {
@@ -111,6 +112,7 @@ export function UserNav({ user }) {
         <NavbarSearch />
       </li>
       <UserPrivateThreadsLink user={user} />
+      <UserNotifications user={user} />
       <li className="dropdown">
         <a
           aria-haspopup="true"

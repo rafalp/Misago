@@ -68,6 +68,7 @@ def preload_settings_json(request):
             "SETTINGS": preloaded_settings,
             "STATIC_URL": settings.STATIC_URL,
             "THREADS_ON_INDEX": settings.MISAGO_THREADS_ON_INDEX,
+            "NOTIFICATIONS_API": reverse("misago:apiv2:notifications"),
             "NOTIFICATIONS_URL": reverse("misago:notifications"),
         }
     )

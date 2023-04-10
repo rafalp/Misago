@@ -19,7 +19,7 @@ class NotificationActorSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj: User) -> dict:
         data = super().to_representation(obj)
-        data["url"] = obj.actor.get_absolute_url()
+        data["url"] = obj.get_absolute_url()
         return data
 
 
