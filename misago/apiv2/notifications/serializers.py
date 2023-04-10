@@ -15,8 +15,12 @@ class NotificationActorSerializer(serializers.ModelSerializer):
             "id",
             "username",
             "avatars",
-            # "url",
         ]
+
+    def to_representation(self, obj: User) -> dict:
+        data = super().to_representation(obj)
+        data["url"] = obj.actor.get_absolute_url()
+        return data
 
 
 class NotificationSerializer(serializers.ModelSerializer):
@@ -29,7 +33,6 @@ class NotificationSerializer(serializers.ModelSerializer):
 
         if obj.actor:
             actor_data = NotificationActorSerializer(obj.actor).data
-            actor_data["url"] = obj.actor.get_absolute_url()
         else:
             actor_data = None
 
