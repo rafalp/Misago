@@ -18,11 +18,13 @@ def test_notifications_api_returns_empty_list_if_user_has_no_notifications(user_
     }
 
 
-def test_notifications_api_returns_list_with_all_user_notifications(user, user_client):
+def test_notifications_api_returns_list_with_all_user_notifications(
+    user, other_user, user_client
+):
     read_notification = Notification.objects.create(
-        user=user, verb="tested", is_read=True
+        user=user, verb="test", is_read=True
     )
-    notification = Notification.objects.create(user=user, verb="tested", is_read=False)
+    notification = Notification.objects.create(user=user, verb="test", is_read=False)
 
     response = user_client.get(reverse("misago:apiv2:notifications"))
     assert response.status_code == 200
@@ -38,9 +40,9 @@ def test_notifications_api_returns_list_with_all_user_notifications(user, user_c
 
 def test_notifications_api_returns_list_with_read_user_notifications(user, user_client):
     read_notification = Notification.objects.create(
-        user=user, verb="tested", is_read=True
+        user=user, verb="test", is_read=True
     )
-    Notification.objects.create(user=user, verb="tested", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
 
     response = user_client.get(reverse("misago:apiv2:notifications") + "?filter=read")
     assert response.status_code == 200
@@ -56,8 +58,8 @@ def test_notifications_api_returns_list_with_read_user_notifications(user, user_
 def test_notifications_api_returns_list_with_unread_user_notifications(
     user, user_client
 ):
-    Notification.objects.create(user=user, verb="tested", is_read=True)
-    notification = Notification.objects.create(user=user, verb="tested", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=True)
+    notification = Notification.objects.create(user=user, verb="test", is_read=False)
 
     response = user_client.get(reverse("misago:apiv2:notifications") + "?filter=unread")
     assert response.status_code == 200
@@ -86,11 +88,31 @@ def test_notifications_api_clears_user_unread_notifications_count_if_unread_list
     assert user.unread_notifications == 0
 
 
+def test_notifications_api_returns_list_with_notification_by_actor(
+    user, other_user, user_client
+):
+    notification = Notification.objects.create(
+        user=user,
+        actor=other_user,
+        actor_name=other_user.username,
+        verb="test",
+        is_read=False,
+    )
+
+    response = user_client.get(reverse("misago:apiv2:notifications"))
+    assert response.status_code == 200
+
+    response_json = response.json()
+    assert [result["id"] for result in response_json["results"]] == [notification.id]
+    assert not response_json["hasNext"]
+    assert not response_json["hasPrevious"]
+
+
 def test_notifications_api_excludes_other_users_notifications(
     user, other_user, user_client
 ):
-    Notification.objects.create(user=other_user, verb="tested", is_read=True)
-    notification = Notification.objects.create(user=user, verb="tested", is_read=False)
+    Notification.objects.create(user=other_user, verb="test", is_read=True)
+    notification = Notification.objects.create(user=user, verb="test", is_read=False)
 
     response = user_client.get(reverse("misago:apiv2:notifications"))
     assert response.status_code == 200
@@ -102,9 +124,9 @@ def test_notifications_api_excludes_other_users_notifications(
 
 
 def test_notifications_api_supports_limiting_results_count(user, user_client):
-    Notification.objects.create(user=user, verb="tested", is_read=False)
-    Notification.objects.create(user=user, verb="tested", is_read=False)
-    Notification.objects.create(user=user, verb="tested", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
 
     response = user_client.get(reverse("misago:apiv2:notifications") + "?limit=2")
     assert response.status_code == 200
@@ -118,9 +140,9 @@ def test_notifications_api_supports_limiting_results_count(user, user_client):
 def test_notifications_api_returns_400_error_if_too_many_results_are_requested(
     user, user_client
 ):
-    Notification.objects.create(user=user, verb="tested", is_read=False)
-    Notification.objects.create(user=user, verb="tested", is_read=False)
-    Notification.objects.create(user=user, verb="tested", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
+    Notification.objects.create(user=user, verb="test", is_read=False)
 
     response = user_client.get(reverse("misago:apiv2:notifications") + "?limit=2000")
     assert response.status_code == 400

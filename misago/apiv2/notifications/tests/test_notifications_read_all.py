@@ -13,7 +13,7 @@ def test_notifications_read_all_api_returns_403_error_if_client_is_no_authentica
 def test_notifications_read_all_api_marks_users_notifications_as_read(
     user, user_client
 ):
-    notification = Notification.objects.create(user=user, verb="tested", is_read=False)
+    notification = Notification.objects.create(user=user, verb="test", is_read=False)
 
     user.unread_notifications = 10
     user.save()
@@ -33,7 +33,7 @@ def test_notifications_read_all_api_excludes_other_users_notifications(
     other_user, user_client
 ):
     notification = Notification.objects.create(
-        user=other_user, verb="tested", is_read=False
+        user=other_user, verb="test", is_read=False
     )
 
     other_user.unread_notifications = 10
@@ -52,7 +52,7 @@ def test_notifications_read_all_api_excludes_other_users_notifications(
 def test_notifications_read_all_api_works_when_user_has_no_unread_notifications(
     user, user_client
 ):
-    notification = Notification.objects.create(user=user, verb="tested", is_read=True)
+    notification = Notification.objects.create(user=user, verb="test", is_read=True)
 
     user.unread_notifications = 0
     user.save()
