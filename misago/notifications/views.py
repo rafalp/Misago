@@ -16,7 +16,19 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
     allow_use_notifications(request.user)
 
     user = request.user
-    notification = get_object_or_404(Notification, user=user, id=notification_id)
+    notification = get_object_or_404(
+        Notification.objects.select_related(),
+        user=user,
+        id=notification_id,
+    )
+
+    if notification.category_id:
+        # Populate relations caches on thread and post models
+        if notification.thread_id:
+            notification.thread.category = notification.category
+        if notification.post_id:
+            notification.post.thread = notification.thread
+            notification.post.category = notification.category
 
     if not notification.is_read:
         notification.is_read = True
