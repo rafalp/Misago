@@ -3,18 +3,18 @@ import React from "react"
 
 export default function NotificationsDropdownBody({
   children,
+  showAll,
   showUnread,
-  showRead,
   unread,
 }) {
   return (
     <div className="notifications-dropdown-body">
       <div>
+        <Button active={!unread} onClick={showAll}>
+          {pgettext("notifications dropdown", "All")}
+        </Button>
         <Button active={unread} onClick={showUnread}>
           {pgettext("notifications dropdown", "Unread")}
-        </Button>
-        <Button active={!unread} onClick={showRead}>
-          {pgettext("notifications dropdown", "Read")}
         </Button>
       </div>
       {children}

@@ -11,21 +11,21 @@ export default class NotificationsDropdown extends React.Component {
     super(props)
 
     this.state = {
-      unread: true,
-      url: misago.get("NOTIFICATIONS_API") + "?filter=unread",
+      unread: false,
+      url: "",
     }
   }
 
   getApiUrl() {
-    let url = misago.get("NOTIFICATIONS_API") + "?limit=30&filter="
-    url += this.state.unread ? "unread" : "read"
+    let url = misago.get("NOTIFICATIONS_API") + "?limit=30"
+    url += this.state.unread ? "&filter=unread" : ""
     return url
   }
 
   render = () => (
     <NotificationsDropdownBody
       unread={this.state.unread}
-      showRead={() => this.setState({ unread: false })}
+      showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}
     >
       <ApiClientGet url={this.getApiUrl()} disabled={this.props.disabled}>

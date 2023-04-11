@@ -1,51 +1,26 @@
 import React from "react"
+import { Dropdown } from "../Dropdown"
 import NotificationsDropdown from "../NotificationsDropdown"
 
-export default class UserNotifications extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      open: false,
-    }
-
-    this.element = null
-    this.ready = false
+export default function UserNotifications({ user }) {
+  let title = null
+  if (user.unreadNotifications) {
+    title = gettext("You have unread notifications!")
+  } else {
+    title = pgettext("navbar link", "Notifications")
   }
 
-  render() {
-    const { user } = this.props
-
-    let title = null
-    if (user.unreadNotifications) {
-      title = gettext("You have unread notifications!")
-    } else {
-      title = pgettext("navbar link", "Notifications")
-    }
-
-    return (
-      <li
-        className="dropdown"
-        ref={(element) => {
-          if (element && !this.element) {
-            this.element = element
-
-            $(element).on("show.bs.dropdown", () => {
-              this.setState({ open: true })
-            })
-
-            $(element).on("hidden.bs.dropdown", () => {
-              this.setState({ open: false })
-            })
-          }
-        }}
-      >
+  return (
+    <Dropdown
+      toggle={({ aria, toggle }) => (
         <a
-          aria-haspopup="true"
-          aria-expanded="false"
+          {...aria}
           className="navbar-icon"
-          data-toggle="dropdown"
           href={misago.get("NOTIFICATIONS_URL")}
+          onClick={(event) => {
+            event.preventDefault()
+            toggle()
+          }}
           title={title}
         >
           <span className="material-icon">
@@ -59,13 +34,12 @@ export default class UserNotifications extends React.Component {
             </span>
           )}
         </a>
-        <div
-          className="dropdown-menu notifications-dropdown dropdown-menu-right"
-          role="menu"
-        >
-          <NotificationsDropdown disabled={!this.state.open} />
-        </div>
-      </li>
-    )
-  }
+      )}
+      listItem
+      menuClassName="notifications-dropdown"
+      menuRightAlign
+    >
+      {({ isOpen }) => <NotificationsDropdown disabled={!isOpen} />}
+    </Dropdown>
+  )
 }
