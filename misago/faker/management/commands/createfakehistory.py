@@ -4,11 +4,14 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from django.db.models import F
 from django.utils import timezone
 from faker import Factory
 
 from ....categories.models import Category
 from ....core.pgutils import chunk_queryset
+from ....notifications.models import Notification
+from ....notifications.verbs import NotificationVerb
 from ....threads.checksums import update_post_checksum
 from ....threads.models import Thread
 from ....users.models import Rank
@@ -192,6 +195,8 @@ class Command(BaseCommand):
         # Default, standard post
         else:
             post = get_fake_post(fake, thread, poster)
+            if poster:
+                self.create_fake_notification(thread, post, poster)
 
         post.posted_on = date
         post.updated_on = date
@@ -201,6 +206,36 @@ class Command(BaseCommand):
         self.write_event(
             date, '%s has replied to "%s" thread' % (post.poster_name, thread)
         )
+
+    def create_fake_notification(self, thread, post, poster):
+        users_ids = list(
+            thread.post_set.exclude(poster=poster)
+            .values_list("poster_id", flat=True)
+            .distinct()
+        )
+        if None in users_ids:
+            users_ids.remove(None)
+
+        if users_ids:
+            Notification.objects.bulk_create(
+                [
+                    Notification(
+                        user_id=user_id,
+                        verb=NotificationVerb.REPLIED,
+                        actor=poster,
+                        actor_name=poster.username,
+                        category=post.category,
+                        thread=thread,
+                        thread_title=thread.title,
+                        post=post,
+                    )
+                    for user_id in users_ids
+                ]
+            )
+
+            User.objects.filter(id__in=users_ids).update(
+                unread_notifications=F("unread_notifications") + 1,
+            )
 
     def create_fake_follow(self, date):
         user_a = self.get_random_user(date)

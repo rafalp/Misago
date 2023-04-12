@@ -1,13 +1,25 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.urls import reverse
+
+
+NOTIFICATION_SECRET = 16
+
+
+def get_migration_secret() -> str:
+    return get_random_string(NOTIFICATION_SECRET)
 
 
 class Notification(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    # TODO: Move this over to WatchedThread
+    secret = models.CharField(
+        max_length=NOTIFICATION_SECRET, default=get_migration_secret
+    )
     verb = models.CharField(max_length=32)
     is_read = models.BooleanField(default=False)
 

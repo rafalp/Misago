@@ -1,6 +1,10 @@
+import html
 from typing import TYPE_CHECKING, Callable, Dict, overload
 
+from django.utils.translation import pgettext
+
 from .exceptions import NotificationVerbError
+from .verbs import NotificationVerb
 
 if TYPE_CHECKING:
     from .models import Notification
@@ -63,6 +67,21 @@ class NotificationMessageFactory:
 message_factory = NotificationMessageFactory()
 
 
-@message_factory.set_message("test")
+@message_factory.set_message("TEST")
 def get_test_notification_message(notification: "Notification") -> str:
     return f"Test notification #{notification.id}"
+
+
+@message_factory.set_message(NotificationVerb.REPLIED)
+def get_replied_notification_message(notification: "Notification") -> str:
+    message = html.escape(
+        pgettext("notification replied", "%(actor)s replied to the thread %(thread)s.")
+    )
+    return message % {
+        "actor": bold_escape(notification.actor_name),
+        "thread": bold_escape(notification.thread_title),
+    }
+
+
+def bold_escape(value: str) -> str:
+    return f"<b>{html.escape(value)}</b>"

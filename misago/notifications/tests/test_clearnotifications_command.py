@@ -24,7 +24,7 @@ def test_command_works_if_there_are_no_notifications(db):
 
 @override_dynamic_settings(delete_notifications_older_than=5)
 def test_recent_notification_is_kept(user, post):
-    Notification.objects.create(user=user, verb="test")
+    Notification.objects.create(user=user, verb="TEST")
 
     command_output = call_command()
     assert command_output == "No old notifications have been deleted."
@@ -33,7 +33,7 @@ def test_recent_notification_is_kept(user, post):
 
 @override_dynamic_settings(delete_notifications_older_than=5)
 def test_old_notification_is_deleted(user, post):
-    Notification.objects.create(user=user, verb="test")
+    Notification.objects.create(user=user, verb="TEST")
     Notification.objects.update(created_at=timezone.now() - timedelta(days=10))
 
     command_output = call_command()

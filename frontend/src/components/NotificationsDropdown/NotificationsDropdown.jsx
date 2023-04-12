@@ -1,5 +1,5 @@
 import React from "react"
-import { ApiClientGet } from "../ApiClient"
+import { ApiFetch } from "../Api"
 import NotificationsDropdownBody from "./NotificationsDropdownBody"
 import NotificationsDropdownEmpty from "./NotificationsDropdownEmpty"
 import NotificationsDropdownError from "./NotificationsDropdownError"
@@ -28,7 +28,7 @@ export default class NotificationsDropdown extends React.Component {
       showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}
     >
-      <ApiClientGet url={this.getApiUrl()} disabled={this.props.disabled}>
+      <ApiFetch url={this.getApiUrl()} disabled={this.props.disabled}>
         {({ data, loading, error }) => {
           if (loading) {
             return <NotificationsDropdownLoading />
@@ -46,7 +46,7 @@ export default class NotificationsDropdown extends React.Component {
 
           return <NotificationsDropdownList items={data ? data.results : []} />
         }}
-      </ApiClientGet>
+      </ApiFetch>
     </NotificationsDropdownBody>
   )
 }

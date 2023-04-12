@@ -6,7 +6,7 @@ from ..redirects import redirect_factory
 
 
 def test_notification_view_returns_redirect_to_user_notification(user, user_client):
-    notification = Notification.objects.create(user=user, verb="test")
+    notification = Notification.objects.create(user=user, verb="TEST")
     response = user_client.get(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
@@ -17,7 +17,7 @@ def test_notification_view_returns_redirect_to_user_notification(user, user_clie
 
 
 def test_notification_view_sets_notification_as_read(user, user_client):
-    notification = Notification.objects.create(user=user, verb="test", is_read=False)
+    notification = Notification.objects.create(user=user, verb="TEST", is_read=False)
     response = user_client.get(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
@@ -31,7 +31,7 @@ def test_notification_view_updates_user_unread_notifications_count(user, user_cl
     user.unread_notifications = 1
     user.save()
 
-    notification = Notification.objects.create(user=user, verb="test", is_read=False)
+    notification = Notification.objects.create(user=user, verb="TEST", is_read=False)
     response = user_client.get(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
@@ -47,7 +47,7 @@ def test_notification_view_skips_user_unread_notifications_count_for_read_notifi
     user.unread_notifications = 1
     user.save()
 
-    notification = Notification.objects.create(user=user, verb="test", is_read=True)
+    notification = Notification.objects.create(user=user, verb="TEST", is_read=True)
     response = user_client.get(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
@@ -67,7 +67,7 @@ def test_notification_view_returns_404_error_for_nonexisting_notification(user_c
 def test_notification_view_returns_404_error_for_other_user_notification(
     other_user, user_client
 ):
-    notification = Notification.objects.create(user=other_user, verb="test")
+    notification = Notification.objects.create(user=other_user, verb="TEST")
     response = user_client.get(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
