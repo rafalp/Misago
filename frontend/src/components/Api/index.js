@@ -1,3 +1,4 @@
 import ApiFetch from "./ApiFetch"
+import ApiMutation from "./ApiMutation"
 
-export { ApiFetch }
+export { ApiFetch, ApiMutation }

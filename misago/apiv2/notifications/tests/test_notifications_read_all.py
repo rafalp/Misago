@@ -19,10 +19,11 @@ def test_notifications_read_all_api_marks_users_notifications_as_read(
     user.save()
 
     response = user_client.post(reverse("misago:apiv2:notifications-read-all"))
-    assert response.status_code == 201
+    assert response.status_code == 204
 
     notification.refresh_from_db()
     assert notification.is_read
+    assert notification.read_at
 
     # User unread notifications counter is zeroed
     user.refresh_from_db()
@@ -40,7 +41,7 @@ def test_notifications_read_all_api_excludes_other_users_notifications(
     other_user.save()
 
     response = user_client.post(reverse("misago:apiv2:notifications-read-all"))
-    assert response.status_code == 201
+    assert response.status_code == 204
 
     notification.refresh_from_db()
     assert not notification.is_read
@@ -58,7 +59,7 @@ def test_notifications_read_all_api_works_when_user_has_no_unread_notifications(
     user.save()
 
     response = user_client.post(reverse("misago:apiv2:notifications-read-all"))
-    assert response.status_code == 201
+    assert response.status_code == 204
 
     notification.refresh_from_db()
     assert notification.is_read
@@ -75,7 +76,7 @@ def test_notifications_read_all_api_works_when_user_has_no_notifications(
     user.save()
 
     response = user_client.post(reverse("misago:apiv2:notifications-read-all"))
-    assert response.status_code == 201
+    assert response.status_code == 204
 
     # User unread notifications counter is zeroed
     user.refresh_from_db()

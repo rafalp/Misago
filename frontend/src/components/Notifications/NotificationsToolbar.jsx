@@ -9,7 +9,7 @@ export default function NotificationsToolbar({
   data,
   disabled,
   bottom,
-  refetch,
+  markAllAsRead,
 }) {
   return (
     <Toolbar>
@@ -29,6 +29,7 @@ export default function NotificationsToolbar({
             className="btn-default btn-block"
             type="button"
             disabled={disabled}
+            onClick={markAllAsRead}
           >
             <span className="material-icon">done_all</span>
             {pgettext("notifications", "Mark all as read")}

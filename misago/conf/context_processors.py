@@ -1,3 +1,5 @@
+import json
+
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.translation import get_language
@@ -16,6 +18,7 @@ def conf(request):
         "LOGIN_URL": settings.LOGIN_URL,
         "LOGOUT_URL": settings.LOGOUT_URL,
         "THREADS_ON_INDEX": settings.MISAGO_THREADS_ON_INDEX,
+        "CSRF_COOKIE_NAME": json.dumps(settings.CSRF_COOKIE_NAME),
         "settings": request.settings,
     }
 

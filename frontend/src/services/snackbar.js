@@ -9,7 +9,7 @@ export class Snackbar {
     this._timeout = null
   }
 
-  alert(message, type) {
+  alert = (message, type) => {
     if (this._timeout) {
       window.clearTimeout(this._timeout)
       this._store.dispatch(hideSnackbar())
@@ -29,26 +29,26 @@ export class Snackbar {
 
   // shorthands for message types
 
-  info(message) {
+  info = (message) => {
     this.alert(message, "info")
   }
 
-  success(message) {
+  success = (message) => {
     this.alert(message, "success")
   }
 
-  warning(message) {
+  warning = (message) => {
     this.alert(message, "warning")
   }
 
-  error(message) {
+  error = (message) => {
     this.alert(message, "error")
   }
 
   // shorthand for api errors
 
-  apiError(rejection) {
-    let message = rejection.detail
+  apiError = (rejection) => {
+    let message = rejection.data ? rejection.data.detail : rejection.detail
 
     if (!message) {
       if (rejection.status === 404) {

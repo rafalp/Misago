@@ -1,6 +1,6 @@
 import React from "react"
 
-export default class ApiClientGet extends React.Component {
+export default class ApiFetch extends React.Component {
   constructor(props) {
     super(props)
 

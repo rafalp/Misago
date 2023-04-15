@@ -1,4 +1,5 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.utils import timezone
 from rest_framework.decorators import api_view
 
 from ...notifications.models import Notification
@@ -28,16 +29,28 @@ def notifications(request: HttpRequest) -> JsonResponse:
 
     page = paginate_queryset(request, queryset, "-id", MAX_LIMIT)
 
-    # Reset user unread notifications counter if its first page of unread notifications
-    # and  its empty
-    if (
-        "after" not in request.GET
-        and filter_state == "unread"
-        and request.user.unread_notifications
-        and not page.items
-    ):
-        request.user.unread_notifications = 0
-        request.user.save(update_fields=["unread_notifications"])
+    # Update user unread notifications counter if its first page of notifications
+    # and the counter is obviously invalid
+    if "after" not in request.GET:
+        # User has unread notifications counter but there are no notifications?
+        if (
+            filter_state != "read"
+            and request.user.unread_notifications
+            and not page.items
+        ):
+            request.user.unread_notifications = 0
+            request.user.save(update_fields=["unread_notifications"])
+
+        # User has unread notifications but counter shows 0
+        if (
+            filter_state == "unread"
+            and not request.user.unread_notifications
+            and page.items
+        ):
+            real_unread_notifications = queryset[: MAX_LIMIT + 1].count()
+            if request.user.unread_notifications != real_unread_notifications:
+                request.user.unread_notifications = real_unread_notifications
+                request.user.save(update_fields=["unread_notifications"])
 
     return JsonResponse(
         {
@@ -54,7 +67,13 @@ def notifications(request: HttpRequest) -> JsonResponse:
 def notifications_read_all(request: HttpRequest) -> HttpResponse:
     allow_use_notifications(request.user)
 
-    Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    Notification.objects.filter(
+        user=request.user,
+        is_read=False,
+    ).update(
+        is_read=True,
+        read_at=timezone.now(),
+    )
     request.user.unread_notifications = 0
     request.user.save(update_fields=["unread_notifications"])
-    return HttpResponse(status=201)
+    return HttpResponse(status=204)

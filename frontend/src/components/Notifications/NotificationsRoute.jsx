@@ -1,5 +1,6 @@
 import React from "react"
-import { ApiFetch } from "../Api"
+import snackbar from "../../services/snackbar"
+import { ApiFetch, ApiMutation } from "../Api"
 import PageTitle from "../PageTitle"
 import PageContainer from "../PageContainer"
 import {
@@ -25,55 +26,76 @@ export default function NotificationsRoute({ location, route }) {
 
       <NotificationsPills filter={filter} />
       <ApiFetch url={getApiUrl(query, filter)}>
-        {({ data, loading, error, refetch }) => {
-          const toolbarProps = {
-            baseUrl,
-            data,
-            refetch,
-            disabled: loading || !data || data.results.length === 0,
-          }
+        {({ data, loading, error, refetch }) => (
+          <ApiMutation url={misago.get("NOTIFICATIONS_API") + "read-all/"}>
+            {(readAll, { loading: mutating }) => {
+              const toolbarProps = {
+                baseUrl,
+                data,
+                disabled:
+                  loading || mutating || !data || data.results.length === 0,
+                markAllAsRead: async () => {
+                  const confirmed = window.confirm(
+                    pgettext("notifications", "Mark all notifications as read?")
+                  )
 
-          if (loading) {
-            return (
-              <div>
-                <NotificationsToolbar {...toolbarProps} />
-                <NotificationsListLoading />
-                <NotificationsToolbar {...toolbarProps} bottom />
-              </div>
-            )
-          }
+                  if (confirmed) {
+                    readAll({
+                      onSuccess: async () => {
+                        refetch()
+                        snackbar.success(
+                          pgettext("notifications", "All notifications have been marked as read.")
+                        )
+                      },
+                      onError: snackbar.apiError,
+                    })
+                  }
+                },
+              }
 
-          if (error) {
-            return (
-              <div>
-                <NotificationsToolbar {...toolbarProps} />
-                <NotificationsListError error={error} />
-                <NotificationsToolbar {...toolbarProps} bottom />
-              </div>
-            )
-          }
+              if (loading || mutating) {
+                return (
+                  <div>
+                    <NotificationsToolbar {...toolbarProps} />
+                    <NotificationsListLoading />
+                    <NotificationsToolbar {...toolbarProps} bottom />
+                  </div>
+                )
+              }
 
-          if (data) {
-            if (!data.hasPrevious && query) {
-              window.history.replaceState({}, "", baseUrl)
-            }
+              if (error) {
+                return (
+                  <div>
+                    <NotificationsToolbar {...toolbarProps} />
+                    <NotificationsListError error={error} />
+                    <NotificationsToolbar {...toolbarProps} bottom />
+                  </div>
+                )
+              }
 
-            return (
-              <div>
-                <NotificationsToolbar {...toolbarProps} />
-                <NotificationsList
-                  filter={filter}
-                  items={data.results}
-                  hasNext={data.hasNext}
-                  hasPrevious={data.hasPrevious}
-                />
-                <NotificationsToolbar {...toolbarProps} bottom />
-              </div>
-            )
-          }
+              if (data) {
+                if (!data.hasPrevious && query) {
+                  window.history.replaceState({}, "", baseUrl)
+                }
 
-          return null
-        }}
+                return (
+                  <div>
+                    <NotificationsToolbar {...toolbarProps} />
+                    <NotificationsList
+                      filter={filter}
+                      items={data.results}
+                      hasNext={data.hasNext}
+                      hasPrevious={data.hasPrevious}
+                    />
+                    <NotificationsToolbar {...toolbarProps} bottom />
+                  </div>
+                )
+              }
+
+              return null
+            }}
+          </ApiMutation>
+        )}
       </ApiFetch>
     </PageContainer>
   )

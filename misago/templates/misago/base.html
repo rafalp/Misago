@@ -64,6 +64,7 @@
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ settings.forum_address }}"}</script>
     <script type="text/javascript">
       window.misago_locale = "{{ LANGUAGE_CODE }}"
+      window.misago_csrf = {{ CSRF_COOKIE_NAME|safe }}
     </script>
   </head>
   <body class="misago-{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}{% if misago_agreement %} agreement-overlay-visible{% endif %}">
