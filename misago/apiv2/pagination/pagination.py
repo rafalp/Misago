@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, List, Tuple
+from typing import Any, List, Optional
 
 from django.http import Http404
 from rest_framework.exceptions import ValidationError
@@ -14,6 +14,8 @@ class PaginationResult:
     items: List[Any]
     has_next: bool
     has_previous: bool
+    first_cursor: Optional[Any]
+    last_cursor: Optional[Any]
 
 
 def paginate_queryset(
@@ -21,7 +23,7 @@ def paginate_queryset(
     queryset,
     order_by: str,
     max_limit: int,
-    raise_404: bool = True,
+    raise_404: bool = False,
 ) -> PaginationResult:
     after = get_query_value(request, "after")
     before = get_query_value(request, "before")
@@ -96,10 +98,11 @@ def paginate_with_after(
             filter_kwarg = {f"{col_name}__lt": cursor}
         has_previous = queryset.filter(**filter_kwarg).order_by(col_name).exists()
 
-    return PaginationResult(
-        items=items,
-        has_next=has_next,
-        has_previous=has_previous,
+    return create_pagination_result(
+        col_name,
+        items,
+        has_next,
+        has_previous,
     )
 
 
@@ -140,8 +143,31 @@ def paginate_with_before(
             filter_kwarg = {f"{col_name}__gt": cursor}
         has_next = queryset.filter(**filter_kwarg).order_by(col_name).exists()
 
+    return create_pagination_result(
+        col_name,
+        items,
+        has_next,
+        has_previous,
+    )
+
+
+def create_pagination_result(
+    col_name: str,
+    items: List[Any],
+    has_next: bool,
+    has_previous: bool,
+) -> PaginationResult:
+    if items:
+        first_cursor = getattr(items[0], col_name)
+        last_cursor = getattr(items[-1], col_name)
+    else:
+        first_cursor = None
+        last_cursor = None
+
     return PaginationResult(
         items=items,
         has_next=has_next,
         has_previous=has_previous,
+        first_cursor=first_cursor,
+        last_cursor=last_cursor,
     )

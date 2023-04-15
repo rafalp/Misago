@@ -3,6 +3,7 @@ import pytest
 from ..exceptions import NotificationVerbError
 from ..messages import NotificationMessageFactory, message_factory
 from ..models import Notification
+from ..verbs import NotificationVerb
 
 
 def test_notification_message_factory_can_have_message_set_with_setter():
@@ -35,4 +36,16 @@ def test_notification_message_factory_raises_verb_error_for_unknown_verb():
 
 def test_default_message_factory_supports_test_notifications():
     message = message_factory.get_message(Notification(id=1, verb="TEST"))
+    assert message == f"Test notification #1"
+
+
+def test_default_message_factory_supports_replies_notifications():
+    message = message_factory.get_message(
+        Notification(
+            id=1,
+            verb=NotificationVerb.REPLIED,
+            actor_name="Aerith",
+            thread_title="Midgar was destroyed!",
+        )
+    )
     assert message == f"Test notification #1"

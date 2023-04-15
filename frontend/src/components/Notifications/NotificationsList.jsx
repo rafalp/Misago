@@ -1,16 +1,15 @@
 import React from "react"
+import NotificationsListItem from "./NotificationsListItem"
 
 export default function NotificationsList({ items, hasNext, hasPrevious }) {
   return (
     <div className="notifications-list">
       <ul className="list-group">
         {items.map((notification) => (
-          <li
+          <NotificationsListItem
             key={notification.id}
-            className="list-group-item notifications-list-itemm"
-          >
-            <div dangerouslySetInnerHTML={{__html: notification.message}} />
-          </li>
+            notification={notification}
+          />
         ))}
       </ul>
     </div>

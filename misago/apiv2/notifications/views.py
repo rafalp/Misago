@@ -44,6 +44,8 @@ def notifications(request: HttpRequest) -> JsonResponse:
             "results": NotificationSerializer(page.items, many=True).data,
             "hasNext": page.has_next,
             "hasPrevious": page.has_previous,
+            "firstCursor": page.first_cursor,
+            "lastCursor": page.last_cursor,
         }
     )
 

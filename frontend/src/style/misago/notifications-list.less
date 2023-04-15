@@ -1,0 +1,103 @@
+//
+// Notifications Lists
+// --------------------------------------------------
+
+.notifications-list {
+  margin-bottom: @line-height-computed;
+}
+
+// Make list row flexbox row
+.notifications-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.notifications-list-item-left-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-list-item-right-col {
+  width: 100%;
+}
+
+.notifications-list-item-top-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-list-item-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Columns
+.notifications-list-item-col-actor {
+  padding-right: @grid-gutter-width / 2;
+
+  img {
+    border-radius: @border-radius-small;
+
+    height: @notification-avatar-height;
+    width: @notification-avatar-height;
+  }
+}
+
+.notifications-list-item-col-read-icon {
+  padding-right: @grid-gutter-width / 2;
+
+  line-height: 0;
+}
+
+// Make timestamp small and gray
+.notifications-list-item-timestamp {
+  margin-top: @line-height-computed / 2;
+
+  color: @gray;
+  font-size: @font-size-small;
+}
+
+// Hide tape
+.notifications-list-item-col-tape {
+  display: none;
+}
+
+// Tablet list
+@media screen and (max-width: @screen-sm-max) {
+  .notifications-list-item {
+    align-items: flex-start;
+    padding-right: 0;
+  }
+
+  .notifications-list-item-left-col {
+    display: block;
+  }
+
+  .notifications-list-item-col-read-icon {
+    display: none;
+  }
+
+  .notifications-list-item-col-tape {
+    display: block;
+    align-self: stretch;
+  }
+}
+
+// Mobile list
+@media screen and (max-width: @screen-xs-max) {
+  .notifications-list {
+    margin-left: @grid-gutter-width * -0.5;
+    margin-right: @grid-gutter-width * -0.5;
+
+    .list-group,
+    .list-group-item {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+}

@@ -36,8 +36,16 @@ export default class ApiClientGet extends React.Component {
     }).then(
       async (response) => {
         if (url === this.props.url) {
-          const data = await response.json()
-          this.setState({ loading: false, data })
+          if (response.status == 200) {
+            const data = await response.json()
+            this.setState({ loading: false, data })
+          } else {
+            const error = { status: response.status }
+            if (response.headers.get("Content-Type") === "application/json") {
+              error.data = await response.json()
+            }
+            this.setState({ loading: false, error })
+          }
         }
       },
       (rejection) => {

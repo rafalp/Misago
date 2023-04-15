@@ -55,7 +55,7 @@ def test_pagination_with_after_returns_empty_items(notifications):
 def test_pagination_with_after_raises_404_for_empty_item(notifications):
     request = Mock(GET={"after": notifications[14]})
     with pytest.raises(Http404):
-        paginate_queryset(request, Notification.objects, "id", 10)
+        paginate_queryset(request, Notification.objects, "id", 10, raise_404=True)
 
 
 def test_pagination_with_after_returns_items_up_to_max_limit_in_reverse_order(
