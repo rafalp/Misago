@@ -19,6 +19,9 @@
 }
 
 .notifications-list-item-right-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
@@ -53,17 +56,22 @@
   line-height: 0;
 }
 
-// Make timestamp small and gray
-.notifications-list-item-timestamp {
-  margin-top: @line-height-computed / 2;
-
-  color: @gray;
-  font-size: @font-size-small;
+.notifications-list-item-col-message {
+  width: 100%;
 }
 
-// Hide tape
-.notifications-list-item-col-tape {
-  display: none;
+.notifications-list-item-col-timestamp {
+  display: flex;
+  align-items: center;
+
+  padding-left: @grid-gutter-width / 2;
+  min-width: 200px;
+}
+
+// Make timestamp small and gray
+.notifications-list-item-timestamp {
+  color: @gray;
+  font-size: @font-size-small;
 }
 
 // Tablet list
@@ -71,19 +79,32 @@
   .notifications-list-item {
     align-items: flex-start;
     padding-right: 0;
+    position: relative;
   }
 
-  .notifications-list-item-left-col {
+  .notifications-list-item-right-col {
     display: block;
   }
 
   .notifications-list-item-col-read-icon {
-    display: none;
+    position: absolute;
+    padding: 0;
+    top: 14px;
+    right: 15px;
   }
 
-  .notifications-list-item-col-tape {
-    display: block;
-    align-self: stretch;
+  .notifications-list-item-col-timestamp {
+    margin-top: @line-height-computed / 2;
+    padding: 0;
+  }
+
+  .notifications-list-item-unread {
+    padding-right: 40px;
+  }
+
+  // Hide read indicator on read notifications
+  .notifications-list-item-read .notifications-list-item-col-read-icon {
+    display: none;
   }
 }
 
