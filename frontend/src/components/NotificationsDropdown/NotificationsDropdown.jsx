@@ -17,7 +17,7 @@ export default class NotificationsDropdown extends React.Component {
   }
 
   getApiUrl() {
-    let url = misago.get("NOTIFICATIONS_API") + "?limit=30"
+    let url = misago.get("NOTIFICATIONS_API") + "?limit=20"
     url += this.state.unread ? "&filter=unread" : ""
     return url
   }

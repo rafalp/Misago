@@ -38,7 +38,7 @@
   justify-content: center;
 }
 
-// Columns
+// Notification actor (author)
 .notifications-list-item-col-actor {
   padding-right: @grid-gutter-width / 2;
 
@@ -50,16 +50,71 @@
   }
 }
 
+// Read icon
 .notifications-list-item-col-read-icon {
   padding-right: @grid-gutter-width / 2;
 
   line-height: 0;
 }
 
+// Read icon (empty circle)
+.notification-read-icon {
+  display: inline-block;
+  width: @notification-read-icon-size;
+  height: @notification-read-icon-size;
+
+  border: @notification-read-icon-border solid @notification-read-icon-color;
+  border-radius: 100%;
+}
+
+// Unread icon (full circle)
+.notification-unread-icon {
+  display: inline-block;
+  width: @notification-unread-icon-size;
+  height: @notification-unread-icon-size;
+
+  font-size: 0;
+  line-height: 0;
+
+  background-color: @notification-unread-icon-color;
+  border-radius: 100%;
+}
+
+// Message
 .notifications-list-item-col-message {
   width: 100%;
 }
 
+// Message styles
+.notification-message {
+  &,
+  &:link,
+  &:hover,
+  &:focus,
+  &:visited {
+    color: @notification-color;
+  }
+
+  &:active {
+    color: @notification-active-color;
+  }
+}
+
+.notification-message-unread {
+  &,
+  &:link,
+  &:hover,
+  &:focus,
+  &:visited {
+    color: @notification-unread-color;
+  }
+
+  &:active {
+    color: @notification-unread-active-color;
+  }
+}
+
+// Timestamp
 .notifications-list-item-col-timestamp {
   display: flex;
   align-items: center;
@@ -69,7 +124,7 @@
 }
 
 // Make timestamp small and gray
-.notifications-list-item-timestamp {
+.notification-timestamp {
   color: @gray;
   font-size: @font-size-small;
 }
@@ -121,4 +176,75 @@
       border-right: 0;
     }
   }
+}
+
+// Loading message
+.notifications-list-loading {
+  padding: @line-height-computed * 2 @line-height-computed;
+}
+
+.notifications-list-loading-message {
+  font-size: @font-size-large;
+  text-align: center;
+}
+
+.notifications-list-loading-progress {
+  width: 300px;
+  margin: auto;
+
+  background-color: @gray-lighter;
+  border-radius: @border-radius-small;
+  overflow: hidden;
+}
+
+.notifications-list-loading-progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: @gray-light;
+  animation: infiniteProgress 1s infinite linear;
+  transform-origin: 0% 50%;
+}
+
+@keyframes infiniteProgress {
+  0% {
+    transform: translateX(0) scaleX(0);
+  }
+  40% {
+    transform: translateX(0) scaleX(0.4);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.5);
+  }
+}
+
+// Empty and error messages
+.notifications-list-error,
+.notifications-list-empty {
+  padding: @line-height-computed;
+}
+
+.notifications-list-error-icon,
+.notifications-list-empty-icon {
+  margin-bottom: @line-height-computed;
+
+  color: @gray-light;
+  font-size: 64px;
+  line-height: 64px;
+  text-align: center;
+}
+
+.notifications-list-error-message,
+.notifications-list-empty-message {
+  margin: 0;
+
+  font-size: @font-size-large;
+  text-align: center;
+}
+
+.notifications-list-error-detail {
+  margin-top: @line-height-computed / 2;
+
+  color: @gray;
+  font-size: @font-size-large;
+  text-align: center;
 }

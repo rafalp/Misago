@@ -2,9 +2,11 @@ import React from "react"
 import { ApiFetch } from "../Api"
 import PageTitle from "../PageTitle"
 import PageContainer from "../PageContainer"
-import NotificationsList from "./NotificationsList"
-import NotificationsListEmpty from "./NotificationsListEmpty"
-import NotificationsLoading from "./NotificationsLoading"
+import {
+  NotificationsList,
+  NotificationsListError,
+  NotificationsListLoading,
+} from "../NotificationsList"
 import NotificationsPills from "./NotificationsPills"
 import NotificationsToolbar from "./NotificationsToolbar"
 
@@ -35,14 +37,20 @@ export default function NotificationsRoute({ location, route }) {
             return (
               <div>
                 <NotificationsToolbar {...toolbarProps} />
-                <NotificationsLoading />
+                <NotificationsListLoading />
                 <NotificationsToolbar {...toolbarProps} bottom />
               </div>
             )
           }
 
           if (error) {
-            return <div>{JSON.stringify(error)}</div>
+            return (
+              <div>
+                <NotificationsToolbar {...toolbarProps} />
+                <NotificationsListError error={error} />
+                <NotificationsToolbar {...toolbarProps} bottom />
+              </div>
+            )
           }
 
           if (data) {
@@ -53,15 +61,12 @@ export default function NotificationsRoute({ location, route }) {
             return (
               <div>
                 <NotificationsToolbar {...toolbarProps} />
-                {data.results.length > 0 ? (
-                  <NotificationsList
-                    items={data.results}
-                    hasNext={data.hasNext}
-                    hasPrevious={data.hasPrevious}
-                  />
-                ) : (
-                  <NotificationsListEmpty filter={filter} />
-                )}
+                <NotificationsList
+                  filter={filter}
+                  items={data.results}
+                  hasNext={data.hasNext}
+                  hasPrevious={data.hasPrevious}
+                />
                 <NotificationsToolbar {...toolbarProps} bottom />
               </div>
             )

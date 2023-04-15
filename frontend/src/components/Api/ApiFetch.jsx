@@ -50,7 +50,7 @@ export default class ApiClientGet extends React.Component {
       },
       (rejection) => {
         if (url === this.props.url) {
-          this.setState({ loading: false, error: rejection })
+          this.setState({ loading: false, error: { status: 0, rejection } })
         }
       }
     )
