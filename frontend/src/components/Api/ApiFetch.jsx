@@ -39,6 +39,9 @@ export default class ApiFetch extends React.Component {
           if (response.status == 200) {
             const data = await response.json()
             this.setState({ loading: false, data })
+            if (this.props.onData) {
+              await this.props.onData(data)
+            }
           } else {
             const error = { status: response.status }
             if (response.headers.get("Content-Type") === "application/json") {

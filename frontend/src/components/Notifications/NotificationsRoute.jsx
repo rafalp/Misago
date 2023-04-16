@@ -1,8 +1,11 @@
 import React from "react"
+import { connect } from "react-redux"
+import { updateAuthenticatedUser } from "../../reducers/auth"
 import snackbar from "../../services/snackbar"
-import { ApiFetch, ApiMutation } from "../Api"
+import { ApiMutation } from "../Api"
 import PageTitle from "../PageTitle"
 import PageContainer from "../PageContainer"
+import NotificationsFetch from "./NotificationsFetch"
 import {
   NotificationsList,
   NotificationsListError,
@@ -11,7 +14,7 @@ import {
 import NotificationsPills from "./NotificationsPills"
 import NotificationsToolbar from "./NotificationsToolbar"
 
-export default function NotificationsRoute({ location, route }) {
+function NotificationsRoute({ dispatch, location, route }) {
   const { query } = location
   const { filter } = route.props
 
@@ -25,7 +28,8 @@ export default function NotificationsRoute({ location, route }) {
       />
 
       <NotificationsPills filter={filter} />
-      <ApiFetch url={getApiUrl(query, filter)}>
+
+      <NotificationsFetch filter={filter} query={query}>
         {({ data, loading, error, refetch }) => (
           <ApiMutation url={misago.get("NOTIFICATIONS_API") + "read-all/"}>
             {(readAll, { loading: mutating }) => {
@@ -43,8 +47,14 @@ export default function NotificationsRoute({ location, route }) {
                     readAll({
                       onSuccess: async () => {
                         refetch()
+                        dispatch(
+                          updateAuthenticatedUser({ unreadNotifications: null })
+                        )
                         snackbar.success(
-                          pgettext("notifications", "All notifications have been marked as read.")
+                          pgettext(
+                            "notifications",
+                            "All notifications have been marked as read."
+                          )
                         )
                       },
                       onError: snackbar.apiError,
@@ -96,7 +106,7 @@ export default function NotificationsRoute({ location, route }) {
             }}
           </ApiMutation>
         )}
-      </ApiFetch>
+      </NotificationsFetch>
     </PageContainer>
   )
 }
@@ -119,16 +129,6 @@ function getBaseUrl(filter) {
   return url
 }
 
-function getApiUrl(query, filter) {
-  let api = misago.get("NOTIFICATIONS_API") + "?limit=30"
-  api += "&filter=" + filter
+const NotificationsRouteConnected = connect()(NotificationsRoute)
 
-  if (query.after) {
-    api += "&after=" + query.after
-  }
-  if (query.before) {
-    api += "&before=" + query.before
-  }
-
-  return api
-}
+export default NotificationsRouteConnected

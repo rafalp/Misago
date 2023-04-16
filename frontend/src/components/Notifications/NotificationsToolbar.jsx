@@ -28,7 +28,7 @@ export default function NotificationsToolbar({
           <Button
             className="btn-default btn-block"
             type="button"
-            disabled={disabled}
+            disabled={disabled || !data || !data.unreadNotifications}
             onClick={markAllAsRead}
           >
             <span className="material-icon">done_all</span>

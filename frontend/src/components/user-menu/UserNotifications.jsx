@@ -24,14 +24,12 @@ export default function UserNotifications({ user }) {
           title={title}
         >
           <span className="material-icon">
-            {user.unreadNotifications
+            {!!user.unreadNotifications
               ? "notifications_active"
               : "notifications_none"}
           </span>
           {!!user.unreadNotifications && (
-            <span className="badge">
-              {user.unreadNotifications > 50 ? "50+" : user.unreadNotifications}
-            </span>
+            <span className="badge">{user.unreadNotifications}</span>
           )}
         </a>
       )}

@@ -1,6 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { Provider } from "react-redux"
 import Notifications from "../../components/Notifications"
+import store from "../../services/store"
 
 export default function initializer(context) {
   const basename = misago.get("NOTIFICATIONS_URL")
@@ -9,7 +11,12 @@ export default function initializer(context) {
     context.get("isAuthenticated")
   ) {
     const root = document.getElementById("page-mount")
-    ReactDOM.render(<Notifications />, root)
+    ReactDOM.render(
+      <Provider store={store.getStore()}>
+        <Notifications />
+      </Provider>,
+      root
+    )
   }
 }
 

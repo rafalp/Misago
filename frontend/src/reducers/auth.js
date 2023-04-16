@@ -5,9 +5,17 @@ export var initialState = {
   signedOut: false,
 }
 
+export const UPDATE_AUTHENTICATED_USER = "UPDATE_AUTHENTICATED_USER"
 export const PATCH_USER = "PATCH_USER"
 export const SIGN_IN = "SIGN_IN"
 export const SIGN_OUT = "SIGN_OUT"
+
+export function updateAuthenticatedUser(data) {
+  return {
+    type: UPDATE_AUTHENTICATED_USER,
+    data,
+  }
+}
 
 export function patch(patch) {
   return {
@@ -36,6 +44,11 @@ export default function auth(state = initialState, action = null) {
       let newState = Object.assign({}, state)
       newState.user = Object.assign({}, state.user, action.patch)
       return newState
+
+    case UPDATE_AUTHENTICATED_USER:
+      let updatedState = Object.assign({}, state)
+      updatedState.user = Object.assign({}, state.user, action.data)
+      return updatedState
 
     case SIGN_IN:
       return Object.assign({}, state, {
