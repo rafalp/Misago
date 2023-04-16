@@ -260,27 +260,32 @@
     max-height: 60vh;
     overflow-y: auto;
 
+    .list-group {
+      margin: 0;
+    }
+
     .list-group,
     .list-group-item {
-      margin: 0;
-
       border-radius: 0;
       border-left: 0;
       border-right: 0;
+    }
+
+    .list-group-item:first-child {
+      border-top: none;
+    }
+
+    .list-group-item:last-child {
+      border-bottom: none;
     }
   }
 
   .notifications-list-item {
     align-items: flex-start;
     position: relative;
-    border-top: none;
 
     // Make sidde paddings match rest of dropdown
     padding: 10px 20px;
-  }
-
-  .notifications-list-item:last-child {
-    border-bottom: none;
   }
 
   .notifications-list-item-right-col {

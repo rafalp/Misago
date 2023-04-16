@@ -2,24 +2,24 @@ import classnames from "classnames"
 import React from "react"
 import { DropdownFooter, DropdownHeader, DropdownPills } from "../Dropdown"
 
-export default function NotificationsDropdownBody({
+export default function NotificationsDropdownLayout({
   children,
   showAll,
   showUnread,
   unread,
 }) {
   return (
-    <div className="notifications-dropdown-body">
+    <div className="notifications-dropdown-layout">
       <DropdownHeader>
         {pgettext("notifications title", "Notifications")}
       </DropdownHeader>
       <DropdownPills>
-        <NotificationsDropdownBodyPill active={!unread} onClick={showAll}>
+        <NotificationsDropdownLayoutPill active={!unread} onClick={showAll}>
           {pgettext("notifications dropdown", "All")}
-        </NotificationsDropdownBodyPill>
-        <NotificationsDropdownBodyPill active={unread} onClick={showUnread}>
+        </NotificationsDropdownLayoutPill>
+        <NotificationsDropdownLayoutPill active={unread} onClick={showUnread}>
           {pgettext("notifications dropdown", "Unread")}
-        </NotificationsDropdownBodyPill>
+        </NotificationsDropdownLayoutPill>
       </DropdownPills>
       {children}
       <DropdownFooter>
@@ -34,7 +34,7 @@ export default function NotificationsDropdownBody({
   )
 }
 
-function NotificationsDropdownBodyPill({ active, children, onClick }) {
+function NotificationsDropdownLayoutPill({ active, children, onClick }) {
   return (
     <button
       className={classnames("btn", {

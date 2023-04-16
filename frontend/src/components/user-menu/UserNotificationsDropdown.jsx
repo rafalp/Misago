@@ -2,7 +2,7 @@ import React from "react"
 import { Dropdown } from "../Dropdown"
 import NotificationsDropdown from "../NotificationsDropdown"
 
-export default function UserNotifications({ user }) {
+export default function UserNotificationsDropdown({ user }) {
   let title = null
   if (user.unreadNotifications) {
     title = gettext("You have unread notifications!")

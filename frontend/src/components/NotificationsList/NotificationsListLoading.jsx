@@ -1,9 +1,9 @@
 import React from "react"
 import NotificationsListGroup from "./NotificationsListGroup"
 
-export default function NotificationsListLoading({ className }) {
+export default function NotificationsListLoading() {
   return (
-    <NotificationsListGroup className={className}>
+    <NotificationsListGroup className="notifications-list-pending">
       <li className="list-group-item notifications-list-loading">
         <p className="notifications-list-loading-message">
           {pgettext("notifications list", "Loading notifications...")}

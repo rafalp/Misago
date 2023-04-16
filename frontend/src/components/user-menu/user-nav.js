@@ -6,7 +6,8 @@ import NavbarSearch from "misago/components/navbar-search"
 import misago from "misago"
 import dropdown from "misago/services/mobile-navbar-dropdown"
 import modal from "misago/services/modal"
-import UserNotifications from "./UserNotifications"
+import UserNotificationsDropdown from "./UserNotificationsDropdown"
+import UserNotificationsOverlay from "./UserNotificationsOverlay"
 
 export class UserMenu extends React.Component {
   changeAvatar() {
@@ -68,7 +69,7 @@ export class UserMenu extends React.Component {
         {!!user.acl.can_use_private_threads && (
           <li>
             <a href={misago.get("PRIVATE_THREADS_URL")}>
-              <span className="material-icon">message</span>
+              <span className="material-icon">inbox</span>
               {gettext("Private threads")}
               <PrivateThreadsBadge user={user} />
             </a>
@@ -112,7 +113,8 @@ export function UserNav({ user }) {
         <NavbarSearch />
       </li>
       <UserPrivateThreadsLink user={user} />
-      <UserNotifications user={user} />
+      <UserNotificationsDropdown user={user} />
+      <UserNotificationsOverlay user={user} />
       <li className="dropdown">
         <a
           aria-haspopup="true"
@@ -147,7 +149,7 @@ export function UserPrivateThreadsLink({ user }) {
         href={misago.get("PRIVATE_THREADS_URL")}
         title={title}
       >
-        <span className="material-icon">message</span>
+        <span className="material-icon">inbox</span>
         {user.unread_private_threads > 0 && (
           <span className="badge">{user.unread_private_threads}</span>
         )}

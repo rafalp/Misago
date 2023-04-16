@@ -1,13 +1,13 @@
 import React from "react"
 import NotificationsListGroup from "./NotificationsListGroup"
 
-export default function NotificationsListError({ className, error }) {
+export default function NotificationsListError({ error }) {
   console.log(error)
 
   const detail = errorDetail(error)
 
   return (
-    <NotificationsListGroup className={className}>
+    <NotificationsListGroup className="notifications-list-pending">
       <li className="list-group-item notifications-list-error">
         <div className="notifications-list-error-icon">
           <span className="material-icon">notifications_off</span>

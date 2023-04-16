@@ -8,6 +8,7 @@
 
   &.show {
     display: block;
+    background-color: @body-bg;
   }
 
   // Positioning override for easier dev
@@ -15,6 +16,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
+  z-index: @zindex-overlay;
 }
 
 // Posting dialog
@@ -113,11 +115,6 @@ body.posting-fullscreen {
   // Remove scroll from body
   overflow: hidden;
 
-  // Hide root mount contents
-  #misago-container {
-    display: none;
-  }
-
   // Make mount take full screen
   #posting-mount {
     height: 100%;
@@ -179,11 +176,6 @@ body.posting-fullscreen {
   body.posting-default {
     // Remove scroll from body
     overflow: hidden;
-
-    // Hide root mount contents
-    #misago-container {
-      display: none;
-    }
 
     // Make mount take full screen
     #posting-mount {

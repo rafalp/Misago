@@ -1,15 +1,19 @@
 import React from "react"
+import { connect } from "react-redux"
+import { close } from "../../reducers/notifications"
 import NotificationsFetch from "../NotificationsFetch"
 import {
   NotificationsList,
   NotificationsListError,
   NotificationsListLoading,
 } from "../NotificationsList"
-import NotificationsDropdownLayout from "./NotificationsDropdownLayout"
+import NotificationsOverlayLayout from "./NotificationsOverlayLayout"
 
-export default class NotificationsDropdown extends React.Component {
+class NotificationsOverlay extends React.Component {
   constructor(props) {
     super(props)
+
+    this.body = document.body
 
     this.state = {
       unread: false,
@@ -23,15 +27,30 @@ export default class NotificationsDropdown extends React.Component {
     return url
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.open !== this.props.open) {
+      if (this.props.open) {
+        this.body.classList.add("notifications-fullscreen")
+      } else {
+        this.body.classList.remove("notifications-fullscreen")
+      }
+    }
+  }
+
+  close = () => {
+    this.props.dispatch(close())
+  }
+
   render = () => (
-    <NotificationsDropdownLayout
+    <NotificationsOverlayLayout
+      close={this.close}
       unread={this.state.unread}
       showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}
     >
       <NotificationsFetch
         filter={this.state.unread ? "unread" : "all"}
-        disabled={this.props.disabled}
+        disabled={!this.props.open}
       >
         {({ data, loading, error }) => {
           if (loading) {
@@ -50,6 +69,14 @@ export default class NotificationsDropdown extends React.Component {
           )
         }}
       </NotificationsFetch>
-    </NotificationsDropdownLayout>
+    </NotificationsOverlayLayout>
   )
 }
+
+function select(state) {
+  return { open: state.notifications.open }
+}
+
+const NotificationsOverlayConnected = connect(select)(NotificationsOverlay)
+
+export default NotificationsOverlayConnected
