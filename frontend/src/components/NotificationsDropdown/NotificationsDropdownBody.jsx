@@ -1,5 +1,6 @@
 import classnames from "classnames"
 import React from "react"
+import { DropdownFooter, DropdownHeader, DropdownPills } from "../Dropdown"
 
 export default function NotificationsDropdownBody({
   children,
@@ -9,20 +10,31 @@ export default function NotificationsDropdownBody({
 }) {
   return (
     <div className="notifications-dropdown-body">
-      <div>
-        <Button active={!unread} onClick={showAll}>
+      <DropdownHeader>
+        {pgettext("notifications title", "Notifications")}
+      </DropdownHeader>
+      <DropdownPills>
+        <NotificationsDropdownBodyPill active={!unread} onClick={showAll}>
           {pgettext("notifications dropdown", "All")}
-        </Button>
-        <Button active={unread} onClick={showUnread}>
+        </NotificationsDropdownBodyPill>
+        <NotificationsDropdownBodyPill active={unread} onClick={showUnread}>
           {pgettext("notifications dropdown", "Unread")}
-        </Button>
-      </div>
+        </NotificationsDropdownBodyPill>
+      </DropdownPills>
       {children}
+      <DropdownFooter>
+        <a
+          className="btn btn-default btn-block"
+          href={misago.get("NOTIFICATIONS_URL")}
+        >
+          {pgettext("notifications", "See all notifications")}
+        </a>
+      </DropdownFooter>
     </div>
   )
 }
 
-function Button({ active, children, onClick }) {
+function NotificationsDropdownBodyPill({ active, children, onClick }) {
   return (
     <button
       className={classnames("btn", {

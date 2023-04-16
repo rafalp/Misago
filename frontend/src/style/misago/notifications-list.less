@@ -83,6 +83,9 @@
 // Message
 .notifications-list-item-col-message {
   width: 100%;
+
+  // Force long messages to break
+  overflow-wrap: anywhere;
 }
 
 // Message styles
@@ -254,7 +257,7 @@
 
   .notifications-list {
     margin: 0;
-    max-height: 70vh;
+    max-height: 60vh;
     overflow-y: auto;
 
     .list-group,
@@ -270,6 +273,11 @@
   .notifications-list-item {
     align-items: flex-start;
     position: relative;
+    border-top: none;
+  }
+
+  .notifications-list-item:last-child {
+    border-bottom: none;
   }
 
   .notifications-list-item-right-col {

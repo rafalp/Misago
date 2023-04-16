@@ -2,6 +2,26 @@
 // Dropdowns
 // --------------------------------------------------
 
+// Make dropdown header heavier
+.dropdown-header {
+  color: @text-color;
+  font-size: @font-size-large;
+}
+
+// Justify dropdown pills
+.dropdown-pills {
+  display: flex;
+  padding: 6px 10px;
+
+  border-bottom: 1px solid @dropdown-divider-bg;
+
+  .btn {
+    display: block;
+    width: 100%;
+    margin: 0px 10px;
+  }
+}
+
 // Unify .btn-link appearance with anchors
 .dropdown-menu > li > a,
 .dropdown-menu > li > .btn-link,
@@ -77,8 +97,11 @@
 }
 
 // Dropdown footer
-.dropdown-menu .dropdown-footer {
+.dropdown-footer {
   padding: 6px 20px;
+  margin-bottom: -5px;
+
+  border-top: 1px solid @dropdown-divider-bg;
 }
 
 // Dropdown buttons container

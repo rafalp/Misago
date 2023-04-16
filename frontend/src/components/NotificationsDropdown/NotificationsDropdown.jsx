@@ -29,7 +29,10 @@ export default class NotificationsDropdown extends React.Component {
       showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}
     >
-      <NotificationsFetch filter={this.state.unread ? "unread" : "all"} disabled={this.props.disabled}>
+      <NotificationsFetch
+        filter={this.state.unread ? "unread" : "all"}
+        disabled={this.props.disabled}
+      >
         {({ data, loading, error }) => {
           if (loading) {
             return <NotificationsListLoading />
@@ -39,7 +42,12 @@ export default class NotificationsDropdown extends React.Component {
             return <NotificationsListError error={error} />
           }
 
-          return <NotificationsList filter={this.state.unread ? "unread" : "all"} items={data ? data.results : []} />
+          return (
+            <NotificationsList
+              filter={this.state.unread ? "unread" : "all"}
+              items={data ? data.results : []}
+            />
+          )
         }}
       </NotificationsFetch>
     </NotificationsDropdownBody>
