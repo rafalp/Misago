@@ -124,7 +124,7 @@
 }
 
 // Make timestamp small and gray
-.notification-timestamp {
+.notifications-list-item-timestamp {
   color: @gray;
   font-size: @font-size-small;
 }
@@ -133,7 +133,6 @@
 @media screen and (max-width: @screen-sm-max) {
   .notifications-list-item {
     align-items: flex-start;
-    padding-right: 0;
     position: relative;
   }
 
@@ -189,7 +188,7 @@
 }
 
 .notifications-list-loading-progress {
-  width: 300px;
+  max-width: 300px;
   margin: auto;
 
   background-color: @gray-lighter;
@@ -247,4 +246,54 @@
   color: @gray;
   font-size: @font-size-large;
   text-align: center;
+}
+
+// In dropdown and modal
+.notifications-dropdown {
+  width: 320px;
+
+  .notifications-list {
+    margin: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .list-group,
+    .list-group-item {
+      margin: 0;
+
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+
+  .notifications-list-item {
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .notifications-list-item-right-col {
+    display: block;
+  }
+
+  .notifications-list-item-col-read-icon {
+    position: absolute;
+    padding: 0;
+    top: 14px;
+    right: 15px;
+  }
+
+  .notifications-list-item-col-timestamp {
+    margin-top: @line-height-computed / 2;
+    padding: 0;
+  }
+
+  .notifications-list-item-unread {
+    padding-right: 40px;
+  }
+
+  // Hide read indicator on read notifications
+  .notifications-list-item-read .notifications-list-item-col-read-icon {
+    display: none;
+  }
 }

@@ -13,12 +13,12 @@ import store from "misago/services/store"
 const WATCH_CHOICES = [
   {
     value: 0,
-    icon: "block",
+    icon: "notifications_none",
     label: pgettext("watch thread choice", "No"),
   },
   {
     value: 1,
-    icon: "check_circle",
+    icon: "notifications",
     label: pgettext("watch thread choice", "Yes"),
   },
   {
@@ -31,12 +31,12 @@ const WATCH_CHOICES = [
 const NOTIFICATION_CHOICES = [
   {
     value: 0,
-    icon: "block",
+    icon: "notifications_none",
     label: pgettext("notification preference", "Don't notify"),
   },
   {
     value: 1,
-    icon: "check_circle",
+    icon: "notifications",
     label: pgettext("notification preference", "Notify"),
   },
   {

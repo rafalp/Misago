@@ -30,17 +30,6 @@ export default function NotificationsListItem({ notification }) {
           <NotificationsListItemTimestamp notification={notification} />
         </div>
       </div>
-      <div className="notifications-list-item-col-tape">
-        <div className="notification-tape">
-          <div
-            className={
-              notification.isRead
-                ? "notification-tape-read"
-                : "notification-tape-unread"
-            }
-          ></div>
-        </div>
-      </div>
     </li>
   )
 }

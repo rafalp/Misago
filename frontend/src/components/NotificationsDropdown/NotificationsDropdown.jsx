@@ -1,10 +1,11 @@
 import React from "react"
-import { ApiFetch } from "../Api"
+import NotificationsFetch from "../NotificationsFetch"
+import {
+  NotificationsList,
+  NotificationsListError,
+  NotificationsListLoading,
+} from "../NotificationsList"
 import NotificationsDropdownBody from "./NotificationsDropdownBody"
-import NotificationsDropdownEmpty from "./NotificationsDropdownEmpty"
-import NotificationsDropdownError from "./NotificationsDropdownError"
-import NotificationsDropdownLoading from "./NotificationsDropdownLoading"
-import NotificationsDropdownList from "./NotificationsDropdownList"
 
 export default class NotificationsDropdown extends React.Component {
   constructor(props) {
@@ -28,25 +29,19 @@ export default class NotificationsDropdown extends React.Component {
       showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}
     >
-      <ApiFetch url={this.getApiUrl()} disabled={this.props.disabled}>
+      <NotificationsFetch filter={this.state.unread ? "unread" : "all"} disabled={this.props.disabled}>
         {({ data, loading, error }) => {
           if (loading) {
-            return <NotificationsDropdownLoading />
+            return <NotificationsListLoading />
           }
 
           if (error) {
-            return <NotificationsDropdownError error={error} />
+            return <NotificationsListError error={error} />
           }
 
-          const results = data ? data.results : []
-
-          if (results.length === 0) {
-            return <NotificationsDropdownEmpty unread={this.state.unread} />
-          }
-
-          return <NotificationsDropdownList items={data ? data.results : []} />
+          return <NotificationsList filter={this.state.unread ? "unread" : "all"} items={data ? data.results : []} />
         }}
-      </ApiFetch>
+      </NotificationsFetch>
     </NotificationsDropdownBody>
   )
 }

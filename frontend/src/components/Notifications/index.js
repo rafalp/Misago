@@ -1,5 +1,5 @@
 import Notifications from "./Notifications"
-import NotificationsFetch from "./NotificationsFetch"
+import NotificationsFetch from "../NotificationsFetch/NotificationsFetch"
 
 export default Notifications
 

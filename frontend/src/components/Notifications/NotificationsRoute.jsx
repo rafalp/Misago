@@ -3,9 +3,9 @@ import { connect } from "react-redux"
 import { updateAuthenticatedUser } from "../../reducers/auth"
 import snackbar from "../../services/snackbar"
 import { ApiMutation } from "../Api"
+import NotificationsFetch from "../NotificationsFetch"
 import PageTitle from "../PageTitle"
 import PageContainer from "../PageContainer"
-import NotificationsFetch from "./NotificationsFetch"
 import {
   NotificationsList,
   NotificationsListError,
