@@ -1,3 +1,5 @@
+from typing import List
+
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.utils import timezone
 from rest_framework.decorators import api_view
@@ -21,36 +23,34 @@ def notifications(request: HttpRequest) -> JsonResponse:
         .order_by("-id")
     )
 
-    filter_state = request.GET.get("filter")
-    if filter_state == "unread":
+    filter_by = request.GET.get("filter")
+    if filter_by == "unread":
         queryset = queryset.filter(is_read=False)
-    if filter_state == "read":
+    if filter_by == "read":
         queryset = queryset.filter(is_read=True)
 
     page = paginate_queryset(request, queryset, "-id", MAX_LIMIT)
 
-    # Update user unread notifications counter if its first page of notifications
+    # Clear user unread notifications counter if its first page of notifications
     # and the counter is obviously invalid
-    if "after" not in request.GET:
-        # User has unread notifications counter but there are no notifications?
-        if (
-            filter_state != "read"
-            and request.user.unread_notifications
-            and not page.items
-        ):
-            request.user.unread_notifications = 0
-            request.user.save(update_fields=["unread_notifications"])
+    if (
+        "after" not in request.GET
+        and filter_by != "read"
+        and not page.items
+        and request.user.unread_notifications
+    ):
+        request.user.unread_notifications = 0
+        request.user.save(update_fields=["unread_notifications"])
 
-        # User has unread notifications but counter shows 0
-        if (
-            filter_state == "unread"
-            and not request.user.unread_notifications
-            and page.items
-        ):
-            real_unread_notifications = queryset[: MAX_LIMIT + 1].count()
-            if request.user.unread_notifications != real_unread_notifications:
-                request.user.unread_notifications = real_unread_notifications
-                request.user.save(update_fields=["unread_notifications"])
+    # Recount unread unread notifications if counter shows 0 but unread
+    # notifications exist
+    if not request.user.unread_notifications and unread_items_exist(
+        filter_by, page.items
+    ):
+        real_unread_notifications = queryset[: MAX_LIMIT + 1].count()
+        if real_unread_notifications:
+            request.user.unread_notifications = real_unread_notifications
+            request.user.save(update_fields=["unread_notifications"])
 
     return JsonResponse(
         {
@@ -59,8 +59,21 @@ def notifications(request: HttpRequest) -> JsonResponse:
             "hasPrevious": page.has_previous,
             "firstCursor": page.first_cursor,
             "lastCursor": page.last_cursor,
+            "unreadNotifications": request.user.unread_notifications,
         }
     )
+
+
+def unread_items_exist(filter_by: str, items: List[Notification]) -> int:
+    if filter_by == "unread":
+        return bool(items)
+
+    if filter_by != "read":
+        for notification in items:
+            if not notification.is_read:
+                return True
+
+    return False
 
 
 @api_view(["POST"])
