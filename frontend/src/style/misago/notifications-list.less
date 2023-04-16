@@ -151,7 +151,7 @@
   }
 
   .notifications-list-item-col-timestamp {
-    margin-top: @line-height-computed / 2;
+    margin-top: floor(@line-height-computed / 4);
     padding: 0;
   }
 
@@ -274,6 +274,9 @@
     align-items: flex-start;
     position: relative;
     border-top: none;
+
+    // Make sidde paddings match rest of dropdown
+    padding: 10px 20px;
   }
 
   .notifications-list-item:last-child {
@@ -292,7 +295,7 @@
   }
 
   .notifications-list-item-col-timestamp {
-    margin-top: @line-height-computed / 2;
+    margin-top: floor(@line-height-computed / 4);
     padding: 0;
   }
 
