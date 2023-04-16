@@ -131,6 +131,19 @@ MISAGO_ADMIN_SESSION_EXPIRATION = 60
 MISAGO_THREADS_ON_INDEX = True
 
 
+# How many notifications may be retrieved from the API in single request?
+
+MISAGO_NOTIFICATIONS_PAGE_LIMIT = 50
+
+
+# How many unread notifications to track
+# Misago will not report report unread notifications count bigger than this
+# Example: if limit 50 and user has 56 unread notifications, UI will show "50+"
+# Also used by the notifications healing mechanism
+
+MISAGO_UNREAD_NOTIFICATIONS_LIMIT = 50
+
+
 # Function used for generating individual avatar for user
 
 MISAGO_DYNAMIC_AVATAR_DRAWER = "misago.users.avatars.dynamic.draw_default"

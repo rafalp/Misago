@@ -17,7 +17,7 @@ def test_notifications_api_returns_empty_list_if_user_has_no_notifications(user_
         "hasPrevious": False,
         "firstCursor": None,
         "lastCursor": None,
-        "unreadNotifications": 0,
+        "unreadNotifications": None,
     }
 
 
@@ -146,7 +146,7 @@ def test_notifications_api_clears_user_unread_notifications_count_if_user_has_no
     assert not response_json["results"]
     assert not response_json["hasNext"]
     assert not response_json["hasPrevious"]
-    assert response_json["unreadNotifications"] == 0
+    assert response_json["unreadNotifications"] is None
 
     user.refresh_from_db()
     assert user.unread_notifications == 0
@@ -165,7 +165,7 @@ def test_notifications_api_clears_user_unread_notifications_count_if_unread_list
     assert not response_json["results"]
     assert not response_json["hasNext"]
     assert not response_json["hasPrevious"]
-    assert response_json["unreadNotifications"] == 0
+    assert response_json["unreadNotifications"] is None
 
     user.refresh_from_db()
     assert user.unread_notifications == 0
@@ -184,7 +184,7 @@ def test_notifications_api_recounts_user_unread_notifications_if_user_has_new_no
 
     response_json = response.json()
     assert response_json["results"]
-    assert response_json["unreadNotifications"] == 1
+    assert response_json["unreadNotifications"] == "1"
 
     user.refresh_from_db()
     assert user.unread_notifications == 1
@@ -203,7 +203,7 @@ def test_notifications_api_recounts_user_unread_notifications_if_unread_list_has
 
     response_json = response.json()
     assert response_json["results"]
-    assert response_json["unreadNotifications"] == 1
+    assert response_json["unreadNotifications"] == "1"
 
     user.refresh_from_db()
     assert user.unread_notifications == 1

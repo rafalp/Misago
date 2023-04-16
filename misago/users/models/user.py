@@ -1,4 +1,5 @@
 from hashlib import md5
+from typing import Optional
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
@@ -481,6 +482,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             return True
         except User.DoesNotExist:
             return False
+
+    def get_unread_notifications_for_display(self) -> Optional[str]:
+        if not self.unread_notifications:
+            return None
+
+        if self.unread_notifications > settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT:
+            return f"{settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT}+"
+
+        return str(self.unread_notifications)
 
 
 class UsernameChange(models.Model):

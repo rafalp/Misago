@@ -77,7 +77,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
 
     def to_representation(self, instance) -> dict:
         data = super().to_representation(instance)
-        data["unreadNotifications"] = instance.unread_notifications
+        data["unreadNotifications"] = instance.get_unread_notifications_for_display()
         return data
 
 

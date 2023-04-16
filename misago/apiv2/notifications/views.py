@@ -4,13 +4,11 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.utils import timezone
 from rest_framework.decorators import api_view
 
+from ...conf import settings
 from ...notifications.models import Notification
 from ...notifications.permissions import allow_use_notifications
 from ..pagination import paginate_queryset
 from .serializers import NotificationSerializer
-
-
-MAX_LIMIT = 50
 
 
 @api_view(["GET"])
@@ -29,7 +27,12 @@ def notifications(request: HttpRequest) -> JsonResponse:
     if filter_by == "read":
         queryset = queryset.filter(is_read=True)
 
-    page = paginate_queryset(request, queryset, "-id", MAX_LIMIT)
+    page = paginate_queryset(
+        request,
+        queryset,
+        "-id",
+        settings.MISAGO_NOTIFICATIONS_PAGE_LIMIT,
+    )
 
     # Clear user unread notifications counter if its first page of notifications
     # and the counter is obviously invalid
@@ -47,7 +50,8 @@ def notifications(request: HttpRequest) -> JsonResponse:
     if not request.user.unread_notifications and unread_items_exist(
         filter_by, page.items
     ):
-        real_unread_notifications = queryset[: MAX_LIMIT + 1].count()
+        count_limit = settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT + 1
+        real_unread_notifications = queryset[:count_limit].count()
         if real_unread_notifications:
             request.user.unread_notifications = real_unread_notifications
             request.user.save(update_fields=["unread_notifications"])
@@ -59,7 +63,9 @@ def notifications(request: HttpRequest) -> JsonResponse:
             "hasPrevious": page.has_previous,
             "firstCursor": page.first_cursor,
             "lastCursor": page.last_cursor,
-            "unreadNotifications": request.user.unread_notifications,
+            "unreadNotifications": (
+                request.user.get_unread_notifications_for_display()
+            ),
         }
     )
 
