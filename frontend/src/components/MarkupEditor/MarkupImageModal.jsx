@@ -1,7 +1,7 @@
 import React from "react"
 import modal from "../../services/modal"
-import isUrl from "../../utils/is-url"
 import FormGroup from "../form-group"
+import isUrl from "./isUrl"
 import { replaceSelection } from "./operations"
 
 class MarkupImageModal extends React.Component {
@@ -27,11 +27,6 @@ class MarkupImageModal extends React.Component {
 
     if (url.length === 0) {
       this.setState({ error: gettext("This field is required.") })
-      return false
-    }
-
-    if (!isUrl(url)) {
-      this.setState({ error: gettext("Enter a valid address.") })
       return false
     }
 
