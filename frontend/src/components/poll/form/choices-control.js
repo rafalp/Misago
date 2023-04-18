@@ -1,10 +1,13 @@
 import React from "react"
+import getRandomString from "../../../utils/getRandomString"
+
+const HASH_LENGTH = 12
 
 export default class extends React.Component {
   onAdd = () => {
     let choices = this.props.choices.slice()
     choices.push({
-      hash: generateRandomHash(),
+      hash: getRandomString(HASH_LENGTH),
       label: "",
     })
 
@@ -65,9 +68,15 @@ export class PollChoice extends React.Component {
   }
 
   onDelete = () => {
-    const deleteItem = window.confirm(
-      pgettext("thread poll", "Are you sure you want to remove this choice?")
-    )
+    const deleteItem =
+      this.props.choice.label.length === 0
+        ? true
+        : window.confirm(
+            pgettext(
+              "thread poll",
+              "Are you sure you want to remove this choice?"
+            )
+          )
     if (deleteItem) {
       this.props.onDelete(this.props.choice.hash)
     }
@@ -96,15 +105,4 @@ export class PollChoice extends React.Component {
       </li>
     )
   }
-}
-
-export function generateRandomHash() {
-  let randomHash = ""
-  while (randomHash.length != 12) {
-    randomHash = Math.random()
-      .toString(36)
-      .replace(/[^a-zA-Z0-9]+/g, "")
-      .substr(1, 12)
-  }
-  return randomHash
 }
