@@ -56,11 +56,11 @@ export default class extends Form {
   }
 
   setChoices = (choices) => {
-    const errors = Object.assign({}, errors, { choices: null })
-
-    this.setState({
-      choices,
-      errors,
+    this.setState((state) => {
+      return {
+        choices,
+        errors: Object.assign({}, state.errors, { choices: null }),
+      }
     })
   }
 

@@ -10,9 +10,7 @@ const ThreadPagination = ({ baseUrl, posts, scrollToTop }) => (
         type="button"
         onClick={resetScroll}
       >
-        <span className="material-icon">
-          arrow_upward
-        </span>
+        <span className="material-icon">arrow_upward</span>
       </button>
     )}
     {posts.isLoaded && posts.first ? (

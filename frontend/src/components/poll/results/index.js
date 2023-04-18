@@ -13,6 +13,7 @@ export default function (props) {
         <Options
           isPollOver={props.isPollOver}
           poll={props.poll}
+          edit={props.edit}
           showVoting={props.showVoting}
           thread={props.thread}
         />
