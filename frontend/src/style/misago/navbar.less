@@ -157,7 +157,11 @@
 
 // Hide some items on small displays (mobile only)
 @media screen and (max-width: @screen-xs-max) {
+  #navbar-notifications-dropdown,
+  #navbar-private-threads-dropdown,
+  #navbar-search-dropdown,
   #navbar-site-nav-dropdown,
+  #navbar-user-nav-dropdown,
   .btn-navbar-sign-in,
   .btn-navbar-register {
     display: none;
@@ -166,7 +170,11 @@
 
 // Hide some items on large displays (tablets and up)
 @media screen and (min-width: @screen-sm-min) {
-  #navbar-site-nav-overlay {
+  #navbar-notifications-overlay,
+  #navbar-private-threads-overlay,
+  #navbar-search-overlay,
+  #navbar-site-nav-overlay,
+  #navbar-user-nav-overlay {
     display: none;
   }
 }
