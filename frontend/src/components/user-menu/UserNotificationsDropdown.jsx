@@ -35,7 +35,7 @@ export default function UserNotificationsDropdown({ user }) {
       )}
       listItem
       menuClassName="notifications-dropdown"
-      menuRightAlign
+      menuAlignRight
     >
       {({ isOpen }) => <NotificationsDropdown disabled={!isOpen} />}
     </Dropdown>

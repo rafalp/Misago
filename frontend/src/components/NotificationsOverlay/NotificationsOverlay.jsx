@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { close } from "../../reducers/notifications"
+import { close } from "../../reducers/overlay"
 import NotificationsFetch from "../NotificationsFetch"
 import {
   NotificationsList,
@@ -74,7 +74,7 @@ class NotificationsOverlay extends React.Component {
 }
 
 function select(state) {
-  return { open: state.notifications.open }
+  return { open: state.overlay.notifications }
 }
 
 const NotificationsOverlayConnected = connect(select)(NotificationsOverlay)

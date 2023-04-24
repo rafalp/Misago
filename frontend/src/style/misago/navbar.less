@@ -2,168 +2,171 @@
 // Misago Navbar
 // --------------------------------------------------
 
-// Remove bottom margin from navbar
+// Navbar layout
 .navbar {
-  margin-bottom: 0px;
+  position: sticky;
+  top: 0;
+  height: @navbar-height;
+  z-index: @zindex-navbar-fixed;
+
+  background-color: @navbar-bg;
+  border-bottom: 1px solid @navbar-border;
+  color: @navbar-color;
 }
 
-// Desktop navbar
-.navbar .navbar-full {
-  // Brand
-  .navbar-brand {
-    padding-top: (@navbar-height - @navbar-icon-height) / 2;
-    padding-bottom: (@navbar-height - @navbar-icon-height) / 2;
+.navbar-container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
 
-    font-size: @font-size-base * 1.5;
+.navbar-right {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  margin-left: auto;
+}
 
-    & > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
+// Branding
+.navbar-branding {
+  margin-right: @navbar-gutter;
+}
 
-    img {
-      height: @navbar-icon-height;
-      margin-right: @padding-base-horizontal / 2;
-    }
-  }
-
-  .navbar-nav > li > a {
-    font-size: @font-size-base * 1.2;
-  }
-
-  .navbar-icon {
-    display: block;
-    height: @navbar-height;
-    padding: @nav-link-padding;
-    padding-top: (@navbar-height - 28px) / 2;
-    padding-bottom: (@navbar-height - 28px) / 2;
-    position: relative;
-
-    color: @navbar-default-link-color;
-
-    &:hover,
-    &:focus {
-      color: @navbar-default-link-hover-color;
-      background-color: @navbar-default-link-hover-bg;
-    }
-
-    .material-icon {
-      width: 28px;
-      height: 28px;
-
-      font-size: 28px;
-      line-height: 28px;
-    }
-
-    .badge {
-      background-color: @brand-danger;
-      position: absolute;
-
-      top: 6px;
-      right: 6px;
-
-      font-size: 9px;
-    }
-  }
-
-  .open .navbar-icon {
-    &,
-    &:hover,
-    &:focus {
-      background-color: @navbar-default-link-active-bg;
-
-      color: @navbar-default-link-active-color;
-    }
-  }
-
-  // Pull Guest and User menus to right
-  .nav-guest,
-  .nav-user {
-    float: right;
-
-    .navbar-btn {
-      margin-left: @navbar-padding-horizontal;
-    }
-  }
-
-  // User avatar size
-  .nav-user .dropdown-toggle {
-    padding: (@navbar-height - @navbar-avatar-size) / 2;
-
-    img {
-      width: @navbar-avatar-size;
-      height: @navbar-avatar-size;
-    }
+.navbar-branding-text {
+  &,
+  &:link,
+  &:visited,
+  &:hover,
+  &:focus,
+  &:active {
+    color: @navbar-branding-text-color;
+    font-size: @navbar-branding-text-size;
+    text-decoration: none;
   }
 }
 
-// Compact (mobile) navbar
-.navbar ul.navbar-compact-nav {
-  border-collapse: collapse;
-  display: table;
-  margin: 0px;
-  table-layout: fixed;
-  width: 100%;
+.navbar-branding-logo img {
+  height: @navbar-logo-height;
+}
 
-  & > li {
-    display: table-cell;
-    width: 100%;
-  }
+// Custom items
+.navbar-custom-menu {
+  display: block;
+  margin: 0;
+  padding: 0;
 
-  & > li > a,
-  & > li > button {
-    background: none;
-    border: none;
-    display: block;
-    padding-top: 13px;
-    padding-bottom: 13px;
+  font-size: @navbar-font-size;
 
-    width: 100%;
-
-    color: @navbar-compact-link-color;
-    text-align: center;
-
-    &.active,
-    &:hover,
-    &:focus {
-      color: @navbar-compact-link-hover-color;
-      background-color: @navbar-compact-link-hover-bg;
-    }
-
-    & > img {
-      width: @navbar-compact-item-size;
-      height: @navbar-compact-item-size;
-    }
-  }
-
-  & > li > button {
+  & > li,
+  & > li > a {
     display: inline-block;
   }
 
-  & > li > a > .material-icon {
-    font-size: @navbar-compact-item-size;
-    line-height: @navbar-compact-item-size;
+  a,
+  a:link,
+  a:visited {
+    padding: @navbar-link-padding;
+
+    border-radius: @navbar-link-border-radius;
+    color: @navbar-link-color;
+  }
+
+  a:hover,
+  a:focus {
+    color: @navbar-link-active-color;
+    text-decoration: none;
+  }
+
+  a:active {
+    color: @navbar-link-active-color;
+    background-color: @navbar-link-active-bg;
+    text-decoration: none;
   }
 }
 
-// Make navbar's height match compact nav
-@media (max-width: @grid-float-breakpoint) {
-  .navbar.navbar-misago {
-    min-height: auto;
+// Navbar icon button
+.btn.btn-navbar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: @navbar-btn-size;
+  height: @navbar-btn-size;
+  position: relative;
+  margin-left: @navbar-gutter-half;
+  padding: 0;
+
+  .material-icon {
+    margin: 0;
+
+    font-size: @navbar-btn-icon-size;
+    line-height: @navbar-btn-icon-size;
+  }
+
+  &,
+  &:link,
+  &:visited,
+  &:hover,
+  &:focus {
+    color: @navbar-btn-color;
+    background-color: @navbar-btn-bg;
+    border-color: @navbar-btn-bg;
+  }
+
+  &:active,
+  &.active {
+    color: @navbar-btn-active-color;
+    background-color: @navbar-btn-active-bg;
+    border-color: @navbar-btn-active-bg;
   }
 }
 
-// Hide compact navbar above breakpoint
-.navbar-misago .navbar-desktop-nav {
-  display: none;
+// Image buttons
+.btn-navbar-image {
+  display: inline-block;
+  padding: 0;
+  margin-left: @navbar-gutter-half;
+
+  img {
+    width: @navbar-btn-size;
+    height: @navbar-btn-size;
+
+    border-radius: @border-radius-small;
+  }
 }
 
-@media (min-width: @grid-float-breakpoint) {
-  .navbar-misago ul.navbar-compact-nav {
+// Badge (small number on red color)
+.navbar-item-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+
+  padding: 0 5px;
+
+  background-color: @navbar-item-badge-bg;
+  border-radius: 4px;
+  color: @navbar-item-badge-color;
+  font-size: @font-size-small;
+  z-index: 2;
+}
+
+// Auth buttons
+.btn-navbar-sign-in,
+.btn-navbar-register {
+  margin-left: @navbar-gutter-half;
+}
+
+// Hide some items on small displays (mobile only)
+@media screen and (max-width: @screen-xs-max) {
+  #navbar-site-nav-dropdown,
+  .btn-navbar-sign-in,
+  .btn-navbar-register {
     display: none;
   }
+}
 
-  .navbar-misago .navbar-desktop-nav {
-    display: block;
+// Hide some items on large displays (tablets and up)
+@media screen and (min-width: @screen-sm-min) {
+  #navbar-site-nav-overlay {
+    display: none;
   }
 }

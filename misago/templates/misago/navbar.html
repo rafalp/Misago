@@ -1,7 +1,11 @@
 {% load i18n static %}
-<nav class="navbar navbar-misago navbar-default navbar-static-top" role="navigation">
+<nav id="misago-navbar" class="navbar" role="navigation">
+  <div class="container navbar-container">
+  </div>
+</nav>
 
-  <div class="container navbar-full navbar-desktop-nav">
+<nav class="navbar" role="navigation" style="display: none;">
+  <div class="container navbar-container">
     {% if settings.logo_text or settings.logo %}
       <a href="{% url 'misago:index' %}" class="navbar-brand">
         {% if settings.logo %}

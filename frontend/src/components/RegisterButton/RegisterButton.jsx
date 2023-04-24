@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
-import Loader from "misago/components/loader"
-import RegisterForm from "misago/components/register.js"
-import ajax from "misago/services/ajax"
-import captcha from "misago/services/captcha"
-import modal from "misago/services/modal"
-import snackbar from "misago/services/snackbar"
+import ajax from "../../services/ajax"
+import captcha from "../../services/captcha"
+import modal from "../../services/modal"
+import snackbar from "../../services/snackbar"
+import Loader from "../loader"
+import RegisterForm from "../register.js"
 
-export default class extends React.Component {
+export default class RegisterButton extends React.Component {
   constructor(props) {
     super(props)
 
@@ -54,7 +54,7 @@ export default class extends React.Component {
   render() {
     return (
       <button
-        className={classnames("btn btn-register", {
+        className={classnames("btn btn-register", this.props.className, {
           "btn-block": this.props.block,
           "btn-loading": this.state.isLoading,
         })}

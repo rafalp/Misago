@@ -43,6 +43,7 @@ export default class Dropdown extends React.Component {
 
     return (
       <RootElement
+        id={this.props.id}
         className={classnames(
           "dropdown",
           { open: isOpen },
@@ -62,7 +63,7 @@ export default class Dropdown extends React.Component {
         <div
           className={classnames(
             "dropdown-menu",
-            { "dropdown-menu-right": this.props.menuRightAlign },
+            { "dropdown-menu-right": this.props.menuAlignRight },
             this.props.menuClassName
           )}
           ref={(element) => {

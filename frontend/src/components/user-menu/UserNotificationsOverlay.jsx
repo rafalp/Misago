@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { open } from "../../reducers/notifications"
+import { openNotifications } from "../../reducers/overlay"
 
 function UserNotificationsOverlay({ dispatch, user }) {
   let title = null
@@ -17,7 +17,7 @@ function UserNotificationsOverlay({ dispatch, user }) {
         href={misago.get("NOTIFICATIONS_URL")}
         onClick={(event) => {
           event.preventDefault()
-          dispatch(open())
+          dispatch(openNotifications())
         }}
         title={title}
       >

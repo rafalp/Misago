@@ -18,25 +18,81 @@
 
 @ui-preview-frequency: 1s;
 
+// Sign in button
+@btn-sign-in-color: #fff;
+@btn-sign-in-border: #2563eb;
+@btn-sign-in-bg: #2563eb;
+
+// Register button
+@btn-register-color: #fff;
+@btn-register-border: #2563eb;
+@btn-register-bg: #2563eb;
+
 //== Navbar
 //
-//## Extra navbar configurability
+//##
 
-// ** Navbar icon height
-@navbar-icon-height: 32px;
+// Basics of a navbar
+@navbar-height: 60px;
 
-//** Navbar height
-@navbar-height: 54px;
+@navbar-color: #111827;
+@navbar-bg: #fff;
+@navbar-border: #e5e7eb;
 
-//** Full navbar avatar padding
-@navbar-avatar-size: 34px;
+@navbar-gutter: 24px;
+@navbar-gutter-half: 12px;
 
-//** Compact navbar
-@navbar-compact-link-color: @navbar-default-link-color;
-@navbar-compact-link-hover-color: @navbar-default-link-hover-color;
-@navbar-compact-link-hover-bg: @navbar-default-link-hover-bg;
+@navbar-font-size: @font-size-large;
 
-@navbar-compact-item-size: 24px;
+// Navbar branding
+@navbar-branding-text-color: #374151;
+@navbar-branding-text-size: @font-size-large + 4px;
+
+@navbar-logo-height: 40px;
+
+// Navbar links (custom menu items)
+@navbar-link-border-radius: @border-radius-base;
+@navbar-link-padding: 6px 12px;
+
+@navbar-link-color: @text-color;
+@navbar-link-active-color: @text-color;
+@navbar-link-active-bg: #e5e7eb;
+
+// Navbar icon btn
+
+@navbar-btn-size: 34px;
+@navbar-btn-icon-size: 24px;
+
+@navbar-btn-color: #374151;
+@navbar-btn-bg: transparent;
+
+@navbar-btn-active-color: @text-color;
+@navbar-btn-active-bg: #e5e7eb;
+
+@navbar-item-badge-color: #fff;
+@navbar-item-badge-bg: #dc2626;
+
+//== Overlay
+//
+@overlay-bg: @body-bg;
+@overlay-padding: 6px 12px;
+@overlay-gutter: 12px;
+
+// Header
+@overlay-header-padding: 12px 12px;
+@overlay-header-color: @text-color;
+@overlay-header-size: @font-size-large;
+
+@overlay-header-btn-size: 32px;
+@overlay-header-btn-icon-size: 24px;
+
+@overlay-header-btn-bg: transparent;
+@overlay-header-btn-border: transparent;
+@overlay-header-btn-color: @text-color;
+
+@overlay-header-btn-active-bg: @gray-lighter;
+@overlay-header-btn-active-border: @gray-lighter;
+@overlay-header-btn-active-color: @text-color;
 
 //== Pills nav
 //
@@ -77,7 +133,7 @@
 @user-status-offline: @gray-light;
 
 // Notifications
-
+//
 @notification-avatar-height: 32px;
 
 @notification-read-icon-color: @gray-lighter;
@@ -92,9 +148,6 @@
 
 @notification-unread-color: @text-color;
 @notification-unread-active-color: @text-color;
-
-// Notifications list
-//
 
 //== Categories status
 //
@@ -268,10 +321,10 @@
 
 @zindex-navbar: 1000;
 @zindex-dropdown: 1000;
-@zindex-overlay: 1010;
 @zindex-popover: 1060;
 @zindex-tooltip: 1070;
 @zindex-navbar-fixed: 1030;
+@zindex-overlay: 1035;
 @zindex-modal-background: 1040;
 @zindex-modal: 1050;
 @zindex-auth-message: 1070;
