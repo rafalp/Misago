@@ -7,7 +7,7 @@ import {
   NotificationsListError,
   NotificationsListLoading,
 } from "../NotificationsList"
-import NotificationsOverlayLayout from "./NotificationsOverlayLayout"
+import NotificationsOverlayBody from "./NotificationsOverlayBody"
 
 class NotificationsOverlay extends React.Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class NotificationsOverlay extends React.Component {
   }
 
   render = () => (
-    <NotificationsOverlayLayout
+    <NotificationsOverlayBody
       close={this.close}
       unread={this.state.unread}
       showAll={() => this.setState({ unread: false })}
@@ -69,7 +69,7 @@ class NotificationsOverlay extends React.Component {
           )
         }}
       </NotificationsFetch>
-    </NotificationsOverlayLayout>
+    </NotificationsOverlayBody>
   )
 }
 

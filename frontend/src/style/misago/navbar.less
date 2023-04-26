@@ -110,6 +110,7 @@
     color: @navbar-btn-color;
     background-color: @navbar-btn-bg;
     border-color: @navbar-btn-bg;
+    box-shadow: none;
   }
 
   &:active,
@@ -117,6 +118,7 @@
     color: @navbar-btn-active-color;
     background-color: @navbar-btn-active-bg;
     border-color: @navbar-btn-active-bg;
+    box-shadow: none;
   }
 }
 
@@ -158,12 +160,19 @@
 // Hide some items on small displays (mobile only)
 @media screen and (max-width: @screen-xs-max) {
   #navbar-notifications-dropdown,
-  #navbar-private-threads-dropdown,
+  #navbar-private-threads,
   #navbar-search-dropdown,
   #navbar-site-nav-dropdown,
   #navbar-user-nav-dropdown,
+  .navbar-extra-menu,
   .btn-navbar-sign-in,
   .btn-navbar-register {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  #navbar-private-threads {
     display: none;
   }
 }
@@ -171,7 +180,6 @@
 // Hide some items on large displays (tablets and up)
 @media screen and (min-width: @screen-sm-min) {
   #navbar-notifications-overlay,
-  #navbar-private-threads-overlay,
   #navbar-search-overlay,
   #navbar-site-nav-overlay,
   #navbar-user-nav-overlay {

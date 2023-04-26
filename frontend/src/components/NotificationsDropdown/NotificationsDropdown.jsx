@@ -5,7 +5,7 @@ import {
   NotificationsListError,
   NotificationsListLoading,
 } from "../NotificationsList"
-import NotificationsDropdownLayout from "./NotificationsDropdownLayout"
+import NotificationsDropdownBody from "./NotificationsDropdownBody"
 
 export default class NotificationsDropdown extends React.Component {
   constructor(props) {
@@ -24,14 +24,14 @@ export default class NotificationsDropdown extends React.Component {
   }
 
   render = () => (
-    <NotificationsDropdownLayout
+    <NotificationsDropdownBody
       unread={this.state.unread}
       showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}
     >
       <NotificationsFetch
         filter={this.state.unread ? "unread" : "all"}
-        disabled={this.props.disabled}
+        disabled={!this.props.active}
       >
         {({ data, loading, error }) => {
           if (loading) {
@@ -50,6 +50,6 @@ export default class NotificationsDropdown extends React.Component {
           )
         }}
       </NotificationsFetch>
-    </NotificationsDropdownLayout>
+    </NotificationsDropdownBody>
   )
 }

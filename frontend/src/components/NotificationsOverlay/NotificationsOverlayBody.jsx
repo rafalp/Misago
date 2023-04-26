@@ -1,8 +1,9 @@
 import classnames from "classnames"
 import React from "react"
-import { DropdownFooter, DropdownHeader, DropdownPills } from "../Dropdown"
+import { DropdownFooter, DropdownPills } from "../Dropdown"
+import { Overlay, OverlayHeader } from "../Overlay"
 
-export default function NotificationsOverlayLayout({
+export default function NotificationsOverlayBody({
   children,
   close,
   showAll,
@@ -10,7 +11,7 @@ export default function NotificationsOverlayLayout({
   unread,
 }) {
   return (
-    <div className="notifications-overlay-layout">
+    <div className="notifications-overlay-body">
       <div className="notifications-overlay-header">
         <div className="notifications-overlay-caption">
           {pgettext("notifications title", "Notifications")}
@@ -25,12 +26,12 @@ export default function NotificationsOverlayLayout({
         </button>
       </div>
       <DropdownPills>
-        <NotificationsOverlayLayoutPill active={!unread} onClick={showAll}>
+        <NotificationsOverlayBodyPill active={!unread} onClick={showAll}>
           {pgettext("notifications dropdown", "All")}
-        </NotificationsOverlayLayoutPill>
-        <NotificationsOverlayLayoutPill active={unread} onClick={showUnread}>
+        </NotificationsOverlayBodyPill>
+        <NotificationsOverlayBodyPill active={unread} onClick={showUnread}>
           {pgettext("notifications dropdown", "Unread")}
-        </NotificationsOverlayLayoutPill>
+        </NotificationsOverlayBodyPill>
       </DropdownPills>
       {children}
       <DropdownFooter>
@@ -45,7 +46,7 @@ export default function NotificationsOverlayLayout({
   )
 }
 
-function NotificationsOverlayLayoutPill({ active, children, onClick }) {
+function NotificationsOverlayBodyPill({ active, children, onClick }) {
   return (
     <button
       className={classnames("btn", {

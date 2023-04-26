@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-export default function NavbarPrivateThreadsToggle({
+export default function NavbarPrivateThreads({
   id,
   className,
   badge,

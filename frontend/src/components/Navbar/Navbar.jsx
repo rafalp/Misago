@@ -5,11 +5,14 @@ import RegisterButton from "../RegisterButton"
 import SignInButton from "../SignInButton"
 import NavbarBranding from "./NavbarBranding"
 import NavbarExtraMenu from "./NavbarExtraMenu"
+import NavbarNotificationsDropdown from "./NavbarNotificationsDropdown"
 import NavbarNotificationsToggle from "./NavbarNotificationsToggle"
-import NavbarPrivateThreadsToggle from "./NavbarPrivateThreadsToggle"
+import NavbarPrivateThreads from "./NavbarPrivateThreads"
+import NavbarSearchDropdown from "./NavbarSearchDropdown"
 import NavbarSearchToggle from "./NavbarSearchToggle"
 import NavbarSiteNavDropdown from "./NavbarSiteNavDropdown"
 import NavbarSiteNavToggle from "./NavbarSiteNavToggle"
+import NavbarUserNavDropdown from "./NavbarUserNavDropdown"
 import NavbarUserNavToggle from "./NavbarUserNavToggle"
 
 export function Navbar({
@@ -30,6 +33,9 @@ export function Navbar({
       <div className="navbar-right">
         {!!extraMenuItems && <NavbarExtraMenu items={extraMenuItems} />}
         {!!showSearch && (
+          <NavbarSearchDropdown id="navbar-search-dropdown" url={searchUrl} />
+        )}
+        {!!showSearch && (
           <NavbarSearchToggle
             id="navbar-search-overlay"
             url={searchUrl}
@@ -47,14 +53,17 @@ export function Navbar({
           }}
         />
         {!!showPrivateThreads && (
-          <NavbarPrivateThreadsToggle
-            id="navbar-private-threads-overlay"
+          <NavbarPrivateThreads
+            id="navbar-private-threads"
             badge={user.unreadPrivateThreads}
             url={privateThreadsUrl}
-            onClick={(event) => {
-              dispatch(overlay.openPrivateThreads())
-              event.preventDefault()
-            }}
+          />
+        )}
+        {!!user && (
+          <NavbarNotificationsDropdown
+            id="navbar-notifications-dropdown"
+            badge={user.unreadNotifications}
+            url={notificationsUrl}
           />
         )}
         {!!user && (
@@ -67,6 +76,9 @@ export function Navbar({
               event.preventDefault()
             }}
           />
+        )}
+        {!!user && (
+          <NavbarUserNavDropdown id="navbar-user-nav-dropdown" user={user} />
         )}
         {!!user && (
           <NavbarUserNavToggle
@@ -90,7 +102,7 @@ export function Navbar({
 function select(state) {
   const settings = misago.get("SETTINGS")
   const user = state.auth.user
-
+  console.log(user)
   return {
     branding: {
       logo: settings.logo,
@@ -107,7 +119,7 @@ function select(state) {
           username: user.username,
           email: user.email,
           avatars: user.avatars,
-          unreadNotifications: user.unread_notifications,
+          unreadNotifications: user.unreadNotifications,
           unreadPrivateThreads: user.unread_private_threads,
           url: user.url,
         },
