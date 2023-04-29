@@ -18,20 +18,17 @@
       <span class="fa fa-chevron-left"></span>
     </button>
   {% endif %}
-  {% if page.next_page_number < paginator.num_pages %}
+  {% if page.has_next %}
     <a href="{% url root_link page=page.next_page_number %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to next page' %}">
       <span class="fa fa-chevron-right"></span>
+    </a>
+    <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to last page' %}">
+      {% trans "Last" %}
     </a>
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
       <span class="fa fa-chevron-right"></span>
     </button>
-  {% endif %}
-  {% if page.has_next %}
-    <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to last page' %}">
-      {% trans "Last" %}
-    </a>
-  {% else %}
     <button class="btn btn-light btn-sm" disabled>
       {% trans "Last" %}
     </button>
