@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-08 12:48+0000\n"
+"POT-Creation-Date: 2023-04-29 09:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2847,7 +2847,7 @@ msgstr ""
 msgid "Go to next page"
 msgstr ""
 
-#: templates/misago/admin/generic/paginator.html:31
+#: templates/misago/admin/generic/paginator.html:25
 #: templates/misago/thread/pagination.html:34
 #: templates/misago/thread/pagination.html:41
 #: templates/misago/userslists/rank_paginator.html:29
@@ -2855,12 +2855,12 @@ msgstr ""
 msgid "Go to last page"
 msgstr ""
 
-#: templates/misago/admin/generic/paginator.html:32
-#: templates/misago/admin/generic/paginator.html:36
+#: templates/misago/admin/generic/paginator.html:26
+#: templates/misago/admin/generic/paginator.html:33
 msgid "Last"
 msgstr ""
 
-#: templates/misago/admin/generic/paginator.html:41
+#: templates/misago/admin/generic/paginator.html:38
 #, python-format
 msgid "Page %(page)s of %(pages)s"
 msgstr ""
