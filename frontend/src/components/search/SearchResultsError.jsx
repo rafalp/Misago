@@ -1,21 +1,18 @@
 import React from "react"
 import { ListGroupError } from "../ListGroup"
-import NotificationsListGroup from "./NotificationsListGroup"
+import SearchResultsList from "./SearchResultsList"
 
-export default function NotificationsListError({ error }) {
-  const detail = errorDetail(error)
-
+export default function SearchResultsError({ error }) {
   return (
-    <NotificationsListGroup className="notifications-list-pending">
+    <SearchResultsList>
       <ListGroupError
-        icon="notifications_off"
         message={pgettext(
-          "notifications list",
-          "Notifications could not be loaded."
+          "search results",
+          "Search results could not be loaded."
         )}
-        detail={detail}
+        detail={errorDetail(error)}
       />
-    </NotificationsListGroup>
+    </SearchResultsList>
   )
 }
 

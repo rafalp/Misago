@@ -1,17 +1,14 @@
 import React from "react"
+import { ListGroupEmpty } from "../ListGroup"
 
 export default function NotificationsListEmpty({ filter }) {
   return (
-    <li className="list-group-item notifications-list-empty">
-      <div className="notifications-list-empty-icon">
-        <span className="material-icon">
-          {filter === "unread"
-            ? "sentiment_very_satisfied"
-            : "notifications_none"}
-        </span>
-      </div>
-      <p className="notifications-list-empty-message">{emptyMessage(filter)}</p>
-    </li>
+    <ListGroupEmpty
+      icon={
+        filter === "unread" ? "sentiment_very_satisfied" : "notifications_none"
+      }
+      message={emptyMessage(filter)}
+    />
   )
 }
 

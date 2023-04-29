@@ -1,5 +1,6 @@
 import React from "react"
 import { Dropdown } from "../Dropdown"
+import { SearchDropdown } from "../Search"
 import NavbarSearchToggle from "./NavbarSearchToggle"
 
 export default function NavbarSearchDropdown({ id, className, url }) {
@@ -20,7 +21,7 @@ export default function NavbarSearchDropdown({ id, className, url }) {
       menuClassName="search-dropdown"
       menuAlignRight
     >
-      {({ isOpen }) => <div>TODO</div>}
+      {() => <SearchDropdown />}
     </Dropdown>
   )
 }

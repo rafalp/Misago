@@ -1,5 +1,6 @@
 import classnames from "classnames"
 import React from "react"
+import { ListGroupItem } from "../ListGroup"
 import NotificationsListItemActor from "./NotificationsListItemActor"
 import NotificationsListItemMessage from "./NotificationsListItemMessage"
 import NotificationsListItemReadStatus from "./NotificationsListItemReadStatus"
@@ -7,9 +8,9 @@ import NotificationsListItemTimestamp from "./NotificationsListItemTimestamp"
 
 export default function NotificationsListItem({ notification }) {
   return (
-    <li
+    <ListGroupItem
       key={notification.id}
-      className={classnames("list-group-item notifications-list-item", {
+      className={classnames("notifications-list-item", {
         "notifications-list-item-read": notification.isRead,
         "notifications-list-item-unread": !notification.isRead,
       })}
@@ -30,6 +31,6 @@ export default function NotificationsListItem({ notification }) {
           <NotificationsListItemTimestamp notification={notification} />
         </div>
       </div>
-    </li>
+    </ListGroupItem>
   )
 }

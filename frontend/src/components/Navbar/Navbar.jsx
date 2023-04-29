@@ -31,7 +31,9 @@ export function Navbar({
     <div className="container navbar-container">
       <NavbarBranding {...branding} />
       <div className="navbar-right">
-        {!!extraMenuItems && <NavbarExtraMenu items={extraMenuItems} />}
+        {extraMenuItems.length > 0 && (
+          <NavbarExtraMenu items={extraMenuItems} />
+        )}
         {!!showSearch && (
           <NavbarSearchDropdown id="navbar-search-dropdown" url={searchUrl} />
         )}
@@ -102,7 +104,7 @@ export function Navbar({
 function select(state) {
   const settings = misago.get("SETTINGS")
   const user = state.auth.user
-  console.log(user)
+
   return {
     branding: {
       logo: settings.logo,

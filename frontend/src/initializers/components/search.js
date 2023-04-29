@@ -1,4 +1,4 @@
-import paths from "misago/components/search"
+import paths from "misago/components/search-route"
 import misago from "misago"
 import mount from "misago/utils/routed-component"
 

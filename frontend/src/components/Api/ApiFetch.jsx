@@ -9,6 +9,9 @@ export default class ApiFetch extends React.Component {
       loading: false,
       error: null,
     }
+
+    this.controller = new AbortController()
+    this.signal = this.controller.signal
   }
 
   componentDidMount() {
@@ -18,12 +21,46 @@ export default class ApiFetch extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const urlDidUpdate = this.props.url && this.props.url !== prevProps.url
-    const disabledDidUpdate =
-      !this.props.disabled && this.props.disabled != prevProps.disabled
+    const url = this.props.url
+    const urlChanged = url && url !== prevProps.url
+    const disabledChanged = this.props.disabled != prevProps.disabled
 
-    if (urlDidUpdate || disabledDidUpdate) {
-      this.request(this.props.url)
+    if (urlChanged || disabledChanged) {
+      if (!this.props.disabled) {
+        if (this.hasCache(url)) {
+          this.getCache(url)
+        } else {
+          this.controller.abort()
+
+          this.controller = new AbortController()
+          this.signal = this.controller.signal
+          this.request(url)
+        }
+      } else {
+        this.controller.abort()
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.controller.abort()
+  }
+
+  hasCache = (url) => {
+    return this.props.cache && this.props.cache[url]
+  }
+
+  getCache = async (url) => {
+    const data = this.props.cache[url]
+    this.setState({ loading: false, error: null, data })
+    if (this.props.onData) {
+      await this.props.onData(data)
+    }
+  }
+
+  setCache = (url, data) => {
+    if (this.props.cache) {
+      this.props.cache[url] = data
     }
   }
 
@@ -33,12 +70,14 @@ export default class ApiFetch extends React.Component {
     fetch(url, {
       method: "GET",
       credentials: "include",
+      signal: this.signal,
     }).then(
       async (response) => {
         if (url === this.props.url) {
           if (response.status == 200) {
             const data = await response.json()
             this.setState({ loading: false, error: null, data })
+            this.setCache(url, data)
             if (this.props.onData) {
               await this.props.onData(data)
             }
