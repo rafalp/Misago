@@ -29,6 +29,8 @@
 
 // Branding
 .navbar-branding {
+  display: flex;
+  align-items: center;
   margin-right: @navbar-gutter;
 }
 
@@ -49,8 +51,17 @@
   height: @navbar-logo-height;
 }
 
-// Custom items
-.navbar-custom-menu {
+.navbar-branding-logo-xs {
+  margin-right: @navbar-gutter-half;
+
+  img {
+    height: @navbar-logo-xs-height;
+    width: @navbar-logo-xs-height;
+  }
+}
+
+// Extra items set by forum admin
+.navbar-extra-menu {
   display: block;
   margin: 0;
   padding: 0;

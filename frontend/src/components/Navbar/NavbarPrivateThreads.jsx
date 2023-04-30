@@ -19,7 +19,6 @@ export default function NavbarPrivateThreads({
       className={classnames("btn btn-navbar-icon", className, { active })}
       href={url}
       title={title}
-      type="button"
       onClick={onClick}
     >
       {!!badge && <span className="navbar-item-badge">{badge}</span>}

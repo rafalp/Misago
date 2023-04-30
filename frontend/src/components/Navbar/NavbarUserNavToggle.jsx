@@ -15,7 +15,6 @@ export default function NavbarUserNavToggle({
       className={classnames("btn-navbar-image", className, { active })}
       href={user.url}
       title={pgettext("navbar", "Open your options")}
-      type="button"
       onClick={onClick}
     >
       <Avatar user={user} size={34} />

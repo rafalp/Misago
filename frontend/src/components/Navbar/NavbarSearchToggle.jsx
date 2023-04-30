@@ -14,7 +14,6 @@ export default function NavbarSearchToggle({
       className={classnames("btn btn-navbar-icon", className, { active })}
       href={url}
       title={pgettext("navbar", "Open search")}
-      type="button"
       onClick={onClick}
     >
       <span className="material-icon">search</span>

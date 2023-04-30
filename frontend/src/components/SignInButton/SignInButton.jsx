@@ -24,6 +24,7 @@ export default function SignInButton({ block, className }) {
       className={classnames("btn btn-sign-in", className, {
         "btn-block": block,
       })}
+      type="button"
       onClick={() => {
         modal.show(<SignInModal />)
       }}
