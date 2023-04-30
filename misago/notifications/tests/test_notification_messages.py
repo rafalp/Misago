@@ -36,7 +36,7 @@ def test_notification_message_factory_raises_verb_error_for_unknown_verb():
 
 def test_default_message_factory_supports_test_notifications():
     message = message_factory.get_message(Notification(id=1, verb="TEST"))
-    assert message == f"Test notification #1"
+    assert message == "Test notification #1"
 
 
 def test_default_message_factory_supports_replies_notifications():
@@ -48,4 +48,6 @@ def test_default_message_factory_supports_replies_notifications():
             thread_title="Midgar was destroyed!",
         )
     )
-    assert message == f"Test notification #1"
+    assert message == (
+        "<b>Aerith</b> replied to the thread <b>Midgar was destroyed!</b>."
+    )

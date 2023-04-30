@@ -63,6 +63,6 @@ class NotificationRedirectFactory:
 redirect_factory = NotificationRedirectFactory()
 
 
-@redirect_factory.set_redirect("test")
+@redirect_factory.set_redirect("TEST")
 def get_test_notification_url(notification: "Notification") -> str:
     return f"/#test-notification-{notification.id}"

@@ -21,9 +21,7 @@ def test_notifications_api_returns_empty_list_if_user_has_no_notifications(user_
     }
 
 
-def test_notifications_api_returns_list_with_all_user_notifications(
-    user, user_client
-):
+def test_notifications_api_returns_list_with_all_user_notifications(user, user_client):
     read_notification = Notification.objects.create(
         user=user, verb="TEST", is_read=True
     )

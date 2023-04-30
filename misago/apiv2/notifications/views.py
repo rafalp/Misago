@@ -51,7 +51,9 @@ def notifications(request: HttpRequest) -> JsonResponse:
         filter_by, page.items
     ):
         count_limit = settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT + 1
-        real_unread_notifications = Notification.objects.filter(user=request.user, is_read=False)[:count_limit].count()
+        real_unread_notifications = Notification.objects.filter(
+            user=request.user, is_read=False
+        )[:count_limit].count()
         if real_unread_notifications:
             request.user.unread_notifications = real_unread_notifications
             request.user.save(update_fields=["unread_notifications"])

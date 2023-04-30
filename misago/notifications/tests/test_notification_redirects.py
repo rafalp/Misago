@@ -35,4 +35,4 @@ def test_notification_redirect_factory_raises_verb_error_for_unknown_verb():
 
 def test_default_redirect_factory_supports_test_notifications():
     redirect = redirect_factory.get_redirect_url(Notification(id=1, verb="TEST"))
-    assert redirect == f"/#test-notification-1"
+    assert redirect == "/#test-notification-1"
