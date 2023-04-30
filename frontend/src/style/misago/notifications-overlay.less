@@ -2,85 +2,7 @@
 // Overlay is a full page notifications list used on small devices
 // --------------------------------------------------
 
-#notifications-mount {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: @zindex-overlay;
-}
-
-body.notifications-fullscreen {
-  // Remove scroll from body
-  overflow: hidden;
-
-  // Make notifications mount visible
-  #notifications-mount {
-    display: block;
-    background-color: @body-bg;
-  }
-
-  .notifications-overlay-layout {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-}
-
-// Overlay header
-.notifications-overlay-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-}
-
-.notifications-overlay-caption {
-  flex: 1;
-  color: @posting-dialog-caption-color;
-  font-size: @posting-dialog-caption-size;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.btn-notifications-overlay {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-
-  width: @posting-dialog-btn-size;
-  height: @posting-dialog-btn-size;
-  margin-left: @line-height-computed / 2;
-  padding: 0;
-
-  font-size: @posting-dialog-btn-icon-size;
-  line-height: @posting-dialog-btn-icon-size;
-
-  &,
-  &:hover {
-    background-color: @posting-dialog-btn-bg;
-    border: 1px solid @posting-dialog-btn-border;
-    color: @posting-dialog-btn-color;
-  }
-
-  &:active {
-    background-color: @posting-dialog-btn-active-bg;
-    border: 1px solid @posting-dialog-btn-active-border;
-    color: @posting-dialog-btn-active-color;
-  }
-
-  .material-icon {
-    padding: 0;
-    margin: 0;
-    bottom: 0;
-  }
-}
-
-// Overlay notifications list
-.notifications-overlay-layout {
+.overlay {
   .notifications-list {
     margin: 0;
     width: 100%;
@@ -155,9 +77,4 @@ body.notifications-fullscreen {
   .notifications-list-pending .list-group-item {
     width: 100%;
   }
-}
-
-// Remove margin from overlay footer
-.notifications-overlay-layout .dropdown-footer {
-  margin: 0;
 }

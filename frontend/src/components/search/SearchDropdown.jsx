@@ -8,13 +8,9 @@ export default function SearchDropdown() {
     <SearchQuery>
       {({ query, setQuery }) => {
         return (
-          <div>
+          <div className="search-dropdown-body">
             <SearchInput query={query} setQuery={setQuery} />
-            <SearchFetch query={query}>
-              {({ data }) => {
-                return <div>TODO!</div>
-              }}
-            </SearchFetch>
+            <SearchFetch query={query} />
           </div>
         )
       }}

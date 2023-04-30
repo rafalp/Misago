@@ -11,18 +11,18 @@
 body.has-overlay {
   position: fixed;
   overflow: hidden;
+}
 
-  // Make overlay visible
-  .overlay {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: @zindex-overlay;
-  }
+// Make overlay visible
+.overlay-open {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: @zindex-overlay;
 }
 
 // Header styles
@@ -31,15 +31,6 @@ body.has-overlay {
   align-items: center;
   width: 100%;
   padding: @overlay-header-padding;
-}
-
-.overlay-header-branding {
-  img {
-    border-radius: @border-radius-small;
-    margin-right: @overlay-gutter;
-    width: @overlay-header-btn-size;
-    height: @overlay-header-btn-size;
-  }
 }
 
 .overlay-header-caption {
@@ -78,4 +69,22 @@ body.has-overlay {
     box-shadow: none;
     color: @overlay-header-btn-active-color;
   }
+}
+
+// Dropdown footer and pills work within overlays
+.overlay .dropdown-pills {
+  padding: @overlay-header-padding;
+  padding-top: 0;
+
+  .btn:first-child {
+    margin-left: 0;
+  }
+
+  .btn:last-child {
+    margin-right: 0;
+  }
+}
+
+.overlay .dropdown-footer {
+  margin: 0;
 }

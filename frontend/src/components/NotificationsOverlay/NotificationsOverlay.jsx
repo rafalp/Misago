@@ -1,6 +1,5 @@
 import React from "react"
 import { connect } from "react-redux"
-import { close } from "../../reducers/overlay"
 import NotificationsFetch from "../NotificationsFetch"
 import {
   NotificationsList,
@@ -37,13 +36,9 @@ class NotificationsOverlay extends React.Component {
     }
   }
 
-  close = () => {
-    this.props.dispatch(close())
-  }
-
   render = () => (
     <NotificationsOverlayBody
-      close={this.close}
+      open={this.props.open}
       unread={this.state.unread}
       showAll={() => this.setState({ unread: false })}
       showUnread={() => this.setState({ unread: true })}

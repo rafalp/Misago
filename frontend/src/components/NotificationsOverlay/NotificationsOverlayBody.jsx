@@ -5,26 +5,16 @@ import { Overlay, OverlayHeader } from "../Overlay"
 
 export default function NotificationsOverlayBody({
   children,
-  close,
+  open,
   showAll,
   showUnread,
   unread,
 }) {
   return (
-    <div className="notifications-overlay-body">
-      <div className="notifications-overlay-header">
-        <div className="notifications-overlay-caption">
-          {pgettext("notifications title", "Notifications")}
-        </div>
-        <button
-          className="btn btn-notifications-overlay"
-          title={pgettext("dialog", "Cancel")}
-          type="button"
-          onClick={close}
-        >
-          <span className="material-icon">close</span>
-        </button>
-      </div>
+    <Overlay open={open}>
+      <OverlayHeader>
+        {pgettext("notifications title", "Notifications")}
+      </OverlayHeader>
       <DropdownPills>
         <NotificationsOverlayBodyPill active={!unread} onClick={showAll}>
           {pgettext("notifications dropdown", "All")}
@@ -42,7 +32,7 @@ export default function NotificationsOverlayBody({
           {pgettext("notifications", "See all notifications")}
         </a>
       </DropdownFooter>
-    </div>
+    </Overlay>
   )
 }
 

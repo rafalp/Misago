@@ -17,6 +17,9 @@ class Overlay extends React.Component {
       if (this.props.open) {
         this.scrollOrigin = window.pageYOffset
         document.body.classList.add(BODY_CLASS)
+        if (this.props.onOpen) {
+          this.props.onOpen()
+        }
       } else {
         document.body.classList.remove(BODY_CLASS)
         window.scrollTo(0, this.scrollOrigin)

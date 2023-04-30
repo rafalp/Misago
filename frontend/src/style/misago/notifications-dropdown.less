@@ -1,0 +1,43 @@
+//
+// Notifications dropdown/overlay styles
+// --------------------------------------------------
+
+.notifications-dropdown {
+  width: 375px;
+
+  .notifications-list {
+    margin: 0;
+    max-height: calc(100vh - @dropdown-height-offset - 130px);
+    overflow-y: auto;
+  }
+
+  .notifications-list-item {
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .notifications-list-item-right-col {
+    display: block;
+  }
+
+  .notifications-list-item-col-read-icon {
+    position: absolute;
+    padding: 0;
+    top: 14px;
+    right: 15px;
+  }
+
+  .notifications-list-item-col-timestamp {
+    margin-top: floor(@line-height-computed / 4);
+    padding: 0;
+  }
+
+  .notifications-list-item-unread {
+    padding-right: 40px;
+  }
+
+  // Hide read indicator on read notifications
+  .notifications-list-item-read .notifications-list-item-col-read-icon {
+    display: none;
+  }
+}

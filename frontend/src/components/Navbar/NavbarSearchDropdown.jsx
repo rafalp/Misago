@@ -15,6 +15,12 @@ export default function NavbarSearchDropdown({ id, className, url }) {
           onClick={(event) => {
             event.preventDefault()
             toggle()
+
+            window.setTimeout(() => {
+              document
+                .querySelector(".search-dropdown .form-control-search")
+                .focus()
+            }, 0)
           }}
         />
       )}

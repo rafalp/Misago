@@ -1,9 +1,9 @@
 //
-// Search Dropdown
+// Search dropdown and overlay
 // --------------------------------------------------
 
 .search-dropdown {
-  width: 500px;
+  width: 450px;
   padding: 0;
   overflow: hidden;
 }
@@ -15,8 +15,33 @@
 }
 
 .search-dropdown .list-group {
-  max-height: 80vh;
+  max-height: calc(100vh - @dropdown-height-offset - 46px);
   overflow-y: auto;
+}
+
+.search-overlay-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.search-overlay-body .search-input {
+  padding: @overlay-padding;
+
+  border-bottom: 1px solid @dropdown-divider-bg;
+}
+
+.search-overlay-body .search-results-container {
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
+  position: relative;
+}
+
+.search-overlay-body .search-results-list {
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
 }
 
 // Search results

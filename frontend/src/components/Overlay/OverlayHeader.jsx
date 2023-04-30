@@ -2,16 +2,9 @@ import React from "react"
 import { connect } from "react-redux"
 import { close } from "../../reducers/overlay"
 
-export function OverlayHeader({ branding, children, dispatch }) {
+export function OverlayHeader({ children, dispatch }) {
   return (
     <div className="overlay-header">
-      {!!branding.logo && (
-        <div className="overlay-header-branding">
-          <a href={branding.url}>
-            <img src={branding.logo} title={branding.text} />
-          </a>
-        </div>
-      )}
       <div className="overlay-header-caption">{children}</div>
       <button
         className="btn btn-overlay-close"
@@ -25,18 +18,6 @@ export function OverlayHeader({ branding, children, dispatch }) {
   )
 }
 
-function select() {
-  const settings = misago.get("SETTINGS")
-
-  return {
-    branding: {
-      logo: settings.logo_small,
-      text: settings.logo_text,
-      url: misago.get("MISAGO_PATH"),
-    },
-  }
-}
-
-const OverlayHeaderConnected = connect(select)(OverlayHeader)
+const OverlayHeaderConnected = connect()(OverlayHeader)
 
 export default OverlayHeaderConnected
