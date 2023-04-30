@@ -101,6 +101,48 @@ def test_categories_map_excludes_categories_not_browserable_by_user(
     ]
 
 
+def test_categories_map_excludes_special_categories(
+    cache_versions,
+    user,
+    private_threads_category,
+    default_category,
+    sibling_category,
+    child_category,
+    other_category,
+):
+    request = Mock(
+        cache_versions=cache_versions,
+        user=user,
+        user_acl={
+            "browseable_categories": [
+                private_threads_category.id,
+                default_category.id,
+                other_category.id,
+            ],
+        },
+    )
+
+    categories_map = get_categories_map(request)
+    assert categories_map == [
+        {
+            "id": default_category.id,
+            "name": default_category.name,
+            "shortName": default_category.short_name,
+            "color": default_category.color,
+            "url": default_category.get_absolute_url(),
+            "children": [],
+        },
+        {
+            "id": other_category.id,
+            "name": other_category.name,
+            "shortName": other_category.short_name,
+            "color": other_category.color,
+            "url": other_category.get_absolute_url(),
+            "children": [],
+        },
+    ]
+
+
 def test_categories_map_skips_database_read_if_there_is_cache(
     mocker,
     django_assert_num_queries,

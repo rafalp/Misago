@@ -8,6 +8,16 @@
   font-size: @font-size-large;
 }
 
+// Add subheader in place of old header
+.dropdown-subheader {
+  padding: 6px 20px;
+  width: 100%;
+
+  color: @text-color;
+  font-size: @font-size-base;
+  font-weight: bold;
+}
+
 // Justify dropdown pills
 .dropdown-pills {
   display: flex;
@@ -22,7 +32,20 @@
   }
 }
 
+// Make dropdown menu list look like menu
+.dropdown-menu-list {
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+  }
+}
+
 // Unify .btn-link appearance with anchors
+.dropdown-menu-item > a,
+.dropdown-menu-item > .btn-link,
+.dropdown-link > a,
 .dropdown-menu > li > a,
 .dropdown-menu > li > .btn-link,
 .modal-menu > li > a,

@@ -40,6 +40,7 @@ def get_categories_map_from_db(request) -> List[dict]:
 
     queryset = Category.objects.filter(
         id__in=request.user_acl["browseable_categories"],
+        special_role__isnull=True,
     ).order_by("lft")
 
     for category in queryset.values(*MAP_CATEGORY_FIELDS):

@@ -1,5 +1,6 @@
 import React from "react"
+import SiteNav from "./SiteNav"
 
 export default function SiteNavDropdown() {
-  return <div>SITE NAV</div>
+  return <SiteNav dropdown />
 }

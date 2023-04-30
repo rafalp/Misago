@@ -33,7 +33,6 @@ function SearchOverlay({ open }) {
 }
 
 function select(state) {
-  console.log(state.overlay)
   return { open: state.overlay.search }
 }
 
