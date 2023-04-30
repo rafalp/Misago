@@ -222,3 +222,44 @@ def other_user_unapproved_thread(default_category, other_user):
 @pytest.fixture
 def private_thread(private_threads_category):
     return post_thread(private_threads_category)
+
+
+@pytest.fixture
+def categories_tree(root_category):
+    sibling_category = Category(
+        name="Sibling Category",
+        slug="sibling-category",
+    )
+
+    sibling_category.insert_at(root_category, position="last-child", save=True)
+
+    child_category = Category(
+        name="Child Category",
+        slug="child-category",
+        color="#FF0000",
+    )
+
+    child_category.insert_at(sibling_category, position="last-child", save=True)
+
+    other_category = Category(
+        name="Other Category",
+        slug="other-category",
+        short_name="Other",
+    )
+
+    other_category.insert_at(root_category, position="last-child", save=True)
+
+
+@pytest.fixture
+def sibling_category(categories_tree):
+    return Category.objects.get(slug="sibling-category")
+
+
+@pytest.fixture
+def child_category(categories_tree):
+    return Category.objects.get(slug="child-category")
+
+
+@pytest.fixture
+def other_category(categories_tree):
+    return Category.objects.get(slug="other-category")
