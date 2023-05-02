@@ -37,6 +37,10 @@ export default class Dropdown extends React.Component {
     })
   }
 
+  close = () => {
+    this.setState({ isOpen: false })
+  }
+
   render() {
     const { isOpen } = this.state
     const RootElement = this.props.listItem ? "li" : "div"
@@ -73,7 +77,7 @@ export default class Dropdown extends React.Component {
           }}
           role="menu"
         >
-          {this.props.children({ isOpen, toggle: this.toggle })}
+          {this.props.children({ isOpen, close: this.close })}
         </div>
       </RootElement>
     )

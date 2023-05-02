@@ -71,7 +71,7 @@ body.has-overlay {
   }
 }
 
-// Dropdown footer and pills work within overlays
+// Make dropdown footer and pills work within overlays
 .overlay .dropdown-pills {
   padding: @overlay-header-padding;
   padding-top: 0;
@@ -87,4 +87,22 @@ body.has-overlay {
 
 .overlay .dropdown-footer {
   margin: 0;
+}
+
+// Overlay menu list
+.overlay-menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  .dropdown-header,
+  .dropdown-subheader,
+  .dropdown-menu-item > a,
+  .dropdown-menu-item > button {
+    padding: @overlay-menu-link-padding;
+  }
+
+  .divider {
+    .nav-divider(@dropdown-divider-bg);
+  }
 }

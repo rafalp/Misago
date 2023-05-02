@@ -17,7 +17,7 @@ export default function NavbarSiteNavDropdown({ id, className }) {
       menuClassName="site-nav-dropdown"
       menuAlignRight
     >
-      {({ isOpen }) => <SiteNavDropdown />}
+      {({ isOpen, close }) => <SiteNavDropdown close={close} />}
     </Dropdown>
   )
 }

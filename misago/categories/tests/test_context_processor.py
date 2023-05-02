@@ -17,7 +17,7 @@ def test_categories_json_is_included_in_frontend_json(
         cache_versions=cache_versions,
         user=user,
         user_acl={
-            "browseable_categories": [
+            "visible_categories": [
                 default_category.id,
                 sibling_category.id,
                 child_category.id,
@@ -35,7 +35,6 @@ def test_categories_json_is_included_in_frontend_json(
             "shortName": default_category.short_name,
             "color": default_category.color,
             "url": default_category.get_absolute_url(),
-            "children": [],
         },
         {
             "id": sibling_category.id,
@@ -43,15 +42,6 @@ def test_categories_json_is_included_in_frontend_json(
             "shortName": sibling_category.short_name,
             "color": sibling_category.color,
             "url": sibling_category.get_absolute_url(),
-            "children": [
-                {
-                    "id": child_category.id,
-                    "name": child_category.name,
-                    "shortName": child_category.short_name,
-                    "color": child_category.color,
-                    "url": child_category.get_absolute_url(),
-                },
-            ],
         },
         {
             "id": other_category.id,
@@ -59,6 +49,5 @@ def test_categories_json_is_included_in_frontend_json(
             "shortName": other_category.short_name,
             "color": other_category.color,
             "url": other_category.get_absolute_url(),
-            "children": [],
         },
     ]

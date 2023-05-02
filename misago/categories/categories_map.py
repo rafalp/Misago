@@ -25,7 +25,6 @@ def get_cache_key(request) -> str:
 
 MAP_CATEGORY_FIELDS = (
     "id",
-    "parent_id",
     "name",
     "slug",
     "short_name",
@@ -36,15 +35,13 @@ MAP_CATEGORY_FIELDS = (
 
 def get_categories_map_from_db(request) -> List[dict]:
     categories_list = []
-    categories_dict = {}
-
     queryset = Category.objects.filter(
-        id__in=request.user_acl["browseable_categories"],
+        id__in=request.user_acl["visible_categories"],
+        level=1,
         special_role__isnull=True,
     ).order_by("lft")
 
     for category in queryset.values(*MAP_CATEGORY_FIELDS):
-        parent_id = category["parent_id"]
         category_url = reverse(
             "misago:category",
             kwargs={"pk": category["id"], "slug": category["slug"]},
@@ -58,11 +55,6 @@ def get_categories_map_from_db(request) -> List[dict]:
             "url": category_url,
         }
 
-        if category["level"] > 1 and parent_id:
-            categories_dict[parent_id]["children"].append(category_json)
-        else:
-            category_json["children"] = []
-            categories_list.append(category_json)
-            categories_dict[category_json["id"]] = category_json
+        categories_list.append(category_json)
 
     return categories_list

@@ -1,5 +1,5 @@
-import SiteNav from "./SiteNav"
+import SiteNavMenu from "./SiteNavMenu"
 import SiteNavDropdown from "./SiteNavDropdown"
 import SiteNavOverlay from "./SiteNavOverlay"
 
-export { SiteNav, SiteNavDropdown, SiteNavOverlay }
+export { SiteNavMenu, SiteNavDropdown, SiteNavOverlay }

@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from ..categories_map import get_categories_map
 
 
-def test_categories_map_returns_categories_browserable_by_user(
+def test_categories_map_returns_top_categories_visible_by_user(
     cache_versions,
     user,
     default_category,
@@ -15,7 +15,7 @@ def test_categories_map_returns_categories_browserable_by_user(
         cache_versions=cache_versions,
         user=user,
         user_acl={
-            "browseable_categories": [
+            "visible_categories": [
                 default_category.id,
                 sibling_category.id,
                 child_category.id,
@@ -32,7 +32,6 @@ def test_categories_map_returns_categories_browserable_by_user(
             "shortName": default_category.short_name,
             "color": default_category.color,
             "url": default_category.get_absolute_url(),
-            "children": [],
         },
         {
             "id": sibling_category.id,
@@ -40,15 +39,6 @@ def test_categories_map_returns_categories_browserable_by_user(
             "shortName": sibling_category.short_name,
             "color": sibling_category.color,
             "url": sibling_category.get_absolute_url(),
-            "children": [
-                {
-                    "id": child_category.id,
-                    "name": child_category.name,
-                    "shortName": child_category.short_name,
-                    "color": child_category.color,
-                    "url": child_category.get_absolute_url(),
-                },
-            ],
         },
         {
             "id": other_category.id,
@@ -56,12 +46,11 @@ def test_categories_map_returns_categories_browserable_by_user(
             "shortName": other_category.short_name,
             "color": other_category.color,
             "url": other_category.get_absolute_url(),
-            "children": [],
         },
     ]
 
 
-def test_categories_map_excludes_categories_not_browserable_by_user(
+def test_categories_map_excludes_categories_invisible_to_user(
     cache_versions,
     user,
     default_category,
@@ -73,7 +62,7 @@ def test_categories_map_excludes_categories_not_browserable_by_user(
         cache_versions=cache_versions,
         user=user,
         user_acl={
-            "browseable_categories": [
+            "visible_categories": [
                 default_category.id,
                 other_category.id,
             ],
@@ -88,7 +77,6 @@ def test_categories_map_excludes_categories_not_browserable_by_user(
             "shortName": default_category.short_name,
             "color": default_category.color,
             "url": default_category.get_absolute_url(),
-            "children": [],
         },
         {
             "id": other_category.id,
@@ -96,7 +84,6 @@ def test_categories_map_excludes_categories_not_browserable_by_user(
             "shortName": other_category.short_name,
             "color": other_category.color,
             "url": other_category.get_absolute_url(),
-            "children": [],
         },
     ]
 
@@ -114,7 +101,7 @@ def test_categories_map_excludes_special_categories(
         cache_versions=cache_versions,
         user=user,
         user_acl={
-            "browseable_categories": [
+            "visible_categories": [
                 private_threads_category.id,
                 default_category.id,
                 other_category.id,
@@ -130,7 +117,6 @@ def test_categories_map_excludes_special_categories(
             "shortName": default_category.short_name,
             "color": default_category.color,
             "url": default_category.get_absolute_url(),
-            "children": [],
         },
         {
             "id": other_category.id,
@@ -138,7 +124,6 @@ def test_categories_map_excludes_special_categories(
             "shortName": other_category.short_name,
             "color": other_category.color,
             "url": other_category.get_absolute_url(),
-            "children": [],
         },
     ]
 
@@ -162,7 +147,6 @@ def test_categories_map_skips_database_read_if_there_is_cache(
                 "shortName": default_category.short_name,
                 "color": default_category.color,
                 "url": default_category.get_absolute_url(),
-                "children": [],
             },
         ],
     )
@@ -171,7 +155,7 @@ def test_categories_map_skips_database_read_if_there_is_cache(
         cache_versions=cache_versions,
         user=user,
         user_acl={
-            "browseable_categories": [
+            "visible_categories": [
                 default_category.id,
                 other_category.id,
             ],
@@ -188,7 +172,6 @@ def test_categories_map_skips_database_read_if_there_is_cache(
             "shortName": default_category.short_name,
             "color": default_category.color,
             "url": default_category.get_absolute_url(),
-            "children": [],
         },
     ]
 
@@ -211,7 +194,7 @@ def test_categories_map_is_cached_when_database_is_used(
         cache_versions=cache_versions,
         user=user,
         user_acl={
-            "browseable_categories": [
+            "visible_categories": [
                 default_category.id,
                 other_category.id,
             ],
@@ -228,7 +211,6 @@ def test_categories_map_is_cached_when_database_is_used(
             "shortName": default_category.short_name,
             "color": default_category.color,
             "url": default_category.get_absolute_url(),
-            "children": [],
         },
         {
             "id": other_category.id,
@@ -236,7 +218,6 @@ def test_categories_map_is_cached_when_database_is_used(
             "shortName": other_category.short_name,
             "color": other_category.color,
             "url": other_category.get_absolute_url(),
-            "children": [],
         },
     ]
 

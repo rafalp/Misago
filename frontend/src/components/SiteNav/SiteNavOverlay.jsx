@@ -1,13 +1,14 @@
 import React from "react"
 import { connect } from "react-redux"
+import { close } from "../../reducers/overlay"
 import { Overlay, OverlayHeader } from "../Overlay"
-import SiteNav from "./SiteNav"
+import SiteNavMenu from "./SiteNavMenu"
 
 export function SiteNavOverlay({ dispatch, isOpen }) {
   return (
     <Overlay open={isOpen}>
       <OverlayHeader>{pgettext("site nav title", "Menu")}</OverlayHeader>
-      <SiteNav overlay />
+      <SiteNavMenu close={() => dispatch(close())} overlay />
     </Overlay>
   )
 }

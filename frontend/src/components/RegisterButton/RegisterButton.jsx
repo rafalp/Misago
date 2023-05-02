@@ -20,6 +20,10 @@ export default class RegisterButton extends React.Component {
   }
 
   showRegisterForm = () => {
+    if (this.props.onClick) {
+      this.props.onClick()
+    }
+
     if (misago.get("SETTINGS").account_activation === "closed") {
       snackbar.info(gettext("New registrations are currently disabled."))
     } else if (this.state.isLoaded) {

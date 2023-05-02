@@ -1,6 +1,6 @@
 import React from "react"
-import SiteNav from "./SiteNav"
+import SiteNavMenu from "./SiteNavMenu"
 
-export default function SiteNavDropdown() {
-  return <SiteNav dropdown />
+export default function SiteNavDropdown({ close }) {
+  return <SiteNavMenu close={close} dropdown />
 }

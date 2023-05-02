@@ -6,12 +6,26 @@ from .models import MenuItem
 
 def menus(request):
     navbar_items = get_navbar_menu_items(request.cache_versions)
+    footer_items = get_footer_menu_items(request.cache_versions)
 
-    request.frontend_context.update({"extraMenuItems": serialize_items(navbar_items)})
+    navbarItemsJson = serialize_items(navbar_items)
+    footerItemsJson = []
+
+    navbarUrls = [item["url"] for item in navbarItemsJson]
+    for footerItem in serialize_items(footer_items):
+        if footerItem["url"] not in navbarUrls:
+            footerItemsJson.append(footerItem)
+
+    request.frontend_context.update(
+        {
+            "extraMenuItems": navbarItemsJson,
+            "extraFooterItems": footerItemsJson,
+        }
+    )
 
     return {
         "navbar_menu": navbar_items,
-        "footer_menu": get_footer_menu_items(request.cache_versions),
+        "footer_menu": footer_items,
     }
 
 

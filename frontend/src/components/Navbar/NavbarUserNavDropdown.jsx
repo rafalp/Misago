@@ -1,6 +1,7 @@
 import React from "react"
 import { Dropdown } from "../Dropdown"
 import NavbarUserNavToggle from "./NavbarUserNavToggle"
+import { UserNavDropdown } from "../UserNav"
 
 export default function NavbarUserNavDropdown({ id, className, user }) {
   return (
@@ -20,7 +21,7 @@ export default function NavbarUserNavDropdown({ id, className, user }) {
       menuClassName="user-nav-dropdown"
       menuAlignRight
     >
-      {({ isOpen }) => <div>TODO</div>}
+      {({ isOpen, close }) => <UserNavDropdown close={close} />}
     </Dropdown>
   )
 }

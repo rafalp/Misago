@@ -10,8 +10,10 @@ def legal_links(request):
 
     legal_context = {
         "TERMS_OF_SERVICE_ID": None,
+        "TERMS_OF_SERVICE_TITLE": None,
         "TERMS_OF_SERVICE_URL": None,
         "PRIVACY_POLICY_ID": None,
+        "PRIVACY_POLICY_TITLE": None,
         "PRIVACY_POLICY_URL": None,
         "misago_agreement": None,
     }
@@ -19,6 +21,7 @@ def legal_links(request):
     terms_of_service = agreements.get(Agreement.TYPE_TOS)
     if terms_of_service:
         legal_context["TERMS_OF_SERVICE_ID"] = terms_of_service["id"]
+        legal_context["TERMS_OF_SERVICE_TITLE"] = terms_of_service["title"]
         if terms_of_service["link"]:
             legal_context["TERMS_OF_SERVICE_URL"] = terms_of_service["link"]
         elif terms_of_service["text"]:
@@ -27,6 +30,7 @@ def legal_links(request):
     privacy_policy = agreements.get(Agreement.TYPE_PRIVACY)
     if privacy_policy:
         legal_context["PRIVACY_POLICY_ID"] = privacy_policy["id"]
+        legal_context["PRIVACY_POLICY_TITLE"] = privacy_policy["title"]
         if privacy_policy["link"]:
             legal_context["PRIVACY_POLICY_URL"] = privacy_policy["link"]
         elif privacy_policy["text"]:

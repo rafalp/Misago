@@ -1,0 +1,32 @@
+// Site Nav menu thats displayed in hamburger menu dropdown and overlay
+.site-nav-menu {
+  min-width: 300px;
+}
+
+// Limit max height of site nav dropdown
+.site-nav-dropdown {
+  max-height: calc(100vh - @dropdown-height-offset);
+  overflow-y: auto;
+}
+
+// Spread and align items in categories
+.site-nav-category a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+// Hide sign in menu on larger devices
+@media screen and (min-width: @screen-sm-min) {
+  .site-nav-sign-in-message,
+  .site-nav-sign-in-options {
+    display: none;
+  }
+}
+
+.site-nav-menu.overlay-menu-list {
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: @line-height-computed;
+}

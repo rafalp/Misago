@@ -1,5 +1,8 @@
+import classnames from "classnames"
 import React from "react"
 
-export default function DropdownHeader({ children }) {
-  return <div className="dropdown-header">{children}</div>
+export default function DropdownHeader({ className, children }) {
+  return (
+    <div className={classnames("dropdown-header", className)}>{children}</div>
+  )
 }

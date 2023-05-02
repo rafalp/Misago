@@ -3,7 +3,7 @@ import React from "react"
 import modal from "../../services/modal"
 import SignInModal from "../sign-in"
 
-export default function SignInButton({ block, className }) {
+export default function SignInButton({ block, className, onClick }) {
   const settings = misago.get("SETTINGS")
 
   if (settings.DELEGATE_AUTH) {
@@ -13,6 +13,7 @@ export default function SignInButton({ block, className }) {
           "btn-block": block,
         })}
         href={settings.LOGIN_URL}
+        onClick={onClick}
       >
         {pgettext("cta", "Sign in")}
       </a>
@@ -26,6 +27,10 @@ export default function SignInButton({ block, className }) {
       })}
       type="button"
       onClick={() => {
+        if (onClick) {
+          onClick()
+        }
+
         modal.show(<SignInModal />)
       }}
     >

@@ -2,6 +2,7 @@ from django.urls import reverse
 
 from .pages import user_profile, usercp, users_list
 from .serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
+from .usersmenus import get_users_menus
 
 
 def user_links(request):
@@ -43,6 +44,8 @@ def preload_user_json(request):
         serializer = AnonymousUserSerializer
 
     serialized_user = serializer(request.user, context={"acl": request.user_acl}).data
-    request.frontend_context.update({"user": serialized_user})
+    request.frontend_context["user"] = serialized_user
+
+    request.frontend_context.update(get_users_menus(request))
 
     return {}

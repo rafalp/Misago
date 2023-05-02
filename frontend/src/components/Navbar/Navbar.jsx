@@ -130,6 +130,7 @@ function select(state) {
     notificationsUrl: misago.get("NOTIFICATIONS_URL"),
     privateThreadsUrl: misago.get("PRIVATE_THREADS_URL"),
 
+    authDelegated: settings.enable_oauth2_client,
     showSearch: !!user.acl.can_search,
     showPrivateThreads: !!user && !!user.acl.can_use_private_threads,
   }
