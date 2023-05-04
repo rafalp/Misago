@@ -48,3 +48,4 @@ jobs:
       - name: Linters
         run: |
           black --check .
+          ruff misago/notifications misago/apiv2

@@ -22,5 +22,6 @@ pytest-mock
 pytz
 requests
 responses
+ruff
 snapshottest
 unidecode

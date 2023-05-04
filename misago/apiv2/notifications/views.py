@@ -1,7 +1,6 @@
 from typing import List
 
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.utils import timezone
 from rest_framework.decorators import api_view
 
 from ...conf import settings
@@ -34,22 +33,37 @@ def notifications(request: HttpRequest) -> JsonResponse:
         settings.MISAGO_NOTIFICATIONS_PAGE_LIMIT,
     )
 
-    # Clear user unread notifications counter if its first page of notifications
+    # Update user unread notifications counter if its first page of notifications
     # and the counter is obviously invalid
     if (
         "after" not in request.GET
+        and "before" not in request.GET
         and filter_by != "read"
-        and not page.items
-        and request.user.unread_notifications
     ):
-        request.user.unread_notifications = 0
-        request.user.save(update_fields=["unread_notifications"])
+        # Unread notifications counter is non-zero but no notifications exist
+        if request.user.unread_notifications and not page.items:
+            request.user.unread_notifications = 0
+            request.user.save(update_fields=["unread_notifications"])
+        # Only page of results, sync unread notifications counter with
+        # real count if those don't match
+        elif not page.has_next:
+            real_unread_notifications = len(
+                [
+                    notification
+                    for notification in page.items
+                    if not notification.is_read
+                ]
+            )
+            if real_unread_notifications != request.user.unread_notifications:
+                request.user.unread_notifications = real_unread_notifications
+                request.user.save(update_fields=["unread_notifications"])
 
     # Recount unread unread notifications if counter shows 0 but unread
     # notifications exist
-    if not request.user.unread_notifications and unread_items_exist(
+    elif not request.user.unread_notifications and unread_items_exist(
         filter_by, page.items
     ):
+        print("HERE!")
         count_limit = settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT + 1
         real_unread_notifications = Notification.objects.filter(
             user=request.user, is_read=False
@@ -72,7 +86,7 @@ def notifications(request: HttpRequest) -> JsonResponse:
     )
 
 
-def unread_items_exist(filter_by: str, items: List[Notification]) -> int:
+def unread_items_exist(filter_by: str, items: List[Notification]) -> bool:
     if filter_by == "unread":
         return bool(items)
 
@@ -93,7 +107,6 @@ def notifications_read_all(request: HttpRequest) -> HttpResponse:
         is_read=False,
     ).update(
         is_read=True,
-        read_at=timezone.now(),
     )
     request.user.unread_notifications = 0
     request.user.save(update_fields=["unread_notifications"])

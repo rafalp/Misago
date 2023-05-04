@@ -23,7 +23,6 @@ def test_notifications_read_all_api_marks_users_notifications_as_read(
 
     notification.refresh_from_db()
     assert notification.is_read
-    assert notification.read_at
 
     # User unread notifications counter is zeroed
     user.refresh_from_db()

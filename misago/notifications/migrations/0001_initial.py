@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import django.utils.timezone
 import misago.notifications.models
 
 
@@ -22,8 +21,14 @@ class Migration(migrations.Migration):
             fields=[
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 ("notifications", models.PositiveIntegerField(default=0)),
+                (
+                    "secret",
+                    models.CharField(
+                        default=misago.notifications.models.get_watched_thread_secret,
+                        max_length=24,
+                    ),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("read_at", models.DateTimeField(default=django.utils.timezone.now)),
                 (
                     "category",
                     models.ForeignKey(
@@ -51,13 +56,6 @@ class Migration(migrations.Migration):
             name="Notification",
             fields=[
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
-                (
-                    "secret",
-                    models.CharField(
-                        default=misago.notifications.models.get_migration_secret,
-                        max_length=16,
-                    ),
-                ),
                 ("verb", models.CharField(max_length=32)),
                 ("is_read", models.BooleanField(default=False)),
                 ("actor_name", models.CharField(blank=True, max_length=255, null=True)),
