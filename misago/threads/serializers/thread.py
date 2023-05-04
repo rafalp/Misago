@@ -37,7 +37,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     poll = PollSerializer(many=False, read_only=True)
     best_answer = serializers.PrimaryKeyRelatedField(read_only=True)
     best_answer_marked_by = serializers.PrimaryKeyRelatedField(read_only=True)
-    subscription = serializers.SerializerMethodField()
+    notifications = serializers.SerializerMethodField()
     starter = serializers.SerializerMethodField()
     last_poster = serializers.SerializerMethodField()
 
@@ -73,7 +73,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             "is_read",
             "path",
             "poll",
-            "subscription",
+            "notifications",
             "starter",
             "last_poster",
             "api",
@@ -108,11 +108,12 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     def get_participants(self, obj):
         return ThreadParticipantSerializer(obj.participants_list, many=True).data
 
-    def get_subscription(self, obj):
-        try:
-            return obj.subscription.send_email
-        except AttributeError:
+    def get_notifications(self, obj):
+        watched_thread = self.context.get("watched_thread")
+        if not watched_thread:
             return None
+
+        return watched_thread.notifications
 
     def get_starter(self, obj):
         if obj.starter_id:

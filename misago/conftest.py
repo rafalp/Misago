@@ -1,4 +1,5 @@
 import pytest
+from django.utils import timezone
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
@@ -7,10 +8,12 @@ from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
 from .menus import MENU_ITEMS_CACHE
+from .notifications.models import WatchedThread
+from .notifications.threads import ThreadNotifications
 from .socialauth import SOCIALAUTH_CACHE
 from .test import MisagoClient
 from .themes import THEME_CACHE
-from .threads.test import post_thread
+from .threads.test import post_thread, reply_thread
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
 from .users.test import create_test_superuser, create_test_user
@@ -190,6 +193,11 @@ def post(thread):
 
 
 @pytest.fixture
+def reply(thread):
+    return reply_thread(thread, poster="Ghost", posted_on=timezone.now())
+
+
+@pytest.fixture
 def user_thread(default_category, user):
     return post_thread(default_category, poster=user)
 
@@ -263,3 +271,20 @@ def child_category(categories_tree):
 @pytest.fixture
 def other_category(categories_tree):
     return Category.objects.get(slug="other-category")
+
+
+@pytest.fixture
+def watched_thread_factory():
+    def create_watched_thread(
+        user,
+        thread,
+        notifications: ThreadNotifications = ThreadNotifications.NONE,
+    ):
+        return WatchedThread.objects.create(
+            user=user,
+            category_id=thread.category_id,
+            thread=thread,
+            notifications=notifications,
+        )
+
+    return create_watched_thread

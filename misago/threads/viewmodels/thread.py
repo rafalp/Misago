@@ -6,6 +6,8 @@ from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ...categories.models import Category
 from ...core.shortcuts import validate_slug
 from ...core.viewmodel import ViewModel as BaseViewModel
+from ...notifications.models import WatchedThread
+from ...notifications.threads import get_watched_thread
 from ...readtracker.threadstracker import make_read_aware
 from ..models import Poll, Thread
 from ..participants import make_participants_aware
@@ -38,7 +40,7 @@ class ViewModel(BaseViewModel):
         slug=None,
         path_aware=False,
         read_aware=False,
-        subscription_aware=False,
+        watch_aware=False,
         poll_votes_aware=False,
     ):
         model = self.get_thread(request, pk, slug)
@@ -51,8 +53,11 @@ class ViewModel(BaseViewModel):
 
         if read_aware:
             make_read_aware(request, model)
-        if subscription_aware:
-            make_subscription_aware(request.user, model)
+
+        if watch_aware and request.user.is_authenticated:
+            self._watched_thread = get_watched_thread(request.user, model)
+        else:
+            self._watched_thread = None
 
         self._model = model
 
@@ -64,6 +69,10 @@ class ViewModel(BaseViewModel):
                 self._poll.make_choices_votes_aware(request.user)
         except Poll.DoesNotExist:
             self._poll = None
+
+    @property
+    def watched_thread(self) -> WatchedThread | None:
+        return self._watched_thread
 
     @property
     def poll(self):
@@ -99,6 +108,7 @@ class ViewModel(BaseViewModel):
     def get_template_context(self):
         return {
             "thread": self._model,
+            "watched_thread": self._watched_thread,
             "poll": self._poll,
             "category": self._model.category,
             "breadcrumbs": self._model.path,
@@ -122,7 +132,12 @@ class ForumThread(ViewModel):
         return _("Threads")
 
     def get_frontend_context(self):
-        return ThreadSerializer(self._model).data
+        return ThreadSerializer(
+            self._model,
+            context={
+                "watched_thread": self._watched_thread,
+            },
+        ).data
 
 
 class PrivateThread(ViewModel):
@@ -147,4 +162,9 @@ class PrivateThread(ViewModel):
         return _("Private threads")
 
     def get_frontend_context(self):
-        return PrivateThreadSerializer(self._model).data
+        return PrivateThreadSerializer(
+            self._model,
+            context={
+                "watched_thread": self._watched_thread,
+            },
+        ).data

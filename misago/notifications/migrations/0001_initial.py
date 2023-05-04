@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+import django.utils.timezone
 import misago.notifications.models
 
 
@@ -29,6 +30,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("read_at", models.DateTimeField(default=django.utils.timezone.now)),
                 (
                     "category",
                     models.ForeignKey(
@@ -65,7 +67,6 @@ class Migration(migrations.Migration):
                 ),
                 ("extra_actors", models.IntegerField(default=0)),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
-                ("read_at", models.DateTimeField(blank=True, null=True)),
                 (
                     "actor",
                     models.ForeignKey(

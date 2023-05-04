@@ -30,14 +30,14 @@ class ViewSet(viewsets.ViewSet):
     post_ = ThreadPost
 
     def get_thread(
-        self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
+        self, request, pk, path_aware=False, read_aware=False, watch_aware=False
     ):
         return self.thread(  # pylint: disable=not-callable
             request,
             get_int_or_404(pk),
             path_aware=path_aware,
             read_aware=read_aware,
-            subscription_aware=subscription_aware,
+            watch_aware=watch_aware,
         )
 
     def get_posts(self, request, thread, page):
@@ -56,7 +56,7 @@ class ViewSet(viewsets.ViewSet):
             thread_pk,
             path_aware=True,
             read_aware=True,
-            subscription_aware=True,
+            watch_aware=True,
         )
         posts = self.get_posts(request, thread, page)
 
@@ -163,9 +163,10 @@ class ViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=["post"])
     def read(self, request, thread_pk, pk=None):
-        thread = self.get_thread(request, thread_pk, subscription_aware=True).unwrap()
+        view_model = self.get_thread(request, thread_pk, watch_aware=True)
+        thread = view_model.unwrap()
         post = self.get_post(request, thread, pk).unwrap()
-        return post_read_endpoint(request, thread, post)
+        return post_read_endpoint(request, thread, view_model.watched_thread, post)
 
     @action(detail=True, methods=["get"], url_name="editor")
     def post_editor(self, request, thread_pk, pk=None):

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.crypto import get_random_string
+from django.utils import timezone
 from django.urls import reverse
 
 
@@ -42,7 +43,6 @@ class Notification(models.Model):
     extra_actors = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    read_at = models.DateTimeField(blank=True, null=True)
 
     def get_absolute_url(self) -> str:
         return reverse("misago:notification", kwargs={"notification_id": self.id})
@@ -60,3 +60,4 @@ class WatchedThread(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
+    read_at = models.DateTimeField(default=timezone.now)
