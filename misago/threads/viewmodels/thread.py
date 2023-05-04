@@ -7,7 +7,7 @@ from ...categories.models import Category
 from ...core.shortcuts import validate_slug
 from ...core.viewmodel import ViewModel as BaseViewModel
 from ...notifications.models import WatchedThread
-from ...notifications.threads import get_watched_thread
+from ...notifications.threads import ThreadNotifications, get_watched_thread
 from ...readtracker.threadstracker import make_read_aware
 from ..models import Poll, Thread
 from ..participants import make_participants_aware
@@ -17,7 +17,6 @@ from ..permissions import (
     allow_use_private_threads,
 )
 from ..serializers import PrivateThreadSerializer, ThreadSerializer
-from ..subscriptions import make_subscription_aware
 from ..threadtypes import trees_map
 
 __all__ = ["ForumThread", "PrivateThread"]
@@ -43,6 +42,8 @@ class ViewModel(BaseViewModel):
         watch_aware=False,
         poll_votes_aware=False,
     ):
+        self.request = request
+
         model = self.get_thread(request, pk, slug)
 
         if path_aware:
@@ -106,9 +107,16 @@ class ViewModel(BaseViewModel):
         )
 
     def get_template_context(self):
+        thread_notifications = None
+        if self._watched_thread:
+            if self._watched_thread.notifications == ThreadNotifications.SEND_EMAIL:
+                thread_notifications = "SEND_EMAIL"
+            if self._watched_thread.notifications == ThreadNotifications.DONT_EMAIL:
+                thread_notifications = "DONT_EMAIL"
+
         return {
             "thread": self._model,
-            "watched_thread": self._watched_thread,
+            "thread_notifications": thread_notifications,
             "poll": self._poll,
             "category": self._model.category,
             "breadcrumbs": self._model.path,
@@ -135,6 +143,7 @@ class ForumThread(ViewModel):
         return ThreadSerializer(
             self._model,
             context={
+                "request": self.request,
                 "watched_thread": self._watched_thread,
             },
         ).data
@@ -165,6 +174,7 @@ class PrivateThread(ViewModel):
         return PrivateThreadSerializer(
             self._model,
             context={
+                "request": self.request,
                 "watched_thread": self._watched_thread,
             },
         ).data

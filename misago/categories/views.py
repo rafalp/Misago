@@ -11,7 +11,9 @@ def categories(request):
     request.frontend_context.update(
         {
             "CATEGORIES": CategorySerializer(
-                categories_tree, context=request, many=True
+                categories_tree,
+                context={"request": request},
+                many=True,
             ).data,
             "CATEGORIES_API": reverse("misago:api:category-list"),
         }

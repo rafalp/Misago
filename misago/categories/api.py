@@ -9,5 +9,9 @@ class CategoryViewSet(viewsets.ViewSet):
     def list(self, request):
         categories_tree = get_categories_tree(request, join_posters=True)
         return Response(
-            CategorySerializer(categories_tree, context=request, many=True).data
+            CategorySerializer(
+                categories_tree,
+                context={"request": request},
+                many=True,
+            ).data
         )

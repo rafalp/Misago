@@ -28,7 +28,7 @@ class ThreadBase(View):
             slug,
             path_aware=True,
             read_aware=True,
-            subscription_aware=True,
+            watch_aware=True,
             poll_votes_aware=True,
         )
 

@@ -81,7 +81,7 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
 
         # Serve root category's description
         if obj.special_role == "root_category" and self.context:
-            settings = self.context.settings
+            settings = self.context["request"].settings
             if settings.index_message:
                 return {
                     "plain": settings.index_message,
