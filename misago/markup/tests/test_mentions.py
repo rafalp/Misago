@@ -57,7 +57,7 @@ def test_util_replaces_multiple_mentions_with_link_to_user_profiles_in_parsed_te
     ) in parsing_result["parsed_text"]
 
 
-def test_util_adds_multiple_mentions_to_parsig_result(user, other_user):
+def test_util_adds_multiple_mentions_to_parsing_result(user, other_user):
     parsing_result = {
         "parsed_text": f"<p>Hello, @{user.username} and @{other_user.username}!</p>",
         "mentions": [],
@@ -67,7 +67,7 @@ def test_util_adds_multiple_mentions_to_parsig_result(user, other_user):
     add_mentions(parsing_result, root_node)
 
     parsing_result["parsed_text"] = print_html_string(root_node)
-    assert parsing_result["mentions"] == [user.id, other_user.id]
+    assert parsing_result["mentions"] == sorted([user.id, other_user.id])
 
 
 def test_util_handles_repeated_mentions_of_same_user(user):

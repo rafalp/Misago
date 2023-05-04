@@ -92,9 +92,12 @@
 
   .badge {
     float: right;
-
     position: relative;
     top: 1px;
+
+    background-color: @navbar-item-badge-bg;
+    border-radius: 4px;
+    color: @navbar-item-badge-color;
   }
 }
 
@@ -124,6 +127,10 @@
   border-top: 1px solid @dropdown-divider-bg;
 }
 
+.dropdown-menu-item + .dropdown-footer {
+  margin-top: ((@line-height-computed / 2) - 1);
+}
+
 // Dropdown buttons container
 .dropdown-menu .dropdown-buttons {
   padding: 2px 20px;
@@ -131,45 +138,6 @@
 
   .btn {
     margin: 4px 0px;
-  }
-}
-
-// Navbar's dropdown
-.mobile-dropdown {
-  position: relative;
-}
-
-.mobile-dropdown.open > .dropdown-menu,
-.compact-nav.open > .dropdown-menu {
-  border: none;
-  border-radius: 0;
-
-  display: block;
-  margin: 0px;
-  width: 100%;
-}
-
-// Guest menu
-.user-dropdown .guest-preview {
-  text-align: center;
-
-  .row {
-    margin: 0px;
-  }
-}
-
-// User menu
-.navbar .user-dropdown {
-  width: 240px;
-}
-
-.user-dropdown .dropdown-header {
-  padding: 6px 20px;
-
-  font-size: @font-size-large;
-
-  strong {
-    font-weight: normal;
   }
 }
 

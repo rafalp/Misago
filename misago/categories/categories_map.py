@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.urls import reverse
 
 from ..acl import ACL_CACHE
+from ..users.models import AnonymousUser
 from .models import Category
 
 CACHE_NAME = "categories_map"
@@ -20,7 +21,12 @@ def get_categories_map(request) -> List[dict]:
 
 def get_cache_key(request) -> str:
     acl_version = request.cache_versions[ACL_CACHE]
-    return f"{CACHE_NAME}:{acl_version}:{request.user.acl_key}"
+    if request.user.is_authenticated:
+        user_acl_key = request.user.acl_key
+    else:
+        user_acl_key = AnonymousUser.acl_key
+
+    return f"{CACHE_NAME}:{acl_version}:{user_acl_key}"
 
 
 MAP_CATEGORY_FIELDS = (

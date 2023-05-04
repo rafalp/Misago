@@ -98,7 +98,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
       {!!users.length && <DropdownDivider className="site-nav-users-divider" />}
       {!!users.length && (
         <DropdownSubheader className="site-nav-users">
-          {pgettext("nav section", "Users")}
+          {pgettext("site nav section", "Users")}
         </DropdownSubheader>
       )}
       {users.map((item) => (
@@ -108,7 +108,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
       ))}
       <DropdownDivider className="site-nav-categories-divider" />
       <DropdownSubheader className="site-nav-categories">
-        {pgettext("nav section", "Categories")}
+        {pgettext("site nav section", "Categories")}
       </DropdownSubheader>
       {categories.map((category) => (
         <DropdownMenuItem className="site-nav-category" key={category.id}>
@@ -131,7 +131,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
       )}
       {(!!footerNav.length || !!extraFooterItems.length) && (
         <DropdownSubheader className="site-nav-footer">
-          {pgettext("nav section", "Footer")}
+          {pgettext("site nav section", "Footer")}
         </DropdownSubheader>
       )}
       {extraFooterItems.map((item, index) => (

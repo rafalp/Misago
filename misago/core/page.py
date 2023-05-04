@@ -99,7 +99,10 @@ class Page:
 
         self._unsorted_list.append(kwargs)
 
-    def _active_link_name(self, request):
+    def _active_link_name(self, request) -> str | None:
+        if not request.resolver_match:
+            return None
+
         namespace = request.resolver_match.namespace
         url_name = request.resolver_match.url_name
 
@@ -124,7 +127,10 @@ class Page:
             if is_visible:
                 if section["get_metadata"]:
                     section["metadata"] = section["get_metadata"](request, *args)
-                section["is_active"] = active_link.startswith(section["link"])
+                if active_link:
+                    section["is_active"] = active_link.startswith(section["link"])
+                else:
+                    section["is_active"] = None
                 visible_sections.append(section)
         return visible_sections
 

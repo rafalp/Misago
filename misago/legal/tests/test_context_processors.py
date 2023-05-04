@@ -30,8 +30,10 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": None,
+                "TERMS_OF_SERVICE_TITLE": None,
                 "TERMS_OF_SERVICE_URL": None,
                 "PRIVACY_POLICY_ID": None,
+                "PRIVACY_POLICY_TITLE": None,
                 "PRIVACY_POLICY_URL": None,
                 "misago_agreement": None,
             },
@@ -49,8 +51,10 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": None,
+                "TERMS_OF_SERVICE_TITLE": None,
                 "TERMS_OF_SERVICE_URL": None,
                 "PRIVACY_POLICY_ID": agreement.id,
+                "PRIVACY_POLICY_TITLE": "Privacy policy",
                 "PRIVACY_POLICY_URL": reverse("misago:privacy-policy"),
                 "misago_agreement": {
                     "type": "Privacy policy",
@@ -73,8 +77,10 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": None,
+                "TERMS_OF_SERVICE_TITLE": None,
                 "TERMS_OF_SERVICE_URL": None,
                 "PRIVACY_POLICY_ID": agreement.id,
+                "PRIVACY_POLICY_TITLE": "Privacy policy",
                 "PRIVACY_POLICY_URL": "http://test.com",
                 "misago_agreement": {
                     "type": "Privacy policy",
@@ -95,8 +101,10 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": None,
+                "TERMS_OF_SERVICE_TITLE": None,
                 "TERMS_OF_SERVICE_URL": None,
                 "PRIVACY_POLICY_ID": agreement.id,
+                "PRIVACY_POLICY_TITLE": "Privacy policy",
                 "PRIVACY_POLICY_URL": "http://test.com",
                 "misago_agreement": {
                     "type": "Privacy policy",
@@ -124,8 +132,10 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": None,
+                "TERMS_OF_SERVICE_TITLE": None,
                 "TERMS_OF_SERVICE_URL": None,
                 "PRIVACY_POLICY_ID": None,
+                "PRIVACY_POLICY_TITLE": None,
                 "PRIVACY_POLICY_URL": None,
                 "misago_agreement": None,
             },
@@ -143,8 +153,10 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": agreement.id,
+                "TERMS_OF_SERVICE_TITLE": "Terms of service",
                 "TERMS_OF_SERVICE_URL": reverse("misago:terms-of-service"),
                 "PRIVACY_POLICY_ID": None,
+                "PRIVACY_POLICY_TITLE": None,
                 "PRIVACY_POLICY_URL": None,
                 "misago_agreement": {
                     "type": "Terms of service",
@@ -167,8 +179,10 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": agreement.id,
+                "TERMS_OF_SERVICE_TITLE": "Terms of service",
                 "TERMS_OF_SERVICE_URL": "http://test.com",
                 "PRIVACY_POLICY_ID": None,
+                "PRIVACY_POLICY_TITLE": None,
                 "PRIVACY_POLICY_URL": None,
                 "misago_agreement": {
                     "type": "Terms of service",
@@ -189,8 +203,10 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
             context_dict,
             {
                 "TERMS_OF_SERVICE_ID": agreement.id,
+                "TERMS_OF_SERVICE_TITLE": "Terms of service",
                 "TERMS_OF_SERVICE_URL": "http://test.com",
                 "PRIVACY_POLICY_ID": None,
+                "PRIVACY_POLICY_TITLE": None,
                 "PRIVACY_POLICY_URL": None,
                 "misago_agreement": {
                     "type": "Terms of service",
