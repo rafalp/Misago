@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
 from django.db.models import IntegerChoices
 from django.utils.translation import pgettext_lazy
@@ -20,3 +20,15 @@ class ThreadNotifications(IntegerChoices):
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
     return WatchedThread.objects.filter(user=user, thread=thread).order_by("id").first()
+
+
+def get_watched_threads(
+    user: "User", threads: Iterable[Thread]
+) -> Dict[int, ThreadNotifications]:
+    queryset = (
+        WatchedThread.objects.filter(user=user, thread__in=threads)
+        .order_by("-id")
+        .values_list("thread_id", "notifications")
+    )
+
+    return {thread_id: notifications for thread_id, notifications in queryset}
