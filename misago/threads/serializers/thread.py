@@ -139,6 +139,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             "editor": obj.get_editor_api_url(),
             "merge": obj.get_merge_api_url(),
             "poll": obj.get_poll_api_url(),
+            "watch": obj.get_watch_api_url(),
             "posts": {
                 "index": obj.get_posts_api_url(),
                 "merge": obj.get_post_merge_api_url(),

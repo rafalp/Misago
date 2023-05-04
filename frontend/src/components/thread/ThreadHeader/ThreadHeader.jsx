@@ -10,7 +10,7 @@ import {
   PageHeaderDetails,
 } from "../../PageHeader"
 import ThreadModeration from "../ThreadModeration"
-import ThreadSubscriptionButton from "../ThreadSubscriptionButton"
+import ThreadWatchButton from "../ThreadWatchButton"
 import ThreadHeaderBreadcrumbs from "./ThreadHeaderBreadcrumbs"
 
 const ThreadHeader = ({ styleName, thread, posts, user, moderation }) => (
@@ -41,7 +41,7 @@ const ThreadHeader = ({ styleName, thread, posts, user, moderation }) => (
           {user.is_authenticated && (
             <FlexRowSection>
               <FlexRowCol>
-                <ThreadSubscriptionButton thread={thread} />
+                <ThreadWatchButton thread={thread} />
               </FlexRowCol>
               {moderation.enabled && (
                 <FlexRowCol shrink>

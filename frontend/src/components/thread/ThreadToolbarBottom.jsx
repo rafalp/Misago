@@ -4,7 +4,7 @@ import ThreadPagination from "./ThreadPagination"
 import ThreadPostsLeft from "./ThreadPostsLeft"
 import ThreadPostsModeration from "./ThreadPostsModeration"
 import ThreadReplyButton from "./ThreadReplyButton"
-import ThreadSubscriptionButton from "./ThreadSubscriptionButton"
+import ThreadWatchButton from "./ThreadWatchButton"
 
 const ThreadToolbarBottom = ({
   thread,
@@ -43,7 +43,7 @@ const ThreadToolbarBottom = ({
     {user.is_authenticated && (
       <ToolbarSection>
         <ToolbarItem>
-          <ThreadSubscriptionButton thread={thread} />
+          <ThreadWatchButton thread={thread} />
         </ToolbarItem>
         {thread.acl.can_reply && (
           <ToolbarItem>

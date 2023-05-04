@@ -45,6 +45,9 @@ class ThreadType:
     def get_thread_poll_api_url(self, thread):
         return None
 
+    def get_thread_watch_api_url(self, thread):
+        return None
+
     def get_thread_posts_api_url(self, thread):
         return None
 

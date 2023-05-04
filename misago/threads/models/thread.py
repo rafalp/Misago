@@ -246,6 +246,9 @@ class Thread(models.Model):
     def get_poll_api_url(self):
         return self.thread_type.get_thread_poll_api_url(self)
 
+    def get_watch_api_url(self):
+        return self.thread_type.get_thread_watch_api_url(self)
+
     def get_absolute_url(self, page=1):
         return self.thread_type.get_thread_absolute_url(self, page)
 

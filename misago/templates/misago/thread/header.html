@@ -61,8 +61,16 @@
                 <div class="flex-row-col">
                   <div class="dropdown">
                     <button class="btn btn-default btn-outline btn-block" type="button" disabled>
-                      <span class="material-icon">star_border</span>
-                      {% trans "Disabled" %}
+                      {% if thread_notifications == "SEND_EMAIL" %}
+                        <span class="material-icon">mail</span>
+                        {% trans "Watching" context "watch thread" %}
+                      {% elif thread_notifications == "DONT_EMAIL" %}
+                        <span class="material-icon">notifications_active</span>
+                        {% trans "Watching" context "watch thread" %}
+                      {% else %}
+                        <span class="material-icon">notifications_none</span>
+                        {% trans "Watch" context "watch thread" %}
+                      {% endif %}
                     </button>
                   </div>
                 </div>

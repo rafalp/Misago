@@ -80,6 +80,9 @@ class Thread(ThreadType):
     def get_thread_poll_api_url(self, thread):
         return reverse("misago:api:thread-poll-list", kwargs={"thread_pk": thread.pk})
 
+    def get_thread_watch_api_url(self, thread):
+        return reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id})
+
     def get_thread_posts_api_url(self, thread):
         return reverse("misago:api:thread-post-list", kwargs={"thread_pk": thread.pk})
 
