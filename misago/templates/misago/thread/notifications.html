@@ -1,0 +1,11 @@
+{% load i18n %}
+{% if thread_notifications == "SEND_EMAIL" %}
+  <span class="material-icon">mail</span>
+  {% trans "Watching" context "watch thread" %}
+{% elif thread_notifications == "DONT_EMAIL" %}
+  <span class="material-icon">notifications_active</span>
+  {% trans "Watching" context "watch thread" %}
+{% else %}
+  <span class="material-icon">notifications_none</span>
+  {% trans "Watch" context "watch thread" %}
+{% endif %}

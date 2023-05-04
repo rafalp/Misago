@@ -43,7 +43,7 @@ const ThreadToolbarBottom = ({
     {user.is_authenticated && (
       <ToolbarSection>
         <ToolbarItem>
-          <ThreadWatchButton thread={thread} />
+          <ThreadWatchButton thread={thread} dropup />
         </ToolbarItem>
         {thread.acl.can_reply && (
           <ToolbarItem>

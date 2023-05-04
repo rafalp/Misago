@@ -6,7 +6,7 @@ import snackbar from "../../services/snackbar"
 import { ApiMutation } from "../Api"
 import { DropdownSubheader } from "../Dropdown"
 
-const ThreadWatchButton = ({ dispatch, stickToBottom, thread }) => (
+const ThreadWatchButton = ({ dispatch, dropup, stickToBottom, thread }) => (
   <ApiMutation url={thread.api.watch}>
     {(mutate, { loading }) => {
       async function setNotifications(notifications) {
@@ -23,7 +23,7 @@ const ThreadWatchButton = ({ dispatch, stickToBottom, thread }) => (
       }
 
       return (
-        <div className="dropdown">
+        <div className={dropup ? "dropup" : "dropdown"}>
           <button
             className="btn btn-default btn-outline btn-block"
             aria-expanded="true"
