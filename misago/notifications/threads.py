@@ -32,3 +32,32 @@ def get_watched_threads(
     )
 
     return {thread_id: notifications for thread_id, notifications in queryset}
+
+
+def watch_started_thread(user: "User", thread: Thread):
+    if user.watch_started_threads:
+        WatchedThread.objects.create(
+            user=user,
+            category=thread.category,
+            thread=thread,
+            notifications=user.watch_started_threads,
+        )
+
+
+def watch_replied_thread(user: "User", thread: Thread):
+    if not user.watch_replied_threads:
+        return
+
+    watched_thread = get_watched_thread(user, thread)
+    if watched_thread:
+        if not watched_thread.notifications:
+            watched_thread.notifications = user.watch_replied_threads
+            watched_thread.save(update_fields=["notifications"])
+
+    else:
+        WatchedThread.objects.create(
+            user=user,
+            category=thread.category,
+            thread=thread,
+            notifications=user.watch_replied_threads,
+        )

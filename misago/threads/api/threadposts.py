@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ...acl.objectacl import add_acl_to_obj
+from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ...core.shortcuts import get_int_or_404
 from ...users.online.utils import make_users_status_aware
 from ..models import Post
@@ -92,7 +93,11 @@ class ViewSet(viewsets.ViewSet):
 
         # Put them through posting pipeline
         posting = PostingEndpoint(
-            request, PostingEndpoint.REPLY, thread=thread, post=post
+            request,
+            PostingEndpoint.REPLY,
+            tree_name=self.tree_name,
+            thread=thread,
+            post=post,
         )
 
         if not posting.is_valid():
@@ -119,7 +124,11 @@ class ViewSet(viewsets.ViewSet):
         allow_edit_post(request.user_acl, post)
 
         posting = PostingEndpoint(
-            request, PostingEndpoint.EDIT, thread=thread, post=post
+            request,
+            PostingEndpoint.EDIT,
+            tree_name=self.tree_name,
+            thread=thread,
+            post=post,
         )
 
         if not posting.is_valid():
@@ -249,8 +258,10 @@ class ViewSet(viewsets.ViewSet):
 
 
 class ThreadPostsViewSet(ViewSet):
+    tree_name = THREADS_ROOT_NAME
     thread = ForumThread
 
 
 class PrivateThreadPostsViewSet(ViewSet):
+    tree_name = PRIVATE_THREADS_ROOT_NAME
     thread = PrivateThread

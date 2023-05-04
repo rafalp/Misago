@@ -65,12 +65,11 @@ MISAGO_POSTING_MIDDLEWARES = [
     "misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware",
     "misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware",
     "misago.threads.api.postingendpoint.mentions.MentionsMiddleware",
-    "misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware",
     "misago.threads.api.postingendpoint.syncprivatethreads.SyncPrivateThreadsMiddleware",
     # Always keep SaveChangesMiddleware middleware after all state-changing middlewares
     "misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware",
     # Those middlewares are last because they don't change app state
-    "misago.threads.api.postingendpoint.emailnotification.EmailNotificationMiddleware",
+    "misago.threads.api.postingendpoint.notifications.NotificationsMiddleware",
 ]
 
 
