@@ -13,7 +13,7 @@ class NotificationsMiddleware(PostingMiddleware):
     def post_save(self, serializer):
         if self.mode == PostingEndpoint.START:
             watch_started_thread(self.user, self.thread)
-        else:
+        elif self.mode == PostingEndpoint.REPLY:
             watch_replied_thread(self.user, self.thread)
 
         is_private = self.tree_name == PRIVATE_THREADS_ROOT_NAME
