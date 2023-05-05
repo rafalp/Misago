@@ -1,4 +1,5 @@
 from ....categories import PRIVATE_THREADS_ROOT_NAME
+from ....notifications.tasks import notify_about_new_thread_reply
 from ....notifications.threads import (
     watch_replied_thread,
     watch_started_thread,
@@ -23,5 +24,4 @@ class NotificationsMiddleware(PostingMiddleware):
             pass
 
         if self.mode == PostingEndpoint.REPLY:
-            # Notify watchers about new reply
-            pass
+            notify_about_new_thread_reply.delay(self.post.id, is_private)
