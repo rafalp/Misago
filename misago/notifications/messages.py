@@ -75,7 +75,7 @@ def get_test_notification_message(notification: "Notification") -> str:
 @message_factory.set_message(NotificationVerb.REPLIED)
 def get_replied_notification_message(notification: "Notification") -> str:
     message = html.escape(
-        pgettext("notification replied", "%(actor)s replied to the thread %(thread)s.")
+        pgettext("notification replied", "%(actor)s replied to %(thread)s")
     )
     return message % {
         "actor": bold_escape(notification.actor_name),

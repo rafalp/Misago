@@ -48,6 +48,4 @@ def test_default_message_factory_supports_replies_notifications():
             thread_title="Midgar was destroyed!",
         )
     )
-    assert message == (
-        "<b>Aerith</b> replied to the thread <b>Midgar was destroyed!</b>."
-    )
+    assert message == ("<b>Aerith</b> replied to <b>Midgar was destroyed!</b>")

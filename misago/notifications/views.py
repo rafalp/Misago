@@ -38,4 +38,4 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
             user.unread_notifications = F("unread_notifications") - 1
             user.save(update_fields=["unread_notifications"])
 
-    return redirect(redirect_factory.get_redirect_url(notification))
+    return redirect(redirect_factory.get_redirect_url(request, notification))

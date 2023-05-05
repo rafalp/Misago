@@ -238,6 +238,11 @@ def private_thread(private_threads_category):
 
 
 @pytest.fixture
+def private_thread_reply(private_thread):
+    return reply_thread(private_thread, poster="Ghost", posted_on=timezone.now())
+
+
+@pytest.fixture
 def private_thread_user_reply(private_thread, user):
     return reply_thread(private_thread, poster=user, posted_on=timezone.now())
 

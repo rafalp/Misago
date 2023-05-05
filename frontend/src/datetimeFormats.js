@@ -49,8 +49,8 @@ export function formatRelative(date) {
   }
 
   if (absDiff < 3600 * 3) {
-    const minutes = Math.ceil(diff / 3600)
-    return relativeNumeric.format(minutes, "hour")
+    const hours = Math.ceil(diff / 3600)
+    return relativeNumeric.format(hours, "hour")
   }
 
   if (isSameDay(now, date)) {

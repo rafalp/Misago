@@ -1,6 +1,6 @@
 from enum import IntEnum
 
 
-class CategoriesTrees(IntEnum):
+class CategoriesTree(IntEnum):
     PRIVATE_THREADS = 0
     THREADS = 1

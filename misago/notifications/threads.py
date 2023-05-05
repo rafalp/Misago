@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _, pgettext_lazy
 
 from ..acl.useracl import get_user_acl
 from ..cache.versions import get_cache_versions
-from ..categories.trees import CategoriesTrees
+from ..categories.trees import CategoriesTree
 from ..conf.dynamicsettings import DynamicSettings
 from ..core.mail import build_mail, send_messages
 from ..core.pgutils import chunk_queryset
@@ -140,7 +140,7 @@ def notify_watcher_about_new_thread_reply(
     cache_versions: Dict[str, str],
     settings: DynamicSettings,
 ):
-    is_private = post.category.tree_id == CategoriesTrees.PRIVATE_THREADS
+    is_private = post.category.tree_id == CategoriesTree.PRIVATE_THREADS
     watcher_acl = get_user_acl(watched_thread.user, cache_versions)
 
     if not watcher_can_see_post(watched_thread.user, watcher_acl, post, is_private):
@@ -255,7 +255,7 @@ def watcher_has_other_unread_posts(
         id__lt=post.id,
         thread=post.thread,
         posted_on__gt=watched_thread.read_at,
-    ).exclude(poster=post.poster)
+    ).exclude(poster=watched_thread.user)
 
     if not is_private:
         posts_queryset = exclude_invisible_posts(

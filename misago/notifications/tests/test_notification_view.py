@@ -1,18 +1,21 @@
 from django.urls import reverse
 
 from ...test import assert_contains
+from ...threads.models import ThreadParticipant
 from ..models import Notification
 from ..redirects import redirect_factory
+from ..verbs import NotificationVerb
 
 
-def test_notification_view_returns_redirect_to_user_notification(user, user_client):
+def test_notification_view_returns_redirect_to_user_notification(rf, user, user_client):
+    request = rf.get("/notification/1/")
     notification = Notification.objects.create(user=user, verb="TEST")
     response = user_client.get(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
     assert response.status_code == 302
     assert response.headers["location"] == redirect_factory.get_redirect_url(
-        notification
+        request, notification
     )
 
 
@@ -77,3 +80,43 @@ def test_notification_view_returns_404_error_for_other_user_notification(
 def test_notification_view_shows_permission_denied_page_to_guests(db, client):
     response = client.get(reverse("misago:notification", kwargs={"notification_id": 1}))
     assert_contains(response, "You must be signed in", status_code=403)
+
+
+def test_notification_view_returns_redirect_to_thread_reply(
+    user, user_client, default_category, thread, reply
+):
+    notification = Notification.objects.create(
+        user=user,
+        verb=NotificationVerb.REPLIED,
+        category=default_category,
+        thread=thread,
+        thread_title=thread.title,
+        post=reply,
+    )
+
+    response = user_client.get(
+        reverse("misago:notification", kwargs={"notification_id": notification.id})
+    )
+    assert response.status_code == 302
+    assert response.headers["location"]
+
+
+def test_notification_view_returns_redirect_to_private_thread_reply(
+    user, user_client, private_threads_category, private_thread, private_thread_reply
+):
+    ThreadParticipant.objects.create(thread=private_thread, user=user)
+
+    notification = Notification.objects.create(
+        user=user,
+        verb=NotificationVerb.REPLIED,
+        category=private_threads_category,
+        thread=private_thread,
+        thread_title=private_thread.title,
+        post=private_thread_reply,
+    )
+
+    response = user_client.get(
+        reverse("misago:notification", kwargs={"notification_id": notification.id})
+    )
+    assert response.status_code == 302
+    assert response.headers["location"]
