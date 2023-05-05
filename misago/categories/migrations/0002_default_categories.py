@@ -1,6 +1,7 @@
 from django.db import migrations
 
 from ...core.utils import slugify
+from ..trees import CategoriesTrees
 
 _ = lambda s: s
 
@@ -14,7 +15,7 @@ def create_default_categories_tree(apps, schema_editor):
         slug="private",
         lft=1,
         rght=2,
-        tree_id=0,
+        tree_id=CategoriesTrees.PRIVATE_THREADS,
         level=0,
     )
 
@@ -24,7 +25,7 @@ def create_default_categories_tree(apps, schema_editor):
         slug="root",
         lft=3,
         rght=6,
-        tree_id=1,
+        tree_id=CategoriesTrees.THREADS,
         level=0,
     )
 
@@ -35,7 +36,7 @@ def create_default_categories_tree(apps, schema_editor):
         lft=4,
         rght=5,
         tree_id=1,
-        level=1,
+        level=CategoriesTrees.THREADS,
         name=category_name,
         slug=slugify(category_name),
     )

@@ -52,4 +52,3 @@ def test_get_watched_thread_removes_extra_watched_threads_for_user(
     assert watched_thread == first_watched_thread
 
     assert WatchedThread.objects.count() == 1
-    

@@ -1,4 +1,4 @@
-from ....categories import PRIVATE_THREADS_ROOT_NAME
+from ....categories.trees import CategoriesTrees
 from ....notifications.tasks import notify_about_new_thread_reply
 from ....notifications.threads import (
     watch_replied_thread,
@@ -17,11 +17,11 @@ class NotificationsMiddleware(PostingMiddleware):
         elif self.mode == PostingEndpoint.REPLY:
             watch_replied_thread(self.user, self.thread)
 
-        is_private = self.tree_name == PRIVATE_THREADS_ROOT_NAME
+        is_private = self.thread.category.tree_id == CategoriesTrees.PRIVATE_THREADS
         if is_private and self.mode == PostingEndpoint.START:
             # Make participants watch thread
             # Notify participants about new thread
             pass
 
         if self.mode == PostingEndpoint.REPLY:
-            notify_about_new_thread_reply.delay(self.post.id, is_private)
+            notify_about_new_thread_reply.delay(self.post.id)

@@ -3,10 +3,24 @@ from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
 from celery import shared_task
 from django.db.models import F, IntegerChoices
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import gettext as _, pgettext_lazy
 
+from ..acl.useracl import get_user_acl
+from ..cache.versions import get_cache_versions
+from ..categories.trees import CategoriesTrees
+from ..conf.dynamicsettings import DynamicSettings
+from ..core.mail import build_mail, send_messages
 from ..core.pgutils import chunk_queryset
-from ..threads.models import Post, Thread
+from ..threads.models import Post, Thread, ThreadParticipant
+from ..threads.permissions.privatethreads import (
+    can_see_private_thread,
+    can_use_private_threads,
+)
+from ..threads.permissions.threads import (
+    can_see_post,
+    can_see_thread,
+    exclude_invisible_posts,
+)
 from .verbs import NotificationVerb
 from .models import Notification, WatchedThread
 
@@ -91,38 +105,161 @@ def watch_replied_thread(user: "User", thread: Thread):
 @shared_task
 def notify_about_new_thread_reply(
     reply_id: int,
-    is_private: bool,
 ):
-    post = Post.objects.select_related().get(id=reply_id)
-    category = post.category
-    thread = post.thread
-    poster = post.poster
+    post = Post.objects.select_related("poster", "thread", "category").get(id=reply_id)
+    post.thread.category = post.category
 
-    thread.category = category
-
-    if not WatchedThread.objects.filter(thread=thread).exists():
+    if not WatchedThread.objects.filter(thread=post.thread).exists():
         return  # Nobody is watching this thread, stop
 
-    queryset = (
-        WatchedThread.objects.filter(thread=thread)
-        .exclude(user=poster)
-        .select_related("user")
-    )
+    cache_versions = get_cache_versions()
+    settings = DynamicSettings(cache_versions)
+
+    queryset = WatchedThread.objects.filter(thread=post.thread).select_related("user")
 
     for watched_thread in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
-        if watched_thread.notifications == ThreadNotifications.NONE:
-            continue  # Skip this watcher because they don't want notifications
+        if (
+            watched_thread.user == post.poster
+            or watched_thread.notifications == ThreadNotifications.NONE
+        ):
+            continue  # Skip poster and watchers with notifications disabled
 
-        Notification.objects.create(
-            user=watched_thread.user,
-            verb=NotificationVerb.REPLIED,
-            actor=poster,
-            actor_name=poster.username,
-            category=category,
-            thread=thread,
-            thread_title=thread.title,
-            post=post,
+        try:
+            notify_watcher_about_new_thread_reply(
+                watched_thread, post, cache_versions, settings
+            )
+        except Exception:
+            logger.exception(
+                "Unexpected error in 'notify_watcher_about_new_thread_reply'"
+            )
+
+
+def notify_watcher_about_new_thread_reply(
+    watched_thread: WatchedThread,
+    post: Post,
+    cache_versions: Dict[str, str],
+    settings: DynamicSettings,
+):
+    is_private = post.category.tree_id == CategoriesTrees.PRIVATE_THREADS
+    watcher_acl = get_user_acl(watched_thread.user, cache_versions)
+
+    if not watcher_can_see_post(watched_thread.user, watcher_acl, post, is_private):
+        return  # Skip this watcher because they can't see the post
+
+    if watcher_has_other_unread_posts(watched_thread, watcher_acl, post, is_private):
+        return  # We only notify about first unread post
+
+    Notification.objects.create(
+        user=watched_thread.user,
+        verb=NotificationVerb.REPLIED,
+        actor=post.poster,
+        actor_name=post.poster.username,
+        category=post.category,
+        thread=post.thread,
+        thread_title=post.thread.title,
+        post=post,
+    )
+
+    watched_thread.user.unread_notifications = F("unread_notifications") + 1
+    watched_thread.user.save(update_fields=["unread_notifications"])
+
+    if watched_thread.notifications == ThreadNotifications.SEND_EMAIL:
+        email_watcher_about_new_thread_reply(watched_thread, post, is_private, settings)
+
+
+def email_watcher_about_new_thread_reply(
+    watched_thread: WatchedThread,
+    post: Post,
+    is_private: bool,
+    settings: DynamicSettings,
+):
+    message = build_mail(
+        watched_thread.user,
+        get_new_reply_email_subject(watched_thread, post, is_private),
+        "misago/emails/thread/reply",
+        sender=post.poster,
+        context={
+            "settings": settings,
+            "watched_thread": watched_thread,
+            "thread": post.thread,
+            "post": post,
+        },
+    )
+
+    send_messages([message])
+
+
+def get_new_reply_email_subject(
+    watched_thread: WatchedThread,
+    post: Post,
+    is_private: bool,
+) -> str:
+    formats = {"user": post.poster.username, "thread": post.thread.title}
+
+    if is_private:
+        if watched_thread.user_id == post.thread.starter_id:
+            return (
+                _('%(user)s has replied to your private thread "%(thread)s"') % formats
+            )
+
+        return (
+            _(
+                '%(user)s has replied to private thread "%(thread)s" that you are watching'
+            )
+            % formats
         )
 
-        watched_thread.user.unread_notifications = F("unread_notifications") + 1
-        watched_thread.user.save(update_fields=["unread_notifications"])
+    if watched_thread.user.id == post.thread.starter_id:
+        return _('%(user)s has replied to your thread "%(thread)s"') % formats
+
+    return (
+        _('%(user)s has replied to a thread "%(thread)s" that you are watching')
+        % formats
+    )
+
+
+def watcher_can_see_post(
+    watcher: "User",
+    watcher_acl: dict,
+    post: "Post",
+    is_private: bool,
+) -> bool:
+    if is_private:
+        return watcher_can_see_post_in_private_thread(watcher, watcher_acl, post)
+
+    return can_see_thread(watcher_acl, post.thread) and can_see_post(watcher_acl, post)
+
+
+def watcher_can_see_post_in_private_thread(
+    watcher: "User", watcher_acl: dict, post: "Post"
+) -> bool:
+    if not can_use_private_threads(watcher_acl):
+        return False
+
+    is_participant = ThreadParticipant.objects.filter(
+        thread=post.thread, user=watcher
+    ).exists()
+    if not can_see_private_thread(watcher_acl, post.thread, is_participant):
+        return False
+
+    return True
+
+
+def watcher_has_other_unread_posts(
+    watched_thread: WatchedThread,
+    watcher_acl: dict,
+    post: Post,
+    is_private: bool,
+) -> bool:
+    posts_queryset = Post.objects.filter(
+        id__lt=post.id,
+        thread=post.thread,
+        posted_on__gt=watched_thread.read_at,
+    ).exclude(poster=post.poster)
+
+    if not is_private:
+        posts_queryset = exclude_invisible_posts(
+            watcher_acl, post.category, posts_queryset
+        )
+
+    return posts_queryset.exists()

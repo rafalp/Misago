@@ -198,6 +198,11 @@ def reply(thread):
 
 
 @pytest.fixture
+def user_reply(thread, user):
+    return reply_thread(thread, poster=user, posted_on=timezone.now())
+
+
+@pytest.fixture
 def user_thread(default_category, user):
     return post_thread(default_category, poster=user)
 
@@ -230,6 +235,11 @@ def other_user_unapproved_thread(default_category, other_user):
 @pytest.fixture
 def private_thread(private_threads_category):
     return post_thread(private_threads_category)
+
+
+@pytest.fixture
+def private_thread_user_reply(private_thread, user):
+    return reply_thread(private_thread, poster=user, posted_on=timezone.now())
 
 
 @pytest.fixture
