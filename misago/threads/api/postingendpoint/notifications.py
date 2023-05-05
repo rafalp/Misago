@@ -1,5 +1,5 @@
 from ....categories.trees import CategoriesTree
-from ....notifications.tasks import notify_about_new_thread_reply
+from ....notifications.tasks import notify_on_new_thread_reply
 from ....notifications.threads import (
     watch_replied_thread,
     watch_started_thread,
@@ -24,4 +24,4 @@ class NotificationsMiddleware(PostingMiddleware):
             pass
 
         if self.mode == PostingEndpoint.REPLY:
-            notify_about_new_thread_reply.delay(self.post.id)
+            notify_on_new_thread_reply.delay(self.post.id)

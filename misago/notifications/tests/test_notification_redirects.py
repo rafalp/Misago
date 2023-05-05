@@ -3,7 +3,6 @@ import pytest
 from ..exceptions import NotificationVerbError
 from ..models import Notification
 from ..redirects import NotificationRedirectFactory, redirect_factory
-from ..verbs import NotificationVerb
 
 
 @pytest.fixture

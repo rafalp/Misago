@@ -122,6 +122,13 @@ def other_superuser(db, user_password):
 
 
 @pytest.fixture
+def inactive_user(db, user_password):
+    return create_test_user(
+        "InactiveUser", "inactiveuser@example.com", user_password, is_active=False
+    )
+
+
+@pytest.fixture
 def client():
     return MisagoClient()
 
@@ -200,6 +207,11 @@ def reply(thread):
 @pytest.fixture
 def user_reply(thread, user):
     return reply_thread(thread, poster=user, posted_on=timezone.now())
+
+
+@pytest.fixture
+def other_user_reply(thread, other_user):
+    return reply_thread(thread, poster=other_user, posted_on=timezone.now())
 
 
 @pytest.fixture

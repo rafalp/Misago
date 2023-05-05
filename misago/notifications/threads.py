@@ -9,7 +9,7 @@ from ..acl.useracl import get_user_acl
 from ..cache.versions import get_cache_versions
 from ..categories.trees import CategoriesTree
 from ..conf.dynamicsettings import DynamicSettings
-from ..core.mail import build_mail, send_messages
+from ..core.mail import build_mail
 from ..core.pgutils import chunk_queryset
 from ..threads.models import Post, Thread, ThreadParticipant
 from ..threads.permissions.privatethreads import (
@@ -103,9 +103,12 @@ def watch_replied_thread(user: "User", thread: Thread):
 
 
 @shared_task
-def notify_about_new_thread_reply(
+def notify_on_new_thread_reply(
     reply_id: int,
 ):
+    # TODO: move `misago.users.bans` to `misago.bans`
+    from ..users.bans import get_user_ban
+
     post = Post.objects.select_related("poster", "thread", "category").get(id=reply_id)
     post.thread.category = post.category
 
@@ -121,20 +124,20 @@ def notify_about_new_thread_reply(
         if (
             watched_thread.user == post.poster
             or watched_thread.notifications == ThreadNotifications.NONE
+            or not watched_thread.user.is_active
+            or get_user_ban(watched_thread.user, cache_versions)
         ):
             continue  # Skip poster and watchers with notifications disabled
 
         try:
-            notify_watcher_about_new_thread_reply(
+            notify_watcher_on_new_thread_reply(
                 watched_thread, post, cache_versions, settings
             )
         except Exception:
-            logger.exception(
-                "Unexpected error in 'notify_watcher_about_new_thread_reply'"
-            )
+            logger.exception("Unexpected error in 'notify_watcher_on_new_thread_reply'")
 
 
-def notify_watcher_about_new_thread_reply(
+def notify_watcher_on_new_thread_reply(
     watched_thread: WatchedThread,
     post: Post,
     cache_versions: Dict[str, str],
@@ -147,7 +150,7 @@ def notify_watcher_about_new_thread_reply(
         return  # Skip this watcher because they can't see the post
 
     if watcher_has_other_unread_posts(watched_thread, watcher_acl, post, is_private):
-        return  # We only notify about first unread post
+        return  # We only notify on first unread post
 
     Notification.objects.create(
         user=watched_thread.user,
@@ -164,18 +167,22 @@ def notify_watcher_about_new_thread_reply(
     watched_thread.user.save(update_fields=["unread_notifications"])
 
     if watched_thread.notifications == ThreadNotifications.SEND_EMAIL:
-        email_watcher_about_new_thread_reply(watched_thread, post, is_private, settings)
+        email_watcher_on_new_thread_reply(watched_thread, post, settings)
 
 
-def email_watcher_about_new_thread_reply(
+def email_watcher_on_new_thread_reply(
     watched_thread: WatchedThread,
     post: Post,
-    is_private: bool,
     settings: DynamicSettings,
 ):
+    subject = _("%(thread)s - new reply by %(user)s") % {
+        "user": post.poster.username,
+        "thread": post.thread.title,
+    }
+
     message = build_mail(
         watched_thread.user,
-        get_new_reply_email_subject(watched_thread, post, is_private),
+        subject,
         "misago/emails/thread/reply",
         sender=post.poster,
         context={
@@ -186,36 +193,7 @@ def email_watcher_about_new_thread_reply(
         },
     )
 
-    send_messages([message])
-
-
-def get_new_reply_email_subject(
-    watched_thread: WatchedThread,
-    post: Post,
-    is_private: bool,
-) -> str:
-    formats = {"user": post.poster.username, "thread": post.thread.title}
-
-    if is_private:
-        if watched_thread.user_id == post.thread.starter_id:
-            return (
-                _('%(user)s has replied to your private thread "%(thread)s"') % formats
-            )
-
-        return (
-            _(
-                '%(user)s has replied to private thread "%(thread)s" that you are watching'
-            )
-            % formats
-        )
-
-    if watched_thread.user.id == post.thread.starter_id:
-        return _('%(user)s has replied to your thread "%(thread)s"') % formats
-
-    return (
-        _('%(user)s has replied to a thread "%(thread)s" that you are watching')
-        % formats
-    )
+    message.send()
 
 
 def watcher_can_see_post(

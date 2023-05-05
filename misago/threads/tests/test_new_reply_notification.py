@@ -7,7 +7,7 @@ from ..models import ThreadParticipant
 @pytest.fixture
 def task_mock(mocker):
     return mocker.patch(
-        "misago.threads.api.postingendpoint.notifications.notify_about_new_thread_reply"
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
     )
 
 
