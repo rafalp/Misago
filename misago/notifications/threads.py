@@ -295,14 +295,75 @@ def notify_participant_on_new_private_thread(
 
     actor_is_followed = user.follows.has(actor)
 
-    watch_new_private_thread(user, thread, actor_is_followed)
+    watched_thread = watch_new_private_thread(user, thread, actor_is_followed)
 
-    # Set notification
+    if actor_is_followed:
+        notify = user.notify_new_private_threads_by_followed
+    else:
+        notify = user.notify_new_private_threads_by_other_users
 
-    # Send e-mail
+    if notify == ThreadNotifications.NONE:
+        return  # User has disabled notifications for new private threads
+
+    has_unread_notification = Notification.objects.filter(
+        user=user,
+        verb=NotificationVerb.INVITED,
+        post=thread.first_post,
+        is_read=False,
+    ).exists()
+
+    if has_unread_notification:
+        return  # Don't spam users with notifications
+
+    Notification.objects.create(
+        user=user,
+        verb=NotificationVerb.INVITED,
+        actor=actor,
+        actor_name=actor.username,
+        category=thread.category,
+        thread=thread,
+        thread_title=thread.title,
+        post=thread.first_post,
+    )
+
+    user.unread_notifications = F("unread_notifications") + 1
+    user.save(update_fields=["unread_notifications"])
+
+    if notify == ThreadNotifications.SEND_EMAIL:
+        email_participant_on_new_private_thread(user, actor, watched_thread, settings)
 
 
-def watch_new_private_thread(user: "User", thread: Thread, from_followed: bool):
+def email_participant_on_new_private_thread(
+    user: "User",
+    actor: "User",
+    watched_thread: WatchedThread,
+    settings: DynamicSettings,
+):
+    thread = watched_thread.thread
+
+    subject = _(
+        '%(user)s has invited you to participate in private thread "%(thread)s"'
+    )
+    subject_formats = {"thread": thread.title, "user": actor.username}
+
+    message = build_mail(
+        user,
+        subject % subject_formats,
+        "misago/emails/privatethread/added",
+        sender=actor,
+        context={
+            "settings": settings,
+            "watched_thread": watched_thread,
+            "thread": thread,
+        },
+    )
+
+    message.send()
+
+
+def watch_new_private_thread(
+    user: "User", thread: Thread, from_followed: bool
+) -> WatchedThread:
     if from_followed:
         notifications = user.watch_new_private_threads_by_followed
     else:
@@ -312,20 +373,19 @@ def watch_new_private_thread(user: "User", thread: Thread, from_followed: bool):
     # From triggering extra notification
     read_at = thread.started_on - timedelta(seconds=5)
 
-    watched_thread = get_watched_thread(user, thread)
-
-    if watched_thread:
+    if watched_thread := get_watched_thread(user, thread):
         watched_thread.notifications = notifications
         watched_thread.read_at = read_at
         watched_thread.save(update_fields=["notifications", "read_at"])
-    else:
-        WatchedThread.objects.create(
-            user=user,
-            category=thread.category,
-            thread=thread,
-            notifications=notifications,
-            read_at=read_at,
-        )
+        return watched_thread
+
+    return WatchedThread.objects.create(
+        user=user,
+        category=thread.category,
+        thread=thread,
+        notifications=notifications,
+        read_at=read_at,
+    )
 
 
 def user_can_see_private_thread(user: "User", user_acl: dict, thread: Thread) -> bool:

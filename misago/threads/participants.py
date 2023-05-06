@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
-from ..core.mail import build_mail, send_messages
 from ..notifications.threads import notify_on_new_private_thread
 from .events import record_event
 from .models import ThreadParticipant
@@ -134,28 +133,6 @@ def add_participants(request, thread, users):
         request.user.id,
         thread.id,
         [user.id for user in users if user.id != request.user.id],
-    )
-
-    # emails = []
-    # for user in users:
-    #     if user != request.user:
-    #         emails.append(build_notification_email(request, thread, user))
-    # if emails:
-    #     send_messages(emails)
-
-
-def build_notification_email(request, thread, user):
-    subject = _(
-        '%(user)s has invited you to participate in private thread "%(thread)s"'
-    )
-    subject_formats = {"thread": thread.title, "user": request.user.username}
-
-    return build_mail(
-        user,
-        subject % subject_formats,
-        "misago/emails/privatethread/added",
-        sender=request.user,
-        context={"settings": request.settings, "thread": thread},
     )
 
 
