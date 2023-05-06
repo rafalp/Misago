@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.urls import reverse
 
@@ -22,7 +24,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         content = encode_multipart(BOUNDARY, data or {})
         return self.client.put(url, content, content_type=MULTIPART_CONTENT)
 
-    def test_mention_noone(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_mention_noone(self, notify_on_new_thread_reply_mock):
         """endpoint handles no mentions in post"""
         response = self.client.post(
             self.post_link, data={"post": "This is test response!"}
@@ -32,7 +37,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         post = self.user.post_set.order_by("id").last()
         self.assertEqual(post.mentions.count(), 0)
 
-    def test_mention_nonexistant(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_mention_nonexistant(self, notify_on_new_thread_reply_mock):
         """endpoint handles nonexistant mention"""
         response = self.client.post(
             self.post_link, data={"post": "This is test response, @InvalidUser!"}
@@ -42,7 +50,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         post = self.user.post_set.order_by("id").last()
         self.assertEqual(post.mentions.count(), 0)
 
-    def test_mention_self(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_mention_self(self, notify_on_new_thread_reply_mock):
         """endpoint mentions author"""
         response = self.client.post(
             self.post_link, data={"post": "This is test response, @%s!" % self.user}
@@ -54,7 +65,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(post.mentions.count(), 1)
         self.assertEqual(post.mentions.all()[0], self.user)
 
-    def test_mention_limit(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_mention_limit(self, notify_on_new_thread_reply_mock):
         """endpoint mentions over limit results in no mentions set"""
         users = []
 
@@ -72,7 +86,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         self.assertEqual(post.mentions.count(), 0)
 
-    def test_mention_update(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_mention_update(self, notify_on_new_thread_reply_mock):
         """edit post endpoint updates mentions"""
         user = create_test_user("User", "user@example.com")
         other_user = create_test_user("OtherUser", "otheruser@example.com")
@@ -118,7 +135,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(post.mentions.count(), 2)
         self.assertEqual(list(post.mentions.order_by("id")), [user, other_user])
 
-    def test_mentions_merge(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_mentions_merge(self, notify_on_new_thread_reply_mock):
         """posts merge sums mentions"""
         user = create_test_user("User1", "user1@example.com")
         other_user = create_test_user("User2", "user2@example.com")

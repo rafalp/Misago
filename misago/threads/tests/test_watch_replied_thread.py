@@ -6,7 +6,7 @@ from ..models import ThreadParticipant
 
 
 def test_replied_thread_is_watched_by_user_with_option_enabled(
-    user, user_client, thread
+    notify_on_new_thread_reply_mock, user, user_client, thread
 ):
     user.watch_replied_threads = ThreadNotifications.DONT_EMAIL
     user.save()
@@ -29,7 +29,7 @@ def test_replied_thread_is_watched_by_user_with_option_enabled(
 
 
 def test_replied_thread_is_not_watched_by_user_with_option_disabled(
-    user, user_client, thread
+    notify_on_new_thread_reply_mock, user, user_client, thread
 ):
     user.watch_replied_threads = ThreadNotifications.NONE
     user.save()
@@ -46,7 +46,7 @@ def test_replied_thread_is_not_watched_by_user_with_option_disabled(
 
 
 def test_replied_private_thread_is_watched_by_user_with_option_enabled(
-    user, user_client, private_thread
+    notify_on_new_thread_reply_mock, user, user_client, private_thread
 ):
     user.watch_replied_threads = ThreadNotifications.DONT_EMAIL
     user.save()
@@ -74,7 +74,7 @@ def test_replied_private_thread_is_watched_by_user_with_option_enabled(
 
 
 def test_replied_private_thread_is_not_watched_by_user_with_option_disabled(
-    user, user_client, private_thread
+    notify_on_new_thread_reply_mock, user, user_client, private_thread
 ):
     user.watch_replied_threads = ThreadNotifications.NONE
     user.save()

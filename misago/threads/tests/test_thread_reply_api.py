@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 
 from .. import test
@@ -132,7 +134,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         )
 
     @patch_category_acl({"can_reply_threads": True})
-    def test_can_reply_thread(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_can_reply_thread(self, notify_on_new_thread_reply_mock):
         """endpoint creates new reply"""
         response = self.client.post(
             self.api_link, data={"post": "This is test response!"}
@@ -172,7 +177,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(category.last_poster_slug, self.user.slug)
 
     @patch_category_acl({"can_reply_threads": True})
-    def test_post_unicode(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_post_unicode(self, notify_on_new_thread_reply_mock):
         """unicode characters can be posted"""
         response = self.client.post(
             self.api_link, data={"post": "Chrzążczyżewoszyce, powiat Łękółody."}
@@ -180,7 +188,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
     @patch_category_acl({"can_reply_threads": True})
-    def test_category_moderation_queue(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_category_moderation_queue(self, notify_on_new_thread_reply_mock):
         """reply thread in category that requires approval"""
         self.category.require_replies_approval = True
         self.category.save()
@@ -204,7 +215,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
     @patch_category_acl({"can_reply_threads": True})
     @patch_user_acl({"can_approve_content": True})
-    def test_category_moderation_queue_bypass(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_category_moderation_queue_bypass(self, notify_on_new_thread_reply_mock):
         """bypass moderation queue due to user's acl"""
         self.category.require_replies_approval = True
         self.category.save()
@@ -227,7 +241,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(category.posts, self.category.posts + 1)
 
     @patch_category_acl({"can_reply_threads": True, "require_replies_approval": True})
-    def test_user_moderation_queue(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_user_moderation_queue(self, notify_on_new_thread_reply_mock):
         """reply thread by user that requires approval"""
         response = self.client.post(
             self.api_link, data={"post": "Lorem ipsum dolor met!"}
@@ -248,7 +265,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
     @patch_category_acl({"can_reply_threads": True, "require_replies_approval": True})
     @patch_user_acl({"can_approve_content": True})
-    def test_user_moderation_queue_bypass(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_user_moderation_queue_bypass(self, notify_on_new_thread_reply_mock):
         """bypass moderation queue due to user's acl"""
         response = self.client.post(
             self.api_link, data={"post": "Lorem ipsum dolor met!"}
@@ -274,7 +294,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             "require_edits_approval": True,
         }
     )
-    def test_omit_other_moderation_queues(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_omit_other_moderation_queues(self, notify_on_new_thread_reply_mock):
         """other queues are omitted"""
         self.category.require_threads_approval = True
         self.category.require_edits_approval = True
