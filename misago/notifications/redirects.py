@@ -101,7 +101,7 @@ def get_replied_notification_url(
 
 
 @redirect_factory.set_redirect(NotificationVerb.INVITED)
-def get_replied_notification_url(
+def get_invited_notification_url(
     request: HttpRequest, notification: "Notification"
 ) -> str:
     return notification.category.thread_type.get_thread_absolute_url(

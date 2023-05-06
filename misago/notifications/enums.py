@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from django.db.models import F, IntegerChoices
+from django.db.models import IntegerChoices
 from django.utils.translation import pgettext_lazy
 
 
