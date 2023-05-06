@@ -17,10 +17,18 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
 
     user = request.user
     notification = get_object_or_404(
-        Notification.objects.select_related(),
+        Notification.objects.select_related(
+            "actor",
+            "category",
+            "thread",
+            "post",
+        ),
         user=user,
         id=notification_id,
     )
+
+    # Populate user relation cache
+    notification.user = request.user
 
     if notification.category_id:
         # Populate relations caches on thread and post models

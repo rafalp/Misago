@@ -3,15 +3,18 @@ from .settings import *  # pylint: disable-all
 # Use in-memory cache
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 
+# Disable Celery backend
+CELERY_BROKER_URL = None
+
 # Disable Debug Toolbar
 DEBUG_TOOLBAR_CONFIG = {}
 INTERNAL_IPS = []
 
-# Disable account validation via Stop Forum Spam
-MISAGO_NEW_REGISTRATIONS_VALIDATORS = ("misago.users.validators.validate_gmail_email",)
-
 # Store mails in memory
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+
+# Disable account validation via Stop Forum Spam
+MISAGO_NEW_REGISTRATIONS_VALIDATORS = ("misago.users.validators.validate_gmail_email",)
 
 # Use MD5 password hashing to speed up test suite
 PASSWORD_HASHERS = ("django.contrib.auth.hashers.MD5PasswordHasher",)
