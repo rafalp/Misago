@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
 from ..core.mail import build_mail, send_messages
+from ..notifications.threads import notify_on_new_private_thread
 from .events import record_event
 from .models import ThreadParticipant
 
@@ -115,7 +116,7 @@ def add_participant(request, thread, new_participant):
 
 def add_participants(request, thread, users):
     """
-    Add multiple participants to thread, set "recound private threads" flag on them
+    Add multiple participants to thread, set "recount private threads" flag on them
     notify them about being added to thread.
     """
     ThreadParticipant.objects.add_participants(thread, users)
@@ -129,15 +130,21 @@ def add_participants(request, thread, users):
         users=users, participants=thread_participants, exclude_user=request.user
     )
 
-    emails = []
-    for user in users:
-        if user != request.user:
-            emails.append(build_noticiation_email(request, thread, user))
-    if emails:
-        send_messages(emails)
+    notify_on_new_private_thread.delay(
+        request.user.id,
+        thread.id,
+        [user.id for user in users if user.id != request.user.id],
+    )
+
+    # emails = []
+    # for user in users:
+    #     if user != request.user:
+    #         emails.append(build_notification_email(request, thread, user))
+    # if emails:
+    #     send_messages(emails)
 
 
-def build_noticiation_email(request, thread, user):
+def build_notification_email(request, thread, user):
     subject = _(
         '%(user)s has invited you to participate in private thread "%(thread)s"'
     )
