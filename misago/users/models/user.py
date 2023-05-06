@@ -1,5 +1,5 @@
 from hashlib import md5
-from typing import Optional
+from typing import Optional, Union
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
@@ -459,29 +459,25 @@ class User(AbstractBaseUser, PermissionsMixin):
         """sends an email to this user (for compat with Django)"""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def is_following(self, user_or_id):
-        try:
-            user_id = user_or_id.id
-        except AttributeError:
+    def is_following(self, user_or_id: Union["User", int]) -> bool:
+        if isinstance(user_or_id, int):
             user_id = user_or_id
-
-        try:
-            self.follows.get(id=user_id)
-            return True
-        except User.DoesNotExist:
-            return False
-
-    def is_blocking(self, user_or_id):
-        try:
+        elif isinstance(user_or_id, User):
             user_id = user_or_id.id
-        except AttributeError:
-            user_id = user_or_id
+        else:
+            raise ValueError("'user_or_id' argument must be an int or User instance")
 
-        try:
-            self.blocks.get(id=user_id)
-            return True
-        except User.DoesNotExist:
-            return False
+        return self.follows.filter(id=user_id).exists()
+
+    def is_blocking(self, user_or_id: Union["User", int]) -> bool:
+        if isinstance(user_or_id, int):
+            user_id = user_or_id
+        elif isinstance(user_or_id, User):
+            user_id = user_or_id.id
+        else:
+            raise ValueError("'user_or_id' argument must be an int or User instance")
+
+        return self.blocks.filter(id=user_id).exists()
 
     def get_unread_notifications_for_display(self) -> Optional[str]:
         if not self.unread_notifications:

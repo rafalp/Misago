@@ -244,7 +244,7 @@ def notify_on_new_private_thread(
     # TODO: move `misago.users.bans` to `misago.bans`
     from ..users.bans import get_user_ban
 
-    actor = User.object.filter(id=actor_id).first()
+    actor = User.objects.filter(id=actor_id).first()
     thread = (
         Thread.objects.filter(id=thread_id)
         .select_related("category", "first_post")
@@ -285,7 +285,7 @@ def notify_participant_on_new_private_thread(
     if not user_can_see_private_thread(user, user_acl, thread):
         return False  # User can't see private thread
 
-    actor_is_followed = user.follows.has(actor)
+    actor_is_followed = user.is_following(actor)
 
     watched_thread = watch_new_private_thread(user, thread, actor_is_followed)
 
@@ -366,9 +366,12 @@ def watch_new_private_thread(
     read_at = thread.started_on - timedelta(seconds=5)
 
     if watched_thread := get_watched_thread(user, thread):
-        watched_thread.notifications = notifications
+        if notifications != ThreadNotifications.NONE:
+            watched_thread.notifications = notifications
+
         watched_thread.read_at = read_at
         watched_thread.save(update_fields=["notifications", "read_at"])
+
         return watched_thread
 
     return WatchedThread.objects.create(

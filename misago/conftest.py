@@ -260,6 +260,11 @@ def private_thread_user_reply(private_thread, user):
 
 
 @pytest.fixture
+def user_private_thread(user, private_threads_category):
+    return post_thread(private_threads_category, poster=user)
+
+
+@pytest.fixture
 def categories_tree(root_category):
     sibling_category = Category(
         name="Sibling Category",
