@@ -20,7 +20,10 @@ def test_notify_about_new_reply_task_is_triggered_by_new_thread_reply(
 
 
 def test_notify_about_new_reply_task_is_triggered_by_new_private_thread_reply(
-    notify_on_new_thread_reply_mock, user, user_client, private_thread
+    notify_on_new_thread_reply_mock,
+    user,
+    user_client,
+    private_thread,
 ):
     ThreadParticipant.objects.create(thread=private_thread, user=user)
 
@@ -78,7 +81,10 @@ def test_notify_about_new_reply_task_is_not_triggered_on_new_private_thread_star
 
 
 def test_notify_about_new_reply_task_is_not_triggered_on_thread_reply_edit(
-    notify_on_new_thread_reply_mock, user_client, thread, user_reply
+    notify_on_new_thread_reply_mock,
+    user_client,
+    thread,
+    user_reply,
 ):
     response = user_client.put(
         reverse(
