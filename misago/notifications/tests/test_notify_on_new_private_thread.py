@@ -1,6 +1,7 @@
 import pytest
 
 from ...threads.models import ThreadParticipant
+from ...users.bans import ban_user
 from ..enums import NotificationVerb, ThreadNotifications
 from ..models import Notification, WatchedThread
 from ..threads import notify_on_new_private_thread
@@ -24,6 +25,38 @@ def test_notify_on_new_private_thread_does_nothing_if_thread_is_not_found(
     notify_participant_mock, user, other_user, private_thread
 ):
     notify_on_new_private_thread(user.id, private_thread.id + 1, [other_user.id])
+    notify_participant_mock.assert_not_called()
+
+
+def test_notify_on_new_private_thread_skips_banned_users(
+    notify_participant_mock, user, other_user, user_private_thread
+):
+    other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
+    other_user.notify_new_private_threads_by_other_users = (
+        ThreadNotifications.SEND_EMAIL
+    )
+    other_user.save()
+
+    ThreadParticipant.objects.create(user=other_user, thread=user_private_thread)
+
+    ban_user(other_user)
+
+    notify_on_new_private_thread(user.id, user_private_thread.id, [other_user.id])
+    notify_participant_mock.assert_not_called()
+
+
+def test_notify_on_new_private_thread_skips_inactive_users(
+    notify_participant_mock, user, inactive_user, user_private_thread
+):
+    inactive_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
+    inactive_user.notify_new_private_threads_by_other_users = (
+        ThreadNotifications.SEND_EMAIL
+    )
+    inactive_user.save()
+
+    ThreadParticipant.objects.create(user=inactive_user, thread=user_private_thread)
+
+    notify_on_new_private_thread(user.id, user_private_thread.id, [inactive_user.id])
     notify_participant_mock.assert_not_called()
 
 
@@ -247,7 +280,7 @@ def test_notify_on_new_private_thread_skips_participant_if_they_have_no_permissi
 
 
 def test_notify_on_new_private_thread_skips_user_not_participating(
-    mocker, user, other_user, user_private_thread, mailoutbox
+    user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
     other_user.notify_new_private_threads_by_other_users = (

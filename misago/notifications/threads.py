@@ -260,8 +260,8 @@ def notify_on_new_private_thread(
     queryset = User.objects.filter(id__in=participants)
 
     for participant in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
-        if get_user_ban(participant, cache_versions):
-            continue  # Skip banned participants
+        if not participant.is_active or get_user_ban(participant, cache_versions):
+            continue  # Skip inactive or banned participants
 
         try:
             notify_participant_on_new_private_thread(
@@ -290,11 +290,11 @@ def notify_participant_on_new_private_thread(
     watched_thread = watch_new_private_thread(user, thread, actor_is_followed)
 
     if actor_is_followed:
-        notify = user.notify_new_private_threads_by_followed
+        notification = user.notify_new_private_threads_by_followed
     else:
-        notify = user.notify_new_private_threads_by_other_users
+        notification = user.notify_new_private_threads_by_other_users
 
-    if notify == ThreadNotifications.NONE:
+    if notification == ThreadNotifications.NONE:
         return  # User has disabled notifications for new private threads
 
     has_unread_notification = Notification.objects.filter(
@@ -321,7 +321,7 @@ def notify_participant_on_new_private_thread(
     user.unread_notifications = F("unread_notifications") + 1
     user.save(update_fields=["unread_notifications"])
 
-    if notify == ThreadNotifications.SEND_EMAIL:
+    if notification == ThreadNotifications.SEND_EMAIL:
         email_participant_on_new_private_thread(user, actor, watched_thread, settings)
 
 
