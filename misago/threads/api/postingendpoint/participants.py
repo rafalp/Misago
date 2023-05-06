@@ -31,7 +31,7 @@ class ParticipantsMiddleware(PostingMiddleware):
 
     def save(self, serializer):
         set_owner(self.thread, self.user)
-        add_participants(self.request, self.thread, serializer.users_cache)
+        add_participants(self.request.user, self.thread, serializer.users_cache)
 
 
 class ParticipantsSerializer(serializers.Serializer):
