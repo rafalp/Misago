@@ -376,7 +376,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             [self.other_user.id],
         )
 
-    def test_post_unicode(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_post_unicode(self, notify_on_new_private_thread_mock):
         """unicode characters can be posted"""
         response = self.client.post(
             self.api_link,

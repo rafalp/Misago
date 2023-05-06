@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from .. import test
 from ...users.test import create_test_user
 from ..models import ThreadParticipant
@@ -13,7 +15,10 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
 
         self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
-    def test_reply_private_thread(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_reply_private_thread(self, notify_on_new_thread_reply_mock):
         """api sets other private thread participants sync thread flag"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
         ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
