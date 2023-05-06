@@ -10,8 +10,8 @@ from faker import Factory
 
 from ....categories.models import Category
 from ....core.pgutils import chunk_queryset
+from ....notifications.enums import NotificationVerb
 from ....notifications.models import Notification
-from ....notifications.verbs import NotificationVerb
 from ....threads.checksums import update_post_checksum
 from ....threads.models import Thread
 from ....users.models import Rank

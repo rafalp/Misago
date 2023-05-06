@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ....notifications.threads import ThreadNotifications
+from ....notifications.enums import ThreadNotifications
 from .base import SettingsForm
 
 

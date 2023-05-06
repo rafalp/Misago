@@ -5,8 +5,9 @@ from django.utils import timezone
 
 from ...threads.models import ThreadParticipant
 from ...users.bans import ban_user
+from ..enums import ThreadNotifications
 from ..models import Notification
-from ..threads import ThreadNotifications, notify_on_new_thread_reply
+from ..threads import notify_on_new_thread_reply
 
 
 @pytest.fixture

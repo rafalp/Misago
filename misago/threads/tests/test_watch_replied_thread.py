@@ -1,7 +1,7 @@
 from django.urls import reverse
 
+from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...notifications.threads import ThreadNotifications
 from ..models import ThreadParticipant
 
 

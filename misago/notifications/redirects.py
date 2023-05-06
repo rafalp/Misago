@@ -4,7 +4,7 @@ from django.http import HttpRequest
 
 from ..categories.trees import CategoriesTree
 from ..threads.views.goto import PrivateThreadGotoPostView, ThreadGotoPostView
-from .verbs import NotificationVerb
+from .enums import NotificationVerb
 from .exceptions import NotificationVerbError
 
 if TYPE_CHECKING:
@@ -98,3 +98,12 @@ def get_replied_notification_url(
     )
 
     return redirect.headers["location"]
+
+
+@redirect_factory.set_redirect(NotificationVerb.INVITED)
+def get_replied_notification_url(
+    request: HttpRequest, notification: "Notification"
+) -> str:
+    return notification.category.thread_type.get_thread_absolute_url(
+        notification.thread
+    )

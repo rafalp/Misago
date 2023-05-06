@@ -2,9 +2,9 @@ from django.urls import reverse
 
 from ...test import assert_contains
 from ...threads.models import ThreadParticipant
+from ..enums import NotificationVerb
 from ..models import Notification
 from ..redirects import redirect_factory
-from ..verbs import NotificationVerb
 
 
 def test_notification_view_returns_redirect_to_user_notification(rf, user, user_client):
@@ -113,6 +113,27 @@ def test_notification_view_returns_redirect_to_private_thread_reply(
         thread=private_thread,
         thread_title=private_thread.title,
         post=private_thread_reply,
+    )
+
+    response = user_client.get(
+        reverse("misago:notification", kwargs={"notification_id": notification.id})
+    )
+    assert response.status_code == 302
+    assert response.headers["location"]
+
+
+def test_notification_view_returns_redirect_to_private_thread_invite(
+    user, user_client, private_threads_category, private_thread
+):
+    ThreadParticipant.objects.create(thread=private_thread, user=user)
+
+    notification = Notification.objects.create(
+        user=user,
+        verb=NotificationVerb.INVITED,
+        category=private_threads_category,
+        thread=private_thread,
+        thread_title=private_thread.title,
+        post_id=private_thread.first_post_id,
     )
 
     response = user_client.get(

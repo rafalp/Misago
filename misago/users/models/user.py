@@ -16,7 +16,7 @@ from django.utils.translation import gettext_lazy as _
 from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
-from ...notifications.threads import ThreadNotifications
+from ...notifications.enums import ThreadNotifications
 from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email

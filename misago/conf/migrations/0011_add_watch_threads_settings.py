@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from ...notifications.threads import ThreadNotifications
+from ...notifications.enums import ThreadNotifications
 from ..hydrators import dehydrate_value
 
 

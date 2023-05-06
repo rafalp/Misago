@@ -6,8 +6,9 @@ from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ...categories.models import Category
 from ...core.shortcuts import validate_slug
 from ...core.viewmodel import ViewModel as BaseViewModel
+from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...notifications.threads import ThreadNotifications, get_watched_thread
+from ...notifications.threads import get_watched_thread
 from ...readtracker.threadstracker import make_read_aware
 from ..models import Poll, Thread
 from ..participants import make_participants_aware

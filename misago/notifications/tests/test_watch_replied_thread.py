@@ -1,5 +1,6 @@
+from ..enums import ThreadNotifications
 from ..models import WatchedThread
-from ..threads import ThreadNotifications, watch_replied_thread
+from ..threads import watch_replied_thread
 
 
 def test_replied_thread_is_watched_with_email_notifications(user, thread):

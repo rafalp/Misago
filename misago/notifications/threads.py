@@ -1,11 +1,11 @@
 from datetime import timedelta
 from logging import getLogger
-from typing import TYPE_CHECKING, Dict, Iterable, Optional
+from typing import Dict, Iterable, Optional
 
 from celery import shared_task
 from django.contrib.auth import get_user_model
-from django.db.models import F, IntegerChoices
-from django.utils.translation import gettext as _, pgettext_lazy
+from django.db.models import F
+from django.utils.translation import gettext as _
 
 from ..acl.useracl import get_user_acl
 from ..cache.versions import get_cache_versions
@@ -23,7 +23,7 @@ from ..threads.permissions.threads import (
     can_see_thread,
     exclude_invisible_posts,
 )
-from .verbs import NotificationVerb
+from .enums import NotificationVerb, ThreadNotifications
 from .models import Notification, WatchedThread
 
 User = get_user_model()
@@ -31,14 +31,6 @@ User = get_user_model()
 logger = getLogger("misago.notifications.threads")
 
 NOTIFY_CHUNK_SIZE = 20
-
-
-class ThreadNotifications(IntegerChoices):
-    NONE = 0, pgettext_lazy("notification type", "Don't notify")
-    DONT_EMAIL = 1, pgettext_lazy(
-        "notification type", "Notify without sending an e-mail"
-    )
-    SEND_EMAIL = 2, pgettext_lazy("notification type", "Notify with an e-mail")
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:

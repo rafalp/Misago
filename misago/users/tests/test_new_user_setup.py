@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from ...conf.test import override_dynamic_settings
-from ...notifications.threads import ThreadNotifications
+from ...notifications.enums import ThreadNotifications
 from ..setupnewuser import setup_new_user
 
 User = get_user_model()

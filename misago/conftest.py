@@ -8,8 +8,8 @@ from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
 from .menus import MENU_ITEMS_CACHE
+from .notifications.enums import ThreadNotifications
 from .notifications.models import WatchedThread
-from .notifications.threads import ThreadNotifications
 from .socialauth import SOCIALAUTH_CACHE
 from .test import MisagoClient
 from .themes import THEME_CACHE

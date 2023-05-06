@@ -1,7 +1,7 @@
 from django.urls import reverse
 
+from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...notifications.threads import ThreadNotifications
 
 
 def test_started_thread_is_watched_by_user_with_option_enabled(
