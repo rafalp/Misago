@@ -129,11 +129,12 @@ def add_participants(user: User, thread: Thread, participants: list[User]):
         users=participants, participants=thread_participants, exclude_user=user
     )
 
-    notify_on_new_private_thread.delay(
-        user.id,
-        thread.id,
-        [participant.id for participant in participants if participant.id != user.id],
-    )
+    participants_ids = [
+        participant.id for participant in participants if participant.id != user.id
+    ]
+
+    if participants_ids:
+        notify_on_new_private_thread.delay(user.id, thread.id, participants_ids)
 
 
 def remove_participant(request, thread, user):

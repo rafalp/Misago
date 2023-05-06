@@ -1,6 +1,5 @@
 import json
-
-from django.core import mail
+from unittest.mock import patch
 
 from .. import test
 from ...acl.test import patch_user_acl
@@ -167,10 +166,11 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             },
         )
 
-    def test_add_user(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_add_user(self, notify_on_new_private_thread_mock):
         """
         adding user to thread add user to thread as participant,
-        sets event and emails them
+        sets event and notifies them
         """
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
@@ -184,15 +184,16 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, "added_participant")
 
-        # notification about new private thread was sent to other user
-        self.assertEqual(len(mail.outbox), 1)
-        email = mail.outbox[-1]
-
-        self.assertIn(self.user.username, email.subject)
-        self.assertIn(self.thread.title, email.subject)
+        # notification about new private thread was triggered
+        notify_on_new_private_thread_mock.delay.assert_called_once_with(
+            self.user.id, self.thread.id, [self.other_user.id]
+        )
 
     @patch_user_acl({"can_moderate_private_threads": True})
-    def test_add_user_to_other_user_thread_moderator(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_add_user_to_other_user_thread_moderator(
+        self, notify_on_new_private_thread_mock
+    ):
         """moderators can add users to other users threads"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
 
@@ -209,11 +210,12 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, "entered_thread")
 
-        # notification about new private thread wasn't send because we invited ourselves
-        self.assertEqual(len(mail.outbox), 0)
+        # notification about new private thread was triggered
+        notify_on_new_private_thread_mock.delay.assert_not_called()
 
     @patch_user_acl({"can_moderate_private_threads": True})
-    def test_add_user_to_closed_moderator(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_add_user_to_closed_moderator(self, notify_on_new_private_thread_mock):
         """moderators can add users to closed threads"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
@@ -230,12 +232,10 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, "added_participant")
 
-        # notification about new private thread was sent to other user
-        self.assertEqual(len(mail.outbox), 1)
-        email = mail.outbox[-1]
-
-        self.assertIn(self.user.username, email.subject)
-        self.assertIn(self.thread.title, email.subject)
+        # notification about new private thread was triggered
+        notify_on_new_private_thread_mock.delay.assert_called_once_with(
+            self.user.id, self.thread.id, [self.other_user.id]
+        )
 
 
 class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
