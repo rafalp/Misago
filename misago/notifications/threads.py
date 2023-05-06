@@ -127,7 +127,7 @@ def notify_on_new_thread_reply(
             or not watched_thread.user.is_active
             or get_user_ban(watched_thread.user, cache_versions)
         ):
-            continue  # Skip poster and watchers with notifications disabled
+            continue  # Skip poster and watchers banned or with notifications disabled 
 
         try:
             notify_watcher_on_new_thread_reply(
