@@ -1,18 +1,10 @@
-import pytest
 from django.urls import reverse
 
 from ..models import ThreadParticipant
 
 
-@pytest.fixture
-def task_mock(mocker):
-    return mocker.patch(
-        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
-    )
-
-
 def test_notify_about_new_reply_task_is_triggered_by_new_thread_reply(
-    task_mock, user_client, thread
+    notify_on_new_thread_reply_mock, user_client, thread
 ):
     response = user_client.post(
         reverse("misago:api:thread-post-list", kwargs={"thread_pk": thread.pk}),
@@ -24,11 +16,11 @@ def test_notify_about_new_reply_task_is_triggered_by_new_thread_reply(
     assert response.status_code == 200
 
     data = response.json()
-    task_mock.delay.assert_called_once_with(data["id"])
+    notify_on_new_thread_reply_mock.delay.assert_called_once_with(data["id"])
 
 
 def test_notify_about_new_reply_task_is_triggered_by_new_private_thread_reply(
-    task_mock, user, user_client, private_thread
+    notify_on_new_thread_reply_mock, user, user_client, private_thread
 ):
     ThreadParticipant.objects.create(thread=private_thread, user=user)
 
@@ -45,11 +37,11 @@ def test_notify_about_new_reply_task_is_triggered_by_new_private_thread_reply(
     assert response.status_code == 200
 
     data = response.json()
-    task_mock.delay.assert_called_once_with(data["id"])
+    notify_on_new_thread_reply_mock.delay.assert_called_once_with(data["id"])
 
 
 def test_notify_about_new_reply_task_is_not_triggered_on_new_thread_start(
-    task_mock, user_client, default_category
+    notify_on_new_thread_reply_mock, user_client, default_category
 ):
     response = user_client.post(
         reverse("misago:api:thread-list"),
@@ -62,11 +54,14 @@ def test_notify_about_new_reply_task_is_not_triggered_on_new_thread_start(
 
     assert response.status_code == 200
 
-    task_mock.delay.assert_not_called()
+    notify_on_new_thread_reply_mock.delay.assert_not_called()
 
 
 def test_notify_about_new_reply_task_is_not_triggered_on_new_private_thread_start(
-    task_mock, other_user, user_client
+    notify_on_new_private_thread_mock,
+    notify_on_new_thread_reply_mock,
+    other_user,
+    user_client,
 ):
     response = user_client.post(
         reverse("misago:api:private-thread-list"),
@@ -79,11 +74,11 @@ def test_notify_about_new_reply_task_is_not_triggered_on_new_private_thread_star
 
     assert response.status_code == 200
 
-    task_mock.delay.assert_not_called()
+    notify_on_new_thread_reply_mock.delay.assert_not_called()
 
 
 def test_notify_about_new_reply_task_is_not_triggered_on_thread_reply_edit(
-    task_mock, user_client, thread, user_reply
+    notify_on_new_thread_reply_mock, user_client, thread, user_reply
 ):
     response = user_client.put(
         reverse(
@@ -97,11 +92,15 @@ def test_notify_about_new_reply_task_is_not_triggered_on_thread_reply_edit(
 
     assert response.status_code == 200
 
-    task_mock.delay.assert_not_called()
+    notify_on_new_thread_reply_mock.delay.assert_not_called()
 
 
 def test_notify_about_new_reply_task_is_not_triggered_on_private_thread_reply_edit(
-    task_mock, user, user_client, private_thread, private_thread_user_reply
+    notify_on_new_thread_reply_mock,
+    user,
+    user_client,
+    private_thread,
+    private_thread_user_reply,
 ):
     ThreadParticipant.objects.create(thread=private_thread, user=user)
 
@@ -117,4 +116,4 @@ def test_notify_about_new_reply_task_is_not_triggered_on_private_thread_reply_ed
 
     assert response.status_code == 200
 
-    task_mock.delay.assert_not_called()
+    notify_on_new_thread_reply_mock.delay.assert_not_called()

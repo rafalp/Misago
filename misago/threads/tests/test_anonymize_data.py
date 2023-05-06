@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import RequestFactory
 from django.urls import reverse
 
@@ -59,7 +61,8 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             },
         )
 
-    def test_anonymize_added_participant_event(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_anonymize_added_participant_event(self, notify_on_new_private_thread_mock):
         """added participant event is anonymized by user.anonymize_data"""
         user = create_test_user("OtherUser", "otheruser@example.com")
         request = self.get_request()
@@ -82,7 +85,8 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             },
         )
 
-    def test_anonymize_owner_left_event(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_anonymize_owner_left_event(self, notify_on_new_private_thread_mock):
         """owner left event is anonymized by user.anonymize_data"""
         user = create_test_user("OtherUser", "otheruser@example.com")
         request = self.get_request(user)
@@ -108,7 +112,8 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             },
         )
 
-    def test_anonymize_removed_owner_event(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_anonymize_removed_owner_event(self, notify_on_new_private_thread_mock):
         """removed owner event is anonymized by user.anonymize_data"""
         user = create_test_user("OtherUser", "otheruser@example.com")
         request = self.get_request()

@@ -51,7 +51,11 @@ def test_started_thread_is_not_watched_by_user_with_option_disabled(
 
 
 def test_started_private_thread_is_watched_by_user_with_option_enabled(
-    user, user_client, other_user, private_threads_category
+    notify_on_new_private_thread_mock,
+    user,
+    user_client,
+    other_user,
+    private_threads_category,
 ):
     user.watch_started_threads = ThreadNotifications.DONT_EMAIL
     user.save()
@@ -78,7 +82,7 @@ def test_started_private_thread_is_watched_by_user_with_option_enabled(
 
 
 def test_started_private_thread_is_not_watched_by_user_with_option_disabled(
-    user, user_client, other_user
+    notify_on_new_private_thread_mock, user, user_client, other_user
 ):
     user.watch_started_threads = ThreadNotifications.NONE
     user.save()

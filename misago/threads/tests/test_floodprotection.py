@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 
 from .. import test
@@ -17,7 +19,10 @@ class FloodProtectionTests(AuthenticatedUserTestCase):
             "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
-    def test_flood_has_no_showstoppers(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_flood_has_no_showstoppers(self, notify_on_new_thread_reply_mock):
         """endpoint handles posting interruption"""
         response = self.client.post(
             self.post_link, data={"post": "This is test response!"}
@@ -34,7 +39,12 @@ class FloodProtectionTests(AuthenticatedUserTestCase):
         )
 
     @patch_user_acl({"can_omit_flood_protection": True})
-    def test_user_with_permission_omits_flood_protection(self):
+    @patch(
+        "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"
+    )
+    def test_user_with_permission_omits_flood_protection(
+        self, notify_on_new_thread_reply_mock
+    ):
         response = self.client.post(
             self.post_link, data={"post": "This is test response!"}
         )
