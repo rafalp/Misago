@@ -12,9 +12,7 @@ from ..threads import ThreadNotifications
 
 @pytest.fixture
 def notify_watcher_mock(mocker):
-    return mocker.patch(
-        "misago.notifications.tasks.notify_watcher_on_new_thread_reply"
-    )
+    return mocker.patch("misago.notifications.tasks.notify_watcher_on_new_thread_reply")
 
 
 def test_notify_on_new_thread_reply_does_nothing_for_unwatched_thread(
