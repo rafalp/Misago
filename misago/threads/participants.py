@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
-from ..notifications.threads import notify_on_new_private_thread
+from ..notifications.tasks import notify_on_new_private_thread
 from .events import record_event
 from .models import Thread, ThreadParticipant
 

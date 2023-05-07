@@ -1,9 +1,9 @@
 import pytest
 
-from ..enums import NotificationVerb
 from ..exceptions import NotificationVerbError
 from ..messages import NotificationMessageFactory, message_factory
 from ..models import Notification
+from ..verbs import NotificationVerb
 
 
 def test_notification_message_factory_can_have_message_set_with_setter():

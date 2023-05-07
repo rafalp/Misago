@@ -1,6 +1,6 @@
 import pytest
 
-from ...notifications.enums import ThreadNotifications
+from ...notifications.threads import ThreadNotifications
 
 
 @pytest.fixture

@@ -1,18 +1,13 @@
 from datetime import timedelta
-from logging import getLogger
-from typing import Dict, Iterable, Optional
+from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
-from celery import shared_task
-from django.contrib.auth import get_user_model
-from django.db.models import F
-from django.utils.translation import gettext as _
+from django.db.models import F, IntegerChoices
+from django.utils.translation import gettext as _, pgettext_lazy
 
 from ..acl.useracl import get_user_acl
-from ..cache.versions import get_cache_versions
 from ..categories.trees import CategoriesTree
 from ..conf.dynamicsettings import DynamicSettings
 from ..core.mail import build_mail
-from ..core.pgutils import chunk_queryset
 from ..threads.models import Post, Thread, ThreadParticipant
 from ..threads.permissions.privatethreads import (
     can_see_private_thread,
@@ -23,14 +18,19 @@ from ..threads.permissions.threads import (
     can_see_thread,
     exclude_invisible_posts,
 )
-from .enums import NotificationVerb, ThreadNotifications
+from .verbs import NotificationVerb
 from .models import Notification, WatchedThread
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ..users.models import User
 
-logger = getLogger("misago.notifications.threads")
 
-NOTIFY_CHUNK_SIZE = 20
+class ThreadNotifications(IntegerChoices):
+    NONE = 0, pgettext_lazy("notification type", "Don't notify")
+    DONT_EMAIL = 1, pgettext_lazy(
+        "notification type", "Notify without sending an e-mail"
+    )
+    SEND_EMAIL = 2, pgettext_lazy("notification type", "Notify with an e-mail")
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
@@ -92,41 +92,6 @@ def watch_replied_thread(user: "User", thread: Thread):
             thread=thread,
             notifications=user.watch_replied_threads,
         )
-
-
-@shared_task
-def notify_on_new_thread_reply(
-    reply_id: int,
-):
-    # TODO: move `misago.users.bans` to `misago.bans`
-    from ..users.bans import get_user_ban
-
-    post = Post.objects.select_related("poster", "thread", "category").get(id=reply_id)
-    post.thread.category = post.category
-
-    if not WatchedThread.objects.filter(thread=post.thread).exists():
-        return  # Nobody is watching this thread, stop
-
-    cache_versions = get_cache_versions()
-    settings = DynamicSettings(cache_versions)
-
-    queryset = WatchedThread.objects.filter(thread=post.thread).select_related("user")
-
-    for watched_thread in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
-        if (
-            watched_thread.user == post.poster
-            or watched_thread.notifications == ThreadNotifications.NONE
-            or not watched_thread.user.is_active
-            or get_user_ban(watched_thread.user, cache_versions)
-        ):
-            continue  # Skip poster and watchers banned or with notifications disabled
-
-        try:
-            notify_watcher_on_new_thread_reply(
-                watched_thread, post, cache_versions, settings
-            )
-        except Exception:
-            logger.exception("Unexpected error in 'notify_watcher_on_new_thread_reply'")
 
 
 def notify_watcher_on_new_thread_reply(
@@ -233,44 +198,6 @@ def user_can_see_post_in_private_thread(
         return False
 
     return True
-
-
-@shared_task
-def notify_on_new_private_thread(
-    actor_id: int,
-    thread_id: int,
-    participants: list[int],
-):
-    # TODO: move `misago.users.bans` to `misago.bans`
-    from ..users.bans import get_user_ban
-
-    actor = User.objects.filter(id=actor_id).first()
-    thread = (
-        Thread.objects.filter(id=thread_id)
-        .select_related("category", "first_post")
-        .first()
-    )
-
-    if not actor or not thread:
-        return  # Actor or thread could not be found but we need both
-
-    cache_versions = get_cache_versions()
-    settings = DynamicSettings(cache_versions)
-
-    queryset = User.objects.filter(id__in=participants)
-
-    for participant in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
-        if not participant.is_active or get_user_ban(participant, cache_versions):
-            continue  # Skip inactive or banned participants
-
-        try:
-            notify_participant_on_new_private_thread(
-                participant, actor, thread, cache_versions, settings
-            )
-        except Exception:
-            logger.exception(
-                "Unexpected error in 'notify_participant_on_new_private_thread'"
-            )
 
 
 def notify_participant_on_new_private_thread(

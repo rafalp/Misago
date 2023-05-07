@@ -1,8 +1,8 @@
 from django.urls import reverse
 
 from ....acl.test import patch_user_acl
-from ....notifications.enums import ThreadNotifications
 from ....notifications.models import WatchedThread
+from ....notifications.threads import ThreadNotifications
 
 
 def test_thread_watch_api_creates_watched_thread_with_notifications_disabled(

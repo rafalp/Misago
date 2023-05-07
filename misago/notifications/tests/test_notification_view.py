@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from ...test import assert_contains
 from ...threads.models import ThreadParticipant
-from ..enums import NotificationVerb
+from ..verbs import NotificationVerb
 from ..models import Notification
 from ..redirects import redirect_factory
 

@@ -2,15 +2,16 @@ import pytest
 
 from ...threads.models import ThreadParticipant
 from ...users.bans import ban_user
-from ..enums import NotificationVerb, ThreadNotifications
 from ..models import Notification, WatchedThread
-from ..threads import notify_on_new_private_thread
+from ..tasks import notify_on_new_private_thread
+from ..threads import ThreadNotifications
+from ..verbs import NotificationVerb
 
 
 @pytest.fixture
 def notify_participant_mock(mocker):
     return mocker.patch(
-        "misago.notifications.threads.notify_participant_on_new_private_thread"
+        "misago.notifications.tasks.notify_participant_on_new_private_thread"
     )
 
 
@@ -66,7 +67,7 @@ def test_notify_on_new_private_thread_handles_exceptions(
     ThreadParticipant.objects.create(user=other_user, thread=private_thread)
 
     notify_participant_mock = mocker.patch(
-        "misago.notifications.threads.notify_participant_on_new_private_thread",
+        "misago.notifications.tasks.notify_participant_on_new_private_thread",
         side_effect=ValueError("Unknown"),
     )
 

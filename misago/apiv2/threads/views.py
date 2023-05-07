@@ -4,9 +4,8 @@ from rest_framework import serializers
 from rest_framework.decorators import api_view
 
 from ...categories.models import Category
-from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...notifications.threads import get_watched_thread
+from ...notifications.threads import ThreadNotifications, get_watched_thread
 from ...threads.models import Thread
 from ...threads.participants import make_thread_participants_aware
 from ...threads.permissions import (

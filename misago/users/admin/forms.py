@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _, ngettext, pgettext_lazy
 from ...acl.models import Role
 from ...admin.forms import IsoDateTimeField, YesNoSwitch
 from ...core.validators import validate_sluggable
-from ...notifications.enums import ThreadNotifications
+from ...notifications.threads import ThreadNotifications
 from ...search.filter_queryset import filter_queryset
 from ..models import Ban, DataDownload, Rank
 from ..profilefields import profilefields

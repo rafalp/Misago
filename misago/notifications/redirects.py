@@ -4,7 +4,7 @@ from django.http import HttpRequest
 
 from ..categories.trees import CategoriesTree
 from ..threads.views.goto import PrivateThreadGotoPostView, ThreadGotoPostView
-from .enums import NotificationVerb
+from .verbs import NotificationVerb
 from .exceptions import NotificationVerbError
 
 if TYPE_CHECKING:

@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Callable, Dict, overload
 
 from django.utils.translation import pgettext
 
-from .enums import NotificationVerb
 from .exceptions import NotificationVerbError
+from .verbs import NotificationVerb
 
 if TYPE_CHECKING:
     from .models import Notification

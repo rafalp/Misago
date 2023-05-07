@@ -1,6 +1,5 @@
-from ..enums import ThreadNotifications
 from ..models import WatchedThread
-from ..threads import get_watched_thread
+from ..threads import ThreadNotifications, get_watched_thread
 
 
 def test_get_watched_thread_returns_null_if_thread_is_not_watched(user, thread):

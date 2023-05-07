@@ -5,15 +5,15 @@ from django.utils import timezone
 
 from ...threads.models import ThreadParticipant
 from ...users.bans import ban_user
-from ..enums import ThreadNotifications
 from ..models import Notification
-from ..threads import notify_on_new_thread_reply
+from ..tasks import notify_on_new_thread_reply
+from ..threads import ThreadNotifications
 
 
 @pytest.fixture
 def notify_watcher_mock(mocker):
     return mocker.patch(
-        "misago.notifications.threads.notify_watcher_on_new_thread_reply"
+        "misago.notifications.tasks.notify_watcher_on_new_thread_reply"
     )
 
 
@@ -62,7 +62,7 @@ def test_notify_on_new_thread_reply_handles_exceptions(
     mocker, watched_thread_factory, other_user, thread, user_reply
 ):
     notify_watcher_mock = mocker.patch(
-        "misago.notifications.threads.notify_watcher_on_new_thread_reply",
+        "misago.notifications.tasks.notify_watcher_on_new_thread_reply",
         side_effect=ValueError("Unknown"),
     )
 

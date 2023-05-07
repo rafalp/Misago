@@ -1,5 +1,4 @@
-from ..enums import ThreadNotifications
-from ..threads import get_watched_threads
+from ..threads import ThreadNotifications, get_watched_threads
 
 
 def test_get_watched_threads_returns_empty_dict_if_threads_are_not_watched(

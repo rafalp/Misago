@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ..enums import ThreadNotifications
+from ..threads import ThreadNotifications
 
 
 def test_disable_email_notifications_view_disables_emails_for_watched_thread(
