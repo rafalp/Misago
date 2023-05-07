@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                     "secret",
                     models.CharField(
                         default=misago.notifications.models.get_watched_thread_secret,
-                        max_length=24,
+                        max_length=32,
                     ),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),

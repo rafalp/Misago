@@ -3,10 +3,13 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user sender=sender thread=thread %}
-{{ user }}, you are receiving this message because {{ sender }} has replied to the thread "{{ thread }}" that you are subscribed to.
+{% blocktrans trimmed with sender=sender thread=thread %}
+{{ sender }} has posted a new reply to the "{{ thread }}" thread that you are watching.
 {% endblocktrans %}
 
-{% trans "To read this reply, click the below link:" %}
+{% trans "You can read this reply by clicking on the following link:" %}
 {% absoluteurl post.get_absolute_url %}
+
+{% trans "To stop receiving e-mails with new reply notifications for this thread, click here:" %}
+{% absoluteurl watched_thread.get_disable_emails_url %}
 {% endblock content %}

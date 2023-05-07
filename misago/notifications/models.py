@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-WATCHED_THREAD_SECRET = 24
+WATCHED_THREAD_SECRET = 32
 
 
 def get_watched_thread_secret() -> str:
@@ -61,3 +61,12 @@ class WatchedThread(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     read_at = models.DateTimeField(default=timezone.now)
+
+    def get_disable_emails_url(self):
+        return reverse(
+            "misago:notifications-disable-email",
+            kwargs={
+                "watched_thread_id": self.id,
+                "secret": self.secret,
+            },
+        )

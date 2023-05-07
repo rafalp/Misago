@@ -8,6 +8,7 @@ export default function initializer(context) {
   const basename = misago.get("NOTIFICATIONS_URL")
   if (
     document.location.pathname.startsWith(basename) &&
+    !document.location.pathname.startsWith(basename + "disable-email/") &&
     context.get("isAuthenticated")
   ) {
     const root = document.getElementById("page-mount")

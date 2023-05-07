@@ -2,7 +2,8 @@ from django.db.models import F
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Notification
+from .enums import ThreadNotifications
+from .models import Notification, WatchedThread
 from .permissions import allow_use_notifications
 from .redirects import redirect_factory
 
@@ -47,3 +48,27 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
             user.save(update_fields=["unread_notifications"])
 
     return redirect(redirect_factory.get_redirect_url(request, notification))
+
+
+def disable_email_notifications(
+    request: HttpRequest, watched_thread_id: int, secret: str
+) -> HttpResponse:
+    watched_thread = get_object_or_404(
+        WatchedThread.objects.select_related("user", "category", "thread"),
+        id=watched_thread_id,
+        secret=secret,
+    )
+
+    watched_thread.notifications = ThreadNotifications.DONT_EMAIL
+    watched_thread.save(update_fields=["notifications"])
+
+    watched_thread.thread.category = watched_thread.category
+
+    return render(
+        request,
+        "misago/notifications_disabled.html",
+        {
+            "watcher": watched_thread.user,
+            "thread": watched_thread.thread,
+        },
+    )
