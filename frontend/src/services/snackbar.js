@@ -51,10 +51,12 @@ export class Snackbar {
     let message = rejection.data ? rejection.data.detail : rejection.detail
 
     if (!message) {
-      if (rejection.status === 404) {
-        message = gettext("Action link is invalid.")
+      if (rejection.status === 0) {
+        message = gettext("Could not connect to server.")
+      } else if (rejection.status === 404) {
+          message = gettext("Action link is invalid.")
       } else {
-        message = gettext("Unknown error has occured.")
+        message = gettext("Unknown error has occurrsed.")
       }
     }
 

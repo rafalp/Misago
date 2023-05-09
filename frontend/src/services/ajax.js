@@ -43,7 +43,7 @@ export class Ajax {
           rejection.status = jqXHR.status
 
           if (rejection.status === 0) {
-            rejection.detail = gettext("Lost connection with application.")
+            rejection.detail = gettext("Could not connect to server.")
           }
 
           if (rejection.status === 404) {
@@ -217,7 +217,7 @@ export class Ajax {
           rejection.status = jqXHR.status
 
           if (rejection.status === 0) {
-            rejection.detail = gettext("Lost connection with application.")
+            rejection.detail = gettext("Could not connect to server.")
           }
 
           if (rejection.status === 413 && !rejection.detail) {
@@ -233,7 +233,7 @@ export class Ajax {
           }
 
           if (rejection.status === 500 && !rejection.detail) {
-            rejection.detail = gettext("Unknown error has occured.")
+            rejection.detail = gettext("Unknown error has occurred.")
           }
 
           rejection.statusText = jqXHR.statusText

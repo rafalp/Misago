@@ -9,7 +9,7 @@ import { DropdownSubheader } from "../Dropdown"
 const ThreadWatchButton = ({ dispatch, dropup, stickToBottom, thread }) => (
   <ApiMutation url={thread.api.watch}>
     {(mutate, { loading }) => {
-      async function setNotifications(notifications) {
+      function setNotifications(notifications) {
         if (thread.notifications !== notifications) {
           dispatch(update({ notifications }))
           mutate({
