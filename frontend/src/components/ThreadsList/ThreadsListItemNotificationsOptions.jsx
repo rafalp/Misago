@@ -10,7 +10,7 @@ const SUBSCRIPTION = {
   email: true,
 }
 
-class ThreadsListItemSubscriptionOptions extends React.Component {
+class ThreadsListItemNotificationsOptions extends React.Component {
   constructor(props) {
     super(props)
 
@@ -32,7 +32,7 @@ class ThreadsListItemSubscriptionOptions extends React.Component {
         (rejection) => {
           store.dispatch(
             patch(thread, {
-              subscription: SUBSCRIPTION[thread.subscription],
+              subscription: SUBSCRIPTION[thread.notifications],
             })
           )
           snackbar.apiError(rejection)
@@ -50,7 +50,7 @@ class ThreadsListItemSubscriptionOptions extends React.Component {
         <li>
           <button
             className="btn-link"
-            disabled={disabled || loading || thread.subscription === null}
+            disabled={disabled || loading || thread.notifications === null}
             onClick={() => this.update("unsubscribe")}
           >
             <span className="material-icon">star_border</span>
@@ -60,7 +60,7 @@ class ThreadsListItemSubscriptionOptions extends React.Component {
         <li>
           <button
             className="btn-link"
-            disabled={disabled || loading || thread.subscription === false}
+            disabled={disabled || loading || thread.notifications === false}
             onClick={() => this.update("notify")}
           >
             <span className="material-icon">star_half</span>
@@ -70,7 +70,7 @@ class ThreadsListItemSubscriptionOptions extends React.Component {
         <li>
           <button
             className="btn-link"
-            disabled={disabled || loading || thread.subscription === true}
+            disabled={disabled || loading || thread.notifications === true}
             onClick={() => this.update("email")}
           >
             <span className="material-icon">star</span>
@@ -82,4 +82,4 @@ class ThreadsListItemSubscriptionOptions extends React.Component {
   }
 }
 
-export default ThreadsListItemSubscriptionOptions
+export default ThreadsListItemNotificationsOptions

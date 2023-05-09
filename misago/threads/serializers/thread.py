@@ -109,11 +109,16 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
         return ThreadParticipantSerializer(obj.participants_list, many=True).data
 
     def get_notifications(self, obj):
-        watched_thread = self.context.get("watched_thread")
-        if not watched_thread:
-            return None
+        if self.context:
+            watched_thread = self.context.get("watched_thread")
+            if watched_thread:
+                return watched_thread.notifications
 
-        return watched_thread.notifications
+            watched_threads = self.context.get("watched_threads")
+            if watched_threads:
+                return watched_threads.get(obj.id)
+
+        return None
 
     def get_starter(self, obj):
         if obj.starter_id:

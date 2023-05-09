@@ -38,7 +38,7 @@ const ThreadsList = ({
               categories={categories}
               thread={thread}
               showOptions={showOptions}
-              showSubscription={showOptions && list.type === "subscribed"}
+              showNotifications={showOptions && list.type === "watched"}
               isBusy={busyThreads.indexOf(thread.id) >= 0}
               isSelected={selection.indexOf(thread.id) >= 0}
             />

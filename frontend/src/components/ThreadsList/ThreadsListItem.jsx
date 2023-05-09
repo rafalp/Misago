@@ -6,13 +6,13 @@ import ThreadsListItemCategory from "./ThreadsListItemCategory"
 import ThreadsListItemCheckbox from "./ThreadsListItemCheckbox"
 import ThreadsListItemIcon from "./ThreadsListItemIcon"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
-import ThreadsListItemSubscription from "./ThreadsListItemSubscription"
+import ThreadsListItemNotifications from "./ThreadsListItemNotifications"
 
 const ThreadsListItem = ({
   activeCategory,
   categories,
   showOptions,
-  showSubscription,
+  showNotifications,
   thread,
   isBusy,
   isSelected,
@@ -102,9 +102,9 @@ const ThreadsListItem = ({
         <div className="threads-list-item-col-last-activity">
           <ThreadsListItemActivity thread={thread} />
         </div>
-        {showOptions && showSubscription && (
-          <div className="threads-list-item-col-subscription">
-            <ThreadsListItemSubscription disabled={isBusy} thread={thread} />
+        {showOptions && showNotifications && (
+          <div className="threads-list-item-col-notifications">
+            <ThreadsListItemNotifications disabled={isBusy} thread={thread} />
           </div>
         )}
         {showOptions && thread.moderation.length > 0 && (

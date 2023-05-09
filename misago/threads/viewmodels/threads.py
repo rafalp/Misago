@@ -3,28 +3,29 @@ from django.core.paginator import EmptyPage, InvalidPage
 from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext_lazy, pgettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...core.cursorpagination import get_page
+from ...notifications.models import WatchedThread
+from ...notifications.threads import ThreadNotifications, get_watched_threads
 from ...readtracker import threadstracker
 from ...readtracker.cutoffdate import get_cutoff_date
 from ..models import Post, Thread
 from ..participants import make_participants_aware
 from ..permissions import exclude_invisible_posts, exclude_invisible_threads
 from ..serializers import ThreadsListSerializer
-from ..subscriptions import make_subscription_aware
 from ..utils import add_categories_to_items
 
 __all__ = ["ForumThreads", "PrivateThreads", "filter_read_threads_queryset"]
 
 LISTS_NAMES = {
     "all": None,
-    "my": gettext_lazy("Your threads"),
-    "new": gettext_lazy("New threads"),
-    "unread": gettext_lazy("Unread threads"),
-    "subscribed": gettext_lazy("Subscribed threads"),
-    "unapproved": gettext_lazy("Unapproved content"),
+    "my": pgettext_lazy("threads list", "Your threads"),
+    "new": pgettext_lazy("threads list", "New threads"),
+    "unread": pgettext_lazy("threads list", "Unread threads"),
+    "watched": pgettext_lazy("threads list", "Watched threads"),
+    "unapproved": pgettext_lazy("threads list", "Unapproved content"),
 }
 
 LIST_DENIED_MESSAGES = {
@@ -35,8 +36,8 @@ LIST_DENIED_MESSAGES = {
     "unread": gettext_lazy(
         "You have to sign in to see list of threads with new replies."
     ),
-    "subscribed": gettext_lazy(
-        "You have to sign in to see list of threads you are subscribing."
+    "watched": gettext_lazy(
+        "You have to sign in to see list of threads you are watching."
     ),
     "unapproved": gettext_lazy(
         "You have to sign in to see list of threads with unapproved posts."
@@ -81,7 +82,11 @@ class ViewModel:
 
         add_categories_to_items(category_model, category.categories, threads)
         add_acl_to_obj(request.user_acl, threads)
-        make_subscription_aware(request.user, threads)
+
+        if list_type == "watched" and request.user.is_authenticated:
+            self.watched_threads = get_watched_threads(request.user, threads)
+        else:
+            self.watched_threads = {}
 
         if list_type in ("new", "unread"):
             # we already know all threads on list are unread
@@ -133,7 +138,11 @@ class ViewModel:
     def get_frontend_context(self):
         return {
             "THREADS": {
-                "results": ThreadsListSerializer(self.threads, many=True).data,
+                "results": ThreadsListSerializer(
+                    self.threads,
+                    many=True,
+                    context={"watched_threads": self.watched_threads},
+                ).data,
                 "subcategories": [c.pk for c in self.category.children],
                 "next": self.list_page.next,
             }
@@ -195,9 +204,12 @@ def get_threads_queryset(request, categories, list_type):
 def filter_threads_queryset(request, categories, list_type, queryset):
     if list_type == "my":
         return queryset.filter(starter=request.user)
-    if list_type == "subscribed":
-        subscribed_threads = request.user.subscription_set.values("thread_id")
-        return queryset.filter(id__in=subscribed_threads)
+    if list_type == "watched":
+        watched_threads = WatchedThread.objects.filter(
+            user=request.user,
+            notifications__gt=ThreadNotifications.NONE,
+        ).values("thread_id")
+        return queryset.filter(id__in=watched_threads)
     if list_type == "unapproved":
         return queryset.filter(has_unapproved_posts=True)
     if list_type in ("new", "unread"):
