@@ -23,21 +23,21 @@ class Command(BaseCommand):
         )
 
         parser.add_argument(
-            "minlevel",
-            help="min. level of created categories",
+            "level",
+            help="level of created categories",
             nargs="?",
             type=int,
-            default=0,
+            default=1,
         )
 
     def handle(self, *args, **options):  # pylint: disable=too-many-locals
         items_to_create = options["categories"]
-        min_level = options["minlevel"]
+        level = options["level"]
 
         fake = Factory.create()
 
         categories = Category.objects.all_categories(include_root=True).filter(
-            level__gte=min_level
+            level=level - 1
         )
         acl_source = list(Category.objects.all_categories())[0]
 
@@ -53,11 +53,6 @@ class Command(BaseCommand):
         show_progress(self, created_count, items_to_create)
 
         while created_count < items_to_create:
-            categories = (
-                Category.objects.all_categories(include_root=True)
-                .filter(level__gte=min_level)
-                .order_by("?")
-            )
             parent = random.choice(categories)
 
             if random.randint(0, 100) > 90:

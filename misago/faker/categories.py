@@ -1,6 +1,7 @@
 import random
 
 from ..categories.models import Category, RoleCategoryACL
+from .colors import COLORS
 
 
 def fake_category(fake, parent, copy_acl_from=None):
@@ -9,6 +10,9 @@ def fake_category(fake, parent, copy_acl_from=None):
 
     if random.randint(1, 100) > 50:
         category.description = fake_category_description(fake)
+
+    if random.randint(1, 100) > 15:
+        category.color = random.choice(COLORS)
 
     category.insert_at(parent, position="last-child", save=True)
 
