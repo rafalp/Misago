@@ -47,6 +47,12 @@ class Notification(models.Model):
     def get_absolute_url(self) -> str:
         return reverse("misago:notification", kwargs={"notification_id": self.id})
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "is_read"]),
+            models.Index(fields=["user", "post", "is_read"]),
+        ]
+
 
 class WatchedThread(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -61,6 +67,11 @@ class WatchedThread(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     read_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "-thread"]),
+        ]
 
     def get_disable_emails_url(self):
         return reverse(
