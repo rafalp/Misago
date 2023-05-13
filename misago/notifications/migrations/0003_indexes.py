@@ -4,22 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misago_notifications', '0002_migrate_threads_subscriptions'),
+        ("misago_notifications", "0002_migrate_threads_subscriptions"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='notification',
-            index=models.Index(fields=['user', 'is_read'], name='misago_noti_user_id_4bbf42_idx'),
+            model_name="notification",
+            index=models.Index(
+                fields=["user", "is_read"], name="misago_noti_user_id_4bbf42_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='notification',
-            index=models.Index(fields=['user', 'post', 'is_read'], name='misago_noti_user_id_9b98fb_idx'),
+            model_name="notification",
+            index=models.Index(
+                fields=["user", "post", "is_read"],
+                name="misago_noti_user_id_9b98fb_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='watchedthread',
-            index=models.Index(fields=['user', '-thread'], name='misago_noti_user_id_2b73f1_idx'),
+            model_name="watchedthread",
+            index=models.Index(
+                fields=["user", "-thread"], name="misago_noti_user_id_2b73f1_idx"
+            ),
         ),
     ]
