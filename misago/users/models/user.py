@@ -213,27 +213,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     unread_notifications = models.PositiveIntegerField(default=0)
 
     watch_started_threads = models.PositiveIntegerField(
-        default=ThreadNotifications.SEND_EMAIL,
+        default=ThreadNotifications.SITE_AND_EMAIL,
         choices=ThreadNotifications.choices,
     )
     watch_replied_threads = models.PositiveIntegerField(
-        default=ThreadNotifications.SEND_EMAIL,
+        default=ThreadNotifications.SITE_AND_EMAIL,
         choices=ThreadNotifications.choices,
     )
     watch_new_private_threads_by_followed = models.PositiveIntegerField(
-        default=ThreadNotifications.SEND_EMAIL,
+        default=ThreadNotifications.SITE_AND_EMAIL,
         choices=ThreadNotifications.choices,
     )
     watch_new_private_threads_by_other_users = models.PositiveIntegerField(
-        default=ThreadNotifications.SEND_EMAIL,
+        default=ThreadNotifications.SITE_AND_EMAIL,
         choices=ThreadNotifications.choices,
     )
     notify_new_private_threads_by_followed = models.PositiveIntegerField(
-        default=ThreadNotifications.SEND_EMAIL,
+        default=ThreadNotifications.SITE_AND_EMAIL,
         choices=ThreadNotifications.choices,
     )
     notify_new_private_threads_by_other_users = models.PositiveIntegerField(
-        default=ThreadNotifications.SEND_EMAIL,
+        default=ThreadNotifications.SITE_AND_EMAIL,
         choices=ThreadNotifications.choices,
     )
 

@@ -61,7 +61,7 @@ class PostReadApiTests(ThreadsApiTestCase):
 def test_read_watched_thread_post_updates_watching_read_at_if_its_older_than_post(
     user, user_client, thread, reply, watched_thread_factory
 ):
-    watched_thread = watched_thread_factory(user, thread)
+    watched_thread = watched_thread_factory(user, thread, send_emails=True)
     watched_thread.read_at = timezone.now() - timedelta(seconds=1)
     watched_thread.save()
 
@@ -80,7 +80,7 @@ def test_read_watched_thread_post_updates_watching_read_at_if_its_older_than_pos
 def test_read_watched_thread_post_skips_watching_read_at_if_its_newer_than_post(
     user, user_client, thread, reply, watched_thread_factory
 ):
-    watched_thread = watched_thread_factory(user, thread)
+    watched_thread = watched_thread_factory(user, thread, send_emails=True)
     watched_thread.read_at = timezone.now() + timedelta(seconds=5)
     watched_thread.save()
 

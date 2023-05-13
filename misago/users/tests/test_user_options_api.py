@@ -56,8 +56,8 @@ def test_change_user_options_api_returns_error_for_invalid_data(user_client, api
 
 def test_change_user_options_api_changes_user_options(user_client, api_link, user):
     NOTIFY_NONE = ThreadNotifications.NONE
-    NOTIFY_DONT_EMAIL = ThreadNotifications.DONT_EMAIL
-    NOTIFY_SEND_EMAIL = ThreadNotifications.SEND_EMAIL
+    NOTIFY_SITE_ONLY = ThreadNotifications.SITE_ONLY
+    NOTIFY_SITE_AND_EMAIL = ThreadNotifications.SITE_AND_EMAIL
 
     response = user_client.post(
         api_link,
@@ -89,12 +89,12 @@ def test_change_user_options_api_changes_user_options(user_client, api_link, use
         data={
             "is_hiding_presence": False,
             "limits_private_thread_invites_to": 1,
-            "watch_started_threads": NOTIFY_DONT_EMAIL,
-            "watch_replied_threads": NOTIFY_DONT_EMAIL,
-            "watch_new_private_threads_by_followed": NOTIFY_DONT_EMAIL,
-            "watch_new_private_threads_by_other_users": NOTIFY_DONT_EMAIL,
-            "notify_new_private_threads_by_followed": NOTIFY_DONT_EMAIL,
-            "notify_new_private_threads_by_other_users": NOTIFY_DONT_EMAIL,
+            "watch_started_threads": NOTIFY_SITE_ONLY,
+            "watch_replied_threads": NOTIFY_SITE_ONLY,
+            "watch_new_private_threads_by_followed": NOTIFY_SITE_ONLY,
+            "watch_new_private_threads_by_other_users": NOTIFY_SITE_ONLY,
+            "notify_new_private_threads_by_followed": NOTIFY_SITE_ONLY,
+            "notify_new_private_threads_by_other_users": NOTIFY_SITE_ONLY,
         },
     )
     assert response.status_code == 200
@@ -103,24 +103,24 @@ def test_change_user_options_api_changes_user_options(user_client, api_link, use
 
     assert not user.is_hiding_presence
     assert user.limits_private_thread_invites_to == 1
-    assert user.watch_started_threads == NOTIFY_DONT_EMAIL
-    assert user.watch_replied_threads == NOTIFY_DONT_EMAIL
-    assert user.watch_new_private_threads_by_followed == NOTIFY_DONT_EMAIL
-    assert user.watch_new_private_threads_by_other_users == NOTIFY_DONT_EMAIL
-    assert user.notify_new_private_threads_by_followed == NOTIFY_DONT_EMAIL
-    assert user.notify_new_private_threads_by_other_users == NOTIFY_DONT_EMAIL
+    assert user.watch_started_threads == NOTIFY_SITE_ONLY
+    assert user.watch_replied_threads == NOTIFY_SITE_ONLY
+    assert user.watch_new_private_threads_by_followed == NOTIFY_SITE_ONLY
+    assert user.watch_new_private_threads_by_other_users == NOTIFY_SITE_ONLY
+    assert user.notify_new_private_threads_by_followed == NOTIFY_SITE_ONLY
+    assert user.notify_new_private_threads_by_other_users == NOTIFY_SITE_ONLY
 
     response = user_client.post(
         api_link,
         data={
             "is_hiding_presence": True,
             "limits_private_thread_invites_to": 2,
-            "watch_started_threads": NOTIFY_SEND_EMAIL,
-            "watch_replied_threads": NOTIFY_SEND_EMAIL,
-            "watch_new_private_threads_by_followed": NOTIFY_SEND_EMAIL,
-            "watch_new_private_threads_by_other_users": NOTIFY_SEND_EMAIL,
-            "notify_new_private_threads_by_followed": NOTIFY_SEND_EMAIL,
-            "notify_new_private_threads_by_other_users": NOTIFY_SEND_EMAIL,
+            "watch_started_threads": NOTIFY_SITE_AND_EMAIL,
+            "watch_replied_threads": NOTIFY_SITE_AND_EMAIL,
+            "watch_new_private_threads_by_followed": NOTIFY_SITE_AND_EMAIL,
+            "watch_new_private_threads_by_other_users": NOTIFY_SITE_AND_EMAIL,
+            "notify_new_private_threads_by_followed": NOTIFY_SITE_AND_EMAIL,
+            "notify_new_private_threads_by_other_users": NOTIFY_SITE_AND_EMAIL,
         },
     )
     assert response.status_code == 200
@@ -129,9 +129,9 @@ def test_change_user_options_api_changes_user_options(user_client, api_link, use
 
     assert user.is_hiding_presence
     assert user.limits_private_thread_invites_to == 2
-    assert user.watch_started_threads == NOTIFY_SEND_EMAIL
-    assert user.watch_replied_threads == NOTIFY_SEND_EMAIL
-    assert user.watch_new_private_threads_by_followed == NOTIFY_SEND_EMAIL
-    assert user.watch_new_private_threads_by_other_users == NOTIFY_SEND_EMAIL
-    assert user.notify_new_private_threads_by_followed == NOTIFY_SEND_EMAIL
-    assert user.notify_new_private_threads_by_other_users == NOTIFY_SEND_EMAIL
+    assert user.watch_started_threads == NOTIFY_SITE_AND_EMAIL
+    assert user.watch_replied_threads == NOTIFY_SITE_AND_EMAIL
+    assert user.watch_new_private_threads_by_followed == NOTIFY_SITE_AND_EMAIL
+    assert user.watch_new_private_threads_by_other_users == NOTIFY_SITE_AND_EMAIL
+    assert user.notify_new_private_threads_by_followed == NOTIFY_SITE_AND_EMAIL
+    assert user.notify_new_private_threads_by_other_users == NOTIFY_SITE_AND_EMAIL

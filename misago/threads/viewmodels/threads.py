@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy, pgettext_lazy
 from ...acl.objectacl import add_acl_to_obj
 from ...core.cursorpagination import get_page
 from ...notifications.models import WatchedThread
-from ...notifications.threads import ThreadNotifications, get_watched_threads
+from ...notifications.threads import get_watched_threads
 from ...readtracker import threadstracker
 from ...readtracker.cutoffdate import get_cutoff_date
 from ..models import Post, Thread
@@ -205,10 +205,9 @@ def filter_threads_queryset(request, categories, list_type, queryset):
     if list_type == "my":
         return queryset.filter(starter=request.user)
     if list_type == "watched":
-        watched_threads = WatchedThread.objects.filter(
-            user=request.user,
-            notifications__gt=ThreadNotifications.NONE,
-        ).values("thread_id")
+        watched_threads = WatchedThread.objects.filter(user=request.user).values(
+            "thread_id"
+        )
         return queryset.filter(id__in=watched_threads)
     if list_type == "unapproved":
         return queryset.filter(has_unapproved_posts=True)

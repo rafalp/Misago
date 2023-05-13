@@ -10,37 +10,37 @@ settings = [
     {
         "setting": "watch_started_threads",
         "python_type": "int",
-        "dry_value": ThreadNotifications.SEND_EMAIL,
+        "dry_value": ThreadNotifications.SITE_AND_EMAIL,
         "is_public": False,
     },
     {
         "setting": "watch_replied_threads",
         "python_type": "int",
-        "dry_value": ThreadNotifications.SEND_EMAIL,
+        "dry_value": ThreadNotifications.SITE_AND_EMAIL,
         "is_public": False,
     },
     {
         "setting": "watch_new_private_threads_by_followed",
         "python_type": "int",
-        "dry_value": ThreadNotifications.SEND_EMAIL,
+        "dry_value": ThreadNotifications.SITE_AND_EMAIL,
         "is_public": False,
     },
     {
         "setting": "watch_new_private_threads_by_other_users",
         "python_type": "int",
-        "dry_value": ThreadNotifications.SEND_EMAIL,
+        "dry_value": ThreadNotifications.SITE_AND_EMAIL,
         "is_public": False,
     },
     {
         "setting": "notify_new_private_threads_by_followed",
         "python_type": "int",
-        "dry_value": ThreadNotifications.SEND_EMAIL,
+        "dry_value": ThreadNotifications.SITE_AND_EMAIL,
         "is_public": False,
     },
     {
         "setting": "notify_new_private_threads_by_other_users",
         "python_type": "int",
-        "dry_value": ThreadNotifications.SEND_EMAIL,
+        "dry_value": ThreadNotifications.SITE_AND_EMAIL,
         "is_public": False,
     },
     {

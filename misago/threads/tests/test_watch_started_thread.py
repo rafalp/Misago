@@ -7,7 +7,7 @@ from ...notifications.threads import ThreadNotifications
 def test_started_thread_is_watched_by_user_with_option_enabled(
     user, user_client, default_category
 ):
-    user.watch_started_threads = ThreadNotifications.DONT_EMAIL
+    user.watch_started_threads = ThreadNotifications.SITE_ONLY
     user.save()
 
     response = user_client.post(
@@ -27,7 +27,7 @@ def test_started_thread_is_watched_by_user_with_option_enabled(
         user=user,
         category=default_category,
         thread_id=data["id"],
-        notifications=ThreadNotifications.DONT_EMAIL,
+        send_emails=False,
     )
 
 
@@ -57,7 +57,7 @@ def test_started_private_thread_is_watched_by_user_with_option_enabled(
     other_user,
     private_threads_category,
 ):
-    user.watch_started_threads = ThreadNotifications.DONT_EMAIL
+    user.watch_started_threads = ThreadNotifications.SITE_ONLY
     user.save()
 
     response = user_client.post(
@@ -77,7 +77,7 @@ def test_started_private_thread_is_watched_by_user_with_option_enabled(
         user=user,
         category=private_threads_category,
         thread_id=data["id"],
-        notifications=ThreadNotifications.DONT_EMAIL,
+        send_emails=False,
     )
 
 

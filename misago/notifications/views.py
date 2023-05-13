@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Notification, WatchedThread
 from .permissions import allow_use_notifications
 from .redirects import redirect_factory
-from .threads import ThreadNotifications
 
 
 def notifications(request: HttpRequest) -> HttpResponse:
@@ -59,8 +58,9 @@ def disable_email_notifications(
         secret=secret,
     )
 
-    watched_thread.notifications = ThreadNotifications.DONT_EMAIL
-    watched_thread.save(update_fields=["notifications"])
+    if watched_thread.send_emails:
+        watched_thread.send_emails = False
+        watched_thread.save(update_fields=["send_emails"])
 
     watched_thread.thread.category = watched_thread.category
 

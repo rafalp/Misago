@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             name="WatchedThread",
             fields=[
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
-                ("notifications", models.PositiveIntegerField(default=0)),
+                ("send_emails", models.BooleanField(default=True)),
                 (
                     "secret",
                     models.CharField(

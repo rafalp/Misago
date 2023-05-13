@@ -53,17 +53,23 @@ def watch_thread_shared_logic(request: HttpRequest, thread: Thread) -> JsonRespo
     serializer.is_valid(raise_exception=True)
     notifications = serializer.data["notifications"]
 
+    if not notifications:
+        WatchedThread.objects.filter(user=request.user, thread=thread).delete()
+        return JsonResponse(serializer.data)
+
+    send_emails = notifications == ThreadNotifications.SITE_AND_EMAIL
+
     watched_thread = get_watched_thread(request.user, thread)
     if watched_thread:
-        if watched_thread.notifications != notifications:
-            watched_thread.notifications = notifications
-            watched_thread.save(update_fields=["notifications"])
+        if watched_thread.send_emails != send_emails:
+            watched_thread.send_emails = send_emails
+            watched_thread.save(update_fields=["send_emails"])
     else:
         WatchedThread.objects.create(
             user=request.user,
             category_id=thread.category_id,
             thread=thread,
-            notifications=notifications,
+            send_emails=send_emails,
         )
 
     return JsonResponse(serializer.data)

@@ -10,7 +10,6 @@ from ..users.bans import get_user_ban
 from ..threads.models import Post, Thread
 from .models import WatchedThread
 from .threads import (
-    ThreadNotifications,
     notify_participant_on_new_private_thread,
     notify_watcher_on_new_thread_reply,
 )
@@ -39,11 +38,10 @@ def notify_on_new_thread_reply(
     for watched_thread in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
         if (
             watched_thread.user == post.poster
-            or watched_thread.notifications == ThreadNotifications.NONE
             or not watched_thread.user.is_active
             or get_user_ban(watched_thread.user, cache_versions)
         ):
-            continue  # Skip poster and watchers banned or with notifications disabled
+            continue  # Skip poster and banned or inactive watchers
 
         try:
             notify_watcher_on_new_thread_reply(

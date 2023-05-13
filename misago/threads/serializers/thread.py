@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from ...categories.serializers import CategorySerializer
 from ...core.serializers import MutableFields
+from ...notifications.threads import ThreadNotifications
 from ..models import Thread
 from .poll import PollSerializer
 from .threadparticipant import ThreadParticipantSerializer
@@ -112,7 +113,9 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
         if self.context:
             watched_thread = self.context.get("watched_thread")
             if watched_thread:
-                return watched_thread.notifications
+                if watched_thread.send_emails:
+                    return ThreadNotifications.SITE_AND_EMAIL
+                return ThreadNotifications.SITE_ONLY
 
             watched_threads = self.context.get("watched_threads")
             if watched_threads:

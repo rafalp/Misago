@@ -4,7 +4,6 @@ from django.db import migrations
 from django.utils import timezone
 
 from ...core.pgutils import chunk_queryset
-from ..threads import ThreadNotifications
 
 BATCH_SIZE_LIMIT = 50
 
@@ -20,17 +19,12 @@ def migrate_threads_subscriptions(apps, schema_editor):
     batch_size = 0
 
     for subscription in chunk_queryset(Subscription.objects.all()):
-        if subscription.send_email:
-            notifications = ThreadNotifications.SEND_EMAIL
-        else:
-            notifications = ThreadNotifications.DONT_EMAIL
-
         batch.append(
             WatchedThread(
                 user_id=subscription.user_id,
                 category_id=subscription.category_id,
                 thread_id=subscription.thread_id,
-                notifications=notifications,
+                send_emails=subscription.send_email,
                 created_at=timezone_now,
                 read_at=subscription.last_read_on,
             )

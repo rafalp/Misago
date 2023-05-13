@@ -1134,11 +1134,7 @@ def assert_not_contains_thread(response: HttpResponse, thread: Thread):
 def test_watched_threads_list_shows_thread_with_email_notifications(
     user, user_client, default_category, thread, watched_thread_factory
 ):
-    watched_thread_factory(
-        user,
-        thread,
-        ThreadNotifications.SEND_EMAIL,
-    )
+    watched_thread_factory(user, thread, send_emails=True)
 
     # Global watched threads list includes thread
     response = user_client.get("/watched/")
@@ -1157,17 +1153,13 @@ def test_watched_threads_list_shows_thread_with_email_notifications(
 
     api_data = api_response.json()
     assert api_data["results"][0]["id"] == thread.id
-    assert api_data["results"][0]["notifications"] == ThreadNotifications.SEND_EMAIL
+    assert api_data["results"][0]["notifications"] == ThreadNotifications.SITE_AND_EMAIL
 
 
-def test_watched_threads_list_shows_thread_with_notifications(
+def test_watched_threads_list_shows_thread_with_email_notifications_disabled(
     user, user_client, default_category, thread, watched_thread_factory
 ):
-    watched_thread_factory(
-        user,
-        thread,
-        ThreadNotifications.DONT_EMAIL,
-    )
+    watched_thread_factory(user, thread, send_emails=False)
 
     # Global watched threads list includes thread
     response = user_client.get("/watched/")
@@ -1186,35 +1178,7 @@ def test_watched_threads_list_shows_thread_with_notifications(
 
     api_data = api_response.json()
     assert api_data["results"][0]["id"] == thread.id
-    assert api_data["results"][0]["notifications"] == ThreadNotifications.DONT_EMAIL
-
-
-def test_watched_threads_list_excludes_thread_with_disabled_notifications(
-    user, user_client, default_category, thread, watched_thread_factory
-):
-    watched_thread_factory(
-        user,
-        thread,
-        ThreadNotifications.NONE,
-    )
-
-    # Global watched threads list includes thread
-    response = user_client.get("/watched/")
-    assert_not_contains_thread(response, thread)
-
-    # Category threads list includes thread
-    response = user_client.get(default_category.get_absolute_url() + "watched/")
-    assert_not_contains_thread(response, thread)
-
-    # API threads list includes thread
-    api_response = user_client.get(
-        reverse("misago:api:thread-list")
-        + f"?list=watched&category={default_category.id}"
-    )
-    assert api_response.status_code == 200
-
-    api_data = api_response.json()
-    assert api_data["results"] == []
+    assert api_data["results"][0]["notifications"] == ThreadNotifications.SITE_ONLY
 
 
 def test_watched_threads_list_excludes_unwatched_thread(
@@ -1242,11 +1206,7 @@ def test_watched_threads_list_excludes_unwatched_thread(
 def test_watched_threads_list_excludes_thread_watched_by_other_user(
     other_user, user_client, default_category, thread, watched_thread_factory
 ):
-    watched_thread_factory(
-        other_user,
-        thread,
-        ThreadNotifications.SEND_EMAIL,
-    )
+    watched_thread_factory(other_user, thread, send_emails=True)
 
     # Global watched threads list includes thread
     response = user_client.get("/watched/")

@@ -27,10 +27,10 @@ if TYPE_CHECKING:
 
 class ThreadNotifications(IntegerChoices):
     NONE = 0, pgettext_lazy("notification type", "Don't notify")
-    DONT_EMAIL = 1, pgettext_lazy(
+    SITE_ONLY = 1, pgettext_lazy(
         "notification type", "Notify without sending an e-mail"
     )
-    SEND_EMAIL = 2, pgettext_lazy("notification type", "Notify with an e-mail")
+    SITE_AND_EMAIL = 2, pgettext_lazy("notification type", "Notify with an e-mail")
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
@@ -59,10 +59,15 @@ def get_watched_threads(
     queryset = (
         WatchedThread.objects.filter(user=user, thread__in=threads)
         .order_by("-id")
-        .values_list("thread_id", "notifications")
+        .values_list("thread_id", "send_emails")
     )
 
-    return {thread_id: notifications for thread_id, notifications in queryset}
+    return {
+        thread_id: ThreadNotifications.SITE_AND_EMAIL
+        if send_emails
+        else ThreadNotifications.SITE_ONLY
+        for thread_id, send_emails in queryset
+    }
 
 
 def watch_started_thread(user: "User", thread: Thread):
@@ -71,27 +76,26 @@ def watch_started_thread(user: "User", thread: Thread):
             user=user,
             category=thread.category,
             thread=thread,
-            notifications=user.watch_started_threads,
+            send_emails=user.watch_started_threads
+            == ThreadNotifications.SITE_AND_EMAIL,
         )
 
 
-def watch_replied_thread(user: "User", thread: Thread):
+def watch_replied_thread(user: "User", thread: Thread) -> WatchedThread | None:
     if not user.watch_replied_threads:
         return
 
-    watched_thread = get_watched_thread(user, thread)
-    if watched_thread:
-        if not watched_thread.notifications:
-            watched_thread.notifications = user.watch_replied_threads
-            watched_thread.save(update_fields=["notifications"])
+    if WatchedThread.objects.filter(user=user, thread=thread).exists():
+        return None
 
-    else:
-        WatchedThread.objects.create(
-            user=user,
-            category=thread.category,
-            thread=thread,
-            notifications=user.watch_replied_threads,
-        )
+    send_emails = user.watch_replied_threads == ThreadNotifications.SITE_AND_EMAIL
+
+    return WatchedThread.objects.create(
+        user=user,
+        category=thread.category,
+        thread=thread,
+        send_emails=send_emails,
+    )
 
 
 def notify_watcher_on_new_thread_reply(
@@ -123,7 +127,7 @@ def notify_watcher_on_new_thread_reply(
     watched_thread.user.unread_notifications = F("unread_notifications") + 1
     watched_thread.user.save(update_fields=["unread_notifications"])
 
-    if watched_thread.notifications == ThreadNotifications.SEND_EMAIL:
+    if watched_thread.send_emails:
         email_watcher_on_new_thread_reply(watched_thread, post, settings)
 
 
@@ -248,7 +252,7 @@ def notify_participant_on_new_private_thread(
     user.unread_notifications = F("unread_notifications") + 1
     user.save(update_fields=["unread_notifications"])
 
-    if notification == ThreadNotifications.SEND_EMAIL:
+    if notification == ThreadNotifications.SITE_AND_EMAIL:
         email_participant_on_new_private_thread(user, actor, watched_thread, settings)
 
 
@@ -282,30 +286,31 @@ def email_participant_on_new_private_thread(
 
 def watch_new_private_thread(
     user: "User", thread: Thread, from_followed: bool
-) -> WatchedThread:
+) -> WatchedThread | None:
     if from_followed:
         notifications = user.watch_new_private_threads_by_followed
     else:
         notifications = user.watch_new_private_threads_by_other_users
+
+    if not notifications:
+        return None
+
+    send_emails = notifications == ThreadNotifications.SITE_AND_EMAIL
 
     # Set thread read date in past to prevent first reply to thread
     # From triggering extra notification
     read_at = thread.started_on - timedelta(seconds=5)
 
     if watched_thread := get_watched_thread(user, thread):
-        if notifications != ThreadNotifications.NONE:
-            watched_thread.notifications = notifications
-
         watched_thread.read_at = read_at
-        watched_thread.save(update_fields=["notifications", "read_at"])
-
+        watched_thread.save(update_fields=["read_at"])
         return watched_thread
 
     return WatchedThread.objects.create(
         user=user,
         category=thread.category,
         thread=thread,
-        notifications=notifications,
+        send_emails=send_emails,
         read_at=read_at,
     )
 

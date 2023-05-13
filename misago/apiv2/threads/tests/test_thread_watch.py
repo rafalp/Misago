@@ -5,7 +5,7 @@ from ....notifications.models import WatchedThread
 from ....notifications.threads import ThreadNotifications
 
 
-def test_thread_watch_api_creates_watched_thread_with_notifications_disabled(
+def test_thread_watch_api_doesnt_create_watched_thread_for_disabled_notifications(
     user, thread, user_client
 ):
     response = user_client.post(
@@ -16,25 +16,23 @@ def test_thread_watch_api_creates_watched_thread_with_notifications_disabled(
     assert response.status_code == 200
     assert response.json() == {"notifications": ThreadNotifications.NONE.value}
 
-    watched_thread = WatchedThread.objects.get(user=user, thread=thread)
-    assert watched_thread.category_id == thread.category_id
-    assert watched_thread.notifications == ThreadNotifications.NONE
+    assert not WatchedThread.objects.exists()
 
 
-def test_thread_watch_api_creates_watched_thread_with_notifications(
+def test_thread_watch_api_creates_watched_thread_without_email_notifications(
     user, thread, user_client
 ):
     response = user_client.post(
         reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
-        json={"notifications": ThreadNotifications.DONT_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_ONLY.value},
     )
 
     assert response.status_code == 200
-    assert response.json() == {"notifications": ThreadNotifications.DONT_EMAIL.value}
+    assert response.json() == {"notifications": ThreadNotifications.SITE_ONLY.value}
 
     watched_thread = WatchedThread.objects.get(user=user, thread=thread)
     assert watched_thread.category_id == thread.category_id
-    assert watched_thread.notifications == ThreadNotifications.DONT_EMAIL
+    assert not watched_thread.send_emails
 
 
 def test_thread_watch_api_creates_watched_thread_with_email_notifications(
@@ -42,39 +40,67 @@ def test_thread_watch_api_creates_watched_thread_with_email_notifications(
 ):
     response = user_client.post(
         reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
-        json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
     )
 
     assert response.status_code == 200
-    assert response.json() == {"notifications": ThreadNotifications.SEND_EMAIL.value}
+    assert response.json() == {
+        "notifications": ThreadNotifications.SITE_AND_EMAIL.value
+    }
 
     watched_thread = WatchedThread.objects.get(user=user, thread=thread)
     assert watched_thread.category_id == thread.category_id
-    assert watched_thread.notifications == ThreadNotifications.SEND_EMAIL
+    assert watched_thread.send_emails
 
 
-def test_thread_watch_api_updates_watched_thread_with_email_notifications(
+def test_thread_watch_api_enables_watched_thread_email_notifications(
     user, thread, user_client, django_assert_num_queries
 ):
     existing_watched_thread = WatchedThread.objects.create(
         user=user,
         category_id=thread.category_id,
         thread=thread,
-        notifications=ThreadNotifications.NONE,
+        send_emails=False,
     )
 
     with django_assert_num_queries(25):
         response = user_client.post(
             reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
-            json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+            json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
         )
 
     assert response.status_code == 200
-    assert response.json() == {"notifications": ThreadNotifications.SEND_EMAIL.value}
+    assert response.json() == {
+        "notifications": ThreadNotifications.SITE_AND_EMAIL.value
+    }
 
     watched_thread = WatchedThread.objects.get(user=user, thread=thread)
     assert watched_thread.id == existing_watched_thread.id
-    assert watched_thread.notifications == ThreadNotifications.SEND_EMAIL
+    assert watched_thread.send_emails
+
+
+def test_thread_watch_api_disables_watched_thread_email_notifications(
+    user, thread, user_client, django_assert_num_queries
+):
+    existing_watched_thread = WatchedThread.objects.create(
+        user=user,
+        category_id=thread.category_id,
+        thread=thread,
+        send_emails=True,
+    )
+
+    with django_assert_num_queries(25):
+        response = user_client.post(
+            reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
+            json={"notifications": ThreadNotifications.SITE_ONLY.value},
+        )
+
+    assert response.status_code == 200
+    assert response.json() == {"notifications": ThreadNotifications.SITE_ONLY.value}
+
+    watched_thread = WatchedThread.objects.get(user=user, thread=thread)
+    assert watched_thread.id == existing_watched_thread.id
+    assert not watched_thread.send_emails
 
 
 def test_thread_watch_api_skips_update_if_notifications_are_not_changed(
@@ -84,27 +110,50 @@ def test_thread_watch_api_skips_update_if_notifications_are_not_changed(
         user=user,
         category_id=thread.category_id,
         thread=thread,
-        notifications=ThreadNotifications.SEND_EMAIL,
+        send_emails=True,
     )
 
     with django_assert_num_queries(24):
         response = user_client.post(
             reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
-            json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+            json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
         )
 
     assert response.status_code == 200
-    assert response.json() == {"notifications": ThreadNotifications.SEND_EMAIL.value}
+    assert response.json() == {
+        "notifications": ThreadNotifications.SITE_AND_EMAIL.value
+    }
 
     watched_thread = WatchedThread.objects.get(user=user, thread=thread)
     assert watched_thread.id == existing_watched_thread.id
-    assert watched_thread.notifications == ThreadNotifications.SEND_EMAIL
+    assert watched_thread.send_emails
+
+
+def test_thread_watch_api_deletes_watched_thread_if_notifications_are_disabled(
+    user, thread, user_client
+):
+    WatchedThread.objects.create(
+        user=user,
+        category_id=thread.category_id,
+        thread=thread,
+        send_emails=True,
+    )
+
+    response = user_client.post(
+        reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
+        json={"notifications": ThreadNotifications.NONE.value},
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"notifications": ThreadNotifications.NONE.value}
+
+    assert not WatchedThread.objects.exists()
 
 
 def test_thread_watch_api_returns_404_error_if_thread_doesnt_exist(user, user_client):
     response = user_client.post(
         reverse("misago:apiv2:thread-watch", kwargs={"thread_id": 404}),
-        json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
     )
 
     assert response.status_code == 404
@@ -119,7 +168,7 @@ def test_thread_watch_api_returns_404_error_if_thread_is_not_accessible(
             "misago:apiv2:thread-watch",
             kwargs={"thread_id": other_user_hidden_thread.id},
         ),
-        json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
     )
 
     assert response.status_code == 404
@@ -158,7 +207,7 @@ def test_thread_watch_api_returns_403_error_if_client_is_no_authenticated(
 ):
     response = client.post(
         reverse("misago:apiv2:thread-watch", kwargs={"thread_id": thread.id}),
-        json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
     )
 
     assert response.status_code == 403
@@ -170,7 +219,7 @@ def test_thread_watch_api_returns_404_error_if_thread_is_private(
 ):
     response = user_client.post(
         reverse("misago:apiv2:thread-watch", kwargs={"thread_id": private_thread.id}),
-        json={"notifications": ThreadNotifications.SEND_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_AND_EMAIL.value},
     )
 
     assert response.status_code == 404
@@ -186,15 +235,15 @@ def test_private_thread_watch_api_creates_watched_thread_with_notifications(
         reverse(
             "misago:apiv2:private-thread-watch", kwargs={"thread_id": private_thread.id}
         ),
-        json={"notifications": ThreadNotifications.DONT_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_ONLY.value},
     )
 
     assert response.status_code == 200
-    assert response.json() == {"notifications": ThreadNotifications.DONT_EMAIL.value}
+    assert response.json() == {"notifications": ThreadNotifications.SITE_ONLY.value}
 
     watched_thread = WatchedThread.objects.get(user=user, thread=private_thread)
     assert watched_thread.category_id == private_thread.category_id
-    assert watched_thread.notifications == ThreadNotifications.DONT_EMAIL
+    assert not watched_thread.send_emails
 
 
 def test_private_thread_watch_api_returns_404_error_if_user_has_no_access_to_thread(
@@ -204,7 +253,7 @@ def test_private_thread_watch_api_returns_404_error_if_user_has_no_access_to_thr
         reverse(
             "misago:apiv2:private-thread-watch", kwargs={"thread_id": private_thread.id}
         ),
-        json={"notifications": ThreadNotifications.DONT_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_ONLY.value},
     )
 
     assert response.status_code == 404
@@ -216,7 +265,7 @@ def test_private_thread_watch_api_returns_404_error_if_thread_is_not_private_thr
 ):
     response = user_client.post(
         reverse("misago:apiv2:private-thread-watch", kwargs={"thread_id": thread.id}),
-        json={"notifications": ThreadNotifications.DONT_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_ONLY.value},
     )
 
     assert response.status_code == 404
@@ -232,7 +281,7 @@ def test_private_thread_watch_api_returns_403_error_if_client_is_no_authenticate
         reverse(
             "misago:apiv2:private-thread-watch", kwargs={"thread_id": private_thread.id}
         ),
-        json={"notifications": ThreadNotifications.DONT_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_ONLY.value},
     )
 
     assert response.status_code == 403
@@ -249,7 +298,7 @@ def test_private_thread_watch_api_returns_403_if_user_cant_use_private_threads(
         reverse(
             "misago:apiv2:private-thread-watch", kwargs={"thread_id": private_thread.id}
         ),
-        json={"notifications": ThreadNotifications.DONT_EMAIL.value},
+        json={"notifications": ThreadNotifications.SITE_ONLY.value},
     )
 
     assert response.status_code == 403

@@ -7,7 +7,7 @@ from ...categories.models import Category
 from ...core.shortcuts import validate_slug
 from ...core.viewmodel import ViewModel as BaseViewModel
 from ...notifications.models import WatchedThread
-from ...notifications.threads import ThreadNotifications, get_watched_thread
+from ...notifications.threads import get_watched_thread
 from ...readtracker.threadstracker import make_read_aware
 from ..models import Poll, Thread
 from ..participants import make_participants_aware
@@ -109,10 +109,10 @@ class ViewModel(BaseViewModel):
     def get_template_context(self):
         thread_notifications = None
         if self._watched_thread:
-            if self._watched_thread.notifications == ThreadNotifications.SEND_EMAIL:
-                thread_notifications = "SEND_EMAIL"
-            if self._watched_thread.notifications == ThreadNotifications.DONT_EMAIL:
-                thread_notifications = "DONT_EMAIL"
+            if self._watched_thread.send_emails:
+                thread_notifications = "SITE_AND_EMAIL"
+            else:
+                thread_notifications = "SITE_ONLY"
 
         return {
             "thread": self._model,

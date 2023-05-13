@@ -54,7 +54,7 @@ class WatchedThread(models.Model):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
 
-    notifications = models.PositiveIntegerField(default=0)
+    send_emails = models.BooleanField(default=True)
     secret = models.CharField(
         max_length=WATCHED_THREAD_SECRET, default=get_watched_thread_secret
     )

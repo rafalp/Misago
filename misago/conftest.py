@@ -13,6 +13,7 @@ from .notifications.threads import ThreadNotifications
 from .socialauth import SOCIALAUTH_CACHE
 from .test import MisagoClient
 from .themes import THEME_CACHE
+from .threads.models import Thread
 from .threads.test import post_thread, reply_thread
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
@@ -307,16 +308,12 @@ def other_category(categories_tree):
 
 @pytest.fixture
 def watched_thread_factory():
-    def create_watched_thread(
-        user,
-        thread,
-        notifications: ThreadNotifications = ThreadNotifications.NONE,
-    ):
+    def create_watched_thread(user: "User", thread: "Thread", send_emails: bool):
         return WatchedThread.objects.create(
             user=user,
             category_id=thread.category_id,
             thread=thread,
-            notifications=notifications,
+            send_emails=send_emails,
         )
 
     return create_watched_thread

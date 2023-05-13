@@ -62,17 +62,15 @@ def test_default_watch_started_threads_option_is_set_for_user(dynamic_settings, 
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.watch_started_threads == ThreadNotifications.NONE
 
-    with override_dynamic_settings(
-        watch_started_threads=ThreadNotifications.DONT_EMAIL
-    ):
+    with override_dynamic_settings(watch_started_threads=ThreadNotifications.SITE_ONLY):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.watch_started_threads == ThreadNotifications.DONT_EMAIL
+        assert user.watch_started_threads == ThreadNotifications.SITE_ONLY
 
     with override_dynamic_settings(
-        watch_started_threads=ThreadNotifications.SEND_EMAIL
+        watch_started_threads=ThreadNotifications.SITE_AND_EMAIL
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.watch_started_threads == ThreadNotifications.SEND_EMAIL
+        assert user.watch_started_threads == ThreadNotifications.SITE_AND_EMAIL
 
 
 def test_default_watch_replied_threads_option_is_set_for_user(dynamic_settings, user):
@@ -80,17 +78,15 @@ def test_default_watch_replied_threads_option_is_set_for_user(dynamic_settings, 
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert user.watch_replied_threads == ThreadNotifications.NONE
 
-    with override_dynamic_settings(
-        watch_replied_threads=ThreadNotifications.DONT_EMAIL
-    ):
+    with override_dynamic_settings(watch_replied_threads=ThreadNotifications.SITE_ONLY):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.watch_replied_threads == ThreadNotifications.DONT_EMAIL
+        assert user.watch_replied_threads == ThreadNotifications.SITE_ONLY
 
     with override_dynamic_settings(
-        watch_replied_threads=ThreadNotifications.SEND_EMAIL
+        watch_replied_threads=ThreadNotifications.SITE_AND_EMAIL
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.watch_replied_threads == ThreadNotifications.SEND_EMAIL
+        assert user.watch_replied_threads == ThreadNotifications.SITE_AND_EMAIL
 
 
 def test_default_watch_new_private_threads_by_followed_option_is_set_for_user(
@@ -103,19 +99,20 @@ def test_default_watch_new_private_threads_by_followed_option_is_set_for_user(
         assert user.watch_new_private_threads_by_followed == ThreadNotifications.NONE
 
     with override_dynamic_settings(
-        watch_new_private_threads_by_followed=ThreadNotifications.DONT_EMAIL
+        watch_new_private_threads_by_followed=ThreadNotifications.SITE_ONLY
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
-            user.watch_new_private_threads_by_followed == ThreadNotifications.DONT_EMAIL
+            user.watch_new_private_threads_by_followed == ThreadNotifications.SITE_ONLY
         )
 
     with override_dynamic_settings(
-        watch_new_private_threads_by_followed=ThreadNotifications.SEND_EMAIL
+        watch_new_private_threads_by_followed=ThreadNotifications.SITE_AND_EMAIL
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
-            user.watch_new_private_threads_by_followed == ThreadNotifications.SEND_EMAIL
+            user.watch_new_private_threads_by_followed
+            == ThreadNotifications.SITE_AND_EMAIL
         )
 
 
@@ -129,21 +126,21 @@ def test_default_watch_new_private_threads_by_other_users_option_is_set_for_user
         assert user.watch_new_private_threads_by_other_users == ThreadNotifications.NONE
 
     with override_dynamic_settings(
-        watch_new_private_threads_by_other_users=ThreadNotifications.DONT_EMAIL
+        watch_new_private_threads_by_other_users=ThreadNotifications.SITE_ONLY
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
             user.watch_new_private_threads_by_other_users
-            == ThreadNotifications.DONT_EMAIL
+            == ThreadNotifications.SITE_ONLY
         )
 
     with override_dynamic_settings(
-        watch_new_private_threads_by_other_users=ThreadNotifications.SEND_EMAIL
+        watch_new_private_threads_by_other_users=ThreadNotifications.SITE_AND_EMAIL
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
             user.watch_new_private_threads_by_other_users
-            == ThreadNotifications.SEND_EMAIL
+            == ThreadNotifications.SITE_AND_EMAIL
         )
 
 
@@ -157,21 +154,20 @@ def test_default_notify_new_private_threads_by_followed_option_is_set_for_user(
         assert user.notify_new_private_threads_by_followed == ThreadNotifications.NONE
 
     with override_dynamic_settings(
-        notify_new_private_threads_by_followed=ThreadNotifications.DONT_EMAIL
+        notify_new_private_threads_by_followed=ThreadNotifications.SITE_ONLY
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
-            user.notify_new_private_threads_by_followed
-            == ThreadNotifications.DONT_EMAIL
+            user.notify_new_private_threads_by_followed == ThreadNotifications.SITE_ONLY
         )
 
     with override_dynamic_settings(
-        notify_new_private_threads_by_followed=ThreadNotifications.SEND_EMAIL
+        notify_new_private_threads_by_followed=ThreadNotifications.SITE_AND_EMAIL
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
             user.notify_new_private_threads_by_followed
-            == ThreadNotifications.SEND_EMAIL
+            == ThreadNotifications.SITE_AND_EMAIL
         )
 
 
@@ -187,21 +183,21 @@ def test_default_notify_new_private_threads_by_other_users_option_is_set_for_use
         )
 
     with override_dynamic_settings(
-        notify_new_private_threads_by_other_users=ThreadNotifications.DONT_EMAIL
+        notify_new_private_threads_by_other_users=ThreadNotifications.SITE_ONLY
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
             user.notify_new_private_threads_by_other_users
-            == ThreadNotifications.DONT_EMAIL
+            == ThreadNotifications.SITE_ONLY
         )
 
     with override_dynamic_settings(
-        notify_new_private_threads_by_other_users=ThreadNotifications.SEND_EMAIL
+        notify_new_private_threads_by_other_users=ThreadNotifications.SITE_AND_EMAIL
     ):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
         assert (
             user.notify_new_private_threads_by_other_users
-            == ThreadNotifications.SEND_EMAIL
+            == ThreadNotifications.SITE_AND_EMAIL
         )
 
 
