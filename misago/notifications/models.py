@@ -45,6 +45,7 @@ class Notification(models.Model):
 
     class Meta:
         indexes = [
+            models.Index(fields=["-id", "user"]),
             models.Index(fields=["-id", "user", "is_read"]),
             models.Index(
                 name="misago_noti_user_unread",

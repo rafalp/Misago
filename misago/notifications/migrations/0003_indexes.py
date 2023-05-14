@@ -12,6 +12,12 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name="notification",
             index=models.Index(
+                fields=["-id", "user"], name="misago_noti_id_5a01fa_idx"
+            ),
+        ),
+        migrations.AddIndex(
+            model_name="notification",
+            index=models.Index(
                 fields=["-id", "user", "is_read"], name="misago_noti_id_7b4a20_idx"
             ),
         ),
