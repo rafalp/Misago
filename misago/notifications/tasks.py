@@ -88,7 +88,7 @@ def notify_on_new_private_thread(
 
 @shared_task(serializer="json")
 def delete_duplicate_watched_threads(thread_id: int):
-    # Upgrade notifications to email
+    # Merge send emails preference for watched threads
     email_notifications_users_ids = WatchedThread.objects.filter(
         thread_id=thread_id,
         send_emails=True,
