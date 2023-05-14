@@ -1,10 +1,12 @@
-from django.apps import AppConfig
+from django.dispatch import receiver
+
+from ..users.signals import (
+    anonymize_user_data,
+    username_changed,
+)
+from .models import Notification
 
 
-class MisagoNotificationsConfig(AppConfig):
-    name = "misago.notifications"
-    label = "misago_notifications"
-    verbose_name = "Misago notifications"
-
-    def ready(self):
-        from . import signals as _
+@receiver([anonymize_user_data, username_changed])
+def update_usernames(sender, **kwargs):
+    Notification.objects.filter(actor=sender).update(actor_name=sender.username)
