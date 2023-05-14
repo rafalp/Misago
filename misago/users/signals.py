@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from ..core.pgutils import chunk_queryset
-from .models import AuditTrail, DataDownload
+from .models import AuditTrail
 from .profilefields import profilefields
 
 User = get_user_model()
