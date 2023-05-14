@@ -2,6 +2,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
+from ....notifications.tasks import delete_duplicate_watched_threads
 from ...events import record_event
 from ...mergeconflict import MergeConflict
 from ...models import Thread
@@ -123,6 +124,7 @@ def threads_merge_endpoint(request):
     new_thread = merge_threads(
         request, serializer.validated_data, threads, merge_conflict
     )
+
     return Response(ThreadsListSerializer(new_thread).data)
 
 
@@ -183,6 +185,9 @@ def merge_threads(request, validated_data, threads, merge_conflict):
     # set extra attrs on thread for UI
     new_thread.is_read = False
     new_thread.subscription = None
+
+    # Deduplicate watched threads
+    delete_duplicate_watched_threads.delay(new_thread.id)
 
     add_acl_to_obj(request.user_acl, new_thread)
     return new_thread

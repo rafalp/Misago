@@ -84,3 +84,19 @@ def notify_on_new_private_thread(
             logger.exception(
                 "Unexpected error in 'notify_participant_on_new_private_thread'"
             )
+
+
+@shared_task(serializer="json")
+def delete_duplicate_watched_threads(thread_id: int):
+    kept_watched_threads_ids = (
+        WatchedThread.objects.filter(
+            thread_id=thread_id,
+        )
+        .order_by("user_id", "-read_at")
+        .distinct("user_id")
+        .values("id")
+    )
+
+    WatchedThread.objects.filter(thread_id=thread_id).exclude(
+        id__in=kept_watched_threads_ids
+    ).delete()

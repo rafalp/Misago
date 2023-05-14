@@ -38,6 +38,17 @@ def merge_threads(sender, **kwargs):
         user__in=sender.subscription_set.values("user")
     ).update(category=sender.category, thread=sender)
 
+    other_thread.notification_set.update(
+        category=sender.category,
+        thread=sender,
+        thread_title=sender.title,
+    )
+
+    other_thread.watchedthread_set.update(
+        category=sender.category,
+        thread=sender,
+    )
+
 
 @receiver(merge_post)
 def merge_posts(sender, **kwargs):
