@@ -1,5 +1,9 @@
+from unittest.mock import patch
+
+import pytest
 from django.urls import reverse
 
+from ...notifications.models import Notification
 from .. import test
 from ...categories.models import Category
 from ...readtracker import poststracker
@@ -101,7 +105,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": False})
     @patch_category_acl({"can_merge_threads": True})
-    def test_other_thread_isnt_mergeable(self):
+    def test_other_thread_is_not_mergeable(self):
         """api validates if other thread can be merged"""
         other_thread = test.post_thread(self.other_category)
 
@@ -202,7 +206,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads(self, delete_duplicate_watched_threads_mock):
         """api merges two threads successfully"""
         other_thread = test.post_thread(self.other_category)
 
@@ -228,7 +233,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_kept_reads(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_kept_reads(self, delete_duplicate_watched_threads_mock):
         """api keeps both threads readtrackers after merge"""
         other_thread = test.post_thread(self.other_category)
 
@@ -260,7 +266,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_kept_subs(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_kept_subs(self, delete_duplicate_watched_threads_mock):
         """api keeps other thread's subscription after merge"""
         other_thread = test.post_thread(self.other_category)
 
@@ -295,7 +302,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_moved_subs(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_moved_subs(self, delete_duplicate_watched_threads_mock):
         """api keeps other thread's subscription after merge"""
         other_thread = test.post_thread(self.other_category)
 
@@ -330,7 +338,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_handle_subs_colision(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_handle_subs_conflict(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api resolves conflicting thread subscriptions after merge"""
         self.user.subscription_set.create(
             thread=self.thread,
@@ -374,7 +385,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_kept_best_answer(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_kept_best_answer(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api merges two threads successfully, keeping best answer from old thread"""
         other_thread = test.post_thread(self.other_category)
         best_answer = test.reply_thread(other_thread)
@@ -407,7 +421,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_moved_best_answer(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_moved_best_answer(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api merges two threads successfully, moving best answer to old thread"""
         other_thread = test.post_thread(self.other_category)
 
@@ -512,7 +529,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_threads_merge_conflict_unmark_all_best_answers(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_threads_merge_conflict_unmark_all_best_answers(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api unmarks all best answers when unmark all choice is selected"""
         best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
@@ -549,7 +569,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_threads_merge_conflict_keep_first_best_answer(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_threads_merge_conflict_keep_first_best_answer(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api unmarks other best answer on merge"""
         best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
@@ -591,7 +614,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_threads_merge_conflict_keep_other_best_answer(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_threads_merge_conflict_keep_other_best_answer(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api unmarks first best answer on merge"""
         best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
@@ -633,7 +659,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_kept_poll(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_kept_poll(self, delete_duplicate_watched_threads_mock):
         """api merges two threads successfully, keeping poll from other thread"""
         other_thread = test.post_thread(self.other_category)
         poll = test.post_poll(other_thread, self.user)
@@ -668,7 +695,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_merge_threads_moved_poll(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_merge_threads_moved_poll(self, delete_duplicate_watched_threads_mock):
         """api merges two threads successfully, moving poll from old thread"""
         other_thread = test.post_thread(self.other_category)
         poll = test.post_poll(self.thread, self.user)
@@ -756,7 +784,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_threads_merge_conflict_delete_all_polls(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_threads_merge_conflict_delete_all_polls(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api deletes all polls when delete all choice is selected"""
         other_thread = test.post_thread(self.other_category)
         test.post_poll(self.thread, self.user)
@@ -788,7 +819,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_threads_merge_conflict_keep_first_poll(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_threads_merge_conflict_keep_first_poll(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api deletes other poll on merge"""
         other_thread = test.post_thread(self.other_category)
         poll = test.post_poll(self.thread, self.user)
@@ -828,7 +862,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
-    def test_threads_merge_conflict_keep_other_poll(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_threads_merge_conflict_keep_other_poll(
+        self, delete_duplicate_watched_threads_mock
+    ):
         """api deletes first poll on merge"""
         other_thread = test.post_thread(self.other_category)
         poll = test.post_poll(self.thread, self.user)
@@ -865,3 +902,71 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         Poll.objects.get(pk=other_poll.pk)
         with self.assertRaises(Poll.DoesNotExist):
             Poll.objects.get(pk=poll.pk)
+
+
+@pytest.fixture
+def delete_duplicate_watched_threads_mock(mocker):
+    return mocker.patch(
+        "misago.threads.moderation.threads.delete_duplicate_watched_threads"
+    )
+
+
+@patch_category_acl({"can_merge_threads": True})
+def test_thread_merge_api_merges_notifications(
+    delete_duplicate_watched_threads_mock,
+    user,
+    user_client,
+    thread,
+    other_thread,
+):
+    notification = Notification.objects.create(
+        user=user,
+        verb="TEST",
+        category=other_thread.category,
+        thread=other_thread,
+        thread_title=other_thread.title,
+        post=other_thread.first_post,
+    )
+
+    response = user_client.post(
+        reverse("misago:api:thread-merge", kwargs={"pk": thread.pk}),
+        json={
+            "other_thread": other_thread.get_absolute_url(),
+        },
+    )
+
+    assert response.status_code == 200
+
+    notification.refresh_from_db()
+
+    assert notification.category_id == other_thread.category_id
+    assert notification.thread_id == other_thread.id
+    assert notification.thread_title == other_thread.title
+
+
+@patch_category_acl({"can_merge_threads": True})
+def test_thread_merge_api_merges_watched_threads(
+    delete_duplicate_watched_threads_mock,
+    user,
+    user_client,
+    thread,
+    other_thread,
+    watched_thread_factory,
+):
+    watched_thread = watched_thread_factory(user, thread, send_emails=True)
+
+    response = user_client.post(
+        reverse("misago:api:thread-merge", kwargs={"pk": thread.pk}),
+        json={
+            "other_thread": other_thread.get_absolute_url(),
+        },
+    )
+
+    assert response.status_code == 200
+
+    watched_thread.refresh_from_db()
+
+    assert watched_thread.category_id == other_thread.category_id
+    assert watched_thread.thread_id == other_thread.id
+
+    delete_duplicate_watched_threads_mock.delay.assert_called_once_with(other_thread.id)
