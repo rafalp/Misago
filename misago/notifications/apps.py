@@ -7,4 +7,4 @@ class MisagoNotificationsConfig(AppConfig):
     verbose_name = "Misago Notifications"
 
     def ready(self):
-        from . import signals as _   # noqa: F401
+        from . import signals as _  # noqa: F401
