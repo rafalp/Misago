@@ -12,7 +12,15 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name="notification",
             index=models.Index(
-                fields=["user", "is_read"], name="misago_noti_user_id_4bbf42_idx"
+                fields=["-id", "user", "is_read"], name="misago_noti_id_7b4a20_idx"
+            ),
+        ),
+        migrations.AddIndex(
+            model_name="notification",
+            index=models.Index(
+                condition=models.Q(("is_read", False)),
+                fields=["user", "is_read"],
+                name="misago_noti_user_unread",
             ),
         ),
         migrations.AddIndex(
@@ -25,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name="watchedthread",
             index=models.Index(
-                fields=["user", "-thread"], name="misago_noti_user_id_2b73f1_idx"
+                fields=["user", "-thread"], name="misago_noti_user_id_9cde34_idx"
             ),
         ),
     ]

@@ -10,7 +10,7 @@ from faker import Factory
 
 from ....categories.models import Category
 from ....core.pgutils import chunk_queryset
-from ....notifications.models import Notification
+from ....notifications.models import Notification, WatchedThread
 from ....notifications.verbs import NotificationVerb
 from ....threads.checksums import update_post_checksum
 from ....threads.models import Thread
@@ -84,6 +84,7 @@ class Command(BaseCommand):
 
         self.synchronize_threads()
         self.synchronize_categories()
+        self.synchronize_watched_threads()
 
         total_time = time.time() - start_time
         total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))
@@ -161,6 +162,14 @@ class Command(BaseCommand):
         thread.first_post.checksum = update_post_checksum(thread.first_post)
         thread.first_post.save(update_fields=["checksum", "posted_on", "updated_on"])
 
+        if starter and random.randint(0, 100) > 15:
+            WatchedThread.objects.create(
+                user=starter,
+                category=thread.category,
+                thread=thread,
+                send_emails=random.choice((True, False)),
+            )
+
         thread.started_on = date
         thread.save(update_fields=["started_on"])
 
@@ -195,8 +204,22 @@ class Command(BaseCommand):
         # Default, standard post
         else:
             post = get_fake_post(fake, thread, poster)
-            if poster:
-                self.create_fake_notification(thread, post, poster)
+
+        if poster:
+            if (
+                random.randint(0, 100) > 50
+                and not WatchedThread.objects.filter(
+                    user=poster, thread=thread
+                ).exists()
+            ):
+                WatchedThread.objects.create(
+                    user=poster,
+                    category=thread.category,
+                    thread=thread,
+                    send_emails=random.choice((True, False)),
+                )
+
+            self.create_fake_notification(thread, post, poster)
 
         post.posted_on = date
         post.updated_on = date
@@ -209,8 +232,8 @@ class Command(BaseCommand):
 
     def create_fake_notification(self, thread, post, poster):
         users_ids = list(
-            thread.post_set.exclude(poster=poster)
-            .values_list("poster_id", flat=True)
+            thread.watchedthread_set.exclude(user=poster)
+            .values_list("user_id", flat=True)
             .distinct()
         )
         if None in users_ids:
@@ -228,6 +251,7 @@ class Command(BaseCommand):
                         thread=thread,
                         thread_title=thread.title,
                         post=post,
+                        is_read=random.randint(0, 100) > 25,
                     )
                     for user_id in users_ids
                 ]
@@ -297,6 +321,22 @@ class Command(BaseCommand):
 
         message = "Synchronized %s categories in %s"
         self.stdout.write(message % (Category.objects.count(), total_humanized))
+
+    def synchronize_watched_threads(self):
+        self.stdout.write("\nSynchronizing watched threads...")
+        start_time = time.time()
+
+        queryset = WatchedThread.objects.select_related("thread").all()
+
+        for watched_thread in chunk_queryset(queryset):
+            watched_thread.read_at = watched_thread.thread.last_post_on
+            watched_thread.save(update_fields=["read_at"])
+
+        total_time = time.time() - start_time
+        total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))
+
+        message = "Synchronized %s watched threads in %s"
+        self.stdout.write(message % (WatchedThread.objects.count(), total_humanized))
 
 
 def get_random_date_variations(date, min_date, max_date):

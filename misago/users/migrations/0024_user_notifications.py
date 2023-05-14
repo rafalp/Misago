@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(
                 choices=[
                     (0, "Don't notify"),
-                    (1, "Notify without sending an e-mail"),
-                    (2, "Notify with an e-mail"),
+                    (1, "Notify on site only"),
+                    (2, "Notify on site and with e-mail"),
                 ],
                 default=2,
             ),
@@ -27,8 +27,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(
                 choices=[
                     (0, "Don't notify"),
-                    (1, "Notify without sending an e-mail"),
-                    (2, "Notify with an e-mail"),
+                    (1, "Notify on site only"),
+                    (2, "Notify on site and with e-mail"),
                 ],
                 default=2,
             ),
@@ -44,8 +44,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(
                 choices=[
                     (0, "Don't notify"),
-                    (1, "Notify without sending an e-mail"),
-                    (2, "Notify with an e-mail"),
+                    (1, "Notify on site only"),
+                    (2, "Notify on site and with e-mail"),
                 ],
                 default=2,
             ),
@@ -56,8 +56,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(
                 choices=[
                     (0, "Don't notify"),
-                    (1, "Notify without sending an e-mail"),
-                    (2, "Notify with an e-mail"),
+                    (1, "Notify on site only"),
+                    (2, "Notify on site and with e-mail"),
                 ],
                 default=2,
             ),
@@ -68,8 +68,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(
                 choices=[
                     (0, "Don't notify"),
-                    (1, "Notify without sending an e-mail"),
-                    (2, "Notify with an e-mail"),
+                    (1, "Notify on site only"),
+                    (2, "Notify on site and with e-mail"),
                 ],
                 default=2,
             ),
@@ -80,8 +80,8 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(
                 choices=[
                     (0, "Don't notify"),
-                    (1, "Notify without sending an e-mail"),
-                    (2, "Notify with an e-mail"),
+                    (1, "Notify on site only"),
+                    (2, "Notify on site and with e-mail"),
                 ],
                 default=2,
             ),
