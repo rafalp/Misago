@@ -15,9 +15,11 @@
             <img src="{{ settings.logo_small }}" alt="{{ settings.logo_text}}">
           </a>
         {% endif %}
-        <a href="{% url 'misago:index' %}" class="navbar-branding-text">
-          {{ settings.logo_text}}
-        </a>
+        {% if settings.logo_text %}
+          <a href="{% url 'misago:index' %}" class="navbar-branding-text">
+            {{ settings.logo_text }}
+          </a>
+        {% endif %}
       </div>
     {% endif %}
 

@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
 from .base import SettingsForm
@@ -55,16 +55,18 @@ class GeneralSettingsForm(SettingsForm):
     )
 
     logo = forms.ImageField(
-        label=_("Logo"),
-        help_text=_("Image that will displayed in forum navbar."),
+        label=pgettext_lazy("general settings", "Large logo"),
+        help_text=_(
+            "Image that will displayed in forum navbar instead of small logo or text."
+        ),
         required=False,
     )
     logo_delete = forms.BooleanField(label=_("Delete logo image"), required=False)
     logo_small = forms.ImageField(
-        label=_("Small logo"),
+        label=pgettext_lazy("general settings", "Small logo"),
         help_text=_(
-            "Image that will be displayed in compact forum navbar. "
-            "When set, it will replace icon pointing to forum index."
+            "Image that will be displayed in forum navbar next to logo text "
+            "if large logo was not uploaded."
         ),
         required=False,
     )
@@ -72,10 +74,11 @@ class GeneralSettingsForm(SettingsForm):
         label=_("Delete small logo image"), required=False
     )
     logo_text = forms.CharField(
-        label=_("Text"),
+        label=pgettext_lazy("general settings", "Textual logo"),
         help_text=_(
-            "Text displayed in forum navbar. If logo image was uploaded, text will "
-            "be displayed right next to it. Never displayed by the compact navbar."
+            "Text displayed in forum navbar. If small logo image was uploaded, "
+            "this text will be displayed right next to it. "
+            "If large logo was uploaded it will replace both small logo and text."
         ),
         max_length=255,
         required=False,
