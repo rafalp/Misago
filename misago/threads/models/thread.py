@@ -268,9 +268,10 @@ class Thread(models.Model):
         self.title = title
         self.slug = slugify(title)
 
-        from ..signals import update_thread_title
+        if self.id:
+            from ..signals import update_thread_title
 
-        update_thread_title.send(sender=self)
+            update_thread_title.send(sender=self)
 
     def set_first_post(self, post):
         self.started_on = post.posted_on

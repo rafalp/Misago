@@ -26,7 +26,7 @@ merge_post = Signal()
 merge_thread = Signal()
 move_post = Signal()
 move_thread = Signal()
-change_thread_title = Signal()
+update_thread_title = Signal()
 
 
 @receiver(merge_thread)
@@ -84,8 +84,8 @@ def move_thread_content(sender, **kwargs):
     Poll.objects.filter(thread=sender).update(category=sender.category)
 
 
-@receiver(change_thread_title)
-def update_thread_title(sender, **kwargs):
+@receiver(update_thread_title)
+def change_thread_title(sender, **kwargs):
     sender.notification_set.update(thread_title=sender.title)
 
 
