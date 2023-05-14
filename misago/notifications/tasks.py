@@ -88,6 +88,19 @@ def notify_on_new_private_thread(
 
 @shared_task(serializer="json")
 def delete_duplicate_watched_threads(thread_id: int):
+    # Upgrade notifications to email
+    email_notifications_users_ids = WatchedThread.objects.filter(
+        thread_id=thread_id,
+        send_emails=True,
+    ).values("user_id")
+
+    WatchedThread.objects.filter(
+        thread_id=thread_id,
+        send_emails=False,
+        user_id__in=email_notifications_users_ids,
+    ).update(send_emails=True)
+
+    # Delete duplicate watched threads
     kept_watched_threads_ids = (
         WatchedThread.objects.filter(
             thread_id=thread_id,

@@ -33,6 +33,33 @@ def test_delete_duplicate_watched_threads_deletes_duplicates_ordered_by_read_at_
     assert WatchedThread.objects.count() == 1
 
 
+def test_delete_duplicate_watched_threads_keeps_email_notifications(user, thread):
+    kept_watched_thread = WatchedThread.objects.create(
+        user=user,
+        category=thread.category,
+        thread=thread,
+        send_emails=False,
+        read_at=timezone.now(),
+    )
+    deleted_watched_thread = WatchedThread.objects.create(
+        user=user,
+        category=thread.category,
+        thread=thread,
+        send_emails=True,
+        read_at=timezone.now() - timedelta(seconds=30),
+    )
+
+    delete_duplicate_watched_threads(thread.id)
+
+    kept_watched_thread.refresh_from_db()
+    assert kept_watched_thread.send_emails
+
+    with pytest.raises(WatchedThread.DoesNotExist):
+        deleted_watched_thread.refresh_from_db()
+
+    assert WatchedThread.objects.count() == 1
+
+
 def test_delete_duplicate_watched_threads_skips_non_duplicated_watched_threads(
     user, other_user, thread
 ):
@@ -114,4 +141,4 @@ def test_delete_duplicate_watched_threads_skips_other_threads_watched_threads(
     with pytest.raises(WatchedThread.DoesNotExist):
         deleted_watched_thread.refresh_from_db()
 
-    assert WatchedThread.objects.count() == 3
+    assert WatchedThread.objects.count() == 4
