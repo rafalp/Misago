@@ -27,10 +27,10 @@ if TYPE_CHECKING:
 
 class ThreadNotifications(IntegerChoices):
     NONE = 0, pgettext_lazy("notification type", "Don't notify")
-    SITE_ONLY = 1, pgettext_lazy(
-        "notification type", "Notify without sending an e-mail"
+    SITE_ONLY = 1, pgettext_lazy("notification type", "Notify on site only")
+    SITE_AND_EMAIL = 2, pgettext_lazy(
+        "notification type", "Notify on site and with e-mail"
     )
-    SITE_AND_EMAIL = 2, pgettext_lazy("notification type", "Notify with an e-mail")
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:

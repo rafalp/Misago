@@ -51,7 +51,7 @@ const ThreadWatchButton = ({ dispatch, dropup, stickToBottom, thread }) => (
                 onClick={() => setNotifications(2)}
               >
                 <span className="material-icon">mail</span>
-                {pgettext("watch thread", "Send e-mail notifications")}
+                {pgettext("watch thread", "On site and with e-mail")}
               </button>
             </li>
             <li>
@@ -61,7 +61,7 @@ const ThreadWatchButton = ({ dispatch, dropup, stickToBottom, thread }) => (
                 onClick={() => setNotifications(1)}
               >
                 <span className="material-icon">notifications_active</span>
-                {pgettext("watch thread", "Without e-mail notifications")}
+                {pgettext("watch thread", "On site only")}
               </button>
             </li>
             <li>

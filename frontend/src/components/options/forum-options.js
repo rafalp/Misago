@@ -19,12 +19,15 @@ const WATCH_CHOICES = [
   {
     value: 1,
     icon: "notifications",
-    label: pgettext("watch thread choice", "Yes"),
+    label: pgettext("watch thread choice", "Yes, with on site notifications"),
   },
   {
     value: 2,
     icon: "mail",
-    label: pgettext("watch thread choice", "Yes, with e-mail notifications"),
+    label: pgettext(
+      "watch thread choice",
+      "Yes, with on site and e-mail notifications"
+    ),
   },
 ]
 
@@ -37,12 +40,15 @@ const NOTIFICATION_CHOICES = [
   {
     value: 1,
     icon: "notifications",
-    label: pgettext("notification preference", "Notify"),
+    label: pgettext("notification preference", "Notify on site"),
   },
   {
     value: 2,
     icon: "mail",
-    label: pgettext("notification preference", "Notify with e-mail"),
+    label: pgettext(
+      "notification preference",
+      "Notify on site and with e-mail"
+    ),
   },
 ]
 
