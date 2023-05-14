@@ -5,6 +5,7 @@ from django.core.files import File
 from django.utils import timezone
 
 from ...categories.models import Category
+from ...notifications.models import Notification
 from ...threads.models import AttachmentType
 from ...threads.test import post_poll, post_thread
 from ..audittrail import create_user_audit_trail
@@ -197,6 +198,12 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
     def test_prepare_download_with_audit_trail(self):
         """function creates data download for user with audit trail"""
         create_user_audit_trail(self.user, "127.0.0.1", self.user)
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_notification(self):
+        """function creates data download for user with notification"""
+        Notification.objects.create(user=self.user, verb="TEST")
 
         self.assert_download_is_valid()
 
