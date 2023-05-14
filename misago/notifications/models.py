@@ -38,10 +38,6 @@ class Notification(models.Model):
         "misago_threads.Post", blank=True, null=True, on_delete=models.CASCADE
     )
 
-    # Used instead of repeating notifications, enables messages
-    # like "[actor] and X others [verb] [target]"
-    extra_actors = models.IntegerField(default=0)
-
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def get_absolute_url(self) -> str:

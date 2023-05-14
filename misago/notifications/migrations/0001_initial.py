@@ -65,7 +65,6 @@ class Migration(migrations.Migration):
                     "thread_title",
                     models.CharField(blank=True, max_length=255, null=True),
                 ),
-                ("extra_actors", models.IntegerField(default=0)),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
                 (
                     "actor",
