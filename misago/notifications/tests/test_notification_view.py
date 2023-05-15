@@ -4,7 +4,7 @@ from ...test import assert_contains
 from ...threads.models import ThreadParticipant
 from ..verbs import NotificationVerb
 from ..models import Notification
-from ..redirects import redirect_factory
+from ..registry import registry
 
 
 def test_notification_view_returns_redirect_to_user_notification(rf, user, user_client):
@@ -14,7 +14,7 @@ def test_notification_view_returns_redirect_to_user_notification(rf, user, user_
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
     assert response.status_code == 302
-    assert response.headers["location"] == redirect_factory.get_redirect_url(
+    assert response.headers["location"] == registry.get_redirect_url(
         request, notification
     )
 

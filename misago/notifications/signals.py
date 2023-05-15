@@ -10,7 +10,7 @@ from ..users.signals import (
     delete_user_content,
     username_changed,
 )
-from .messages import message_factory
+from .registry import registry
 from .models import Notification, WatchedThread
 
 
@@ -24,7 +24,7 @@ def archive_user_notifications(sender, archive=None, **kwargs):
         item_name = notification.created_at.strftime("%H%M%S-notification")
         archive.add_text(
             item_name,
-            message_factory.get_message(notification),
+            registry.get_message(notification),
             date=notification.created_at,
         )
 

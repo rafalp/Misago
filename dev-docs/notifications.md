@@ -1,6 +1,6 @@
 # Notifications guide
 
-Misago's notifications feature is implemented in `misago.notifications` package.
+Misago's notifications feature is implemented in the `misago.notifications` package.
 
 
 ## Notification model
@@ -87,48 +87,52 @@ Custom verbs can be any Python string not longer than 32 characters. To reduce t
 Once you've decided on verb for your notification, you will be able to implement message and redirect url for it.
 
 
+### Notification registry
+
+Misago uses factory functions to retrieve notifications messages and redirect urls.
+
+Those factory functions are registered in special registry, importable as `registry` from `misago.notifications.registry` module.
+
+
 ### Notification message
 
-Notification messages are not stored in the database. Instead they are created dynamically by a function associated with given `verb` from `Notification` instances.
-
-Function used to retrieve notification's message looks like this:
+Factory function for notification's message is called with single argument, `Notification` instance, and returns **escaped** `str` with HTML for notification message:
 
 ```python
 def get_verb_notification_message(notification: Notification) -> str:
-    return f"Test notification #{notification.id}"
+    return html.escape(f"Test notification #{notification.id}")
 ```
 
 > **Note:** For performance reasons foreign key fields on `Notification` model are not populated when notifications list is retrieved.
 > 
 > Use `notification.actor_name` field to retrieve actor's name and `notification.thread_title` field to retrieve thread's title.
 
-To know which function to use for the verb, Misago uses instance of `misago.notifications.messages.NotificationMessageFactory` class, importable as `message_factory` from same package.
-
-This instance implements the `set_message` method which can be used to set notification's message factory for given verb:
+To register custom function as message factory for verb, use `registry`'s `message` method:
 
 ```python
-from misago.notifications.messages import Notification, message_factory
+import html
 
-# Use `set_message` as decorator
-@message_factory.set_message("CUSTOM")
+from misago.notifications.registry import Notification, registry
+
+
+# `message` works as decorator
+@registry.message("CUSTOM")
 def get_custom_notification_message(notification: Notification) -> str:
-    return f"Custom notification in {notification.thread_title}"
+    return html.escape(f"Custom notification in {notification.thread_title}")
 
 
-# Or as setter
+# And as setter
 def get_custom_notification_message(notification: Notification) -> str:
-    return f"Custom notification in {notification.thread_title}"
+    return html.escape(f"Custom notification in {notification.thread_title}")
 
 
-message_factory.set_message("CUSTOM", get_custom_notification_message)
+registry.message("CUSTOM", get_custom_notification_message)
 ```
 
 
 ### Notification redirect url
 
-Notification urls are created dynamically by a function associated with given `verb` from `HttpRequest` and `Notification` instances.
-
-Function used to retrieve notification's redirect url looks like this:
+Factory function for notification's redirect url is called with two arguments, Django's `HttpRequest` instance and the `Notification` instance, and retuurns `str` with URL to which user should be redirected to see notification's source:
 
 ```python
 def get_verb_notification_redirect_url(request: HttpRequest, notification: Notification) -> str:
@@ -143,17 +147,17 @@ def get_verb_notification_redirect_url(request: HttpRequest, notification: Notif
 
 > **Note:** Foreign key fields on `Notification` model are populated with related objects when notification redirect url is retrieved.
 
-To know which function to use for the verb, Misago uses instance of `misago.notifications.redirects.NotificationRedirectFactory` class, importable as `redirect_factory` from same package.
 
-This instance implements the `set_redirect` method which can be used to set notification's redirect url factory for given verb:
+To register custom function as redirect url factory for verb, use `registry`'s `redirect` method:
 
 ```python
 from django.http import HttpRequest
 from django.urls import reverse
-from misago.notifications.redirects import Notification, redirect_factory
+from misago.notifications.registry import Notification, registry
 
-# Use `set_message` as decorator
-@redirect_factory.set_message("CUSTOM")
+
+# `redirect` works as decorator
+@registry.redirect("CUSTOM")
 def get_custom_notification_redirect_url(
     request: HttpRequest, notification: Notification
 ) -> str:
@@ -166,7 +170,7 @@ def get_custom_notification_redirect_url(
     )
 
 
-# Or as setter
+# And as setter
 def get_custom_notification_redirect_url(
     request: HttpRequest, notification: Notification
 ) -> str:
@@ -179,5 +183,5 @@ def get_custom_notification_redirect_url(
     )
 
 
-redirect_factory.set_message("CUSTOM", get_custom_notification_redirect_url)
+registry.redirect("CUSTOM", get_custom_notification_redirect_url)
 ```

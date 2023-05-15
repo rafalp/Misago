@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from ...notifications.models import Notification
-from ...notifications.messages import message_factory
+from ...notifications.registry import registry
 
 User = get_user_model()
 
@@ -41,6 +41,6 @@ class NotificationSerializer(serializers.ModelSerializer):
             "createdAt": data["created_at"],
             "actor": actor_data,
             "actorName": obj.actor_name,
-            "message": message_factory.get_message(obj),
+            "message": registry.get_message(obj),
             "url": obj.get_absolute_url(),
         }

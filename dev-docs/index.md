@@ -7,6 +7,6 @@ This directory contains reference documents for Misago developers.
 
 ## Notifications
 
-Misago's notifications feature is implemented in `misago.notifications` package.
+Misago's notifications feature is implemented in the `misago.notifications` package.
 
 - [Notifications guide](./notifications.md)

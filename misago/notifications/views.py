@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Notification, WatchedThread
 from .permissions import allow_use_notifications
-from .redirects import redirect_factory
+from .registry import registry
 
 
 def notifications(request: HttpRequest) -> HttpResponse:
@@ -46,7 +46,7 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
             user.unread_notifications = F("unread_notifications") - 1
             user.save(update_fields=["unread_notifications"])
 
-    return redirect(redirect_factory.get_redirect_url(request, notification))
+    return redirect(registry.get_redirect_url(request, notification))
 
 
 def disable_email_notifications(
