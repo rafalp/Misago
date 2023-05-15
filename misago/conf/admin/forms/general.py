@@ -55,18 +55,19 @@ class GeneralSettingsForm(SettingsForm):
     )
 
     logo = forms.ImageField(
-        label=pgettext_lazy("general settings", "Large logo"),
+        label=pgettext_lazy("admin general", "Large logo"),
         help_text=_(
-            "Image that will displayed in forum navbar instead of small logo or text."
+            "Image that will be displayed in forum navbar instead of a small "
+            "logo or text."
         ),
         required=False,
     )
     logo_delete = forms.BooleanField(label=_("Delete logo image"), required=False)
     logo_small = forms.ImageField(
-        label=pgettext_lazy("general settings", "Small logo"),
+        label=pgettext_lazy("admin general", "Small logo"),
         help_text=_(
-            "Image that will be displayed in forum navbar next to logo text "
-            "if large logo was not uploaded."
+            "Image that will be displayed in the forum navbar next to the logo "
+            "text if a large logo was not uploaded."
         ),
         required=False,
     )
@@ -74,11 +75,11 @@ class GeneralSettingsForm(SettingsForm):
         label=_("Delete small logo image"), required=False
     )
     logo_text = forms.CharField(
-        label=pgettext_lazy("general settings", "Textual logo"),
+        label=pgettext_lazy("admin general", "Text logo"),
         help_text=_(
-            "Text displayed in forum navbar. If small logo image was uploaded, "
-            "this text will be displayed right next to it. "
-            "If large logo was uploaded it will replace both small logo and text."
+            "Text displayed in forum navbar. If a small logo image was uploaded, "
+            "this text will be displayed right next to it. If a large logo was "
+            "uploaded, it will replace both the small logo and the text."
         ),
         max_length=255,
         required=False,

@@ -28,7 +28,7 @@ class NotificationsSettingsForm(SettingsForm):
     watch_replied_threads = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin notifications",
-            "Notify about new replies in threads replied by the user",
+            "Notify about new replies in threads replied to by the user",
         ),
         choices=ThreadNotifications.choices,
         widget=forms.RadioSelect(),
@@ -76,11 +76,11 @@ class NotificationsSettingsForm(SettingsForm):
     delete_notifications_older_than = forms.IntegerField(
         label=pgettext_lazy(
             "admin notifications",
-            "Automatically delete notifications that are older than given number of days",
+            "Delete notifications older than (in days)",
         ),
         help_text=pgettext_lazy(
             "admin notifications",
-            "Old notifications filling the database table can have an negative impact on the notifications performance.",
+            "Misago automatically deletes notifications older than the specified age.",
         ),
         min_value=1,
     )
