@@ -6,7 +6,7 @@ export default function SearchResultsEmpty() {
   return (
     <SearchResultsList>
       <ListGroupEmpty
-        message={pgettext("search results", "Search returned no results.")}
+        message={pgettext("search results", "The search returned no results.")}
       />
     </SearchResultsList>
   )

@@ -46,7 +46,7 @@ settings = [
     {
         "setting": "delete_notifications_older_than",
         "python_type": "int",
-        "dry_value": 45,
+        "dry_value": 60,
     },
 ]
 

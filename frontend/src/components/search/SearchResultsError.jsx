@@ -8,7 +8,7 @@ export default function SearchResultsError({ error }) {
       <ListGroupError
         message={pgettext(
           "search results",
-          "Search results could not be loaded."
+          "The search could not be completed."
         )}
         detail={errorDetail(error)}
       />

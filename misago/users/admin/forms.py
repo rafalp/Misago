@@ -179,14 +179,15 @@ class EditUserForm(UserBaseForm):
 
     watch_started_threads = forms.TypedChoiceField(
         label=pgettext_lazy(
-            "admin user form", "Automatically watch threads user has started"
+            "admin user form", "Automatically watch threads that the user has started"
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
     )
     watch_replied_threads = forms.TypedChoiceField(
         label=pgettext_lazy(
-            "admin user form", "Automatically watch threads user has replied to"
+            "admin user form",
+            "Automatically watch threads that the user has replied to",
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -194,7 +195,10 @@ class EditUserForm(UserBaseForm):
     watch_new_private_threads_by_followed = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            "Automatically watch private threads user was invited to user they are following",
+            (
+                "Automatically watch private threads that the user was invited to "
+                "by users they are following"
+            ),
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -202,7 +206,10 @@ class EditUserForm(UserBaseForm):
     watch_new_private_threads_by_other_users = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            "Automatically watch private threads user was invited to by other users",
+            (
+                "Automatically watch private threads that the user "
+                "was invited to by other users"
+            ),
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -210,7 +217,10 @@ class EditUserForm(UserBaseForm):
     notify_new_private_threads_by_followed = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            "Notify about new private threads invitations from users this user is following",
+            (
+                "Notify about new private thread invitations from users "
+                "this user is following"
+            ),
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -218,7 +228,7 @@ class EditUserForm(UserBaseForm):
     notify_new_private_threads_by_other_users = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            "Notify about new private threads invitations from other users",
+            "Notify about new private thread invitations from other users",
         ),
         coerce=int,
         choices=ThreadNotifications.choices,

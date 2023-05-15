@@ -81,17 +81,19 @@ export default class ForumOptionsForm extends Form {
       {
         value: 0,
         icon: "help_outline",
-        label: gettext("Everybody"),
+        label: gettext("Anybody can invite me to their private threads"),
       },
       {
         value: 1,
         icon: "done_all",
-        label: gettext("Users I follow"),
+        label: gettext(
+          "Only those I follow can invite me to their private threads"
+        ),
       },
       {
         value: 2,
         icon: "highlight_off",
-        label: gettext("Nobody"),
+        label: gettext("Nobody can invite me to their private threads"),
       },
     ]
   }
@@ -134,12 +136,12 @@ export default class ForumOptionsForm extends Form {
           this.state.notify_new_private_threads_by_other_users,
       })
     )
-    snackbar.success(gettext("Your forum options have been changed."))
+    snackbar.success(gettext("Your forum options have been updated."))
   }
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      snackbar.error(gettext("Please reload page and try again."))
+      snackbar.error(gettext("Please reload the page and try again."))
     } else {
       snackbar.apiError(rejection)
     }
@@ -183,7 +185,9 @@ export default class ForumOptionsForm extends Form {
               </FormGroup>
 
               <FormGroup
-                label={gettext("Private thread invitations")}
+                label={gettext(
+                  "Limit private thread invitations from other users"
+                )}
                 for="id_limits_private_thread_invites_to"
               >
                 <Select
@@ -234,7 +238,7 @@ export default class ForumOptionsForm extends Form {
               <FormGroup
                 label={pgettext(
                   "notifications options",
-                  "Automatically watch new private threads I'm invited to by members I am following"
+                  "Automatically watch new private threads I'm invited to by the members I am following"
                 )}
                 for="id_watch_new_private_threads_by_followed"
               >
@@ -268,7 +272,7 @@ export default class ForumOptionsForm extends Form {
               <FormGroup
                 label={pgettext(
                   "notifications options",
-                  "Notify me about new private threads invitations from members I am following"
+                  "Notify me about new private thread invitations from the members I am following"
                 )}
                 for="id_notify_new_private_threads_by_followed"
               >
@@ -285,7 +289,7 @@ export default class ForumOptionsForm extends Form {
               <FormGroup
                 label={pgettext(
                   "notifications options",
-                  "Notify me about new private threads invitations from other members"
+                  "Notify me about new private thread invitations from other members"
                 )}
                 for="id_notify_new_private_threads_by_other_users"
               >

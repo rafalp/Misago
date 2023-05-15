@@ -21,7 +21,7 @@ function emptyMessage(filter) {
   } else if (filter === "unread") {
     return pgettext(
       "notifications list",
-      "You don't have any unread notifications!"
+      "You don't have any unread notifications."
     )
   }
 
