@@ -2,7 +2,47 @@
 // Dropdowns
 // --------------------------------------------------
 
+// Make dropdown header heavier
+.dropdown-header {
+  color: @text-color;
+  font-size: @font-size-large;
+}
+
+// Add subheader in place of old header
+.dropdown-subheader {
+  padding: 6px 20px;
+  width: 100%;
+
+  color: @text-color;
+  font-size: @font-size-base;
+  font-weight: bold;
+}
+
+// Justify dropdown pills
+.dropdown-pills {
+  display: flex;
+  padding: 6px 10px;
+
+  border-bottom: 1px solid @dropdown-divider-bg;
+
+  .btn {
+    display: block;
+    width: 100%;
+    margin: 0px 10px;
+  }
+}
+
+// Make dropdown menu list look like menu
+.dropdown-menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 // Unify .btn-link appearance with anchors
+.dropdown-menu-item > a,
+.dropdown-menu-item > .btn-link,
+.dropdown-link > a,
 .dropdown-menu > li > a,
 .dropdown-menu > li > .btn-link,
 .modal-menu > li > a,
@@ -52,9 +92,12 @@
 
   .badge {
     float: right;
-
     position: relative;
     top: 1px;
+
+    background-color: @navbar-item-badge-bg;
+    border-radius: 4px;
+    color: @navbar-item-badge-color;
   }
 }
 
@@ -77,8 +120,15 @@
 }
 
 // Dropdown footer
-.dropdown-menu .dropdown-footer {
+.dropdown-footer {
   padding: 6px 20px;
+  margin-bottom: -5px;
+
+  border-top: 1px solid @dropdown-divider-bg;
+}
+
+.dropdown-menu-item + .dropdown-footer {
+  margin-top: ((@line-height-computed / 2) - 1);
 }
 
 // Dropdown buttons container
@@ -88,45 +138,6 @@
 
   .btn {
     margin: 4px 0px;
-  }
-}
-
-// Navbar's dropdown
-.mobile-dropdown {
-  position: relative;
-}
-
-.mobile-dropdown.open > .dropdown-menu,
-.compact-nav.open > .dropdown-menu {
-  border: none;
-  border-radius: 0;
-
-  display: block;
-  margin: 0px;
-  width: 100%;
-}
-
-// Guest menu
-.user-dropdown .guest-preview {
-  text-align: center;
-
-  .row {
-    margin: 0px;
-  }
-}
-
-// User menu
-.navbar .user-dropdown {
-  width: 240px;
-}
-
-.user-dropdown .dropdown-header {
-  padding: 6px 20px;
-
-  font-size: @font-size-large;
-
-  strong {
-    font-weight: normal;
   }
 }
 

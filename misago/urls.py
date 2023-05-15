@@ -14,6 +14,7 @@ urlpatterns = hooks.urlpatterns + [
     path("", include("misago.users.urls")),
     path("", include("misago.categories.urls")),
     path("", include("misago.threads.urls")),
+    path("", include("misago.notifications.urls")),
     path("", include("misago.search.urls")),
     path("", include("misago.oauth2.urls")),
     path("", include("misago.socialauth.urls")),
@@ -43,7 +44,10 @@ apipatterns = hooks.apipatterns + [
     path("", include("misago.search.urls.api")),
 ]
 
-urlpatterns += [path("api/", include((apipatterns, "api"), namespace="api"))]
+urlpatterns += [
+    path("api/", include((apipatterns, "api"), namespace="api")),
+    path("api/v2/", include("misago.apiv2.urls")),
+]
 
 
 # Register Misago ACP

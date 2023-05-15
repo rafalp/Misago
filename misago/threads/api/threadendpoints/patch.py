@@ -124,7 +124,9 @@ def patch_move(request, thread, value):
 
     moderation.move_thread(request, thread, new_category)
 
-    return {"category": CategorySerializer(new_category, context=request).data}
+    return {
+        "category": CategorySerializer(new_category, context={"request": request}).data,
+    }
 
 
 thread_patch_dispatcher.replace("category", patch_move)
@@ -187,35 +189,6 @@ def patch_is_hidden(request, thread, value):
 
 
 thread_patch_dispatcher.replace("is-hidden", patch_is_hidden)
-
-
-def patch_subscription(request, thread, value):
-    request.user.subscription_set.filter(thread=thread).delete()
-
-    if value == "notify":
-        thread.subscription = request.user.subscription_set.create(
-            thread=thread,
-            category=thread.category,
-            last_read_on=thread.last_post_on,
-            send_email=False,
-        )
-
-        return {"subscription": False}
-
-    if value == "email":
-        thread.subscription = request.user.subscription_set.create(
-            thread=thread,
-            category=thread.category,
-            last_read_on=thread.last_post_on,
-            send_email=True,
-        )
-
-        return {"subscription": True}
-
-    return {"subscription": None}
-
-
-thread_patch_dispatcher.replace("subscription", patch_subscription)
 
 
 def patch_best_answer(request, thread, value):

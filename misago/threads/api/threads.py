@@ -27,19 +27,19 @@ class ViewSet(viewsets.ViewSet):
     thread = None
 
     def get_thread(
-        self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
+        self, request, pk, path_aware=False, read_aware=False, watch_aware=False
     ):
         return self.thread(  # pylint: disable=not-callable
             request,
             get_int_or_404(pk),
             path_aware=path_aware,
             read_aware=read_aware,
-            subscription_aware=subscription_aware,
+            watch_aware=watch_aware,
         )
 
     def retrieve(self, request, pk):
         thread = self.get_thread(
-            request, pk, path_aware=True, read_aware=True, subscription_aware=True
+            request, pk, path_aware=True, read_aware=True, watch_aware=True
         )
 
         return Response(thread.get_frontend_context())

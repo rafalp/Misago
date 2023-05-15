@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
 from django.utils.translation import gettext as _
@@ -9,6 +10,7 @@ from django.utils.translation import gettext as _
 from ..categories.models import Category
 from ..categories.signals import delete_category_content, move_category_content
 from ..core.pgutils import chunk_queryset
+from ..notifications.models import Notification, WatchedThread
 from ..users.signals import (
     anonymize_user_data,
     archive_user_data,
@@ -24,6 +26,7 @@ merge_post = Signal()
 merge_thread = Signal()
 move_post = Signal()
 move_thread = Signal()
+update_thread_title = Signal()
 
 
 @receiver(merge_thread)
@@ -38,12 +41,34 @@ def merge_threads(sender, **kwargs):
         user__in=sender.subscription_set.values("user")
     ).update(category=sender.category, thread=sender)
 
+    other_thread.notification_set.update(
+        category=sender.category,
+        thread=sender,
+        thread_title=sender.title,
+    )
+
+    other_thread.watchedthread_set.update(
+        category=sender.category,
+        thread=sender,
+    )
+
 
 @receiver(merge_post)
 def merge_posts(sender, **kwargs):
     other_post = kwargs["other_post"]
     for user in sender.mentions.iterator():
         other_post.mentions.add(user)
+
+    sender.notification_set.update(post=other_post)
+
+
+@receiver(move_post)
+def move_post_notifications(sender, **kwargs):
+    sender.notification_set.update(
+        category=sender.category,
+        thread=sender.thread,
+        thread_title=sender.thread.title,
+    )
 
 
 @receiver(move_thread)
@@ -53,12 +78,21 @@ def move_thread_content(sender, **kwargs):
     sender.postlike_set.update(category=sender.category)
     sender.pollvote_set.update(category=sender.category)
     sender.subscription_set.update(category=sender.category)
+    sender.notification_set.update(category=sender.category)
+    sender.watchedthread_set.update(category=sender.category)
 
     Poll.objects.filter(thread=sender).update(category=sender.category)
 
 
+@receiver(update_thread_title)
+def change_thread_title(sender, **kwargs):
+    sender.notification_set.update(thread_title=sender.title)
+
+
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
+    sender.notification_set.all().delete()
+    sender.watchedthread_set.all().delete()
     sender.subscription_set.all().delete()
     sender.pollvote_set.all().delete()
     sender.poll_set.all().delete()
@@ -79,12 +113,20 @@ def move_category_threads(sender, **kwargs):
     sender.poll_set.filter(category=sender).update(category=new_category)
     sender.pollvote_set.update(category=new_category)
     sender.subscription_set.update(category=new_category)
+    sender.notification_set.update(category=new_category)
+    sender.watchedthread_set.update(category=new_category)
 
 
 @receiver(delete_user_content)
 def delete_user_threads(sender, **kwargs):
     recount_categories = set()
     recount_threads = set()
+
+    Notification.objects.filter(
+        Q(thread__starter=sender) | Q(post__poster=sender)
+    ).delete()
+
+    WatchedThread.objects.filter(thread__starter=sender).delete()
 
     for post in chunk_queryset(sender.liked_post_set):
         cleaned_likes = list(filter(lambda i: i["id"] != sender.id, post.last_likes))

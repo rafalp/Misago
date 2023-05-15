@@ -14,9 +14,10 @@ from ..views.goto import (
     PrivateThreadGotoNewView,
 )
 from ..views.list import ForumThreadsList, CategoryThreadsList, PrivateThreadsList
+from ..views.subscribed import redirect_subscribed_to_watched
 from ..views.thread import ThreadView, PrivateThreadView
 
-LISTS_TYPES = ("all", "my", "new", "unread", "subscribed", "unapproved")
+LISTS_TYPES = ("all", "my", "new", "unread", "watched", "unapproved")
 
 
 def threads_list_patterns(prefix, view, patterns):
@@ -35,6 +36,7 @@ def threads_list_patterns(prefix, view, patterns):
                 kwargs={"list_type": LISTS_TYPES[i]},
             )
         )
+
     return urls
 
 
@@ -42,7 +44,14 @@ if settings.MISAGO_THREADS_ON_INDEX:
     urlpatterns = threads_list_patterns(
         "threads",
         ForumThreadsList,
-        ("", "my/", "new/", "unread/", "subscribed/", "unapproved/"),
+        (
+            "",
+            "my/",
+            "new/",
+            "unread/",
+            "watched/",
+            "unapproved/",
+        ),
     )
 else:
     urlpatterns = threads_list_patterns(
@@ -53,7 +62,7 @@ else:
             "threads/my/",
             "threads/new/",
             "threads/unread/",
-            "threads/subscribed/",
+            "threads/watched/",
             "threads/unapproved/",
         ),
     )
@@ -66,7 +75,7 @@ urlpatterns += threads_list_patterns(
         "c/<slug:slug>/<int:pk>/my/",
         "c/<slug:slug>/<int:pk>/new/",
         "c/<slug:slug>/<int:pk>/unread/",
-        "c/<slug:slug>/<int:pk>/subscribed/",
+        "c/<slug:slug>/<int:pk>/watched/",
         "c/<slug:slug>/<int:pk>/unapproved/",
     ),
 )
@@ -79,9 +88,22 @@ urlpatterns += threads_list_patterns(
         "private-threads/my/",
         "private-threads/new/",
         "private-threads/unread/",
-        "private-threads/subscribed/",
+        "private-threads/watched/",
     ),
 )
+
+
+# Redirect from subscribed to watched
+if settings.MISAGO_THREADS_ON_INDEX:
+    root_subscribed_path = "subscribed/"
+else:
+    root_subscribed_path = "threads/subscribed/"
+
+urlpatterns += [
+    path(root_subscribed_path, redirect_subscribed_to_watched),
+    path("c/<slug:slug>/<int:pk>/subscribed/", redirect_subscribed_to_watched),
+    path("private-threads/subscribed/", redirect_subscribed_to_watched),
+]
 
 
 def thread_view_patterns(prefix, view):

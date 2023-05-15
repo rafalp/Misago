@@ -1,7 +1,7 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
-from django.core import mail
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
@@ -309,7 +309,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             )
 
     @override_dynamic_settings(forum_address="http://test.com/")
-    def test_can_start_thread(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_can_start_thread(self, notify_on_new_private_thread_mock):
         """endpoint creates new thread"""
         response = self.client.post(
             self.api_link,
@@ -368,20 +369,15 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.other_user.refresh_from_db()
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
-        # notification about new private thread was sent to other user
-        self.assertEqual(len(mail.outbox), 1)
-        email = mail.outbox[-1]
+        # notification about new private thread was triggered
+        notify_on_new_private_thread_mock.delay.assert_called_once_with(
+            self.user.id,
+            thread.id,
+            [self.other_user.id],
+        )
 
-        self.assertIn(self.user.username, email.subject)
-        self.assertIn(thread.title, email.subject)
-
-        email_body = smart_str(email.body)
-
-        self.assertIn(self.user.username, email_body)
-        self.assertIn(thread.title, email_body)
-        self.assertIn(thread.get_absolute_url(), email_body)
-
-    def test_post_unicode(self):
+    @patch("misago.threads.participants.notify_on_new_private_thread")
+    def test_post_unicode(self, notify_on_new_private_thread_mock):
         """unicode characters can be posted"""
         response = self.client.post(
             self.api_link,

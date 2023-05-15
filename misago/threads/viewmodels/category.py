@@ -48,7 +48,9 @@ class ViewModel(BaseViewModel):
     def get_frontend_context(self):
         return {
             "CATEGORIES": BasicCategorySerializer(
-                self._categories, context=self.request, many=True
+                self._categories,
+                context={"request": self.request},
+                many=True,
             ).data
         }
 

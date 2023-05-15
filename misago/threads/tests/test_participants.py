@@ -5,6 +5,7 @@ from ...categories.models import Category
 from ...users.test import create_test_user
 from ..models import Post, Thread, ThreadParticipant
 from ..participants import (
+    add_participants,
     has_participants,
     make_participants_aware,
     set_owner,
@@ -193,3 +194,17 @@ class ParticipantsTests(TestCase):
 
         user.refresh_from_db()
         assert user.sync_unread_private_threads is False
+
+
+def test_add_participants_triggers_notify_on_new_private_thread(
+    mocker, user, other_user, private_thread
+):
+    notify_on_new_private_thread_mock = mocker.patch(
+        "misago.threads.participants.notify_on_new_private_thread"
+    )
+
+    add_participants(user, private_thread, [user, other_user])
+
+    notify_on_new_private_thread_mock.delay.assert_called_once_with(
+        user.id, private_thread.id, [other_user.id]
+    )

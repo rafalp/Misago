@@ -1,4 +1,5 @@
 from hashlib import md5
+from typing import Optional, Union
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
@@ -15,6 +16,7 @@ from django.utils.translation import gettext_lazy as _
 from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
+from ...notifications.threads import ThreadNotifications
 from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
@@ -206,6 +208,33 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
         default=SUBSCRIPTION_NONE, choices=SUBSCRIPTION_CHOICES
+    )
+
+    unread_notifications = models.PositiveIntegerField(default=0)
+
+    watch_started_threads = models.PositiveIntegerField(
+        default=ThreadNotifications.SITE_AND_EMAIL,
+        choices=ThreadNotifications.choices,
+    )
+    watch_replied_threads = models.PositiveIntegerField(
+        default=ThreadNotifications.SITE_AND_EMAIL,
+        choices=ThreadNotifications.choices,
+    )
+    watch_new_private_threads_by_followed = models.PositiveIntegerField(
+        default=ThreadNotifications.SITE_AND_EMAIL,
+        choices=ThreadNotifications.choices,
+    )
+    watch_new_private_threads_by_other_users = models.PositiveIntegerField(
+        default=ThreadNotifications.SITE_AND_EMAIL,
+        choices=ThreadNotifications.choices,
+    )
+    notify_new_private_threads_by_followed = models.PositiveIntegerField(
+        default=ThreadNotifications.SITE_AND_EMAIL,
+        choices=ThreadNotifications.choices,
+    )
+    notify_new_private_threads_by_other_users = models.PositiveIntegerField(
+        default=ThreadNotifications.SITE_AND_EMAIL,
+        choices=ThreadNotifications.choices,
     )
 
     threads = models.PositiveIntegerField(default=0)
@@ -430,29 +459,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         """sends an email to this user (for compat with Django)"""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def is_following(self, user_or_id):
-        try:
-            user_id = user_or_id.id
-        except AttributeError:
+    def is_following(self, user_or_id: Union["User", int]) -> bool:
+        if isinstance(user_or_id, int):
             user_id = user_or_id
-
-        try:
-            self.follows.get(id=user_id)
-            return True
-        except User.DoesNotExist:
-            return False
-
-    def is_blocking(self, user_or_id):
-        try:
+        elif isinstance(user_or_id, User):
             user_id = user_or_id.id
-        except AttributeError:
-            user_id = user_or_id
+        else:
+            raise ValueError("'user_or_id' argument must be an int or User instance")
 
-        try:
-            self.blocks.get(id=user_id)
-            return True
-        except User.DoesNotExist:
-            return False
+        return self.follows.filter(id=user_id).exists()
+
+    def is_blocking(self, user_or_id: Union["User", int]) -> bool:
+        if isinstance(user_or_id, int):
+            user_id = user_or_id
+        elif isinstance(user_or_id, User):
+            user_id = user_or_id.id
+        else:
+            raise ValueError("'user_or_id' argument must be an int or User instance")
+
+        return self.blocks.filter(id=user_id).exists()
+
+    def get_unread_notifications_for_display(self) -> Optional[str]:
+        if not self.unread_notifications:
+            return None
+
+        if self.unread_notifications > settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT:
+            return f"{settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT}+"
+
+        return str(self.unread_notifications)
 
 
 class UsernameChange(models.Model):

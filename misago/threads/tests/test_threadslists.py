@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.http import HttpResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
@@ -9,10 +10,14 @@ from ...acl.test import patch_user_acl
 from ...categories.models import Category
 from ...conf import settings
 from ...conf.test import override_dynamic_settings
+from ...notifications.threads import ThreadNotifications
 from ...readtracker import poststracker
+from ...test import assert_contains, assert_not_contains
 from ...users.test import AuthenticatedUserTestCase
+from ..models import Thread
 
-LISTS_URLS = ("", "my/", "new/", "unread/", "subscribed/")
+
+LISTS_URLS = ("", "my/", "new/", "unread/", "watched/")
 
 
 def patch_categories_acl(category_acl=None, base_acl=None):
@@ -1118,71 +1123,108 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json["results"]), 0)
 
 
-class SubscribedThreadsListTests(ThreadsListTestCase):
-    @patch_categories_acl()
-    def test_list_shows_subscribed_thread(self):
-        """list shows subscribed thread"""
-        test_thread = test.post_thread(category=self.category_a)
-        self.user.subscription_set.create(
-            thread=test_thread,
-            category=self.category_a,
-            last_read_on=test_thread.last_post_on,
-        )
+def assert_contains_thread(response: HttpResponse, thread: Thread):
+    assert_contains(response, f'href="{thread.get_absolute_url()}"')
 
-        response = self.client.get("/subscribed/")
-        self.assertEqual(response.status_code, 200)
-        self.assertContainsThread(response, test_thread)
 
-        response = self.client.get(self.category_a.get_absolute_url() + "subscribed/")
-        self.assertEqual(response.status_code, 200)
-        self.assertContainsThread(response, test_thread)
+def assert_not_contains_thread(response: HttpResponse, thread: Thread):
+    assert_not_contains(response, f'href="{thread.get_absolute_url()}"')
 
-        # test api
-        response = self.client.get("%s?list=subscribed" % self.api_link)
-        self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertEqual(len(response_json["results"]), 1)
-        self.assertContains(response, test_thread.get_absolute_url())
+def test_watched_threads_list_shows_thread_with_email_notifications(
+    user, user_client, default_category, thread, watched_thread_factory
+):
+    watched_thread_factory(user, thread, send_emails=True)
 
-        response = self.client.get(
-            "%s?list=subscribed&category=%s" % (self.api_link, self.category_a.pk)
-        )
-        self.assertEqual(response.status_code, 200)
+    # Global watched threads list includes thread
+    response = user_client.get("/watched/")
+    assert_contains_thread(response, thread)
 
-        response_json = response.json()
-        self.assertEqual(len(response_json["results"]), 1)
-        self.assertContains(response, test_thread.get_absolute_url())
+    # Category threads list includes thread
+    response = user_client.get(default_category.get_absolute_url() + "watched/")
+    assert_contains_thread(response, thread)
 
-    @patch_categories_acl()
-    def test_list_hides_unsubscribed_thread(self):
-        """list shows subscribed thread"""
-        test_thread = test.post_thread(category=self.category_a)
+    # API threads list includes thread
+    api_response = user_client.get(
+        reverse("misago:api:thread-list")
+        + f"?list=watched&category={default_category.id}"
+    )
+    assert api_response.status_code == 200
 
-        response = self.client.get("/subscribed/")
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContainsThread(response, test_thread)
+    api_data = api_response.json()
+    assert api_data["results"][0]["id"] == thread.id
+    assert api_data["results"][0]["notifications"] == ThreadNotifications.SITE_AND_EMAIL
 
-        response = self.client.get(self.category_a.get_absolute_url() + "subscribed/")
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContainsThread(response, test_thread)
 
-        # test api
-        response = self.client.get("%s?list=subscribed" % self.api_link)
-        self.assertEqual(response.status_code, 200)
+def test_watched_threads_list_shows_thread_with_email_notifications_disabled(
+    user, user_client, default_category, thread, watched_thread_factory
+):
+    watched_thread_factory(user, thread, send_emails=False)
 
-        response_json = response.json()
-        self.assertEqual(len(response_json["results"]), 0)
-        self.assertNotContainsThread(response, test_thread)
+    # Global watched threads list includes thread
+    response = user_client.get("/watched/")
+    assert_contains_thread(response, thread)
 
-        response = self.client.get(
-            "%s?list=subscribed&category=%s" % (self.api_link, self.category_a.pk)
-        )
-        self.assertEqual(response.status_code, 200)
+    # Category threads list includes thread
+    response = user_client.get(default_category.get_absolute_url() + "watched/")
+    assert_contains_thread(response, thread)
 
-        response_json = response.json()
-        self.assertEqual(len(response_json["results"]), 0)
-        self.assertNotContainsThread(response, test_thread)
+    # API threads list includes thread
+    api_response = user_client.get(
+        reverse("misago:api:thread-list")
+        + f"?list=watched&category={default_category.id}"
+    )
+    assert api_response.status_code == 200
+
+    api_data = api_response.json()
+    assert api_data["results"][0]["id"] == thread.id
+    assert api_data["results"][0]["notifications"] == ThreadNotifications.SITE_ONLY
+
+
+def test_watched_threads_list_excludes_unwatched_thread(
+    user_client, default_category, thread
+):
+    # Global watched threads list includes thread
+    response = user_client.get("/watched/")
+    assert_not_contains_thread(response, thread)
+
+    # Category threads list includes thread
+    response = user_client.get(default_category.get_absolute_url() + "watched/")
+    assert_not_contains_thread(response, thread)
+
+    # API threads list includes thread
+    api_response = user_client.get(
+        reverse("misago:api:thread-list")
+        + f"?list=watched&category={default_category.id}"
+    )
+    assert api_response.status_code == 200
+
+    api_data = api_response.json()
+    assert api_data["results"] == []
+
+
+def test_watched_threads_list_excludes_thread_watched_by_other_user(
+    other_user, user_client, default_category, thread, watched_thread_factory
+):
+    watched_thread_factory(other_user, thread, send_emails=True)
+
+    # Global watched threads list includes thread
+    response = user_client.get("/watched/")
+    assert_not_contains_thread(response, thread)
+
+    # Category threads list includes thread
+    response = user_client.get(default_category.get_absolute_url() + "watched/")
+    assert_not_contains_thread(response, thread)
+
+    # API threads list includes thread
+    api_response = user_client.get(
+        reverse("misago:api:thread-list")
+        + f"?list=watched&category={default_category.id}"
+    )
+    assert api_response.status_code == 200
+
+    api_data = api_response.json()
+    assert api_data["results"] == []
 
 
 class UnapprovedListTests(ThreadsListTestCase):

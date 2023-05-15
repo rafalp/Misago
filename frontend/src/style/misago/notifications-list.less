@@ -1,0 +1,181 @@
+//
+// Notifications Lists
+// --------------------------------------------------
+
+.notifications-list {
+  margin-bottom: @line-height-computed;
+}
+
+// Make list row flexbox row
+.notifications-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.notifications-list-item-left-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-list-item-right-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.notifications-list-item-top-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-list-item-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Notification actor (author)
+.notifications-list-item-col-actor {
+  padding-right: @grid-gutter-width / 2;
+
+  img {
+    border-radius: @border-radius-small;
+
+    height: @notification-avatar-height;
+    width: @notification-avatar-height;
+  }
+}
+
+// Read icon
+.notifications-list-item-col-read-icon {
+  padding-right: @grid-gutter-width / 2;
+
+  line-height: 0;
+}
+
+// Read icon (empty circle)
+.notification-read-icon {
+  display: inline-block;
+  width: @notification-read-icon-size;
+  height: @notification-read-icon-size;
+
+  border: @notification-read-icon-border solid @notification-read-icon-color;
+  border-radius: 100%;
+}
+
+// Unread icon (full circle)
+.notification-unread-icon {
+  display: inline-block;
+  width: @notification-unread-icon-size;
+  height: @notification-unread-icon-size;
+
+  font-size: 0;
+  line-height: 0;
+
+  background-color: @notification-unread-icon-color;
+  border-radius: 100%;
+}
+
+// Message
+.notifications-list-item-col-message {
+  width: 100%;
+
+  // Force long messages to break
+  overflow-wrap: anywhere;
+}
+
+// Message styles
+.notification-message {
+  &,
+  &:link,
+  &:hover,
+  &:focus,
+  &:visited {
+    color: @notification-color;
+  }
+
+  &:active {
+    color: @notification-active-color;
+  }
+}
+
+.notification-message-unread {
+  &,
+  &:link,
+  &:hover,
+  &:focus,
+  &:visited {
+    color: @notification-unread-color;
+  }
+
+  &:active {
+    color: @notification-unread-active-color;
+  }
+}
+
+// Timestamp
+.notifications-list-item-col-timestamp {
+  display: flex;
+  align-items: center;
+
+  padding-left: @grid-gutter-width / 2;
+  min-width: 200px;
+}
+
+// Make timestamp small and gray
+.notifications-list-item-timestamp {
+  color: @gray;
+  font-size: @font-size-small;
+}
+
+// Tablet list
+@media screen and (max-width: @screen-sm-max) {
+  .notifications-list-item {
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .notifications-list-item-right-col {
+    display: block;
+  }
+
+  .notifications-list-item-col-read-icon {
+    position: absolute;
+    padding: 0;
+    top: 14px;
+    right: 15px;
+  }
+
+  .notifications-list-item-col-timestamp {
+    margin-top: floor(@line-height-computed / 4);
+    padding: 0;
+  }
+
+  .notifications-list-item-unread {
+    padding-right: 40px;
+  }
+
+  // Hide read indicator on read notifications
+  .notifications-list-item-read .notifications-list-item-col-read-icon {
+    display: none;
+  }
+}
+
+// Mobile list
+@media screen and (max-width: @screen-xs-max) {
+  .notifications-list {
+    margin-left: @grid-gutter-width * -0.5;
+    margin-right: @grid-gutter-width * -0.5;
+
+    .list-group,
+    .list-group-item {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+}

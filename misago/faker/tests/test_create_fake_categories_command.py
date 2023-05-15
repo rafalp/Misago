@@ -19,11 +19,11 @@ def test_management_command_updates_categories_tree_after_creation(root_category
     assert root_category.rght == root_category.lft + 13  # 6 child items
 
 
-def test_management_command_creates_categories_at_minimal_depth(default_category):
+def test_management_command_creates_categories_at_specified_level(default_category):
     call_command(
         createfakecategories.Command(),
         categories=5,
-        minlevel=default_category.level,
+        level=2,
         stdout=StringIO(),
     )
 
@@ -35,7 +35,7 @@ def test_management_command_copies_default_category_acl(default_category):
     call_command(
         createfakecategories.Command(),
         categories=5,
-        minlevel=default_category.level,
+        level=1,
         stdout=StringIO(),
     )
 

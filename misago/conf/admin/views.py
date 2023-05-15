@@ -6,12 +6,13 @@ from ...admin.views import render
 from ...admin.views.generic import AdminView
 from ..models import Setting
 from .forms import (
-    ChangeAnalyticsSettingsForm,
-    ChangeCaptchaSettingsForm,
-    ChangeGeneralSettingsForm,
-    ChangeOAuth2SettingsForm,
-    ChangeThreadsSettingsForm,
-    ChangeUsersSettingsForm,
+    AnalyticsSettingsForm,
+    CaptchaSettingsForm,
+    GeneralSettingsForm,
+    NotificationsSettingsForm,
+    OAuth2SettingsForm,
+    ThreadsSettingsForm,
+    UsersSettingsForm,
 )
 
 
@@ -19,7 +20,7 @@ def index(request):
     return render(request, "misago/admin/conf/index.html")
 
 
-class ChangeSettingsView(AdminView):
+class SettingsView(AdminView):
     root_link = None  # Unused by change config views
     template_name = None
     form_class = None
@@ -61,31 +62,36 @@ class ChangeSettingsView(AdminView):
         return {key: setting.value for key, setting in settings.items()}
 
 
-class ChangeAnalyticsSettingsView(ChangeSettingsView):
-    form_class = ChangeAnalyticsSettingsForm
+class AnalyticsSettingsView(SettingsView):
+    form_class = AnalyticsSettingsForm
     template_name = "misago/admin/conf/analytics_settings.html"
 
 
-class ChangeCaptchaSettingsView(ChangeSettingsView):
-    form_class = ChangeCaptchaSettingsForm
+class CaptchaSettingsView(SettingsView):
+    form_class = CaptchaSettingsForm
     template_name = "misago/admin/conf/captcha_settings.html"
 
 
-class ChangeGeneralSettingsView(ChangeSettingsView):
-    form_class = ChangeGeneralSettingsForm
+class GeneralSettingsView(SettingsView):
+    form_class = GeneralSettingsForm
     template_name = "misago/admin/conf/general_settings.html"
 
 
-class ChangeOAuth2SettingsView(ChangeSettingsView):
-    form_class = ChangeOAuth2SettingsForm
+class NotificationsSettingsView(SettingsView):
+    form_class = NotificationsSettingsForm
+    template_name = "misago/admin/conf/notifications_settings.html"
+
+
+class OAuth2SettingsView(SettingsView):
+    form_class = OAuth2SettingsForm
     template_name = "misago/admin/conf/oauth2_settings.html"
 
 
-class ChangeThreadsSettingsView(ChangeSettingsView):
-    form_class = ChangeThreadsSettingsForm
+class ThreadsSettingsView(SettingsView):
+    form_class = ThreadsSettingsForm
     template_name = "misago/admin/conf/threads_settings.html"
 
 
-class ChangeUsersSettingsView(ChangeSettingsView):
-    form_class = ChangeUsersSettingsForm
+class UsersSettingsView(SettingsView):
+    form_class = UsersSettingsForm
     template_name = "misago/admin/conf/users_settings.html"

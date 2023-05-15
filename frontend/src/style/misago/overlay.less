@@ -1,0 +1,108 @@
+//
+// Full-page overlays
+// --------------------------------------------------
+
+.overlay {
+  background-color: @overlay-bg;
+  display: none;
+}
+
+// Disable body scrolling on overlay
+body.has-overlay {
+  position: fixed;
+  overflow: hidden;
+}
+
+// Make overlay visible
+.overlay-open {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: @zindex-overlay;
+}
+
+// Header styles
+.overlay-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: @overlay-header-padding;
+}
+
+.overlay-header-caption {
+  margin-right: @overlay-gutter;
+
+  color: @overlay-header-color;
+  font-size: @overlay-header-size;
+}
+
+.btn-overlay-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: @overlay-header-btn-size;
+  height: @overlay-header-btn-size;
+  margin-left: auto;
+
+  .material-icon {
+    margin: 0;
+    font-size: @overlay-header-btn-icon-size;
+    line-height: @overlay-header-btn-icon-size;
+  }
+
+  &,
+  &:focus,
+  &:hover {
+    background-color: @overlay-header-btn-bg;
+    border-color: @overlay-header-btn-border;
+    color: @overlay-header-btn-color;
+  }
+
+  &:active {
+    background-color: @overlay-header-btn-active-bg;
+    border-color: @overlay-header-btn-active-border;
+    box-shadow: none;
+    color: @overlay-header-btn-active-color;
+  }
+}
+
+// Make dropdown footer and pills work within overlays
+.overlay .dropdown-pills {
+  padding: @overlay-header-padding;
+  padding-top: 0;
+
+  .btn:first-child {
+    margin-left: 0;
+  }
+
+  .btn:last-child {
+    margin-right: 0;
+  }
+}
+
+.overlay .dropdown-footer {
+  margin: 0;
+}
+
+// Overlay menu list
+.overlay-menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  .dropdown-header,
+  .dropdown-subheader,
+  .dropdown-menu-item > a,
+  .dropdown-menu-item > button {
+    padding: @overlay-menu-link-padding;
+  }
+
+  .divider {
+    .nav-divider(@dropdown-divider-bg);
+  }
+}

@@ -139,6 +139,20 @@ def get_default_edit_form_data(user):
         "signature_lock_user_message": str(user.signature_lock_user_message or ""),
         "subscribe_to_started_threads": str(user.subscribe_to_started_threads),
         "subscribe_to_replied_threads": str(user.subscribe_to_replied_threads),
+        "watch_started_threads": str(user.watch_started_threads),
+        "watch_replied_threads": str(user.watch_replied_threads),
+        "watch_new_private_threads_by_followed": str(
+            user.watch_new_private_threads_by_followed
+        ),
+        "watch_new_private_threads_by_other_users": str(
+            user.watch_new_private_threads_by_other_users
+        ),
+        "notify_new_private_threads_by_followed": str(
+            user.notify_new_private_threads_by_followed
+        ),
+        "notify_new_private_threads_by_other_users": str(
+            user.notify_new_private_threads_by_other_users
+        ),
         "is_active": "1",
     }
 

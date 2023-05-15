@@ -30,8 +30,12 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
             "is_hiding_presence",
             "limits_private_thread_invites_to",
             "unread_private_threads",
-            "subscribe_to_started_threads",
-            "subscribe_to_replied_threads",
+            "watch_started_threads",
+            "watch_replied_threads",
+            "watch_new_private_threads_by_followed",
+            "watch_new_private_threads_by_other_users",
+            "notify_new_private_threads_by_followed",
+            "notify_new_private_threads_by_other_users",
             "is_authenticated",
             "is_anonymous",
         ]
@@ -70,6 +74,11 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
                 "misago:api:user-delete-own-account", kwargs={"pk": obj.pk}
             ),
         }
+
+    def to_representation(self, instance) -> dict:
+        data = super().to_representation(instance)
+        data["unreadNotifications"] = instance.get_unread_notifications_for_display()
+        return data
 
 
 AuthenticatedUserSerializer = AuthenticatedUserSerializer.exclude_fields(

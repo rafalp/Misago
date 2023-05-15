@@ -25,13 +25,21 @@ class ForumOptionsSerializer(serializers.ModelSerializer):
         fields = [
             "is_hiding_presence",
             "limits_private_thread_invites_to",
-            "subscribe_to_started_threads",
-            "subscribe_to_replied_threads",
+            "watch_started_threads",
+            "watch_replied_threads",
+            "watch_new_private_threads_by_followed",
+            "watch_new_private_threads_by_other_users",
+            "notify_new_private_threads_by_followed",
+            "notify_new_private_threads_by_other_users",
         ]
         extra_kwargs = {
             "limits_private_thread_invites_to": {"required": True},
-            "subscribe_to_started_threads": {"required": True},
-            "subscribe_to_replied_threads": {"required": True},
+            "watch_started_threads": {"required": True},
+            "watch_replied_threads": {"required": True},
+            "watch_new_private_threads_by_followed": {"required": True},
+            "watch_new_private_threads_by_other_users": {"required": True},
+            "notify_new_private_threads_by_followed": {"required": True},
+            "notify_new_private_threads_by_other_users": {"required": True},
         }
 
 

@@ -234,10 +234,23 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Automatic subscription preferences" %}</legend>
+    <legend>{% trans "Automatic subscription preferences (deprecated)" %}</legend>
 
     {% form_row form.subscribe_to_started_threads %}
     {% form_row form.subscribe_to_replied_threads %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Notifications preferences" context "admin user form" %}</legend>
+
+    {% form_row form.watch_started_threads %}
+    {% form_row form.watch_replied_threads %}
+    {% form_row form.watch_new_private_threads_by_followed %}
+    {% form_row form.watch_new_private_threads_by_other_users %}
+    {% form_row form.notify_new_private_threads_by_followed %}
+    {% form_row form.notify_new_private_threads_by_other_users %}
 
   </fieldset>
 </div>

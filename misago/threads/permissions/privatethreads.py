@@ -184,15 +184,18 @@ def allow_use_private_threads(user_acl):
 can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
-def allow_see_private_thread(user_acl, target):
+def allow_see_private_thread(user_acl, target, is_participant: bool | None = None):
     if user_acl["can_moderate_private_threads"]:
         can_see_reported = target.has_reported_posts
     else:
         can_see_reported = False
 
-    can_see_participating = user_acl["user_id"] in [
-        p.user_id for p in target.participants_list
-    ]
+    if is_participant is not None:
+        can_see_participating = is_participant
+    else:
+        can_see_participating = user_acl["user_id"] in [
+            p.user_id for p in target.participants_list
+        ]
 
     if not (can_see_participating or can_see_reported):
         raise Http404()

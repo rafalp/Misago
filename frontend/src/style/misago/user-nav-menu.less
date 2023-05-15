@@ -1,0 +1,25 @@
+// User Nav menu thats displayed in avatar menu dropdown and overlay
+.user-nav-menu {
+  min-width: 300px;
+}
+
+// Style header
+.user-nav-profile {
+  strong {
+    display: block;
+
+    font-size: @font-size-large;
+  }
+}
+
+// Limit max height of user nav dropdown
+.user-nav-dropdown {
+  max-height: calc(100vh - @dropdown-height-offset);
+  overflow-y: auto;
+}
+
+.user-nav-menu.overlay-menu-list {
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: @line-height-computed;
+}

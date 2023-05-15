@@ -19,7 +19,7 @@ export function getLists(user) {
     {
       type: "all",
       path: "",
-      name: gettext("All"),
+      name: pgettext("threads list", "All"),
       longName: gettext("All threads"),
     },
   ]
@@ -28,34 +28,34 @@ export function getLists(user) {
     lists.push({
       type: "my",
       path: "my/",
-      name: gettext("My"),
-      longName: gettext("My threads"),
+      name: pgettext("threads list", "My"),
+      longName: pgettext("threads list", "My threads"),
     })
     lists.push({
       type: "new",
       path: "new/",
-      name: gettext("New"),
-      longName: gettext("New threads"),
+      name: pgettext("threads list", "New"),
+      longName: pgettext("threads list", "New threads"),
     })
     lists.push({
       type: "unread",
       path: "unread/",
-      name: gettext("Unread"),
-      longName: gettext("Unread threads"),
+      name: pgettext("threads list", "Unread"),
+      longName: pgettext("threads list", "Unread threads"),
     })
     lists.push({
-      type: "subscribed",
-      path: "subscribed/",
-      name: gettext("Subscribed"),
-      longName: gettext("Subscribed threads"),
+      type: "watched",
+      path: "watched/",
+      name: pgettext("threads list", "Watched"),
+      longName: pgettext("threads list", "Watched threads"),
     })
 
     if (user.acl.can_see_unapproved_content_lists) {
       lists.push({
         type: "unapproved",
         path: "unapproved/",
-        name: gettext("Unapproved"),
-        longName: gettext("Unapproved content"),
+        name: pgettext("threads list", "Unapproved"),
+        longName: pgettext("threads list", "Unapproved content"),
       })
     }
   }

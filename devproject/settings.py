@@ -194,6 +194,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.themes",
     "misago.markup",
     "misago.legal",
+    "misago.notifications",
     "misago.categories",
     "misago.threads",
     "misago.readtracker",
@@ -204,6 +205,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.faker",
     "misago.menus",
     "misago.plugins",
+    "misago.apiv2",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]
@@ -305,6 +307,7 @@ TEMPLATES = [
                 "misago.markup.context_processors.preload_api_url",
                 "misago.threads.context_processors.preload_threads_urls",
                 "misago.users.context_processors.preload_user_json",
+                "misago.categories.context_processors.preload_categories_json",
                 "misago.socialauth.context_processors.preload_socialauth_json",
                 # Note: keep frontend_context processor last for previous processors
                 # to be able to expose data UI app via request.frontend_context

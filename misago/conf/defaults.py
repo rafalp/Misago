@@ -65,12 +65,11 @@ MISAGO_POSTING_MIDDLEWARES = [
     "misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware",
     "misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware",
     "misago.threads.api.postingendpoint.mentions.MentionsMiddleware",
-    "misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware",
     "misago.threads.api.postingendpoint.syncprivatethreads.SyncPrivateThreadsMiddleware",
     # Always keep SaveChangesMiddleware middleware after all state-changing middlewares
     "misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware",
     # Those middlewares are last because they don't change app state
-    "misago.threads.api.postingendpoint.emailnotification.EmailNotificationMiddleware",
+    "misago.threads.api.postingendpoint.notifications.NotificationsMiddleware",
 ]
 
 
@@ -129,6 +128,19 @@ MISAGO_ADMIN_SESSION_EXPIRATION = 60
 # Change this to false to display categories list instead
 
 MISAGO_THREADS_ON_INDEX = True
+
+
+# How many notifications may be retrieved from the API in single request?
+
+MISAGO_NOTIFICATIONS_PAGE_LIMIT = 50
+
+
+# How many unread notifications to track
+# Misago will not report report unread notifications count bigger than this
+# Example: if limit 50 and user has 56 unread notifications, UI will show "50+"
+# Also used by the notifications healing mechanism
+
+MISAGO_UNREAD_NOTIFICATIONS_LIMIT = 50
 
 
 # Function used for generating individual avatar for user

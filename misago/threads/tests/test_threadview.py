@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from .. import test
 from ...acl import useracl
@@ -376,7 +376,8 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         self.assertContains(response, event.get_absolute_url())
         self.assertContains(response, "Thread has been moved from")
 
-    def test_thread_merged_event_renders(self):
+    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
+    def test_thread_merged_event_renders(self, delete_duplicate_watched_threads_mock):
         """merged thread event renders"""
         request = Mock(user=self.user, user_ip="127.0.0.1")
         other_thread = test.post_thread(category=self.category)

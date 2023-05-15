@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ...acl.objectacl import add_acl_to_obj
+from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ...core.shortcuts import get_int_or_404
 from ...users.online.utils import make_users_status_aware
 from ..models import Post
@@ -30,14 +31,14 @@ class ViewSet(viewsets.ViewSet):
     post_ = ThreadPost
 
     def get_thread(
-        self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
+        self, request, pk, path_aware=False, read_aware=False, watch_aware=False
     ):
         return self.thread(  # pylint: disable=not-callable
             request,
             get_int_or_404(pk),
             path_aware=path_aware,
             read_aware=read_aware,
-            subscription_aware=subscription_aware,
+            watch_aware=watch_aware,
         )
 
     def get_posts(self, request, thread, page):
@@ -56,7 +57,7 @@ class ViewSet(viewsets.ViewSet):
             thread_pk,
             path_aware=True,
             read_aware=True,
-            subscription_aware=True,
+            watch_aware=True,
         )
         posts = self.get_posts(request, thread, page)
 
@@ -92,7 +93,11 @@ class ViewSet(viewsets.ViewSet):
 
         # Put them through posting pipeline
         posting = PostingEndpoint(
-            request, PostingEndpoint.REPLY, thread=thread, post=post
+            request,
+            PostingEndpoint.REPLY,
+            tree_name=self.tree_name,
+            thread=thread,
+            post=post,
         )
 
         if not posting.is_valid():
@@ -119,7 +124,11 @@ class ViewSet(viewsets.ViewSet):
         allow_edit_post(request.user_acl, post)
 
         posting = PostingEndpoint(
-            request, PostingEndpoint.EDIT, thread=thread, post=post
+            request,
+            PostingEndpoint.EDIT,
+            tree_name=self.tree_name,
+            thread=thread,
+            post=post,
         )
 
         if not posting.is_valid():
@@ -163,9 +172,10 @@ class ViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=["post"])
     def read(self, request, thread_pk, pk=None):
-        thread = self.get_thread(request, thread_pk, subscription_aware=True).unwrap()
+        view_model = self.get_thread(request, thread_pk, watch_aware=True)
+        thread = view_model.unwrap()
         post = self.get_post(request, thread, pk).unwrap()
-        return post_read_endpoint(request, thread, post)
+        return post_read_endpoint(request, thread, view_model.watched_thread, post)
 
     @action(detail=True, methods=["get"], url_name="editor")
     def post_editor(self, request, thread_pk, pk=None):
@@ -248,8 +258,10 @@ class ViewSet(viewsets.ViewSet):
 
 
 class ThreadPostsViewSet(ViewSet):
+    tree_name = THREADS_ROOT_NAME
     thread = ForumThread
 
 
 class PrivateThreadPostsViewSet(ViewSet):
+    tree_name = PRIVATE_THREADS_ROOT_NAME
     thread = PrivateThread

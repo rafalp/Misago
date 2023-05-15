@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
 
+from ...notifications.tasks import delete_duplicate_watched_threads
 from ..events import record_event
 
 __all__ = [
@@ -94,6 +95,8 @@ def move_thread(request, thread, new_category):
 def merge_thread(request, thread, other_thread):
     thread.merge(other_thread)
     other_thread.delete()
+
+    delete_duplicate_watched_threads.delay(thread.id)
 
     record_event(request, thread, "merged", {"merged_thread": other_thread.title})
     return True

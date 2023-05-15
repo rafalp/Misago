@@ -246,6 +246,9 @@ class Thread(models.Model):
     def get_poll_api_url(self):
         return self.thread_type.get_thread_poll_api_url(self)
 
+    def get_watch_api_url(self):
+        return self.thread_type.get_thread_watch_api_url(self)
+
     def get_absolute_url(self, page=1):
         return self.thread_type.get_thread_absolute_url(self, page)
 
@@ -264,6 +267,11 @@ class Thread(models.Model):
     def set_title(self, title):
         self.title = title
         self.slug = slugify(title)
+
+        if self.id:
+            from ..signals import update_thread_title
+
+            update_thread_title.send(sender=self)
 
     def set_first_post(self, post):
         self.started_on = post.posted_on

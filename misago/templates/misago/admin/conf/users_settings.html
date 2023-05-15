@@ -82,6 +82,13 @@
   <fieldset>
     <legend>{% trans "Default subscription preferences" %}</legend>
 
+    <div class="alert alert-warning" role="alert">
+      <strong>{% translate "Deprecation warning" context "deprecation warning" %}:</strong>
+      {% blocktranslate trimmed context "deprecation warning" %}
+      The thread subscriptions feature has been replaced with notifications and will be removed in a future version of Misago. Please use the notification settings instead.
+      {% endblocktranslate %}
+    </div>
+
     {% form_row form.subscribe_start %}
     {% form_row form.subscribe_reply %}
 

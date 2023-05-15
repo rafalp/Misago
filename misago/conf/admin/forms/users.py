@@ -5,10 +5,10 @@ from ....admin.forms import YesNoSwitch
 from ....core.validators import validate_image_square
 from ....users.validators import validate_username_content
 from ... import settings
-from .base import ChangeSettingsForm
+from .base import SettingsForm
 
 
-class ChangeUsersSettingsForm(ChangeSettingsForm):
+class UsersSettingsForm(SettingsForm):
     settings = [
         "account_activation",
         "allow_custom_avatars",

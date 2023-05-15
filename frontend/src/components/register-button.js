@@ -1,3 +1,4 @@
+import classnames from "classnames"
 import React from "react"
 import Loader from "misago/components/loader"
 import RegisterForm from "misago/components/register.js"
@@ -50,19 +51,18 @@ export default class extends React.Component {
     }
   }
 
-  getClassName() {
-    return this.props.className + (this.state.isLoading ? " btn-loading" : "")
-  }
-
   render() {
     return (
       <button
-        className={"btn " + this.getClassName()}
+        className={classnames("btn btn-register", {
+          "btn-block": this.props.block,
+          "btn-loading": this.state.isLoading,
+        })}
         disabled={this.state.isLoading}
         onClick={this.showRegisterForm}
         type="button"
       >
-        {gettext("Register")}
+        {pgettext("cta", "Register")}
         {this.state.isLoading ? <Loader /> : null}
       </button>
     )

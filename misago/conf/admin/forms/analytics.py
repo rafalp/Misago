@@ -3,14 +3,14 @@ import re
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from .base import ChangeSettingsForm
+from .base import SettingsForm
 
 GOOGLE_SITE_VERIFICATION = re.compile(
     "^google-site-verification: google([0-9a-z]+)\.html$"
 )
 
 
-class ChangeAnalyticsSettingsForm(ChangeSettingsForm):
+class AnalyticsSettingsForm(SettingsForm):
     settings = ["google_tracking_id", "google_site_verification"]
 
     google_tracking_id = forms.CharField(

@@ -1,11 +1,11 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
-from .base import ChangeSettingsForm
+from .base import SettingsForm
 
 
-class ChangeGeneralSettingsForm(ChangeSettingsForm):
+class GeneralSettingsForm(SettingsForm):
     settings = [
         "forum_name",
         "forum_address",
@@ -55,16 +55,19 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
     )
 
     logo = forms.ImageField(
-        label=_("Logo"),
-        help_text=_("Image that will displayed in forum navbar."),
+        label=pgettext_lazy("admin general", "Large logo"),
+        help_text=_(
+            "Image that will be displayed in forum navbar instead of a small "
+            "logo or text."
+        ),
         required=False,
     )
-    logo_delete = forms.BooleanField(label=_("Delete logo image"), required=False)
+    logo_delete = forms.BooleanField(label=_("Delete large logo image"), required=False)
     logo_small = forms.ImageField(
-        label=_("Small logo"),
+        label=pgettext_lazy("admin general", "Small logo"),
         help_text=_(
-            "Image that will be displayed in compact forum navbar. "
-            "When set, it will replace icon pointing to forum index."
+            "Image that will be displayed in the forum navbar next to the logo "
+            "text if a large logo was not uploaded."
         ),
         required=False,
     )
@@ -72,10 +75,11 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         label=_("Delete small logo image"), required=False
     )
     logo_text = forms.CharField(
-        label=_("Text"),
+        label=pgettext_lazy("admin general", "Text logo"),
         help_text=_(
-            "Text displayed in forum navbar. If logo image was uploaded, text will "
-            "be displayed right next to it. Never displayed by the compact navbar."
+            "Text displayed in forum navbar. If a small logo image was uploaded, "
+            "this text will be displayed right next to it. If a large logo was "
+            "uploaded, it will replace both the small logo and the text."
         ),
         max_length=255,
         required=False,

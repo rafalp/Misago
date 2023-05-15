@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
-from ..core.mail import build_mail, send_messages
+from ..notifications.tasks import notify_on_new_private_thread
 from .events import record_event
-from .models import ThreadParticipant
+from .models import Thread, ThreadParticipant
 
 User = get_user_model()
 
@@ -94,7 +94,7 @@ def change_owner(request, thread, new_owner):
 
 def add_participant(request, thread, new_participant):
     """adds single participant to thread, registers this on the event"""
-    add_participants(request, thread, [new_participant])
+    add_participants(request.user, thread, [new_participant])
 
     if request.user == new_participant:
         record_event(request, thread, "entered_thread")
@@ -113,12 +113,12 @@ def add_participant(request, thread, new_participant):
         )
 
 
-def add_participants(request, thread, users):
+def add_participants(user: User, thread: Thread, participants: list[User]):
     """
-    Add multiple participants to thread, set "recound private threads" flag on them
+    Add multiple participants to thread, set "recount private threads" flag on them
     notify them about being added to thread.
     """
-    ThreadParticipant.objects.add_participants(thread, users)
+    ThreadParticipant.objects.add_participants(thread, participants)
 
     try:
         thread_participants = thread.participants_list
@@ -126,30 +126,15 @@ def add_participants(request, thread, users):
         thread_participants = []
 
     set_users_unread_private_threads_sync(
-        users=users, participants=thread_participants, exclude_user=request.user
+        users=participants, participants=thread_participants, exclude_user=user
     )
 
-    emails = []
-    for user in users:
-        if user != request.user:
-            emails.append(build_noticiation_email(request, thread, user))
-    if emails:
-        send_messages(emails)
+    participants_ids = [
+        participant.id for participant in participants if participant.id != user.id
+    ]
 
-
-def build_noticiation_email(request, thread, user):
-    subject = _(
-        '%(user)s has invited you to participate in private thread "%(thread)s"'
-    )
-    subject_formats = {"thread": thread.title, "user": request.user.username}
-
-    return build_mail(
-        user,
-        subject % subject_formats,
-        "misago/emails/privatethread/added",
-        sender=request.user,
-        context={"settings": request.settings, "thread": thread},
-    )
+    if participants_ids:
+        notify_on_new_private_thread.delay(user.id, thread.id, participants_ids)
 
 
 def remove_participant(request, thread, user):
