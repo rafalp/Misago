@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
-from django.db.models import F, IntegerChoices
+from django.db.models import IntegerChoices
 from django.utils.translation import gettext as _, pgettext_lazy
 
 from ..acl.useracl import get_user_acl
@@ -20,6 +20,7 @@ from ..threads.permissions.threads import (
 )
 from .verbs import NotificationVerb
 from .models import Notification, WatchedThread
+from .users import notify_user
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -113,19 +114,14 @@ def notify_watcher_on_new_thread_reply(
     if user_has_other_unread_posts(watched_thread, user_acl, post, is_private):
         return  # We only notify on first unread post
 
-    Notification.objects.create(
-        user=watched_thread.user,
-        verb=NotificationVerb.REPLIED,
-        actor=post.poster,
-        actor_name=post.poster.username,
-        category=post.category,
-        thread=post.thread,
-        thread_title=post.thread.title,
-        post=post,
+    notify_user(
+        watched_thread.user,
+        NotificationVerb.REPLIED,
+        post.poster,
+        post.category,
+        post.thread,
+        post,
     )
-
-    watched_thread.user.unread_notifications = F("unread_notifications") + 1
-    watched_thread.user.save(update_fields=["unread_notifications"])
 
     if watched_thread.send_emails:
         email_watcher_on_new_thread_reply(watched_thread, post, settings)
@@ -238,19 +234,14 @@ def notify_participant_on_new_private_thread(
     if has_unread_notification:
         return  # Don't spam users with notifications
 
-    Notification.objects.create(
-        user=user,
-        verb=NotificationVerb.INVITED,
-        actor=actor,
-        actor_name=actor.username,
-        category=thread.category,
-        thread=thread,
-        thread_title=thread.title,
-        post=thread.first_post,
+    notify_user(
+        user,
+        NotificationVerb.INVITED,
+        actor,
+        thread.category,
+        thread,
+        thread.first_post,
     )
-
-    user.unread_notifications = F("unread_notifications") + 1
-    user.save(update_fields=["unread_notifications"])
 
     if notification == ThreadNotifications.SITE_AND_EMAIL:
         email_participant_on_new_private_thread(user, actor, watched_thread, settings)
