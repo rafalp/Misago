@@ -62,9 +62,7 @@ class GeneralSettingsForm(SettingsForm):
         ),
         required=False,
     )
-    logo_delete = forms.BooleanField(
-        label=_("Delete large logo image"), required=False
-    )
+    logo_delete = forms.BooleanField(label=_("Delete large logo image"), required=False)
     logo_small = forms.ImageField(
         label=pgettext_lazy("admin general", "Small logo"),
         help_text=_(

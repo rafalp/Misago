@@ -31,7 +31,7 @@ def test_notify_user_increases_user_unread_notifications_counter(user):
 
     user.refresh_from_db()
     assert user.unread_notifications == 1
-    
+
 
 def test_notify_user_sets_actor_on_notification(user, other_user):
     notification = notify_user(user, "TEST", actor=other_user)
