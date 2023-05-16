@@ -38,6 +38,12 @@ def test_old_post_by_user_doesnt_count_to_ranking(thread, user):
     assert not build_active_posters_ranking()
 
 
+@override_dynamic_settings(top_posters_ranking_length=5)
+def test_event_posts_doesnt_count_to_ranking(thread, user):
+    reply_thread(thread, poster=user, is_event=True)
+    assert not build_active_posters_ranking()
+
+
 @override_dynamic_settings(top_posters_ranking_size=2)
 def test_ranking_size_is_limited(thread):
     for i in range(3):

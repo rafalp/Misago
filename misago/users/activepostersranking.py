@@ -22,7 +22,7 @@ def get_active_posters_ranking():
     return {"users": users, "users_count": len(users)}
 
 
-def build_active_posters_ranking():
+def build_active_posters_ranking() -> list[ActivityRanking]:
     settings = get_dynamic_settings()
     tracked_period = settings.top_posters_ranking_length
     tracked_since = timezone.now() - timedelta(days=tracked_period)
@@ -36,6 +36,7 @@ def build_active_posters_ranking():
     queryset = (
         User.objects.filter(
             is_active=True,
+            post__is_event=False,
             post__posted_on__gte=tracked_since,
             post__category__in=ranked_categories,
         )
@@ -47,5 +48,7 @@ def build_active_posters_ranking():
     new_ranking = []
     for ranking in queryset.iterator():
         new_ranking.append(ActivityRanking(user=ranking, score=ranking.score))
+
     ActivityRanking.objects.bulk_create(new_ranking)
+
     return new_ranking
