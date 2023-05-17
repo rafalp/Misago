@@ -58,13 +58,10 @@ const ThreadsListItem = ({
           </div>
         )}
         <div className="threads-list-item-col-title">
-          <a href={thread.url.index} className="threads-list-item-title">
-            {thread.title}
-          </a>
           <a
             href={isNew ? thread.url.new_post : thread.url.index}
             className={
-              "threads-list-item-title-sm" +
+              "threads-list-item-title" +
               (isNew ? " threads-list-item-title-new" : "")
             }
           >

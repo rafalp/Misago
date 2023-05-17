@@ -13,12 +13,9 @@
       </div>
     {% endif %}
     <div class="threads-list-item-col-title">
-      <a href="{{ thread.get_absolute_url }}" class="threads-list-item-title">
-        {{ thread.title }}
-      </a>
       <a
         href="{% if thread.is_read %}{{ thread.get_absolute_url }}{% else %}{{ thread.get_new_post_url }}{% endif %}"
-        class="threads-list-item-title-sm{% if not thread.is_read %} threads-list-item-title-new{% endif %}"
+        class="threads-list-item-title{% if not thread.is_read %} threads-list-item-title-new{% endif %}"
       >
         {{ thread.title }}
       </a>

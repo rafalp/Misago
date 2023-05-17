@@ -86,19 +86,6 @@ a.threads-list-item-title {
   }
 }
 
-a.threads-list-item-title-sm {
-  font-size: @threads-list-title-size-sm;
-
-  &:link,
-  &:active,
-  &:focus,
-  &:hover,
-  &:visited {
-    color: @thread-read-color;
-    overflow-wrap: anywhere;
-  }
-}
-
 a.threads-list-item-title-new {
   &:link,
   &:active,
@@ -218,7 +205,6 @@ a.threads-list-item-title-new {
   display: none;
 }
 
-.threads-list-item-title-sm,
 .threads-list-item-col-checkbox-sm {
   display: none;
 }
@@ -237,13 +223,9 @@ a.threads-list-item-title-new {
     }
   }
 
-  // Swap title with sm one
+  // Make thread title smaller
   .threads-list-item-title {
-    display: none;
-  }
-
-  .threads-list-item-title-sm {
-    display: inline-block;
+    font-size: @threads-list-title-size-sm
   }
 
   // Make thread read icon disappear
