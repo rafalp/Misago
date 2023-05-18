@@ -7,7 +7,7 @@ const ThreadsListItemLastPoster = ({ thread }) =>
       href={thread.url.last_poster}
       className="threads-list-item-last-poster"
       title={interpolate(
-        gettext("Last post by: %(poster)s"),
+        pgettext("threads list", "%(poster)s - Last poster"),
         { poster: thread.last_poster.username },
         true
       )}
@@ -18,7 +18,7 @@ const ThreadsListItemLastPoster = ({ thread }) =>
     <span
       className="threads-list-item-last-poster"
       title={interpolate(
-        gettext("Last post by: %(poster)s"),
+        pgettext("threads list", "%(poster)s - Last poster"),
         { poster: thread.last_poster_name },
         true
       )}

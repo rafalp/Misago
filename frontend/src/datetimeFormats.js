@@ -1,6 +1,14 @@
 export const locale = window.misago_locale || "en-us"
-export const momentAgo = pgettext("moment", "moment ago")
+
+export const momentAgo = pgettext("time ago", "moment ago")
+export const momentAgoNarrow = pgettext("time ago", "now")
 export const dayAt = pgettext("day at time", "%(day)s at %(time)s")
+export const tomorrowAt = pgettext("day at time", "Tomorrow at %(time)s")
+export const yesterdayAt = pgettext("day at time", "Yesterday at %(time)s")
+
+export const minuteCompact = pgettext("short minutes", "%(time)sm")
+export const hourCompact = pgettext("short hours", "%(time)sh")
+export const dayCompact = pgettext("short days", "%(time)sd")
 
 export const relativeNumeric = new Intl.RelativeTimeFormat(locale, {
   numeric: "always",
@@ -22,8 +30,19 @@ export const thisYearDate = new Intl.DateTimeFormat(locale, {
   day: "numeric",
 })
 
+export const thisYearDateNarrow = new Intl.DateTimeFormat(locale, {
+  month: "short",
+  day: "numeric",
+})
+
 export const otherYearDate = new Intl.DateTimeFormat(locale, {
   year: "numeric",
+  month: "long",
+  day: "numeric",
+})
+
+export const otherYearDateNarrow = new Intl.DateTimeFormat(locale, {
+  year: "2-digit",
   month: "long",
   day: "numeric",
 })
@@ -33,6 +52,36 @@ export const weekday = new Intl.DateTimeFormat(locale, {
 })
 
 export const shortTime = new Intl.DateTimeFormat(locale, { timeStyle: "short" })
+
+export function formatNarrow(date) {
+  const now = new Date()
+  const absDiff = Math.abs(Math.round((date - now) / 1000))
+
+  if (absDiff < 60) {
+    return momentAgoNarrow
+  }
+
+  if (absDiff < 60 * 55) {
+    const minutes = Math.ceil(absDiff / 60)
+    return minuteCompact.replace("%(time)s", minutes)
+  }
+
+  if (absDiff < 3600 * 24) {
+    const hours = Math.ceil(absDiff / 3600)
+    return hourCompact.replace("%(time)s", hours)
+  }
+
+  if (absDiff < 86400 * 7) {
+    const days = Math.ceil(absDiff / 86400)
+    return dayCompact.replace("%(time)s", days)
+  }
+
+  if (date.getFullYear() === now.getFullYear()) {
+    return thisYearDateNarrow.format(date)
+  }
+
+  return otherYearDateNarrow.format(date)
+}
 
 export function formatRelative(date) {
   const now = new Date()
@@ -58,13 +107,11 @@ export function formatRelative(date) {
   }
 
   if (isYesterday(date)) {
-    const yesterday = relativeAuto.formatToParts(-1, "day")[0].value
-    return formatDayAtTime(yesterday, date)
+    return yesterdayAt.replace("%(time)s", shortTime.format(date))
   }
 
   if (isTomorrow(date)) {
-    const tomorrow = relativeAuto.formatToParts(1, "day")[0].value
-    return formatDayAtTime(tomorrow, date)
+    return tomorrowAt.replace("%(time)s", shortTime.format(date))
   }
 
   if (diff < 0 && absDiff < 3600 * 24 * 6) {

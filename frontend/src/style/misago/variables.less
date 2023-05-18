@@ -176,20 +176,24 @@
 // Threads list
 //
 
+@thread-avatar-image-size: 32px;
+
+@thread-read-icon-color: @gray-lighter;
+@thread-read-icon-size: 14px;
+@thread-read-icon-border: 2px;
+
+@thread-unread-icon-color: @brand-primary;
+@thread-unread-icon-size: 14px;
+
+// Used to align icon with title on small screens
+@thread-read-icon-offset-top: 4px;
+@thread-read-icon-offset-right: 4px;
+
 @threads-list-title-size: 16px;
 @threads-list-title-size-sm: 18px;
 
 @thread-color: @text-color;
-@thread-read-color: @gray;
 @thread-new-color: @text-color;
-
-@thread-read-block-size: 32px;
-@thread-read-icon-size: 16px;
-@thread-read-icon-bg: @gray-lighter;
-@thread-read-icon-color: @gray-light;
-
-@thread-new-icon-bg: @brand-primary;
-@thread-new-icon-color: #fff;
 
 @thread-flag-block-size: 20px;
 @thread-flag-icon-size: 16px;
@@ -220,9 +224,11 @@
 
 @thread-replies-color: @gray;
 @thread-replies-size: 16px;
+@thread-replies-size-xs: 13px;
 
 @thread-last-activity-color: @gray-dark;
 @thread-last-activity-size: 16px;
+@thread-last-activity-size-xs: 13px;
 
 @update-threads-prompt-bg: lighten(@brand-primary, 52%);
 @update-threads-prompt-color: darken(@brand-primary, 10%);

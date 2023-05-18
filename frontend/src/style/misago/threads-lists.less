@@ -12,9 +12,16 @@
   align-items: center;
 
   img {
-    width: @thread-read-block-size;
-    height: @thread-read-block-size;
+    border-radius: @border-radius-small;
+    width: @thread-avatar-image-size;
+    height: @thread-avatar-image-size;
   }
+}
+
+.threads-list-item-right-col {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .threads-list-item-top-row {
@@ -24,48 +31,52 @@
   justify-content: center;
 }
 
-.threads-list-item-bottom-row {
+.threads-list-item-bottom-row,
+.threads-list-item-bottom-left,
+.threads-list-item-bottom-right {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+// Original poster
+.threads-list-item-col-starter {
+  padding-right: @grid-gutter-width / 2;
+}
+
+// Hide small avatar
+.threads-list-item-col-starter-sm {
+  display: none;
 }
 
 // Thread icon
-.threads-list-item-col-icon {
+.threads-list-item-col-read-status {
   padding-right: floor(@grid-gutter-width / 2);
+
+  line-height: 0;
 }
 
-.threads-list-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: @thread-read-block-size;
-  height: @thread-read-block-size;
+// Read icon (empty circle)
+.threads-list-read-icon {
+  display: inline-block;
+  width: @thread-read-icon-size;
+  height: @thread-read-icon-size;
 
-  border-radius: @border-radius-small;
-  font-size: @thread-read-icon-size;
-  line-height: @thread-read-icon-size;
-
-  &:link,
-  &:active,
-  &:focus,
-  &:hover,
-  &:visited {
-    background-color: @thread-read-icon-bg;
-    color: @thread-read-icon-color;
-    text-decoration: none;
-  }
+  border: @thread-read-icon-border solid @thread-read-icon-color;
+  border-radius: 100%;
 }
 
-.threads-list-icon-new {
-  &:link,
-  &:active,
-  &:focus,
-  &:hover,
-  &:visited {
-    background-color: @thread-new-icon-bg;
-    color: @thread-new-icon-color;
-  }
+// Unread icon (full circle)
+.threads-list-unread-icon {
+  display: inline-block;
+  width: @thread-unread-icon-size;
+  height: @thread-unread-icon-size;
+
+  font-size: 0;
+  line-height: 0;
+
+  background-color: @thread-unread-icon-color;
+  border-radius: 100%;
 }
 
 // Thread title
@@ -169,21 +180,26 @@ a.threads-list-item-title-new {
 // Last poster
 .threads-list-item-col-last-poster {
   padding-left: @grid-gutter-width / 2;
+}
 
-  img {
-    border-radius: @border-radius-small;
-  }
+// Hide small last poster
+.threads-list-item-col-last-poster-sm {
+  display: none;
 }
 
 // Last activity
 .threads-list-item-col-last-activity {
-  width: 120px;
+  width: 90px;
   padding-left: @grid-gutter-width / 2;
 
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
 
+// Last activity colors
+.threads-list-item-col-last-activity,
+.threads-list-item-col-last-activity-narrow {
   a:link,
   a:hover,
   a:active,
@@ -194,6 +210,11 @@ a.threads-list-item-title-new {
   }
 }
 
+// Hide narrow last activity by default
+.threads-list-item-col-last-activity-narrow {
+  display: none;
+}
+
 // Subscription and checkbox
 .threads-list-item-col-checkbox,
 .threads-list-item-col-notifications {
@@ -201,12 +222,81 @@ a.threads-list-item-title-new {
 }
 
 // Make list responsive
-.threads-list-item-col-spacer-xs {
+.threads-list-item-col-checkbox-sm {
   display: none;
 }
 
-.threads-list-item-col-checkbox-sm {
-  display: none;
+@media screen and (max-width: @screen-sm-max) {
+  // Remove vertical center align
+  .threads-list-item {
+    align-items: flex-start;
+  }
+
+  // Use two rows per item
+  .threads-list-item-right-col {
+    display: block;
+  }
+
+  // Align top row contents to top
+  .threads-list-item-top-row {
+    align-items: start;
+  }
+
+  // Make all cols in second row auto, align them to right
+  .threads-list-item-bottom-row {
+    justify-content: end;
+    flex: 0;
+  }
+
+  // Add top margin to bottom row items
+  .threads-list-item-bottom-left,
+  .threads-list-item-bottom-right {
+    margin-top: @grid-gutter-width / 4;
+  }
+
+  // Hide some cols used on large displays
+  .threads-list-item-col-starter,
+  .threads-list-item-col-notifications,
+  .threads-list-item-col-replies-zero,
+  .threads-list-item-col-last-poster,
+  .threads-list-item-col-checkbox {
+    display: none;
+  }
+
+  // Align read icon with title
+  .threads-list-item-col-read-status {
+    padding-top: @thread-read-icon-offset-top;
+  }
+
+  // Reveal starter small avatar
+  .threads-list-item-col-starter-sm {
+    display: block;
+  }
+
+  // Reveal right-most last poster
+  .threads-list-item-col-last-poster-sm {
+    display: block;
+  }
+
+  // Make avatars same size as flag icons
+  .threads-list-item img {
+    width: @thread-flag-block-size;
+    height: @thread-flag-block-size;
+  }
+
+  // Reveal checkbox in top row, make it smol
+  .threads-list-item-col-checkbox-sm {
+    display: block;
+    padding-left: @grid-gutter-width / 2;
+
+    .btn-icon {
+      padding: 4px 8px;
+
+      .material-icon {
+        font-size: 16px;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: @screen-xs-max) {
@@ -223,74 +313,55 @@ a.threads-list-item-title-new {
     }
   }
 
-  // Make thread title smaller
-  .threads-list-item-title {
-    font-size: @threads-list-title-size-sm
+  // Make padding on thread read icon smaller, offset it to right
+  .threads-list-item-col-read-status {
+    position: relative;
+    right: @thread-read-icon-offset-right;
+    padding-right: floor(@grid-gutter-width / 4);
   }
 
-  // Make thread read icon disappear
-  .threads-list-item-col-icon {
+  // Make thread title smaller
+  .threads-list-item-title {
+    font-size: @threads-list-title-size-sm;
+  }
+
+  // Hide starter's avatar
+  .threads-list-item-col-starter-sm {
     display: none;
   }
 
-  // Spread categories and other details
-  .threads-list-item-col-spacer-xs {
+  // Allow breaking bottom row into two
+  .threads-list-item-bottom-row {
     display: block;
-    flex: 1;
+    overflow: auto;
+
+    .threads-list-item-bottom-left {
+      float: left;
+    }
+
+    .threads-list-item-bottom-right {
+      float: right;
+
+      & > div {
+        width: auto;
+      }
+    }
   }
 
   // Remove left padding from first item
-  .threads-list-item-bottom-row > div:first-child {
+  .threads-list-item-col-starter-sm + .threads-list-item-col-flags,
+  .threads-list-item-col-starter-sm + .threads-list-item-col-category {
     padding-left: 0;
   }
-}
 
-@media screen and (max-width: @screen-sm-max) {
-  // Use two rows per item
-  .threads-list-item {
-    display: block;
-
-    // Make avatar same size as flag icons
-    img {
-      width: @thread-flag-block-size;
-      height: @thread-flag-block-size;
-    }
-  }
-
-  // Insert bottom marin to top row, align itss contents to top
-  .threads-list-item-top-row {
-    align-items: start;
-    margin-bottom: @grid-gutter-width / 4;
-  }
-
-  // Make all cols in second row auto, align them to right
-  .threads-list-item-bottom-row {
-    justify-content: end;
-    flex: 0;
-
-    & > div {
-      width: auto;
-      padding: 0 0 0 @grid-gutter-width / 2;
-    }
-  }
-
-  // Make thread notifications and checkbox icons disappear
-  .threads-list-item-col-notifications,
-  .threads-list-item-col-checkbox {
-    display: none;
-  }
-
-  // Reveal checkbox in top row, make it smol
-  .threads-list-item-col-checkbox-sm {
-    display: block;
-    padding-left: @grid-gutter-width / 2;
-
-    .btn-icon {
-      padding: 4px;
-
-      .material-icon {
-        font-size: 16px;
-      }
+  // Make last activity small
+  .threads-list-item-col-last-activity {
+    a:link,
+    a:hover,
+    a:active,
+    a:visited,
+    a:focus {
+      font-size: @thread-last-activity-size-xs;
     }
   }
 }

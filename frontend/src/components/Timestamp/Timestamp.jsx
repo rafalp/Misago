@@ -1,5 +1,9 @@
 import React from "react"
-import { fullDateTime, formatRelative } from "../../datetimeFormats"
+import {
+  formatNarrow,
+  formatRelative,
+  fullDateTime,
+} from "../../datetimeFormats"
 
 class Timestamp extends React.Component {
   constructor(props) {
@@ -43,9 +47,24 @@ class Timestamp extends React.Component {
   }
 
   render() {
-    const displayed = formatRelative(this.date)
+    const displayed = this.props.narrow
+      ? formatNarrow(this.date)
+      : formatRelative(this.date)
 
-    return <attr title={fullDateTime.format(this.date)}>{displayed}</attr>
+    return (
+      <attr
+        title={
+          this.props.title
+            ? this.props.title.replace(
+                "%(timestamp)s",
+                fullDateTime.format(this.date)
+              )
+            : fullDateTime.format(this.date)
+        }
+      >
+        {displayed}
+      </attr>
+    )
   }
 }
 
