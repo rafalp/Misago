@@ -44,8 +44,9 @@ jobs:
           POSTGRES_HOST: localhost
         run: |
           pytest --cov=misago
-          coveralls
       - name: Linters
         run: |
           black --check .
           ruff misago/notifications misago/apiv2
+      - name: Publish to coveralls.io
+        uses: coverallsapp/github-action@v2
