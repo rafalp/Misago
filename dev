@@ -46,7 +46,7 @@ wait_for_db() {
 # Check if user has docker compose
 if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
     if ! docker version >/dev/null 2>&1; then
-        error "You need to have Docker installed to use this tool."
+        error "You need to have Docker installed running to use this tool."
         echo
         echo "Docker release for your system can be downloaded for free from this page:"
         echo "https://www.docker.com/get-started"
