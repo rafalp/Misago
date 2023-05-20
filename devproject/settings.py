@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 from misago import load_plugin_list_if_exists
+from misago.settings import *
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -163,49 +164,10 @@ PLUGINS_LIST_PATH = os.path.join(os.path.dirname(BASE_DIR), "plugins.txt")
 
 INSTALLED_PLUGINS = load_plugin_list_if_exists(PLUGINS_LIST_PATH) or []
 
-INSTALLED_APPS = INSTALLED_PLUGINS + [
-    # Misago overrides for Django core feature
-    "misago",
-    "misago.users",
-    # Django apps
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.postgres",
-    "django.contrib.humanize",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    # 3rd party apps used by Misago
-    "ariadne_django",
-    "celery",
-    "debug_toolbar",
-    "mptt",
-    "rest_framework",
-    "social_django",
-    # Misago apps
-    "misago.admin",
-    "misago.acl",
-    "misago.analytics",
-    "misago.cache",
-    "misago.core",
-    "misago.conf",
-    "misago.icons",
-    "misago.themes",
-    "misago.markup",
-    "misago.legal",
-    "misago.notifications",
-    "misago.categories",
-    "misago.threads",
-    "misago.readtracker",
-    "misago.search",
-    "misago.oauth2",
-    "misago.socialauth",
-    "misago.graphql",
-    "misago.faker",
-    "misago.menus",
-    "misago.plugins",
-    "misago.apiv2",
+# Combine Misago's default installed apps with plugins
+INSTALLED_APPS = [
+    *INSTALLED_PLUGINS,
+    *INSTALLED_APPS,
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]
