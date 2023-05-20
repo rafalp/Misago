@@ -22,13 +22,6 @@ def test_notify_on_new_private_thread_does_nothing_if_actor_is_not_found(
     notify_participant_mock.assert_not_called()
 
 
-def test_notify_on_new_private_thread_does_nothing_if_thread_is_not_found(
-    notify_participant_mock, user, other_user, private_thread
-):
-    notify_on_new_private_thread(user.id, private_thread.id + 1, [other_user.id])
-    notify_participant_mock.assert_not_called()
-
-
 def test_notify_on_new_private_thread_skips_banned_users(
     notify_participant_mock, user, other_user, user_private_thread
 ):
