@@ -1,12 +1,8 @@
-// Site Nav menu thats displayed in hamburger menu dropdown and overlay
-.site-nav-menu {
-  min-width: 300px;
-}
-
-// Limit max height of site nav dropdown
+// Set height and width of nav dropdown
 .site-nav-dropdown {
   max-height: calc(100vh - @dropdown-height-offset);
   overflow-y: auto;
+  width: 320px;
 }
 
 // Spread and align items in categories
@@ -15,6 +11,12 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 // Hide sign in menu on larger devices

@@ -113,7 +113,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
       {categories.map((category) => (
         <DropdownMenuItem className="site-nav-category" key={category.id}>
           <a href={category.url}>
-            {category.name}
+            <span>{category.name}</span>
             <span
               className={classnames(
                 "threads-list-item-category threads-list-category-label",
