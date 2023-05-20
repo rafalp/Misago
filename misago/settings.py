@@ -2,6 +2,7 @@
 
 __all__ = [
     "INSTALLED_APPS",
+    "NOTIFICATIONS_RETRY_DELAY",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -84,3 +85,5 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     # to be able to expose data UI app via request.frontend_context
     "misago.core.context_processors.frontend_context",
 ]
+
+NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
