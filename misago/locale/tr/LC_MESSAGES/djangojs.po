@@ -19,18 +19,163 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 13:08+0000\n"
+"POT-Creation-Date: 2023-05-20 12:13+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Arda Asik (Student) <ardaasik@sabanciuniv.edu>, 2020\n"
-"Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/teams/65369/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/misago/teams/65369/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: static/misago/admin/index.js:16
-msgid "defineLocaleOverride"
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any read notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any unread notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification status"
+msgid "Read notification"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification status"
+msgid "Unread notification"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Check your internet connection and try refreshing the site."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "Notifications could not be loaded."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "Loading notifications..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "modal"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Entered password is very weak."
+msgstr "Girilen şifre çok zayıf."
+
+#: static/misago/js/misago.js:1
+msgid "Entered password is weak."
+msgstr "Girilen şifre zayıf."
+
+#: static/misago/js/misago.js:1
+msgid "Entered password is average."
+msgstr "Girilen şifre olağan."
+
+#: static/misago/js/misago.js:1
+msgid "Entered password is strong."
+msgstr "Girilen şifre güçlü"
+
+#: static/misago/js/misago.js:1
+msgid "Entered password is very strong."
+msgstr "Girilen şifre çok güçlü."
+
+#: static/misago/js/misago.js:1
+msgid "Form contains errors."
+msgstr "Form hatalar içeriyor."
+
+#: static/misago/js/misago.js:1
+msgid "Register"
+msgstr "Kayıt Ol"
+
+#: static/misago/js/misago.js:1
+msgid "Join with %(site)s"
+msgstr "%(site)s ile katıl."
+
+#: static/misago/js/misago.js:1
+msgid "Or create forum account:"
+msgstr "Veya forum hesabı oluştur:"
+
+#: static/misago/js/misago.js:1
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+#: static/misago/js/misago.js:1
+msgid "E-mail"
+msgstr "E-posta"
+
+#: static/misago/js/misago.js:1
+msgid "Password"
+msgstr "Şifre"
+
+#: static/misago/js/misago.js:1
+msgid "Cancel"
+msgstr "İptal et"
+
+#: static/misago/js/misago.js:1
+msgid "Register account"
+msgstr "Hesabı Kaydet"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"%(username)s, your account has been created but you need to activate it "
+"before you will be able to sign in."
+msgstr ""
+"%(username)s hesabınız oluşturuldu, ancak oturum açabilmeniz için önce "
+"etkinleştirmeniz gerekir."
+
+#: static/misago/js/misago.js:1
+msgid ""
+"%(username)s, your account has been created but board administrator will "
+"have to activate it before you will be able to sign in."
+msgstr ""
+"%(username)shesabınız oluşturuldu fakat pano yöneticisi oturum açabilmeniz "
+"için onu aktif hale getirmek zorundadır. "
+
+#: static/misago/js/misago.js:1
+msgid ""
+"We have sent an e-mail to %(email)s with link that you have to click to "
+"activate your account."
+msgstr ""
+"Hesabınızı aktifleştirmek için gerekli linki %(email)s adresinize e-posta "
+"yolladık."
+
+#: static/misago/js/misago.js:1
+msgid "We will send an e-mail to %(email)s when this takes place."
+msgstr "Bu gerçekleştiğinde %(email)sadresinize e-posta göndereceğiz."
+
+#: static/misago/js/misago.js:1
+msgid "Registration complete"
+msgstr "Kayıt tamamlandı."
+
+#: static/misago/js/misago.js:1
+msgid "Ok"
+msgstr "Tamam"
+
+#: static/misago/js/misago.js:1
+msgid "New registrations are currently disabled."
+msgstr "Yeni kullanıcı kayıtları şu anda devde dışıdır."
+
+#: static/misago/js/misago.js:1
+msgid "Registration is currently unavailable due to an error."
+msgstr "Kayıt şu anda bir hata nedeniyle kullanılamıyor."
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Register"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -44,6 +189,82 @@ msgstr "Servis şartları."
 #: static/misago/js/misago.js:1
 msgid "the privacy policy"
 msgstr "gizlilik ilke"
+
+#: static/misago/js/misago.js:1
+msgctxt "search cta"
+msgid "Enter search query (at least 3 characters)."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "See all %(count)s result."
+msgid_plural "See all %(count)s results."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "The search returned no results."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "The search could not be completed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "Searching..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Sign in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "You are not signed in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Users"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Footer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav title"
+msgid "Menu"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Pinned globally"
@@ -84,6 +305,125 @@ msgstr[0] "%(replies)s adet cevap"
 msgstr[1] "%(replies)s adet cevap"
 
 #: static/misago/js/misago.js:1
+msgctxt "moment"
+msgid "moment ago"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "%(day)s at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Download my Gravatar"
+msgstr "Gravatar'ımı indir"
+
+#: static/misago/js/misago.js:1
+msgid "Re-crop uploaded image"
+msgstr "Yüklenen resmi tekrar boyutlandır"
+
+#: static/misago/js/misago.js:1
+msgid "Upload new image"
+msgstr "Yeni resim yükle"
+
+#: static/misago/js/misago.js:1
+msgid "Pick avatar from gallery"
+msgstr "Galeriden avatar'ını al"
+
+#: static/misago/js/misago.js:1
+msgid "Generate my individual avatar"
+msgstr "Avatarımı oluştur"
+
+#: static/misago/js/misago.js:1
+msgid "Set avatar"
+msgstr "Avatarı ayarla"
+
+#: static/misago/js/misago.js:1
+msgid "Crop image"
+msgstr "Resmi kırp"
+
+#: static/misago/js/misago.js:1
+msgid "Your image has been uploaded and you may now crop it."
+msgstr "Resminiz yüklendi, artık resminizi kırpabilirsiniz."
+
+#: static/misago/js/misago.js:1
+msgid "Selected file is too big. (%(filesize)s)"
+msgstr "Seçilen dosya boyutu çok büyük. (%(filesize)s) "
+
+#: static/misago/js/misago.js:1
+msgid "Selected file type is not supported."
+msgstr "Seçilen dosyanın uzantısı desteklenmiyor."
+
+#: static/misago/js/misago.js:1
+msgid "%(files)s files smaller than %(limit)s"
+msgstr "%(files)s tane dosya %(limit)s limitinden daha küçük"
+
+#: static/misago/js/misago.js:1
+msgid "Select file"
+msgstr "Dosya seç"
+
+#: static/misago/js/misago.js:1
+msgid "%(progress)s % complete"
+msgstr "% %(progress)s tamamlandı"
+
+#: static/misago/js/misago.js:1
+msgid "Save choice"
+msgstr "Değişiklikleri Kaydet"
+
+#: static/misago/js/misago.js:1
+msgid "Select avatar"
+msgstr "Varsayılan Avatar"
+
+#: static/misago/js/misago.js:1
+msgid "Change your avatar"
+msgstr "Avatarını değiştir"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Go to your profile"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Admin control panel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav section"
+msgid "Change options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Change avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "See more"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Log out"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav title"
+msgid "Your options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgid "No profile details are editable at this time."
 msgstr "Şu anda herhangi bir profil detayı düzenlenemez."
 
@@ -92,16 +432,8 @@ msgid "This option is currently unavailable."
 msgstr " Şu anda bu seçenek kullanılamıyor."
 
 #: static/misago/js/misago.js:1
-msgid "Form contains errors."
-msgstr "Form hatalar içeriyor."
-
-#: static/misago/js/misago.js:1
 msgid "Save changes"
 msgstr "Değişiklikleri Kaydet"
-
-#: static/misago/js/misago.js:1
-msgid "Cancel"
-msgstr "İptal et"
 
 #: static/misago/js/misago.js:1
 msgid "Edit details"
@@ -114,19 +446,6 @@ msgstr "(hata)"
 #: static/misago/js/misago.js:1
 msgid "(success)"
 msgstr "(başarılı)"
-
-#: static/misago/js/misago.js:1
-msgid "Are you sure you want to delete all polls?"
-msgstr "Bütün anketleri silmek istediğinize emin misiniz ?"
-
-#: static/misago/js/misago.js:1
-msgctxt "modal"
-msgid "Close"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "Merge threads"
-msgstr "Konular birleştir"
 
 #: static/misago/js/misago.js:1
 msgid "Best answer"
@@ -149,8 +468,12 @@ msgstr ""
 "olarak silinir ve geri alınamaz."
 
 #: static/misago/js/misago.js:1
-msgid "Ok"
-msgstr "Tamam"
+msgid "Are you sure you want to delete all polls?"
+msgstr "Bütün anketleri silmek istediğinize emin misiniz ?"
+
+#: static/misago/js/misago.js:1
+msgid "Merge threads"
+msgstr "Konular birleştir"
 
 #: static/misago/js/misago.js:1
 msgid "This post's contents cannot be displayed."
@@ -588,10 +911,6 @@ msgid "Reveal spoiler"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Enter a valid address."
-msgstr ""
-
-#: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Image"
 msgstr ""
@@ -969,10 +1288,6 @@ msgid "Username or e-mail"
 msgstr "Kullanıcı adı veya e-posta"
 
 #: static/misago/js/misago.js:1
-msgid "Password"
-msgstr "Şifre"
-
-#: static/misago/js/misago.js:1
 msgid "Forgot password?"
 msgstr "Şifreyi mi unuttun?"
 
@@ -1135,6 +1450,114 @@ msgid "This category is protected. You can't browse its contents."
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications dropdown"
+msgid "All"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications dropdown"
+msgid "Unread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "See all notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "You have unread notifications!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "You have unread private threads!"
+msgstr "Okunmamış gizli konular ınız var !"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open menu"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open your options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "All"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "Unread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "Read"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Latest"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Newer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Older"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "Mark all as read"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Unread notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Read notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "Mark all notifications as read?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "All notifications have been marked as read."
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgid "Enter your password to confirm account deletion."
 msgstr "Hesap silme işlemini onaylamak için şifrenizi girin."
 
@@ -1232,36 +1655,54 @@ msgid "Download is expired"
 msgstr "İndirme süre aşımına uğradı"
 
 #: static/misago/js/misago.js:1
-msgid "Everybody"
-msgstr "Herkes"
-
-#: static/misago/js/misago.js:1
-msgid "Users I follow"
-msgstr "Takip ettiklerim"
-
-#: static/misago/js/misago.js:1
-msgid "Nobody"
-msgstr "Kimse"
-
-#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
 msgid "No"
-msgstr "Hayır"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Notify"
-msgstr "Uyarmak"
+msgctxt "watch thread choice"
+msgid "Yes, with on site notifications"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Notify with e-mail"
-msgstr "Email ile uyarmak"
+msgctxt "watch thread choice"
+msgid "Yes, with on site and e-mail notifications"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Your forum options have been changed."
-msgstr "Forum seçeneklerin değiştirildi."
+msgctxt "notification preference"
+msgid "Don't notify"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Please reload page and try again."
-msgstr "Sayfayı yeniden yükle ve tekrar dene."
+msgctxt "notification preference"
+msgid "Notify on site"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Notify on site and with e-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Anybody can invite me to their private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Only those I follow can invite me to their private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Nobody can invite me to their private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Your forum options have been updated."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Please reload the page and try again."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Forum options"
@@ -1296,20 +1737,48 @@ msgid "Show my presence to other users"
 msgstr "Varlığımı diğer kullanıcılara göster"
 
 #: static/misago/js/misago.js:1
-msgid "Private thread invitations"
-msgstr "Özel konu davetleri"
+msgid "Limit private thread invitations from other users"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Automatic subscriptions"
-msgstr "Otomatik abonelik ücretleri"
+msgctxt "notifications options"
+msgid "Notifications preferences"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Threads I start"
-msgstr "Başlattığım konular"
+msgctxt "notifications options"
+msgid "Automatically watch threads I start"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Threads I reply to"
-msgstr "Cevapladığım konular"
+msgctxt "notifications options"
+msgid "Automatically watch threads I reply to"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Automatically watch new private threads I'm invited to by the members I am "
+"following"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Automatically watch new private threads I'm invited to by other members"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Notify me about new private thread invitations from the members I am "
+"following"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Notify me about new private thread invitations from other members"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Change username"
@@ -1527,30 +1996,6 @@ msgid "Search users..."
 msgstr "Kullanıcı ara..."
 
 #: static/misago/js/misago.js:1
-msgid "Follows"
-msgstr "Takipler"
-
-#: static/misago/js/misago.js:1
-msgid "You are following %(users)s user."
-msgid_plural "You are following %(users)s users."
-msgstr[0] "%(users)s adet kullanıcı takip ediyorsun."
-msgstr[1] "%(users)s adet kullanıcı takip ediyorsun."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s is following %(users)s user."
-msgid_plural "%(username)s is following %(users)s users."
-msgstr[0] "%(username)s kullanıcısı %(users)s adet kullanıcı takip ediyor."
-msgstr[1] "%(username)s kullanıcısı %(users)s adet kullanıcı takip ediyor."
-
-#: static/misago/js/misago.js:1
-msgid "You are not following any users."
-msgstr "Hiçbir kullanıcıyı takip etmiyorsun."
-
-#: static/misago/js/misago.js:1
-msgid "%(username)s is not following any users."
-msgstr "%(username)s herhangi bir kullanıcıyı takip etmiyor."
-
-#: static/misago/js/misago.js:1
 msgid "Username history"
 msgstr "Kullanıcı adı geçmişi"
 
@@ -1762,6 +2207,30 @@ msgid "Threads"
 msgstr "Konular"
 
 #: static/misago/js/misago.js:1
+msgid "Follows"
+msgstr "Takipler"
+
+#: static/misago/js/misago.js:1
+msgid "You are following %(users)s user."
+msgid_plural "You are following %(users)s users."
+msgstr[0] "%(users)s adet kullanıcı takip ediyorsun."
+msgstr[1] "%(users)s adet kullanıcı takip ediyorsun."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s is following %(users)s user."
+msgid_plural "%(username)s is following %(users)s users."
+msgstr[0] "%(username)s kullanıcısı %(users)s adet kullanıcı takip ediyor."
+msgstr[1] "%(username)s kullanıcısı %(users)s adet kullanıcı takip ediyor."
+
+#: static/misago/js/misago.js:1
+msgid "You are not following any users."
+msgstr "Hiçbir kullanıcıyı takip etmiyorsun."
+
+#: static/misago/js/misago.js:1
+msgid "%(username)s is not following any users."
+msgstr "%(username)s herhangi bir kullanıcıyı takip etmiyor."
+
+#: static/misago/js/misago.js:1
 msgid "Enter a valid email address."
 msgstr "Geçerli bir e-posta adresi girin."
 
@@ -1862,28 +2331,8 @@ msgid "Complete your details"
 msgstr "Bilgilerini tamamla."
 
 #: static/misago/js/misago.js:1
-msgid "Username"
-msgstr "Kullanıcı Adı"
-
-#: static/misago/js/misago.js:1
 msgid "E-mail address"
 msgstr "E-mail adresi"
-
-#: static/misago/js/misago.js:1
-msgid ""
-"%(username)s, your account has been created but you need to activate it "
-"before you will be able to sign in."
-msgstr ""
-"%(username)s hesabınız oluşturuldu, ancak oturum açabilmeniz için önce "
-"etkinleştirmeniz gerekir."
-
-#: static/misago/js/misago.js:1
-msgid ""
-"%(username)s, your account has been created but board administrator will "
-"have to activate it before you will be able to sign in."
-msgstr ""
-"%(username)shesabınız oluşturuldu fakat pano yöneticisi oturum açabilmeniz "
-"için onu aktif hale getirmek zorundadır. "
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -2368,16 +2817,6 @@ msgid "This post is protected. Only moderators may change it."
 msgstr "Korunan ileti. Yalnızca moderatörler değiştirebilir."
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to delete this post? This action is not reversible!"
-msgstr ""
-"Bu ileti yi silmek istediğinizden emin misiniz? Bu eylem geri alınamaz!"
-
-#: static/misago/js/misago.js:1
-msgid "Post has been deleted."
-msgstr "İleti silindi."
-
-#: static/misago/js/misago.js:1
 msgid "No users have liked this post."
 msgstr "Bu iletiyi hiç kimse beğenmedi."
 
@@ -2390,6 +2829,11 @@ msgid "%(likes)s like"
 msgid_plural "%(likes)s likes"
 msgstr[0] "%(likes)s beğenmeler"
 msgstr[1] "%(likes)s beğenmeler"
+
+#: static/misago/js/misago.js:1
+msgctxt "post control"
+msgid "Best answer"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Liked"
@@ -2418,8 +2862,19 @@ msgstr[0] "%(users)s ve %(likes)s diğer kullanıcılar"
 msgstr[1] "%(users)s ve %(likes)s diğer kullanıcılar"
 
 #: static/misago/js/misago.js:1
+msgctxt "post control"
 msgid "Reply"
-msgstr "Cevapla"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post control"
+msgid "Quote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post control"
+msgid "Edit"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "You have to enter link to the other thread."
@@ -2470,6 +2925,10 @@ msgstr "İleti önceki duruma döndü."
 #: static/misago/js/misago.js:1
 msgid "Post edits history"
 msgstr "İleti geçmişini yayımlamak"
+
+#: static/misago/js/misago.js:1
+msgid "No"
+msgstr "Hayır"
 
 #: static/misago/js/misago.js:1
 msgid "Yes"
@@ -2564,6 +3023,16 @@ msgstr "Koru"
 #: static/misago/js/misago.js:1
 msgid "Remove protection"
 msgstr "Korumayı kaldır"
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to delete this post? This action is not reversible!"
+msgstr ""
+"Bu ileti yi silmek istediğinizden emin misiniz? Bu eylem geri alınamaz!"
+
+#: static/misago/js/misago.js:1
+msgid "Post has been deleted."
+msgstr "İleti silindi."
 
 #: static/misago/js/misago.js:1
 msgid "New post"
@@ -2678,32 +3147,42 @@ msgid "Thread options"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "E-mail"
-msgstr "E-posta"
+msgctxt "watch thread"
+msgid "Watching"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Enabled"
-msgstr "İzin Ver"
+msgctxt "watch thread"
+msgid "Watch"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Disabled"
-msgstr "çevrimdışı"
+msgctxt "watch thread"
+msgid "Notify about new replies"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Unsubscribe"
-msgstr "Abonelikten Çık"
+msgctxt "watch thread"
+msgid "On site and with e-mail"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Subscribe"
-msgstr "abone"
+msgctxt "watch thread"
+msgid "On site only"
+msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Subscribe with e-mail"
-msgstr "E-posta ile abone ol"
+msgctxt "watch thread"
+msgid "Don't notify"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Private threads"
 msgstr "Özel Konular"
+
+#: static/misago/js/misago.js:1
+msgid "Go to top"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Go to first page"
@@ -2744,22 +3223,6 @@ msgid "%(username)s on %(posted_on)s"
 msgstr "%(posted_on)s'de%(username)s"
 
 #: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
-msgstr ""
-"Seçilen iletiler i birleştirmek istediğinizden emin misiniz? Bu eylem geri "
-"alınamaz!"
-
-#: static/misago/js/misago.js:1
-msgid ""
-"Are you sure you want to delete selected posts? This action is not "
-"reversible!"
-msgstr ""
-"Seçilen iletileri silmek istediğinizden emin misiniz? Bu eylem geri "
-"alınamaz!"
-
-#: static/misago/js/misago.js:1
 msgid "Selected posts were moved to the other thread."
 msgstr "Seçilen iletiler diğer bir konu ya taşındı."
 
@@ -2788,12 +3251,32 @@ msgid "Split posts into new thread"
 msgstr "Yeni bir konu için iletiler bölünsün"
 
 #: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Seçilen iletiler i birleştirmek istediğinizden emin misiniz? Bu eylem geri "
+"alınamaz!"
+
+#: static/misago/js/misago.js:1
 msgid "Unprotect"
 msgstr "Korumalı değil"
 
 #: static/misago/js/misago.js:1
+msgid ""
+"Are you sure you want to delete selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Seçilen iletileri silmek istediğinizden emin misiniz? Bu eylem geri "
+"alınamaz!"
+
+#: static/misago/js/misago.js:1
 msgid "Posts options"
 msgstr "İletiler in ayarları"
+
+#: static/misago/js/misago.js:1
+msgid "Reply"
+msgstr "Cevapla"
 
 #: static/misago/js/misago.js:1
 msgid "Add poll"
@@ -2801,6 +3284,10 @@ msgstr "Anket ekle"
 
 #: static/misago/js/misago.js:1
 msgid "Shortcuts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Go to first post"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2995,19 +3482,17 @@ msgid "Last post by: %(poster)s"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Subscribe with alert"
+msgctxt "watch thread"
+msgid "Send e-mail notifications"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Subscribed to e-mails"
+msgctxt "watch thread"
+msgid "Without e-mail notifications"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Subscribed to alerts"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "Not subscribed"
+msgid "Not watching"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3016,6 +3501,65 @@ msgid_plural ""
 "There are %(threads)s new or updated threads. Click here to show them."
 msgstr[0] ""
 msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "All"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "All threads"
+msgstr "Tüm konular"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "My"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "My threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "New"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "New threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unread threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Watched"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Watched threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unapproved"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unapproved content"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -3028,225 +3572,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgid "You aren't participating in any private threads."
 msgstr "Özel konular, katılamazsın."
-
-#: static/misago/js/misago.js:1
-msgid "All"
-msgstr "Tümü"
-
-#: static/misago/js/misago.js:1
-msgid "All threads"
-msgstr "Tüm konular"
-
-#: static/misago/js/misago.js:1
-msgid "My"
-msgstr "Benim"
-
-#: static/misago/js/misago.js:1
-msgid "My threads"
-msgstr "Benim konular"
-
-#: static/misago/js/misago.js:1
-msgid "New threads"
-msgstr "Yeni Konular"
-
-#: static/misago/js/misago.js:1
-msgid "Unread"
-msgstr "Okunmamış"
-
-#: static/misago/js/misago.js:1
-msgid "Unread threads"
-msgstr "Okunmamış konular"
-
-#: static/misago/js/misago.js:1
-msgid "Subscribed"
-msgstr "Abone olundu"
-
-#: static/misago/js/misago.js:1
-msgid "Subscribed threads"
-msgstr "Abone olunan konular"
-
-#: static/misago/js/misago.js:1
-msgid "Unapproved"
-msgstr "Onaylanmamış"
-
-#: static/misago/js/misago.js:1
-msgid "Unapproved content"
-msgstr "Onaylanmamış içerik"
-
-#: static/misago/js/misago.js:1
-msgid "Search returned no results."
-msgstr "Arama sonuç vermiyor."
-
-#: static/misago/js/misago.js:1
-msgid "See full \"%(provider)s\" results page with %(count)s result."
-msgid_plural "See full \"%(provider)s\" results page with %(count)s results."
-msgstr[0] ""
-"%(count)s sonuçlarıyla birlikte tam \"%(provider)s\" sonuç sayfasını görün."
-msgstr[1] ""
-"%(count)s sonuçlarıyla birlikte tam \"%(provider)s\" sonuç sayfasını görün."
-
-#: static/misago/js/misago.js:1
-msgid "Posted by %(poster)s on %(posted_on)s in %(category)s."
-msgstr ""
-"%(poster)s tarafından, %(posted_on)s tarihinde %(category)s kategorisinde "
-"yayımlandı."
-
-#: static/misago/js/misago.js:1
-msgid "%(title)s, joined on %(joined_on)s"
-msgstr "%(title)s, %(joined_on)s'da katıldı."
-
-#: static/misago/js/misago.js:1
-msgid "Entered password is very weak."
-msgstr "Girilen şifre çok zayıf."
-
-#: static/misago/js/misago.js:1
-msgid "Entered password is weak."
-msgstr "Girilen şifre zayıf."
-
-#: static/misago/js/misago.js:1
-msgid "Entered password is average."
-msgstr "Girilen şifre olağan."
-
-#: static/misago/js/misago.js:1
-msgid "Entered password is strong."
-msgstr "Girilen şifre güçlü"
-
-#: static/misago/js/misago.js:1
-msgid "Entered password is very strong."
-msgstr "Girilen şifre çok güçlü."
-
-#: static/misago/js/misago.js:1
-msgid "Register"
-msgstr "Kayıt Ol"
-
-#: static/misago/js/misago.js:1
-msgid "Join with %(site)s"
-msgstr "%(site)s ile katıl."
-
-#: static/misago/js/misago.js:1
-msgid "Or create forum account:"
-msgstr "Veya forum hesabı oluştur:"
-
-#: static/misago/js/misago.js:1
-msgid "Register account"
-msgstr "Hesabı Kaydet"
-
-#: static/misago/js/misago.js:1
-msgid ""
-"We have sent an e-mail to %(email)s with link that you have to click to "
-"activate your account."
-msgstr ""
-"Hesabınızı aktifleştirmek için gerekli linki %(email)s adresinize e-posta "
-"yolladık."
-
-#: static/misago/js/misago.js:1
-msgid "We will send an e-mail to %(email)s when this takes place."
-msgstr "Bu gerçekleştiğinde %(email)sadresinize e-posta göndereceğiz."
-
-#: static/misago/js/misago.js:1
-msgid "Registration complete"
-msgstr "Kayıt tamamlandı."
-
-#: static/misago/js/misago.js:1
-msgid "New registrations are currently disabled."
-msgstr "Yeni kullanıcı kayıtları şu anda devde dışıdır."
-
-#: static/misago/js/misago.js:1
-msgid "Registration is currently unavailable due to an error."
-msgstr "Kayıt şu anda bir hata nedeniyle kullanılamıyor."
-
-#: static/misago/js/misago.js:1
-msgid "You are browsing as guest."
-msgstr "Misafir olarak geziyorsun."
-
-#: static/misago/js/misago.js:1
-msgid "Sign in or register to start and participate in discussions."
-msgstr ""
-"Tartışmaya katılmak ve tartışma başlatmak için oturum açın veya kayıt olun."
-
-#: static/misago/js/misago.js:1
-msgid "Download my Gravatar"
-msgstr "Gravatar'ımı indir"
-
-#: static/misago/js/misago.js:1
-msgid "Re-crop uploaded image"
-msgstr "Yüklenen resmi tekrar boyutlandır"
-
-#: static/misago/js/misago.js:1
-msgid "Upload new image"
-msgstr "Yeni resim yükle"
-
-#: static/misago/js/misago.js:1
-msgid "Pick avatar from gallery"
-msgstr "Galeriden avatar'ını al"
-
-#: static/misago/js/misago.js:1
-msgid "Generate my individual avatar"
-msgstr "Avatarımı oluştur"
-
-#: static/misago/js/misago.js:1
-msgid "Set avatar"
-msgstr "Avatarı ayarla"
-
-#: static/misago/js/misago.js:1
-msgid "Crop image"
-msgstr "Resmi kırp"
-
-#: static/misago/js/misago.js:1
-msgid "Your image has been uploaded and you may now crop it."
-msgstr "Resminiz yüklendi, artık resminizi kırpabilirsiniz."
-
-#: static/misago/js/misago.js:1
-msgid "Selected file is too big. (%(filesize)s)"
-msgstr "Seçilen dosya boyutu çok büyük. (%(filesize)s) "
-
-#: static/misago/js/misago.js:1
-msgid "Selected file type is not supported."
-msgstr "Seçilen dosyanın uzantısı desteklenmiyor."
-
-#: static/misago/js/misago.js:1
-msgid "%(files)s files smaller than %(limit)s"
-msgstr "%(files)s tane dosya %(limit)s limitinden daha küçük"
-
-#: static/misago/js/misago.js:1
-msgid "Select file"
-msgstr "Dosya seç"
-
-#: static/misago/js/misago.js:1
-msgid "%(progress)s % complete"
-msgstr "% %(progress)s tamamlandı"
-
-#: static/misago/js/misago.js:1
-msgid "Save choice"
-msgstr "Değişiklikleri Kaydet"
-
-#: static/misago/js/misago.js:1
-msgid "Select avatar"
-msgstr "Varsayılan Avatar"
-
-#: static/misago/js/misago.js:1
-msgid "Change your avatar"
-msgstr "Avatarını değiştir"
-
-#: static/misago/js/misago.js:1
-msgid "See your profile"
-msgstr "Profil Gör"
-
-#: static/misago/js/misago.js:1
-msgid "Change options"
-msgstr "Seçenekleri değiştir"
-
-#: static/misago/js/misago.js:1
-msgid "Change avatar"
-msgstr "Avatarı değiştir"
-
-#: static/misago/js/misago.js:1
-msgid "Log out"
-msgstr "Çıkış yap"
-
-#: static/misago/js/misago.js:1
-msgid "You have unread private threads!"
-msgstr "Okunmamış gizli konular ınız var !"
 
 #: static/misago/js/misago.js:1
 msgid "No users have posted any new messages during last %(days)s days."
@@ -3289,8 +3614,8 @@ msgid "There are no users with this rank at the moment."
 msgstr "Şu anda bu rütbeyle bir kullanıcı yoktur."
 
 #: static/misago/js/misago.js:1
-msgid "Lost connection with application."
-msgstr "Uygulamayla bağlantı kesildi."
+msgid "Could not connect to server."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Action link is invalid."
@@ -3303,6 +3628,10 @@ msgstr "Bilinmeyen bir hata oluştu."
 #: static/misago/js/misago.js:1
 msgid "Upload was rejected by server as too large."
 msgstr "Yükleme çok büyük sunucu tarafından reddedildi."
+
+#: static/misago/js/misago.js:1
+msgid "Unknown error has occurred."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Failed to load CAPTCHA."
@@ -3324,6 +3653,10 @@ msgstr "sayfa: %(page)s"
 #: static/misago/js/misago.js:1
 msgid "You are already working on other message. Do you want to discard it?"
 msgstr "Zaten başka bir ileti üzerinde çalışıyoruz. Çöpe atmak ister misin?"
+
+#: static/misago/js/misago.js:1
+msgid "Unknown error has occurrsed."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "You don't have permission to perform this action."
