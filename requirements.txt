@@ -51,7 +51,7 @@ coverage[toml]==6.5.0
     #   pytest-cov
 coveralls==3.3.1
     # via -r requirements.in
-cryptography==37.0.4
+cryptography==40.0.2
     # via social-auth-core
 defusedxml==0.7.1
     # via
