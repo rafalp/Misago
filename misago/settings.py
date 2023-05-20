@@ -86,4 +86,4 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.core.context_processors.frontend_context",
 ]
 
-NOTIFICATIONS_RETRY_DELAY = 10  # Seconds
+NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
