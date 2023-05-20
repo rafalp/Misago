@@ -31,6 +31,12 @@
   border-bottom: 1px solid @dropdown-divider-bg;
 }
 
+// Make font size on search input bigger to disable zoom on iOS
+.search-dropdown .form-control-search,
+.search-overlay-body .form-control-search {
+  font-size: @search-control-font-size;
+}
+
 .search-overlay-body .search-results-container {
   flex: 1;
   overflow-y: auto;
