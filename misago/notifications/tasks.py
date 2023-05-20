@@ -1,6 +1,7 @@
 from logging import getLogger
 
 from celery import shared_task
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from ..cache.versions import get_cache_versions
@@ -14,16 +15,20 @@ from .threads import (
     notify_watcher_on_new_thread_reply,
 )
 
+RETRY_DELAY = settings.NOTIFICATIONS_RETRY_DELAY
 NOTIFY_CHUNK_SIZE = 20
 
 User = get_user_model()
 logger = getLogger("misago.notifications")
 
 
-@shared_task(serializer="json")
-def notify_on_new_thread_reply(
-    reply_id: int,
-):
+@shared_task(
+    name="notifications.new-thread-reply",
+    autoretry_for=(Post.DoesNotExist,),
+    default_retry_delay=RETRY_DELAY,
+    serializer="json",
+)
+def notify_on_new_thread_reply(reply_id: int):
     post = Post.objects.select_related("poster", "thread", "category").get(id=reply_id)
     post.thread.category = post.category
 
@@ -31,7 +36,7 @@ def notify_on_new_thread_reply(
         return  # Nobody is watching this thread, stop
 
     cache_versions = get_cache_versions()
-    settings = DynamicSettings(cache_versions)
+    dynamic_settings = DynamicSettings(cache_versions)
 
     queryset = WatchedThread.objects.filter(thread=post.thread).select_related("user")
 
@@ -45,30 +50,31 @@ def notify_on_new_thread_reply(
 
         try:
             notify_watcher_on_new_thread_reply(
-                watched_thread, post, cache_versions, settings
+                watched_thread, post, cache_versions, dynamic_settings
             )
         except Exception:
             logger.exception("Unexpected error in 'notify_watcher_on_new_thread_reply'")
 
 
-@shared_task(serializer="json")
+@shared_task(
+    name="notifications.new-private-thread",
+    autoretry_for=(Thread.DoesNotExist,),
+    default_retry_delay=RETRY_DELAY,
+    serializer="json",
+)
 def notify_on_new_private_thread(
     actor_id: int,
     thread_id: int,
     participants: list[int],
 ):
     actor = User.objects.filter(id=actor_id).first()
-    thread = (
-        Thread.objects.filter(id=thread_id)
-        .select_related("category", "first_post")
-        .first()
-    )
+    if not actor:
+        return
 
-    if not actor or not thread:
-        return  # Actor or thread could not be found but we need both
+    thread = Thread.objects.select_related("category", "first_post").get(id=thread_id)
 
     cache_versions = get_cache_versions()
-    settings = DynamicSettings(cache_versions)
+    dynamic_settings = DynamicSettings(cache_versions)
 
     queryset = User.objects.filter(id__in=participants)
 
@@ -78,7 +84,7 @@ def notify_on_new_private_thread(
 
         try:
             notify_participant_on_new_private_thread(
-                participant, actor, thread, cache_versions, settings
+                participant, actor, thread, cache_versions, dynamic_settings
             )
         except Exception:
             logger.exception(
