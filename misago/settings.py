@@ -1,8 +1,8 @@
-"""Misago's default Django Project settings"""
+"""Misago's default Django Project settings."""
 
 __all__ = [
-    "CONTEXT_PROCESSORS",
     "INSTALLED_APPS",
+    "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
 INSTALLED_APPS = [
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "misago.apiv2",
 ]
 
-CONTEXT_PROCESSORS = [
+TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.debug",
     "django.template.context_processors.i18n",
     "django.template.context_processors.media",

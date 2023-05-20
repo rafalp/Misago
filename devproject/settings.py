@@ -241,7 +241,7 @@ TEMPLATES = [
         "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
-            "context_processors": CONTEXT_PROCESSORS,
+            "context_processors": TEMPLATE_CONTEXT_PROCESSORS,
         },
     }
 ]
