@@ -5,25 +5,25 @@ const ThreadsListItemStarter = ({ thread }) =>
   !!thread.starter ? (
     <a
       href={thread.url.starter}
-      className="threads-list-item-last-poster"
+      className="threads-list-item-starter"
       title={interpolate(
         pgettext("threads list", "%(starter)s - original poster"),
         { starter: thread.starter.username },
         true
       )}
     >
-      <Avatar size={32} user={thread.starter} />
+      <Avatar size={24} user={thread.starter} />
     </a>
   ) : (
     <span
-      className="threads-list-item-last-poster"
+      className="threads-list-item-starter"
       title={interpolate(
         pgettext("threads list", "%(starter)s - original poster"),
         { starter: thread.starter_name },
         true
       )}
     >
-      <Avatar size={32} />
+      <Avatar size={24} />
     </span>
   )
 

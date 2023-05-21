@@ -44,11 +44,6 @@
   padding-right: @grid-gutter-width / 2;
 }
 
-// Hide small avatar
-.threads-list-item-col-starter-sm {
-  display: none;
-}
-
 // Thread icon
 .threads-list-item-col-read-status {
   padding-right: floor(@grid-gutter-width / 2);
@@ -182,9 +177,18 @@ a.threads-list-item-title-new {
   padding-left: @grid-gutter-width / 2;
 }
 
-// Hide small last poster
+// Small first and last posters, hidden by default
+.threads-list-item-col-starter-sm,
 .threads-list-item-col-last-poster-sm {
   display: none;
+
+  font-size: @thread-flag-block-size;
+  line-height: 1;
+
+  img {
+    width: @thread-flag-block-size;
+    height: @thread-flag-block-size;
+  }
 }
 
 // Last activity
@@ -195,11 +199,7 @@ a.threads-list-item-title-new {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
 
-// Last activity colors
-.threads-list-item-col-last-activity,
-.threads-list-item-col-last-activity-narrow {
   a:link,
   a:hover,
   a:active,
@@ -210,15 +210,30 @@ a.threads-list-item-title-new {
   }
 }
 
-// Hide narrow last activity by default
-.threads-list-item-col-last-activity-narrow {
-  display: none;
-}
-
 // Subscription and checkbox
 .threads-list-item-col-checkbox,
 .threads-list-item-col-notifications {
   padding-left: @grid-gutter-width / 2;
+
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    height: @thread-avatar-image-size;
+    width: @thread-avatar-image-size;
+
+    .material-icon {
+      position: static;
+      margin: 0;
+      height: auto;
+      width: auto;
+
+      font-size: 24px;
+      line-height: 24px;
+    }
+  }
 }
 
 // Make list responsive
@@ -244,13 +259,9 @@ a.threads-list-item-title-new {
 
   // Make all cols in second row auto, align them to right
   .threads-list-item-bottom-row {
-    justify-content: end;
+    justify-content: space-between;
     flex: 0;
-  }
 
-  // Add top margin to bottom row items
-  .threads-list-item-bottom-left,
-  .threads-list-item-bottom-right {
     margin-top: @grid-gutter-width / 4;
   }
 
@@ -273,17 +284,17 @@ a.threads-list-item-title-new {
     display: block;
   }
 
+  // Make width of replies and last activity auto
+  .threads-list-item-col-replies,
+  .threads-list-item-col-last-activity {
+    width: auto;
+  }
+
   // Reveal right-most last poster
   .threads-list-item-col-last-poster-sm {
     display: block;
 
     padding-left: @grid-gutter-width / 2;
-  }
-
-  // Make avatars same size as flag icons
-  .threads-list-item img {
-    width: @thread-flag-block-size;
-    height: @thread-flag-block-size;
   }
 
   // Reveal checkbox in top row, make it smol
@@ -292,10 +303,10 @@ a.threads-list-item-title-new {
     padding-left: @grid-gutter-width / 2;
 
     .btn-icon {
-      padding: 4px 8px;
+      padding: 2px 6px;
 
       .material-icon {
-        font-size: 16px;
+        font-size: 12px;
       }
     }
   }
@@ -312,6 +323,32 @@ a.threads-list-item-title-new {
       border-radius: 0;
       border-left: 0;
       border-right: 0;
+    }
+  }
+
+  // Remove top margin from bottom row itself
+  .threads-list-item-bottom-row {
+    margin-top: 0;
+  }
+
+  // Add top margin to bottom row halves
+  .threads-list-item-bottom-left,
+  .threads-list-item-bottom-right {
+    margin-top: floor(@grid-gutter-width / 4);
+    overflow: visible;
+  }
+
+  // Allow breaking bottom row into two
+  .threads-list-item-bottom-row {
+    display: block;
+    overflow: auto;
+
+    .threads-list-item-bottom-left {
+      float: left;
+    }
+
+    .threads-list-item-bottom-right {
+      float: right;
     }
   }
 
@@ -332,32 +369,17 @@ a.threads-list-item-title-new {
     display: none;
   }
 
-  // Allow breaking bottom row into two
-  .threads-list-item-bottom-row {
-    display: block;
-    overflow: auto;
-
-    .threads-list-item-bottom-left {
-      float: left;
-    }
-
-    .threads-list-item-bottom-right {
-      float: right;
-
-      & > div {
-        width: auto;
-      }
-    }
-  }
-
   // Remove left padding from first item
   .threads-list-item-col-starter-sm + .threads-list-item-col-flags,
   .threads-list-item-col-starter-sm + .threads-list-item-col-category {
     padding-left: 0;
   }
 
-  // Make last activity small
+  // Make last activity small but add spacing to make it easier to click
   .threads-list-item-col-last-activity {
+    padding-left: floor(@grid-gutter-width / 2);
+    padding-right: floor(@grid-gutter-width / 4);
+
     a:link,
     a:hover,
     a:active,
@@ -378,6 +400,11 @@ a.threads-list-item-title-new {
   50% {
     opacity: 0.5;
   }
+}
+
+// Make threads list ui preview line height 1
+.threads-list-item .ui-preview-text {
+  line-height: 1;
 }
 
 // Threads list update prompt
