@@ -2,7 +2,7 @@
 
 __all__ = [
     "INSTALLED_APPS",
-    "NOTIFICATIONS_RETRY_DELAY",
+    "MISAGO_NOTIFICATIONS_RETRY_DELAY",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -86,4 +86,4 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.core.context_processors.frontend_context",
 ]
 
-NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
+MISAGO_NOTIFICATIONS_RETRY_DELAY = 5  # Seconds

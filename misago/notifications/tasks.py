@@ -15,7 +15,6 @@ from .threads import (
     notify_watcher_on_new_thread_reply,
 )
 
-RETRY_DELAY = settings.NOTIFICATIONS_RETRY_DELAY
 NOTIFY_CHUNK_SIZE = 20
 
 User = get_user_model()
@@ -25,7 +24,7 @@ logger = getLogger("misago.notifications")
 @shared_task(
     name="notifications.new-thread-reply",
     autoretry_for=(Post.DoesNotExist,),
-    default_retry_delay=RETRY_DELAY,
+    default_retry_delay=settings.MISAGO_NOTIFICATIONS_RETRY_DELAY,
     serializer="json",
 )
 def notify_on_new_thread_reply(reply_id: int):
@@ -59,7 +58,7 @@ def notify_on_new_thread_reply(reply_id: int):
 @shared_task(
     name="notifications.new-private-thread",
     autoretry_for=(Thread.DoesNotExist,),
-    default_retry_delay=RETRY_DELAY,
+    default_retry_delay=settings.MISAGO_NOTIFICATIONS_RETRY_DELAY,
     serializer="json",
 )
 def notify_on_new_private_thread(
