@@ -1,7 +1,7 @@
 import React from "react"
 import Avatar from "../avatar"
 import { ListGroupItem } from "../ListGroup"
-import { Timestamp } from "../Timestamp"
+import Timestamp from "../Timestamp"
 
 export default function SearchResultUser({ user }) {
   const title = user.title || user.rank.title

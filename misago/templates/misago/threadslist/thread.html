@@ -1,99 +1,157 @@
-{% load i18n misago_absoluteurl misago_avatars misago_capture %}
+{% load i18n misago_absoluteurl misago_avatars %}
 <li id="threads-item-{{ thread.id }}" class="list-group-item threads-list-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-  <div class="threads-list-item-top-row">
-    {% if user.is_authenticated %}
-      <div class="threads-list-item-col-icon">
-        <a title="{% if thread.is_read %}{% trans 'No new posts' %}{% else %}{% trans 'New posts' %}{% endif %}"
-          href="{% if thread.is_read %}{{ thread.get_last_post_url }}{% else %}{{ thread.get_new_post_url }}{% endif %}"
-          class="threads-list-icon{% if not thread.is_read %} threads-list-icon-new{% endif %}">
-          <span class="material-icon">
-            {% if thread.is_read %}chat_bubble_outline{% else %}chat_bubble{% endif %}
-          </span>
-        </a>
-      </div>
-    {% endif %}
-    <div class="threads-list-item-col-title">
-      <a href="{{ thread.get_absolute_url }}" class="threads-list-item-title">
-        {{ thread.title }}
-      </a>
+  <div class="threads-list-item-col-starter">
+    {% if thread.starter_id %}
       <a
-        href="{% if thread.is_read %}{{ thread.get_absolute_url }}{% else %}{{ thread.get_new_post_url }}{% endif %}"
-        class="threads-list-item-title-sm{% if not thread.is_read %} threads-list-item-title-new{% endif %}"
-      >
-        {{ thread.title }}
+        href="{% url 'misago:user' slug=thread.starter_slug pk=thread.starter_id  %}"
+        class="threads-list-item-starter"
+        title="{% blocktrans trimmed with starter=thread.starter.username context 'threads list' %}
+        {{ starter }} - original poster
+        {% endblocktrans %}">
+        <img class="user-avatar" src="{{ thread.starter|avatar:26 }}" width="26" height="26" alt="">
       </a>
-    </div>
+    {% else %}
+      <span class="threads-list-item-starter" title="{% blocktrans trimmed with starter=thread.starter_name context 'threads list' %}
+        {{ starter }} - original poster
+        {% endblocktrans %}">
+        <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="26" height="26" alt="">
+      </span>
+    {% endif %}
   </div>
-  <div class="threads-list-item-bottom-row">
-    {% if thread.is_closed or thread.is_hidden or thread.is_unapproved or thread.weight > 0 or thread.best_answer or thread.has_poll %}
-      <div class="threads-list-item-col-flags">
-        {% include "misago/thread_flags.html" %}
-      </div>
-    {% endif %}
-    {% if thread.category != category %}
-      <div class="threads-list-item-col-category">
-        <span>
-          {% if thread.category.parent and not thread.category.parent.special_role and thread.category.parent != category %}
-            <a
-              href="{{ thread.category.parent.get_absolute_url }}"
-              class="threads-list-item-category threads-list-category-label{% if thread.category.parent.color %} threads-list-category-label-color{% endif %} threads-list-item-parent-category"
-              {% if thread.category.parent.color %}style="--label-color: {{ thread.category.parent.color }}"{% endif %}
-              {% if thread.category.parent.short_name %}title="{{ thread.category.parent.name }}"{% endif %}
-            >
-              {% if thread.category.parent.short_name %}{{ thread.category.parent.short_name }}{% else %}{{ thread.category.parent.name }}{% endif %}
-            </a>
-          {% endif %}
-          <a
-            href="{{ thread.category.get_absolute_url }}"
-            class="threads-list-item-category threads-list-category-label{% if thread.category.color %} threads-list-category-label-color{% endif %}"
-            {% if thread.category.color %}style="--label-color: {{ thread.category.color }}"{% endif %}
-            {% if thread.category.short_name %}title="{{ thread.category.name }}"{% endif %}
-          >
-            {% if thread.category.short_name %}{{ thread.category.short_name }}{% else %}{{ thread.category.name }}{% endif %}
-          </a>
-        </span>
-      </div>
-    {% endif %}
-    <div class="threads-list-item-col-spacer-xs"></div>
-    <div class="threads-list-item-col-replies">
-      {% include "misago/thread_replies.html" %}
-    </div>
-    <div class="threads-list-item-col-last-poster">
-      {% if thread.last_poster_id %}
-        <a
-          href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}"
-          class="threads-list-item-last-poster"
-          title="{% blocktrans trimmed with last_poster=thread.last_poster.username %}
-          Last post by: {{ last_poster }}
-          {% endblocktrans %}">
-          <img src="{{ thread.last_poster|avatar:32 }}" width="32" height="32" alt="">
-        </a>
+  {% if user.is_authenticated %}
+    <div class="threads-list-item-col-read-status">
+      {% if thread.is_read %}
+        <div class="threads-list-item-read-status" title="{% trans 'No unread posts' context 'threads list' %}">
+          <span class="threads-list-read-icon"></span>
+        </div>
       {% else %}
-        <span class="threads-list-item-last-poster" title="{% blocktrans trimmed with last_poster=thread.last_poster_name %}
-          Last post by: {{ last_poster }}
-          {% endblocktrans %}">
-          <img src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="">
-        </span>
+        <div class="threads-list-item-read-status" title="{% trans 'Contains unread posts' context 'threads list' %}">
+          <span class="threads-list-unread-icon"></span>
+        </div>
       {% endif %}
     </div>
-    <div class="threads-list-item-col-last-activity">
-      <a href="{{ thread.get_last_post_url }}" class="threads-list-item-last-activity" title="{% blocktrans trimmed with last_activity=thread.last_post_on|date:'DATETIME_FORMAT' %}
-        Last activity: {{ last_activity }}
-        {% endblocktrans %}">
-        {{ thread.last_post_on|date }}
-      </a>
-    </div>
-    {% if list_type == "subscribed" %}
-      <div class="threads-list-item-col-subscription">
-        <div class="dropdown">
-          <button class="btn btn-default btn-icon" type="button" disabled>
-            <span class="material-icon">
-              star_border
-            </span>
-          </button>
-        </div>
+  {% endif %}
+  <div class="threads-list-item-right-col">
+    <div class="threads-list-item-top-row">
+      <div class="threads-list-item-col-title">
+        <a
+          href="{% if thread.is_read %}{{ thread.get_absolute_url }}{% else %}{{ thread.get_new_post_url }}{% endif %}"
+          class="threads-list-item-title{% if not thread.is_read %} threads-list-item-title-new{% endif %}"
+        >
+          {{ thread.title }}
+        </a>
       </div>
-    {% endif %}
+    </div>
+    <div class="threads-list-item-bottom-row">
+      <div class="threads-list-item-bottom-left">
+        <div class="threads-list-item-col-starter-sm">
+          {% if thread.starter_id %}
+            <a
+              href="{% url 'misago:user' slug=thread.starter_slug pk=thread.starter_id %}"
+              class="threads-list-item-starter"
+              title="{% blocktrans trimmed with starter=thread.starter.username context 'threads list' %}
+              {{ starter }} - original poster
+              {% endblocktrans %}">
+              <img class="user-avatar" src="{{ thread.starter|avatar:20 }}" width="20" height="20" alt="">
+            </a>
+          {% else %}
+            <span class="threads-list-item-starter" title="{% blocktrans trimmed with starter=thread.starter_name context 'threads list' %}
+              {{ starter }} - original poster
+              {% endblocktrans %}">
+              <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="20" height="20" alt="">
+            </span>
+          {% endif %}
+        </div>
+        {% if thread.is_closed or thread.is_hidden or thread.is_unapproved or thread.weight > 0 or thread.best_answer or thread.has_poll %}
+          <div class="threads-list-item-col-flags">
+            {% include "misago/thread_flags.html" %}
+          </div>
+        {% endif %}
+        {% if thread.category != category %}
+          <div class="threads-list-item-col-category">
+            <span>
+              {% if thread.category.parent and not thread.category.parent.special_role and thread.category.parent != category %}
+                <a
+                  href="{{ thread.category.parent.get_absolute_url }}"
+                  class="threads-list-item-category threads-list-category-label{% if thread.category.parent.color %} threads-list-category-label-color{% endif %} threads-list-item-parent-category"
+                  {% if thread.category.parent.color %}style="--label-color: {{ thread.category.parent.color }}"{% endif %}
+                  {% if thread.category.parent.short_name %}title="{{ thread.category.parent.name }}"{% endif %}
+                >
+                  {% if thread.category.parent.short_name %}{{ thread.category.parent.short_name }}{% else %}{{ thread.category.parent.name }}{% endif %}
+                </a>
+              {% endif %}
+              <a
+                href="{{ thread.category.get_absolute_url }}"
+                class="threads-list-item-category threads-list-category-label{% if thread.category.color %} threads-list-category-label-color{% endif %}"
+                {% if thread.category.color %}style="--label-color: {{ thread.category.color }}"{% endif %}
+                {% if thread.category.short_name %}title="{{ thread.category.name }}"{% endif %}
+              >
+                {% if thread.category.short_name %}{{ thread.category.short_name }}{% else %}{{ thread.category.name }}{% endif %}
+              </a>
+            </span>
+          </div>
+        {% endif %}
+      </div>
+      <div class="threads-list-item-bottom-right">
+        <div class="threads-list-item-col-replies{% if thread.replies == 0 %} threads-list-item-col-replies-zero{% endif %}">
+          {% include "misago/thread_replies.html" %}
+        </div>
+        <div class="threads-list-item-col-last-poster">
+          {% if thread.last_poster_id %}
+            <a
+              href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}"
+              class="threads-list-item-last-poster"
+              title="{% blocktrans trimmed with last_poster=thread.last_poster.username context 'threads list' %}
+              {{ last_poster }} - latest poster
+              {% endblocktrans %}">
+              <img src="{{ thread.last_poster|avatar:26 }}" width="26" height="26" alt="">
+            </a>
+          {% else %}
+            <span class="threads-list-item-last-poster" title="{% blocktrans trimmed with last_poster=thread.last_poster_name context 'threads list' %}
+              {{ last_poster }} - latest poster
+              {% endblocktrans %}">
+              <img src="{{ BLANK_AVATAR_URL }}" width="26" height="26" alt="">
+            </span>
+          {% endif %}
+        </div>
+        <div class="threads-list-item-col-last-activity">
+          <a href="{{ thread.get_last_post_url }}" class="threads-list-item-last-activity" title="{% blocktrans trimmed with last_activity=thread.last_post_on|date:'DATETIME_FORMAT' context 'threads list' %}
+            {{ last_activity }} - latest activity
+            {% endblocktrans %}">
+            {{ thread.last_post_on|date }}
+          </a>
+        </div>
+        <div class="threads-list-item-col-last-poster-sm">
+          {% if thread.last_poster_id %}
+            <a
+              href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}"
+              class="threads-list-item-last-poster"
+              title="{% blocktrans trimmed with last_poster=thread.last_poster.username context 'threads list' %}
+              {{ last_poster }} - latest poster
+              {% endblocktrans %}">
+              <img src="{{ thread.last_poster|avatar:20 }}" width="20" height="20" alt="">
+            </a>
+          {% else %}
+            <span class="threads-list-item-last-poster" title="{% blocktrans trimmed with last_poster=thread.last_poster_name context 'threads list' %}
+              {{ last_poster }} - latest poster
+              {% endblocktrans %}">
+              <img src="{{ BLANK_AVATAR_URL }}" width="20" height="20" alt="">
+            </span>
+          {% endif %}
+        </div>
+        {% if list_type == "watched" %}
+          <div class="threads-list-item-col-notifications">
+            <div class="dropdown">
+              <button class="btn btn-default btn-icon" type="button" disabled>
+                <span class="material-icon">
+                  notifications_none
+                </span>
+              </button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
   <meta itemprop="position" content="{{ list_page.start|add:forloop.counter }}">
   <meta itemprop="url" content="{% absoluteurl thread.get_absolute_url %}">

@@ -77,8 +77,6 @@ export function getThreadModerationOptions(thread_acl) {
 
 export function hydrateThread(thread) {
   return Object.assign({}, thread, {
-    started_on: moment(thread.started_on),
-    last_post_on: moment(thread.last_post_on),
     moderation: getThreadModerationOptions(thread.acl),
   })
 }

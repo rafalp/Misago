@@ -1,18 +1,13 @@
 import React from "react"
+import Timestamp from "../Timestamp"
 
 const ThreadsListItemActivity = ({ thread }) => (
-  <a
-    href={thread.url.last_post}
-    className="threads-list-item-last-activity"
-    title={interpolate(
-      gettext("Last activity: %(timestamp)s"),
-      {
-        timestamp: thread.last_post_on.format("LLL"),
-      },
-      true
-    )}
-  >
-    {thread.last_post_on.fromNow(true)}
+  <a href={thread.url.last_post} className="threads-list-item-last-activity">
+    <Timestamp
+      datetime={thread.last_post_on}
+      title={pgettext("threads list", "%(timestamp)s - latest activity")}
+      narrow
+    />
   </a>
 )
 

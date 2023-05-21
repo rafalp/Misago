@@ -9,7 +9,7 @@ export default function NotificationsListItemActor({ notification }) {
         className="notifications-list-item-actor"
         title={notification.actor.username}
       >
-        <Avatar size={32} user={notification.actor} />
+        <Avatar size={26} user={notification.actor} />
       </a>
     )
   }
@@ -19,7 +19,7 @@ export default function NotificationsListItemActor({ notification }) {
       className="threads-list-item-last-poster"
       title={notification.actor_name || null}
     >
-      <Avatar size={32} />
+      <Avatar size={26} />
     </span>
   )
 }

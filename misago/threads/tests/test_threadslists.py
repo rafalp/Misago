@@ -130,10 +130,10 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         self.category_f = Category.objects.get(slug="category-f")
 
     def assertContainsThread(self, response, thread):
-        self.assertContains(response, ' href="%s"' % thread.get_absolute_url())
+        self.assertContains(response, ' href="%s' % thread.get_absolute_url())
 
     def assertNotContainsThread(self, response, thread):
-        self.assertNotContains(response, ' href="%s"' % thread.get_absolute_url())
+        self.assertNotContains(response, ' href="%s' % thread.get_absolute_url())
 
 
 class ApiTests(ThreadsListTestCase):
@@ -1124,11 +1124,11 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
 
 def assert_contains_thread(response: HttpResponse, thread: Thread):
-    assert_contains(response, f'href="{thread.get_absolute_url()}"')
+    assert_contains(response, f'href="{thread.get_absolute_url()}')
 
 
 def assert_not_contains_thread(response: HttpResponse, thread: Thread):
-    assert_not_contains(response, f'href="{thread.get_absolute_url()}"')
+    assert_not_contains(response, f'href="{thread.get_absolute_url()}')
 
 
 def test_watched_threads_list_shows_thread_with_email_notifications(
