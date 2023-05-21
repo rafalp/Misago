@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import * as overlay from "../../reducers/overlay"
 import RegisterButton from "../RegisterButton"
 import SignInButton from "../SignInButton"
+import SignInModalAutoOpen from "../SignInModalAutoOpen"
 import NavbarBranding from "./NavbarBranding"
 import NavbarExtraMenu from "./NavbarExtraMenu"
 import NavbarNotificationsDropdown from "./NavbarNotificationsDropdown"
@@ -96,6 +97,7 @@ export function Navbar({
         {!user && !authDelegated && (
           <RegisterButton className="btn-navbar-register" />
         )}
+        {!user && !authDelegated && <SignInModalAutoOpen />}
       </div>
     </div>
   )
