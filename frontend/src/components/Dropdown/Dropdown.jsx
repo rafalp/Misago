@@ -21,6 +21,19 @@ export default class Dropdown extends React.Component {
     window.removeEventListener("click", this.handleClick)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const didUpdate = prevState.isOpen !== this.state.isOpen
+    if (didUpdate) {
+      if (this.state.isOpen && this.props.onOpen) {
+        this.props.onOpen(this.root)
+      }
+
+      if (!this.state.isOpen && this.props.onClose) {
+        this.props.onClose(this.root)
+      }
+    }
+  }
+
   handleClick = (event) => {
     if (
       this.state.isOpen &&
@@ -43,10 +56,9 @@ export default class Dropdown extends React.Component {
 
   render() {
     const { isOpen } = this.state
-    const RootElement = this.props.listItem ? "li" : "div"
 
     return (
-      <RootElement
+      <div
         id={this.props.id}
         className={classnames(
           "dropdown",
@@ -79,7 +91,7 @@ export default class Dropdown extends React.Component {
         >
           {this.props.children({ isOpen, close: this.close })}
         </div>
-      </RootElement>
+      </div>
     )
   }
 }
