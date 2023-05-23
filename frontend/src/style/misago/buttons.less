@@ -102,3 +102,37 @@
 .btn-register {
   .button-variant(@btn-register-color; @btn-register-bg; @btn-register-border);
 }
+
+// Btn without background
+.btn-muted {
+  color: @text-muted;
+  border-radius: 0;
+
+  &,
+  &:active,
+  &.active,
+  &[disabled],
+  fieldset[disabled] & {
+    background-color: transparent;
+    .box-shadow(none);
+  }
+  &,
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: transparent;
+  }
+  &:hover,
+  &:focus {
+    color: @text-color;
+    background-color: transparent;
+  }
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus {
+      color: @text-muted;
+      text-decoration: none;
+    }
+  }
+}

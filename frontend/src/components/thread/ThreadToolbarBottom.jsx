@@ -25,7 +25,7 @@ const ThreadToolbarBottom = ({
         </ToolbarItem>
       </ToolbarSection>
     )}
-    <ToolbarSpacer className="hidden-xs" />
+    <ToolbarSpacer />
     {user.is_authenticated && (
       <ToolbarSection>
         <ToolbarItem className="hidden-xs">
