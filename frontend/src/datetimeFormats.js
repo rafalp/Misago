@@ -87,18 +87,19 @@ export function formatRelative(date) {
   const now = new Date()
   const diff = Math.round((date - now) / 1000)
   const absDiff = Math.abs(diff)
+  const mod = diff < 1 ? -1 : 1
 
   if (absDiff < 90) {
     return momentAgo
   }
 
   if (absDiff < 60 * 47) {
-    const minutes = Math.ceil(diff / 60)
+    const minutes = Math.ceil(absDiff / 60) * mod
     return relativeNumeric.format(minutes, "minute")
   }
 
   if (absDiff < 3600 * 3) {
-    const hours = Math.ceil(diff / 3600)
+    const hours = Math.ceil(absDiff / 3600) * mod
     return relativeNumeric.format(hours, "hour")
   }
 
