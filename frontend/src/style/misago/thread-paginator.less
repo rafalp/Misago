@@ -1,0 +1,52 @@
+.thread-paginator {
+  display: flex;
+  align-items: center;
+
+  .btn + .btn {
+    margin-left: @thread-paginator-gutter;
+  }
+
+  .dropdown {
+    margin: 0 @thread-paginator-gutter;
+  }
+}
+
+.thread-paginator .dropdown-menu {
+  padding: @thread-paginator-dropdown-padding;
+  min-width: @thread-paginator-dropdown-width;
+}
+
+.thread-paginator .form-control {
+  margin-right: @thread-paginator-gutter;
+
+  font-size: @thread-paginator-input-text-size;
+}
+
+.thread-paginator-form {
+  display: flex;
+}
+
+// Make thread paginator full width on small screens
+@media screen and (max-width: @screen-xs-max) {
+  .toolbar-item .thread-paginator {
+    width: 100%;
+
+    .dropdown {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .btn-block {
+      min-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+
+      text-align: center;
+
+      // Make too long text ellipsis
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}

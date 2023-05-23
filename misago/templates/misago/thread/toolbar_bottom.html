@@ -1,16 +1,13 @@
 {% load i18n %}
 <div class="toolbar">
-  <div class="toolbar-section">
-    <div class="toolbar-item">
-      {% include "misago/thread/pagination.html" with bottom=1 %}
+  {% if paginator.pages > 1 %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        {% include "misago/thread/paginator.html" %}
+      </div>
     </div>
-  </div>
-  <div class="toolbar-section toolbar-section-auto hidden-xs hidden-sm">
-    <div class="toolbar-item">
-      {% include "misago/thread/posts_left.html" %}
-    </div>
-  </div>
-  <div class="toolbar-spacer hidden-md hidden-lg"></div>
+  {% endif %}
+  <div class="toolbar-spacer hidden-xs"></div>
   {% if user.is_authenticated %}
     <div class="toolbar-section">
       <div class="toolbar-item">

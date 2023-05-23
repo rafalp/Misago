@@ -1,6 +1,6 @@
 import React from "react"
 import { Toolbar, ToolbarItem, ToolbarSection, ToolbarSpacer } from "../Toolbar"
-import ThreadPagination from "./ThreadPagination"
+import ThreadPaginator from "./ThreadPaginator"
 import ThreadPollButton from "./ThreadPollButton"
 import ThreadPostsModeration from "./ThreadPostsModeration"
 import ThreadReplyButton from "./ThreadReplyButton"
@@ -21,9 +21,11 @@ const ThreadToolbarTop = ({
       <ToolbarItem>
         <ThreadShortcutsButton posts={posts} thread={thread} user={user} />
       </ToolbarItem>
-      <ToolbarItem>
-        <ThreadPagination baseUrl={thread.url.index} posts={posts} />
-      </ToolbarItem>
+      {posts.pages > 1 && (
+        <ToolbarItem>
+          <ThreadPaginator baseUrl={thread.url.index} posts={posts} />
+        </ToolbarItem>
+      )}
     </ToolbarSection>
     <ToolbarSpacer />
     {thread.acl.can_start_poll && !thread.poll && (
@@ -79,6 +81,13 @@ const ThreadToolbarTop = ({
             />
           </ToolbarItem>
         )}
+      </ToolbarSection>
+    )}
+    {posts.pages > 1 && (
+      <ToolbarSection className="hidden-sm hidden-md hidden-lg">
+        <ToolbarItem>
+          <ThreadPaginator baseUrl={thread.url.index} posts={posts} />
+        </ToolbarItem>
       </ToolbarSection>
     )}
   </Toolbar>

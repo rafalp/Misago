@@ -16,6 +16,7 @@ import { PostingQuoteSelection } from "../posting"
 import PageContainer from "../PageContainer"
 import ThreadHeader from "./ThreadHeader"
 import ThreadToolbarBottom from "./ThreadToolbarBottom"
+import ThreadToolbarThird from "./ThreadToolbarThird"
 import ThreadToolbarTop from "./ThreadToolbarTop"
 
 export default class extends React.Component {
@@ -224,6 +225,7 @@ export default class extends React.Component {
             moderation={postsModeration}
             onReply={this.openReplyForm}
           />
+          <ThreadToolbarThird />
         </PageContainer>
       </div>
     )
