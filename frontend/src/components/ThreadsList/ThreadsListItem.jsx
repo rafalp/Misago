@@ -9,6 +9,7 @@ import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
 import ThreadsListItemNotifications from "./ThreadsListItemNotifications"
 import ThreadsListItemReadStatus from "./ThreadsListItemReadStatus"
 import ThreadsListItemStarter from "./ThreadsListItemStarter"
+import ThreadsListItemTitle from "./ThreadsListItemTitle"
 
 const ThreadsListItem = ({
   activeCategory,
@@ -62,16 +63,7 @@ const ThreadsListItem = ({
       )}
       <div className="threads-list-item-right-col">
         <div className="threads-list-item-top-row">
-          <div className="threads-list-item-col-title">
-            <a
-              href={isNew ? thread.url.new_post : thread.url.index}
-              className={classnames("threads-list-item-title", {
-                "threads-list-item-title-new": isNew,
-              })}
-            >
-              {thread.title}
-            </a>
-          </div>
+          <ThreadsListItemTitle thread={thread} isNew={isNew} />
           {showOptions && thread.moderation.length > 0 && (
             <div className="threads-list-item-col-checkbox-sm">
               <ThreadsListItemCheckbox

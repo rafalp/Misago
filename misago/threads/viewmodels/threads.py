@@ -47,6 +47,8 @@ LIST_DENIED_MESSAGES = {
 
 class ViewModel:
     def __init__(self, request, category, list_type, start=0):
+        self.request = request
+
         self.allow_see_list(request, category, list_type)
 
         category_model = category.unwrap()
@@ -141,7 +143,10 @@ class ViewModel:
                 "results": ThreadsListSerializer(
                     self.threads,
                     many=True,
-                    context={"watched_threads": self.watched_threads},
+                    context={
+                        "request": self.request,
+                        "watched_threads": self.watched_threads,
+                    },
                 ).data,
                 "subcategories": [c.pk for c in self.category.children],
                 "next": self.list_page.next,

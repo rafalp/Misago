@@ -102,6 +102,34 @@ a.threads-list-item-title-new {
   }
 }
 
+// Link to page
+.threads-list-item-goto-page {
+  margin-left: @thread-goto-page-link-gutter;
+  padding: @thread-goto-page-link-padding;
+
+  border-radius: @border-radius-small;
+  font-size: @thread-goto-page-link-font-size;
+  font-weight: bold;
+
+  &:focus,
+  &:hover,
+  &:link,
+  &:visited {
+    color: @thread-goto-page-link-color;
+    background-color: @thread-goto-page-link-bg;
+    text-decoration: none;
+  }
+
+  &:active {
+    color: @thread-goto-page-link-active-color;
+    background-color: @thread-goto-page-link-active-bg;
+  }
+}
+
+.threads-list-item-title + .threads-list-item-goto-page {
+  margin-left: @thread-goto-page-link-margin;
+}
+
 // Thread status flags
 .threads-list-item-col-flags {
   padding-left: @grid-gutter-width / 2;
