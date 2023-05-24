@@ -49,7 +49,7 @@ class ViewModel(BaseViewModel):
         return {
             "CATEGORIES": BasicCategorySerializer(
                 self._categories,
-                context={"request": self.request},
+                context={"settings": self.request.settings},
                 many=True,
             ).data
         }

@@ -8,6 +8,7 @@ from .. import test
 from ...acl import useracl
 from ...acl.objectacl import add_acl_to_obj
 from ...categories.models import Category
+from ...conf.dynamicsettings import DynamicSettings
 from ...conf.test import override_dynamic_settings
 from ...conftest import get_cache_versions
 from ...notifications.models import Notification
@@ -597,7 +598,12 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         add_acl_to_obj(user_acl, new_thread.category)
         add_acl_to_obj(user_acl, new_thread)
 
-        self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
+        self.assertEqual(
+            response_json,
+            ThreadsListSerializer(
+                new_thread, context={"settings": DynamicSettings(cache_versions)}
+            ).data,
+        )
 
         # did posts move to new thread?
         for post in Post.objects.filter(id__in=posts_ids):
@@ -667,7 +673,12 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         add_acl_to_obj(user_acl, new_thread.category)
         add_acl_to_obj(user_acl, new_thread)
 
-        self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
+        self.assertEqual(
+            response_json,
+            ThreadsListSerializer(
+                new_thread, context={"settings": DynamicSettings(cache_versions)}
+            ).data,
+        )
 
         # did posts move to new thread?
         for post in Post.objects.filter(id__in=posts_ids):

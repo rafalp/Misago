@@ -144,7 +144,7 @@ class ViewModel:
                     self.threads,
                     many=True,
                     context={
-                        "request": self.request,
+                        "settings": self.request.settings,
                         "watched_threads": self.watched_threads,
                     },
                 ).data,

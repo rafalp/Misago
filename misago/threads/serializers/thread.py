@@ -146,18 +146,18 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             }
 
     def get_pages(self, obj):
-        settings = self.context["request"].settings
+        settings = self.context["settings"]
 
         posts_per_page = settings.posts_per_page - 1
-        
         posts_per_page_orphans = settings.posts_per_page_orphans
+
         if posts_per_page_orphans:
             posts_per_page_orphans += 1
-        
+
         total_posts = obj.replies + 1
         if total_posts <= posts_per_page + posts_per_page_orphans:
             return 1
-        
+
         hits = total_posts - posts_per_page_orphans
         return ceil(hits / posts_per_page)
 
