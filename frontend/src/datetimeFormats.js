@@ -43,8 +43,7 @@ export const otherYearDate = new Intl.DateTimeFormat(locale, {
 
 export const otherYearDateNarrow = new Intl.DateTimeFormat(locale, {
   year: "2-digit",
-  month: "long",
-  day: "numeric",
+  month: "short",
 })
 
 export const weekday = new Intl.DateTimeFormat(locale, {
