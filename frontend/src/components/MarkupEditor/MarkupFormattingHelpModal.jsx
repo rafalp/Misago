@@ -315,11 +315,11 @@ export default function MarkupFormattingHelpModal() {
 
           <hr />
 
-          <h4>{pgettext("markup help", "Quote text with title (BBCode)")}</h4>
+          <h4>{pgettext("markup help", "Quote text with author (BBCode)")}</h4>
           <ExampleFormatting
             markup={
               '[quote="' +
-              pgettext("markup help", "Quote title") +
+              pgettext("markup help", "Quote author") +
               '"]\n' +
               pgettext("markup help", "Quoted text") +
               "\n[/quote]"
@@ -327,7 +327,7 @@ export default function MarkupFormattingHelpModal() {
             result={
               <aside className="quote-block">
                 <div className="quote-heading">
-                  {gettext("Quote title has written:")}
+                  {pgettext("markup help", "Quote author has written:")}
                 </div>
                 <blockquote className="quote-body">
                   <p>{pgettext("markup help", "Quoted text")}</p>
