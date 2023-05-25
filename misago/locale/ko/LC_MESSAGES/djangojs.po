@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 12:13+0000\n"
+"POT-Creation-Date: 2023-05-25 20:00+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: miiiji <alwldmsrk@gmail.com>, 2020\n"
 "Language-Team: Korean (https://app.transifex.com/misago/teams/65369/ko/)\n"
@@ -289,13 +289,43 @@ msgid_plural "%(replies)s replies"
 msgstr[0] "%(replies)s개의 답글"
 
 #: static/misago/js/misago.js:1
-msgctxt "moment"
+msgctxt "time ago"
 msgid "moment ago"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "now"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "day at time"
 msgid "%(day)s at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Tomorrow at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short minutes"
+msgid "%(time)sm"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short hours"
+msgid "%(time)sh"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short days"
+msgid "%(time)sd"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -824,16 +854,17 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
-msgid "Quote text with title (BBCode)"
+msgid "Quote text with author (BBCode)"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
-msgid "Quote title"
+msgid "Quote author"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Quote title has written:"
+msgctxt "markup help"
+msgid "Quote author has written:"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3082,33 +3113,39 @@ msgid "Private threads"
 msgstr "비공개 스레드"
 
 #: static/misago/js/misago.js:1
-msgid "Go to top"
+msgctxt "paginator"
+msgid "Go to first page"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Go to first page"
-msgstr "첫 페이지로"
-
-#: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to previous page"
-msgstr "이전 페이지로"
+msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator input"
+msgid "Page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to next page"
-msgstr "다음 페이지로"
+msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to last page"
-msgstr "마지막 페이지로"
-
-#: static/misago/js/misago.js:1
-msgid "There is %(more)s more post in this thread."
-msgid_plural "There are %(more)s more posts in this thread."
-msgstr[0] "이 스레드에 %(more)s개의 게시물이 더 있습니다."
-
-#: static/misago/js/misago.js:1
-msgid "There are no more posts in this thread."
-msgstr "이 스레드에는 더 이상 게시물이 없습니다."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Moderation"
@@ -3173,6 +3210,11 @@ msgstr "게시물 옵션"
 #: static/misago/js/misago.js:1
 msgid "Reply"
 msgstr "답글"
+
+#: static/misago/js/misago.js:1
+msgctxt "go up"
+msgid "Go to top"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Add poll"
@@ -3357,19 +3399,13 @@ msgid "No threads matching specified criteria were found."
 msgstr "지정된 조건에 해당하는 스레드를 찾을 수 없습니다."
 
 #: static/misago/js/misago.js:1
-msgid "Last activity: %(timestamp)s"
+msgctxt "threads list"
+msgid "%(timestamp)s - latest activity"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "No new posts"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "New posts"
-msgstr "새 게시물"
-
-#: static/misago/js/misago.js:1
-msgid "Last post by: %(poster)s"
+msgctxt "threads list"
+msgid "%(poster)s - latest poster"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3384,6 +3420,26 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Not watching"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "No unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Go to page: %(page)s"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3494,6 +3550,22 @@ msgstr[0] "이 역할을 가진 회원이 %(more)s명 더 있습니다."
 #: static/misago/js/misago.js:1
 msgid "There are no more members with this role."
 msgstr "이 역할을 가진 회원이 더 이상 없습니다."
+
+#: static/misago/js/misago.js:1
+msgid "Go to first page"
+msgstr "첫 페이지로"
+
+#: static/misago/js/misago.js:1
+msgid "Go to previous page"
+msgstr "이전 페이지로"
+
+#: static/misago/js/misago.js:1
+msgid "Go to next page"
+msgstr "다음 페이지로"
+
+#: static/misago/js/misago.js:1
+msgid "Go to last page"
+msgstr "마지막 페이지로"
 
 #: static/misago/js/misago.js:1
 msgid "There are no users with this rank at the moment."
