@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 12:13+0000\n"
+"POT-Creation-Date: 2023-05-25 20:00+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Paulo Abraham <cnnick.ex@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://app.transifex.com/misago/teams/65369/es/)\n"
@@ -3031,8 +3031,6 @@ msgid "Change sorting to:"
 msgstr "Cambiar la ordenación a:"
 
 #: templates/misago/admin/generic/paginator.html:4
-#: templates/misago/thread/pagination.html:9
-#: templates/misago/thread/pagination.html:23
 #: templates/misago/userslists/rank_paginator.html:4
 #: templates/misago/userslists/rank_paginator.html:18
 msgid "Go to first page"
@@ -3044,24 +3042,18 @@ msgid "First"
 msgstr "Primer"
 
 #: templates/misago/admin/generic/paginator.html:13
-#: templates/misago/thread/pagination.html:19
-#: templates/misago/thread/pagination.html:26
 #: templates/misago/userslists/rank_paginator.html:14
 #: templates/misago/userslists/rank_paginator.html:21
 msgid "Go to previous page"
 msgstr "Ir a la página anterior"
 
 #: templates/misago/admin/generic/paginator.html:22
-#: templates/misago/thread/pagination.html:31
-#: templates/misago/thread/pagination.html:38
 #: templates/misago/userslists/rank_paginator.html:26
 #: templates/misago/userslists/rank_paginator.html:33
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
 #: templates/misago/admin/generic/paginator.html:25
-#: templates/misago/thread/pagination.html:34
-#: templates/misago/thread/pagination.html:41
 #: templates/misago/userslists/rank_paginator.html:29
 #: templates/misago/userslists/rank_paginator.html:36
 msgid "Go to last page"
@@ -4749,8 +4741,34 @@ msgctxt "watch thread"
 msgid "Watch"
 msgstr ""
 
-#: templates/misago/thread/pagination.html:4
-msgid "Go to top"
+#: templates/misago/thread/paginator.html:4
+#: templates/misago/thread/paginator.html:18
+msgctxt "paginator"
+msgid "Go to first page"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:14
+#: templates/misago/thread/paginator.html:21
+msgctxt "paginator"
+msgid "Go to previous page"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:27
+#, python-format
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:33
+#: templates/misago/thread/paginator.html:40
+msgctxt "paginator"
+msgid "Go to next page"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:36
+#: templates/misago/thread/paginator.html:43
+msgctxt "paginator"
+msgid "Go to last page"
 msgstr ""
 
 #: templates/misago/thread/posts/event/index.html:5
@@ -4918,18 +4936,6 @@ msgstr "Enlace de la publicación"
 msgid "Removed user"
 msgstr "Usuario eliminado"
 
-#: templates/misago/thread/posts_left.html:4
-#, python-format
-msgid "There is %(more)s more post in this thread."
-msgid_plural "There are %(more)s more posts in this thread."
-msgstr[0] "Hay %(more)s mensaje en este hilo."
-msgstr[1] "Hay %(more)s mensajes en este hilo."
-msgstr[2] "Hay %(more)s mensajes en este hilo."
-
-#: templates/misago/thread/posts_left.html:10
-msgid "There are no more posts in this thread."
-msgstr "No hay más mensajes en este hilo."
-
 #: templates/misago/thread/thread.html:19
 #: templates/misago/thread/thread.html:30
 #, python-format
@@ -4956,18 +4962,23 @@ msgstr ""
 msgid "Closed."
 msgstr ""
 
-#: templates/misago/thread/toolbar_bottom.html:27
-#: templates/misago/thread/toolbar_top.html:39
+#: templates/misago/thread/toolbar_bottom.html:24
+#: templates/misago/thread/toolbar_top.html:41
 msgid "Reply"
 msgstr "Responder"
 
+#: templates/misago/thread/toolbar_third.html:8
+msgctxt "go up"
+msgid "Go to top"
+msgstr ""
+
 #: templates/misago/thread/toolbar_top.html:6
-#: templates/misago/thread/toolbar_top.html:30
+#: templates/misago/thread/toolbar_top.html:32
 msgid "Shortcuts"
 msgstr ""
 
-#: templates/misago/thread/toolbar_top.html:22
-#: templates/misago/thread/toolbar_top.html:45
+#: templates/misago/thread/toolbar_top.html:24
+#: templates/misago/thread/toolbar_top.html:47
 msgid "Add poll"
 msgstr ""
 
@@ -5037,23 +5048,38 @@ msgstr ""
 msgid "You aren't participating in any private threads."
 msgstr "No participas en ningún hilo privado."
 
-#: templates/misago/threadslist/thread.html:6
-msgid "No new posts"
+#: templates/misago/threadslist/thread.html:8
+#: templates/misago/threadslist/thread.html:14
+#: templates/misago/threadslist/thread.html:52
+#: templates/misago/threadslist/thread.html:58
+#, python-format
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:6
-msgid "New posts"
-msgstr "Nuevos mensajes"
-
-#: templates/misago/threadslist/thread.html:66
-#: templates/misago/threadslist/thread.html:72
-#, python-format
-msgid "Last post by: %(last_poster)s"
+#: templates/misago/threadslist/thread.html:24
+msgctxt "threads list"
+msgid "No unread posts"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:80
+#: templates/misago/threadslist/thread.html:28
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: templates/misago/threadslist/thread.html:104
+#: templates/misago/threadslist/thread.html:110
+#: templates/misago/threadslist/thread.html:129
+#: templates/misago/threadslist/thread.html:135
 #, python-format
-msgid "Last activity: %(last_activity)s"
+msgctxt "threads list"
+msgid "%(last_poster)s - latest poster"
+msgstr ""
+
+#: templates/misago/threadslist/thread.html:118
+#, python-format
+msgctxt "threads list"
+msgid "%(last_activity)s - latest activity"
 msgstr ""
 
 #: templates/misago/threadslist/toolbar.html:9
@@ -5645,7 +5671,7 @@ msgid "You can't like posts in this category."
 msgstr "No te pueden gustar las publicaciones en esta categoría."
 
 #: threads/api/postendpoints/patch_post.py:99
-#: threads/api/threadendpoints/patch.py:149
+#: threads/api/threadendpoints/patch.py:154
 msgid "Content approval can't be reversed."
 msgstr "La aprobación del contenido no se puede revertir."
 
@@ -5785,57 +5811,57 @@ msgstr "No puedes fijar hilos de manera global en esta categoría."
 msgid "You can't move thread to the category it's already in."
 msgstr "No puedes mover el hilo a la categoría en la que ya está."
 
-#: threads/api/threadendpoints/patch.py:172
+#: threads/api/threadendpoints/patch.py:177
 msgid "You don't have permission to close this thread."
 msgstr "No tienes permiso para cerrar este hilo."
 
-#: threads/api/threadendpoints/patch.py:174
+#: threads/api/threadendpoints/patch.py:179
 msgid "You don't have permission to open this thread."
 msgstr "No tienes permiso para abrir este hilo."
 
-#: threads/api/threadendpoints/patch.py:198
-#: threads/api/threadendpoints/patch.py:237
-#: threads/api/threadendpoints/patch.py:300
-#: threads/api/threadendpoints/patch.py:328
+#: threads/api/threadendpoints/patch.py:203
+#: threads/api/threadendpoints/patch.py:242
+#: threads/api/threadendpoints/patch.py:305
+#: threads/api/threadendpoints/patch.py:333
 msgid "A valid integer is required."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:211
+#: threads/api/threadendpoints/patch.py:216
 msgid "This post is already marked as thread's best answer."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:246
+#: threads/api/threadendpoints/patch.py:251
 msgid ""
 "This post can't be unmarked because it's not currently marked as best "
 "answer."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:274
+#: threads/api/threadendpoints/patch.py:279
 msgid "You have to enter new participant's username."
 msgstr "Debes ingresar el nombre de usuario del nuevo participante."
 
-#: threads/api/threadendpoints/patch.py:277
+#: threads/api/threadendpoints/patch.py:282
 msgid "No user with such name exists."
 msgstr "No existe ningún usuario con ese nombre."
 
-#: threads/api/threadendpoints/patch.py:280
+#: threads/api/threadendpoints/patch.py:285
 msgid "This user is already thread participant."
 msgstr "Este usuario ya participa en el hilo."
 
-#: threads/api/threadendpoints/patch.py:306
-#: threads/api/threadendpoints/patch.py:337
+#: threads/api/threadendpoints/patch.py:311
+#: threads/api/threadendpoints/patch.py:342
 msgid "Participant doesn't exist."
 msgstr "El participante no existe."
 
-#: threads/api/threadendpoints/patch.py:333
+#: threads/api/threadendpoints/patch.py:338
 msgid "This user already is thread owner."
 msgstr "Este usuario ya es propietario del hilo."
 
-#: threads/api/threadendpoints/patch.py:452
+#: threads/api/threadendpoints/patch.py:457
 msgid "One or more threads to update could not be found."
 msgstr "Uno o más hilos para actualizar no se pudieron encontrar."
 
-#: threads/api/threadendpoints/patch.py:469
+#: threads/api/threadendpoints/patch.py:474
 #, python-format
 msgid "No more than %(limit)s thread can be updated at a single time."
 msgid_plural "No more than %(limit)s threads can be updated at a single time."
@@ -7521,7 +7547,7 @@ msgstr ""
 "Debes iniciar sesión para ver la lista de temas con publicaciones no "
 "aprobadas."
 
-#: threads/viewmodels/threads.py:118
+#: threads/viewmodels/threads.py:120
 msgid "You don't have permission to see unapproved content lists."
 msgstr "No tienes permiso para ver listas de contenido no aprobadas."
 

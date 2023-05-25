@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 12:13+0000\n"
+"POT-Creation-Date: 2023-05-25 20:00+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: uwnyuD, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/misago/teams/65369/hu/)\n"
@@ -297,13 +297,43 @@ msgstr[0] "%(replies)s válasz"
 msgstr[1] "%(replies)s válasz"
 
 #: static/misago/js/misago.js:1
-msgctxt "moment"
+msgctxt "time ago"
 msgid "moment ago"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "now"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "day at time"
 msgid "%(day)s at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Tomorrow at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short minutes"
+msgid "%(time)sm"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short hours"
+msgid "%(time)sh"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short days"
+msgid "%(time)sd"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -836,16 +866,17 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
-msgid "Quote text with title (BBCode)"
+msgid "Quote text with author (BBCode)"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
-msgid "Quote title"
+msgid "Quote author"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Quote title has written:"
+msgctxt "markup help"
+msgid "Quote author has written:"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3187,34 +3218,39 @@ msgid "Private threads"
 msgstr "Privát témák"
 
 #: static/misago/js/misago.js:1
-msgid "Go to top"
+msgctxt "paginator"
+msgid "Go to first page"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Go to first page"
-msgstr "Ugrás az első oldalra"
-
-#: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to previous page"
-msgstr "Ugrás az előző oldalra"
+msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator input"
+msgid "Page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to next page"
-msgstr "Ugrás a következő oldalra"
+msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to last page"
-msgstr "Ugrás az utolsó oldalra"
-
-#: static/misago/js/misago.js:1
-msgid "There is %(more)s more post in this thread."
-msgid_plural "There are %(more)s more posts in this thread."
-msgstr[0] "%(more)s másik bejegyzés is van ebben a témában."
-msgstr[1] "%(more)s másik bejegyzés is van ebben a témában."
-
-#: static/misago/js/misago.js:1
-msgid "There are no more posts in this thread."
-msgstr "Nincs több bejegyzés ebben a témában."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Moderation"
@@ -3284,6 +3320,11 @@ msgstr "Bejegyzések beállításai"
 #: static/misago/js/misago.js:1
 msgid "Reply"
 msgstr "Válasz"
+
+#: static/misago/js/misago.js:1
+msgctxt "go up"
+msgid "Go to top"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Add poll"
@@ -3474,19 +3515,13 @@ msgid "No threads matching specified criteria were found."
 msgstr "Nem található a megadott feltételeknek megfelelő téma."
 
 #: static/misago/js/misago.js:1
-msgid "Last activity: %(timestamp)s"
+msgctxt "threads list"
+msgid "%(timestamp)s - latest activity"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "No new posts"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "New posts"
-msgstr "Új bejegyzések"
-
-#: static/misago/js/misago.js:1
-msgid "Last post by: %(poster)s"
+msgctxt "threads list"
+msgid "%(poster)s - latest poster"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3501,6 +3536,26 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Not watching"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "No unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Go to page: %(page)s"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3617,6 +3672,22 @@ msgstr[1] "Több tag is betölti ezt a csoportot."
 #: static/misago/js/misago.js:1
 msgid "There are no more members with this role."
 msgstr "Nincs több tag ezzel a szerepkörrel."
+
+#: static/misago/js/misago.js:1
+msgid "Go to first page"
+msgstr "Ugrás az első oldalra"
+
+#: static/misago/js/misago.js:1
+msgid "Go to previous page"
+msgstr "Ugrás az előző oldalra"
+
+#: static/misago/js/misago.js:1
+msgid "Go to next page"
+msgstr "Ugrás a következő oldalra"
+
+#: static/misago/js/misago.js:1
+msgid "Go to last page"
+msgstr "Ugrás az utolsó oldalra"
 
 #: static/misago/js/misago.js:1
 msgid "There are no users with this rank at the moment."

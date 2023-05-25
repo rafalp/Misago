@@ -17,10 +17,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 13:07+0000\n"
+"POT-Creation-Date: 2023-05-25 20:00+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/misago/teams/65369/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -98,7 +98,7 @@ msgstr "不可拉黑"
 
 #: acl/migrations/0003_default_roles.py:174
 #: threads/permissions/privatethreads.py:33
-#: threads/threadtypes/privatethread.py:12 threads/viewmodels/thread.py:147
+#: threads/threadtypes/privatethread.py:12 threads/viewmodels/thread.py:171
 #: users/migrations/0004_default_ranks.py:31
 #: users/migrations/0004_default_ranks.py:35
 msgid "Private threads"
@@ -122,7 +122,7 @@ msgstr "匿名用户"
 msgid "Dashboard"
 msgstr "仪表盘"
 
-#: admin/auth.py:29
+#: admin/auth.py:30
 msgid "Your admin session has expired."
 msgstr "管理会话已过期。"
 
@@ -134,13 +134,13 @@ msgstr "必须是 7 个字符长，用来表示 RGB 颜色的 16 进制字符串
 
 #: admin/forms.py:67 templates/misago/admin/users/edit.html:145
 #: templates/misago/admin/users/edit.html:163
-#: templates/misago/admin/users/edit.html:265 users/admin/forms.py:582
+#: templates/misago/admin/users/edit.html:278 users/admin/forms.py:644
 msgid "Yes"
 msgstr "是"
 
 #: admin/forms.py:68 templates/misago/admin/users/edit.html:149
 #: templates/misago/admin/users/edit.html:167
-#: templates/misago/admin/users/edit.html:269
+#: templates/misago/admin/users/edit.html:282
 #: threads/permissions/bestanswers.py:34 threads/permissions/bestanswers.py:40
 #: threads/permissions/polls.py:34 threads/permissions/polls.py:40
 #: threads/permissions/polls.py:46 threads/permissions/threads.py:120
@@ -148,7 +148,7 @@ msgstr "是"
 #: threads/permissions/threads.py:149 threads/permissions/threads.py:159
 #: threads/permissions/threads.py:168 threads/permissions/threads.py:180
 #: threads/permissions/threads.py:188 threads/permissions/threads.py:218
-#: users/admin/forms.py:582 users/models/user.py:105
+#: users/admin/forms.py:644 users/models/user.py:107
 msgid "No"
 msgstr "否"
 
@@ -172,11 +172,18 @@ msgstr "你必须选择一个或者多个项目。"
 msgid "Action is not allowed."
 msgstr "非法操作。"
 
+#: apiv2/decorators.py:12 users/decorators.py:30
+msgid "You have to sign in to access this page."
+msgstr "你必须登录才能访问此页面。"
+
+#: apiv2/decorators.py:13 users/api/users.py:64
+msgid "You have to sign in to perform this action."
+msgstr "你必须登录才能执行此操作。"
+
 #: categories/admin/__init__.py:65 templates/misago/categories/base.html:7
 #: templates/misago/categories/base.html:29
 #: templates/misago/categories/base.html:38
-#: templates/misago/categories/header.html:35 templates/misago/navbar.html:25
-#: templates/misago/navbar.html:31
+#: templates/misago/categories/header.html:35
 msgid "Categories"
 msgstr "版块"
 
@@ -187,7 +194,7 @@ msgstr "版块权限"
 #: categories/admin/forms.py:49
 #: templates/misago/admin/themes/assets/css.html:31
 #: templates/misago/admin/themes/assets/media.html:21 themes/admin/forms.py:26
-#: themes/admin/forms.py:53 themes/admin/forms.py:174 users/admin/forms.py:386
+#: themes/admin/forms.py:53 themes/admin/forms.py:174 users/admin/forms.py:448
 msgid "Name"
 msgstr "名称"
 
@@ -213,7 +220,7 @@ msgstr ""
 msgid "Entered value is not a valid color."
 msgstr ""
 
-#: categories/admin/forms.py:71 users/admin/forms.py:402
+#: categories/admin/forms.py:71 users/admin/forms.py:464
 msgid "Description"
 msgstr "描述"
 
@@ -223,7 +230,7 @@ msgstr "解释此版块的主要内容。（可选）。"
 
 #: categories/admin/forms.py:78 menus/admin/forms.py:20
 #: templates/misago/admin/categories/list.html:19
-#: templates/misago/admin/ranks/list.html:20 users/admin/forms.py:419
+#: templates/misago/admin/ranks/list.html:20 users/admin/forms.py:481
 msgid "CSS class"
 msgstr "CSS class"
 
@@ -241,10 +248,8 @@ msgstr "已关闭版块"
 msgid "Only members with valid permissions can post in closed categories."
 msgstr "只有具备特定权限的成员可以在已经关闭的版块中发帖。"
 
-#: categories/admin/forms.py:93 conf/admin/__init__.py:83
-#: templates/misago/admin/categories/list.html:20
+#: categories/admin/forms.py:93 templates/misago/admin/categories/list.html:20
 #: templates/misago/admin/dashboard/totals.html:19
-#: templates/misago/navbar.html:20 templates/misago/navbar.html:36
 #: templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
 #: templates/misago/profile/threads.html:9
@@ -254,7 +259,7 @@ msgstr "只有具备特定权限的成员可以在已经关闭的版块中发帖
 #: templates/misago/threadslist/threads.html:42
 #: templates/misago/threadslist/threads.html:90
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
-#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:106
+#: threads/search.py:16 threads/viewmodels/thread.py:140 users/apps.py:106
 msgid "Threads"
 msgstr "话题"
 
@@ -425,7 +430,7 @@ msgstr "已修改 %(name)s 身份的版块权限。"
 msgid "Categories permissions"
 msgstr "版块权限"
 
-#: categories/migrations/0002_default_categories.py:31
+#: categories/migrations/0002_default_categories.py:32
 msgid "First category"
 msgstr "第一个版块"
 
@@ -474,57 +479,81 @@ msgstr "可查看版块内容"
 msgid "You don't have permission to browse \"%(category)s\" contents."
 msgstr "你无法浏览 \"%(category)s\" 版块中的内容。"
 
-#: conf/admin/__init__.py:45 templates/misago/admin/conf/index.html:5
-#: templates/misago/admin/themes/form.html:48
+#: conf/admin/__init__.py:52
+msgctxt "admin page"
 msgid "Settings"
-msgstr "设置"
+msgstr ""
 
-#: conf/admin/__init__.py:52 templates/misago/admin/socialauth/form.html:27
+#: conf/admin/__init__.py:59
+msgctxt "admin page"
 msgid "General"
-msgstr "通用"
+msgstr ""
 
-#: conf/admin/__init__.py:53
+#: conf/admin/__init__.py:61
+msgctxt "admin page"
 msgid "Change forum details like name, description or footer."
-msgstr "修改论坛信息，比如名称，描述信息，页脚信息等。"
-
-#: conf/admin/__init__.py:58 templates/misago/admin/dashboard/totals.html:7
-#: templates/misago/admin/users/ban.html:22 templates/misago/navbar.html:42
-#: templates/misago/userslists/base.html:5 users/admin/__init__.py:74
-#: users/search.py:16
-msgid "Users"
-msgstr "用户"
-
-#: conf/admin/__init__.py:60
-msgid "Customize user accounts default behavior and features availability."
-msgstr "自定义用户账号的默认行为和功能。"
+msgstr ""
 
 #: conf/admin/__init__.py:67
-msgid "Captcha"
-msgstr "验证码"
+msgctxt "admin page"
+msgid "Users"
+msgstr ""
 
-#: conf/admin/__init__.py:69
-msgid "Setup protection against automatic registrations on the site."
-msgstr "为站点上的自动注册设置保护措施。"
-
-#: conf/admin/__init__.py:76 templates/misago/admin/dashboard/analytics.html:7
-#: templates/misago/admin/dashboard/index.html:40
-msgid "Analytics"
-msgstr "分析"
+#: conf/admin/__init__.py:70
+msgctxt "admin page"
+msgid "Customize user accounts default behavior and features availability."
+msgstr ""
 
 #: conf/admin/__init__.py:77
-msgid "Enable Google Analytics or setup Google Site Verification."
-msgstr "启用谷歌分析或设置谷歌网站验证。"
+msgctxt "admin page"
+msgid "Captcha"
+msgstr ""
 
-#: conf/admin/__init__.py:84
+#: conf/admin/__init__.py:80
+msgctxt "admin page"
+msgid "Setup protection against automatic registrations on the site."
+msgstr ""
+
+#: conf/admin/__init__.py:87
+msgctxt "admin page"
+msgid "Threads"
+msgstr ""
+
+#: conf/admin/__init__.py:89
+msgctxt "admin page"
 msgid "Threads, posts, polls and attachments options."
-msgstr "话题、帖子、投票和附件选项。"
+msgstr ""
 
-#: conf/admin/__init__.py:90
+#: conf/admin/__init__.py:96
+msgctxt "admin page"
+msgid "Notifications"
+msgstr ""
+
+#: conf/admin/__init__.py:99
+msgctxt "admin page"
+msgid ""
+"Those settings control default notification preferences of new user accounts"
+" and storage time of existing notifications."
+msgstr ""
+
+#: conf/admin/__init__.py:106
+msgctxt "admin page"
 msgid "OAuth2"
 msgstr ""
 
-#: conf/admin/__init__.py:92
+#: conf/admin/__init__.py:109
+msgctxt "admin page"
 msgid "Enable OAuth2 client and connect your site to existing auth provider."
+msgstr ""
+
+#: conf/admin/__init__.py:116
+msgctxt "admin page"
+msgid "Analytics"
+msgstr ""
+
+#: conf/admin/__init__.py:119
+msgctxt "admin page"
+msgid "Enable Google Analytics or setup Google Site Verification."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:17
@@ -646,129 +675,188 @@ msgstr "如果选定的验证码类型是问答，则需要设置问题。"
 msgid "You need to set question answers if selected CAPTCHA type is Q&A."
 msgstr "如果选定的验证码类型为问答，则需要设置问题答案。"
 
-#: conf/admin/forms/general.py:26
+#: conf/admin/forms/general.py:27
 msgid "Forum name"
 msgstr "论坛名字"
 
-#: conf/admin/forms/general.py:27
+#: conf/admin/forms/general.py:28
 msgid "Forum address"
 msgstr "论坛地址"
 
-#: conf/admin/forms/general.py:29
+#: conf/admin/forms/general.py:30
 msgid "Page title"
 msgstr "页面标题"
 
-#: conf/admin/forms/general.py:31
+#: conf/admin/forms/general.py:32
 msgid "Meta Description"
 msgstr "元描述"
 
-#: conf/admin/forms/general.py:33
+#: conf/admin/forms/general.py:34
 msgid ""
 "Short description of your forum that search and social sites may display "
 "next to link to your forum's index."
 msgstr "在搜索结果或者社交站点中，可能会显示在站点链接旁边的论坛简短描述。"
 
-#: conf/admin/forms/general.py:40
+#: conf/admin/forms/general.py:41
 msgid "Header text"
 msgstr "标题文字"
 
-#: conf/admin/forms/general.py:41
+#: conf/admin/forms/general.py:42
 msgid "This text will be displayed in page header on forum index."
 msgstr ""
 
-#: conf/admin/forms/general.py:46
+#: conf/admin/forms/general.py:47
 msgid "Header message"
 msgstr ""
 
-#: conf/admin/forms/general.py:48
+#: conf/admin/forms/general.py:49
 msgid ""
 "This message will be displayed in page header on forum index, under the "
 "header text."
 msgstr ""
 
-#: conf/admin/forms/general.py:57
-#: templates/misago/admin/conf/general_settings.html:17
-msgid "Logo"
-msgstr "Logo"
-
 #: conf/admin/forms/general.py:58
-msgid "Image that will displayed in forum navbar."
-msgstr "将在论坛导航栏中显示的图片。"
+msgctxt "admin general"
+msgid "Large logo"
+msgstr ""
 
-#: conf/admin/forms/general.py:61
-msgid "Delete logo image"
-msgstr "删除 logo 图片"
-
-#: conf/admin/forms/general.py:63
-msgid "Small logo"
-msgstr "小 logo"
+#: conf/admin/forms/general.py:60
+msgid ""
+"Image that will be displayed in forum navbar instead of a small logo or "
+"text."
+msgstr ""
 
 #: conf/admin/forms/general.py:65
-msgid ""
-"Image that will be displayed in compact forum navbar. When set, it will "
-"replace icon pointing to forum index."
-msgstr "显示在移动端导航栏中的图片。设置后，将会替换指向论坛首页的图标。"
+msgid "Delete large logo image"
+msgstr ""
 
-#: conf/admin/forms/general.py:71
+#: conf/admin/forms/general.py:67
+msgctxt "admin general"
+msgid "Small logo"
+msgstr ""
+
+#: conf/admin/forms/general.py:69
+msgid ""
+"Image that will be displayed in the forum navbar next to the logo text if a "
+"large logo was not uploaded."
+msgstr ""
+
+#: conf/admin/forms/general.py:75
 msgid "Delete small logo image"
 msgstr "删除小 logo 图片"
 
-#: conf/admin/forms/general.py:74 legal/admin/forms.py:34
-msgid "Text"
-msgstr "文本"
+#: conf/admin/forms/general.py:78
+msgctxt "admin general"
+msgid "Text logo"
+msgstr ""
 
-#: conf/admin/forms/general.py:76
+#: conf/admin/forms/general.py:80
 msgid ""
-"Text displayed in forum navbar. If logo image was uploaded, text will be "
-"displayed right next to it. Never displayed by the compact navbar."
-msgstr "显示在论坛导航栏中的文本。如果上传了 logo 图片，该文本将显示在 logo 旁边。永远不会显示在移动端导航栏。"
+"Text displayed in forum navbar. If a small logo image was uploaded, this "
+"text will be displayed right next to it. If a large logo was uploaded, it "
+"will replace both the small logo and the text."
+msgstr ""
 
-#: conf/admin/forms/general.py:84
+#: conf/admin/forms/general.py:89
 msgid "Image"
 msgstr "图片"
 
-#: conf/admin/forms/general.py:86
+#: conf/admin/forms/general.py:91
 msgid ""
 "Custom image that will appear next to links to your forum posted on social "
 "sites. Facebook recommends that this image should be 1200 pixels wide and "
 "630 pixels tall."
 msgstr "用于展示在社交站点上的网站图片。Facebook 建议该图片应该是 1200px 宽，630px 高。"
 
-#: conf/admin/forms/general.py:92
+#: conf/admin/forms/general.py:97
 msgid "Delete image"
 msgstr "删除图片"
 
-#: conf/admin/forms/general.py:94
+#: conf/admin/forms/general.py:99
 msgid "Replace image with avatar on user profiles"
 msgstr "在用户资料页面中将图片替换为头像"
 
-#: conf/admin/forms/general.py:97
+#: conf/admin/forms/general.py:102
 msgid "Replace image with avatar on threads"
 msgstr "在话题页面中将图片替换为头像"
 
-#: conf/admin/forms/general.py:101
+#: conf/admin/forms/general.py:106
 #: templates/misago/admin/conf/general_settings.html:60
 msgid "Forum footnote"
 msgstr "论坛脚注"
 
-#: conf/admin/forms/general.py:102
+#: conf/admin/forms/general.py:107
 msgid "Short message displayed in forum footer."
 msgstr "展示在论坛底部的短消息。"
 
-#: conf/admin/forms/general.py:107
+#: conf/admin/forms/general.py:112
 msgid "E-mails footer"
 msgstr "电子邮件落款"
 
-#: conf/admin/forms/general.py:109
+#: conf/admin/forms/general.py:114
 msgid "Optional short message included at the end of e-mails sent by forum."
 msgstr "由本论坛发送的电子邮件末尾的短消息。（可选）"
 
-#: conf/admin/forms/general.py:120
+#: conf/admin/forms/general.py:122
+msgid ""
+"Display the link to the Admin Control Panel in the administrator's user menu"
+msgstr ""
+
+#: conf/admin/forms/general.py:126
+msgid ""
+"Hiding the link to the ACP from user menus reduces risk of malicious actors "
+"gaining access to admin session for admin users who are sharing their PC "
+"with others or who are logging in to the site in public spaces."
+msgstr ""
+
+#: conf/admin/forms/general.py:137
 #, python-format
 msgid ""
 "Misago uses this setting to build links in e-mails sent to site users. "
 "Address under which site is running appears to be \"%(address)s\"."
 msgstr "系统使用此设置创建发送给用户邮件中的正确连接。当前站点的正确链接似乎是 “%(address)s”。"
+
+#: conf/admin/forms/notifications.py:22
+msgctxt "admin notifications"
+msgid "Notify about new replies in threads started by the user"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:31
+msgctxt "admin notifications"
+msgid "Notify about new replies in threads replied to by the user"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:41
+msgctxt "admin notifications"
+msgid ""
+"Notify about new replies in new private threads started by followed users"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:50
+msgctxt "admin notifications"
+msgid "Notify about new replies in new private threads started by other users"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:60
+msgctxt "admin notifications"
+msgid "Notify about new private threads started by followed users"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:69
+msgctxt "admin notifications"
+msgid "Notify about new private threads started by other users"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:79
+msgctxt "admin notifications"
+msgid "Delete notifications older than (in days)"
+msgstr ""
+
+#: conf/admin/forms/notifications.py:83
+msgctxt "admin notifications"
+msgid ""
+"Misago automatically deletes notifications older than the specified age."
+msgstr ""
 
 #: conf/admin/forms/oauth2.py:40
 msgid "Enable OAuth2 client"
@@ -1167,7 +1255,7 @@ msgid "Maximum allowed signature length"
 msgstr "最大签名长度"
 
 #: conf/admin/forms/users.py:113 threads/permissions/threads.py:110
-#: users/admin/forms.py:175
+#: users/admin/forms.py:174
 msgid "Started threads"
 msgstr "发起的话题"
 
@@ -1183,7 +1271,7 @@ msgstr "添加到订阅的话题列表"
 msgid "Put on watched threads list and e-mail user when somebody replies"
 msgstr "添加到订阅的话题列表，并在有人回复的时给用户发送邮件"
 
-#: conf/admin/forms/users.py:125
+#: conf/admin/forms/users.py:125 users/admin/forms.py:177
 msgid "Replied threads"
 msgstr "已回复话题"
 
@@ -1254,7 +1342,7 @@ msgstr "上传的图片的边长至少炫耀 %(size)s 像素。"
 msgid "This value must be lower than number of users per page."
 msgstr "此值必须低于每页的用户数。"
 
-#: conf/admin/views.py:40
+#: conf/admin/views.py:41
 msgid "Settings have been saved."
 msgstr "设置已保存。"
 
@@ -1407,7 +1495,7 @@ msgstr "设置服务条款和隐私政策内容。"
 #: templates/misago/admin/attachmenttypes/list.html:16
 #: templates/misago/admin/bans/list.html:18
 #: templates/misago/admin/themes/assets/media.html:24
-#: templates/misago/admin/users/edit.html:300 users/admin/forms.py:569
+#: templates/misago/admin/users/edit.html:313 users/admin/forms.py:631
 msgid "Type"
 msgstr "类型"
 
@@ -1438,6 +1526,10 @@ msgstr "链接"
 #: legal/admin/forms.py:29
 msgid "If your agreement is located on other page, enter here a link to it."
 msgstr "如果你的协议在其他页面上，请在此输入该页面的链接。"
+
+#: legal/admin/forms.py:34
+msgid "Text"
+msgstr "文本"
 
 #: legal/admin/forms.py:35
 msgid "You can use Markdown syntax for rich text elements."
@@ -1541,16 +1633,7 @@ msgstr "%(title)s 说："
 msgid "Quoted message:"
 msgstr "引用消息："
 
-#: markup/finalize.py:33
-#, python-format
-msgid "%(title)s:"
-msgstr "%(title)s："
-
-#: markup/finalize.py:35
-msgid "Spoiler:"
-msgstr "隐藏："
-
-#: markup/finalize.py:40
+#: markup/finalize.py:31
 msgid "Reveal spoiler"
 msgstr "显示内容"
 
@@ -1652,6 +1735,47 @@ msgstr "导航菜单"
 #: menus/models.py:12 templates/misago/admin/menuitems/list.html:46
 msgid "Footer"
 msgstr "页脚菜单"
+
+#: notifications/permissions.py:12
+msgid "You must be signed in to access your notifications."
+msgstr ""
+
+#: notifications/registry.py:143
+#, python-format
+msgctxt "notification replied"
+msgid "%(actor)s replied to %(thread)s"
+msgstr ""
+
+#: notifications/registry.py:180
+#, python-format
+msgctxt "notification invited"
+msgid "%(actor)s invited you to %(thread)s"
+msgstr ""
+
+#: notifications/threads.py:30
+msgctxt "notification type"
+msgid "Don't notify"
+msgstr ""
+
+#: notifications/threads.py:31
+msgctxt "notification type"
+msgid "Notify on site only"
+msgstr ""
+
+#: notifications/threads.py:33
+msgctxt "notification type"
+msgid "Notify on site and with e-mail"
+msgstr ""
+
+#: notifications/threads.py:135
+#, python-format
+msgid "%(thread)s - new reply by %(user)s"
+msgstr ""
+
+#: notifications/threads.py:259
+#, python-format
+msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgstr "%(user)s邀请你参与隐蔽话题 \"%(thread)s\""
 
 #: oauth2/exceptions.py:13
 msgid "The OAuth2 process was canceled by the provider."
@@ -1959,7 +2083,7 @@ msgid "Fill in one of the fields."
 msgstr "填写其中一个字段。"
 
 #: templates/misago/admin/agreements/list.html:17
-#: templates/misago/admin/users/edit.html:299
+#: templates/misago/admin/users/edit.html:312
 msgid "Agreement"
 msgstr "协议"
 
@@ -1978,7 +2102,7 @@ msgid "Users are required to accept this agreement to use the site"
 msgstr "用户必须接受本协议才能使用本网站"
 
 #: templates/misago/admin/agreements/list.html:42
-#: templates/misago/admin/themes/list.html:51 users/admin/forms.py:587
+#: templates/misago/admin/themes/list.html:51 users/admin/forms.py:649
 msgid "Active"
 msgstr "启用"
 
@@ -2113,8 +2237,6 @@ msgstr "不支持上传或下载此文件类型"
 #: templates/misago/admin/attachmenttypes/list.html:38
 #: templates/misago/admin/users/edit.html:67
 #: templates/misago/admin/users/list.html:70
-#: templates/misago/thread/header.html:65
-#: templates/misago/thread/toolbar_bottom.html:20
 msgid "Disabled"
 msgstr "已禁用"
 
@@ -2182,11 +2304,11 @@ msgstr "封禁"
 msgid "Expires on"
 msgstr "过期于"
 
-#: templates/misago/admin/bans/list.html:36 users/admin/forms.py:580
+#: templates/misago/admin/bans/list.html:36 users/admin/forms.py:642
 msgid "Registration only"
 msgstr "仅注册"
 
-#: templates/misago/admin/bans/list.html:41 users/admin/forms.py:587
+#: templates/misago/admin/bans/list.html:41 users/admin/forms.py:649
 #: users/models/datadownload.py:29
 msgid "Expired"
 msgstr "已过期"
@@ -2323,7 +2445,7 @@ msgstr "编辑版块身份"
 msgid "New role"
 msgstr "新身份"
 
-#: templates/misago/admin/categoryroles/list.html:16 users/admin/forms.py:250
+#: templates/misago/admin/categoryroles/list.html:16 users/admin/forms.py:312
 msgid "Roles"
 msgstr "身份"
 
@@ -2387,6 +2509,10 @@ msgstr "保存修改"
 msgid "Site details"
 msgstr "网站详情"
 
+#: templates/misago/admin/conf/general_settings.html:17
+msgid "Logo"
+msgstr "Logo"
+
 #: templates/misago/admin/conf/general_settings.html:35
 msgid "Open Graph image"
 msgstr "分享预览图片"
@@ -2394,6 +2520,30 @@ msgstr "分享预览图片"
 #: templates/misago/admin/conf/general_settings.html:49
 msgid "Forum index"
 msgstr "论坛首页"
+
+#: templates/misago/admin/conf/general_settings.html:69
+msgid "Admin Control Panel"
+msgstr ""
+
+#: templates/misago/admin/conf/index.html:5
+#: templates/misago/admin/themes/form.html:48
+msgid "Settings"
+msgstr "设置"
+
+#: templates/misago/admin/conf/notifications_settings.html:8
+msgctxt "admin notifications"
+msgid "Default notifications settings"
+msgstr ""
+
+#: templates/misago/admin/conf/notifications_settings.html:9
+msgctxt "admin notifications"
+msgid "Those settings are applied only to newly created user accounts."
+msgstr ""
+
+#: templates/misago/admin/conf/notifications_settings.html:22
+msgctxt "admin notifications"
+msgid "Performance settings"
+msgstr ""
 
 #: templates/misago/admin/conf/oauth2_settings.html:19
 msgid "Initializing login"
@@ -2482,8 +2632,8 @@ msgstr ""
 msgid "New accounts"
 msgstr "新账号"
 
-#: templates/misago/admin/conf/users_settings.html:24 users/admin/forms.py:484
-#: users/admin/forms.py:573
+#: templates/misago/admin/conf/users_settings.html:24 users/admin/forms.py:546
+#: users/admin/forms.py:635
 msgid "Usernames"
 msgstr "用户名"
 
@@ -2504,7 +2654,7 @@ msgstr "下载数据"
 msgid "Own account deletion"
 msgstr "删除帐户"
 
-#: templates/misago/admin/conf/users_settings.html:75 users/admin/forms.py:492
+#: templates/misago/admin/conf/users_settings.html:75 users/admin/forms.py:554
 msgid "IP addresses"
 msgstr "IP 地址"
 
@@ -2512,13 +2662,31 @@ msgstr "IP 地址"
 msgid "Default subscription preferences"
 msgstr "默认订阅首选项"
 
-#: templates/misago/admin/conf/users_settings.html:92
+#: templates/misago/admin/conf/users_settings.html:86
+msgctxt "deprecation warning"
+msgid "Deprecation warning"
+msgstr ""
+
+#: templates/misago/admin/conf/users_settings.html:87
+msgctxt "deprecation warning"
+msgid ""
+"The thread subscriptions feature has been replaced with notifications and "
+"will be removed in a future version of Misago. Please use the notification "
+"settings instead."
+msgstr ""
+
+#: templates/misago/admin/conf/users_settings.html:99
 msgid "Users lists"
 msgstr "用户列表"
 
-#: templates/misago/admin/conf/users_settings.html:101
+#: templates/misago/admin/conf/users_settings.html:108
 msgid "Top posters ranking"
 msgstr "活跃用户排行榜"
+
+#: templates/misago/admin/dashboard/analytics.html:7
+#: templates/misago/admin/dashboard/index.html:40
+msgid "Analytics"
+msgstr "分析"
 
 #: templates/misago/admin/dashboard/checks.html:5
 msgid "System checks"
@@ -2637,9 +2805,16 @@ msgstr "数据下载请求"
 msgid "Site analytics are currently unavailable due to an error."
 msgstr "由于出现错误，站点分析当前不可用。"
 
+#: templates/misago/admin/dashboard/totals.html:7
+#: templates/misago/admin/users/ban.html:22
+#: templates/misago/userslists/base.html:5 users/admin/__init__.py:74
+#: users/search.py:16
+msgid "Users"
+msgstr "用户"
+
 #: templates/misago/admin/dashboard/totals.html:43
-#: threads/admin/__init__.py:36 threads/permissions/attachments.py:11
-#: threads/permissions/attachments.py:29
+#: threads/admin/__init__.py:36 threads/permissions/attachments.py:12
+#: threads/permissions/attachments.py:30
 msgid "Attachments"
 msgstr "附件"
 
@@ -2654,12 +2829,12 @@ msgstr "新下载"
 
 #: templates/misago/admin/datadownloads/list.html:17
 #: templates/misago/admin/users/ban.html:28
-#: templates/misago/admin/users/list.html:17 users/admin/forms.py:670
+#: templates/misago/admin/users/list.html:17 users/admin/forms.py:732
 msgid "User"
 msgstr "用户"
 
 #: templates/misago/admin/datadownloads/list.html:18 threads/admin/forms.py:58
-#: users/admin/forms.py:668
+#: users/admin/forms.py:730
 msgid "Status"
 msgstr "状态"
 
@@ -2667,7 +2842,7 @@ msgstr "状态"
 msgid "Requested on"
 msgstr "请求于"
 
-#: templates/misago/admin/datadownloads/list.html:21 users/admin/forms.py:671
+#: templates/misago/admin/datadownloads/list.html:21 users/admin/forms.py:733
 msgid "Requested by"
 msgstr "请求者"
 
@@ -2830,8 +3005,6 @@ msgid "Change sorting to:"
 msgstr "将排序更改为："
 
 #: templates/misago/admin/generic/paginator.html:4
-#: templates/misago/thread/pagination.html:4
-#: templates/misago/thread/pagination.html:18
 #: templates/misago/userslists/rank_paginator.html:4
 #: templates/misago/userslists/rank_paginator.html:18
 msgid "Go to first page"
@@ -2843,35 +3016,29 @@ msgid "First"
 msgstr "首页"
 
 #: templates/misago/admin/generic/paginator.html:13
-#: templates/misago/thread/pagination.html:14
-#: templates/misago/thread/pagination.html:21
 #: templates/misago/userslists/rank_paginator.html:14
 #: templates/misago/userslists/rank_paginator.html:21
 msgid "Go to previous page"
 msgstr "转到上一页"
 
 #: templates/misago/admin/generic/paginator.html:22
-#: templates/misago/thread/pagination.html:26
-#: templates/misago/thread/pagination.html:33
 #: templates/misago/userslists/rank_paginator.html:26
 #: templates/misago/userslists/rank_paginator.html:33
 msgid "Go to next page"
 msgstr "转到下一页"
 
-#: templates/misago/admin/generic/paginator.html:31
-#: templates/misago/thread/pagination.html:29
-#: templates/misago/thread/pagination.html:36
+#: templates/misago/admin/generic/paginator.html:25
 #: templates/misago/userslists/rank_paginator.html:29
 #: templates/misago/userslists/rank_paginator.html:36
 msgid "Go to last page"
 msgstr "转到最后一页"
 
-#: templates/misago/admin/generic/paginator.html:32
-#: templates/misago/admin/generic/paginator.html:36
+#: templates/misago/admin/generic/paginator.html:26
+#: templates/misago/admin/generic/paginator.html:33
 msgid "Last"
 msgstr "最后"
 
-#: templates/misago/admin/generic/paginator.html:41
+#: templates/misago/admin/generic/paginator.html:38
 #, python-format
 msgid "Page %(page)s of %(pages)s"
 msgstr "第 %(page)s 页 共 %(pages)s 页"
@@ -2917,7 +3084,7 @@ msgstr "请重试。"
 msgid "Username or e-mail"
 msgstr "用户名或电子邮件"
 
-#: templates/misago/admin/login.html:53 users/admin/forms.py:67
+#: templates/misago/admin/login.html:53 users/admin/forms.py:66
 #: users/forms/auth.py:63
 msgid "Password"
 msgstr "密码"
@@ -3036,7 +3203,7 @@ msgstr "显示和可见性"
 #: templates/misago/admin/users/list.html:19
 #: templates/misago/userslists/active_posters.html:112
 #: templates/misago/userslists/active_posters.html:123
-#: users/admin/forms.py:238
+#: users/admin/forms.py:300
 msgid "Rank"
 msgstr "级别"
 
@@ -3091,6 +3258,10 @@ msgstr "编辑社交登录"
 #: templates/misago/admin/socialauth/form.html:19
 msgid "Setup social login"
 msgstr "设置社交登录"
+
+#: templates/misago/admin/socialauth/form.html:27
+msgid "General"
+msgstr "通用"
 
 #: templates/misago/admin/socialauth/form.html:40
 msgid "Button appearance"
@@ -3182,9 +3353,7 @@ msgstr "大小"
 #: templates/misago/admin/themes/assets/css.html:84
 #: templates/misago/admin/users/list.html:95
 #: templates/misago/admin/warnings/list.html:105
-#: templates/misago/profile/details.html:27
-#: templates/misago/thread/posts/post/footer.html:31
-#: users/admin/djangoadmin.py:72
+#: templates/misago/profile/details.html:27 users/admin/djangoadmin.py:72
 msgid "Edit"
 msgstr "编辑"
 
@@ -3313,7 +3482,7 @@ msgstr "封禁用户"
 msgid "Ban selected users"
 msgstr "封禁选定的用户"
 
-#: templates/misago/admin/users/ban.html:29 users/admin/forms.py:314
+#: templates/misago/admin/users/ban.html:29 users/admin/forms.py:376
 #: users/signals.py:30
 msgid "E-mail"
 msgstr "电子邮件"
@@ -3381,7 +3550,7 @@ msgstr "已删除"
 
 #: templates/misago/admin/users/edit.html:66
 #: templates/misago/admin/users/list.html:69
-#: templates/misago/profile/header.html:30 users/admin/forms.py:317
+#: templates/misago/profile/header.html:30 users/admin/forms.py:379
 msgid "Account disabled"
 msgstr "账号已禁用"
 
@@ -3436,34 +3605,39 @@ msgid "Forum options"
 msgstr "论坛选项"
 
 #: templates/misago/admin/users/edit.html:237
-msgid "Automatic subscription preferences"
-msgstr "默认订阅偏好设置"
+msgid "Automatic subscription preferences (deprecated)"
+msgstr ""
 
 #: templates/misago/admin/users/edit.html:246
+msgctxt "admin user form"
+msgid "Notifications preferences"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:259
 msgid "Account status"
 msgstr "账号状态"
 
-#: templates/misago/admin/users/edit.html:250
+#: templates/misago/admin/users/edit.html:263
 msgid ""
 "This user is deleting their account. It has been deactivated for the "
 "duration of the process."
 msgstr "此用户正在删除他的帐户。已停用该用户。"
 
-#: templates/misago/admin/users/edit.html:251
+#: templates/misago/admin/users/edit.html:264
 msgid ""
 "No additional action is required. This account will be deleted "
 "automatically."
 msgstr "无需其他操作。此账号将自动删除。"
 
-#: templates/misago/admin/users/edit.html:294
+#: templates/misago/admin/users/edit.html:307
 msgid "Agreements"
 msgstr "协议"
 
-#: templates/misago/admin/users/edit.html:301
+#: templates/misago/admin/users/edit.html:314
 msgid "Accepted on"
 msgstr "接受于"
 
-#: templates/misago/admin/users/edit.html:324
+#: templates/misago/admin/users/edit.html:337
 msgid "This user didn't accept any agreements."
 msgstr "此用户不接受任何协议。"
 
@@ -3790,25 +3964,36 @@ msgstr "账号激活之后，你可以通过以下链接登录："
 #: templates/misago/emails/thread/reply.html:9
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because %(sender)s has replied to "
-"the thread %(thread)s that you are subscribed to."
-msgstr "%(user)s, %(sender)s 回复了你订阅的话题 %(thread)s 。"
+"%(sender)s has posted a new reply to the %(thread)s thread that you are "
+"watching."
+msgstr ""
 
 #: templates/misago/emails/thread/reply.html:14
 #: templates/misago/emails/thread/reply.txt:10
-msgid "To read this reply, click the below link:"
-msgstr "点击以下链接，即可阅读回复："
+msgid "You can read this reply by clicking on the following link:"
+msgstr ""
 
-#: templates/misago/emails/thread/reply.html:17
+#: templates/misago/emails/thread/reply.html:18
 msgid "Go to reply"
 msgstr "去回复"
+
+#: templates/misago/emails/thread/reply.html:22
+#: templates/misago/emails/thread/reply.txt:13
+msgid ""
+"To stop receiving e-mails with new reply notifications for this thread, "
+"click here:"
+msgstr ""
+
+#: templates/misago/emails/thread/reply.html:25
+msgid "Disable e-mail notifications for this thread"
+msgstr ""
 
 #: templates/misago/emails/thread/reply.txt:6
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because %(sender)s has replied to "
-"the thread \"%(thread)s\" that you are subscribed to."
-msgstr "%(user)s，%(sender)s 回复了你订阅的话题 \"%(thread)s\"。"
+"%(sender)s has posted a new reply to the \"%(thread)s\" thread that you are "
+"watching."
+msgstr ""
 
 #: templates/misago/errorpages/403.html:49
 msgid "This page is not available."
@@ -3977,6 +4162,83 @@ msgstr "为了得到这个链接，输入你的电子邮箱地址并按下 “�
 msgid "To request new password reset link please enable JavaScript."
 msgstr "要申请新的密码重置链接，请启用JavaScript。"
 
+#: templates/misago/navbar.html:40
+msgctxt "navbar"
+msgid "Open search"
+msgstr ""
+
+#: templates/misago/navbar.html:51
+msgctxt "navbar"
+msgid "Open private threads"
+msgstr ""
+
+#: templates/misago/navbar.html:57
+msgctxt "navbar"
+msgid "Open notifications"
+msgstr ""
+
+#: templates/misago/navbar.html:62
+msgctxt "navbar"
+msgid "Open your options"
+msgstr ""
+
+#: templates/misago/navbar.html:68 templates/misago/navbar.html:72
+msgctxt "cta"
+msgid "Sign in"
+msgstr ""
+
+#: templates/misago/navbar.html:75
+msgctxt "cta"
+msgid "Register"
+msgstr ""
+
+#: templates/misago/notifications.html:5
+#: templates/misago/notifications.html:18
+msgctxt "notifications title"
+msgid "Notifications"
+msgstr ""
+
+#: templates/misago/notifications.html:36
+#: templates/misago/options/noscript.html:49
+#: templates/misago/socialauth.html:21
+msgid "Enable JavaScript"
+msgstr "启用 JavaScript"
+
+#: templates/misago/notifications.html:37
+msgid ""
+"You need to enable JavaScript in your browser to see your notifications."
+msgstr ""
+
+#: templates/misago/notifications.html:45
+#: templates/misago/options/noscript.html:58
+msgid "Loading..."
+msgstr ""
+
+#: templates/misago/notifications_disabled.html:5
+#: templates/misago/notifications_disabled.html:18
+msgid "E-mail notifications disabled"
+msgstr ""
+
+#: templates/misago/notifications_disabled.html:19
+msgid ""
+"You will no longer receive e-mail notifications when someone replies to this"
+" thread."
+msgstr ""
+
+#: templates/misago/notifications_disabled.html:20
+msgid ""
+"If you change your mind and want to re-enable e-mail notifications, visit "
+"the thread's page and adjust your notification settings."
+msgstr ""
+
+#: templates/misago/notifications_disabled.html:23
+msgid "Go to thread"
+msgstr ""
+
+#: templates/misago/notifications_disabled.html:26
+msgid "Go to forum home"
+msgstr ""
+
 #: templates/misago/options/credentials_changed.html:5
 #: templates/misago/options/credentials_error.html:5
 msgid "Change sign-in credentials"
@@ -4001,18 +4263,9 @@ msgstr "确认链接属于其他用户，已被使用或已过期。"
 msgid "Change your options"
 msgstr "修改你的选项"
 
-#: templates/misago/options/noscript.html:49
-#: templates/misago/socialauth.html:21
-msgid "Enable JavaScript"
-msgstr "启用 JavaScript"
-
 #: templates/misago/options/noscript.html:50
 msgid "You need to enable JavaScript in your browser to change your options."
 msgstr "你需要在浏览器中启用 JavaScript 才能更改你的设定。"
-
-#: templates/misago/options/noscript.html:58
-msgid "Loading..."
-msgstr ""
 
 #: templates/misago/participants.html:30
 msgid "Add participant"
@@ -4364,6 +4617,47 @@ msgstr "你需要启用浏览器的 JavaScript 支持，才能使用 %(backend)s
 msgid "Started on %(date)s"
 msgstr ""
 
+#: templates/misago/thread/notifications.html:4
+#: templates/misago/thread/notifications.html:7
+msgctxt "watch thread"
+msgid "Watching"
+msgstr ""
+
+#: templates/misago/thread/notifications.html:10
+msgctxt "watch thread"
+msgid "Watch"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:4
+#: templates/misago/thread/paginator.html:18
+msgctxt "paginator"
+msgid "Go to first page"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:14
+#: templates/misago/thread/paginator.html:21
+msgctxt "paginator"
+msgid "Go to previous page"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:27
+#, python-format
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:33
+#: templates/misago/thread/paginator.html:40
+msgctxt "paginator"
+msgid "Go to next page"
+msgstr ""
+
+#: templates/misago/thread/paginator.html:36
+#: templates/misago/thread/paginator.html:43
+msgctxt "paginator"
+msgid "Go to last page"
+msgstr ""
+
 #: templates/misago/thread/posts/event/index.html:5
 msgid "New event"
 msgstr ""
@@ -4495,10 +4789,19 @@ msgid "Like"
 msgstr "赞"
 
 #: templates/misago/thread/posts/post/footer.html:26
-#: templates/misago/thread/toolbar_bottom.html:28
-#: templates/misago/thread/toolbar_top.html:39
+msgctxt "post control"
 msgid "Reply"
-msgstr "回复"
+msgstr ""
+
+#: templates/misago/thread/posts/post/footer.html:29
+msgctxt "post control"
+msgid "Quote"
+msgstr ""
+
+#: templates/misago/thread/posts/post/footer.html:34
+msgctxt "post control"
+msgid "Edit"
+msgstr ""
 
 #: templates/misago/thread/posts/post/header.html:5
 msgid "New post"
@@ -4516,16 +4819,6 @@ msgstr "发布链接"
 #: templates/misago/thread/posts/post/side.html:73
 msgid "Removed user"
 msgstr "已移除的用户"
-
-#: templates/misago/thread/posts_left.html:4
-#, python-format
-msgid "There is %(more)s more post in this thread."
-msgid_plural "There are %(more)s more posts in this thread."
-msgstr[0] "此话题中还有 %(more)s 条帖子。"
-
-#: templates/misago/thread/posts_left.html:10
-msgid "There are no more posts in this thread."
-msgstr "此话题中帖子已全部显示。"
 
 #: templates/misago/thread/thread.html:19
 #: templates/misago/thread/thread.html:30
@@ -4550,13 +4843,23 @@ msgstr "已回答。"
 msgid "Closed."
 msgstr "已关闭。"
 
+#: templates/misago/thread/toolbar_bottom.html:24
+#: templates/misago/thread/toolbar_top.html:41
+msgid "Reply"
+msgstr "回复"
+
+#: templates/misago/thread/toolbar_third.html:8
+msgctxt "go up"
+msgid "Go to top"
+msgstr ""
+
 #: templates/misago/thread/toolbar_top.html:6
-#: templates/misago/thread/toolbar_top.html:30
+#: templates/misago/thread/toolbar_top.html:32
 msgid "Shortcuts"
 msgstr ""
 
-#: templates/misago/thread/toolbar_top.html:22
-#: templates/misago/thread/toolbar_top.html:45
+#: templates/misago/thread/toolbar_top.html:24
+#: templates/misago/thread/toolbar_top.html:47
 msgid "Add poll"
 msgstr ""
 
@@ -4622,23 +4925,38 @@ msgstr "仅发起者和被邀请者可以查看和参与隐蔽话题。"
 msgid "You aren't participating in any private threads."
 msgstr "你还没有参与隐蔽话题。"
 
-#: templates/misago/threadslist/thread.html:6
-msgid "No new posts"
+#: templates/misago/threadslist/thread.html:8
+#: templates/misago/threadslist/thread.html:14
+#: templates/misago/threadslist/thread.html:52
+#: templates/misago/threadslist/thread.html:58
+#, python-format
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:6
-msgid "New posts"
-msgstr "新帖子"
-
-#: templates/misago/threadslist/thread.html:66
-#: templates/misago/threadslist/thread.html:72
-#, python-format
-msgid "Last post by: %(last_poster)s"
+#: templates/misago/threadslist/thread.html:24
+msgctxt "threads list"
+msgid "No unread posts"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:80
+#: templates/misago/threadslist/thread.html:28
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: templates/misago/threadslist/thread.html:104
+#: templates/misago/threadslist/thread.html:110
+#: templates/misago/threadslist/thread.html:129
+#: templates/misago/threadslist/thread.html:135
 #, python-format
-msgid "Last activity: %(last_activity)s"
+msgctxt "threads list"
+msgid "%(last_poster)s - latest poster"
+msgstr ""
+
+#: templates/misago/threadslist/thread.html:118
+#, python-format
+msgctxt "threads list"
+msgid "%(last_activity)s - latest activity"
 msgstr ""
 
 #: templates/misago/threadslist/toolbar.html:9
@@ -4661,17 +4979,14 @@ msgid "My threads"
 msgstr ""
 
 #: templates/misago/threadslist/toolbar.html:59
-#: threads/viewmodels/threads.py:24
 msgid "New threads"
 msgstr "新话题"
 
 #: templates/misago/threadslist/toolbar.html:61
-#: threads/viewmodels/threads.py:25
 msgid "Unread threads"
 msgstr "未读话题"
 
 #: templates/misago/threadslist/toolbar.html:63
-#: threads/viewmodels/threads.py:26
 msgid "Subscribed threads"
 msgstr "订阅话题"
 
@@ -5020,7 +5335,7 @@ msgstr "文件名包含"
 msgid "File type"
 msgstr "文件类型"
 
-#: threads/admin/forms.py:24 users/admin/forms.py:585
+#: threads/admin/forms.py:24 users/admin/forms.py:647
 msgid "State"
 msgstr "状态"
 
@@ -5208,7 +5523,7 @@ msgid "You can't like posts in this category."
 msgstr "你不能赞此版块中的帖子。"
 
 #: threads/api/postendpoints/patch_post.py:99
-#: threads/api/threadendpoints/patch.py:147
+#: threads/api/threadendpoints/patch.py:154
 msgid "Content approval can't be reversed."
 msgstr "内容审批不能撤销。"
 
@@ -5255,16 +5570,6 @@ msgid ""
 "Selected category doesn't exist or you don't have permission to browse it."
 msgstr "所选版块不存在或你没有浏览权限。"
 
-#: threads/api/postingendpoint/emailnotification.py:43
-#, python-format
-msgid "%(user)s has replied to your thread \"%(thread)s\""
-msgstr "%(user)s回复了你的话题\"%(thread)s\""
-
-#: threads/api/postingendpoint/emailnotification.py:46
-#, python-format
-msgid "%(user)s has replied to thread \"%(thread)s\" that you are watching"
-msgstr "%(user)s已经回复了你订阅的话题\"%(thread)s\""
-
 #: threads/api/postingendpoint/floodprotection.py:25
 msgid "You can't post message so quickly after previous one."
 msgstr "你发帖过快，请稍后再试。"
@@ -5301,11 +5606,11 @@ msgstr[0] "你不能添加超过 %(users)s 名用户到隐蔽话题（已添加 
 msgid "One or more users could not be found: %(usernames)s"
 msgstr "无法找到一个或多个用户：%(usernames)s"
 
-#: threads/api/postingendpoint/reply.py:81 threads/validators.py:77
+#: threads/api/postingendpoint/reply.py:85 threads/validators.py:77
 msgid "You have to enter a message."
 msgstr "你必须输入内容。"
 
-#: threads/api/postingendpoint/reply.py:106
+#: threads/api/postingendpoint/reply.py:110
 msgid "You have to enter thread title."
 msgstr "你必须输入话题名称。"
 
@@ -5334,57 +5639,57 @@ msgstr "你无法全局置顶该版块中的帖子。"
 msgid "You can't move thread to the category it's already in."
 msgstr "你不能将话题移动到它现在所在的版块中。"
 
-#: threads/api/threadendpoints/patch.py:170
+#: threads/api/threadendpoints/patch.py:177
 msgid "You don't have permission to close this thread."
 msgstr "你没有关闭此话题的权限。"
 
-#: threads/api/threadendpoints/patch.py:172
+#: threads/api/threadendpoints/patch.py:179
 msgid "You don't have permission to open this thread."
 msgstr "你没有打开此话题的权限。"
 
-#: threads/api/threadendpoints/patch.py:225
-#: threads/api/threadendpoints/patch.py:264
-#: threads/api/threadendpoints/patch.py:327
-#: threads/api/threadendpoints/patch.py:355
+#: threads/api/threadendpoints/patch.py:203
+#: threads/api/threadendpoints/patch.py:242
+#: threads/api/threadendpoints/patch.py:305
+#: threads/api/threadendpoints/patch.py:333
 msgid "A valid integer is required."
 msgstr "必须填一个有效整数。"
 
-#: threads/api/threadendpoints/patch.py:238
+#: threads/api/threadendpoints/patch.py:216
 msgid "This post is already marked as thread's best answer."
 msgstr "这篇帖子已被标记为该话题的最佳答案。"
 
-#: threads/api/threadendpoints/patch.py:273
+#: threads/api/threadendpoints/patch.py:251
 msgid ""
 "This post can't be unmarked because it's not currently marked as best "
 "answer."
 msgstr "此帖子无法取消标记，因为它目前未被标记为最佳答案。"
 
-#: threads/api/threadendpoints/patch.py:301
+#: threads/api/threadendpoints/patch.py:279
 msgid "You have to enter new participant's username."
 msgstr "你必须输入新参与者的用户名。"
 
-#: threads/api/threadendpoints/patch.py:304
+#: threads/api/threadendpoints/patch.py:282
 msgid "No user with such name exists."
 msgstr "用户名不存在。"
 
-#: threads/api/threadendpoints/patch.py:307
+#: threads/api/threadendpoints/patch.py:285
 msgid "This user is already thread participant."
 msgstr "该用户已经是话题参与者。"
 
-#: threads/api/threadendpoints/patch.py:333
-#: threads/api/threadendpoints/patch.py:364
+#: threads/api/threadendpoints/patch.py:311
+#: threads/api/threadendpoints/patch.py:342
 msgid "Participant doesn't exist."
 msgstr "参与者不存在。"
 
-#: threads/api/threadendpoints/patch.py:360
+#: threads/api/threadendpoints/patch.py:338
 msgid "This user already is thread owner."
 msgstr "该用户已经是话题所有者。"
 
-#: threads/api/threadendpoints/patch.py:479
+#: threads/api/threadendpoints/patch.py:457
 msgid "One or more threads to update could not be found."
 msgstr "无法找到要更新的一个或多个话题。"
 
-#: threads/api/threadendpoints/patch.py:496
+#: threads/api/threadendpoints/patch.py:474
 #, python-format
 msgid "No more than %(limit)s thread can be updated at a single time."
 msgid_plural "No more than %(limit)s threads can be updated at a single time."
@@ -5394,15 +5699,15 @@ msgstr[0] "一次最多可以更新 %(limit)s 个话题。"
 msgid "There's already a poll in this thread."
 msgstr "此话题已发起投票。"
 
-#: threads/api/threadposts.py:210
+#: threads/api/threadposts.py:220
 msgid "You can't reply to events."
 msgstr "你不能回复事件。"
 
-#: threads/api/threadposts.py:212
+#: threads/api/threadposts.py:222
 msgid "You can't reply to hidden posts."
 msgstr "你不能回复隐藏的帖子。"
 
-#: threads/api/threadposts.py:245
+#: threads/api/threadposts.py:255
 msgid "You can't see who liked this post."
 msgstr "你看不到谁赞过这篇文章。"
 
@@ -5460,28 +5765,23 @@ msgstr "你不能隐藏帖子而不隐藏话题。"
 msgid "You can't delete original post without deleting thread."
 msgstr "你不能删除帖子而不删除话题。"
 
-#: threads/participants.py:142
-#, python-format
-msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
-msgstr "%(user)s邀请你参与隐蔽话题 \"%(thread)s\""
-
-#: threads/permissions/attachments.py:14
+#: threads/permissions/attachments.py:15
 msgid "Max attached file size (in kb)"
 msgstr "最大附件文件大小（以KB为单位）"
 
-#: threads/permissions/attachments.py:15
+#: threads/permissions/attachments.py:16
 msgid "Enter 0 to don't allow uploading end deleting attachments."
 msgstr "输入0将不允许上传和删除附件。"
 
-#: threads/permissions/attachments.py:21
+#: threads/permissions/attachments.py:22
 msgid "Can download other users attachments"
 msgstr "可下载其他用户的附件"
 
-#: threads/permissions/attachments.py:24
+#: threads/permissions/attachments.py:25
 msgid "Can delete other users attachments"
 msgstr "可删除其他用户的附件"
 
-#: threads/permissions/attachments.py:32
+#: threads/permissions/attachments.py:33
 msgid "Can download attachments"
 msgstr "可下载附件"
 
@@ -5845,50 +6145,50 @@ msgstr "你必须登录才能使用隐蔽话题。"
 msgid "You can't use private threads."
 msgstr "你不能使用隐蔽话题。"
 
-#: threads/permissions/privatethreads.py:210
+#: threads/permissions/privatethreads.py:213
 msgid "Only thread owner and moderators can change threads owners."
 msgstr "只有话题所有者和版主可修改话题所有者。"
 
-#: threads/permissions/privatethreads.py:214
+#: threads/permissions/privatethreads.py:217
 msgid "Only moderators can change closed threads owners."
 msgstr "只有版主可以修改已关闭话题的所有者。"
 
-#: threads/permissions/privatethreads.py:226
+#: threads/permissions/privatethreads.py:229
 msgid "You have to be thread owner to add new participants to it."
 msgstr "只有话题发起者能新增参与者。"
 
-#: threads/permissions/privatethreads.py:231
+#: threads/permissions/privatethreads.py:234
 msgid "Only moderators can add participants to closed threads."
 msgstr "只有版主可以向已关闭话题中添加参与者。"
 
-#: threads/permissions/privatethreads.py:238
+#: threads/permissions/privatethreads.py:241
 msgid "You can't add any more new users to this thread."
 msgstr "你不能添加更多用户到此话题中。"
 
-#: threads/permissions/privatethreads.py:253
+#: threads/permissions/privatethreads.py:256
 msgid "Only moderators can remove participants from closed threads."
 msgstr "仅版主可从已关闭的话题中移除参与者。"
 
-#: threads/permissions/privatethreads.py:258
+#: threads/permissions/privatethreads.py:261
 msgid "You have to be thread owner to remove participants from it."
 msgstr "你必须是话题所有者才能移除参与者。"
 
-#: threads/permissions/privatethreads.py:270
+#: threads/permissions/privatethreads.py:273
 #, python-format
 msgid "%(user)s can't participate in private threads."
 msgstr "%(user)s 不能参与隐蔽话题。"
 
-#: threads/permissions/privatethreads.py:277
+#: threads/permissions/privatethreads.py:280
 #, python-format
 msgid "%(user)s is blocking you."
 msgstr "%(user)s 拉黑了你。"
 
-#: threads/permissions/privatethreads.py:281
+#: threads/permissions/privatethreads.py:284
 #, python-format
 msgid "%(user)s is not allowing invitations to private threads."
 msgstr "%(user)s 不允许邀请到隐蔽话题。"
 
-#: threads/permissions/privatethreads.py:288
+#: threads/permissions/privatethreads.py:291
 #, python-format
 msgid "%(user)s limits invitations to private threads to followed users."
 msgstr "%(user)s 仅接受关注用户的隐蔽话题邀请。"
@@ -6118,498 +6418,498 @@ msgstr "回复需要审批"
 msgid "Require edits approval"
 msgstr "编辑需要审批"
 
-#: threads/permissions/threads.py:539
+#: threads/permissions/threads.py:544
 msgid "You have to sign in to start threads."
 msgstr "你必须登录才能发起话题。"
 
-#: threads/permissions/threads.py:545
+#: threads/permissions/threads.py:550
 msgid "You don't have permission to start new threads in this category."
 msgstr "你不能在此版块中发起新话题。"
 
-#: threads/permissions/threads.py:550
+#: threads/permissions/threads.py:555
 msgid "This category is closed. You can't start new threads in it."
 msgstr "你不能在已关闭的版块中发起新话题。"
 
-#: threads/permissions/threads.py:559
+#: threads/permissions/threads.py:564
 msgid "You have to sign in to reply threads."
 msgstr "你需要登录后才能回复话题。"
 
-#: threads/permissions/threads.py:566
+#: threads/permissions/threads.py:571
 msgid "You can't reply to threads in this category."
 msgstr "你不能回复此版块中的话题。"
 
-#: threads/permissions/threads.py:571
+#: threads/permissions/threads.py:576
 msgid "This category is closed. You can't reply to threads in it."
 msgstr "你不能回复已关闭的版块中的话题。"
 
-#: threads/permissions/threads.py:575
+#: threads/permissions/threads.py:580
 msgid "You can't reply to closed threads in this category."
 msgstr "你不能回复此版块中已关闭的话题。"
 
-#: threads/permissions/threads.py:584
+#: threads/permissions/threads.py:589
 msgid "You have to sign in to edit threads."
 msgstr "登录后才能编辑话题。"
 
-#: threads/permissions/threads.py:591
+#: threads/permissions/threads.py:596
 msgid "You can't edit threads in this category."
 msgstr "你不能编辑此版块中的话题。"
 
-#: threads/permissions/threads.py:596
+#: threads/permissions/threads.py:601
 msgid "You can't edit other users threads in this category."
 msgstr "你无法编辑此版块中其他用户的话题。"
 
-#: threads/permissions/threads.py:601
+#: threads/permissions/threads.py:606
 #, python-format
 msgid "You can't edit threads that are older than %(minutes)s minute."
 msgid_plural "You can't edit threads that are older than %(minutes)s minutes."
 msgstr[0] "你不能编辑已发布 %(minutes)s 的话题。"
 
-#: threads/permissions/threads.py:612
+#: threads/permissions/threads.py:617
 msgid "This category is closed. You can't edit threads in it."
 msgstr "你不能编辑已关闭版块中的话题。"
 
-#: threads/permissions/threads.py:615
+#: threads/permissions/threads.py:620
 msgid "This thread is closed. You can't edit it."
 msgstr "你不能编辑已关闭的话题。"
 
-#: threads/permissions/threads.py:623
+#: threads/permissions/threads.py:628
 msgid "You have to sign in to change threads weights."
 msgstr "你必须登录才能置顶话题。"
 
-#: threads/permissions/threads.py:630
+#: threads/permissions/threads.py:635
 msgid "You can't change threads weights in this category."
 msgstr "不能置顶此版块中的话题。"
 
-#: threads/permissions/threads.py:635
+#: threads/permissions/threads.py:640
 msgid "This category is closed. You can't change threads weights in it."
 msgstr "你不能置顶已关闭版块中的话题。"
 
-#: threads/permissions/threads.py:639
+#: threads/permissions/threads.py:644
 msgid "This thread is closed. You can't change its weight."
 msgstr "你不能置顶已关闭话题。"
 
-#: threads/permissions/threads.py:648 threads/permissions/threads.py:668
+#: threads/permissions/threads.py:653 threads/permissions/threads.py:673
 msgid "You have to sign in to hide threads."
 msgstr "你必须登录才能隐藏话题。"
 
-#: threads/permissions/threads.py:657
+#: threads/permissions/threads.py:662
 msgid "This category is closed. You can't reveal threads in it."
 msgstr "你不能再次显示已关闭版块中的话题。"
 
-#: threads/permissions/threads.py:660
+#: threads/permissions/threads.py:665
 msgid "This thread is closed. You can't reveal it."
 msgstr "你不能再次显示已关闭的话题。"
 
-#: threads/permissions/threads.py:678
+#: threads/permissions/threads.py:683
 msgid "You can't hide threads in this category."
 msgstr "你不能隐藏此版块中的话题。"
 
-#: threads/permissions/threads.py:683
+#: threads/permissions/threads.py:688
 msgid "You can't hide other users theads in this category."
 msgstr "你不能隐藏此版块中其他用户的话题。"
 
-#: threads/permissions/threads.py:688
+#: threads/permissions/threads.py:693
 #, python-format
 msgid "You can't hide threads that are older than %(minutes)s minute."
 msgid_plural "You can't hide threads that are older than %(minutes)s minutes."
 msgstr[0] "你不能隐藏发布时间超过 %(minutes)s 分钟的话题。"
 
-#: threads/permissions/threads.py:699
+#: threads/permissions/threads.py:704
 msgid "This category is closed. You can't hide threads in it."
 msgstr "你不能隐藏已关闭版块中的话题。"
 
-#: threads/permissions/threads.py:702
+#: threads/permissions/threads.py:707
 msgid "This thread is closed. You can't hide it."
 msgstr "你不能隐藏已关闭的话题。"
 
-#: threads/permissions/threads.py:710
+#: threads/permissions/threads.py:715
 msgid "You have to sign in to delete threads."
 msgstr "你必须登录才能删除话题。"
 
-#: threads/permissions/threads.py:720
+#: threads/permissions/threads.py:725
 msgid "You can't delete threads in this category."
 msgstr "你不能删除此版块中的话题。"
 
-#: threads/permissions/threads.py:728
+#: threads/permissions/threads.py:733
 msgid "You can't delete other users theads in this category."
 msgstr "你不能删除此版块中其他用户的话题。"
 
-#: threads/permissions/threads.py:733
+#: threads/permissions/threads.py:738
 #, python-format
 msgid "You can't delete threads that are older than %(minutes)s minute."
 msgid_plural ""
 "You can't delete threads that are older than %(minutes)s minutes."
 msgstr[0] "你不能删除发布时间超过 %(minutes)s 分钟的话题。"
 
-#: threads/permissions/threads.py:744
+#: threads/permissions/threads.py:749
 msgid "This category is closed. You can't delete threads in it."
 msgstr "你不能删除已关闭版块中的话题。"
 
-#: threads/permissions/threads.py:747
+#: threads/permissions/threads.py:752
 msgid "This thread is closed. You can't delete it."
 msgstr "你不能删除已关闭的话题。"
 
-#: threads/permissions/threads.py:755
+#: threads/permissions/threads.py:760
 msgid "You have to sign in to move threads."
 msgstr "你必须登录才能移动话题。"
 
-#: threads/permissions/threads.py:762
+#: threads/permissions/threads.py:767
 msgid "You can't move threads in this category."
 msgstr "你不能移动此版块中的话题。"
 
-#: threads/permissions/threads.py:767
+#: threads/permissions/threads.py:772
 msgid "This category is closed. You can't move it's threads."
 msgstr "你不能移动已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:770
+#: threads/permissions/threads.py:775
 msgid "This thread is closed. You can't move it."
 msgstr "你不能移动已关闭的话题。"
 
-#: threads/permissions/threads.py:778
+#: threads/permissions/threads.py:783
 msgid "You have to sign in to merge threads."
 msgstr "你必须登录才能合并话题。"
 
-#: threads/permissions/threads.py:786
+#: threads/permissions/threads.py:791
 msgid "Other thread can't be merged with."
 msgstr "无法与其他话题合并。"
 
-#: threads/permissions/threads.py:787
+#: threads/permissions/threads.py:792
 msgid "You can't merge threads in this category."
 msgstr "你不能合并此版块中的话题。"
 
-#: threads/permissions/threads.py:793
+#: threads/permissions/threads.py:798
 msgid "Other thread's category is closed. You can't merge with it."
 msgstr "你不能与版块已关闭的话题合并。"
 
-#: threads/permissions/threads.py:796
+#: threads/permissions/threads.py:801
 msgid "This category is closed. You can't merge it's threads."
 msgstr "你不能合并已关闭版块中的话题。"
 
-#: threads/permissions/threads.py:801
+#: threads/permissions/threads.py:806
 msgid "Other thread is closed and can't be merged with."
 msgstr "其他话题已关闭，不能合并。"
 
-#: threads/permissions/threads.py:804
+#: threads/permissions/threads.py:809
 msgid "This thread is closed. You can't merge it with other threads."
 msgstr "此话题已关闭，你不能将它和其它话题合并。"
 
-#: threads/permissions/threads.py:813
+#: threads/permissions/threads.py:818
 msgid "You have to sign in to approve threads."
 msgstr "你必须登录才能审批话题。"
 
-#: threads/permissions/threads.py:820
+#: threads/permissions/threads.py:825
 msgid "You can't approve threads in this category."
 msgstr "你不能审批此版块中的话题。"
 
-#: threads/permissions/threads.py:825
+#: threads/permissions/threads.py:830
 msgid "This category is closed. You can't approve threads in it."
 msgstr "你不能审批已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:828
+#: threads/permissions/threads.py:833
 msgid "This thread is closed. You can't approve it."
 msgstr "你不能审批已关闭的话题。"
 
-#: threads/permissions/threads.py:858
+#: threads/permissions/threads.py:863
 msgid "You have to sign in to edit posts."
 msgstr "你必须登录才能编辑帖子。"
 
-#: threads/permissions/threads.py:861
+#: threads/permissions/threads.py:866
 msgid "Events can't be edited."
 msgstr "事件无法编辑。"
 
-#: threads/permissions/threads.py:868
+#: threads/permissions/threads.py:873
 msgid "You can't edit posts in this category."
 msgstr "你不能编辑此版块中的帖子。"
 
-#: threads/permissions/threads.py:875
+#: threads/permissions/threads.py:880
 msgid "This post is hidden, you can't edit it."
 msgstr "你不能编辑已隐藏的帖子。"
 
-#: threads/permissions/threads.py:880
+#: threads/permissions/threads.py:885
 msgid "You can't edit other users posts in this category."
 msgstr "你不能编辑此版块中的其他用户的帖子。"
 
-#: threads/permissions/threads.py:884
+#: threads/permissions/threads.py:889
 msgid "This post is protected. You can't edit it."
 msgstr "你不能编辑已锁定的帖子。"
 
-#: threads/permissions/threads.py:888
+#: threads/permissions/threads.py:893
 #, python-format
 msgid "You can't edit posts that are older than %(minutes)s minute."
 msgid_plural "You can't edit posts that are older than %(minutes)s minutes."
 msgstr[0] "你不能编辑已发布超过 %(minutes)s 分钟的帖子。"
 
-#: threads/permissions/threads.py:899
+#: threads/permissions/threads.py:904
 msgid "This category is closed. You can't edit posts in it."
 msgstr "你不能编辑已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:903
+#: threads/permissions/threads.py:908
 msgid "This thread is closed. You can't edit posts in it."
 msgstr "你不能编辑已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:912
+#: threads/permissions/threads.py:917
 msgid "You have to sign in to reveal posts."
 msgstr "你必须登录才能重新显示帖子。"
 
-#: threads/permissions/threads.py:920
+#: threads/permissions/threads.py:925
 msgid "You can't reveal posts in this category."
 msgstr "你不能重新显示此版块中的帖子。"
 
-#: threads/permissions/threads.py:924
+#: threads/permissions/threads.py:929
 msgid "You can't reveal other users posts in this category."
 msgstr "你不能重新显示此版块中其他用户的帖子。"
 
-#: threads/permissions/threads.py:928
+#: threads/permissions/threads.py:933
 msgid "This post is protected. You can't reveal it."
 msgstr "你不能重新显示已锁定的帖子。"
 
-#: threads/permissions/threads.py:932
+#: threads/permissions/threads.py:937
 #, python-format
 msgid "You can't reveal posts that are older than %(minutes)s minute."
 msgid_plural "You can't reveal posts that are older than %(minutes)s minutes."
 msgstr[0] "你不能重新显示已发布超过 %(minutes)s 分钟的帖子。"
 
-#: threads/permissions/threads.py:941
+#: threads/permissions/threads.py:946
 msgid "You can't reveal thread's first post."
 msgstr "你不能重新显示话题的第一条帖子。"
 
-#: threads/permissions/threads.py:946
+#: threads/permissions/threads.py:951
 msgid "This category is closed. You can't reveal posts in it."
 msgstr "你不能重新显示已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:950
+#: threads/permissions/threads.py:955
 msgid "This thread is closed. You can't reveal posts in it."
 msgstr "你不能重新显示已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:959
+#: threads/permissions/threads.py:964
 msgid "You have to sign in to hide posts."
 msgstr "你必须登录才能隐藏帖子。"
 
-#: threads/permissions/threads.py:967
+#: threads/permissions/threads.py:972
 msgid "You can't hide posts in this category."
 msgstr "你不能隐藏此版块中的帖子。"
 
-#: threads/permissions/threads.py:971
+#: threads/permissions/threads.py:976
 msgid "You can't hide other users posts in this category."
 msgstr "你不能隐藏此版块中其他用户的帖子。"
 
-#: threads/permissions/threads.py:975
+#: threads/permissions/threads.py:980
 msgid "This post is protected. You can't hide it."
 msgstr "你不能隐藏已锁定的帖子。"
 
-#: threads/permissions/threads.py:979
+#: threads/permissions/threads.py:984
 #, python-format
 msgid "You can't hide posts that are older than %(minutes)s minute."
 msgid_plural "You can't hide posts that are older than %(minutes)s minutes."
 msgstr[0] "你不能隐藏已发布超过 %(minutes)s 分钟的帖子。"
 
-#: threads/permissions/threads.py:988
+#: threads/permissions/threads.py:993
 msgid "You can't hide thread's first post."
 msgstr "你不能隐藏话题中的第一条帖子。"
 
-#: threads/permissions/threads.py:993
+#: threads/permissions/threads.py:998
 msgid "This category is closed. You can't hide posts in it."
 msgstr "你不能隐藏已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:997
+#: threads/permissions/threads.py:1002
 msgid "This thread is closed. You can't hide posts in it."
 msgstr "你不能隐藏已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:1006
+#: threads/permissions/threads.py:1011
 msgid "You have to sign in to delete posts."
 msgstr "你必须登录才能删除帖子。"
 
-#: threads/permissions/threads.py:1014
+#: threads/permissions/threads.py:1019
 msgid "You can't delete posts in this category."
 msgstr "你不能删除此版块中的帖子。"
 
-#: threads/permissions/threads.py:1018
+#: threads/permissions/threads.py:1023
 msgid "You can't delete other users posts in this category."
 msgstr "你不能删除此版块中其他用户的帖子。"
 
-#: threads/permissions/threads.py:1022
+#: threads/permissions/threads.py:1027
 msgid "This post is protected. You can't delete it."
 msgstr "你不能删除已锁定的帖子。"
 
-#: threads/permissions/threads.py:1026
+#: threads/permissions/threads.py:1031
 #, python-format
 msgid "You can't delete posts that are older than %(minutes)s minute."
 msgid_plural "You can't delete posts that are older than %(minutes)s minutes."
 msgstr[0] "你不能删除已发布超过 %(minutes)s 分钟的帖子。"
 
-#: threads/permissions/threads.py:1035
+#: threads/permissions/threads.py:1040
 msgid "You can't delete thread's first post."
 msgstr "你不能删除话题的第一篇帖子。"
 
-#: threads/permissions/threads.py:1040
+#: threads/permissions/threads.py:1045
 msgid "This category is closed. You can't delete posts in it."
 msgstr "你不能删除已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:1044
+#: threads/permissions/threads.py:1049
 msgid "This thread is closed. You can't delete posts in it."
 msgstr "你不能删除已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:1053
+#: threads/permissions/threads.py:1058
 msgid "You have to sign in to protect posts."
 msgstr "你必须登录才能锁定帖子。"
 
-#: threads/permissions/threads.py:1060
+#: threads/permissions/threads.py:1065
 msgid "You can't protect posts in this category."
 msgstr "你无法锁定此版块中的帖子。"
 
-#: threads/permissions/threads.py:1062
+#: threads/permissions/threads.py:1067
 msgid "You can't protect posts you can't edit."
 msgstr "你无法锁定你无法编辑的帖子。"
 
-#: threads/permissions/threads.py:1070
+#: threads/permissions/threads.py:1075
 msgid "You have to sign in to approve posts."
 msgstr "你必须登录后才能审批帖子。"
 
-#: threads/permissions/threads.py:1077
+#: threads/permissions/threads.py:1082
 msgid "You can't approve posts in this category."
 msgstr "你不能审批此版块中的帖子。"
 
-#: threads/permissions/threads.py:1079
+#: threads/permissions/threads.py:1084
 msgid "You can't approve thread's first post."
 msgstr "你不能审批话题的第一条帖子。"
 
-#: threads/permissions/threads.py:1085
+#: threads/permissions/threads.py:1090
 msgid "You can't approve posts the content you can't see."
 msgstr "你不能审批你看不到内容的帖子。"
 
-#: threads/permissions/threads.py:1090
+#: threads/permissions/threads.py:1095
 msgid "This category is closed. You can't approve posts in it."
 msgstr "你不能审批已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:1094
+#: threads/permissions/threads.py:1099
 msgid "This thread is closed. You can't approve posts in it."
 msgstr "你不能审批已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:1103
+#: threads/permissions/threads.py:1108
 msgid "You have to sign in to move posts."
 msgstr "你必须登录才能移动帖子。"
 
-#: threads/permissions/threads.py:1110
+#: threads/permissions/threads.py:1115
 msgid "You can't move posts in this category."
 msgstr "你无法移动此版块中的帖子。"
 
-#: threads/permissions/threads.py:1112
+#: threads/permissions/threads.py:1117
 msgid "Events can't be moved."
 msgstr "事件无法移动。"
 
-#: threads/permissions/threads.py:1114
+#: threads/permissions/threads.py:1119
 msgid "You can't move thread's first post."
 msgstr "你不能移动话题的第一条帖子。"
 
-#: threads/permissions/threads.py:1116
+#: threads/permissions/threads.py:1121
 msgid "You can't move posts the content you can't see."
 msgstr "你不能移动你看不到内容的帖子。"
 
-#: threads/permissions/threads.py:1121
+#: threads/permissions/threads.py:1126
 msgid "This category is closed. You can't move posts in it."
 msgstr "你不能移动已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:1125
+#: threads/permissions/threads.py:1130
 msgid "This thread is closed. You can't move posts in it."
 msgstr "你不能移动已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:1134
+#: threads/permissions/threads.py:1139
 msgid "You have to sign in to merge posts."
 msgstr "你必须登录才能合并帖子。"
 
-#: threads/permissions/threads.py:1141
+#: threads/permissions/threads.py:1146
 msgid "You can't merge posts in this category."
 msgstr "你无法合并此版块中的帖子。"
 
-#: threads/permissions/threads.py:1143
+#: threads/permissions/threads.py:1148
 msgid "Events can't be merged."
 msgstr "无法合并事件。"
 
-#: threads/permissions/threads.py:1149
+#: threads/permissions/threads.py:1154
 msgid "You can't merge posts the content you can't see."
 msgstr "你不能合并你看不到内容的帖子。"
 
-#: threads/permissions/threads.py:1154
+#: threads/permissions/threads.py:1159
 msgid "This category is closed. You can't merge posts in it."
 msgstr "你不能合并已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:1158
+#: threads/permissions/threads.py:1163
 msgid "This thread is closed. You can't merge posts in it."
 msgstr "你不能合并已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:1167
+#: threads/permissions/threads.py:1172
 msgid "You have to sign in to split posts."
 msgstr "你必须登录才能拆分帖子。"
 
-#: threads/permissions/threads.py:1174
+#: threads/permissions/threads.py:1179
 msgid "You can't split posts in this category."
 msgstr "你不能拆分此版块中的帖子。"
 
-#: threads/permissions/threads.py:1176
+#: threads/permissions/threads.py:1181
 msgid "Events can't be split."
 msgstr "无法拆分事件。"
 
-#: threads/permissions/threads.py:1178
+#: threads/permissions/threads.py:1183
 msgid "You can't split thread's first post."
 msgstr "你不能拆分话题的第一条帖子。"
 
-#: threads/permissions/threads.py:1180
+#: threads/permissions/threads.py:1185
 msgid "You can't split posts the content you can't see."
 msgstr "你不能拆分你看不到内容的帖子。"
 
-#: threads/permissions/threads.py:1185
+#: threads/permissions/threads.py:1190
 msgid "This category is closed. You can't split posts in it."
 msgstr "你不能拆分已关闭版块中的帖子。"
 
-#: threads/permissions/threads.py:1189
+#: threads/permissions/threads.py:1194
 msgid "This thread is closed. You can't split posts in it."
 msgstr "你不能拆分已关闭话题中的帖子。"
 
-#: threads/permissions/threads.py:1198
+#: threads/permissions/threads.py:1203
 msgid "You have to sign in to reveal events."
 msgstr "你必须登录以重新显示事件。"
 
-#: threads/permissions/threads.py:1205
+#: threads/permissions/threads.py:1210
 msgid "You can't reveal events in this category."
 msgstr "你无法重新显示此版块中的事件。"
 
-#: threads/permissions/threads.py:1210
+#: threads/permissions/threads.py:1215
 msgid "This category is closed. You can't reveal events in it."
 msgstr "你不能重新显示已关闭版块中的事件。"
 
-#: threads/permissions/threads.py:1214
+#: threads/permissions/threads.py:1219
 msgid "This thread is closed. You can't reveal events in it."
 msgstr "你不能重新显示已关闭话题中的事件。"
 
-#: threads/permissions/threads.py:1223
+#: threads/permissions/threads.py:1228
 msgid "You have to sign in to hide events."
 msgstr "你必须登录才能隐藏事件。"
 
-#: threads/permissions/threads.py:1230
+#: threads/permissions/threads.py:1235
 msgid "You can't hide events in this category."
 msgstr "你无法隐藏此版块中的事件。"
 
-#: threads/permissions/threads.py:1235
+#: threads/permissions/threads.py:1240
 msgid "This category is closed. You can't hide events in it."
 msgstr "你不能隐藏已关闭版块中的事件。"
 
-#: threads/permissions/threads.py:1239
+#: threads/permissions/threads.py:1244
 msgid "This thread is closed. You can't hide events in it."
 msgstr "你不能隐藏已关闭话题中的事件。"
 
-#: threads/permissions/threads.py:1248
+#: threads/permissions/threads.py:1253
 msgid "You have to sign in to delete events."
 msgstr "你必须登录才能删除事件。"
 
-#: threads/permissions/threads.py:1255
+#: threads/permissions/threads.py:1260
 msgid "You can't delete events in this category."
 msgstr "你不能删除此版块中的事件。"
 
-#: threads/permissions/threads.py:1260
+#: threads/permissions/threads.py:1265
 msgid "This category is closed. You can't delete events in it."
 msgstr "你不能删除已关闭版块中的事件。"
 
-#: threads/permissions/threads.py:1264
+#: threads/permissions/threads.py:1269
 msgid "This thread is closed. You can't delete events in it."
 msgstr "你不能删除已关闭话题中的事件。"
 
@@ -6804,11 +7104,11 @@ msgstr "一条或多条投票选项无效。"
 msgid "You have to make a choice."
 msgstr "你必须做出选择。"
 
-#: threads/signals.py:168
+#: threads/signals.py:210
 msgid "Question"
 msgstr "问题"
 
-#: threads/signals.py:169
+#: threads/signals.py:211
 msgid "Choices"
 msgstr "选择"
 
@@ -6897,35 +7197,52 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "发帖内容最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
-#: threads/viewmodels/threads.py:23
+#: threads/viewmodels/threads.py:24
+msgctxt "threads list"
 msgid "Your threads"
-msgstr "你的话题"
+msgstr ""
+
+#: threads/viewmodels/threads.py:25
+msgctxt "threads list"
+msgid "New threads"
+msgstr ""
+
+#: threads/viewmodels/threads.py:26
+msgctxt "threads list"
+msgid "Unread threads"
+msgstr ""
 
 #: threads/viewmodels/threads.py:27
-msgid "Unapproved content"
-msgstr "未审批的内容"
+msgctxt "threads list"
+msgid "Watched threads"
+msgstr ""
 
-#: threads/viewmodels/threads.py:32
+#: threads/viewmodels/threads.py:28
+msgctxt "threads list"
+msgid "Unapproved content"
+msgstr ""
+
+#: threads/viewmodels/threads.py:33
 msgid "You have to sign in to see list of threads that you have started."
 msgstr "你必须登录才能看到你发起的话题列表。"
 
-#: threads/viewmodels/threads.py:34
+#: threads/viewmodels/threads.py:35
 msgid "You have to sign in to see list of threads you haven't read."
 msgstr "你必须登录才能看到你尚未阅读的话题列表。"
 
-#: threads/viewmodels/threads.py:36
+#: threads/viewmodels/threads.py:37
 msgid "You have to sign in to see list of threads with new replies."
 msgstr "你必须登录才能看到有新回复的话题列表。"
 
-#: threads/viewmodels/threads.py:39
-msgid "You have to sign in to see list of threads you are subscribing."
-msgstr "你必须登录才能看到你订阅的话题列表。"
+#: threads/viewmodels/threads.py:40
+msgid "You have to sign in to see list of threads you are watching."
+msgstr ""
 
-#: threads/viewmodels/threads.py:42
+#: threads/viewmodels/threads.py:43
 msgid "You have to sign in to see list of threads with unapproved posts."
 msgstr "你必须登录才能看到未审批帖子的话题列表。"
 
-#: threads/viewmodels/threads.py:113
+#: threads/viewmodels/threads.py:120
 msgid "You don't have permission to see unapproved content lists."
 msgstr "你无法查看未审批的内容列表。"
 
@@ -6955,275 +7272,286 @@ msgstr "编辑权限和组"
 msgid "Edit the user from Misago admin panel"
 msgstr "在 Misago 管理面版编辑用户"
 
-#: users/admin/forms.py:22 users/admin/forms.py:313 users/models/ban.py:71
+#: users/admin/forms.py:21 users/admin/forms.py:375 users/models/ban.py:71
 #: users/signals.py:29
 msgid "Username"
 msgstr "用户名"
 
-#: users/admin/forms.py:23
+#: users/admin/forms.py:22
 msgid "Custom title"
 msgstr "外号"
 
-#: users/admin/forms.py:24 users/models/ban.py:72
+#: users/admin/forms.py:23 users/models/ban.py:72
 msgid "E-mail address"
 msgstr "电子邮件地址"
 
-#: users/admin/forms.py:59
+#: users/admin/forms.py:58
 msgid "All registered members must have a \"Member\" role."
 msgstr "所有注册会员都必须具有 “论坛成员” 身份。"
 
-#: users/admin/forms.py:76
+#: users/admin/forms.py:75
 msgid "Is administrator"
 msgstr "是管理员"
 
-#: users/admin/forms.py:78
+#: users/admin/forms.py:77
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
 "is enabled, this user will need additional permissions assigned within it to"
 " admin Django modules."
 msgstr "指定用户是否可以登录到管理员站点。如果启用 Django 管理站点，用户将需要额外的 Django 模块的权限。"
 
-#: users/admin/forms.py:84
+#: users/admin/forms.py:83
 msgid "Is superuser"
 msgstr "是超级用户"
 
-#: users/admin/forms.py:86
+#: users/admin/forms.py:85
 msgid ""
 "Only administrators can access admin sites. In addition to admin site "
 "access, superadmins can also change other members admin levels."
 msgstr "只有管理员可以访问管理页面。另外，超级管理员可以改变其他成员的管理权限。"
 
-#: users/admin/forms.py:91
+#: users/admin/forms.py:90
 msgid "Is active"
 msgstr "已激活"
 
-#: users/admin/forms.py:93
+#: users/admin/forms.py:92
 msgid ""
 "Designates whether this user should be treated as active. Turning this off "
 "is non-destructible way to remove user accounts."
 msgstr "指定该用户是否应被视为激活状态。当需要删除用户账号时将它设为 “否” 来冻结用户账号即可保留数据。"
 
-#: users/admin/forms.py:97 users/admin/forms.py:128 users/admin/forms.py:158
+#: users/admin/forms.py:96 users/admin/forms.py:127 users/admin/forms.py:157
 msgid "Staff message"
 msgstr "员工消息"
 
-#: users/admin/forms.py:99
+#: users/admin/forms.py:98
 msgid ""
 "Optional message for forum team members explaining why user's account has "
 "been disabled."
 msgstr "呈现给站点管理团队用于说明用户账号被封禁的原因。（可选）"
 
-#: users/admin/forms.py:104
+#: users/admin/forms.py:103
 msgid "Change password to"
 msgstr "修改密码"
 
-#: users/admin/forms.py:111
+#: users/admin/forms.py:110
 msgid "Lock avatar"
 msgstr "锁定头像"
 
-#: users/admin/forms.py:113
+#: users/admin/forms.py:112
 msgid ""
 "Setting this to yes will stop user from changing his/her avatar, and will "
 "reset his/her avatar to procedurally generated one."
 msgstr "设置为“是”将阻止用户修改其头像，并重置用户头像为程序生成头像。"
 
-#: users/admin/forms.py:119 users/admin/forms.py:150 users/admin/forms.py:457
-#: users/admin/forms.py:524
+#: users/admin/forms.py:118 users/admin/forms.py:149 users/admin/forms.py:519
+#: users/admin/forms.py:586
 msgid "User message"
 msgstr "用户信息"
 
-#: users/admin/forms.py:121
+#: users/admin/forms.py:120
 msgid ""
 "Optional message for user explaining why he/she is banned form changing "
 "avatar."
 msgstr "用于向用户说明被禁止修改头像的原因（可选）。"
 
-#: users/admin/forms.py:130
+#: users/admin/forms.py:129
 msgid ""
 "Optional message for forum team members explaining why user is banned form "
 "changing avatar."
 msgstr "呈现给站点管理团队的用来说明用户被禁止修改头像的原因（可选）。"
 
-#: users/admin/forms.py:138
+#: users/admin/forms.py:137
 msgid "Signature contents"
 msgstr "签名内容"
 
-#: users/admin/forms.py:143
+#: users/admin/forms.py:142
 msgid "Lock signature"
 msgstr "锁定签名"
 
-#: users/admin/forms.py:145
+#: users/admin/forms.py:144
 msgid ""
 "Setting this to yes will stop user from making changes to his/her signature."
 msgstr "设置为“是”将阻止用户修改其签名。"
 
-#: users/admin/forms.py:152
+#: users/admin/forms.py:151
 msgid "Optional message to user explaining why his/hers signature is locked."
 msgstr "用来向用户说明其签名被锁定原因。（可选）"
 
-#: users/admin/forms.py:160
+#: users/admin/forms.py:159
 msgid ""
 "Optional message to team members explaining why user signature is locked."
 msgstr "呈现给站点管理团队，说明用户签名被锁定原因。（可选）"
 
-#: users/admin/forms.py:166
+#: users/admin/forms.py:165
 msgid "Hides presence"
 msgstr "隐身"
 
-#: users/admin/forms.py:169
+#: users/admin/forms.py:168
 msgid "Who can add user to private threads"
 msgstr "谁可以将用户添加到隐蔽话题"
 
-#: users/admin/forms.py:178
-msgid "Replid threads"
-msgstr "回复的话题"
+#: users/admin/forms.py:182
+msgctxt "admin user form"
+msgid "Automatically watch threads that the user has started"
+msgstr ""
 
-#: users/admin/forms.py:221 users/serializers/moderation.py:36
+#: users/admin/forms.py:190
+msgctxt "admin user form"
+msgid "Automatically watch threads that the user has replied to"
+msgstr ""
+
+#: users/admin/forms.py:231
+msgctxt "admin user form"
+msgid "Notify about new private thread invitations from other users"
+msgstr ""
+
+#: users/admin/forms.py:283 users/serializers/moderation.py:36
 #, python-format
 msgid "Signature can't be longer than %(limit)s character."
 msgid_plural "Signature can't be longer than %(limit)s characters."
 msgstr[0] "签名不能超过 %(limit)s 个字符。"
 
-#: users/admin/forms.py:240
+#: users/admin/forms.py:302
 msgid ""
 "Ranks are used to group and distinguish users. They are also used to add "
 "permissions to groups of users."
 msgstr "级别用于分组和区分用户。同时也可向用户组添加权限。"
 
-#: users/admin/forms.py:252
+#: users/admin/forms.py:314
 msgid "Individual roles of this user. All users must have a \"Member\" role."
 msgstr "这个用户的个人身份。所有用户都必须有 “论坛成员” 的身份。"
 
-#: users/admin/forms.py:315
+#: users/admin/forms.py:377
 msgid "Profile fields contain"
 msgstr "个人资料包含"
 
-#: users/admin/forms.py:316
+#: users/admin/forms.py:378
 msgid "Requires activation"
 msgstr "需要激活"
 
-#: users/admin/forms.py:318
+#: users/admin/forms.py:380
 msgid "Administrator"
 msgstr "管理员"
 
-#: users/admin/forms.py:319
+#: users/admin/forms.py:381
 msgid "Deletes their account"
 msgstr "删除他们的帐户"
 
-#: users/admin/forms.py:364
+#: users/admin/forms.py:426
 msgid "All ranks"
 msgstr "所有级别"
 
-#: users/admin/forms.py:368
+#: users/admin/forms.py:430
 msgid "All roles"
 msgstr "所有身份"
 
-#: users/admin/forms.py:374
+#: users/admin/forms.py:436
 msgid "Has rank"
 msgstr "拥有级别"
 
-#: users/admin/forms.py:377
+#: users/admin/forms.py:439
 msgid "Has role"
 msgstr "拥有身份"
 
-#: users/admin/forms.py:389
+#: users/admin/forms.py:451
 msgid ""
 "Short and descriptive name of all users with this rank. \"The Team\" or "
 "\"Game Masters\" are good examples."
 msgstr "该级别的用户简短描述性名字。比如\"开发团队\"或者\"游戏大师”。"
 
-#: users/admin/forms.py:394
+#: users/admin/forms.py:456
 msgid "User title"
 msgstr "用户外号"
 
-#: users/admin/forms.py:397
+#: users/admin/forms.py:459
 msgid ""
 "Optional, singular version of rank name displayed by user names. For example"
 " \"GM\" or \"Dev\"."
 msgstr "可选，展示在用户名旁边的级别名称。例如 “游戏大师” 或 “开发”。"
 
-#: users/admin/forms.py:407
+#: users/admin/forms.py:469
 msgid ""
 "Optional description explaining function or status of members distincted "
 "with this rank."
 msgstr "用于解释此级别成员的功能和地位的描述 （可选）。"
 
-#: users/admin/forms.py:412
+#: users/admin/forms.py:474
 msgid "User roles"
 msgstr "用户身份"
 
-#: users/admin/forms.py:416
+#: users/admin/forms.py:478
 msgid "Rank can give additional roles to users with it."
 msgstr "级别可以为用户提供额外身份。"
 
-#: users/admin/forms.py:422
+#: users/admin/forms.py:484
 msgid "Optional css class added to content belonging to this rank owner."
 msgstr "可选的 css class，添加到该等级的用户卡片边框。"
 
-#: users/admin/forms.py:426
+#: users/admin/forms.py:488
 msgid "Give rank dedicated tab on users list"
 msgstr "将此级别显示到用户标签"
 
-#: users/admin/forms.py:429
+#: users/admin/forms.py:491
 msgid ""
 "Selecting this option will make users with this rank easily discoverable by "
 "others through dedicated page on forum users list."
 msgstr "选择此选项将使得具有此级别的用户可以轻松地被其他人在论坛用户列表专用页上发现。"
 
-#: users/admin/forms.py:447
+#: users/admin/forms.py:509
 msgid "This name collides with other rank."
 msgstr "与其他级别重名。"
 
-#: users/admin/forms.py:454
+#: users/admin/forms.py:516
 msgid "Values to ban"
 msgstr "封禁值"
 
-#: users/admin/forms.py:460
+#: users/admin/forms.py:522
 msgid "Optional message displayed to users instead of default one."
 msgstr "用来代替默认信息呈现给用户。（可选）"
 
-#: users/admin/forms.py:463 users/admin/forms.py:473 users/admin/forms.py:530
-#: users/admin/forms.py:540
+#: users/admin/forms.py:525 users/admin/forms.py:535 users/admin/forms.py:592
+#: users/admin/forms.py:602
 msgid "Message can't be longer than 1000 characters."
 msgstr "信息不能超过 1000 个字符。"
 
-#: users/admin/forms.py:467 users/admin/forms.py:534
+#: users/admin/forms.py:529 users/admin/forms.py:596
 msgid "Team message"
 msgstr "管理团队讯息"
 
-#: users/admin/forms.py:470 users/admin/forms.py:537
+#: users/admin/forms.py:532 users/admin/forms.py:599
 msgid "Optional ban message for moderators and administrators."
 msgstr "呈现给管理员和版主的封禁消息。（可选）"
 
-#: users/admin/forms.py:476 users/admin/forms.py:543
+#: users/admin/forms.py:538 users/admin/forms.py:605
 msgid "Expiration date"
 msgstr "截止日期"
 
-#: users/admin/forms.py:485 users/admin/forms.py:574
+#: users/admin/forms.py:547 users/admin/forms.py:636
 msgid "E-mails"
 msgstr "电子邮件"
 
-#: users/admin/forms.py:486
+#: users/admin/forms.py:548
 msgid "E-mail domains"
 msgstr "电子邮件域"
 
-#: users/admin/forms.py:493
+#: users/admin/forms.py:555
 msgid "First segment of IP addresses"
 msgstr "IP 地址第一段"
 
-#: users/admin/forms.py:494
+#: users/admin/forms.py:556
 msgid "First two segments of IP addresses"
 msgstr "IP 地址前两段"
 
-#: users/admin/forms.py:500
+#: users/admin/forms.py:562
 msgid "Check type"
 msgstr "检查类型"
 
-#: users/admin/forms.py:503
+#: users/admin/forms.py:565
 msgid "Restrict this ban to registrations"
 msgstr "此封禁仅限于注册时"
 
-#: users/admin/forms.py:505
+#: users/admin/forms.py:567
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
 "registration step. This is good if you want to block certain registrations "
@@ -7231,50 +7559,50 @@ msgid ""
 "existing users."
 msgstr "设置为“是”可以使得该封禁只在注册步骤生效。这能帮助你阻止来自近期被攻击的电子邮件提供商的用户注册，而不影响现有的用户。"
 
-#: users/admin/forms.py:512
+#: users/admin/forms.py:574
 msgid "Banned value"
 msgstr "封禁值"
 
-#: users/admin/forms.py:515
+#: users/admin/forms.py:577
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for rought matches. "
 "For example, making IP ban for value \"83.*\" will ban all IP addresses "
 "beginning with \"83.\"."
 msgstr "这个值不区分大小写，并接受*作为通配符。例如，设置IP封禁为\"83.*\"，将会禁止所有以\"83.\"开头的 IP 地址。"
 
-#: users/admin/forms.py:520
+#: users/admin/forms.py:582
 msgid "Banned value can't be longer than 250 characters."
 msgstr "封禁值不能超过250个字符。"
 
-#: users/admin/forms.py:527
+#: users/admin/forms.py:589
 msgid "Optional message displayed to user instead of default one."
 msgstr "代替默认显示给用户的消息。（可选）"
 
-#: users/admin/forms.py:562
+#: users/admin/forms.py:624
 msgid "Banned value is too vague."
 msgstr "封禁值太含糊。"
 
-#: users/admin/forms.py:572
+#: users/admin/forms.py:634
 msgid "All bans"
 msgstr "所有封禁"
 
-#: users/admin/forms.py:575
+#: users/admin/forms.py:637
 msgid "IPs"
 msgstr "IPs"
 
-#: users/admin/forms.py:578
+#: users/admin/forms.py:640
 msgid "Banned value begins with"
 msgstr "封禁值开头"
 
-#: users/admin/forms.py:582 users/admin/forms.py:587
+#: users/admin/forms.py:644 users/admin/forms.py:649
 msgid "Any"
 msgstr "任意"
 
-#: users/admin/forms.py:622
+#: users/admin/forms.py:684
 msgid "Usernames or emails"
 msgstr "用户名或电子邮件"
 
-#: users/admin/forms.py:624
+#: users/admin/forms.py:686
 msgid ""
 "Enter every item in new line. Duplicates will be ignored. This field is case"
 " insensitive. Depending on site configuration and amount of data to archive "
@@ -7283,14 +7611,14 @@ msgid ""
 msgstr ""
 "在新行中输入每个项目。重复项将被忽略。此字段不区分大小写。根据站点配置和存档的数据量，请求最多可能需要几天时间才能完成。一旦每个用户的下载准备就绪，将向其发送电子邮件通知。"
 
-#: users/admin/forms.py:641
+#: users/admin/forms.py:703
 #, python-format
 msgid ""
 "You may not enter more than 20 items at a single time (You have entered "
 "%(show_value)s)."
 msgstr "你不能一次输入超过 20 个项目（你已输入 %(show_value)s 个）。"
 
-#: users/admin/forms.py:660
+#: users/admin/forms.py:722
 msgid "One or more specified users could not be found."
 msgstr "找不到一个或多个指定的用户。"
 
@@ -7628,10 +7956,6 @@ msgstr "修改用户名时出错，请再试一次。"
 msgid "You don't have permission to see other users name history."
 msgstr "你无法查看其他用户名称的历史记录。"
 
-#: users/api/users.py:64
-msgid "You have to sign in to perform this action."
-msgstr "你必须登录才能执行此操作。"
-
 #: users/api/users.py:119
 msgid "You can't change other users avatars."
 msgstr "你无法修改其他用户的头像。"
@@ -7756,10 +8080,6 @@ msgstr "输入的答案不正确的。"
 msgid "This page is not available to signed in users."
 msgstr "已登录用户无法访问此页面。"
 
-#: users/decorators.py:30
-msgid "You have to sign in to access this page."
-msgstr "你必须登录才能访问此页面。"
-
 #: users/forms/auth.py:15
 msgid "Fill out both fields."
 msgstr "填写所需的字段。"
@@ -7838,7 +8158,7 @@ msgid "%(user)s, your data download is ready"
 msgstr "%(user)s，你的数据下载已准备就绪"
 
 #: users/migrations/0004_default_ranks.py:13
-#: users/migrations/0004_default_ranks.py:14 users/models/user.py:77
+#: users/migrations/0004_default_ranks.py:14 users/models/user.py:79
 msgid "Forum team"
 msgstr "论坛团队"
 
@@ -7875,43 +8195,43 @@ msgstr "由管理人员"
 msgid "By system"
 msgstr "由系统"
 
-#: users/models/user.py:106
+#: users/models/user.py:108
 msgid "Notify"
 msgstr "站点通知"
 
-#: users/models/user.py:107
+#: users/models/user.py:109
 msgid "Notify with e-mail"
 msgstr "电子邮件通知"
 
-#: users/models/user.py:115
+#: users/models/user.py:117
 msgid "Everybody"
 msgstr "所有人"
 
-#: users/models/user.py:116
+#: users/models/user.py:118
 msgid "Users I follow"
 msgstr "我关注的用户"
 
-#: users/models/user.py:117
+#: users/models/user.py:119
 msgid "Nobody"
 msgstr "不接受"
 
-#: users/models/user.py:136
+#: users/models/user.py:138
 msgid "joined on"
 msgstr "加入于"
 
-#: users/models/user.py:148
+#: users/models/user.py:150
 msgid "staff status"
 msgstr "员工状态"
 
-#: users/models/user.py:150
+#: users/models/user.py:152
 msgid "Designates whether the user can log into admin sites."
 msgstr "指定用户是否可以登录管理站点。"
 
-#: users/models/user.py:157
+#: users/models/user.py:159
 msgid "active"
 msgstr "激活"
 
-#: users/models/user.py:161
+#: users/models/user.py:163
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -8275,28 +8595,28 @@ msgstr "你的IP地址被封禁了。"
 msgid "You are banned."
 msgstr "你被封禁了。"
 
-#: users/serializers/options.py:46
+#: users/serializers/options.py:54
 msgid "Signature is too long."
 msgstr "签名太长。"
 
-#: users/serializers/options.py:57
+#: users/serializers/options.py:65
 msgid "Enter new username."
 msgstr "输入新用户名。"
 
-#: users/serializers/options.py:61
+#: users/serializers/options.py:69
 msgid "New username is same as current one."
 msgstr "新用户名与当前用户名相同。"
 
-#: users/serializers/options.py:80 users/serializers/options.py:94
-#: users/serializers/options.py:116
+#: users/serializers/options.py:88 users/serializers/options.py:102
+#: users/serializers/options.py:124
 msgid "Entered password is invalid."
 msgstr "输入的密码无效。"
 
-#: users/serializers/options.py:100
+#: users/serializers/options.py:108
 msgid "You have to enter new e-mail address."
 msgstr "你必须输入新的电子邮件地址。"
 
-#: users/serializers/options.py:104
+#: users/serializers/options.py:112
 msgid "New e-mail is same as current one."
 msgstr "新电子邮件与当前电子邮件相同。"
 

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 12:13+0000\n"
+"POT-Creation-Date: 2023-05-25 20:00+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -303,13 +303,43 @@ msgstr[2] "%(replies)s odpowiedzi"
 msgstr[3] "%(replies)s odpowiedzi"
 
 #: static/misago/js/misago.js:1
-msgctxt "moment"
+msgctxt "time ago"
 msgid "moment ago"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "now"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "day at time"
 msgid "%(day)s at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Tomorrow at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short minutes"
+msgid "%(time)sm"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short hours"
+msgid "%(time)sh"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short days"
+msgid "%(time)sd"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -842,16 +872,17 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
-msgid "Quote text with title (BBCode)"
+msgid "Quote text with author (BBCode)"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup help"
-msgid "Quote title"
+msgid "Quote author"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Quote title has written:"
+msgctxt "markup help"
+msgid "Quote author has written:"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3269,36 +3300,39 @@ msgid "Private threads"
 msgstr "Prywatne tematy"
 
 #: static/misago/js/misago.js:1
-msgid "Go to top"
+msgctxt "paginator"
+msgid "Go to first page"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "Go to first page"
-msgstr "Idź do pierwszej strony"
-
-#: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to previous page"
-msgstr "Idź do poprzedniej strony"
+msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator input"
+msgid "Page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to next page"
-msgstr "Idź do następnej strony"
+msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "paginator"
 msgid "Go to last page"
-msgstr "Idź do ostatniej strony"
-
-#: static/misago/js/misago.js:1
-msgid "There is %(more)s more post in this thread."
-msgid_plural "There are %(more)s more posts in this thread."
-msgstr[0] "W tym temacie jest jeszcze %(more)s post."
-msgstr[1] "W tym temacie są jeszcze %(more)s posty."
-msgstr[2] "W tym temacie jest jeszcze %(more)s postów."
-msgstr[3] "W tym temacie jest jeszcze %(more)s postów."
-
-#: static/misago/js/misago.js:1
-msgid "There are no more posts in this thread."
-msgstr "W tym temacie nie ma więcej postów."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Moderation"
@@ -3363,6 +3397,11 @@ msgstr "Moderuj posty"
 #: static/misago/js/misago.js:1
 msgid "Reply"
 msgstr "Odpowiedz"
+
+#: static/misago/js/misago.js:1
+msgctxt "go up"
+msgid "Go to top"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Add poll"
@@ -3553,19 +3592,13 @@ msgid "No threads matching specified criteria were found."
 msgstr "Nie ma tematów spełniających wybrane kryteria."
 
 #: static/misago/js/misago.js:1
-msgid "Last activity: %(timestamp)s"
+msgctxt "threads list"
+msgid "%(timestamp)s - latest activity"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "No new posts"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgid "New posts"
-msgstr "Nowe posty"
-
-#: static/misago/js/misago.js:1
-msgid "Last post by: %(poster)s"
+msgctxt "threads list"
+msgid "%(poster)s - latest poster"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3580,6 +3613,26 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Not watching"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "No unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Go to page: %(page)s"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3704,6 +3757,22 @@ msgstr[3] "Jest jeszcze %(more)s osób z tą rangą."
 #: static/misago/js/misago.js:1
 msgid "There are no more members with this role."
 msgstr "Nie ma innych użytkowników z tą rangą."
+
+#: static/misago/js/misago.js:1
+msgid "Go to first page"
+msgstr "Idź do pierwszej strony"
+
+#: static/misago/js/misago.js:1
+msgid "Go to previous page"
+msgstr "Idź do poprzedniej strony"
+
+#: static/misago/js/misago.js:1
+msgid "Go to next page"
+msgstr "Idź do następnej strony"
+
+#: static/misago/js/misago.js:1
+msgid "Go to last page"
+msgstr "Idź do ostatniej strony"
 
 #: static/misago/js/misago.js:1
 msgid "There are no users with this rank at the moment."
