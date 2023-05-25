@@ -1,3 +1,5 @@
+from math import ceil
+
 from django.urls import reverse
 from rest_framework import serializers
 
@@ -36,6 +38,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     is_read = serializers.SerializerMethodField()
     path = BasicCategorySerializer(many=True, read_only=True)
     poll = PollSerializer(many=False, read_only=True)
+    pages = serializers.SerializerMethodField()
     best_answer = serializers.PrimaryKeyRelatedField(read_only=True)
     best_answer_marked_by = serializers.PrimaryKeyRelatedField(read_only=True)
     notifications = serializers.SerializerMethodField()
@@ -77,6 +80,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             "notifications",
             "starter",
             "last_poster",
+            "pages",
             "api",
             "url",
         ]
@@ -140,6 +144,22 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
                 "real_name": obj.last_poster.get_real_name(),
                 "avatars": obj.last_poster.avatars,
             }
+
+    def get_pages(self, obj):
+        settings = self.context["settings"]
+
+        posts_per_page = settings.posts_per_page - 1
+        posts_per_page_orphans = settings.posts_per_page_orphans
+
+        if posts_per_page_orphans:
+            posts_per_page_orphans += 1
+
+        total_posts = obj.replies + 1
+        if total_posts <= posts_per_page + posts_per_page_orphans:
+            return 1
+
+        hits = total_posts - posts_per_page_orphans
+        return ceil(hits / posts_per_page)
 
     def get_api(self, obj):
         return {

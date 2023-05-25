@@ -125,7 +125,12 @@ def patch_move(request, thread, value):
     moderation.move_thread(request, thread, new_category)
 
     return {
-        "category": CategorySerializer(new_category, context={"request": request}).data,
+        "category": CategorySerializer(
+            new_category,
+            context={
+                "settings": request.settings,
+            },
+        ).data,
     }
 
 

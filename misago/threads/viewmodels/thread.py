@@ -143,7 +143,7 @@ class ForumThread(ViewModel):
         return ThreadSerializer(
             self._model,
             context={
-                "request": self.request,
+                "settings": self.request.settings,
                 "watched_thread": self._watched_thread,
             },
         ).data
@@ -174,7 +174,7 @@ class PrivateThread(ViewModel):
         return PrivateThreadSerializer(
             self._model,
             context={
-                "request": self.request,
+                "settings": self.request.settings,
                 "watched_thread": self._watched_thread,
             },
         ).data

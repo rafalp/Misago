@@ -22,7 +22,12 @@ def thread_merge_endpoint(
 
     serializer = MergeThreadSerializer(
         data=request.data,
-        context={"request": request, "thread": thread, "viewmodel": viewmodel},
+        context={
+            "request": request,
+            "settings": request.settings,
+            "thread": thread,
+            "viewmodel": viewmodel,
+        },
     )
 
     if not serializer.is_valid():
@@ -91,7 +96,10 @@ def thread_merge_endpoint(
 def threads_merge_endpoint(request):
     serializer = MergeThreadsSerializer(
         data=request.data,
-        context={"settings": request.settings, "user_acl": request.user_acl},
+        context={
+            "settings": request.settings,
+            "user_acl": request.user_acl,
+        },
     )
 
     if not serializer.is_valid():
@@ -125,7 +133,12 @@ def threads_merge_endpoint(request):
         request, serializer.validated_data, threads, merge_conflict
     )
 
-    return Response(ThreadsListSerializer(new_thread).data)
+    return Response(
+        ThreadsListSerializer(
+            new_thread,
+            context={"settings": request.settings},
+        ).data
+    )
 
 
 def merge_threads(request, validated_data, threads, merge_conflict):

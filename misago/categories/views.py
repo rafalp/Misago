@@ -12,7 +12,7 @@ def categories(request):
         {
             "CATEGORIES": CategorySerializer(
                 categories_tree,
-                context={"request": request},
+                context={"settings": request.settings},
                 many=True,
             ).data,
             "CATEGORIES_API": reverse("misago:api:category-list"),
