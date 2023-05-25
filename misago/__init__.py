@@ -1,5 +1,5 @@
 from .plugins.pluginlist import load_plugin_list_if_exists
 
 
-__version__ = "0.35.0"
+__version__ = "0.36.0"
 __released__ = True
