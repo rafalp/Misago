@@ -158,7 +158,7 @@ MISAGO_AVATAR_GALLERY = None
 # Keep sizes ordered from greatest to smallest
 # Max size also controls min size of uploaded image as well as crop size
 
-MISAGO_AVATARS_SIZES = [400, 200, 150, 128, 100, 64, 50, 40, 30, 26, 20]
+MISAGO_AVATARS_SIZES = [400, 200, 150, 128, 100, 64, 50, 40, 32, 20]
 
 
 # Path to blank avatar image used for guests and removed users.

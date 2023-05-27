@@ -12,7 +12,7 @@ const ThreadsListItemStarter = ({ thread }) =>
         true
       )}
     >
-      <Avatar size={24} user={thread.starter} />
+      <Avatar size={30} user={thread.starter} />
     </a>
   ) : (
     <span
@@ -23,7 +23,7 @@ const ThreadsListItemStarter = ({ thread }) =>
         true
       )}
     >
-      <Avatar size={24} />
+      <Avatar size={30} />
     </span>
   )
 
