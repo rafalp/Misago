@@ -12,7 +12,7 @@ const ThreadsListItemLastPoster = ({ thread }) =>
         true
       )}
     >
-      <Avatar size={26} user={thread.last_poster} />
+      <Avatar size={30} user={thread.last_poster} />
     </a>
   ) : (
     <span
@@ -23,7 +23,7 @@ const ThreadsListItemLastPoster = ({ thread }) =>
         true
       )}
     >
-      <Avatar size={26} />
+      <Avatar size={30} />
     </span>
   )
 

@@ -3,7 +3,7 @@ import misago from "misago"
 
 export default function (props) {
   const size = props.size || 100
-  const size2x = props.size2x || size
+  const size2x = props.size2x || (size * 2)
 
   return (
     <img
@@ -11,8 +11,8 @@ export default function (props) {
       className={props.className || "user-avatar"}
       src={getSrc(props.user, size)}
       srcSet={getSrc(props.user, size2x)}
-      width={size}
-      height={size}
+      width={props.height || size}
+      height={props.height || size}
     />
   )
 }

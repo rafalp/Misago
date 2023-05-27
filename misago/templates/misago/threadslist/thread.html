@@ -8,13 +8,13 @@
         title="{% blocktrans trimmed with starter=thread.starter.username context 'threads list' %}
         {{ starter }} - original poster
         {% endblocktrans %}">
-        <img class="user-avatar" src="{{ thread.starter|avatar:26 }}" width="26" height="26" alt="">
+        <img class="user-avatar" src="{{ thread.starter|avatar:30 }}" width="30" height="30" alt="">
       </a>
     {% else %}
       <span class="threads-list-item-starter" title="{% blocktrans trimmed with starter=thread.starter_name context 'threads list' %}
         {{ starter }} - original poster
         {% endblocktrans %}">
-        <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="26" height="26" alt="">
+        <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="30" height="30" alt="">
       </span>
     {% endif %}
   </div>
@@ -104,13 +104,13 @@
               title="{% blocktrans trimmed with last_poster=thread.last_poster.username context 'threads list' %}
               {{ last_poster }} - latest poster
               {% endblocktrans %}">
-              <img src="{{ thread.last_poster|avatar:26 }}" width="26" height="26" alt="">
+              <img src="{{ thread.last_poster|avatar:30 }}" width="30" height="30" alt="">
             </a>
           {% else %}
             <span class="threads-list-item-last-poster" title="{% blocktrans trimmed with last_poster=thread.last_poster_name context 'threads list' %}
               {{ last_poster }} - latest poster
               {% endblocktrans %}">
-              <img src="{{ BLANK_AVATAR_URL }}" width="26" height="26" alt="">
+              <img src="{{ BLANK_AVATAR_URL }}" width="30" height="30" alt="">
             </span>
           {% endif %}
         </div>
