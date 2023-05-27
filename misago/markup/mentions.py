@@ -10,7 +10,7 @@ from .htmlparser import (
 )
 
 EXCLUDE_ELEMENTS = ("pre", "code", "a")
-USERNAME_RE = re.compile(r"@[0-9a-z]+", re.IGNORECASE)
+USERNAME_RE = re.compile(r"@[0-9a-z_]+", re.IGNORECASE)
 MENTIONS_LIMIT = 32
 
 
@@ -62,7 +62,7 @@ def find_mentions_in_str(text: str):
     if not matches:
         return None
 
-    return set([match.lower()[1:] for match in matches])
+    return set([match.lower().replace("_", "-")[1:] for match in matches])
 
 
 def get_users_data(mentions):
@@ -102,7 +102,7 @@ def add_mentions_to_text(text: str, users_data):
             return nodes
 
         start, end = match.span()
-        user_slug = text[start + 1 : end].lower()
+        user_slug = text[start + 1 : end].lower().replace("_", "-")
 
         # Append text between 0 and start to nodes
         if start > 0:

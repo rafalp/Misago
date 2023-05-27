@@ -73,7 +73,7 @@ def user_acl(user, cache_versions):
 
 @pytest.fixture
 def other_user(db, user_password):
-    return create_test_user("OtherUser", "otheruser@example.com", user_password)
+    return create_test_user("Other_User", "otheruser@example.com", user_password)
 
 
 @pytest.fixture
@@ -83,7 +83,7 @@ def other_user_acl(other_user, cache_versions):
 
 @pytest.fixture
 def staffuser(db, user_password):
-    user = create_test_superuser("Staffuser", "staffuser@example.com", user_password)
+    user = create_test_superuser("Staff_User", "staffuser@example.com", user_password)
     user.is_superuser = False
     user.save()
     return user
@@ -97,7 +97,7 @@ def staffuser_acl(staffuser, cache_versions):
 @pytest.fixture
 def other_staffuser(db, user_password):
     user = create_test_superuser(
-        "OtherStaffuser", "otherstaffuser@example.com", user_password
+        "Other_Staff_User", "otherstaffuser@example.com", user_password
     )
 
     user.is_superuser = False
@@ -107,7 +107,7 @@ def other_staffuser(db, user_password):
 
 @pytest.fixture
 def superuser(db, user_password):
-    return create_test_superuser("Superuser", "superuser@example.com", user_password)
+    return create_test_superuser("Super_User", "superuser@example.com", user_password)
 
 
 @pytest.fixture
@@ -118,14 +118,14 @@ def superuser_acl(superuser, cache_versions):
 @pytest.fixture
 def other_superuser(db, user_password):
     return create_test_superuser(
-        "OtherSuperuser", "othersuperuser@example.com", user_password
+        "Other_Super_User", "othersuperuser@example.com", user_password
     )
 
 
 @pytest.fixture
 def inactive_user(db, user_password):
     return create_test_user(
-        "InactiveUser", "inactiveuser@example.com", user_password, is_active=False
+        "Inactive_User", "inactiveuser@example.com", user_password, is_active=False
     )
 
 

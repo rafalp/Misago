@@ -43,7 +43,7 @@ def search_users(**filters):
     if not filters.get("search_disabled", False):
         queryset = queryset.filter(is_active=True)
 
-    username = filters.get("username").lower()
+    username = filters.get("username").lower().replace("_", "-")
 
     results = []
 

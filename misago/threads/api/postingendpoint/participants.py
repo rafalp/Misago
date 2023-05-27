@@ -44,7 +44,7 @@ class ParticipantsSerializer(serializers.Serializer):
     def clean_usernames(self, usernames):
         clean_usernames = []
         for name in usernames:
-            clean_name = name.strip().lower()
+            clean_name = name.strip().lower().replace("_", "-")
 
             if clean_name == self.context["user"].slug:
                 raise serializers.ValidationError(

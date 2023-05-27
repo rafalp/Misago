@@ -92,7 +92,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
 
     def test_add_blocking_user(self):
-        """can't add user that is already participant"""
+        """can't add user that is blocking us"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
         self.other_user.blocks.add(self.user)
 

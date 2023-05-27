@@ -108,7 +108,7 @@ export function usernameContent() {
   return function (value) {
     if (!USERNAME.test($.trim(value))) {
       return gettext(
-        "Username can only contain latin alphabet letters and digits."
+        "Username can only contain Latin alphabet letters, digits, and an underscore sign."
       )
     }
   }

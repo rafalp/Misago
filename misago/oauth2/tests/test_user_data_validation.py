@@ -73,7 +73,10 @@ def test_error_was_raised_for_user_data_with_without_name(db, dynamic_settings):
             )
 
     assert excinfo.value.error_list == [
-        "Username can only contain latin alphabet letters and digits."
+        (
+            "Username can only contain Latin alphabet letters, digits, "
+            "and an underscore sign."
+        )
     ]
 
 
@@ -97,7 +100,10 @@ def test_error_was_raised_for_user_data_with_invalid_name(db, dynamic_settings):
             )
 
     assert excinfo.value.error_list == [
-        "Username can only contain latin alphabet letters and digits."
+        (
+            "Username can only contain Latin alphabet letters, digits, "
+            "and an underscore sign."
+        )
     ]
 
 

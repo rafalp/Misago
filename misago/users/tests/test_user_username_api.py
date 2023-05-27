@@ -67,7 +67,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "Username can only contain latin alphabet letters and digits."},
+            {
+                "detail": (
+                    "Username can only contain Latin alphabet letters, digits, "
+                    "and an underscore sign."
+                ),
+            },
         )
 
     def test_change_username(self):
@@ -148,7 +153,12 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "Username can only contain latin alphabet letters and digits."},
+            {
+                "detail": (
+                    "Username can only contain Latin alphabet letters, digits, "
+                    "and an underscore sign."
+                ),
+            },
         )
 
         response = self.client.post(
