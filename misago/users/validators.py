@@ -89,7 +89,7 @@ def validate_username_content(value):
             )
         )
 
-    if not USERNAME_LATIN_ALPHA_RE.match(value):
+    if not USERNAME_LATIN_ALPHA_RE.search(value):
         raise ValidationError(
             _("Username must contain Latin alphabet letters or digits.")
         )
