@@ -26,6 +26,13 @@ def test_search_finds_user_by_username(admin_client, users_admin_link, user_a):
     assert_contains(response, user_a.username)
 
 
+def test_search_finds_user_by_username_with_underscore(
+    admin_client, users_admin_link, other_user
+):
+    response = admin_client.get("%s&username=other_user" % users_admin_link)
+    assert_contains(response, other_user.username)
+
+
 def test_search_excludes_users_with_different_username(
     admin_client, users_admin_link, user_b, user_c
 ):
@@ -40,6 +47,13 @@ def test_search_finds_users_by_username_start(
     response = admin_client.get("%s&username=Tyr*" % users_admin_link)
     assert_contains(response, user_a.username)
     assert_contains(response, user_b.username)
+
+
+def test_search_finds_user_username_with_underscore_by_username_start(
+    admin_client, users_admin_link, other_user
+):
+    response = admin_client.get("%s&username=other_*" % users_admin_link)
+    assert_contains(response, other_user.username)
 
 
 def test_search_by_username_start_excludes_users_with_different_username(

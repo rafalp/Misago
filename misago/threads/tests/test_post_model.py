@@ -54,7 +54,7 @@ class PostModelTests(TestCase):
         with self.assertRaises(ValueError):
             self.post.merge(self.post)
 
-        other_user = create_test_user("OtherUser", "otheruser@example.com")
+        other_user = create_test_user("Other_User", "otheruser@example.com")
 
         other_thread = Thread.objects.create(
             category=self.category,

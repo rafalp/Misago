@@ -31,7 +31,7 @@ class UserDetailsApiTests(AuthenticatedUserTestCase):
 
     def test_other_user(self):
         """api handles scenario when its other user looking at profile"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         api_link = reverse("misago:api:user-details", kwargs={"pk": user.pk})
 
         # moderator has permission to edit details

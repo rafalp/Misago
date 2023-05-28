@@ -26,7 +26,7 @@ class DeleteUserLikesTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread)
         post.acl = {"can_like": True}
 
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
 
         patch_is_liked(self.get_request(self.user), post, 1)
         patch_is_liked(self.get_request(user), post, 1)

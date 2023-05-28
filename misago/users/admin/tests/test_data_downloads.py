@@ -85,7 +85,7 @@ class DataDownloadAdminTests(AdminTestCase):
         response = self.client.get(reverse("misago:admin:users:data-downloads:request"))
         self.assertEqual(response.status_code, 200)
 
-        other_user = create_test_user("OtherUser", "OtherUser@example.com")
+        other_user = create_test_user("Other_User", "otheruser@example.com")
 
         response = self.client.post(
             reverse("misago:admin:users:data-downloads:request"),

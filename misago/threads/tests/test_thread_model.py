@@ -396,7 +396,7 @@ class ThreadModelTests(TestCase):
         when there are no participants left in it
         """
         user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("OtherUser", "otheruser@example.com")
+        other_user = create_test_user("Other_User", "otheruser@example.com")
 
         ThreadParticipant.objects.add_participants(self.thread, [user, other_user])
         self.assertEqual(self.thread.participants.count(), 2)

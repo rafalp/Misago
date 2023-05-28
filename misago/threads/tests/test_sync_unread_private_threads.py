@@ -8,7 +8,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "user@example.com")
+        self.other_user = create_test_user("Other_User", "user@example.com")
         self.thread = test.post_thread(self.category, poster=self.user)
 
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)

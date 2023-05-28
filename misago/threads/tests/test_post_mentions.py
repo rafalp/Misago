@@ -92,7 +92,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
     def test_mention_update(self, notify_on_new_thread_reply_mock):
         """edit post endpoint updates mentions"""
         user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("OtherUser", "otheruser@example.com")
+        other_user = create_test_user("Other_User", "otheruser@example.com")
 
         response = self.client.post(
             self.post_link, data={"post": "This is test response, @%s!" % user}

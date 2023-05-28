@@ -67,7 +67,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "Username can only contain latin alphabet letters and digits."},
+            {
+                "detail": (
+                    "Username can only contain Latin alphabet letters, digits, "
+                    "and an underscore sign."
+                ),
+            },
         )
 
     def test_change_username(self):
@@ -111,7 +116,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
         self.link = "/api/users/%s/moderate-username/" % self.other_user.pk
 
     @patch_user_acl({"can_rename_users": 0})
@@ -148,7 +153,12 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "Username can only contain latin alphabet letters and digits."},
+            {
+                "detail": (
+                    "Username can only contain Latin alphabet letters, digits, "
+                    "and an underscore sign."
+                ),
+            },
         )
 
         response = self.client.post(

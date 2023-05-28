@@ -60,7 +60,10 @@ class ValidateUsernameTests(TestCase):
         """validate_username has no crashes"""
         settings = Mock(username_length_min=1, username_length_max=5)
         validate_username(settings, "LeBob")
+        validate_username(settings, "123")
         validate_username(settings, "LeB_b")
+        validate_username(settings, "_a_")
+        validate_username(settings, "_123_")
         with self.assertRaises(ValidationError):
             validate_username(settings, "*")
         with self.assertRaises(ValidationError):
@@ -73,7 +76,7 @@ class ValidateUsernameAvailableTests(TestCase):
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
-        validate_username_available("OtherUser")
+        validate_username_available("Other_User")
         validate_username_available(self.user.username, exclude=self.user)
 
     def test_invalid_name(self):

@@ -11,7 +11,7 @@ from ...notifications.threads import ThreadNotifications
 from ...search.filter_queryset import filter_queryset
 from ..models import Ban, DataDownload, Rank
 from ..profilefields import profilefields
-from ..utils import hash_email
+from ..utils import hash_email, slugify_username
 from ..validators import validate_email, validate_username
 
 User = get_user_model()
@@ -383,19 +383,19 @@ class BaseFilterUsersForm(forms.Form):
     def filter_queryset(self, criteria, queryset):
         if criteria.get("username"):
             queryset = filter_queryset(
-                queryset, "slug", criteria.get("username").lower()
+                queryset, "slug", slugify_username(criteria["username"])
             )
 
         if criteria.get("email"):
             queryset = filter_queryset(
-                queryset, "email", criteria.get("email"), case_sensitive=False
+                queryset, "email", criteria["email"], case_sensitive=False
             )
 
         if criteria.get("rank"):
-            queryset = queryset.filter(rank_id=criteria.get("rank"))
+            queryset = queryset.filter(rank_id=criteria["rank"])
 
         if criteria.get("role"):
-            queryset = queryset.filter(roles__id=criteria.get("role"))
+            queryset = queryset.filter(roles__id=criteria["role"])
 
         if criteria.get("is_inactive"):
             queryset = queryset.filter(requires_activation__gt=0)

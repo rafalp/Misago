@@ -26,13 +26,13 @@ def test_util_adds_mention_to_parsig_result(user):
 
 
 def test_mentions_arent_added_for_nonexisting_user(user):
-    parsing_result = {"parsed_text": f"<p>Hello, @OtherUser!</p>", "mentions": []}
+    parsing_result = {"parsed_text": f"<p>Hello, @Aerith!</p>", "mentions": []}
     root_node = parse_html_string(parsing_result["parsed_text"])
 
     add_mentions(parsing_result, root_node)
 
     parsing_result["parsed_text"] = print_html_string(root_node)
-    assert parsing_result["parsed_text"] == "<p>Hello, @OtherUser!</p>"
+    assert parsing_result["parsed_text"] == "<p>Hello, @Aerith!</p>"
 
 
 def test_util_replaces_multiple_mentions_with_link_to_user_profiles_in_parsed_text(

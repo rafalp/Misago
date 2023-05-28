@@ -20,7 +20,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.category = Category.objects.private_threads()
         self.api_link = reverse("misago:api:private-thread-list")
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
 
     def test_cant_start_thread_as_guest(self):
         """user has to be authenticated to be able to post private thread"""
@@ -171,7 +171,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"to": ["OtherUser can't participate in private threads."]}
+            response.json(),
+            {"to": ["Other_User can't participate in private threads."]},
         )
 
     def test_cant_invite_blocking(self):
@@ -188,7 +189,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"to": ["OtherUser is blocking you."]})
+        self.assertEqual(response.json(), {"to": ["Other_User is blocking you."]})
 
     @patch_user_acl({"can_add_everyone_to_private_threads": 1})
     def test_cant_invite_blocking_override(self):
@@ -230,7 +231,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             response.json(),
             {
                 "to": [
-                    "OtherUser limits invitations to private threads to followed users."
+                    "Other_User limits invitations to private threads to followed users."
                 ]
             },
         )
@@ -288,7 +289,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"to": ["OtherUser is not allowing invitations to private threads."]},
+            {"to": ["Other_User is not allowing invitations to private threads."]},
         )
 
         # allow us to bypass user preference check

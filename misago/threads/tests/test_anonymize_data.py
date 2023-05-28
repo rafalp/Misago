@@ -40,7 +40,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
     def test_anonymize_changed_owner_event(self):
         """changed owner event is anonymized by user.anonymize_data"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         request = self.get_request()
 
         set_owner(self.thread, self.user)
@@ -64,7 +64,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
     @patch("misago.threads.participants.notify_on_new_private_thread")
     def test_anonymize_added_participant_event(self, notify_on_new_private_thread_mock):
         """added participant event is anonymized by user.anonymize_data"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         request = self.get_request()
 
         set_owner(self.thread, self.user)
@@ -88,7 +88,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
     @patch("misago.threads.participants.notify_on_new_private_thread")
     def test_anonymize_owner_left_event(self, notify_on_new_private_thread_mock):
         """owner left event is anonymized by user.anonymize_data"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         request = self.get_request(user)
 
         set_owner(self.thread, user)
@@ -115,7 +115,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
     @patch("misago.threads.participants.notify_on_new_private_thread")
     def test_anonymize_removed_owner_event(self, notify_on_new_private_thread_mock):
         """removed owner event is anonymized by user.anonymize_data"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         request = self.get_request()
 
         set_owner(self.thread, user)
@@ -141,7 +141,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
     def test_anonymize_participant_left_event(self):
         """participant left event is anonymized by user.anonymize_data"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         request = self.get_request(user)
 
         set_owner(self.thread, self.user)
@@ -170,7 +170,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         self, notify_on_new_private_thread_mock
     ):
         """removed participant event is anonymized by user.anonymize_data"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         request = self.get_request()
 
         set_owner(self.thread, self.user)
@@ -214,7 +214,7 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread)
         post.acl = {"can_like": True}
 
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
 
         patch_is_liked(self.get_request(self.user), post, 1)
         patch_is_liked(self.get_request(user), post, 1)
@@ -248,7 +248,7 @@ class AnonymizePostsTests(AuthenticatedUserTestCase):
         category = Category.objects.get(slug="first-category")
         thread = test.post_thread(category)
 
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
         post = test.reply_thread(thread, poster=user)
         user.anonymize_data(anonymous_username="Deleted")
 

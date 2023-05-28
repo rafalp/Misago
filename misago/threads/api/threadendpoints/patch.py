@@ -14,6 +14,7 @@ from ....categories.serializers import CategorySerializer
 from ....conf import settings
 from ....core.apipatch import ApiPatch
 from ....core.shortcuts import get_int_or_404
+from ....users.utils import slugify_username
 from ...moderation import threads as moderation
 from ...participants import (
     add_participant,
@@ -270,16 +271,16 @@ def patch_unmark_best_answer(request, thread, value):
 thread_patch_dispatcher.remove("best-answer", patch_unmark_best_answer)
 
 
-def patch_add_participant(request, thread, value):
+def patch_add_participant(request, thread, value: str):
     allow_add_participants(request.user_acl, thread)
 
     try:
-        username = str(value).strip().lower()
-        if not username:
+        user_slug = slugify_username(value)
+        if not user_slug:
             raise PermissionDenied(_("You have to enter new participant's username."))
-        participant = User.objects.get(slug=username)
+        participant = User.objects.get(slug=user_slug)
     except User.DoesNotExist:
-        raise PermissionDenied(_("No user with such name exists."))
+        raise PermissionDenied(_("No user with this name exists."))
 
     if participant in [p.user for p in thread.participants_list]:
         raise PermissionDenied(_("This user is already thread participant."))

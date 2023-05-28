@@ -1,10 +1,11 @@
 const EMAIL =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-const USERNAME = new RegExp("^[0-9a-z]+$", "i")
+const USERNAME = new RegExp("^[0-9a-z_]+$", "i")
+const USERNAME_ALPHANUMERIC = new RegExp("[0-9a-z]", "i")
 
 export function required(message) {
   return function (value) {
-    if (value === false || value === null || $.trim(value).length === 0) {
+    if (value === false || value === null || value.trim().length === 0) {
       return message || gettext("This field is required.")
     }
   }
@@ -31,7 +32,7 @@ export function email(message) {
 export function minLength(limitValue, message) {
   return function (value) {
     var returnMessage = ""
-    var length = $.trim(value).length
+    var length = value.trim().length
 
     if (length < limitValue) {
       if (message) {
@@ -58,7 +59,7 @@ export function minLength(limitValue, message) {
 export function maxLength(limitValue, message) {
   return function (value) {
     var returnMessage = ""
-    var length = $.trim(value).length
+    var length = value.trim().length
 
     if (length > limitValue) {
       if (message) {
@@ -106,9 +107,15 @@ export function usernameMaxLength(lengthMax) {
 
 export function usernameContent() {
   return function (value) {
-    if (!USERNAME.test($.trim(value))) {
+    const valueTrimmed = value.trim()
+    if (!USERNAME.test(valueTrimmed)) {
       return gettext(
-        "Username can only contain latin alphabet letters and digits."
+        "Username can only contain Latin alphabet letters, digits, and an underscore sign."
+      )
+    }
+    if (!USERNAME_ALPHANUMERIC.test(valueTrimmed)) {
+      return gettext(
+        "Username can must contain Latin alphabet letters or digits."
       )
     }
   }
