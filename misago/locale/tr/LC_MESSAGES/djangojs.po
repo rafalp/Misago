@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 20:00+0000\n"
+"POT-Creation-Date: 2023-05-28 12:41+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Arda Asik (Student) <ardaasik@sabanciuniv.edu>, 2020\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/misago/teams/65369/tr_TR/)\n"
@@ -3792,9 +3792,14 @@ msgstr[0] "Kullanıcı adı %(limit_value)s karakterden uzun olamaz."
 msgstr[1] "Kullanıcı adı %(limit_value)s karakterden uzun olamaz."
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
+msgid "Username can must contain Latin alphabet letters or digits."
 msgstr ""
-"Kullanıcı adı sadece latin alfabesindeki harfleri ve rakamları içerebilir."
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Valid password must be at least %(limit_value)s character long."

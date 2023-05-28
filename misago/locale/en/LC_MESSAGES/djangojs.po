@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 20:00+0000\n"
+"POT-Creation-Date: 2023-05-28 12:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3695,7 +3695,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
+msgid "Username can must contain Latin alphabet letters or digits."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
 msgstr ""
 
 #: static/misago/js/misago.js:1

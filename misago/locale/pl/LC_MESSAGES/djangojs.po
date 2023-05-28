@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 20:00+0000\n"
+"POT-Creation-Date: 2023-05-28 12:41+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -3899,8 +3899,14 @@ msgstr[2] "Nazwa nie może być dłuższa niż %(limit_value)s znaków."
 msgstr[3] "Nazwa nie może być dłuższa niż %(limit_value)s znaków."
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr "Nazwa może zawierać wyłącznie znaki alfabetu łacińskiego i cyfry."
+msgid "Username can must contain Latin alphabet letters or digits."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Valid password must be at least %(limit_value)s character long."

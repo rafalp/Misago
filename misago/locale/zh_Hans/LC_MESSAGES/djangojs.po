@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 20:00+0000\n"
+"POT-Creation-Date: 2023-05-28 12:41+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Percy <scvoet@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -3668,8 +3668,14 @@ msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] "用户名不可以超过 %(limit_value)s 个字符。"
 
 #: static/misago/js/misago.js:1
-msgid "Username can only contain latin alphabet letters and digits."
-msgstr "用户名只可以包含拉丁字母和数字。"
+msgid "Username can must contain Latin alphabet letters or digits."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Valid password must be at least %(limit_value)s character long."

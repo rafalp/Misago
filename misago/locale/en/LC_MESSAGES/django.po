@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 20:00+0000\n"
+"POT-Creation-Date: 2023-05-28 12:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1828,11 +1828,11 @@ msgstr ""
 msgid "User profile retrieved from the OAuth2 provider did not validate."
 msgstr ""
 
-#: oauth2/user.py:97 users/validators.py:39
+#: oauth2/user.py:97 users/validators.py:40
 msgid "This e-mail address is not available."
 msgstr ""
 
-#: oauth2/user.py:102 users/validators.py:67
+#: oauth2/user.py:102 users/validators.py:68
 msgid "This username is not available."
 msgstr ""
 
@@ -2791,7 +2791,7 @@ msgstr ""
 #: templates/misago/admin/dashboard/totals.html:7
 #: templates/misago/admin/users/ban.html:22
 #: templates/misago/userslists/base.html:5 users/admin/__init__.py:74
-#: users/search.py:16
+#: users/search.py:17
 msgid "Users"
 msgstr ""
 
@@ -5525,7 +5525,7 @@ msgid "You can't like posts in this category."
 msgstr ""
 
 #: threads/api/postendpoints/patch_post.py:99
-#: threads/api/threadendpoints/patch.py:154
+#: threads/api/threadendpoints/patch.py:155
 msgid "Content approval can't be reversed."
 msgstr ""
 
@@ -5586,16 +5586,16 @@ msgstr ""
 msgid "Your account has exceed a daily post limit."
 msgstr ""
 
-#: threads/api/postingendpoint/participants.py:52
+#: threads/api/postingendpoint/participants.py:53
 msgid ""
 "You can't include yourself on the list of users to invite to new thread."
 msgstr ""
 
-#: threads/api/postingendpoint/participants.py:61
+#: threads/api/postingendpoint/participants.py:62
 msgid "You have to enter user names."
 msgstr ""
 
-#: threads/api/postingendpoint/participants.py:67
+#: threads/api/postingendpoint/participants.py:68
 #, python-format
 msgid ""
 "You can't add more than %(users)s user to private thread (you've added "
@@ -5606,7 +5606,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/api/postingendpoint/participants.py:93
+#: threads/api/postingendpoint/participants.py:94
 #, python-format
 msgid "One or more users could not be found: %(usernames)s"
 msgstr ""
@@ -5628,72 +5628,72 @@ msgid ""
 "No categories that allow new threads are available to you at the moment."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:65
+#: threads/api/threadendpoints/patch.py:66
 msgid "Not a valid string."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:86
+#: threads/api/threadendpoints/patch.py:87
 msgid "You can't change globally pinned threads weights in this category."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:94
+#: threads/api/threadendpoints/patch.py:95
 msgid "You can't pin threads globally in this category."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:122
+#: threads/api/threadendpoints/patch.py:123
 msgid "You can't move thread to the category it's already in."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:177
+#: threads/api/threadendpoints/patch.py:178
 msgid "You don't have permission to close this thread."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:179
+#: threads/api/threadendpoints/patch.py:180
 msgid "You don't have permission to open this thread."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:203
-#: threads/api/threadendpoints/patch.py:242
-#: threads/api/threadendpoints/patch.py:305
-#: threads/api/threadendpoints/patch.py:333
+#: threads/api/threadendpoints/patch.py:204
+#: threads/api/threadendpoints/patch.py:243
+#: threads/api/threadendpoints/patch.py:306
+#: threads/api/threadendpoints/patch.py:334
 msgid "A valid integer is required."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:216
+#: threads/api/threadendpoints/patch.py:217
 msgid "This post is already marked as thread's best answer."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:251
+#: threads/api/threadendpoints/patch.py:252
 msgid ""
 "This post can't be unmarked because it's not currently marked as best answer."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:279
+#: threads/api/threadendpoints/patch.py:280
 msgid "You have to enter new participant's username."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:282
-msgid "No user with such name exists."
+#: threads/api/threadendpoints/patch.py:283
+msgid "No user with this name exists."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:285
+#: threads/api/threadendpoints/patch.py:286
 msgid "This user is already thread participant."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:311
-#: threads/api/threadendpoints/patch.py:342
+#: threads/api/threadendpoints/patch.py:312
+#: threads/api/threadendpoints/patch.py:343
 msgid "Participant doesn't exist."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:338
+#: threads/api/threadendpoints/patch.py:339
 msgid "This user already is thread owner."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:457
+#: threads/api/threadendpoints/patch.py:458
 msgid "One or more threads to update could not be found."
 msgstr ""
 
-#: threads/api/threadendpoints/patch.py:474
+#: threads/api/threadendpoints/patch.py:475
 #, python-format
 msgid "No more than %(limit)s thread can be updated at a single time."
 msgid_plural "No more than %(limit)s threads can be updated at a single time."
@@ -8161,11 +8161,11 @@ msgid ""
 "request new password."
 msgstr ""
 
-#: users/forms/register.py:34 users/validators.py:79
+#: users/forms/register.py:34 users/validators.py:80
 msgid "This username is not allowed."
 msgstr ""
 
-#: users/forms/register.py:45 users/validators.py:51
+#: users/forms/register.py:45 users/validators.py:52
 msgid "This e-mail address is not allowed."
 msgstr ""
 
@@ -8608,7 +8608,7 @@ msgstr ""
 msgid "Welcome on %(forum_name)s forums!"
 msgstr ""
 
-#: users/search.py:22
+#: users/search.py:23
 msgid "You don't have permission to search users."
 msgstr ""
 
@@ -8661,29 +8661,35 @@ msgstr ""
 msgid "Old username"
 msgstr ""
 
-#: users/validators.py:85
-msgid "Username can only contain latin alphabet letters and digits."
+#: users/validators.py:87
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
 msgstr ""
 
-#: users/validators.py:92
+#: users/validators.py:94
+msgid "Username must contain Latin alphabet letters or digits."
+msgstr ""
+
+#: users/validators.py:101
 #, python-format
 msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:100
+#: users/validators.py:109
 #, python-format
 msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:136
+#: users/validators.py:145
 msgid "Data entered was found in spammers database."
 msgstr ""
 
-#: users/validators.py:146
+#: users/validators.py:155
 msgid "This email is not allowed."
 msgstr ""
 
