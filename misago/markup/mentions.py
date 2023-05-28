@@ -3,6 +3,7 @@ from typing import Union
 
 from django.contrib.auth import get_user_model
 
+from ..users.utils import slugify_username
 from .htmlparser import (
     ElementNode,
     RootNode,
@@ -18,7 +19,7 @@ def add_mentions(result, root_node):
     if "@" not in result["parsed_text"]:
         return
 
-    mentions = set()
+    mentions = set()  # usernames slugs
     nodes = []
 
     find_mentions(root_node, mentions, nodes)
@@ -62,7 +63,7 @@ def find_mentions_in_str(text: str):
     if not matches:
         return None
 
-    return set([match.lower().replace("_", "-")[1:] for match in matches])
+    return set([slugify_username(match[1:]) for match in matches])
 
 
 def get_users_data(mentions):

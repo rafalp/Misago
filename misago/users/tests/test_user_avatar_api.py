@@ -92,7 +92,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             response.json(), {"detail": "You have to sign in to perform this action."}
         )
 
-        self.login_user(create_test_user("OtherUser", "otheruser@example.com"))
+        self.login_user(create_test_user("Other_User", "otheruser@example.com"))
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
@@ -296,7 +296,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "other@user.com")
+        self.other_user = create_test_user("Other_User", "other@user.com")
         self.link = "/api/users/%s/moderate-avatar/" % self.other_user.pk
 
     @patch_user_acl({"can_moderate_avatars": 0})

@@ -12,7 +12,7 @@ from ..djangoadmin import UserAdminModel
 class TestDjangoAdminUserForm(AdminTestCase):
     def setUp(self):
         super().setUp()
-        self.test_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.test_user = create_test_user("Other_User", "otheruser@example.com")
         self.edit_test_user_in_django_url = reverse(
             "admin:misago_users_user_change", args=[self.test_user.pk]
         )

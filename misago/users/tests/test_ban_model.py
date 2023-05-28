@@ -17,7 +17,7 @@ class BansManagerTests(TestCase):
         """get_ban finds ban for given username"""
         self.assertIsNotNone(Ban.objects.get_ban(username="User"))
         with self.assertRaises(Ban.DoesNotExist):
-            Ban.objects.get_ban(username="OtherUser")
+            Ban.objects.get_ban(username="Other_User")
 
     def test_get_ban_for_banned_email(self):
         """get_ban finds ban for given email"""
@@ -36,7 +36,7 @@ class BansManagerTests(TestCase):
         valid_kwargs = {"username": "User", "ip": "42.51.52.51"}
         self.assertIsNotNone(Ban.objects.get_ban(**valid_kwargs))
 
-        invalid_kwargs = {"username": "OtherUser", "ip": "42.51.52.51"}
+        invalid_kwargs = {"username": "Other_User", "ip": "42.51.52.51"}
         with self.assertRaises(Ban.DoesNotExist):
             Ban.objects.get_ban(**invalid_kwargs)
 
@@ -47,7 +47,7 @@ class BanTests(TestCase):
         test_ban = Ban(banned_value="user")
 
         self.assertTrue(test_ban.check_value("User"))
-        self.assertFalse(test_ban.check_value("OtherUser"))
+        self.assertFalse(test_ban.check_value("Other_User"))
         self.assertFalse(test_ban.check_value("UserOther"))
 
     def test_check_value_starts_with(self):
@@ -72,5 +72,5 @@ class BanTests(TestCase):
         test_ban = Ban(banned_value="*user")
 
         self.assertTrue(test_ban.check_value("User"))
-        self.assertTrue(test_ban.check_value("OtherUser"))
+        self.assertTrue(test_ban.check_value("Other_User"))
         self.assertFalse(test_ban.check_value("UserOther"))

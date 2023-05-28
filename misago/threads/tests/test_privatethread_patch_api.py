@@ -16,7 +16,7 @@ class PrivateThreadPatchApiTestCase(PrivateThreadsTestCase):
         self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
 
     def patch(self, api_link, ops):
         return self.client.patch(
@@ -71,7 +71,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"id": self.thread.pk, "detail": ["No user with such name exists."]},
+            {"id": self.thread.pk, "detail": ["No user with this name exists."]},
         )
 
     def test_add_already_participant(self):
@@ -103,7 +103,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"id": self.thread.pk, "detail": ["OtherUser is blocking you."]},
+            {"id": self.thread.pk, "detail": ["Other_User is blocking you."]},
         )
 
     @patch_user_acl(other_user_cant_use_private_threads)
@@ -120,7 +120,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             response.json(),
             {
                 "id": self.thread.pk,
-                "detail": ["OtherUser can't participate in private threads."],
+                "detail": ["Other_User can't participate in private threads."],
             },
         )
 

@@ -7,7 +7,7 @@ from ..test import AuthenticatedUserTestCase, create_test_user
 class GetUserStatusTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
 
     def test_get_visible_user_status_returns_online(self):
         request = Mock(

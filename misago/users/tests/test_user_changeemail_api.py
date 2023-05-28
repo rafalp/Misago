@@ -63,7 +63,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     def test_email_taken(self):
         """api validates email usage"""
         taken_email = "otheruser@example.com"
-        create_test_user("OtherUser", taken_email)
+        create_test_user("Other_User", taken_email)
 
         response = self.client.post(
             self.link, data={"new_email": taken_email, "password": self.USER_PASSWORD}

@@ -57,7 +57,9 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_exact_match(self):
         """api handles exact search query"""
-        response = self.client.get("%s?q=%s" % (self.api_link, self.user.username))
+        other_user = create_test_user("Other_User", "otheruser@example.com")
+
+        response = self.client.get("%s?q=%s" % (self.api_link, other_user.username))
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -67,11 +69,13 @@ class SearchApiTests(AuthenticatedUserTestCase):
             if provider["id"] == "users":
                 results = provider["results"]["results"]
                 self.assertEqual(len(results), 1)
-                self.assertEqual(results[0]["id"], self.user.id)
+                self.assertEqual(results[0]["id"], other_user.id)
 
     def test_orphans_match(self):
         """api handles last three chars match query"""
-        response = self.client.get("%s?q=%s" % (self.api_link, self.user.username[-3:]))
+        other_user = create_test_user("Other_User", "otheruser@example.com")
+
+        response = self.client.get("%s?q=%s" % (self.api_link, "Other_"))
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -81,7 +85,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
             if provider["id"] == "users":
                 results = provider["results"]["results"]
                 self.assertEqual(len(results), 1)
-                self.assertEqual(results[0]["id"], self.user.id)
+                self.assertEqual(results[0]["id"], other_user.id)
 
     def test_no_match(self):
         """api handles no match"""
@@ -111,7 +115,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
             if provider["id"] == "users":
                 self.assertEqual(provider["results"]["results"], [])
 
-        # user shows in searchech performed by staff
+        # user shows in search performed by staff
         self.user.is_staff = True
         self.user.save()
 

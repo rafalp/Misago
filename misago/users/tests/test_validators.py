@@ -73,7 +73,7 @@ class ValidateUsernameAvailableTests(TestCase):
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
-        validate_username_available("OtherUser")
+        validate_username_available("Other_User")
         validate_username_available(self.user.username, exclude=self.user)
 
     def test_invalid_name(self):

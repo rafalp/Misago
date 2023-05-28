@@ -50,7 +50,7 @@ class ParticipantsTests(TestCase):
         """has_participants returns true if thread has participants"""
         users = [
             create_test_user("User", "user@example.com"),
-            create_test_user("OtherUser", "otheruser@example.com"),
+            create_test_user("Other_User", "otheruser@example.com"),
         ]
 
         self.assertFalse(has_participants(self.thread))
@@ -67,7 +67,7 @@ class ParticipantsTests(TestCase):
         annotations on list of threads
         """
         user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("OtherUser", "otheruser@example.com")
+        other_user = create_test_user("Other_User", "otheruser@example.com")
 
         self.assertFalse(hasattr(self.thread, "participants_list"))
         self.assertFalse(hasattr(self.thread, "participant"))
@@ -92,7 +92,7 @@ class ParticipantsTests(TestCase):
         annotations on thread model
         """
         user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("OtherUser", "otheruser@example.com")
+        other_user = create_test_user("Other_User", "otheruser@example.com")
 
         self.assertFalse(hasattr(self.thread, "participants_list"))
         self.assertFalse(hasattr(self.thread, "participant"))
@@ -133,7 +133,7 @@ class ParticipantsTests(TestCase):
         """
         users = [
             create_test_user("User", "user@example.com"),
-            create_test_user("OtherUser", "otheruser@example.com"),
+            create_test_user("Other_User", "otheruser@example.com"),
         ]
 
         set_users_unread_private_threads_sync(users=users)
@@ -148,7 +148,7 @@ class ParticipantsTests(TestCase):
         """
         users = [
             create_test_user("User", "user@example.com"),
-            create_test_user("OtherUser", "otheruser@example.com"),
+            create_test_user("Other_User", "otheruser@example.com"),
         ]
 
         participants = [ThreadParticipant(user=u) for u in users]
@@ -165,7 +165,7 @@ class ParticipantsTests(TestCase):
         """
         users = [create_test_user("User", "user@example.com")]
         participants = [ThreadParticipant(user=u) for u in users]
-        users.append(create_test_user("OtherUser", "otheruser@example.com"))
+        users.append(create_test_user("Other_User", "otheruser@example.com"))
 
         set_users_unread_private_threads_sync(users=users, participants=participants)
         for user in users:
@@ -176,7 +176,7 @@ class ParticipantsTests(TestCase):
         """exclude_user kwarg works"""
         users = [
             create_test_user("User", "user@example.com"),
-            create_test_user("OtherUser", "otheruser@example.com"),
+            create_test_user("Other_User", "otheruser@example.com"),
         ]
 
         set_users_unread_private_threads_sync(users=users, exclude_user=users[0])

@@ -37,11 +37,11 @@ class ForgottenPasswordViewsTests(UserTestCase):
     def test_change_password_on_banned(self):
         """change banned user password errors"""
         user = create_test_user(
-            "OtherUser", "otheruser@example.com", self.USER_PASSWORD
+            "Other_User", "otheruser@example.com", self.USER_PASSWORD
         )
 
         Ban.objects.create(
-            check_type=Ban.USERNAME, banned_value="OtherUser", user_message="Nope!"
+            check_type=Ban.USERNAME, banned_value="Other_User", user_message="Nope!"
         )
 
         password_token = make_password_change_token(user)
@@ -57,7 +57,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
     def test_change_password_on_other_user(self):
         """change other user password errors"""
         user = create_test_user(
-            "OtherUser", "otheruser@example.com", self.USER_PASSWORD
+            "Other_User", "otheruser@example.com", self.USER_PASSWORD
         )
 
         password_token = make_password_change_token(user)
@@ -75,7 +75,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
     def test_change_password_invalid_token(self):
         """invalid form token errors"""
         user = create_test_user(
-            "OtherUser", "otheruser@example.com", self.USER_PASSWORD
+            "Other_User", "otheruser@example.com", self.USER_PASSWORD
         )
 
         response = self.client.get(
@@ -89,7 +89,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
     def test_change_password_form(self):
         """change user password form displays for valid token"""
         user = create_test_user(
-            "OtherUser", "otheruser@example.com", self.USER_PASSWORD
+            "Other_User", "otheruser@example.com", self.USER_PASSWORD
         )
 
         password_token = make_password_change_token(user)
@@ -104,7 +104,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_unusable_password_form(self):
         """set user first password form displays for valid token"""
-        user = create_test_user("OtherUser", "otheruser@example.com")
+        user = create_test_user("Other_User", "otheruser@example.com")
 
         password_token = make_password_change_token(user)
 

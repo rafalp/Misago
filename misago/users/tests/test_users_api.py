@@ -220,7 +220,7 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
         self.link = reverse("misago:api:user-detail", kwargs={"pk": self.other_user.pk})
 
     def test_get_user(self):
@@ -252,7 +252,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
         self.link = "/api/users/%s/follow/" % self.other_user.pk
 
     def test_follow_unauthenticated(self):
@@ -319,7 +319,7 @@ class UserBanTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
         self.link = "/api/users/%s/ban/" % self.other_user.pk
 
     @patch_user_acl({"can_see_ban_details": 0})
@@ -470,7 +470,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
         self.link = "/api/users/%s/delete/" % self.other_user.pk
 
         self.threads = Thread.objects.count()

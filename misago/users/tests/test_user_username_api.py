@@ -116,7 +116,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
         self.link = "/api/users/%s/moderate-username/" % self.other_user.pk
 
     @patch_user_acl({"can_rename_users": 0})

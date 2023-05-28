@@ -13,7 +13,7 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_posts_api_url()
 
-        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.other_user = create_test_user("Other_User", "otheruser@example.com")
 
     @patch(
         "misago.threads.api.postingendpoint.notifications.notify_on_new_thread_reply"

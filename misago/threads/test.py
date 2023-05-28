@@ -39,7 +39,7 @@ def patch_category_acl(acl_patch=None):
 
 def patch_other_user_category_acl(acl_patch=None):
     def patch_acl(user, user_acl):
-        if user.slug != "otheruser":
+        if user.slug != "other_user":
             return
 
         category = Category.objects.get(slug="first-category")
@@ -82,7 +82,7 @@ def patch_private_threads_acl(acl_patch=None):
 
 
 def other_user_cant_use_private_threads(user, user_acl):
-    if user.slug == "otheruser":
+    if user.slug == "other-user":
         user_acl.update({"can_use_private_threads": False})
 
 

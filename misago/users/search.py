@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy
 
 from ..search import SearchProvider
 from .serializers import UserCardSerializer
+from .utils import slugify_username
 
 HEAD_RESULTS = 8
 TAIL_RESULTS = 8
@@ -43,7 +44,7 @@ def search_users(**filters):
     if not filters.get("search_disabled", False):
         queryset = queryset.filter(is_active=True)
 
-    username = filters.get("username").lower().replace("_", "-")
+    username = slugify_username(filters.get("username", ""))
 
     results = []
 

@@ -7,6 +7,7 @@ from rest_framework import serializers
 from . import PostingEndpoint, PostingMiddleware
 from ....acl import useracl
 from ....categories import PRIVATE_THREADS_ROOT_NAME
+from ....users.utils import slugify_username
 from ...participants import add_participants, set_owner
 from ...permissions import allow_message_user
 
@@ -44,7 +45,7 @@ class ParticipantsSerializer(serializers.Serializer):
     def clean_usernames(self, usernames):
         clean_usernames = []
         for name in usernames:
-            clean_name = name.strip().lower().replace("_", "-")
+            clean_name = slugify_username(name)
 
             if clean_name == self.context["user"].slug:
                 raise serializers.ValidationError(
