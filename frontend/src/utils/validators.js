@@ -1,6 +1,7 @@
 const EMAIL =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-const USERNAME = new RegExp("^[0-9a-z]+$", "i")
+const USERNAME = new RegExp("^[0-9a-z_]+$", "i")
+const USERNAME_ALPHANUMERIC = new RegExp("[0-9a-z]", "i")
 
 export function required(message) {
   return function (value) {
@@ -106,9 +107,15 @@ export function usernameMaxLength(lengthMax) {
 
 export function usernameContent() {
   return function (value) {
-    if (!USERNAME.test(value.trim())) {
+    const valueTrimmed = value.trim()
+    if (!USERNAME.test(valueTrimmed)) {
       return gettext(
         "Username can only contain Latin alphabet letters, digits, and an underscore sign."
+      )
+    }
+    if (!USERNAME_ALPHANUMERIC.test(valueTrimmed)) {
+      return gettext(
+        "Username can must contain Latin alphabet letters or digits."
       )
     }
   }

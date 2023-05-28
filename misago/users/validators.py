@@ -16,6 +16,7 @@ from ..conf import settings
 from .bans import get_email_ban, get_username_ban
 
 USERNAME_RE = re.compile(r"^[0-9a-z_]+$", re.IGNORECASE)
+USERNAME_LATIN_ALPHA_RE = re.compile(r"[0-9a-z]", re.IGNORECASE)
 
 logger = logging.getLogger("misago.users.validators")
 
@@ -86,6 +87,11 @@ def validate_username_content(value):
                 "Username can only contain Latin alphabet letters, "
                 "digits, and an underscore sign."
             )
+        )
+
+    if not USERNAME_LATIN_ALPHA_RE.match(value):
+        raise ValidationError(
+            _("Username must contain Latin alphabet letters or digits.")
         )
 
 

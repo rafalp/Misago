@@ -118,7 +118,7 @@ def superuser_acl(superuser, cache_versions):
 @pytest.fixture
 def other_superuser(db, user_password):
     return create_test_superuser(
-        "Other_Super_User", "othersuperuser@example.com", user_password
+        "OtherSuperUser", "othersuperuser@example.com", user_password
     )
 
 

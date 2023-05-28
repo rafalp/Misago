@@ -524,7 +524,7 @@ def test_superuser_can_reactivate_other_superuser_account(
     form_data = get_default_edit_form_data(other_superuser)
     form_data["is_active"] = "1"
 
-    admin_client.post(
+    r = admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
