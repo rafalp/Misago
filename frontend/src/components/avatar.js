@@ -3,7 +3,7 @@ import misago from "misago"
 
 export default function (props) {
   const size = props.size || 100
-  const size2x = props.size2x || (size * 2)
+  const size2x = props.size2x || size * 2
 
   return (
     <img
