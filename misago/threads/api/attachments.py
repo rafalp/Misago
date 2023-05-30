@@ -65,7 +65,7 @@ def validate_filetype(upload, user_roles):
     queryset = AttachmentType.objects.filter(status=AttachmentType.ENABLED)
     for filetype in queryset.prefetch_related("limit_uploads_to"):
         for extension in filetype.extensions_list:
-            if filename.endswith(".%s" % extension):
+            if filename.endswith(f".{extension}"):
                 break
         else:
             continue
@@ -104,6 +104,6 @@ def is_upload_image(upload):
     filename = upload.name.strip().lower()
 
     for extension in IMAGE_EXTENSIONS:
-        if filename.endswith(".%s" % extension):
+        if filename.endswith(f".{extension}"):
             return True
     return False

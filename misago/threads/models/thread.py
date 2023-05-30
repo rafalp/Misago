@@ -216,7 +216,7 @@ class Thread(models.Model):
 
     @property
     def replies_in_ks(self):
-        return "%sK" % round(self.replies / 1000, 0)
+        return f"{round(self.replies / 1000, 0)}K"
 
     @property
     def thread_type(self):

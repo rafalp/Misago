@@ -52,7 +52,7 @@ def test_setting_image_filename_is_prefixed_with_setting_name(admin_client, sett
         )
 
     setting.refresh_from_db()
-    assert ("%s." % setting.setting) in str(setting.image.name)
+    assert (f"{setting.setting}.") in str(setting.image.name)
 
 
 def test_setting_image_filename_is_hashed(admin_client, setting):

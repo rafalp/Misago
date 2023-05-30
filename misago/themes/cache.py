@@ -15,7 +15,7 @@ def set_theme_cache(cache_versions, theme):
 
 
 def get_cache_key(cache_versions):
-    return "%s_%s" % (THEME_CACHE, cache_versions[THEME_CACHE])
+    return f"{THEME_CACHE}_{cache_versions[THEME_CACHE]}"
 
 
 def clear_theme_cache():

@@ -16,7 +16,7 @@ User = get_user_model()
 
 def create_multiple_users(**kwargs):
     return [
-        create_test_user("User%s" % i, "user%s@gmail.com" % i, **kwargs)
+        create_test_user(f"User{i}", f"user{i}@gmail.com", **kwargs)
         for i in range(5)
     ]
 
@@ -80,7 +80,7 @@ def test_multiple_users_can_be_banned_with_mass_action(admin_client, users_admin
     for user in users:
         Ban.objects.get(banned_value=user.username.lower())
         Ban.objects.get(banned_value=user.email)
-        Ban.objects.get(banned_value="*%s" % user.email[-10:])
+        Ban.objects.get(banned_value=f"*{user.email[-10:]}")
 
 
 def test_option_to_ban_multiple_users_ips_is_disabled_if_user_ips_are_not_available(

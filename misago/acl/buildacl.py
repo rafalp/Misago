@@ -9,7 +9,7 @@ def build_acl(roles):
         try:
             acl = module.build_acl(acl, roles, extension)
         except AttributeError:
-            message = "%s has to define build_acl function" % extension
+            message = f"{extension} has to define build_acl function"
             raise AttributeError(message)
 
     return acl

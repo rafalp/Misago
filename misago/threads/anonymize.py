@@ -12,7 +12,7 @@ ANONYMIZABLE_EVENTS = (
 
 def anonymize_event(user, event):
     if event.event_type not in ANONYMIZABLE_EVENTS:
-        raise ValueError('event of type "%s" can\'t be ananymized' % event.event_type)
+        raise ValueError(f'event of type "{event.event_type}" can\'t be ananymized')
 
     event.event_context = {
         "user": {"id": None, "username": user.username, "url": reverse("misago:index")}

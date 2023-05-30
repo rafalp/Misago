@@ -31,7 +31,7 @@ class IsRequestToMisagoTests(TestCase):
             request.path = path
             self.assertTrue(
                 is_request_to_misago(request),
-                '"%s" is not overlapped by "%s"' % (path, misago_prefix),
+                f'"{path}" is not overlapped by "{misago_prefix}"',
             )
 
         for path in INVALID_PATHS:
@@ -39,7 +39,7 @@ class IsRequestToMisagoTests(TestCase):
             request.path = path
             self.assertFalse(
                 is_request_to_misago(request),
-                '"%s" is overlapped by "%s"' % (path, misago_prefix),
+                f'"{path}" is overlapped by "{misago_prefix}"',
             )
 
 

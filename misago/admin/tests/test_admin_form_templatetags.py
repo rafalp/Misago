@@ -147,7 +147,7 @@ def test_image_row_with_value_renders_help_text():
 
 def test_image_row_with_value_renders_image_preview():
     html = render_image("{% form_image_row form.image_field %}")
-    assert ('src="%s"' % TestImage.url) in html
+    assert (f'src="{TestImage.url}"') in html
 
 
 def test_image_row_with_value_renders_input():

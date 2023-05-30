@@ -1002,9 +1002,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
                     ["0", "Delete all polls"],
                     [
                         str(other_poll.pk),
-                        "%s (%s)" % (other_poll.question, other_poll.thread.title),
+                        f"{other_poll.question} ({other_poll.thread.title})",
                     ],
-                    [str(poll.pk), "%s (%s)" % (poll.question, poll.thread.title)],
+                    [str(poll.pk), f"{poll.question} ({poll.thread.title})"],
                 ]
             },
         )

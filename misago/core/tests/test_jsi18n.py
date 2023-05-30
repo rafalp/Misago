@@ -14,7 +14,7 @@ LOCALES_DIR = os.path.join(MISAGO_DIR, "locale")
 class JsI18nUrlTests(TestCase):
     def test_url_cache_buster(self):
         """js i18n catalog link has cachebuster with lang code"""
-        url = "%s?%s" % (reverse("django-i18n"), settings.LANGUAGE_CODE)
+        url = f"{reverse('django-i18n')}?{settings.LANGUAGE_CODE}"
 
         response = self.client.get(reverse("misago:index"))
         self.assertContains(response, url)
@@ -35,5 +35,5 @@ class JsI18nUrlTests(TestCase):
 
         if failed_languages:
             self.fail(
-                "JS catalog failed for languages: %s" % (", ".join(failed_languages))
+                f"JS catalog failed for languages: {', '.join(failed_languages)}"
             )

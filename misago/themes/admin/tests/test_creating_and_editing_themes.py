@@ -26,14 +26,14 @@ def test_theme_creation_form_is_displayed(admin_client, create_link):
 def test_theme_creation_form_reads_parent_from_url_and_preselects_it_in_parent_select(
     admin_client, create_link, theme
 ):
-    response = admin_client.get("%s?parent=%s" % (create_link, theme.pk))
-    assert_contains(response, '<option value="%s" selected>' % theme.pk)
+    response = admin_client.get(f"{create_link}?parent={theme.pk}")
+    assert_contains(response, f'<option value="{theme.pk}" selected>')
 
 
 def test_theme_creation_form_reads_parent_from_url_and_discards_invalid_value(
     admin_client, create_link, theme
 ):
-    response = admin_client.get("%s?parent=%s" % (create_link, theme.pk + 1))
+    response = admin_client.get(f"{create_link}?parent={theme.pk + 1}")
     assert response.status_code == 200
 
 

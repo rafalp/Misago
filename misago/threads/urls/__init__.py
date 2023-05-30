@@ -24,7 +24,7 @@ def threads_list_patterns(prefix, view, patterns):
     urls = []
     for i, pattern in enumerate(patterns):
         if i > 0:
-            url_name = "%s-%s" % (prefix, LISTS_TYPES[i])
+            url_name = f"{prefix}-{LISTS_TYPES[i]}"
         else:
             url_name = prefix
 
@@ -109,12 +109,12 @@ urlpatterns += [
 def thread_view_patterns(prefix, view):
     urls = [
         path(
-            "%s/<slug:slug>/<int:pk>/" % prefix[0],
+            f"{prefix[0]}/<slug:slug>/<int:pk>/",
             view.as_view(),
             name=prefix,
         ),
         path(
-            "%s/<slug:slug>/<int:pk>/<int:page>/" % prefix[0],
+            f"{prefix[0]}/<slug:slug>/<int:pk>/<int:page>/",
             view.as_view(),
             name=prefix,
         ),
@@ -131,17 +131,14 @@ def goto_patterns(prefix, **views):
 
     post_view = views.pop("post", None)
     if post_view:
-        url_pattern = "%s/<slug:slug>/<int:pk>/post/<int:post>/" % prefix[0]
-        url_name = "%s-post" % prefix
+        url_pattern = f"{prefix[0]}/<slug:slug>/<int:pk>/post/<int:post>/"
+        url_name = f"{prefix}-post"
         urls.append(path(url_pattern, post_view.as_view(), name=url_name))
 
     for name, view in views.items():
         name = name.replace("_", "-")
-        url_pattern = "%s/<slug:slug>/<int:pk>/%s/" % (
-            prefix[0],
-            name,
-        )
-        url_name = "%s-%s" % (prefix, name)
+        url_pattern = f"{prefix[0]}/<slug:slug>/<int:pk>/{name}/"
+        url_name = f"{prefix}-{name}"
         urls.append(path(url_pattern, view.as_view(), name=url_name))
 
     return urls

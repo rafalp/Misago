@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         if deleted_count:
             queryset.delete()
-            message = "\n\nDeleted %s old notifications." % deleted_count
+            message = f"\n\nDeleted {deleted_count} old notifications."
         else:
             message = "\n\nNo old notifications have been deleted."
 

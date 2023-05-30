@@ -130,7 +130,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
         for i in range(3):
-            user = create_test_user("User%s" % i, "user%s@example.com" % i)
+            user = create_test_user(f"User{i}", f"user{i}@example.com")
             ThreadParticipant.objects.add_participants(self.thread, [user])
 
         response = self.patch(

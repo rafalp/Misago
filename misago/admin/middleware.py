@@ -21,6 +21,6 @@ class AdminAuthMiddleware(MiddlewareMixin):
             remove_admin_authorization(request)
             if request.resolver_match.url_name == "index":
                 return login(request)
-            return redirect("%s:index" % request.admin_namespace)
+            return redirect(f"{request.admin_namespace}:index")
 
         update_admin_authorization(request)

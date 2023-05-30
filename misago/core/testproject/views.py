@@ -122,7 +122,7 @@ def test_redirect(request):
 
 @require_POST
 def test_require_post(request):
-    return HttpResponse("Request method: %s" % request.method)
+    return HttpResponse(f"Request method: {request.method}")
 
 
 @errorpages.shared_403_exception_handler

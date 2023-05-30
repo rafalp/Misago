@@ -147,11 +147,11 @@ class ListView(AdminView):
                 self.paginate_items(context, kwargs.get("page", 0))
             except EmptyPage:
                 return redirect(
-                    "%s%s" % (reverse(self.root_link), context["querystring"])
+                    f"{reverse(self.root_link)}{context['querystring']}"
                 )
 
         if refresh_querystring and "redirected" not in request.GET:
-            return redirect("%s%s" % (request.path, context["querystring"]))
+            return redirect(f"{request.path}{context['querystring']}")
 
         return self.render(request, context)
 
@@ -179,7 +179,7 @@ class ListView(AdminView):
 
     @property
     def filters_session_key(self):
-        return "misago_admin_%s_filters" % self.root_link
+        return f"misago_admin_{self.root_link}_filters"
 
     def get_filtering_methods(self, request, filter_form):
         methods = {
@@ -236,7 +236,7 @@ class ListView(AdminView):
         sort = request.GET.get("sort")
 
         if request.GET.get("direction") == "desc":
-            new_ordering = "-%s" % sort
+            new_ordering = f"-{sort}"
         elif request.GET.get("direction") == "asc":
             new_ordering = sort
         else:
@@ -245,7 +245,7 @@ class ListView(AdminView):
 
     @property
     def ordering_session_key(self):
-        return "misago_admin_%s_order_by" % self.root_link
+        return f"misago_admin_{self.root_link}_order_by"
 
     def get_ordering_from_session(self, request):
         new_ordering = request.session.get(self.ordering_session_key)
@@ -292,7 +292,7 @@ class ListView(AdminView):
         if not action_queryset.exists():
             raise MassActionError(_("You have to select one or more items."))
 
-        action_callable = getattr(self, "action_%s" % action["action"])
+        action_callable = getattr(self, f"action_{action['action']}")
 
         if action.get("is_atomic", True):
             with transaction.atomic():
@@ -330,7 +330,7 @@ class ListView(AdminView):
 
         if values:
             values["redirected"] = 1
-            context["querystring"] = "?%s" % urlencode(values, "utf-8")
+            context["querystring"] = f"?{urlencode(values, 'utf-8')}"
         if order_values:
             context["query_order"] = order_values
         if filter_values:

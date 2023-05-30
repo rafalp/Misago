@@ -65,7 +65,7 @@ class TwitterHandleField(basefields.TextProfileField):
         ) % {"slug": user.slug}
 
     def get_value_display_data(self, request, user, value):
-        return {"text": "@%s" % value, "url": "https://twitter.com/%s" % value}
+        return {"text": f"@{value}", "url": f"https://twitter.com/{value}"}
 
     def clean(self, request, user, data):
         data = data.lstrip("@")

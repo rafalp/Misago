@@ -100,7 +100,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         followers = []
         for i in range(10):
-            user_data = ("Follower%s" % i, "foll%s@test.com" % i)
+            user_data = (f"Follower{i}", f"foll{i}@test.com")
             followers.append(create_test_user(*user_data))
             self.user.followed_by.add(followers[-1])
 
@@ -109,7 +109,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
         for i in range(10):
-            self.assertContains(response, "Follower%s" % i)
+            self.assertContains(response, f"Follower{i}")
 
     def test_user_follows(self):
         """user profile follows list has no showstoppers"""
@@ -122,7 +122,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         followers = []
         for i in range(10):
-            user_data = ("Follower%s" % i, "foll%s@test.com" % i)
+            user_data = (f"Follower{i}", f"foll{i}@test.com")
             followers.append(create_test_user(*user_data))
             followers[-1].followed_by.add(self.user)
 
@@ -131,7 +131,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
         for i in range(10):
-            self.assertContains(response, "Follower%s" % i)
+            self.assertContains(response, f"Follower{i}")
 
     def test_user_details(self):
         """user details page has no showstoppers"""

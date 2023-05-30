@@ -38,7 +38,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_empty_query(self):
         """api handles empty search query"""
-        response = self.client.get("%s?q=" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -54,7 +54,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         index_post(post)
 
-        response = self.client.get("%s?q=ip" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=ip")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -70,7 +70,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         index_post(post)
 
-        response = self.client.get("%s?q=elit" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=elit")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -86,7 +86,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread, message="Lorem ipsum dolor.", is_hidden=True)
         index_post(post)
 
-        response = self.client.get("%s?q=ipsum" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=ipsum")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -104,7 +104,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         )
         index_post(post)
 
-        response = self.client.get("%s?q=ipsum" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=ipsum")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -120,7 +120,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         index_post(post)
 
-        response = self.client.get("%s?q=ipsum" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=ipsum")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -140,7 +140,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         index_post(post)
 
-        response = self.client.get("%s?q=mars atmosphere" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=mars atmosphere")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -158,7 +158,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(thread, message="Atmosphere of Mars")
         index_post(post)
 
-        response = self.client.get("%s?q=Mars atmosphere" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=Mars atmosphere")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -179,7 +179,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
         index_post(post)
 
-        response = self.client.get("%s?q=MMM" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=MMM")
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
@@ -191,7 +191,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
                 self.assertEqual(len(results), 1)
                 self.assertEqual(results[0]["id"], post.id)
 
-        response = self.client.get("%s?q=Marines Medics" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=Marines Medics")
         self.assertEqual(response.status_code, 200)
 
         for provider in reponse_json:

@@ -37,4 +37,4 @@ class Command(BaseCommand):
             record_user_deleted_by_system()
             users_deleted += 1
 
-        self.stdout.write("Deleted inactive user accounts: %s" % users_deleted)
+        self.stdout.write(f"Deleted inactive user accounts: {users_deleted}")

@@ -74,14 +74,14 @@ def get_fake_post_content(fake):
 
             cat_url = PLACEKITTEN_URL % (cat_width, cat_height)
 
-            raw.append("!(%s)" % cat_url)
-            parsed.append('<p><img src="%s" alt=""/></p>' % cat_url)
+            raw.append(f"!({cat_url})")
+            parsed.append(f'<p><img src="{cat_url}" alt=""/></p>')
         else:
             if random.randint(0, 100) > 95:
                 sentences_to_make = random.randint(1, 20)
             else:
                 sentences_to_make = random.randint(1, 7)
             raw.append(" ".join(corpus.random_sentences(sentences_to_make)))
-            parsed.append("<p>%s</p>" % raw[-1])
+            parsed.append(f"<p>{raw[-1]}</p>")
 
     return "\n\n".join(raw), "\n".join(parsed)

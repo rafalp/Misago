@@ -7,9 +7,9 @@ register = template.Library()
 @register.simple_tag
 def pagetitle(title, **kwargs):
     if "page" in kwargs and kwargs["page"] > 1:
-        title += " (%s)" % (_("page: %(page)s") % {"page": kwargs["page"]})
+        title += f" ({_('page: %(page)s') % {'page': kwargs['page']}})"
 
     if "parent" in kwargs:
-        title += " | %s" % kwargs["parent"]
+        title += f" | {kwargs['parent']}"
 
     return title

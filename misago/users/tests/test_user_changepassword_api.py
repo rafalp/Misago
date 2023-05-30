@@ -10,7 +10,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
 
     def setUp(self):
         super().setUp()
-        self.link = "/api/users/%s/change-password/" % self.user.pk
+        self.link = f"/api/users/{self.user.pk}/change-password/"
 
     def test_unsupported_methods(self):
         """api isn't supporting GET"""

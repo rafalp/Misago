@@ -21,7 +21,7 @@ class CategoryManager(TreeManager):
         return self.get_special(THREADS_ROOT_NAME)
 
     def get_special(self, special_role):
-        cache_name = "%s_%s" % (CACHE_NAME, special_role)
+        cache_name = f"{CACHE_NAME}_{special_role}"
 
         special_category = cache.get(cache_name, "nada")
         if special_category == "nada":

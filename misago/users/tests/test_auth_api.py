@@ -118,7 +118,7 @@ class GatewayTests(TestCase):
         self.assertEqual(response_json["code"], "banned")
         self.assertEqual(response_json["detail"]["message"]["plain"], ban.user_message)
         self.assertEqual(
-            response_json["detail"]["message"]["html"], "<p>%s</p>" % ban.user_message
+            response_json["detail"]["message"]["html"], f"<p>{ban.user_message}</p>"
         )
 
         response = self.client.get("/api/auth/")

@@ -199,7 +199,7 @@ def user_email_filter(request, user, user_data):
     return {
         "id": user_data["id"],
         "name": user_data["name"],
-        "email": "filtered_%s" % user_data["email"],
+        "email": f"filtered_{user_data['email']}",
         "avatar": user_data["avatar"],
     }
 

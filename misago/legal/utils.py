@@ -26,12 +26,12 @@ def get_parsed_agreement_text(request, agreement):
     if not agreement.text:
         return None
 
-    cache_name = "misago_legal_%s_%s" % (agreement.pk, agreement.last_modified_on or "")
+    cache_name = f"misago_legal_{agreement.pk}_{agreement.last_modified_on or ''}"
     cached_content = cache.get(cache_name)
 
     unparsed_content = agreement.text
 
-    checksum_source = force_bytes("%s:%s" % (unparsed_content, settings.SECRET_KEY))
+    checksum_source = force_bytes(f"{unparsed_content}:{settings.SECRET_KEY}")
     unparsed_checksum = md5(checksum_source).hexdigest()
 
     if cached_content and cached_content.get("checksum") == unparsed_checksum:

@@ -21,7 +21,7 @@ class SettingsForm(forms.Form):
             if setting_obj.python_type == "image":
                 if new_value and new_value != self.initial.get(setting):
                     self.save_image(setting_obj, new_value)
-                elif self.cleaned_data.get("%s_delete" % setting):
+                elif self.cleaned_data.get(f"{setting}_delete"):
                     self.delete_image(setting_obj)
             else:
                 self.save_setting(setting_obj, new_value)

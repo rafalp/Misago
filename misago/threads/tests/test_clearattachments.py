@@ -24,7 +24,7 @@ def create_attachment(attachment_type, uploaded_on, post=None):
         uploaded_on=uploaded_on,
         uploader_name="User",
         uploader_slug="user",
-        filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
+        filename=f"testfile_{Attachment.objects.count() + 1}.zip",
     )
 
 

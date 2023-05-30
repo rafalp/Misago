@@ -61,7 +61,7 @@ def get_image_thumbnail(image, src_name):
     img.close()
 
     filename = ".".join(src_name.split(".")[:1])
-    return ImageFile(file, name="thumb_%s.png" % filename)
+    return ImageFile(file, name=f"thumb_{filename}.png")
 
 
 def save_media(theme, media):

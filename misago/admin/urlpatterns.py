@@ -21,7 +21,7 @@ class URLPatterns:
         self.patterns(":".join((parent, namespace)), path("", view, name="index"))
 
     def get_child_patterns(self, parent):
-        prefix = "%s:" % parent if parent else ""
+        prefix = f"{parent}:" if parent else ""
 
         namespace_urlpatterns = self.namespace_patterns.get(parent, [])
         for namespace in self._namespaces:

@@ -81,4 +81,4 @@ class DeleteRole(RoleAdmin, generic.ButtonView):
 class RoleUsers(RoleAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
         redirect_url = reverse("misago:admin:users:index")
-        return redirect("%s?role=%s" % (redirect_url, target.pk))
+        return redirect(f"{redirect_url}?role={target.pk}")

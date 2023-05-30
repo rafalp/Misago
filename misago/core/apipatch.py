@@ -85,13 +85,13 @@ class ApiPatch:
             raise InvalidAction("undefined op")
 
         if action.get("op") not in ALLOWED_OPS:
-            raise InvalidAction('"%s" op is unsupported' % action.get("op"))
+            raise InvalidAction(f"\"{action.get('op')}\" op is unsupported")
 
         if not action.get("path"):
-            raise InvalidAction('"%s" op has to specify path' % action.get("op"))
+            raise InvalidAction(f"\"{action.get('op')}\" op has to specify path")
 
         if "value" not in action:
-            raise InvalidAction('"%s" op has to specify value' % action.get("op"))
+            raise InvalidAction(f"\"{action.get('op')}\" op has to specify value")
 
     def dispatch_action(self, patch, request, target, action):
         for handler in self._actions:

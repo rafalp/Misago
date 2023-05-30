@@ -64,7 +64,7 @@ def get_thread_id_from_url(request, url):  # pylint: disable=too-many-return-sta
     if not resolution.namespaces:
         return None
 
-    url_name = "%s:%s" % (":".join(resolution.namespaces), resolution.url_name)
+    url_name = f"{':'.join(resolution.namespaces)}:{resolution.url_name}"
     kwargname = SUPPORTED_THREAD_ROUTES.get(url_name)
 
     if not kwargname:

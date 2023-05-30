@@ -19,7 +19,7 @@ class Command(BaseCommand):
             self.rebuild_posts_search(posts_to_reindex)
 
     def rebuild_posts_search(self, posts_to_reindex):
-        self.stdout.write("Rebuilding search for %s posts...\n" % posts_to_reindex)
+        self.stdout.write(f"Rebuilding search for {posts_to_reindex} posts...\n")
 
         rebuild_count = 0
         show_progress(self, rebuild_count, posts_to_reindex)
@@ -39,4 +39,4 @@ class Command(BaseCommand):
             rebuild_count += 1
             show_progress(self, rebuild_count, posts_to_reindex, start_time)
 
-        self.stdout.write("\n\nRebuild search for %s posts" % rebuild_count)
+        self.stdout.write(f"\n\nRebuild search for {rebuild_count} posts")

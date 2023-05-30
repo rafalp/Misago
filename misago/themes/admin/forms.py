@@ -143,7 +143,7 @@ class UploadAssetsForm(forms.Form):
     def validate_asset_extension(self, asset):
         filename = asset.name.lower()
         for extension in self.allowed_extensions:
-            if filename.endswith(".%s" % extension):
+            if filename.endswith(f".{extension}"):
                 return
 
         message = gettext('File "%(file)s" extension is invalid.')

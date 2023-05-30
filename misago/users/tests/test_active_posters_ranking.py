@@ -47,7 +47,7 @@ def test_event_posts_doesnt_count_to_ranking(thread, user):
 @override_dynamic_settings(top_posters_ranking_size=2)
 def test_ranking_size_is_limited(thread):
     for i in range(3):
-        user = create_test_user("User%s" % i, "user%s@example.com" % i)
+        user = create_test_user(f"User{i}", f"user{i}@example.com")
         reply_thread(thread, poster=user)
     assert len(build_active_posters_ranking()) == 2
 

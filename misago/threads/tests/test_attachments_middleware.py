@@ -38,7 +38,7 @@ def create_attachment(*, post=None, user=None):
         uploader=user if user else None,
         uploader_name=user.username if user else "testuser",
         uploader_slug=user.slug if user else "testuser",
-        filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
+        filename=f"testfile_{Attachment.objects.count() + 1}.zip",
     )
 
 

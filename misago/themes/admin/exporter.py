@@ -23,7 +23,7 @@ def export_theme(theme):
 
         response = FileResponse(open(export_file, "rb"), content_type="application/zip")
         response["Content-Length"] = os.path.getsize(export_file)
-        response["Content-Disposition"] = "inline; filename=%s" % export_filename
+        response["Content-Disposition"] = f"inline; filename={export_filename}"
 
         return response
 
@@ -37,7 +37,7 @@ def create_export_directory(tmp_dir, theme):
 
 def get_export_name(theme):
     if theme.version:
-        return "%s-%s" % (slugify(theme.name), theme.version.replace(".", "-"))
+        return f"{slugify(theme.name)}-{theme.version.replace('.', '-')}"
     return slugify(theme.name)
 
 

@@ -84,8 +84,7 @@ class PostsPaginatorTests(TestCase):
                     common_part = set(page) & set(compared)
                     self.assertTrue(
                         len(common_part) < 2,
-                        "invalid page %s: %s"
-                        % (max(p, c) + 1, sorted(list(common_part))),
+                        f"invalid page {max(p, c) + 1}: {sorted(list(common_part))}",
                     )
 
     def get_paginator_items_list(self, paginator):

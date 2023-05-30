@@ -312,7 +312,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         with patch_category_acl({"can_reply_threads": True}):
             response = self.client.get(
-                "%s?reply=%s" % (self.api_link, unapproved_reply.pk)
+                f"{self.api_link}?reply={unapproved_reply.pk}"
             )
             self.assertEqual(response.status_code, 404)
 
@@ -320,7 +320,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         hidden_reply = test.reply_thread(self.thread, is_hidden=True)
 
         with patch_category_acl({"can_reply_threads": True}):
-            response = self.client.get("%s?reply=%s" % (self.api_link, hidden_reply.pk))
+            response = self.client.get(f"{self.api_link}?reply={hidden_reply.pk}")
             self.assertEqual(response.status_code, 403)
             self.assertEqual(
                 response.json(), {"detail": "You can't reply to hidden posts."}
@@ -331,7 +331,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         other_thread = test.post_thread(category=self.category)
         reply_to = test.reply_thread(other_thread)
 
-        response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
+        response = self.client.get(f"{self.api_link}?reply={reply_to.pk}")
         self.assertEqual(response.status_code, 404)
 
     @patch_category_acl({"can_reply_threads": True})
@@ -339,7 +339,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         """events can't be replied to"""
         reply_to = test.reply_thread(self.thread, is_event=True)
 
-        response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
+        response = self.client.get(f"{self.api_link}?reply={reply_to.pk}")
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {"detail": "You can't reply to events."})
 
@@ -348,7 +348,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         """api includes replied to post details in response"""
         reply_to = test.reply_thread(self.thread)
 
-        response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
+        response = self.client.get(f"{self.api_link}?reply={reply_to.pk}")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(

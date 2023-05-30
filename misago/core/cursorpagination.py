@@ -22,9 +22,9 @@ def _slice_queryset(queryset, order_by, per_page, start):
     page_len = int(per_page) + 1
     if start:
         if order_by.startswith("-"):
-            filter_name = "%s__lte" % order_by[1:]
+            filter_name = f"{order_by[1:]}__lte"
         else:
-            filter_name = "%s__gte" % order_by
+            filter_name = f"{order_by}__gte"
         return queryset.filter(**{filter_name: start})[:page_len]
     return queryset[:page_len]
 

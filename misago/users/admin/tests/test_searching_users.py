@@ -22,21 +22,21 @@ def user_c(db):
 
 
 def test_search_finds_user_by_username(admin_client, users_admin_link, user_a):
-    response = admin_client.get("%s&username=Tyrael" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=Tyrael")
     assert_contains(response, user_a.username)
 
 
 def test_search_finds_user_by_username_with_underscore(
     admin_client, users_admin_link, other_user
 ):
-    response = admin_client.get("%s&username=other_user" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=other_user")
     assert_contains(response, other_user.username)
 
 
 def test_search_excludes_users_with_different_username(
     admin_client, users_admin_link, user_b, user_c
 ):
-    response = admin_client.get("%s&username=Tyrael" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=Tyrael")
     assert_not_contains(response, user_b.username)
     assert_not_contains(response, user_c.username)
 
@@ -44,7 +44,7 @@ def test_search_excludes_users_with_different_username(
 def test_search_finds_users_by_username_start(
     admin_client, users_admin_link, user_a, user_b
 ):
-    response = admin_client.get("%s&username=Tyr*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=Tyr*")
     assert_contains(response, user_a.username)
     assert_contains(response, user_b.username)
 
@@ -52,26 +52,26 @@ def test_search_finds_users_by_username_start(
 def test_search_finds_user_username_with_underscore_by_username_start(
     admin_client, users_admin_link, other_user
 ):
-    response = admin_client.get("%s&username=other_*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=other_*")
     assert_contains(response, other_user.username)
 
 
 def test_search_by_username_start_excludes_users_with_different_username(
     admin_client, users_admin_link, user_c
 ):
-    response = admin_client.get("%s&username=Tyr*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=Tyr*")
     assert_not_contains(response, user_c.username)
 
 
 def test_search_finds_user_by_username_end(admin_client, users_admin_link, user_a):
-    response = admin_client.get("%s&username=*ael" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=*ael")
     assert_contains(response, user_a.username)
 
 
 def test_search_by_username_end_excludes_users_with_different_username(
     admin_client, users_admin_link, user_b, user_c
 ):
-    response = admin_client.get("%s&username=*ael" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=*ael")
     assert_not_contains(response, user_b.username)
     assert_not_contains(response, user_c.username)
 
@@ -79,7 +79,7 @@ def test_search_by_username_end_excludes_users_with_different_username(
 def test_search_finds_users_by_username_content(
     admin_client, users_admin_link, user_a, user_b
 ):
-    response = admin_client.get("%s&username=*yr*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=*yr*")
     assert_contains(response, user_a.username)
     assert_contains(response, user_b.username)
 
@@ -87,19 +87,19 @@ def test_search_finds_users_by_username_content(
 def test_search_by_username_content_excludes_users_with_different_username(
     admin_client, users_admin_link, user_c
 ):
-    response = admin_client.get("%s&username=*yr*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&username=*yr*")
     assert_not_contains(response, user_c.username)
 
 
 def test_search_finds_user_by_email(admin_client, users_admin_link, user_a):
-    response = admin_client.get("%s&email=test123@test.org" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=test123@test.org")
     assert_contains(response, user_a.email)
 
 
 def test_search_excludes_users_with_different_email(
     admin_client, users_admin_link, user_b, user_c
 ):
-    response = admin_client.get("%s&email=test123@test.org" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=test123@test.org")
     assert_not_contains(response, user_b.email)
     assert_not_contains(response, user_c.email)
 
@@ -107,7 +107,7 @@ def test_search_excludes_users_with_different_email(
 def test_search_finds_users_by_email_start(
     admin_client, users_admin_link, user_a, user_b
 ):
-    response = admin_client.get("%s&email=test*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=test*")
     assert_contains(response, user_a.email)
     assert_contains(response, user_b.email)
 
@@ -115,19 +115,19 @@ def test_search_finds_users_by_email_start(
 def test_search_by_email_start_excludes_users_with_different_email(
     admin_client, users_admin_link, user_c
 ):
-    response = admin_client.get("%s&email=test*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=test*")
     assert_not_contains(response, user_c.email)
 
 
 def test_search_finds_user_by_email_end(admin_client, users_admin_link, user_a):
-    response = admin_client.get("%s&email=*org" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=*org")
     assert_contains(response, user_a.email)
 
 
 def test_search_by_email_end_excludes_users_with_different_email(
     admin_client, users_admin_link, user_b, user_c
 ):
-    response = admin_client.get("%s&email=*org" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=*org")
     assert_not_contains(response, user_b.email)
     assert_not_contains(response, user_c.email)
 
@@ -135,7 +135,7 @@ def test_search_by_email_end_excludes_users_with_different_email(
 def test_search_finds_users_by_email_content(
     admin_client, users_admin_link, user_b, user_c
 ):
-    response = admin_client.get("%s&email=*@gmail*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=*@gmail*")
     assert_contains(response, user_b.email)
     assert_contains(response, user_c.email)
 
@@ -143,7 +143,7 @@ def test_search_finds_users_by_email_content(
 def test_search_by_email_content_excludes_users_with_different_email(
     admin_client, users_admin_link, user_a
 ):
-    response = admin_client.get("%s&email=*@gmail*" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&email=*@gmail*")
     assert_not_contains(response, user_a.email)
 
 
@@ -154,7 +154,7 @@ def rank(db):
 
 def test_search_finds_user_with_rank(admin_client, users_admin_link, rank):
     user = create_test_user("UserWithRank", "rank@example.org", rank=rank)
-    response = admin_client.get("%s&rank=%s" % (users_admin_link, rank.pk))
+    response = admin_client.get(f"{users_admin_link}&rank={rank.pk}")
     assert_contains(response, user.username)
 
 
@@ -162,7 +162,7 @@ def test_staff_users_search_excludes_user_without_rank(
     admin_client, users_admin_link, rank
 ):
     user = create_test_user("RegularUser", "regular@example.org")
-    response = admin_client.get("%s&rank=%s" % (users_admin_link, rank.pk))
+    response = admin_client.get(f"{users_admin_link}&rank={rank.pk}")
     assert_not_contains(response, user.username)
 
 
@@ -174,7 +174,7 @@ def role(db):
 def test_search_finds_user_with_role(admin_client, users_admin_link, role):
     user = create_test_user("UserWithRole", "role@example.org")
     user.roles.add(role)
-    response = admin_client.get("%s&role=%s" % (users_admin_link, role.pk))
+    response = admin_client.get(f"{users_admin_link}&role={role.pk}")
     assert_contains(response, user.username)
 
 
@@ -182,7 +182,7 @@ def test_staff_users_search_excludes_user_without_role(
     admin_client, users_admin_link, role
 ):
     user = create_test_user("RegularUser", "regular@example.org")
-    response = admin_client.get("%s&role=%s" % (users_admin_link, role.pk))
+    response = admin_client.get(f"{users_admin_link}&role={role.pk}")
     assert_not_contains(response, user.username)
 
 
@@ -190,7 +190,7 @@ def test_search_finds_inactive_user(admin_client, users_admin_link):
     user = create_test_user(
         "InactiveUser", "inactive@example.org", requires_activation=1
     )
-    response = admin_client.get("%s&is_inactive=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_inactive=1")
     assert_contains(response, user.username)
 
 
@@ -198,31 +198,31 @@ def test_inactive_users_search_excludes_activated_users(admin_client, users_admi
     user = create_test_user(
         "ActivatedUser", "activated@example.org", requires_activation=0
     )
-    response = admin_client.get("%s&is_inactive=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_inactive=1")
     assert_not_contains(response, user.username)
 
 
 def test_search_finds_disabled_user(admin_client, users_admin_link):
     user = create_test_user("DisabledUser", "disabled@example.org", is_active=False)
-    response = admin_client.get("%s&is_disabled=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_disabled=1")
     assert_contains(response, user.username)
 
 
 def test_disabled_users_search_excludes_active_users(admin_client, users_admin_link):
     user = create_test_user("ActiveUser", "active@example.org", is_active=True)
-    response = admin_client.get("%s&is_disabled=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_disabled=1")
     assert_not_contains(response, user.username)
 
 
 def test_search_finds_staff_user(admin_client, users_admin_link):
     user = create_test_user("StaffUser", "staff@example.org", is_staff=True)
-    response = admin_client.get("%s&is_staff=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_staff=1")
     assert_contains(response, user.username)
 
 
 def test_staff_users_search_excludes_non_staff_users(admin_client, users_admin_link):
     user = create_test_user("RegularUser", "non_staff@example.org", is_staff=False)
-    response = admin_client.get("%s&is_staff=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_staff=1")
     assert_not_contains(response, user.username)
 
 
@@ -230,7 +230,7 @@ def test_search_finds_user_deleting_account(admin_client, users_admin_link):
     user = create_test_user(
         "DeletingUser", "deleting@example.org", is_deleting_account=True
     )
-    response = admin_client.get("%s&is_deleting_account=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_deleting_account=1")
     assert_contains(response, user.username)
 
 
@@ -238,5 +238,5 @@ def test_staff_users_search_excludes_non_deleting_users(admin_client, users_admi
     user = create_test_user(
         "RegularUser", "regular@example.org", is_deleting_account=False
     )
-    response = admin_client.get("%s&is_deleting_account=1" % users_admin_link)
+    response = admin_client.get(f"{users_admin_link}&is_deleting_account=1")
     assert_not_contains(response, user.username)

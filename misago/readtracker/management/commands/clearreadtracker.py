@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
         if deleted_count:
             queryset.delete()
-            message = "\n\nDeleted %s expired entries" % deleted_count
+            message = f"\n\nDeleted {deleted_count} expired entries"
         else:
             message = "\n\nNo expired entries were found"
 

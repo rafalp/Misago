@@ -129,7 +129,7 @@ class MockRequest:
         self.host = host
 
         self.path_info = "/api/threads/123/merge/"
-        self.path = "%s%s" % (wsgialias.rstrip("/"), self.path_info)
+        self.path = f"{wsgialias.rstrip('/')}{self.path_info}"
 
     def get_host(self):
         return self.host
@@ -210,7 +210,7 @@ class GetThreadIdFromUrlTests(TestCase):
             self.assertEqual(
                 pk,
                 case["pk"],
-                "get_thread_id_from_url for %(url)s should return %(pk)s" % case,
+                f"get_thread_id_from_url for {case['url']} should return {case['pk']}",
             )
 
     def test_get_thread_id_from_invalid_urls(self):
@@ -265,5 +265,5 @@ class GetThreadIdFromUrlTests(TestCase):
         for case in TEST_CASES:
             pk = get_thread_id_from_url(case["request"], case["url"])
             self.assertIsNone(
-                pk, "get_thread_id_from_url for %s should fail" % case["url"]
+                pk, f"get_thread_id_from_url for {case['url']} should fail"
             )

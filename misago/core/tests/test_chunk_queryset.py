@@ -11,7 +11,7 @@ class ChunkQuerysetTest(TestCase):
 
         items_pks = []
         for i in range(50):
-            obj = CacheVersion.objects.create(cache="test%s" % i)
+            obj = CacheVersion.objects.create(cache=f"test{i}")
             items_pks.append(obj.pk)
         self.items_pks = list(sorted(items_pks, reverse=True))
 

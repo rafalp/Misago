@@ -35,7 +35,7 @@ def handle_banned_exception(request, exception):
 def handle_explicit_first_page_exception(request, exception):
     matched_url = request.resolver_match.url_name
     if request.resolver_match.namespace:
-        matched_url = "%s:%s" % (request.resolver_match.namespace, matched_url)
+        matched_url = f"{request.resolver_match.namespace}:{matched_url}"
 
     url_kwargs = request.resolver_match.kwargs
     del url_kwargs["page"]
@@ -83,7 +83,7 @@ def get_exception_handler(exception):
     for exception_type, handler in EXCEPTION_HANDLERS:
         if isinstance(exception, exception_type):
             return handler
-    raise ValueError("%s is not a Misago exception" % exception.__class__.__name__)
+    raise ValueError(f"{exception.__class__.__name__} is not a Misago exception")
 
 
 def handle_misago_exception(request, exception):

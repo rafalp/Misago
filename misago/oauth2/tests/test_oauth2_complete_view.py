@@ -60,7 +60,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_canceled_sign_in(
 ):
     assert dynamic_settings.enable_oauth2_client is True
 
-    response = client.get("%s?error=access_denied" % reverse("misago:oauth2-complete"))
+    response = client.get(f"{reverse('misago:oauth2-complete')}?error=access_denied")
     assert_contains(response, "The OAuth2 process was canceled by the provider.", 400)
 
 
@@ -95,7 +95,7 @@ def test_oauth2_complete_view_returns_error_400_if_state_is_invalid(
     session.save()
 
     response = client.get(
-        "%s?state=invalid&code=1234" % reverse("misago:oauth2-complete")
+        f"{reverse('misago:oauth2-complete')}?state=invalid&code=1234"
     )
     assert_contains(
         response,
@@ -119,7 +119,7 @@ def test_oauth2_complete_view_returns_error_400_if_code_is_missing(
     session[SESSION_STATE] = "state123"
     session.save()
 
-    response = client.get("%s?state=state123&code=" % reverse("misago:oauth2-complete"))
+    response = client.get(f"{reverse('misago:oauth2-complete')}?state=state123&code=")
     assert_contains(
         response,
         "OAuth2 authorization code was not sent by the provider.",
@@ -193,12 +193,7 @@ def test_oauth2_complete_view_creates_new_user(client, dynamic_settings, mailout
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert response.status_code == 302
@@ -276,12 +271,7 @@ def test_oauth2_complete_view_doesnt_send_welcome_mail_if_option_is_disabled(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert response.status_code == 302
@@ -364,12 +354,7 @@ def test_oauth2_complete_view_includes_extra_headers_in_token_request(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert response.status_code == 302
@@ -449,12 +434,7 @@ def test_oauth2_complete_view_includes_extra_headers_in_user_request(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert response.status_code == 302
@@ -521,12 +501,7 @@ def test_oauth2_complete_view_updates_existing_user(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert response.status_code == 302
@@ -579,12 +554,7 @@ def test_oauth2_complete_view_returns_error_400_if_code_grant_is_rejected(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(
@@ -640,12 +610,7 @@ def test_oauth2_complete_view_returns_error_400_if_access_token_is_rejected(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(
@@ -706,12 +671,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_email_was_missing(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(response, "Enter a valid email address.", 400)
@@ -769,12 +729,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_email_was_invalid(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(response, "Enter a valid email address.", 400)
@@ -830,12 +785,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_data_causes_integrity_er
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(response, "This e-mail address is not available.", 400)
@@ -896,12 +846,7 @@ def test_oauth2_complete_view_updates_deactivated_user_but_returns_error_400(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(
@@ -982,12 +927,7 @@ def test_oauth2_complete_view_creates_banned_user_but_returns_error_403(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(response, "Banned for a test.", 403)
@@ -1064,12 +1004,7 @@ def test_oauth2_complete_view_updates_banned_user_but_returns_error_403(
     )
 
     response = client.get(
-        "%s?state=%s&code=%s"
-        % (
-            reverse("misago:oauth2-complete"),
-            session_state,
-            code_grant,
-        )
+        f"{reverse('misago:oauth2-complete')}?state={session_state}&code={code_grant}"
     )
 
     assert_contains(response, "Banned for a test.", 403)

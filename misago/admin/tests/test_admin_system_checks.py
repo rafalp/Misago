@@ -214,8 +214,8 @@ def test_inactive_users_check_passess_if_there_are_no_inactive_users(db):
 def test_inactive_users_check_passess_if_there_are_less_than_eleven_inactive_users(db):
     for i in range(10):
         create_test_user(
-            "User%s" % i,
-            "user%s@example.com" % i,
+            f"User{i}",
+            f"user{i}@example.com",
             requires_activation=User.ACTIVATION_USER,
         )
     assert check_inactive_users() == {"is_ok": True, "count": 10}
@@ -224,8 +224,8 @@ def test_inactive_users_check_passess_if_there_are_less_than_eleven_inactive_use
 def test_inactive_users_check_fails_if_there_are_more_than_ten_inactive_users(db):
     for i in range(11):
         create_test_user(
-            "User%s" % i,
-            "user%s@example.com" % i,
+            f"User{i}",
+            f"user{i}@example.com",
             requires_activation=User.ACTIVATION_USER,
         )
     assert check_inactive_users() == {"is_ok": False, "count": 11}
@@ -234,8 +234,8 @@ def test_inactive_users_check_fails_if_there_are_more_than_ten_inactive_users(db
 def test_warning_about_inactive_users_is_displayed_on_checks_list(admin_client):
     for i in range(11):
         create_test_user(
-            "User%s" % i,
-            "user%s@example.com" % i,
+            f"User{i}",
+            f"user{i}@example.com",
             requires_activation=User.ACTIVATION_USER,
         )
 

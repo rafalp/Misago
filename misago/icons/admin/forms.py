@@ -89,7 +89,7 @@ def save_favicon(image):
     buffer.seek(0)
 
     icon_file = ContentFile(buffer.read())
-    icon_file.name = "%s.%s.ico" % ("favicon", get_file_hash(icon_file))
+    icon_file.name = f"{'favicon'}.{get_file_hash(icon_file)}.ico"
 
     Icon.objects.create(type=Icon.TYPE_FAVICON, image=icon_file, size=icon_file.size)
 
@@ -103,10 +103,7 @@ def save_icon(image, size, icon_type):
     buffer.seek(0)
 
     icon_file = ContentFile(buffer.read())
-    icon_file.name = "%s.%s.png" % (
-        icon_type.replace("_", "-"),
-        get_file_hash(icon_file),
-    )
+    icon_file.name = f"{icon_type.replace('_', '-')}.{get_file_hash(icon_file)}.png"
 
     Icon.objects.create(type=icon_type, image=icon_file, size=icon_file.size)
 

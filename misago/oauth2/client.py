@@ -24,7 +24,7 @@ def create_login_url(request):
         "state": state,
     }
 
-    return "%s?%s" % (request.settings.oauth2_login_url, urlencode(quote))
+    return f"{request.settings.oauth2_login_url}?{urlencode(quote)}"
 
 
 def get_code_grant(request):

@@ -36,7 +36,7 @@ class SpoilerPreprocessor(Preprocessor):
 
     def replace(self, matchobj):
         text = matchobj.group("text")
-        return "\n\n%s\n\n%s\n\n%s\n\n" % (SPOILER_START, text, SPOILER_END)
+        return f"\n\n{SPOILER_START}\n\n{text}\n\n{SPOILER_END}\n\n"
 
 
 class SpoilerBlockProcessor(BlockProcessor):

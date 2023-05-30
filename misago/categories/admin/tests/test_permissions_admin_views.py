@@ -194,8 +194,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
                 "misago:admin:categories:permissions", kwargs={"pk": test_category.pk}
             ),
             data={
-                ("%s-category_role" % test_role_a.pk): role_full.pk,
-                ("%s-category_role" % test_role_b.pk): role_comments.pk,
+                f"{test_role_a.pk}-category_role": role_full.pk,
+                f"{test_role_b.pk}-category_role": role_comments.pk,
             },
         )
         self.assertEqual(response.status_code, 302)
@@ -217,8 +217,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
                     kwargs={"pk": test_category.pk},
                 ),
                 data={
-                    ("%s-category_role" % test_role_a.pk): role_full.pk,
-                    ("%s-category_role" % test_role_b.pk): role_comments.pk,
+                    f"{test_role_a.pk}-category_role": role_full.pk,
+                    f"{test_role_b.pk}-category_role": role_comments.pk,
                 },
             )
 
@@ -328,10 +328,10 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         response = self.client.post(
             reverse("misago:admin:permissions:categories", kwargs={"pk": test_role.pk}),
             data={
-                ("%s-role" % category_a.pk): role_comments.pk,
-                ("%s-role" % category_b.pk): role_comments.pk,
-                ("%s-role" % category_c.pk): role_full.pk,
-                ("%s-role" % category_d.pk): role_full.pk,
+                f"{category_a.pk}-role": role_comments.pk,
+                f"{category_b.pk}-role": role_comments.pk,
+                f"{category_c.pk}-role": role_full.pk,
+                f"{category_d.pk}-role": role_full.pk,
             },
         )
         self.assertEqual(response.status_code, 302)
@@ -358,9 +358,9 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
                     "misago:admin:permissions:categories", kwargs={"pk": test_role.pk}
                 ),
                 data={
-                    ("%s-role" % category_a.pk): role_comments.pk,
-                    ("%s-role" % category_b.pk): role_comments.pk,
-                    ("%s-role" % category_c.pk): role_full.pk,
-                    ("%s-role" % category_d.pk): role_full.pk,
+                    f"{category_a.pk}-role": role_comments.pk,
+                    f"{category_b.pk}-role": role_comments.pk,
+                    f"{category_c.pk}-role": role_full.pk,
+                    f"{category_d.pk}-role": role_full.pk,
                 },
             )

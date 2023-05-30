@@ -20,4 +20,4 @@ class Command(BaseCommand):
             expire_user_data_download(data_download)
             downloads_expired += 1
 
-        self.stdout.write("Data downloads expired: %s" % downloads_expired)
+        self.stdout.write(f"Data downloads expired: {downloads_expired}")

@@ -21,6 +21,6 @@ class Command(BaseCommand):
             max_len = max([len(k) for k in keys])
             for key in sorted(keys):
                 space = " " * (max_len + 1 - len(key))
-                self.stdout.write("%s:%s%s" % (key, space, keys[key]))
+                self.stdout.write(f"{key}:{space}{keys[key]}")
         else:
             self.stdout.write("No profile fields are currently in use.")

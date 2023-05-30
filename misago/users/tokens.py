@@ -20,12 +20,12 @@ def make(user, token_type):
     creation_day = _days_since_epoch()
 
     obfuscated = base64.b64encode(
-        force_bytes("%s%s" % (user_hash, creation_day))
+        force_bytes(f"{user_hash}{creation_day}")
     ).decode()
     obfuscated = obfuscated.rstrip("=")
     checksum = _make_checksum(obfuscated)
 
-    return "%s%s" % (checksum, obfuscated)
+    return f"{checksum}{obfuscated}"
 
 
 def is_valid(user, token_type, token):
@@ -63,7 +63,7 @@ def _days_since_epoch():
 
 
 def _make_checksum(obfuscated):
-    return sha256(force_bytes("%s:%s" % (settings.SECRET_KEY, obfuscated))).hexdigest()[
+    return sha256(force_bytes(f"{settings.SECRET_KEY}:{obfuscated}")).hexdigest()[
         :8
     ]
 

@@ -15,7 +15,7 @@ def set_socialauth_cache(cache_versions, socialauth):
 
 
 def get_cache_key(cache_versions):
-    return "%s_%s" % (SOCIALAUTH_CACHE, cache_versions[SOCIALAUTH_CACHE])
+    return f"{SOCIALAUTH_CACHE}_{cache_versions[SOCIALAUTH_CACHE]}"
 
 
 def clear_socialauth_cache():

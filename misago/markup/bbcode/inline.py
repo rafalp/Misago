@@ -21,7 +21,7 @@ class SimpleBBCodePattern(SimpleTagPattern):
     def __init__(self, bbcode, tag=None):  # pylint: disable=super-init-not-called
         self.pattern = r"(\[%s\](.*?)\[/%s\])" % (bbcode, bbcode)
         self.compiled_re = re.compile(
-            "^(.*?)%s(.*?)$" % self.pattern, re.DOTALL | re.UNICODE | re.IGNORECASE
+            f"^(.*?){self.pattern}(.*?)$", re.DOTALL | re.UNICODE | re.IGNORECASE
         )
 
         # Api for Markdown to pass safe_mode into instance
@@ -40,7 +40,7 @@ class BBcodeProcessor(Pattern):
     def __init__(self, pattern, md=None):
         self.pattern = pattern
         self.compiled_re = re.compile(
-            "^(.*?)%s(.*)$" % pattern, re.DOTALL | re.UNICODE | re.IGNORECASE
+            f"^(.*?){pattern}(.*)$", re.DOTALL | re.UNICODE | re.IGNORECASE
         )
 
         self.safe_mode = False

@@ -163,9 +163,9 @@ def assert_link_prefix(link):
     if link.lower().startswith("http:"):
         return link
     if link.startswith("//"):
-        return "http:%s" % link
+        return f"http:{link}"
 
-    return "http://%s" % link
+    return f"http://{link}"
 
 
 def clean_internal_link(link, host):
@@ -193,7 +193,7 @@ def clean_attachment_link(link, force_shva=False):
 
     if url_name in MISAGO_ATTACHMENT_VIEWS:
         if force_shva:
-            link = "%s?shva=1" % link
+            link = f"{link}?shva=1"
         elif link.endswith("?shva=1"):
             link = link[:-7]
     return link

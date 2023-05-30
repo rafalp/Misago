@@ -40,7 +40,7 @@ def search(request, search_provider=None):
                 page = 1
 
             provider_data["results"] = provider.search(search_query, page)
-            provider_data["time"] = float("%.2f" % (time() - start_time))
+            provider_data["time"] = float(f"{time() - start_time:.2f}")
 
         response.append(provider_data)
     return Response(response)

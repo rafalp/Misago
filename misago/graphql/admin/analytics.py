@@ -19,7 +19,7 @@ analytics = QueryType()
 @analytics.field("analytics")
 def resolve_analytics(_, info, *, span):
     span = clean_span(span)
-    cache_key = "%s_%s" % (CACHE_KEY, span)
+    cache_key = f"{CACHE_KEY}_{span}"
     data = cache.get(cache_key)
     if not data:
         data = get_data_from_db(span)
@@ -67,7 +67,7 @@ class Analytics:
         return {k: 0 for k in self.legend}
 
     def get_data_for_model(self, model, date_attr):
-        filter_kwarg = {"%s__gte" % date_attr: self.cutoff}
+        filter_kwarg = {f"{date_attr}__gte": self.cutoff}
         queryset = model.objects.filter(**filter_kwarg).order_by("-pk")
 
         data = self.get_empty_data()

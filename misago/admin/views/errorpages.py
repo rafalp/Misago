@@ -11,7 +11,7 @@ def _error_page(request, code, exception=None, default_message=None):
     if not is_admin_authorized(request):
         return redirect("misago:admin:index")
 
-    template_pattern = "misago/admin/errorpages/%s.html" % code
+    template_pattern = f"misago/admin/errorpages/{code}.html"
 
     response = render(
         request,

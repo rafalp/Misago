@@ -12,7 +12,7 @@ def discover_misago_admin():
         if not hasattr(module, "admin"):
             continue
 
-        admin_module = import_module("%s.admin" % app.name)
+        admin_module = import_module(f"{app.name}.admin")
         if hasattr(admin_module, "MisagoAdminExtension"):
             extension = getattr(admin_module, "MisagoAdminExtension")()
             if hasattr(extension, "register_navigation_nodes"):

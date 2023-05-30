@@ -44,7 +44,7 @@ class TreesMap:
         try:
             return self.trees[tree_id]
         except KeyError:
-            raise KeyError("'%s' tree id has no type defined" % tree_id)
+            raise KeyError(f"'{tree_id}' tree id has no type defined")
 
     def get_tree_id_for_root(self, root_name):
         if not self.is_loaded:
@@ -53,7 +53,7 @@ class TreesMap:
         try:
             return self.roots[root_name]
         except KeyError:
-            raise KeyError('"%s" root has no tree defined' % root_name)
+            raise KeyError(f'"{root_name}" root has no tree defined')
 
 
 trees_map = TreesMap(settings.MISAGO_THREAD_TYPES)

@@ -27,7 +27,7 @@ class Command(BaseCommand):
             self.sync_attachments(queryset, attachments_to_sync)
 
     def sync_attachments(self, queryset, attachments_to_sync):
-        self.stdout.write("Clearing %s attachments...\n" % attachments_to_sync)
+        self.stdout.write(f"Clearing {attachments_to_sync} attachments...\n")
 
         cleared_count = 0
         show_progress(self, cleared_count, attachments_to_sync)
@@ -39,4 +39,4 @@ class Command(BaseCommand):
             cleared_count += 1
             show_progress(self, cleared_count, attachments_to_sync, start_time)
 
-        self.stdout.write("\n\nCleared %s attachments" % cleared_count)
+        self.stdout.write(f"\n\nCleared {cleared_count} attachments")

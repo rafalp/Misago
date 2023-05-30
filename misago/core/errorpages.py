@@ -26,11 +26,11 @@ def _ajax_error(code, exception=None, default_message=None):
 
 @admin_error_page
 def _error_page(request, code, exception=None, default_message=None):
-    request.frontend_context.update({"CURRENT_LINK": "misago:error-%s" % code})
+    request.frontend_context.update({"CURRENT_LINK": f"misago:error-{code}"})
 
     return render(
         request,
-        "misago/errorpages/%s.html" % code,
+        f"misago/errorpages/{code}.html",
         {"message": get_exception_message(exception, default_message)},
         status=code,
     )

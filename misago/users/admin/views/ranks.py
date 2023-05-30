@@ -92,7 +92,7 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
 class RankUsers(RankAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
         redirect_url = reverse("misago:admin:users:index")
-        return redirect("%s?rank=%s" % (redirect_url, target.pk))
+        return redirect(f"{redirect_url}?rank={target.pk}")
 
 
 class DefaultRank(RankAdmin, generic.ButtonView):

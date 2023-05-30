@@ -15,7 +15,7 @@ def set_acl_cache(user, cache_versions, user_acl):
 
 
 def get_cache_key(user, cache_versions):
-    return "acl_%s_%s" % (user.acl_key, cache_versions[ACL_CACHE])
+    return f"acl_{user.acl_key}_{cache_versions[ACL_CACHE]}"
 
 
 def clear_acl_cache():

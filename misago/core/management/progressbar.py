@@ -29,4 +29,4 @@ def get_estimation_str(since, progress, step, total):
     step_time = (time.time() - since) / progress_float
     estimated_time = (100 - progress) * step_time
     clock = time.strftime("%H:%M:%S", time.gmtime(estimated_time))
-    return " %s est." % clock
+    return f" {clock} est."

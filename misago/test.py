@@ -54,7 +54,7 @@ def assert_has_message(response, message, level=None):
 
     if not found:
         raise AssertionError(
-            'Message containing "%s" was not set during the request' % message
+            f'Message containing "{message}" was not set during the request'
         )
 
 

@@ -41,7 +41,7 @@ class UserMiddlewareTest(AuthenticatedUserTestCase):
         """middleware ignores registration only bans"""
         Ban.objects.create(
             check_type=Ban.USERNAME,
-            banned_value="%s*" % self.user.username[:3],
+            banned_value=f"{self.user.username[:3]}*",
             registration_only=True,
         )
 

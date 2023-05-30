@@ -75,7 +75,7 @@ class ProfileField:
         if self.readonly:
             return None
 
-        return Q(**{"profile_fields__%s__contains" % self.fieldname: criteria})
+        return Q(**{f"profile_fields__{self.fieldname}__contains": criteria})
 
 
 class ChoiceProfileField(ProfileField):
@@ -113,11 +113,11 @@ class ChoiceProfileField(ProfileField):
 
     def search_users(self, criteria):
         """custom search implementation for choice fields"""
-        q_obj = Q(**{"profile_fields__%s__contains" % self.fieldname: criteria})
+        q_obj = Q(**{f"profile_fields__{self.fieldname}__contains": criteria})
 
         for key, choice in self.get_choices():  # pylint: disable=not-an-iterable
             if key and criteria.lower() in str(choice).lower():
-                q_obj = q_obj | Q(**{"profile_fields__%s" % self.fieldname: key})
+                q_obj = q_obj | Q(**{f"profile_fields__{self.fieldname}": key})
 
         return q_obj
 

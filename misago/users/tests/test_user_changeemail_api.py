@@ -10,7 +10,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
     def setUp(self):
         super().setUp()
-        self.link = "/api/users/%s/change-email/" % self.user.pk
+        self.link = f"/api/users/{self.user.pk}/change-email/"
 
     def test_unsupported_methods(self):
         """api isn't supporting GET"""

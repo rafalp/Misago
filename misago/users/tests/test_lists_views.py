@@ -46,7 +46,7 @@ class ActivePostersTests(UsersListTestCase):
 
         # Create 50 test users and see if errors appeared
         for i in range(50):
-            user = create_test_user("Bob%s" % i, "m%s@te.com" % i, posts=12345)
+            user = create_test_user(f"Bob{i}", f"m{i}@te.com", posts=12345)
             post_thread(category, poster=user)
 
         build_active_posters_ranking()

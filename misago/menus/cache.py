@@ -15,7 +15,7 @@ def set_menus_cache(cache_versions, menus):
 
 
 def get_cache_key(cache_versions):
-    return "%s_%s" % (MENU_ITEMS_CACHE, cache_versions[MENU_ITEMS_CACHE])
+    return f"{MENU_ITEMS_CACHE}_{cache_versions[MENU_ITEMS_CACHE]}"
 
 
 def clear_menus_cache():

@@ -10,7 +10,7 @@ def legal_view(request, agreement_type):
     if agreement.link:
         return redirect(agreement.link)
 
-    template_name = "misago/%s.html" % agreement_type
+    template_name = f"misago/{agreement_type}.html"
     agreement_text = get_parsed_agreement_text(request, agreement)
 
     return render(

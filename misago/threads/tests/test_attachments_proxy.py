@@ -180,7 +180,7 @@ def test_proxy_blocks_user_from_their_orphaned_attachment(
 def test_proxy_redirects_user_to_their_orphaned_attachment_if_link_has_shva_key(
     user_client, orphaned_attachment
 ):
-    response = user_client.get("%s?shva=1" % orphaned_attachment.get_absolute_url())
+    response = user_client.get(f"{orphaned_attachment.get_absolute_url()}?shva=1")
     assert response.status_code == 302
     assert response["location"].endswith("test.txt")
 
@@ -196,7 +196,7 @@ def test_proxy_blocks_user_from_other_users_orphaned_attachment_if_link_has_shva
     user_client, other_users_orphaned_attachment
 ):
     response = user_client.get(
-        "%s?shva=1" % other_users_orphaned_attachment.get_absolute_url()
+        f"{other_users_orphaned_attachment.get_absolute_url()}?shva=1"
     )
     assert_404(response)
 
@@ -204,7 +204,7 @@ def test_proxy_blocks_user_from_other_users_orphaned_attachment_if_link_has_shva
 def test_proxy_redirects_staff_to_other_users_orphaned_attachment(
     staff_client, orphaned_attachment
 ):
-    response = staff_client.get("%s?shva=1" % orphaned_attachment.get_absolute_url())
+    response = staff_client.get(f"{orphaned_attachment.get_absolute_url()}?shva=1")
     assert response.status_code == 302
     assert response["location"].endswith("test.txt")
 

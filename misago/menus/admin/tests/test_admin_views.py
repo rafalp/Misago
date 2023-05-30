@@ -25,8 +25,8 @@ def test_menu_items_can_be_mass_deleted(admin_client, list_url, superuser):
     for _ in range(10):
         item = MenuItem.objects.create(
             menu=MenuItem.MENU_FOOTER,
-            title="Test Item {}".format(_),
-            url="https://items{}.com".format(_),
+            title=f"Test Item {_}",
+            url=f"https://items{_}.com",
         )
         items.append(item.pk)
 

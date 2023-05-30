@@ -149,7 +149,7 @@ EMAIL_HOST_PASSWORD = ""
 
 # Default email address to use for various automated correspondence from the site manager(s).
 
-DEFAULT_FROM_EMAIL = "Forums <%s>" % EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = f"Forums <{EMAIL_HOST_USER}>"
 
 
 # Application definition

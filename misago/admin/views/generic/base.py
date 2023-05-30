@@ -5,11 +5,11 @@ from .. import render
 
 class AdminView(View):
     def get_template_name(self, request):
-        return "%s/%s" % (self.templates_dir, self.template_name)
+        return f"{self.templates_dir}/{self.template_name}"
 
     def current_link(self, request):
         matched_url = request.resolver_match.url_name
-        return "%s:%s" % (request.resolver_match.namespace, matched_url)
+        return f"{request.resolver_match.namespace}:{matched_url}"
 
     def process_context(self, request, context):
         """simple hook for extending and manipulating template context."""

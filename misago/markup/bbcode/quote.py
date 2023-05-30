@@ -44,15 +44,15 @@ class QuotePreprocessor(Preprocessor):
 
     def replace(self, matchobj):
         text = matchobj.group("text")
-        return "\n\n%s\n\n%s\n\n%s\n\n" % (QUOTE_START, text, QUOTE_END)
+        return f"\n\n{QUOTE_START}\n\n{text}\n\n{QUOTE_END}\n\n"
 
     def replace_titled(self, matchobj):
         title = matchobj.group("title").strip()
         text = matchobj.group("text")
 
         if title:
-            return "\n\n%s%s\n\n%s\n\n%s\n\n" % (QUOTE_START, title, text, QUOTE_END)
-        return "\n\n%s\n\n%s\n\n%s\n\n" % (QUOTE_START, text, QUOTE_END)
+            return f"\n\n{QUOTE_START}{title}\n\n{text}\n\n{QUOTE_END}\n\n"
+        return f"\n\n{QUOTE_START}\n\n{text}\n\n{QUOTE_END}\n\n"
 
 
 class QuoteBlockProcessor(BlockProcessor):

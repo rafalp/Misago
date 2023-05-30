@@ -338,7 +338,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             self.assertContains(response, post.get_absolute_url())
 
         # see second page
-        response = self.client.get("%s2/" % self.thread.get_absolute_url())
+        response = self.client.get(f"{self.thread.get_absolute_url()}2/")
         for event in events[5 + events_limit :]:
             self.assertContains(response, event.get_absolute_url())
         for post in posts[posts_limit - 1 :]:

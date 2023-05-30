@@ -70,7 +70,7 @@ class GotoView(View):
 
     def get_redirect(self, thread, target_post, target_page):
         thread_url = thread.thread_type.get_thread_absolute_url(thread, target_page)
-        return redirect("%s#post-%s" % (thread_url, target_post.pk))
+        return redirect(f"{thread_url}#post-{target_post.pk}")
 
 
 class ThreadGotoPostView(GotoView):

@@ -79,7 +79,7 @@ def filter_name(user, name):
         return clean_name  # No change in name
 
     if not clean_name.replace("_", ""):
-        clean_name = "User_%s" % get_random_string(4)
+        clean_name = f"User_{get_random_string(4)}"
 
     clean_name_root = clean_name
     while True:

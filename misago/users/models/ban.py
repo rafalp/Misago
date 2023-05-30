@@ -109,7 +109,7 @@ class Ban(models.Model):
     def check_value(self, value):
         if "*" in self.banned_value:
             regex = re.escape(self.banned_value).replace(r"\*", r"(.*?)")
-            return re.search("^%s$" % regex, value, re.IGNORECASE) is not None
+            return re.search(f"^{regex}$", value, re.IGNORECASE) is not None
         return self.banned_value.lower() == value.lower()
 
     def lift(self):

@@ -36,8 +36,8 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
 
         self.tested_links = [
             self.api_link,
-            "%sposts/" % self.api_link,
-            "%sposts/?page=1" % self.api_link,
+            f"{self.api_link}posts/",
+            f"{self.api_link}posts/?page=1",
         ]
 
     @patch_category_acl()

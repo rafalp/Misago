@@ -125,7 +125,7 @@ class Command(BaseCommand):
         user.save(update_fields=["joined_on"])
         user.audittrail_set.all().delete()
 
-        self.write_event(date, "%s has joined" % user)
+        self.write_event(date, f"{user} has joined")
 
     def create_fake_thread(self, fake, date, categories):
         category = random.choice(categories)
@@ -174,7 +174,7 @@ class Command(BaseCommand):
         thread.save(update_fields=["started_on"])
 
         self.write_event(
-            date, '%s has started "%s" thread' % (thread.first_post.poster_name, thread)
+            date, f'{thread.first_post.poster_name} has started "{thread}" thread'
         )
 
     def create_fake_post(self, fake, date):
@@ -227,7 +227,7 @@ class Command(BaseCommand):
         post.save(update_fields=["checksum", "posted_on", "updated_on"])
 
         self.write_event(
-            date, '%s has replied to "%s" thread' % (post.poster_name, thread)
+            date, f'{post.poster_name} has replied to "{thread}" thread'
         )
 
     def create_fake_notification(self, thread, post, poster):
@@ -271,7 +271,7 @@ class Command(BaseCommand):
         if not user_a.is_following(user_b):
             user_a.follows.add(user_b)
 
-        self.write_event(date, "%s followed %s" % (user_a, user_b))
+        self.write_event(date, f"{user_a} followed {user_b}")
 
     def get_random_thread(self, date):
         return (
@@ -292,7 +292,7 @@ class Command(BaseCommand):
 
     def write_event(self, date, event):
         formatted_date = date.strftime("%Y-%m-%d %H:%M")
-        self.stdout.write("%s: %s" % (formatted_date, event))
+        self.stdout.write(f"{formatted_date}: {event}")
 
     def synchronize_threads(self):
         self.stdout.write("\nSynchronizing threads...")

@@ -24,7 +24,7 @@ class Command(BaseCommand):
     def sync_users(self, users_to_sync):
         categories = Category.objects.root_category().get_descendants()
 
-        self.stdout.write("Synchronizing %s users...\n" % users_to_sync)
+        self.stdout.write(f"Synchronizing {users_to_sync} users...\n")
 
         synchronized_count = 0
         show_progress(self, synchronized_count, users_to_sync)
@@ -47,4 +47,4 @@ class Command(BaseCommand):
             synchronized_count += 1
             show_progress(self, synchronized_count, users_to_sync, start_time)
 
-        self.stdout.write("\n\nSynchronized %s users" % synchronized_count)
+        self.stdout.write(f"\n\nSynchronized {synchronized_count} users")

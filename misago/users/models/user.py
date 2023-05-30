@@ -449,9 +449,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         roles_pks = []
         for role in self.get_roles():
             if role.origin == "self":
-                roles_pks.append("u%s" % role.pk)
+                roles_pks.append(f"u{role.pk}")
             else:
-                roles_pks.append("%s:%s" % (self.rank.pk, role.pk))
+                roles_pks.append(f"{self.rank.pk}:{role.pk}")
 
         self.acl_key = md5(",".join(roles_pks).encode()).hexdigest()[:12]
 

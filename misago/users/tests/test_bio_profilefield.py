@@ -90,13 +90,13 @@ class BioProfileFieldTests(AdminTestCase):
         """admin users search searches this field"""
         test_link = reverse("misago:admin:users:index")
 
-        response = self.client.get("%s?redirected=1&profilefields=Ipsum" % test_link)
+        response = self.client.get(f"{test_link}?redirected=1&profilefields=Ipsum")
         self.assertContains(response, "No users matching criteria exist.")
 
         self.user.profile_fields["bio"] = "Lorem Ipsum Dolor Met"
         self.user.save()
 
-        response = self.client.get("%s?redirected=1&profilefields=Ipsum" % test_link)
+        response = self.client.get(f"{test_link}?redirected=1&profilefields=Ipsum")
         self.assertNotContains(response, "No users matching criteria exist.")
 
     def test_field_display(self):

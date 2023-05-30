@@ -140,7 +140,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                "to": ["Username%s" % i for i in range(50)],
+                "to": [f"Username{i}" for i in range(50)],
                 "title": "Lorem ipsum dolor met",
                 "post": "Lorem ipsum dolor.",
             },

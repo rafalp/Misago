@@ -75,7 +75,7 @@ def test_created_source_file_is_hashed(theme, admin_client, create_link, data):
     admin_client.post(create_link, data)
     css = theme.css.last()
     source_filename = str(css.source_file).split("/")[-1]
-    assert ".%s." % css.source_hash in source_filename
+    assert f".{css.source_hash}." in source_filename
 
 
 def test_css_creation_fails_if_name_is_not_given(

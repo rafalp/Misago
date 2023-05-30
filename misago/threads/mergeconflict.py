@@ -75,7 +75,7 @@ class PollMergeHandler(MergeConflictHandler):
         resolutions = [[0, _("Delete all polls")]]
         for poll in self.items:
             resolutions.append(
-                [poll.id, "%s (%s)" % (poll.question, poll.thread.title)]
+                [poll.id, f"{poll.question} ({poll.thread.title})"]
             )
         return resolutions
 
@@ -130,7 +130,7 @@ class MergeConflict:
     def raise_resolutions_exception(self):
         resolutions = {}
         for conflict in self._conflicts:
-            key = "%ss" % conflict.data_name
+            key = f"{conflict.data_name}s"
             resolutions[key] = conflict.get_available_resolutions()
         if resolutions:
             raise ValidationError(resolutions)

@@ -7,7 +7,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
 
     def setUp(self):
         super().setUp()
-        self.link = "/api/users/%s/signature/" % self.user.pk
+        self.link = f"/api/users/{self.user.pk}/signature/"
 
     @patch_user_acl({"can_have_signature": 0})
     def test_signature_no_permission(self):

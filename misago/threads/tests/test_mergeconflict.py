@@ -165,7 +165,7 @@ class MergeConflictTests(TestCase):
                     + [
                         [
                             str(thread.poll.id),
-                            "%s (%s)" % (thread.poll.question, thread.title),
+                            f"{thread.poll.question} ({thread.title})",
                         ]
                         for thread in polls
                     ]
@@ -235,7 +235,7 @@ class MergeConflictTests(TestCase):
                     + [
                         [
                             str(thread.poll.id),
-                            "%s (%s)" % (thread.poll.question, thread.title),
+                            f"{thread.poll.question} ({thread.title})",
                         ]
                         for thread in polls
                     ],

@@ -519,7 +519,7 @@ class UserCreateTests(UserTestCase):
     @override_dynamic_settings(account_activation="none")
     def test_registration_creates_user_with_whitespace_password(self):
         """api creates user with spaces around password"""
-        password = " %s " % self.USER_PASSWORD
+        password = f" {self.USER_PASSWORD} "
         response = self.client.post(
             self.api_link,
             data={

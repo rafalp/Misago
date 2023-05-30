@@ -29,6 +29,5 @@ class Command(BaseCommand):
                 fields_deleted += 1
 
         self.stdout.write(
-            '"%s" profile field has been deleted from %s users.'
-            % (fieldname, fields_deleted)
+            f'"{fieldname}" profile field has been deleted from {fields_deleted} users.'
         )

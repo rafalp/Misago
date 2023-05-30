@@ -15,4 +15,4 @@ class StaticSettings:
         except AttributeError:
             pass
 
-        raise AttributeError("%s setting is not defined" % name)
+        raise AttributeError(f"{name} setting is not defined")

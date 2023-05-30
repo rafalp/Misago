@@ -15,4 +15,4 @@ class Command(BaseCommand):
         build_active_posters_ranking()
         end_time = time() - start_time
 
-        self.stdout.write("Finished after %.2fs" % end_time)
+        self.stdout.write(f"Finished after {end_time:.2f}s")

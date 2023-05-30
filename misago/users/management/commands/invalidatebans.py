@@ -21,7 +21,7 @@ class Command(BaseCommand):
         queryset = queryset.filter(expires_on__lt=timezone.now())
 
         expired_count = queryset.update(is_checked=False)
-        self.stdout.write("Bans invalidated: %s" % expired_count)
+        self.stdout.write(f"Bans invalidated: {expired_count}")
 
     def handle_bans_caches(self):
         queryset = BanCache.objects.filter(expires_on__lt=timezone.now())
@@ -35,4 +35,4 @@ class Command(BaseCommand):
         expired_count += queryset.count()
         queryset.delete()
 
-        self.stdout.write("Ban caches emptied: %s" % expired_count)
+        self.stdout.write(f"Ban caches emptied: {expired_count}")

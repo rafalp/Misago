@@ -5,7 +5,7 @@ from ..test import AuthenticatedUserTestCase
 class UserDataDownloadsApiTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
-        self.link = "/api/users/%s/data-downloads/" % self.user.pk
+        self.link = f"/api/users/{self.user.pk}/data-downloads/"
 
     def test_get_other_user_exports_anonymous(self):
         """requests to api fails if user is anonymous"""
@@ -20,7 +20,7 @@ class UserDataDownloadsApiTests(AuthenticatedUserTestCase):
     def test_get_other_user_exports(self):
         """requests to api fails if user tries to access other user"""
         other_user = self.get_superuser()
-        link = "/api/users/%s/data-downloads/" % other_user.pk
+        link = f"/api/users/{other_user.pk}/data-downloads/"
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 403)

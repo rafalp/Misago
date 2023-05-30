@@ -40,7 +40,7 @@ def parse_iso8601_string(value):
             except ValueError:
                 pass
     else:
-        raise ValueError("failed to hydrate the %s timestamp" % value)
+        raise ValueError(f"failed to hydrate the {value} timestamp")
 
     offset_str = value[-6:]
     if offset_str and offset_str[0] in ("-", "+"):

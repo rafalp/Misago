@@ -30,16 +30,16 @@ class DynamicSettings:
                     real_value = Setting.objects.get(setting=setting).value
                     self._settings[setting]["real_value"] = real_value
                 return self._settings[setting]["real_value"]
-            raise ValueError("Setting %s is not lazy" % setting)
+            raise ValueError(f"Setting {setting} is not lazy")
         except (KeyError, Setting.DoesNotExist):
-            raise AttributeError("Setting %s is not defined" % setting)
+            raise AttributeError(f"Setting {setting} is not defined")
 
     def __getattr__(self, setting):
         if setting in self._overrides:
             return self._overrides[setting]
         if setting in self._settings:
             return self._settings[setting]["value"]
-        raise AttributeError("Setting %s is not defined" % setting)
+        raise AttributeError(f"Setting {setting} is not defined")
 
     @classmethod
     def override_settings(cls, overrides):

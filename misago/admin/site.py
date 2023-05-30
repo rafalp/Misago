@@ -85,7 +85,7 @@ class Node:
             return self._children_dict[namespace]
         except KeyError:
             raise ValueError(
-                "Node %s is not a child of node %s" % (namespace, self.name)
+                f"Node {namespace} is not a child of node {self.name}"
             )
 
     def is_root(self):

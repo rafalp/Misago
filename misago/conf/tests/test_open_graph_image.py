@@ -25,7 +25,7 @@ def test_custom_og_image_is_used_instead_of_default_one_when_set(db, client):
 
 @override_dynamic_settings(forum_address="http://test.com/")
 def test_default_og_image_is_used_on_user_profiles(client, user):
-    response = client.get("%sposts/" % user.get_absolute_url())
+    response = client.get(f"{user.get_absolute_url()}posts/")
     assert_contains(response, "http://test.com/static/misago/img/og-image.jpg")
 
 
@@ -33,7 +33,7 @@ def test_default_og_image_is_used_on_user_profiles(client, user):
     forum_address="http://test.com/", og_image_avatar_on_profile=True
 )
 def test_user_avatar_can_be_used_as_og_image_on_user_profiles(client, user):
-    response = client.get("%sposts/" % user.get_absolute_url())
+    response = client.get(f"{user.get_absolute_url()}posts/")
     assert_not_contains(response, "http://test.com/static/misago/img/og-image.jpg")
 
 

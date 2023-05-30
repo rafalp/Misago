@@ -11,9 +11,9 @@ def get_fake_username_ban(fake):
 
     banned_value = fake.first_name()
     if random.randint(0, 100) < 31:
-        banned_value = "%s*" % banned_value
+        banned_value = f"{banned_value}*"
     elif random.randint(0, 100) < 31:
-        banned_value = "*%s" % banned_value
+        banned_value = f"*{banned_value}"
     elif random.randint(0, 100) < 31:
         banned_value = list(banned_value)
         banned_value.insert(random.randint(0, len(banned_value) - 1), "*")
@@ -28,7 +28,7 @@ def get_fake_email_ban(fake):
     ban = _create_base_ban(fake, Ban.EMAIL)
 
     if random.randint(0, 100) < 35:
-        ban.banned_value = "*@%s" % fake.domain_name()
+        ban.banned_value = f"*@{fake.domain_name()}"
     else:
         ban.banned_value = fake.email()
 
@@ -44,11 +44,11 @@ def get_fake_ip_ban(fake):
         if random.randint(0, 100) < 35:
             banned_value = banned_value.split(".")
             banned_value = ".".join(banned_value[: random.randint(1, 3)])
-            banned_value = "%s.*" % banned_value
+            banned_value = f"{banned_value}.*"
         elif random.randint(0, 100) < 35:
             banned_value = banned_value.split(".")
             banned_value = ".".join(banned_value[random.randint(1, 3) :])
-            banned_value = "*.%s" % banned_value
+            banned_value = f"*.{banned_value}"
         elif random.randint(0, 100) < 35:
             banned_value = banned_value.split(".")
             banned_value[random.randint(0, 3)] = "*"
@@ -59,11 +59,11 @@ def get_fake_ip_ban(fake):
         if random.randint(0, 100) < 35:
             banned_value = banned_value.split(":")
             banned_value = ":".join(banned_value[: random.randint(1, 7)])
-            banned_value = "%s:*" % banned_value
+            banned_value = f"{banned_value}:*"
         elif random.randint(0, 100) < 35:
             banned_value = banned_value.split(":")
             banned_value = ":".join(banned_value[: random.randint(1, 7)])
-            banned_value = "*:%s" % banned_value
+            banned_value = f"*:{banned_value}"
         elif random.randint(0, 100) < 35:
             banned_value = banned_value.split(":")
             banned_value[random.randint(0, 7)] = "*"

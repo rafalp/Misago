@@ -66,7 +66,7 @@ def rebuild_css(media_map, css):
 
     build_file_name = css.name
     if css.source_hash in build_file_name:
-        build_file_name = build_file_name.replace(".%s" % css.source_hash, "")
+        build_file_name = build_file_name.replace(f".{css.source_hash}", "")
     build_file = ContentFile(build_source, build_file_name)
 
     css.build_file = build_file
@@ -91,7 +91,7 @@ def get_url_replacer(media_map):
 
         media_name = url.split("/")[-1]
         if media_name in media_map:
-            return "url(%s)" % media_map[media_name]
+            return f"url({media_map[media_name]})"
 
         return matchobj.group(0)
 

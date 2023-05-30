@@ -161,7 +161,7 @@ class UsersList(UserAdmin, generic.ListView):
                             check_type = Ban.EMAIL
                             banned_value = user.email.lower()
                             at_pos = banned_value.find("@")
-                            banned_value = "*%s" % banned_value[at_pos:]
+                            banned_value = f"*{banned_value[at_pos:]}"
 
                         if ban == "ip" and user.joined_from_ip:
                             check_type = Ban.IP
@@ -180,7 +180,7 @@ class UsersList(UserAdmin, generic.ListView):
                                 formats = (bits[0], ip_separator)
                             if ban == "ip_two":
                                 formats = (bits[0], ip_separator, bits[1], ip_separator)
-                            banned_value = "%s*" % ("".join(formats))
+                            banned_value = f"{''.join(formats)}*"
 
                         if banned_value and banned_value not in banned_values:
                             ban_kwargs.update(

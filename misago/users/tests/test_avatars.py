@@ -259,11 +259,11 @@ class UploadedAvatarTests(TestCase):
         """uploaded image extension is validated"""
         for invalid_extension in (".txt", ".zip", ".py", ".tiff"):
             with self.assertRaises(ValidationError):
-                image = MockAvatarFile(name="test%s" % invalid_extension)
+                image = MockAvatarFile(name=f"test{invalid_extension}")
                 uploaded.validate_extension(image)
 
         for valid_extension in uploaded.ALLOWED_EXTENSIONS:
-            image = MockAvatarFile(name="test%s" % valid_extension)
+            image = MockAvatarFile(name=f"test{valid_extension}")
             uploaded.validate_extension(image)
 
     def test_uploaded_image_mime_validation(self):

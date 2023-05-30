@@ -7,5 +7,5 @@ class SearchProvider:
 
     def search(self, query, page=1):
         raise NotImplementedError(
-            "%s has to define search(query, page=1) method" % self.__class__.__name__
+            f"{self.__class__.__name__} has to define search(query, page=1) method"
         )

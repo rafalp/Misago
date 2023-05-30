@@ -16,5 +16,5 @@ class assert_invalidates_cache:
         new_versions = get_cache_versions()
         for cache, version in new_versions.items():
             if cache == self.cache:
-                message = "cache %s was not invalidated" % cache
+                message = f"cache {cache} was not invalidated"
                 assert self.versions[cache] != version, message

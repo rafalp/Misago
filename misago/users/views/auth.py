@@ -33,10 +33,10 @@ def login(request):
             if is_redirect_safe:
                 redirect_to_path = urlparse(redirect_to).path
                 if "?" not in redirect_to_path:
-                    redirect_to_path = "%s?" % redirect_to_path
+                    redirect_to_path = f"{redirect_to_path}?"
                 else:
-                    redirect_to_path = "%s&" % redirect_to_path
-                redirect_to_path = "%sref=login" % redirect_to_path
+                    redirect_to_path = f"{redirect_to_path}&"
+                redirect_to_path = f"{redirect_to_path}ref=login"
                 try:
                     return redirect(redirect_to_path)
                 except NoReverseMatch:

@@ -24,8 +24,8 @@ def build_mail(recipient, subject, template, sender=None, context=None):
         }
     )
 
-    message_plain = render_to_string("%s.txt" % template, context)
-    message_html = render_to_string("%s.html" % template, context)
+    message_plain = render_to_string(f"{template}.txt", context)
+    message_html = render_to_string(f"{template}.html", context)
 
     message = djmail.EmailMultiAlternatives(
         subject, message_plain, to=[recipient.email]

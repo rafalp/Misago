@@ -56,7 +56,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
     def test_mention_self(self, notify_on_new_thread_reply_mock):
         """endpoint mentions author"""
         response = self.client.post(
-            self.post_link, data={"post": "This is test response, @%s!" % self.user}
+            self.post_link, data={"post": f"This is test response, @{self.user}!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -73,12 +73,12 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         users = []
 
         for i in range(MENTIONS_LIMIT + 5):
-            users.append(create_test_user("User%s" % i, "user%s@example.com" % i))
+            users.append(create_test_user(f"User{i}", f"user{i}@example.com"))
 
-        mentions = ["@%s" % u for u in users]
+        mentions = [f"@{u}" for u in users]
         response = self.client.post(
             self.post_link,
-            data={"post": "This is test response, %s!" % (", ".join(mentions))},
+            data={"post": f"This is test response, {', '.join(mentions)}!"},
         )
         self.assertEqual(response.status_code, 200)
 
@@ -95,7 +95,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         other_user = create_test_user("Other_User", "otheruser@example.com")
 
         response = self.client.post(
-            self.post_link, data={"post": "This is test response, @%s!" % user}
+            self.post_link, data={"post": f"This is test response, @{user}!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -112,7 +112,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         response = self.put(
             edit_link,
-            data={"post": "This is test response, @%s and @%s!" % (user, other_user)},
+            data={"post": f"This is test response, @{user} and @{other_user}!"},
         )
         self.assertEqual(response.status_code, 200)
 
@@ -121,7 +121,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         # remove first mention from post - should preserve mentions
         response = self.put(
-            edit_link, data={"post": "This is test response, @%s!" % other_user}
+            edit_link, data={"post": f"This is test response, @{other_user}!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -144,7 +144,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         other_user = create_test_user("User2", "user2@example.com")
 
         response = self.client.post(
-            self.post_link, data={"post": "This is test response, @%s!" % user}
+            self.post_link, data={"post": f"This is test response, @{user}!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -159,7 +159,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.post_link,
-            data={"post": "This is test response, @%s and @%s!" % (user, other_user)},
+            data={"post": f"This is test response, @{user} and @{other_user}!"},
         )
         self.assertEqual(response.status_code, 200)
 

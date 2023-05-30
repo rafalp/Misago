@@ -26,7 +26,7 @@ def login(request):
         form = AdminAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth.login(request, form.user_cache)
-            return redirect("%s:index" % request.admin_namespace)
+            return redirect(f"{request.admin_namespace}:index")
 
     return render(request, "misago/admin/login.html", {"form": form, "target": target})
 

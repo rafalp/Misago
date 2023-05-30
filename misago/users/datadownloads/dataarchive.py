@@ -74,7 +74,7 @@ class DataArchive:
     def add_text(self, name, value, date=None, directory=None):
         clean_filename = slugify(str(name))
         file_dir_path = self.make_final_path(date=date, directory=directory)
-        file_path = os.path.join(file_dir_path, "%s.txt" % clean_filename)
+        file_path = os.path.join(file_dir_path, f"{clean_filename}.txt")
         with open(file_path, "w") as fp:
             fp.write(str(value))
             return file_path
@@ -82,7 +82,7 @@ class DataArchive:
     def add_dict(self, name, value, date=None, directory=None):
         text_lines = []
         for key, item in value.items():
-            text_lines.append("%s: %s" % (key, item))
+            text_lines.append(f"{key}: {item}")
         text = "\n".join(text_lines)
         return self.add_text(name, text, date=date, directory=directory)
 
@@ -94,7 +94,7 @@ class DataArchive:
 
         filename = os.path.basename(model_file.name)
         if prefix:
-            prefixed_filename = "%s-%s" % (prefix, filename)
+            prefixed_filename = f"{prefix}-{filename}"
             clean_filename = trim_long_filename(prefixed_filename)
             target_path = os.path.join(target_dir_path, clean_filename)
         else:
@@ -150,4 +150,4 @@ def trim_long_filename(filename):
 
     name, extension = os.path.splitext(filename)
     name_len = FILENAME_MAX_LEN - len(extension)
-    return "%s%s" % (name[:name_len], extension)
+    return f"{name[:name_len]}{extension}"

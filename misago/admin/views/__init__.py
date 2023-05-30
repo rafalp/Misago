@@ -13,7 +13,7 @@ from .auth import login
 def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
         try:
-            admin_path = reverse("%s:index" % namespace)
+            admin_path = reverse(f"{namespace}:index")
             if request.path.startswith(admin_path):
                 return namespace
         except NoReverseMatch:

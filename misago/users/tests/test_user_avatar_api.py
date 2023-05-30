@@ -18,7 +18,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
     def setUp(self):
         super().setUp()
-        self.link = "/api/users/%s/avatar/" % self.user.pk
+        self.link = f"/api/users/{self.user.pk}/avatar/"
         self.client.post(self.link, data={"avatar": "generated"})
 
     def get_current_user(self):
@@ -297,7 +297,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.other_user = create_test_user("Other_User", "other@user.com")
-        self.link = "/api/users/%s/moderate-avatar/" % self.other_user.pk
+        self.link = f"/api/users/{self.other_user.pk}/moderate-avatar/"
 
     @patch_user_acl({"can_moderate_avatars": 0})
     def test_no_permission(self):
@@ -443,5 +443,5 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     @patch_user_acl({"can_moderate_avatars": 1})
     def test_moderate_own_avatar(self):
         """moderate own avatar"""
-        response = self.client.get("/api/users/%s/moderate-avatar/" % self.user.pk)
+        response = self.client.get(f"/api/users/{self.user.pk}/moderate-avatar/")
         self.assertEqual(response.status_code, 200)

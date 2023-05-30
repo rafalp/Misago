@@ -11,7 +11,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
     def test_user_can_always_see_his_name_changes(self):
         """list returns own username changes"""
         self.user.set_username("NewUsername", self.user)
-        response = self.client.get("%s?user=%s" % (self.link, self.user.pk))
+        response = self.client.get(f"{self.link}?user={self.user.pk}")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
@@ -19,14 +19,14 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
     def test_list_handles_invalid_filter(self):
         """list raises 404 for invalid filter"""
         self.user.set_username("NewUsername", self.user)
-        response = self.client.get("%s?user=abcd" % self.link)
+        response = self.client.get(f"{self.link}?user=abcd")
         self.assertEqual(response.status_code, 404)
 
     @patch_user_acl({"can_see_users_name_history": True})
     def test_list_handles_nonexisting_user(self):
         """list raises 404 for invalid user id"""
         self.user.set_username("NewUsername", self.user)
-        response = self.client.get("%s?user=142141" % self.link)
+        response = self.client.get(f"{self.link}?user=142141")
         self.assertEqual(response.status_code, 404)
 
     @patch_user_acl({"can_see_users_name_history": False})
@@ -34,12 +34,12 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
         """list returns found username changes"""
         self.user.set_username("NewUsername", self.user)
 
-        response = self.client.get("%s?user=%s&search=new" % (self.link, self.user.pk))
+        response = self.client.get(f"{self.link}?user={self.user.pk}&search=new")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
         response = self.client.get(
-            "%s?user=%s&search=usernew" % (self.link, self.user.pk)
+            f"{self.link}?user={self.user.pk}&search=usernew"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
@@ -47,7 +47,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
     @patch_user_acl({"can_see_users_name_history": False})
     def test_list_denies_permission(self):
         """list denies permission for other user (or all) if no access"""
-        response = self.client.get("%s?user=%s" % (self.link, self.user.pk + 1))
+        response = self.client.get(f"{self.link}?user={self.user.pk + 1}")
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(),

@@ -34,7 +34,7 @@ class ProfileFields:
 
                 if field_path in self.fields_dict:
                     raise ValueError(
-                        "%s profile field has been specified twice" % field._field_path
+                        f"{field._field_path} profile field has been specified twice"
                     )
 
                 if not getattr(field, "fieldname", None):
@@ -141,7 +141,7 @@ class ProfileFields:
 
     def log_profile_fields_update(self, request, user):
         if request.user == user:
-            log_message = "%s edited own profile fields" % user.username
+            log_message = f"{user.username} edited own profile fields"
         else:
             log_message = "%s edited %s's (#%s) profile fields" % (
                 request.user,

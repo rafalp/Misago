@@ -19,4 +19,4 @@ def absoluteurl(context, url_or_name, *args, **kwargs):
         if not url_or_name.startswith("/"):
             return url_or_name
 
-    return "%s%s" % (absolute_url_prefix, url_or_name)
+    return f"{absolute_url_prefix}{url_or_name}"

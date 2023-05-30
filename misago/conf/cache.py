@@ -15,7 +15,7 @@ def set_settings_cache(cache_versions, user_settings):
 
 
 def get_cache_key(cache_versions):
-    return "%s_%s" % (SETTINGS_CACHE, cache_versions[SETTINGS_CACHE])
+    return f"{SETTINGS_CACHE}_{cache_versions[SETTINGS_CACHE]}"
 
 
 def clear_settings_cache():

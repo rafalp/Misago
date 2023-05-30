@@ -12,7 +12,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
 
     def setUp(self):
         super().setUp()
-        self.link = "/api/users/%s/username/" % self.user.pk
+        self.link = f"/api/users/{self.user.pk}/username/"
 
     @override_dynamic_settings(username_length_min=2, username_length_max=4)
     def test_get_change_username_options(self):
@@ -28,7 +28,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         self.assertIsNone(response_json["next_on"])
 
         for i in range(response_json["changes_left"]):
-            self.user.set_username("NewName%s" % i, self.user)
+            self.user.set_username(f"NewName{i}", self.user)
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
@@ -43,7 +43,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         for i in range(response.json()["changes_left"]):
-            self.user.set_username("NewName%s" % i, self.user)
+            self.user.set_username(f"NewName{i}", self.user)
 
         response = self.client.get(self.link)
         self.assertEqual(response.json()["changes_left"], 0)
@@ -117,7 +117,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.other_user = create_test_user("Other_User", "otheruser@example.com")
-        self.link = "/api/users/%s/moderate-username/" % self.other_user.pk
+        self.link = f"/api/users/{self.other_user.pk}/moderate-username/"
 
     @patch_user_acl({"can_rename_users": 0})
     def test_no_permission(self):
@@ -188,5 +188,5 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     @patch_user_acl({"can_rename_users": 1})
     def test_moderate_own_username(self):
         """moderate own username"""
-        response = self.client.get("/api/users/%s/moderate-username/" % self.user.pk)
+        response = self.client.get(f"/api/users/{self.user.pk}/moderate-username/")
         self.assertEqual(response.status_code, 200)

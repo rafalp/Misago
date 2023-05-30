@@ -22,7 +22,7 @@ class OptionsViewsTests(AuthenticatedUserTestCase):
 class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
-        link = "/api/users/%s/change-email/" % self.user.pk
+        link = f"/api/users/{self.user.pk}/change-email/"
 
         with override_dynamic_settings(forum_address="http://test.com/"):
             response = self.client.post(
@@ -67,7 +67,7 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
 class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
-        link = "/api/users/%s/change-password/" % self.user.pk
+        link = f"/api/users/{self.user.pk}/change-password/"
 
         with override_dynamic_settings(forum_address="http://test.com/"):
             response = self.client.post(

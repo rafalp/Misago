@@ -94,7 +94,7 @@ class FollowersListTests(AuthenticatedUserTestCase):
 
         api_link = self.link % self.user.pk
 
-        response = self.client.get("%s?search=%s" % (api_link, "test"))
+        response = self.client.get(f"{api_link}?search={'test'}")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, follower.username)
 
@@ -132,7 +132,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
 
         api_link = self.link % self.user.pk
 
-        response = self.client.get("%s?search=%s" % (api_link, "test"))
+        response = self.client.get(f"{api_link}?search={'test'}")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, follower.username)
 
@@ -168,7 +168,7 @@ class RankListTests(AuthenticatedUserTestCase):
         """rank list is not searchable"""
         api_link = self.link % self.user.rank.pk
 
-        response = self.client.get("%s&name=%s" % (api_link, "test"))
+        response = self.client.get(f"{api_link}&name={'test'}")
         self.assertEqual(response.status_code, 404)
 
     def test_filled_list(self):
@@ -253,7 +253,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.other_user = create_test_user("Other_User", "otheruser@example.com")
-        self.link = "/api/users/%s/follow/" % self.other_user.pk
+        self.link = f"/api/users/{self.other_user.pk}/follow/"
 
     def test_follow_unauthenticated(self):
         """you have to sign in to follow users"""
@@ -267,7 +267,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
 
     def test_follow_myself(self):
         """you can't follow yourself"""
-        response = self.client.post("/api/users/%s/follow/" % self.user.pk)
+        response = self.client.post(f"/api/users/{self.user.pk}/follow/")
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(), {"detail": "You can't add yourself to followed."}
@@ -320,7 +320,7 @@ class UserBanTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.other_user = create_test_user("Other_User", "otheruser@example.com")
-        self.link = "/api/users/%s/ban/" % self.other_user.pk
+        self.link = f"/api/users/{self.other_user.pk}/ban/"
 
     @patch_user_acl({"can_see_ban_details": 0})
     def test_no_permission(self):
@@ -363,7 +363,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
 
     def setUp(self):
         super().setUp()
-        self.api_link = "/api/users/%s/delete-own-account/" % self.user.pk
+        self.api_link = f"/api/users/{self.user.pk}/delete-own-account/"
 
     @override_dynamic_settings(allow_delete_own_account=False)
     def test_delete_own_account_feature_disabled(self):
@@ -471,7 +471,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.other_user = create_test_user("Other_User", "otheruser@example.com")
-        self.link = "/api/users/%s/delete/" % self.other_user.pk
+        self.link = f"/api/users/{self.other_user.pk}/delete/"
 
         self.threads = Thread.objects.count()
         self.posts = Post.objects.count()
@@ -528,7 +528,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
     )
     def test_delete_self(self):
         """raises 403 error when attempting to delete oneself"""
-        response = self.client.post("/api/users/%s/delete/" % self.user.pk)
+        response = self.client.post(f"/api/users/{self.user.pk}/delete/")
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {"detail": "You can't delete your account."})
 

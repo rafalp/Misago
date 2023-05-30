@@ -39,7 +39,7 @@ def test_list_renders_with_item(admin_client, admin_link, ban):
 
 
 def test_bans_can_be_mass_deleted(admin_client, admin_link):
-    bans_ids = [Ban.objects.create(banned_value="ban_%s" % i).id for i in range(10)]
+    bans_ids = [Ban.objects.create(banned_value=f"ban_{i}").id for i in range(10)]
 
     admin_client.post(admin_link, data={"action": "delete", "selected_items": bans_ids})
 

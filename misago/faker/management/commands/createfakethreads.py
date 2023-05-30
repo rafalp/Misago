@@ -82,7 +82,7 @@ class Command(BaseCommand):
             show_progress(self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
-        self.stdout.write("\nPinning %s threads..." % pinned_threads)
+        self.stdout.write(f"\nPinning {pinned_threads} threads...")
 
         for _ in range(0, pinned_threads):
             thread = Thread.objects.order_by("?")[:1][0]

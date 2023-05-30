@@ -20,7 +20,7 @@ def current_link(request):
     url_name = request.resolver_match.url_name
     if request.resolver_match.namespaces:
         namespaces = ":".join(request.resolver_match.namespaces)
-        link_name = "%s:%s" % (namespaces, url_name)
+        link_name = f"{namespaces}:{url_name}"
     else:
         link_name = url_name
 

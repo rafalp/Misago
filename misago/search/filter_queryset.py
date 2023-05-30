@@ -30,20 +30,20 @@ def get_mode(search):
 def get_queryset_filter(attr, mode, search, *, case_sensitive=False):
     if mode is STARTS_WITH:
         if case_sensitive:
-            return {"%s__startswith" % attr: search}
-        return {"%s__istartswith" % attr: search}
+            return {f"{attr}__startswith": search}
+        return {f"{attr}__istartswith": search}
 
     if mode is ENDS_WITH:
         if case_sensitive:
-            return {"%s__endswith" % attr: search}
-        return {"%s__iendswith" % attr: search}
+            return {f"{attr}__endswith": search}
+        return {f"{attr}__iendswith": search}
 
     if mode is CONTAINS:
         if case_sensitive:
-            return {"%s__contains" % attr: search}
-        return {"%s__icontains" % attr: search}
+            return {f"{attr}__contains": search}
+        return {f"{attr}__icontains": search}
 
     if case_sensitive:
         return {attr: search}
 
-    return {"%s__iexact" % attr: search}
+    return {f"{attr}__iexact": search}

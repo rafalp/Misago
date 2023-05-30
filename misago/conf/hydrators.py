@@ -50,7 +50,7 @@ def hydrate_value(python_type, dry_value):
     try:
         value_hydrator = VALUE_HYDRATORS[python_type][0]
     except KeyError:
-        raise ValueError("%s type is not hydrateable" % python_type)
+        raise ValueError(f"{python_type} type is not hydrateable")
 
     return value_hydrator(dry_value)
 
@@ -59,6 +59,6 @@ def dehydrate_value(python_type, wet_value):
     try:
         value_dehydrator = VALUE_HYDRATORS[python_type][1]
     except KeyError:
-        raise ValueError("%s type is not dehydrateable" % python_type)
+        raise ValueError(f"{python_type} type is not dehydrateable")
 
     return value_dehydrator(wet_value)

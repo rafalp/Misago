@@ -31,7 +31,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_empty_query(self):
         """api handles empty search query"""
-        response = self.client.get("%s?q=" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -43,7 +43,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_short_query(self):
         """api handles short search query"""
-        response = self.client.get("%s?q=%s" % (self.api_link, self.user.username[0]))
+        response = self.client.get(f"{self.api_link}?q={self.user.username[0]}")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -59,7 +59,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles exact search query"""
         other_user = create_test_user("Other_User", "otheruser@example.com")
 
-        response = self.client.get("%s?q=%s" % (self.api_link, other_user.username))
+        response = self.client.get(f"{self.api_link}?q={other_user.username}")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -75,7 +75,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles last three chars match query"""
         other_user = create_test_user("Other_User", "otheruser@example.com")
 
-        response = self.client.get("%s?q=%s" % (self.api_link, "Other_"))
+        response = self.client.get(f"{self.api_link}?q={'Other_'}")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -89,7 +89,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_no_match(self):
         """api handles no match"""
-        response = self.client.get("%s?q=BobBoberson" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=BobBoberson")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -105,7 +105,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
             "DisabledUser", "disableduser@example.com", is_active=False
         )
 
-        response = self.client.get("%s?q=DisabledUser" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=DisabledUser")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -119,7 +119,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         self.user.is_staff = True
         self.user.save()
 
-        response = self.client.get("%s?q=DisabledUser" % self.api_link)
+        response = self.client.get(f"{self.api_link}?q=DisabledUser")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
