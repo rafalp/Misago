@@ -74,9 +74,7 @@ class PollMergeHandler(MergeConflictHandler):
     def get_available_resolutions(self):
         resolutions = [[0, _("Delete all polls")]]
         for poll in self.items:
-            resolutions.append(
-                [poll.id, f"{poll.question} ({poll.thread.title})"]
-            )
+            resolutions.append([poll.id, f"{poll.question} ({poll.thread.title})"])
         return resolutions
 
 

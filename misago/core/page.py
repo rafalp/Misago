@@ -76,7 +76,7 @@ class Page:
         before=None,
         visible_if=None,
         get_metadata=None,
-        **kwargs
+        **kwargs,
     ):
         if self._finalized:
             message = (

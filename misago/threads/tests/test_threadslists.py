@@ -144,9 +144,7 @@ class ApiTests(ThreadsListTestCase):
 
     def test_invalid_list_type(self):
         """api returns 404 for invalid list type"""
-        response = self.client.get(
-            f"{self.api_link}?category={self.root.pk}&list=nope"
-        )
+        response = self.client.get(f"{self.api_link}?category={self.root.pk}&list=nope")
         self.assertEqual(response.status_code, 404)
 
 
@@ -274,9 +272,7 @@ class AllThreadsListTests(ThreadsListTestCase):
         self.assertNotContains(response, f"subcategory-{self.category_d.css_class}")
         self.assertNotContains(response, f"subcategory-{self.category_f.css_class}")
 
-        response = self.client.get(
-            f"{self.api_link}?category={self.category_a.pk}"
-        )
+        response = self.client.get(f"{self.api_link}?category={self.category_a.pk}")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -386,9 +382,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             response = self.client.get(test_category.get_absolute_url() + url)
             self.assertEqual(response.status_code, 404)
 
-            response = self.client.get(
-                f"{self.api_link}?category={test_category.id}"
-            )
+            response = self.client.get(f"{self.api_link}?category={test_category.id}")
             self.assertEqual(response.status_code, 404)
 
     def test_access_protected_category(self):
@@ -502,9 +496,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertContainsThread(response, test_thread)
 
         # api displays same data
-        response = self.client.get(
-            f"{self.api_link}?category={self.category_b.pk}"
-        )
+        response = self.client.get(f"{self.api_link}?category={self.category_b.pk}")
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()

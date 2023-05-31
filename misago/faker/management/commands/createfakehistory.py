@@ -226,9 +226,7 @@ class Command(BaseCommand):
         post.checksum = update_post_checksum(post)
         post.save(update_fields=["checksum", "posted_on", "updated_on"])
 
-        self.write_event(
-            date, f'{post.poster_name} has replied to "{thread}" thread'
-        )
+        self.write_event(date, f'{post.poster_name} has replied to "{thread}" thread')
 
     def create_fake_notification(self, thread, post, poster):
         users_ids = list(

@@ -19,9 +19,7 @@ def make(user, token_type):
     user_hash = _make_hash(user, token_type)
     creation_day = _days_since_epoch()
 
-    obfuscated = base64.b64encode(
-        force_bytes(f"{user_hash}{creation_day}")
-    ).decode()
+    obfuscated = base64.b64encode(force_bytes(f"{user_hash}{creation_day}")).decode()
     obfuscated = obfuscated.rstrip("=")
     checksum = _make_checksum(obfuscated)
 
@@ -63,9 +61,7 @@ def _days_since_epoch():
 
 
 def _make_checksum(obfuscated):
-    return sha256(force_bytes(f"{settings.SECRET_KEY}:{obfuscated}")).hexdigest()[
-        :8
-    ]
+    return sha256(force_bytes(f"{settings.SECRET_KEY}:{obfuscated}")).hexdigest()[:8]
 
 
 ACTIVATION_TOKEN = "activation"

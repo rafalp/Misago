@@ -56,9 +56,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
         """admin users search searches this field"""
         test_link = reverse("misago:admin:users:index")
 
-        response = self.client.get(
-            f"{test_link}?redirected=1&profilefields=127.0.0.1"
-        )
+        response = self.client.get(f"{test_link}?redirected=1&profilefields=127.0.0.1")
         self.assertContains(response, "No users matching criteria exist.")
 
     def test_field_display(self):

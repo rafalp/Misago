@@ -38,9 +38,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
-        response = self.client.get(
-            f"{self.link}?user={self.user.pk}&search=usernew"
-        )
+        response = self.client.get(f"{self.link}?user={self.user.pk}&search=usernew")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
 

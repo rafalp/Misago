@@ -146,9 +146,7 @@ class ListView(AdminView):
             try:
                 self.paginate_items(context, kwargs.get("page", 0))
             except EmptyPage:
-                return redirect(
-                    f"{reverse(self.root_link)}{context['querystring']}"
-                )
+                return redirect(f"{reverse(self.root_link)}{context['querystring']}")
 
         if refresh_querystring and "redirected" not in request.GET:
             return redirect(f"{request.path}{context['querystring']}")

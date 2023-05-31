@@ -16,8 +16,7 @@ User = get_user_model()
 
 def create_multiple_users(**kwargs):
     return [
-        create_test_user(f"User{i}", f"user{i}@gmail.com", **kwargs)
-        for i in range(5)
+        create_test_user(f"User{i}", f"user{i}@gmail.com", **kwargs) for i in range(5)
     ]
 
 

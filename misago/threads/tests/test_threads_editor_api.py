@@ -311,9 +311,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         unapproved_reply = test.reply_thread(self.thread, is_unapproved=True)
 
         with patch_category_acl({"can_reply_threads": True}):
-            response = self.client.get(
-                f"{self.api_link}?reply={unapproved_reply.pk}"
-            )
+            response = self.client.get(f"{self.api_link}?reply={unapproved_reply.pk}")
             self.assertEqual(response.status_code, 404)
 
         # hidden reply can't be replied to

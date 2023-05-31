@@ -34,6 +34,4 @@ class JsI18nUrlTests(TestCase):
                 failed_languages.append(language)
 
         if failed_languages:
-            self.fail(
-                f"JS catalog failed for languages: {', '.join(failed_languages)}"
-            )
+            self.fail(f"JS catalog failed for languages: {', '.join(failed_languages)}")

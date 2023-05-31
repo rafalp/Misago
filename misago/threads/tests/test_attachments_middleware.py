@@ -78,7 +78,7 @@ def test_data_validation_fails_if_attachments_data_is_not_iterable(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": "none"}),
         mode=PostingEndpoint.START,
-        **context
+        **context,
     )
 
     serializer = middleware.get_serializer()
@@ -89,7 +89,7 @@ def test_data_validation_fails_if_attachments_data_has_non_int_values(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [1, "b"]}),
         mode=PostingEndpoint.START,
-        **context
+        **context,
     )
 
     serializer = middleware.get_serializer()
@@ -101,7 +101,7 @@ def test_data_validation_fails_if_attachments_data_is_longer_than_allowed(contex
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": range(5)}),
         mode=PostingEndpoint.START,
-        **context
+        **context,
     )
 
     serializer = middleware.get_serializer()
@@ -113,7 +113,7 @@ def test_middleware_adds_attachment_to_new_post(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [new_attachment.id]}),
         mode=PostingEndpoint.START,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
@@ -128,7 +128,7 @@ def test_middleware_adds_attachment_to_attachments_cache(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [new_attachment.id]}),
         mode=PostingEndpoint.START,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
@@ -144,7 +144,7 @@ def test_middleware_adds_attachment_to_existing_post(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [new_attachment.id]}),
         mode=PostingEndpoint.EDIT,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
@@ -160,7 +160,7 @@ def test_middleware_adds_attachment_to_post_with_existing_attachment(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [old_attachment.id, new_attachment.id]}),
         mode=PostingEndpoint.EDIT,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
@@ -179,7 +179,7 @@ def test_middleware_adds_attachment_to_existing_attachments_cache(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [old_attachment.id, new_attachment.id]}),
         mode=PostingEndpoint.EDIT,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
@@ -196,7 +196,7 @@ def test_other_user_attachment_cant_be_added_to_post(context):
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [attachment.id]}),
         mode=PostingEndpoint.EDIT,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
@@ -212,7 +212,7 @@ def test_other_post_attachment_cant_be_added_to_new_post(context, default_catego
     middleware = AttachmentsMiddleware(
         request=Mock(data={"attachments": [attachment.id]}),
         mode=PostingEndpoint.EDIT,
-        **context
+        **context,
     )
     serializer = middleware.get_serializer()
     serializer.is_valid()
