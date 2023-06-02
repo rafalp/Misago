@@ -52,12 +52,11 @@ if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
         echo "https://www.docker.com/get-started"
         echo
         exit 1
-    fi
-    if ! docker compose version >/dev/null 2>&1; then
-        error "You need to have Docker Compose installed to use this tool."
+    elif ! docker compose version >/dev/null 2>&1; then
+        error "You need to have Docker Compose plugin installed to use this tool."
         echo
-        echo "Docker release for your system can be downloaded for free from this page:"
-        echo "https://www.docker.com/get-started"
+        echo "Guide for installing Docker Compose plugin on your system can be found on this page:"
+        echo "https://docs.docker.com/compose/install/"
         echo
         exit 1
     fi

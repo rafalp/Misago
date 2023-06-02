@@ -3,7 +3,7 @@
 version: "3.0"
 services:
   postgres:
-    image: postgres:10
+    image: postgres:15
     restart: unless-stopped
     environment:
       - POSTGRES_USER=misago
@@ -11,17 +11,17 @@ services:
     ports:
       - '127.0.0.1:5432:5432'
   redis:
-    image: redis:5
+    image: redis:6
     restart: unless-stopped
   misago:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       # Postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=misago
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
-      - POSTGRES_DB=misago
-      - POSTGRES_HOST=postgres
       - POSTGRES_TEST_DB=misago_test
       # Superuser
       - SUPERUSER_USERNAME=Admin
@@ -39,15 +39,15 @@ services:
       # Map in the entire project into the container
       # This makes sure files in the container updates on the fly as we were working locally
       - .:/srv/misago:Z
-  celery:
+  celery-worker:
     build: .
     command: celery -A devproject worker --loglevel=info
     environment:
       # Postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=misago
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
-      - POSTGRES_DB=misago
-      - POSTGRES_HOST=postgres
       - POSTGRES_TEST_DB=misago_test
     depends_on:
       - postgres
