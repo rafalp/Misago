@@ -1,5 +1,5 @@
 from debug_toolbar.panels import Panel
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 
 class MisagoACLPanel(Panel):
@@ -14,7 +14,7 @@ class MisagoACLPanel(Panel):
 
         if misago_user and misago_user.is_authenticated:
             return misago_user.username
-        return _("Anonymous user")
+        return pgettext_lazy("debug toolbar", "Anonymous user")
 
     def generate_stats(self, request, response):
         try:

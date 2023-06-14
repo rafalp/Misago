@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...admin.views import generic
 from ..models import Role
@@ -12,7 +12,7 @@ class RoleAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:permissions:index"
     model = Role
     templates_dir = "misago/admin/roles"
-    message_404 = _("Requested role does not exist.")
+    message_404 = pgettext_lazy("admin roles", "Requested role does not exist.")
 
 
 class RolesList(RoleAdmin, generic.ListView):
@@ -59,22 +59,24 @@ class RoleFormMixin:
 
 
 class NewRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
-    message_submit = _('New role "%(name)s" has been saved.')
+    message_submit = pgettext_lazy("admin roles", 'New role "%(name)s" has been saved.')
 
 
 class EditRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
-    message_submit = _('Role "%(name)s" has been changed.')
+    message_submit = pgettext_lazy("admin roles", 'Role "%(name)s" has been changed.')
 
 
 class DeleteRole(RoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%(name)s" is special role and can\'t be deleted.')
+            message = pgettext_lazy(
+                "admin roles", 'Role "%(name)s" is special role and can\'t be deleted.'
+            )
             return message % {"name": target.name}
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Role "%(name)s" has been deleted.')
+        message = pgettext_lazy("admin roles", 'Role "%(name)s" has been deleted.')
         messages.success(request, message % {"name": target.name})
 
 

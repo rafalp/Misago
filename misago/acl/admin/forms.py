@@ -1,12 +1,12 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..models import Role
 from ..providers import providers
 
 
 class RoleForm(forms.ModelForm):
-    name = forms.CharField(label=_("Role name"))
+    name = forms.CharField(label=pgettext_lazy("admin roles form", "Role name"))
 
     class Meta:
         model = Role
