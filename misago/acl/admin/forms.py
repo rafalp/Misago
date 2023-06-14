@@ -6,7 +6,7 @@ from ..providers import providers
 
 
 class RoleForm(forms.ModelForm):
-    name = forms.CharField(label=pgettext_lazy("admin roles form", "Role name"))
+    name = forms.CharField(label=pgettext_lazy("admin role form", "Role name"))
 
     class Meta:
         model = Role

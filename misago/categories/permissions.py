@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..acl import algebra
 from ..acl.decorators import return_boolean
@@ -12,8 +12,10 @@ from .models import Category, CategoryRole, RoleCategoryACL
 class PermissionsForm(forms.Form):
     legend = _("Category access")
 
-    can_see = YesNoSwitch(label=_("Can see category"))
-    can_browse = YesNoSwitch(label=_("Can see category contents"))
+    can_see = YesNoSwitch(label=pgettext_lazy("permissions", "Can see category"))
+    can_browse = YesNoSwitch(
+        label=pgettext_lazy("permissions", "Can see category contents")
+    )
 
 
 def change_permissions_form(role):
@@ -116,7 +118,10 @@ can_see_category = return_boolean(allow_see_category)
 def allow_browse_category(user_acl, target):
     target_acl = user_acl["categories"].get(target.id, {"can_browse": False})
     if not target_acl["can_browse"]:
-        message = _('You don\'t have permission to browse "%(category)s" contents.')
+        message = pgettext_lazy(
+            "permissions",
+            'You don\'t have permission to browse "%(category)s" contents.',
+        )
         raise PermissionDenied(message % {"category": target.name})
 
 

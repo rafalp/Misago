@@ -4,7 +4,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
 from ...admin.forms import YesNoSwitch
@@ -46,85 +46,104 @@ class AdminCategoryMultipleChoiceField(
 
 
 class CategoryFormBase(forms.ModelForm):
-    name = forms.CharField(label=_("Name"), validators=[validate_sluggable()])
+    name = forms.CharField(
+        label=pgettext_lazy("admin category form", "Name"),
+        validators=[validate_sluggable()],
+    )
     short_name = forms.CharField(
-        label=_("Short name"),
+        label=pgettext_lazy("admin category form", "Short name"),
         required=False,
-        help_text=_(
-            "Optional, alternative or abbreviated name (eg. abbreviation) used on threads list."
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Optional, alternative or abbreviated name (eg. abbreviation) used on threads list.",
         ),
         validators=[validate_sluggable()],
     )
     color = forms.CharField(
-        label=_("Color"),
+        label=pgettext_lazy("admin category form", "Color"),
         required=False,
-        help_text=_("Optional but recommended, should be in hex format, eg. #F5A9B8."),
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Optional but recommended, should be in hex format, eg. #F5A9B8.",
+        ),
         validators=[
             RegexValidator(
                 r"^#[0-9a-f][0-9a-f][0-9a-f]([0-9a-f][0-9a-f][0-9a-f]?)$",
                 flags=re.MULTILINE | re.IGNORECASE,
-                message=_("Entered value is not a valid color."),
+                message=pgettext_lazy(
+                    "admin category form", "Entered value is not a valid color."
+                ),
             ),
         ],
     )
     description = forms.CharField(
-        label=_("Description"),
+        label=pgettext_lazy("admin category form", "Description"),
         max_length=2048,
         required=False,
         widget=forms.Textarea(attrs={"rows": 3}),
-        help_text=_("Optional description explaining category intented purpose."),
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Optional description explaining category intented purpose.",
+        ),
     )
     css_class = forms.CharField(
-        label=_("CSS class"),
+        label=pgettext_lazy("admin category form", "CSS class"),
         required=False,
-        help_text=_(
+        help_text=pgettext_lazy(
+            "admin category form",
             "Optional CSS class used to customize this "
-            "category's appearance from templates."
+            "category's appearance from templates.",
         ),
     )
     is_closed = YesNoSwitch(
-        label=_("Closed category"),
+        label=pgettext_lazy("admin category form", "Closed category"),
         required=False,
-        help_text=_(
-            "Only members with valid permissions can post in closed categories."
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Only members with valid permissions can post in closed categories.",
         ),
     )
     require_threads_approval = YesNoSwitch(
-        label=_("Threads"),
+        label=pgettext_lazy("admin category form", "Threads"),
         required=False,
-        help_text=_(
-            "All threads started in this category will require moderator approval."
+        help_text=pgettext_lazy(
+            "admin category form",
+            "All threads started in this category will require moderator approval.",
         ),
     )
     require_replies_approval = YesNoSwitch(
-        label=_("Replies"),
+        label=pgettext_lazy("admin category form", "Replies"),
         required=False,
-        help_text=_(
-            "All replies posted in this category will require moderator approval."
+        help_text=pgettext_lazy(
+            "admin category form",
+            "All replies posted in this category will require moderator approval.",
         ),
     )
     require_edits_approval = YesNoSwitch(
-        label=_("Edits"),
+        label=pgettext_lazy("admin category form", "Edits"),
         required=False,
-        help_text=_(
+        help_text=pgettext_lazy(
+            "admin category form",
             "Will make all edited replies return to unapproved state "
-            "for moderator to review."
+            "for moderator to review.",
         ),
     )
     prune_started_after = forms.IntegerField(
-        label=_("Thread age"),
+        label=pgettext_lazy("admin category form", "Thread age"),
         min_value=0,
-        help_text=_(
+        help_text=pgettext_lazy(
+            "admin category form",
             "Prune thread if number of days since its creation is greater than "
-            "specified. Enter 0 to disable this pruning criteria."
+            "specified. Enter 0 to disable this pruning criteria.",
         ),
     )
     prune_replied_after = forms.IntegerField(
-        label=_("Last reply"),
+        label=pgettext_lazy("admin category form", "Last reply"),
         min_value=0,
-        help_text=_(
+        help_text=pgettext_lazy(
+            "admin category form",
             "Prune thread if number of days since last reply is greater than "
-            "specified. Enter 0 to disable this pruning criteria."
+            "specified. Enter 0 to disable this pruning criteria.",
         ),
     )
 
@@ -148,14 +167,19 @@ class CategoryFormBase(forms.ModelForm):
     def clean_copy_permissions(self):
         data = self.cleaned_data["copy_permissions"]
         if data and data.pk == self.instance.pk:
-            message = _("Permissions cannot be copied from category into itself.")
+            message = pgettext_lazy(
+                "admin category form",
+                "Permissions cannot be copied from category into itself.",
+            )
             raise forms.ValidationError(message)
         return data
 
     def clean_archive_pruned_in(self):
         data = self.cleaned_data["archive_pruned_in"]
         if data and data.pk == self.instance.pk:
-            message = _("Category cannot act as archive for itself.")
+            message = pgettext_lazy(
+                "admin category form", "Category cannot act as archive for itself."
+            )
             raise forms.ValidationError(message)
         return data
 
@@ -177,29 +201,35 @@ def CategoryFormFactory(instance):
         (CategoryFormBase,),
         {
             "new_parent": AdminCategoryChoiceField(
-                label=_("Parent category"),
+                label=pgettext_lazy("admin category form", "Parent category"),
                 queryset=parent_queryset,
                 initial=instance.parent,
                 empty_label=None,
             ),
             "copy_permissions": AdminCategoryChoiceField(
-                label=_("Copy permissions"),
-                help_text=_(
+                label=pgettext_lazy("admin category form", "Copy permissions"),
+                help_text=pgettext_lazy(
+                    "admin category form",
                     "You can replace this category permissions with "
-                    "permissions copied from category selected here."
+                    "permissions copied from category selected here.",
                 ),
                 queryset=Category.objects.all_categories(),
-                empty_label=_("Don't copy permissions"),
+                empty_label=pgettext_lazy(
+                    "admin category form", "Don't copy permissions"
+                ),
                 required=False,
             ),
             "archive_pruned_in": AdminCategoryChoiceField(
-                label=_("Archive"),
-                help_text=_(
+                label=pgettext_lazy("admin category form", "Archive"),
+                help_text=pgettext_lazy(
+                    "admin category form",
                     "Instead of being deleted, pruned threads can be "
-                    "moved to designated category."
+                    "moved to designated category.",
                 ),
                 queryset=Category.objects.all_categories(),
-                empty_label=_("Don't archive pruned threads"),
+                empty_label=pgettext_lazy(
+                    "admin category form", "Don't archive pruned threads"
+                ),
                 required=False,
             ),
         },
@@ -216,15 +246,19 @@ class DeleteCategoryFormBase(forms.ModelForm):
 
         if data.get("move_threads_to"):
             if data["move_threads_to"].pk == self.instance.pk:
-                message = _("You are trying to move this category threads to itself.")
+                message = pgettext_lazy(
+                    "admin category form",
+                    "You are trying to move this category threads to itself.",
+                )
                 raise forms.ValidationError(message)
 
             moving_to_child = self.instance.has_child(data["move_threads_to"])
             if moving_to_child and not data.get("move_children_to"):
-                message = _(
+                message = pgettext_lazy(
+                    "admin category form",
                     "You are trying to move this category threads to a "
                     "child category that will be deleted together with "
-                    "this category."
+                    "this category.",
                 )
                 raise forms.ValidationError(message)
 
@@ -235,10 +269,10 @@ def DeleteFormFactory(instance):
     content_queryset = Category.objects.all_categories().order_by("lft")
     fields = {
         "move_threads_to": AdminCategoryChoiceField(
-            label=_("Move category threads to"),
+            label=pgettext_lazy("admin category form", "Move category threads to"),
             queryset=content_queryset,
             initial=instance.parent,
-            empty_label=_("Delete with category"),
+            empty_label=pgettext_lazy("admin category form", "Delete with category"),
             required=False,
         )
     }
@@ -250,9 +284,9 @@ def DeleteFormFactory(instance):
 
     if children_queryset.exists():
         fields["move_children_to"] = AdminCategoryChoiceField(
-            label=_("Move child categories to"),
+            label=pgettext_lazy("admin category form", "Move child categories to"),
             queryset=children_queryset,
-            empty_label=_("Delete with category"),
+            empty_label=pgettext_lazy("admin category form", "Delete with category"),
             required=False,
         )
 
@@ -260,7 +294,7 @@ def DeleteFormFactory(instance):
 
 
 class CategoryRoleForm(forms.ModelForm):
-    name = forms.CharField(label=_("Role name"))
+    name = forms.CharField(label=pgettext_lazy("admin category form", "Role name"))
 
     class Meta:
         model = CategoryRole
@@ -271,11 +305,11 @@ def RoleCategoryACLFormFactory(category, category_roles, selected_role):
     attrs = {
         "category": category,
         "role": forms.ModelChoiceField(
-            label=_("Role"),
+            label=pgettext_lazy("admin category form", "Role"),
             required=False,
             queryset=category_roles,
             initial=selected_role,
-            empty_label=_("No access"),
+            empty_label=pgettext_lazy("admin category form", "No access"),
         ),
     }
 
@@ -286,11 +320,11 @@ def CategoryRolesACLFormFactory(role, category_roles, selected_role):
     attrs = {
         "role": role,
         "category_role": forms.ModelChoiceField(
-            label=_("Role"),
+            label=pgettext_lazy("admin category form", "Role"),
             required=False,
             queryset=category_roles,
             initial=selected_role,
-            empty_label=_("No access"),
+            empty_label=pgettext_lazy("admin category form", "No access"),
         ),
     }
 

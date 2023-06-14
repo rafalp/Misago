@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ... import THREADS_ROOT_NAME
 from ....acl.cache import clear_acl_cache
@@ -14,7 +14,9 @@ class CategoryAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:categories:index"
     model = Category
     templates_dir = "misago/admin/categories"
-    message_404 = _("Requested category does not exist.")
+    message_404 = pgettext_lazy(
+        "admin categories", "Requested category does not exist."
+    )
 
     def get_target(self, kwargs):
         target = super().get_target(kwargs)
@@ -93,15 +95,21 @@ class CategoryFormMixin:
 
 
 class NewCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
-    message_submit = _('New category "%(name)s" has been saved.')
+    message_submit = pgettext_lazy(
+        "admin categories", 'New category "%(name)s" has been saved.'
+    )
 
 
 class EditCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
-    message_submit = _('Category "%(name)s" has been edited.')
+    message_submit = pgettext_lazy(
+        "admin categories", 'Category "%(name)s" has been edited.'
+    )
 
 
 class DeleteCategory(CategoryAdmin, generic.ModelFormView):
-    message_submit = _('Category "%(name)s" has been deleted.')
+    message_submit = pgettext_lazy(
+        "admin categories", 'Category "%(name)s" has been deleted.'
+    )
     template_name = "delete.html"
 
     def get_form_class(self, request, target):
@@ -151,7 +159,10 @@ class MoveDownCategory(CategoryAdmin, generic.ButtonView):
             Category.objects.move_node(target, other_target, "right")
             Category.objects.clear_cache()
 
-            message = _('Category "%(name)s" has been moved below "%(other)s".')
+            message = pgettext_lazy(
+                "admin categories",
+                'Category "%(name)s" has been moved below "%(other)s".',
+            )
             targets_names = {"name": target.name, "other": other_target.name}
             messages.success(request, message % targets_names)
 
@@ -167,6 +178,9 @@ class MoveUpCategory(CategoryAdmin, generic.ButtonView):
             Category.objects.move_node(target, other_target, "left")
             Category.objects.clear_cache()
 
-            message = _('Category "%(name)s" has been moved above "%(other)s".')
+            message = pgettext_lazy(
+                "admin categories",
+                'Category "%(name)s" has been moved above "%(other)s".',
+            )
             targets_names = {"name": target.name, "other": other_target.name}
             messages.success(request, message % targets_names)
