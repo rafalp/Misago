@@ -294,7 +294,7 @@ def DeleteFormFactory(instance):
 
 
 class CategoryRoleForm(forms.ModelForm):
-    name = forms.CharField(label=pgettext_lazy("admin category form", "Role name"))
+    name = forms.CharField(label=pgettext_lazy("admin category role form", "Role name"))
 
     class Meta:
         model = CategoryRole
@@ -305,11 +305,11 @@ def RoleCategoryACLFormFactory(category, category_roles, selected_role):
     attrs = {
         "category": category,
         "role": forms.ModelChoiceField(
-            label=pgettext_lazy("admin category form", "Role"),
+            label=pgettext_lazy("admin permissions form", "Role"),
             required=False,
             queryset=category_roles,
             initial=selected_role,
-            empty_label=pgettext_lazy("admin category form", "No access"),
+            empty_label=pgettext_lazy("admin permissions form", "No access"),
         ),
     }
 
@@ -320,11 +320,11 @@ def CategoryRolesACLFormFactory(role, category_roles, selected_role):
     attrs = {
         "role": role,
         "category_role": forms.ModelChoiceField(
-            label=pgettext_lazy("admin category form", "Role"),
+            label=pgettext_lazy("admin permissions form", "Role"),
             required=False,
             queryset=category_roles,
             initial=selected_role,
-            empty_label=pgettext_lazy("admin category form", "No access"),
+            empty_label=pgettext_lazy("admin permissions form", "No access"),
         ),
     }
 

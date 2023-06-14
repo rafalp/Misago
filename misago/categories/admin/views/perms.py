@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ....acl.admin.forms import get_permissions_forms
 from ....acl.admin.views import RoleAdmin, RolesList
@@ -20,7 +20,9 @@ class CategoryRoleAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:permissions:categories:index"
     model = CategoryRole
     templates_dir = "misago/admin/categoryroles"
-    message_404 = _("Requested role does not exist.")
+    message_404 = pgettext_lazy(
+        "admin categories roles", "Requested role does not exist."
+    )
 
 
 class CategoryRolesList(CategoryRoleAdmin, generic.ListView):
@@ -59,7 +61,9 @@ class RoleFormMixin:
                         return redirect(request.path)
                     return redirect(self.root_link)
 
-                form.add_error(None, _("Form contains errors."))
+                form.add_error(
+                    None, pgettext_lazy("admin form", "Form contains errors.")
+                )
 
         template_name = self.get_template_name(request, target)
         return self.render(
@@ -70,22 +74,31 @@ class RoleFormMixin:
 
 
 class NewCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
-    message_submit = _('New role "%(name)s" has been saved.')
+    message_submit = pgettext_lazy(
+        "admin categories roles", 'New role "%(name)s" has been saved.'
+    )
 
 
 class EditCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
-    message_submit = _('Role "%(name)s" has been changed.')
+    message_submit = pgettext_lazy(
+        "admin categories roles", 'Role "%(name)s" has been changed.'
+    )
 
 
 class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%(name)s" is special role and can\'t be deleted.')
+            message = pgettext_lazy(
+                "admin categories roles",
+                'Role "%(name)s" is special role and can\'t be deleted.',
+            )
             return message % {"name": target.name}
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Role "%(name)s" has been deleted.')
+        message = pgettext_lazy(
+            "admin categories roles", 'Role "%(name)s" has been deleted.'
+        )
         messages.success(request, message % {"name": target.name})
 
 
@@ -131,7 +144,10 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
 
             clear_acl_cache()
 
-            message = _("Category %(name)s permissions have been changed.")
+            message = pgettext_lazy(
+                "admin categories roles",
+                "Category %(name)s permissions have been changed.",
+            )
             messages.success(request, message % {"name": target.name})
             if "stay" in request.POST:
                 return redirect(request.path)
@@ -142,7 +158,8 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
 
 
 CategoriesList.add_item_action(
-    name=_("Change permissions"), link="misago:admin:categories:permissions"
+    name=pgettext_lazy("admin categories", "Change permissions"),
+    link="misago:admin:categories:permissions",
 )
 
 
@@ -155,7 +172,9 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
         roles = CategoryRole.objects.order_by("name")
 
         if not categories:
-            messages.info(request, _("No categories exist."))
+            messages.info(
+                request, pgettext_lazy("admin categories", "No categories exist.")
+            )
             return redirect(self.root_link)
 
         choices = {}
@@ -194,7 +213,10 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
 
             clear_acl_cache()
 
-            message = _("Category permissions for role %(name)s have been changed.")
+            message = pgettext_lazy(
+                "admin categories roles",
+                "Category permissions for role %(name)s have been changed.",
+            )
             messages.success(request, message % {"name": target.name})
             if "stay" in request.POST:
                 return redirect(request.path)
@@ -205,5 +227,6 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
 
 
 RolesList.add_item_action(
-    name=_("Categories permissions"), link="misago:admin:permissions:categories"
+    name=pgettext_lazy("admin roles", "Categories permissions"),
+    link="misago:admin:permissions:categories",
 )

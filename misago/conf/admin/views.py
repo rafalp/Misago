@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ...admin.views import render
 from ...admin.views.generic import AdminView
@@ -38,7 +38,9 @@ class SettingsView(AdminView):
             )
             if form.is_valid():
                 form.save(settings)
-                messages.success(request, _("Settings have been saved."))
+                messages.success(
+                    request, pgettext("admin settings", "Settings have been saved.")
+                )
                 return redirect(request.path_info)
         return self.render(request, {"form": form, "form_settings": settings})
 

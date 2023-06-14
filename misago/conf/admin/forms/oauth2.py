@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import messages
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
 from .base import SettingsForm
@@ -37,87 +37,111 @@ class OAuth2SettingsForm(SettingsForm):
     ]
 
     enable_oauth2_client = YesNoSwitch(
-        label=_("Enable OAuth2 client"),
-        help_text=_(
-            "Enabling OAuth2 will make login option redirect users to the OAuth provider "
-            "configured below. It will also disable option to register on forum, "
-            "change username, email or password, as those features will be delegated "
-            "to the 3rd party site."
+        label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 client"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            (
+                "Enabling OAuth2 will make login option redirect users to the OAuth "
+                "provider configured below. It will also disable option to register on "
+                "forum, change username, email or password, as those features will be "
+                "delegated to the 3rd party site."
+            ),
         ),
     )
     oauth2_provider = forms.CharField(
-        label=_("Provider name"),
-        help_text=_("Name of the OAuth 2 provider to be displayed by interface."),
+        label=pgettext_lazy("admin oauth2 settings form", "Provider name"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "Name of the OAuth 2 provider to be displayed by interface.",
+        ),
         max_length=255,
         required=False,
     )
     oauth2_client_id = forms.CharField(
-        label=_("Client ID"),
+        label=pgettext_lazy("admin oauth2 settings form", "Client ID"),
         max_length=200,
         required=False,
     )
     oauth2_client_secret = forms.CharField(
-        label=_("Client Secret"),
+        label=pgettext_lazy("admin oauth2 settings form", "Client Secret"),
         max_length=200,
         required=False,
     )
     oauth2_scopes = forms.CharField(
-        label=_("Scopes"),
-        help_text=_("List of scopes to request from provider, separated with spaces."),
+        label=pgettext_lazy("admin oauth2 settings form", "Scopes"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "List of scopes to request from provider, separated with spaces.",
+        ),
         max_length=500,
         required=False,
     )
 
     oauth2_login_url = forms.URLField(
-        label=_("Login form URL"),
-        help_text=_(
-            "Address to login form on provider's server that users will be "
-            "redirected to."
+        label=pgettext_lazy("admin oauth2 settings form", "Login form URL"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            (
+                "Address to login form on provider's server that users will be "
+                "redirected to."
+            ),
         ),
         max_length=500,
         required=False,
     )
 
     oauth2_token_url = forms.URLField(
-        label=_("Access token retrieval URL"),
-        help_text=_(
-            "URL that will be called after user completes the login process "
-            "and authorization code is sent back to your site. This URL "
-            "is expected to take this code and return the access token that "
-            "will be next used to retrieve user data."
+        label=pgettext_lazy("admin oauth2 settings form", "Access token retrieval URL"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            (
+                "URL that will be called after user completes the login process "
+                "and authorization code is sent back to your site. This URL "
+                "is expected to take this code and return the access token that "
+                "will be next used to retrieve user data."
+            ),
         ),
         max_length=500,
         required=False,
     )
     oauth2_token_extra_headers = forms.CharField(
-        label=_("Extra HTTP headers in token request"),
-        help_text=_(
-            "List of extra headers to include in a HTTP request made to retrieve "
-            'the access token. Example header is "Header-name: value". Specify each '
-            "header on separate line."
+        label=pgettext_lazy(
+            "admin oauth2 settings form", "Extra HTTP headers in token request"
+        ),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            (
+                "List of extra headers to include in a HTTP request made to retrieve "
+                'the access token. Example header is "Header-name: value". '
+                "Specify each header on separate line."
+            ),
         ),
         widget=forms.Textarea(attrs={"rows": 4}),
         max_length=500,
         required=False,
     )
     oauth2_json_token_path = forms.CharField(
-        label=_("JSON path to access token"),
-        help_text=_(
-            "Name of key containing the access token in JSON returned by the provider "
-            'If token is nested, use period (".") for path, eg: "result.token" '
-            'will retrieve the token from "token" key nested in "result".'
+        label=pgettext_lazy("admin oauth2 settings form", "JSON path to access token"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            (
+                "Name of key containing the access token in JSON returned by the "
+                'provider. If token is nested, use period (".") for path, eg: '
+                '"result.token" will retrieve the token from "token" key nested in '
+                '"result".'
+            ),
         ),
         max_length=500,
         required=False,
     )
 
     oauth2_user_url = forms.URLField(
-        label=_("User data URL"),
+        label=pgettext_lazy("admin oauth2 settings form", "User data URL"),
         max_length=500,
         required=False,
     )
     oauth2_user_method = forms.ChoiceField(
-        label=_("Request method"),
+        label=pgettext_lazy("admin oauth2 settings form", "Request method"),
         choices=[
             ("POST", "POST"),
             ("GET", "GET"),
@@ -125,25 +149,33 @@ class OAuth2SettingsForm(SettingsForm):
         widget=forms.RadioSelect(),
     )
     oauth2_user_token_location = forms.ChoiceField(
-        label=_("Access token location"),
+        label=pgettext_lazy("admin oauth2 settings form", "Access token location"),
         choices=[
-            ("QUERY", _("Query string")),
-            ("HEADER", _("HTTP header")),
-            ("HEADER_BEARER", _("HTTP header (Bearer)")),
+            ("QUERY", pgettext_lazy("admin oauth2 settings form", "Query string")),
+            ("HEADER", pgettext_lazy("admin oauth2 settings form", "HTTP header")),
+            (
+                "HEADER_BEARER",
+                pgettext_lazy("admin oauth2 settings form", "HTTP header (Bearer)"),
+            ),
         ],
         widget=forms.RadioSelect(),
     )
     oauth2_user_token_name = forms.CharField(
-        label=_("Access token name"),
+        label=pgettext_lazy("admin oauth2 settings form", "Access token name"),
         max_length=200,
         required=False,
     )
     oauth2_user_extra_headers = forms.CharField(
-        label=_("Extra HTTP headers in user request"),
-        help_text=_(
-            "List of extra headers to include in a HTTP request made to retrieve "
-            'the user profile. Example header is "Header-name: value". Specify each '
-            "header on separate line."
+        label=pgettext_lazy(
+            "admin oauth2 settings form", "Extra HTTP headers in user request"
+        ),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            (
+                "List of extra headers to include in a HTTP request made to retrieve "
+                'the user profile. Example header is "Header-name: value". '
+                "Specify each header on separate line."
+            ),
         ),
         widget=forms.Textarea(attrs={"rows": 4}),
         max_length=500,
@@ -151,28 +183,34 @@ class OAuth2SettingsForm(SettingsForm):
     )
 
     oauth2_send_welcome_email = YesNoSwitch(
-        label=_("Send a welcoming e-mail to users on their first sign-ons"),
+        label=pgettext_lazy(
+            "admin oauth2 settings form",
+            "Send a welcoming e-mail to users on their first sign-ons",
+        ),
         required=False,
     )
 
     oauth2_json_id_path = forms.CharField(
-        label=_("User ID path"),
+        label=pgettext_lazy("admin oauth2 settings form", "User ID path"),
         max_length=200,
         required=False,
     )
     oauth2_json_name_path = forms.CharField(
-        label=_("User name path"),
+        label=pgettext_lazy("admin oauth2 settings form", "User name path"),
         max_length=200,
         required=False,
     )
     oauth2_json_email_path = forms.CharField(
-        label=_("User e-mail path"),
+        label=pgettext_lazy("admin oauth2 settings form", "User e-mail path"),
         max_length=200,
         required=False,
     )
     oauth2_json_avatar_path = forms.CharField(
-        label=_("User avatar URL path"),
-        help_text=_("Optional, leave empty to don't download avatar from provider."),
+        label=pgettext_lazy("admin oauth2 settings form", "User avatar URL path"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "Optional, leave empty to don't download avatar from provider.",
+        ),
         max_length=200,
         required=False,
     )
@@ -206,9 +244,12 @@ class OAuth2SettingsForm(SettingsForm):
 
             messages.error(
                 self.request,
-                gettext(
-                    "You need to complete the configuration before you will be able to "
-                    "enable OAuth 2 on your site."
+                pgettext(
+                    "admin oauth2 settings form",
+                    (
+                        "You need to complete the configuration before you will be "
+                        "able to enable OAuth 2 on your site."
+                    ),
                 ),
             )
 
@@ -223,9 +264,12 @@ def clean_headers(headers_value):
             continue
         if ":" not in header:
             raise forms.ValidationError(
-                gettext(
-                    '"%(header)s" is not a valid header. '
-                    'It\'s missing a colon (":").'
+                pgettext(
+                    "admin oauth2 settings form",
+                    (
+                        '"%(header)s" is not a valid header. '
+                        'It\'s missing a colon (":").'
+                    ),
                 )
                 % {"header": header},
             )
@@ -234,24 +278,33 @@ def clean_headers(headers_value):
 
         if not name:
             raise forms.ValidationError(
-                gettext(
-                    '"%(header)s" is not a valid header. '
-                    'It\'s missing a header name before the colon (":").'
+                pgettext(
+                    "admin oauth2 settings form",
+                    (
+                        '"%(header)s" is not a valid header. '
+                        'It\'s missing a header name before the colon (":").'
+                    ),
                 )
                 % {"header": header},
             )
 
         if name in clean_headers:
             raise forms.ValidationError(
-                gettext('"%(header)s" header is entered more than once.')
+                pgettext(
+                    "admin oauth2 settings form",
+                    '"%(header)s" header is entered more than once.',
+                )
                 % {"header": name},
             )
 
         if not value:
             raise forms.ValidationError(
-                gettext(
-                    '"%(header)s" is not a valid header. '
-                    'It\'s missing a header value after the colon (":").'
+                pgettext(
+                    "admin oauth2 settings form",
+                    (
+                        '"%(header)s" is not a valid header. '
+                        'It\'s missing a header value after the colon (":").'
+                    ),
                 )
                 % {"header": header},
             )

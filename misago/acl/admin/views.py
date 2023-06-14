@@ -48,7 +48,9 @@ class RoleFormMixin:
                     return redirect(request.path)
                 return redirect(self.root_link)
             if form.is_valid() and len(perms_forms) != valid_forms:
-                form.add_error(None, _("Form contains errors."))
+                form.add_error(
+                    None, pgettext_lazy("admin form", "Form contains errors.")
+                )
 
         template_name = self.get_template_name(request, target)
         return self.render(
