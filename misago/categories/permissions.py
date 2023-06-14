@@ -10,7 +10,7 @@ from .models import Category, CategoryRole, RoleCategoryACL
 
 
 class PermissionsForm(forms.Form):
-    legend = _("Category access")
+    legend = pgettext_lazy("permissions", "Category access")
 
     can_see = YesNoSwitch(label=pgettext_lazy("permissions", "Can see category"))
     can_browse = YesNoSwitch(
