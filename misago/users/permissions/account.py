@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...acl import algebra
 from ...acl.models import Role
@@ -7,29 +7,43 @@ from ...admin.forms import YesNoSwitch
 
 
 class PermissionsForm(forms.Form):
-    legend = _("Account settings")
+    legend = pgettext_lazy("permissions", "Account settings")
 
     name_changes_allowed = forms.IntegerField(
-        label=_("Allowed username changes number"), min_value=0, initial=1
+        label=pgettext_lazy("permissions", "Allowed username changes number"),
+        min_value=0,
+        initial=1,
     )
     name_changes_expire = forms.IntegerField(
-        label=_("Don't count username changes older than"),
-        help_text=_(
-            "Number of days since name change that makes "
-            "that change no longer count to limit. Enter "
-            "zero to make all changes count."
+        label=pgettext_lazy("permissions", "Don't count username changes older than"),
+        help_text=pgettext_lazy(
+            "permissions",
+            (
+                "Number of days since name change that makes "
+                "that change no longer count to limit. Enter "
+                "zero to make all changes count."
+            ),
         ),
         min_value=0,
         initial=0,
     )
-    can_have_signature = YesNoSwitch(label=_("Can have signature"))
-    allow_signature_links = YesNoSwitch(label=_("Can put links in signature"))
-    allow_signature_images = YesNoSwitch(label=_("Can put images in signature"))
+    can_have_signature = YesNoSwitch(
+        label=pgettext_lazy("permissions", "Can have signature")
+    )
+    allow_signature_links = YesNoSwitch(
+        label=pgettext_lazy("permissions", "Can put links in signature")
+    )
+    allow_signature_images = YesNoSwitch(
+        label=pgettext_lazy("permissions", "Can put images in signature")
+    )
     allow_signature_blocks = YesNoSwitch(
-        label=_("Can use text blocks in signature"),
-        help_text=_(
-            "Controls whether or not users can put quote, code, "
-            "spoiler blocks and horizontal lines in signatures."
+        label=pgettext_lazy("permissions", "Can use text blocks in signature"),
+        help_text=pgettext_lazy(
+            "permissions",
+            (
+                "Controls whether or not users can put quote, code, "
+                "spoiler blocks and horizontal lines in signatures."
+            ),
         ),
     )
 
