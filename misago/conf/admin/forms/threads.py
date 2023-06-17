@@ -104,7 +104,7 @@ class ThreadsSettingsForm(SettingsForm):
                 "older than number of days specified in this setting is considered old "
                 "and read, even if the opposite is true for the user. Active forums "
                 "can try lowering this value while less active ones may wish to "
-                "increase it instead. "
+                "increase it instead."
             ),
         ),
         min_value=1,

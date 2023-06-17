@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.utils.module_loading import import_string
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import npgettext, pgettext
 
 from .. import hooks
 from ..categories import THREADS_ROOT_NAME
@@ -24,18 +23,32 @@ def validate_category(user_acl, category_id, allow_root=False):
         return category
 
     if not category or not can_see_category(user_acl, category):
-        raise ValidationError(_("Requested category could not be found."))
+        raise ValidationError(
+            pgettext(
+                "thread category validator", "Requested category could not be found."
+            )
+        )
 
     if not can_browse_category(user_acl, category):
-        raise ValidationError(_("You don't have permission to access this category."))
+        raise ValidationError(
+            pgettext(
+                "thread category validator",
+                "You don't have permission to access this category.",
+            )
+        )
     return category
 
 
 def validate_thread_title(settings, title):
     validate_thread_title_length(settings, title)
 
-    error_not_sluggable = _("Thread title should contain alpha-numeric characters.")
-    error_slug_too_long = _("Thread title is too long.")
+    error_not_sluggable = pgettext(
+        "thread title validator",
+        "Thread title should contain alpha-numeric characters.",
+    )
+    error_slug_too_long = pgettext(
+        "thread title validator", "Thread title is too long."
+    )
     validate_sluggable(error_not_sluggable, error_slug_too_long)(title)
 
 
@@ -47,7 +60,8 @@ def validate_thread_title_length(settings, value):
 
     if value_len < settings.thread_title_length_min:
         # pylint: disable=line-too-long
-        message = ngettext(
+        message = npgettext(
+            "thread title length validator",
             "Thread title should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Thread title should be at least %(limit_value)s characters long (it has %(show_value)s).",
             settings.thread_title_length_min,
@@ -59,7 +73,8 @@ def validate_thread_title_length(settings, value):
 
     if value_len > settings.thread_title_length_max:
         # pylint: disable=line-too-long
-        message = ngettext(
+        message = npgettext(
+            "thread title length validator",
             "Thread title cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Thread title cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
             settings.thread_title_length_max,
@@ -78,7 +93,8 @@ def validate_post_length(settings, value):
 
     if value_len < settings.post_length_min:
         # pylint: disable=line-too-long
-        message = ngettext(
+        message = npgettext(
+            "post length validator",
             "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
             settings.post_length_min,
@@ -89,7 +105,8 @@ def validate_post_length(settings, value):
 
     if settings.post_length_max and value_len > settings.post_length_max:
         # pylint: disable=line-too-long
-        message = ngettext(
+        message = npgettext(
+            "post length validator",
             "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
             settings.post_length_max,

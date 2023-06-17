@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views import (
     DisableSocialAuthProvider,
@@ -37,9 +37,10 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Social login"),
-            description=_(
-                "Enable users to sign on and login using their social profile."
+            name=pgettext_lazy("admin node", "Social login"),
+            description=pgettext_lazy(
+                "admin node",
+                "Enable users to sign on and login using their social profile.",
             ),
             parent="settings",
             namespace="socialauth",

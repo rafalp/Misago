@@ -30,34 +30,46 @@ __all__ = [
 
 
 class PermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Users moderation")
+    legend = pgettext_lazy("users moderation permission", "Users moderation")
 
     can_rename_users = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can rename users")
+        label=pgettext_lazy("users moderation permission", "Can rename users")
     )
     can_moderate_avatars = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can moderate avatars")
+        label=pgettext_lazy("users moderation permission", "Can moderate avatars")
     )
     can_moderate_signatures = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can moderate signatures")
+        label=pgettext_lazy("users moderation permission", "Can moderate signatures")
     )
     can_moderate_profile_details = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can moderate profile details")
+        label=pgettext_lazy(
+            "users moderation permission", "Can moderate profile details"
+        )
     )
-    can_ban_users = YesNoSwitch(label=pgettext_lazy("permissions", "Can ban users"))
+    can_ban_users = YesNoSwitch(
+        label=pgettext_lazy("users moderation permission", "Can ban users")
+    )
     max_ban_length = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Max length, in days, of imposed ban"),
+        label=pgettext_lazy(
+            "users moderation permission", "Max length, in days, of imposed ban"
+        ),
         help_text=pgettext_lazy(
-            "permissions", "Enter zero to let moderators impose permanent bans."
+            "users moderation permission",
+            "Enter zero to let moderators impose permanent bans.",
         ),
         min_value=0,
         initial=0,
     )
-    can_lift_bans = YesNoSwitch(label=pgettext_lazy("permissions", "Can lift bans"))
+    can_lift_bans = YesNoSwitch(
+        label=pgettext_lazy("users moderation permission", "Can lift bans")
+    )
     max_lifted_ban_length = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Max length, in days, of lifted ban"),
+        label=pgettext_lazy(
+            "users moderation permission", "Max length, in days, of lifted ban"
+        ),
         help_text=pgettext_lazy(
-            "permissions", "Enter zero to let moderators lift permanent bans."
+            "users moderation permission",
+            "Enter zero to let moderators lift permanent bans.",
         ),
         min_value=0,
         initial=0,
@@ -120,10 +132,14 @@ def register_with(registry):
 
 def allow_rename_user(user_acl, target):
     if not user_acl["can_rename_users"]:
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't rename users."))
+        raise PermissionDenied(
+            pgettext_lazy("users moderation permission", "You can't rename users.")
+        )
     if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't rename administrators.")
+            pgettext_lazy(
+                "users moderation permission", "You can't rename administrators."
+            )
         )
 
 
@@ -133,11 +149,14 @@ can_rename_user = return_boolean(allow_rename_user)
 def allow_moderate_avatar(user_acl, target):
     if not user_acl["can_moderate_avatars"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't moderate avatars.")
+            pgettext_lazy("users moderation permission", "You can't moderate avatars.")
         )
     if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't moderate administrators avatars.")
+            pgettext_lazy(
+                "users moderation permission",
+                "You can't moderate administrators avatars.",
+            )
         )
 
 
@@ -147,11 +166,14 @@ can_moderate_avatar = return_boolean(allow_moderate_avatar)
 def allow_moderate_signature(user_acl, target):
     if not user_acl["can_moderate_signatures"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't moderate signatures.")
+            pgettext_lazy(
+                "users moderation permission", "You can't moderate signatures."
+            )
         )
     if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
         message = pgettext_lazy(
-            "permissions", "You can't moderate administrators signatures."
+            "users moderation permission",
+            "You can't moderate administrators signatures.",
         )
         raise PermissionDenied(message)
 
@@ -162,17 +184,24 @@ can_moderate_signature = return_boolean(allow_moderate_signature)
 def allow_edit_profile_details(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to edit profile details.")
+            pgettext_lazy(
+                "users moderation permission",
+                "You have to sign in to edit profile details.",
+            )
         )
     if (
         user_acl["user_id"] != target.id
         and not user_acl["can_moderate_profile_details"]
     ):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't edit other users details.")
+            pgettext_lazy(
+                "users moderation permission", "You can't edit other users details."
+            )
         )
     if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
-        message = pgettext_lazy("permissions", "You can't edit administrators details.")
+        message = pgettext_lazy(
+            "users moderation permission", "You can't edit administrators details."
+        )
         raise PermissionDenied(message)
 
 
@@ -181,10 +210,14 @@ can_edit_profile_details = return_boolean(allow_edit_profile_details)
 
 def allow_ban_user(user_acl, target):
     if not user_acl["can_ban_users"]:
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't ban users."))
+        raise PermissionDenied(
+            pgettext_lazy("users moderation permission", "You can't ban users.")
+        )
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't ban administrators.")
+            pgettext_lazy(
+                "users moderation permission", "You can't ban administrators."
+            )
         )
 
 
@@ -193,20 +226,27 @@ can_ban_user = return_boolean(allow_ban_user)
 
 def allow_lift_ban(user_acl, target):
     if not user_acl["can_lift_bans"]:
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't lift bans."))
+        raise PermissionDenied(
+            pgettext_lazy("users moderation permission", "You can't lift bans.")
+        )
     ban = get_user_ban(target, user_acl["cache_versions"])
     if not ban:
-        raise PermissionDenied(pgettext_lazy("permissions", "This user is not banned."))
+        raise PermissionDenied(
+            pgettext_lazy("users moderation permission", "This user is not banned.")
+        )
     if user_acl["max_lifted_ban_length"]:
         expiration_limit = timedelta(days=user_acl["max_lifted_ban_length"])
         lift_cutoff = (timezone.now() + expiration_limit).date()
         if not ban.valid_until:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "You can't lift permanent bans.")
+                pgettext_lazy(
+                    "users moderation permission", "You can't lift permanent bans."
+                )
             )
         elif ban.valid_until > lift_cutoff:
             message = pgettext_lazy(
-                "permissions", "You can't lift bans that expire after %(expiration)s."
+                "users moderation permission",
+                "You can't lift bans that expire after %(expiration)s.",
             )
             raise PermissionDenied(message % {"expiration": format_date(lift_cutoff)})
 

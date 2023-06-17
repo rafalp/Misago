@@ -69,234 +69,241 @@ __all__ = [
 
 
 class RolePermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Threads")
+    legend = pgettext_lazy("threads permission", "Threads")
 
     can_see_unapproved_content_lists = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can see unapproved content list"),
+        label=pgettext_lazy("threads permission", "Can see unapproved content list"),
         help_text=pgettext_lazy(
-            "permissions",
+            "threads permission",
             (
                 'Allows access to "unapproved" tab on threads lists for '
                 "easy listing of threads that are unapproved or contain "
                 "unapproved posts. Despite the tab being available on all "
                 "threads lists, it will only display threads belonging to "
                 "categories in which the user has permission to approve "
-                "content.",
+                "content."
             ),
         ),
     )
     can_see_reported_content_lists = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can see reported content list"),
+        label=pgettext_lazy("threads permission", "Can see reported content list"),
         help_text=pgettext_lazy(
-            "permissions",
+            "threads permission",
             (
                 'Allows access to "reported" tab on threads lists for '
                 "easy listing of threads that contain reported posts. "
                 "Despite the tab being available on all categories "
                 "threads lists, it will only display threads belonging to "
                 "categories in which the user has permission to see posts "
-                "reports.",
+                "reports."
             ),
         ),
     )
     can_omit_flood_protection = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can omit flood protection"),
+        label=pgettext_lazy("threads permission", "Can omit flood protection"),
         help_text=pgettext_lazy(
-            "permissions", "Allows posting more frequently than flood protection would."
+            "threads permission",
+            "Allows posting more frequently than flood protection would.",
         ),
     )
 
 
 class CategoryPermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Threads")
+    legend = pgettext_lazy("threads permission", "Threads")
 
     can_see_all_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can see threads"),
+        label=pgettext_lazy("threads permission", "Can see threads"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "Started threads")),
-            (1, pgettext_lazy("permissions", "All threads")),
+            (0, pgettext_lazy("threads permission", "Started threads")),
+            (1, pgettext_lazy("threads permission", "All threads")),
         ],
     )
 
     can_start_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can start threads")
+        label=pgettext_lazy("threads permission", "Can start threads")
     )
     can_reply_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can reply to threads")
+        label=pgettext_lazy("threads permission", "Can reply to threads")
     )
 
     can_edit_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can edit threads"),
+        label=pgettext_lazy("threads permission", "Can edit threads"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own threads")),
-            (2, pgettext_lazy("permissions", "All threads")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Own threads")),
+            (2, pgettext_lazy("threads permission", "All threads")),
         ],
     )
     can_hide_own_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can hide own threads"),
+        label=pgettext_lazy("threads permission", "Can hide own threads"),
         help_text=pgettext_lazy(
-            "permissions",
-            "Only threads started within time limit and "
-            "with no replies can be hidden.",
+            "threads permission",
+            "Only threads started within time limit and with no replies can be hidden.",
         ),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Hide threads")),
-            (2, pgettext_lazy("permissions", "Delete threads")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Hide threads")),
+            (2, pgettext_lazy("threads permission", "Delete threads")),
         ],
     )
     thread_edit_time = forms.IntegerField(
         label=pgettext_lazy(
-            "permissions", "Time limit for own threads edits, in minutes"
+            "threads permission", "Time limit for own threads edits, in minutes"
         ),
         help_text=pgettext_lazy(
-            "permissions", "Enter 0 to don't limit time for editing own threads."
+            "threads permission", "Enter 0 to don't limit time for editing own threads."
         ),
         initial=0,
         min_value=0,
     )
     can_hide_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can hide all threads"),
+        label=pgettext_lazy("threads permission", "Can hide all threads"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Hide threads")),
-            (2, pgettext_lazy("permissions", "Delete threads")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Hide threads")),
+            (2, pgettext_lazy("threads permission", "Delete threads")),
         ],
     )
 
     can_pin_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can pin threads"),
+        label=pgettext_lazy("threads permission", "Can pin threads"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Locally")),
-            (2, pgettext_lazy("permissions", "Globally")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Locally")),
+            (2, pgettext_lazy("threads permission", "Globally")),
         ],
     )
     can_close_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can close threads")
+        label=pgettext_lazy("threads permission", "Can close threads")
     )
     can_move_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can move threads")
+        label=pgettext_lazy("threads permission", "Can move threads")
     )
     can_merge_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can merge threads")
+        label=pgettext_lazy("threads permission", "Can merge threads")
     )
 
     can_edit_posts = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can edit posts"),
+        label=pgettext_lazy("threads permission", "Can edit posts"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own posts")),
-            (2, pgettext_lazy("permissions", "All posts")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Own posts")),
+            (2, pgettext_lazy("threads permission", "All posts")),
         ],
     )
     can_hide_own_posts = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can hide own posts"),
+        label=pgettext_lazy("threads permission", "Can hide own posts"),
         help_text=pgettext_lazy(
-            "permissions",
+            "threads permission",
             "Only last posts to thread made within edit time limit can be hidden.",
         ),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Hide posts")),
-            (2, pgettext_lazy("permissions", "Delete posts")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Hide posts")),
+            (2, pgettext_lazy("threads permission", "Delete posts")),
         ],
     )
     post_edit_time = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Time limit for own post edits, in minutes"),
+        label=pgettext_lazy(
+            "threads permission", "Time limit for own post edits, in minutes"
+        ),
         help_text=pgettext_lazy(
-            "permissions", "Enter 0 to don't limit time for editing own posts."
+            "threads permission", "Enter 0 to don't limit time for editing own posts."
         ),
         initial=0,
         min_value=0,
     )
     can_hide_posts = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can hide all posts"),
+        label=pgettext_lazy("threads permission", "Can hide all posts"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Hide posts")),
-            (2, pgettext_lazy("permissions", "Delete posts")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Hide posts")),
+            (2, pgettext_lazy("threads permission", "Delete posts")),
         ],
     )
 
     can_see_posts_likes = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can see posts likes"),
+        label=pgettext_lazy("threads permission", "Can see posts likes"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Number only")),
-            (2, pgettext_lazy("permissions", "Number and list of likers")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Number only")),
+            (2, pgettext_lazy("threads permission", "Number and list of likers")),
         ],
     )
     can_like_posts = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can like posts"),
+        label=pgettext_lazy("threads permission", "Can like posts"),
         help_text=pgettext_lazy(
-            "permissions",
+            "threads permission",
             "Only users with this permission to see likes can like posts.",
         ),
     )
 
     can_protect_posts = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can protect posts"),
+        label=pgettext_lazy("threads permission", "Can protect posts"),
         help_text=pgettext_lazy(
-            "permissions", "Only users with this permission can edit protected posts."
+            "threads permission",
+            "Only users with this permission can edit protected posts.",
         ),
     )
     can_move_posts = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can move posts"),
+        label=pgettext_lazy("threads permission", "Can move posts"),
         help_text=pgettext_lazy(
-            "permissions", "Will be able to move posts to other threads."
+            "threads permission", "Will be able to move posts to other threads."
         ),
     )
-    can_merge_posts = YesNoSwitch(label=pgettext_lazy("permissions", "Can merge posts"))
+    can_merge_posts = YesNoSwitch(
+        label=pgettext_lazy("threads permission", "Can merge posts")
+    )
     can_approve_content = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can approve content"),
+        label=pgettext_lazy("threads permission", "Can approve content"),
         help_text=pgettext_lazy(
-            "permissions", "Will be able to see and approve unapproved content."
+            "threads permission", "Will be able to see and approve unapproved content."
         ),
     )
     can_report_content = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can report posts")
+        label=pgettext_lazy("threads permission", "Can report posts")
     )
-    can_see_reports = YesNoSwitch(label=pgettext_lazy("permissions", "Can see reports"))
+    can_see_reports = YesNoSwitch(
+        label=pgettext_lazy("threads permission", "Can see reports")
+    )
 
     can_hide_events = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can hide events"),
+        label=pgettext_lazy("threads permission", "Can hide events"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Hide events")),
-            (2, pgettext_lazy("permissions", "Delete events")),
+            (0, pgettext_lazy("threads permission", "No")),
+            (1, pgettext_lazy("threads permission", "Hide events")),
+            (2, pgettext_lazy("threads permission", "Delete events")),
         ],
     )
 
     require_threads_approval = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Require threads approval")
+        label=pgettext_lazy("threads permission", "Require threads approval")
     )
     require_replies_approval = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Require replies approval")
+        label=pgettext_lazy("threads permission", "Require replies approval")
     )
     require_edits_approval = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Require edits approval")
+        label=pgettext_lazy("threads permission", "Require edits approval")
     )
 
 
@@ -619,7 +626,7 @@ can_see_thread = return_boolean(allow_see_thread)
 def allow_start_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to start threads.")
+            pgettext_lazy("threads permission", "You have to sign in to start threads.")
         )
 
     category_acl = user_acl["categories"].get(target.pk, {"can_start_threads": False})
@@ -627,7 +634,7 @@ def allow_start_thread(user_acl, target):
     if not category_acl["can_start_threads"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "threads permission",
                 "You don't have permission to start new threads in this category.",
             )
         )
@@ -635,7 +642,7 @@ def allow_start_thread(user_acl, target):
     if target.is_closed and not category_acl["can_close_threads"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "threads permission",
                 "This category is closed. You can't start new threads in it.",
             )
         )
@@ -647,7 +654,7 @@ can_start_thread = return_boolean(allow_start_thread)
 def allow_reply_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to reply threads.")
+            pgettext_lazy("threads permission", "You have to sign in to reply threads.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -656,21 +663,24 @@ def allow_reply_thread(user_acl, target):
 
     if not category_acl["can_reply_threads"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't reply to threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't reply to threads in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't reply to threads in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "You can't reply to closed threads in this category."
+                    "threads permission",
+                    "You can't reply to closed threads in this category.",
                 )
             )
 
@@ -681,7 +691,7 @@ can_reply_thread = return_boolean(allow_reply_thread)
 def allow_edit_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to edit threads.")
+            pgettext_lazy("threads permission", "You have to sign in to edit threads.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -690,21 +700,23 @@ def allow_edit_thread(user_acl, target):
 
     if not category_acl["can_edit_threads"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't edit threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't edit threads in this category."
+            )
         )
 
     if category_acl["can_edit_threads"] == 1:
         if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "You can't edit other users threads in this category.",
                 )
             )
 
         if not has_time_to_edit_thread(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't edit threads that are older than %(minutes)s minute.",
                 "You can't edit threads that are older than %(minutes)s minutes.",
                 category_acl["thread_edit_time"],
@@ -717,14 +729,14 @@ def allow_edit_thread(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't edit threads in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't edit it."
+                    "threads permission", "This thread is closed. You can't edit it."
                 )
             )
 
@@ -736,7 +748,7 @@ def allow_pin_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You have to sign in to change threads weights."
+                "threads permission", "You have to sign in to change threads weights."
             )
         )
 
@@ -747,7 +759,8 @@ def allow_pin_thread(user_acl, target):
     if not category_acl["can_pin_threads"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't change threads weights in this category."
+                "threads permission",
+                "You can't change threads weights in this category.",
             )
         )
 
@@ -755,14 +768,15 @@ def allow_pin_thread(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't change threads weights in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't change its weight."
+                    "threads permission",
+                    "This thread is closed. You can't change its weight.",
                 )
             )
 
@@ -773,7 +787,7 @@ can_pin_thread = return_boolean(allow_pin_thread)
 def allow_unhide_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to hide threads.")
+            pgettext_lazy("threads permission", "You have to sign in to hide threads.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -784,14 +798,14 @@ def allow_unhide_thread(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't reveal threads in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't reveal it."
+                    "threads permission", "This thread is closed. You can't reveal it."
                 )
             )
 
@@ -802,7 +816,7 @@ can_unhide_thread = return_boolean(allow_unhide_thread)
 def allow_hide_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to hide threads.")
+            pgettext_lazy("threads permission", "You have to sign in to hide threads.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -814,20 +828,23 @@ def allow_hide_thread(user_acl, target):
         and not category_acl["can_hide_own_threads"]
     ):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't hide threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't hide threads in this category."
+            )
         )
 
     if not category_acl["can_hide_threads"] and category_acl["can_hide_own_threads"]:
         if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "You can't hide other users theads in this category."
+                    "threads permission",
+                    "You can't hide other users theads in this category.",
                 )
             )
 
         if not has_time_to_edit_thread(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't hide threads that are older than %(minutes)s minute.",
                 "You can't hide threads that are older than %(minutes)s minutes.",
                 category_acl["thread_edit_time"],
@@ -840,14 +857,14 @@ def allow_hide_thread(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't hide threads in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't hide it."
+                    "threads permission", "This thread is closed. You can't hide it."
                 )
             )
 
@@ -858,7 +875,9 @@ can_hide_thread = return_boolean(allow_hide_thread)
 def allow_delete_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to delete threads.")
+            pgettext_lazy(
+                "threads permission", "You have to sign in to delete threads."
+            )
         )
 
     category_acl = user_acl["categories"].get(
@@ -870,7 +889,9 @@ def allow_delete_thread(user_acl, target):
         and category_acl["can_hide_own_threads"] != 2
     ):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't delete threads in this category."
+            )
         )
 
     if (
@@ -880,14 +901,14 @@ def allow_delete_thread(user_acl, target):
         if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "You can't delete other users theads in this category.",
                 )
             )
 
         if not has_time_to_edit_thread(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't delete threads that are older than %(minutes)s minute.",
                 "You can't delete threads that are older than %(minutes)s minutes.",
                 category_acl["thread_edit_time"],
@@ -900,14 +921,14 @@ def allow_delete_thread(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't delete threads in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't delete it."
+                    "threads permission", "This thread is closed. You can't delete it."
                 )
             )
 
@@ -918,7 +939,7 @@ can_delete_thread = return_boolean(allow_delete_thread)
 def allow_move_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to move threads.")
+            pgettext_lazy("threads permission", "You have to sign in to move threads.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -927,21 +948,23 @@ def allow_move_thread(user_acl, target):
 
     if not category_acl["can_move_threads"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't move threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't move threads in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't move it's threads.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't move it."
+                    "threads permission", "This thread is closed. You can't move it."
                 )
             )
 
@@ -952,7 +975,7 @@ can_move_thread = return_boolean(allow_move_thread)
 def allow_merge_thread(user_acl, target, otherthread=False):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to merge threads.")
+            pgettext_lazy("threads permission", "You have to sign in to merge threads.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -962,10 +985,14 @@ def allow_merge_thread(user_acl, target, otherthread=False):
     if not category_acl["can_merge_threads"]:
         if otherthread:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "Other thread can't be merged with.")
+                pgettext_lazy(
+                    "threads permission", "Other thread can't be merged with."
+                )
             )
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't merge threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't merge threads in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
@@ -973,13 +1000,13 @@ def allow_merge_thread(user_acl, target, otherthread=False):
             if otherthread:
                 raise PermissionDenied(
                     pgettext_lazy(
-                        "permissions",
+                        "threads permission",
                         "Other thread's category is closed. You can't merge with it.",
                     )
                 )
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't merge it's threads.",
                 )
             )
@@ -987,13 +1014,13 @@ def allow_merge_thread(user_acl, target, otherthread=False):
             if otherthread:
                 raise PermissionDenied(
                     pgettext_lazy(
-                        "permissions",
+                        "threads permission",
                         "Other thread is closed and can't be merged with.",
                     )
                 )
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This thread is closed. You can't merge it with other threads.",
                 )
             )
@@ -1005,7 +1032,9 @@ can_merge_thread = return_boolean(allow_merge_thread)
 def allow_approve_thread(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to approve threads.")
+            pgettext_lazy(
+                "threads permission", "You have to sign in to approve threads."
+            )
         )
 
     category_acl = user_acl["categories"].get(
@@ -1014,21 +1043,23 @@ def allow_approve_thread(user_acl, target):
 
     if not category_acl["can_approve_content"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't approve threads in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't approve threads in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't approve threads in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't approve it."
+                    "threads permission", "This thread is closed. You can't approve it."
                 )
             )
 
@@ -1061,11 +1092,13 @@ can_see_post = return_boolean(allow_see_post)
 def allow_edit_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to edit posts.")
+            pgettext_lazy("threads permission", "You have to sign in to edit posts.")
         )
 
     if target.is_event:
-        raise PermissionDenied(pgettext_lazy("permissions", "Events can't be edited."))
+        raise PermissionDenied(
+            pgettext_lazy("threads permission", "Events can't be edited.")
+        )
 
     category_acl = user_acl["categories"].get(
         target.category_id, {"can_edit_posts": False}
@@ -1073,7 +1106,9 @@ def allow_edit_post(user_acl, target):
 
     if not category_acl["can_edit_posts"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't edit posts in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't edit posts in this category."
+            )
         )
 
     if (
@@ -1082,27 +1117,30 @@ def allow_edit_post(user_acl, target):
         and not category_acl["can_hide_posts"]
     ):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "This post is hidden, you can't edit it.")
+            pgettext_lazy(
+                "threads permission", "This post is hidden, you can't edit it."
+            )
         )
 
     if category_acl["can_edit_posts"] == 1:
         if target.poster_id != user_acl["user_id"]:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "You can't edit other users posts in this category."
+                    "threads permission",
+                    "You can't edit other users posts in this category.",
                 )
             )
 
         if target.is_protected and not category_acl["can_protect_posts"]:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This post is protected. You can't edit it."
+                    "threads permission", "This post is protected. You can't edit it."
                 )
             )
 
         if not has_time_to_edit_post(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't edit posts that are older than %(minutes)s minute.",
                 "You can't edit posts that are older than %(minutes)s minutes.",
                 category_acl["post_edit_time"],
@@ -1115,14 +1153,15 @@ def allow_edit_post(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't edit posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't edit posts in it."
+                    "threads permission",
+                    "This thread is closed. You can't edit posts in it.",
                 )
             )
 
@@ -1133,7 +1172,7 @@ can_edit_post = return_boolean(allow_edit_post)
 def allow_unhide_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to reveal posts.")
+            pgettext_lazy("threads permission", "You have to sign in to reveal posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1143,13 +1182,15 @@ def allow_unhide_post(user_acl, target):
     if not category_acl["can_hide_posts"]:
         if not category_acl["can_hide_own_posts"]:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "You can't reveal posts in this category.")
+                pgettext_lazy(
+                    "threads permission", "You can't reveal posts in this category."
+                )
             )
 
         if user_acl["user_id"] != target.poster_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "You can't reveal other users posts in this category.",
                 )
             )
@@ -1157,13 +1198,13 @@ def allow_unhide_post(user_acl, target):
         if target.is_protected and not category_acl["can_protect_posts"]:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This post is protected. You can't reveal it."
+                    "threads permission", "This post is protected. You can't reveal it."
                 )
             )
 
         if not has_time_to_edit_post(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't reveal posts that are older than %(minutes)s minute.",
                 "You can't reveal posts that are older than %(minutes)s minutes.",
                 category_acl["post_edit_time"],
@@ -1174,21 +1215,21 @@ def allow_unhide_post(user_acl, target):
 
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't reveal thread's first post.")
+            pgettext_lazy("threads permission", "You can't reveal thread's first post.")
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't reveal posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This thread is closed. You can't reveal posts in it.",
                 )
             )
@@ -1200,7 +1241,7 @@ can_unhide_post = return_boolean(allow_unhide_post)
 def allow_hide_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to hide posts.")
+            pgettext_lazy("threads permission", "You have to sign in to hide posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1210,26 +1251,29 @@ def allow_hide_post(user_acl, target):
     if not category_acl["can_hide_posts"]:
         if not category_acl["can_hide_own_posts"]:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "You can't hide posts in this category.")
+                pgettext_lazy(
+                    "threads permission", "You can't hide posts in this category."
+                )
             )
 
         if user_acl["user_id"] != target.poster_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "You can't hide other users posts in this category."
+                    "threads permission",
+                    "You can't hide other users posts in this category.",
                 )
             )
 
         if target.is_protected and not category_acl["can_protect_posts"]:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This post is protected. You can't hide it."
+                    "threads permission", "This post is protected. You can't hide it."
                 )
             )
 
         if not has_time_to_edit_post(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't hide posts that are older than %(minutes)s minute.",
                 "You can't hide posts that are older than %(minutes)s minutes.",
                 category_acl["post_edit_time"],
@@ -1240,21 +1284,22 @@ def allow_hide_post(user_acl, target):
 
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't hide thread's first post.")
+            pgettext_lazy("threads permission", "You can't hide thread's first post.")
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't hide posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't hide posts in it."
+                    "threads permission",
+                    "This thread is closed. You can't hide posts in it.",
                 )
             )
 
@@ -1265,7 +1310,7 @@ can_hide_post = return_boolean(allow_hide_post)
 def allow_delete_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to delete posts.")
+            pgettext_lazy("threads permission", "You have to sign in to delete posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1275,13 +1320,15 @@ def allow_delete_post(user_acl, target):
     if category_acl["can_hide_posts"] != 2:
         if category_acl["can_hide_own_posts"] != 2:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "You can't delete posts in this category.")
+                pgettext_lazy(
+                    "threads permission", "You can't delete posts in this category."
+                )
             )
 
         if user_acl["user_id"] != target.poster_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "You can't delete other users posts in this category.",
                 )
             )
@@ -1289,13 +1336,13 @@ def allow_delete_post(user_acl, target):
         if target.is_protected and not category_acl["can_protect_posts"]:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This post is protected. You can't delete it."
+                    "threads permission", "This post is protected. You can't delete it."
                 )
             )
 
         if not has_time_to_edit_post(user_acl, target):
             message = npgettext(
-                "permissions",
+                "threads permission",
                 "You can't delete posts that are older than %(minutes)s minute.",
                 "You can't delete posts that are older than %(minutes)s minutes.",
                 category_acl["post_edit_time"],
@@ -1306,21 +1353,21 @@ def allow_delete_post(user_acl, target):
 
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete thread's first post.")
+            pgettext_lazy("threads permission", "You can't delete thread's first post.")
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't delete posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This thread is closed. You can't delete posts in it.",
                 )
             )
@@ -1332,7 +1379,7 @@ can_delete_post = return_boolean(allow_delete_post)
 def allow_protect_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to protect posts.")
+            pgettext_lazy("threads permission", "You have to sign in to protect posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1341,11 +1388,15 @@ def allow_protect_post(user_acl, target):
 
     if not category_acl["can_protect_posts"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't protect posts in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't protect posts in this category."
+            )
         )
     if not can_edit_post(user_acl, target):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't protect posts you can't edit.")
+            pgettext_lazy(
+                "threads permission", "You can't protect posts you can't edit."
+            )
         )
 
 
@@ -1355,7 +1406,7 @@ can_protect_post = return_boolean(allow_protect_post)
 def allow_approve_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to approve posts.")
+            pgettext_lazy("threads permission", "You have to sign in to approve posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1364,11 +1415,15 @@ def allow_approve_post(user_acl, target):
 
     if not category_acl["can_approve_content"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't approve posts in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't approve posts in this category."
+            )
         )
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't approve thread's first post.")
+            pgettext_lazy(
+                "threads permission", "You can't approve thread's first post."
+            )
         )
     if (
         not target.is_first_post
@@ -1377,7 +1432,8 @@ def allow_approve_post(user_acl, target):
     ):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't approve posts the content you can't see."
+                "threads permission",
+                "You can't approve posts the content you can't see.",
             )
         )
 
@@ -1385,14 +1441,14 @@ def allow_approve_post(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't approve posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This thread is closed. You can't approve posts in it.",
                 )
             )
@@ -1404,7 +1460,7 @@ can_approve_post = return_boolean(allow_approve_post)
 def allow_move_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to move posts.")
+            pgettext_lazy("threads permission", "You have to sign in to move posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1413,18 +1469,22 @@ def allow_move_post(user_acl, target):
 
     if not category_acl["can_move_posts"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't move posts in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't move posts in this category."
+            )
         )
     if target.is_event:
-        raise PermissionDenied(pgettext_lazy("permissions", "Events can't be moved."))
+        raise PermissionDenied(
+            pgettext_lazy("threads permission", "Events can't be moved.")
+        )
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't move thread's first post.")
+            pgettext_lazy("threads permission", "You can't move thread's first post.")
         )
     if not category_acl["can_hide_posts"] and target.is_hidden:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't move posts the content you can't see."
+                "threads permission", "You can't move posts the content you can't see."
             )
         )
 
@@ -1432,14 +1492,15 @@ def allow_move_post(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't move posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't move posts in it."
+                    "threads permission",
+                    "This thread is closed. You can't move posts in it.",
                 )
             )
 
@@ -1450,7 +1511,7 @@ can_move_post = return_boolean(allow_move_post)
 def allow_merge_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to merge posts.")
+            pgettext_lazy("threads permission", "You have to sign in to merge posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1459,10 +1520,14 @@ def allow_merge_post(user_acl, target):
 
     if not category_acl["can_merge_posts"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't merge posts in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't merge posts in this category."
+            )
         )
     if target.is_event:
-        raise PermissionDenied(pgettext_lazy("permissions", "Events can't be merged."))
+        raise PermissionDenied(
+            pgettext_lazy("threads permission", "Events can't be merged.")
+        )
     if (
         target.is_hidden
         and not category_acl["can_hide_posts"]
@@ -1470,7 +1535,7 @@ def allow_merge_post(user_acl, target):
     ):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't merge posts the content you can't see."
+                "threads permission", "You can't merge posts the content you can't see."
             )
         )
 
@@ -1478,14 +1543,15 @@ def allow_merge_post(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't merge posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't merge posts in it."
+                    "threads permission",
+                    "This thread is closed. You can't merge posts in it.",
                 )
             )
 
@@ -1496,7 +1562,7 @@ can_merge_post = return_boolean(allow_merge_post)
 def allow_split_post(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to split posts.")
+            pgettext_lazy("threads permission", "You have to sign in to split posts.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1505,18 +1571,22 @@ def allow_split_post(user_acl, target):
 
     if not category_acl["can_move_posts"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't split posts in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't split posts in this category."
+            )
         )
     if target.is_event:
-        raise PermissionDenied(pgettext_lazy("permissions", "Events can't be split."))
+        raise PermissionDenied(
+            pgettext_lazy("threads permission", "Events can't be split.")
+        )
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't split thread's first post.")
+            pgettext_lazy("threads permission", "You can't split thread's first post.")
         )
     if not category_acl["can_hide_posts"] and target.is_hidden:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't split posts the content you can't see."
+                "threads permission", "You can't split posts the content you can't see."
             )
         )
 
@@ -1524,14 +1594,15 @@ def allow_split_post(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't split posts in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't split posts in it."
+                    "threads permission",
+                    "This thread is closed. You can't split posts in it.",
                 )
             )
 
@@ -1542,7 +1613,7 @@ can_split_post = return_boolean(allow_split_post)
 def allow_unhide_event(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to reveal events.")
+            pgettext_lazy("threads permission", "You have to sign in to reveal events.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1551,21 +1622,23 @@ def allow_unhide_event(user_acl, target):
 
     if not category_acl["can_hide_events"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't reveal events in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't reveal events in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't reveal events in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This thread is closed. You can't reveal events in it.",
                 )
             )
@@ -1577,7 +1650,7 @@ can_unhide_event = return_boolean(allow_unhide_event)
 def allow_hide_event(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to hide events.")
+            pgettext_lazy("threads permission", "You have to sign in to hide events.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1586,21 +1659,24 @@ def allow_hide_event(user_acl, target):
 
     if not category_acl["can_hide_events"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't hide events in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't hide events in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't hide events in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't hide events in it."
+                    "threads permission",
+                    "This thread is closed. You can't hide events in it.",
                 )
             )
 
@@ -1611,7 +1687,7 @@ can_hide_event = return_boolean(allow_hide_event)
 def allow_delete_event(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to delete events.")
+            pgettext_lazy("threads permission", "You have to sign in to delete events.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -1620,21 +1696,23 @@ def allow_delete_event(user_acl, target):
 
     if category_acl["can_hide_events"] != 2:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete events in this category.")
+            pgettext_lazy(
+                "threads permission", "You can't delete events in this category."
+            )
         )
 
     if not category_acl["can_close_threads"]:
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This category is closed. You can't delete events in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "threads permission",
                     "This thread is closed. You can't delete events in it.",
                 )
             )

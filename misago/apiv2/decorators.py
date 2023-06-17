@@ -10,10 +10,10 @@ def require_auth(f):
         if request.user.is_anonymous:
             if request.method in ("GET", "HEAD", "OPTIONS"):
                 raise PermissionDenied(
-                    pgettext("permissions", "You have to sign in to access this page.")
+                    pgettext("apiv2", "You have to sign in to access this page.")
                 )
             raise PermissionDenied(
-                pgettext("permissions", "You have to sign in to perform this action.")
+                pgettext("apiv2", "You have to sign in to perform this action.")
             )
 
         return f(request, *args, **kwargs)

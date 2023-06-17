@@ -21,7 +21,7 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=pgettext_lazy("admin page", "Permissions"),
+            name=pgettext_lazy("admin node", "Permissions"),
             icon="fa fa-adjust",
             after="categories:index",
             namespace="permissions",

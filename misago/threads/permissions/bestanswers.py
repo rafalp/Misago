@@ -9,7 +9,9 @@ from ...categories.models import Category, CategoryRole
 from ...categories.permissions import get_categories_roles
 from ..models import Post, Thread
 
-__all__nope = [
+__all__ = [
+    "allow_change_best_answer",
+    "can_change_best_answer",
     "allow_mark_best_answer",
     "can_mark_best_answer",
     "allow_mark_as_best_answer",
@@ -24,35 +26,37 @@ __all__nope = [
 
 
 class CategoryPermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Best answers")
+    legend = pgettext_lazy("best answers permission", "Best answers")
 
     can_mark_best_answers = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can mark posts as best answers"),
+        label=pgettext_lazy(
+            "best answers permission", "Can mark posts as best answers"
+        ),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own threads")),
-            (2, pgettext_lazy("permissions", "All threads")),
+            (0, pgettext_lazy("best answers permission", "No")),
+            (1, pgettext_lazy("best answers permission", "Own threads")),
+            (2, pgettext_lazy("best answers permission", "All threads")),
         ],
     )
     can_change_marked_answers = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can change marked answers"),
+        label=pgettext_lazy("best answers permission", "Can change marked answers"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own threads")),
-            (2, pgettext_lazy("permissions", "All threads")),
+            (0, pgettext_lazy("best answers permission", "No")),
+            (1, pgettext_lazy("best answers permission", "Own threads")),
+            (2, pgettext_lazy("best answers permission", "All threads")),
         ],
     )
     best_answer_change_time = forms.IntegerField(
         label=pgettext_lazy(
-            "permissions",
+            "best answers permission",
             "Time limit for changing marked best answer in owned thread, in minutes",
         ),
         help_text=pgettext_lazy(
-            "permissions",
+            "best answers permission",
             (
                 "Enter 0 to don't limit time for changing marked best answer in "
                 "owned thread."
@@ -143,7 +147,9 @@ def register_with(registry):
 def allow_mark_best_answer(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to mark best answers.")
+            pgettext_lazy(
+                "best answers permission", "You have to sign in to mark best answers."
+            )
         )
 
     category_acl = user_acl["categories"].get(target.category_id, {})
@@ -151,7 +157,7 @@ def allow_mark_best_answer(user_acl, target):
     if not category_acl.get("can_mark_best_answers"):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to mark best answers in the "
                     '"%(category)s" category.'
@@ -166,7 +172,7 @@ def allow_mark_best_answer(user_acl, target):
     ):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to mark best answer in this thread "
                     "because you didn't start it."
@@ -178,7 +184,7 @@ def allow_mark_best_answer(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "best answers permission",
                     (
                         "You don't have permission to mark best answer in this thread "
                         'because its category "%(category)s" is closed.'
@@ -189,7 +195,7 @@ def allow_mark_best_answer(user_acl, target):
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "best answers permission",
                     (
                         "You can't mark best answer in this thread because it's closed "
                         "and you don't have permission to open it."
@@ -210,7 +216,7 @@ def allow_change_best_answer(user_acl, target):
     if not category_acl.get("can_change_marked_answers"):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to change this thread's marked answer "
                     'because it\'s in the "%(category)s" category.'
@@ -223,7 +229,7 @@ def allow_change_best_answer(user_acl, target):
         if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "best answers permission",
                     (
                         "You don't have permission to change this thread's marked answer "
                         "because you are not a thread starter."
@@ -233,7 +239,7 @@ def allow_change_best_answer(user_acl, target):
         if not has_time_to_change_answer(user_acl, target):
             # pylint: disable=line-too-long
             message = npgettext(
-                "permissions",
+                "best answers permission",
                 "You don't have permission to change best answer that was marked for more than %(minutes)s minute.",
                 "You don't have permission to change best answer that was marked for more than %(minutes)s minutes.",
                 category_acl["best_answer_change_time"],
@@ -245,7 +251,7 @@ def allow_change_best_answer(user_acl, target):
     if target.best_answer_is_protected and not category_acl["can_protect_posts"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to change this thread's best answer "
                     "because a moderator has protected it."
@@ -260,7 +266,9 @@ can_change_best_answer = return_boolean(allow_change_best_answer)
 def allow_unmark_best_answer(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to unmark best answers.")
+            pgettext_lazy(
+                "best answers permission", "You have to sign in to unmark best answers."
+            )
         )
 
     if not target.has_best_answer:
@@ -271,7 +279,7 @@ def allow_unmark_best_answer(user_acl, target):
     if not category_acl.get("can_change_marked_answers"):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to unmark threads answers in "
                     'the "%(category)s" category.'
@@ -284,7 +292,7 @@ def allow_unmark_best_answer(user_acl, target):
         if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "best answers permission",
                     (
                         "You don't have permission to unmark this best answer "
                         "because you are not a thread starter."
@@ -294,7 +302,7 @@ def allow_unmark_best_answer(user_acl, target):
         if not has_time_to_change_answer(user_acl, target):
             # pylint: disable=line-too-long
             message = npgettext(
-                "permissions",
+                "best answers permission",
                 "You don't have permission to unmark best answer that was marked for more than %(minutes)s minute.",
                 "You don't have permission to unmark best answer that was marked for more than %(minutes)s minutes.",
                 category_acl["best_answer_change_time"],
@@ -307,7 +315,7 @@ def allow_unmark_best_answer(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "best answers permission",
                     (
                         "You don't have permission to unmark this best answer "
                         'because its category "%(category)s" is closed.'
@@ -318,7 +326,7 @@ def allow_unmark_best_answer(user_acl, target):
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "best answers permission",
                     (
                         "You can't unmark this thread's best answer "
                         "because it's closed and you don't have permission to open it."
@@ -329,7 +337,7 @@ def allow_unmark_best_answer(user_acl, target):
     if target.best_answer_is_protected and not category_acl["can_protect_posts"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to unmark this thread's best answer "
                     "because a moderator has protected it."
@@ -344,12 +352,16 @@ can_unmark_best_answer = return_boolean(allow_unmark_best_answer)
 def allow_mark_as_best_answer(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to mark best answers.")
+            pgettext_lazy(
+                "best answers permission", "You have to sign in to mark best answers."
+            )
         )
 
     if target.is_event:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "Events can't be marked as best answers.")
+            pgettext_lazy(
+                "best answers permission", "Events can't be marked as best answers."
+            )
         )
 
     category_acl = user_acl["categories"].get(target.category_id, {})
@@ -357,7 +369,7 @@ def allow_mark_as_best_answer(user_acl, target):
     if not category_acl.get("can_mark_best_answers"):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to mark best answers "
                     'in the "%(category)s" category.'
@@ -372,7 +384,7 @@ def allow_mark_as_best_answer(user_acl, target):
     ):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to mark best answer in this thread "
                     "because you didn't start it."
@@ -383,28 +395,31 @@ def allow_mark_as_best_answer(user_acl, target):
     if target.is_first_post:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "First post in a thread can't be marked as best answer."
+                "best answers permission",
+                "First post in a thread can't be marked as best answer.",
             )
         )
 
     if target.is_hidden:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "Hidden posts can't be marked as best answers."
+                "best answers permission",
+                "Hidden posts can't be marked as best answers.",
             )
         )
 
     if target.is_unapproved:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "Unapproved posts can't be marked as best answers."
+                "best answers permission",
+                "Unapproved posts can't be marked as best answers.",
             )
         )
 
     if target.is_protected and not category_acl["can_protect_posts"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 (
                     "You don't have permission to mark this post as best answer "
                     "because a moderator has protected it."
@@ -420,7 +435,7 @@ def allow_hide_best_answer(user_acl, target):
     if target.is_best_answer:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 "You can't hide this post because its marked as best answer.",
             )
         )
@@ -433,7 +448,7 @@ def allow_delete_best_answer(user_acl, target):
     if target.is_best_answer:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "best answers permission",
                 "You can't delete this post because its marked as best answer.",
             )
         )

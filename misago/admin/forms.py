@@ -43,7 +43,7 @@ def ColorField(**kwargs):
                 r"^#[0-9a-f]{6}$",
                 flags=re.IGNORECASE,
                 message=pgettext_lazy(
-                    "admin validator",
+                    "admin color field",
                     (
                         "Value must be a 7-character string specifying an RGB "
                         "color in a hexadecimal format."

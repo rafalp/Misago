@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext as _, ngettext
 from rest_framework import serializers
 
 from . import PostingEndpoint, PostingMiddleware

@@ -37,6 +37,6 @@ def logout(request):
     if request.method == "POST":
         auth.remove_admin_authorization(request)
         messages.info(
-            request, pgettext("admin logout", "Your admin session has been closed.")
+            request, pgettext("admin auth", "Your admin session has been closed.")
         )
     return redirect("misago:admin:index")

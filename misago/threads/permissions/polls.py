@@ -24,52 +24,52 @@ __all__ = [
 
 
 class RolePermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Polls")
+    legend = pgettext_lazy("polls permission", "Polls")
 
     can_start_polls = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can start polls"),
+        label=pgettext_lazy("polls permission", "Can start polls"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own threads")),
-            (2, pgettext_lazy("permissions", "All threads")),
+            (0, pgettext_lazy("polls permission", "No")),
+            (1, pgettext_lazy("polls permission", "Own threads")),
+            (2, pgettext_lazy("polls permission", "All threads")),
         ],
     )
     can_edit_polls = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can edit polls"),
+        label=pgettext_lazy("polls permission", "Can edit polls"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own polls")),
-            (2, pgettext_lazy("permissions", "All polls")),
+            (0, pgettext_lazy("polls permission", "No")),
+            (1, pgettext_lazy("polls permission", "Own polls")),
+            (2, pgettext_lazy("polls permission", "All polls")),
         ],
     )
     can_delete_polls = forms.TypedChoiceField(
-        label=pgettext_lazy("permissions", "Can delete polls"),
+        label=pgettext_lazy("polls permission", "Can delete polls"),
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("permissions", "No")),
-            (1, pgettext_lazy("permissions", "Own polls")),
-            (2, pgettext_lazy("permissions", "All polls")),
+            (0, pgettext_lazy("polls permission", "No")),
+            (1, pgettext_lazy("polls permission", "Own polls")),
+            (2, pgettext_lazy("polls permission", "All polls")),
         ],
     )
     poll_edit_time = forms.IntegerField(
         label=pgettext_lazy(
-            "permissions", "Time limit for own polls edits, in minutes"
+            "polls permission", "Time limit for own polls edits, in minutes"
         ),
         help_text=pgettext_lazy(
-            "permissions", "Enter 0 to don't limit time for editing own polls."
+            "polls permission", "Enter 0 to don't limit time for editing own polls."
         ),
         initial=0,
         min_value=0,
     )
     can_always_see_poll_voters = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can always see polls voters"),
+        label=pgettext_lazy("polls permission", "Can always see polls voters"),
         help_text=pgettext_lazy(
-            "permissions",
+            "polls permission",
             "Allows users to see who voted in poll even if poll votes are secret.",
         ),
     )
@@ -126,7 +126,7 @@ def register_with(registry):
 def allow_start_poll(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to start polls.")
+            pgettext_lazy("polls permission", "You have to sign in to start polls.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -134,11 +134,13 @@ def allow_start_poll(user_acl, target):
     )
 
     if not user_acl.get("can_start_polls"):
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't start polls."))
+        raise PermissionDenied(
+            pgettext_lazy("polls permission", "You can't start polls.")
+        )
     if user_acl.get("can_start_polls") < 2 and user_acl["user_id"] != target.starter_id:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't start polls in other users threads."
+                "polls permission", "You can't start polls in other users threads."
             )
         )
 
@@ -146,14 +148,15 @@ def allow_start_poll(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "polls permission",
                     "This category is closed. You can't start polls in it.",
                 )
             )
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't start polls in it."
+                    "polls permission",
+                    "This thread is closed. You can't start polls in it.",
                 )
             )
 
@@ -164,7 +167,7 @@ can_start_poll = return_boolean(allow_start_poll)
 def allow_edit_poll(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to edit polls.")
+            pgettext_lazy("polls permission", "You have to sign in to edit polls.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -172,18 +175,21 @@ def allow_edit_poll(user_acl, target):
     )
 
     if not user_acl.get("can_edit_polls"):
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't edit polls."))
+        raise PermissionDenied(
+            pgettext_lazy("polls permission", "You can't edit polls.")
+        )
 
     if user_acl.get("can_edit_polls") < 2:
         if user_acl["user_id"] != target.poster_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "You can't edit other users polls in this category."
+                    "polls permission",
+                    "You can't edit other users polls in this category.",
                 )
             )
         if not has_time_to_edit_poll(user_acl, target):
             message = npgettext(
-                "permissions",
+                "polls permission",
                 "You can't edit polls that are older than %(minutes)s minute.",
                 "You can't edit polls that are older than %(minutes)s minutes.",
                 user_acl["poll_edit_time"],
@@ -192,21 +198,24 @@ def allow_edit_poll(user_acl, target):
 
         if target.is_over:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "This poll is over. You can't edit it.")
+                pgettext_lazy(
+                    "polls permission", "This poll is over. You can't edit it."
+                )
             )
 
     if not category_acl.get("can_close_threads"):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "polls permission",
                     "This category is closed. You can't edit polls in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't edit polls in it."
+                    "polls permission",
+                    "This thread is closed. You can't edit polls in it.",
                 )
             )
 
@@ -217,7 +226,7 @@ can_edit_poll = return_boolean(allow_edit_poll)
 def allow_delete_poll(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to delete polls.")
+            pgettext_lazy("polls permission", "You have to sign in to delete polls.")
         )
 
     category_acl = user_acl["categories"].get(
@@ -225,19 +234,21 @@ def allow_delete_poll(user_acl, target):
     )
 
     if not user_acl.get("can_delete_polls"):
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't delete polls."))
+        raise PermissionDenied(
+            pgettext_lazy("polls permission", "You can't delete polls.")
+        )
 
     if user_acl.get("can_delete_polls") < 2:
         if user_acl["user_id"] != target.poster_id:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "polls permission",
                     "You can't delete other users polls in this category.",
                 )
             )
         if not has_time_to_edit_poll(user_acl, target):
             message = npgettext(
-                "permissions",
+                "polls permission",
                 "You can't delete polls that are older than %(minutes)s minute.",
                 "You can't delete polls that are older than %(minutes)s minutes.",
                 user_acl["poll_edit_time"],
@@ -245,21 +256,23 @@ def allow_delete_poll(user_acl, target):
             raise PermissionDenied(message % {"minutes": user_acl["poll_edit_time"]})
         if target.is_over:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "This poll is over. You can't delete it.")
+                pgettext_lazy(
+                    "polls permission", "This poll is over. You can't delete it."
+                )
             )
 
     if not category_acl.get("can_close_threads"):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "polls permission",
                     "This category is closed. You can't delete polls in it.",
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "polls permission",
                     "This thread is closed. You can't delete polls in it.",
                 )
             )
@@ -271,16 +284,18 @@ can_delete_poll = return_boolean(allow_delete_poll)
 def allow_vote_poll(user_acl, target):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to vote in polls.")
+            pgettext_lazy("polls permission", "You have to sign in to vote in polls.")
         )
 
     if target.has_selected_choices and not target.allow_revotes:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have already voted in this poll.")
+            pgettext_lazy("polls permission", "You have already voted in this poll.")
         )
     if target.is_over:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "This poll is over. You can't vote in it.")
+            pgettext_lazy(
+                "polls permission", "This poll is over. You can't vote in it."
+            )
         )
 
     category_acl = user_acl["categories"].get(
@@ -291,13 +306,13 @@ def allow_vote_poll(user_acl, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This category is closed. You can't vote in it."
+                    "polls permission", "This category is closed. You can't vote in it."
                 )
             )
         if target.thread.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "This thread is closed. You can't vote in it."
+                    "polls permission", "This thread is closed. You can't vote in it."
                 )
             )
 
@@ -309,7 +324,7 @@ def allow_see_poll_votes(user_acl, target):
     if not target.is_public and not user_acl["can_always_see_poll_voters"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You dont have permission to this poll's voters."
+                "polls permission", "You dont have permission to this poll's voters."
             )
         )
 

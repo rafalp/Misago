@@ -2,8 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import EmptyPage, InvalidPage
 from django.db.models import Q
 from django.http import Http404
-from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy, pgettext_lazy
+from django.utils.translation import gettext as _, gettext_lazy, pgettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...core.cursorpagination import get_page

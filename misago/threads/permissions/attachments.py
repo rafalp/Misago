@@ -9,10 +9,10 @@ from ..models import Attachment
 
 # Admin Permissions Forms
 class PermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Attachments")
+    legend = pgettext_lazy("attachments permission", "Attachments")
 
     max_attachment_size = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Max attached file size (in kb)"),
+        label=pgettext_lazy("attachments permission", "Max attached file size (in kb)"),
         help_text=pgettext_lazy(
             "permissions", "Enter 0 to don't allow uploading end deleting attachments."
         ),
@@ -21,18 +21,22 @@ class PermissionsForm(forms.Form):
     )
 
     can_download_other_users_attachments = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can download other users attachments")
+        label=pgettext_lazy(
+            "attachments permission", "Can download other users attachments"
+        )
     )
     can_delete_other_users_attachments = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can delete other users attachments")
+        label=pgettext_lazy(
+            "attachments permission", "Can delete other users attachments"
+        )
     )
 
 
 class AnonymousPermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Attachments")
+    legend = pgettext_lazy("attachments permission", "Attachments")
 
     can_download_other_users_attachments = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can download attachments")
+        label=pgettext_lazy("attachments permission", "Can download attachments")
     )
 
 

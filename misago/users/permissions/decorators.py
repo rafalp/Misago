@@ -9,7 +9,7 @@ def authenticated_only(f):
         if user_acl["is_anonymous"]:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions", "You have to sign in to perform this action."
+                    "view decorator", "You have to sign in to perform this action."
                 )
             )
         return f(user_acl, target)
@@ -21,7 +21,7 @@ def anonymous_only(f):
     def perm_decorator(user_acl, target):
         if user_acl["is_authenticated"]:
             raise PermissionDenied(
-                pgettext_lazy("permissions", "Only guests can perform this action.")
+                pgettext_lazy("view decorator", "Only guests can perform this action.")
             )
         return f(user_acl, target)
 

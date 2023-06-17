@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...admin.views import generic
 from ..cache import clear_socialauth_cache
@@ -12,7 +12,9 @@ class SocialAuthProviderAdmin(generic.AdminBaseMixin):
     model = SocialAuthProvider
     form_class = None
     templates_dir = "misago/admin/socialauth"
-    message_404 = _("Requested social login provider does not exist.")
+    message_404 = pgettext_lazy(
+        "admin social auths", "Requested social login provider does not exist."
+    )
 
     def get_target(self, kwargs):
         queryset = SocialAuthProvider.objects.filter(is_active=True)
@@ -58,7 +60,9 @@ class EditSocialAuthProvider(SocialAuthProviderAdmin, generic.ModelFormView):
         form.save()
         clear_socialauth_cache()
 
-        message = _("Login with %(provider)s has been updated.")
+        message = pgettext_lazy(
+            "admin social auths", "Login with %(provider)s has been updated."
+        )
         messages.success(request, message % {"provider": target})
 
 
@@ -68,7 +72,9 @@ class DisableSocialAuthProvider(SocialAuthProviderAdmin, generic.ButtonView):
         target.save(update_fields=["is_active"])
         clear_socialauth_cache()
 
-        message = _("Login with %(provider)s has been disabled.")
+        message = pgettext_lazy(
+            "admin social auths", "Login with %(provider)s has been disabled."
+        )
         messages.success(request, message % {"provider": target})
 
 
@@ -88,7 +94,10 @@ class MoveDownSocialAuthProvider(SocialAuthProviderAdmin, generic.ButtonView):
             target.save(update_fields=["order"])
             clear_socialauth_cache()
 
-            message = _("Login with %(provider)s has been moved after %(other)s.")
+            message = pgettext_lazy(
+                "admin social auths",
+                "Login with %(provider)s has been moved after %(other)s.",
+            )
             targets_names = {"provider": target, "other": other_target}
             messages.success(request, message % targets_names)
 
@@ -109,6 +118,9 @@ class MoveUpSocialAuthProvider(SocialAuthProviderAdmin, generic.ButtonView):
             target.save(update_fields=["order"])
             clear_socialauth_cache()
 
-            message = _("Login with %(provider)s has been moved before %(other)s.")
+            message = pgettext_lazy(
+                "admin social auths",
+                "Login with %(provider)s has been moved before %(other)s.",
+            )
             targets_names = {"provider": target, "other": other_target}
             messages.success(request, message % targets_names)

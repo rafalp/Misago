@@ -2,7 +2,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME, login
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from social_core.actions import do_auth, do_complete
@@ -21,9 +21,12 @@ def social_auth_view(f):
     def social_auth_view_wrapper(request, backend, *args, **kwargs):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to sign in."
+                pgettext(
+                    "social auth",
+                    (
+                        "This feature has been disabled. "
+                        "Please use %(provider)s to sign in."
+                    ),
                 )
                 % {"provider": request.settings.oauth2_provider}
             )

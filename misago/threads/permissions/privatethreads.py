@@ -30,35 +30,39 @@ __all__ = [
 
 
 class PermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Private threads")
+    legend = pgettext_lazy("private threads permission", "Private threads")
 
     can_use_private_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can use private threads")
+        label=pgettext_lazy("private threads permission", "Can use private threads")
     )
     can_start_private_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can start private threads")
+        label=pgettext_lazy("private threads permission", "Can start private threads")
     )
     max_private_thread_participants = forms.IntegerField(
         label=pgettext_lazy(
-            "permissions", "Max number of users invited to private thread"
+            "private threads permission",
+            "Max number of users invited to private thread",
         ),
         help_text=pgettext_lazy(
-            "permissions", "Enter 0 to don't limit number of participants."
+            "private threads permission",
+            "Enter 0 to don't limit number of participants.",
         ),
         initial=3,
         min_value=0,
     )
     can_add_everyone_to_private_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can add everyone to threads"),
+        label=pgettext_lazy(
+            "private threads permission", "Can add everyone to threads"
+        ),
         help_text=pgettext_lazy(
-            "permissions",
+            "private threads permission",
             "Allows user to add users that are blocking them to private threads.",
         ),
     )
     can_report_private_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can report private threads"),
+        label=pgettext_lazy("private threads permission", "Can report private threads"),
         help_text=pgettext_lazy(
-            "permissions",
+            "private threads permission",
             (
                 "Allows user to report private threads they are "
                 "participating in, making them accessible to moderators."
@@ -66,9 +70,11 @@ class PermissionsForm(forms.Form):
         ),
     )
     can_moderate_private_threads = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can moderate private threads"),
+        label=pgettext_lazy(
+            "private threads permission", "Can moderate private threads"
+        ),
         help_text=pgettext_lazy(
-            "permissions",
+            "private threads permission",
             (
                 "Allows user to read, reply, edit and delete content "
                 "in reported private threads."
@@ -192,11 +198,16 @@ def register_with(registry):
 def allow_use_private_threads(user_acl):
     if user_acl["is_anonymous"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You have to sign in to use private threads.")
+            pgettext_lazy(
+                "private threads permission",
+                "You have to sign in to use private threads.",
+            )
         )
     if not user_acl["can_use_private_threads"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't use private threads.")
+            pgettext_lazy(
+                "private threads permission", "You can't use private threads."
+            )
         )
 
 
@@ -230,7 +241,7 @@ def allow_change_owner(user_acl, target):
     if not (is_owner or is_moderator):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "private threads permission",
                 "Only thread owner and moderators can change threads owners.",
             )
         )
@@ -238,7 +249,8 @@ def allow_change_owner(user_acl, target):
     if not is_moderator and target.is_closed:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "Only moderators can change closed threads owners."
+                "private threads permission",
+                "Only moderators can change closed threads owners.",
             )
         )
 
@@ -253,7 +265,7 @@ def allow_add_participants(user_acl, target):
         if not target.participant or not target.participant.is_owner:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "private threads permission",
                     "You have to be thread owner to add new participants to it.",
                 )
             )
@@ -261,7 +273,7 @@ def allow_add_participants(user_acl, target):
         if target.is_closed:
             raise PermissionDenied(
                 pgettext_lazy(
-                    "permissions",
+                    "private threads permission",
                     "Only moderators can add participants to closed threads.",
                 )
             )
@@ -272,7 +284,8 @@ def allow_add_participants(user_acl, target):
     if current_participants >= max_participants:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "You can't add any more new users to this thread."
+                "private threads permission",
+                "You can't add any more new users to this thread.",
             )
         )
 
@@ -290,7 +303,7 @@ def allow_remove_participant(user_acl, thread, target):
     if thread.is_closed:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "private threads permission",
                 "Only moderators can remove participants from closed threads.",
             )
         )
@@ -298,7 +311,7 @@ def allow_remove_participant(user_acl, thread, target):
     if not thread.participant or not thread.participant.is_owner:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "private threads permission",
                 "You have to be thread owner to remove participants from it.",
             )
         )
@@ -313,7 +326,8 @@ def allow_add_participant(user_acl, target, target_acl):
     if not can_use_private_threads(target_acl):
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions", "%(user)s can't participate in private threads."
+                "private threads permission",
+                "%(user)s can't participate in private threads.",
             )
             % message_format
         )
@@ -323,13 +337,14 @@ def allow_add_participant(user_acl, target, target_acl):
 
     if user_acl["can_be_blocked"] and target.is_blocking(user_acl["user_id"]):
         raise PermissionDenied(
-            pgettext_lazy("permissions", "%(user)s is blocking you.") % message_format
+            pgettext_lazy("private threads permission", "%(user)s is blocking you.")
+            % message_format
         )
 
     if target.can_be_messaged_by_nobody:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "private threads permission",
                 "%(user)s is not allowing invitations to private threads.",
             )
             % message_format
@@ -339,7 +354,7 @@ def allow_add_participant(user_acl, target, target_acl):
         user_acl["user_id"]
     ):
         message = pgettext_lazy(
-            "permissions",
+            "private threads permission",
             "%(user)s limits invitations to private threads to followed users.",
         )
         raise PermissionDenied(message % message_format)

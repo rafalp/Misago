@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from social_core import exceptions as social_exceptions
 
 from ..admin.views.errorpages import admin_csrf_failure, admin_error_page
@@ -48,7 +48,7 @@ def banned(request, exception):
 
 def permission_denied(request, exception):
     if _is_ajax(request):
-        return _ajax_error(403, exception, _("Permission denied."))
+        return _ajax_error(403, exception, pgettext("api", "Permission denied."))
     return _error_page(request, 403, exception)
 
 
@@ -76,29 +76,43 @@ def social_auth_failed(request, exception):
         pass
 
     if isinstance(exception, social_exceptions.NotAllowedToDisconnect):
-        message = _(
-            "A problem was encountered when disconnecting your account "
-            "from the remote site."
+        message = pgettext(
+            "social auth",
+            (
+                "A problem was encountered when disconnecting your account "
+                "from the remote site."
+            ),
         )
-        help_text = _(
-            "You are not allowed to disconnect your account from the other site, "
-            "because currently it's the only way to sign in to your account."
+        help_text = pgettext(
+            "social auth",
+            (
+                "You are not allowed to disconnect your account from the other site, "
+                "because currently it's the only way to sign in to your account."
+            ),
         )
     elif backend_name:
-        message = _(
-            "A problem was encountered when signing you in using %(backend)s."
+        message = pgettext(
+            "social auth",
+            "A problem was encountered when signing you in using %(backend)s.",
         ) % {"backend": backend_name}
 
         if isinstance(exception, social_exceptions.AuthCanceled):
-            help_text = _("The sign in process has been canceled by user.")
+            help_text = pgettext(
+                "social auth", "The sign in process has been canceled by user."
+            )
         if isinstance(exception, social_exceptions.AuthUnreachableProvider):
-            help_text = _("The other service could not be reached.")
+            help_text = pgettext(
+                "social auth", "The other service could not be reached."
+            )
         if isinstance(exception, SocialAuthFailed):
             help_text = exception.message
         if isinstance(exception, SocialAuthBanned):
             ban = exception.ban
     else:
-        message = _("Unexpected problem has been encountered during sign in process.")
+        message = pgettext(
+            "social auth",
+            "Unexpected problem has been encountered during sign in process.",
+        )
 
     return render(
         request,
@@ -118,9 +132,12 @@ def csrf_failure(request, reason=""):
     if _is_ajax(request):
         return JsonResponse(
             {
-                "detail": _(
-                    "Your request was rejected because your browser didn't "
-                    "send the CSRF cookie, or the cookie sent was invalid."
+                "detail": pgettext(
+                    "api",
+                    (
+                        "Your request was rejected because your browser didn't "
+                        "send the CSRF cookie, or the cookie sent was invalid."
+                    ),
                 )
             },
             status=403,

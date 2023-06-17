@@ -1,7 +1,6 @@
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext as _, ngettext
 from rest_framework import serializers
 
 from ..models import Poll

@@ -62,14 +62,14 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=pgettext_lazy("admin page", "Categories"),
+            name=pgettext_lazy("admin node", "Categories"),
             icon="fas fa-sitemap",
             after="ranks:index",
             namespace="categories",
         )
 
         site.add_node(
-            name=pgettext_lazy("admin page", "Category permissions"),
+            name=pgettext_lazy("admin node", "Category permissions"),
             parent="permissions",
             namespace="categories",
         )

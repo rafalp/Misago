@@ -91,8 +91,10 @@ class CategoryFormBase(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            "Optional CSS class used to customize this "
-            "category's appearance from templates.",
+            (
+                "Optional CSS class used to customize this "
+                "category's appearance from templates."
+            ),
         ),
     )
     is_closed = YesNoSwitch(
@@ -124,8 +126,10 @@ class CategoryFormBase(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            "Will make all edited replies return to unapproved state "
-            "for moderator to review.",
+            (
+                "Will make all edited replies return to unapproved state "
+                "for moderator to review."
+            ),
         ),
     )
     prune_started_after = forms.IntegerField(
@@ -133,8 +137,10 @@ class CategoryFormBase(forms.ModelForm):
         min_value=0,
         help_text=pgettext_lazy(
             "admin category form",
-            "Prune thread if number of days since its creation is greater than "
-            "specified. Enter 0 to disable this pruning criteria.",
+            (
+                "Prune thread if number of days since its creation is greater than "
+                "specified. Enter 0 to disable this pruning criteria."
+            ),
         ),
     )
     prune_replied_after = forms.IntegerField(
@@ -142,8 +148,10 @@ class CategoryFormBase(forms.ModelForm):
         min_value=0,
         help_text=pgettext_lazy(
             "admin category form",
-            "Prune thread if number of days since last reply is greater than "
-            "specified. Enter 0 to disable this pruning criteria.",
+            (
+                "Prune thread if number of days since last reply is greater than "
+                "specified. Enter 0 to disable this pruning criteria."
+            ),
         ),
     )
 
@@ -210,8 +218,10 @@ def CategoryFormFactory(instance):
                 label=pgettext_lazy("admin category form", "Copy permissions"),
                 help_text=pgettext_lazy(
                     "admin category form",
-                    "You can replace this category permissions with "
-                    "permissions copied from category selected here.",
+                    (
+                        "You can replace this category permissions with "
+                        "permissions copied from category selected here."
+                    ),
                 ),
                 queryset=Category.objects.all_categories(),
                 empty_label=pgettext_lazy(
@@ -223,8 +233,10 @@ def CategoryFormFactory(instance):
                 label=pgettext_lazy("admin category form", "Archive"),
                 help_text=pgettext_lazy(
                     "admin category form",
-                    "Instead of being deleted, pruned threads can be "
-                    "moved to designated category.",
+                    (
+                        "Instead of being deleted, pruned threads can be "
+                        "moved to designated category."
+                    ),
                 ),
                 queryset=Category.objects.all_categories(),
                 empty_label=pgettext_lazy(
@@ -256,9 +268,11 @@ class DeleteCategoryFormBase(forms.ModelForm):
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
-                    "You are trying to move this category threads to a "
-                    "child category that will be deleted together with "
-                    "this category.",
+                    (
+                        "You are trying to move this category threads to a "
+                        "child category that will be deleted together with "
+                        "this category."
+                    ),
                 )
                 raise forms.ValidationError(message)
 

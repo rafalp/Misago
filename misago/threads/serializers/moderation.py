@@ -1,7 +1,6 @@
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
-from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from rest_framework import serializers
 
 from ...acl.objectacl import add_acl_to_obj

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..users.setupnewuser import setup_new_user
 from .exceptions import OAuth2UserDataValidationError, OAuth2UserIdNotProvidedError
@@ -94,10 +94,14 @@ def raise_validation_error_from_integrity_error(error):
 
     if "misago_users_user_email_hash_key" in error_str:
         raise OAuth2UserDataValidationError(
-            error_list=[_("This e-mail address is not available.")]
+            error_list=[
+                pgettext_lazy("oauth2 error", "This e-mail address is not available.")
+            ]
         )
 
     if "misago_users_user_slug_key" in error_str:
         raise OAuth2UserDataValidationError(
-            error_list=[_("This username is not available.")]
+            error_list=[
+                pgettext_lazy("oauth2 error", "This username is not available.")
+            ]
         )

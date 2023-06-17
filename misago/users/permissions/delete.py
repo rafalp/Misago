@@ -19,19 +19,25 @@ __all__ = [
 
 
 class PermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Deleting users")
+    legend = pgettext_lazy("users delete permission", "Deleting users")
 
     can_delete_users_newer_than = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Maximum age of deleted account (in days)"),
-        help_text=pgettext_lazy("permissions", "Enter zero to disable this check."),
+        label=pgettext_lazy(
+            "users delete permission", "Maximum age of deleted account (in days)"
+        ),
+        help_text=pgettext_lazy(
+            "users delete permission", "Enter zero to disable this check."
+        ),
         min_value=0,
         initial=0,
     )
     can_delete_users_with_less_posts_than = forms.IntegerField(
         label=pgettext_lazy(
-            "permissions", "Maximum number of posts on deleted account"
+            "users delete permission", "Maximum number of posts on deleted account"
         ),
-        help_text=pgettext_lazy("permissions", "Enter zero to disable this check."),
+        help_text=pgettext_lazy(
+            "users delete permission", "Enter zero to disable this check."
+        ),
         min_value=0,
         initial=0,
     )
@@ -72,21 +78,23 @@ def allow_delete_user(user_acl, target):
     newer_than = user_acl["can_delete_users_newer_than"]
     less_posts_than = user_acl["can_delete_users_with_less_posts_than"]
     if not newer_than and not less_posts_than:
-        raise PermissionDenied(pgettext_lazy("permissions", "You can't delete users."))
+        raise PermissionDenied(
+            pgettext_lazy("users delete permission", "You can't delete users.")
+        )
 
     if user_acl["user_id"] == target.id:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete your account.")
+            pgettext_lazy("users delete permission", "You can't delete your account.")
         )
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete administrators.")
+            pgettext_lazy("users delete permission", "You can't delete administrators.")
         )
 
     if newer_than:
         if target.joined_on < timezone.now() - timedelta(days=newer_than):
             message = npgettext(
-                "permissions",
+                "users delete permission",
                 "You can't delete users that are members for more than %(days)s day.",
                 "You can't delete users that are members for more than %(days)s days.",
                 newer_than,
@@ -95,7 +103,7 @@ def allow_delete_user(user_acl, target):
     if less_posts_than:
         if target.posts > less_posts_than:
             message = npgettext(
-                "permissions",
+                "users delete permission",
                 "You can't delete users that made more than %(posts)s post.",
                 "You can't delete users that made more than %(posts)s posts.",
                 less_posts_than,
@@ -109,16 +117,18 @@ can_delete_user = return_boolean(allow_delete_user)
 def allow_delete_own_account(settings, user, target):
     if user.id != target.id:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete other users accounts.")
+            pgettext_lazy(
+                "users delete permission", "You can't delete other users accounts."
+            )
         )
     if not settings.allow_delete_own_account and not user.is_deleting_account:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't delete your account.")
+            pgettext_lazy("users delete permission", "You can't delete your account.")
         )
     if user.is_staff or user.is_superuser:
         raise PermissionDenied(
             pgettext_lazy(
-                "permissions",
+                "users delete permission",
                 "You can't delete your account because you are an administrator.",
             )
         )

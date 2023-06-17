@@ -10,11 +10,13 @@ from .models import Category, CategoryRole, RoleCategoryACL
 
 
 class PermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Category access")
+    legend = pgettext_lazy("categories permission", "Category access")
 
-    can_see = YesNoSwitch(label=pgettext_lazy("permissions", "Can see category"))
+    can_see = YesNoSwitch(
+        label=pgettext_lazy("categories permission", "Can see category")
+    )
     can_browse = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can see category contents")
+        label=pgettext_lazy("categories permission", "Can see category contents")
     )
 
 
@@ -119,7 +121,7 @@ def allow_browse_category(user_acl, target):
     target_acl = user_acl["categories"].get(target.id, {"can_browse": False})
     if not target_acl["can_browse"]:
         message = pgettext_lazy(
-            "permissions",
+            "categories permission",
             'You don\'t have permission to browse "%(category)s" contents.',
         )
         raise PermissionDenied(message % {"category": target.name})

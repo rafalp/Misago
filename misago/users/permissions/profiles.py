@@ -21,25 +21,28 @@ __all__ = [
 ]
 
 CAN_BROWSE_USERS_LIST = YesNoSwitch(
-    label=pgettext_lazy("permissions", "Can browse users list"), initial=1
+    label=pgettext_lazy("users profiles permission", "Can browse users list"), initial=1
 )
 CAN_SEARCH_USERS = YesNoSwitch(
-    label=pgettext_lazy("permissions", "Can search user profiles"), initial=1
+    label=pgettext_lazy("users profiles permission", "Can search user profiles"),
+    initial=1,
 )
 CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(
-    label=pgettext_lazy("permissions", "Can see other members name history")
+    label=pgettext_lazy(
+        "users profiles permission", "Can see other members name history"
+    )
 )
 CAN_SEE_DETAILS = YesNoSwitch(
-    label=pgettext_lazy("permissions", "Can see members bans details"),
+    label=pgettext_lazy("users profiles permission", "Can see members bans details"),
     help_text=pgettext_lazy(
-        "permissions",
+        "users profiles permission",
         "Allows users with this permission to see user and staff ban messages.",
     ),
 )
 
 
 class LimitedPermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "User profiles")
+    legend = pgettext_lazy("users profiles permission", "User profiles")
 
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
@@ -51,21 +54,27 @@ class PermissionsForm(LimitedPermissionsForm):
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
     can_follow_users = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can follow other users"), initial=1
+        label=pgettext_lazy("users profiles permission", "Can follow other users"),
+        initial=1,
     )
     can_be_blocked = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can be blocked by other users"), initial=0
+        label=pgettext_lazy(
+            "users profiles permission", "Can be blocked by other users"
+        ),
+        initial=0,
     )
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
     can_see_ban_details = CAN_SEE_DETAILS
     can_see_users_emails = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can see members e-mails")
+        label=pgettext_lazy("users profiles permission", "Can see members e-mails")
     )
     can_see_users_ips = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can see members IPs")
+        label=pgettext_lazy("users profiles permission", "Can see members IPs")
     )
     can_see_hidden_users = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can see members that hide their presence")
+        label=pgettext_lazy(
+            "users profiles permission", "Can see members that hide their presence"
+        )
     )
 
 
@@ -126,7 +135,7 @@ def register_with(registry):
 def allow_browse_users_list(user_acl):
     if not user_acl["can_browse_users_list"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't browse users list.")
+            pgettext_lazy("users profiles permission", "You can't browse users list.")
         )
 
 
@@ -137,11 +146,13 @@ can_browse_users_list = return_boolean(allow_browse_users_list)
 def allow_follow_user(user_acl, target):
     if not user_acl["can_follow_users"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't follow other users.")
+            pgettext_lazy("users profiles permission", "You can't follow other users.")
         )
     if user_acl["user_id"] == target.id:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't add yourself to followed.")
+            pgettext_lazy(
+                "users profiles permission", "You can't add yourself to followed."
+            )
         )
 
 
@@ -152,11 +163,13 @@ can_follow_user = return_boolean(allow_follow_user)
 def allow_block_user(user_acl, target):
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't block administrators.")
+            pgettext_lazy(
+                "users profiles permission", "You can't block administrators."
+            )
         )
     if user_acl["user_id"] == target.id:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't block yourself.")
+            pgettext_lazy("users profiles permission", "You can't block yourself.")
         )
     # FIXME: check if user has "can be blocked" permission
 
@@ -168,7 +181,9 @@ can_block_user = return_boolean(allow_block_user)
 def allow_see_ban_details(user_acl, target):
     if not user_acl["can_see_ban_details"]:
         raise PermissionDenied(
-            pgettext_lazy("permissions", "You can't see users bans details.")
+            pgettext_lazy(
+                "users profiles permission", "You can't see users bans details."
+            )
         )
 
 

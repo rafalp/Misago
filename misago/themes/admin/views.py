@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db.models import ObjectDoesNotExist
 from django.shortcuts import redirect
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ...admin.views import generic
 from ..cache import clear_theme_cache
@@ -25,7 +25,7 @@ class ThemeAdmin(generic.AdminBaseMixin):
     model = Theme
     form_class = ThemeForm
     templates_dir = "misago/admin/themes"
-    message_404 = _("Requested theme does not exist.")
+    message_404 = pgettext_lazy("admin themes", "Requested theme does not exist.")
 
 
 class ThemesList(ThemeAdmin, generic.ListView):
@@ -33,7 +33,9 @@ class ThemesList(ThemeAdmin, generic.ListView):
 
 
 class NewTheme(ThemeAdmin, generic.ModelFormView):
-    message_submit = _('New theme "%(name)s" has been saved.')
+    message_submit = pgettext_lazy(
+        "admin themes", 'New theme "%(name)s" has been saved.'
+    )
 
     def get_form(self, form_class, request, target):
         if request.method == "POST":
@@ -48,11 +50,11 @@ class NewTheme(ThemeAdmin, generic.ModelFormView):
 
 
 class EditTheme(ThemeAdmin, generic.ModelFormView):
-    message_submit = _('Theme "%(name)s" has been updated.')
+    message_submit = pgettext_lazy("admin themes", 'Theme "%(name)s" has been updated.')
 
     def check_permissions(self, request, target):
         if target.is_default:
-            return gettext("Default theme can't be edited.")
+            return pgettext("admin themes", "Default theme can't be edited.")
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -61,17 +63,20 @@ class EditTheme(ThemeAdmin, generic.ModelFormView):
 
 
 class DeleteTheme(ThemeAdmin, generic.ButtonView):
-    message_submit = _('Theme "%(name)s" has been deleted.')
+    message_submit = pgettext_lazy("admin themes", 'Theme "%(name)s" has been deleted.')
 
     def check_permissions(self, request, target):
         if target.is_default:
-            return gettext("Default theme can't be deleted.")
+            return pgettext("admin themes", "Default theme can't be deleted.")
         if target.is_active:
-            return gettext("Active theme can't be deleted.")
+            return pgettext("admin themes", "Active theme can't be deleted.")
         if target.get_descendants().filter(is_active=True).exists():
-            message = gettext(
-                'Theme "%(name)s" can\'t be deleted '
-                "because one of its child themes is set as active."
+            message = pgettext(
+                "admin themes",
+                (
+                    'Theme "%(name)s" can\'t be deleted '
+                    "because one of its child themes is set as active."
+                ),
             )
             return message % {"name": target}
 
@@ -87,7 +92,9 @@ class ActivateTheme(ThemeAdmin, generic.ButtonView):
     def button_action(self, request, target):
         set_theme_as_active(request, target)
 
-        message = gettext('Active theme has been changed to "%(name)s".')
+        message = pgettext(
+            "admin themes", 'Active theme has been changed to "%(name)s".'
+        )
         messages.success(request, message % {"name": target})
 
 
@@ -100,7 +107,7 @@ def set_theme_as_active(request, theme):
 class ExportTheme(ThemeAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.is_default:
-            return gettext("Default theme can't be exported.")
+            return pgettext("admin themes", "Default theme can't be exported.")
 
     def button_action(self, request, target):
         return export_theme(target)
@@ -120,14 +127,14 @@ class ImportTheme(ThemeAdmin, generic.FormView):
 
     def import_theme(self, request, *_, name, parent, upload):
         theme = import_theme(name, parent, upload)
-        message = gettext('Theme "%(name)s" has been imported.')
+        message = pgettext("admin themes", 'Theme "%(name)s" has been imported.')
         messages.success(request, message % {"name": theme})
 
 
 class ThemeAssetsAdmin(ThemeAdmin):
     def check_permissions(self, request, theme):
         if theme.is_default:
-            return gettext("Default theme assets can't be edited.")
+            return pgettext("admin themes", "Default theme assets can't be edited.")
 
     def redirect_to_theme_assets(self, theme):
         return redirect("misago:admin:themes:assets", pk=theme.pk)
@@ -154,8 +161,8 @@ class ThemeAssetsActionAdmin(ThemeAssetsAdmin):
 
 
 class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
-    message_partial_success = _(
-        "Some css files could not have been added to the theme."
+    message_partial_success = pgettext_lazy(
+        "admin themes", "Some css files could not have been added to the theme."
     )
 
     message_submit = None
@@ -179,12 +186,16 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
 
 class UploadThemeCss(UploadThemeAssets):
-    message_success = _("New CSS files have been added to the theme.")
+    message_success = pgettext_lazy(
+        "admin themes", "New CSS files have been added to the theme."
+    )
     form_class = UploadCssForm
 
 
 class UploadThemeMedia(UploadThemeAssets):
-    message_success = _("New media files have been added to the theme.")
+    message_success = pgettext_lazy(
+        "admin themes", "New media files have been added to the theme."
+    )
     form_class = UploadMediaForm
 
 
@@ -215,7 +226,9 @@ class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
 
 class DeleteThemeCss(DeleteThemeAssets):
-    message_submit = _("Selected CSS files have been deleted.")
+    message_submit = pgettext_lazy(
+        "admin themes", "Selected CSS files have been deleted."
+    )
     queryset_attr = "css"
 
     def action(self, request, theme):
@@ -224,7 +237,7 @@ class DeleteThemeCss(DeleteThemeAssets):
 
 
 class DeleteThemeMedia(DeleteThemeAssets):
-    message_submit = _("Selected media have been deleted.")
+    message_submit = pgettext_lazy("admin themes", "Selected media have been deleted.")
     queryset_attr = "media"
 
 
@@ -244,7 +257,9 @@ class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
 
         css = self.get_theme_css_or_none(theme, css_pk)
         if css_pk and not css:
-            css_error = gettext("Requested CSS could not be found in the theme.")
+            css_error = pgettext(
+                "admin themes", "Requested CSS could not be found in the theme."
+            )
             messages.error(request, css_error)
             return self.redirect_to_theme_assets(theme)
 
@@ -270,7 +285,9 @@ class MoveThemeCssUp(ThemeCssAdmin):
     def real_dispatch(self, request, theme, css):
         if request.method == "POST" and move_css_up(theme, css):
             clear_theme_cache()
-            messages.success(request, gettext('"%s" was moved up.') % css)
+            messages.success(
+                request, pgettext("admin themes", '"%s" was moved up.') % css
+            )
 
         return self.redirect_to_theme_assets(theme)
 
@@ -279,7 +296,9 @@ class MoveThemeCssDown(ThemeCssAdmin):
     def real_dispatch(self, request, theme, css):
         if request.method == "POST" and move_css_down(theme, css):
             clear_theme_cache()
-            messages.success(request, gettext('"%s" was moved down.') % css)
+            messages.success(
+                request, pgettext("admin themes", '"%s" was moved down.') % css
+            )
 
         return self.redirect_to_theme_assets(theme)
 
@@ -321,7 +340,7 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
 
 
 class NewThemeCss(ThemeCssFormAdmin):
-    message_submit = _('New CSS "%(name)s" has been saved.')
+    message_submit = pgettext_lazy("admin themes", 'New CSS "%(name)s" has been saved.')
     form_class = CssEditorForm
     template_name = "assets/css-editor-form.html"
 
@@ -338,7 +357,7 @@ class NewThemeCss(ThemeCssFormAdmin):
 
 
 class EditThemeCss(NewThemeCss):
-    message_submit = _('CSS "%(name)s" has been updated.')
+    message_submit = pgettext_lazy("admin themes", 'CSS "%(name)s" has been updated.')
 
     def get_theme_css_or_none(self, theme, css_pk):
         try:
@@ -361,12 +380,16 @@ class EditThemeCss(NewThemeCss):
                 clear_theme_cache()
             messages.success(request, self.message_submit % {"name": css.name})
         else:
-            message = gettext('No changes have been made to "%(css)s".')
+            message = pgettext(
+                "admin themes", 'No changes have been made to "%(css)s".'
+            )
             messages.info(request, message % {"name": css.name})
 
 
 class NewThemeCssLink(ThemeCssFormAdmin):
-    message_submit = _('New CSS link "%(name)s" has been saved.')
+    message_submit = pgettext_lazy(
+        "admin themes", 'New CSS link "%(name)s" has been saved.'
+    )
     form_class = CssLinkForm
     template_name = "assets/css-link-form.html"
 
@@ -389,7 +412,9 @@ class NewThemeCssLink(ThemeCssFormAdmin):
 
 
 class EditThemeCssLink(NewThemeCssLink):
-    message_submit = _('CSS link "%(name)s" has been updated.')
+    message_submit = pgettext_lazy(
+        "admin themes", 'CSS link "%(name)s" has been updated.'
+    )
 
     def get_theme_css_or_none(self, theme, css_pk):
         try:

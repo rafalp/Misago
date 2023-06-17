@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from .searchproviders import searchproviders
 
@@ -9,7 +9,9 @@ from .searchproviders import searchproviders
 def landing(request):
     allowed_providers = searchproviders.get_allowed_providers(request)
     if not request.user_acl["can_search"] or not allowed_providers:
-        raise PermissionDenied(_("You don't have permission to search site."))
+        raise PermissionDenied(
+            pgettext("search view", "You don't have permission to search site.")
+        )
 
     default_provider = allowed_providers[0]
     return redirect("misago:search", search_provider=default_provider.url)
@@ -18,7 +20,9 @@ def landing(request):
 def search(request, search_provider):
     all_providers = searchproviders.get_providers(request)
     if not request.user_acl["can_search"] or not all_providers:
-        raise PermissionDenied(_("You don't have permission to search site."))
+        raise PermissionDenied(
+            pgettext("search view", "You don't have permission to search site.")
+        )
 
     for provider in all_providers:
         if provider.url == search_provider:

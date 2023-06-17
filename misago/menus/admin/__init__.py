@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views import (
     DeleteMenuItem,
@@ -28,9 +28,10 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Menu items"),
-            description=_(
-                "Use those options to add custom items to the navbar and footer menus."
+            name=pgettext_lazy("admin node", "Menu items"),
+            description=pgettext_lazy(
+                "admin node",
+                "Use those options to add custom items to the navbar and footer menus.",
             ),
             parent="settings",
             namespace="menu-items",

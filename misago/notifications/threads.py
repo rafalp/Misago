@@ -2,7 +2,7 @@ from datetime import timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
 from django.db.models import IntegerChoices
-from django.utils.translation import gettext as _, pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ..acl.useracl import get_user_acl
 from ..categories.trees import CategoriesTree
@@ -132,7 +132,9 @@ def email_watcher_on_new_thread_reply(
     post: Post,
     settings: DynamicSettings,
 ):
-    subject = _("%(thread)s - new reply by %(user)s") % {
+    subject = pgettext(
+        "notification email subject", "%(thread)s - new reply by %(user)s"
+    ) % {
         "user": post.poster.username,
         "thread": post.thread.title,
     }
@@ -255,8 +257,9 @@ def email_participant_on_new_private_thread(
 ):
     thread = watched_thread.thread
 
-    subject = _(
-        '%(user)s has invited you to participate in private thread "%(thread)s"'
+    subject = pgettext(
+        "notification email subject",
+        '%(user)s has invited you to participate in private thread "%(thread)s"',
     )
     subject_formats = {"thread": thread.title, "user": actor.username}
 

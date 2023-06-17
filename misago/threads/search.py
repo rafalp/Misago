@@ -1,5 +1,5 @@
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..conf import settings
 from ..core.shortcuts import paginate, pagination_dict
@@ -13,7 +13,7 @@ from .viewmodels import ThreadsRootCategory
 
 
 class SearchThreads(SearchProvider):
-    name = _("Threads")
+    name = pgettext_lazy("search provider", "Threads")
     icon = "forum"
     url = "threads"
 

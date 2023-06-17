@@ -7,17 +7,21 @@ from ...admin.forms import YesNoSwitch
 
 
 class PermissionsForm(forms.Form):
-    legend = pgettext_lazy("permissions", "Account settings")
+    legend = pgettext_lazy("users accounts permission", "Account settings")
 
     name_changes_allowed = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Allowed username changes number"),
+        label=pgettext_lazy(
+            "users accounts permission", "Allowed username changes number"
+        ),
         min_value=0,
         initial=1,
     )
     name_changes_expire = forms.IntegerField(
-        label=pgettext_lazy("permissions", "Don't count username changes older than"),
+        label=pgettext_lazy(
+            "users accounts permission", "Don't count username changes older than"
+        ),
         help_text=pgettext_lazy(
-            "permissions",
+            "users accounts permission",
             (
                 "Number of days since name change that makes "
                 "that change no longer count to limit. Enter "
@@ -28,18 +32,20 @@ class PermissionsForm(forms.Form):
         initial=0,
     )
     can_have_signature = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can have signature")
+        label=pgettext_lazy("users accounts permission", "Can have signature")
     )
     allow_signature_links = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can put links in signature")
+        label=pgettext_lazy("users accounts permission", "Can put links in signature")
     )
     allow_signature_images = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can put images in signature")
+        label=pgettext_lazy("users accounts permission", "Can put images in signature")
     )
     allow_signature_blocks = YesNoSwitch(
-        label=pgettext_lazy("permissions", "Can use text blocks in signature"),
+        label=pgettext_lazy(
+            "users accounts permission", "Can use text blocks in signature"
+        ),
         help_text=pgettext_lazy(
-            "permissions",
+            "users accounts permission",
             (
                 "Controls whether or not users can put quote, code, "
                 "spoiler blocks and horizontal lines in signatures."
