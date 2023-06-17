@@ -56,7 +56,7 @@ def validate_thread_title_length(settings, value):
     value_len = len(value)
 
     if not value_len:
-        raise ValidationError(_("You have to enter an thread title."))
+        raise ValidationError(pgettext("thread title length validator", "You have to enter an thread title."))
 
     if value_len < settings.thread_title_length_min:
         # pylint: disable=line-too-long
@@ -89,7 +89,7 @@ def validate_post_length(settings, value):
     value_len = len(value)
 
     if not value_len:
-        raise ValidationError(_("You have to enter a message."))
+        raise ValidationError(pgettext("post length validator", "You have to enter a message."))
 
     if value_len < settings.post_length_min:
         # pylint: disable=line-too-long

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.views import generic
 from ...models import Rank
@@ -13,7 +13,7 @@ class RankAdmin(generic.AdminBaseMixin):
     model = Rank
     form_class = RankForm
     templates_dir = "misago/admin/ranks"
-    message_404 = _("Requested rank does not exist.")
+    message_404 = pgettext_lazy("admin ranks", "Requested rank does not exist.")
 
     def update_roles(self, target, roles):
         target.roles.clear()
@@ -30,26 +30,31 @@ class RanksList(RankAdmin, generic.ListView):
 
 
 class NewRank(RankAdmin, generic.ModelFormView):
-    message_submit = _('New rank "%(name)s" has been saved.')
+    message_submit = pgettext_lazy("admin ranks", 'New rank "%(name)s" has been saved.')
 
 
 class EditRank(RankAdmin, generic.ModelFormView):
-    message_submit = _('Rank "%(name)s" has been edited.')
+    message_submit = pgettext_lazy("admin ranks", 'Rank "%(name)s" has been edited.')
 
 
 class DeleteRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         message_format = {"name": target.name}
         if target.is_default:
-            message = _('Rank "%(name)s" is default rank and can\'t be deleted.')
+            message = pgettext(
+                "admin ranks", 'Rank "%(name)s" is default rank and can\'t be deleted.'
+            )
             return message % message_format
         if target.user_set.exists():
-            message = _('Rank "%(name)s" is assigned to users and can\'t be deleted.')
+            message = pgettext(
+                "admin ranks",
+                'Rank "%(name)s" is assigned to users and can\'t be deleted.',
+            )
             return message % message_format
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Rank "%(name)s" has been deleted.')
+        message = pgettext("admin ranks", 'Rank "%(name)s" has been deleted.')
         messages.success(request, message % {"name": target.name})
 
 
@@ -66,7 +71,9 @@ class MoveDownRank(RankAdmin, generic.ButtonView):
             other_target.save(update_fields=["order"])
             target.save(update_fields=["order"])
 
-            message = _('Rank "%(name)s" has been moved below "%(other)s".')
+            message = pgettext(
+                "admin ranks", 'Rank "%(name)s" has been moved below "%(other)s".'
+            )
             targets_names = {"name": target.name, "other": other_target.name}
             messages.success(request, message % targets_names)
 
@@ -84,7 +91,9 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
             other_target.save(update_fields=["order"])
             target.save(update_fields=["order"])
 
-            message = _('Rank "%(name)s" has been moved above "%(other)s".')
+            message = pgettext(
+                "admin ranks", 'Rank "%(name)s" has been moved above "%(other)s".'
+            )
             targets_names = {"name": target.name, "other": other_target.name}
             messages.success(request, message % targets_names)
 
@@ -98,10 +107,10 @@ class RankUsers(RankAdmin, generic.TargetedView):
 class DefaultRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.is_default:
-            message = _('Rank "%(name)s" is already default.')
+            message = pgettext("admin ranks", 'Rank "%(name)s" is already default.')
             return message % {"name": target.name}
 
     def button_action(self, request, target):
         Rank.objects.make_rank_default(target)
-        message = _('Rank "%(name)s" has been made default.')
+        message = pgettext("admin ranks", 'Rank "%(name)s" has been made default.')
         messages.success(request, message % {"name": target.name})

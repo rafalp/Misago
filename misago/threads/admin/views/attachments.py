@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.views import generic
 from ...models import Attachment, Post
@@ -11,7 +11,9 @@ class AttachmentAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:attachments:index"
     model = Attachment
     templates_dir = "misago/admin/attachments"
-    message_404 = _("Requested attachment could not be found.")
+    message_404 = pgettext_lazy(
+        "admin attachments", "Requested attachment could not be found."
+    )
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -23,20 +25,23 @@ class AttachmentAdmin(generic.AdminBaseMixin):
 class AttachmentsList(AttachmentAdmin, generic.ListView):
     items_per_page = 20
     ordering = [
-        ("-id", _("From newest")),
-        ("id", _("From oldest")),
-        ("filename", _("A to z")),
-        ("-filename", _("Z to a")),
-        ("size", _("Smallest files")),
-        ("-size", _("Largest files")),
+        ("-id", pgettext_lazy("admin attachments", "From newest")),
+        ("id", pgettext_lazy("admin attachments", "From oldest")),
+        ("filename", pgettext_lazy("admin attachments", "A to z")),
+        ("-filename", pgettext_lazy("admin attachments", "Z to a")),
+        ("size", pgettext_lazy("admin attachments", "Smallest files")),
+        ("-size", pgettext_lazy("admin attachments", "Largest files")),
     ]
-    selection_label = _("With attachments: 0")
-    empty_selection_label = _("Select attachments")
+    selection_label = pgettext_lazy("admin attachments", "With attachments: 0")
+    empty_selection_label = pgettext_lazy("admin attachments", "Select attachments")
     mass_actions = [
         {
             "action": "delete",
-            "name": _("Delete attachments"),
-            "confirmation": _("Are you sure you want to delete selected attachments?"),
+            "name": pgettext_lazy("admin attachments", "Delete attachments"),
+            "confirmation": pgettext_lazy(
+                "admin attachments",
+                "Are you sure you want to delete selected attachments?",
+            ),
             "is_atomic": False,
         }
     ]
@@ -59,7 +64,9 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
         for attachment in attachments:
             attachment.delete()
 
-        message = _("Selected attachments have been deleted.")
+        message = pgettext(
+            "admin attachments", "Selected attachments have been deleted."
+        )
         messages.success(request, message)
 
     def delete_from_cache(self, post, attachments):
@@ -80,7 +87,9 @@ class DeleteAttachment(AttachmentAdmin, generic.ButtonView):
         if target.post:
             self.delete_from_cache(target)
         target.delete()
-        message = _('Attachment "%(filename)s" has been deleted.')
+        message = pgettext(
+            "admin attachments", 'Attachment "%(filename)s" has been deleted.'
+        )
         messages.success(request, message % {"filename": target.filename})
 
     def delete_from_cache(self, attachment):

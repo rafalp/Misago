@@ -1,17 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
-from django.db import transaction
-from django.http import JsonResponse
 from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ....acl.useracl import get_user_acl
 from ....admin.auth import authorize_admin
 from ....admin.views import generic
-from ....categories.models import Category
 from ....core.mail import mail_users
-from ....core.pgutils import chunk_queryset
-from ....threads.models import Thread
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
 from ...deletesrecord import record_user_deleted_by_staff
@@ -60,30 +55,43 @@ class UserAdmin(generic.AdminBaseMixin):
 class UsersList(UserAdmin, generic.ListView):
     items_per_page = 24
     ordering = [
-        ("-id", _("From newest")),
-        ("id", _("From oldest")),
-        ("slug", _("A to z")),
-        ("-slug", _("Z to a")),
-        ("-posts", _("Biggest posters")),
-        ("posts", _("Smallest posters")),
+        ("-id", pgettext_lazy("admin users ordering choice", "From newest")),
+        ("id", pgettext_lazy("admin users ordering choice", "From oldest")),
+        ("slug", pgettext_lazy("admin users ordering choice", "A to z")),
+        ("-slug", pgettext_lazy("admin users ordering choice", "Z to a")),
+        ("-posts", pgettext_lazy("admin users ordering choice", "Biggest posters")),
+        ("posts", pgettext_lazy("admin users ordering choice", "Smallest posters")),
     ]
-    selection_label = _("With users: 0")
-    empty_selection_label = _("Select users")
+    selection_label = pgettext_lazy("admin users", "With users: 0")
+    empty_selection_label = pgettext_lazy("admin users", "Select users")
     mass_actions = [
-        {"action": "activate", "name": _("Activate accounts")},
-        {"action": "ban", "name": _("Ban users"), "icon": "fa fa-lock"},
-        {"action": "request_data_download", "name": _("Request data download")},
+        {
+            "action": "activate",
+            "name": pgettext_lazy("admin users", "Activate accounts"),
+        },
+        {
+            "action": "ban",
+            "name": pgettext_lazy("admin users", "Ban users"),
+            "icon": "fa fa-lock",
+        },
+        {
+            "action": "request_data_download",
+            "name": pgettext_lazy("admin users", "Request data download"),
+        },
         {
             "action": "delete_accounts",
-            "name": _("Delete accounts"),
-            "confirmation": _("Are you sure you want to delete selected users?"),
+            "name": pgettext_lazy("admin users", "Delete accounts"),
+            "confirmation": pgettext_lazy(
+                "admin users", "Are you sure you want to delete selected users?"
+            ),
         },
         {
             "action": "delete_all",
-            "name": _("Delete with content"),
-            "confirmation": _(
+            "name": pgettext_lazy("admin users", "Delete with content"),
+            "confirmation": pgettext_lazy(
+                "admin users",
                 "Are you sure you want to delete selected users? "
-                "This will also delete all content associated with their accounts."
+                "This will also delete all content associated with their accounts.",
             ),
             "is_atomic": False,
         },
@@ -103,14 +111,17 @@ class UsersList(UserAdmin, generic.ListView):
                 inactive_users.append(user)
 
         if not inactive_users:
-            message = _("You have to select inactive users.")
+            message = pgettext("admin users", "You have to select inactive users.")
             raise generic.MassActionError(message)
         else:
             activated_users_pks = [u.pk for u in inactive_users]
             queryset = User.objects.filter(pk__in=activated_users_pks)
             queryset.update(requires_activation=User.ACTIVATION_NONE)
 
-            subject = _("Your account on %(forum_name)s forums has been activated")
+            subject = pgettext(
+                "account activated email subject",
+                "Your account on %(forum_name)s forums has been activated",
+            )
             mail_subject = subject % {"forum_name": request.settings.forum_name}
 
             mail_users(
@@ -120,7 +131,10 @@ class UsersList(UserAdmin, generic.ListView):
                 context={"settings": request.settings},
             )
 
-            messages.success(request, _("Selected users accounts have been activated."))
+            messages.success(
+                request,
+                pgettext("admin users", "Selected users accounts have been activated."),
+            )
 
     def action_ban(
         self, request, users
@@ -128,7 +142,9 @@ class UsersList(UserAdmin, generic.ListView):
         users = users.order_by("slug")
         for user in users:
             if user.is_superuser:
-                message = _("%(user)s is super admin and can't be banned.")
+                message = pgettext(
+                    "admin users", "%(user)s is super admin and can't be banned."
+                )
                 mesage = message % {"user": user.username}
                 raise generic.MassActionError(mesage)
 
@@ -190,7 +206,9 @@ class UsersList(UserAdmin, generic.ListView):
                             banned_values.append(banned_value)
 
                 Ban.objects.invalidate_cache()
-                messages.success(request, _("Selected users have been banned."))
+                messages.success(
+                    request, pgettext("admin users", "Selected users have been banned.")
+                )
                 return None
 
         return self.render(
@@ -205,33 +223,41 @@ class UsersList(UserAdmin, generic.ListView):
                 request_user_data_download(user, requester=request.user)
 
         messages.success(
-            request, _("Data download requests have been placed for selected users.")
+            request,
+            pgettext(
+                "admin users",
+                "Data download requests have been placed for selected users.",
+            ),
         )
 
     def action_delete_accounts(self, request, users):
         for user in users:
             if user == request.user:
-                raise generic.MassActionError(_("You can't delete yourself."))
+                raise generic.MassActionError(
+                    pgettext("admin users", "You can't delete yourself.")
+                )
             if user.is_staff or user.is_superuser:
-                message = _("%(user)s is admin and can't be deleted.") % {
-                    "user": user.username
-                }
+                message = pgettext(
+                    "admin users", "%(user)s is admin and can't be deleted."
+                ) % {"user": user.username}
                 raise generic.MassActionError(message)
 
         for user in users:
             user.delete(anonymous_username=request.settings.anonymous_username)
             record_user_deleted_by_staff()
 
-        messages.success(request, _("Selected users have been deleted."))
+        messages.success(request, pgettext("admin users", "Selected users have been deleted."))
 
     def action_delete_all(self, request, users):
         for user in users:
             if user == request.user:
-                raise generic.MassActionError(_("You can't delete yourself."))
+                raise generic.MassActionError(
+                    pgettext("admin users", "You can't delete yourself.")
+                )
             if user.is_staff or user.is_superuser:
-                message = _("%(user)s is admin and can't be deleted.") % {
-                    "user": user.username
-                }
+                message = pgettext(
+                    "admin users", "%(user)s is admin and can't be deleted."
+                ) % {"user": user.username}
                 raise generic.MassActionError(message)
 
         for user in users:
@@ -242,9 +268,12 @@ class UsersList(UserAdmin, generic.ListView):
 
         messages.success(
             request,
-            _(
-                "Selected users have been disabled and queued for deletion "
-                "together with their content."
+            pgettext(
+                "admin users",
+                (
+                    "Selected users have been disabled and queued for deletion "
+                    "together with their content."
+                ),
             ),
         )
 
@@ -252,7 +281,9 @@ class UsersList(UserAdmin, generic.ListView):
 class NewUser(UserAdmin, generic.ModelFormView):
     form_class = NewUserForm
     template_name = "new.html"
-    message_submit = _('New user "%(user)s" has been registered.')
+    message_submit = pgettext_lazy(
+        "admin users", 'New user "%(user)s" has been registered.'
+    )
 
     def get_form(self, form_class, request, target):
         if request.method == "POST":
@@ -284,7 +315,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
 class EditUser(UserAdmin, generic.ModelFormView):
     form_class = EditUserForm
     template_name = "edit.html"
-    message_submit = _('User "%(user)s" has been edited.')
+    message_submit = pgettext_lazy("admin users", 'User "%(user)s" has been edited.')
 
     def real_dispatch(self, request, target):
         target.old_username = target.username

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.views import generic
 from ...datadownloads import (
@@ -19,22 +19,29 @@ class DataDownloadAdmin(generic.AdminBaseMixin):
 
 class DataDownloadsList(DataDownloadAdmin, generic.ListView):
     items_per_page = 30
-    ordering = [("-id", _("From newest")), ("id", _("From oldest"))]
-    selection_label = _("With data downloads: 0")
-    empty_selection_label = _("Select data downloads")
+    ordering = [
+        ("-id", pgettext_lazy("admin data downloads ordering choice ", "From newest")),
+        ("id", pgettext_lazy("admin data downloads ordering choice ", "From oldest")),
+    ]
+    selection_label = pgettext_lazy("admin data downloads", "With data downloads: 0")
+    empty_selection_label = pgettext_lazy(
+        "admin data downloads", "Select data downloads"
+    )
     mass_actions = [
         {
             "action": "expire",
-            "name": _("Expire downloads"),
-            "confirmation": _(
-                "Are you sure you want to set selected data downloads as expired?"
+            "name": pgettext_lazy("admin data downloads", "Expire downloads"),
+            "confirmation": pgettext_lazy(
+                "admin data downloads",
+                "Are you sure you want to set selected data downloads as expired?",
             ),
         },
         {
             "action": "delete",
-            "name": _("Delete downloads"),
-            "confirmation": _(
-                "Are you sure you want to delete selected data downloads?"
+            "name": pgettext_lazy("admin data downloads", "Delete downloads"),
+            "confirmation": pgettext_lazy(
+                "admin data downloads",
+                "Are you sure you want to delete selected data downloads?",
             ),
         },
     ]
@@ -49,14 +56,23 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
             expire_user_data_download(data_download)
 
         messages.success(
-            request, _("Selected data downloads have been set as expired.")
+            request,
+            pgettext(
+                "admin data downloads",
+                "Selected data downloads have been set as expired.",
+            ),
         )
 
     def action_delete(self, request, data_downloads):
         for data_download in data_downloads:
             data_download.delete()
 
-        messages.success(request, _("Selected data downloads have been deleted."))
+        messages.success(
+            request,
+            pgettext(
+                "admin data downloads", "Selected data downloads have been deleted."
+            ),
+        )
 
 
 class RequestDataDownloads(DataDownloadAdmin, generic.FormView):
@@ -68,5 +84,9 @@ class RequestDataDownloads(DataDownloadAdmin, generic.FormView):
                 request_user_data_download(user, requester=request.user)
 
         messages.success(
-            request, _("Data downloads have been requested for specified users.")
+            request,
+            pgettext(
+                "admin data downloads",
+                "Data downloads have been requested for specified users.",
+            ),
         )
