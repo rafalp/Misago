@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.utils.translation import gettext as _, ngettext
+from django.utils.translation import npgettext, pgettext
 from rest_framework import serializers
 
 __all__ = ["NewVoteSerializer", "PollVoteSerializer"]
@@ -10,7 +10,8 @@ class NewVoteSerializer(serializers.Serializer):
 
     def validate_choices(self, data):
         if len(data) > self.context["allowed_choices"]:
-            message = ngettext(
+            message = npgettext(
+                "new vote serializer",
                 "This poll disallows voting for more than %(choices)s choice.",
                 "This poll disallows voting for more than %(choices)s choices.",
                 self.context["allowed_choices"],
@@ -28,11 +29,15 @@ class NewVoteSerializer(serializers.Serializer):
 
         if len(clean_choices) != len(data):
             raise serializers.ValidationError(
-                _("One or more of poll choices were invalid.")
+                pgettext(
+                    "new vote serializer", "One or more of poll choices were invalid."
+                )
             )
 
         if not clean_choices:
-            raise serializers.ValidationError(_("You have to make a choice."))
+            raise serializers.ValidationError(
+                pgettext("new vote serializer", "You have to make a choice.")
+            )
 
         return clean_choices
 

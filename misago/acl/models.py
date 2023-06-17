@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext
 
 from .cache import clear_acl_cache
 
@@ -17,7 +17,7 @@ class BaseRole(models.Model):
         abstract = True
 
     def __str__(self):
-        return _(self.name)
+        return gettext(self.name)
 
     def save(self, *args, **kwargs):
         if self.pk:

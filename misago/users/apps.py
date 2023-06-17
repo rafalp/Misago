@@ -1,7 +1,6 @@
 from django.apps import AppConfig
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
-from ..conf import settings
 from .pages import user_profile, usercp, users_list
 
 
@@ -24,26 +23,26 @@ class MisagoUsersConfig(AppConfig):
 
         usercp.add_section(
             link="misago:usercp-change-forum-options",
-            name=_("Forum options"),
+            name=pgettext_lazy("user options page", "Forum options"),
             component="forum-options",
             icon="settings",
         )
         usercp.add_section(
             link="misago:usercp-edit-details",
-            name=_("Edit details"),
+            name=pgettext_lazy("user options page", "Edit details"),
             component="edit-details",
             icon="person_outline",
         )
         usercp.add_section(
             link="misago:usercp-change-username",
-            name=_("Change username"),
+            name=pgettext_lazy("user options page", "Change username"),
             component="change-username",
             icon="card_membership",
             visible_if=auth_is_not_delegated,
         )
         usercp.add_section(
             link="misago:usercp-change-email-password",
-            name=_("Change email or password"),
+            name=pgettext_lazy("user options page", "Change email or password"),
             component="sign-in-credentials",
             icon="vpn_key",
             visible_if=auth_is_not_delegated,
@@ -54,7 +53,7 @@ class MisagoUsersConfig(AppConfig):
 
         usercp.add_section(
             link="misago:usercp-download-data",
-            name=_("Download data"),
+            name=pgettext_lazy("user options page", "Download data"),
             component="download-data",
             icon="save_alt",
             visible_if=can_download_own_data,
@@ -68,7 +67,7 @@ class MisagoUsersConfig(AppConfig):
 
         usercp.add_section(
             link="misago:usercp-delete-account",
-            name=_("Delete account"),
+            name=pgettext_lazy("user options page", "Delete account"),
             component="delete-account",
             icon="cancel",
             visible_if=can_delete_own_account,
@@ -78,7 +77,7 @@ class MisagoUsersConfig(AppConfig):
         users_list.add_section(
             link="misago:users-active-posters",
             component="active-posters",
-            name=_("Top posters"),
+            name=pgettext_lazy("users lists page", "Top posters"),
         )
 
     def register_default_user_profile_pages(self):
@@ -99,42 +98,45 @@ class MisagoUsersConfig(AppConfig):
             return False
 
         user_profile.add_section(
-            link="misago:user-posts", name=_("Posts"), icon="message", component="posts"
+            link="misago:user-posts",
+            name=pgettext_lazy("user profile page", "Posts"),
+            icon="message",
+            component="posts",
         )
         user_profile.add_section(
             link="misago:user-threads",
-            name=_("Threads"),
+            name=pgettext_lazy("user profile page", "Threads"),
             icon="forum",
             component="threads",
         )
         user_profile.add_section(
             link="misago:user-followers",
-            name=_("Followers"),
+            name=pgettext_lazy("user profile page", "Followers"),
             icon="favorite",
             component="followers",
         )
         user_profile.add_section(
             link="misago:user-follows",
-            name=_("Follows"),
+            name=pgettext_lazy("user profile page", "Follows"),
             icon="favorite_border",
             component="follows",
         )
         user_profile.add_section(
             link="misago:user-details",
-            name=_("Details"),
+            name=pgettext_lazy("user profile page", "Details"),
             icon="person_outline",
             component="details",
         )
         user_profile.add_section(
             link="misago:username-history",
-            name=_("Username history"),
+            name=pgettext_lazy("user profile page", "Username history"),
             icon="card_membership",
             component="username-history",
             visible_if=can_see_names_history,
         )
         user_profile.add_section(
             link="misago:user-ban",
-            name=_("Ban details"),
+            name=pgettext_lazy("user profile page", "Ban details"),
             icon="remove_circle_outline",
             component="ban-details",
             visible_if=can_see_ban_details,

@@ -71,7 +71,7 @@ class ValidatePostTests(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
                 "post": ["You have to enter a message."],
             },
         )

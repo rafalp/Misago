@@ -246,7 +246,9 @@ class UsersList(UserAdmin, generic.ListView):
             user.delete(anonymous_username=request.settings.anonymous_username)
             record_user_deleted_by_staff()
 
-        messages.success(request, pgettext("admin users", "Selected users have been deleted."))
+        messages.success(
+            request, pgettext("admin users", "Selected users have been deleted.")
+        )
 
     def action_delete_all(self, request, users):
         for user in users:

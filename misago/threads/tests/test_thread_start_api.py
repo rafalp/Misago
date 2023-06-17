@@ -30,7 +30,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             {
                 "category": ["Selected category is invalid."],
                 "post": ["You have to enter a message."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
             },
         )
 
@@ -44,7 +44,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             {
                 "category": ["Selected category is invalid."],
                 "post": ["You have to enter a message."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
             },
         )
 
@@ -60,7 +60,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                     "You don't have permission to start new threads in this category."
                 ],
                 "post": ["You have to enter a message."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
             },
         )
 
@@ -79,7 +79,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                     "This category is closed. You can't start new threads in it."
                 ],
                 "post": ["You have to enter a message."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
             },
         )
 
@@ -97,7 +97,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                     "you don't have permission to browse it."
                 ],
                 "post": ["You have to enter a message."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
             },
         )
 
@@ -110,7 +110,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             response.json(),
             {
                 "category": ["You have to select category to post thread in."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
                 "post": ["You have to enter a message."],
             },
         )

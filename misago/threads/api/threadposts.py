@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -217,9 +217,11 @@ class ViewSet(viewsets.ViewSet):
         ).unwrap()
 
         if reply_to.is_event:
-            raise PermissionDenied(_("You can't reply to events."))
+            raise PermissionDenied(pgettext("posts api", "You can't reply to events."))
         if reply_to.is_hidden and not reply_to.acl["can_see_hidden"]:
-            raise PermissionDenied(_("You can't reply to hidden posts."))
+            raise PermissionDenied(
+                pgettext("posts api", "You can't reply to hidden posts.")
+            )
 
         return Response(
             {
@@ -252,7 +254,9 @@ class ViewSet(viewsets.ViewSet):
         post = self.get_post(request, thread, pk).unwrap()
 
         if post.acl["can_see_likes"] < 2:
-            raise PermissionDenied(_("You can't see who liked this post."))
+            raise PermissionDenied(
+                pgettext("posts api", "You can't see who liked this post.")
+            )
 
         return likes_list_endpoint(request, post)
 

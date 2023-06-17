@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.utils import timezone
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from .exceptions import ModerationError
 
@@ -50,7 +50,10 @@ def unprotect_post(user, post):
 def unhide_post(user, post):
     if post.is_first_post:
         raise ModerationError(
-            _("You can't make original post visible without revealing thread.")
+            pgettext(
+                "post unhide",
+                "You can't make original post visible without revealing the thread.",
+            )
         )
 
     if not post.is_hidden:
@@ -63,7 +66,9 @@ def unhide_post(user, post):
 
 def hide_post(user, post):
     if post.is_first_post:
-        raise ModerationError(_("You can't hide original post without hiding thread."))
+        raise ModerationError(
+            pgettext("post hide", "You can't hide original post without hiding thread.")
+        )
 
     if post.is_hidden:
         return False
@@ -89,7 +94,9 @@ def hide_post(user, post):
 def delete_post(user, post):
     if post.is_first_post:
         raise ModerationError(
-            _("You can't delete original post without deleting thread.")
+            pgettext(
+                "post delete", "You can't delete original post without deleting thread."
+            )
         )
 
     post.delete()

@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
-from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.utils.translation import npgettext, pgettext, pgettext_lazy
 from rest_framework import serializers
 
 from ...acl.objectacl import add_acl_to_obj
@@ -44,15 +44,18 @@ def get_posts_limit(settings):
 
 
 class DeletePostsSerializer(serializers.Serializer):
-    error_empty_or_required = gettext_lazy(
-        "You have to specify at least one post to delete."
+    error_empty_or_required = pgettext_lazy(
+        "delete posts serializer", "You have to specify at least one post to delete."
     )
 
     posts = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                "invalid": gettext_lazy("One or more post ids received were invalid.")
+                "invalid": pgettext_lazy(
+                    "delete posts serializer",
+                    "One or more post ids received were invalid.",
+                )
             }
         ),
         error_messages={
@@ -65,7 +68,8 @@ class DeletePostsSerializer(serializers.Serializer):
     def validate_posts(self, data):
         limit = get_posts_limit(self.context["settings"])
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "delete posts serializer",
                 "No more than %(limit)s post can be deleted at a single time.",
                 "No more than %(limit)s posts can be deleted at a single time.",
                 limit,
@@ -94,20 +98,28 @@ class DeletePostsSerializer(serializers.Serializer):
             posts.append(post)
 
         if len(posts) != len(data):
-            raise PermissionDenied(_("One or more posts to delete could not be found."))
+            raise PermissionDenied(
+                pgettext(
+                    "delete posts serializer",
+                    "One or more posts to delete could not be found.",
+                )
+            )
 
         return posts
 
 
 class MergePostsSerializer(serializers.Serializer):
-    error_empty_or_required = gettext_lazy(
-        "You have to select at least two posts to merge."
+    error_empty_or_required = pgettext_lazy(
+        "merge posts serializer", "You have to select at least two posts to merge."
     )
 
     posts = serializers.ListField(
         child=serializers.IntegerField(
             error_messages={
-                "invalid": gettext_lazy("One or more post ids received were invalid.")
+                "invalid": pgettext_lazy(
+                    "merge posts serializer",
+                    "One or more post ids received were invalid.",
+                )
             }
         ),
         error_messages={
@@ -123,7 +135,8 @@ class MergePostsSerializer(serializers.Serializer):
         if len(data) < 2:
             raise serializers.ValidationError(self.error_empty_or_required)
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "merge posts serializer",
                 "No more than %(limit)s post can be merged at a single time.",
                 "No more than %(limit)s posts can be merged at a single time.",
                 limit,
@@ -152,7 +165,10 @@ class MergePostsSerializer(serializers.Serializer):
                 posts.append(post)
                 continue
 
-            authorship_error = _("Posts made by different users can't be merged.")
+            authorship_error = pgettext(
+                "merge posts serializer",
+                "Posts made by different users can't be merged.",
+            )
             if post.poster_id != posts[0].poster_id:
                 raise serializers.ValidationError(authorship_error)
             elif (
@@ -164,9 +180,12 @@ class MergePostsSerializer(serializers.Serializer):
 
             if posts[0].is_first_post and post.is_best_answer:
                 raise serializers.ValidationError(
-                    _(
-                        "Post marked as best answer can't be merged with "
-                        "thread's first post."
+                    pgettext(
+                        "merge posts serializer",
+                        (
+                            "Post marked as best answer can't be merged with "
+                            "thread's first post."
+                        ),
                     )
                 )
 
@@ -176,32 +195,45 @@ class MergePostsSerializer(serializers.Serializer):
                     or posts[0].is_unapproved != post.is_unapproved
                 ):
                     raise serializers.ValidationError(
-                        _("Posts with different visibility can't be merged.")
+                        pgettext(
+                            "merge posts serializer",
+                            "Posts with different visibility can't be merged.",
+                        )
                     )
 
             posts.append(post)
 
         if len(posts) != len(data):
             raise serializers.ValidationError(
-                _("One or more posts to merge could not be found.")
+                pgettext(
+                    "merge posts serializer",
+                    "One or more posts to merge could not be found.",
+                )
             )
 
         return posts
 
 
 class MovePostsSerializer(serializers.Serializer):
-    error_empty_or_required = gettext_lazy(
-        "You have to specify at least one post to move."
+    error_empty_or_required = pgettext_lazy(
+        "move posts serializer", "You have to specify at least one post to move."
     )
 
     new_thread = serializers.CharField(
-        error_messages={"required": gettext_lazy("Enter link to new thread.")}
+        error_messages={
+            "required": pgettext_lazy(
+                "move posts serializer", "Enter link to new thread."
+            )
+        }
     )
     posts = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                "invalid": gettext_lazy("One or more post ids received were invalid.")
+                "invalid": pgettext_lazy(
+                    "move posts serializer",
+                    "One or more post ids received were invalid.",
+                )
             }
         ),
         error_messages={
@@ -218,25 +250,36 @@ class MovePostsSerializer(serializers.Serializer):
 
         new_thread_id = get_thread_id_from_url(request, data)
         if not new_thread_id:
-            raise serializers.ValidationError(_("This is not a valid thread link."))
+            raise serializers.ValidationError(
+                pgettext("move posts serializer", "This is not a valid thread link.")
+            )
         if new_thread_id == thread.pk:
             raise serializers.ValidationError(
-                _("Thread to move posts to is same as current one.")
+                pgettext(
+                    "move posts serializer",
+                    "Thread to move posts to is same as current one.",
+                )
             )
 
         try:
             new_thread = viewmodel(request, new_thread_id).unwrap()
         except Http404:
             raise serializers.ValidationError(
-                _(
-                    "The thread you have entered link to doesn't "
-                    "exist or you don't have permission to see it."
+                pgettext(
+                    "move posts serializer",
+                    (
+                        "The thread you have entered link to doesn't "
+                        "exist or you don't have permission to see it."
+                    ),
                 )
             )
 
         if not new_thread.acl["can_reply"]:
             raise serializers.ValidationError(
-                _("You can't move posts to threads you can't reply.")
+                pgettext(
+                    "move posts serializer",
+                    "You can't move posts to threads you can't reply.",
+                )
             )
 
         return new_thread
@@ -245,7 +288,8 @@ class MovePostsSerializer(serializers.Serializer):
         limit = get_posts_limit(self.context["settings"])
         data = list(set(data))
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "move posts serializer",
                 "No more than %(limit)s post can be moved at a single time.",
                 "No more than %(limit)s posts can be moved at a single time.",
                 limit,
@@ -273,7 +317,10 @@ class MovePostsSerializer(serializers.Serializer):
 
         if len(posts) != len(data):
             raise serializers.ValidationError(
-                _("One or more posts to move could not be found.")
+                pgettext(
+                    "move posts serializer",
+                    "One or more posts to move could not be found.",
+                )
             )
 
         return posts
@@ -301,7 +348,10 @@ class NewThreadSerializer(serializers.Serializer):
         self.category = validate_category(user_acl, category_id)
         if not can_start_thread(user_acl, self.category):
             raise ValidationError(
-                _("You can't create new threads in selected category.")
+                pgettext(
+                    "new thread serializer",
+                    "You can't create new threads in selected category.",
+                )
             )
         return self.category
 
@@ -314,14 +364,20 @@ class NewThreadSerializer(serializers.Serializer):
         if weight > self.category.acl.get("can_pin_threads", 0):
             if weight == 2:
                 raise ValidationError(
-                    _(
-                        "You don't have permission to pin threads globally "
-                        "in this category."
+                    pgettext(
+                        "new thread serializer",
+                        (
+                            "You don't have permission to pin threads globally "
+                            "in this category."
+                        ),
                     )
                 )
             else:
                 raise ValidationError(
-                    _("You don't have permission to pin threads in this category.")
+                    pgettext(
+                        "new thread serializer",
+                        "You don't have permission to pin threads in this category.",
+                    )
                 )
         return weight
 
@@ -333,7 +389,10 @@ class NewThreadSerializer(serializers.Serializer):
 
         if is_hidden and not self.category.acl.get("can_hide_threads"):
             raise ValidationError(
-                _("You don't have permission to hide threads in this category.")
+                pgettext(
+                    "new thread serializer",
+                    "You don't have permission to hide threads in this category.",
+                )
             )
         return is_hidden
 
@@ -345,21 +404,27 @@ class NewThreadSerializer(serializers.Serializer):
 
         if is_closed and not self.category.acl.get("can_close_threads"):
             raise ValidationError(
-                _("You don't have permission to close threads in this category.")
+                pgettext(
+                    "new thread serializer",
+                    "You don't have permission to close threads in this category.",
+                )
             )
         return is_closed
 
 
 class SplitPostsSerializer(NewThreadSerializer):
-    error_empty_or_required = gettext_lazy(
-        "You have to specify at least one post to split."
+    error_empty_or_required = pgettext_lazy(
+        "split posts serializer", "You have to specify at least one post to split."
     )
 
     posts = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                "invalid": gettext_lazy("One or more post ids received were invalid.")
+                "invalid": pgettext_lazy(
+                    "split posts serializer",
+                    "One or more post ids received were invalid.",
+                )
             }
         ),
         error_messages={
@@ -372,7 +437,8 @@ class SplitPostsSerializer(NewThreadSerializer):
     def validate_posts(self, data):
         limit = get_posts_limit(self.context["settings"])
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "split posts serializer",
                 "No more than %(limit)s post can be split at a single time.",
                 "No more than %(limit)s posts can be split at a single time.",
                 limit,
@@ -400,21 +466,30 @@ class SplitPostsSerializer(NewThreadSerializer):
             posts.append(post)
 
         if len(posts) != len(data):
-            raise ValidationError(_("One or more posts to split could not be found."))
+            raise ValidationError(
+                pgettext(
+                    "split posts serializer",
+                    "One or more posts to split could not be found.",
+                )
+            )
 
         return posts
 
 
 class DeleteThreadsSerializer(serializers.Serializer):
-    error_empty_or_required = gettext_lazy(
-        "You have to specify at least one thread to delete."
+    error_empty_or_required = pgettext_lazy(
+        "delete threads serializer",
+        "You have to specify at least one thread to delete.",
     )
 
     threads = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                "invalid": gettext_lazy("One or more thread ids received were invalid.")
+                "invalid": pgettext_lazy(
+                    "delete threads serializer",
+                    "One or more thread ids received were invalid.",
+                )
             }
         ),
         error_messages={
@@ -427,7 +502,8 @@ class DeleteThreadsSerializer(serializers.Serializer):
     def validate_threads(self, data):
         limit = self.context["settings"].threads_per_page
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "delete threads serializer",
                 "No more than %(limit)s thread can be deleted at a single time.",
                 "No more than %(limit)s threads can be deleted at a single time.",
                 limit,
@@ -460,7 +536,10 @@ class DeleteThreadsSerializer(serializers.Serializer):
 
         if len(threads) != len(data):
             raise ValidationError(
-                _("One or more threads to delete could not be found.")
+                pgettext(
+                    "delete threads serializer",
+                    "One or more threads to delete could not be found.",
+                )
             )
 
         return threads
@@ -468,13 +547,23 @@ class DeleteThreadsSerializer(serializers.Serializer):
 
 class MergeThreadSerializer(serializers.Serializer):
     other_thread = serializers.CharField(
-        error_messages={"required": gettext_lazy("Enter link to new thread.")}
+        error_messages={
+            "required": pgettext_lazy(
+                "merge thread serializer", "Enter link to new thread."
+            )
+        }
     )
     best_answer = serializers.IntegerField(
-        required=False, error_messages={"invalid": gettext_lazy("Invalid choice.")}
+        required=False,
+        error_messages={
+            "invalid": pgettext_lazy("merge thread serializer", "Invalid choice.")
+        },
     )
     poll = serializers.IntegerField(
-        required=False, error_messages={"invalid": gettext_lazy("Invalid choice.")}
+        required=False,
+        error_messages={
+            "invalid": pgettext_lazy("merge thread serializer", "Invalid choice.")
+        },
     )
 
     def validate_other_thread(self, data):
@@ -484,9 +573,15 @@ class MergeThreadSerializer(serializers.Serializer):
 
         other_thread_id = get_thread_id_from_url(request, data)
         if not other_thread_id:
-            raise ValidationError(_("This is not a valid thread link."))
+            raise ValidationError(
+                pgettext("merge thread serializer", "This is not a valid thread link.")
+            )
         if other_thread_id == thread.pk:
-            raise ValidationError(_("You can't merge thread with itself."))
+            raise ValidationError(
+                pgettext(
+                    "merge thread serializer", "You can't merge thread with itself."
+                )
+            )
 
         try:
             other_thread = viewmodel(request, other_thread_id).unwrap()
@@ -495,15 +590,21 @@ class MergeThreadSerializer(serializers.Serializer):
             raise serializers.ValidationError(e)
         except Http404:
             raise ValidationError(
-                _(
-                    "The thread you have entered link to doesn't "
-                    "exist or you don't have permission to see it."
+                pgettext(
+                    "merge thread serializer",
+                    (
+                        "The thread you have entered link to doesn't "
+                        "exist or you don't have permission to see it."
+                    ),
                 )
             )
 
         if not can_reply_thread(request.user_acl, other_thread):
             raise ValidationError(
-                _("You can't merge this thread into thread you can't reply.")
+                pgettext(
+                    "merge thread serializer",
+                    "You can't merge this thread into thread you can't reply.",
+                )
             )
 
         return other_thread
@@ -521,8 +622,8 @@ class MergeThreadSerializer(serializers.Serializer):
 
 
 class MergeThreadsSerializer(NewThreadSerializer):
-    error_empty_or_required = gettext_lazy(
-        "You have to select at least two threads to merge."
+    error_empty_or_required = pgettext_lazy(
+        "merge threads serializer", "You have to select at least two threads to merge."
     )
 
     threads = serializers.ListField(
@@ -530,7 +631,10 @@ class MergeThreadsSerializer(NewThreadSerializer):
         min_length=2,
         child=serializers.IntegerField(
             error_messages={
-                "invalid": gettext_lazy("One or more thread ids received were invalid.")
+                "invalid": pgettext_lazy(
+                    "merge threads serializer",
+                    "One or more thread ids received were invalid.",
+                )
             }
         ),
         error_messages={
@@ -541,16 +645,23 @@ class MergeThreadsSerializer(NewThreadSerializer):
         },
     )
     best_answer = serializers.IntegerField(
-        required=False, error_messages={"invalid": gettext_lazy("Invalid choice.")}
+        required=False,
+        error_messages={
+            "invalid": pgettext_lazy("merge threads serializer", "Invalid choice.")
+        },
     )
     poll = serializers.IntegerField(
-        required=False, error_messages={"invalid": gettext_lazy("Invalid choice.")}
+        required=False,
+        error_messages={
+            "invalid": pgettext_lazy("merge threads serializer", "Invalid choice.")
+        },
     )
 
     def validate_threads(self, data):
         limit = self.context["settings"].threads_per_page
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "merge threads serializer",
                 "No more than %(limit)s thread can be merged at a single time.",
                 "No more than %(limit)s threads can be merged at a single time.",
                 limit,
@@ -574,6 +685,11 @@ class MergeThreadsSerializer(NewThreadSerializer):
                 threads.append(thread)
 
         if len(threads) != len(data):
-            raise ValidationError(_("One or more threads to merge could not be found."))
+            raise ValidationError(
+                pgettext(
+                    "merge threads serializer",
+                    "One or more threads to merge could not be found.",
+                )
+            )
 
         return threads

@@ -3,10 +3,9 @@ from math import ceil
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from django.views import View
 
-from ...conf import settings
 from ...readtracker.cutoffdate import get_cutoff_date
 from ..permissions import exclude_invisible_posts
 from ..viewmodels import ForumThread, PrivateThread
@@ -126,9 +125,12 @@ class ThreadGotoUnapprovedView(GotoView):
     def test_permissions(self, request, thread):
         if not thread.acl["can_approve"]:
             raise PermissionDenied(
-                _(
-                    "You need permission to approve content to "
-                    "be able to go to first unapproved post."
+                pgettext(
+                    "thread goto unapproved",
+                    (
+                        "You need permission to approve content to "
+                        "be able to go to first unapproved post."
+                    ),
                 )
             )
 

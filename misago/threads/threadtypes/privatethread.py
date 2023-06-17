@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from . import ThreadType
 from ...categories import PRIVATE_THREADS_ROOT_NAME
@@ -9,7 +9,7 @@ class PrivateThread(ThreadType):
     root_name = PRIVATE_THREADS_ROOT_NAME
 
     def get_category_name(self, category):
-        return _("Private threads")
+        return pgettext_lazy("private threads category name", "Private threads")
 
     def get_category_absolute_url(self, category):
         return reverse("misago:private-threads")

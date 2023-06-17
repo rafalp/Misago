@@ -1,5 +1,5 @@
 from django.db import migrations
-from django.utils.translation import gettext
+from django.utils.translation import pgettext
 
 from ...core.utils import slugify
 
@@ -10,17 +10,17 @@ def create_default_ranks(apps, schema_editor):
     Rank = apps.get_model("misago_users", "Rank")
 
     team = Rank.objects.create(
-        name=gettext("Forum team"),
-        slug=slugify(gettext("Forum team")),
-        title=gettext("Team"),
+        name=pgettext("default rank", "Forum team"),
+        slug=slugify(pgettext("default rank", "Forum team")),
+        title=pgettext("default rank", "Team"),
         css_class="primary",
         is_tab=True,
         order=0,
     )
 
     member = Rank.objects.create(
-        name=gettext("Members"),
-        slug=slugify(gettext("Members")),
+        name=pgettext("default rank", "Members"),
+        slug=slugify(pgettext("default rank", "Members")),
         is_default=True,
         order=1,
     )

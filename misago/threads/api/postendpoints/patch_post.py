@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _, ngettext
+from django.utils.translation import npgettext, pgettext
 from rest_framework import serializers
 from rest_framework.response import Response
 
@@ -33,7 +33,9 @@ post_patch_dispatcher.add("acl", patch_acl)
 
 def patch_is_liked(request, post, value):
     if not post.acl["can_like"]:
-        raise PermissionDenied(_("You can't like posts in this category."))
+        raise PermissionDenied(
+            pgettext("posts api", "You can't like posts in this category.")
+        )
 
     # lock user to protect us from likes flood
     request.user.lock()
@@ -96,7 +98,9 @@ def patch_is_unapproved(request, post, value):
     allow_approve_post(request.user_acl, post)
 
     if value:
-        raise PermissionDenied(_("Content approval can't be reversed."))
+        raise PermissionDenied(
+            pgettext("posts api", "Content approval can't be reversed.")
+        )
 
     moderation.approve_post(request.user, post)
 
@@ -177,7 +181,9 @@ def clean_posts_for_patch(request, thread, posts_ids):
         posts.append(post)
 
     if len(posts) != len(posts_ids):
-        raise PermissionDenied(_("One or more posts to update could not be found."))
+        raise PermissionDenied(
+            pgettext("posts api", "One or more posts to update could not be found.")
+        )
 
     return posts
 
@@ -194,7 +200,8 @@ class BulkPatchSerializer(serializers.Serializer):
         settings = self.context["settings"]
         limit = settings.posts_per_page + settings.posts_per_page_orphans
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "posts api",
                 "No more than %(limit)s post can be updated at a single time.",
                 "No more than %(limit)s posts can be updated at a single time.",
                 limit,

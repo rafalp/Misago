@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _, gettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 from rest_framework import serializers
 
 from . import PostingEndpoint, PostingMiddleware
@@ -41,8 +41,10 @@ class CategoryMiddleware(PostingMiddleware):
 class CategorySerializer(serializers.Serializer):
     category = serializers.IntegerField(
         error_messages={
-            "required": gettext_lazy("You have to select category to post thread in."),
-            "invalid": gettext_lazy("Selected category is invalid."),
+            "required": pgettext_lazy(
+                "posting api", "You have to select category to post thread in."
+            ),
+            "invalid": pgettext_lazy("posting api", "Selected category is invalid."),
         }
     )
 
@@ -61,14 +63,19 @@ class CategorySerializer(serializers.Serializer):
             can_see = can_see_category(self.user_acl, self.category_cache)
             can_browse = can_browse_category(self.user_acl, self.category_cache)
             if not (self.category_cache.level and can_see and can_browse):
-                raise PermissionDenied(_("Selected category is invalid."))
+                raise PermissionDenied(
+                    pgettext("posting api", "Selected category is invalid.")
+                )
 
             allow_start_thread(self.user_acl, self.category_cache)
         except Category.DoesNotExist:
             raise serializers.ValidationError(
-                _(
-                    "Selected category doesn't exist or "
-                    "you don't have permission to browse it."
+                pgettext(
+                    "posting api",
+                    (
+                        "Selected category doesn't exist or "
+                        "you don't have permission to browse it."
+                    ),
                 )
             )
         except PermissionDenied as e:

@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.template.defaultfilters import filesizeformat
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -15,7 +15,11 @@ IMAGE_EXTENSIONS = ("jpg", "jpeg", "png", "gif", "webp")
 class AttachmentViewSet(viewsets.ViewSet):
     def create(self, request):
         if not request.user_acl["max_attachment_size"]:
-            raise PermissionDenied(_("You don't have permission to upload new files."))
+            raise PermissionDenied(
+                pgettext(
+                    "attachments api", "You don't have permission to upload new files."
+                )
+            )
 
         try:
             return self.create_attachment(request)
@@ -25,7 +29,9 @@ class AttachmentViewSet(viewsets.ViewSet):
     def create_attachment(self, request):
         upload = request.FILES.get("upload")
         if not upload:
-            raise ValidationError(_("No file has been uploaded."))
+            raise ValidationError(
+                pgettext("attachments api", "No file has been uploaded.")
+            )
 
         user_roles = set(r.pk for r in request.user.get_roles())
         filetype = validate_filetype(upload, user_roles)
@@ -45,7 +51,11 @@ class AttachmentViewSet(viewsets.ViewSet):
             try:
                 attachment.set_image(upload)
             except IOError:
-                raise ValidationError(_("Uploaded image was corrupted or invalid."))
+                raise ValidationError(
+                    pgettext(
+                        "attachments api", "Uploaded image was corrupted or invalid."
+                    )
+                )
         else:
             attachment.set_file(upload)
 
@@ -83,13 +93,16 @@ def validate_filetype(upload, user_roles):
 
         return filetype
 
-    raise ValidationError(_("You can't upload files of this type."))
+    raise ValidationError(
+        pgettext("attachments api", "You can't upload files of this type.")
+    )
 
 
 def validate_filesize(upload, upload_limit):
     if upload.size > upload_limit * 1024:
-        message = _(
-            "You can't upload files larger than %(limit)s (your file has %(upload)s)."
+        message = pgettext(
+            "attachments api",
+            "You can't upload files larger than %(limit)s (your file has %(upload)s).",
         )
         raise ValidationError(
             message

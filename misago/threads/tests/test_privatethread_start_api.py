@@ -54,7 +54,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             response.json(),
             {
                 "to": ["This field is required."],
-                "title": ["You have to enter thread title."],
+                "title": ["You have to enter a thread title."],
                 "post": ["You have to enter a message."],
             },
         )

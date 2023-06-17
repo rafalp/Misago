@@ -1,4 +1,4 @@
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ..core.mail import mail_user
 from ..legal.models import Agreement
@@ -9,7 +9,7 @@ from .tokens import make_activation_token
 def send_welcome_email(request, user):
     settings = request.settings
 
-    mail_subject = _("Welcome on %(forum_name)s forums!")
+    mail_subject = pgettext("welcome email subject", "Welcome on %(forum_name)s forums!")
     mail_subject = mail_subject % {"forum_name": settings.forum_name}
 
     if not user.requires_activation:
