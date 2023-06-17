@@ -18,14 +18,18 @@ def recaptcha_test(request):
         if not response_json.get("success"):
             raise ValidationError(pgettext("recaptcha check", "Please try again."))
     else:
-        raise ValidationError(pgettext("recaptcha check", "Failed to contact reCAPTCHA API."))
+        raise ValidationError(
+            pgettext("recaptcha check", "Failed to contact reCAPTCHA API.")
+        )
 
 
 def qacaptcha_test(request):
     answer = request.data.get("captcha", "").lower().strip()
     valid_answers = get_valid_qacaptcha_answers(request.settings)
     if answer not in valid_answers:
-        raise ValidationError(pgettext("qacaptcha check", "Entered answer is incorrect."))
+        raise ValidationError(
+            pgettext("qacaptcha check", "Entered answer is incorrect.")
+        )
 
 
 def get_valid_qacaptcha_answers(settings):

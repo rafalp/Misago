@@ -14,7 +14,12 @@ def deny_authenticated(f):
     @wraps(f)
     def decorator(request, *args, **kwargs):
         if request.user.is_authenticated:
-            raise PermissionDenied(pgettext("block authenticated decorator", "This page is not available to signed in users."))
+            raise PermissionDenied(
+                pgettext(
+                    "block authenticated decorator",
+                    "This page is not available to signed in users.",
+                )
+            )
         else:
             return f(request, *args, **kwargs)
 
@@ -27,7 +32,11 @@ def deny_guests(f):
         if request.user.is_anonymous:
             if request.GET.get("ref") == "login":
                 return redirect(settings.LOGIN_REDIRECT_URL)
-            raise PermissionDenied(pgettext("block guests decorator", "You have to sign in to access this page."))
+            raise PermissionDenied(
+                pgettext(
+                    "block guests decorator", "You have to sign in to access this page."
+                )
+            )
         else:
             return f(request, *args, **kwargs)
 
