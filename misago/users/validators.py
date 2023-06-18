@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.encoding import force_str
 from django.utils.module_loading import import_string
-from django.utils.translation import gettext_lazy as _, ngettext
+from django.utils.translation import npgettext, pgettext_lazy
 from requests.exceptions import RequestException
 
 from .. import hooks
@@ -37,7 +37,11 @@ def validate_email_available(value, exclude=None):
     try:
         user = User.objects.get_by_email(value)
         if not exclude or user.pk != exclude.pk:
-            raise ValidationError(_("This e-mail address is not available."))
+            raise ValidationError(
+                pgettext_lazy(
+                    "user email validator", "This e-mail address is not available."
+                )
+            )
     except User.DoesNotExist:
         pass
 
@@ -49,7 +53,11 @@ def validate_email_banned(value):
         if ban.user_message:
             raise ValidationError(ban.user_message)
         else:
-            raise ValidationError(_("This e-mail address is not allowed."))
+            raise ValidationError(
+                pgettext_lazy(
+                    "user email validator", "This e-mail address is not allowed."
+                )
+            )
 
 
 # Username validators
@@ -65,7 +73,9 @@ def validate_username_available(value, exclude=None):
     try:
         user = User.objects.get_by_username(value)
         if not exclude or user.pk != exclude.pk:
-            raise ValidationError(_("This username is not available."))
+            raise ValidationError(
+                pgettext_lazy("username validator", "This username is not available.")
+            )
     except User.DoesNotExist:
         pass
 
@@ -77,27 +87,36 @@ def validate_username_banned(value):
         if ban.user_message:
             raise ValidationError(ban.user_message)
         else:
-            raise ValidationError(_("This username is not allowed."))
+            raise ValidationError(
+                pgettext_lazy("username validator", "This username is not allowed.")
+            )
 
 
 def validate_username_content(value):
     if not USERNAME_RE.match(value):
         raise ValidationError(
-            _(
-                "Username can only contain Latin alphabet letters, "
-                "digits, and an underscore sign."
+            pgettext_lazy(
+                "username validator",
+                (
+                    "Username can only contain Latin alphabet letters, "
+                    "digits, and an underscore sign."
+                ),
             )
         )
 
     if not USERNAME_LATIN_ALPHA_RE.search(value):
         raise ValidationError(
-            _("Username must contain Latin alphabet letters or digits.")
+            pgettext_lazy(
+                "username validator",
+                "Username must contain Latin alphabet letters or digits.",
+            )
         )
 
 
 def validate_username_length(settings, value):
     if len(value) < settings.username_length_min:
-        message = ngettext(
+        message = npgettext(
+            "username length validator",
             "Username must be at least %(limit_value)s character long.",
             "Username must be at least %(limit_value)s characters long.",
             settings.username_length_min,
@@ -105,7 +124,8 @@ def validate_username_length(settings, value):
         raise ValidationError(message % {"limit_value": settings.username_length_min})
 
     if len(value) > settings.username_length_max:
-        message = ngettext(
+        message = npgettext(
+            "username length validator",
             "Username cannot be longer than %(limit_value)s characters.",
             "Username cannot be longer than %(limit_value)s characters.",
             settings.username_length_max,
@@ -142,7 +162,12 @@ def _real_validate_with_sfs(ip, email, confidence):
     api_score = max((ip_score, email_score))
 
     if api_score > confidence:
-        raise ValidationError(_("Data entered was found in spammers database."))
+        raise ValidationError(
+            pgettext_lazy(
+                "stop forum spam validator",
+                "Data entered was found in spammers database.",
+            )
+        )
 
 
 def validate_gmail_email(request, cleaned_data, add_error):
@@ -152,7 +177,12 @@ def validate_gmail_email(request, cleaned_data, add_error):
 
     username, domain = email.lower().split("@")
     if domain == "gmail.com" and username.count(".") > 5:
-        add_error("email", ValidationError(_("This email is not allowed.")))
+        add_error(
+            "email",
+            ValidationError(
+                pgettext_lazy("gmail email validator", "This email is not allowed.")
+            ),
+        )
 
 
 # Registration validation

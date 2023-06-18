@@ -20,9 +20,12 @@ class CaptchaSettingsForm(SettingsForm):
     captcha_type = forms.ChoiceField(
         label=pgettext_lazy("admin captcha settings form", "Enable CAPTCHA"),
         choices=[
-            ("no", pgettext_lazy("admin captcha settings form", "No CAPTCHA")),
-            ("re", pgettext_lazy("admin captcha settings form", "reCaptcha")),
-            ("qa", pgettext_lazy("admin captcha settings form", "Question and answer")),
+            ("no", pgettext_lazy("admin captcha type field choice", "No CAPTCHA")),
+            ("re", pgettext_lazy("admin captcha type field choice", "reCaptcha")),
+            (
+                "qa",
+                pgettext_lazy("admin captcha type field choice", "Question and answer"),
+            ),
         ],
         widget=forms.RadioSelect(),
     )

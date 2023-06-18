@@ -30,16 +30,26 @@ class FilterAttachmentsForm(forms.Form):
         label=pgettext_lazy("admin attachments filter form", "State"),
         required=False,
         choices=[
-            ("", pgettext_lazy("admin attachments orphan filter choice", "All")),
+            (
+                "",
+                pgettext_lazy(
+                    "admin attachments orphan filter choice",
+                    "All",
+                ),
+            ),
             (
                 "yes",
                 pgettext_lazy(
-                    "admin attachments orphan filter choice", "Only orphaned"
+                    "admin attachments orphan filter choice",
+                    "Only orphaned",
                 ),
             ),
             (
                 "no",
-                pgettext_lazy("admin attachments orphan filter choice", "Not orphaned"),
+                pgettext_lazy(
+                    "admin attachments orphan filter choice",
+                    "Not orphaned",
+                ),
             ),
         ],
     )
@@ -120,10 +130,11 @@ class AttachmentTypeForm(forms.ModelForm):
             "limit_downloads_to": pgettext_lazy(
                 "admin attachment type form",
                 (
-                    "If you wish to limit option to download files of this type to users "
-                    "with specific roles, select them on this list. Otherwise don't "
-                    "select any roles to allow all users with permission to download "
-                    "attachments to be able to download attachments of this type."
+                    "If you wish to limit option to download files of this type to "
+                    "users with specific roles, select them on this list. Otherwise "
+                    "don't select any roles to allow all users with permission to "
+                    "download attachments to be able to download attachments of "
+                    "this type."
                 ),
             ),
         }

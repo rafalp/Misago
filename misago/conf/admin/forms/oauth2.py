@@ -151,11 +151,26 @@ class OAuth2SettingsForm(SettingsForm):
     oauth2_user_token_location = forms.ChoiceField(
         label=pgettext_lazy("admin oauth2 settings form", "Access token location"),
         choices=[
-            ("QUERY", pgettext_lazy("admin oauth2 settings form", "Query string")),
-            ("HEADER", pgettext_lazy("admin oauth2 settings form", "HTTP header")),
+            (
+                "QUERY",
+                pgettext_lazy(
+                    "admin oauth2 token location choice",
+                    "Query string",
+                ),
+            ),
+            (
+                "HEADER",
+                pgettext_lazy(
+                    "admin oauth2 token location choice",
+                    "HTTP header",
+                ),
+            ),
             (
                 "HEADER_BEARER",
-                pgettext_lazy("admin oauth2 settings form", "HTTP header (Bearer)"),
+                pgettext_lazy(
+                    "admin oauth2 token location choice",
+                    "HTTP header (Bearer)",
+                ),
             ),
         ],
         widget=forms.RadioSelect(),

@@ -80,7 +80,7 @@ class FilterAgreementsForm(forms.Form):
     type = forms.ChoiceField(
         label=pgettext_lazy("admin agreement form", "Type"),
         required=False,
-        choices=[("", pgettext_lazy("admin agreement form", "All types"))]
+        choices=[("", pgettext_lazy("admin agreement type field choice", "All types"))]
         + Agreement.TYPE_CHOICES,
     )
     content = forms.CharField(

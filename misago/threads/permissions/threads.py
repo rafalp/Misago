@@ -116,8 +116,8 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "Started threads")),
-            (1, pgettext_lazy("threads permission", "All threads")),
+            (0, pgettext_lazy("threads see permission choice", "Started threads")),
+            (1, pgettext_lazy("threads see permission choice", "All threads")),
         ],
     )
 
@@ -133,9 +133,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Own threads")),
-            (2, pgettext_lazy("threads permission", "All threads")),
+            (0, pgettext_lazy("threads edit permission choice", "No")),
+            (1, pgettext_lazy("threads edit permission choice", "Own threads")),
+            (2, pgettext_lazy("threads edit permission choice", "All threads")),
         ],
     )
     can_hide_own_threads = forms.TypedChoiceField(
@@ -147,9 +147,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Hide threads")),
-            (2, pgettext_lazy("threads permission", "Delete threads")),
+            (0, pgettext_lazy("threads hide own permission choice", "No")),
+            (1, pgettext_lazy("threads hide own permission choice", "Hide threads")),
+            (2, pgettext_lazy("threads hide own permission choice", "Delete threads")),
         ],
     )
     thread_edit_time = forms.IntegerField(
@@ -167,9 +167,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Hide threads")),
-            (2, pgettext_lazy("threads permission", "Delete threads")),
+            (0, pgettext_lazy("threads hide permission choice", "No")),
+            (1, pgettext_lazy("threads hide permission choice", "Hide threads")),
+            (2, pgettext_lazy("threads hide permission choice", "Delete threads")),
         ],
     )
 
@@ -178,9 +178,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Locally")),
-            (2, pgettext_lazy("threads permission", "Globally")),
+            (0, pgettext_lazy("threads pin permission choice", "No")),
+            (1, pgettext_lazy("threads pin permission choice", "Locally")),
+            (2, pgettext_lazy("threads pin permission choice", "Globally")),
         ],
     )
     can_close_threads = YesNoSwitch(
@@ -198,9 +198,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Own posts")),
-            (2, pgettext_lazy("threads permission", "All posts")),
+            (0, pgettext_lazy("threads posts edit permission choice", "No")),
+            (1, pgettext_lazy("threads posts edit permission choice", "Own posts")),
+            (2, pgettext_lazy("threads posts edit permission choice", "All posts")),
         ],
     )
     can_hide_own_posts = forms.TypedChoiceField(
@@ -212,9 +212,17 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Hide posts")),
-            (2, pgettext_lazy("threads permission", "Delete posts")),
+            (0, pgettext_lazy("threads own posts hide permission choice", "No")),
+            (
+                1,
+                pgettext_lazy("threads own posts hide permission choice", "Hide posts"),
+            ),
+            (
+                2,
+                pgettext_lazy(
+                    "threads own posts hide permission choice", "Delete posts"
+                ),
+            ),
         ],
     )
     post_edit_time = forms.IntegerField(
@@ -232,9 +240,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Hide posts")),
-            (2, pgettext_lazy("threads permission", "Delete posts")),
+            (0, pgettext_lazy("threads hide posts permission choice", "No")),
+            (1, pgettext_lazy("threads hide posts permission choice", "Hide posts")),
+            (2, pgettext_lazy("threads hide posts permission choice", "Delete posts")),
         ],
     )
 
@@ -243,9 +251,20 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Number only")),
-            (2, pgettext_lazy("threads permission", "Number and list of likers")),
+            (0, pgettext_lazy("threads posts like see permission choice", "No")),
+            (
+                1,
+                pgettext_lazy(
+                    "threads posts like see permission choice", "Number only"
+                ),
+            ),
+            (
+                2,
+                pgettext_lazy(
+                    "threads posts like see permission choice",
+                    "Number and list of likers",
+                ),
+            ),
         ],
     )
     can_like_posts = YesNoSwitch(
@@ -290,9 +309,12 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("threads permission", "No")),
-            (1, pgettext_lazy("threads permission", "Hide events")),
-            (2, pgettext_lazy("threads permission", "Delete events")),
+            (0, pgettext_lazy("threads events hide permission choice", "No")),
+            (1, pgettext_lazy("threads events hide permission choice", "Hide events")),
+            (
+                2,
+                pgettext_lazy("threads events hide permission choice", "Delete events"),
+            ),
         ],
     )
 

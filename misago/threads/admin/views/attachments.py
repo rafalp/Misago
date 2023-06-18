@@ -25,12 +25,12 @@ class AttachmentAdmin(generic.AdminBaseMixin):
 class AttachmentsList(AttachmentAdmin, generic.ListView):
     items_per_page = 20
     ordering = [
-        ("-id", pgettext_lazy("admin attachments", "From newest")),
-        ("id", pgettext_lazy("admin attachments", "From oldest")),
-        ("filename", pgettext_lazy("admin attachments", "A to z")),
-        ("-filename", pgettext_lazy("admin attachments", "Z to a")),
-        ("size", pgettext_lazy("admin attachments", "Smallest files")),
-        ("-size", pgettext_lazy("admin attachments", "Largest files")),
+        ("-id", pgettext_lazy("admin attachments ordering choice", "From newest")),
+        ("id", pgettext_lazy("admin attachments ordering choice", "From oldest")),
+        ("filename", pgettext_lazy("admin attachments ordering choice", "A to z")),
+        ("-filename", pgettext_lazy("admin attachments ordering choice", "Z to a")),
+        ("size", pgettext_lazy("admin attachments ordering choice", "Smallest files")),
+        ("-size", pgettext_lazy("admin attachments ordering choice", "Largest files")),
     ]
     selection_label = pgettext_lazy("admin attachments", "With attachments: 0")
     empty_selection_label = pgettext_lazy("admin attachments", "Select attachments")

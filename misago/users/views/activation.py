@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ...core.exceptions import Banned
 from ..bans import get_user_ban
@@ -18,7 +18,10 @@ def activation_view(f):
     def decorator(request, *args, **kwargs):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _("Please use %(provider)s to activatee your account.")
+                pgettext(
+                    "activate account",
+                    "Please use %(provider)s to activate your account.",
+                )
                 % {"provider": request.settings.oauth2_provider}
             )
 
@@ -49,13 +52,19 @@ def activate_by_token(request, pk, token):
 
     try:
         if not inactive_user.requires_activation:
-            message = _("%(user)s, your account is already active.")
+            message = pgettext(
+                "activate account with token",
+                "%(user)s, your account is already active.",
+            )
             raise ActivationStopped(message % {"user": inactive_user.username})
 
         if not is_activation_token_valid(inactive_user, token):
-            message = _(
-                "%(user)s, your activation link is invalid. "
-                "Try again or request new activation link."
+            message = pgettext(
+                "activate account with token",
+                (
+                    "%(user)s, your activation link is invalid. "
+                    "Try again or request new activation link."
+                ),
             )
             raise ActivationError(message % {"user": inactive_user.username})
 
@@ -72,7 +81,9 @@ def activate_by_token(request, pk, token):
     inactive_user.requires_activation = User.ACTIVATION_NONE
     inactive_user.save(update_fields=["requires_activation"])
 
-    message = _("%(user)s, your account has been activated!")
+    message = pgettext(
+        "activate account with token", "%(user)s, your account has been activated!"
+    )
 
     return render(
         request,

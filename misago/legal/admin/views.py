@@ -29,8 +29,8 @@ class AgreementAdmin(generic.AdminBaseMixin):
 class AgreementsList(AgreementAdmin, generic.ListView):
     items_per_page = 30
     ordering = [
-        ("-id", pgettext_lazy("admin agreements", "From newest")),
-        ("id", pgettext_lazy("admin agreements", "From oldest")),
+        ("-id", pgettext_lazy("admin agreements ordering choice", "From newest")),
+        ("id", pgettext_lazy("admin agreements ordering choice", "From oldest")),
     ]
     filter_form = FilterAgreementsForm
     selection_label = pgettext_lazy("admin agreements", "With agreements: 0")

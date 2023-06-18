@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.permissions import BasePermission
 
 from ...core.exceptions import Banned
@@ -27,7 +27,10 @@ class UnbannedAnonOnly(UnbannedOnly):
     def has_permission(self, request, view):
         if request.user.is_authenticated:
             raise PermissionDenied(
-                _("This action is not available to signed in users.")
+                pgettext(
+                    "anonymous api",
+                    "This action is not available to signed in users.",
+                )
             )
 
         self.is_request_banned(request)

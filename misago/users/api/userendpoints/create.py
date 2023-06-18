@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model, login
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from django.views.decorators.csrf import csrf_protect
 from rest_framework import status
 from rest_framework.response import Response
@@ -22,7 +22,11 @@ User = get_user_model()
 @csrf_protect
 def create_endpoint(request):
     if request.settings.account_activation == "closed":
-        raise PermissionDenied(_("New users registrations are currently closed."))
+        raise PermissionDenied(
+            pgettext(
+                "user register api", "New users registrations are currently closed."
+            )
+        )
 
     request_data = request.data
     if not isinstance(request_data, dict):
@@ -57,7 +61,11 @@ def create_endpoint(request):
         )
     except IntegrityError:
         return Response(
-            {"__all__": _("Please try resubmitting the form.")},
+            {
+                "__all__": pgettext(
+                    "user register api", "Please try resubmitting the form."
+                )
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 

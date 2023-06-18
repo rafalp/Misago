@@ -7,9 +7,9 @@ class MenuItem(models.Model):
     MENU_NAVBAR = "navbar"
     MENU_FOOTER = "footer"
     MENU_CHOICES = [
-        (MENU_BOTH, pgettext_lazy("menu", "Navbar and footer")),
-        (MENU_NAVBAR, pgettext_lazy("menu", "Navbar")),
-        (MENU_FOOTER, pgettext_lazy("menu", "Footer")),
+        (MENU_BOTH, pgettext_lazy("menu choice", "Navbar and footer")),
+        (MENU_NAVBAR, pgettext_lazy("menu choice", "Navbar")),
+        (MENU_FOOTER, pgettext_lazy("menu choice", "Footer")),
     ]
 
     menu = models.CharField(max_length=6, choices=MENU_CHOICES)

@@ -485,11 +485,11 @@ def create_filter_users_form():
     and makes those ranks and roles typed choice fields that play nice
     with passing values via GET
     """
-    ranks_choices = [("", pgettext_lazy("admin users filter form", "All ranks"))]
+    ranks_choices = [("", pgettext_lazy("admin users rank filter choice", "All ranks"))]
     for rank in Rank.objects.order_by("name").iterator():
         ranks_choices.append((rank.pk, rank.name))
 
-    roles_choices = [("", pgettext_lazy("admin users filter form", "All roles"))]
+    roles_choices = [("", pgettext_lazy("admin users role filter choice", "All roles"))]
     for role in Role.objects.order_by("name").iterator():
         roles_choices.append((role.pk, role.name))
 
@@ -679,7 +679,7 @@ class BanForm(forms.ModelForm):
             (
                 "Changing this to yes will make this ban check be only performed on "
                 "registration step. This is good if you want to block certain "
-                "registrations like ones from recently comprimised e-mail providers, "
+                "registrations like ones from recently compromised e-mail providers, "
                 "without harming existing users."
             ),
         ),

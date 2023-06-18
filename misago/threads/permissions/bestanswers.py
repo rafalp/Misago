@@ -35,9 +35,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("best answers permission", "No")),
-            (1, pgettext_lazy("best answers permission", "Own threads")),
-            (2, pgettext_lazy("best answers permission", "All threads")),
+            (0, pgettext_lazy("best answers mark permission choice", "No")),
+            (1, pgettext_lazy("best answers mark permission choice", "Own threads")),
+            (2, pgettext_lazy("best answers mark permission choice", "All threads")),
         ],
     )
     can_change_marked_answers = forms.TypedChoiceField(
@@ -45,9 +45,9 @@ class CategoryPermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("best answers permission", "No")),
-            (1, pgettext_lazy("best answers permission", "Own threads")),
-            (2, pgettext_lazy("best answers permission", "All threads")),
+            (0, pgettext_lazy("best answers change permission choice", "No")),
+            (1, pgettext_lazy("best answers change permission choice", "Own threads")),
+            (2, pgettext_lazy("best answers change permission choice", "All threads")),
         ],
     )
     best_answer_change_time = forms.IntegerField(

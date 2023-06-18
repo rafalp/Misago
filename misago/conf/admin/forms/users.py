@@ -40,23 +40,31 @@ class UsersSettingsForm(SettingsForm):
         choices=[
             (
                 "none",
-                pgettext_lazy("admin users settings form", "No activation required"),
+                pgettext_lazy(
+                    "admin users account activation field choice",
+                    "No activation required",
+                ),
             ),
             (
                 "user",
                 pgettext_lazy(
-                    "admin users settings form", "Activation token sent to user e-mail"
+                    "admin users account activation field choice",
+                    "Activation token sent to user e-mail",
                 ),
             ),
             (
                 "admin",
                 pgettext_lazy(
-                    "admin users settings form", "Activation by administrator"
+                    "admin users account activation field choice",
+                    "Activation by administrator",
                 ),
             ),
             (
                 "closed",
-                pgettext_lazy("admin users settings form", "Disable new registrations"),
+                pgettext_lazy(
+                    "admin users account activation field choice",
+                    "Disable new registrations",
+                ),
             ),
         ],
         widget=forms.RadioSelect(),
@@ -114,12 +122,25 @@ class UsersSettingsForm(SettingsForm):
     default_avatar = forms.ChoiceField(
         label=pgettext_lazy("admin users settings form", "Default avatar"),
         choices=[
-            ("dynamic", pgettext_lazy("admin users settings form", "Individual")),
-            ("gravatar", pgettext_lazy("admin users settings form", "Gravatar")),
+            (
+                "dynamic",
+                pgettext_lazy(
+                    "admin users default avatar choice",
+                    "Individual",
+                ),
+            ),
+            (
+                "gravatar",
+                pgettext_lazy(
+                    "admin users default avatar choice",
+                    "Gravatar",
+                ),
+            ),
             (
                 "gallery",
                 pgettext_lazy(
-                    "admin users settings form", "Random avatar from gallery"
+                    "admin users default avatar choice",
+                    "Random avatar from gallery",
                 ),
             ),
         ],
@@ -137,11 +158,14 @@ class UsersSettingsForm(SettingsForm):
             ),
         ),
         choices=[
-            ("dynamic", pgettext_lazy("admin users settings form", "Individual")),
+            (
+                "dynamic",
+                pgettext_lazy("admin users gravatar fallback choice", "Individual"),
+            ),
             (
                 "gallery",
                 pgettext_lazy(
-                    "admin users settings form", "Random avatar from gallery"
+                    "admin users gravatar fallback choice", "Random avatar from gallery"
                 ),
             ),
         ],
@@ -179,13 +203,14 @@ class UsersSettingsForm(SettingsForm):
             (
                 "watch",
                 pgettext_lazy(
-                    "admin users settings form", "Put on watched threads list"
+                    "admin users default subscription choice",
+                    "Put on watched threads list",
                 ),
             ),
             (
                 "watch_email",
                 pgettext_lazy(
-                    "admin users settings form",
+                    "admin users default subscription choice",
                     "Put on watched threads list and e-mail user when somebody replies",
                 ),
             ),
@@ -199,13 +224,14 @@ class UsersSettingsForm(SettingsForm):
             (
                 "watch",
                 pgettext_lazy(
-                    "admin users settings form", "Put on watched threads list"
+                    "admin users default subscription choice",
+                    "Put on watched threads list",
                 ),
             ),
             (
                 "watch_email",
                 pgettext_lazy(
-                    "admin users settings form",
+                    "admin users default subscription choice",
                     "Put on watched threads list and e-mail user when somebody replies",
                 ),
             ),

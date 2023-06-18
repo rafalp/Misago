@@ -31,9 +31,9 @@ class RolePermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("polls permission", "No")),
-            (1, pgettext_lazy("polls permission", "Own threads")),
-            (2, pgettext_lazy("polls permission", "All threads")),
+            (0, pgettext_lazy("polls start permission choice", "No")),
+            (1, pgettext_lazy("polls start permission choice", "Own threads")),
+            (2, pgettext_lazy("polls start permission choice", "All threads")),
         ],
     )
     can_edit_polls = forms.TypedChoiceField(
@@ -41,9 +41,9 @@ class RolePermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("polls permission", "No")),
-            (1, pgettext_lazy("polls permission", "Own polls")),
-            (2, pgettext_lazy("polls permission", "All polls")),
+            (0, pgettext_lazy("polls edit permission choice", "No")),
+            (1, pgettext_lazy("polls edit permission choice", "Own polls")),
+            (2, pgettext_lazy("polls edit permission choice", "All polls")),
         ],
     )
     can_delete_polls = forms.TypedChoiceField(
@@ -51,9 +51,9 @@ class RolePermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=[
-            (0, pgettext_lazy("polls permission", "No")),
-            (1, pgettext_lazy("polls permission", "Own polls")),
-            (2, pgettext_lazy("polls permission", "All polls")),
+            (0, pgettext_lazy("polls delete permission choice", "No")),
+            (1, pgettext_lazy("polls delete permission choice", "Own polls")),
+            (2, pgettext_lazy("polls delete permission choice", "All polls")),
         ],
     )
     poll_edit_time = forms.IntegerField(

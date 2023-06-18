@@ -1,4 +1,4 @@
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import serializers
 
 from ...core.utils import format_plaintext_for_html
@@ -23,9 +23,9 @@ class BanMessageSerializer(serializers.ModelSerializer):
         if obj.user_message:
             message = obj.user_message
         elif obj.check_type == Ban.IP:
-            message = _("Your IP address is banned.")
+            message = pgettext("ban message", "Your IP address is banned.")
         else:
-            message = _("You are banned.")
+            message = pgettext("ban message", "You are banned.")
 
         return serialize_message(message)
 

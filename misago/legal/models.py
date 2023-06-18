@@ -39,8 +39,8 @@ class Agreement(models.Model):
     TYPE_TOS = "terms_of_service"
     TYPE_PRIVACY = "privacy_policy"
     TYPE_CHOICES = [
-        (TYPE_TOS, pgettext_lazy("agreement", "Terms of service")),
-        (TYPE_PRIVACY, pgettext_lazy("agreement", "Privacy policy")),
+        (TYPE_TOS, pgettext_lazy("agreement type choice", "Terms of service")),
+        (TYPE_PRIVACY, pgettext_lazy("agreement type choice", "Privacy policy")),
     ]
 
     type = models.CharField(
