@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Posting" %}</legend>
+    <legend>{% trans "Posting" context "admin threads settings form" %}</legend>
 
     {% form_row form.thread_title_length_min %}
     {% form_row form.thread_title_length_max %}
@@ -23,7 +23,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Threads lists" %}</legend>
+    <legend>{% trans "Threads lists" context "admin threads settings form" %}</legend>
     
     {% form_row form.threads_per_page %}
 
@@ -31,7 +31,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Thread pages" %}</legend>
+    <legend>{% trans "Thread pages" context "admin threads settings form" %}</legend>
     
     {% form_row form.posts_per_page %}
     {% form_row form.posts_per_page_orphans %}
@@ -41,7 +41,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Read-tracker" %}</legend>
+    <legend>{% trans "Read-tracker" context "admin threads settings form" %}</legend>
     
     {% form_row form.readtracker_cutoff %}
 
@@ -49,7 +49,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Attachment error images" %}</legend>
+    <legend>{% trans "Attachment error images" context "admin threads settings form" %}</legend>
 
     {% with form.attachment_403_image_delete as delete_field %}
       {% with form_settings.attachment_403_image as setting %}

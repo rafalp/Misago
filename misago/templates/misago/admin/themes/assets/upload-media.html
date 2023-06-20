@@ -3,8 +3,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{% trans "Upload media" %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' %}">
+        <h5 class="modal-title">{% trans "Upload media" context "admin theme media upload form" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'admin theme media upload form' %}">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -12,19 +12,19 @@
         {% csrf_token %}
         <div class="modal-body">
           <div class="form-group">
-            <label for="uploadMediaInput">{% trans "Select media files to upload" %}:</label>
+            <label for="uploadMediaInput">{% trans "Select media files to upload" context "admin theme media upload form" %}:</label>
             <input type="file" class="form-control" id="uploadMediaInput" name="assets" multiple>
             <small class="form-text text-muted">
-              {% trans "Media files are primarily image and font files that can be linked to from the CSS, but files of any type can be uploaded using this option." %}
+              {% trans "Media files are primarily image and font files that can be linked to from the CSS, but files of any type can be uploaded using this option." context "admin theme media upload form" %}
             </small>
             <small class="form-text text-muted">
-              {% trans 'Theme CSS that use the "url()" to point to media files will be updated automatically.' %}
+              {% trans 'Theme CSS that use the "url()" to point to media files will be updated automatically.' context "admin theme media upload form" %}
             </small>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-dismiss="modal">{% trans "Cancel" %}</button>
-          <button class="btn btn-primary">{% trans "Upload" %}</button>
+          <button type="button" class="btn btn-light" data-dismiss="modal">{% trans "Cancel" context "admin theme media upload form" %}</button>
+          <button class="btn btn-primary">{% trans "Upload" context "admin theme media upload form" %}</button>
         </div>
       </form>
     </div><!-- /.modal-content -->

@@ -6,7 +6,7 @@
 {% if target.pk %}
 {{ target }}
 {% else %}
-{% trans "New type" %}
+{% trans "New type" context "admin attachment type form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -23,9 +23,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit attachment type" %}
+  {% trans "Edit attachment type" context "admin attachment type form" %}
 {% else %}
-  {% trans "New attachment type" %}
+  {% trans "New attachment type" context "admin attachment type form" %}
 {% endif %}
 {% endblock %}
 
@@ -33,7 +33,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic options" %}</legend>
+    <legend>{% trans "Basic options" context "admin attachment type form" %}</legend>
 
     {% form_row form.name %}
     {% form_row form.extensions %}
@@ -44,7 +44,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Availability" %}</legend>
+    <legend>{% trans "Availability" context "admin attachment type form" %}</legend>
 
     {% form_row form.status %}
     {% form_row form.limit_uploads_to %}

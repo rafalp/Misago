@@ -6,7 +6,7 @@
 
 
 {% block meta-description %}
-  {{ rank.description|default:"" }} {% blocktrans trimmed count users=paginator.count %}
+  {{ rank.description|default:"" }} {% blocktrans trimmed count users=paginator.count context "rank users page meta" %}
     {{ users }} user have this rank.
   {% plural %}
     {{ users }} users have this rank.
@@ -38,7 +38,7 @@
 {% block og-description %}
   {% if rank.description %}
     {{ rank.description }}
-  {% endif %} {% blocktrans trimmed count users=paginator.count %}
+  {% endif %} {% blocktrans trimmed count users=paginator.count context "rank users page meta" %}
     {{ users }} user have this rank.
   {% plural %}
     {{ users }} users have this rank.
@@ -49,7 +49,7 @@
 {% block twitter-description %}
   {% if rank.description %}
     {{ rank.description }}
-  {% endif %} {% blocktrans trimmed count users=paginator.count %}
+  {% endif %} {% blocktrans trimmed count users=paginator.count context "rank users page meta" %}
     {{ users }} user have this rank.
   {% plural %}
     {{ users }} users have this rank.
@@ -99,13 +99,13 @@
             <div class="toolbar-item">
               <p>
                 {% if paginator.more %}
-                  {% blocktrans trimmed count more=paginator.more %}
+                  {% blocktrans trimmed count more=paginator.more context "rank users page" %}
                     There is {{ more }} more members with this role.
                   {% plural %}
                     There are {{ more }} more members with this role.
                   {% endblocktrans %}
                 {% else %}
-                  {% trans "There are no more members with this role." %}
+                  {% trans "There are no more members with this role." context "rank users page" %}
                 {% endif %}
               </p>
             </div>
@@ -114,7 +114,7 @@
       </section>
     {% else %}
       <p class="lead">
-        {% trans "There are no users with this rank at the moment." %}
+        {% trans "There are no users with this rank at the moment." context "rank users page" %}
       </p>
     {% endif %}
 

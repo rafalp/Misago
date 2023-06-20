@@ -2,37 +2,37 @@
 {% load i18n misago_absoluteurl misago_avatars %}
 
 
-{% block title %}{% trans "Top posters" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Top posters" context "active posters page" %} | {{ block.super }}{% endblock %}
 
 
 {% block meta-description %}
   {% if users_count %}
-    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count %}
+    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
       {{ posters }} most active poster from last {{ days }} days.
     {% plural %}
       {{ posters }} most active posters from last {{ days }} days.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with days=tracked_period %}
+    {% blocktrans trimmed with days=tracked_period context "active posters page meta" %}
       No users have posted any new messages during last {{ days }} days.
     {% endblocktrans %}
   {% endif %}
 {% endblock meta-description %}
 
 
-{% block og-title %}{% trans "Top posters" %}{% endblock %}
-{% block twitter-title %}{% trans "Top posters" %}{% endblock %}
+{% block og-title %}{% trans "Top posters" context "active posters page meta" %}{% endblock %}
+{% block twitter-title %}{% trans "Top posters" context "active posters page meta" %}{% endblock %}
 
 
 {% block og-description %}
   {% if users_count %}
-    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count %}
+    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
       {{ posters }} top poster from last {{ days }} days.
     {% plural %}
       {{ posters }} top posters from last {{ days }} days.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with days=tracked_period %}
+    {% blocktrans trimmed with days=tracked_period context "active posters page meta" %}
       No users have posted any new messages during last {{ days }} days.
     {% endblocktrans %}
   {% endif %}
@@ -41,13 +41,13 @@
 
 {% block twitter-description %}
   {% if users_count %}
-    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count %}
+    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
       {{ posters }} top poster from last {{ days }} days.
     {% plural %}
       {{ posters }} top posters from last {{ days }} days.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with days=tracked_period %}
+    {% blocktrans trimmed with days=tracked_period context "active posters page meta" %}
       No users have posted any new messages during last {{ days }} days.
     {% endblocktrans %}
   {% endif %}
@@ -66,7 +66,7 @@
 
     {% if users_count %}
       <p class="lead">
-        {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count %}
+        {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page" %}
           {{ posters }} top poster from last {{ days }} days.
         {% plural %}
           {{ posters }} top posters from last {{ days }} days.
@@ -80,7 +80,7 @@
             <li class="list-group-item{% if ranked.rank.css_class %} list-group-rank-{{ ranked.rank.css_class }}{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
               <div class="rank-user-avatar">
                 <a href="{{ user_url }}">
-                  <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" %}" height="50" width="50" class="avatar">
+                  <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" context "active posters list item"  %}" height="50" width="50" class="avatar">
                 </a>
               </div>
 
@@ -109,28 +109,28 @@
                 <div class="user-compact-stats visible-xs-block">
                   <span class="rank-position">
                     <strong>#{{ forloop.counter }}</strong>
-                    <small>{% trans "Rank" %}</small>
+                    <small>{% trans "Rank" context "active posters list item" %}</small>
                   </span>
                   <span class="rank-posts-counted">
                     <strong>{{ ranked.score }}</strong>
-                    <small>{% trans "Ranked posts" %}</small>
+                    <small>{% trans "Ranked posts" context "active posters list item" %}</small>
                   </span>
                 </div>
               </div>
 
               <div class="rank-position hidden-xs">
                 <strong>#{{ forloop.counter }}</strong>
-                <small>{% trans "Rank" %}</small>
+                <small>{% trans "Rank" context "active posters list item" %}</small>
               </div>
 
               <div class="rank-posts-counted hidden-xs">
                 <strong>{{ ranked.score }}</strong>
-                <small>{% trans "Ranked posts" %}</small>
+                <small>{% trans "Ranked posts" context "active posters list item" %}</small>
               </div>
 
               <div class="rank-posts-total hidden-xs">
                 <strong>{{ ranked.posts }}</strong>
-                <small>{% trans "Total posts" %}</small>
+                <small>{% trans "Total posts" context "active posters list item" %}</small>
               </div>
 
               <meta itemprop="position" content="{{ forloop.counter }}" />
@@ -142,7 +142,7 @@
       </div>
     {% else %}
       <p class="lead">
-        {% blocktrans trimmed with days=tracked_period %}
+        {% blocktrans trimmed with days=tracked_period context "active posters page" %}
           No users have posted any new messages during last {{ days }} days.
         {% endblocktrans %}
       </p>

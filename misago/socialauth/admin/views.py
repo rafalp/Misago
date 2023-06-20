@@ -13,7 +13,7 @@ class SocialAuthProviderAdmin(generic.AdminBaseMixin):
     form_class = None
     templates_dir = "misago/admin/socialauth"
     message_404 = pgettext_lazy(
-        "admin social auths", "Requested social login provider does not exist."
+        "admin social auth providers", "Requested social login provider does not exist."
     )
 
     def get_target(self, kwargs):
@@ -61,7 +61,7 @@ class EditSocialAuthProvider(SocialAuthProviderAdmin, generic.ModelFormView):
         clear_socialauth_cache()
 
         message = pgettext_lazy(
-            "admin social auths", "Login with %(provider)s has been updated."
+            "admin social auth providers", "Login with %(provider)s has been updated."
         )
         messages.success(request, message % {"provider": target})
 
@@ -73,7 +73,7 @@ class DisableSocialAuthProvider(SocialAuthProviderAdmin, generic.ButtonView):
         clear_socialauth_cache()
 
         message = pgettext_lazy(
-            "admin social auths", "Login with %(provider)s has been disabled."
+            "admin social auth providers", "Login with %(provider)s has been disabled."
         )
         messages.success(request, message % {"provider": target})
 
@@ -95,7 +95,7 @@ class MoveDownSocialAuthProvider(SocialAuthProviderAdmin, generic.ButtonView):
             clear_socialauth_cache()
 
             message = pgettext_lazy(
-                "admin social auths",
+                "admin social auth providers",
                 "Login with %(provider)s has been moved after %(other)s.",
             )
             targets_names = {"provider": target, "other": other_target}
@@ -119,7 +119,7 @@ class MoveUpSocialAuthProvider(SocialAuthProviderAdmin, generic.ButtonView):
             clear_socialauth_cache()
 
             message = pgettext_lazy(
-                "admin social auths",
+                "admin social auth providers",
                 "Login with %(provider)s has been moved before %(other)s.",
             )
             targets_names = {"provider": target, "other": other_target}

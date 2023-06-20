@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" %}</legend>
+    <legend>{% trans "Basic settings" context "admin oauth2 settings form" %}</legend>
 
     {% form_row form.enable_oauth2_client %}
     {% form_row form.oauth2_provider %}
@@ -16,7 +16,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Initializing login" %}</legend>
+    <legend>{% trans "Initializing login" context "admin oauth2 settings form" %}</legend>
 
     {% form_row form.oauth2_login_url %}
     {% form_row form.oauth2_scopes %}
@@ -25,7 +25,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Retrieving access token" %}</legend>
+    <legend>{% trans "Retrieving access token" context "admin oauth2 settings form" %}</legend>
 
     {% form_row form.oauth2_token_url %}
     {% form_row form.oauth2_token_extra_headers %}
@@ -35,7 +35,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Retrieving user data" %}</legend>
+    <legend>{% trans "Retrieving user data" context "admin oauth2 settings form" %}</legend>
 
     {% form_row form.oauth2_user_url %}
     {% form_row form.oauth2_user_method %}
@@ -47,7 +47,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "New user sign-ons" %}</legend>
+    <legend>{% trans "New user sign-ons" context "admin oauth2 settings form" %}</legend>
 
     {% form_row form.oauth2_send_welcome_email %}
 
@@ -55,15 +55,15 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "User JSON mappings" %}</legend>
+    <legend>{% trans "User JSON mappings" context "admin oauth2 settings form" %}</legend>
 
     <p>
-      {% blocktrans trimmed %}
+      {% blocktrans trimmed context "admin oauth2 settings form" %}
         Path to value is a key under which it can be found in the JSON with user data returned by the provider. If this key is nested under other key, use full path and separate keys with periods ("<code>.</code>").
       {% endblocktrans %}
     </p>
     <p>
-      {% trans "For example, for given JSON with user data:" %}
+      {% trans "For example, for given JSON with user data:" context "admin oauth2 settings form" %}
     </p>
     <p>
       <code>
@@ -78,15 +78,15 @@
       </code>
     </p>
     <p>
-      {% blocktrans trimmed %}
+      {% blocktrans trimmed context "admin oauth2 settings form" %}
         Those paths should be used:
       {% endblocktrans %}
     </p>
     <ul class="list-unstyled">
-      <li>{% trans "User ID" %}: <code>id</code></li>
-      <li>{% trans "User name" %}: <code>name</code></li>
-      <li>{% trans "User e-mail" %}: <code>email</code></li>
-      <li>{% trans "User avatar" %}: <code>picture.url</code></li>
+      <li>{% trans "User ID" context "admin oauth2 settings form" %}: <code>id</code></li>
+      <li>{% trans "User name" context "admin oauth2 settings form" %}: <code>name</code></li>
+      <li>{% trans "User e-mail context "admin oauth2 settings form"" %}: <code>email</code></li>
+      <li>{% trans "User avatar" context "admin oauth2 settings form" %}: <code>picture.url</code></li>
     </ul>
 
     {% form_row form.oauth2_json_id_path %}

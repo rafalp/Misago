@@ -6,7 +6,7 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:users:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New user" %}
+    {% trans "New user" context "admin users" %}
   </a>
 </div>
 {% endblock %}
@@ -14,11 +14,11 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "User" %}</th>
+<th>{% trans "User" context "admin users list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
-<th style="width: 150px;">{% trans "Rank" %}</th>
-<th style="width: 200px;">{% trans "Registration" %}</th>
-<th style="width: 150px;">{% trans "Posts" %}</th>
+<th style="width: 150px;">{% trans "Rank" context "admin users list" %}</th>
+<th style="width: 200px;">{% trans "Registration" context "admin users list" %}</th>
+<th style="width: 150px;">{% trans "Posts" context "admin users list" %}</th>
 {% for action in extra_actions %}
   <th>&nbsp;</th>
 {% endfor %}
@@ -29,7 +29,7 @@
 {% block table-row %}
 <td class="pr-0">
   <a href="{{ item.get_absolute_url }}">
-    <img src="{{ item|avatar:40 }}" alt="{% trans 'Avatar' %}" width="40" height="40">
+    <img src="{{ item|avatar:40 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="40" height="40">
   </a>
 </td>
 <td class="pr-0">
@@ -44,30 +44,30 @@
 </td>
 <td class="badges-list">
   {% if item.is_superuser %}
-    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' %}">
-      {% trans "Super Admin" %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' context 'admin users list item' %}">
+      {% trans "Super Admin" context "admin user super admin status" %}
     </span>
   {% elif item.is_staff %}
-    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' %}">
-      {% trans "Admin" %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' context 'admin users list item' %}">
+      {% trans "Admin" context "admin user admin status" %}
     </span>
   {% endif %}
   {% if item.requires_activation_by_admin %}
-    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' %}">
-      {% trans "Inactive" %}
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' context 'admin users list item' %}">
+      {% trans "Inactive" context "admin user inactive status" %}
     </span>
   {% elif item.requires_activation_by_user %}
-    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate their account' %}">
-      {% trans "Inactive" %}
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate their account' context 'admin users list item' %}">
+      {% trans "Inactive" context "admin user inactive status" %}
     </span>
   {% endif %}
   {% if item.is_deleting_account %}
-    <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' %}">
-      {% trans "Deleted" %}
+    <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' context 'admin users list item' %}">
+      {% trans "Deleted" context "admin user deleted status" %}
     </span>
   {% elif not item.is_active %}
-    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' %}">
-      {% trans "Disabled" %}
+    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' context 'admin users list item' %}">
+      {% trans "Disabled" context "admin user disabled status" %}
     </span>
   {% endif %}
 </td>
@@ -82,7 +82,7 @@
     {% if item.joined_from_ip %}
       {{ item.joined_from_ip }}
     {% else %}
-      <i class="text-muted">{% trans "IP removed" %}</i>
+      <i class="text-muted">{% trans "IP removed" context "admin user ip deleted" %}</i>
     {% endif %}
   </div>
 </td>
@@ -91,8 +91,8 @@
 </td>
 {% include "misago/admin/generic/list_extra_actions.html" %}
 <td>
-  <a href="{% url 'misago:admin:users:edit' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Edit user' %}">
-    {% trans "Edit" %}
+  <a href="{% url 'misago:admin:users:edit' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Edit user' context 'admin users' %}">
+    {% trans "Edit" context "admin users" %}
   </a>
 </td>
 {% endblock table-row %}
@@ -100,7 +100,7 @@
 
 {% block blankslate %}
 <td colspan="{{ 7|add:extra_actions_len }}">
-  {% trans "No users matching criteria exist." %}
+  {% trans "No users matching criteria exist." context "admin users" %}
 </td>
 {% endblock blankslate %}
 
@@ -108,16 +108,16 @@
 {% block filters-modal-body %}
 <div class="alert alert-info" role="alert">
   <p>
-    {% trans 'You can include wildcard ("*") in username and email search:' %}
+    {% trans 'You can include wildcard ("*") in username and email search:' context "admin users filter form" %}
   </p>
   <p>
-    {% trans '"admin*" will find both "admin" and "administrator".' %}
+    {% trans '"admin*" will find both "admin" and "administrator".' context "admin users filter form" %}
   </p>
   <p>
-    {% trans '"*chan" will match both "chan" and "marichan".' %}
+    {% trans '"*chan" will match both "chan" and "marichan".' context "admin users filter form" %}
   </p>
   <p class="mb-0">
-    {% trans '"*son*" will match "son", "song", "firstson" and "firstsong".' %}
+    {% trans '"*son*" will match "son", "song", "firstson" and "firstsong".' context "admin users filter form" %}
   </p>
 </div>
 <div class="row">

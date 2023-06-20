@@ -4,22 +4,22 @@
     <div class="row align-items-center">
       <div class="col">
         <h4 class="card-title">
-          {% trans "CSS files" %}
+          {% trans "CSS files" context "admin theme assets" %}
         </h4>
       </div>
       <div class="col-auto">
         <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#uploadCss">
-          {% trans "Upload" %}
+          {% trans "Upload" context "admin theme assets" %}
         </button>
       </div>
       <div class="col-auto">
         <a href="{% url 'misago:admin:themes:new-css-link' pk=theme.pk %}" class="btn btn-light btn-sm">
-          {% trans "Link" %}
+          {% trans "Link" context "admin theme assets" %}
         </a>
       </div>
       <div class="col-auto">
         <a href="{% url 'misago:admin:themes:new-css-file' pk=theme.pk %}" class="btn btn-light btn-sm">
-          {% trans "Create" %}
+          {% trans "Create" context "admin theme assets" %}
         </a>
       </div>
     </div>

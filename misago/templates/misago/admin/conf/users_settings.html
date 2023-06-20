@@ -6,13 +6,14 @@
 <div class="form-fieldset">
   {% if settings.enable_oauth2_client %}  
     <div class="alert alert-warning" role="alert">
-      <strong>{% trans "Note" %}:</strong> {% blocktrans trimmed with provider=settings.oauth2_provider %}
+      <strong>{% trans "Note" context "admin users settings form" %}:</strong>
+      {% blocktrans trimmed with provider=settings.oauth2_provider context "admin users settings form" %}
       OAuth2 client is enabled. On site registration, password and account deletion features have been disabled and delegated to the {{ provider }}.
       {% endblocktrans %}
     </div>
   {% endif %}
   <fieldset>
-    <legend>{% trans "New accounts" %}</legend>
+    <legend>{% trans "New accounts" context "admin users settings form" %}</legend>
 
     {% form_row form.account_activation %}
     {% form_row form.new_inactive_accounts_delete %}
@@ -21,7 +22,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Usernames" %}</legend>
+    <legend>{% trans "Usernames" context "admin users settings form" %}</legend>
 
     {% form_row form.username_length_min %}
     {% form_row form.username_length_max %}
@@ -31,7 +32,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Avatars" %}</legend>
+    <legend>{% trans "Avatars" context "admin users settings form" %}</legend>
 
     {% form_row form.allow_custom_avatars %}
     {% form_row form.avatar_upload_limit %}
@@ -47,7 +48,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Signatures" %}</legend>
+    <legend>{% trans "Signatures" context "admin users settings form" %}</legend>
 
     {% form_row form.signature_length_max %}
 
@@ -55,7 +56,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Data downloads" %}</legend>
+    <legend>{% trans "Data downloads" context "admin users settings form" %}</legend>
 
     {% form_row form.allow_data_downloads %}
     {% form_row form.data_downloads_expiration %}
@@ -64,7 +65,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Own account deletion" %}</legend>
+    <legend>{% trans "Own account deletion" context "admin users settings form" %}</legend>
 
     {% form_row form.allow_delete_own_account %}
 
@@ -72,7 +73,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "IP addresses" %}</legend>
+    <legend>{% trans "IP addresses" context "admin users settings form" %}</legend>
 
     {% form_row form.ip_storage_time %}
 
@@ -80,11 +81,11 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Default subscription preferences" %}</legend>
+    <legend>{% trans "Default subscription preferences" context "admin users settings form" %}</legend>
 
     <div class="alert alert-warning" role="alert">
-      <strong>{% translate "Deprecation warning" context "deprecation warning" %}:</strong>
-      {% blocktranslate trimmed context "deprecation warning" %}
+      <strong>{% translate "Deprecation warning" context "admin users settings form" %}:</strong>
+      {% blocktranslate trimmed context "admin users settings form" %}
       The thread subscriptions feature has been replaced with notifications and will be removed in a future version of Misago. Please use the notification settings instead.
       {% endblocktranslate %}
     </div>
@@ -96,7 +97,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Users lists" %}</legend>
+    <legend>{% trans "Users lists" context "admin users settings form" %}</legend>
 
     {% form_row form.users_per_page %}
     {% form_row form.users_per_page_orphans %}
@@ -105,7 +106,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Top posters ranking" %}</legend>
+    <legend>{% trans "Top posters ranking" context "admin users settings form" %}</legend>
 
     {% form_row form.top_posters_ranking_size %}
     {% form_row form.top_posters_ranking_length %}

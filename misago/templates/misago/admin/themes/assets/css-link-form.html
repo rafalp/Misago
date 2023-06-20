@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New CSS link" %}
+  {% trans "New CSS link" context "admin theme css link form" %}
 {% endif %} | {{ theme }} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -26,9 +26,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit CSS link" %}
+  {% trans "Edit CSS link" context "admin theme css link form" %}
 {% else %}
-  {% trans "New CSS link" %}
+  {% trans "New CSS link" context "admin theme css link form" %}
 {% endif %}
 {% endblock %}
 
@@ -41,6 +41,6 @@
 
 {% block form-footer-cancel %}
 <a href="{% url 'misago:admin:themes:assets' pk=theme.pk %}" class="btn btn-light btn-sm">
-  {% trans "Cancel" %}
+  {% trans "Cancel" context "admin theme css link form" %}
 </a>
 {% endblock %}
