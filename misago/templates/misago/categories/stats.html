@@ -2,14 +2,14 @@
 <div class="col-md-2 hidden-xs hidden-sm">
   <ul class="list-unstyled category-stats">
     <li class="category-stat-threads">
-      {% blocktrans trimmed count threads=category.threads %}
+      {% blocktrans trimmed count threads=category.threads context "category stats" %}
         {{ threads }} thread
       {% plural %}
         {{ threads }} threads
       {% endblocktrans %}
     </li>
     <li class="category-stat-posts">
-      {% blocktrans trimmed count posts=category.posts %}
+      {% blocktrans trimmed count posts=category.posts context "category stats" %}
         {{ posts }} post
       {% plural %}
         {{ posts }} posts

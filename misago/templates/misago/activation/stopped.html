@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Activation failed" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Activation failed" context "account activation page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -16,7 +16,7 @@
 
       <div class="message-body">
         <p class="lead">
-          {% trans "Your account can't be activated at this time." %}
+          {% trans "Your account can't be activated at this time." context "account activation page" %}
         </p>
         <p>{{ message }}</p>
       </div>

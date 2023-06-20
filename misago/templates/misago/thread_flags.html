@@ -4,7 +4,7 @@
   {% if thread.weight == 2 %}
     <li
       class="thread-flag-pinned-globally"
-      title="{% trans 'Pinned globally' %}"
+      title="{% trans 'Pinned globally' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark</span>
     </li>
@@ -12,7 +12,7 @@
   {% if thread.weight == 1 %}
     <li
       class="thread-flag-pinned-locally"
-      title="{% trans 'Pinned in category' %}"
+      title="{% trans 'Pinned in category' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
@@ -20,7 +20,7 @@
   {% if thread.best_answer %}
     <li
       class="thread-flag-answered"
-      title="{% trans 'Answered' %}"
+      title="{% trans 'Answered' context 'thread flag' %}"
     >
       <span class="material-icon">check_circle</span>
     </li>
@@ -28,7 +28,7 @@
   {% if thread.has_poll %}
     <li
       class="thread-flag-poll"
-      title="{% trans 'Poll' %}"
+      title="{% trans 'Poll' context 'thread flag' %}"
     >
       <span class="material-icon">poll</span>
     </li>
@@ -36,7 +36,7 @@
   {% if thread.is_closed %}
     <li
       class="thread-flag-closed"
-      title="{% trans 'Closed' %}"
+      title="{% trans 'Closed' context 'thread flag' %}"
     >
       <span class="material-icon">lock</span>
     </li>
@@ -44,7 +44,7 @@
   {% if thread.is_hidden %}
     <li
       class="thread-flag-hidden"
-      title="{% trans 'Hidden' %}"
+      title="{% trans 'Hidden' context 'thread flag' %}"
     >
       <span class="material-icon">visibility_off</span>
     </li>
