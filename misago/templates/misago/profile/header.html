@@ -26,8 +26,8 @@
                 <ul class="profile-data-list">
                   {% if not profile.is_active %}
                     <li class="user-account-disabled">
-                      <abbr title="{% trans "This user's account has been disabled by administrator." %}">
-                        {% trans "Account disabled" %}
+                      <abbr title="{% trans "This user's account has been disabled by administrator." context 'user profile page header' %}">
+                        {% trans "Account disabled" context "user profile page header" %}
                       </abbr>
                     </li>
                   {% endif %}
@@ -53,7 +53,7 @@
                   {% endif %}
                   <li class="user-joined-on">
                     <abbr>
-                      {% blocktrans trimmed with joined_on=profile.joined_on|date %}
+                      {% blocktrans trimmed with joined_on=profile.joined_on|date context "user profile page header" %}
                         Joined {{ joined_on }}
                       {% endblocktrans %}
                     </abbr>
@@ -74,7 +74,7 @@
                   <div class="flex-row-col">
                     <button class="btn btn-default btn-block btn-outline" type="button" disabled>
                       <span class="material-icon">comment</span>
-                      {% trans "Message" %}
+                      {% trans "Message" context "user profile page header" %}
                     </button>
                   </div>
                   {% if not profile.acl.can_follow and profile.acl.can_moderate %}
@@ -93,7 +93,7 @@
                   <div class="flex-row-col">
                     <button class="btn btn btn-block btn-outline btn-default btn-follow" type="button" disabled>
                       <span class="material-icon">favorite_border</span>
-                      {% trans "Follow" %}
+                      {% trans "Follow" context "user profile page header" %}
                     </button>
                   </div>
                   {% if profile.acl.can_moderate %}

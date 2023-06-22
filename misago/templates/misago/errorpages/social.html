@@ -2,14 +2,14 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Problem with sign in" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Problem with sign in" context "error social auth page" %} | {{ block.super }}{% endblock %}
 
 
 {% block meta-description %}{{ message }}{% endblock %}
 
 
-{% block og-title %}{% trans "Problem with sign in" %}{% endblock %}
-{% block twitter-title %}{% trans "Problem with sign in" %}{% endblock %}
+{% block og-title %}{% trans "Problem with sign in" context "error social auth page" %}{% endblock %}
+{% block twitter-title %}{% trans "Problem with sign in" context "error social auth page" %}{% endblock %}
 
 
 {% block og-description %}{{ message }}{% endblock %}
@@ -34,7 +34,7 @@
             {% if help_text %}
               {{ help_text }}
             {% else %}
-              {% trans "Please try again or use another method to sign in if the problem persists." %}
+              {% trans "Please try again or use another method to sign in if the problem persists." context "error social auth page" %}
             {% endif %}
           </p>
         {% endif %}

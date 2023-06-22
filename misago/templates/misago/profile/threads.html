@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Threads" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Threads" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Threads" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -17,13 +17,13 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count threads=profile.threads %}
+            {% blocktrans trimmed count threads=profile.threads context "user profile page threads" %}
               You have started {{ threads }} thread.
             {% plural %}
               You have started {{ threads }} threads.
             {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed count threads=profile.threads with username=profile %}
+            {% blocktrans trimmed count threads=profile.threads with username=profile context "user profile page threads" %}
               {{ username }} has started {{ threads }} thread.
             {% plural %}
               {{ username }} has started {{ threads }} threads.
@@ -38,10 +38,10 @@
     {% include "misago/profile/feed.html" %}
   {% else %}
     <p class="lead">
-      {% if is_authenticated_user %}
+      {% if is_authenticated_user context "user profile page threads" %}
         {% trans "You have no started threads." %}
       {% else %}
-        {% blocktrans trimmed with username=profile.username %}
+        {% blocktrans trimmed with username=profile.username context "user profile page threads" %}
           {{ username }} started no threads.
         {% endblocktrans %}
       {% endif %}

@@ -133,7 +133,7 @@ def email_watcher_on_new_thread_reply(
     settings: DynamicSettings,
 ):
     subject = pgettext(
-        "notification email subject", "%(thread)s - new reply by %(user)s"
+        "new thread reply email subject", "%(thread)s - new reply by %(user)s"
     ) % {
         "user": post.poster.username,
         "thread": post.thread.title,
@@ -258,7 +258,7 @@ def email_participant_on_new_private_thread(
     thread = watched_thread.thread
 
     subject = pgettext(
-        "notification email subject",
+        "new private thread email subject",
         '%(user)s has invited you to participate in private thread "%(thread)s"',
     )
     subject_formats = {"thread": thread.title, "user": actor.username}

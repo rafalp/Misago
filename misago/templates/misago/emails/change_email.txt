@@ -3,11 +3,11 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user %}
+{% blocktrans trimmed with user=user context "confirm email change email" %}
 {{ user }}, you are receiving this message because you have changed your e-mail address.
 {% endblocktrans %}
 
-{% blocktrans trimmed %}
+{% blocktrans trimmed context "confirm email change email" %}
 To confirm this change, click the link below:
 {% endblocktrans %}
 {% absoluteurl 'misago:options-confirm-email-change' token=token %}

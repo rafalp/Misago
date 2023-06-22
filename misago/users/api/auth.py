@@ -155,7 +155,7 @@ def send_password_form(request):
     requesting_user = form.user_cache
 
     mail_subject = pgettext(
-        "change forgotten password api",
+        "change forgotten password email subject",
         "Change %(user)s password on %(forum_name)s forums",
     ) % {
         "user": requesting_user.username,
