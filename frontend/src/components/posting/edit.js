@@ -98,6 +98,14 @@ export default class extends Form {
   }
 
   onCancel = () => {
+    const editorEmpty = this.state.post.length === 0
+
+    if (editorEmpty) {
+      this.minimize()
+      posting.close()
+      return
+    }
+
     const cancel = window.confirm(
       pgettext("edit reply", "Are you sure you want to discard changes?")
     )
