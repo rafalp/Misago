@@ -11,9 +11,9 @@
     {% endif %}
   {% else %}
     {% if list_name %}
-      {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
+      {{ list_name }} | {% trans "Threads" context "threads page" %} | {{ block.super }}
     {% else %}
-      {% trans "Threads" %} | {{ block.super }}
+      {% trans "Threads" context "threads page" %} | {{ block.super }}
     {% endif %}
   {% endif %}
 {% endblock title %}
@@ -30,7 +30,7 @@
   {% if THREADS_ON_INDEX %}
     {{ settings.index_title|default:settings.forum_name }}
   {% else %}
-    {% trans "Threads" %}
+    {% trans "Threads" context "threads page" %}
   {% endif %}
 {% endblock og-title %}
 
@@ -39,7 +39,7 @@
   {% if THREADS_ON_INDEX %}
     {{ settings.index_title|default:settings.forum_name }}
   {% else %}
-    {% trans "Threads" %}
+    {% trans "Threads" context "threads page" %}
   {% endif %}
 {% endblock twitter-title %}
 
@@ -87,7 +87,7 @@
         <div class="page-header-banner page-header-banner-threads">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
-              <h1>{% trans "Threads" %}</h1>
+              <h1>{% trans "Threads" context "threads page" %}</h1>
             </div>
           </div>
         </div>

@@ -50,17 +50,17 @@
                     {% if list_type == 'all' %}
                       <p class="lead">
                         {% if category.level %}
-                          {% trans "There are no threads in this category." %}
+                          {% trans "There are no threads in this category." context "threads list" %}
                         {% else %}
-                          {% trans "There are no threads on this forum... yet!" %}
+                          {% trans "There are no threads on this forum... yet!" context "threads list" %}
                         {% endif %}
                       </p>
                       <p>
-                        {% trans "Why not start one yourself?" %}
+                        {% trans "Why not start one yourself?" context "threads list" %}
                       </p>
                     {% else %}
                       <p class="lead">
-                        {% trans "No threads matching specified criteria were found." %}
+                        {% trans "No threads matching specified criteria were found." context "threads list" %}
                       </p>
                     {% endif %}
                   {% endblock list-empty-message %}
@@ -75,7 +75,7 @@
             <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
               <ul class="pager">
                 <li class="next">
-                  <a href="{{ request_path }}?page={{ list_page.next }}" rel="next" title="{% trans 'Next page' %}">
+                  <a href="{{ request_path }}?page={{ list_page.next }}" rel="next" title="{% trans 'Next page' context 'threads list paginator' %}">
                     <span aria-hidden="true" class="material-icon">
                       arrow_forward
                     </span>

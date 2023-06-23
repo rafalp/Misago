@@ -38,8 +38,8 @@
     {% include "misago/profile/feed.html" %}
   {% else %}
     <p class="lead">
-      {% if is_authenticated_user context "user profile page threads" %}
-        {% trans "You have no started threads." %}
+      {% if is_authenticated_user %}
+        {% trans "You have no started threads." context "user profile page threads" %}
       {% else %}
         {% blocktrans trimmed with username=profile.username context "user profile page threads" %}
           {{ username }} started no threads.
