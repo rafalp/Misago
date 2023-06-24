@@ -97,11 +97,14 @@ export default class extends Form {
 
   onCancel = () => {
     const editorEmpty = this.state.post.length === 0
+    // If only the quote text is on editor user didn't add anything
+    // so no changes to discard
+    const onlyQuoteTextInEditor =
+      this.state.post.startsWith('[quote="@') &&
+      this.state.post.endsWith("[/quote]")
 
-    if (editorEmpty) {
-      this.minimize()
-      posting.close()
-      return
+    if (editorEmpty || onlyQuoteTextInEditor) {
+      return this.close()
     }
 
     const cancel = window.confirm(
