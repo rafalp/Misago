@@ -66,6 +66,19 @@ export default class extends Form {
 
   onCancel = () => {
     let cancel = false
+    const pollData = this.state
+
+    // Nothing added to the poll so no changes to discard
+    const nothingAddedToPoll =
+      pollData.question === "" &&
+      pollData.choices[0].label === "" &&
+      pollData.choices[1].label === "" &&
+      pollData.length === 0 &&
+      pollData.allowed_choices === 1
+
+    if (nothingAddedToPoll) {
+      return this.props.close()
+    }
 
     if (!!this.props.poll) {
       cancel = window.confirm(
