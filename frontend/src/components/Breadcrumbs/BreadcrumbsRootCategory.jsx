@@ -7,8 +7,8 @@ const BreadcrumbsRootCategory = ({ category, className }) => (
       <span className="material-icon">chevron_right</span>
       <span className="breadcrumbs-item-name">
         {category.special_role === "root_category"
-          ? gettext("Threads")
-          : gettext("Private threads")}
+          ? pgettext("breadcrumb", "Threads")
+          : pgettext("breadcrumb", "Private threads")}
       </span>
     </a>
   </li>

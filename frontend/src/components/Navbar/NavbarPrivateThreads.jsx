@@ -10,7 +10,7 @@ export default function NavbarPrivateThreads({
   onClick,
 }) {
   const title = !!badge
-    ? gettext("You have unread private threads!")
+    ? pgettext("navbar", "You have unread private threads!")
     : pgettext("navbar", "Open private threads")
 
   return (

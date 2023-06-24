@@ -21,7 +21,12 @@ export default class extends React.Component {
 
   showRegisterForm = () => {
     if (misago.get("SETTINGS").account_activation === "closed") {
-      snackbar.info(gettext("New registrations are currently disabled."))
+      snackbar.info(
+        pgettext(
+          "registration btn error",
+          "New registrations are currently disabled."
+        )
+      )
     } else if (this.state.isLoaded) {
       modal.show(<RegisterForm criteria={this.state.criteria} />)
     } else {
@@ -44,7 +49,10 @@ export default class extends React.Component {
           this.setState({ isLoading: false })
 
           snackbar.error(
-            gettext("Registration is currently unavailable due to an error.")
+            pgettext(
+              "registration btn error",
+              "Registration is currently unavailable due to an error."
+            )
           )
         }
       )

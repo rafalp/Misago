@@ -25,7 +25,12 @@ export default class extends Form {
 
   clean() {
     if (!this.state.username.trim().length) {
-      snackbar.error(gettext("You have to enter user name."))
+      snackbar.error(
+        pgettext(
+          "add private thread participant",
+          "You have to enter user name."
+        )
+      )
       return false
     }
 
@@ -43,7 +48,12 @@ export default class extends Form {
     store.dispatch(updateAcl(data))
     store.dispatch(participants.replace(data.participants))
 
-    snackbar.success(gettext("New participant has been added to thread."))
+    snackbar.success(
+      pgettext(
+        "add private thread participant",
+        "New participant has been added to thread."
+      )
+    )
 
     modal.hide()
   }
@@ -55,7 +65,13 @@ export default class extends Form {
           <div className="modal-content">
             <ModalHeader />
             <div className="modal-body">
-              <FormGroup for="id_username" label={gettext("User to add")}>
+              <FormGroup
+                for="id_username"
+                label={pgettext(
+                  "add private thread participant field",
+                  "User to add"
+                )}
+              >
                 <input
                   id="id_username"
                   className="form-control"
@@ -71,7 +87,10 @@ export default class extends Form {
                 className="btn btn-block btn-primary"
                 disabled={this.state.isLoading}
               >
-                {gettext("Add participant")}
+                {pgettext(
+                  "add private thread participant btn",
+                  "Add participant"
+                )}
               </button>
               <button
                 className="btn btn-block btn-default"
@@ -79,7 +98,7 @@ export default class extends Form {
                 disabled={this.state.isLoading}
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("add private thread participant btn", "Cancel")}
               </button>
             </div>
           </div>
@@ -100,7 +119,12 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Add participant")}</h4>
+      <h4 className="modal-title">
+        {pgettext(
+          "add private thread participant modal title",
+          "Add participant"
+        )}
+      </h4>
     </div>
   )
 }

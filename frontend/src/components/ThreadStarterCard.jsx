@@ -18,12 +18,15 @@ const ThreadStarterCard = ({ thread }) => (
           <a
             className="item-title"
             href={thread.url.starter}
-            title={gettext("Thread author")}
+            title={pgettext("thread starter info", "Thread author")}
           >
             {thread.starter.username}
           </a>
         ) : (
-          <span className="item-title" title={gettext("Thread author")}>
+          <span
+            className="item-title"
+            title={pgettext("thread starter info", "Thread author")}
+          >
             {thread.starter_name}
           </span>
         )}
@@ -32,7 +35,7 @@ const ThreadStarterCard = ({ thread }) => (
         <span
           className="text-muted"
           title={interpolate(
-            gettext("Started on: %(timestamp)s"),
+            pgettext("thread starter info", "Started on: %(timestamp)s"),
             {
               timestamp: thread.started_on.format("LLL"),
             },

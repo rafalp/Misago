@@ -81,19 +81,26 @@ export default class ForumOptionsForm extends Form {
       {
         value: 0,
         icon: "help_outline",
-        label: gettext("Anybody can invite me to their private threads"),
+        label: pgettext(
+          "private threads preference",
+          "Anybody can invite me to their private threads"
+        ),
       },
       {
         value: 1,
         icon: "done_all",
-        label: gettext(
+        label: pgettext(
+          "private threads preference",
           "Only those I follow can invite me to their private threads"
         ),
       },
       {
         value: 2,
         icon: "highlight_off",
-        label: gettext("Nobody can invite me to their private threads"),
+        label: pgettext(
+          "private threads preference",
+          "Nobody can invite me to their private threads"
+        ),
       },
     ]
   }
@@ -136,12 +143,16 @@ export default class ForumOptionsForm extends Form {
           this.state.notify_new_private_threads_by_other_users,
       })
     )
-    snackbar.success(gettext("Your forum options have been updated."))
+    snackbar.success(
+      pgettext("forum options form", "Your forum options have been updated.")
+    )
   }
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      snackbar.error(gettext("Please reload the page and try again."))
+      snackbar.error(
+        pgettext("forum options form", "Please reload the page and try again.")
+      )
     } else {
       snackbar.apiError(rejection)
     }
@@ -149,8 +160,8 @@ export default class ForumOptionsForm extends Form {
 
   componentDidMount() {
     title.set({
-      title: gettext("Forum options"),
-      parent: gettext("Change your options"),
+      title: pgettext("forum options title", "Forum options"),
+      parent: pgettext("forum options", "Change your options"),
     })
   }
 
@@ -159,15 +170,20 @@ export default class ForumOptionsForm extends Form {
       <form onSubmit={this.handleSubmit}>
         <div className="panel panel-default panel-form">
           <div className="panel-heading">
-            <h3 className="panel-title">{gettext("Change forum options")}</h3>
+            <h3 className="panel-title">
+              {pgettext("forum options form title", "Change forum options")}
+            </h3>
           </div>
           <div className="panel-body">
             <fieldset>
-              <legend>{gettext("Privacy settings")}</legend>
+              <legend>
+                {pgettext("forum options form", "Privacy settings")}
+              </legend>
 
               <FormGroup
-                label={gettext("Hide my presence")}
-                helpText={gettext(
+                label={pgettext("forum options form", "Hide my presence")}
+                helpText={pgettext(
+                  "forum options form",
                   "If you hide your presence, only members with permission to see hidden users will see when you are online."
                 )}
                 for="id_is_hiding_presence"
@@ -177,15 +193,22 @@ export default class ForumOptionsForm extends Form {
                   disabled={this.state.isLoading}
                   iconOn="visibility_off"
                   iconOff="visibility"
-                  labelOn={gettext("Hide my presence from other users")}
-                  labelOff={gettext("Show my presence to other users")}
+                  labelOn={pgettext(
+                    "forum options form",
+                    "Hide my presence from other users"
+                  )}
+                  labelOff={pgettext(
+                    "forum options form",
+                    "Show my presence to other users"
+                  )}
                   onChange={this.bindInput("is_hiding_presence")}
                   value={this.state.is_hiding_presence}
                 />
               </FormGroup>
 
               <FormGroup
-                label={gettext(
+                label={pgettext(
+                  "forum options form",
                   "Limit private thread invitations from other users"
                 )}
                 for="id_limits_private_thread_invites_to"
@@ -307,7 +330,7 @@ export default class ForumOptionsForm extends Form {
           </div>
           <div className="panel-footer">
             <Button className="btn-primary" loading={this.state.isLoading}>
-              {gettext("Save changes")}
+              {pgettext("forum options form btn", "Save changes")}
             </Button>
           </div>
         </div>

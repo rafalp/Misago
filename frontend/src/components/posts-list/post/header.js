@@ -29,7 +29,9 @@ export function UnreadLabel(props) {
   if (props.post.is_read) return null
 
   return (
-    <span className="label label-unread hidden-xs">{gettext("New post")}</span>
+    <span className="label label-unread hidden-xs">
+      {pgettext("post unread label", "New post")}
+    </span>
   )
 }
 
@@ -38,14 +40,14 @@ export function UnreadCompact(props) {
 
   return (
     <span className="label label-unread visible-xs-inline-block">
-      {gettext("New")}
+      {pgettext("post unread label", "New")}
     </span>
   )
 }
 
 export function PostedOn(props) {
   const tooltip = interpolate(
-    gettext("posted %(posted_on)s"),
+    pgettext("post timestamp", "posted %(posted_on)s"),
     {
       posted_on: props.post.posted_on.format("LL, LT"),
     },
@@ -85,7 +87,8 @@ export class PostEdits extends React.Component {
     const isUnedited = this.props.post.edits === 0
     if (isHidden || isUnedited) return null
 
-    const tooltip = ngettext(
+    const tooltip = npgettext(
+      "post edits stat",
       "This post was edited %(edits)s time.",
       "This post was edited %(edits)s times.",
       this.props.post.edits
@@ -99,7 +102,8 @@ export class PostEdits extends React.Component {
       true
     )
 
-    const label = ngettext(
+    const label = npgettext(
+      "post edits stat",
       "edited %(edits)s time",
       "edited %(edits)s times",
       this.props.post.edits
@@ -131,7 +135,8 @@ export class PostEditsCompacts extends PostEdits {
     const isUnedited = this.props.post.edits === 0
     if (isHidden || isUnedited) return null
 
-    const label = ngettext(
+    const label = npgettext(
+      "post edits stat",
       "%(edits)s edit",
       "%(edits)s edits",
       this.props.post.edits
@@ -168,10 +173,13 @@ export function ProtectedLabel(props) {
   return (
     <span
       className="label label-protected hidden-xs"
-      title={gettext("This post is protected and may not be edited.")}
+      title={pgettext(
+        "post protected label",
+        "This post is protected and may not be edited."
+      )}
     >
       <span className="material-icon">lock_outline</span>
-      {gettext("protected")}
+      {pgettext("post protected label", "protected")}
     </span>
   )
 }

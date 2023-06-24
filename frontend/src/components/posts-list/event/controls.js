@@ -62,7 +62,7 @@ export class Hide extends React.Component {
     if (!this.props.post.is_hidden) {
       return (
         <button type="button" className="btn btn-link" onClick={this.onClick}>
-          {gettext("Hide")}
+          {pgettext("event hide btn", "Hide")}
         </button>
       )
     } else {
@@ -105,7 +105,7 @@ export class Unhide extends React.Component {
     if (this.props.post.is_hidden) {
       return (
         <button type="button" className="btn btn-link" onClick={this.onClick}>
-          {gettext("Unhide")}
+          {pgettext("event reveal btn", "Unhide")}
         </button>
       )
     } else {
@@ -118,6 +118,7 @@ export class Delete extends React.Component {
   onClick = () => {
     const decision = window.confirm(
       gettext(
+        "event delete",
         "Are you sure you wish to delete this event? This action is not reversible!"
       )
     )
@@ -135,7 +136,7 @@ export class Delete extends React.Component {
 
     ajax.delete(this.props.post.api.index).then(
       () => {
-        snackbar.success(gettext("Event has been deleted."))
+        snackbar.success(pgettext("event delete", "Event has been deleted."))
       },
       (rejection) => {
         if (rejection.status === 400) {
@@ -156,7 +157,7 @@ export class Delete extends React.Component {
   render() {
     return (
       <button type="button" className="btn btn-link" onClick={this.onClick}>
-        {gettext("Delete")}
+        {pgettext("event delete btn", "Delete")}
       </button>
     )
   }

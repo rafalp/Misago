@@ -39,7 +39,9 @@ export default class extends React.Component {
     return (
       <div className="panel panel-default panel-form">
         <div className="panel-heading">
-          <h3 className="panel-title">{gettext("Edit details")}</h3>
+          <h3 className="panel-title">
+            {pgettext("user profile details form title", "Edit details")}
+          </h3>
         </div>
         <Loader display={loading} />
         <Blankslate display={!loading && !groups.length} />

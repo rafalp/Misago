@@ -20,7 +20,10 @@ export default class extends Form {
   clean() {
     if (this.props.polls && this.state.poll === "0") {
       const confirmation = window.confirm(
-        gettext("Are you sure you want to delete all polls?")
+        pgettext(
+          "merge threads conflict form",
+          "Are you sure you want to delete all polls?"
+        )
       )
       return confirmation
     }
@@ -67,7 +70,9 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Merge threads")}</h4>
+            <h4 className="modal-title">
+              {pgettext("merge threads conflict modal title", "Merge threads")}
+            </h4>
           </div>
           <form onSubmit={this.handleSubmit}>
             <div className="modal-body">
@@ -89,10 +94,10 @@ export default class extends Form {
                 disabled={this.state.isLoading}
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("merge threads conflict btn", "Cancel")}
               </button>
               <Button className="btn-primary" loading={this.state.isLoading}>
-                {gettext("Merge threads")}
+                {pgettext("merge threads conflict btn", "Merge threads")}
               </Button>
             </div>
           </form>
@@ -107,8 +112,9 @@ export function BestAnswerSelect({ choices, onChange, value }) {
 
   return (
     <FormGroup
-      label={gettext("Best answer")}
-      helpText={gettext(
+      label={pgettext("merge threads conflict best answer", "Best answer")}
+      helpText={pgettext(
+        "merge threads conflict best answer",
         "Please select the best answer for your newly merged thread. No posts will be deleted during the merge."
       )}
       for="id_best_answer"
@@ -136,8 +142,9 @@ export function PollSelect({ choices, onChange, value }) {
 
   return (
     <FormGroup
-      label={gettext("Poll")}
-      helpText={gettext(
+      label={pgettext("merge threads conflict poll", "Poll")}
+      helpText={pgettext(
+        "merge threads conflict poll",
         "Please select the poll for your newly merged thread. Rejected polls will be permanently deleted and cannot be recovered."
       )}
       for="id_poll"

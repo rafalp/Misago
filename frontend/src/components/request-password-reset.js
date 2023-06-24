@@ -27,7 +27,9 @@ export class RequestResetForm extends Form {
     if (this.isValid()) {
       return true
     } else {
-      snackbar.error(gettext("Enter a valid email address."))
+      snackbar.error(
+        pgettext("request password reset form", "Enter a valid email address.")
+      )
       return false
     }
   }
@@ -61,7 +63,10 @@ export class RequestResetForm extends Form {
               <input
                 type="text"
                 className="form-control"
-                placeholder={gettext("Your e-mail address")}
+                placeholder={pgettext(
+                  "request password reset form field",
+                  "Your e-mail address"
+                )}
                 disabled={this.state.isLoading}
                 onChange={this.bindInput("email")}
                 value={this.state.email}
@@ -73,7 +78,7 @@ export class RequestResetForm extends Form {
             className="btn-primary btn-block"
             loading={this.state.isLoading}
           >
-            {gettext("Send link")}
+            {pgettext("request password reset form btn", "Send link")}
           </Button>
         </form>
       </div>
@@ -84,7 +89,10 @@ export class RequestResetForm extends Form {
 export class LinkSent extends React.Component {
   getMessage() {
     return interpolate(
-      gettext("Reset password link was sent to %(email)s"),
+      pgettext(
+        "request password reset form",
+        "Reset password link was sent to %(email)s"
+      ),
       {
         email: this.props.user.email,
       },
@@ -107,7 +115,10 @@ export class LinkSent extends React.Component {
             className="btn btn-primary btn-block"
             onClick={this.props.callback}
           >
-            {gettext("Request another link")}
+            {pgettext(
+              "request password reset form btn",
+              "Request another link"
+            )}
           </button>
         </div>
       </div>
@@ -121,7 +132,10 @@ export class AccountInactivePage extends React.Component {
       return (
         <p>
           <a href={misago.get("REQUEST_ACTIVATION_URL")}>
-            {gettext("Activate your account.")}
+            {pgettext(
+              "request password reset form error",
+              "Activate your account."
+            )}
           </a>
         </p>
       )
@@ -140,7 +154,12 @@ export class AccountInactivePage extends React.Component {
             </div>
 
             <div className="message-body">
-              <p className="lead">{gettext("Your account is inactive.")}</p>
+              <p className="lead">
+                {pgettext(
+                  "request password reset form error",
+                  "Your account is inactive."
+                )}
+              </p>
               <p>{this.props.message}</p>
               {this.getActivateButton()}
             </div>

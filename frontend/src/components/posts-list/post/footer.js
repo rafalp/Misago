@@ -55,7 +55,7 @@ export class MarkAsBestAnswer extends React.Component {
         type="button"
       >
         <span className="material-icon">check_box</span>
-        {pgettext("post control", "Best answer")}
+        {pgettext("post footer btn", "Best answer")}
       </button>
     )
   }
@@ -110,7 +110,9 @@ export class Like extends React.Component {
         onClick={this.onClick}
         type="button"
       >
-        {this.props.post.is_liked ? gettext("Liked") : gettext("Like")}
+        {this.props.post.is_liked
+          ? pgettext("post footer btn", "Liked")
+          : pgettext("post footer btn", "Like")}
       </button>
     )
   }
@@ -177,7 +179,7 @@ export function getLikesMessage(likes, users) {
 
   if (usernames.length == 1) {
     return interpolate(
-      gettext("%(user)s likes this."),
+      pgettext("post likes", "%(user)s likes this."),
       {
         user: usernames[0],
       },
@@ -191,7 +193,7 @@ export function getLikesMessage(likes, users) {
   const lastUser = usernames.slice(-1)[0]
 
   const usernamesList = interpolate(
-    gettext("%(users)s and %(last_user)s"),
+    pgettext("post likes", "%(users)s and %(last_user)s"),
     {
       users: otherUsers,
       last_user: lastUser,
@@ -201,7 +203,7 @@ export function getLikesMessage(likes, users) {
 
   if (hiddenLikes === 0) {
     return interpolate(
-      gettext("%(users)s like this."),
+      pgettext("post likes", "%(users)s like this."),
       {
         users: usernamesList,
       },
@@ -209,7 +211,8 @@ export function getLikesMessage(likes, users) {
     )
   }
 
-  const message = ngettext(
+  const message = npgettext(
+    "post likes",
     "%(users)s and %(likes)s other user like this.",
     "%(users)s and %(likes)s other users like this.",
     hiddenLikes
@@ -244,7 +247,7 @@ export class Reply extends React.Component {
           type="button"
           onClick={this.onClick}
         >
-          {pgettext("post control", "Reply")}
+          {pgettext("post footer btn", "Reply")}
         </button>
       )
     } else {
@@ -276,7 +279,7 @@ export class Quote extends React.Component {
           type="button"
           onClick={this.onClick}
         >
-          {pgettext("post control", "Quote")}
+          {pgettext("post footer btn", "Quote")}
         </button>
       )
     } else {
@@ -305,7 +308,7 @@ export class Edit extends React.Component {
           type="button"
           onClick={this.onClick}
         >
-          {pgettext("post control", "Edit")}
+          {pgettext("post footer btn", "Edit")}
         </button>
       )
     } else {

@@ -10,7 +10,7 @@ export default function NavbarNotificationsToggle({
   onClick,
 }) {
   const title = !!badge
-    ? gettext("You have unread notifications!")
+    ? pgettext("navbar", "You have unread notifications!")
     : pgettext("navbar", "Open notifications")
 
   return (

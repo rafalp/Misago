@@ -29,7 +29,9 @@ export default function (props) {
           <UserStatus isOwner={participant.is_owner} />
           <li className="dropdown-header" />
           <li>
-            <a href={participant.url}>{gettext("See profile")}</a>
+            <a href={participant.url}>
+              {pgettext("thread participants profile link", "See profile")}
+            </a>
           </li>
           <li role="separator" className="divider" />
           <MakeOwner {...props} />
@@ -46,7 +48,9 @@ export function UserStatus({ isOwner }) {
   return (
     <li className="dropdown-header dropdown-header-owner">
       <span className="material-icon">start</span>
-      <span className="icon-text">{gettext("Thread owner")}</span>
+      <span className="icon-text">
+        {pgettext("thread participants owner status", "Thread owner")}
+      </span>
     </li>
   )
 }

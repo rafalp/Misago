@@ -49,7 +49,9 @@ export function Hidden(props) {
     )
 
     const message = interpolate(
-      escapeHtml(gettext("Hidden by %(event_by)s %(event_on)s.")),
+      escapeHtml(
+        pgettext("event info", "Hidden by %(event_by)s %(event_on)s.")
+      ),
       {
         event_by: user,
         event_on: date,
@@ -100,7 +102,7 @@ export function Poster(props) {
   )
 
   const message = interpolate(
-    escapeHtml(gettext("By %(event_by)s %(event_on)s.")),
+    escapeHtml(pgettext("event info", "By %(event_by)s %(event_on)s.")),
     {
       event_by: user,
       event_on: date,

@@ -18,7 +18,7 @@ export default function ({ post, thread }) {
           <span className="media-heading item-title">{post.poster_name}</span>
 
           <span className="user-title user-title-anonymous">
-            {gettext("Removed user")}
+            {pgettext("removed username", "Removed user")}
           </span>
         </div>
       </div>

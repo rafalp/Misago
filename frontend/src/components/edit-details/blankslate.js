@@ -6,8 +6,14 @@ export default function ({ display }) {
 
   return (
     <PanelMessage
-      helpText={gettext("No profile details are editable at this time.")}
-      message={gettext("This option is currently unavailable.")}
+      helpText={pgettext(
+        "user profile details",
+        "No profile details are editable at this time."
+      )}
+      message={pgettext(
+        "user profile details",
+        "This option is currently unavailable."
+      )}
     />
   )
 }

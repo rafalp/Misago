@@ -12,10 +12,14 @@ export default class extends React.Component {
     let confirmed = false
     if (this.isUser) {
       confirmed = window.confirm(
-        gettext("Are you sure you want to take over this thread?")
+        pgettext(
+          "private thread owner change",
+          "Are you sure you want to take over this thread?"
+        )
       )
     } else {
-      const message = gettext(
+      const message = pgettext(
+        "private thread owner change",
         "Are you sure you want to change thread owner to %(user)s?"
       )
       confirmed = window.confirm(
@@ -41,7 +45,7 @@ export default class extends React.Component {
     return (
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
-          {gettext("Make owner")}
+          {pgettext("private thread owner change btn", "Make owner")}
         </button>
       </li>
     )

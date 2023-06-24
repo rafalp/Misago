@@ -1,5 +1,4 @@
 import React from "react"
-import Button from "misago/components/button"
 import Form from "misago/components/form"
 import FormGroup from "misago/components/form-group"
 import * as post from "misago/reducers/post"
@@ -26,7 +25,12 @@ export default class extends Form {
 
   clean() {
     if (!this.state.url.trim().length) {
-      snackbar.error(gettext("You have to enter link to the other thread."))
+      snackbar.error(
+        pgettext(
+          "post move modal",
+          "You have to enter link to the other thread."
+        )
+      )
       return false
     }
 
@@ -49,7 +53,12 @@ export default class extends Form {
 
     modal.hide()
 
-    snackbar.success(gettext("Selected post was moved to the other thread."))
+    snackbar.success(
+      pgettext(
+        "post move modal",
+        "Selected post was moved to the other thread."
+      )
+    )
   }
 
   handleError(rejection) {
@@ -73,7 +82,10 @@ export default class extends Form {
             <div className="modal-body">
               <FormGroup
                 for="id_url"
-                label={gettext("Link to thread you want to move post to")}
+                label={pgettext(
+                  "post move modal field",
+                  "Link to thread you want to move post to"
+                )}
               >
                 <input
                   className="form-control"
@@ -89,7 +101,7 @@ export default class extends Form {
                 className="btn btn-primary"
                 disabled={this.state.isLoading}
               >
-                {gettext("Move post")}
+                {pgettext("post move modal btn", "Move post")}
               </button>
             </div>
           </div>
@@ -110,7 +122,9 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Move post")}</h4>
+      <h4 className="modal-title">
+        {pgettext("post move modal title", "Move post")}
+      </h4>
     </div>
   )
 }

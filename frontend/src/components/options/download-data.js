@@ -18,8 +18,8 @@ export default class DownloadData extends React.Component {
 
   componentDidMount() {
     title.set({
-      title: gettext("Download your data"),
-      parent: gettext("Change your options"),
+      title: pgettext("download your data title", "Download your data"),
+      parent: pgettext("forum options", "Change your options"),
     })
 
     this.handleLoadDownloads()
@@ -45,7 +45,10 @@ export default class DownloadData extends React.Component {
       () => {
         this.handleLoadDownloads()
         snackbar.success(
-          gettext("Your request for data download has been registered.")
+          pgettext(
+            "download your data",
+            "Your request for data download has been registered."
+          )
         )
         this.setState({ isSubmiting: false })
       },
@@ -61,17 +64,21 @@ export default class DownloadData extends React.Component {
       <div>
         <div className="panel panel-default panel-form">
           <div className="panel-heading">
-            <h3 className="panel-title">{gettext("Download your data")}</h3>
+            <h3 className="panel-title">
+              {pgettext("download your data title", "Download your data")}
+            </h3>
           </div>
           <div className="panel-body">
             <p>
-              {gettext(
+              {pgettext(
+                "download your data",
                 'To download your data from the site, click the "Request data download" button. Depending on amount of data to be archived and number of users wanting to download their data at same time it may take up to few days for your download to be prepared. An e-mail with notification will be sent to you when your data is ready to be downloaded.'
               )}
             </p>
 
             <p>
-              {gettext(
+              {pgettext(
+                "download your data",
                 "The download will only be available for limited amount of time, after which it will be deleted from the site and marked as expired."
               )}
             </p>
@@ -79,8 +86,10 @@ export default class DownloadData extends React.Component {
           <table className="table">
             <thead>
               <tr>
-                <th>{gettext("Requested on")}</th>
-                <th className="col-md-4">{gettext("Download")}</th>
+                <th>{pgettext("download your data table", "Requested on")}</th>
+                <th className="col-md-4">
+                  {pgettext("download your data table", "Download")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -101,7 +110,12 @@ export default class DownloadData extends React.Component {
               })}
               {this.state.downloads.length == 0 ? (
                 <tr>
-                  <td colSpan="2">{gettext("You have no data downloads.")}</td>
+                  <td colSpan="2">
+                    {pgettext(
+                      "download your data table",
+                      "You have no data downloads."
+                    )}
+                  </td>
                 </tr>
               ) : null}
             </tbody>
@@ -113,7 +127,7 @@ export default class DownloadData extends React.Component {
               type="button"
               onClick={this.handleRequestDataDownload}
             >
-              {gettext("Request data download")}
+              {pgettext("download your data btn", "Request data download")}
             </Button>
           </div>
         </div>
@@ -137,7 +151,7 @@ const DownloadButton = ({ exportFile, status }) => {
         disabled={true}
         type="button"
       >
-        {gettext("Download is being prepared")}
+        {pgettext("download your data table btn", "Download is being prepared")}
       </Button>
     )
   }
@@ -145,7 +159,7 @@ const DownloadButton = ({ exportFile, status }) => {
   if (exportFile) {
     return (
       <a className="btn btn-success btn-sm btn-block" href={exportFile}>
-        {gettext("Download your data")}
+        {pgettext("download your data table btn", "Download your data")}
       </a>
     )
   }
@@ -156,7 +170,7 @@ const DownloadButton = ({ exportFile, status }) => {
       disabled={true}
       type="button"
     >
-      {gettext("Download is expired")}
+      {pgettext("download your data table btn", "Download is expired")}
     </Button>
   )
 }

@@ -65,7 +65,7 @@ export default class extends React.Component {
           disabled={this.state.isLoading}
           className="btn-default btn-block btn-avatar-gravatar"
         >
-          {gettext("Download my Gravatar")}
+          {pgettext("avatar modal btn", "Download my Gravatar")}
         </Button>
       )
     } else {
@@ -82,7 +82,7 @@ export default class extends React.Component {
         disabled={this.state.isLoading}
         onClick={this.props.showCrop}
       >
-        {gettext("Re-crop uploaded image")}
+        {pgettext("avatar modal btn", "Re-crop uploaded image")}
       </Button>
     )
   }
@@ -96,7 +96,7 @@ export default class extends React.Component {
         disabled={this.state.isLoading}
         onClick={this.props.showUpload}
       >
-        {gettext("Upload new image")}
+        {pgettext("avatar modal btn", "Upload new image")}
       </Button>
     )
   }
@@ -110,7 +110,7 @@ export default class extends React.Component {
         disabled={this.state.isLoading}
         onClick={this.props.showGallery}
       >
-        {gettext("Pick avatar from gallery")}
+        {pgettext("avatar modal btn", "Pick avatar from gallery")}
       </Button>
     )
   }
@@ -150,7 +150,7 @@ export default class extends React.Component {
               disabled={this.state.isLoading}
               className="btn-default btn-block btn-avatar-generate"
             >
-              {gettext("Generate my individual avatar")}
+              {pgettext("avatar modal btn", "Generate my individual avatar")}
             </Button>
 
             {this.getCropButton()}

@@ -6,7 +6,8 @@ export default function (props) {
       <ul className="list-group">
         <li className="list-group-item empty-message">
           <p className="lead">
-            {gettext(
+            {pgettext(
+              "categories list",
               "No categories exist or you don't have permission to see them."
             )}
           </p>

@@ -43,7 +43,9 @@ export default class extends Form {
     }
 
     if (this.state.new_password !== this.state.repeat_password) {
-      snackbar.error(gettext("New passwords are different."))
+      snackbar.error(
+        pgettext("change password form", "New passwords are different.")
+      )
       return false
     }
 
@@ -86,10 +88,15 @@ export default class extends Form {
         <input type="password" style={{ display: "none" }} />
         <div className="panel panel-default panel-form">
           <div className="panel-heading">
-            <h3 className="panel-title">{gettext("Change password")}</h3>
+            <h3 className="panel-title">
+              {pgettext("change password title", "Change password")}
+            </h3>
           </div>
           <div className="panel-body">
-            <FormGroup label={gettext("New password")} for="id_new_password">
+            <FormGroup
+              label={pgettext("change password form field", "New password")}
+              for="id_new_password"
+            >
               <input
                 type="password"
                 id="id_new_password"
@@ -101,7 +108,7 @@ export default class extends Form {
             </FormGroup>
 
             <FormGroup
-              label={gettext("Repeat password")}
+              label={pgettext("change password form field", "Repeat password")}
               for="id_repeat_password"
             >
               <input
@@ -117,7 +124,10 @@ export default class extends Form {
             <hr />
 
             <FormGroup
-              label={gettext("Your current password")}
+              label={pgettext(
+                "change password form field",
+                "Your current password"
+              )}
               for="id_confirm_password"
             >
               <input
@@ -132,7 +142,7 @@ export default class extends Form {
           </div>
           <div className="panel-footer">
             <Button className="btn-primary" loading={this.state.isLoading}>
-              {gettext("Change password")}
+              {pgettext("change password form btn", "Change password")}
             </Button>
           </div>
         </div>

@@ -24,7 +24,10 @@ const RegisterLegalFootnote = (props) => {
   return (
     <div>
       <LegalAgreement
-        agreement={gettext("the terms of service")}
+        agreement={pgettext(
+          "register form agreement prompt",
+          "the terms of service"
+        )}
         checked={termsOfService !== null}
         errors={errors.termsOfService}
         url={termsOfServiceUrl}
@@ -32,7 +35,10 @@ const RegisterLegalFootnote = (props) => {
         onChange={onTermsOfServiceChange}
       />
       <LegalAgreement
-        agreement={gettext("the privacy policy")}
+        agreement={pgettext(
+          "register form agreement prompt",
+          "the privacy policy"
+        )}
         checked={privacyPolicy !== null}
         errors={errors.privacyPolicy}
         url={privacyPolicyUrl}
@@ -54,7 +60,10 @@ const LegalAgreement = (props) => {
     true
   )
   const label = interpolate(
-    gettext("I have read and accept %(agreement)s."),
+    pgettext(
+      "register form agreement prompt",
+      "I have read and accept %(agreement)s."
+    ),
     { agreement: agreementHtml },
     true
   )

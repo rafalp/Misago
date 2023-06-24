@@ -160,8 +160,8 @@ export default class extends React.Component {
               className="btn-primary btn-block"
             >
               {this.props.upload
-                ? gettext("Set avatar")
-                : gettext("Crop image")}
+                ? pgettext("avatar crop modal btn", "Set avatar")
+                : pgettext("avatar crop modal btn", "Crop image")}
             </Button>
 
             <Button
@@ -169,7 +169,7 @@ export default class extends React.Component {
               disabled={this.state.isLoading}
               className="btn-default btn-block"
             >
-              {gettext("Cancel")}
+              {pgettext("avatar crop modal btn", "Cancel")}
             </Button>
           </div>
         </div>

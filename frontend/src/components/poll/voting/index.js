@@ -69,7 +69,9 @@ export default class extends Form {
 
   clean() {
     if (this.state.choicesLeft === this.props.poll.allowed_choices) {
-      snackbar.error(gettext("You need to select at least one choice"))
+      snackbar.error(
+        pgettext("thread poll vote", "You need to select at least one choice")
+      )
       return false
     }
 
@@ -90,7 +92,7 @@ export default class extends Form {
 
   handleSuccess(data) {
     store.dispatch(poll.replace(data))
-    snackbar.success(gettext("Your vote has been saved."))
+    snackbar.success(pgettext("thread poll vote", "Your vote has been saved."))
 
     this.props.showResults()
   }
@@ -134,7 +136,7 @@ export default class extends Form {
                   className="btn-primary btn-block btn-sm"
                   loading={this.state.isLoading}
                 >
-                  {gettext("Save your vote")}
+                  {pgettext("thread poll vote btn", "Save your vote")}
                 </Button>
               </div>
               <div className={getClassName(controls, 1)}>
@@ -144,7 +146,7 @@ export default class extends Form {
                   onClick={this.props.showResults}
                   type="button"
                 >
-                  {gettext("See results")}
+                  {pgettext("thread poll vote btn", "See results")}
                 </button>
               </div>
               <Edit

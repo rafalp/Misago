@@ -2,7 +2,12 @@ import React from "react"
 import hasVisibleTitle from "./has-visible-title"
 
 export default function ({ poster }) {
-  const message = ngettext("%(posts)s post", "%(posts)s posts", poster.posts)
+  const message = npgettext(
+    "poster stats",
+    "%(posts)s post",
+    "%(posts)s posts",
+    poster.posts
+  )
 
   let className = "user-postcount"
   if (hasVisibleTitle(poster)) {

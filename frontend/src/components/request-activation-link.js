@@ -26,7 +26,9 @@ export class RequestLinkForm extends Form {
     if (this.isValid()) {
       return true
     } else {
-      snackbar.error(gettext("Enter a valid email address."))
+      snackbar.error(
+        pgettext("request activation link form", "Enter a valid email address.")
+      )
       return false
     }
   }
@@ -60,7 +62,10 @@ export class RequestLinkForm extends Form {
               <input
                 type="text"
                 className="form-control"
-                placeholder={gettext("Your e-mail address")}
+                placeholder={pgettext(
+                  "request activation link form field",
+                  "Your e-mail address"
+                )}
                 disabled={this.state.isLoading}
                 onChange={this.bindInput("email")}
                 value={this.state.email}
@@ -72,7 +77,7 @@ export class RequestLinkForm extends Form {
             className="btn-primary btn-block"
             loading={this.state.isLoading}
           >
-            {gettext("Send link")}
+            {pgettext("request activation link form btn", "Send link")}
           </Button>
         </form>
       </div>
@@ -83,7 +88,10 @@ export class RequestLinkForm extends Form {
 export class LinkSent extends React.Component {
   getMessage() {
     return interpolate(
-      gettext("Activation link was sent to %(email)s"),
+      pgettext(
+        "request activation link form",
+        "Activation link was sent to %(email)s"
+      ),
       {
         email: this.props.user.email,
       },
@@ -106,7 +114,10 @@ export class LinkSent extends React.Component {
             type="button"
             onClick={this.props.callback}
           >
-            {gettext("Request another link")}
+            {pgettext(
+              "request activation link form btn",
+              "Request another link"
+            )}
           </button>
         </div>
       </div>

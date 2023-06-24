@@ -15,9 +15,12 @@ export default class extends React.Component {
           className="btn-default btn-sm btn-block"
           disabled={this.props.disabled}
           onClick={this.onClick}
-          title={gettext("Revert post to state from before this edit.")}
+          title={pgettext(
+            "post revert btn",
+            "Revert post to state from before this edit."
+          )}
         >
-          {gettext("Revert")}
+          {pgettext("post revert btn", "Revert")}
         </Button>
       </div>
     )

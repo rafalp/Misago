@@ -32,14 +32,14 @@ export default class extends WithDropdown {
               <FlexRow>
                 <FlexRowSection auto>
                   <FlexRowCol auto>
-                    <h1>{gettext("Change your options")}</h1>
+                    <h1>{pgettext("forum options", "Change your options")}</h1>
                   </FlexRowCol>
                   <FlexRowCol className="hidden-xs hidden-md hidden-lg" shrink>
                     <div className="dropdown">
                       <button
                         type="button"
                         className="btn btn-default btn-outline btn-icon dropdown-toggle"
-                        title={gettext("Menu")}
+                        title={pgettext("forum options nav btn", "Menu")}
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false"

@@ -18,7 +18,7 @@ export default class extends React.Component {
           type="button"
         >
           <span className="material-icon">person_add</span>
-          {gettext("Add participant")}
+          {pgettext("add participant btn", "Add participant")}
         </button>
       </div>
     )

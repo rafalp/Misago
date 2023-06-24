@@ -24,8 +24,8 @@ export default class extends React.Component {
 
   componentDidMount() {
     title.set({
-      title: gettext("Change username"),
-      parent: gettext("Change your options"),
+      title: pgettext("change username title", "Change username"),
+      parent: pgettext("forum options", "Change your options"),
     })
 
     Promise.all([
@@ -58,7 +58,12 @@ export default class extends React.Component {
     )
     store.dispatch(updateUsername(this.props.user, username, slug))
 
-    snackbar.success(gettext("Your username has been changed successfully."))
+    snackbar.success(
+      pgettext(
+        "change username",
+        "Your username has been changed successfully."
+      )
+    )
   }
 
   getChangeForm() {

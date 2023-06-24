@@ -17,7 +17,7 @@ export default function ({ post }) {
             <span className="item-title">{post.poster_name}</span>
           </div>
           <span className="user-title user-title-anonymous">
-            {gettext("Removed user")}
+            {pgettext("post deleted poster", "Removed user")}
           </span>
         </div>
       </div>

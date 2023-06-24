@@ -28,7 +28,7 @@ export default class extends Form {
 
   clean() {
     if (!this.isValid()) {
-      snackbar.error(gettext("Fill out both fields."))
+      snackbar.error(pgettext("sign in modal", "Fill out both fields."))
       return false
     } else {
       return true
@@ -94,7 +94,7 @@ export default class extends Form {
         className="btn btn-success btn-block"
         href={misago.get("REQUEST_ACTIVATION_URL")}
       >
-        {gettext("Activate account")}
+        {pgettext("sign in modal btn", "Activate account")}
       </a>
     )
   }
@@ -112,13 +112,18 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Sign in")}</h4>
+            <h4 className="modal-title">
+              {pgettext("sign in modal title", "Sign in")}
+            </h4>
           </div>
           <form onSubmit={this.handleSubmit}>
             <div className="modal-body">
               <StartSocialAuth
-                buttonLabel={gettext("Sign in with %(site)s")}
-                formLabel={gettext("Or use your forum account:")}
+                buttonLabel={pgettext("sign in modal", "Sign in with %(site)s")}
+                formLabel={pgettext(
+                  "sign in modal",
+                  "Or use your forum account:"
+                )}
                 labelClassName="text-center"
               />
 
@@ -129,7 +134,10 @@ export default class extends Form {
                     disabled={this.state.isLoading}
                     id="id_username"
                     onChange={this.bindInput("username")}
-                    placeholder={gettext("Username or e-mail")}
+                    placeholder={pgettext(
+                      "sign in modal field",
+                      "Username or e-mail"
+                    )}
                     type="text"
                     value={this.state.username}
                   />
@@ -143,7 +151,7 @@ export default class extends Form {
                     disabled={this.state.isLoading}
                     id="id_password"
                     onChange={this.bindInput("password")}
-                    placeholder={gettext("Password")}
+                    placeholder={pgettext("sign in modal field", "Password")}
                     type="password"
                     value={this.state.password}
                   />
@@ -156,13 +164,13 @@ export default class extends Form {
                 className="btn-primary btn-block"
                 loading={this.state.isLoading}
               >
-                {gettext("Sign in")}
+                {pgettext("sign in modal btn", "Sign in")}
               </Button>
               <a
                 className="btn btn-default btn-block"
                 href={misago.get("FORGOTTEN_PASSWORD_URL")}
               >
-                {gettext("Forgot password?")}
+                {pgettext("sign in modal btn", "Forgot password?")}
               </a>
             </div>
           </form>

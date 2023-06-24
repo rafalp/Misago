@@ -181,12 +181,14 @@ export default class extends Form {
 
   clean() {
     if (!this.state.title.trim().length) {
-      snackbar.error(gettext("You have to enter thread title."))
+      snackbar.error(
+        pgettext("posting form", "You have to enter thread title.")
+      )
       return false
     }
 
     if (!this.state.post.trim().length) {
-      snackbar.error(gettext("You have to enter a message."))
+      snackbar.error(pgettext("posting form", "You have to enter a message."))
       return false
     }
 

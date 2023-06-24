@@ -144,7 +144,9 @@ export class RegisterForm extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Register")}</h4>
+            <h4 className="modal-title">
+              {pgettext("register modal title", "Register")}
+            </h4>
           </div>
           <form onSubmit={this.handleSubmit}>
             <input type="type" style={{ display: "none" }} />
@@ -152,12 +154,18 @@ export class RegisterForm extends Form {
             <div className="modal-body">
               <StartSocialAuth
                 buttonClassName="col-xs-12 col-sm-6"
-                buttonLabel={gettext("Join with %(site)s")}
-                formLabel={gettext("Or create forum account:")}
+                buttonLabel={pgettext(
+                  "register modal field",
+                  "Join with %(site)s"
+                )}
+                formLabel={pgettext(
+                  "register modal field",
+                  "Or create forum account:"
+                )}
               />
 
               <FormGroup
-                label={gettext("Username")}
+                label={pgettext("register modal field", "Username")}
                 for="id_username"
                 validation={this.state.errors.username}
               >
@@ -173,7 +181,7 @@ export class RegisterForm extends Form {
               </FormGroup>
 
               <FormGroup
-                label={gettext("E-mail")}
+                label={pgettext("register modal field", "E-mail")}
                 for="id_email"
                 validation={this.state.errors.email}
               >
@@ -189,7 +197,7 @@ export class RegisterForm extends Form {
               </FormGroup>
 
               <FormGroup
-                label={gettext("Password")}
+                label={pgettext("register modal field", "Password")}
                 for="id_password"
                 validation={this.state.errors.password}
                 extra={
@@ -229,10 +237,10 @@ export class RegisterForm extends Form {
                 disabled={this.state.isLoading}
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("register modal btn", "Cancel")}
               </button>
               <Button className="btn-primary" loading={this.state.isLoading}>
-                {gettext("Register account")}
+                {pgettext("register modal btn", "Register account")}
               </Button>
             </div>
           </form>
@@ -245,11 +253,13 @@ export class RegisterForm extends Form {
 export class RegisterComplete extends React.Component {
   getLead() {
     if (this.props.activation === "user") {
-      return gettext(
+      return pgettext(
+        "register modal",
         "%(username)s, your account has been created but you need to activate it before you will be able to sign in."
       )
     } else if (this.props.activation === "admin") {
-      return gettext(
+      return pgettext(
+        "register modal",
         "%(username)s, your account has been created but board administrator will have to activate it before you will be able to sign in."
       )
     }
@@ -257,11 +267,13 @@ export class RegisterComplete extends React.Component {
 
   getSubscript() {
     if (this.props.activation === "user") {
-      return gettext(
+      return pgettext(
+        "register modal",
         "We have sent an e-mail to %(email)s with link that you have to click to activate your account."
       )
     } else if (this.props.activation === "admin") {
-      return gettext(
+      return pgettext(
+        "register modal",
         "We will send an e-mail to %(email)s when this takes place."
       )
     }
@@ -283,7 +295,9 @@ export class RegisterComplete extends React.Component {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Registration complete")}</h4>
+            <h4 className="modal-title">
+              {pgettext("register modal title", "Registration complete")}
+            </h4>
           </div>
           <div className="modal-body">
             <div className="message-icon">
@@ -309,7 +323,7 @@ export class RegisterComplete extends React.Component {
                 data-dismiss="modal"
                 type="button"
               >
-                {gettext("Ok")}
+                {pgettext("register modal dismiss", "Ok")}
               </button>
             </div>
           </div>
