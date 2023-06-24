@@ -44,9 +44,7 @@ export default class extends Form {
       this.state.post.length === 0 && this.state.title.length === 0
 
     if (editorEmpty) {
-      this.minimize()
-      posting.close()
-      return
+      return this.close()
     }
 
     const cancel = window.confirm(
