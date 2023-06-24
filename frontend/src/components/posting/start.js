@@ -93,8 +93,7 @@ export default class extends Form {
 
     if (editorEmpty) {
       this.minimize()
-      posting.close()
-      return
+      return posting.close()
     }
 
     const cancel = window.confirm(
