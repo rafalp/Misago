@@ -99,7 +99,6 @@ export default class extends Form {
       return posting.close()
     }
 
-
     const cancel = window.confirm(
       pgettext("post thread", "Are you sure you want to discard thread?")
     )
