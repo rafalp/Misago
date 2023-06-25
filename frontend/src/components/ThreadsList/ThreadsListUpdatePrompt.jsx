@@ -10,7 +10,8 @@ const ThreadsListUpdatePrompt = ({ threads, onClick }) => (
       <span className="material-icon">cached</span>
       <span className="threads-list-update-prompt-message">
         {interpolate(
-          ngettext(
+          npgettext(
+            "threads list update prompt",
             "There is %(threads)s new or updated thread. Click here to show it.",
             "There are %(threads)s new or updated threads. Click here to show them.",
             threads

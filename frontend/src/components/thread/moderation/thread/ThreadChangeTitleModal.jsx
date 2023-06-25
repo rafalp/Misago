@@ -26,7 +26,9 @@ export default class extends Form {
 
   clean() {
     if (!this.state.title.trim().length) {
-      snackbar.error(gettext("You have to enter thread title."))
+      snackbar.error(
+        pgettext("thread title form", "You have to enter thread title.")
+      )
       return false
     }
 
@@ -86,7 +88,10 @@ export default class extends Form {
           <div className="modal-content">
             <ModalHeader />
             <div className="modal-body">
-              <FormGroup for="id_modal_title" label={gettext("Thread title")}>
+              <FormGroup
+                for="id_modal_title"
+                label={pgettext("thread title form field", "Thread title")}
+              >
                 <input
                   className="form-control"
                   disabled={this.state.isLoading || this.props.thread.isBusy}
@@ -103,13 +108,13 @@ export default class extends Form {
                 disabled={this.state.isLoading}
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("thread title form btn", "Cancel")}
               </button>
               <button
                 className="btn btn-primary"
                 disabled={this.state.isLoading || this.props.thread.isBusy}
               >
-                {gettext("Change title")}
+                {pgettext("thread title form btn", "Change title")}
               </button>
             </div>
           </div>
@@ -130,7 +135,9 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Change title")}</h4>
+      <h4 className="modal-title">
+        {pgettext("thread title form title", "Change title")}
+      </h4>
     </div>
   )
 }

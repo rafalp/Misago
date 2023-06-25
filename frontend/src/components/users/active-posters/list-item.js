@@ -89,29 +89,29 @@ export default class extends React.Component {
           <div className="user-compact-stats visible-xs-block">
             <span className="rank-position">
               <strong>#{this.props.counter}</strong>
-              <small>{gettext("Rank")}</small>
+              <small>{pgettext("top posters list item", "Rank")}</small>
             </span>
 
             <span className="rank-posts-counted">
               <strong>{this.props.user.meta.score}</strong>
-              <small>{gettext("Ranked posts")}</small>
+              <small>{pgettext("top posters list item", "Ranked posts")}</small>
             </span>
           </div>
         </div>
 
         <div className="rank-position hidden-xs">
           <strong>#{this.props.counter}</strong>
-          <small>{gettext("Rank")}</small>
+          <small>{pgettext("top posters list item", "Rank")}</small>
         </div>
 
         <div className="rank-posts-counted hidden-xs">
           <strong>{this.props.user.meta.score}</strong>
-          <small>{gettext("Ranked posts")}</small>
+          <small>{pgettext("top posters list item", "Ranked posts")}</small>
         </div>
 
         <div className="rank-posts-total hidden-xs">
           <strong>{this.props.user.posts}</strong>
-          <small>{gettext("Total posts")}</small>
+          <small>{pgettext("top posters list item", "Total posts")}</small>
         </div>
       </li>
     )

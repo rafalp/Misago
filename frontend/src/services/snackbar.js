@@ -52,16 +52,19 @@ export class Snackbar {
 
     if (!message) {
       if (rejection.status === 0) {
-        message = gettext("Could not connect to server.")
+        message = pgettext("api error", "Could not connect to server.")
       } else if (rejection.status === 404) {
-        message = gettext("Action link is invalid.")
+        message = pgettext("api error", "Action link is invalid.")
       } else {
-        message = gettext("Unknown error has occurrsed.")
+        message = pgettext("api error", "Unknown error has occurrsed.")
       }
     }
 
     if (rejection.status === 403 && message === "Permission denied") {
-      message = gettext("You don't have permission to perform this action.")
+      message = pgettext(
+        "api error",
+        "You don't have permission to perform this action."
+      )
     }
 
     this.error(message)

@@ -5,7 +5,8 @@ const RankUsersLeft = ({ users }) => {
     return (
       <p>
         {interpolate(
-          ngettext(
+          npgettext(
+            "rank users list",
             "There is %(more)s more member with this role.",
             "There are %(more)s more members with this role.",
             users.more
@@ -17,7 +18,14 @@ const RankUsersLeft = ({ users }) => {
     )
   }
 
-  return <p>{gettext("There are no more members with this role.")}</p>
+  return (
+    <p>
+      {pgettext(
+        "rank users list empty",
+        "There are no more members with this role."
+      )}
+    </p>
+  )
 }
 
 export default RankUsersLeft

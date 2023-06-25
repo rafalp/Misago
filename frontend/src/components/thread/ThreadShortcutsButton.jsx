@@ -5,7 +5,7 @@ const ThreadShortcutsButton = ({ user, thread, posts }) => (
   <div className="dropdown">
     <button
       className="btn btn-default btn-outline btn-icon"
-      title={gettext("Shortcuts")}
+      title={pgettext("thread shortcuts btn", "Shortcuts")}
       aria-expanded="true"
       aria-haspopup="true"
       data-toggle="dropdown"
@@ -18,7 +18,7 @@ const ThreadShortcutsButton = ({ user, thread, posts }) => (
         <li>
           <Link className="btn btn-link" href={thread.url.index}>
             <span className="material-icon">place</span>
-            {gettext("Go to first post")}
+            {pgettext("thread shortcut btn", "Go to first post")}
           </Link>
         </li>
       )}
@@ -26,7 +26,7 @@ const ThreadShortcutsButton = ({ user, thread, posts }) => (
         <li>
           <a className="btn btn-link" href={thread.url.new_post}>
             <span className="material-icon">comment</span>
-            {gettext("Go to new post")}
+            {pgettext("thread shortcut btn", "Go to new post")}
           </a>
         </li>
       )}
@@ -34,7 +34,7 @@ const ThreadShortcutsButton = ({ user, thread, posts }) => (
         <li>
           <a className="btn btn-link" href={thread.url.best_answer}>
             <span className="material-icon">check_circle</span>
-            {gettext("Go to best answer")}
+            {pgettext("thread shortcut btn", "Go to best answer")}
           </a>
         </li>
       )}
@@ -42,14 +42,14 @@ const ThreadShortcutsButton = ({ user, thread, posts }) => (
         <li>
           <a className="btn btn-link" href={thread.url.unapproved_post}>
             <span className="material-icon">visibility</span>
-            {gettext("Go to unapproved post")}
+            {pgettext("thread shortcut btn", "Go to unapproved post")}
           </a>
         </li>
       )}
       <li>
         <a className="btn btn-link" href={thread.url.last_post}>
           <span className="material-icon">reply</span>
-          {gettext("Go to last post")}
+          {pgettext("thread shortcut btn", "Go to last post")}
         </a>
       </li>
     </ul>

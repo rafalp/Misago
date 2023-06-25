@@ -23,11 +23,15 @@ export function getListOptions(context) {
         mode: "START_PRIVATE",
         submit: misago.get("PRIVATE_THREADS_API"),
       },
-      title: gettext("Private threads"),
-      pageLead: gettext(
+      title: pgettext("private threads title", "Private threads"),
+      pageLead: pgettext(
+        "private threads list",
         "Private threads are threads which only those that started them and those they have invited may see and participate in."
       ),
-      emptyMessage: gettext("You aren't participating in any private threads."),
+      emptyMessage: pgettext(
+        "private threads list empty",
+        "You aren't participating in any private threads."
+      ),
     }
   }
 

@@ -39,7 +39,7 @@ export default class extends React.Component {
               onClick={this.showAvatarDialog}
             >
               <span className="material-icon">portrait</span>
-              {gettext("Avatar controls")}
+              {pgettext("profile moderation menu", "Avatar controls")}
             </button>
           </li>
         )}
@@ -51,7 +51,7 @@ export default class extends React.Component {
               onClick={this.showRenameDialog}
             >
               <span className="material-icon">credit_card</span>
-              {gettext("Change username")}
+              {pgettext("profile moderation menu", "Change username")}
             </button>
           </li>
         )}
@@ -63,7 +63,7 @@ export default class extends React.Component {
               onClick={this.showDeleteDialog}
             >
               <span className="material-icon">clear</span>
-              {gettext("Delete account")}
+              {pgettext("profile moderation menu", "Delete account")}
             </button>
           </li>
         )}

@@ -39,7 +39,9 @@ export class QACaptcha extends BaseCaptcha {
           resolve()
         },
         function () {
-          self._snackbar.error(gettext("Failed to load CAPTCHA."))
+          self._snackbar.error(
+            pgettext("captcha field", "Failed to load CAPTCHA.")
+          )
           reject()
         }
       )
@@ -119,12 +121,13 @@ export class ReCaptcha extends BaseCaptcha {
   component(kwargs) {
     return (
       <FormGroup
-        label={gettext("Please solve the quick test")}
+        label={pgettext("captcha field", "Please solve the quick test")}
         for="id_captcha"
         labelClass={kwargs.labelClass || ""}
         controlClass={kwargs.controlClass || ""}
         validation={kwargs.form.state.errors.captcha}
-        helpText={gettext(
+        helpText={pgettext(
+          "captcha field",
           "This test helps us prevent automated spam registrations on our site."
         )}
       >

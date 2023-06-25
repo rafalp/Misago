@@ -18,7 +18,7 @@ export class PageTitle {
 
     if (title.page > 1) {
       const pageLabel = interpolate(
-        gettext("page: %(page)s"),
+        pgettext("page title pagination", "page: %(page)s"),
         {
           page: title.page,
         },

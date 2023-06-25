@@ -32,7 +32,7 @@ export function SearchTime(props) {
 
   if (time === null) return null
 
-  const copy = gettext("Search took %(time)s s to complete")
+  const copy = pgettext("search time", "Search took %(time)s s to complete")
 
   return (
     <footer className="search-footer">

@@ -24,7 +24,8 @@ export default function SearchResults({ query, results }) {
             href={threads.url + "?q=" + encodeURIComponent(query)}
             className="btn btn-default btn-block"
           >
-            {ngettext(
+            {npgettext(
+              "search results list",
               "See all %(count)s result.",
               "See all %(count)s results.",
               threads.results.count

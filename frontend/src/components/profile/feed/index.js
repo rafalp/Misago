@@ -4,10 +4,10 @@ import Route from "./route"
 export function Threads(props) {
   let emptyMessage = null
   if (props.user.id === props.profile.id) {
-    emptyMessage = gettext("You have no started threads.")
+    emptyMessage = pgettext("profile threads", "You have no started threads.")
   } else {
     emptyMessage = interpolate(
-      gettext("%(username)s started no threads."),
+      pgettext("profile threads", "%(username)s started no threads."),
       {
         username: props.profile.username,
       },
@@ -17,9 +17,10 @@ export function Threads(props) {
 
   let header = null
   if (!props.posts.isLoaded) {
-    header = gettext("Loading...")
+    header = pgettext("profile threads", "Loading...")
   } else if (props.profile.id === props.user.id) {
-    const message = ngettext(
+    const message = npgettext(
+      "profile threads",
       "You have started %(threads)s thread.",
       "You have started %(threads)s threads.",
       props.profile.threads
@@ -33,7 +34,8 @@ export function Threads(props) {
       true
     )
   } else {
-    const message = ngettext(
+    const message = npgettext(
+      "profile threads",
       "%(username)s has started %(threads)s thread.",
       "%(username)s has started %(threads)s threads.",
       props.profile.threads
@@ -54,7 +56,7 @@ export function Threads(props) {
       api={props.profile.api.threads}
       emptyMessage={emptyMessage}
       header={header}
-      title={gettext("Threads")}
+      title={pgettext("profile threads title", "Threads")}
       {...props}
     />
   )
@@ -63,10 +65,10 @@ export function Threads(props) {
 export function Posts(props) {
   let emptyMessage = null
   if (props.user.id === props.profile.id) {
-    emptyMessage = gettext("You have posted no messages.")
+    emptyMessage = pgettext("profile posts", "You have posted no messages.")
   } else {
     emptyMessage = interpolate(
-      gettext("%(username)s posted no messages."),
+      pgettext("profile posts", "%(username)s posted no messages."),
       {
         username: props.profile.username,
       },
@@ -76,9 +78,10 @@ export function Posts(props) {
 
   let header = null
   if (!props.posts.isLoaded) {
-    header = gettext("Loading...")
+    header = pgettext("profile posts", "Loading...")
   } else if (props.profile.id === props.user.id) {
-    const message = ngettext(
+    const message = npgettext(
+      "profile posts",
       "You have posted %(posts)s message.",
       "You have posted %(posts)s messages.",
       props.profile.posts
@@ -92,7 +95,8 @@ export function Posts(props) {
       true
     )
   } else {
-    const message = ngettext(
+    const message = npgettext(
+      "profile posts",
       "%(username)s has posted %(posts)s message.",
       "%(username)s has posted %(posts)s messages.",
       props.profile.posts
@@ -113,7 +117,7 @@ export function Posts(props) {
       api={props.profile.api.posts}
       emptyMessage={emptyMessage}
       header={header}
-      title={gettext("Posts")}
+      title={pgettext("profile posts title", "Posts")}
       {...props}
     />
   )

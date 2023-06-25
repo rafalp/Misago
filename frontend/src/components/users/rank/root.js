@@ -61,7 +61,7 @@ export default class extends React.Component {
     title.set({
       title: this.props.route.rank.name,
       page: this.props.params.page || null,
-      parent: gettext("Users"),
+      parent: pgettext("users page title", "Users"),
     })
   }
 
@@ -74,7 +74,7 @@ export default class extends React.Component {
       title.set({
         title: this.props.route.rank.name,
         page: nextProps.params.page || null,
-        parent: gettext("Users"),
+        parent: pgettext("users page title", "Users"),
       })
 
       this.setState({
@@ -113,7 +113,10 @@ export default class extends React.Component {
       } else {
         return (
           <p className="lead">
-            {gettext("There are no users with this rank at the moment.")}
+            {pgettext(
+              "rank users list",
+              "There are no users with this rank at the moment."
+            )}
           </p>
         )
       }

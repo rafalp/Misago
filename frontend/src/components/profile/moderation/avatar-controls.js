@@ -64,7 +64,12 @@ export default class extends Form {
 
   handleSuccess(apiResponse) {
     store.dispatch(updateAvatar(this.props.profile, apiResponse.avatar_hash))
-    snackbar.success(gettext("Avatar controls have been changed."))
+    snackbar.success(
+      pgettext(
+        "profile avatar moderation",
+        "Avatar controls have been changed."
+      )
+    )
   }
 
   getFormBody() {
@@ -72,8 +77,9 @@ export default class extends Form {
       <form onSubmit={this.handleSubmit}>
         <div className="modal-body">
           <FormGroup
-            label={gettext("Lock avatar")}
-            helpText={gettext(
+            label={pgettext("profile avatar moderation field", "Lock avatar")}
+            helpText={pgettext(
+              "profile avatar moderation field",
               "Locking user avatar will prohibit user from changing his avatar and will reset his/her avatar to default one."
             )}
             for="id_is_avatar_locked"
@@ -83,16 +89,23 @@ export default class extends Form {
               disabled={this.state.isLoading}
               iconOn="lock_outline"
               iconOff="lock_open"
-              labelOn={gettext("Disallow user from changing avatar")}
-              labelOff={gettext("Allow user to change avatar")}
+              labelOn={pgettext(
+                "profile avatar moderation field",
+                "Disallow user from changing avatar"
+              )}
+              labelOff={pgettext(
+                "profile avatar moderation field",
+                "Allow user to change avatar"
+              )}
               onChange={this.bindInput("is_avatar_locked")}
               value={this.state.is_avatar_locked}
             />
           </FormGroup>
 
           <FormGroup
-            label={gettext("User message")}
-            helpText={gettext(
+            label={pgettext("profile avatar moderation field", "User message")}
+            helpText={pgettext(
+              "profile avatar moderation field",
               "Optional message for user explaining why he/she is prohibited form changing avatar."
             )}
             for="id_avatar_lock_user_message"
@@ -108,8 +121,9 @@ export default class extends Form {
           </FormGroup>
 
           <FormGroup
-            label={gettext("Staff message")}
-            helpText={gettext(
+            label={pgettext("profile avatar moderation field", "Staff message")}
+            helpText={pgettext(
+              "profile avatar moderation field",
               "Optional message for forum team members explaining why user is prohibited form changing avatar."
             )}
             for="id_avatar_lock_staff_message"
@@ -130,10 +144,10 @@ export default class extends Form {
             className="btn btn-default"
             data-dismiss="modal"
           >
-            {gettext("Close")}
+            {pgettext("profile avatar moderation btn", "Close")}
           </button>
           <Button className="btn-primary" loading={this.state.isLoading}>
-            {gettext("Save changes")}
+            {pgettext("profile avatar moderation btn", "Save changes")}
           </Button>
         </div>
       </form>
@@ -173,7 +187,9 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Avatar controls")}</h4>
+            <h4 className="modal-title">
+              {pgettext("profile avatar moderation title", "Avatar controls")}
+            </h4>
           </div>
           {this.getModalBody()}
         </div>

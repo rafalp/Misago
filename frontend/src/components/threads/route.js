@@ -253,7 +253,7 @@ export default class extends WithDropdown {
           loading={this.state.isBusy || this.state.busyThreads.length}
           onClick={this.loadMore}
         >
-          {gettext("Show more")}
+          {pgettext("threas list more btn", "Show more")}
         </Button>
       </div>
     )
@@ -292,7 +292,10 @@ export default class extends WithDropdown {
             />
           )}
         {specialRole == "root_category" && !misago.get("THREADS_ON_INDEX") && (
-          <PageHeaderPlain header={gettext("Threads")} styleName="threads" />
+          <PageHeaderPlain
+            header={pgettext("threads list title", "Threads")}
+            styleName="threads"
+          />
         )}
         {specialRole == "private_threads" && (
           <PageHeaderPlain

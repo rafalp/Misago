@@ -92,12 +92,12 @@ export class ModerationForm extends Form {
       {
         value: 0,
         icon: "visibility",
-        label: gettext("post hidden switch choice", "No"),
+        label: pgettext("thread hidden switch choice", "No"),
       },
       {
         value: 1,
         icon: "visibility_off",
-        label: gettext("post hidden switch choice", "Yes"),
+        label: pgettext("thread hidden switch choice", "Yes"),
       },
     ]
 
@@ -105,12 +105,12 @@ export class ModerationForm extends Form {
       {
         value: false,
         icon: "lock_outline",
-        label: gettext("thread closed switch choice", "No"),
+        label: pgettext("thread closed switch choice", "No"),
       },
       {
         value: true,
         icon: "lock",
-        label: gettext("thread closed switch choice", "Yes"),
+        label: pgettext("thread closed switch choice", "Yes"),
       },
     ]
 

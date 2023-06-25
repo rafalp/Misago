@@ -76,7 +76,7 @@ export default class extends Form {
         { op: "replace", path: "flatten-categories", value: null },
         { op: "add", path: "acl", value: true },
       ],
-      gettext("Selected threads were moved."),
+      pgettext("threads moderation move", "Selected threads were moved."),
       onSuccess
     )
   }
@@ -93,7 +93,10 @@ export default class extends Form {
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="modal-body">
-          <FormGroup label={gettext("New category")} for="id_new_category">
+          <FormGroup
+            label={pgettext("threads moderation move field", "New category")}
+            for="id_new_category"
+          >
             <CategorySelect
               id="id_new_category"
               onChange={this.bindInput("category")}
@@ -109,9 +112,11 @@ export default class extends Form {
             disabled={this.state.isLoading}
             type="button"
           >
-            {gettext("Cancel")}
+            {pgettext("threads moderation move btn", "Cancel")}
           </button>
-          <button className="btn btn-primary">{gettext("Move threads")}</button>
+          <button className="btn btn-primary">
+            {pgettext("threads moderation move btn", "Move threads")}
+          </button>
         </div>
       </form>
     )
@@ -125,12 +130,14 @@ export default class extends Form {
         </div>
         <div className="message-body">
           <p className="lead">
-            {gettext(
+            {pgettext(
+              "threads moderation move",
               "You can't move threads because there are no categories you are allowed to move them to."
             )}
           </p>
           <p>
-            {gettext(
+            {pgettext(
+              "threads moderation move",
               "You need permission to start threads in category to be able to move threads to it."
             )}
           </p>
@@ -139,7 +146,7 @@ export default class extends Form {
             data-dismiss="modal"
             type="button"
           >
-            {gettext("Ok")}
+            {pgettext("threads moderation move dismiss btn", "Ok")}
           </button>
         </div>
       </div>
@@ -159,7 +166,9 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Move threads")}</h4>
+            <h4 className="modal-title">
+              {pgettext("threads moderation move title", "Move threads")}
+            </h4>
           </div>
           {this.state.category
             ? this.renderForm()

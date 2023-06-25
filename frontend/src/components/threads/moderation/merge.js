@@ -70,12 +70,12 @@ export default class extends Form {
       {
         value: 0,
         icon: "visibility",
-        label: gettext("No"),
+        label: pgettext("thread hidden switch choice", "No"),
       },
       {
         value: 1,
         icon: "visibility_off",
-        label: gettext("Yes"),
+        label: pgettext("thread hidden switch choice", "Yes"),
       },
     ]
 
@@ -83,12 +83,12 @@ export default class extends Form {
       {
         value: false,
         icon: "lock_outline",
-        label: gettext("No"),
+        label: pgettext("thread closed switch choice", "No"),
       },
       {
         value: true,
         icon: "lock",
-        label: gettext("Yes"),
+        label: pgettext("thread closed switch choice", "Yes"),
       },
     ]
   }
@@ -196,12 +196,12 @@ export default class extends Form {
       {
         value: 0,
         icon: "remove",
-        label: gettext("Not pinned"),
+        label: pgettext("thread weight choice", "Not pinned"),
       },
       {
         value: 1,
         icon: "bookmark_border",
-        label: gettext("Pinned locally"),
+        label: pgettext("thread weight choice", "Pinned locally"),
       },
     ]
 
@@ -209,7 +209,7 @@ export default class extends Form {
       choices.push({
         value: 2,
         icon: "bookmark",
-        label: gettext("Pinned globally"),
+        label: pgettext("thread weight choice", "Pinned globally"),
       })
     }
 
@@ -219,7 +219,10 @@ export default class extends Form {
   renderWeightField() {
     if (this.acl[this.state.category].can_pin_threads) {
       return (
-        <FormGroup label={gettext("Thread weight")} for="id_weight">
+        <FormGroup
+          label={pgettext("threads moderation merge field", "Thread weight")}
+          for="id_weight"
+        >
           <Select
             id="id_weight"
             onChange={this.bindInput("weight")}
@@ -236,7 +239,10 @@ export default class extends Form {
   renderHiddenField() {
     if (this.acl[this.state.category].can_hide_threads) {
       return (
-        <FormGroup label={gettext("Hide thread")} for="id_is_hidden">
+        <FormGroup
+          label={pgettext("threads moderation merge field", "Hide thread")}
+          for="id_is_hidden"
+        >
           <Select
             id="id_is_closed"
             onChange={this.bindInput("is_hidden")}
@@ -253,7 +259,10 @@ export default class extends Form {
   renderClosedField() {
     if (this.acl[this.state.category].can_close_threads) {
       return (
-        <FormGroup label={gettext("Close thread")} for="id_is_closed">
+        <FormGroup
+          label={pgettext("threads moderation merge field", "Close thread")}
+          for="id_is_closed"
+        >
           <Select
             id="id_is_closed"
             onChange={this.bindInput("is_closed")}
@@ -272,7 +281,7 @@ export default class extends Form {
       <form onSubmit={this.handleSubmit}>
         <div className="modal-body">
           <FormGroup
-            label={gettext("Thread title")}
+            label={pgettext("threads moderation merge field", "Thread title")}
             for="id_title"
             validation={this.state.errors.title}
           >
@@ -287,7 +296,7 @@ export default class extends Form {
           <div className="clearfix" />
 
           <FormGroup
-            label={gettext("Category")}
+            label={pgettext("threads moderation merge field", "Category")}
             for="id_category"
             validation={this.state.errors.category}
           >
@@ -311,10 +320,10 @@ export default class extends Form {
             disabled={this.state.isLoading}
             type="button"
           >
-            {gettext("Cancel")}
+            {pgettext("threads moderation merge btn", "Cancel")}
           </button>
           <Button className="btn-primary" loading={this.state.isLoading}>
-            {gettext("Merge threads")}
+            {pgettext("threads moderation merge btn", "Merge threads")}
           </Button>
         </div>
       </form>
@@ -329,12 +338,14 @@ export default class extends Form {
         </div>
         <div className="message-body">
           <p className="lead">
-            {gettext(
+            {pgettext(
+              "threads moderation merge",
               "You can't move threads because there are no categories you are allowed to move them to."
             )}
           </p>
           <p>
-            {gettext(
+            {pgettext(
+              "threads moderation merge",
               "You need permission to start threads in category to be able to merge threads to it."
             )}
           </p>
@@ -343,7 +354,7 @@ export default class extends Form {
             data-dismiss="modal"
             type="button"
           >
-            {gettext("Ok")}
+            {pgettext("threads moderation merge dismiss btn", "Ok")}
           </button>
         </div>
       </div>
@@ -371,7 +382,9 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Merge threads")}</h4>
+            <h4 className="modal-title">
+              {pgettext("threads moderation merge title", "Merge threads")}
+            </h4>
           </div>
           {this.state.category
             ? this.renderForm()

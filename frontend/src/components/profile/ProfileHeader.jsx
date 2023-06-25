@@ -119,7 +119,7 @@ const ProfileHeader = ({ profile, user, moderation, message, follow }) => (
                     aria-expanded="false"
                   >
                     <span className="material-icon">settings</span>
-                    {gettext("Options")}
+                    {pgettext("profile options btn", "Options")}
                   </button>
                   <ModerationOptions
                     profile={profile}
@@ -139,7 +139,7 @@ const ProfileModerationButton = () => (
   <button
     className="btn btn-default btn-icon btn-outline dropdown-toggle"
     type="button"
-    title={gettext("Options")}
+    title={pgettext("profile options btn", "Options")}
     data-toggle="dropdown"
     aria-haspopup="true"
     aria-expanded="false"

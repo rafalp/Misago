@@ -5,7 +5,7 @@ const ProfileDetailsHeader = ({ onEdit, showEditButton }) => (
   <Toolbar>
     <ToolbarSection auto>
       <ToolbarItem auto>
-        <h3>{gettext("Details")}</h3>
+        <h3>{pgettext("profile details title", "Details")}</h3>
       </ToolbarItem>
     </ToolbarSection>
     {showEditButton && (
@@ -16,7 +16,7 @@ const ProfileDetailsHeader = ({ onEdit, showEditButton }) => (
             onClick={onEdit}
             type="button"
           >
-            {gettext("Edit")}
+            {pgettext("profile details edit btn", "Edit")}
           </button>
         </ToolbarItem>
       </ToolbarSection>

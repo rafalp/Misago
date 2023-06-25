@@ -5,7 +5,8 @@ import UsersNav from "../UsersNav"
 
 export default class extends React.Component {
   getLeadMessage() {
-    let message = ngettext(
+    let message = npgettext(
+      "top posters list",
       "%(posters)s top poster from last %(days)s days.",
       "%(posters)s top posters from last %(days)s days.",
       this.props.count

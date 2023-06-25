@@ -50,7 +50,7 @@ export default class Register extends Form {
     ]
 
     if (lengths.indexOf(0) !== -1) {
-      snackbar.error(gettext("Fill out all fields."))
+      snackbar.error(pgettext("social auth form", "Fill out all fields."))
       return false
     }
 
@@ -65,7 +65,6 @@ export default class Register extends Form {
     const checkPrivacyPolicy = !!misago.get("PRIVACY_POLICY_ID")
     if (checkPrivacyPolicy && this.state.privacyPolicy === null) {
       snackbar.error(validators.privacyPolicy[0](null))
-      snackbar.error(gettext("You need to accept the privacy policy."))
       return false
     }
 
@@ -132,7 +131,8 @@ export default class Register extends Form {
 
     let emailHelpText = null
     if (emailProtected) {
-      const emailHelpTextTpl = gettext(
+      const emailHelpTextTpl = pgettext(
+        "social auth form",
         "Your e-mail address has been verified by %(backend)s."
       )
       emailHelpText = interpolate(
@@ -152,13 +152,16 @@ export default class Register extends Form {
                 <div className="panel panel-default panel-form">
                   <div className="panel-heading">
                     <h3 className="panel-title">
-                      {gettext("Complete your details")}
+                      {pgettext(
+                        "social auth form title",
+                        "Complete your details"
+                      )}
                     </h3>
                   </div>
                   <div className="panel-body">
                     <FormGroup
                       for="id_username"
-                      label={gettext("Username")}
+                      label={pgettext("social auth form field", "Username")}
                       validation={this.state.errors.username}
                     >
                       <input
@@ -172,7 +175,10 @@ export default class Register extends Form {
                     </FormGroup>
                     <FormGroup
                       for="id_email"
-                      label={gettext("E-mail address")}
+                      label={pgettext(
+                        "social auth form field",
+                        "E-mail address"
+                      )}
                       helpText={emailHelpText}
                       validation={
                         emailProtected ? null : this.state.errors.email
@@ -200,7 +206,7 @@ export default class Register extends Form {
                       className="btn-primary"
                       loading={this.state.isLoading}
                     >
-                      {gettext("Sign in")}
+                      {pgettext("social auth form btn", "Sign in")}
                     </Button>
                   </div>
                 </div>

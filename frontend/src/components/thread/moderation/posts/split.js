@@ -93,12 +93,12 @@ export class ModerationForm extends Form {
       {
         value: 0,
         icon: "visibility",
-        label: gettext("No"),
+        label: pgettext("thread hidden switch choice", "No"),
       },
       {
         value: 1,
         icon: "visibility_off",
-        label: gettext("Yes"),
+        label: pgettext("thread hidden switch choice", "Yes"),
       },
     ]
 
@@ -106,12 +106,12 @@ export class ModerationForm extends Form {
       {
         value: false,
         icon: "lock_outline",
-        label: gettext("No"),
+        label: pgettext("thread closed switch choice", "No"),
       },
       {
         value: true,
         icon: "lock",
-        label: gettext("Yes"),
+        label: pgettext("thread closed switch choice", "Yes"),
       },
     ]
 
@@ -165,7 +165,12 @@ export class ModerationForm extends Form {
 
     modal.hide()
 
-    snackbar.success(gettext("Selected posts were split into new thread."))
+    snackbar.success(
+      pgettext(
+        "posts moderation split",
+        "Selected posts were split into new thread."
+      )
+    )
   }
 
   handleError(rejection) {
@@ -207,12 +212,12 @@ export class ModerationForm extends Form {
       {
         value: 0,
         icon: "remove",
-        label: gettext("Not pinned"),
+        label: pgettext("thread weight choice", "Not pinned"),
       },
       {
         value: 1,
         icon: "bookmark_border",
-        label: gettext("Pinned locally"),
+        label: pgettext("thread weight choice", "Pinned locally"),
       },
     ]
 
@@ -220,7 +225,7 @@ export class ModerationForm extends Form {
       choices.push({
         value: 2,
         icon: "bookmark",
-        label: gettext("Pinned globally"),
+        label: pgettext("thread weight choice", "Pinned globally"),
       })
     }
 
@@ -231,7 +236,7 @@ export class ModerationForm extends Form {
     if (this.acl[this.state.category].can_pin_threads) {
       return (
         <FormGroup
-          label={gettext("Thread weight")}
+          label={pgettext("posts moderation split field", "Thread weight")}
           for="id_weight"
           labelClass="col-sm-4"
           controlClass="col-sm-8"
@@ -253,7 +258,7 @@ export class ModerationForm extends Form {
     if (this.acl[this.state.category].can_hide_threads) {
       return (
         <FormGroup
-          label={gettext("Hide thread")}
+          label={pgettext("posts moderation split field", "Hide thread")}
           for="id_is_hidden"
           labelClass="col-sm-4"
           controlClass="col-sm-8"
@@ -275,7 +280,7 @@ export class ModerationForm extends Form {
     if (this.acl[this.state.category].can_close_threads) {
       return (
         <FormGroup
-          label={gettext("Close thread")}
+          label={pgettext("posts moderation split field", "Close thread")}
           for="id_is_closed"
           labelClass="col-sm-4"
           controlClass="col-sm-8"
@@ -299,7 +304,7 @@ export class ModerationForm extends Form {
         <form onSubmit={this.handleSubmit}>
           <div className="modal-body">
             <FormGroup
-              label={gettext("Thread title")}
+              label={pgettext("posts moderation split field", "Thread title")}
               for="id_title"
               labelClass="col-sm-4"
               controlClass="col-sm-8"
@@ -316,7 +321,7 @@ export class ModerationForm extends Form {
             <div className="clearfix" />
 
             <FormGroup
-              label={gettext("Category")}
+              label={pgettext("posts moderation split field", "Category")}
               for="id_category"
               labelClass="col-sm-4"
               controlClass="col-sm-8"
@@ -342,10 +347,10 @@ export class ModerationForm extends Form {
               disabled={this.state.isLoading}
               type="button"
             >
-              {gettext("Cancel")}
+              {pgettext("posts moderation split btn", "Cancel")}
             </button>
             <Button className="btn-primary" loading={this.state.isLoading}>
-              {gettext("Split posts")}
+              {pgettext("posts moderation split btn", "Split posts")}
             </Button>
           </div>
         </form>
@@ -370,11 +375,14 @@ export function Error(props) {
       </div>
       <div className="message-body">
         <p className="lead">
-          {gettext("You can't move selected posts at the moment.")}
+          {pgettext(
+            "posts moderation split",
+            "You can't move selected posts at the moment."
+          )}
         </p>
         <p>{props.message}</p>
         <button className="btn btn-default" data-dismiss="modal" type="button">
-          {gettext("Ok")}
+          {pgettext("posts moderation split dismiss btn", "Ok")}
         </button>
       </div>
     </Modal>
@@ -395,7 +403,10 @@ export function Modal(props) {
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 className="modal-title">
-            {gettext("Split posts into new thread")}
+            {pgettext(
+              "posts moderation split title",
+              "Split posts into new thread"
+            )}
           </h4>
         </div>
         {props.children}

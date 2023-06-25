@@ -64,7 +64,7 @@ export default class extends React.Component {
   componentDidMount() {
     title.set({
       title: this.props.route.extra.name,
-      parent: gettext("Users"),
+      parent: pgettext("users page title", "Users"),
     })
   }
 
