@@ -68,6 +68,7 @@ export default class extends Form {
     let cancel = false
 
     // Nothing added to the poll so no changes to discard
+
     const formEmpty = !!(
       this.state.question === "" &&
       this.state.choices &&
