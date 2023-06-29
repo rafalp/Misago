@@ -40,6 +40,7 @@ export default class extends Form {
   }
 
   onCancel = () => {
+
     const formEmpty = !!(
       this.state.post.length === 0 &&
       this.state.title.length === 0 &&
