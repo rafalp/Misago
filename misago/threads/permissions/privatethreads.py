@@ -63,10 +63,7 @@ class PermissionsForm(forms.Form):
         label=pgettext_lazy("private threads permission", "Can report private threads"),
         help_text=pgettext_lazy(
             "private threads permission",
-            (
-                "Allows user to report private threads they are "
-                "participating in, making them accessible to moderators."
-            ),
+            "Allows user to report private threads they are participating in, making them accessible to moderators.",
         ),
     )
     can_moderate_private_threads = YesNoSwitch(
@@ -75,10 +72,7 @@ class PermissionsForm(forms.Form):
         ),
         help_text=pgettext_lazy(
             "private threads permission",
-            (
-                "Allows user to read, reply, edit and delete content "
-                "in reported private threads."
-            ),
+            "Allows user to read, reply, edit and delete content in reported private threads.",
         ),
     )
 

@@ -97,10 +97,7 @@ def validate_username_content(value):
         raise ValidationError(
             pgettext_lazy(
                 "username validator",
-                (
-                    "Username can only contain Latin alphabet letters, "
-                    "digits, and an underscore sign."
-                ),
+                "Username can only contain Latin alphabet letters, digits, and an underscore sign.",
             )
         )
 

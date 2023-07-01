@@ -47,12 +47,7 @@ class OAuthProviderForm(ProviderForm):
         ),
         help_text=pgettext_lazy(
             "admin social auth provider form",
-            (
-                "Enabling this option will result in the user being signed in if their "
-                "forum account was registered using same e-mail address as used on the "
-                "social site. Otherwise they will be asked to specify a different "
-                "e-mail to continue sign in using social site."
-            ),
+            "Enabling this option will result in the user being signed in if their forum account was registered using same e-mail address as used on the social site. Otherwise they will be asked to specify a different e-mail to continue sign in using social site.",
         ),
     )
 

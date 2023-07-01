@@ -34,22 +34,22 @@ class CategoryAdminTestCase(AdminTestCase):
             _category = current_tree[i]
             if category[0] != _category[0]:
                 self.fail(
-                    ("expected category at index #%s to be %s, " "found %s instead")
+                    "expected category at index #%s to be %s, found %s instead"
                     % (i, category[0], _category[0])
                 )
             if category[1] != _category[1]:
                 self.fail(
-                    ("expected level at index #%s to be %s, " "found %s instead")
+                    "expected level at index #%s to be %s, found %s instead"
                     % (i, category[1], _category[1])
                 )
             if category[2] != _category[2]:
                 self.fail(
-                    ("expected lft at index #%s to be %s, " "found %s instead")
+                    "expected lft at index #%s to be %s, found %s instead"
                     % (i, category[2], _category[2])
                 )
             if category[3] != _category[3]:
                 self.fail(
-                    ("expected lft at index #%s to be %s, " "found %s instead")
+                    "expected lft at index #%s to be %s, found %s instead"
                     % (i, category[3], _category[3])
                 )
 

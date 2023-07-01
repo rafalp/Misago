@@ -27,11 +27,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Daily post limit per user"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "Daily limit of posts that may be posted by single user. "
-                "Fail-safe for situations when forum is flooded by spam bots. "
-                "Change to 0 to remove the limit."
-            ),
+            "Daily limit of posts that may be posted by single user. Fail-safe for situations when forum is flooded by spam bots. Change to 0 to remove the limit.",
         ),
         min_value=0,
     )
@@ -41,11 +37,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "Hourly limit of posts that may be posted by single user. "
-                "Fail-safe for situations when forum is flooded by spam bots. "
-                "Change to 0 to remove the limit."
-            ),
+            "Hourly limit of posts that may be posted by single user. Fail-safe for situations when forum is flooded by spam bots. Change to 0 to remove the limit.",
         ),
         min_value=0,
     )
@@ -87,10 +79,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "Period of time (in hours) after which user-uploaded files that "
-                "weren't attached to any post are deleted from disk."
-            ),
+            "Period of time (in hours) after which user-uploaded files that weren't attached to any post are deleted from disk.",
         ),
         min_value=1,
     )
@@ -99,13 +88,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Read-tracker cutoff"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "Controls amount of data used by read-tracking system. All content "
-                "older than number of days specified in this setting is considered old "
-                "and read, even if the opposite is true for the user. Active forums "
-                "can try lowering this value while less active ones may wish to "
-                "increase it instead."
-            ),
+            "Controls amount of data used by read-tracking system. All content older than number of days specified in this setting is considered old and read, even if the opposite is true for the user. Active forums can try lowering this value while less active ones may wish to increase it instead.",
         ),
         min_value=1,
     )
@@ -128,12 +111,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Maximum orphans"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "If number of posts to be displayed on the last page is less or equal "
-                "to number specified in this setting, those posts will instead be "
-                "displayed on previous page, reducing the total number of pages in "
-                "thread."
-            ),
+            "If number of posts to be displayed on the last page is less or equal to number specified in this setting, those posts will instead be displayed on previous page, reducing the total number of pages in thread.",
         ),
         min_value=0,
     )
@@ -149,10 +127,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Permission denied"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "Attachments proxy will display this image in place of default one "
-                "when user tries to access attachment they have no permission to see."
-            ),
+            "Attachments proxy will display this image in place of default one when user tries to access attachment they have no permission to see.",
         ),
         required=False,
     )
@@ -166,10 +141,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Not found"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            (
-                "Attachments proxy will display this image in place of default one "
-                "when user tries to access attachment that doesn't exist."
-            ),
+            "Attachments proxy will display this image in place of default one when user tries to access attachment that doesn't exist.",
         ),
         required=False,
     )

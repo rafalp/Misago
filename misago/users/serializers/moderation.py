@@ -33,7 +33,7 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
         length_limit = settings.signature_length_max
         if len(value) > length_limit:
             message = npgettext(
-                "signature length validator"
+                "signature length validator",
                 "Signature can't be longer than %(limit)s character.",
                 "Signature can't be longer than %(limit)s characters.",
                 length_limit,

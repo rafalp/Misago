@@ -30,10 +30,7 @@ def get_unreleased_error():
         ),
         "description": pgettext(
             "admin version check",
-            (
-                "Unreleased versions of Misago can lack security features and there is "
-                "no supported way to upgrade them to release versions later."
-            ),
+            "Unreleased versions of Misago can lack security features and there is no supported way to upgrade them to release versions later.",
         ),
     }
 
@@ -51,11 +48,7 @@ def check_version_with_api():
             ),
             "description": pgettext(
                 "admin version check",
-                (
-                    "Version check feature relies on the API operated by the Python "
-                    "Package Index (pypi.org) API to retrieve latest Misago release "
-                    "version."
-                ),
+                "Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.",
             ),
         }
 
@@ -95,10 +88,7 @@ def compare_versions(current, latest):
         ),
         "description": pgettext(
             "admin version check",
-            (
-                "The site is running Misago version %(version)s while version "
-                "%(latest)s is available."
-            ),
+            "The site is running Misago version %(version)s while version %(latest)s is available.",
         )
         % {"version": current, "latest": latest},
     }

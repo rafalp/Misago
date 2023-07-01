@@ -82,40 +82,25 @@ class EditUserForm(UserBaseForm):
     IS_STAFF_LABEL = pgettext_lazy("admin user form", "Is administrator")
     IS_STAFF_HELP_TEXT = pgettext_lazy(
         "admin user form",
-        (
-            "Designates whether the user can log into admin sites. "
-            "If Django admin site is enabled, this user will need "
-            "additional permissions assigned within it to admin "
-            "Django modules."
-        ),
+        "Designates whether the user can log into admin sites. If Django admin site is enabled, this user will need additional permissions assigned within it to admin Django modules.",
     )
 
     IS_SUPERUSER_LABEL = pgettext_lazy("admin user form", "Is superuser")
     IS_SUPERUSER_HELP_TEXT = pgettext_lazy(
         "admin user form",
-        (
-            "Only administrators can access admin sites. "
-            "In addition to admin site access, superadmins "
-            "can also change other members admin levels."
-        ),
+        "Only administrators can access admin sites. In addition to admin site access, superadmins can also change other members admin levels.",
     )
 
     IS_ACTIVE_LABEL = pgettext_lazy("admin user form", "Is active")
     IS_ACTIVE_HELP_TEXT = pgettext_lazy(
         "admin user form",
-        (
-            "Designates whether this user should be treated as active. "
-            "Turning this off is non-destructible way to remove user accounts."
-        ),
+        "Designates whether this user should be treated as active. Turning this off is non-destructible way to remove user accounts.",
     )
 
     IS_ACTIVE_STAFF_MESSAGE_LABEL = pgettext_lazy("admin user form", "Staff message")
     IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT = pgettext_lazy(
         "admin user form",
-        (
-            "Optional message for forum team members explaining "
-            "why user's account has been disabled."
-        ),
+        "Optional message for forum team members explaining why user's account has been disabled.",
     )
 
     new_password = forms.CharField(
@@ -129,21 +114,14 @@ class EditUserForm(UserBaseForm):
         label=pgettext_lazy("admin user form", "Lock avatar"),
         help_text=pgettext_lazy(
             "admin user form",
-            (
-                "Setting this to yes will stop user from changing "
-                "his/her avatar, and will reset his/her avatar to "
-                "procedurally generated one."
-            ),
+            "Setting this to yes will stop user from changing his/her avatar, and will reset his/her avatar to procedurally generated one.",
         ),
     )
     avatar_lock_user_message = forms.CharField(
         label=pgettext_lazy("admin user form", "User message"),
         help_text=pgettext_lazy(
             "admin user form",
-            (
-                "Optional message for user explaining "
-                "why he/she is banned form changing avatar."
-            ),
+            "Optional message for user explaining why he/she is banned form changing avatar.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
@@ -152,10 +130,7 @@ class EditUserForm(UserBaseForm):
         label=pgettext_lazy("admin user form", "Staff message"),
         help_text=pgettext_lazy(
             "admin user form",
-            (
-                "Optional message for forum team members explaining "
-                "why user is banned form changing avatar."
-            ),
+            "Optional message for forum team members explaining why user is banned form changing avatar.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
@@ -170,10 +145,7 @@ class EditUserForm(UserBaseForm):
         label=pgettext_lazy("admin user form", "Lock signature"),
         help_text=pgettext_lazy(
             "admin user form",
-            (
-                "Setting this to yes will stop user from "
-                "making changes to his/her signature."
-            ),
+            "Setting this to yes will stop user from making changes to his/her signature.",
         ),
     )
     signature_lock_user_message = forms.CharField(
@@ -235,10 +207,7 @@ class EditUserForm(UserBaseForm):
     watch_new_private_threads_by_followed = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            (
-                "Automatically watch private threads that the user was invited to "
-                "by users they are following"
-            ),
+            "Automatically watch private threads that the user was invited to by users they are following",
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -246,10 +215,7 @@ class EditUserForm(UserBaseForm):
     watch_new_private_threads_by_other_users = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            (
-                "Automatically watch private threads that the user "
-                "was invited to by other users"
-            ),
+            "Automatically watch private threads that the user was invited to by other users",
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -257,10 +223,7 @@ class EditUserForm(UserBaseForm):
     notify_new_private_threads_by_followed = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
-            (
-                "Notify about new private thread invitations from users "
-                "this user is following"
-            ),
+            "Notify about new private thread invitations from users this user is following",
         ),
         coerce=int,
         choices=ThreadNotifications.choices,
@@ -341,10 +304,7 @@ def UserFormFactory(FormType, instance):
         label=pgettext_lazy("admin user form", "Rank"),
         help_text=pgettext_lazy(
             "admin user form",
-            (
-                "Ranks are used to group and distinguish users. They are "
-                "also used to add permissions to groups of users."
-            ),
+            "Ranks are used to group and distinguish users. They are also used to add permissions to groups of users.",
         ),
         queryset=Rank.objects.order_by("name"),
         initial=instance.rank,
@@ -356,7 +316,7 @@ def UserFormFactory(FormType, instance):
         label=pgettext_lazy("admin user form", "Roles"),
         help_text=pgettext_lazy(
             "admin user form",
-            ('Individual roles of this user. All users must have a "Member" role.'),
+            'Individual roles of this user. All users must have a "Member" role.',
         ),
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
@@ -517,10 +477,7 @@ class RankForm(forms.ModelForm):
         validators=[validate_sluggable()],
         help_text=pgettext_lazy(
             "admin rank form",
-            (
-                "Short and descriptive name of all users with this rank. "
-                '"The Team" or "Game Masters" are good examples.'
-            ),
+            'Short and descriptive name of all users with this rank. "The Team" or "Game Masters" are good examples.',
         ),
     )
     title = forms.CharField(
@@ -528,10 +485,7 @@ class RankForm(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin rank form",
-            (
-                "Optional, singular version of rank name displayed by user names. "
-                'For example "GM" or "Dev".'
-            ),
+            'Optional, singular version of rank name displayed by user names. For example "GM" or "Dev".',
         ),
     )
     description = forms.CharField(
@@ -541,10 +495,7 @@ class RankForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}),
         help_text=pgettext_lazy(
             "admin rank form",
-            (
-                "Optional description explaining function or status of "
-                "members distincted with this rank."
-            ),
+            "Optional description explaining function or status of members distincted with this rank.",
         ),
     )
     roles = forms.ModelMultipleChoiceField(
@@ -569,10 +520,7 @@ class RankForm(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin rank form",
-            (
-                "Selecting this option will make users with this rank easily "
-                "discoverable by others through dedicated page on forum users list."
-            ),
+            "Selecting this option will make users with this rank easily discoverable by others through dedicated page on forum users list.",
         ),
     )
 
@@ -676,12 +624,7 @@ class BanForm(forms.ModelForm):
         label=pgettext_lazy("admin ban form", "Restrict this ban to registrations"),
         help_text=pgettext_lazy(
             "admin ban form",
-            (
-                "Changing this to yes will make this ban check be only performed on "
-                "registration step. This is good if you want to block certain "
-                "registrations like ones from recently compromised e-mail providers, "
-                "without harming existing users."
-            ),
+            "Changing this to yes will make this ban check be only performed on registration step. This is good if you want to block certain registrations like ones from recently compromised e-mail providers, without harming existing users.",
         ),
     )
     banned_value = forms.CharField(
@@ -689,11 +632,7 @@ class BanForm(forms.ModelForm):
         max_length=250,
         help_text=pgettext_lazy(
             "admin ban form",
-            (
-                "This value is case-insensitive and accepts asterisk (*) "
-                "for rought matches. For example, making IP ban for value "
-                '"83.*" will ban all IP addresses beginning with "83.".'
-            ),
+            'This value is case-insensitive and accepts asterisk (*) for partial matches. For example, making IP ban for value "83.*" will ban all IP addresses beginning with "83.".',
         ),
         error_messages={
             "max_length": pgettext_lazy(
@@ -828,13 +767,7 @@ class RequestDataDownloadsForm(forms.Form):
         label=pgettext_lazy("admin data download request form", "Usernames or emails"),
         help_text=pgettext_lazy(
             "admin data download request form",
-            (
-                "Enter every item in new line. Duplicates will be ignored. "
-                "This field is case insensitive. Depending on site configuration and "
-                "amount of data to archive it may take up to few days for requests to "
-                "complete. E-mail will notification will be sent to every user once "
-                "their download is ready."
-            ),
+            "Enter every item in new line. Duplicates will be ignored. This field is case insensitive. Depending on site configuration and amount of data to archive it may take up to few days for requests to complete. E-mail will notification will be sent to every user once their download is ready.",
         ),
         widget=forms.Textarea,
     )
@@ -848,10 +781,7 @@ class RequestDataDownloadsForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "admin data download request form",
-                    (
-                        "You may not enter more than 20 items at a single time "
-                        "(You have entered %(show_value)s)."
-                    ),
+                    "You may not enter more than 20 items at a single time (You have entered %(show_value)s).",
                 )
                 % {"show_value": len(user_identifiers)}
             )

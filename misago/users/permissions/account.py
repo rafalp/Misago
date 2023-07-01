@@ -22,11 +22,7 @@ class PermissionsForm(forms.Form):
         ),
         help_text=pgettext_lazy(
             "users accounts permission",
-            (
-                "Number of days since name change that makes "
-                "that change no longer count to limit. Enter "
-                "zero to make all changes count."
-            ),
+            "Number of days since name change that makes that change no longer count to limit. Enter zero to make all changes count.",
         ),
         min_value=0,
         initial=0,
@@ -46,10 +42,7 @@ class PermissionsForm(forms.Form):
         ),
         help_text=pgettext_lazy(
             "users accounts permission",
-            (
-                "Controls whether or not users can put quote, code, "
-                "spoiler blocks and horizontal lines in signatures."
-            ),
+            "Controls whether or not users can put quote, code, spoiler blocks and horizontal lines in signatures.",
         ),
     )
 

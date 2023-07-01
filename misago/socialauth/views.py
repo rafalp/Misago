@@ -23,10 +23,7 @@ def social_auth_view(f):
             raise PermissionDenied(
                 pgettext(
                     "social auth",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to sign in."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to sign in.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )

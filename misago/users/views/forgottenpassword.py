@@ -42,10 +42,7 @@ def reset_password_form(request, pk, token):
         if request.user.is_authenticated and request.user.id != requesting_user.id:
             message = pgettext(
                 "user password",
-                (
-                    "%(user)s, your link has expired. "
-                    "Please request new link and try again."
-                ),
+                "%(user)s, your link has expired. Please request new link and try again.",
             )
             raise ResetError(message % {"user": requesting_user.username})
 

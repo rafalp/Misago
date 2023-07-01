@@ -17,10 +17,7 @@ class AnalyticsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin analytics settings form", "Tracking ID"),
         help_text=pgettext_lazy(
             "admin analytics settings form",
-            (
-                "Setting the Tracking ID will result in gtag.js file being included in "
-                "your site's HTML markup, enabling Google Analytics integration."
-            ),
+            "Setting the Tracking ID will result in gtag.js file being included in your site's HTML markup, enabling Google Analytics integration.",
         ),
         required=False,
     )
@@ -28,10 +25,7 @@ class AnalyticsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin analytics settings form", "Site verification token"),
         help_text=pgettext_lazy(
             "admin analytics settings form",
-            (
-                "This token was extracted from uploaded site verification file. "
-                "To change it, upload new verification file."
-            ),
+            "This token was extracted from uploaded site verification file. To change it, upload new verification file.",
         ),
         required=False,
         disabled=True,
@@ -42,10 +36,7 @@ class AnalyticsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin analytics settings form",
-            (
-                "Site verification file can be downloaded from Search Console's "
-                '"Ownership verification" page.'
-            ),
+            'Site verification file can be downloaded from Search Console\'s "Ownership verification" page.',
         ),
         required=False,
     )

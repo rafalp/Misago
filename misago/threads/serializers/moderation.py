@@ -182,10 +182,7 @@ class MergePostsSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     pgettext(
                         "merge posts serializer",
-                        (
-                            "Post marked as best answer can't be merged with "
-                            "thread's first post."
-                        ),
+                        "Post marked as best answer can't be merged with thread's first post.",
                     )
                 )
 
@@ -267,10 +264,7 @@ class MovePostsSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 pgettext(
                     "move posts serializer",
-                    (
-                        "The thread you have entered link to doesn't "
-                        "exist or you don't have permission to see it."
-                    ),
+                    "The thread you have entered link to doesn't exist or you don't have permission to see it.",
                 )
             )
 
@@ -366,10 +360,7 @@ class NewThreadSerializer(serializers.Serializer):
                 raise ValidationError(
                     pgettext(
                         "new thread serializer",
-                        (
-                            "You don't have permission to pin threads globally "
-                            "in this category."
-                        ),
+                        "You don't have permission to pin threads globally in this category.",
                     )
                 )
             else:
@@ -592,10 +583,7 @@ class MergeThreadSerializer(serializers.Serializer):
             raise ValidationError(
                 pgettext(
                     "merge thread serializer",
-                    (
-                        "The thread you have entered link to doesn't "
-                        "exist or you don't have permission to see it."
-                    ),
+                    "The thread you have entered link to doesn't exist or you don't have permission to see it.",
                 )
             )
 

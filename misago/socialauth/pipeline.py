@@ -86,10 +86,7 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
             backend,
             pgettext(
                 "social auth",
-                (
-                    "The e-mail address associated with your %(backend)s account is "
-                    "not available for use on this site."
-                ),
+                "The e-mail address associated with your %(backend)s account is not available for use on this site.",
             )
             % {"backend": backend_name},
         )
@@ -99,10 +96,7 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
             backend,
             pgettext(
                 "social auth",
-                (
-                    "Your account has to be activated by site administrator "
-                    "before you will be able to sign in with %(backend)s."
-                ),
+                "Your account has to be activated by site administrator before you will be able to sign in with %(backend)s.",
             )
             % {"backend": backend_name},
         )

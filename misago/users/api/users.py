@@ -92,10 +92,7 @@ class UserViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 pgettext(
                     "users api",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to sign in."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to sign in.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -161,10 +158,7 @@ class UserViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 pgettext(
                     "users api",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to change your name."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to change your name.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -200,10 +194,7 @@ class UserViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 pgettext(
                     "users api",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to change your password."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to change your password.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -228,10 +219,7 @@ class UserViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 pgettext(
                     "users api",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to change your e-mail."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to change your e-mail.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -273,10 +261,7 @@ class UserViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 pgettext(
                     "users api",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to delete your account."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to delete your account.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -373,10 +358,7 @@ class UserViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(
                 pgettext(
                     "users api",
-                    (
-                        "You can't have more than one data download "
-                        "request at a single time."
-                    ),
+                    "You can't have more than one data download request at a single time.",
                 )
             )
 

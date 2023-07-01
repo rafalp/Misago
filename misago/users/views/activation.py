@@ -61,10 +61,7 @@ def activate_by_token(request, pk, token):
         if not is_activation_token_valid(inactive_user, token):
             message = pgettext(
                 "activate account with token",
-                (
-                    "%(user)s, your activation link is invalid. "
-                    "Try again or request new activation link."
-                ),
+                "%(user)s, your activation link is invalid. Try again or request new activation link.",
             )
             raise ActivationError(message % {"user": inactive_user.username})
 

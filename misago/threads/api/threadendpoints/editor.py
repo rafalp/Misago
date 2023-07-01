@@ -60,10 +60,7 @@ def thread_start_editor(request):
         raise PermissionDenied(
             pgettext(
                 "posting api",
-                (
-                    "No categories that allow new threads "
-                    "are available to you at the moment."
-                ),
+                "No categories that allow new threads are available to you at the moment.",
             )
         )
 

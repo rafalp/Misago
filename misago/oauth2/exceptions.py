@@ -67,10 +67,7 @@ class OAuth2AccessTokenResponseError(OAuth2ProviderError):
 class OAuth2AccessTokenJSONError(OAuth2ProviderError):
     message = pgettext_lazy(
         "oauth2 error",
-        (
-            "The OAuth2 provider did not respond with a valid JSON "
-            "for an access token request."
-        ),
+        "The OAuth2 provider did not respond with a valid JSON for an access token request.",
     )
 
 
@@ -98,10 +95,7 @@ class OAuth2UserDataResponseError(OAuth2ProviderError):
 class OAuth2UserDataJSONError(OAuth2ProviderError):
     message = pgettext_lazy(
         "oauth2 error",
-        (
-            "The OAuth2 provider did not respond with a valid JSON "
-            "for user profile request."
-        ),
+        "The OAuth2 provider did not respond with a valid JSON for user profile request.",
     )
 
 
@@ -115,10 +109,7 @@ class OAuth2UserAccountDeactivatedError(OAuth2Error):
     recoverable = False
     message = pgettext_lazy(
         "oauth2 error",
-        (
-            "User account associated with the profile from the OAuth2 provider was "
-            "deactivated by the site administrator."
-        ),
+        "User account associated with the profile from the OAuth2 provider was deactivated by the site administrator.",
     )
 
 

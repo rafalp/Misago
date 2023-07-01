@@ -137,10 +137,7 @@ class EditPollSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 pgettext(
                     "edit poll serializer",
-                    (
-                        "Number of allowed choices can't be "
-                        "greater than number of all choices."
-                    ),
+                    "Number of allowed choices can't be greater than number of all choices.",
                 )
             )
         return data

@@ -60,10 +60,7 @@ class AttachmentsSerializer(serializers.Serializer):
                 else:
                     message = pgettext(
                         "posting api",
-                        (
-                            "You don't have permission to remove "
-                            '"%(attachment)s" attachment.'
-                        ),
+                        'You don\'t have permission to remove "%(attachment)s" attachment.',
                     )
                     raise serializers.ValidationError(
                         message % {"attachment": attachment.filename}

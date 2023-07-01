@@ -38,10 +38,7 @@ def check_delegated_auth(f):
             raise PermissionDenied(
                 pgettext(
                     "auth api",
-                    (
-                        "This feature has been disabled. "
-                        "Please use %(provider)s to sign in."
-                    ),
+                    "This feature has been disabled. Please use %(provider)s to sign in.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )

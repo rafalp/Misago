@@ -44,10 +44,7 @@ def ColorField(**kwargs):
                 flags=re.IGNORECASE,
                 message=pgettext_lazy(
                     "admin color field",
-                    (
-                        "Value must be a 7-character string specifying an RGB "
-                        "color in a hexadecimal format."
-                    ),
+                    "Value must be a 7-character string specifying an RGB color in a hexadecimal format.",
                 ),
             )
         ],

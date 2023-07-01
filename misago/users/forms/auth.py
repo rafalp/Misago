@@ -20,10 +20,7 @@ class MisagoAuthMixin:
         ),
         "inactive_admin": pgettext_lazy(
             "auth form",
-            (
-                "Your account has to be activated by site administrator "
-                "before you will be able to sign in."
-            ),
+            "Your account has to be activated by site administrator before you will be able to sign in.",
         ),
     }
 
@@ -186,17 +183,11 @@ class ResetPasswordForm(GetUserForm):
     error_messages = {
         "inactive_user": pgettext_lazy(
             "reset password form",
-            (
-                "You have to activate your account before "
-                "you will be able to request new password."
-            ),
+            "You have to activate your account before you will be able to request new password.",
         ),
         "inactive_admin": pgettext_lazy(
             "reset password form",
-            (
-                "Administrator has to activate your account before "
-                "you will be able to request new password."
-            ),
+            "Administrator has to activate your account before you will be able to request new password.",
         ),
     }
 

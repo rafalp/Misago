@@ -94,25 +94,15 @@ class AttachmentTypeForm(forms.ModelForm):
         help_texts = {
             "extensions": pgettext_lazy(
                 "admin attachment type form",
-                (
-                    "List of comma separated file extensions associated with this "
-                    "attachment type."
-                ),
+                "List of comma separated file extensions associated with this attachment type.",
             ),
             "mimetypes": pgettext_lazy(
                 "admin attachment type form",
-                (
-                    "Optional list of comma separated mime types associated with this "
-                    "attachment type."
-                ),
+                "Optional list of comma separated mime types associated with this attachment type.",
             ),
             "size_limit": pgettext_lazy(
                 "admin attachment type form",
-                (
-                    "Maximum allowed uploaded file size for this type, in kb. "
-                    "This setting is deprecated and has no effect. It will be "
-                    "deleted in Misago 1.0."
-                ),
+                "Maximum allowed uploaded file size for this type, in kb. This setting is deprecated and has no effect. It will be deleted in Misago 1.0.",
             ),
             "status": pgettext_lazy(
                 "admin attachment type form",
@@ -120,22 +110,11 @@ class AttachmentTypeForm(forms.ModelForm):
             ),
             "limit_uploads_to": pgettext_lazy(
                 "admin attachment type form",
-                (
-                    "If you wish to limit option to upload files of this type to users "
-                    "with specific roles, select them on this list. Otherwise don't "
-                    "select any roles to allow all users with permission to upload "
-                    "attachments to be able to upload attachments of this type."
-                ),
+                "If you wish to limit option to upload files of this type to users with specific roles, select them on this list. Otherwise don't select any roles to allow all users with permission to upload attachments to be able to upload attachments of this type.",
             ),
             "limit_downloads_to": pgettext_lazy(
                 "admin attachment type form",
-                (
-                    "If you wish to limit option to download files of this type to "
-                    "users with specific roles, select them on this list. Otherwise "
-                    "don't select any roles to allow all users with permission to "
-                    "download attachments to be able to download attachments of "
-                    "this type."
-                ),
+                "If you wish to limit option to download files of this type to users with specific roles, select them on this list. Otherwise don't select any roles to allow all users with permission to download attachments to be able to download attachments of this type.",
             ),
         }
         widgets = {

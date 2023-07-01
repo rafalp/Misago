@@ -269,10 +269,7 @@ def patch_unmark_best_answer(request, thread, value):
         raise PermissionDenied(
             pgettext(
                 "threads api",
-                (
-                    "This post can't be unmarked because "
-                    "it's not currently marked as best answer."
-                ),
+                "This post can't be unmarked because it's not currently marked as best answer.",
             )
         )
 

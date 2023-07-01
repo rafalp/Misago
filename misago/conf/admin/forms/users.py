@@ -72,10 +72,7 @@ class UsersSettingsForm(SettingsForm):
     new_inactive_accounts_delete = forms.IntegerField(
         label=pgettext_lazy(
             "admin users settings form",
-            (
-                "Delete new inactive accounts if they weren't activated "
-                "within this number of days"
-            ),
+            "Delete new inactive accounts if they weren't activated within this number of days",
         ),
         help_text=pgettext_lazy(
             "admin users settings form",
@@ -103,10 +100,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Allow custom avatar uploads"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            (
-                "Turning this option off will forbid forum users from uploading custom "
-                "avatars. Good for forums adressed at young users."
-            ),
+            "Turning this option off will forbid forum users from uploading custom avatars. Good for forums adressed at young users.",
         ),
     )
     avatar_upload_limit = forms.IntegerField(
@@ -152,10 +146,7 @@ class UsersSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin users settings form",
-            (
-                "Select which avatar to use when user has no gravatar associated with "
-                "their e-mail address."
-            ),
+            "Select which avatar to use when user has no gravatar associated with their e-mail address.",
         ),
         choices=[
             (
@@ -175,11 +166,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Blank avatar"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            (
-                "Blank avatar is displayed in the interface when user's avatar is not "
-                "available: when user was deleted or is guest. Uploaded image should "
-                "be a square."
-            ),
+            "Blank avatar is displayed in the interface when user's avatar is not available: when user was deleted or is guest. Uploaded image should be a square.",
         ),
         required=False,
     )
@@ -249,12 +236,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Maximum orphans"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            (
-                "If number of users to be displayed on the last page is less or equal "
-                "to number specified in this setting, those users will instead be "
-                "displayed  on previous page, reducing the total number of pages on "
-                "the list."
-            ),
+            "If number of users to be displayed on the last page is less or equal to number specified in this setting, those users will instead be displayed  on previous page, reducing the total number of pages on the list.",
         ),
         min_value=0,
     )
@@ -285,10 +267,7 @@ class UsersSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin users settings form",
-            (
-                "Data downloads older than specified will have their files deleted and "
-                "will be marked as expired."
-            ),
+            "Data downloads older than specified will have their files deleted and will be marked as expired.",
         ),
         min_value=1,
     )
@@ -303,12 +282,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "IP storage time"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            (
-                "Number of days for which users IP addresses are stored in "
-                "forum database. Enter zero to store registered IP addresses forever. "
-                "Deleting user account always deletes the IP addresses "
-                "associated with it."
-            ),
+            "Number of days for which users IP addresses are stored in forum database. Enter zero to store registered IP addresses forever. Deleting user account always deletes the IP addresses associated with it.",
         ),
         min_value=0,
     )
@@ -317,8 +291,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Anonymous username"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            "This username is displayed instead of delete user's actual name "
-            "next to their content.",
+            "This username is displayed instead of delete user's actual name next to their content.",
         ),
         min_length=1,
         max_length=15,
@@ -336,7 +309,7 @@ class UsersSettingsForm(SettingsForm):
             raise forms.ValidationError(
                 pgettext_lazy(
                     "admin users settings form",
-                    ("Uploaded image's edge should be at least %(size)s pixels long."),
+                    "Uploaded image's edge should be at least %(size)s pixels long.",
                 )
                 % {"size": min_size}
             )

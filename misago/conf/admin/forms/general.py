@@ -43,10 +43,7 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Meta Description"),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "Short description of your forum that search and social sites may "
-                "display next to link to your forum's index."
-            ),
+            "Short description of your forum that search and social sites may display next to link to your forum's index.",
         ),
         max_length=255,
         required=False,
@@ -64,10 +61,7 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Header message"),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "This message will be displayed in page header on forum index, "
-                "under the header text."
-            ),
+            "This message will be displayed in page header on forum index, under the header text.",
         ),
         max_length=2048,
         widget=forms.Textarea(attrs={"rows": 3}),
@@ -78,10 +72,7 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Large logo"),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "Image that will be displayed in forum navbar instead of a small "
-                "logo or text."
-            ),
+            "Image that will be displayed in forum navbar instead of a small logo or text.",
         ),
         required=False,
     )
@@ -93,10 +84,7 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Small logo"),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "Image that will be displayed in the forum navbar next to the logo "
-                "text if a large logo was not uploaded."
-            ),
+            "Image that will be displayed in the forum navbar next to the logo text if a large logo was not uploaded.",
         ),
         required=False,
     )
@@ -108,11 +96,7 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Text logo"),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "Text displayed in forum navbar. If a small logo image was uploaded, "
-                "this text will be displayed right next to it. If a large logo was "
-                "uploaded, it will replace both the small logo and the text."
-            ),
+            "Text displayed in forum navbar. If a small logo image was uploaded, this text will be displayed right next to it. If a large logo was uploaded, it will replace both the small logo and the text.",
         ),
         max_length=255,
         required=False,
@@ -122,11 +106,7 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Image"),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "Custom image that will appear next to links to your forum posted on "
-                "social sites. Facebook recommends that this image should be "
-                "1200 pixels wide and 630 pixels tall."
-            ),
+            "Custom image that will appear next to links to your forum posted on social sites. Facebook recommends that this image should be 1200 pixels wide and 630 pixels tall.",
         ),
         required=False,
     )
@@ -166,19 +146,11 @@ class GeneralSettingsForm(SettingsForm):
     show_admin_panel_link_in_ui = YesNoSwitch(
         label=pgettext_lazy(
             "admin general settings form",
-            (
-                "Display the link to the Admin Control Panel in "
-                "the administrator's user menu"
-            ),
+            "Display the link to the Admin Control Panel in the administrator's user menu",
         ),
         help_text=pgettext_lazy(
             "admin general settings form",
-            (
-                "Hiding the link to the ACP from user menus reduces risk of malicious "
-                "actors gaining access to admin session for admin users who are "
-                "sharing their PC with others or who are logging in to the site in "
-                "public spaces."
-            ),
+            "Hiding the link to the ACP from user menus reduces risk of malicious actors gaining access to admin session for admin users who are sharing their PC with others or who are logging in to the site in public spaces.",
         ),
     )
 
@@ -188,10 +160,7 @@ class GeneralSettingsForm(SettingsForm):
         address = self.request.build_absolute_uri("/")
         self["forum_address"].help_text = pgettext_lazy(
             "admin general settings form",
-            (
-                "Misago uses this setting to build links in e-mails sent to site "
-                'users. Address under which site is running appears to be "%(address)s".'
-            ),
+            'Misago uses this setting to build links in e-mails sent to site users. Address under which site is running appears to be "%(address)s".',
         ) % {"address": address}
 
     def clean_forum_address(self):

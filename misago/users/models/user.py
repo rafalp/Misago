@@ -186,10 +186,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=True,
         help_text=pgettext_lazy(
             "user",
-            (
-                "Designates whether this user should be treated as active. "
-                "Unselect this instead of deleting accounts."
-            ),
+            "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
         ),
     )
     is_active_staff_message = models.TextField(null=True, blank=True)

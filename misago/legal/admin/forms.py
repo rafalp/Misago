@@ -24,12 +24,7 @@ class AgreementForm(forms.ModelForm):
         label=pgettext_lazy("admin agreement form", "Active for its type"),
         help_text=pgettext_lazy(
             "admin agreement form",
-            (
-                "If other agreement is already active for this type, it will be "
-                "unset and replaced with this one. "
-                "Misago will ask users who didn't accept this agreement to do so "
-                "before allowing them to continue using the site."
-            ),
+            "If other agreement is already active for this type, it will be unset and replaced with this one. Misago will ask users who didn't accept this agreement to do so before allowing them to continue using the site.",
         ),
     )
     link = forms.URLField(

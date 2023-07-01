@@ -50,10 +50,7 @@ class ParticipantsSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     pgettext(
                         "posting api",
-                        (
-                            "You can't include yourself on the "
-                            "list of users to invite to new thread."
-                        ),
+                        "You can't include yourself on the list of users to invite to new thread.",
                     )
                 )
 

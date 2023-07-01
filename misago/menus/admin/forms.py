@@ -33,10 +33,7 @@ class MenuItemForm(forms.ModelForm):
         label=pgettext_lazy("admin menu item form", "Open this link in new window"),
         help_text=pgettext_lazy(
             "admin menu item form",
-            (
-                'Enabling this option will result in the target="_blank" attribute being '
-                "added to this link's HTML element."
-            ),
+            'Enabling this option will result in the target="_blank" attribute being added to this link\'s HTML element.',
         ),
         required=False,
     )

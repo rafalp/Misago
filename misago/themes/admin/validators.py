@@ -22,10 +22,7 @@ def validate_css_name(filename):
         raise ValidationError(
             pgettext(
                 "admin css name validator",
-                (
-                    "Name can contain only latin alphabet characters, "
-                    "digits, dots, underscores and dashes."
-                ),
+                "Name can contain only latin alphabet characters, digits, dots, underscores and dashes.",
             )
         )
 

@@ -51,10 +51,7 @@ class DeleteAttachmentType(AttachmentTypeAdmin, generic.ButtonView):
         if target.attachment_set.exists():
             message = pgettext(
                 "admin attachments types",
-                (
-                    'Attachment type "%(name)s" has '
-                    "associated attachments and can't be deleted."
-                ),
+                'Attachment type "%(name)s" has associated attachments and can\'t be deleted.',
             )
             return message % {"name": target.name}
 

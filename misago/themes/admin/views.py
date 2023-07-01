@@ -73,10 +73,7 @@ class DeleteTheme(ThemeAdmin, generic.ButtonView):
         if target.get_descendants().filter(is_active=True).exists():
             message = pgettext(
                 "admin themes",
-                (
-                    'Theme "%(name)s" can\'t be deleted '
-                    "because one of its child themes is set as active."
-                ),
+                'Theme "%(name)s" can\'t be deleted because one of its child themes is set as an active theme.',
             )
             return message % {"name": target}
 

@@ -96,10 +96,7 @@ class MisagoAdminExtension:
             name=pgettext_lazy("admin node", "Notifications"),
             description=pgettext_lazy(
                 "admin node",
-                (
-                    "Those settings control default notification preferences of new "
-                    "user accounts and storage time of existing notifications."
-                ),
+                "Those settings control default notification preferences of new user accounts and storage time of existing notifications.",
             ),
             parent="settings",
             namespace="notifications",

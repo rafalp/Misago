@@ -78,17 +78,11 @@ def social_auth_failed(request, exception):
     if isinstance(exception, social_exceptions.NotAllowedToDisconnect):
         message = pgettext(
             "social auth",
-            (
-                "A problem was encountered when disconnecting your account "
-                "from the remote site."
-            ),
+            "A problem was encountered when disconnecting your account from the remote site.",
         )
         help_text = pgettext(
             "social auth",
-            (
-                "You are not allowed to disconnect your account from the other site, "
-                "because currently it's the only way to sign in to your account."
-            ),
+            "You are not allowed to disconnect your account from the other site, because currently it's the only way to sign in to your account.",
         )
     elif backend_name:
         message = pgettext(
@@ -134,10 +128,7 @@ def csrf_failure(request, reason=""):
             {
                 "detail": pgettext(
                     "api",
-                    (
-                        "Your request was rejected because your browser didn't "
-                        "send the CSRF cookie, or the cookie sent was invalid."
-                    ),
+                    "Your request was rejected because your browser didn't send the CSRF cookie, or the cookie sent was invalid.",
                 )
             },
             status=403,

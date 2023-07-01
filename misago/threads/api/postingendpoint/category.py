@@ -72,10 +72,7 @@ class CategorySerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 pgettext(
                     "posting api",
-                    (
-                        "Selected category doesn't exist or "
-                        "you don't have permission to browse it."
-                    ),
+                    "Selected category doesn't exist or you don't have permission to browse it.",
                 )
             )
         except PermissionDenied as e:

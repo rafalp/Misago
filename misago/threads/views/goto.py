@@ -127,10 +127,7 @@ class ThreadGotoUnapprovedView(GotoView):
             raise PermissionDenied(
                 pgettext(
                     "thread goto unapproved",
-                    (
-                        "You need permission to approve content to "
-                        "be able to go to first unapproved post."
-                    ),
+                    "You need permission to approve content to be able to go to first unapproved post.",
                 )
             )
 

@@ -90,8 +90,7 @@ class UsersList(UserAdmin, generic.ListView):
             "name": pgettext_lazy("admin users", "Delete with content"),
             "confirmation": pgettext_lazy(
                 "admin users",
-                "Are you sure you want to delete selected users? "
-                "This will also delete all content associated with their accounts.",
+                "Are you sure you want to delete selected users? This will also delete all content associated with their accounts.",
             ),
             "is_atomic": False,
         },
@@ -272,10 +271,7 @@ class UsersList(UserAdmin, generic.ListView):
             request,
             pgettext(
                 "admin users",
-                (
-                    "Selected users have been disabled and queued for deletion "
-                    "together with their content."
-                ),
+                "Selected users have been disabled and queued for deletion together with their content.",
             ),
         )
 

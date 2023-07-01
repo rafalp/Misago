@@ -7,7 +7,7 @@ from .utils import slugify
 class validate_sluggable:
     def __init__(self, error_short=None, error_long=None):
         self.error_short = error_short or pgettext_lazy(
-            "sluggable validator" "Value has to contain alpha-numerical characters."
+            "sluggable validator", "Value has to contain alpha-numerical characters."
         )
         self.error_long = error_long or pgettext_lazy(
             "sluggable validator", "Value is too long."

@@ -69,10 +69,7 @@ class CaptchaSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin captcha settings form",
-            (
-                "Turning this option on will result in Misago validating new user's e-mail "
-                "and IP address against SFS database."
-            ),
+            "Turning this option on will result in Misago validating new user's e-mail and IP address against SFS database.",
         ),
     )
     stop_forum_spam_confidence = forms.IntegerField(
@@ -81,13 +78,7 @@ class CaptchaSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin captcha settings form",
-            (
-                "SFS compares user e-mail and IP address with database of known "
-                "spammers and assigns the confidence score in range of 0 to 100 that "
-                "user is a spammer themselves. If this score is equal or higher than "
-                "specified, Misago will block user from registering and ban their IP "
-                "address for 24 hours."
-            ),
+            "SFS compares user e-mail and IP address with database of known spammers and assigns the confidence score in range of 0 to 100 that user is a spammer themselves. If this score is equal or higher than specified, Misago will block user from registering and ban their IP address for 24 hours.",
         ),
         min_value=0,
         max_value=100,
@@ -102,10 +93,7 @@ class CaptchaSettingsForm(SettingsForm):
                     "recaptcha_site_key",
                     pgettext_lazy(
                         "admin captcha settings form",
-                        (
-                            "You need to enter site key if "
-                            "selected CAPTCHA type is reCaptcha."
-                        ),
+                        "You need to enter site key if selected CAPTCHA type is reCaptcha.",
                     ),
                 )
 
@@ -114,10 +102,7 @@ class CaptchaSettingsForm(SettingsForm):
                     "recaptcha_secret_key",
                     pgettext_lazy(
                         "admin captcha settings form",
-                        (
-                            "You need to enter secret key if "
-                            "selected CAPTCHA type is reCaptcha."
-                        ),
+                        "You need to enter secret key if selected CAPTCHA type is reCaptcha.",
                     ),
                 )
 
@@ -136,10 +121,7 @@ class CaptchaSettingsForm(SettingsForm):
                     "qa_answers",
                     pgettext_lazy(
                         "admin captcha settings form",
-                        (
-                            "You need to set question answers if "
-                            "selected CAPTCHA type is Q&A."
-                        ),
+                        "You need to set question answers if selected CAPTCHA type is Q&A.",
                     ),
                 )
 

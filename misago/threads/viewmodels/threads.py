@@ -33,13 +33,16 @@ LIST_DENIED_MESSAGES = {
         "You have to sign in to see list of threads that you have started.",
     ),
     "new": pgettext_lazy(
-        "threads list", "You have to sign in to see list of threads you haven't read."
+        "threads list",
+        "You have to sign in to see list of threads you haven't read.",
     ),
     "unread": pgettext_lazy(
-        "threads list", "You have to sign in to see list of threads with new replies."
+        "threads list",
+        "You have to sign in to see list of threads with new replies.",
     ),
     "watched": pgettext_lazy(
-        "threads list", "You have to sign in to see list of threads you are watching."
+        "threads list",
+        "You have to sign in to see list of threads you are watching.",
     ),
     "unapproved": pgettext_lazy(
         "threads list",

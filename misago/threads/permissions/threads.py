@@ -75,28 +75,14 @@ class RolePermissionsForm(forms.Form):
         label=pgettext_lazy("threads permission", "Can see unapproved content list"),
         help_text=pgettext_lazy(
             "threads permission",
-            (
-                'Allows access to "unapproved" tab on threads lists for '
-                "easy listing of threads that are unapproved or contain "
-                "unapproved posts. Despite the tab being available on all "
-                "threads lists, it will only display threads belonging to "
-                "categories in which the user has permission to approve "
-                "content."
-            ),
+            'Allows access to "unapproved" tab on threads lists for easy listing of threads that are unapproved or contain unapproved posts. Despite the tab being available on all threads lists, it will only display threads belonging to categories in which the user has permission to approve content.',
         ),
     )
     can_see_reported_content_lists = YesNoSwitch(
         label=pgettext_lazy("threads permission", "Can see reported content list"),
         help_text=pgettext_lazy(
             "threads permission",
-            (
-                'Allows access to "reported" tab on threads lists for '
-                "easy listing of threads that contain reported posts. "
-                "Despite the tab being available on all categories "
-                "threads lists, it will only display threads belonging to "
-                "categories in which the user has permission to see posts "
-                "reports."
-            ),
+            'Allows access to "reported" tab on threads lists for easy listing of threads that contain reported posts. Despite the tab being available on all categories threads lists, it will only display threads belonging to categories in which the user has permission to see posts reports.',
         ),
     )
     can_omit_flood_protection = YesNoSwitch(
