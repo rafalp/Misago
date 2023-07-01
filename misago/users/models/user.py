@@ -450,7 +450,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.email_hash = hash_email(new_email)
 
     def get_any_title(self):
-        return self.title or self.rank.title or self.rank.name
+        if self.title:
+            return self.title
+
+        if self.rank.title:
+            return self.rank.title
+
+        return str(self.rank)
 
     def get_roles(self):
         roles_pks = []

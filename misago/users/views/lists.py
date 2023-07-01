@@ -30,7 +30,7 @@ class ListView(View):
         for rank in Rank.objects.filter(is_tab=True).order_by("order"):
             context_data["pages"].append(
                 {
-                    "name": rank.name,
+                    "name": str(rank),
                     "reversed_link": reverse(
                         "misago:users-rank", kwargs={"slug": rank.slug}
                     ),
@@ -49,7 +49,7 @@ class ListView(View):
             request.frontend_context["USERS_LISTS"].append(
                 {
                     "id": rank.pk,
-                    "name": rank.name,
+                    "name": str(rank),
                     "slug": rank.slug,
                     "css_class": rank.css_class,
                     "description": description,

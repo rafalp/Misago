@@ -2,7 +2,7 @@
 {% load i18n misago_absoluteurl misago_pagetitle misago_shorthands misago_stringutils %}
 
 
-{% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
+{% block title %}{% pagetitle rank page=paginator.page %} | {{ block.super }}{% endblock %}
 
 
 {% block meta-description %}
@@ -31,8 +31,8 @@
 {% endblock meta-extra %}
 
 
-{% block og-title %}{{ rank.name }}{% endblock %}
-{% block twitter-title %}{{ rank.name }}{% endblock %}
+{% block og-title %}{{ rank }}{% endblock %}
+{% block twitter-title %}{{ rank }}{% endblock %}
 
 
 {% block og-description %}

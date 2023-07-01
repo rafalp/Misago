@@ -447,11 +447,11 @@ def create_filter_users_form():
     """
     ranks_choices = [("", pgettext_lazy("admin users rank filter choice", "All ranks"))]
     for rank in Rank.objects.order_by("name").iterator():
-        ranks_choices.append((rank.pk, rank.name))
+        ranks_choices.append((rank.pk, str(rank)))
 
     roles_choices = [("", pgettext_lazy("admin users role filter choice", "All roles"))]
     for role in Role.objects.order_by("name").iterator():
-        roles_choices.append((role.pk, role.name))
+        roles_choices.append((role.pk, str(role)))
 
     extra_fields = {
         "rank": forms.TypedChoiceField(

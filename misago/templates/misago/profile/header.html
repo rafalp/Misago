@@ -34,12 +34,12 @@
                   {% if profile.rank.is_tab %}
                     <li class="user-rank">
                       <a href="{{ profile.rank.get_absolute_url }}" class="item-title">
-                        {{ profile.rank.name }}
+                        {{ profile.rank }}
                       </a>
                     </li>
                   {% else %}
                     <li class="user-rank">
-                      <span class="item-title">{{ profile.rank.name }}</span>
+                      <span class="item-title">{{ profile.rank }}</span>
                     </li>
                   {% endif %}
                   {% if profile.title %}

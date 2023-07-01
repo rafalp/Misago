@@ -24,6 +24,9 @@ class RankSerializer(serializers.ModelSerializer):
             "url",
         ]
 
+    def get_name(self, obj):
+        return str(obj)
+
     def get_description(self, obj):
         if obj.description:
             return format_plaintext_for_html(obj.description)

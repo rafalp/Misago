@@ -19,7 +19,7 @@
   <tbody>
     {% for role in misago_user.get_roles %}
       <tr>
-        <td>{{ role.name }}</td>
+        <td>{{ role }}</td>
         <td>{{ role.permissions }}</td>
       </tr>
     {% endfor %}
