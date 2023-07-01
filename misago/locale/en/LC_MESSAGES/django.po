@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 11:49+0000\n"
+"POT-Creation-Date: 2023-07-01 13:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3563,7 +3563,7 @@ msgstr ""
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
 msgid ""
-"The link you clicked was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
@@ -5211,20 +5211,15 @@ msgstr ""
 #: templates/misago/errorpages/404.html:9
 #: templates/misago/errorpages/404.html:18
 #: templates/misago/errorpages/404.html:23
+#: templates/misago/errorpages/404.html:38
 msgctxt "error 404 page"
 msgid ""
-"The link you clicked was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/404.html:37
 msgctxt "error 404 page"
 msgid "Requested page could not be found."
-msgstr ""
-
-#: templates/misago/errorpages/404.html:38
-msgctxt "error 404 page"
-msgid ""
-"The link you followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/405.html:5

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 11:27+0000\n"
+"POT-Creation-Date: 2023-07-01 13:05+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -45,7 +45,7 @@ msgstr "Formularz zawiera błędy."
 #, python-format
 msgctxt "admin roles"
 msgid "New role \"%(name)s\" has been saved."
-msgstr "Nowa rola \"%(name)s\" została zapisana."
+msgstr "Nowa rola \"%(name)s\" została dodana."
 
 #: acl/admin/views.py:68
 #, python-format
@@ -92,7 +92,7 @@ msgid "Banning users"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:155
-#: users/migrations/0004_default_ranks.py:32
+#: users/migrations/0004_default_ranks.py:34
 msgctxt "role name"
 msgid "Deleting users"
 msgstr ""
@@ -104,13 +104,13 @@ msgstr ""
 
 #: acl/migrations/0003_default_roles.py:174
 #: users/migrations/0004_default_ranks.py:30
-#: users/migrations/0004_default_ranks.py:34
+#: users/migrations/0004_default_ranks.py:37
 msgctxt "role name"
 msgid "Private threads"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:189
-#: users/migrations/0004_default_ranks.py:31
+#: users/migrations/0004_default_ranks.py:32
 msgctxt "role name"
 msgid "Private threads moderator"
 msgstr ""
@@ -308,7 +308,7 @@ msgstr ""
 #: categories/admin/forms.py:130
 msgctxt "admin category form"
 msgid "Thread age"
-msgstr ""
+msgstr "Wiek tematu"
 
 #: categories/admin/forms.py:134
 msgctxt "admin category form"
@@ -320,7 +320,7 @@ msgstr ""
 #: categories/admin/forms.py:138
 msgctxt "admin category form"
 msgid "Last reply"
-msgstr ""
+msgstr "Ostatnia odpowiedź"
 
 #: categories/admin/forms.py:142
 msgctxt "admin category form"
@@ -332,22 +332,22 @@ msgstr ""
 #: categories/admin/forms.py:168
 msgctxt "admin category form"
 msgid "Permissions cannot be copied from category into itself."
-msgstr ""
+msgstr "Nie można skopiować uprawnień kategorii z niej samej."
 
 #: categories/admin/forms.py:177
 msgctxt "admin category form"
 msgid "Category cannot act as archive for itself."
-msgstr ""
+msgstr "Kategoria nie może archiwizować tematów do siebie samej."
 
 #: categories/admin/forms.py:200
 msgctxt "admin category form"
 msgid "Parent category"
-msgstr ""
+msgstr "Nadrzędna kategoria"
 
 #: categories/admin/forms.py:206
 msgctxt "admin category form"
 msgid "Copy permissions"
-msgstr ""
+msgstr "Skopiuj uprawnienia"
 
 #: categories/admin/forms.py:209
 msgctxt "admin category form"
@@ -359,12 +359,12 @@ msgstr ""
 #: categories/admin/forms.py:213
 msgctxt "admin category form"
 msgid "Don't copy permissions"
-msgstr ""
+msgstr "Nie kopiuj uprawnień"
 
 #: categories/admin/forms.py:218
 msgctxt "admin category form"
 msgid "Archive"
-msgstr ""
+msgstr "Archiwizacja"
 
 #: categories/admin/forms.py:221
 msgctxt "admin category form"
@@ -376,12 +376,12 @@ msgstr ""
 #: categories/admin/forms.py:225
 msgctxt "admin category form"
 msgid "Don't archive pruned threads"
-msgstr ""
+msgstr "Nie archiwizuj usuniętych tematów"
 
 #: categories/admin/forms.py:245
 msgctxt "admin category form"
 msgid "You are trying to move this category threads to itself."
-msgstr ""
+msgstr "Próbujesz przenieść tematy tej kategorii do niej samej."
 
 #: categories/admin/forms.py:253
 msgctxt "admin category form"
@@ -393,96 +393,96 @@ msgstr ""
 #: categories/admin/forms.py:264
 msgctxt "admin category form"
 msgid "Move category threads to"
-msgstr ""
+msgstr "Przenieś tematy kategorii do"
 
 #: categories/admin/forms.py:267 categories/admin/forms.py:281
 msgctxt "admin category form"
 msgid "Delete with category"
-msgstr ""
+msgstr "Usuń wraz z kategorią"
 
 #: categories/admin/forms.py:279
 msgctxt "admin category form"
 msgid "Move child categories to"
-msgstr ""
+msgstr "Przenieś kategorie podrzędne do"
 
 #: categories/admin/forms.py:289
 msgctxt "admin category role form"
 msgid "Role name"
-msgstr ""
+msgstr "Nazwa roli"
 
 #: categories/admin/forms.py:300 categories/admin/forms.py:315
 msgctxt "admin permissions form"
 msgid "Role"
-msgstr ""
+msgstr "Rola"
 
 #: categories/admin/forms.py:304 categories/admin/forms.py:319
 msgctxt "admin permissions form"
 msgid "No access"
-msgstr ""
+msgstr "Brak dostępu"
 
 #: categories/admin/views/categories.py:18
 msgctxt "admin categories"
 msgid "Requested category does not exist."
-msgstr ""
+msgstr "Żądana kategoria nie istnieje."
 
 #: categories/admin/views/categories.py:99
 #, python-format
 msgctxt "admin categories"
 msgid "New category \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowa kategoria \"%(name)s\" została dodana."
 
 #: categories/admin/views/categories.py:105
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been edited."
-msgstr ""
+msgstr "Kategoria \"%(name)s\" została zmieniona."
 
 #: categories/admin/views/categories.py:111
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Kategoria \"%(name)s\" została usunięta."
 
 #: categories/admin/views/categories.py:164
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been moved below \"%(other)s\"."
-msgstr ""
+msgstr "Kategoria \"%(name)s\" została przeniesiona za \"%(other)s\"."
 
 #: categories/admin/views/categories.py:183
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been moved above \"%(other)s\"."
-msgstr ""
+msgstr "Kategoria \"%(name)s\" została przeniesiona przed \"%(other)s\"."
 
 #: categories/admin/views/perms.py:24
 msgctxt "admin categories roles"
 msgid "Requested role does not exist."
-msgstr ""
+msgstr "Żądana rola nie istnieje."
 
 #: categories/admin/views/perms.py:78
 #, python-format
 msgctxt "admin categories roles"
 msgid "New role \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Rola \"%(name)s\" została dodana."
 
 #: categories/admin/views/perms.py:84
 #, python-format
 msgctxt "admin categories roles"
 msgid "Role \"%(name)s\" has been changed."
-msgstr ""
+msgstr "Rola \"%(name)s\" została zmieniona."
 
 #: categories/admin/views/perms.py:93
 #, python-format
 msgctxt "admin categories roles"
 msgid "Role \"%(name)s\" is special role and can't be deleted."
-msgstr ""
+msgstr "Nie można usunąć specjalnej roli \"%(name)s\"."
 
 #: categories/admin/views/perms.py:100
 #, python-format
 msgctxt "admin categories roles"
 msgid "Role \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Rola \"%(name)s\" została usunięta."
 
 #: categories/admin/views/perms.py:149
 #, python-format
@@ -1701,7 +1701,7 @@ msgstr ""
 #: graphql/admin/versioncheck.py:76
 msgctxt "admin version check"
 msgid "The site is running updated version of Misago."
-msgstr ""
+msgstr "Ta strona działa na aktualnej wersji Misago."
 
 #: graphql/admin/versioncheck.py:79
 #, python-format
@@ -1766,7 +1766,7 @@ msgstr ""
 #: icons/admin/views.py:18
 msgctxt "admin icons"
 msgid "Icons have been updated."
-msgstr ""
+msgstr "Ikony zostały zmienione."
 
 #: legal/admin/__init__.py:35
 msgctxt "admin node"
@@ -1885,7 +1885,7 @@ msgstr ""
 #, python-format
 msgctxt "admin agreements"
 msgid "New agreement \"%(title)s\" has been saved."
-msgstr ""
+msgstr "Nowa zgoda \"%(title)s\" została dodana."
 
 #: legal/admin/views.py:76
 #, python-format
@@ -1897,7 +1897,7 @@ msgstr ""
 #, python-format
 msgctxt "admin agreements"
 msgid "Agreement \"%(title)s\" has been deleted."
-msgstr ""
+msgstr "Zgoda \"%(title)s\" została usunięta."
 
 #: legal/admin/views.py:104
 #, python-format
@@ -2038,7 +2038,7 @@ msgstr ""
 #, python-format
 msgctxt "admin menu items"
 msgid "New menu item %(item)s has been saved."
-msgstr ""
+msgstr "Nowy element menu \"%(item)s\" został dodany."
 
 #: menus/admin/views.py:62
 #, python-format
@@ -2050,7 +2050,7 @@ msgstr ""
 #, python-format
 msgctxt "admin menu items"
 msgid "Menu item %(item)s has been deleted."
-msgstr ""
+msgstr "Element menu \"%(item)s\" został usunięty."
 
 #: menus/admin/views.py:96
 #, python-format
@@ -2327,7 +2327,7 @@ msgstr ""
 #, python-format
 msgctxt "admin social auth providers"
 msgid "Login with %(provider)s has been updated."
-msgstr ""
+msgstr "Logowanie przez %(provider)s zostało zmienione."
 
 #: socialauth/admin/views.py:76
 #, python-format
@@ -3580,7 +3580,8 @@ msgstr ""
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
 msgid ""
-"The link you clicked was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or "
+"deleted."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
@@ -5243,20 +5244,18 @@ msgstr ""
 #: templates/misago/errorpages/404.html:9
 #: templates/misago/errorpages/404.html:18
 #: templates/misago/errorpages/404.html:23
+#: templates/misago/errorpages/404.html:38
 msgctxt "error 404 page"
 msgid ""
-"The link you clicked was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or "
+"deleted."
 msgstr ""
+"Użyty odnośnik był nieprawidłowy bądź strona została usunięta albo "
+"przeniesiona."
 
 #: templates/misago/errorpages/404.html:37
 msgctxt "error 404 page"
 msgid "Requested page could not be found."
-msgstr ""
-
-#: templates/misago/errorpages/404.html:38
-msgctxt "error 404 page"
-msgid ""
-"The link you followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/405.html:5
@@ -6977,13 +6976,13 @@ msgstr ""
 #, python-format
 msgctxt "admin themes"
 msgid "New theme \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowy motyw \"%(name)s\" został dodany."
 
 #: themes/admin/views.py:53
 #, python-format
 msgctxt "admin themes"
 msgid "Theme \"%(name)s\" has been updated."
-msgstr ""
+msgstr "Motyw \"%(name)s\" został zmieniony."
 
 #: themes/admin/views.py:57
 msgctxt "admin themes"
@@ -6994,7 +6993,7 @@ msgstr ""
 #, python-format
 msgctxt "admin themes"
 msgid "Theme \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Motyw \"%(name)s\" został usunięty."
 
 #: themes/admin/views.py:70
 msgctxt "admin themes"
@@ -7082,13 +7081,13 @@ msgstr ""
 #, python-format
 msgctxt "admin themes"
 msgid "New CSS \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowy CSS \"%(name)s\" został dodany."
 
 #: themes/admin/views.py:357
 #, python-format
 msgctxt "admin themes"
 msgid "CSS \"%(name)s\" has been updated."
-msgstr ""
+msgstr "CSS \"%(name)s\" został zmieniony."
 
 #: themes/admin/views.py:381
 #, python-format
@@ -7100,13 +7099,13 @@ msgstr ""
 #, python-format
 msgctxt "admin themes"
 msgid "New CSS link \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowy odnośnik do CSS \"%(name)s\" został dodany."
 
 #: themes/admin/views.py:413
 #, python-format
 msgctxt "admin themes"
 msgid "CSS link \"%(name)s\" has been updated."
-msgstr ""
+msgstr "Odnośnik do CSS \"%(name)s\" został zmieniony."
 
 #: themes/models.py:40
 msgctxt "default theme name"
@@ -7316,7 +7315,7 @@ msgstr ""
 #, python-format
 msgctxt "admin attachments"
 msgid "Attachment \"%(filename)s\" has been deleted."
-msgstr ""
+msgstr "Załącznik \"%(filename)s\" został usunięty."
 
 #: threads/admin/views/attachmenttypes.py:16
 msgctxt "admin attachments types"
@@ -7327,7 +7326,7 @@ msgstr ""
 #, python-format
 msgctxt "admin attachments types"
 msgid "New type \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowy typ załącznika \"%(name)s\" został dodany."
 
 #: threads/admin/views/attachmenttypes.py:45
 #, python-format
@@ -7347,7 +7346,7 @@ msgstr ""
 #, python-format
 msgctxt "admin attachments types"
 msgid "Attachment type \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Typ załącznika \"%(name)s\" został usunięty."
 
 #: threads/api/attachments.py:20
 msgctxt "attachments api"
@@ -10494,7 +10493,7 @@ msgstr ""
 #, python-format
 msgctxt "admin bans"
 msgid "New ban \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowy ban \"%(name)s\" został dodany."
 
 #: users/admin/views/bans.py:55
 #, python-format
@@ -10572,7 +10571,7 @@ msgstr ""
 #, python-format
 msgctxt "admin ranks"
 msgid "New rank \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowa ranga \"%(name)s\" została dodana."
 
 #: users/admin/views/ranks.py:37
 #, python-format
@@ -10596,7 +10595,7 @@ msgstr ""
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Ranga \"%(name)s\" została usunięta."
 
 #: users/admin/views/ranks.py:75
 #, python-format
