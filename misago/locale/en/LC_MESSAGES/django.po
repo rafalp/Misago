@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 11:27+0000\n"
+"POT-Creation-Date: 2023-07-01 11:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,7 +89,7 @@ msgid "Banning users"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:155
-#: users/migrations/0004_default_ranks.py:32
+#: users/migrations/0004_default_ranks.py:34
 msgctxt "role name"
 msgid "Deleting users"
 msgstr ""
@@ -101,13 +101,13 @@ msgstr ""
 
 #: acl/migrations/0003_default_roles.py:174
 #: users/migrations/0004_default_ranks.py:30
-#: users/migrations/0004_default_ranks.py:34
+#: users/migrations/0004_default_ranks.py:37
 msgctxt "role name"
 msgid "Private threads"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:189
-#: users/migrations/0004_default_ranks.py:31
+#: users/migrations/0004_default_ranks.py:32
 msgctxt "role name"
 msgid "Private threads moderator"
 msgstr ""
