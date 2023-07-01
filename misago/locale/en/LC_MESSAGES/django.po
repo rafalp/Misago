@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 11:21+0000\n"
+"POT-Creation-Date: 2023-07-01 11:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,45 +63,52 @@ msgid "Role \"%(name)s\" has been deleted."
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:10
+msgctxt "role name"
 msgid "Member"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:48
+msgctxt "role name"
 msgid "Guest"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:78
-#: categories/migrations/0003_categories_roles.py:71
-#: categories/migrations/0003_categories_roles.py:117
-#: users/migrations/0004_default_ranks.py:30
+#: users/migrations/0004_default_ranks.py:29
+msgctxt "role name"
 msgid "Moderator"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:133
+msgctxt "role name"
 msgid "Renaming users"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:141
+msgctxt "role name"
 msgid "Banning users"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:155
-#: users/migrations/0004_default_ranks.py:33
+#: users/migrations/0004_default_ranks.py:32
+msgctxt "role name"
 msgid "Deleting users"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:166
+msgctxt "role name"
 msgid "Can't be blocked"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:174
-#: users/migrations/0004_default_ranks.py:31
-#: users/migrations/0004_default_ranks.py:35
+#: users/migrations/0004_default_ranks.py:30
+#: users/migrations/0004_default_ranks.py:34
+msgctxt "role name"
 msgid "Private threads"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:189
-#: users/migrations/0004_default_ranks.py:32
+#: users/migrations/0004_default_ranks.py:31
+msgctxt "role name"
 msgid "Private threads moderator"
 msgstr ""
 
@@ -510,6 +517,11 @@ msgstr ""
 
 #: categories/migrations/0003_categories_roles.py:51
 msgid "Start and reply threads"
+msgstr ""
+
+#: categories/migrations/0003_categories_roles.py:71
+#: categories/migrations/0003_categories_roles.py:117
+msgid "Moderator"
 msgstr ""
 
 #: categories/migrations/0006_moderation_queue_roles.py:10
@@ -11088,20 +11100,20 @@ msgctxt "data download ready email subject"
 msgid "%(user)s, your data download is ready"
 msgstr ""
 
+#: users/migrations/0004_default_ranks.py:12
 #: users/migrations/0004_default_ranks.py:13
-#: users/migrations/0004_default_ranks.py:14 users/models/user.py:80
-msgctxt "default rank"
+msgctxt "rank name"
 msgid "Forum team"
 msgstr ""
 
-#: users/migrations/0004_default_ranks.py:15
-msgctxt "default rank"
+#: users/migrations/0004_default_ranks.py:14
+msgctxt "rank name"
 msgid "Team"
 msgstr ""
 
+#: users/migrations/0004_default_ranks.py:21
 #: users/migrations/0004_default_ranks.py:22
-#: users/migrations/0004_default_ranks.py:23
-msgctxt "default rank"
+msgctxt "rank name"
 msgid "Members"
 msgstr ""
 
@@ -11153,6 +11165,11 @@ msgstr ""
 #: users/models/deleteduser.py:14
 msgctxt "user deleted by"
 msgid "By system"
+msgstr ""
+
+#: users/models/user.py:80
+msgctxt "default rank"
+msgid "Forum team"
 msgstr ""
 
 #: users/models/user.py:114

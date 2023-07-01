@@ -1,13 +1,13 @@
 from django.db import migrations
 
-_ = lambda s: s
+pgettext_lazy = lambda c, s: s
 
 
 def create_default_roles(apps, schema_editor):
     Role = apps.get_model("misago_acl", "Role")
 
     Role.objects.create(
-        name=_("Member"),
+        name=pgettext_lazy("role name", "Member"),
         special_role="authenticated",
         permissions={
             # account
@@ -45,7 +45,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Guest"),
+        name=pgettext_lazy("role name", "Guest"),
         special_role="anonymous",
         permissions={
             # account
@@ -75,7 +75,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Moderator"),
+        name=pgettext_lazy("role name", "Moderator"),
         permissions={
             # account
             "misago.users.permissions.account": {
@@ -130,7 +130,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Renaming users"),
+        name=pgettext_lazy("role name", "Renaming users"),
         permissions={
             # rename users
             "misago.users.permissions.moderation": {"can_rename_users": 1}
@@ -138,7 +138,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Banning users"),
+        name=pgettext_lazy("role name", "Banning users"),
         permissions={
             # ban users
             "misago.users.permissions.profiles": {"can_see_ban_details": 1},
@@ -152,7 +152,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Deleting users"),
+        name=pgettext_lazy("role name", "Deleting users"),
         permissions={
             # delete users
             "misago.users.permissions.delete": {
@@ -163,7 +163,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Can't be blocked"),
+        name=pgettext_lazy("role name", "Can't be blocked"),
         permissions={
             # profiles
             "misago.users.permissions.profiles": {"can_be_blocked": 0}
@@ -171,7 +171,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Private threads"),
+        name=pgettext_lazy("role name", "Private threads"),
         permissions={
             # private threads
             "misago.threads.permissions.privatethreads": {
@@ -186,7 +186,7 @@ def create_default_roles(apps, schema_editor):
     )
 
     Role.objects.create(
-        name=_("Private threads moderator"),
+        name=pgettext_lazy("role name", "Private threads moderator"),
         permissions={
             # private threads
             "misago.threads.permissions.privatethreads": {

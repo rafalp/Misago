@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import gettext
+from django.utils.translation import pgettext
 
 from .cache import clear_acl_cache
 
@@ -17,7 +17,7 @@ class BaseRole(models.Model):
         abstract = True
 
     def __str__(self):
-        return gettext(self.name)
+        return pgettext("role name", self.name)
 
     def save(self, *args, **kwargs):
         if self.pk:
