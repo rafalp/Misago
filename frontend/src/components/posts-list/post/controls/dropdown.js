@@ -32,7 +32,7 @@ export class Permalink extends React.Component {
     permaUrl += window.location.host
     permaUrl += this.props.post.url.index
 
-    prompt(gettext("Permament link to this post:"), permaUrl)
+    prompt(pgettext("post permalink", "Permament link to this post:"), permaUrl)
   }
 
   render() {
@@ -40,7 +40,7 @@ export class Permalink extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">link</span>
-          {gettext("Permament link")}
+          {pgettext("post options permalink btn", "Permament link")}
         </button>
       </li>
     )
@@ -66,7 +66,7 @@ export class Edit extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">edit</span>
-          {gettext("Edit")}
+          {pgettext("post options edit btn", "Edit")}
         </button>
       </li>
     )
@@ -90,7 +90,7 @@ export class MarkAsBestAnswer extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">check_box</span>
-          {gettext("Mark as best answer")}
+          {pgettext("post options best answer btn", "Mark as best answer")}
         </button>
       </li>
     )
@@ -112,7 +112,7 @@ export class UnmarkMarkBestAnswer extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">check_box_outline_blank</span>
-          {gettext("Unmark best answer")}
+          {pgettext("post options best answer btn", "Unmark best answer")}
         </button>
       </li>
     )
@@ -130,7 +130,8 @@ export class PostEdits extends React.Component {
     const isUnedited = this.props.post.edits === 0
     if (isHidden || isUnedited) return null
 
-    const message = ngettext(
+    const message = npgettext(
+      "post edits",
       "This post was edited %(edits)s time.",
       "This post was edited %(edits)s times.",
       this.props.post.edits
@@ -148,7 +149,7 @@ export class PostEdits extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">edit</span>
-          {gettext("Changes history")}
+          {pgettext("post options edit btn", "Changes history")}
         </button>
       </li>
     )
@@ -168,7 +169,7 @@ export class Approve extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">done</span>
-          {gettext("Approve")}
+          {pgettext("post options approve btn", "Approve")}
         </button>
       </li>
     )
@@ -187,7 +188,7 @@ export class Move extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">arrow_forward</span>
-          {gettext("Move")}
+          {pgettext("post options move btn", "Move")}
         </button>
       </li>
     )
@@ -206,7 +207,7 @@ export class Split extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">call_split</span>
-          {gettext("Split")}
+          {pgettext("post options split btn", "Split")}
         </button>
       </li>
     )
@@ -226,7 +227,7 @@ export class Protect extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">lock_outline</span>
-          {gettext("Protect")}
+          {pgettext("post options protect btn", "Protect")}
         </button>
       </li>
     )
@@ -246,7 +247,7 @@ export class Unprotect extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">lock_open</span>
-          {gettext("Remove protection")}
+          {pgettext("post options protect btn", "Remove protection")}
         </button>
       </li>
     )
@@ -269,7 +270,7 @@ export class Hide extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">visibility_off</span>
-          {gettext("Hide")}
+          {pgettext("post options hide btn", "Hide")}
         </button>
       </li>
     )
@@ -289,7 +290,7 @@ export class Unhide extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">visibility</span>
-          {gettext("Unhide")}
+          {pgettext("post options hide btn", "Unhide")}
         </button>
       </li>
     )
@@ -311,7 +312,7 @@ export class Delete extends React.Component {
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
           <span className="material-icon">clear</span>
-          {gettext("Delete")}
+          {pgettext("post options delete btn", "Delete")}
         </button>
       </li>
     )

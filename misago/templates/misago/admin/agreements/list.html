@@ -6,7 +6,7 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:settings:agreements:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New agreement" %}
+    {% trans "New agreement" context "admin agreements" %}
   </a>
 </div>
 {% endblock %}
@@ -14,11 +14,11 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "Agreement" %}</th>
+<th>{% trans "Agreement" context "admin agreements list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
-<th style="width: 180px;">{% trans "Type" %}</th>
-<th style="width: 250px;">{% trans "Created" %}</th>
-<th style="width: 250px;">{% trans "Modified" %}</th>
+<th style="width: 180px;">{% trans "Type" context "admin agreements list" %}</th>
+<th style="width: 250px;">{% trans "Created" context "admin agreements list" %}</th>
+<th style="width: 250px;">{% trans "Modified" context "admin agreements list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -38,8 +38,8 @@
 </td>
 <td class="badges-list">
   {% if item.is_active %}
-    <span class="badge badge-success" data-tooltip="top" title="{% trans 'Users are required to accept this agreement to use the site' %}">
-      {% trans "Active" %}
+    <span class="badge badge-success" data-tooltip="top" title="{% trans 'Users are required to accept this agreement to use the site' context 'admin agreements list item' %}">
+      {% trans "Active" context "admin active agreement" %}
     </span>
   {% endif %}
 </td>
@@ -57,7 +57,7 @@
       <span class="item-title">{{ item.created_by_name }}</span>
     {% endif %}
   {% endcapture %}
-  {% blocktrans trimmed with created_on=created_on|safe created_by=created_by|safe %}
+  {% blocktrans trimmed with created_on=created_on|safe created_by=created_by|safe context "admin agreements list item" %}
     {{ created_on }} by {{ created_by }}
   {% endblocktrans %}
 </td>
@@ -75,11 +75,11 @@
         <span class="item-title">{{ item.last_modified_by }}</span>
       {% endif %}
     {% endcapture %}
-    {% blocktrans trimmed with last_modified_on=last_modified_on|safe last_modified_by=last_modified_by|safe %}
+    {% blocktrans trimmed with last_modified_on=last_modified_on|safe last_modified_by=last_modified_by|safe context "admin agreements list item" %}
       {{ last_modified_on }} by {{ last_modified_by }}
     {% endblocktrans %}
   {% else %}
-    <em>{% trans "never" %}</em>
+    <em>{% trans "never" context "admin never modified agreement" %}</em>
   {% endif %}
 </td>
 <td>
@@ -92,24 +92,24 @@
         <form action="{% url 'misago:admin:settings:agreements:set-as-active' pk=item.pk %}" method="post" data-set-as-active-confirmation="true">
           {% csrf_token %}
           <button class="dropdown-item">
-            {% trans "Set as active" %}
+            {% trans "Set as active" context "admin agreements" %}
           </button>
         </form>
       {% else %}
         <form action="{% url 'misago:admin:settings:agreements:disable' pk=item.pk %}" method="post" data-disable-confirmation="true">
           {% csrf_token %}
           <button class="dropdown-item">
-            {% trans "Disable agreement" %}
+            {% trans "Disable agreement" context "admin agreements" %}
           </button>
         </form>
       {% endif %}
       <a class="dropdown-item" href="{% url 'misago:admin:settings:agreements:edit' pk=item.pk %}">
-        {% trans "Edit agreement" %}
+        {% trans "Edit agreement" context "admin agreements" %}
       </a>
       <form action="{% url 'misago:admin:settings:agreements:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
-          {% trans "Remove agreement" %}
+          {% trans "Remove agreement" context "admin agreements" %}
         </button>
       </form>
     </div>
@@ -121,9 +121,9 @@
 {% block blankslate %}
 <td colspan="8">
   {% if active_filters %}
-    {% trans "No agreements matching criteria exist." %}
+    {% trans "No agreements matching criteria exist." context "admin agreements" %}
   {% else %}
-    {% trans "No agreements are set." %}
+    {% trans "No agreements are set." context "admin agreements" %}
   {% endif %}
 </td>
 {% endblock blankslate %}
@@ -134,15 +134,15 @@
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-set-as-active-confirmation]",
-    "{% trans 'Are you sure you want to set this agreement as active for its type?' %}"
+    "{% trans 'Are you sure you want to set this agreement as active for its type?' context 'admin agreements' %}"
   )
   window.misago.initConfirmation(
     "[data-disable-confirmation]",
-    "{% trans 'Are you sure you want to disable this agreement?' %}"
+    "{% trans 'Are you sure you want to disable this agreement?' context 'admin agreements' %}"
   )
   window.misago.initConfirmation(
     "[data-delete-confirmation]",
-    "{% trans 'Are you sure you want to remove this agreement?' %}"
+    "{% trans 'Are you sure you want to remove this agreement?' context 'admin agreements' %}"
   )
 </script>
 {% endblock %}

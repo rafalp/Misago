@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{% trans "Assets" %} | {{ theme }} | {{ active_link.name }} | {{ block.super }}
+{% trans "Assets" context "admin theme assets" %} | {{ theme }} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -19,7 +19,7 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:themes:edit' pk=theme.pk %}" class="btn btn-primary btn-sm">
     <span class="fa fa-edit"></span>
-    {% trans "Edit theme" %}
+    {% trans "Edit theme" context "admin themes" %}
   </a>
 </div>
 {% endblock %}
@@ -41,6 +41,6 @@
 {% block javascripts %}
 {{ block.super }}
 <script type="text/javascript">
-  window.misago.initMassDelete("{% trans 'Are you sure you want to delete selected items?' %}")
+  window.misago.initMassDelete("{% trans 'Are you sure you want to delete selected items?' context 'admin theme assets' %}")
 </script>
 {% endblock javascripts %}

@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 
 class AttachmentType(models.Model):
@@ -14,9 +14,27 @@ class AttachmentType(models.Model):
     status = models.PositiveIntegerField(
         default=ENABLED,
         choices=[
-            (ENABLED, _("Allow uploads and downloads")),
-            (LOCKED, _("Allow downloads only")),
-            (DISABLED, _("Disallow both uploading and downloading")),
+            (
+                ENABLED,
+                pgettext_lazy(
+                    "attachment availability choice",
+                    "Allow uploads and downloads",
+                ),
+            ),
+            (
+                LOCKED,
+                pgettext_lazy(
+                    "attachment availability choice",
+                    "Allow downloads only",
+                ),
+            ),
+            (
+                DISABLED,
+                pgettext_lazy(
+                    "attachment availability choice",
+                    "Disallow both uploading and downloading",
+                ),
+            ),
         ],
     )
 

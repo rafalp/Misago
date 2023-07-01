@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
@@ -11,7 +11,9 @@ from ...threadtypes import trees_map
 
 def thread_start_editor(request):
     if request.user.is_anonymous:
-        raise PermissionDenied(_("You need to be signed in to start threads."))
+        raise PermissionDenied(
+            pgettext("posting api", "You need to be signed in to start threads.")
+        )
 
     # list of categories that allow or contain subcategories that allow new threads
     available = []
@@ -56,9 +58,9 @@ def thread_start_editor(request):
 
     if not cleaned_categories:
         raise PermissionDenied(
-            _(
-                "No categories that allow new threads "
-                "are available to you at the moment."
+            pgettext(
+                "posting api",
+                "No categories that allow new threads are available to you at the moment.",
             )
         )
 

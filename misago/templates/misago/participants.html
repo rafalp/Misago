@@ -27,13 +27,13 @@
         <div class="col-xs-12 col-sm-3">
           <button class="btn btn-default btn-block" type="button" disabled>
             <span class="material-icon">person_add</span>
-            {% trans "Add participant" %}
+            {% trans "Add participant" context "private thread participants" %}
           </button>
         </div>
       {% endif %}
       <div class="col-xs-12 col-sm-9">
         <p>
-          {% blocktrans trimmed count users=participants|length %}
+          {% blocktrans trimmed count users=participants|length context "private thread participants" %}
             This thread has {{ users }} participant.
           {% plural %}
             This thread has {{ users }} participants.

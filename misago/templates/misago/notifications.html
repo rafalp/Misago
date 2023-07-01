@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Notifications" context "notifications title" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Notifications" context "notifications page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -15,7 +15,7 @@
           <div class="page-header-banner page-header-banner-notifications">
             <div class="page-header-banner-bg-image">
               <div class="page-header-banner-bg-overlay">
-                <h1>{% trans "Notifications" context "notifications title" %}</h1>
+                <h1>{% trans "Notifications" context "notifications page" %}</h1>
               </div>
             </div>
           </div>
@@ -33,8 +33,8 @@
         </div>
 
         <div class="message-body">
-          <p class="lead">{% trans "Enable JavaScript" %}</p>
-          <p>{% trans "You need to enable JavaScript in your browser to see your notifications." %}</p>
+          <p class="lead">{% trans "Enable JavaScript" context "notifications page" %}</p>
+          <p>{% trans "You need to enable JavaScript in your browser to see your notifications." context "notifications page" %}</p>
         </div>
 
       </div>
@@ -42,7 +42,7 @@
   </noscript>
   <div class="container page-container page-placeholder hidden">
     <div class="lead lead-placeholder">
-      <p>{% trans "Loading..." %}</p>
+      <p>{% trans "Loading..." context "notifications page" %}</p>
     </div>
   </div>
   <script type="text/javascript">

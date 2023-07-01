@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ..bans import get_user_ban
 
@@ -12,14 +12,15 @@ User = get_user_model()
 
 class MisagoAuthMixin:
     error_messages = {
-        "empty_data": _("Fill out both fields."),
-        "invalid_login": _("Login or password is incorrect."),
-        "inactive_user": _(
-            "You have to activate your account before you will be able to sign in."
+        "empty_data": pgettext_lazy("auth form", "Fill out both fields."),
+        "invalid_login": pgettext_lazy("auth form", "Login or password is incorrect."),
+        "inactive_user": pgettext_lazy(
+            "auth form",
+            "You have to activate your account before you will be able to sign in.",
         ),
-        "inactive_admin": _(
-            "Your account has to be activated by site administrator "
-            "before you will be able to sign in."
+        "inactive_admin": pgettext_lazy(
+            "auth form",
+            "Your account has to be activated by site administrator before you will be able to sign in.",
         ),
     }
 
@@ -57,10 +58,15 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     """
 
     username = forms.CharField(
-        label=_("Username or e-mail"), required=False, max_length=254
+        label=pgettext_lazy("login form", "Username or e-mail"),
+        required=False,
+        max_length=254,
     )
     password = forms.CharField(
-        label=_("Password"), strip=False, required=False, widget=forms.PasswordInput
+        label=pgettext_lazy("login form", "Password"),
+        strip=False,
+        required=False,
+        widget=forms.PasswordInput,
     )
 
     def __init__(self, *args, request=None, **kwargs):
@@ -95,7 +101,11 @@ class AdminAuthenticationForm(AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         self.error_messages.update(
-            {"not_staff": _("Your account does not have admin privileges.")}
+            {
+                "not_staff": pgettext_lazy(
+                    "admin login form", "Your account does not have admin privileges."
+                )
+            }
         )
 
         super().__init__(*args, **kwargs)
@@ -115,13 +125,17 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
 
         email = data.get("email")
         if not email or len(email) > 250:
-            raise forms.ValidationError(_("Enter e-mail address."), code="empty_email")
+            raise forms.ValidationError(
+                pgettext_lazy("auth email form", "Enter e-mail address."),
+                code="empty_email",
+            )
 
         try:
             validate_email(email)
         except forms.ValidationError:
             raise forms.ValidationError(
-                _("Entered e-mail is invalid."), code="invalid_email"
+                pgettext_lazy("auth email form", "Entered e-mail is invalid."),
+                code="invalid_email",
             )
 
         try:
@@ -131,7 +145,8 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
             self.user_cache = user
         except User.DoesNotExist:
             raise forms.ValidationError(
-                _("No user with this e-mail exists."), code="not_found"
+                pgettext_lazy("auth email form", "No user with this e-mail exists."),
+                code="not_found",
             )
 
         self.confirm_allowed(user)
@@ -147,13 +162,18 @@ class ResendActivationForm(GetUserForm):
         username_format = {"user": user.username}
 
         if not user.requires_activation:
-            message = _("%(user)s, your account is already active.")
+            message = pgettext(
+                "resend activation form", "%(user)s, your account is already active."
+            )
             raise forms.ValidationError(
                 message % username_format, code="already_active"
             )
 
         if user.requires_activation_by_admin:
-            message = _("%(user)s, only administrator may activate your account.")
+            message = pgettext(
+                "resend activation form",
+                "%(user)s, only administrator may activate your account.",
+            )
             raise forms.ValidationError(
                 message % username_format, code="inactive_admin"
             )
@@ -161,13 +181,13 @@ class ResendActivationForm(GetUserForm):
 
 class ResetPasswordForm(GetUserForm):
     error_messages = {
-        "inactive_user": _(
-            "You have to activate your account before "
-            "you will be able to request new password."
+        "inactive_user": pgettext_lazy(
+            "reset password form",
+            "You have to activate your account before you will be able to request new password.",
         ),
-        "inactive_admin": _(
-            "Administrator has to activate your account before "
-            "you will be able to request new password."
+        "inactive_admin": pgettext_lazy(
+            "reset password form",
+            "Administrator has to activate your account before you will be able to request new password.",
         ),
     }
 

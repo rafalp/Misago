@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Details" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Details" context "user profile page details" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Details" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Details" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% trans "Details" context "user profile page details" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% trans "Details" context "user profile page details" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -16,7 +16,7 @@
     <div class="toolbar-section toolbar-section-auto">
       <div class="toolbar-item">
         <h3>
-          {% trans "Details" %}
+          {% trans "Details" context "user profile page details" %}
         </h3>
       </div>
     </div>
@@ -24,7 +24,7 @@
       <div class="toolbar-section">
         <div class="toolbar-item">
           <button type="button" class="btn btn-default btn-outline btn-block" disabled>
-            {% trans "Edit" %}
+            {% trans "Edit" context "user profile page details" %}
           </button>
         </div>
       </div>
@@ -73,9 +73,9 @@
     <div class="panel panel-default">
       <div class="panel-body text-center lead">
         {% if is_authenticated_user %}
-          {% trans "You are not sharing any details with others." %}
+          {% trans "You are not sharing any details with others." context "user profile page details" %}
         {% else %}
-          {% blocktrans trimmed with username=profile %}
+          {% blocktrans trimmed with username=profile context "user profile page details" %}
             {{ username }} is not sharing any details with others.
           {% endblocktrans %}
         {% endif %}

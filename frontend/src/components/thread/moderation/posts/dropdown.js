@@ -36,7 +36,7 @@ export class Approve extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">done</span>
-          {gettext("Approve")}
+          {pgettext("thread posts moderation", "Approve")}
         </button>
       </li>
     )
@@ -61,7 +61,7 @@ export class Merge extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">call_merge</span>
-          {gettext("Merge")}
+          {pgettext("thread posts moderation", "Merge")}
         </button>
       </li>
     )
@@ -84,7 +84,7 @@ export class Move extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">arrow_forward</span>
-          {gettext("Move")}
+          {pgettext("thread posts moderation", "Move")}
         </button>
       </li>
     )
@@ -107,7 +107,7 @@ export class Split extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">call_split</span>
-          {gettext("Split")}
+          {pgettext("thread posts moderation", "Split")}
         </button>
       </li>
     )
@@ -130,7 +130,7 @@ export class Protect extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">lock_outline</span>
-          {gettext("Protect")}
+          {pgettext("thread posts moderation", "Protect")}
         </button>
       </li>
     )
@@ -153,7 +153,7 @@ export class Unprotect extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">lock_open</span>
-          {gettext("Unprotect")}
+          {pgettext("thread posts moderation", "Unprotect")}
         </button>
       </li>
     )
@@ -176,7 +176,7 @@ export class Hide extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">visibility_off</span>
-          {gettext("Hide")}
+          {pgettext("thread posts moderation", "Hide")}
         </button>
       </li>
     )
@@ -199,7 +199,7 @@ export class Unhide extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">visibility</span>
-          {gettext("Unhide")}
+          {pgettext("thread posts moderation", "Unhide")}
         </button>
       </li>
     )
@@ -222,7 +222,7 @@ export class Delete extends React.Component {
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">clear</span>
-          {gettext("Delete")}
+          {pgettext("thread posts moderation", "Delete")}
         </button>
       </li>
     )

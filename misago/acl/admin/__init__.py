@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views import DeleteRole, EditRole, NewRole, RolesList, RoleUsers
 
@@ -21,7 +21,7 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Permissions"),
+            name=pgettext_lazy("admin node", "Permissions"),
             icon="fa fa-adjust",
             after="categories:index",
             namespace="permissions",

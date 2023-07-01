@@ -12,10 +12,14 @@ export default class extends React.Component {
     let confirmed = false
     if (this.isUser) {
       confirmed = window.confirm(
-        gettext("Are you sure you want to leave this thread?")
+        pgettext(
+          "private thread leave",
+          "Are you sure you want to leave this thread?"
+        )
       )
     } else {
-      const message = gettext(
+      const message = pgettext(
+        "private thread leave",
         "Are you sure you want to remove %(user)s from this thread?"
       )
       confirmed = window.confirm(
@@ -46,7 +50,9 @@ export default class extends React.Component {
     return (
       <li>
         <button className="btn btn-link" onClick={this.onClick} type="button">
-          {this.isUser ? gettext("Leave thread") : gettext("Remove")}
+          {this.isUser
+            ? pgettext("private thread leave btn", "Leave thread")
+            : pgettext("private thread leave btn", "Remove")}
         </button>
       </li>
     )

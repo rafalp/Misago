@@ -1,4 +1,4 @@
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -19,7 +19,10 @@ def change_email_endpoint(request, pk=None):
         request, "email", serializer.validated_data["new_email"]
     )
 
-    mail_subject = _("Confirm e-mail change on %(forum_name)s forums")
+    mail_subject = pgettext(
+        "confirm email change email subject",
+        "Confirm e-mail change on %(forum_name)s forums",
+    )
     mail_subject = mail_subject % {"forum_name": request.settings.forum_name}
 
     # swap address with new one so email is sent to new address
@@ -32,5 +35,8 @@ def change_email_endpoint(request, pk=None):
         context={"settings": request.settings, "token": token},
     )
 
-    message = _("E-mail change confirmation link was sent to new address.")
+    message = pgettext(
+        "change email api",
+        "E-mail change confirmation link was sent to new address.",
+    )
     return Response({"detail": message})

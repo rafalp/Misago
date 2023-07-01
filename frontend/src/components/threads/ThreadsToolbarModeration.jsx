@@ -20,7 +20,7 @@ const ThreadsToolbarModeration = ({
     <button
       type="button"
       className="btn btn-default btn-outline btn-icon dropdown-toggle"
-      title={gettext("Moderation")}
+      title={pgettext("threads list nav", "Moderation")}
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"

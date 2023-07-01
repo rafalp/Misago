@@ -10,11 +10,11 @@ export const STYLES = [
 ]
 
 export const LABELS = [
-  gettext("Entered password is very weak."),
-  gettext("Entered password is weak."),
-  gettext("Entered password is average."),
-  gettext("Entered password is strong."),
-  gettext("Entered password is very strong."),
+  pgettext("password strength indicator", "Entered password is very weak."),
+  pgettext("password strength indicator", "Entered password is weak."),
+  pgettext("password strength indicator", "Entered password is average."),
+  pgettext("password strength indicator", "Entered password is strong."),
+  pgettext("password strength indicator", "Entered password is very strong."),
 ]
 
 export default class extends React.Component {

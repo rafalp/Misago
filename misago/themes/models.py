@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import gettext
+from django.utils.translation import pgettext
 from mptt.models import MPTTModel, TreeForeignKey
 
 from .uploadto import (
@@ -37,7 +37,7 @@ class Theme(MPTTModel):
 
     def __str__(self):
         if self.is_default:
-            return gettext("Default Misago Theme")
+            return pgettext("default theme name", "Default Misago Theme")
         return self.name
 
     @property

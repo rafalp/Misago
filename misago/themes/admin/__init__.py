@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views import (
     ActivateTheme,
@@ -91,7 +91,7 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Themes"),
+            name=pgettext_lazy("admin node", "Themes"),
             icon="fa fa-paint-brush",
             after="attachments:index",
             namespace="themes",

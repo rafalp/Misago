@@ -16,6 +16,6 @@
       This ban expires on {{ expires_on }}.
     {% endblocktrans %}
   {% else %}
-    {% trans "This ban is permanent." %}
+    {% trans "This ban is permanent." context "error banned message" %}
   {% endif %}
 </p>

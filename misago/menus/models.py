@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 
 class MenuItem(models.Model):
@@ -7,9 +7,9 @@ class MenuItem(models.Model):
     MENU_NAVBAR = "navbar"
     MENU_FOOTER = "footer"
     MENU_CHOICES = [
-        (MENU_BOTH, _("Navbar and footer")),
-        (MENU_NAVBAR, _("Navbar")),
-        (MENU_FOOTER, _("Footer")),
+        (MENU_BOTH, pgettext_lazy("menu choice", "Navbar and footer")),
+        (MENU_NAVBAR, pgettext_lazy("menu choice", "Navbar")),
+        (MENU_FOOTER, pgettext_lazy("menu choice", "Footer")),
     ]
 
     menu = models.CharField(max_length=6, choices=MENU_CHOICES)

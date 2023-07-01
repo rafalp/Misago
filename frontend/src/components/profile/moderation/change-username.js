@@ -70,14 +70,22 @@ export default class extends Form {
       updateUsername(this.props.profile, apiResponse.username, apiResponse.slug)
     )
 
-    snackbar.success(gettext("Username has been changed."))
+    snackbar.success(
+      pgettext("profile username moderation", "Username has been changed.")
+    )
   }
 
   getFormBody() {
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="modal-body">
-          <FormGroup label={gettext("New username")} for="id_username">
+          <FormGroup
+            label={pgettext(
+              "profile username moderation field",
+              "New username"
+            )}
+            for="id_username"
+          >
             <input
               type="text"
               id="id_username"
@@ -95,10 +103,10 @@ export default class extends Form {
             disabled={this.state.isLoading}
             type="button"
           >
-            {gettext("Cancel")}
+            {pgettext("profile username moderation btn", "Cancel")}
           </button>
           <Button className="btn-primary" loading={this.state.isLoading}>
-            {gettext("Change username")}
+            {pgettext("profile username moderation btn", "Change username")}
           </Button>
         </div>
       </form>
@@ -138,7 +146,9 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Change username")}</h4>
+            <h4 className="modal-title">
+              {pgettext("profile username moderation title", "Change username")}
+            </h4>
           </div>
           {this.getModalBody()}
         </div>

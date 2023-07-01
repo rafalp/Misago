@@ -1,4 +1,4 @@
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.exceptions import ValidationError
 
 from .models import Poll
@@ -53,7 +53,9 @@ class BestAnswerMergeHandler(MergeConflictHandler):
         self.items.sort(key=lambda thread: (thread.title, thread.id))
 
     def get_available_resolutions(self):
-        resolutions = [[0, _("Unmark all best answers")]]
+        resolutions = [
+            [0, pgettext("merge conflict best answer", "Unmark all best answers")]
+        ]
         for thread in self.items:
             resolutions.append([thread.pk, thread.title])
         return resolutions
@@ -72,7 +74,7 @@ class PollMergeHandler(MergeConflictHandler):
         self.items.sort(key=lambda poll: poll.question)
 
     def get_available_resolutions(self):
-        resolutions = [[0, _("Delete all polls")]]
+        resolutions = [[0, pgettext("merge conflict poll", "Delete all polls")]]
         for poll in self.items:
             resolutions.append(
                 [poll.id, "%s (%s)" % (poll.question, poll.thread.title)]
@@ -123,7 +125,9 @@ class MergeConflict:
         errors = {}
         for conflict in self._conflicts:
             if not conflict.is_valid() or self.data.get(conflict.data_name) is None:
-                errors[conflict.data_name] = [_("Invalid choice.")]
+                errors[conflict.data_name] = [
+                    pgettext("merge conflict invalid resolution", "Invalid choice.")
+                ]
         if errors:
             raise ValidationError(errors)
 

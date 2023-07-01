@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ..bans import get_email_ban, get_ip_ban, get_username_ban
 from ..validators import validate_email, validate_new_registration, validate_username
@@ -31,7 +31,9 @@ class BaseRegisterForm(forms.Form):
             if ban.user_message:
                 raise ValidationError(ban.user_message)
             else:
-                raise ValidationError(_("This username is not allowed."))
+                raise ValidationError(
+                    pgettext("register form", "This username is not allowed.")
+                )
         return data
 
     def clean_email(self):
@@ -42,13 +44,17 @@ class BaseRegisterForm(forms.Form):
             if ban.user_message:
                 raise ValidationError(ban.user_message)
             else:
-                raise ValidationError(_("This e-mail address is not allowed."))
+                raise ValidationError(
+                    pgettext("register form", "This e-mail address is not allowed.")
+                )
         return data
 
     def clean_agreements(self, data):
         for field_name, agreement in self.agreements.items():
             if data.get(field_name) != agreement["id"]:
-                error = ValueError(_("This agreement is required."))
+                error = ValueError(
+                    pgettext("register form", "This agreement is required.")
+                )
                 self.add_error(field_name, error)
 
     def raise_if_ip_banned(self):
@@ -58,7 +64,10 @@ class BaseRegisterForm(forms.Form):
                 raise ValidationError(ban.user_message)
             else:
                 raise ValidationError(
-                    _("New registrations from this IP address are not allowed.")
+                    pgettext(
+                        "register form",
+                        "New registrations from this IP address are not allowed.",
+                    )
                 )
 
 

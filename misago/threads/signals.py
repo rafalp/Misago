@@ -1,11 +1,9 @@
-from collections import OrderedDict
-
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ..categories.models import Category
 from ..categories.signals import delete_category_content, move_category_content
@@ -205,12 +203,12 @@ def archive_user_polls(sender, archive=None, **kwargs):
         item_name = poll.posted_on.strftime("%H%M%S-poll")
         archive.add_dict(
             item_name,
-            OrderedDict(
-                [
-                    (_("Question"), poll.question),
-                    (_("Choices"), ", ".join([c["label"] for c in poll.choices])),
-                ]
-            ),
+            {
+                pgettext("archived poll", "Question"): poll.question,
+                pgettext("archived poll", "Choices"): ", ".join(
+                    [c["label"] for c in poll.choices]
+                ),
+            },
             date=poll.posted_on,
         )
 

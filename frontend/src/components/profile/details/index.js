@@ -18,7 +18,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     title.set({
-      title: gettext("Details"),
+      title: pgettext("profile details title", "Details"),
       parent: this.props.profile.username,
     })
   }
@@ -36,10 +36,16 @@ export default class extends React.Component {
 
     let message = null
     if (isAuthenticated) {
-      message = gettext("Your details have been updated.")
+      message = pgettext(
+        "profile details form",
+        "Your details have been updated."
+      )
     } else {
       message = interpolate(
-        gettext("%(username)s's details have been updated."),
+        pgettext(
+          "profile details form",
+          "%(username)s's details have been updated."
+        ),
         {
           username: profile.username,
         },

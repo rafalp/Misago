@@ -72,7 +72,7 @@ export function GoBackBtn(props) {
       className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.previous}
       onClick={props.onClick}
-      title={gettext("See previous change")}
+      title={pgettext("post history modal btn", "See previous change")}
     >
       <span className="material-icon">chevron_left</span>
     </Button>
@@ -85,7 +85,7 @@ export function GoForwardBtn(props) {
       className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.next}
       onClick={props.onClick}
-      title={gettext("See next change")}
+      title={pgettext("post history modal btn", "See next change")}
     >
       <span className="material-icon">chevron_right</span>
     </Button>
@@ -98,7 +98,7 @@ export function GoLastBtn(props) {
       className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.next}
       onClick={props.onClick}
-      title={gettext("See previous change")}
+      title={pgettext("post history modal btn", "See previous change")}
     >
       <span className="material-icon">last_page</span>
     </Button>
@@ -114,9 +114,12 @@ export function RevertBtn(props) {
         className="btn-default btn-sm btn-block"
         disabled={props.disabled}
         onClick={props.onClick}
-        title={gettext("Revert post to state from before this edit.")}
+        title={pgettext(
+          "post history modal btn",
+          "Revert post to state from before this edit."
+        )}
       >
-        {gettext("Revert")}
+        {pgettext("post history modal btn", "Revert")}
       </Button>
     </div>
   )
@@ -153,7 +156,9 @@ export function Label(props) {
   )
 
   const message = interpolate(
-    escapeHtml(gettext("By %(edited_by)s %(edited_on)s.")),
+    escapeHtml(
+      pgettext("post history modal", "By %(edited_by)s %(edited_on)s.")
+    ),
     {
       edited_by: user,
       edited_on: date,

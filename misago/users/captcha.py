@@ -1,6 +1,6 @@
 import requests
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 
 def recaptcha_test(request):
@@ -16,16 +16,20 @@ def recaptcha_test(request):
     if r.status_code == 200:
         response_json = r.json()
         if not response_json.get("success"):
-            raise ValidationError(_("Please try again."))
+            raise ValidationError(pgettext("recaptcha check", "Please try again."))
     else:
-        raise ValidationError(_("Failed to contact reCAPTCHA API."))
+        raise ValidationError(
+            pgettext("recaptcha check", "Failed to contact reCAPTCHA API.")
+        )
 
 
 def qacaptcha_test(request):
     answer = request.data.get("captcha", "").lower().strip()
     valid_answers = get_valid_qacaptcha_answers(request.settings)
     if answer not in valid_answers:
-        raise ValidationError(_("Entered answer is incorrect."))
+        raise ValidationError(
+            pgettext("qacaptcha check", "Entered answer is incorrect.")
+        )
 
 
 def get_valid_qacaptcha_answers(settings):

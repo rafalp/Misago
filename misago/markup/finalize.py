@@ -1,6 +1,6 @@
 import re
 
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 QUOTE_HEADER_RE = re.compile(
     r"""
@@ -21,12 +21,16 @@ def finalize_markup(post):
 def replace_quote_headers(matchobj):
     title = matchobj.group("title")
     if title:
-        quote_title = _("%(title)s has written:") % {"title": title}
+        quote_title = pgettext("quote title", "%(title)s has written:") % {
+            "title": title
+        }
     else:
-        quote_title = _("Quoted message:")
+        quote_title = pgettext("quote title", "Quoted message:")
     return '<div class="quote-heading" data-noquote="1">%s</div>' % quote_title
 
 
 def replace_spoiler_reveal_buttons(post):
-    final_btn = SPOILER_REVEAL_BTN.replace("></", ">%s</" % _("Reveal spoiler"))
+    final_btn = SPOILER_REVEAL_BTN.replace(
+        "></", ">%s</" % pgettext("spoiler", "Reveal spoiler")
+    )
     return post.replace(SPOILER_REVEAL_BTN, final_btn)

@@ -39,17 +39,17 @@ export class StatusLabel extends React.Component {
 
   getLabel() {
     if (this.props.status.is_banned) {
-      return gettext("Banned")
+      return pgettext("user status", "Banned")
     } else if (this.props.status.is_hidden) {
-      return gettext("Hidden")
+      return pgettext("user status", "Hidden")
     } else if (this.props.status.is_online_hidden) {
-      return gettext("Online (hidden)")
+      return pgettext("user status", "Online (hidden)")
     } else if (this.props.status.is_offline_hidden) {
-      return gettext("Offline (hidden)")
+      return pgettext("user status", "Offline (hidden)")
     } else if (this.props.status.is_online) {
-      return gettext("Online")
+      return pgettext("user status", "Online")
     } else if (this.props.status.is_offline) {
-      return gettext("Offline")
+      return pgettext("user status", "Offline")
     }
   }
 
@@ -88,7 +88,7 @@ export function getStatusDescription(user, status) {
   if (status.is_banned) {
     if (status.banned_until) {
       return interpolate(
-        gettext("%(username)s is banned until %(ban_expires)s"),
+        pgettext("user status", "%(username)s is banned until %(ban_expires)s"),
         {
           username: user.username,
           ban_expires: status.banned_until.format("LL, LT"),
@@ -97,7 +97,7 @@ export function getStatusDescription(user, status) {
       )
     } else {
       return interpolate(
-        gettext("%(username)s is banned"),
+        pgettext("user status", "%(username)s is banned"),
         {
           username: user.username,
         },
@@ -106,7 +106,7 @@ export function getStatusDescription(user, status) {
     }
   } else if (status.is_hidden) {
     return interpolate(
-      gettext("%(username)s is hiding presence"),
+      pgettext("user status", "%(username)s is hiding presence"),
       {
         username: user.username,
       },
@@ -114,7 +114,7 @@ export function getStatusDescription(user, status) {
     )
   } else if (status.is_online_hidden) {
     return interpolate(
-      gettext("%(username)s is online (hidden)"),
+      pgettext("user status", "%(username)s is online (hidden)"),
       {
         username: user.username,
       },
@@ -122,7 +122,10 @@ export function getStatusDescription(user, status) {
     )
   } else if (status.is_offline_hidden) {
     return interpolate(
-      gettext("%(username)s was last seen %(last_click)s (hidden)"),
+      pgettext(
+        "user status",
+        "%(username)s was last seen %(last_click)s (hidden)"
+      ),
       {
         username: user.username,
         last_click: status.last_click.fromNow(),
@@ -131,7 +134,7 @@ export function getStatusDescription(user, status) {
     )
   } else if (status.is_online) {
     return interpolate(
-      gettext("%(username)s is online"),
+      pgettext("user status", "%(username)s is online"),
       {
         username: user.username,
       },
@@ -139,7 +142,7 @@ export function getStatusDescription(user, status) {
     )
   } else if (status.is_offline) {
     return interpolate(
-      gettext("%(username)s was last seen %(last_click)s"),
+      pgettext("user status", "%(username)s was last seen %(last_click)s"),
       {
         username: user.username,
         last_click: status.last_click.fromNow(),

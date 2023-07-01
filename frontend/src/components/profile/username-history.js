@@ -93,7 +93,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     title.set({
-      title: gettext("Username history"),
+      title: pgettext("profile username history title", "Username history"),
       parent: this.props.profile.username,
     })
   }
@@ -125,9 +125,10 @@ export default class extends React.Component {
 
   getLabel() {
     if (!this.state.isLoaded) {
-      return gettext("Loading...")
+      return pgettext("profile username history", "Loading...")
     } else if (this.state.search) {
-      let message = ngettext(
+      let message = npgettext(
+        "profile username history",
         "Found %(changes)s username change.",
         "Found %(changes)s username changes.",
         this.state.count
@@ -141,7 +142,8 @@ export default class extends React.Component {
         true
       )
     } else if (this.props.profile.id === this.props.user.id) {
-      let message = ngettext(
+      let message = npgettext(
+        "profile username history",
         "Your username was changed %(changes)s time.",
         "Your username was changed %(changes)s times.",
         this.state.count
@@ -155,7 +157,8 @@ export default class extends React.Component {
         true
       )
     } else {
-      let message = ngettext(
+      let message = npgettext(
+        "profile username history",
         "%(username)s's username was changed %(changes)s time.",
         "%(username)s's username was changed %(changes)s times.",
         this.state.count
@@ -174,14 +177,21 @@ export default class extends React.Component {
 
   getEmptyMessage() {
     if (this.state.search) {
-      return gettext(
+      return pgettext(
+        "profile username history",
         "Search returned no username changes matching specified criteria."
       )
     } else if (this.props.user.id === this.props.profile.id) {
-      return gettext("No name changes have been recorded for your account.")
+      return pgettext(
+        "profile username history",
+        "No name changes have been recorded for your account."
+      )
     } else {
       return interpolate(
-        gettext("%(username)s's username was never changed."),
+        pgettext(
+          "profile username history",
+          "%(username)s's username was never changed."
+        ),
         {
           username: this.props.profile.username,
         },
@@ -201,7 +211,7 @@ export default class extends React.Component {
           onClick={this.loadMore}
         >
           {interpolate(
-            gettext("Show older (%(more)s)"),
+            pgettext("profile username history", "Show older (%(more)s)"),
             {
               more: this.state.more,
             },
@@ -226,7 +236,10 @@ export default class extends React.Component {
               <Search
                 value={this.state.search}
                 onChange={this.search}
-                placeholder={gettext("Search history...")}
+                placeholder={pgettext(
+                  "profile username history search input",
+                  "Search history..."
+                )}
               />
             </ToolbarItem>
           </ToolbarSection>

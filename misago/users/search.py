@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ..search import SearchProvider
 from .serializers import UserCardSerializer
@@ -14,13 +13,15 @@ User = get_user_model()
 
 
 class SearchUsers(SearchProvider):
-    name = gettext_lazy("Users")
+    name = pgettext_lazy("search provider", "Users")
     icon = "people"
     url = "users"
 
     def allow_search(self):
         if not self.request.user_acl["can_search_users"]:
-            raise PermissionDenied(_("You don't have permission to search users."))
+            raise PermissionDenied(
+                pgettext("search users", "You don't have permission to search users.")
+            )
 
     def search(self, query, page=1):
         if query:

@@ -27,15 +27,21 @@ export function Blankslate({ children, loading, posts, query }) {
     return (
       <p className="lead">
         {loading
-          ? gettext("Loading results...")
-          : gettext("No threads matching search query have been found.")}
+          ? pgettext("search threads", "Loading results...")
+          : pgettext(
+              "search threads",
+              "No threads matching search query have been found."
+            )}
       </p>
     )
   }
 
   return (
     <p className="lead">
-      {gettext("Enter at least two characters to search threads.")}
+      {pgettext(
+        "search threads",
+        "Enter at least two characters to search threads."
+      )}
     </p>
   )
 }

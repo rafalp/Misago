@@ -26,7 +26,12 @@ export default class extends Form {
 
   clean() {
     if (!this.state.url.trim().length) {
-      snackbar.error(gettext("You have to enter link to the other thread."))
+      snackbar.error(
+        pgettext(
+          "thread merge form",
+          "You have to enter link to the other thread."
+        )
+      )
       return false
     }
 
@@ -52,7 +57,9 @@ export default class extends Form {
   }
 
   handleSuccessUnmounted = (success) => {
-    snackbar.success(gettext("Thread has been merged with other one."))
+    snackbar.success(
+      pgettext("thread merge form", "Thread has been merged with other one.")
+    )
     window.location = success.url
   }
 
@@ -96,8 +103,12 @@ export default class extends Form {
             <div className="modal-body">
               <FormGroup
                 for="id_url"
-                label={gettext("Link to thread you want to merge with")}
-                help_text={gettext(
+                label={pgettext(
+                  "thread merge form field",
+                  "Link to thread you want to merge with"
+                )}
+                help_text={pgettext(
+                  "thread merge form field",
                   "Merge will delete current thread and move its contents to the thread specified here."
                 )}
               >
@@ -117,13 +128,13 @@ export default class extends Form {
                 disabled={this.state.isLoading}
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("thread merge form btn", "Cancel")}
               </button>
               <button
                 className="btn btn-primary"
                 disabled={this.state.isLoading || this.props.thread.isBusy}
               >
-                {gettext("Merge thread")}
+                {pgettext("thread merge form btn", "Merge thread")}
               </button>
             </div>
           </div>
@@ -144,7 +155,9 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Merge thread")}</h4>
+      <h4 className="modal-title">
+        {pgettext("thread merge form title", "Merge thread")}
+      </h4>
     </div>
   )
 }

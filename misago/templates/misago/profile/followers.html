@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Followers" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Followers" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Followers" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% trans "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% trans "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -17,13 +17,13 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count users=count %}
+            {% blocktrans trimmed count users=count context "user profile page followers" %}
               You have {{ users }} follower.
             {% plural %}
               You have {{ users }} followers.
             {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed count users=count with username=profile %}
+            {% blocktrans trimmed count users=count with username=profile context "user profile page followers" %}
               {{ username }} has {{ users }} follower.
             {% plural %}
               {{ username }} has {{ users }} followers.
@@ -50,9 +50,9 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You have no followers." %}
+        {% trans "You have no followers." context "user profile page followers" %}
       {% else %}
-        {% blocktrans trimmed with username=profile.username %}
+        {% blocktrans trimmed with username=profile.username context "user profile page followers" %}
           {{ username }} has no followers.
         {% endblocktrans %}
       {% endif %}

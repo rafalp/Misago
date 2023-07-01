@@ -7,7 +7,7 @@ const ThreadReplyButton = ({ onClick }) => (
     onClick={onClick}
   >
     <span className="material-icon">chat</span>
-    {gettext("Reply")}
+    {pgettext("thread reply btn", "Reply")}
   </button>
 )
 

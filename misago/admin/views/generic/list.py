@@ -5,7 +5,7 @@ from django.core.paginator import EmptyPage, Paginator
 from django.db import transaction
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ....core.exceptions import ExplicitFirstPage
 from .base import AdminView
@@ -36,8 +36,8 @@ class ListView(AdminView):
     extra_actions = None
     mass_actions = None
 
-    selection_label = _("Selected: 0")
-    empty_selection_label = _("Select items")
+    selection_label = pgettext_lazy("admin lists", "Selected: 0")
+    empty_selection_label = pgettext_lazy("admin lists", "Select items")
 
     @classmethod
     def add_mass_action(cls, action, name, confirmation=None):
@@ -285,12 +285,16 @@ class ListView(AdminView):
 
         context["selected_items"] = items
         if not context["selected_items"]:
-            raise MassActionError(_("You have to select one or more items."))
+            raise MassActionError(
+                pgettext_lazy("admin lists", "You have to select one or more items.")
+            )
 
         action_queryset = context["items"].filter(pk__in=items)
 
         if not action_queryset.exists():
-            raise MassActionError(_("You have to select one or more items."))
+            raise MassActionError(
+                pgettext_lazy("admin lists", "You have to select one or more items.")
+            )
 
         action_callable = getattr(self, "action_%s" % action["action"])
 
@@ -304,7 +308,7 @@ class ListView(AdminView):
         for definition in self.mass_actions:  # pylint: disable=not-an-iterable
             if definition["action"] == action:
                 return definition
-        raise MassActionError(_("Action is not allowed."))
+        raise MassActionError(pgettext_lazy("admin lists", "Action is not allowed."))
 
     # Querystring builder
     def make_querystring(self, context):

@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New rank" %}
+  {% trans "New rank" context "admin rank form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -26,7 +26,7 @@
   <div class="col-auto page-action">
     <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
       <span class="fas fa-external-link-alt"></span>
-      {% trans "View on site" %}
+      {% trans "View on site" context "admin ranks" %}
     </a>
   </div>
 {% endif %}
@@ -35,9 +35,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit rank" %}
+  {% trans "Edit rank" context "admin rank form" %}
 {% else %}
-  {% trans "New rank" %}
+  {% trans "New rank" context "admin rank form" %}
 {% endif %}
 {% endblock %}
 
@@ -45,7 +45,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Name and description" %}</legend>
+    <legend>{% trans "Name and description" context "admin rank form" %}</legend>
 
     {% form_row form.name %}
     {% form_row form.title %}
@@ -55,7 +55,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Permissions" %}</legend>
+    <legend>{% trans "Permissions" context "admin rank form" %}</legend>
 
     {% form_row form.roles %}
 
@@ -63,7 +63,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Display and visibility" %}</legend>
+    <legend>{% trans "Display and visibility" context "admin rank form" %}</legend>
 
     {% form_row form.css_class %}
     {% form_row form.is_tab %}

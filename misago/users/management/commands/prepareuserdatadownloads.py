@@ -1,7 +1,7 @@
 import logging
 
 from django.core.management.base import BaseCommand
-from django.utils.translation import gettext
+from django.utils.translation import pgettext
 
 from ....conf import settings
 from ....conf.shortcuts import get_dynamic_settings
@@ -34,12 +34,13 @@ class Command(BaseCommand):
         queryset = queryset.filter(status=DataDownload.STATUS_PENDING)
         for data_download in chunk_queryset(queryset):
             if prepare_user_data_download(data_download, expires_in, logger):
-                user = data_download.user
-                subject = gettext("%(user)s, your data download is ready") % {
-                    "user": user
-                }
+                subject = pgettext(
+                    "data download ready email subject",
+                    "%(user)s, your data download is ready",
+                ) % {"user": data_download.user}
+
                 mail_user(
-                    user,
+                    data_download.user,
                     subject,
                     "misago/emails/data_download",
                     context={

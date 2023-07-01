@@ -1,7 +1,7 @@
 from functools import wraps
 
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 
 def require_auth(f):
@@ -9,8 +9,12 @@ def require_auth(f):
     def auth_only_view(request, *args, **kwargs):
         if request.user.is_anonymous:
             if request.method in ("GET", "HEAD", "OPTIONS"):
-                raise PermissionDenied(_("You have to sign in to access this page."))
-            raise PermissionDenied(_("You have to sign in to perform this action."))
+                raise PermissionDenied(
+                    pgettext("apiv2", "You have to sign in to access this page.")
+                )
+            raise PermissionDenied(
+                pgettext("apiv2", "You have to sign in to perform this action.")
+            )
 
         return f(request, *args, **kwargs)
 

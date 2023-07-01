@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..acl import algebra
 from ..acl.models import Role
@@ -7,9 +7,11 @@ from ..admin.forms import YesNoSwitch
 
 
 class PermissionsForm(forms.Form):
-    legend = _("Search")
+    legend = pgettext_lazy("search permission", "Search")
 
-    can_search = YesNoSwitch(label=_("Can search site"), initial=1)
+    can_search = YesNoSwitch(
+        label=pgettext_lazy("search permission", "Can search site"), initial=1
+    )
 
 
 def change_permissions_form(role):

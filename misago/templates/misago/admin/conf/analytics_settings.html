@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Google Analytics and Search Console" %}</legend>
+    <legend>{% trans "Google Analytics and Search Console" context "admin captcha settings form" %}</legend>
 
     {% form_row form.google_tracking_id %}
     {% if form.google_site_verification.value %}

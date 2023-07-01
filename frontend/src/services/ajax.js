@@ -43,17 +43,26 @@ export class Ajax {
           rejection.status = jqXHR.status
 
           if (rejection.status === 0) {
-            rejection.detail = gettext("Could not connect to server.")
+            rejection.detail = pgettext(
+              "ajax client error",
+              "Could not connect to server."
+            )
           }
 
           if (rejection.status === 404) {
             if (!rejection.detail || rejection.detail === "NOT FOUND") {
-              rejection.detail = gettext("Action link is invalid.")
+              rejection.detail = pgettext(
+                "ajax client error",
+                "Action link is invalid."
+              )
             }
           }
 
           if (rejection.status === 500 && !rejection.detail) {
-            rejection.detail = gettext("Unknown error has occured.")
+            rejection.detail = pgettext(
+              "ajax client error",
+              "Unknown error has occured."
+            )
           }
 
           rejection.statusText = jqXHR.statusText
@@ -217,23 +226,33 @@ export class Ajax {
           rejection.status = jqXHR.status
 
           if (rejection.status === 0) {
-            rejection.detail = gettext("Could not connect to server.")
+            rejection.detail = pgettext(
+              "ajax client error",
+              "Could not connect to server."
+            )
           }
 
           if (rejection.status === 413 && !rejection.detail) {
-            rejection.detail = gettext(
+            rejection.detail = pgettext(
+              "ajax client error",
               "Upload was rejected by server as too large."
             )
           }
 
           if (rejection.status === 404) {
             if (!rejection.detail || rejection.detail === "NOT FOUND") {
-              rejection.detail = gettext("Action link is invalid.")
+              rejection.detail = pgettext(
+                "ajax client error",
+                "Action link is invalid."
+              )
             }
           }
 
           if (rejection.status === 500 && !rejection.detail) {
-            rejection.detail = gettext("Unknown error has occurred.")
+            rejection.detail = pgettext(
+              "ajax client error",
+              "Unknown error has occurred."
+            )
           }
 
           rejection.statusText = jqXHR.statusText

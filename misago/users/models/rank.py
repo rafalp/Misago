@@ -1,5 +1,6 @@
 from django.db import models, transaction
 from django.urls import reverse
+from django.utils.translation import pgettext
 
 from ...acl.cache import clear_acl_cache
 from ...core.utils import slugify
@@ -33,7 +34,7 @@ class Rank(models.Model):
         get_latest_by = "order"
 
     def __str__(self):
-        return self.name
+        return pgettext("rank name", self.name)
 
     def save(self, *args, **kwargs):
         if not self.pk:

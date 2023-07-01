@@ -1,9 +1,15 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .base import OAuthProviderForm
 
 
 class GitHubForm(OAuthProviderForm):
-    key = forms.CharField(label=_("Client ID"), required=False)
-    secret = forms.CharField(label=_("Client Secret"), required=False)
+    key = forms.CharField(
+        label=pgettext_lazy("admin social auth github form", "Client ID"),
+        required=False,
+    )
+    secret = forms.CharField(
+        label=pgettext_lazy("admin social auth github form", "Client Secret"),
+        required=False,
+    )

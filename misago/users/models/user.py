@@ -11,7 +11,7 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ...acl.models import Role
 from ...conf import settings
@@ -76,7 +76,12 @@ class UserManager(BaseUserManager):
 
         try:
             if not extra_fields.get("rank"):
-                extra_fields["rank"] = Rank.objects.get(name=_("Forum team"))
+                forum_team_rank = Rank.objects.get(
+                    name=pgettext("default rank", "Forum team")
+                )
+
+                if forum_team_rank:
+                    extra_fields["rank"] = forum_team_rank
         except Rank.DoesNotExist:
             pass
 
@@ -104,9 +109,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     SUBSCRIPTION_ALL = 2
 
     SUBSCRIPTION_CHOICES = [
-        (SUBSCRIPTION_NONE, _("No")),
-        (SUBSCRIPTION_NOTIFY, _("Notify")),
-        (SUBSCRIPTION_ALL, _("Notify with e-mail")),
+        (
+            SUBSCRIPTION_NONE,
+            pgettext_lazy("user default subscription choice", "No"),
+        ),
+        (
+            SUBSCRIPTION_NOTIFY,
+            pgettext_lazy("user default subscription choice", "Notify"),
+        ),
+        (
+            SUBSCRIPTION_ALL,
+            pgettext_lazy("user default subscription choice", "Notify with e-mail"),
+        ),
     ]
 
     LIMIT_INVITES_TO_NONE = 0
@@ -114,9 +128,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     LIMIT_INVITES_TO_NOBODY = 2
 
     LIMIT_INVITES_TO_CHOICES = [
-        (LIMIT_INVITES_TO_NONE, _("Everybody")),
-        (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
-        (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
+        (
+            LIMIT_INVITES_TO_NONE,
+            pgettext_lazy("user default invites choice", "Everybody"),
+        ),
+        (
+            LIMIT_INVITES_TO_FOLLOWED,
+            pgettext_lazy("user default invites choice", "Users I follow"),
+        ),
+        (
+            LIMIT_INVITES_TO_NOBODY,
+            pgettext_lazy("user default invites choice", "Nobody"),
+        ),
     ]
 
     # Note that "username" field is purely for shows.
@@ -135,7 +158,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_hash = models.CharField(max_length=32, unique=True)
 
     joined_on = models.DateTimeField(
-        _("joined on"), default=timezone.now, db_index=True
+        pgettext_lazy("user", "joined on"), default=timezone.now, db_index=True
     )
     joined_from_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
@@ -147,21 +170,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
     is_staff = models.BooleanField(
-        _("staff status"),
+        pgettext_lazy("user", "staff status"),
         default=False,
-        help_text=_("Designates whether the user can log into admin sites."),
+        help_text=pgettext_lazy(
+            "user", "Designates whether the user can log into admin sites."
+        ),
     )
 
     roles = models.ManyToManyField("misago_acl.Role")
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_active = models.BooleanField(
-        _("active"),
+        pgettext_lazy("user", "active"),
         db_index=True,
         default=True,
-        help_text=_(
-            "Designates whether this user should be treated as active. "
-            "Unselect this instead of deleting accounts."
+        help_text=pgettext_lazy(
+            "user",
+            "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
         ),
     )
     is_active_staff_message = models.TextField(null=True, blank=True)
@@ -425,7 +450,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.email_hash = hash_email(new_email)
 
     def get_any_title(self):
-        return self.title or self.rank.title or self.rank.name
+        if self.title:
+            return self.title
+
+        if self.rank.title:
+            return self.rank.title
+
+        return str(self.rank)
 
     def get_roles(self):
         roles_pks = []

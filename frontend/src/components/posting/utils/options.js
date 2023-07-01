@@ -70,7 +70,9 @@ export default function (props) {
 export function CloseOptions(props) {
   if (!props.show) return null
 
-  const label = props.close ? gettext("Closed") : gettext("Open")
+  const label = props.close
+    ? pgettext("posting form", "Closed")
+    : pgettext("posting form", "Open")
 
   return (
     <div className={props.className}>
@@ -93,7 +95,9 @@ export function CloseOptions(props) {
 export function HideOptions(props) {
   if (!props.show) return null
 
-  const label = props.hide ? gettext("Hidden") : gettext("Not hidden")
+  const label = props.hide
+    ? pgettext("posting form", "Hidden")
+    : pgettext("posting form", "Not hidden")
 
   return (
     <div className={props.className}>
@@ -124,13 +128,13 @@ export function PinOptions(props) {
     case 0:
       icon = "radio_button_unchecked"
       onClick = props.onPinLocally
-      label = gettext("Unpinned")
+      label = pgettext("posting form", "Unpinned")
       break
 
     case 1:
       icon = "bookmark_outline"
       onClick = props.onPinGlobally
-      label = gettext("Pinned locally")
+      label = pgettext("posting form", "Pinned locally")
 
       if (props.show == 2) {
         onClick = props.onPinGlobally
@@ -143,7 +147,7 @@ export function PinOptions(props) {
     case 2:
       icon = "bookmark"
       onClick = props.onUnpin
-      label = gettext("Pinned globally")
+      label = pgettext("posting form", "Pinned globally")
       break
   }
 

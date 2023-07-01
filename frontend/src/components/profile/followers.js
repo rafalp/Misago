@@ -25,7 +25,7 @@ export default class extends React.Component {
 
   setSpecialProps() {
     this.PRELOADED_DATA_KEY = "PROFILE_FOLLOWERS"
-    this.TITLE = gettext("Followers")
+    this.TITLE = pgettext("profile followers title", "Followers")
     this.API_FILTER = "followers"
   }
 
@@ -134,9 +134,10 @@ export default class extends React.Component {
 
   getLabel() {
     if (!this.state.isLoaded) {
-      return gettext("Loading...")
+      return pgettext("Loading...")
     } else if (this.state.search) {
-      let message = ngettext(
+      let message = npgettext(
+        "profile followers",
         "Found %(users)s user.",
         "Found %(users)s users.",
         this.state.count
@@ -150,7 +151,8 @@ export default class extends React.Component {
         true
       )
     } else if (this.props.profile.id === this.props.user.id) {
-      let message = ngettext(
+      let message = npgettext(
+        "profile followers",
         "You have %(users)s follower.",
         "You have %(users)s followers.",
         this.state.count
@@ -164,7 +166,8 @@ export default class extends React.Component {
         true
       )
     } else {
-      let message = ngettext(
+      let message = npgettext(
+        "profile followers",
         "%(username)s has %(users)s follower.",
         "%(username)s has %(users)s followers.",
         this.state.count
@@ -183,12 +186,15 @@ export default class extends React.Component {
 
   getEmptyMessage() {
     if (this.state.search) {
-      return gettext("Search returned no users matching specified criteria.")
+      return pgettext(
+        "profile followers",
+        "Search returned no users matching specified criteria."
+      )
     } else if (this.props.user.id === this.props.profile.id) {
-      return gettext("You have no followers.")
+      return pgettext("profile followers", "You have no followers.")
     } else {
       return interpolate(
-        gettext("%(username)s has no followers."),
+        pgettext("profile followers", "%(username)s has no followers."),
         {
           username: this.props.profile.username,
         },
@@ -208,7 +214,7 @@ export default class extends React.Component {
           onClick={this.loadMore}
         >
           {interpolate(
-            gettext("Show more (%(more)s)"),
+            pgettext("profile followers", "Show more (%(more)s)"),
             {
               more: this.state.more,
             },
@@ -255,7 +261,10 @@ export default class extends React.Component {
               <Search
                 value={this.state.search}
                 onChange={this.search}
-                placeholder={gettext("Search users...")}
+                placeholder={pgettext(
+                  "profile followers search",
+                  "Search users..."
+                )}
               />
             </ToolbarItem>
           </ToolbarSection>

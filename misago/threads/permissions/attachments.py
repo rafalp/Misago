@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...acl import algebra
 from ...acl.models import Role
@@ -9,28 +9,34 @@ from ..models import Attachment
 
 # Admin Permissions Forms
 class PermissionsForm(forms.Form):
-    legend = _("Attachments")
+    legend = pgettext_lazy("attachments permission", "Attachments")
 
     max_attachment_size = forms.IntegerField(
-        label=_("Max attached file size (in kb)"),
-        help_text=_("Enter 0 to don't allow uploading end deleting attachments."),
+        label=pgettext_lazy("attachments permission", "Max attached file size (in kb)"),
+        help_text=pgettext_lazy(
+            "permissions", "Enter 0 to don't allow uploading end deleting attachments."
+        ),
         initial=500,
         min_value=0,
     )
 
     can_download_other_users_attachments = YesNoSwitch(
-        label=_("Can download other users attachments")
+        label=pgettext_lazy(
+            "attachments permission", "Can download other users attachments"
+        )
     )
     can_delete_other_users_attachments = YesNoSwitch(
-        label=_("Can delete other users attachments")
+        label=pgettext_lazy(
+            "attachments permission", "Can delete other users attachments"
+        )
     )
 
 
 class AnonymousPermissionsForm(forms.Form):
-    legend = _("Attachments")
+    legend = pgettext_lazy("attachments permission", "Attachments")
 
     can_download_other_users_attachments = YesNoSwitch(
-        label=_("Can download attachments")
+        label=pgettext_lazy("attachments permission", "Can download attachments")
     )
 
 

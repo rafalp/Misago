@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -29,7 +29,13 @@ def change_username(request):
     options = get_username_options_from_request(request)
     if not options["changes_left"]:
         return Response(
-            {"detail": _("You can't change your username now."), "options": options},
+            {
+                "detail": pgettext(
+                    "change username api",
+                    "You can't change your username now.",
+                ),
+                "options": options,
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -57,7 +63,12 @@ def change_username(request):
         )
     except IntegrityError:
         return Response(
-            {"detail": _("Error changing username. Please try again.")},
+            {
+                "detail": pgettext(
+                    "change username api",
+                    "Error changing username. Please try again.",
+                )
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -79,7 +90,12 @@ def moderate_username_endpoint(request, profile):
             return Response({"username": profile.username, "slug": profile.slug})
         except IntegrityError:
             return Response(
-                {"detail": _("Error changing username. Please try again.")},
+                {
+                    "detail": pgettext(
+                        "change username api",
+                        "Error changing username. Please try again.",
+                    )
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

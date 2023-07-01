@@ -159,7 +159,8 @@ export function patch(props, ops, previousState) {
 
 export function remove(props) {
   let confirmed = window.confirm(
-    gettext(
+    pgettext(
+      "post delete",
       "Are you sure you want to delete this post? This action is not reversible!"
     )
   )
@@ -175,7 +176,7 @@ export function remove(props) {
 
   ajax.delete(props.post.api.index).then(
     () => {
-      snackbar.success(gettext("Post has been deleted."))
+      snackbar.success(pgettext("post delete", "Post has been deleted."))
     },
     (rejection) => {
       if (rejection.status === 400) {

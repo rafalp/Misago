@@ -6,7 +6,7 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:users:data-downloads:request' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New downloads" %}
+    {% trans "New downloads" context "admin data downloads" %}
   </a>
 </div>
 {% endblock %}
@@ -14,11 +14,11 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "User" %}</th>
-<th>{% trans "Status" %}</th>
-<th>{% trans "Requested on" %}</th>
+<th>{% trans "User" context "admin data downloads list" %}</th>
+<th>{% trans "Status" context "admin data downloads list" %}</th>
+<th>{% trans "Requested on" context "admin data downloads list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "Requested by" %}</th>
+<th>{% trans "Requested by" context "admin data downloads list" %}</th>
 {% for action in extra_actions %}
   <th style="width: 1px;">&nbsp;</th>
 {% endfor %}
@@ -29,7 +29,7 @@
 {% block table-row %}
 <td class="pr-0">
   <a href="{{ item.user.get_absolute_url }}">
-    <img src="{{ item.user|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
+    <img src="{{ item.user|avatar:40 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
   </a>
 </td>
 <td class="small">
@@ -48,10 +48,10 @@
 <td class="pr-0">
   {% if item.requester %}
     <a href="{{ item.requester.get_absolute_url.user }}">
-      <img src="{{ item.requester|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
+      <img src="{{ item.requester|avatar:40 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
     </a>
   {% else %}
-    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans 'Avatar' %}" width="24" height="24">
+    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
   {% endif %}
 </td>
 <td class="small">
@@ -67,11 +67,11 @@
 <td>
   {% if item.file %}
     <a href="{{ item.file.url }}" class="btn btn-light btn-sm">
-      {% trans "Download" %}
+      {% trans "Download" context "admin data download button" %}
     </a>
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
-      {% trans "Download" %}
+      {% trans "Download" context "admin data download button" %}
     </button>
   {% endif %}
 </td>
@@ -81,9 +81,9 @@
 {% block blankslate %}
 <td colspan="{{ 8|add:extra_actions_len }}">
   {% if active_filters %}
-    {% trans "No data downloads matching criteria exist." %}
+    {% trans "No data downloads matching criteria exist." context "admin data downloads" %}
   {% else %}
-    {% trans "No data downloads exist." %}
+    {% trans "No data downloads exist." context "admin data downloads" %}
   {% endif %}
 </td>
 {% endblock blankslate %}

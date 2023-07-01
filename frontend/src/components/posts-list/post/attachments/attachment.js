@@ -93,7 +93,8 @@ export function AttachmentDetails(props) {
 
   const message = interpolate(
     escapeHtml(
-      gettext(
+      pgettext(
+        "post attachment",
         "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s."
       )
     ),

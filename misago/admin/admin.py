@@ -1,6 +1,6 @@
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 
 class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
-        site.add_node(name=_("Dashboard"), icon="fa fa-home")
+        site.add_node(name=pgettext_lazy("admin node", "Dashboard"), icon="fa fa-home")

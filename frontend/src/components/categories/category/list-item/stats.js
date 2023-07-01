@@ -1,5 +1,4 @@
 import React from "react"
-import Avatar from "misago/components/avatar"
 
 export default function ({ category }) {
   return (
@@ -13,7 +12,12 @@ export default function ({ category }) {
 }
 
 export function Threads({ threads }) {
-  const message = ngettext("%(threads)s thread", "%(threads)s threads", threads)
+  const message = npgettext(
+    "category stats",
+    "%(threads)s thread",
+    "%(threads)s threads",
+    threads
+  )
 
   return (
     <li className="category-stat-threads">
@@ -29,7 +33,12 @@ export function Threads({ threads }) {
 }
 
 export function Posts({ posts }) {
-  const message = ngettext("%(posts)s post", "%(posts)s posts", posts)
+  const message = npgettext(
+    "category stats",
+    "%(posts)s post",
+    "%(posts)s posts",
+    posts
+  )
 
   return (
     <li className="category-stat-posts">

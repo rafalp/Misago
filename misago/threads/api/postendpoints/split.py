@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.response import Response
 
 from ...models import Thread
@@ -9,7 +9,9 @@ from ...serializers import SplitPostsSerializer
 
 def posts_split_endpoint(request, thread):
     if not thread.acl["can_move_posts"]:
-        raise PermissionDenied(_("You can't split posts from this thread."))
+        raise PermissionDenied(
+            pgettext("posts api", "You can't split posts from this thread.")
+        )
 
     serializer = SplitPostsSerializer(
         data=request.data,

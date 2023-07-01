@@ -3,15 +3,15 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user %}
+{% blocktrans trimmed with user=user context "welcome email" %}
 {{ user }}, thank you for joining us!
 {% endblocktrans %}
 
-{% blocktrans trimmed %}
+{% blocktrans trimmed context "welcome email" %}
 You may now join discussion on our forums. Why not spend a minute or two to have a look around and share your opinions and knowledge with rest of community?
 {% endblocktrans %}
 
-{% blocktrans trimmed %}
+{% blocktrans trimmed context "welcome email" %}
 You can always sign in to your account using the form below:
 {% endblocktrans %}
 {% absoluteurl LOGIN_URL %}?modal=login

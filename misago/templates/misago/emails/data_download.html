@@ -3,15 +3,15 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user %}
+{% blocktrans trimmed with user=user context "data download ready email" %}
 {{ user }}, you are receiving this message because your data is ready for download.
 {% endblocktrans %}
 <br>
 <br>
-<a href="{% absoluteurl data_download.file.url %}">{% trans "Download data" %}</a>
+<a href="{% absoluteurl data_download.file.url %}">{% trans "Download data" context "data download ready email cta" %}</a>
 <br>
 <br>
-{% blocktrans trimmed count expires_in=expires_in %}
+{% blocktrans trimmed count expires_in=expires_in context "data download ready email" %}
 This link will remain active for {{ expires_in }} hour from the time this message has been sent.
 {% plural %}
 This link will remain active for {{ expires_in }} hours from the time this message has been sent.

@@ -4,7 +4,7 @@ from django.db import transaction
 from django.db.models import F
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
@@ -61,7 +61,9 @@ class UserViewSetPermission(BasePermission):
 
 def allow_self_only(user, pk, message):
     if user.is_anonymous:
-        raise PermissionDenied(_("You have to sign in to perform this action."))
+        raise PermissionDenied(
+            pgettext("users api", "You have to sign in to perform this action.")
+        )
     if user.pk != int(pk):
         raise PermissionDenied(message)
 
@@ -88,9 +90,9 @@ class UserViewSet(viewsets.GenericViewSet):
     def create(self, request):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to sign in."
+                pgettext(
+                    "users api",
+                    "This feature has been disabled. Please use %(provider)s to sign in.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -116,7 +118,11 @@ class UserViewSet(viewsets.GenericViewSet):
     @action(methods=["get", "post"], detail=True)
     def avatar(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't change other users avatars."))
+        allow_self_only(
+            request.user,
+            pk,
+            pgettext("users api", "You can't change other users avatars."),
+        )
 
         return avatar_endpoint(request)
 
@@ -128,34 +134,52 @@ class UserViewSet(viewsets.GenericViewSet):
     )
     def forum_options(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't change other users options."))
+        allow_self_only(
+            request.user,
+            pk,
+            pgettext("users api", "You can't change other users options."),
+        )
 
         serializer = ForumOptionsSerializer(request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": _("Your forum options have been changed.")})
+            return Response(
+                {
+                    "detail": pgettext(
+                        "users api", "Your forum options have been changed."
+                    )
+                }
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=["get", "post"], detail=True)
     def username(self, request, pk=None):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to change your name."
+                pgettext(
+                    "users api",
+                    "This feature has been disabled. Please use %(provider)s to change your name.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
 
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't change other users names."))
+        allow_self_only(
+            request.user,
+            pk,
+            pgettext("users api", "You can't change other users names."),
+        )
 
         return username_endpoint(request)
 
     @action(methods=["get", "post"], detail=True)
     def signature(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't change other users signatures."))
+        allow_self_only(
+            request.user,
+            pk,
+            pgettext("users api", "You can't change other users signatures."),
+        )
 
         return signature_endpoint(request)
 
@@ -168,34 +192,43 @@ class UserViewSet(viewsets.GenericViewSet):
     def change_password(self, request, pk=None):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to change your password."
-                )
-                % {"provider": request.settings.oauth2_provider}
-            )
-
-        get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't change other users passwords."))
-
-        return change_password_endpoint(request)
-
-    @action(
-        methods=["post"], detail=True, url_path="change-email", url_name="change-email"
-    )
-    def change_email(self, request, pk=None):
-        if request.settings.enable_oauth2_client:
-            raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to change your e-mail."
+                pgettext(
+                    "users api",
+                    "This feature has been disabled. Please use %(provider)s to change your password.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
 
         get_int_or_404(pk)
         allow_self_only(
-            request.user, pk, _("You can't change other users e-mail addresses.")
+            request.user,
+            pk,
+            pgettext("users api", "You can't change other users passwords."),
+        )
+
+        return change_password_endpoint(request)
+
+    @action(
+        methods=["post"],
+        detail=True,
+        url_path="change-email",
+        url_name="change-email",
+    )
+    def change_email(self, request, pk=None):
+        if request.settings.enable_oauth2_client:
+            raise PermissionDenied(
+                pgettext(
+                    "users api",
+                    "This feature has been disabled. Please use %(provider)s to change your e-mail.",
+                )
+                % {"provider": request.settings.oauth2_provider}
+            )
+
+        get_int_or_404(pk)
+        allow_self_only(
+            request.user,
+            pk,
+            pgettext("users api", "You can't change other users e-mail addresses."),
         )
 
         return change_email_endpoint(request)
@@ -226,9 +259,9 @@ class UserViewSet(viewsets.GenericViewSet):
     def delete_own_account(self, request, pk=None):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to delete your account."
+                pgettext(
+                    "users api",
+                    "This feature has been disabled. Please use %(provider)s to delete your account.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -311,16 +344,21 @@ class UserViewSet(viewsets.GenericViewSet):
     def request_data_download(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
-            request.user, pk, _("You can't request data downloads for other users.")
+            request.user,
+            pk,
+            pgettext("users api", "You can't request data downloads for other users."),
         )
 
         if not request.settings.allow_data_downloads:
-            raise PermissionDenied(_("You can't download your data."))
+            raise PermissionDenied(
+                pgettext("users api", "You can't download your data.")
+            )
 
         if user_has_data_download_request(request.user):
             raise PermissionDenied(
-                _(
-                    "You can't have more than one data download request at a single time."
+                pgettext(
+                    "users api",
+                    "You can't have more than one data download request at a single time.",
                 )
             )
 
@@ -377,7 +415,9 @@ class UserViewSet(viewsets.GenericViewSet):
     def data_downloads(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
-            request.user, pk, _("You can't see other users data downloads.")
+            request.user,
+            pk,
+            pgettext("users api", "You can't see other users data downloads."),
         )
 
         queryset = request.user.datadownload_set.all()[:5]

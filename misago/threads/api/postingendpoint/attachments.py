@@ -1,5 +1,4 @@
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import npgettext, pgettext
 from rest_framework import serializers
 from rest_framework.fields import empty
 
@@ -59,9 +58,9 @@ class AttachmentsSerializer(serializers.Serializer):
                     self.update_attachments = True
                     self.removed_attachments.append(attachment)
                 else:
-                    message = _(
-                        "You don't have permission to remove "
-                        '"%(attachment)s" attachment.'
+                    message = pgettext(
+                        "posting api",
+                        'You don\'t have permission to remove "%(attachment)s" attachment.',
                     )
                     raise serializers.ValidationError(
                         message % {"attachment": attachment.filename}
@@ -128,7 +127,8 @@ def validate_attachments_count(data, settings):
     total_attachments = len(data)
     if total_attachments > settings.post_attachments_limit:
         # pylint: disable=line-too-long
-        message = ngettext(
+        message = npgettext(
+            "posting api",
             "You can't attach more than %(limit_value)s file to single post (added %(show_value)s).",
             "You can't attach more than %(limit_value)s flies to single post (added %(show_value)s).",
             settings.post_attachments_limit,

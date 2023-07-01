@@ -1,16 +1,16 @@
 {% load i18n %}
 <div class="col-auto pr-0">
   {% if page.has_previous %}
-    <a href="{% url root_link %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to first page' %}">
-      {% trans "First" %}
+    <a href="{% url root_link %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to first page' context 'admin paginator' %}">
+      {% trans "First" context "admin paginator" %}
     </a>
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
-      {% trans "First" %}
+      {% trans "First" context "admin paginator" %}
     </button>
   {% endif %}
   {% if page.number > 1 %}
-    <a href="{% url root_link page=page.previous_page_number %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to previous page' %}">
+    <a href="{% url root_link page=page.previous_page_number %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to previous page' context 'admin paginator' %}">
       <span class="fa fa-chevron-left"></span>
     </a>
   {% else %}
@@ -19,23 +19,23 @@
     </button>
   {% endif %}
   {% if page.has_next %}
-    <a href="{% url root_link page=page.next_page_number %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to next page' %}">
+    <a href="{% url root_link page=page.next_page_number %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to next page' context 'admin paginator' %}">
       <span class="fa fa-chevron-right"></span>
     </a>
-    <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to last page' %}">
-      {% trans "Last" %}
+    <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to last page' context 'admin paginator' %}">
+      {% trans "Last" context "admin paginator" %}
     </a>
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
       <span class="fa fa-chevron-right"></span>
     </button>
     <button class="btn btn-light btn-sm" disabled>
-      {% trans "Last" %}
+      {% trans "Last" context "admin paginator" %}
     </button>
   {% endif %}
 </div>
 <div class="col-auto">
-  {% blocktrans trimmed with page=page.number pages=paginator.num_pages %}
+  {% blocktrans trimmed with page=page.number pages=paginator.num_pages context "admin paginator" %}
     Page {{ page }} of {{ pages }}
   {% endblocktrans %}
 </div>

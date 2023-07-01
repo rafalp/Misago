@@ -2,7 +2,7 @@ import re
 
 from django import forms
 from django.core.files.base import ContentFile
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 from mptt.forms import TreeNodeChoiceField
 
 from ...core.utils import get_file_hash
@@ -17,17 +17,25 @@ class ThemeChoiceField(TreeNodeChoiceField):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("queryset", Theme.objects.all())
-        kwargs.setdefault("empty_label", _("No parent"))
+        kwargs.setdefault(
+            "empty_label", pgettext_lazy("admin theme parent empty label", "No parent")
+        )
         kwargs.setdefault("level_indicator", self.level_indicator)
         super().__init__(*args, **kwargs)
 
 
 class ThemeForm(forms.ModelForm):
-    name = forms.CharField(label=_("Name"))
-    parent = ThemeChoiceField(label=_("Parent"), required=False)
-    version = forms.CharField(label=_("Version"), required=False)
-    author = forms.CharField(label=_("Author(s)"), required=False)
-    url = forms.URLField(label=_("Url"), required=False)
+    name = forms.CharField(label=pgettext_lazy("admin theme form", "Name"))
+    parent = ThemeChoiceField(
+        label=pgettext_lazy("admin theme form", "Parent"), required=False
+    )
+    version = forms.CharField(
+        label=pgettext_lazy("admin theme form", "Version"), required=False
+    )
+    author = forms.CharField(
+        label=pgettext_lazy("admin theme form", "Author(s)"), required=False
+    )
+    url = forms.URLField(label=pgettext_lazy("admin theme form", "Url"), required=False)
 
     class Meta:
         model = Theme
@@ -50,19 +58,27 @@ class ThemeForm(forms.ModelForm):
 
 class ImportForm(forms.Form):
     name = forms.CharField(
-        label=_("Name"),
-        help_text=_("Leave this field empty to use theme name from imported file."),
+        label=pgettext_lazy("admin theme form", "Name"),
+        help_text=pgettext_lazy(
+            "admin theme form",
+            "Leave this field empty to use theme name from imported file.",
+        ),
         max_length=255,
         required=False,
     )
-    parent = ThemeChoiceField(label=_("Parent"), required=False)
+    parent = ThemeChoiceField(
+        label=pgettext_lazy("admin theme form", "Parent"), required=False
+    )
     upload = forms.FileField(
-        label=_("Theme file"), help_text=_("Theme file should be a ZIP file.")
+        label=pgettext_lazy("admin theme form", "Theme file"),
+        help_text=pgettext_lazy("admin theme form", "Theme file should be a ZIP file."),
     )
 
     def clean_upload(self):
         data = self.cleaned_data["upload"]
-        error_message = gettext("Uploaded file is not a valid ZIP file.")
+        error_message = pgettext(
+            "admin theme form", "Uploaded file is not a valid ZIP file."
+        )
         if not data.name.lower().endswith(".zip"):
             raise forms.ValidationError(error_message)
         if data.content_type not in ("application/zip", "application/octet-stream"):
@@ -107,7 +123,11 @@ class UploadAssetsForm(forms.Form):
 
     assets = forms.FileField(
         widget=forms.ClearableFileInput(attrs={"multiple": True}),
-        error_messages={"required": _("No files have been uploaded.")},
+        error_messages={
+            "required": pgettext_lazy(
+                "admin theme assets form", "No files have been uploaded."
+            )
+        },
     )
 
     def __init__(self, *args, instance=None):
@@ -133,8 +153,9 @@ class UploadAssetsForm(forms.Form):
         if asset.content_type in self.allowed_content_types:
             return
 
-        message = gettext(
-            'File "%(file)s" content type "%(content_type)s" is not allowed.'
+        message = pgettext(
+            "admin theme assets form",
+            'File "%(file)s" content type "%(content_type)s" is not allowed.',
         )
         details = {"file": asset.name, "content_type": asset.content_type}
 
@@ -146,7 +167,9 @@ class UploadAssetsForm(forms.Form):
             if filename.endswith(".%s" % extension):
                 return
 
-        message = gettext('File "%(file)s" extension is invalid.')
+        message = pgettext(
+            "admin theme assets form", 'File "%(file)s" extension is invalid.'
+        )
         details = {"file": asset.name}
 
         raise forms.ValidationError(message % details)
@@ -171,9 +194,10 @@ class UploadMediaForm(UploadAssetsForm):
 
 class CssEditorForm(forms.ModelForm):
     name = forms.CharField(
-        label=_("Name"),
-        help_text=_(
-            "Should be an correct filename and include the .css extension. It will be lowercased."
+        label=pgettext_lazy("admin theme css form", "Name"),
+        help_text=pgettext_lazy(
+            "admin theme css form",
+            "Should be an correct filename and include the .css extension. It will be lowercased.",
         ),
         validators=[validate_css_name],
     )
@@ -191,7 +215,9 @@ class CssEditorForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         if not cleaned_data.get("source"):
-            raise forms.ValidationError(gettext("You need to enter CSS for this file."))
+            raise forms.ValidationError(
+                pgettext("admin theme css form", "You need to enter CSS for this file.")
+            )
         return cleaned_data
 
     def save(self):
@@ -218,10 +244,15 @@ class CssEditorForm(forms.ModelForm):
 
 class CssLinkForm(forms.ModelForm):
     name = forms.CharField(
-        label=_("Link name"),
-        help_text=_('Can be descriptive (e.g. "roboto from fonts.google.com").'),
+        label=pgettext_lazy("admin theme css link form", "Link name"),
+        help_text=pgettext_lazy(
+            "admin theme css link form",
+            'Can be descriptive (e.g. "roboto from fonts.google.com").',
+        ),
     )
-    url = forms.URLField(label=_("Remote CSS URL"))
+    url = forms.URLField(
+        label=pgettext_lazy("admin theme css link form", "Remote CSS URL")
+    )
 
     class Meta:
         model = Css

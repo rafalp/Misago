@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from . import ThreadType
 from ...categories import THREADS_ROOT_NAME
@@ -11,7 +11,9 @@ class Thread(ThreadType):
     def get_category_name(self, category):
         if category.level:
             return category.name
-        return _("None (will become top level category)")
+        return pgettext_lazy(
+            "threads root category name", "None (will become top level category)"
+        )
 
     def get_category_absolute_url(self, category):
         if category.level:

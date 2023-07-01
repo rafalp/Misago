@@ -4,7 +4,7 @@ import logging
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.utils.module_loading import import_string
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext
 
 from ...conf import settings
 
@@ -72,7 +72,7 @@ class ProfileFields:
 
         groups = []
         for group in self.fields_groups:
-            group_dict = {"name": _(group["name"]), "fields": []}
+            group_dict = {"name": gettext(group["name"]), "fields": []}
 
             for field_path in group["fields"]:
                 field = self.fields_dict[field_path]
@@ -100,7 +100,7 @@ class ProfileFields:
 
         form._profile_fields_groups = []
         for group in self.fields_groups:
-            group_dict = {"name": _(group["name"]), "fields": []}
+            group_dict = {"name": gettext(group["name"]), "fields": []}
 
             for field_path in group["fields"]:
                 field = self.fields_dict[field_path]

@@ -8,7 +8,7 @@ from django.forms import (
     ValidationError,
 )
 from django.core.validators import RegexValidator
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..core.utils import parse_iso8601_string
 
@@ -42,9 +42,9 @@ def ColorField(**kwargs):
             RegexValidator(
                 r"^#[0-9a-f]{6}$",
                 flags=re.IGNORECASE,
-                message=_(
-                    "Value must be a 7-character string specifying an RGB color "
-                    "in a hexadecimal format."
+                message=pgettext_lazy(
+                    "admin color field",
+                    "Value must be a 7-character string specifying an RGB color in a hexadecimal format.",
                 ),
             )
         ],
@@ -64,8 +64,8 @@ class YesNoSwitchBase(TypedChoiceField):
 
 
 def YesNoSwitch(**kwargs):
-    yes_label = kwargs.pop("yes_label", _("Yes"))
-    no_label = kwargs.pop("no_label", _("No"))
+    yes_label = kwargs.pop("yes_label", pgettext_lazy("admin yesno switch", "Yes"))
+    no_label = kwargs.pop("no_label", pgettext_lazy("admin yesno switch", "No"))
 
     return YesNoSwitchBase(
         coerce=int,

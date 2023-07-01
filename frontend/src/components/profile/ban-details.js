@@ -69,7 +69,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     title.set({
-      title: gettext("Ban details"),
+      title: pgettext("profile ban details title", "Ban details"),
       parent: this.props.profile.username,
     })
   }
@@ -82,7 +82,7 @@ export default class extends React.Component {
     if (this.state.ban.user_message) {
       return (
         <div className="panel-body ban-message ban-user-message">
-          <h4>{gettext("User-shown ban message")}</h4>
+          <h4>{pgettext("profile ban details", "User-shown ban message")}</h4>
           <div
             className="lead"
             dangerouslySetInnerHTML={{
@@ -100,7 +100,7 @@ export default class extends React.Component {
     if (this.state.ban.staff_message) {
       return (
         <div className="panel-body ban-message ban-staff-message">
-          <h4>{gettext("Team-shown ban message")}</h4>
+          <h4>{pgettext("profile ban details", "Team-shown ban message")}</h4>
           <div
             className="lead"
             dangerouslySetInnerHTML={{
@@ -118,7 +118,10 @@ export default class extends React.Component {
     if (this.state.ban.expires_on) {
       if (this.state.ban.expires_on.isAfter(moment())) {
         let title = interpolate(
-          gettext("This ban expires on %(expires_on)s."),
+          pgettext(
+            "profile ban details",
+            "This ban expires on %(expires_on)s."
+          ),
           {
             expires_on: this.state.ban.expires_on.format("LL, LT"),
           },
@@ -126,7 +129,7 @@ export default class extends React.Component {
         )
 
         let message = interpolate(
-          gettext("This ban expires %(expires_on)s."),
+          pgettext("profile ban details", "This ban expires %(expires_on)s."),
           {
             expires_on: this.state.ban.expires_on.fromNow(),
           },
@@ -135,11 +138,11 @@ export default class extends React.Component {
 
         return <abbr title={title}>{message}</abbr>
       } else {
-        return gettext("This ban has expired.")
+        return pgettext("profile ban details", "This ban has expired.")
       }
     } else {
       return interpolate(
-        gettext("%(username)s's ban is permanent."),
+        pgettext("profile ban details", "%(username)s's ban is permanent."),
         {
           username: this.props.profile.username,
         },
@@ -157,7 +160,7 @@ export default class extends React.Component {
             {this.getStaffMessage()}
 
             <div className="panel-body ban-expires">
-              <h4>{gettext("Ban expiration")}</h4>
+              <h4>{pgettext("profile ban details", "Ban expiration")}</h4>
               <p className="lead">{this.getExpirationMessage()}</p>
             </div>
           </div>
@@ -166,7 +169,10 @@ export default class extends React.Component {
         return (
           <div>
             <PanelMessage
-              message={gettext("No ban is active at the moment.")}
+              message={pgettext(
+                "profile ban details",
+                "No ban is active at the moment."
+              )}
             />
           </div>
         )
@@ -191,7 +197,9 @@ export default class extends React.Component {
       <div className="profile-ban-details">
         <div className="panel panel-default">
           <div className="panel-heading">
-            <h3 className="panel-title">{gettext("Ban details")}</h3>
+            <h3 className="panel-title">
+              {pgettext("profile ban details title", "Ban details")}
+            </h3>
           </div>
 
           {this.getPanelBody()}

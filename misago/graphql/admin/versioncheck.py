@@ -1,7 +1,7 @@
 import requests
 from ariadne import QueryType
 from django.core.cache import cache
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from requests.exceptions import RequestException
 
 from ... import __released__, __version__
@@ -24,10 +24,13 @@ def resolve_version(*_):
 def get_unreleased_error():
     return {
         "status": Status.ERROR,
-        "message": _("The site is running using unreleased version of Misago."),
-        "description": _(
-            "Unreleased versions of Misago can lack security features and there is "
-            "no supported way to upgrade them to release versions later."
+        "message": pgettext(
+            "admin version check",
+            "The site is running using unreleased version of Misago.",
+        ),
+        "description": pgettext(
+            "admin version check",
+            "Unreleased versions of Misago can lack security features and there is no supported way to upgrade them to release versions later.",
         ),
     }
 
@@ -39,11 +42,13 @@ def check_version_with_api():
     except (RequestException, KeyError, ValueError):
         return {
             "status": Status.WARNING,
-            "message": _("Failed to connect to pypi.org API. Try again later."),
-            "description": _(
-                "Version check feature relies on the API operated by the Python "
-                "Package Index (pypi.org) API to retrieve latest Misago release "
-                "version."
+            "message": pgettext(
+                "admin version check",
+                "Failed to connect to pypi.org API. Try again later.",
+            ),
+            "description": pgettext(
+                "admin version check",
+                "Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.",
             ),
         }
 
@@ -67,17 +72,23 @@ def compare_versions(current, latest):
     if latest == current:
         return {
             "status": Status.SUCCESS,
-            "message": _("The site is running updated version of Misago."),
-            "description": _("Misago %(version)s is latest release.")
+            "message": pgettext(
+                "admin version check", "The site is running updated version of Misago."
+            ),
+            "description": pgettext(
+                "admin version check", "Misago %(version)s is latest release."
+            )
             % {"version": current},
         }
 
     return {
         "status": Status.ERROR,
-        "message": _("The site is running outdated version of Misago."),
-        "description": _(
-            "The site is running Misago version %(version)s while version %(latest)s "
-            "is available."
+        "message": pgettext(
+            "admin version check", "The site is running outdated version of Misago."
+        ),
+        "description": pgettext(
+            "admin version check",
+            "The site is running Misago version %(version)s while version %(latest)s is available.",
         )
         % {"version": current, "latest": latest},
     }

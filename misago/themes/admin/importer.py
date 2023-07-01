@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 from zipfile import BadZipFile, ZipFile
 
 from django.core.files.uploadedfile import UploadedFile
-from django.utils.translation import gettext as _, gettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ..models import Theme
 from .css import create_css
@@ -17,8 +17,9 @@ from .forms import (
 from .media import create_media
 from .tasks import build_theme_css, update_remote_css_size
 
-INVALID_MANIFEST_ERROR = gettext_lazy(
-    '"manifest.json" contained by ZIP file is not a valid theme manifest file.'
+INVALID_MANIFEST_ERROR = pgettext_lazy(
+    "admin theme import",
+    '"manifest.json" contained by ZIP file is not a valid theme manifest file.',
 )
 
 
@@ -58,17 +59,30 @@ def extract_zipfile_to_tmp_dir(zipfile, tmp_dir):
     try:
         ZipFile(zipfile).extractall(tmp_dir)
     except BadZipFile:
-        raise ThemeImportError(_("Uploaded ZIP file could not be extracted."))
+        raise ThemeImportError(
+            pgettext("admin theme import", "Uploaded ZIP file could not be extracted.")
+        )
 
 
 def validate_zipfile_contains_single_directory(tmp_dir):
     dir_contents = os.listdir(tmp_dir)
     if not dir_contents:
-        raise ThemeImportError(_("Uploaded ZIP file is empty."))
+        raise ThemeImportError(
+            pgettext("admin theme import", "Uploaded ZIP file is empty.")
+        )
     if len(dir_contents) > 1:
-        raise ThemeImportError(_("Uploaded ZIP file should contain single directory."))
+        raise ThemeImportError(
+            pgettext(
+                "admin theme import",
+                "Uploaded ZIP file should contain single directory.",
+            )
+        )
     if not os.path.isdir(os.path.join(tmp_dir, dir_contents[0])):
-        raise ThemeImportError(_("Uploaded ZIP file didn't contain a directory."))
+        raise ThemeImportError(
+            pgettext(
+                "admin theme import", "Uploaded ZIP file didn't contain a directory."
+            )
+        )
 
 
 def clean_theme_contents(theme_dir):
@@ -82,11 +96,17 @@ def read_manifest(theme_dir):
             return json.load(fp)
     except FileNotFoundError:
         raise ThemeImportError(
-            _('Uploaded ZIP file didn\'t contain a "manifest.json".')
+            pgettext(
+                "admin theme import",
+                'Uploaded ZIP file didn\'t contain a "manifest.json".',
+            )
         )
     except json.decoder.JSONDecodeError:
         raise ThemeImportError(
-            _('"manifest.json" contained by ZIP file is not a valid JSON file.')
+            pgettext(
+                "admin theme import",
+                '"manifest.json" contained by ZIP file is not a valid JSON file.',
+            )
         )
 
 

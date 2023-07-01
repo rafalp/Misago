@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ...acl.objectacl import add_acl_to_obj
 from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
@@ -137,7 +137,7 @@ class ForumThread(ViewModel):
         return thread
 
     def get_root_name(self):
-        return _("Threads")
+        return pgettext("threads root name", "Threads")
 
     def get_frontend_context(self):
         return ThreadSerializer(
@@ -168,7 +168,7 @@ class PrivateThread(ViewModel):
         return thread
 
     def get_root_name(self):
-        return _("Private threads")
+        return pgettext("private threads root name", "Private threads")
 
     def get_frontend_context(self):
         return PrivateThreadSerializer(

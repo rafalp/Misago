@@ -267,6 +267,7 @@ class GenderProfileFieldTests(AdminTestCase):
                         {"label": "Not telling", "value": "secret"},
                         {"label": "Female", "value": "female"},
                         {"label": "Male", "value": "male"},
+                        {"label": "Non-binary", "value": "enby"},
                     ],
                 },
                 "initial": "",

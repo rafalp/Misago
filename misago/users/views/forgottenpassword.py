@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ...core.exceptions import Banned
 from ..bans import get_user_ban
@@ -14,7 +14,7 @@ from ..tokens import is_password_change_token_valid
 def request_reset(request):
     if request.settings.enable_oauth2_client:
         raise PermissionDenied(
-            _("Please use %(provider)s to reset your password.")
+            pgettext("user password", "Please use %(provider)s to reset your password.")
             % {"provider": request.settings.oauth2_provider}
         )
 
@@ -32,7 +32,7 @@ class ResetError(Exception):
 def reset_password_form(request, pk, token):
     if request.settings.enable_oauth2_client:
         raise PermissionDenied(
-            _("Please use %(provider)s to reset your password.")
+            pgettext("user password", "Please use %(provider)s to reset your password.")
             % {"provider": request.settings.oauth2_provider}
         )
 
@@ -40,15 +40,16 @@ def reset_password_form(request, pk, token):
 
     try:
         if request.user.is_authenticated and request.user.id != requesting_user.id:
-            message = _(
-                "%(user)s, your link has expired. "
-                "Please request new link and try again."
+            message = pgettext(
+                "user password",
+                "%(user)s, your link has expired. Please request new link and try again.",
             )
             raise ResetError(message % {"user": requesting_user.username})
 
         if not is_password_change_token_valid(requesting_user, token):
-            message = _(
-                "%(user)s, your link is invalid. Please try again or request new link."
+            message = pgettext(
+                "user password",
+                "%(user)s, your link is invalid. Please try again or request new link.",
             )
             raise ResetError(message % {"user": requesting_user.username})
 

@@ -8,12 +8,12 @@ const ThreadPollButton = ({ compact, disabled, onClick }) => (
       "btn-icon": compact,
     })}
     type="button"
-    title={compact ? gettext("Add poll") : null}
+    title={compact ? pgettext("thread poll btn", "Add poll") : null}
     disabled={disabled}
     onClick={onClick}
   >
     <span className="material-icon">poll</span>
-    {!compact && gettext("Add poll")}
+    {!compact && pgettext("thread poll btn", "Add poll")}
   </button>
 )
 

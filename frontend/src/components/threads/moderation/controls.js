@@ -83,7 +83,7 @@ export default class extends React.Component {
           value: 2,
         },
       ],
-      gettext("Selected threads were pinned globally.")
+      pgettext("threads moderation", "Selected threads were pinned globally.")
     )
   }
 
@@ -96,7 +96,7 @@ export default class extends React.Component {
           value: 1,
         },
       ],
-      gettext("Selected threads were pinned locally.")
+      pgettext("threads moderation", "Selected threads were pinned locally.")
     )
   }
 
@@ -109,7 +109,7 @@ export default class extends React.Component {
           value: 0,
         },
       ],
-      gettext("Selected threads were unpinned.")
+      pgettext("threads moderation", "Selected threads were unpinned.")
     )
   }
 
@@ -122,7 +122,7 @@ export default class extends React.Component {
           value: false,
         },
       ],
-      gettext("Selected threads were approved.")
+      pgettext("threads moderation", "Selected threads were approved.")
     )
   }
 
@@ -135,7 +135,7 @@ export default class extends React.Component {
           value: false,
         },
       ],
-      gettext("Selected threads were opened.")
+      pgettext("threads moderation", "Selected threads were opened.")
     )
   }
 
@@ -148,7 +148,7 @@ export default class extends React.Component {
           value: true,
         },
       ],
-      gettext("Selected threads were closed.")
+      pgettext("threads moderation", "Selected threads were closed.")
     )
   }
 
@@ -161,7 +161,7 @@ export default class extends React.Component {
           value: false,
         },
       ],
-      gettext("Selected threads were unhidden.")
+      pgettext("threads moderation", "Selected threads were unhidden.")
     )
   }
 
@@ -174,7 +174,7 @@ export default class extends React.Component {
           value: true,
         },
       ],
-      gettext("Selected threads were hidden.")
+      pgettext("threads moderation", "Selected threads were hidden.")
     )
   }
 
@@ -198,7 +198,8 @@ export default class extends React.Component {
           id: thread.id,
           title: thread.title,
           errors: [
-            gettext(
+            pgettext(
+              "threads moderation",
               "You don't have permission to merge this thread with others."
             ),
           ],
@@ -208,7 +209,10 @@ export default class extends React.Component {
 
     if (this.props.threads.length < 2) {
       snackbar.info(
-        gettext("You have to select at least two threads to merge.")
+        pgettext(
+          "threads moderation",
+          "You have to select at least two threads to merge."
+        )
       )
     } else if (errors.length) {
       modal.show(<ErrorsModal errors={errors} />)
@@ -221,7 +225,10 @@ export default class extends React.Component {
   delete = () => {
     if (
       !window.confirm(
-        gettext("Are you sure you want to delete selected threads?")
+        pgettext(
+          "threads moderation",
+          "Are you sure you want to delete selected threads?"
+        )
       )
     ) {
       return
@@ -242,7 +249,9 @@ export default class extends React.Component {
           this.props.deleteThread(thread)
         })
 
-        snackbar.success(gettext("Selected threads were deleted."))
+        snackbar.success(
+          pgettext("threads moderation", "Selected threads were deleted.")
+        )
       },
       (rejection) => {
         if (rejection.status === 400) {
@@ -278,7 +287,7 @@ export default class extends React.Component {
             onClick={() => store.dispatch(select.all(threads.map((t) => t.id)))}
           >
             <span className="material-icon">check_box</span>
-            {gettext("Select all")}
+            {pgettext("threads moderation btn", "Select all")}
           </button>
         </li>
         <li>
@@ -289,7 +298,7 @@ export default class extends React.Component {
             onClick={() => store.dispatch(select.none())}
           >
             <span className="material-icon">check_box_outline_blank</span>
-            {gettext("Select none")}
+            {pgettext("threads moderation btn", "Select none")}
           </button>
         </li>
         <li role="separator" className="divider" />
@@ -302,7 +311,7 @@ export default class extends React.Component {
               onClick={this.pinGlobally}
             >
               <span className="material-icon">bookmark</span>
-              {gettext("Pin threads globally")}
+              {pgettext("threads moderation btn", "Pin threads globally")}
             </button>
           </li>
         )}
@@ -315,7 +324,7 @@ export default class extends React.Component {
               onClick={this.pinLocally}
             >
               <span className="material-icon">bookmark_border</span>
-              {gettext("Pin threads locally")}
+              {pgettext("threads moderation btn", "Pin threads locally")}
             </button>
           </li>
         )}
@@ -328,7 +337,7 @@ export default class extends React.Component {
               onClick={this.unpin}
             >
               <span className="material-icon">panorama_fish_eye</span>
-              {gettext("Unpin threads")}
+              {pgettext("threads moderation btn", "Unpin threads")}
             </button>
           </li>
         )}
@@ -341,7 +350,7 @@ export default class extends React.Component {
               onClick={this.move}
             >
               <span className="material-icon">arrow_forward</span>
-              {gettext("Move threads")}
+              {pgettext("threads moderation btn", "Move threads")}
             </button>
           </li>
         )}
@@ -354,7 +363,7 @@ export default class extends React.Component {
               onClick={this.merge}
             >
               <span className="material-icon">call_merge</span>
-              {gettext("Merge threads")}
+              {pgettext("threads moderation btn", "Merge threads")}
             </button>
           </li>
         )}
@@ -367,7 +376,7 @@ export default class extends React.Component {
               onClick={this.approve}
             >
               <span className="material-icon">done</span>
-              {gettext("Approve threads")}
+              {pgettext("threads moderation btn", "Approve threads")}
             </button>
           </li>
         )}
@@ -380,7 +389,7 @@ export default class extends React.Component {
               onClick={this.open}
             >
               <span className="material-icon">lock_open</span>
-              {gettext("Open threads")}
+              {pgettext("threads moderation btn", "Open threads")}
             </button>
           </li>
         )}
@@ -393,7 +402,7 @@ export default class extends React.Component {
               onClick={this.close}
             >
               <span className="material-icon">lock_outline</span>
-              {gettext("Close threads")}
+              {pgettext("threads moderation btn", "Close threads")}
             </button>
           </li>
         )}
@@ -406,7 +415,7 @@ export default class extends React.Component {
               onClick={this.unhide}
             >
               <span className="material-icon">visibility</span>
-              {gettext("Unhide threads")}
+              {pgettext("threads moderation btn", "Unhide threads")}
             </button>
           </li>
         )}
@@ -419,7 +428,7 @@ export default class extends React.Component {
               onClick={this.hide}
             >
               <span className="material-icon">visibility_off</span>
-              {gettext("Hide threads")}
+              {pgettext("threads moderation btn", "Hide threads")}
             </button>
           </li>
         )}
@@ -432,7 +441,7 @@ export default class extends React.Component {
               onClick={this.delete}
             >
               <span className="material-icon">clear</span>
-              {gettext("Delete threads")}
+              {pgettext("threads moderation btn", "Delete threads")}
             </button>
           </li>
         )}

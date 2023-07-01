@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New theme" %}
+  {% trans "New theme" context "admin theme form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -26,7 +26,7 @@
   <div class="col-auto page-action">
     <a href="{% url 'misago:admin:themes:assets' pk=target.pk %}" class="btn btn-primary btn-sm">
       <span class="far fa-file-alt"></span>
-      {% trans "Edit assets" %}
+      {% trans "Edit assets" context "admin themes" %}
     </a>
   </div>
 {% endif %}
@@ -35,9 +35,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit theme" %}
+  {% trans "Edit theme" context "admin theme form" %}
 {% else %}
-  {% trans "New theme" %}
+  {% trans "New theme" context "admin theme form" %}
 {% endif %}
 {% endblock %}
 
@@ -45,7 +45,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Settings" %}</legend>
+    <legend>{% trans "Settings" context "admin theme form" %}</legend>
 
     {% form_row form.parent %}
     {% form_row form.name %}
@@ -54,7 +54,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Additional information (optional)" %}</legend>
+    <legend>{% trans "Additional information (optional)" context "admin theme form" %}</legend>
 
     {% form_row form.version %}
     {% form_row form.author %}

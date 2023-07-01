@@ -35,7 +35,7 @@
                       {% endif %}
                     </div>
                     <div>
-                      <span class="text-muted" title="{% blocktrans trimmed with date=thread.started_on|date:'DATETIME_FORMAT' %}
+                      <span class="text-muted" title="{% blocktrans trimmed with date=thread.started_on|date:'DATETIME_FORMAT' context 'thread page header' %}
                         Started on {{ date }}
                       {% endblocktrans %}">
                         {{ thread.started_on|date:'DATE_FORMAT' }}

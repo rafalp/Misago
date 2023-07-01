@@ -1,9 +1,15 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .base import OAuthProviderForm
 
 
 class FacebookForm(OAuthProviderForm):
-    key = forms.CharField(label=_("App ID"), required=False)
-    secret = forms.CharField(label=_("App Secret"), required=False)
+    key = forms.CharField(
+        label=pgettext_lazy("admin social auth facebook form", "App ID"),
+        required=False,
+    )
+    secret = forms.CharField(
+        label=pgettext_lazy("admin social auth facebook form", "App Secret"),
+        required=False,
+    )

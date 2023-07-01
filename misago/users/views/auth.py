@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.urls import NoReverseMatch
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
@@ -18,7 +18,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 def login(request):
     if request.settings.enable_oauth2_client:
         raise PermissionDenied(
-            _("Please use %(provider)s to sign in.")
+            pgettext("login", "Please use %(provider)s to sign in.")
             % {"provider": request.settings.oauth2_provider}
         )
 

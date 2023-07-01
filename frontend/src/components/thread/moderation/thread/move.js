@@ -78,7 +78,9 @@ export default class extends Form {
           store.dispatch(posts.load(data.post_set))
           store.dispatch(thread.release())
 
-          snackbar.success(gettext("Thread has been moved."))
+          snackbar.success(
+            pgettext("thread move form", "Thread has been moved.")
+          )
           modal.hide()
         },
         (rejection) => {
@@ -108,7 +110,10 @@ export default class extends Form {
             <div className="modal-content">
               <ModalHeader />
               <div className="modal-body">
-                <FormGroup for="id_category" label={gettext("New category")}>
+                <FormGroup
+                  for="id_category"
+                  label={pgettext("thread move form field", "New category")}
+                >
                   <CategorySelect
                     choices={this.state.categories}
                     disabled={this.state.isLoading || this.props.thread.isBusy}
@@ -125,13 +130,13 @@ export default class extends Form {
                   disabled={this.state.isLoading}
                   type="button"
                 >
-                  {gettext("Cancel")}
+                  {pgettext("thread move form btn", "Cancel")}
                 </button>
                 <button
                   className="btn btn-primary"
                   disabled={this.state.isLoading || this.props.thread.isBusy}
                 >
-                  {gettext("Move thread")}
+                  {pgettext("thread move form btn", "Move thread")}
                 </button>
               </div>
             </div>
@@ -157,7 +162,9 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Move thread")}</h4>
+      <h4 className="modal-title">
+        {pgettext("thread move form title", "Move thread")}
+      </h4>
     </div>
   )
 }
@@ -183,7 +190,10 @@ export function ModalMessage(props) {
         </div>
         <div className="message-body">
           <p className="lead">
-            {gettext("You can't move this thread at the moment.")}
+            {pgettext(
+              "thread move form",
+              "You can't move this thread at the moment."
+            )}
           </p>
           <p>{props.message}</p>
           <button
@@ -191,7 +201,7 @@ export function ModalMessage(props) {
             data-dismiss="modal"
             type="button"
           >
-            {gettext("Ok")}
+            {pgettext("thread move form dismiss btn", "Ok")}
           </button>
         </div>
       </div>

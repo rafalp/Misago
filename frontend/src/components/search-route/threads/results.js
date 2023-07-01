@@ -69,7 +69,7 @@ export class LoadMore extends React.Component {
           loading={this.props.isBusy}
           onClick={this.onClick}
         >
-          {gettext("Show more")}
+          {pgettext("search threads btn", "Show more")}
         </Button>
       </div>
     )

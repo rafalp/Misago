@@ -45,7 +45,7 @@ export default class extends React.Component {
           value: 2,
         },
       ],
-      gettext("Thread has been pinned globally.")
+      pgettext("thread moderation", "Thread has been pinned globally.")
     )
   }
 
@@ -58,7 +58,7 @@ export default class extends React.Component {
           value: 1,
         },
       ],
-      gettext("Thread has been pinned locally.")
+      pgettext("thread moderation", "Thread has been pinned locally.")
     )
   }
 
@@ -71,7 +71,7 @@ export default class extends React.Component {
           value: 0,
         },
       ],
-      gettext("Thread has been unpinned.")
+      pgettext("thread moderation", "Thread has been unpinned.")
     )
   }
 
@@ -84,7 +84,7 @@ export default class extends React.Component {
           value: false,
         },
       ],
-      gettext("Thread has been approved.")
+      pgettext("thread moderation", "Thread has been approved.")
     )
   }
 
@@ -110,7 +110,7 @@ export default class extends React.Component {
           value: true,
         },
       ],
-      gettext("Thread has been closed.")
+      pgettext("thread moderation", "Thread has been closed.")
     )
   }
 
@@ -123,7 +123,7 @@ export default class extends React.Component {
           value: false,
         },
       ],
-      gettext("Thread has been made visible.")
+      pgettext("thread moderation", "Thread has been made visible.")
     )
   }
 
@@ -136,7 +136,7 @@ export default class extends React.Component {
           value: true,
         },
       ],
-      gettext("Thread has been made hidden.")
+      pgettext("thread moderation", "Thread has been made hidden.")
     )
   }
 
@@ -152,7 +152,12 @@ export default class extends React.Component {
 
   delete = () => {
     if (
-      !window.confirm(gettext("Are you sure you want to delete this thread?"))
+      !window.confirm(
+        pgettext(
+          "thread moderation",
+          "Are you sure you want to delete this thread?"
+        )
+      )
     ) {
       return
     }
@@ -161,7 +166,9 @@ export default class extends React.Component {
 
     ajax.delete(this.props.thread.api.index).then(
       (data) => {
-        snackbar.success(gettext("Thread has been deleted."))
+        snackbar.success(
+          pgettext("thread moderation", "Thread has been deleted.")
+        )
         window.location = this.props.thread.category.url.index
       },
       (rejection) => {
@@ -184,7 +191,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">edit</span>
-              {gettext("Change title")}
+              {pgettext("thread moderation btn", "Change title")}
             </button>
           </li>
         )}
@@ -196,7 +203,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">bookmark</span>
-              {gettext("Pin globally")}
+              {pgettext("thread moderation btn", "Pin globally")}
             </button>
           </li>
         )}
@@ -208,7 +215,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">bookmark_border</span>
-              {gettext("Pin locally")}
+              {pgettext("thread moderation btn", "Pin locally")}
             </button>
           </li>
         )}
@@ -216,7 +223,7 @@ export default class extends React.Component {
           <li>
             <button className="btn btn-link" onClick={this.unpin} type="button">
               <span className="material-icon">panorama_fish_eye</span>
-              {gettext("Unpin")}
+              {pgettext("thread moderation btn", "Unpin")}
             </button>
           </li>
         )}
@@ -224,7 +231,7 @@ export default class extends React.Component {
           <li>
             <button className="btn btn-link" onClick={this.move} type="button">
               <span className="material-icon">arrow_forward</span>
-              {gettext("Move")}
+              {pgettext("thread moderation btn", "Move")}
             </button>
           </li>
         )}
@@ -232,7 +239,7 @@ export default class extends React.Component {
           <li>
             <button className="btn btn-link" onClick={this.merge} type="button">
               <span className="material-icon">call_merge</span>
-              {gettext("Merge")}
+              {pgettext("thread moderation btn", "Merge")}
             </button>
           </li>
         )}
@@ -244,7 +251,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">done</span>
-              {gettext("Approve")}
+              {pgettext("thread moderation btn", "Approve")}
             </button>
           </li>
         )}
@@ -252,7 +259,7 @@ export default class extends React.Component {
           <li>
             <button className="btn btn-link" onClick={this.open} type="button">
               <span className="material-icon">lock_open</span>
-              {gettext("Open")}
+              {pgettext("thread moderation btn", "Open")}
             </button>
           </li>
         )}
@@ -260,7 +267,7 @@ export default class extends React.Component {
           <li>
             <button className="btn btn-link" onClick={this.close} type="button">
               <span className="material-icon">lock_outline</span>
-              {gettext("Close")}
+              {pgettext("thread moderation btn", "Close")}
             </button>
           </li>
         )}
@@ -272,7 +279,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">visibility</span>
-              {gettext("Unhide")}
+              {pgettext("thread moderation btn", "Unhide")}
             </button>
           </li>
         )}
@@ -280,7 +287,7 @@ export default class extends React.Component {
           <li>
             <button className="btn btn-link" onClick={this.hide} type="button">
               <span className="material-icon">visibility_off</span>
-              {gettext("Hide")}
+              {pgettext("thread moderation btn", "Hide")}
             </button>
           </li>
         )}
@@ -292,7 +299,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">clear</span>
-              {gettext("Delete")}
+              {pgettext("thread moderation btn", "Delete")}
             </button>
           </li>
         )}

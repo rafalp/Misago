@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Form submission rejected" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Form submission rejected" context "admin csrf error" %} | {{ block.super }}{% endblock %}
 
 
 {% block body %}
@@ -11,7 +11,7 @@
     <div class="card login-error-card">
       <div class="card-body">
         <h1 class="card-title login-error-title">
-          {% trans "Form submission rejected" %}
+          {% trans "Form submission rejected" context "admin csrf error" %}
         </h1>
         {% include "misago/admin/errorpages/csrf_failure_message.html" %}
       </div>

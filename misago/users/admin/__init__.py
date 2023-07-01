@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin as djadmin
 from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .djangoadmin import UserAdminModel
 from .views.bans import BansList, DeleteBan, EditBan, NewBan
@@ -71,20 +71,27 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Users"), icon="fa fa-users", after="index", namespace="users"
+            name=pgettext_lazy("admin node", "Users"),
+            icon="fa fa-users",
+            after="index",
+            namespace="users",
         )
 
-        site.add_node(name=_("Bans"), parent="users", namespace="bans")
+        site.add_node(
+            name=pgettext_lazy("admin node", "Bans"),
+            parent="users",
+            namespace="bans",
+        )
 
         site.add_node(
-            name=_("Data downloads"),
+            name=pgettext_lazy("admin node", "Data downloads"),
             parent="users",
             after="bans:index",
             namespace="data-downloads",
         )
 
         site.add_node(
-            name=_("Ranks"),
+            name=pgettext_lazy("admin node", "Ranks"),
             icon="fas fa-shield-alt",
             after="users:index",
             namespace="ranks",

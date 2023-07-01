@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "You are banned" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "You are banned" context "error banned page" %} | {{ block.super }}{% endblock %}
 
 
 {% block meta-description %}
-{% trans "You are banned from accessing this page." %}
+{% trans "You are banned from accessing this page." context "error banned page" %}
 {% endblock meta-description %}
 
 

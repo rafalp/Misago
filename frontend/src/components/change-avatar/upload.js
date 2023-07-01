@@ -21,7 +21,10 @@ export default class extends React.Component {
   validateFile(image) {
     if (image.size > this.props.options.upload.limit) {
       return interpolate(
-        gettext("Selected file is too big. (%(filesize)s)"),
+        pgettext(
+          "avatar upload modal",
+          "Selected file is too big. (%(filesize)s)"
+        ),
         {
           filesize: fileSize(image.size),
         },
@@ -29,7 +32,10 @@ export default class extends React.Component {
       )
     }
 
-    let invalidTypeMsg = gettext("Selected file type is not supported.")
+    let invalidTypeMsg = pgettext(
+      "avatar upload modal",
+      "Selected file type is not supported."
+    )
     if (
       this.props.options.upload.allowed_mime_types.indexOf(image.type) === -1
     ) {
@@ -89,7 +95,10 @@ export default class extends React.Component {
           })
 
           snackbar.info(
-            gettext("Your image has been uploaded and you may now crop it.")
+            pgettext(
+              "avatar upload modal",
+              "Your image has been uploaded and you may now crop it."
+            )
           )
         },
         (rejection) => {
@@ -113,7 +122,7 @@ export default class extends React.Component {
     })
 
     return interpolate(
-      gettext("%(files)s files smaller than %(limit)s"),
+      pgettext("avatar upload modal", "%(files)s files smaller than %(limit)s"),
       {
         files: extensions.join(", "),
         limit: fileSize(options.limit),
@@ -127,7 +136,7 @@ export default class extends React.Component {
       <div className="modal-body modal-avatar-upload">
         <Button className="btn-pick-file" onClick={this.pickFile}>
           <div className="material-icon">input</div>
-          {gettext("Select file")}
+          {pgettext("avatar upload modal field", "Select file")}
         </Button>
         <p className="text-muted">
           {this.getUploadRequirements(this.props.options.upload)}
@@ -138,7 +147,7 @@ export default class extends React.Component {
 
   getUploadProgressLabel() {
     return interpolate(
-      gettext("%(progress)s % complete"),
+      pgettext("avatar upload modal field", "%(progress)s % complete"),
       {
         progress: this.state.progress,
       },
@@ -186,7 +195,7 @@ export default class extends React.Component {
               disabled={!!this.state.image}
               className="btn-default btn-block"
             >
-              {gettext("Cancel")}
+              {pgettext("avatar upload modal btn", "Cancel")}
             </Button>
           </div>
         </div>

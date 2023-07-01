@@ -4,7 +4,7 @@ export default function ({ post }) {
   const { category, thread } = post
 
   const tooltip = interpolate(
-    gettext("posted %(posted_on)s"),
+    pgettext("posts feed item header", "posted %(posted_on)s"),
     {
       posted_on: post.posted_on.format("LL, LT"),
     },

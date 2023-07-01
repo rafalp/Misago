@@ -71,7 +71,8 @@ export default class extends Form {
     if (this.state.with_content) {
       this.setState({
         isDeleted: interpolate(
-          gettext(
+          pgettext(
+            "profile delete",
             "%(username)s's account, threads, posts and other content has been deleted."
           ),
           {
@@ -83,7 +84,8 @@ export default class extends Form {
     } else {
       this.setState({
         isDeleted: interpolate(
-          gettext(
+          pgettext(
+            "profile delete",
             "%(username)s's account has been deleted and other content has been hidden."
           ),
           {
@@ -98,7 +100,7 @@ export default class extends Form {
   getButtonLabel() {
     if (this.state.confirm) {
       return interpolate(
-        gettext("Delete %(username)s"),
+        pgettext("profile delete btn", "Delete %(username)s"),
         {
           username: this.props.profile.username,
         },
@@ -106,7 +108,7 @@ export default class extends Form {
       )
     } else {
       return interpolate(
-        gettext("Please wait... (%(countdown)ss)"),
+        pgettext("profile delete btn", "Please wait... (%(countdown)ss)"),
         {
           countdown: this.state.countdown,
         },
@@ -119,12 +121,21 @@ export default class extends Form {
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="modal-body">
-          <FormGroup label={gettext("User content")} for="id_with_content">
+          <FormGroup
+            label={pgettext("profile delete", "User content")}
+            for="id_with_content"
+          >
             <YesNoSwitch
               id="id_with_content"
               disabled={this.state.isLoading}
-              labelOn={gettext("Delete together with user's account")}
-              labelOff={gettext("Hide after deleting user's account")}
+              labelOn={pgettext(
+                "profile delete content",
+                "Delete together with user's account"
+              )}
+              labelOff={pgettext(
+                "profile delete content",
+                "Hide after deleting user's account"
+              )}
               onChange={this.bindInput("with_content")}
               value={this.state.with_content}
             />
@@ -136,7 +147,7 @@ export default class extends Form {
             className="btn btn-default"
             data-dismiss="modal"
           >
-            {gettext("Cancel")}
+            {pgettext("profile delete btn", "Cancel")}
           </button>
 
           <Button
@@ -161,7 +172,7 @@ export default class extends Form {
           <p className="lead">{this.state.isDeleted}</p>
           <p>
             <a href={misago.get("USERS_LIST_URL")}>
-              {gettext("Return to users list")}
+              {pgettext("profile delete link", "Return to users list")}
             </a>
           </p>
         </div>
@@ -206,7 +217,9 @@ export default class extends Form {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Delete user account")}</h4>
+            <h4 className="modal-title">
+              {pgettext("profile delete title", "Delete user account")}
+            </h4>
           </div>
           {this.getModalBody()}
         </div>

@@ -8,8 +8,11 @@ import UnusablePasswordMessage from "./UnusablePasswordMessage"
 export default class extends React.Component {
   componentDidMount() {
     title.set({
-      title: gettext("Change email or password"),
-      parent: gettext("Change your options"),
+      title: pgettext(
+        "change sign in credentials title",
+        "Change email or password"
+      ),
+      parent: pgettext("forum options", "Change your options"),
     })
   }
 
@@ -26,7 +29,10 @@ export default class extends React.Component {
         <p className="message-line">
           <span className="material-icon">warning</span>
           <a href={misago.get("FORGOTTEN_PASSWORD_URL")}>
-            {gettext("Change forgotten password")}
+            {pgettext(
+              "change sign in credentials link",
+              "Change forgotten password"
+            )}
           </a>
         </p>
       </div>

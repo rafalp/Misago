@@ -5,8 +5,8 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Default notifications settings" context "admin notifications" %}</legend>
-    <p>{% trans "Those settings are applied only to newly created user accounts." context "admin notifications" %}</p>
+    <legend>{% trans "Default notifications settings" context "admin notifications settings form" %}</legend>
+    <p>{% trans "Those settings are applied only to newly created user accounts." context "admin notifications settings form" %}</p>
 
     {% form_row form.watch_started_threads %}
     {% form_row form.watch_replied_threads %}
@@ -19,7 +19,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Performance settings" context "admin notifications" %}</legend>
+    <legend>{% trans "Performance settings" context "admin notifications settings form" %}</legend>
 
     {% form_row form.delete_notifications_older_than %}
 

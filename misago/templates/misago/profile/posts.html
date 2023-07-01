@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Posts" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Posts" context "user profile page posts" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Posts" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Posts" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% trans "Posts" context "user profile page posts" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% trans "Posts" context "user profile page posts" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -17,13 +17,13 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count posts=profile.posts %}
+            {% blocktrans trimmed count posts=profile.posts context "user profile page posts" %}
               You have posted {{ posts }} message.
             {% plural %}
               You have posted {{ posts }} messages.
             {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed count posts=profile.posts with username=profile %}
+            {% blocktrans trimmed count posts=profile.posts with username=profile context "user profile page posts" %}
               {{ username }} has posted {{ posts }} message.
             {% plural %}
               {{ username }} has posted {{ posts }} messages.
@@ -39,9 +39,9 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You have posted no messages" %}
+        {% trans "You have posted no messages" context "user profile page posts" %}
       {% else %}
-        {% blocktrans trimmed with username=profile.username %}
+        {% blocktrans trimmed with username=profile.username context "user profile page posts" %}
           {{ username }} posted no messages.
         {% endblocktrans %}
       {% endif %}

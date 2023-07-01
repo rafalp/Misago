@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Site details" %}</legend>
+    <legend>{% trans "Site details" context "admin general settings form" %}</legend>
 
     {% form_row form.forum_name %}
     {% form_row form.forum_address %}
@@ -14,7 +14,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Logo" %}</legend>
+    <legend>{% trans "Logo" context "admin general settings form" %}</legend>
 
     {% form_row form.logo_text %}
     {% with form.logo_delete as delete_field %}
@@ -32,7 +32,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Open Graph image" %}</legend>
+    <legend>{% trans "Open Graph image" context "admin general settings form" %}</legend>
 
     {% with form.og_image_delete as delete_field %}
       {% with form_settings.og_image as setting %}
@@ -46,7 +46,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Forum index" %}</legend>
+    <legend>{% trans "Forum index" context "admin general settings form" %}</legend>
 
     {% form_row form.index_title %}
     {% form_row form.index_meta_description %}
@@ -57,7 +57,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Forum footnote" %}</legend>
+    <legend>{% trans "Forum footnote" context "admin general settings form" %}</legend>
 
     {% form_row form.forum_footnote %}
     {% form_row form.email_footer %}
@@ -66,7 +66,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Admin Control Panel" %}</legend>
+    <legend>{% trans "Admin Control Panel" context "admin general settings form" %}</legend>
 
     {% form_row form.show_admin_panel_link_in_ui %}
 

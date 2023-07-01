@@ -2,10 +2,10 @@
 <div class="post-heading">
   {% if not post.is_read %}
     <span class="label label-unread hidden-xs">
-      {% trans "New post" %}
+      {% trans "New post" context "post unread label" %}
     </span>
     <span class="label label-unread visible-xs-inline-block">
-      {% trans "New" %}
+      {% trans "New" context "post unread label" %}
     </span>
   {% endif %}
 
@@ -19,7 +19,7 @@
   </a>
 
   <div class="pull-right">
-    <a href="{{ post.get_absolute_url }}" title="{% trans 'Post link' %}" class="btn btn-default btn-icon">
+    <a href="{{ post.get_absolute_url }}" title="{% trans 'Post link' context 'post permalink' %}" class="btn btn-default btn-icon">
       <span class="material-icon">
         link
       </span>

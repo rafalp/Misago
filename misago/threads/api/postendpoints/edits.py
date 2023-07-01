@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
@@ -84,7 +84,9 @@ def get_edit(post, pk=None):
 
     edit = post.edits_record.first()
     if not edit:
-        raise PermissionDenied(_("Edits record is unavailable for this post."))
+        raise PermissionDenied(
+            pgettext("posts api", "Edits record is unavailable for this post.")
+        )
     return edit
 
 

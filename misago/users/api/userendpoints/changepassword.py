@@ -1,4 +1,4 @@
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -19,7 +19,10 @@ def change_password_endpoint(request, pk=None):
         request, "password", serializer.validated_data["new_password"]
     )
 
-    mail_subject = _("Confirm password change on %(forum_name)s forums")
+    mail_subject = pgettext(
+        "confirm password change email subject",
+        "Confirm password change on %(forum_name)s forums",
+    )
     mail_subject = mail_subject % {"forum_name": request.settings.forum_name}
 
     mail_user(
@@ -30,5 +33,10 @@ def change_password_endpoint(request, pk=None):
     )
 
     return Response(
-        {"detail": _("Password change confirmation link was sent to your address.")}
+        {
+            "detail": pgettext(
+                "change password api",
+                "Password change confirmation link was sent to your address.",
+            )
+        }
     )

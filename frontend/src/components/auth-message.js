@@ -8,7 +8,8 @@ export default class extends React.Component {
   getMessage() {
     if (this.props.signedIn) {
       return interpolate(
-        gettext(
+        pgettext(
+          "auth message",
           "You have signed in as %(username)s. Please refresh the page before continuing."
         ),
         { username: this.props.signedIn.username },
@@ -16,7 +17,8 @@ export default class extends React.Component {
       )
     } else if (this.props.signedOut) {
       return interpolate(
-        gettext(
+        pgettext(
+          "auth message",
           "%(username)s, you have been signed out. Please refresh the page before continuing."
         ),
         { username: this.props.user.username },
@@ -41,10 +43,10 @@ export default class extends React.Component {
               type="button"
               onClick={this.refresh}
             >
-              {gettext("Reload page")}
+              {pgettext("auth message", "Reload page")}
             </button>
             <span className="hidden-xs hidden-sm">
-              {" " + gettext("or press F5 key.")}
+              {" " + pgettext("auth message", "or press F5 key.")}
             </span>
           </p>
         </div>

@@ -1,32 +1,56 @@
 from django import forms
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ..models import AttachmentType
 
 
 def get_searchable_filetypes():
-    choices = [(0, _("All types"))]
+    choices = [(0, pgettext_lazy("admin attachments type filter choice", "All types"))]
     choices += [(a.id, a.name) for a in AttachmentType.objects.order_by("name")]
     return choices
 
 
 class FilterAttachmentsForm(forms.Form):
-    uploader = forms.CharField(label=_("Uploader name contains"), required=False)
-    filename = forms.CharField(label=_("Filename contains"), required=False)
+    uploader = forms.CharField(
+        label=pgettext_lazy("admin attachments filter form", "Uploader name contains"),
+        required=False,
+    )
+    filename = forms.CharField(
+        label=pgettext_lazy("admin attachments filter form", "Filename contains"),
+        required=False,
+    )
     filetype = forms.TypedChoiceField(
-        label=_("File type"),
+        label=pgettext_lazy("admin attachments filter form", "File type"),
         coerce=int,
         choices=get_searchable_filetypes,
         empty_value=0,
         required=False,
     )
     is_orphan = forms.ChoiceField(
-        label=_("State"),
+        label=pgettext_lazy("admin attachments filter form", "State"),
         required=False,
         choices=[
-            ("", _("All")),
-            ("yes", _("Only orphaned")),
-            ("no", _("Not orphaned")),
+            (
+                "",
+                pgettext_lazy(
+                    "admin attachments orphan filter choice",
+                    "All",
+                ),
+            ),
+            (
+                "yes",
+                pgettext_lazy(
+                    "admin attachments orphan filter choice",
+                    "Only orphaned",
+                ),
+            ),
+            (
+                "no",
+                pgettext_lazy(
+                    "admin attachments orphan filter choice",
+                    "Not orphaned",
+                ),
+            ),
         ],
     )
 
@@ -51,40 +75,46 @@ class AttachmentTypeForm(forms.ModelForm):
         model = AttachmentType
         fields = "__all__"
         labels = {
-            "name": _("Type name"),
-            "extensions": _("File extensions"),
-            "mimetypes": _("Mimetypes"),
-            "size_limit": _("Maximum allowed uploaded file size"),
-            "status": _("Status"),
-            "limit_uploads_to": _("Limit uploads to"),
-            "limit_downloads_to": _("Limit downloads to"),
+            "name": pgettext_lazy("admin attachment type form", "Type name"),
+            "extensions": pgettext_lazy(
+                "admin attachment type form", "File extensions"
+            ),
+            "mimetypes": pgettext_lazy("admin attachment type form", "Mimetypes"),
+            "size_limit": pgettext_lazy(
+                "admin attachment type form", "Maximum allowed uploaded file size"
+            ),
+            "status": pgettext_lazy("admin attachment type form", "Status"),
+            "limit_uploads_to": pgettext_lazy(
+                "admin attachment type form", "Limit uploads to"
+            ),
+            "limit_downloads_to": pgettext_lazy(
+                "admin attachment type form", "Limit downloads to"
+            ),
         }
         help_texts = {
-            "extensions": _(
-                "List of comma separated file extensions associated with this "
-                "attachment type."
+            "extensions": pgettext_lazy(
+                "admin attachment type form",
+                "List of comma separated file extensions associated with this attachment type.",
             ),
-            "mimetypes": _(
-                "Optional list of comma separated mime types associated with this "
-                "attachment type."
+            "mimetypes": pgettext_lazy(
+                "admin attachment type form",
+                "Optional list of comma separated mime types associated with this attachment type.",
             ),
-            "size_limit": _(
-                "Maximum allowed uploaded file size for this type, in kb. "
-                "This setting is deprecated and has no effect. It will be "
-                "deleted in Misago 1.0."
+            "size_limit": pgettext_lazy(
+                "admin attachment type form",
+                "Maximum allowed uploaded file size for this type, in kb. This setting is deprecated and has no effect. It will be deleted in Misago 1.0.",
             ),
-            "status": _("Controls this attachment type availability on your site."),
-            "limit_uploads_to": _(
-                "If you wish to limit option to upload files of this type to users "
-                "with specific roles, select them on this list. Otherwhise don't "
-                "select any roles to allow all users with permission to upload "
-                "attachments to be able to upload attachments of this type."
+            "status": pgettext_lazy(
+                "admin attachment type form",
+                "Controls this attachment type availability on your site.",
             ),
-            "limit_downloads_to": _(
-                "If you wish to limit option to download files of this type to users "
-                "with specific roles, select them on this list. Otherwhise don't "
-                "select any roles to allow all users with permission to download "
-                "attachments to be able to download attachments of this type."
+            "limit_uploads_to": pgettext_lazy(
+                "admin attachment type form",
+                "If you wish to limit option to upload files of this type to users with specific roles, select them on this list. Otherwise don't select any roles to allow all users with permission to upload attachments to be able to upload attachments of this type.",
+            ),
+            "limit_downloads_to": pgettext_lazy(
+                "admin attachment type form",
+                "If you wish to limit option to download files of this type to users with specific roles, select them on this list. Otherwise don't select any roles to allow all users with permission to download attachments to be able to download attachments of this type.",
             ),
         }
         widgets = {
@@ -95,7 +125,9 @@ class AttachmentTypeForm(forms.ModelForm):
     def clean_extensions(self):
         data = self.clean_list(self.cleaned_data["extensions"])
         if not data:
-            raise forms.ValidationError(_("This field is required."))
+            raise forms.ValidationError(
+                pgettext("admin attachment type form", "This field is required.")
+            )
         return data
 
     def clean_mimetypes(self):

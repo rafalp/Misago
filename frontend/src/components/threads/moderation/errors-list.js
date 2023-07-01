@@ -14,11 +14,16 @@ export default class extends React.Component {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Threads moderation")}</h4>
+            <h4 className="modal-title">
+              {pgettext("threads moderation title", "Threads moderation")}
+            </h4>
           </div>
           <div className="modal-body">
             <p className="lead">
-              {gettext("One or more threads could not be deleted:")}
+              {pgettext(
+                "threads moderation",
+                "One or more threads could not be deleted:"
+              )}
             </p>
 
             <ul className="list-unstyled list-errored-items">

@@ -20,7 +20,7 @@
   <div class="col-auto page-action">
     <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
       <span class="fas fa-external-link-alt"></span>
-      {% trans "View on site" %}
+      {% trans "View on site" context "admin users" %}
     </a>
   </div>
 {% endif %}
@@ -28,43 +28,43 @@
 
 
 {% block form-header %}
-{% trans "Edit user" %}
+{% trans "Edit user" context "admin user form" %}
 {% endblock form-header %}
 
 
 {% block form-body %}
 <div class="media py-1">
   <a href="{{ target.get_absolute_url }}" class="mr-3">
-    <img src="{{ target|avatar:56 }}" class="rounded" alt="{% trans 'Avatar' %}" width="56" height="56">
+    <img src="{{ target|avatar:56 }}" class="rounded" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="56" height="56">
   </a>
   <div class="media-body">
     <h5 class="mt-0">
       {{ target }}
       {% if target.is_superuser %}
-        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' %}">
-          {% trans "Super Admin" %}
+        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' context 'admin users list item' %}">
+          {% trans "Super Admin" context "admin user super admin status" %}
         </span>
       {% elif target.is_staff %}
-        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' %}">
-          {% trans "Admin" %}
+        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' context 'admin users list item' %}">
+          {% trans "Admin" context "admin user admin status" %}
         </span>
       {% endif %}
       {% if target.requires_activation_by_admin %}
-        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' %}">
-          {% trans "Inactive" %}
+        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' context 'admin users list item' %}">
+          {% trans "Inactive" context "admin user inactive status" %}
         </span>
       {% elif target.requires_activation_by_user %}
-        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate their account' %}">
-          {% trans "Inactive" %}
+        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate their account' context 'admin users list item' %}">
+          {% trans "Inactive" context "admin user inactive status" %}
         </span>
       {% endif %}
       {% if target.is_deleting_account %}
-        <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' %}">
-          {% trans "Deleted" %}
+        <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' context 'admin users list item' %}">
+          {% trans "Deleted" context "admin user deleted status" %}
         </span>
-      {% elif not target.is_active %}
-        <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' %}">
-          {% trans "Disabled" %}
+      {% elif not target.is_active %}}
+        <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' context 'admin users list item' %}">
+          {% trans "Disabled" context "admin user disabled status" %}
         </span>
       {% endif %}
     </h5>
@@ -89,14 +89,14 @@
         </li>
       {% endif %}
       <li class="list-inline-item">
-        {% blocktrans trimmed count posts=target.posts %}
+        {% blocktrans trimmed count posts=target.posts context "admin user stats" %}
           {{ posts }} post
         {% plural %}
           {{ posts }} posts
         {% endblocktrans %}
       </li>
       <li class="list-inline-item">
-        {% blocktrans trimmed count threads=target.threads %}
+        {% blocktrans trimmed count threads=target.threads context "admin user stats" %}
           {{ threads }} thread
         {% plural %}
           {{ threads }} threads
@@ -107,7 +107,7 @@
 </div>
 <div class="form-fieldset border-top">
   <fieldset>
-    <legend>{% trans "Basic account settings" %}</legend>
+    <legend>{% trans "Basic account settings" context "admin user form" %}</legend>
 
     {% form_row form.username %}
 
@@ -126,14 +126,14 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Administrator status" %}</legend>
+    <legend>{% trans "Administrator status" context "admin user form" %}</legend>
 
     {% if 'is_staff' in form.fields %}
       {% form_row form.is_staff %}
       {% form_row form.is_superuser %}
     {% else %}
       <div class="alert alert-info" role="alert">
-        {% trans "Only superusers can change other users administrator status." %}
+        {% trans "Only superusers can change other users administrator status." context "admin user form" %}
       </div>
       <div id="div_id_is_staff" class="form-group">
         <label class="control-label">
@@ -142,11 +142,11 @@
         <div class="controls control-yesno-switch">
           <label class="radio">
             <input class="yesno-switch" type="radio" disabled{% if target.is_staff %} checked=""{% endif %}>
-            {% trans "Yes" %}
+            {% trans "Yes" context "admin yesno switch" %}
           </label>
           <label class="radio">
             <input class="yesno-switch" type="radio" disabled{% if not target.is_staff %} checked=""{% endif %}>
-            {% trans "No" %}
+            {% trans "No" context "admin yesno switch" %}
           </label>
         </div>
         <small class="form-text text-muted">
@@ -160,11 +160,11 @@
         <div class="controls control-yesno-switch">
           <label class="radio">
             <input class="yesno-switch" type="radio" disabled{% if target.is_superuser %} checked=""{% endif %}>
-            {% trans "Yes" %}
+            {% trans "Yes" context "admin yesno switch" %}
           </label>
           <label class="radio">
             <input class="yesno-switch" type="radio" disabled{% if not target.is_superuser %} checked=""{% endif %}>
-            {% trans "No" %}
+            {% trans "No" context "admin yesno switch" %}
           </label>
         </div>
         <small class="form-text text-muted">
@@ -177,11 +177,11 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Sign-in credentials" %}</legend>
+    <legend>{% trans "Sign-in credentials" context "admin user form" %}</legend>
     
     {% if not target.has_usable_password %}
       <div class="alert alert-info alert-has-unusable-password" role="alert">
-        {% trans "This user has not set account password and uses other service to authenticate." %}
+        {% trans "This user has not set account password and uses other service to authenticate." context "admin user form" %}
       </div>
     {% endif %}
 
@@ -192,7 +192,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Avatar" %}</legend>
+    <legend>{% trans "Avatar" context "admin user form" %}</legend>
 
     {% form_row form.is_avatar_locked %}
     {% form_row form.avatar_lock_user_message %}
@@ -202,7 +202,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Signature" %}</legend>
+    <legend>{% trans "Signature" context "admin user form" %}</legend>
 
     {% form_row form.signature %}
     {% form_row form.is_signature_locked %}
@@ -225,7 +225,7 @@
 {% endfor %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Forum options" %}</legend>
+    <legend>{% trans "Forum options" context "admin user form" %}</legend>
 
     {% form_row form.is_hiding_presence %}
     {% form_row form.limits_private_thread_invites_to %}
@@ -234,7 +234,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Automatic subscription preferences (deprecated)" %}</legend>
+    <legend>{% trans "Automatic subscription preferences (deprecated)" context "admin user form" %}</legend>
 
     {% form_row form.subscribe_to_started_threads %}
     {% form_row form.subscribe_to_replied_threads %}
@@ -243,7 +243,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Notifications preferences" context "admin user form" %}</legend>
+    <legend>{% trans "Notifications preferences" context "admin user form"  %}</legend>
 
     {% form_row form.watch_started_threads %}
     {% form_row form.watch_replied_threads %}
@@ -256,12 +256,12 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Account status" %}</legend>
+    <legend>{% trans "Account status" context "admin user form" %}</legend>
 
     {% if target.is_deleting_account %}
       <div class="alert alert-danger" role="alert">
-        <p>{% trans "This user is deleting their account. It has been deactivated for the duration of the process." %}</p>
-        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically." %}</p>
+        <p>{% trans "This user is deleting their account. It has been deactivated for the duration of the process." context "admin user form" %}</p>
+        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically." context "admin user form" %}</p>
       </div>
     {% else %}
       {% if 'is_active' in form.fields %}
@@ -275,11 +275,11 @@
           <div class="controls control-yesno-switch">
             <label class="radio">
               <input class="yesno-switch" type="radio" disabled{% if target.is_active %} checked=""{% endif %}>
-              {% trans "Yes" %}
+              {% trans "Yes" context "admin yesno switch" %}
             </label>
             <label class="radio">
               <input class="yesno-switch" type="radio" disabled{% if not target.is_active %} checked=""{% endif %}>
-              {% trans "No" %}
+              {% trans "No" context "admin yesno switch" %}
             </label>
           </div>
           <small class="form-text text-muted">
@@ -304,14 +304,14 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Agreements" %}</legend>
+    <legend>{% trans "Agreements" context "admin user form" %}</legend>
     <div class="card card-admin-table">
       <table class="table">
         <thead>
           <tr>
-            <th>{% trans "Agreement" %}</th>
-            <th style="width: 250px;">{% trans "Type" %}</th>
-            <th style="width: 250px;">{% trans "Accepted on" %}</th>
+            <th>{% trans "Agreement" context "admin user agreements list" %}</th>
+            <th style="width: 250px;">{% trans "Type" context "admin user agreements list" %}</th>
+            <th style="width: 250px;">{% trans "Accepted on" context "admin user agreements list" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -334,7 +334,7 @@
           {% empty %}
             <tr class="blankslate">
               <td colspan="3">
-                {% trans "This user didn't accept any agreements." %}
+                {% trans "This user didn't accept any agreements." context "admin user agreements list" %}
               </td>
             </tr>
           {% endfor %}

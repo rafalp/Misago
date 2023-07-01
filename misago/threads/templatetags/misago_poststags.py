@@ -1,6 +1,5 @@
 from django import template
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import npgettext, pgettext
 
 register = template.Library()
 
@@ -14,7 +13,9 @@ def likes_label(post):
         usernames.append(like["username"])
 
     if len(usernames) == 1:
-        return _("%(user)s likes this.") % {"user": usernames[0]}
+        return pgettext("post likes message", "%(user)s likes this.") % {
+            "user": usernames[0]
+        }
 
     hidden_likes = post.likes - len(usernames)
     if len(last_likes) < 4:
@@ -23,9 +24,12 @@ def likes_label(post):
         usernames_string = ", ".join(usernames)
 
     if not hidden_likes:
-        return _("%(users)s like this.") % {"users": usernames_string}
+        return pgettext("post likes message", "%(users)s like this.") % {
+            "users": usernames_string
+        }
 
-    label = ngettext(
+    label = npgettext(
+        "post likes message",
         "%(users)s and %(likes)s other user like this.",
         "%(users)s and %(likes)s other users like this.",
         hidden_likes,
@@ -38,4 +42,4 @@ def likes_label(post):
 def humanize_usernames_list(usernames):
     formats = {"users": ", ".join(usernames[:-1]), "last_user": usernames[-1]}
 
-    return _("%(users)s and %(last_user)s") % formats
+    return pgettext("post likes message", "%(users)s and %(last_user)s") % formats

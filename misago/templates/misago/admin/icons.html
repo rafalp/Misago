@@ -5,10 +5,10 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Favicon" %}</legend>
+    <legend>{% trans "Favicon" context "admin icons form" %}</legend>
 
     <p>
-      {% trans "Favicon is small icon that internet browsers display next to your site in its interface." %}
+      {% trans "Favicon is small icon that internet browsers display next to your site in its interface." context "admin icons form" %}
     </p>
 
     {% if icons.favicon or icons.favicon_16 or icons.favicon_32 %}
@@ -65,10 +65,10 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Apple Touch Icon" %}</legend>
+    <legend>{% trans "Apple Touch Icon" context "admin icons form" %}</legend>
 
     <p>
-      {% trans "Apple devices and Safari web browser will use this image to represent the site in its interfaces." %}
+      {% trans "Apple devices and Safari web browser will use this image to represent the site in its interfaces." context "admin icons form" %}
     </p>
 
     {% if icons.apple_touch_icon %}

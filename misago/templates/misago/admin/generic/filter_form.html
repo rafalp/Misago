@@ -4,7 +4,7 @@
     <input type="hidden" name="clear_filters" value="1">
     <button class="btn btn-light btn-sm" type="button" data-toggle="modal" data-target="#filter-modal">
       <span class="fa fa-filter"></span>
-      {% trans "Filter" %}
+      {% trans "Filter" context "admin list filters" %}
       {% if active_filters %}
         <span class="badge badge-primary">
           {{ active_filters|length }}
@@ -14,7 +14,7 @@
     {% if active_filters %}
       <button class="btn btn-light btn-sm ml-1" type="submit">
         <span class="fa fa-times"></span>
-        {% trans "Clear filters" %}
+        {% trans "Clear filters" context "admin list filters" %}
       </button>
     {% endif %}
   </form>

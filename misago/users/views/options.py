@@ -2,7 +2,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.shortcuts import render
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ..credentialchange import read_new_credential
 from ..decorators import deny_guests
@@ -45,7 +45,7 @@ def confirm_change_view(f):
 def confirm_email_change(request, token):
     if request.settings.enable_oauth2_client:
         raise PermissionDenied(
-            _("Please use %(provider)s to change your e-mail.")
+            pgettext("user options", "Please use %(provider)s to change your e-mail.")
             % {"provider": request.settings.oauth2_provider}
         )
 
@@ -59,7 +59,7 @@ def confirm_email_change(request, token):
     except IntegrityError:
         raise ChangeError()
 
-    message = _("%(user)s, your e-mail has been changed.")
+    message = pgettext("user options", "%(user)s, your e-mail has been changed.")
     return render(
         request,
         "misago/options/credentials_changed.html",
@@ -71,7 +71,7 @@ def confirm_email_change(request, token):
 def confirm_password_change(request, token):
     if request.settings.enable_oauth2_client:
         raise PermissionDenied(
-            _("Please use %(provider)s to change your password.")
+            pgettext("user options", "Please use %(provider)s to change your password.")
             % {"provider": request.settings.oauth2_provider}
         )
 
@@ -83,7 +83,7 @@ def confirm_password_change(request, token):
     update_session_auth_hash(request, request.user)
     request.user.save(update_fields=["password"])
 
-    message = _("%(user)s, your password has been changed.")
+    message = pgettext("user options", "%(user)s, your password has been changed.")
     return render(
         request,
         "misago/options/credentials_changed.html",

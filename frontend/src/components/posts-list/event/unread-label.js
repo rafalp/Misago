@@ -5,7 +5,9 @@ export default function ({ post }) {
 
   return (
     <div className="event-label">
-      <span className="label label-unread">{gettext("New event")}</span>
+      <span className="label label-unread">
+        {pgettext("event unread label", "New event")}
+      </span>
     </div>
   )
 }

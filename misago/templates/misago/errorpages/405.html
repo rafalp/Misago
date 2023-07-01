@@ -2,25 +2,25 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Wrong way" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Wrong way" context "error 405 page" %} | {{ block.super }}{% endblock %}
 
 
 {% block meta-description %}
-{% trans "This page should be reached via form submission or pressing button." %}
+{% trans "This page should be reached via form submission or pressing button." context "error 405 page" %}
 {% endblock meta-description %}
 
 
-{% block og-title %}{% trans "Wrong way" %}{% endblock %}
-{% block twitter-title %}{% trans "Wrong way" %}{% endblock %}
+{% block og-title %}{% trans "Wrong way" context "error 405 page" %}{% endblock %}
+{% block twitter-title %}{% trans "Wrong way" context "error 405 page" %}{% endblock %}
 
 
 {% block og-description %}
-{% trans "This page should be reached via form submission or pressing button." %}
+{% trans "This page should be reached via form submission or pressing button." context "error 405 page" %}
 {% endblock %}
 
 
 {% block twitter-description %}
-{% trans "This page should be reached via form submission or pressing button." %}
+{% trans "This page should be reached via form submission or pressing button." context "error 405 page" %}
 {% endblock %}
 
 
@@ -34,8 +34,8 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{% trans "Page reached in wrong way." %}</p>
-        <p>{% trans "This page should be reached via form submission or pressing button." %}</p>
+        <p class="lead">{% trans "Page reached in wrong way." context "error 405 page" %}</p>
+        <p>{% trans "This page should be reached via form submission or pressing button." context "error 405 page" %}</p>
       </div>
 
     </div>

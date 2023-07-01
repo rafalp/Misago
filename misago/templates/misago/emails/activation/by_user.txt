@@ -3,7 +3,7 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user %}
+{% blocktrans trimmed with user=user context "account activation email" %}
 {{ user }}, to activate your account click the below link:
 {% endblocktrans %}
 {% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}

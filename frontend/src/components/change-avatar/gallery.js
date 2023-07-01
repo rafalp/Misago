@@ -154,8 +154,8 @@ export default class extends React.Component {
                 className="btn-primary btn-block"
               >
                 {this.state.selection
-                  ? gettext("Save choice")
-                  : gettext("Select avatar")}
+                  ? pgettext("avatar gallery modal btn", "Save choice")
+                  : pgettext("avatar gallery modal btn", "Select avatar")}
               </Button>
 
               <Button
@@ -163,7 +163,7 @@ export default class extends React.Component {
                 disabled={this.state.isLoading}
                 className="btn-default btn-block"
               >
-                {gettext("Cancel")}
+                {pgettext("avatar gallery modal btn", "Cancel")}
               </Button>
             </div>
           </div>

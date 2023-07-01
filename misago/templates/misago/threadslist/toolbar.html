@@ -6,7 +6,7 @@
         {% if category.special_role %}
           <div class="toolbar-item">
             <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis" disabled>
-              {% trans "All categories" %}
+              {% trans "All categories" context "threads page nav" %}
             </button>
           </div>
         {% else %}
@@ -26,7 +26,7 @@
           {% if subcategories %}
             <div class="toolbar-item">
               <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block text-ellipsis" disabled>
-                {% trans "All subcategories" %}
+                {% trans "All subcategories" context "threads page nav" %}
               </button>
             </div>
           {% elif sub_category %}
@@ -52,17 +52,17 @@
         <div class="toolbar-item">
           <button type="button" class="btn btn-default btn-outline dropdown-toggle btn-block" disabled>
             {% if list_type == 'all' %}
-              {% trans "All threads" %}
+              {% trans "All threads" context "threads list" %}
             {% elif list_type == 'my' %}
-              {% trans "My threads" %}
+              {% trans "My threads" context "threads list" %}
             {% elif list_type == 'new' %}
-              {% trans "New threads" %}
+              {% trans "New threads" context "threads list" %}
             {% elif list_type == 'unread' %}
-              {% trans "Unread threads" %}
+              {% trans "Unread threads" context "threads list" %}
             {% elif list_type == 'subscribed' %}
-              {% trans "Subscribed threads" %}
+              {% trans "Subscribed threads" context "threads list" %}
             {% elif list_type == 'unapproved' %}
-              {% trans "Unapproved threads" %}
+              {% trans "Unapproved threads" context "threads list" %}
             {% endif %}
           </button>
         </div>
@@ -74,7 +74,7 @@
         <div class="toolbar-item">
           <button type="button" class="btn btn-primary btn-outline btn-block" disabled>
             <span class="material-icon">chat</span>
-            {% trans "Start thread" %}
+            {% trans "Start thread" context "threads page nav" %}
           </button>
         </div>
       </div>

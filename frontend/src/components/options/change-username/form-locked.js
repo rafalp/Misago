@@ -5,12 +5,18 @@ export default class extends React.Component {
   getHelpText() {
     if (this.props.options.next_on) {
       return interpolate(
-        gettext("You will be able to change your username %(next_change)s."),
+        pgettext(
+          "change username",
+          "You will be able to change your username %(next_change)s."
+        ),
         { next_change: this.props.options.next_on.fromNow() },
         true
       )
     } else {
-      return gettext("You have used up available name changes.")
+      return pgettext(
+        "change username",
+        "You have used up available name changes."
+      )
     }
   }
 
@@ -18,11 +24,16 @@ export default class extends React.Component {
     return (
       <div className="panel panel-default panel-form">
         <div className="panel-heading">
-          <h3 className="panel-title">{gettext("Change username")}</h3>
+          <h3 className="panel-title">
+            {pgettext("change username title", "Change username")}
+          </h3>
         </div>
         <PanelMessage
           helpText={this.getHelpText()}
-          message={gettext("You can't change your username at the moment.")}
+          message={pgettext(
+            "change username",
+            "You can't change your username at the moment."
+          )}
         />
       </div>
     )

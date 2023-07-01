@@ -4,7 +4,7 @@
 
 {% block title %}
   {% if THREADS_ON_INDEX %}
-    {% trans "Categories" %} | {{ block.super }}
+    {% trans "Categories" context "categories page" %} | {{ block.super }}
   {% else %}
     {{ settings.index_title|default:settings.forum_name }}
   {% endif %}
@@ -26,7 +26,7 @@
 
 {% block og-title %}
   {% if THREADS_ON_INDEX %}
-    {% trans "Categories" %}
+    {% trans "Categories" context "categories page" %}
   {% else %}
     {{ settings.index_title|default:settings.forum_name }}
   {% endif %}
@@ -35,7 +35,7 @@
 
 {% block twitter-title %}
   {% if THREADS_ON_INDEX %}
-    {% trans "Categories" %}
+    {% trans "Categories" context "categories page" %}
   {% else %}
     {{ settings.index_title|default:settings.forum_name }}
   {% endif %}
@@ -46,7 +46,7 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name %}
+    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
@@ -59,7 +59,7 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name %}
+    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.

@@ -4,7 +4,7 @@ from io import BytesIO
 from PIL import Image
 from django import forms
 from django.core.files.base import ContentFile
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...core.utils import get_file_hash
 from ...core.validators import validate_image_square
@@ -18,19 +18,27 @@ VALID_MIME = ("image/gif", "image/jpeg", "image/png")
 
 class IconsForm(forms.Form):
     favicon = forms.ImageField(
-        label=_("Upload image"),
-        help_text=_("Uploaded image should be a square that is 48px wide and tall."),
+        label=pgettext_lazy("admin icons form", "Upload image"),
+        help_text=pgettext_lazy(
+            "admin icons form",
+            "Uploaded image should be a square that is 48px wide and tall.",
+        ),
         required=False,
     )
-    favicon_delete = forms.BooleanField(label=_("Delete custom icon"), required=False)
+    favicon_delete = forms.BooleanField(
+        label=pgettext_lazy("admin icons form", "Delete custom icon"), required=False
+    )
 
     apple_touch_icon = forms.ImageField(
-        label=_("Upload image"),
-        help_text=_("Uploaded image should be square at least 180px wide and tall."),
+        label=pgettext_lazy("admin icons form", "Upload image"),
+        help_text=pgettext_lazy(
+            "admin icons form",
+            "Uploaded image should be square at least 180px wide and tall.",
+        ),
         required=False,
     )
     apple_touch_icon_delete = forms.BooleanField(
-        label=_("Delete custom icon"), required=False
+        label=pgettext_lazy("admin icons form", "Delete custom icon"), required=False
     )
 
     def clean_favicon(self):
@@ -114,11 +122,18 @@ def save_icon(image, size, icon_type):
 def validate_image_dimensions(image, size):
     if image.width < size:
         raise forms.ValidationError(
-            _("Uploaded image's edge should be at least %(size)s pixels long.")
+            pgettext_lazy(
+                "admin icons form",
+                "Uploaded image's edge should be at least %(size)s pixels long.",
+            )
             % {"size": size}
         )
 
 
 def validate_image_mime_type(upload):
     if upload.content_type not in VALID_MIME:
-        raise forms.ValidationError(_("Uploaded image was not gif, jpeg or png."))
+        raise forms.ValidationError(
+            pgettext_lazy(
+                "admin icons form", "Uploaded image was not gif, jpeg or png."
+            )
+        )

@@ -31,7 +31,7 @@ export class ChangeAvatarError extends React.Component {
             data-dismiss="modal"
             type="button"
           >
-            {gettext("Ok")}
+            {pgettext("avatar modal dismiss", "Ok")}
           </button>
         </div>
       </div>
@@ -143,7 +143,9 @@ export default class extends React.Component {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">{gettext("Change your avatar")}</h4>
+            <h4 className="modal-title">
+              {pgettext("avatar modal title", "Change your avatar")}
+            </h4>
           </div>
 
           {this.getBody()}

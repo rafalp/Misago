@@ -29,7 +29,8 @@ export default class extends Form {
     let phrases = []
 
     if (this.props.options.changes_left > 0) {
-      let message = ngettext(
+      let message = npgettext(
+        "change username form",
         "You can change your username %(changes_left)s more time.",
         "You can change your username %(changes_left)s more times.",
         this.props.options.changes_left
@@ -47,7 +48,8 @@ export default class extends Form {
     }
 
     if (this.props.user.acl.name_changes_expire > 0) {
-      let message = ngettext(
+      let message = npgettext(
+        "change username form",
         "Used changes become available again after %(name_changes_expire)s day.",
         "Used changes become available again after %(name_changes_expire)s days.",
         this.props.user.acl.name_changes_expire
@@ -74,7 +76,12 @@ export default class extends Form {
       return false
     }
     if (this.state.username.trim() === this.props.user.username) {
-      snackbar.info(gettext("Your new username is same as current one."))
+      snackbar.info(
+        pgettext(
+          "change username form",
+          "Your new username is same as current one."
+        )
+      )
       return false
     } else {
       return true
@@ -104,11 +111,13 @@ export default class extends Form {
       <form onSubmit={this.handleSubmit}>
         <div className="panel panel-default panel-form">
           <div className="panel-heading">
-            <h3 className="panel-title">{gettext("Change username")}</h3>
+            <h3 className="panel-title">
+              {pgettext("change username title", "Change username")}
+            </h3>
           </div>
           <div className="panel-body">
             <FormGroup
-              label={gettext("New username")}
+              label={pgettext("change username form field", "New username")}
               for="id_username"
               helpText={this.getHelpText()}
             >
@@ -124,7 +133,7 @@ export default class extends Form {
           </div>
           <div className="panel-footer">
             <Button className="btn-primary" loading={this.state.isLoading}>
-              {gettext("Change username")}
+              {pgettext("change username form btn", "Change username")}
             </Button>
           </div>
         </div>

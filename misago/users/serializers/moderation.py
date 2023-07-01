@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.utils.translation import ngettext
+from django.utils.translation import npgettext
 from rest_framework import serializers
 
 from ...conf import settings
@@ -32,7 +32,8 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
     def validate_signature(self, value):
         length_limit = settings.signature_length_max
         if len(value) > length_limit:
-            message = ngettext(
+            message = npgettext(
+                "signature length validator",
                 "Signature can't be longer than %(limit)s character.",
                 "Signature can't be longer than %(limit)s characters.",
                 length_limit,

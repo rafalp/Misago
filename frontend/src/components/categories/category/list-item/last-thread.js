@@ -91,7 +91,8 @@ export function Empty({ category }) {
 
   return (
     <Message
-      message={gettext(
+      message={pgettext(
+        "category last thread",
         "This category is empty. No threads were posted within it so far."
       )}
     />
@@ -104,7 +105,8 @@ export function Private({ category }) {
 
   return (
     <Message
-      message={gettext(
+      message={pgettext(
+        "category last thread",
         "This category is private. You can see only your own threads within it."
       )}
     />
@@ -116,7 +118,8 @@ export function Protected({ category }) {
 
   return (
     <Message
-      message={gettext(
+      message={pgettext(
+        "category last thread",
         "This category is protected. You can't browse its contents."
       )}
     />

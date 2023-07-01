@@ -33,10 +33,16 @@ export function PostBody(props) {
   return (
     <div className="panel-body panel-body-invalid">
       <p className="lead">
-        {gettext("This post's contents cannot be displayed.")}
+        {pgettext(
+          "search threads result body invalid",
+          "This post's contents cannot be displayed."
+        )}
       </p>
       <p className="text-muted">
-        {gettext("This error is caused by invalid post content manipulation.")}
+        {pgettext(
+          "search threads result body invalid",
+          "This error is caused by invalid post content manipulation."
+        )}
       </p>
     </div>
   )

@@ -49,24 +49,24 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=pgettext_lazy("admin page", "Settings"),
+            name=pgettext_lazy("admin node", "Settings"),
             icon="fa fa-cog",
             after="themes:index",
             namespace="settings",
         )
 
         site.add_node(
-            name=pgettext_lazy("admin page", "General"),
+            name=pgettext_lazy("admin node", "General"),
             description=pgettext_lazy(
-                "admin page", "Change forum details like name, description or footer."
+                "admin node", "Change forum details like name, description or footer."
             ),
             parent="settings",
             namespace="general",
         )
         site.add_node(
-            name=pgettext_lazy("admin page", "Users"),
+            name=pgettext_lazy("admin node", "Users"),
             description=pgettext_lazy(
-                "admin page",
+                "admin node",
                 "Customize user accounts default behavior and features availability.",
             ),
             parent="settings",
@@ -74,9 +74,9 @@ class MisagoAdminExtension:
             after="general:index",
         )
         site.add_node(
-            name=pgettext_lazy("admin page", "Captcha"),
+            name=pgettext_lazy("admin node", "Captcha"),
             description=pgettext_lazy(
-                "admin page",
+                "admin node",
                 "Setup protection against automatic registrations on the site.",
             ),
             parent="settings",
@@ -84,18 +84,18 @@ class MisagoAdminExtension:
             after="users:index",
         )
         site.add_node(
-            name=pgettext_lazy("admin page", "Threads"),
+            name=pgettext_lazy("admin node", "Threads"),
             description=pgettext_lazy(
-                "admin page", "Threads, posts, polls and attachments options."
+                "admin node", "Threads, posts, polls and attachments options."
             ),
             parent="settings",
             namespace="threads",
             after="captcha:index",
         )
         site.add_node(
-            name=pgettext_lazy("admin page", "Notifications"),
+            name=pgettext_lazy("admin node", "Notifications"),
             description=pgettext_lazy(
-                "admin page",
+                "admin node",
                 "Those settings control default notification preferences of new user accounts and storage time of existing notifications.",
             ),
             parent="settings",
@@ -103,9 +103,9 @@ class MisagoAdminExtension:
             after="threads:index",
         )
         site.add_node(
-            name=pgettext_lazy("admin page", "OAuth2"),
+            name=pgettext_lazy("admin node", "OAuth2"),
             description=pgettext_lazy(
-                "admin page",
+                "admin node",
                 "Enable OAuth2 client and connect your site to existing auth provider.",
             ),
             parent="settings",
@@ -113,9 +113,9 @@ class MisagoAdminExtension:
             after="notifications:index",
         )
         site.add_node(
-            name=pgettext_lazy("admin page", "Analytics"),
+            name=pgettext_lazy("admin node", "Analytics"),
             description=pgettext_lazy(
-                "admin page",
+                "admin node",
                 "Enable Google Analytics or setup Google Site Verification.",
             ),
             parent="settings",

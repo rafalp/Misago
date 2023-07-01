@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -57,7 +57,9 @@ class ViewSet(viewsets.ViewSet):
 
         try:
             if thread.poll and thread.poll.pk:
-                raise PermissionDenied(_("There's already a poll in this thread."))
+                raise PermissionDenied(
+                    pgettext("polls api", "There's already a poll in this thread.")
+                )
         except Poll.DoesNotExist:
             pass
 

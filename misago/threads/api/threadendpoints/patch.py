@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _, ngettext
+from django.utils.translation import npgettext, pgettext
 from rest_framework import serializers
 from rest_framework.response import Response
 
@@ -63,7 +63,7 @@ def patch_title(request, thread, value):
     try:
         value_cleaned = str(value).strip()
     except (TypeError, ValueError):
-        raise PermissionDenied(_("Not a valid string."))
+        raise PermissionDenied(pgettext("threads api", "Not a valid string."))
 
     try:
         validate_thread_title(request.settings, value_cleaned)
@@ -84,7 +84,10 @@ def patch_weight(request, thread, value):
 
     if not thread.acl.get("can_pin_globally") and thread.weight == 2:
         raise PermissionDenied(
-            _("You can't change globally pinned threads weights in this category.")
+            pgettext(
+                "threads api",
+                "You can't change globally pinned threads weights in this category.",
+            )
         )
 
     if value == 2:
@@ -92,7 +95,9 @@ def patch_weight(request, thread, value):
             moderation.pin_thread_globally(request, thread)
         else:
             raise PermissionDenied(
-                _("You can't pin threads globally in this category.")
+                pgettext(
+                    "threads api", "You can't pin threads globally in this category."
+                )
             )
     elif value == 1:
         moderation.pin_thread_locally(request, thread)
@@ -120,7 +125,9 @@ def patch_move(request, thread, value):
 
     if new_category == thread.category:
         raise PermissionDenied(
-            _("You can't move thread to the category it's already in.")
+            pgettext(
+                "threads api", "You can't move thread to the category it's already in."
+            )
         )
 
     moderation.move_thread(request, thread, new_category)
@@ -152,7 +159,9 @@ def patch_is_unapproved(request, thread, value):
     allow_approve_thread(request.user_acl, thread)
 
     if value:
-        raise PermissionDenied(_("Content approval can't be reversed."))
+        raise PermissionDenied(
+            pgettext("threads api", "Content approval can't be reversed.")
+        )
 
     moderation.approve_thread(request, thread)
 
@@ -175,9 +184,17 @@ def patch_is_closed(request, thread, value):
         return {"is_closed": thread.is_closed}
     else:
         if value:
-            raise PermissionDenied(_("You don't have permission to close this thread."))
+            raise PermissionDenied(
+                pgettext(
+                    "threads api", "You don't have permission to close this thread."
+                )
+            )
         else:
-            raise PermissionDenied(_("You don't have permission to open this thread."))
+            raise PermissionDenied(
+                pgettext(
+                    "threads api", "You don't have permission to open this thread."
+                )
+            )
 
 
 thread_patch_dispatcher.replace("is-closed", patch_is_closed)
@@ -201,7 +218,7 @@ def patch_best_answer(request, thread, value):
     try:
         post_id = int(value)
     except (TypeError, ValueError):
-        raise PermissionDenied(_("A valid integer is required."))
+        raise PermissionDenied(pgettext("threads api", "A valid integer is required."))
 
     allow_mark_best_answer(request.user_acl, thread)
 
@@ -214,7 +231,9 @@ def patch_best_answer(request, thread, value):
 
     if post.is_best_answer:
         raise PermissionDenied(
-            _("This post is already marked as thread's best answer.")
+            pgettext(
+                "threads api", "This post is already marked as thread's best answer."
+            )
         )
 
     if thread.has_best_answer:
@@ -240,7 +259,7 @@ def patch_unmark_best_answer(request, thread, value):
     try:
         post_id = int(value)
     except (TypeError, ValueError):
-        raise PermissionDenied(_("A valid integer is required."))
+        raise PermissionDenied(pgettext("threads api", "A valid integer is required."))
 
     post = get_object_or_404(thread.post_set, id=post_id)
     post.category = thread.category
@@ -248,9 +267,9 @@ def patch_unmark_best_answer(request, thread, value):
 
     if not post.is_best_answer:
         raise PermissionDenied(
-            _(
-                "This post can't be unmarked because "
-                "it's not currently marked as best answer."
+            pgettext(
+                "threads api",
+                "This post can't be unmarked because it's not currently marked as best answer.",
             )
         )
 
@@ -277,13 +296,19 @@ def patch_add_participant(request, thread, value: str):
     try:
         user_slug = slugify_username(value)
         if not user_slug:
-            raise PermissionDenied(_("You have to enter new participant's username."))
+            raise PermissionDenied(
+                pgettext("threads api", "You have to enter new participant's username.")
+            )
         participant = User.objects.get(slug=user_slug)
     except User.DoesNotExist:
-        raise PermissionDenied(_("No user with this name exists."))
+        raise PermissionDenied(
+            pgettext("threads api", "No user with this name exists.")
+        )
 
     if participant in [p.user for p in thread.participants_list]:
-        raise PermissionDenied(_("This user is already thread participant."))
+        raise PermissionDenied(
+            pgettext("threads api", "This user is already thread participant.")
+        )
 
     participant_acl = useracl.get_user_acl(participant, request.cache_versions)
     allow_add_participant(request.user_acl, participant, participant_acl)
@@ -303,13 +328,13 @@ def patch_remove_participant(request, thread, value):
     try:
         user_id = int(value)
     except (ValueError, TypeError):
-        raise PermissionDenied(_("A valid integer is required."))
+        raise PermissionDenied(pgettext("threads api", "A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
             break
     else:
-        raise PermissionDenied(_("Participant doesn't exist."))
+        raise PermissionDenied(pgettext("threads api", "Participant doesn't exist."))
 
     allow_remove_participant(request.user_acl, thread, participant.user)
     remove_participant(request, thread, participant.user)
@@ -331,16 +356,18 @@ def patch_replace_owner(request, thread, value):
     try:
         user_id = int(value)
     except (ValueError, TypeError):
-        raise PermissionDenied(_("A valid integer is required."))
+        raise PermissionDenied(pgettext("threads api", "A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
             if participant.is_owner:
-                raise PermissionDenied(_("This user already is thread owner."))
+                raise PermissionDenied(
+                    pgettext("threads api", "This user already is thread owner.")
+                )
             else:
                 break
     else:
-        raise PermissionDenied(_("Participant doesn't exist."))
+        raise PermissionDenied(pgettext("threads api", "Participant doesn't exist."))
 
     allow_change_owner(request.user_acl, thread)
     change_owner(request, thread, participant.user)
@@ -455,7 +482,9 @@ def clean_threads_for_patch(request, viewmodel, threads_ids):
             threads.append(viewmodel(request, thread_id).unwrap())
         except (Http404, PermissionDenied):
             raise PermissionDenied(
-                _("One or more threads to update could not be found.")
+                pgettext(
+                    "threads api", "One or more threads to update could not be found."
+                )
             )
     return threads
 
@@ -471,7 +500,8 @@ class BulkPatchSerializer(serializers.Serializer):
     def validate_ids(self, data):
         limit = self.context["settings"].threads_per_page
         if len(data) > limit:
-            message = ngettext(
+            message = npgettext(
+                "threads api",
                 "No more than %(limit)s thread can be updated at a single time.",
                 "No more than %(limit)s threads can be updated at a single time.",
                 limit,

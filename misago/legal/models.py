@@ -2,7 +2,7 @@ from django.core.cache import cache
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ..conf import settings
 
@@ -39,8 +39,8 @@ class Agreement(models.Model):
     TYPE_TOS = "terms_of_service"
     TYPE_PRIVACY = "privacy_policy"
     TYPE_CHOICES = [
-        (TYPE_TOS, _("Terms of service")),
-        (TYPE_PRIVACY, _("Privacy policy")),
+        (TYPE_TOS, pgettext_lazy("agreement type choice", "Terms of service")),
+        (TYPE_PRIVACY, pgettext_lazy("agreement type choice", "Privacy policy")),
     ]
 
     type = models.CharField(

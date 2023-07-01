@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -117,7 +117,9 @@ class PrivateThreadViewSet(ViewSet):
     def create(self, request):
         allow_use_private_threads(request.user_acl)
         if not request.user_acl["can_start_private_threads"]:
-            raise PermissionDenied(_("You can't start private threads."))
+            raise PermissionDenied(
+                pgettext("private threads api", "You can't start private threads.")
+            )
 
         request.user.lock()
 

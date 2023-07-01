@@ -2,7 +2,7 @@ from time import time
 
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -14,7 +14,9 @@ from .searchproviders import searchproviders
 def search(request, search_provider=None):
     allowed_providers = searchproviders.get_allowed_providers(request)
     if not request.user_acl["can_search"] or not allowed_providers:
-        raise PermissionDenied(_("You don't have permission to search site."))
+        raise PermissionDenied(
+            pgettext("search api", "You don't have permission to search site.")
+        )
 
     search_query = get_search_query(request)
     response = []

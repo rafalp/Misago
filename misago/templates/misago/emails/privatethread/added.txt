@@ -3,11 +3,11 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user.username sender=sender.username thread=thread.title %}
+{% blocktrans trimmed with user=user.username sender=sender.username thread=thread.title context "new private thread email" %}
 {{ user }}, you are receiving this message because {{ sender }} has invited you to participate in private thread "{{ thread }}".
 {% endblocktrans %}
 
-{% blocktrans trimmed %}
+{% blocktrans trimmed context "new private thread email" %}
 To read this thread click the link below:
 {% endblocktrans %}
 {% absoluteurl thread.get_absolute_url %}

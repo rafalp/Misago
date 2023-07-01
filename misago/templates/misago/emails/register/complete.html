@@ -3,21 +3,21 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user %}
+{% blocktrans trimmed with user=user context "welcome email" %}
 {{ user }}, thank you for joining us!
 {% endblocktrans %}
 <br>
 <br>
 {% block activation-message %}
-{% blocktrans trimmed %}
+{% blocktrans trimmed context "welcome email" %}
 You may now join discussion on our forums. Why not spend a minute or two to have a look around and share your opinions and knowledge with rest of community?
 {% endblocktrans %}
 <br>
 <br>
 {% capture trimmed as login_link %}
-<a href="{% absoluteurl LOGIN_URL %}?modal=login">{% trans "this form" %}</a>
+<a href="{% absoluteurl LOGIN_URL %}?modal=login">{% trans "this form" context "welcome email complete sign in cta link" %}</a>
 {% endcapture %}
-{% blocktrans trimmed with login_form=login_link|safe %}
+{% blocktrans trimmed with login_form=login_link|safe context "welcome email complete sign in cta" %}
 You can always sign in to your account using {{ login_form }}.
 {% endblocktrans %}
 <br>

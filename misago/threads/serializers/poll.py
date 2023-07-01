@@ -1,7 +1,6 @@
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import npgettext, pgettext
 from rest_framework import serializers
 
 from ..models import Poll
@@ -103,7 +102,9 @@ class EditPollSerializer(serializers.ModelSerializer):
         serializer = PollChoiceSerializer(data=clean_choice)
         if not serializer.is_valid():
             raise serializers.ValidationError(
-                _("One or more poll choices are invalid.")
+                pgettext(
+                    "edit poll serializer", "One or more poll choices are invalid."
+                )
             )
 
         return serializer.data
@@ -113,12 +114,16 @@ class EditPollSerializer(serializers.ModelSerializer):
 
         if total_choices < 2:
             raise serializers.ValidationError(
-                _("You need to add at least two choices to a poll.")
+                pgettext(
+                    "edit poll serializer",
+                    "You need to add at least two choices to a poll.",
+                )
             )
 
         if total_choices > MAX_POLL_OPTIONS:
             # pylint: disable=line-too-long
-            message = ngettext(
+            message = npgettext(
+                "edit poll serializer",
                 "You can't add more than %(limit_value)s option to a single poll (added %(show_value)s).",
                 "You can't add more than %(limit_value)s options to a single poll (added %(show_value)s).",
                 MAX_POLL_OPTIONS,
@@ -130,9 +135,9 @@ class EditPollSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data["allowed_choices"] > len(data["choices"]):
             raise serializers.ValidationError(
-                _(
-                    "Number of allowed choices can't be "
-                    "greater than number of all choices."
+                pgettext(
+                    "edit poll serializer",
+                    "Number of allowed choices can't be greater than number of all choices.",
                 )
             )
         return data

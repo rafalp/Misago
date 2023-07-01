@@ -1,7 +1,7 @@
 import json
 
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -23,7 +23,9 @@ def avatar_endpoint(request, pk=None):
 
         return Response(
             {
-                "detail": _("Your avatar is locked. You can't change it."),
+                "detail": pgettext(
+                    "avatar api", "Your avatar is locked. You can't change it."
+                ),
                 "reason": reason,
             },
             status=status.HTTP_403_FORBIDDEN,
@@ -106,14 +108,15 @@ def avatar_post(request, options):
         type_options = options[avatar_type]
         if not type_options:
             return Response(
-                {"detail": _("This avatar type is not allowed.")},
+                {"detail": pgettext("avatar api", "This avatar type is not allowed.")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         avatar_strategy = AVATAR_TYPES[avatar_type]
     except KeyError:
         return Response(
-            {"detail": _("Unknown avatar type.")}, status=status.HTTP_400_BAD_REQUEST
+            {"detail": pgettext("avatar api", "Unknown avatar type.")},
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     try:
@@ -134,17 +137,23 @@ def avatar_post(request, options):
 
 def avatar_generate(user, data):
     avatars.dynamic.set_avatar(user)
-    return _("New avatar based on your account was set.")
+    return pgettext("avatar api", "New avatar based on your account was set.")
 
 
 def avatar_gravatar(user, data):
     try:
         avatars.gravatar.set_avatar(user)
-        return _("Gravatar was downloaded and set as new avatar.")
+        return pgettext("avatar api", "Gravatar was downloaded and set as new avatar.")
     except avatars.gravatar.NoGravatarAvailable:
-        raise AvatarError(_("No Gravatar is associated with your e-mail address."))
+        raise AvatarError(
+            pgettext(
+                "avatar api", "No Gravatar is associated with your e-mail address."
+            )
+        )
     except avatars.gravatar.GravatarError:
-        raise AvatarError(_("Failed to connect to Gravatar servers."))
+        raise AvatarError(
+            pgettext("avatar api", "Failed to connect to Gravatar servers.")
+        )
 
 
 def avatar_gallery(user, data):
@@ -154,15 +163,15 @@ def avatar_gallery(user, data):
         if image.gallery == "__default__":
             raise ValueError()
         avatars.gallery.set_avatar(user, image)
-        return _("Avatar from gallery was set.")
+        return pgettext("avatar api", "Avatar from gallery was set.")
     except (TypeError, ValueError, AvatarGallery.DoesNotExist):
-        raise AvatarError(_("Incorrect image."))
+        raise AvatarError(pgettext("avatar api", "Incorrect image."))
 
 
 def avatar_upload(request, user, data):
     new_avatar = data.get("image")
     if not new_avatar:
-        raise AvatarError(_("No file was sent."))
+        raise AvatarError(pgettext("avatar api", "No file was sent."))
 
     try:
         avatars.uploaded.handle_uploaded_file(request, user, new_avatar)
@@ -175,12 +184,12 @@ def avatar_upload(request, user, data):
 
 def avatar_crop_src(user, data):
     avatar_crop(user, data, "src")
-    return _("Avatar was re-cropped.")
+    return pgettext("avatar api", "Avatar was re-cropped.")
 
 
 def avatar_crop_tmp(user, data):
     avatar_crop(user, data, "tmp")
-    return _("Uploaded avatar was set.")
+    return pgettext("avatar api", "Uploaded avatar was set.")
 
 
 def avatar_crop(user, data, suffix):

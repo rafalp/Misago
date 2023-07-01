@@ -26,7 +26,12 @@ export default class extends Form {
 
   clean() {
     if (!this.state.url.trim().length) {
-      snackbar.error(gettext("You have to enter link to the other thread."))
+      snackbar.error(
+        pgettext(
+          "thread posts moderation move",
+          "You have to enter link to the other thread."
+        )
+      )
       return false
     }
 
@@ -51,7 +56,12 @@ export default class extends Form {
 
     modal.hide()
 
-    snackbar.success(gettext("Selected posts were moved to the other thread."))
+    snackbar.success(
+      pgettext(
+        "thread posts moderation move",
+        "Selected posts were moved to the other thread."
+      )
+    )
   }
 
   handleError(rejection) {
@@ -75,7 +85,10 @@ export default class extends Form {
             <div className="modal-body">
               <FormGroup
                 for="id_url"
-                label={gettext("Link to thread you want to move posts to")}
+                label={pgettext(
+                  "thread posts moderation move",
+                  "Link to thread you want to move posts to"
+                )}
               >
                 <input
                   className="form-control"
@@ -93,13 +106,13 @@ export default class extends Form {
                 disabled={this.state.isLoading}
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("thread posts moderation move btn", "Cancel")}
               </button>
               <button
                 className="btn btn-primary"
                 disabled={this.state.isLoading}
               >
-                {gettext("Move posts")}
+                {pgettext("thread posts moderation move btn", "Move posts")}
               </button>
             </div>
           </div>
@@ -120,7 +133,9 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Move posts")}</h4>
+      <h4 className="modal-title">
+        {pgettext("thread posts moderation move title", "Move posts")}
+      </h4>
     </div>
   )
 }

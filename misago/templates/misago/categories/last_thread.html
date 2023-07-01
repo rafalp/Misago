@@ -51,7 +51,7 @@
           </div>
           <div class="media-body">
             <p>
-              {% trans "This category is empty. No threads were posted within it so far." %}
+              {% trans "This category is empty. No threads were posted within it so far." context "category last reply" %}
             </p>
           </div>
         </div>
@@ -65,7 +65,7 @@
         </div>
         <div class="media-body">
           <p>
-            {% trans "This category is private. You can see only your own threads within it." %}
+            {% trans "This category is private. You can see only your own threads within it." context "category last reply" %}
           </p>
         </div>
       </div>
@@ -79,7 +79,7 @@
       </div>
       <div class="media-body">
         <p>
-          {% trans "This category is protected. You can't browse it's contents." %}
+          {% trans "This category is protected. You can't browse it's contents." context "category last reply" %}
         </p>
       </div>
     </div>

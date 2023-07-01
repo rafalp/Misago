@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...conf import settings
 from ...core.utils import slugify
@@ -14,9 +14,18 @@ class Thread(models.Model):
     WEIGHT_GLOBAL = 2
 
     WEIGHT_CHOICES = [
-        (WEIGHT_DEFAULT, _("Don't pin thread")),
-        (WEIGHT_PINNED, _("Pin thread within category")),
-        (WEIGHT_GLOBAL, _("Pin thread globally")),
+        (
+            WEIGHT_DEFAULT,
+            pgettext_lazy("thread weight choice", "Not pinned"),
+        ),
+        (
+            WEIGHT_PINNED,
+            pgettext_lazy("thread weight choice", "Pinned in category"),
+        ),
+        (
+            WEIGHT_GLOBAL,
+            pgettext_lazy("thread weight choice", "Pinned globally"),
+        ),
     ]
 
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)

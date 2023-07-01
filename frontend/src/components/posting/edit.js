@@ -99,7 +99,7 @@ export default class extends Form {
 
   onCancel = () => {
     const cancel = window.confirm(
-      gettext("Are you sure you want to discard changes?")
+      pgettext("edit reply", "Are you sure you want to discard changes?")
     )
     if (cancel) {
       this.close()
@@ -140,7 +140,7 @@ export default class extends Form {
 
   clean() {
     if (!this.state.post.trim().length) {
-      snackbar.error(gettext("You have to enter a message."))
+      snackbar.error(pgettext("posting form", "You have to enter a message."))
       return false
     }
 
@@ -170,7 +170,7 @@ export default class extends Form {
 
     setGlobalState(false, this.onQuote)
 
-    snackbar.success(gettext("Reply has been edited."))
+    snackbar.success(pgettext("edit reply", "Reply has been edited."))
     window.location = success.url.index
   }
 

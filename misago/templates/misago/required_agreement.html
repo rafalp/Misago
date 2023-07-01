@@ -6,7 +6,7 @@
         <h2>{{ misago_agreement.title }}</h2>
         {% if not misago_agreement.link %}
           <p class="lead">
-            {% blocktrans trimmed with agreement=misago_agreement.type %}
+            {% blocktrans trimmed with agreement=misago_agreement.type context "agreement overlay" %}
               Please review the updated {{ agreement }}:
             {% endblocktrans %}
           </p>
@@ -16,9 +16,9 @@
         {% if misago_agreement.link %}
           <p class="lead">
             {% capture trimmed as link %}
-              <a href="{{ misago_agreement.link }}" target="_blank">{% trans "here" %}</a>
+              <a href="{{ misago_agreement.link }}" target="_blank">{% trans "here" context "agreement overlay" %}</a>
             {% endcapture %}
-            {% blocktrans trimmed with agreement=misago_agreement.type link=link|safe %}
+            {% blocktrans trimmed with agreement=misago_agreement.type link=link|safe context "agreement overlay" %}
               Please review the updated {{ agreement }} available {{ link }}.
             {% endblocktrans %}
           </p>

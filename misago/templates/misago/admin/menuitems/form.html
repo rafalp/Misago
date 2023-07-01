@@ -6,7 +6,7 @@
 {% if target.pk %}
 {% trans target.title %}
 {% else %}
-{% trans "New menu item" %}
+{% trans "New menu item" context "admin menu item form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -28,9 +28,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit menu item" %}
+  {% trans "Edit menu item" context "admin menu item form" %}
 {% else %}
-  {% trans "New menu item" %}
+  {% trans "New menu item" context "admin menu item form" %}
 {% endif %}
 {% endblock %}
 
@@ -38,7 +38,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" %}</legend>
+    <legend>{% trans "Basic settings" context "admin menu item form" %}</legend>
 
     {% form_row form.title %}
     {% form_row form.url %}
@@ -47,7 +47,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Behavior and appearance" %}</legend>
+    <legend>{% trans "Behavior and appearance" context "admin menu item form" %}</legend>
     
     {% form_row form.menu %}
     {% form_row form.css_class %}

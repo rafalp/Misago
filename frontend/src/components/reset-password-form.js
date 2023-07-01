@@ -25,7 +25,7 @@ export class ResetPasswordForm extends Form {
     if (this.state.password.trim().length) {
       return true
     } else {
-      snackbar.error(gettext("Enter new password."))
+      snackbar.error(pgettext("password reset form", "Enter new password."))
       return false
     }
   }
@@ -57,7 +57,10 @@ export class ResetPasswordForm extends Form {
               <input
                 type="password"
                 className="form-control"
-                placeholder={gettext("Enter new password")}
+                placeholder={pgettext(
+                  "password reset form field",
+                  "Enter new password"
+                )}
                 disabled={this.state.isLoading}
                 onChange={this.bindInput("password")}
                 value={this.state.password}
@@ -69,7 +72,7 @@ export class ResetPasswordForm extends Form {
             className="btn-primary btn-block"
             loading={this.state.isLoading}
           >
-            {gettext("Change password")}
+            {pgettext("password reset form btn", "Change password")}
           </Button>
         </form>
       </div>
@@ -80,7 +83,10 @@ export class ResetPasswordForm extends Form {
 export class PasswordChangedPage extends React.Component {
   getMessage() {
     return interpolate(
-      gettext("%(username)s, your password has been changed successfully."),
+      pgettext(
+        "password reset form",
+        "%(username)s, your password has been changed successfully."
+      ),
       {
         username: this.props.user.username,
       },
@@ -104,7 +110,8 @@ export class PasswordChangedPage extends React.Component {
             <div className="message-body">
               <p className="lead">{this.getMessage()}</p>
               <p>
-                {gettext(
+                {pgettext(
+                  "password reset form",
                   "You will have to sign in using new password before continuing."
                 )}
               </p>
@@ -114,7 +121,7 @@ export class PasswordChangedPage extends React.Component {
                   className="btn btn-primary"
                   onClick={this.showSignIn}
                 >
-                  {gettext("Sign in")}
+                  {pgettext("password reset form btn", "Sign in")}
                 </button>
               </p>
             </div>

@@ -1,4 +1,4 @@
-from django.utils.translation import gettext_lazy
+from django.utils.translation import pgettext_lazy
 from rest_framework import serializers
 
 from . import PostingEndpoint, PostingMiddleware
@@ -82,7 +82,9 @@ class ReplyMiddleware(PostingMiddleware):
 
 class ReplySerializer(serializers.Serializer):
     post = serializers.CharField(
-        error_messages={"required": gettext_lazy("You have to enter a message.")}
+        error_messages={
+            "required": pgettext_lazy("posting api", "You have to enter a message.")
+        }
     )
 
     def validate_post(self, data):
@@ -107,7 +109,11 @@ class ReplySerializer(serializers.Serializer):
 
 class ThreadSerializer(ReplySerializer):
     title = serializers.CharField(
-        error_messages={"required": gettext_lazy("You have to enter thread title.")}
+        error_messages={
+            "required": pgettext_lazy(
+                "posting api", "You have to enter a thread title."
+            )
+        }
     )
 
     def validate_title(self, data):

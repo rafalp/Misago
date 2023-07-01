@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...admin.views import generic
 from ..models import MenuItem
@@ -13,7 +13,9 @@ class MenuItemAdmin(generic.AdminBaseMixin):
     model = MenuItem
     form_class = MenuItemForm
     templates_dir = "misago/admin/menuitems"
-    message_404 = _("Requested menu item does not exist.")
+    message_404 = pgettext_lazy(
+        "admin menu items", "Requested menu item does not exist."
+    )
 
     def handle_form(self, form, request, target):
         form.save()
@@ -27,19 +29,26 @@ class MenuItemsList(MenuItemAdmin, generic.ListView):
     mass_actions = [
         {
             "action": "delete",
-            "name": _("Delete items"),
-            "confirmation": _("Are you sure you want to delete those menu items?"),
+            "name": pgettext_lazy("admin menu items", "Delete items"),
+            "confirmation": pgettext_lazy(
+                "admin menu items", "Are you sure you want to delete those menu items?"
+            ),
         }
     ]
 
     def action_delete(self, request, items):
         items.delete()
         clear_menus_cache()
-        messages.success(request, _("Selected menu items have been deleted."))
+        messages.success(
+            request,
+            pgettext_lazy("admin menu items", "Selected menu items have been deleted."),
+        )
 
 
 class NewMenuItem(MenuItemAdmin, generic.ModelFormView):
-    message_submit = _("New menu item %(item)s has been saved.")
+    message_submit = pgettext_lazy(
+        "admin menu items", "New menu item %(item)s has been saved."
+    )
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -49,7 +58,9 @@ class NewMenuItem(MenuItemAdmin, generic.ModelFormView):
 
 
 class EditMenuItem(MenuItemAdmin, generic.ModelFormView):
-    message_submit = _("Menu item %(item)s has been edited.")
+    message_submit = pgettext_lazy(
+        "admin menu items", "Menu item %(item)s has been edited."
+    )
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -61,7 +72,9 @@ class DeleteMenuItem(MenuItemAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
         clear_menus_cache()
-        message = _("Menu item %(item)s has been deleted.")
+        message = pgettext_lazy(
+            "admin menu items", "Menu item %(item)s has been deleted."
+        )
         messages.success(request, message % {"item": target})
 
 
@@ -79,7 +92,9 @@ class MoveDownMenuItem(MenuItemAdmin, generic.ButtonView):
             target.save(update_fields=["order"])
             clear_menus_cache()
 
-            message = _("Menu item %(item)s has been moved after %(other)s.")
+            message = pgettext_lazy(
+                "admin menu items", "Menu item %(item)s has been moved after %(other)s."
+            )
             targets_names = {"item": target, "other": other_target}
             messages.success(request, message % targets_names)
 
@@ -98,6 +113,9 @@ class MoveUpMenuItem(MenuItemAdmin, generic.ButtonView):
             target.save(update_fields=["order"])
             clear_menus_cache()
 
-            message = _("Menu item %(item)s has been moved before %(other)s.")
+            message = pgettext_lazy(
+                "admin menu items",
+                "Menu item %(item)s has been moved before %(other)s.",
+            )
             targets_names = {"item": target, "other": other_target}
             messages.success(request, message % targets_names)

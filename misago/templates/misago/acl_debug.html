@@ -2,24 +2,24 @@
 
 <h4>
   {% if misago_user.is_authenticated %}
-    {% blocktrans with user=misago_user.username %}
+    {% blocktrans with user=misago_user.username context "debug toolbar user acl" %}
     {{ user }} roles
     {% endblocktrans %}
   {% else %}
-    {% trans "Anonymous roles" %}
+    {% trans "Anonymous roles" context "debug toolbar user acl" %}
   {% endif %}
 </h4>
 <table>
   <thead>
     <tr>
-      <th style="width: 180px;">{% trans "Role" %}</th>
-      <th>{% trans "Permissions" %}</th>
+      <th style="width: 180px;">{% trans "Role" context "debug toolbar user acl" %}</th>
+      <th>{% trans "Permissions" context "debug toolbar user acl" %}</th>
     </tr>
   </thead>
   <tbody>
     {% for role in misago_user.get_roles %}
       <tr>
-        <td>{{ role.name }}</td>
+        <td>{{ role }}</td>
         <td>{{ role.permissions }}</td>
       </tr>
     {% endfor %}
@@ -27,12 +27,12 @@
 </table>
 
 
-<h4>{% trans "Current ACL" %}</h4>
+<h4>{% trans "Current ACL" context "debug toolbar user acl" %}</h4>
 <table>
   <thead>
     <tr>
-      <th style="width: 180px;">{% trans "Key" %}</th>
-      <th>{% trans "Value" %}</th>
+      <th style="width: 180px;">{% trans "Key" context "debug toolbar user acl" %}</th>
+      <th>{% trans "Value" context "debug toolbar user acl" %}</th>
     </tr>
   </thead>
   <tbody>

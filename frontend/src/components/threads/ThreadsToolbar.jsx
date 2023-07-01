@@ -35,7 +35,7 @@ const ThreadsToolbar = ({
       <ToolbarSection>
         <ToolbarItem>
           <ThreadsCategoryPicker
-            allItems={gettext("All categories")}
+            allItems={pgettext("threads list nav", "All categories")}
             parentUrl={list.path}
             category={topCategory}
             categories={topCategories}
@@ -45,7 +45,7 @@ const ThreadsToolbar = ({
         {topCategory && subCategories.length > 0 && (
           <ToolbarItem>
             <ThreadsCategoryPicker
-              allItems={gettext("All subcategories")}
+              allItems={pgettext("threads list nav", "All subcategories")}
               parentUrl={topCategory.url.index}
               category={subCategory}
               categories={subCategories}
@@ -83,7 +83,7 @@ const ThreadsToolbar = ({
             }}
           >
             <span className="material-icon">chat</span>
-            {gettext("Start thread")}
+            {pgettext("threads list nav", "Start thread")}
           </Button>
         </ToolbarItem>
         {!!moderation.allow && (

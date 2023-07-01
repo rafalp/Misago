@@ -6,7 +6,7 @@ import {
 } from "../PageHeader"
 
 const Header = ({ backendName }) => {
-  const pageTitleTpl = gettext("Sign in with %(backend)s")
+  const pageTitleTpl = pgettext("social auth title", "Sign in with %(backend)s")
   const pageTitle = interpolate(pageTitleTpl, { backend: backendName }, true)
 
   return (

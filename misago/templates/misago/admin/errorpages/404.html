@@ -2,18 +2,18 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Page not found" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Page not found" context "admin error 404" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
 <div class="container-fluid">
   <div class="card card-admin-error">
     <h5 class="card-header">
-      {% trans "Requested page could not be found" %}
+      {% trans "Requested page could not be found" context "admin error 404" %}
     </h5>
     <div class="card-body">
       <p class="mb-0">
-        {% trans "The link you clicked was incorrect or the page has been moved or deleted." %}
+        {% trans "The link you clicked was incorrect or the page has been moved or deleted." context "admin error 404" %}
       </p>
     </div>
   </div>

@@ -14,9 +14,9 @@
 
 {% block form-header %}
 {% if target.order %}
-  {% trans "Edit social login" %}
+  {% trans "Edit social login" context "admin social auth provider form" %}
 {% else %}
-  {% trans "Setup social login" %}
+  {% trans "Setup social login" context "admin social auth provider form" %}
 {% endif %}
 {% endblock %}
 
@@ -24,7 +24,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "General" %}</legend>
+    <legend>{% trans "General" context "admin social auth provider form" %}</legend>
 
     {% form_row form.is_active %}
     {% block form-settings %}
@@ -37,7 +37,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Button appearance" %}</legend>
+    <legend>{% trans "Button appearance" context "admin social auth provider form" %}</legend>
 
     {% form_row form.button_text %}
     {% form_row form.button_color %}

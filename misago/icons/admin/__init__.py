@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views import icons_admin
 
@@ -12,8 +12,10 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Icons"),
-            description=_("Upload favicon and application icon for the site."),
+            name=pgettext_lazy("admin node", "Icons"),
+            description=pgettext_lazy(
+                "admin node", "Upload favicon and application icon for the site."
+            ),
             parent="settings",
             namespace="icons",
         )

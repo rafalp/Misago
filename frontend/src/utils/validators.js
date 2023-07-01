@@ -12,19 +12,27 @@ export function required(message) {
 }
 
 export function requiredTermsOfService(message) {
-  const error = gettext("You have to accept the terms of service.")
+  const error = pgettext(
+    "agreement validator",
+    "You have to accept the terms of service."
+  )
   return required(message || error)
 }
 
 export function requiredPrivacyPolicy(message) {
-  const error = gettext("You have to accept the privacy policy.")
+  const error = pgettext(
+    "agreement validator",
+    "You have to accept the privacy policy."
+  )
   return required(message || error)
 }
 
 export function email(message) {
   return function (value) {
     if (!EMAIL.test(value)) {
-      return message || gettext("Enter a valid email address.")
+      return (
+        message || pgettext("email validator", "Enter a valid email address.")
+      )
     }
   }
 }
@@ -38,7 +46,8 @@ export function minLength(limitValue, message) {
       if (message) {
         returnMessage = message(limitValue, length)
       } else {
-        returnMessage = ngettext(
+        returnMessage = npgettext(
+          "value length validator",
           "Ensure this value has at least %(limit_value)s character (it has %(show_value)s).",
           "Ensure this value has at least %(limit_value)s characters (it has %(show_value)s).",
           limitValue
@@ -65,7 +74,8 @@ export function maxLength(limitValue, message) {
       if (message) {
         returnMessage = message(limitValue, length)
       } else {
-        returnMessage = ngettext(
+        returnMessage = npgettext(
+          "value length validator",
           "Ensure this value has at most %(limit_value)s character (it has %(show_value)s).",
           "Ensure this value has at most %(limit_value)s characters (it has %(show_value)s).",
           limitValue
@@ -85,7 +95,8 @@ export function maxLength(limitValue, message) {
 
 export function usernameMinLength(lengthMin) {
   var message = function (lengthMin) {
-    return ngettext(
+    return npgettext(
+      "username length validator",
       "Username must be at least %(limit_value)s character long.",
       "Username must be at least %(limit_value)s characters long.",
       lengthMin
@@ -96,7 +107,8 @@ export function usernameMinLength(lengthMin) {
 
 export function usernameMaxLength(lengthMax) {
   var message = function (lengthMax) {
-    return ngettext(
+    return npgettext(
+      "username length validator",
       "Username cannot be longer than %(limit_value)s character.",
       "Username cannot be longer than %(limit_value)s characters.",
       lengthMax
@@ -109,12 +121,14 @@ export function usernameContent() {
   return function (value) {
     const valueTrimmed = value.trim()
     if (!USERNAME.test(valueTrimmed)) {
-      return gettext(
+      return pgettext(
+        "username validator",
         "Username can only contain Latin alphabet letters, digits, and an underscore sign."
       )
     }
     if (!USERNAME_ALPHANUMERIC.test(valueTrimmed)) {
-      return gettext(
+      return pgettext(
+        "username validator",
         "Username can must contain Latin alphabet letters or digits."
       )
     }
@@ -126,7 +140,8 @@ export function passwordMinLength(limitValue) {
     const length = value.length
 
     if (length < limitValue) {
-      const returnMessage = ngettext(
+      const returnMessage = npgettext(
+        "password length validator",
         "Valid password must be at least %(limit_value)s character long.",
         "Valid password must be at least %(limit_value)s characters long.",
         limitValue

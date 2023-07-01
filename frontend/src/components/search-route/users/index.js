@@ -27,15 +27,21 @@ export function Blankslate({ children, loading, query, users }) {
     return (
       <p className="lead">
         {loading
-          ? gettext("Loading results...")
-          : gettext("No users matching search query have been found.")}
+          ? pgettext("search users", "Loading results...")
+          : pgettext(
+              "search users",
+              "No users matching search query have been found."
+            )}
       </p>
     )
   }
 
   return (
     <p className="lead">
-      {gettext("Enter at least two characters to search users.")}
+      {pgettext(
+        "search users",
+        "Enter at least two characters to search users."
+      )}
     </p>
   )
 }

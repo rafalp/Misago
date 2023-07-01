@@ -3,7 +3,7 @@ import re
 from django.conf import settings
 from django.db import IntegrityError, models
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .. import BANS_CACHE
 from ...cache.versions import invalidate_cache
@@ -68,9 +68,9 @@ class Ban(models.Model):
     IP = 2
 
     CHOICES = [
-        (USERNAME, _("Username")),
-        (EMAIL, _("E-mail address")),
-        (IP, _("IP address")),
+        (USERNAME, pgettext_lazy("ban type choice", "Username")),
+        (EMAIL, pgettext_lazy("ban type choice", "E-mail address")),
+        (IP, pgettext_lazy("ban type choice", "IP address")),
     ]
 
     check_type = models.PositiveIntegerField(

@@ -6,12 +6,12 @@
 {% capture trimmed as thread_title %}
 <b>{{ thread.title }}</b>
 {% endcapture %}
-{% blocktrans trimmed with user=user.username sender=sender.username thread=thread_title|safe %}
+{% blocktrans trimmed with user=user.username sender=sender.username thread=thread_title|safe context "new private thread email" %}
 {{ user }}, you are receiving this message because {{ sender }} has invited you to participate in private thread {{ thread }}.
 {% endblocktrans %}
 <br>
 <br>
-{% blocktrans trimmed %}
+{% blocktrans trimmed context "new private thread email" %}
 To read this thread click the link below:
 {% endblocktrans %}
 <br>

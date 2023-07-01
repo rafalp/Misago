@@ -79,7 +79,7 @@ export default class extends Form {
             onCancel={this.props.onCancel}
           />{" "}
           <Button className="btn-primary" loading={this.state.isLoading}>
-            {gettext("Save changes")}
+            {pgettext("user profile details form btn", "Save changes")}
           </Button>
         </div>
       </form>
@@ -97,7 +97,7 @@ export function CancelButton({ onCancel, disabled }) {
       onClick={onCancel}
       type="button"
     >
-      {gettext("Cancel")}
+      {pgettext("user profile details form btn", "Cancel")}
     </button>
   )
 }

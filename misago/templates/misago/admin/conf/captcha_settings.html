@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" %}</legend>
+    <legend>{% trans "Basic settings" context "admin captcha settings form" %}</legend>
 
     {% form_row form.captcha_type %}
 
@@ -13,7 +13,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "reCAPTCHA" %}</legend>
+    <legend>{% trans "reCAPTCHA" context "admin captcha settings form" %}</legend>
 
     {% form_row form.recaptcha_site_key %}
     {% form_row form.recaptcha_secret_key %}
@@ -22,7 +22,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Question and answer" %}</legend>
+    <legend>{% trans "Question and answer" context "admin captcha settings form" %}</legend>
 
     {% form_row form.qa_question %}
     {% form_row form.qa_help_text %}
@@ -32,7 +32,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Stop Forum Spam" %}</legend>
+    <legend>{% trans "Stop Forum Spam" context "admin captcha settings form" %}</legend>
 
     {% form_row form.enable_stop_forum_spam %}
     {% form_row form.stop_forum_spam_confidence %}

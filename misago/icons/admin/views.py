@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ...admin.views import render
 from ..models import Icon
@@ -14,7 +14,9 @@ def icons_admin(request):
         if form.is_valid():
             form.save()
 
-            messages.success(request, _("Icons have been updated."))
+            messages.success(
+                request, pgettext("admin icons", "Icons have been updated.")
+            )
             return redirect("misago:admin:settings:icons:index")
 
     return render(

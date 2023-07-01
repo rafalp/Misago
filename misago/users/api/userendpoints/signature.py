@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -10,7 +10,12 @@ from ...signatures import is_user_signature_valid, set_user_signature
 
 def signature_endpoint(request):
     if not request.user_acl["can_have_signature"]:
-        raise PermissionDenied(_("You don't have permission to change signature."))
+        raise PermissionDenied(
+            pgettext(
+                "signature api",
+                "You don't have permission to change signature.",
+            )
+        )
 
     user = request.user
 
@@ -22,7 +27,10 @@ def signature_endpoint(request):
 
         return Response(
             {
-                "detail": _("Your signature is locked. You can't change it."),
+                "detail": pgettext(
+                    "signature api",
+                    "Your signature is locked. You can't change it.",
+                ),
                 "reason": reason,
             },
             status=status.HTTP_403_FORBIDDEN,
@@ -35,10 +43,16 @@ def signature_endpoint(request):
 
 
 def get_signature_options(settings, user):
-    options = {"signature": None, "limit": settings.signature_length_max}
+    options = {
+        "signature": None,
+        "limit": settings.signature_length_max,
+    }
 
     if user.signature:
-        options["signature"] = {"plain": user.signature, "html": user.signature_parsed}
+        options["signature"] = {
+            "plain": user.signature,
+            "html": user.signature_parsed,
+        }
 
         if not is_user_signature_valid(user):
             # pylint: disable=unsupported-assignment-operation
@@ -54,7 +68,13 @@ def edit_signature(request, user):
     if serializer.is_valid():
         signature = serializer.validated_data["signature"]
         set_user_signature(request, user, request.user_acl, signature)
-        user.save(update_fields=["signature", "signature_parsed", "signature_checksum"])
+        user.save(
+            update_fields=[
+                "signature",
+                "signature_parsed",
+                "signature_checksum",
+            ],
+        )
         return get_signature_options(request.settings, user)
 
     return Response(

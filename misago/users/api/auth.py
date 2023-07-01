@@ -3,7 +3,7 @@ from functools import wraps
 from django.contrib import auth
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from django.views.decorators.csrf import csrf_protect
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -36,9 +36,9 @@ def check_delegated_auth(f):
     def view_disabled_if_auth_is_delegated(request, *args, **kwargs):
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
-                _(
-                    "This feature has been disabled. "
-                    "Please use %(provider)s to sign in."
+                pgettext(
+                    "auth api",
+                    "This feature has been disabled. Please use %(provider)s to sign in.",
                 )
                 % {"provider": request.settings.oauth2_provider}
             )
@@ -112,7 +112,10 @@ def send_activation(request):
 
     requesting_user = form.user_cache
 
-    mail_subject = _("Activate %(user)s account on %(forum_name)s forums") % {
+    mail_subject = pgettext(
+        "account activation email subject",
+        "Activate %(user)s account on %(forum_name)s forums",
+    ) % {
         "user": requesting_user.username,
         "forum_name": request.settings.forum_name,
     }
@@ -148,7 +151,10 @@ def send_password_form(request):
 
     requesting_user = form.user_cache
 
-    mail_subject = _("Change %(user)s password on %(forum_name)s forums") % {
+    mail_subject = pgettext(
+        "change forgotten password email subject",
+        "Change %(user)s password on %(forum_name)s forums",
+    ) % {
         "user": requesting_user.username,
         "forum_name": request.settings.forum_name,
     }
@@ -184,8 +190,14 @@ def change_forgotten_password(request, pk, token):
     POST /auth/change-password/user/token/ with CSRF and new password
     will change forgotten password
     """
-    invalid_message = _("Form link is invalid. Please try again.")
-    expired_message = _("Your link has expired. Please request new one.")
+    invalid_message = pgettext(
+        "change forgotten password api",
+        "Form link is invalid. Please try again.",
+    )
+    expired_message = pgettext(
+        "change forgotten password api",
+        "Your link has expired. Please request new one.",
+    )
 
     try:
         try:

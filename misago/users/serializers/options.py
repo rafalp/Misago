@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.password_validation import validate_password
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework import serializers
 
 from ..online.tracker import clear_tracking
@@ -51,7 +51,9 @@ class EditSignatureSerializer(serializers.ModelSerializer):
     def validate(self, data):
         settings = self.context["settings"]
         if len(data.get("signature", "")) > settings.signature_length_max:
-            raise serializers.ValidationError(_("Signature is too long."))
+            raise serializers.ValidationError(
+                pgettext("edit signature serializer", "Signature is too long.")
+            )
 
         return data
 
@@ -62,11 +64,17 @@ class ChangeUsernameSerializer(serializers.Serializer):
     def validate(self, data):
         username = data.get("username")
         if not username:
-            raise serializers.ValidationError(_("Enter new username."))
+            raise serializers.ValidationError(
+                pgettext("change username serializer", "Enter new username.")
+            )
 
         user = self.context["user"]
         if username == user.username:
-            raise serializers.ValidationError(_("New username is same as current one."))
+            raise serializers.ValidationError(
+                pgettext(
+                    "change username serializer", "New username is same as current one."
+                )
+            )
 
         settings = self.context["settings"]
         validate_username(settings, username)
@@ -85,7 +93,9 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def validate_password(self, value):
         if not self.context["user"].check_password(value):
-            raise serializers.ValidationError(_("Entered password is invalid."))
+            raise serializers.ValidationError(
+                pgettext("change password serializer", "Entered password is invalid.")
+            )
         return value
 
     def validate_new_password(self, value):
@@ -99,17 +109,25 @@ class ChangeEmailSerializer(serializers.Serializer):
 
     def validate_password(self, value):
         if not self.context["user"].check_password(value):
-            raise serializers.ValidationError(_("Entered password is invalid."))
+            raise serializers.ValidationError(
+                pgettext("change email serializer", "Entered password is invalid.")
+            )
         return value
 
     def validate_new_email(self, value):
         if not value:
             raise serializers.ValidationError(
-                _("You have to enter new e-mail address.")
+                pgettext(
+                    "change email serializer", "You have to enter new e-mail address."
+                )
             )
 
         if value.lower() == self.context["user"].email.lower():
-            raise serializers.ValidationError(_("New e-mail is same as current one."))
+            raise serializers.ValidationError(
+                pgettext(
+                    "change email serializer", "New e-mail is same as current one."
+                )
+            )
 
         validate_email(value)
 
@@ -121,7 +139,11 @@ class DeleteOwnAccountSerializer(serializers.Serializer):
 
     def validate_password(self, value):
         if not self.context["user"].check_password(value):
-            raise serializers.ValidationError(_("Entered password is invalid."))
+            raise serializers.ValidationError(
+                pgettext(
+                    "delete own account serializer", "Entered password is invalid."
+                )
+            )
         return value
 
     def mark_account_for_deletion(self, request):

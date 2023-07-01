@@ -7,15 +7,18 @@ const Complete = ({ activation, backend_name, username }) => {
   let icon = ""
   let message = ""
   if (activation === "user") {
-    message = gettext(
+    message = pgettext(
+      "social auth complete",
       "%(username)s, your account has been created but you need to activate it before you will be able to sign in."
     )
   } else if (activation === "admin") {
-    message = gettext(
+    message = pgettext(
+      "social auth complete",
       "%(username)s, your account has been created but board administrator will have to activate it before you will be able to sign in."
     )
   } else {
-    message = gettext(
+    message = pgettext(
+      "social auth complete",
       "%(username)s, your account has been created and you have been signed in to it."
     )
   }
@@ -35,7 +38,10 @@ const Complete = ({ activation, backend_name, username }) => {
             <div className="panel panel-default panel-form">
               <div className="panel-heading">
                 <h3 className="panel-title">
-                  {gettext("Registration completed!")}
+                  {pgettext(
+                    "social auth complete title",
+                    "Registration completed!"
+                  )}
                 </h3>
               </div>
               <div className="panel-body panel-message-body">
@@ -51,7 +57,10 @@ const Complete = ({ activation, backend_name, username }) => {
                       className="btn btn-default"
                       href={misago.get("MISAGO_PATH")}
                     >
-                      {gettext("Return to forum index")}
+                      {pgettext(
+                        "social auth complete link",
+                        "Return to forum index"
+                      )}
                     </a>
                   </p>
                 </div>

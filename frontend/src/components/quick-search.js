@@ -17,7 +17,10 @@ export default class extends React.Component {
           className="form-control"
           value={this.props.value}
           onChange={this.props.onChange}
-          placeholder={this.props.placeholder || gettext("Search...")}
+          placeholder={
+            this.props.placeholder ||
+            pgettext("quick search placeholder", "Search...")
+          }
         />
         <span className="material-icon">search</span>
       </div>

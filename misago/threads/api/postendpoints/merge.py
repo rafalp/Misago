@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
@@ -8,7 +8,9 @@ from ...serializers import MergePostsSerializer, PostSerializer
 
 def posts_merge_endpoint(request, thread):
     if not thread.acl["can_merge_posts"]:
-        raise PermissionDenied(_("You can't merge posts in this thread."))
+        raise PermissionDenied(
+            pgettext("posts api", "You can't merge posts in this thread.")
+        )
 
     serializer = MergePostsSerializer(
         data=request.data,

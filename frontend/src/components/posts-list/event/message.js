@@ -2,22 +2,28 @@ import React from "react"
 import escapeHtml from "misago/utils/escape-html"
 
 const MESSAGE = {
-  pinned_globally: gettext("Thread has been pinned globally."),
-  pinned_locally: gettext("Thread has been pinned locally."),
-  unpinned: gettext("Thread has been unpinned."),
+  pinned_globally: pgettext(
+    "event message",
+    "Thread has been pinned globally."
+  ),
+  pinned_locally: pgettext("event message", "Thread has been pinned locally."),
+  unpinned: pgettext("event message", "Thread has been unpinned."),
 
-  approved: gettext("Thread has been approved."),
+  approved: pgettext("event message", "Thread has been approved."),
 
-  opened: gettext("Thread has been opened."),
-  closed: gettext("Thread has been closed."),
+  opened: pgettext("event message", "Thread has been opened."),
+  closed: pgettext("event message", "Thread has been closed."),
 
-  unhid: gettext("Thread has been revealed."),
-  hid: gettext("Thread has been made hidden."),
+  unhid: pgettext("event message", "Thread has been revealed."),
+  hid: pgettext("event message", "Thread has been made hidden."),
 
-  tookover: gettext("Took thread over."),
+  tookover: pgettext("event message", "Took thread over."),
 
-  owner_left: gettext("Owner has left thread. This thread is now closed."),
-  participant_left: gettext("Participant has left thread."),
+  owner_left: pgettext(
+    "event message",
+    "Owner has left thread. This thread is now closed."
+  ),
+  participant_left: pgettext("event message", "Participant has left thread."),
 }
 
 const ITEM_LINK = '<a href="%(url)s" class="item-title">%(name)s</a>'
@@ -45,7 +51,10 @@ export default function (props) {
 
 export function ChangedTitle(props) {
   const msgstring = escapeHtml(
-    gettext("Thread title has been changed from %(old_title)s.")
+    pgettext(
+      "event message",
+      "Thread title has been changed from %(old_title)s."
+    )
   )
   const oldTitle = interpolate(
     ITEM_SPAN,
@@ -72,7 +81,7 @@ export function ChangedTitle(props) {
 
 export function Moved(props) {
   const msgstring = escapeHtml(
-    gettext("Thread has been moved from %(from_category)s.")
+    pgettext("event message", "Thread has been moved from %(from_category)s.")
   )
   const fromCategory = interpolate(
     ITEM_LINK,
@@ -101,7 +110,10 @@ export function Moved(props) {
 
 export function Merged(props) {
   const msgstring = escapeHtml(
-    gettext("The %(merged_thread)s thread has been merged into this thread.")
+    pgettext(
+      "event message",
+      "The %(merged_thread)s thread has been merged into this thread."
+    )
   )
   const mergedThread = interpolate(
     ITEM_SPAN,
@@ -128,7 +140,9 @@ export function Merged(props) {
 }
 
 export function ChangedOwner(props) {
-  const msgstring = escapeHtml(gettext("Changed thread owner to %(user)s."))
+  const msgstring = escapeHtml(
+    pgettext("event message", "Changed thread owner to %(user)s.")
+  )
   const newOwner = interpolate(
     ITEM_LINK,
     {
@@ -155,7 +169,9 @@ export function ChangedOwner(props) {
 }
 
 export function AddedParticipant(props) {
-  const msgstring = escapeHtml(gettext("Added %(user)s to thread."))
+  const msgstring = escapeHtml(
+    pgettext("event message", "Added %(user)s to thread.")
+  )
   const newOwner = interpolate(
     ITEM_LINK,
     {
@@ -182,7 +198,9 @@ export function AddedParticipant(props) {
 }
 
 export function RemovedParticipant(props) {
-  const msgstring = escapeHtml(gettext("Removed %(user)s from thread."))
+  const msgstring = escapeHtml(
+    pgettext("event message", "Removed %(user)s from thread.")
+  )
   const newOwner = interpolate(
     ITEM_LINK,
     {

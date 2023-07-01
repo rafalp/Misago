@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New role" %}
+  {% trans "New role" context "admin role form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -23,9 +23,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit role" %}
+  {% trans "Edit role" context "admin role form" %}
 {% else %}
-  {% trans "New role" %}
+  {% trans "New role" context "admin role form" %}
 {% endif %}
 {% endblock %}
 
@@ -33,7 +33,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" %}</legend>
+    <legend>{% trans "Basic settings" context "admin role form" %}</legend>
     {% form_row form.name %}
   </fieldset>
 </div>

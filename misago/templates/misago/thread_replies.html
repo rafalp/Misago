@@ -1,6 +1,6 @@
 {% load i18n %}
 <span class="threads-replies"
-  title="{% blocktrans trimmed count replies=thread.replies %}
+  title="{% blocktrans trimmed count replies=thread.replies context 'thread replies stat' %}
   {{ replies }} reply
   {% plural %}
     {{ replies }} replies

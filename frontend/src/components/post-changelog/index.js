@@ -62,7 +62,8 @@ export default class extends React.Component {
     if (this.state.isBusy) return
 
     const confirmation = window.confirm(
-      gettext(
+      pgettext(
+        "post revert",
         "Are you sure you with to revert this post to the state from before this edit?"
       )
     )
@@ -78,7 +79,9 @@ export default class extends React.Component {
         const hydratedPost = post.hydrate(data)
         store.dispatch(post.patch(data, hydratedPost))
 
-        snackbar.success(gettext("Post has been reverted to previous state."))
+        snackbar.success(
+          pgettext("post revert", "Post has been reverted to previous state.")
+        )
         modal.hide()
       },
       (rejection) => {
@@ -140,7 +143,9 @@ export function ModalDialog(props) {
           >
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 className="modal-title">{gettext("Post edits history")}</h4>
+          <h4 className="modal-title">
+            {pgettext("post history modal title", "Post edits history")}
+          </h4>
         </div>
         {props.children}
       </div>

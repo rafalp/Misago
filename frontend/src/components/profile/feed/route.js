@@ -112,7 +112,7 @@ export function LoadMoreButton(props) {
         loading={props.isLoading}
         onClick={props.loadMore}
       >
-        {gettext("Show older activity")}
+        {pgettext("profile load more btn", "Show older activity")}
       </Button>
     </div>
   )

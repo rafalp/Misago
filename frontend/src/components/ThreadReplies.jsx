@@ -4,7 +4,12 @@ const ThreadReplies = ({ thread }) => (
   <span
     className="threads-replies"
     title={interpolate(
-      ngettext("%(replies)s reply", "%(replies)s replies", thread.replies),
+      npgettext(
+        "thread replies stat",
+        "%(replies)s reply",
+        "%(replies)s replies",
+        thread.replies
+      ),
       { replies: thread.replies },
       true
     )}

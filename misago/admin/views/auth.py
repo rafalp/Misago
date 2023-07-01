@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
@@ -36,5 +36,7 @@ def login(request):
 def logout(request):
     if request.method == "POST":
         auth.remove_admin_authorization(request)
-        messages.info(request, _("Your admin session has been closed."))
+        messages.info(
+            request, pgettext("admin auth", "Your admin session has been closed.")
+        )
     return redirect("misago:admin:index")

@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import npgettext, pgettext
 from rest_framework import serializers
 
 from . import PostingEndpoint, PostingMiddleware
@@ -49,9 +48,9 @@ class ParticipantsSerializer(serializers.Serializer):
 
             if clean_name == self.context["user"].slug:
                 raise serializers.ValidationError(
-                    _(
-                        "You can't include yourself on the "
-                        "list of users to invite to new thread."
+                    pgettext(
+                        "posting api",
+                        "You can't include yourself on the list of users to invite to new thread.",
                     )
                 )
 
@@ -59,12 +58,15 @@ class ParticipantsSerializer(serializers.Serializer):
                 clean_usernames.append(clean_name)
 
         if not clean_usernames:
-            raise serializers.ValidationError(_("You have to enter user names."))
+            raise serializers.ValidationError(
+                pgettext("posting api", "You have to enter user names.")
+            )
 
         max_participants = self.context["user_acl"]["max_private_thread_participants"]
         if max_participants and len(clean_usernames) > max_participants:
             # pylint: disable=line-too-long
-            message = ngettext(
+            message = npgettext(
+                "posting api",
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
                 "You can't add more than %(users)s users to private thread (you've added %(added)s).",
                 max_participants,
@@ -91,7 +93,9 @@ class ParticipantsSerializer(serializers.Serializer):
             invalid_usernames = set(usernames) - {u.slug for u in users}
             sorted_usernames = sorted(invalid_usernames)
 
-            message = _("One or more users could not be found: %(usernames)s")
+            message = pgettext(
+                "posting api", "One or more users could not be found: %(usernames)s"
+            )
             raise serializers.ValidationError(
                 message % {"usernames": ", ".join(sorted_usernames)}
             )

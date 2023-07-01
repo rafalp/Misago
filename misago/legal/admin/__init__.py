@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views import (
     AgreementsList,
@@ -32,8 +32,10 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Legal agreements"),
-            description=_("Set terms of service and privacy policy contents."),
+            name=pgettext_lazy("admin node", "Legal agreements"),
+            description=pgettext_lazy(
+                "admin node", "Set terms of service and privacy policy contents."
+            ),
             parent="settings",
             namespace="agreements",
         )

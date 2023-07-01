@@ -3,7 +3,7 @@ from time import time
 
 from django.contrib import auth as dj_auth
 from django.contrib import messages
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ..conf import settings
 
@@ -27,7 +27,9 @@ def is_admin_authorized(request):
     if updated < time() - (settings.MISAGO_ADMIN_SESSION_EXPIRATION * 60):
         if updated:
             request.session.pop(UPDATED_KEY, None)
-            messages.info(request, _("Your admin session has expired."))
+            messages.info(
+                request, pgettext("admin auth", "Your admin session has expired.")
+            )
         return False
 
     return True

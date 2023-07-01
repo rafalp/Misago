@@ -2,8 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import EmptyPage, InvalidPage
 from django.db.models import Q
 from django.http import Http404
-from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy, pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...core.cursorpagination import get_page
@@ -29,18 +28,25 @@ LISTS_NAMES = {
 }
 
 LIST_DENIED_MESSAGES = {
-    "my": gettext_lazy(
-        "You have to sign in to see list of threads that you have started."
+    "my": pgettext_lazy(
+        "threads list",
+        "You have to sign in to see list of threads that you have started.",
     ),
-    "new": gettext_lazy("You have to sign in to see list of threads you haven't read."),
-    "unread": gettext_lazy(
-        "You have to sign in to see list of threads with new replies."
+    "new": pgettext_lazy(
+        "threads list",
+        "You have to sign in to see list of threads you haven't read.",
     ),
-    "watched": gettext_lazy(
-        "You have to sign in to see list of threads you are watching."
+    "unread": pgettext_lazy(
+        "threads list",
+        "You have to sign in to see list of threads with new replies.",
     ),
-    "unapproved": gettext_lazy(
-        "You have to sign in to see list of threads with unapproved posts."
+    "watched": pgettext_lazy(
+        "threads list",
+        "You have to sign in to see list of threads you are watching.",
+    ),
+    "unapproved": pgettext_lazy(
+        "threads list",
+        "You have to sign in to see list of threads with unapproved posts.",
     ),
 }
 
@@ -117,7 +123,10 @@ class ViewModel:
             has_permission = request.user_acl["can_see_unapproved_content_lists"]
             if list_type == "unapproved" and not has_permission:
                 raise PermissionDenied(
-                    _("You don't have permission to see unapproved content lists.")
+                    pgettext(
+                        "threads list",
+                        "You don't have permission to see unapproved content lists.",
+                    )
                 )
 
     def get_list_name(self, list_type):

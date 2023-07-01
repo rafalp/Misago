@@ -2,13 +2,13 @@
 {% load i18n misago_capture %}
 
 
-{% block title %}{% trans "Dashboard" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Dashboard" context "admin dashboard" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
 <div class="page-header row align-items-center">
   <div class="col">
-    <h1>{% trans "Dashboard" %}</h1>
+    <h1>{% trans "Dashboard" context "admin dashboard" %}</h1>
   </div>
 </div>
 
@@ -25,28 +25,28 @@
     uri: "{% url 'misago:admin:graphql:index' %}",
 
     errorMessage: {
-      message: "{% trans 'Version check is currently unavailable due to an error.' %}",
-      description: "{% trans 'Misago admin API did not answer or answered with an error.' %}"
+      message: "{% trans 'Version check is currently unavailable due to an error.' context 'admin version check' %}",
+      description: "{% trans 'Misago admin API did not answer or answered with an error.' context 'admin version check' %}"
     },
     loadingMessage: {
-      message: "{% trans 'Checking Misago version used by the site...' %}",
-      description: "{% trans 'Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.' %}"
+      message: "{% trans 'Checking Misago version used by the site...' context 'admin version check' %}",
+      description: "{% trans 'Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.' context 'admin version check' %}"
     }
   })
   window.misago.initAnalytics({
     elementId: "admin-analytics",
     uri: "{% url 'misago:admin:graphql:index' %}",
 
-    title: "{% trans 'Analytics' %}",
+    title: "{% trans 'Analytics' context 'admin analytics' %}",
     labels: {
-      users: "{% trans 'User registrations' %}",
-      userDeletions: "{% trans 'User deletions' %}",
-      threads: "{% trans 'Threads started' %}",
-      posts: "{% trans 'Posts' %}",
-      attachments: "{% trans 'Attachments uploaded' %}",
-      dataDownloads: "{% trans 'Data download requests' %}"
+      users: "{% trans 'User registrations' context 'admin analytics' %}",
+      userDeletions: "{% trans 'User deletions' context 'admin analytics' %}",
+      threads: "{% trans 'Threads started' context 'admin analytics' %}",
+      posts: "{% trans 'Posts' context 'admin analytics' %}",
+      attachments: "{% trans 'Attachments uploaded' context 'admin analytics' %}",
+      dataDownloads: "{% trans 'Data download requests' context 'admin analytics' %}"
     },
-    errorMessage: "{% trans 'Site analytics are currently unavailable due to an error.' %}"
+    errorMessage: "{% trans 'Site analytics are currently unavailable due to an error.' context 'admin analytics' %}"
   })
 </script>
 {% endblock javascripts %}

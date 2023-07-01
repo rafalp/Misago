@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 
 def get_data_upload_to(instance, filename):
@@ -23,10 +23,22 @@ class DataDownload(models.Model):
     STATUS_EXPIRED = 3
 
     STATUS_CHOICES = [
-        (STATUS_PENDING, _("Pending")),
-        (STATUS_PROCESSING, _("Processing")),
-        (STATUS_READY, _("Ready")),
-        (STATUS_EXPIRED, _("Expired")),
+        (
+            STATUS_PENDING,
+            pgettext_lazy("user data download status", "Pending"),
+        ),
+        (
+            STATUS_PROCESSING,
+            pgettext_lazy("user data download status", "Processing"),
+        ),
+        (
+            STATUS_READY,
+            pgettext_lazy("user data download status", "Ready"),
+        ),
+        (
+            STATUS_EXPIRED,
+            pgettext_lazy("user data download status", "Expired"),
+        ),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)

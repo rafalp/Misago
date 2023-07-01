@@ -3,12 +3,12 @@
 
 
 {% block title %}
-{% trans "Ban users" %} | {{ active_link.name }} | {{ block.super }}
+{% trans "Ban users" context "admin ban users form" %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block form-header %}
-{% trans "Ban selected users" %}
+{% trans "Ban selected users" context "admin ban users form" %}
 {% endblock %}
 
 
@@ -19,15 +19,15 @@
 {% endfor %}
 <div class="form-fieldset pt-0">
   <fieldset>
-    <legend>{% trans "Users" %}</legend>
+    <legend>{% trans "Users" context "admin ban users form" %}</legend>
     <div class="card card-admin-table">
       <table class="table">
         <thead>
           <tr>
             <th style="width: 1px;">&nbsp;</th>
-            <th>{% trans "User" %}</th>
-            <th style="width: 50%;">{% trans "E-mail" %}</th>
-            <th style="width: 200px;">{% trans "IP address" %}</th>
+            <th>{% trans "User" context "admin ban users list" %}</th>
+            <th style="width: 50%;">{% trans "E-mail" context "admin ban users list" %}</th>
+            <th style="width: 200px;">{% trans "IP address" context "admin ban users list" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@
               {% if user.joined_from_ip %}
                 {{ user.joined_from_ip }}
               {% else %}
-                <i class="text-muted">{% trans "IP removed" %}</i>
+                <i class="text-muted">{% trans "IP removed" context "admin user ip deleted" %}</i>
               {% endif %}
             </td>
           </tr>
@@ -59,7 +59,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Ban settings" %}</legend>
+    <legend>{% trans "Ban settings" context "admin ban users form" %}</legend>
 
     {% form_row form.ban_type %}
     {% form_row form.expires_on %}
@@ -68,7 +68,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Messages" %}</legend>
+    <legend>{% trans "Messages" context "admin ban users form" %}</legend>
 
     {% form_row form.user_message %}
     {% form_row form.staff_message %}
@@ -79,7 +79,9 @@
 
 
 {% block form-footer %}
-<button class="btn btn-primary btn-sm" name="finalize">{% trans "Ban users" %}</button>
+<button class="btn btn-primary btn-sm" name="finalize">
+  {% trans "Ban users" context "admin ban users form" %}
+</button>
 {% endblock %}
 
 
@@ -87,8 +89,8 @@
 <script type="text/javascript">
   window.misago.initDatepicker({
     elementId: "id_expires_on",
-    never: "{% trans 'Never' %}",
-    setDate: "{% trans 'Set date' %}"
+    never: "{% trans 'Never' context 'admin ban users form' %}",
+    setDate: "{% trans 'Set date' context 'admin ban users form' %}"
   })
 </script>
 {% endblock %}

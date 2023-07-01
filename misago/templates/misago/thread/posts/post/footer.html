@@ -4,9 +4,9 @@
     {% if post.acl.can_like %}
       <button type="button" class="btn btn-{% if post.is_liked %}success{% else %}default{% endif %} pull-left" disabled="disabled">
         {% if post.is_liked %}
-          {% trans "Liked" %}
+          {% trans "Liked" context "post control" %}
         {% else %}
-          {% trans "Like" %}
+          {% trans "Like" context "post control" %}
         {% endif %}
       </button>
     {% endif %}

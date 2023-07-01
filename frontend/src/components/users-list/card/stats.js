@@ -30,7 +30,7 @@ export function JoinDate({ user }) {
   const { joined_on } = user
 
   let title = interpolate(
-    gettext("Joined on %(joined_on)s"),
+    pgettext("users list item", "Joined on %(joined_on)s"),
     {
       joined_on: joined_on.format("LL, LT"),
     },
@@ -38,7 +38,7 @@ export function JoinDate({ user }) {
   )
 
   let message = interpolate(
-    gettext("Joined %(joined_on)s"),
+    pgettext("users list item", "Joined %(joined_on)s"),
     {
       joined_on: joined_on.fromNow(),
     },
@@ -54,7 +54,12 @@ export function JoinDate({ user }) {
 
 export function Posts({ user }) {
   const className = getStatClassName("user-stat-posts", user.posts)
-  const message = ngettext("%(posts)s post", "%(posts)s posts", user.posts)
+  const message = npgettext(
+    "users list item",
+    "%(posts)s post",
+    "%(posts)s posts",
+    user.posts
+  )
 
   return (
     <li className={className}>
@@ -71,7 +76,8 @@ export function Posts({ user }) {
 
 export function Threads({ user }) {
   const className = getStatClassName("user-stat-threads", user.threads)
-  const message = ngettext(
+  const message = npgettext(
+    "users list item",
     "%(threads)s thread",
     "%(threads)s threads",
     user.threads
@@ -92,7 +98,8 @@ export function Threads({ user }) {
 
 export function Followers({ user }) {
   const className = getStatClassName("user-stat-followers", user.followers)
-  const message = ngettext(
+  const message = npgettext(
+    "users list item",
     "%(followers)s follower",
     "%(followers)s followers",
     user.followers

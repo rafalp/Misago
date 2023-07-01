@@ -6,7 +6,7 @@ const ThreadsListEmpty = ({ category, list, message }) => {
       return (
         <li className="list-group-item empty-message">
           <p className="lead">{message}</p>
-          <p>{gettext("Why not start one yourself?")}</p>
+          <p>{pgettext("threads list empty", "Why not start one yourself?")}</p>
         </li>
       )
     }
@@ -15,10 +15,16 @@ const ThreadsListEmpty = ({ category, list, message }) => {
       <li className="list-group-item empty-message">
         <p className="lead">
           {category.special_role
-            ? gettext("There are no threads on this forum... yet!")
-            : gettext("There are no threads in this category.")}
+            ? pgettext(
+                "threads list empty",
+                "There are no threads on this forum... yet!"
+              )
+            : pgettext(
+                "threads list empty",
+                "There are no threads in this category."
+              )}
         </p>
-        <p>{gettext("Why not start one yourself?")}</p>
+        <p>{pgettext("threads list empty", "Why not start one yourself?")}</p>
       </li>
     )
   }
@@ -26,7 +32,10 @@ const ThreadsListEmpty = ({ category, list, message }) => {
   return (
     <li className="list-group-item empty-message">
       <p className="lead">
-        {gettext("No threads matching specified criteria were found.")}
+        {pgettext(
+          "threads list empty",
+          "No threads matching specified criteria were found."
+        )}
       </p>
     </li>
   )

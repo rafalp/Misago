@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from PIL import Image
 
 from . import store
@@ -35,7 +35,9 @@ def validate_uploaded_file(settings, uploaded_file):
 def validate_file_size(settings, uploaded_file):
     upload_limit = settings.avatar_upload_limit * 1024
     if uploaded_file.size > upload_limit:
-        raise ValidationError(_("Uploaded file is too big."))
+        raise ValidationError(
+            pgettext("avatar upload size validator", "Uploaded file is too big.")
+        )
 
 
 def validate_extension(uploaded_file):
@@ -43,12 +45,22 @@ def validate_extension(uploaded_file):
     for extension in ALLOWED_EXTENSIONS:
         if lowercased_name.endswith(extension):
             return True
-    raise ValidationError(_("Uploaded file type is not allowed."))
+    raise ValidationError(
+        pgettext(
+            "avatar upload extension validator",
+            "Uploaded file type is not allowed.",
+        )
+    )
 
 
 def validate_mime(uploaded_file):
     if uploaded_file.content_type not in ALLOWED_MIME_TYPES:
-        raise ValidationError(_("Uploaded file type is not allowed."))
+        raise ValidationError(
+            pgettext(
+                "avatar upload mimetype validator",
+                "Uploaded file type is not allowed.",
+            )
+        )
 
 
 def validate_dimensions(uploaded_file):
@@ -56,22 +68,34 @@ def validate_dimensions(uploaded_file):
 
     min_size = max(settings.MISAGO_AVATARS_SIZES)
     if min(image.size) < min_size:
-        message = _("Uploaded image should be at least %(size)s pixels tall and wide.")
+        message = pgettext(
+            "avatar upload dimensions validator",
+            "Uploaded image should be at least %(size)s pixels tall and wide.",
+        )
         raise ValidationError(message % {"size": min_size})
 
     if image.size[0] * image.size[1] > 2000 * 3000:
-        message = _("Uploaded image is too big.")
+        message = pgettext(
+            "avatar upload dimensions validator",
+            "Uploaded image is too big.",
+        )
         raise ValidationError(message)
 
     image_ratio = float(min(image.size)) / float(max(image.size))
     if image_ratio < 0.25:
-        message = _("Uploaded image ratio cannot be greater than 16:9.")
+        message = pgettext(
+            "avatar upload dimensions validator",
+            "Uploaded image ratio cannot be greater than 16:9.",
+        )
         raise ValidationError(message)
     return image
 
 
 def clean_crop(image, crop):
-    message = _("Crop data is invalid. Please try again.")
+    message = pgettext(
+        "avatar upload crop validator",
+        "Crop data is invalid. Please try again.",
+    )
 
     crop_dict = {}
     try:

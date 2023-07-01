@@ -2,11 +2,11 @@
 {% load i18n misago_avatars %}
 
 
-{% block title %}{% trans "Username history" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Username history" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Username history" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% trans "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% trans "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -17,13 +17,13 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count changes=count %}
+            {% blocktrans trimmed count changes=count context "user profile page username history" %}
               Your username was changed {{ changes }} time.
             {% plural %}
               Your username was changed {{ changes }} times.
             {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed count changes=count with username=profile %}
+            {% blocktrans trimmed count changes=count with username=profile context "user profile page username history" %}
               {{ username }}'s username was changed {{ changes }} time.
             {% plural %}
               {{ username }}'s username was changed {{ changes }} times.
@@ -80,9 +80,9 @@
       {% empty %}
         <li class="list-group-item empty-message">
           {% if is_authenticated_user %}
-            {% trans "Your username was never changed." %}
+            {% trans "Your username was never changed." context "user profile page username history" %}
           {% else %}
-            {% blocktrans trimmed with username=profile.username %}
+            {% blocktrans trimmed with username=profile.username context "user profile page username history" %}
               {{ username }}'s username was never changed.
             {% endblocktrans %}
           {% endif %}

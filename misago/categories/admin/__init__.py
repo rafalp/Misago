@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views.categories import (
     CategoriesList,
@@ -62,12 +62,14 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Categories"),
+            name=pgettext_lazy("admin node", "Categories"),
             icon="fas fa-sitemap",
             after="ranks:index",
             namespace="categories",
         )
 
         site.add_node(
-            name=_("Category permissions"), parent="permissions", namespace="categories"
+            name=pgettext_lazy("admin node", "Category permissions"),
+            parent="permissions",
+            namespace="categories",
         )

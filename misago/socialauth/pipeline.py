@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from social_core.pipeline.partial import partial
 from unidecode import unidecode
 
@@ -84,9 +84,9 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
     if not user.is_active:
         raise SocialAuthFailed(
             backend,
-            _(
-                "The e-mail address associated with your %(backend)s account is "
-                "not available for use on this site."
+            pgettext(
+                "social auth",
+                "The e-mail address associated with your %(backend)s account is not available for use on this site.",
             )
             % {"backend": backend_name},
         )
@@ -94,9 +94,9 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
     if user.requires_activation_by_admin:
         raise SocialAuthFailed(
             backend,
-            _(
-                "Your account has to be activated by site administrator "
-                "before you will be able to sign in with %(backend)s."
+            pgettext(
+                "social auth",
+                "Your account has to be activated by site administrator before you will be able to sign in with %(backend)s.",
             )
             % {"backend": backend_name},
         )
@@ -220,7 +220,12 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             setup_new_user(settings, new_user)
         except IntegrityError:
             return JsonResponse(
-                {"__all__": _("Please try resubmitting the form.")}, status=400
+                {
+                    "__all__": pgettext(
+                        "social auth", "Please try resubmitting the form."
+                    )
+                },
+                status=400,
             )
 
         save_user_agreements(new_user, form)

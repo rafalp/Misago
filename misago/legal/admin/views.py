@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from ...admin.views import generic
 from ..models import Agreement
@@ -13,7 +13,9 @@ class AgreementAdmin(generic.AdminBaseMixin):
     model = Agreement
     form_class = AgreementForm
     templates_dir = "misago/admin/agreements"
-    message_404 = _("Requested agreement does not exist.")
+    message_404 = pgettext_lazy(
+        "admin agreements", "Requested agreement does not exist."
+    )
 
     def handle_form(self, form, request, target):
         form.save()
@@ -26,15 +28,20 @@ class AgreementAdmin(generic.AdminBaseMixin):
 
 class AgreementsList(AgreementAdmin, generic.ListView):
     items_per_page = 30
-    ordering = [("-id", _("From newest")), ("id", _("From oldest"))]
+    ordering = [
+        ("-id", pgettext_lazy("admin agreements ordering choice", "From newest")),
+        ("id", pgettext_lazy("admin agreements ordering choice", "From oldest")),
+    ]
     filter_form = FilterAgreementsForm
-    selection_label = _("With agreements: 0")
-    empty_selection_label = _("Select agreements")
+    selection_label = pgettext_lazy("admin agreements", "With agreements: 0")
+    empty_selection_label = pgettext_lazy("admin agreements", "Select agreements")
     mass_actions = [
         {
             "action": "delete",
-            "name": _("Delete agreements"),
-            "confirmation": _("Are you sure you want to delete those agreements?"),
+            "name": pgettext_lazy("admin agreements", "Delete agreements"),
+            "confirmation": pgettext_lazy(
+                "admin agreements", "Are you sure you want to delete those agreements?"
+            ),
         }
     ]
 
@@ -45,11 +52,16 @@ class AgreementsList(AgreementAdmin, generic.ListView):
     def action_delete(self, request, items):
         items.delete()
         Agreement.objects.invalidate_cache()
-        messages.success(request, _("Selected agreements have been deleted."))
+        messages.success(
+            request,
+            pgettext_lazy("admin agreements", "Selected agreements have been deleted."),
+        )
 
 
 class NewAgreement(AgreementAdmin, generic.ModelFormView):
-    message_submit = _('New agreement "%(title)s" has been saved.')
+    message_submit = pgettext_lazy(
+        "admin agreements", 'New agreement "%(title)s" has been saved.'
+    )
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -60,7 +72,9 @@ class NewAgreement(AgreementAdmin, generic.ModelFormView):
 
 
 class EditAgreement(AgreementAdmin, generic.ModelFormView):
-    message_submit = _('Agreement "%(title)s" has been edited.')
+    message_submit = pgettext_lazy(
+        "admin agreements", 'Agreement "%(title)s" has been edited.'
+    )
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -75,7 +89,9 @@ class DeleteAgreement(AgreementAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
         Agreement.objects.invalidate_cache()
-        message = _('Agreement "%(title)s" has been deleted.')
+        message = pgettext_lazy(
+            "admin agreements", 'Agreement "%(title)s" has been deleted.'
+        )
         messages.success(request, message % {"title": target.get_final_title()})
 
 
@@ -83,7 +99,10 @@ class SetAgreementAsActive(AgreementAdmin, generic.ButtonView):
     def button_action(self, request, target):
         set_agreement_as_active(target, commit=True)
 
-        message = _('Agreement "%(title)s" has been set as active for type "%(type)s".')
+        message = pgettext_lazy(
+            "admin agreements",
+            'Agreement "%(title)s" has been set as active for type "%(type)s".',
+        )
         targets_names = {
             "title": target.get_final_title(),
             "type": target.get_type_display(),
@@ -95,7 +114,7 @@ class DisableAgreement(AgreementAdmin, generic.ButtonView):
     def button_action(self, request, target):
         disable_agreement(target, commit=True)
 
-        message = _('Agreement "%(title)s" has been disabled.') % {
-            "title": target.get_final_title()
-        }
+        message = pgettext_lazy(
+            "admin agreements", 'Agreement "%(title)s" has been disabled.'
+        ) % {"title": target.get_final_title()}
         messages.success(request, message)

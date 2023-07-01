@@ -1,11 +1,10 @@
-from collections import OrderedDict
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.dispatch import Signal, receiver
 from django.utils import timezone
-from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 from ..core.pgutils import chunk_queryset
 from .models import AuditTrail
@@ -24,20 +23,20 @@ username_changed = Signal()
 def archive_user_details(sender, archive=None, **kwargs):
     archive.add_dict(
         "details",
-        OrderedDict(
-            [
-                (_("Username"), sender.username),
-                (_("E-mail"), sender.email),
-                (_("Joined on"), sender.joined_on),
-                (_("Joined from ip"), sender.joined_from_ip or "unavailable"),
-            ]
-        ),
+        {
+            pgettext("archived user details", "Username"): sender.username,
+            pgettext("archived user details", "E-mail"): sender.email,
+            pgettext("archived user details", "Joined on"): sender.joined_on,
+            pgettext("archived user details", "Joined from ip"): (
+                sender.joined_from_ip or "unavailable"
+            ),
+        },
     )
 
 
 @receiver(archive_user_data)
 def archive_user_profile_fields(sender, archive=None, **kwargs):
-    clean_profile_fields = OrderedDict()
+    clean_profile_fields = {}
     for profile_fields_group in profilefields.get_fields_groups():
         for profile_field in profile_fields_group["fields"]:
             if sender.profile_fields.get(profile_field.fieldname):
@@ -69,12 +68,14 @@ def archive_user_name_history(sender, archive=None, **kwargs):
         item_name = name_change.changed_on.strftime("%H%M%S-name-change")
         archive.add_dict(
             item_name,
-            OrderedDict(
-                [
-                    (_("New username"), name_change.new_username),
-                    (_("Old username"), name_change.old_username),
-                ]
-            ),
+            {
+                pgettext(
+                    "archived username history", "New username"
+                ): name_change.new_username,
+                pgettext(
+                    "archived username history", "Old username"
+                ): name_change.old_username,
+            },
             date=name_change.changed_on,
         )
 

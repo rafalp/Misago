@@ -6,23 +6,23 @@
 {% capture trimmed as thread_link %}
   <a href="{% absoluteurl thread.get_absolute_url %}">{{ thread }}</a>
 {% endcapture %}
-{% blocktrans trimmed with sender=sender thread=thread_link|safe %}
+{% blocktrans trimmed with sender=sender thread=thread_link|safe context "new thread reply email" %}
 {{ sender }} has posted a new reply to the {{ thread }} thread that you are watching.
 {% endblocktrans %}
 <br>
 <br>
-{% trans "You can read this reply by clicking on the following link:" %}
+{% trans "You can read this reply by clicking on the following link:" context "new thread reply email" %}
 <br>
 <br>
 <a href="{% absoluteurl post.get_absolute_url %}" style="border-radius: 3px; padding: 8px 12px; background-color: #2563eb; color: #ffffff; text-decoration: none;">
-  {% trans "Go to reply" %}
+  {% trans "Go to reply" context "new thread reply email cta" %}
 </a>
 <br>
 <br>
-{% trans "To stop receiving e-mails with new reply notifications for this thread, click here:" %}
+{% trans "To stop receiving e-mails with new reply notifications for this thread, click here:" context "new thread reply email" %}
 <br>
 <br>
-<a href="{% absoluteurl watched_thread.get_disable_emails_url %}">{% trans "Disable e-mail notifications for this thread" %}</a>
+<a href="{% absoluteurl watched_thread.get_disable_emails_url %}">{% trans "Disable e-mail notifications for this thread" context "new thread reply email" %}</a>
 <br>
 <br>
 {% endblock content %}

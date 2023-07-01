@@ -59,7 +59,9 @@ export function Hidden(props) {
   )
 
   const message = interpolate(
-    escapeHtml(gettext("Hidden by %(hidden_by)s %(hidden_on)s.")),
+    escapeHtml(
+      pgettext("post body hidden", "Hidden by %(hidden_by)s %(hidden_on)s.")
+    ),
     {
       hidden_by: user,
       hidden_on: date,
@@ -70,7 +72,10 @@ export function Hidden(props) {
   return (
     <Waypoint className="post-body post-body-hidden" post={props.post}>
       <p className="lead">
-        {gettext("This post is hidden. You cannot see its contents.")}
+        {pgettext(
+          "post body hidden",
+          "This post is hidden. You cannot see its contents."
+        )}
       </p>
       <p className="text-muted" dangerouslySetInnerHTML={{ __html: message }} />
     </Waypoint>
@@ -81,10 +86,16 @@ export function Invalid(props) {
   return (
     <Waypoint className="post-body post-body-invalid" post={props.post}>
       <p className="lead">
-        {gettext("This post's contents cannot be displayed.")}
+        {pgettext(
+          "post body invalid",
+          "This post's contents cannot be displayed."
+        )}
       </p>
       <p className="text-muted">
-        {gettext("This error is caused by invalid post content manipulation.")}
+        {pgettext(
+          "post body invalid",
+          "This error is caused by invalid post content manipulation."
+        )}
       </p>
     </Waypoint>
   )

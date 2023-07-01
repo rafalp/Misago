@@ -3,19 +3,19 @@
 
 
 {% block title %}
-{% trans "New user" %} | {{ active_link.name }} | {{ block.super }}
+{% trans "New user" context "admin user form" %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block form-header %}
-{% trans "New user" %}
+{% trans "New user" context "admin user form" %}
 {% endblock %}
 
 
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic account settings" %}</legend>
+    <legend>{% trans "Basic account settings" context "admin user form" %}</legend>
 
     {% form_row form.username %}
 
@@ -34,7 +34,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Sign-in credentials" %}</legend>
+    <legend>{% trans "Sign-in credentials" context "admin user form" %}</legend>
 
     {% form_row form.email %}
     {% form_row form.new_password %}
@@ -44,5 +44,5 @@
 
 
 {% block form-footer %}
-<button class="btn btn-primary btn-sm">{% trans "Save user" %}</button>
+<button class="btn btn-primary btn-sm">{% trans "Save user" context "admin user form" %}</button>
 {% endblock form-footer %}

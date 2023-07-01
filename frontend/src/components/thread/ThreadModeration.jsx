@@ -6,7 +6,7 @@ const ThreadModeration = ({ thread, posts, moderation }) => (
     <button
       type="button"
       className="btn btn-default btn-outline btn-icon dropdown-toggle"
-      title={gettext("Thread options")}
+      title={pgettext("thread options btn", "Thread options")}
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"

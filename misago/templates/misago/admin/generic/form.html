@@ -22,7 +22,7 @@
               </div>
             {% empty %}
               <div class="alert alert-danger" role="alert">
-                {% trans "Form was completed with errors." %}
+                {% trans "Form was completed with errors." context "admin form" %}
               </div>
             {% endfor %}
           {% endif %}
@@ -33,23 +33,23 @@
         <div class="card-footer text-right">
           {% block form-footer-cancel %}
             <a href="{% url root_link %}" class="btn btn-light btn-sm" data-cancel-confirmation="true">
-              {% trans "Cancel" %}
+              {% trans "Cancel" context "admin form" %}
             </a>
           {% endblock %}
           {% block form-footer %}
             {% if target and target.pk %}
               <button class="btn btn-primary btn-sm" name="stay" value="1">
-                {% trans "Save and keep editing" %}
+                {% trans "Save and keep editing" context "admin form action" %}
               </button>
               <button class="btn btn-primary btn-sm">
-                {% trans "Save changes" %}
+                {% trans "Save changes" context "admin form action" %}
               </button>
             {% else %}
               <button class="btn btn-primary btn-sm" name="stay" value="1">
-                {% trans "Save and add another" %}
+                {% trans "Save and add another" context "admin form action" %}
               </button>
               <button class="btn btn-primary btn-sm">
-                {% trans "Save" %}
+                {% trans "Save" context "admin form action" %}
               </button>
             {% endif %}
           {% endblock %}

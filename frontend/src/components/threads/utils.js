@@ -24,11 +24,11 @@ export function getPageTitle(route) {
     if (route.list.path) {
       return {
         title: route.list.longName,
-        parent: gettext("Threads"),
+        parent: pgettext("threads list title", "Threads"),
       }
     } else {
       return {
-        title: gettext("Threads"),
+        title: pgettext("threads list title", "Threads"),
       }
     }
   }
@@ -44,7 +44,7 @@ export function getTitle(route) {
       return misago.get("SETTINGS").forum_name
     }
   } else {
-    return gettext("Threads")
+    return pgettext("threads list title", "Threads")
   }
 }
 

@@ -37,7 +37,7 @@ export default class extends Form {
 
   clean() {
     if (!this.state.query.trim().length) {
-      snackbar.error(gettext("You have to enter search query."))
+      snackbar.error(pgettext("search form", "You have to enter search query."))
       return false
     }
 
@@ -97,7 +97,7 @@ export default class extends Form {
         <PageHeaderContainer>
           <PageHeader styleName="site-search">
             <PageHeaderBanner styleName="site-search">
-              <h1>{gettext("Search")}</h1>
+              <h1>{pgettext("search form title", "Search")}</h1>
             </PageHeaderBanner>
             <PageHeaderDetails className="page-header-search-form">
               <FlexRow>
@@ -108,13 +108,14 @@ export default class extends Form {
                       disabled={this.state.isLoading}
                       type="text"
                       value={this.state.query}
-                      placeholder={gettext("Search")}
+                      placeholder={pgettext("search form input", "Search")}
                       onChange={this.onQueryChange}
                     />
                   </FlexRowCol>
                   <FlexRowCol shrink>
                     <button
                       className="btn btn-secondary btn-icon btn-outline"
+                      title={pgettext("search form btn", "Search")}
                       disabled={this.state.isLoading}
                     >
                       <span className="material-icon">search</span>

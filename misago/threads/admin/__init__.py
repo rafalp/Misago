@@ -1,5 +1,5 @@
 from django.urls import path
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .views.attachments import AttachmentsList, DeleteAttachment
 from .views.attachmenttypes import (
@@ -33,15 +33,17 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Attachments"),
+            name=pgettext_lazy("admin node", "Attachments"),
             icon="fas fa-paperclip",
             after="permissions:index",
             namespace="attachments",
         )
 
         site.add_node(
-            name=_("Attachment types"),
-            description=_("Specify what files may be uploaded on the forum."),
+            name=pgettext_lazy("admin node", "Attachment types"),
+            description=pgettext_lazy(
+                "admin node", "Specify what files may be uploaded on the forum."
+            ),
             parent="settings",
             namespace="attachment-types",
         )

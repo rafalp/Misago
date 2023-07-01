@@ -6,11 +6,12 @@ const ProfileDataList = ({ profile }) => (
     {profile.is_active === false && (
       <li className="user-account-disabled">
         <abbr
-          title={gettext(
+          title={pgettext(
+            "profile data list",
             "This user's account has been disabled by administrator."
           )}
         >
-          {gettext("Account disabled")}
+          {pgettext("profile data list", "Account disabled")}
         </abbr>
       </li>
     )}
@@ -41,7 +42,7 @@ const ProfileDataList = ({ profile }) => (
     <li className="user-joined-on">
       <abbr
         title={interpolate(
-          gettext("Joined on %(joined_on)s"),
+          pgettext("profile data list", "Joined on %(joined_on)s"),
           {
             joined_on: profile.joined_on.format("LL, LT"),
           },
@@ -49,7 +50,7 @@ const ProfileDataList = ({ profile }) => (
         )}
       >
         {interpolate(
-          gettext("Joined %(joined_on)s"),
+          pgettext("profile data list", "Joined %(joined_on)s"),
           {
             joined_on: profile.joined_on.fromNow(),
           },

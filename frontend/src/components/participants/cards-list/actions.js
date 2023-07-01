@@ -12,7 +12,9 @@ export function leave(thread, participant) {
     ])
     .then(
       () => {
-        snackbar.success(gettext("You have left this thread."))
+        snackbar.success(
+          pgettext("thread participants actions", "You have left this thread.")
+        )
         window.setTimeout(() => {
           window.location = misago.get("PRIVATE_THREADS_URL")
         }, 3 * 1000)
@@ -34,7 +36,10 @@ export function remove(thread, participant) {
         store.dispatch(updateAcl(data))
         store.dispatch(participants.replace(data.participants))
 
-        const message = gettext("%(user)s has been removed from this thread.")
+        const message = pgettext(
+          "thread participants actions",
+          "%(user)s has been removed from this thread."
+        )
         snackbar.success(
           interpolate(
             message,
@@ -62,7 +67,10 @@ export function changeOwner(thread, participant) {
         store.dispatch(updateAcl(data))
         store.dispatch(participants.replace(data.participants))
 
-        const message = gettext("%(user)s has been made new thread owner.")
+        const message = pgettext(
+          "thread participants actions",
+          "%(user)s has been made new thread owner."
+        )
         snackbar.success(
           interpolate(
             message,

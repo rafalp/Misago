@@ -1,38 +1,41 @@
 from django.db import migrations
-from django.utils.translation import gettext
 
 from ...core.utils import slugify
 
-_ = lambda s: s
+pgettext_lazy = lambda c, s: s
 
 
 def create_default_ranks(apps, schema_editor):
     Rank = apps.get_model("misago_users", "Rank")
 
     team = Rank.objects.create(
-        name=gettext("Forum team"),
-        slug=slugify(gettext("Forum team")),
-        title=gettext("Team"),
+        name=pgettext_lazy("rank name", "Forum team"),
+        slug=slugify(pgettext_lazy("rank name", "Forum team")),
+        title=pgettext_lazy("rank name", "Team"),
         css_class="primary",
         is_tab=True,
         order=0,
     )
 
     member = Rank.objects.create(
-        name=gettext("Members"),
-        slug=slugify(gettext("Members")),
+        name=pgettext_lazy("rank name", "Members"),
+        slug=slugify(pgettext_lazy("rank name", "Members")),
         is_default=True,
         order=1,
     )
 
     Role = apps.get_model("misago_acl", "Role")
 
-    team.roles.add(Role.objects.get(name=_("Moderator")))
-    team.roles.add(Role.objects.get(name=_("Private threads")))
-    team.roles.add(Role.objects.get(name=_("Private threads moderator")))
-    team.roles.add(Role.objects.get(name=_("Deleting users")))
+    team.roles.add(Role.objects.get(name=pgettext_lazy("role name", "Moderator")))
+    team.roles.add(Role.objects.get(name=pgettext_lazy("role name", "Private threads")))
+    team.roles.add(
+        Role.objects.get(name=pgettext_lazy("role name", "Private threads moderator"))
+    )
+    team.roles.add(Role.objects.get(name=pgettext_lazy("role name", "Deleting users")))
 
-    member.roles.add(Role.objects.get(name=_("Private threads")))
+    member.roles.add(
+        Role.objects.get(name=pgettext_lazy("role name", "Private threads"))
+    )
 
 
 class Migration(migrations.Migration):

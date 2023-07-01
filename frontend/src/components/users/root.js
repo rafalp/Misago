@@ -17,7 +17,7 @@ export default class extends WithDropdown {
         <PageHeaderContainer>
           <PageHeader styleName="users-lists">
             <PageHeaderBanner styleName="users-lists">
-              <h1>{gettext("Users")}</h1>
+              <h1>{pgettext("users page title", "Users")}</h1>
             </PageHeaderBanner>
           </PageHeader>
         </PageHeaderContainer>

@@ -1,67 +1,65 @@
 import re
 
 from django.forms import ValidationError
-from django.utils.translation import gettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 
 from . import basefields
 
 
 class BioField(basefields.UrlifiedTextareaProfileField):
     fieldname = "bio"
-    label = _("Bio")
+    label = pgettext_lazy("bio profile field", "Bio")
 
 
 class RealNameField(basefields.TextProfileField):
     fieldname = "real_name"
-    label = _("Real name")
+    label = pgettext_lazy("real_name profile field", "Real name")
 
 
 class LocationField(basefields.TextProfileField):
     fieldname = "location"
-    label = _("Location")
+    label = pgettext_lazy("location profile field", "Location")
 
 
 class GenderField(basefields.ChoiceProfileField):
     fieldname = "gender"
-    label = _("Gender")
+    label = pgettext_lazy("gender profile field", "Gender")
 
     choices = (
-        ("", _("Not specified")),
-        ("secret", _("Not telling")),
-        ("female", _("Female")),
-        ("male", _("Male")),
+        ("", pgettext_lazy("gender profile field choice", "Not specified")),
+        ("secret", pgettext_lazy("gender profile field choice", "Not telling")),
+        ("female", pgettext_lazy("gender profile field choice", "Female")),
+        ("male", pgettext_lazy("gender profile field choice", "Male")),
+        ("enby", pgettext_lazy("gender profile field choice", "Non-binary")),
     )
 
 
 class WebsiteField(basefields.UrlProfileField):
     fieldname = "website"
-    label = _("Website")
-    help_text = _(
-        "If you own website in the internet you wish to share on your profile "
-        "you may enter its address here. Remember to for it to be valid http "
-        'address starting with either "http://" or "https://".'
+    label = pgettext_lazy("website profile field", "Website")
+    help_text = pgettext_lazy(
+        "website profile field",
+        'If you own website in the internet you wish to share on your profile you may enter its address here. Remember to for it to be valid http address starting with either "http://" or "https://".',
     )
 
 
 class SkypeIdField(basefields.TextProfileField):
     fieldname = "skype"
-    label = _("Skype ID")
-    help_text = _(
-        "Entering your Skype ID in this field may invite other users to "
-        "contact you over the Skype instead of via private threads."
+    label = pgettext_lazy("skype id profile field", "Skype ID")
+    help_text = pgettext_lazy(
+        "skype id profile field",
+        "Entering your Skype ID in this field may invite other users to contact you over the Skype instead of via private threads.",
     )
 
 
 class TwitterHandleField(basefields.TextProfileField):
     fieldname = "twitter"
-    label = _("Twitter handle")
+    label = pgettext_lazy("twitter handle profile field", "Twitter handle")
 
     def get_help_text(self, user):
-        return _(
-            "If you own Twitter account, here you may enter your Twitter handle for "
-            'other users to find you. Starting your handle with "@" sign is optional. '
-            'Either "@%(slug)s" or "%(slug)s" are valid values.'
+        return pgettext_lazy(
+            "twitter handle profile field",
+            'If you own Twitter account, here you may enter your Twitter handle for other users to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or "%(slug)s" are valid values.',
         ) % {"slug": user.slug}
 
     def get_value_display_data(self, request, user, value):
@@ -70,13 +68,18 @@ class TwitterHandleField(basefields.TextProfileField):
     def clean(self, request, user, data):
         data = data.lstrip("@")
         if data and not re.search("^[A-Za-z0-9_]+$", data):
-            raise ValidationError(gettext("This is not a valid twitter handle."))
+            raise ValidationError(
+                pgettext(
+                    "twitter handle profile field",
+                    "This is not a valid twitter handle.",
+                )
+            )
         return data
 
 
 class JoinIpField(basefields.TextProfileField):
     fieldname = "join_ip"
-    label = _("Join IP")
+    label = pgettext_lazy("join ip profile field", "Join IP")
     readonly = True
 
     def get_value_display_data(self, request, user, value):

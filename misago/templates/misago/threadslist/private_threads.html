@@ -31,7 +31,7 @@ page-private-threads
         </div>
         <div class="page-header-details">
           <div class="page-header-message">
-            <p>{% trans "Private threads are threads which only those that started them and those they have invited may see and participate in." %}</p>
+            <p>{% trans "Private threads are threads which only those that started them and those they have invited may see and participate in." context "private threads page" %}</p>
           </div>
         </div>
       </div>
@@ -56,12 +56,12 @@ page-private-threads
 {% block list-empty-message %}
 {% if list_type == 'all' %}
   <p class="lead">
-    {% trans "You aren't participating in any private threads." %}
+    {% trans "You aren't participating in any private threads." context "private threads page" %}
   </p>
   <p>
-    {% trans "Why not start one yourself?" %}
+    {% trans "Why not start one yourself?" context "private threads page" %}
   </p>
 {% else %}
-  {% trans "No threads matching specified criteria were found." %}
+  {% trans "No threads matching specified criteria were found." context "private threads page" %}
 {% endif %}
 {% endblock list-empty-message %}

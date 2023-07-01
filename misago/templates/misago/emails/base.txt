@@ -1,3 +1,4 @@
+{% load i18n %}
 {{ settings.forum_name }}
 ================================================
 
@@ -8,4 +9,6 @@
 
 ------------------------------------------------
 {% if settings.email_footer %}{{ settings.email_footer }}{% endif %}
+{% blocktrans trimmed with forum_address=settings.forum_address context "email footer" %}
 Sent from {{ settings.forum_address }}
+{% endblocktrans %}

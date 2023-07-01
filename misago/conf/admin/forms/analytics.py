@@ -1,7 +1,7 @@
 import re
 
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from .base import SettingsForm
 
@@ -14,27 +14,29 @@ class AnalyticsSettingsForm(SettingsForm):
     settings = ["google_tracking_id", "google_site_verification"]
 
     google_tracking_id = forms.CharField(
-        label=_("Tracking ID"),
-        help_text=_(
-            "Setting the Tracking ID will result in gtag.js file being included in "
-            "your site's HTML markup, enabling Google Analytics integration."
+        label=pgettext_lazy("admin analytics settings form", "Tracking ID"),
+        help_text=pgettext_lazy(
+            "admin analytics settings form",
+            "Setting the Tracking ID will result in gtag.js file being included in your site's HTML markup, enabling Google Analytics integration.",
         ),
         required=False,
     )
     google_site_verification = forms.CharField(
-        label=_("Site verification token"),
-        help_text=_(
-            "This token was extracted from uploaded site verification file. "
-            "To change it, upload new verification file."
+        label=pgettext_lazy("admin analytics settings form", "Site verification token"),
+        help_text=pgettext_lazy(
+            "admin analytics settings form",
+            "This token was extracted from uploaded site verification file. To change it, upload new verification file.",
         ),
         required=False,
         disabled=True,
     )
     google_site_verification_file = forms.FileField(
-        label=_("Upload site verification file"),
-        help_text=_(
-            "Site verification file can be downloaded from Search Console's "
-            '"Ownership verification" page.'
+        label=pgettext_lazy(
+            "admin analytics settings form", "Upload site verification file"
+        ),
+        help_text=pgettext_lazy(
+            "admin analytics settings form",
+            'Site verification file can be downloaded from Search Console\'s "Ownership verification" page.',
         ),
         required=False,
     )
@@ -45,13 +47,20 @@ class AnalyticsSettingsForm(SettingsForm):
             return None
 
         if upload.content_type != "text/html":
-            raise forms.ValidationError(_("Submitted file type is not HTML."))
+            raise forms.ValidationError(
+                pgettext_lazy(
+                    "admin analytics settings form", "Submitted file type is not HTML."
+                )
+            )
 
         file_content = upload.read().decode("utf-8")
         content_match = GOOGLE_SITE_VERIFICATION.match(file_content)
         if not content_match:
             raise forms.ValidationError(
-                _("Submitted file doesn't contain a verification code.")
+                pgettext_lazy(
+                    "admin analytics settings form",
+                    "Submitted file doesn't contain a verification code.",
+                )
             )
 
         return content_match.group(1)

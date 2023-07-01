@@ -12,7 +12,8 @@ export default class AcceptAgreement extends React.Component {
     if (this.state.submiting) return
 
     const confirmation = window.confirm(
-      gettext(
+      pgettext(
+        "accept agreement prompt",
         "Declining will result in immediate deactivation and deletion of your account. This action is not reversible."
       )
     )
@@ -44,7 +45,7 @@ export default class AcceptAgreement extends React.Component {
           type="buton"
           onClick={this.handleDecline}
         >
-          {gettext("Decline")}
+          {pgettext("accept agreement choice", "Decline")}
         </button>
         <button
           className="btn btn-primary"
@@ -52,7 +53,7 @@ export default class AcceptAgreement extends React.Component {
           type="buton"
           onClick={this.handleAccept}
         >
-          {gettext("Accept and continue")}
+          {pgettext("accept agreement choice", "Accept and continue")}
         </button>
       </div>
     )
