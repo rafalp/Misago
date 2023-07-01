@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 13:05+0000\n"
+"POT-Creation-Date: 2023-07-01 20:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1785,7 +1785,7 @@ msgid "Delete my account"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "edit details"
+msgctxt "profile details form"
 msgid "Your details have been updated."
 msgstr ""
 
@@ -2201,11 +2201,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile details edit btn"
 msgid "Edit"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile details form"
-msgid "Your details have been updated."
 msgstr ""
 
 #: static/misago/js/misago.js:1
