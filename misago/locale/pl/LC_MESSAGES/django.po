@@ -3,127 +3,132 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Rafał Pitoń <kontakt@rpiton.com>, 2023
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-01 11:21+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2023-07-01 08:52+0000\n"
+"Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #: acl/admin/__init__.py:24
 msgctxt "admin node"
 msgid "Permissions"
-msgstr ""
+msgstr "Uprawnienia"
 
 #: acl/admin/forms.py:9
 msgctxt "admin role form"
 msgid "Role name"
-msgstr ""
+msgstr "Nazwa roli"
 
 #: acl/admin/views.py:15
 msgctxt "admin roles"
 msgid "Requested role does not exist."
-msgstr ""
+msgstr "Żądana rola nie istnieje."
 
 #: acl/admin/views.py:52 categories/admin/views/perms.py:65
 msgctxt "admin form"
 msgid "Form contains errors."
-msgstr ""
+msgstr "Formularz zawiera błędy."
 
 #: acl/admin/views.py:64
 #, python-format
 msgctxt "admin roles"
 msgid "New role \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Nowa rola \"%(name)s\" została zapisana."
 
 #: acl/admin/views.py:68
 #, python-format
 msgctxt "admin roles"
 msgid "Role \"%(name)s\" has been changed."
-msgstr ""
+msgstr "Rola \"%(name)s\" została zmieniona."
 
 #: acl/admin/views.py:75
 #, python-format
 msgctxt "admin roles"
 msgid "Role \"%(name)s\" is special role and can't be deleted."
-msgstr ""
+msgstr "Nie można usunąć specjalnej roli \"%(name)s\"."
 
 #: acl/admin/views.py:81
 #, python-format
 msgctxt "admin roles"
 msgid "Role \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Rola \"%(name)s\" została usunięta."
 
 #: acl/migrations/0003_default_roles.py:10
 msgid "Member"
-msgstr ""
+msgstr "Członek"
 
 #: acl/migrations/0003_default_roles.py:48
 msgid "Guest"
-msgstr ""
+msgstr "Gość"
 
 #: acl/migrations/0003_default_roles.py:78
 #: categories/migrations/0003_categories_roles.py:71
 #: categories/migrations/0003_categories_roles.py:117
 #: users/migrations/0004_default_ranks.py:30
 msgid "Moderator"
-msgstr ""
+msgstr "Moderator"
 
 #: acl/migrations/0003_default_roles.py:133
 msgid "Renaming users"
-msgstr ""
+msgstr "Zmienianie nazw użytkowników"
 
 #: acl/migrations/0003_default_roles.py:141
 msgid "Banning users"
-msgstr ""
+msgstr "Banowanie użytkowników"
 
 #: acl/migrations/0003_default_roles.py:155
 #: users/migrations/0004_default_ranks.py:33
 msgid "Deleting users"
-msgstr ""
+msgstr "Usuwanie użytkowników"
 
 #: acl/migrations/0003_default_roles.py:166
 msgid "Can't be blocked"
-msgstr ""
+msgstr "Nie może być blokowany"
 
 #: acl/migrations/0003_default_roles.py:174
 #: users/migrations/0004_default_ranks.py:31
 #: users/migrations/0004_default_ranks.py:35
 msgid "Private threads"
-msgstr ""
+msgstr "Prywatne tematy"
 
 #: acl/migrations/0003_default_roles.py:189
 #: users/migrations/0004_default_ranks.py:32
 msgid "Private threads moderator"
-msgstr ""
+msgstr "Moderator prywatnych tematów"
 
 #: acl/panels.py:8
 msgctxt "debug toolbar"
 msgid "Misago User ACL"
-msgstr ""
+msgstr "Uprawnienia użytkownika Misago"
 
 #: acl/panels.py:17
 msgctxt "debug toolbar"
 msgid "Anonymous user"
-msgstr ""
+msgstr "Niezalogowany użytkownik"
 
 #: admin/admin.py:6
 msgctxt "admin node"
 msgid "Dashboard"
-msgstr ""
+msgstr "Strona główna"
 
 #: admin/auth.py:31
 msgctxt "admin auth"
 msgid "Your admin session has expired."
-msgstr ""
+msgstr "Sesja administratora wygasła."
 
 #: admin/forms.py:47
 msgctxt "admin color field"
@@ -137,69 +142,69 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:278
 msgctxt "admin yesno switch"
 msgid "Yes"
-msgstr ""
+msgstr "Tak"
 
 #: admin/forms.py:68 templates/misago/admin/users/edit.html:149
 #: templates/misago/admin/users/edit.html:167
 #: templates/misago/admin/users/edit.html:282
 msgctxt "admin yesno switch"
 msgid "No"
-msgstr ""
+msgstr "Nie"
 
 #: admin/views/auth.py:40
 msgctxt "admin auth"
 msgid "Your admin session has been closed."
-msgstr ""
+msgstr "Zamknięto sesję administratora."
 
 #: admin/views/generic/list.py:39
 msgctxt "admin lists"
 msgid "Selected: 0"
-msgstr ""
+msgstr "Wybrano: 0"
 
 #: admin/views/generic/list.py:40
 msgctxt "admin lists"
 msgid "Select items"
-msgstr ""
+msgstr "Wybierz obiekty"
 
 #: admin/views/generic/list.py:289 admin/views/generic/list.py:296
 msgctxt "admin lists"
 msgid "You have to select one or more items."
-msgstr ""
+msgstr "Wybierz przynajmniej jeden obiekt."
 
 #: admin/views/generic/list.py:311
 msgctxt "admin lists"
 msgid "Action is not allowed."
-msgstr ""
+msgstr "Niedozwolona akcja."
 
 #: apiv2/decorators.py:13
 msgctxt "apiv2"
 msgid "You have to sign in to access this page."
-msgstr ""
+msgstr "Zaloguj się aby zobaczyć tą stronę."
 
 #: apiv2/decorators.py:16
 msgctxt "apiv2"
 msgid "You have to sign in to perform this action."
-msgstr ""
+msgstr "Zaloguj się aby wykonać tą akcję."
 
 #: categories/admin/__init__.py:65
 msgctxt "admin node"
 msgid "Categories"
-msgstr ""
+msgstr "Kategorie"
 
 #: categories/admin/__init__.py:72
 msgctxt "admin node"
 msgid "Category permissions"
-msgstr ""
+msgstr "Uprawnienia kategorii"
 
 #: categories/admin/forms.py:50
 msgctxt "admin category form"
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: categories/admin/forms.py:54
 msgctxt "admin category form"
 msgid "Short name"
-msgstr ""
+msgstr "Nazwa skrócona"
 
 #: categories/admin/forms.py:58
 msgctxt "admin category form"
@@ -207,36 +212,38 @@ msgid ""
 "Optional, alternative or abbreviated name (eg. abbreviation) used on threads "
 "list."
 msgstr ""
+"Opcjonalna, skrócona wersja pełnej nazwy (lub akronim) używana na listach "
+"tematów."
 
 #: categories/admin/forms.py:63
 msgctxt "admin category form"
 msgid "Color"
-msgstr ""
+msgstr "Kolor"
 
 #: categories/admin/forms.py:67
 msgctxt "admin category form"
 msgid "Optional but recommended, should be in hex format, eg. #F5A9B8."
-msgstr ""
+msgstr "Opcjonalny ale zalecany, w formacie heksadecymalnym (np. #F5A9B8)."
 
 #: categories/admin/forms.py:74
 msgctxt "admin category form"
 msgid "Entered value is not a valid color."
-msgstr ""
+msgstr "Wprowadzona wartość nie jest prawidłowym kolorem."
 
 #: categories/admin/forms.py:80
 msgctxt "admin category form"
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: categories/admin/forms.py:86
 msgctxt "admin category form"
 msgid "Optional description explaining category intented purpose."
-msgstr ""
+msgstr "Opcjonalny opis wyjaśniający przeznaczenie kategorii."
 
 #: categories/admin/forms.py:90
 msgctxt "admin category form"
 msgid "CSS class"
-msgstr ""
+msgstr "Klasa CSS"
 
 #: categories/admin/forms.py:94
 msgctxt "admin category form"
@@ -248,37 +255,43 @@ msgstr ""
 #: categories/admin/forms.py:98
 msgctxt "admin category form"
 msgid "Closed category"
-msgstr ""
+msgstr "Zamknij tą kategorię"
 
 #: categories/admin/forms.py:102
 msgctxt "admin category form"
 msgid "Only members with valid permissions can post in closed categories."
 msgstr ""
+"Tylko osoby z odpowiednimi uprawnieniami mogą pisać w zamkniętych "
+"kategoriach."
 
 #: categories/admin/forms.py:106
 msgctxt "admin category form"
 msgid "Threads"
-msgstr ""
+msgstr "Tematy"
 
 #: categories/admin/forms.py:110
 msgctxt "admin category form"
 msgid "All threads started in this category will require moderator approval."
 msgstr ""
+"Wszystkie nowe tematy w tej kategorii będą wymagać zatwierdzenia przez "
+"moderatora."
 
 #: categories/admin/forms.py:114
 msgctxt "admin category form"
 msgid "Replies"
-msgstr ""
+msgstr "Odpowiedzi"
 
 #: categories/admin/forms.py:118
 msgctxt "admin category form"
 msgid "All replies posted in this category will require moderator approval."
 msgstr ""
+"Wszystkie nowe odpowiedzi w tej kategorii będą wymagać zatwierdzenia przez "
+"moderatora."
 
 #: categories/admin/forms.py:122
 msgctxt "admin category form"
 msgid "Edits"
-msgstr ""
+msgstr "Zmiany"
 
 #: categories/admin/forms.py:126
 msgctxt "admin category form"
@@ -3374,6 +3387,8 @@ msgid "There is %(downloads)s unprocessed data download request."
 msgid_plural "There are %(downloads)s unprocessed data download requests."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/admin/dashboard/checks.html:139
 msgctxt "admin data downloads check"
@@ -3388,6 +3403,8 @@ msgid "There is %(users)s inactive user accounts."
 msgid_plural "There are %(users)s inactive users accounts."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/admin/dashboard/checks.html:162
 msgctxt "admin inactive users check"
@@ -4621,6 +4638,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/admin/users/edit.html:99
 #, python-format
@@ -4629,6 +4648,8 @@ msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/admin/users/edit.html:110
 #: templates/misago/admin/users/new.html:18
@@ -4816,6 +4837,8 @@ msgid_plural ""
 "%(forum_name)s."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/categories/base.html:49
 #: templates/misago/categories/base.html:62
@@ -4829,6 +4852,8 @@ msgid_plural ""
 "%(forum_name)s."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/categories/body.html:15
 msgctxt "categories page"
@@ -4877,6 +4902,8 @@ msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/categories/stats.html:12
 #, python-format
@@ -4885,6 +4912,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/emails/activation/by_admin.html:6
 #: templates/misago/emails/activation/by_admin.txt:6
@@ -5013,6 +5042,8 @@ msgid_plural ""
 "message has been sent."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/emails/data_download.txt:10
 msgctxt "data download ready email"
@@ -5603,6 +5634,8 @@ msgid "This thread has %(users)s participant."
 msgid_plural "This thread has %(users)s participants."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/poll/info.html:4
 #, python-format
@@ -5611,6 +5644,8 @@ msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/poll/info.html:15
 #, python-format
@@ -5636,6 +5671,8 @@ msgid "%(votes)s vote, %(proc)s%% of total."
 msgid_plural "%(votes)s votes, %(proc)s%% of total."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/poll/results.html:41
 msgctxt "thread poll"
@@ -5669,6 +5706,8 @@ msgid "You can select %(choices)s choice."
 msgid_plural "You can select %(choices)s choices."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/poll/voting.html:32
 msgctxt "thread poll"
@@ -5738,6 +5777,8 @@ msgid "Wrote %(posts)s post."
 msgid_plural "Wrote %(posts)s posts."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/base.html:26 templates/misago/profile/base.html:41
 #, python-format
@@ -5746,6 +5787,8 @@ msgid "Started %(threads)s thread."
 msgid_plural "Started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
@@ -5800,6 +5843,8 @@ msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/followers.html:26
 #, python-format
@@ -5808,6 +5853,8 @@ msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/followers.html:53
 msgctxt "user profile page followers"
@@ -5834,6 +5881,8 @@ msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/follows.html:26
 #, python-format
@@ -5842,6 +5891,8 @@ msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/follows.html:53
 msgctxt "user profile page follows"
@@ -5893,6 +5944,8 @@ msgid "You have posted %(posts)s message."
 msgid_plural "You have posted %(posts)s messages."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/posts.html:26
 #, python-format
@@ -5901,6 +5954,8 @@ msgid "%(username)s has posted %(posts)s message."
 msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/posts.html:42
 msgctxt "user profile page posts"
@@ -5927,6 +5982,8 @@ msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/threads.html:26
 #, python-format
@@ -5935,6 +5992,8 @@ msgid "%(username)s has started %(threads)s thread."
 msgid_plural "%(username)s has started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/threads.html:42
 msgctxt "user profile page threads"
@@ -5961,6 +6020,8 @@ msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/username_history.html:26
 #, python-format
@@ -5969,6 +6030,8 @@ msgid "%(username)s's username was changed %(changes)s time."
 msgid_plural "%(username)s's username was changed %(changes)s times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/profile/username_history.html:83
 msgctxt "user profile page username history"
@@ -6298,6 +6361,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/thread/posts/post/side.html:73
 msgctxt "post removed poster username"
@@ -6329,6 +6394,8 @@ msgid "%(replies)s reply, last one from %(last_post_on)s."
 msgid_plural "%(replies)s replies, last one from %(last_post_on)s."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/thread/thread.html:25
 #: templates/misago/thread/thread.html:36
@@ -6403,6 +6470,8 @@ msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/threadslist/base.html:53
 msgctxt "threads list"
@@ -6553,6 +6622,8 @@ msgid "%(posters)s most active poster from last %(days)s days."
 msgid_plural "%(posters)s most active posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/active_posters.html:16
 #: templates/misago/userslists/active_posters.html:35
@@ -6576,6 +6647,8 @@ msgid "%(posters)s top poster from last %(days)s days."
 msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/active_posters.html:69
 #, python-format
@@ -6584,6 +6657,8 @@ msgid "%(posters)s top poster from last %(days)s days."
 msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/active_posters.html:83
 msgctxt "active posters list item"
@@ -6628,6 +6703,8 @@ msgid "%(users)s user have this rank."
 msgid_plural "%(users)s users have this rank."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/rank.html:102
 #, python-format
@@ -6636,6 +6713,8 @@ msgid "There is %(more)s more members with this role."
 msgid_plural "There are %(more)s more members with this role."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/rank.html:108
 msgctxt "rank users page"
@@ -6685,6 +6764,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/usercard.html:59
 #, python-format
@@ -6693,6 +6774,8 @@ msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: templates/misago/userslists/usercard.html:66
 #, python-format
@@ -6701,6 +6784,8 @@ msgid "%(followers)s follower"
 msgid_plural "%(followers)s followers"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: themes/admin/__init__.py:94
 msgctxt "admin node"
@@ -7312,6 +7397,8 @@ msgid "No more than %(limit)s post can be updated at a single time."
 msgid_plural "No more than %(limit)s posts can be updated at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/api/postendpoints/split.py:13
 msgctxt "posts api"
@@ -7335,6 +7422,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/api/postingendpoint/category.py:45
 msgctxt "posting api"
@@ -7390,6 +7479,8 @@ msgid_plural ""
 "%(added)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/api/postingendpoint/participants.py:97
 #, python-format
@@ -7510,6 +7601,8 @@ msgid "No more than %(limit)s thread can be updated at a single time."
 msgid_plural "No more than %(limit)s threads can be updated at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/api/threadpoll.py:61
 msgctxt "polls api"
@@ -7746,6 +7839,8 @@ msgid_plural ""
 "than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/bestanswers.py:234
 msgctxt "best answers permission"
@@ -7785,6 +7880,8 @@ msgid_plural ""
 "than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/bestanswers.py:289
 #, python-format
@@ -7977,6 +8074,8 @@ msgid "You can't edit polls that are older than %(minutes)s minute."
 msgid_plural "You can't edit polls that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/polls.py:202
 msgctxt "polls permission"
@@ -8015,6 +8114,8 @@ msgid "You can't delete polls that are older than %(minutes)s minute."
 msgid_plural "You can't delete polls that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/polls.py:260
 msgctxt "polls permission"
@@ -8610,6 +8711,8 @@ msgid "You can't edit threads that are older than %(minutes)s minute."
 msgid_plural "You can't edit threads that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:741
 msgctxt "threads permission"
@@ -8673,6 +8776,8 @@ msgid "You can't hide threads that are older than %(minutes)s minute."
 msgid_plural "You can't hide threads that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:869
 msgctxt "threads permission"
@@ -8707,6 +8812,8 @@ msgid_plural ""
 "You can't delete threads that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:933
 msgctxt "threads permission"
@@ -8830,6 +8937,8 @@ msgid "You can't edit posts that are older than %(minutes)s minute."
 msgid_plural "You can't edit posts that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:1165
 msgctxt "threads permission"
@@ -8868,6 +8977,8 @@ msgid "You can't reveal posts that are older than %(minutes)s minute."
 msgid_plural "You can't reveal posts that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:1226
 msgctxt "threads permission"
@@ -8911,6 +9022,8 @@ msgid "You can't hide posts that are older than %(minutes)s minute."
 msgid_plural "You can't hide posts that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:1295
 msgctxt "threads permission"
@@ -8954,6 +9067,8 @@ msgid "You can't delete posts that are older than %(minutes)s minute."
 msgid_plural "You can't delete posts that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/permissions/threads.py:1364
 msgctxt "threads permission"
@@ -9197,6 +9312,8 @@ msgid "No more than %(limit)s post can be deleted at a single time."
 msgid_plural "No more than %(limit)s posts can be deleted at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/moderation.py:104
 msgctxt "delete posts serializer"
@@ -9220,6 +9337,8 @@ msgid "No more than %(limit)s post can be merged at a single time."
 msgid_plural "No more than %(limit)s posts can be merged at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/moderation.py:170
 msgctxt "merge posts serializer"
@@ -9285,6 +9404,8 @@ msgid "No more than %(limit)s post can be moved at a single time."
 msgid_plural "No more than %(limit)s posts can be moved at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/moderation.py:316
 msgctxt "move posts serializer"
@@ -9333,6 +9454,8 @@ msgid "No more than %(limit)s post can be split at a single time."
 msgid_plural "No more than %(limit)s posts can be split at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/moderation.py:463
 msgctxt "split posts serializer"
@@ -9356,6 +9479,8 @@ msgid "No more than %(limit)s thread can be deleted at a single time."
 msgid_plural "No more than %(limit)s threads can be deleted at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/moderation.py:532
 msgctxt "delete threads serializer"
@@ -9416,6 +9541,8 @@ msgid "No more than %(limit)s thread can be merged at a single time."
 msgid_plural "No more than %(limit)s threads can be merged at a single time."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/moderation.py:679
 msgctxt "merge threads serializer"
@@ -9443,6 +9570,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/poll.py:140
 msgctxt "edit poll serializer"
@@ -9456,6 +9585,8 @@ msgid "This poll disallows voting for more than %(choices)s choice."
 msgid_plural "This poll disallows voting for more than %(choices)s choices."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/serializers/pollvote.py:33
 msgctxt "new vote serializer"
@@ -9496,6 +9627,8 @@ msgid "%(users)s and %(likes)s other user like this."
 msgid_plural "%(users)s and %(likes)s other users like this."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/templatetags/misago_poststags.py:45
 #, python-format
@@ -9549,6 +9682,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/validators.py:82
 #, python-format
@@ -9561,6 +9696,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/validators.py:97
 msgctxt "post length validator"
@@ -9578,6 +9715,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/validators.py:116
 #, python-format
@@ -9590,6 +9729,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: threads/viewmodels/thread.py:140
 msgctxt "threads root name"
@@ -9879,6 +10020,8 @@ msgid "Signature can't be longer than %(limit)s character."
 msgid_plural "Signature can't be longer than %(limit)s characters."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: users/admin/forms.py:304
 msgctxt "admin user form"
@@ -11314,6 +11457,8 @@ msgid_plural ""
 "You can't delete users that are members for more than %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: users/permissions/delete.py:107
 #, python-format
@@ -11322,6 +11467,8 @@ msgid "You can't delete users that made more than %(posts)s post."
 msgid_plural "You can't delete users that made more than %(posts)s posts."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: users/permissions/delete.py:121
 msgctxt "users delete permission"
@@ -11676,6 +11823,8 @@ msgid "Signature can't be longer than %(limit)s character."
 msgid_plural "Signature can't be longer than %(limit)s characters."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: users/serializers/options.py:55
 msgctxt "edit signature serializer"
@@ -11786,6 +11935,8 @@ msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: users/validators.py:126
 #, python-format
@@ -11794,6 +11945,8 @@ msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: users/validators.py:165
 msgctxt "stop forum spam validator"
