@@ -33,6 +33,8 @@ export default class extends Form {
       },
       errors: {},
     }
+
+    this.quoteText = ""
   }
 
   componentDidMount() {
@@ -67,6 +69,10 @@ export default class extends Form {
         ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]"
         : this.state.post,
     })
+
+    this.quoteText = data.post
+      ? '[quote="@' + data.poster + '"]\n' + data.post + "\n[/quote]"
+      : this.state.post
   }
 
   loadError = (rejection) => {
@@ -96,14 +102,11 @@ export default class extends Form {
   }
 
   onCancel = () => {
-    const editorEmpty = this.state.post.length === 0
     // If only the quote text is on editor user didn't add anything
     // so no changes to discard
-    const onlyQuoteTextInEditor =
-      this.state.post.startsWith('[quote="@') &&
-      this.state.post.endsWith("[/quote]")
+    const onlyQuoteTextInEditor = this.state.post === this.quoteText
 
-    if (editorEmpty || onlyQuoteTextInEditor) {
+    if (onlyQuoteTextInEditor && this.state.attachments.length === 0) {
       return this.close()
     }
 

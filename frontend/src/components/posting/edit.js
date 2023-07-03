@@ -36,6 +36,8 @@ export default class extends Form {
       },
       errors: {},
     }
+
+    this.originalPost = ""
   }
 
   componentDidMount() {
@@ -60,6 +62,8 @@ export default class extends Form {
   }
 
   loadSuccess = (data) => {
+    this.originalPost = data.post
+
     this.setState({
       isReady: true,
 
@@ -98,11 +102,12 @@ export default class extends Form {
   }
 
   onCancel = () => {
-    const editorEmpty = this.state.post.length === 0
+    const originalPostSameAsCurrentPost =
+      this.state.originalPost === this.state.post
+    const noAttachementsAdded = this.state.attachments.length === 0
 
-    if (editorEmpty) {
-      this.minimize()
-      return posting.close()
+    if (originalPostSameAsCurrentPost && noAttachementsAdded) {
+      return this.close()
     }
 
     const cancel = window.confirm(

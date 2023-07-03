@@ -88,13 +88,17 @@ export default class extends Form {
   }
 
   onCancel = () => {
-    const editorEmpty =
-      this.state.post.length === 0 && this.state.title.length === 0
+    const formEmpty = !!(
+      this.state.post.length === 0 &&
+      this.state.title.length === 0 &&
+      this.state.attachments.length === 0
+    )
 
-    if (editorEmpty) {
+    if (formEmpty) {
       this.minimize()
       return posting.close()
     }
+
 
     const cancel = window.confirm(
       pgettext("post thread", "Are you sure you want to discard thread?")
