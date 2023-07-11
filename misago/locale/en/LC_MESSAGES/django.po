@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 20:05+0000\n"
+"POT-Creation-Date: 2023-07-11 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -648,14 +648,14 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:25
 msgctxt "admin analytics settings form"
-msgid "Site verification token"
+msgid "Site verification code"
 msgstr ""
 
 #: conf/admin/forms/analytics.py:28
 msgctxt "admin analytics settings form"
 msgid ""
-"This token was extracted from uploaded site verification file. To change it, "
-"upload new verification file."
+"This code was extracted from the uploaded site verification file. To change "
+"it, upload new verification file."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:35
@@ -672,12 +672,12 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:52
 msgctxt "admin analytics settings form"
-msgid "Submitted file type is not HTML."
+msgid "Uploaded file type is not HTML."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:62
 msgctxt "admin analytics settings form"
-msgid "Submitted file doesn't contain a verification code."
+msgid "Uploaded file doesn't contain a verification code."
 msgstr ""
 
 #: conf/admin/forms/captcha.py:21
