@@ -40,6 +40,17 @@ export default class extends Form {
   }
 
   onCancel = () => {
+    const formEmpty = !!(
+      this.state.post.length === 0 &&
+      this.state.title.length === 0 &&
+      this.state.to.length === 0 &&
+      this.state.attachments.length === 0
+    )
+
+    if (formEmpty) {
+      return this.close()
+    }
+
     const cancel = window.confirm(
       pgettext(
         "post thread",

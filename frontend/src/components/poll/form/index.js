@@ -67,6 +67,19 @@ export default class extends Form {
   onCancel = () => {
     let cancel = false
 
+    // Nothing added to the poll so no changes to discard
+    const formEmpty = !!(
+      this.state.question === "" &&
+      this.state.choices &&
+      this.state.choices.every((choice) => choice.label === "") &&
+      this.state.length === 0 &&
+      this.state.allowed_choices === 1
+    )
+
+    if (formEmpty) {
+      return this.props.close()
+    }
+
     if (!!this.props.poll) {
       cancel = window.confirm(
         pgettext("thread poll", "Are you sure you want to discard changes?")

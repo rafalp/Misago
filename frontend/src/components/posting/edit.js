@@ -36,6 +36,8 @@ export default class extends Form {
       },
       errors: {},
     }
+
+    this.originalPost = ""
   }
 
   componentDidMount() {
@@ -60,6 +62,8 @@ export default class extends Form {
   }
 
   loadSuccess = (data) => {
+    this.originalPost = data.post
+
     this.setState({
       isReady: true,
 
@@ -98,6 +102,14 @@ export default class extends Form {
   }
 
   onCancel = () => {
+    const originalPostSameAsCurrentPost =
+      this.state.originalPost === this.state.post
+    const noAttachementsAdded = this.state.attachments.length === 0
+
+    if (originalPostSameAsCurrentPost && noAttachementsAdded) {
+      return this.close()
+    }
+
     const cancel = window.confirm(
       pgettext("edit reply", "Are you sure you want to discard changes?")
     )
