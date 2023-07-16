@@ -244,7 +244,7 @@ class UsersSettingsForm(SettingsForm):
     top_posters_ranking_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin users settings form",
-            "Maximum age in days of posts that should count to the ranking",
+            "Maximum age in days of posts that should count to the ranking position",
         ),
         min_value=1,
     )

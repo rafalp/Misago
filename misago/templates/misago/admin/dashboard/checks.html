@@ -15,7 +15,7 @@
       <div class="media-body">
         <h5>{% trans "Checking Misago version used by the site..." context "admin version check" %}</h5>
         {% blocktrans trimmed context "admin version check" %}
-          Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.
+          Version check feature relies on the API operated by the Python Package Index (pypi.org) to retrieve the latest Misago release version.
         {% endblocktrans %}
       </div>
     </div>
@@ -79,7 +79,7 @@
                 {% endblocktrans %}
               </div>
               <div>
-                {% trans "Links in e-mails sentby Misago will be broken." context "admin site address check" %}
+                {% trans "Links in e-mails sent by Misago may be broken." context "admin site address check" %}
               </div>
             </div>
           </div>
@@ -116,7 +116,7 @@
         <div class="media-body">
           <h5>{% trans "Cache is disabled." context "admin cache check" %}</h5>
           {% blocktrans trimmed context "admin cache check" %}
-            This will cause degraded performance and increased CPU usage by the site, possibly leading to increased hosting costs.
+            This will cause degraded performance and increased CPU usage by the site, leading to worse user experience and increased hosting costs.
           {% endblocktrans %}
         </div>
       </div>

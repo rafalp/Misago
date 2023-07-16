@@ -56,7 +56,9 @@
       {{ item.post.thread }}
     </a>
   {% else %}
-    <em class="text-muted">{% trans "None" context "admin orphaned attachment" %}</em>
+    <em class="text-muted" title="{% trans 'This attachment is not associated with any existing post.' context 'admin orphaned attachment' %}">
+      {% trans "Orphaned" context "admin orphaned attachment" %}
+    </em>
   {% endif %}
 </td>
 <td>

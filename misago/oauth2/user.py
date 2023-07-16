@@ -95,13 +95,19 @@ def raise_validation_error_from_integrity_error(error):
     if "misago_users_user_email_hash_key" in error_str:
         raise OAuth2UserDataValidationError(
             error_list=[
-                pgettext_lazy("oauth2 error", "This e-mail address is not available.")
+                pgettext_lazy(
+                    "oauth2 error",
+                    "Your e-mail address returned by the provider is not available for use on this site.",
+                )
             ]
         )
 
     if "misago_users_user_slug_key" in error_str:
         raise OAuth2UserDataValidationError(
             error_list=[
-                pgettext_lazy("oauth2 error", "This username is not available.")
+                pgettext_lazy(
+                    "oauth2 error",
+                    "Your username returned by the provider is not available for use on this site.",
+                )
             ]
         )

@@ -114,14 +114,14 @@ class EditUserForm(UserBaseForm):
         label=pgettext_lazy("admin user form", "Lock avatar"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Setting this to yes will stop user from changing his/her avatar, and will reset his/her avatar to procedurally generated one.",
+            "Setting this to yes will stop user from changing their avatar, and will reset their avatar to procedurally generated one.",
         ),
     )
     avatar_lock_user_message = forms.CharField(
         label=pgettext_lazy("admin user form", "User message"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Optional message for user explaining why he/she is banned form changing avatar.",
+            "Optional message for user explaining why they are banned form changing avatar.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,

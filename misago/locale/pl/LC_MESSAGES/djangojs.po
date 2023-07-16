@@ -2,23 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Rafał Pitoń <kontakt@rpiton.com>, 2023
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 11:27+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2023-07-16 13:17+0000\n"
+"PO-Revision-Date: 2023-07-01 08:52+0000\n"
+"Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
-"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
-"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications list"
@@ -210,6 +211,8 @@ msgid "See all %(count)s result."
 msgid_plural "See all %(count)s results."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "search results"
@@ -322,6 +325,8 @@ msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "time ago"
@@ -551,8 +556,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "merge threads conflict best answer"
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be "
-"deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be"
+" deleted during the merge."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1349,6 +1354,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread title length validator"
@@ -1360,6 +1367,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post length validator"
@@ -1371,6 +1380,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post length validator"
@@ -1382,6 +1393,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "sign in modal"
@@ -1431,12 +1444,12 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "user status"
 msgid "%(username)s is banned until %(ban_expires)s"
-msgstr ""
+msgstr "Konto %(username)s jest zablokowane do %(ban_expires)s"
 
 #: static/misago/js/misago.js:1
 msgctxt "user status"
 msgid "%(username)s is banned"
-msgstr ""
+msgstr "Konto %(username)s jest zablokowane"
 
 #: static/misago/js/misago.js:1
 msgctxt "user status"
@@ -1466,7 +1479,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "user status"
 msgid "Banned"
-msgstr ""
+msgstr "Konto zablokowane"
 
 #: static/misago/js/misago.js:1
 msgctxt "user status"
@@ -1514,6 +1527,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "users list item"
@@ -1521,6 +1536,8 @@ msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "users list item"
@@ -1528,6 +1545,8 @@ msgid "%(followers)s follower"
 msgid_plural "%(followers)s followers"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "yesno switch choice"
@@ -1610,6 +1629,8 @@ msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "category stats"
@@ -1617,6 +1638,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications title"
@@ -1746,8 +1769,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will "
-"result in following data being deleted:"
+"You are going to delete your account. This action is nonreversible, and will"
+" result in following data being deleted:"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1772,8 +1795,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it "
-"will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it"
+" will be changed to one shared by all deleted accounts."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1787,7 +1810,7 @@ msgid "Delete my account"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "edit details"
+msgctxt "profile details form"
 msgid "Your details have been updated."
 msgstr ""
 
@@ -1800,11 +1823,12 @@ msgstr ""
 msgctxt "download your data"
 msgid "Your request for data download has been registered."
 msgstr ""
+"Nowa kopia twoich danych oczekuje teraz na przygotowywanie do pobrania."
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data title"
 msgid "Download your data"
-msgstr ""
+msgstr "Pobierz kopię swoich danych"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data"
@@ -1815,6 +1839,11 @@ msgid ""
 "your download to be prepared. An e-mail with notification will be sent to "
 "you when your data is ready to be downloaded."
 msgstr ""
+"Aby pobrać kopię swoich danych ze strony, kliknij na \"Przygotuj kopię "
+"danych\". W zależności od ilości danych do zarchiwizowania oraz liczby "
+"użytkowników oczekujących na swoje dane, przygotowanie kopii może zająć "
+"nawet kilka dni. Kiedy twoje dane będą gotowe, otrzymasz e-mail z "
+"odnośnikiem do ich pobrania."
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data"
@@ -1836,12 +1865,12 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "download your data table"
 msgid "You have no data downloads."
-msgstr ""
+msgstr "Nie masz żadnych kopii swoich danych do pobrania."
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data btn"
 msgid "Request data download"
-msgstr ""
+msgstr "Przygotuj kopię danych"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table btn"
@@ -1851,7 +1880,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "download your data table btn"
 msgid "Download your data"
-msgstr ""
+msgstr "Pobierz swoje dane"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table btn"
@@ -1979,7 +2008,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications options"
-msgid "Automatically watch new private threads I'm invited to by other members"
+msgid ""
+"Automatically watch new private threads I'm invited to by other members"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2025,6 +2055,8 @@ msgid "You can change your username %(changes_left)s more time."
 msgid_plural "You can change your username %(changes_left)s more times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change username form"
@@ -2033,6 +2065,8 @@ msgid_plural ""
 "Used changes become available again after %(name_changes_expire)s days."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change username form"
@@ -2143,47 +2177,47 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details title"
 msgid "Ban details"
-msgstr ""
+msgstr "Szczegóły blokady"
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "User-shown ban message"
-msgstr ""
+msgstr "Komunikat blokady wyświetlany użytkownikowi"
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "Team-shown ban message"
-msgstr ""
+msgstr "Komunikat blokady wyświetlany zespołowi"
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "This ban expires on %(expires_on)s."
-msgstr ""
+msgstr "Ta blokada wygasa %(expires_on)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "This ban expires %(expires_on)s."
-msgstr ""
+msgstr "Ta blokada wygasa %(expires_on)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "This ban has expired."
-msgstr ""
+msgstr "Ta blokada wygasła."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "%(username)s's ban is permanent."
-msgstr ""
+msgstr "Konto %(username)s zablokowano na stałe."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "Ban expiration"
-msgstr ""
+msgstr "Blokada wygasa"
 
 #: static/misago/js/misago.js:1
 msgctxt "profile ban details"
 msgid "No ban is active at the moment."
-msgstr ""
+msgstr "To konto nie jest teraz zablokowane."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile details empty"
@@ -2203,11 +2237,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile details edit btn"
 msgid "Edit"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile details form"
-msgid "Your details have been updated."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2236,6 +2265,8 @@ msgid "Found %(users)s user."
 msgid_plural "Found %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile followers"
@@ -2243,6 +2274,8 @@ msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile followers"
@@ -2250,11 +2283,13 @@ msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile followers"
 msgid "Search returned no users matching specified criteria."
-msgstr ""
+msgstr "Szukanie nie znalazło żadnych pasujących użytkowników."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile followers"
@@ -2287,6 +2322,8 @@ msgid "Found %(changes)s username change."
 msgid_plural "Found %(changes)s username changes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile username history"
@@ -2294,6 +2331,8 @@ msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile username history"
@@ -2301,6 +2340,8 @@ msgid "%(username)s's username was changed %(changes)s time."
 msgid_plural "%(username)s's username was changed %(changes)s times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile username history"
@@ -2310,7 +2351,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile username history"
 msgid "Search returned no username changes matching specified criteria."
-msgstr ""
+msgstr "Szukanie nie znalazło żadnych pasujących zmian nazwy."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile username history"
@@ -2443,12 +2484,14 @@ msgctxt "profile delete"
 msgid ""
 "%(username)s's account, threads, posts and other content has been deleted."
 msgstr ""
+"Konto %(username)s zostało usunięte wraz z jego tematami, postami i "
+"pozostałymi treściami."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile delete"
 msgid ""
 "%(username)s's account has been deleted and other content has been hidden."
-msgstr ""
+msgstr "Konto %(username)s zostało a jego treści ukryte."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile delete btn"
@@ -2546,6 +2589,8 @@ msgid "You have posted %(posts)s message."
 msgid_plural "You have posted %(posts)s messages."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile posts"
@@ -2553,6 +2598,8 @@ msgid "%(username)s has posted %(posts)s message."
 msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile posts"
@@ -2580,6 +2627,8 @@ msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
@@ -2587,6 +2636,8 @@ msgid "%(username)s has started %(threads)s thread."
 msgid_plural "%(username)s has started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
@@ -2609,6 +2660,8 @@ msgid "Found %(users)s user."
 msgid_plural "Found %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile follows"
@@ -2616,6 +2669,8 @@ msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile follows"
@@ -2623,6 +2678,8 @@ msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile follows"
@@ -2632,7 +2689,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile follows"
 msgid "Search returned no users matching specified criteria."
-msgstr ""
+msgstr "Szukanie nie znalazło żadnych pasujących użytkowników."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile follows"
@@ -2961,6 +3018,8 @@ msgid "This thread has %(users)s participant."
 msgid_plural "This thread has %(users)s participants."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -2968,6 +3027,8 @@ msgid "%(votes)s vote, %(proc)s% of total."
 msgid_plural "%(votes)s votes, %(proc)s% of total."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -2985,6 +3046,8 @@ msgid "%(votes)s user has voted for this choice."
 msgid_plural "%(votes)s users have voted for this choice."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -3010,7 +3073,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
 msgid "Poll has been deleted"
-msgstr ""
+msgstr "Ankieta została usunięta."
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -3033,6 +3096,8 @@ msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -3050,6 +3115,8 @@ msgid "You can select %(choices)s more choice."
 msgid_plural "You can select %(choices)s more choices."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -3069,7 +3136,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "thread poll vote"
 msgid "Your vote has been saved."
-msgstr ""
+msgstr "Twój głos został zapisany."
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll vote btn"
@@ -3239,7 +3306,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "event delete"
 msgid "Event has been deleted."
-msgstr ""
+msgstr "Zdarzenie zostało usunięte."
 
 #: static/misago/js/misago.js:1
 msgctxt "event delete btn"
@@ -3389,8 +3456,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post unapproved flag"
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its "
-"author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3414,6 +3481,8 @@ msgid "%(likes)s like"
 msgid_plural "%(likes)s likes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post footer btn"
@@ -3451,6 +3520,8 @@ msgid "%(users)s and %(likes)s other user like this."
 msgid_plural "%(users)s and %(likes)s other users like this."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post footer btn"
@@ -3530,7 +3601,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post revert"
 msgid ""
-"Are you sure you with to revert this post to the state from before this edit?"
+"Are you sure you with to revert this post to the state from before this "
+"edit?"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3654,6 +3726,8 @@ msgid "This post was edited %(edits)s time."
 msgid_plural "This post was edited %(edits)s times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post options edit btn"
@@ -3704,7 +3778,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post delete"
 msgid "Post has been deleted."
-msgstr ""
+msgstr "Post został usunięty."
 
 #: static/misago/js/misago.js:1
 msgctxt "post options delete btn"
@@ -3732,6 +3806,8 @@ msgid "This post was edited %(edits)s time."
 msgid_plural "This post was edited %(edits)s times."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post edits stat"
@@ -3739,6 +3815,8 @@ msgid "edited %(edits)s time"
 msgid_plural "edited %(edits)s times"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post edits stat"
@@ -3746,6 +3824,8 @@ msgid "%(edits)s edit"
 msgid_plural "%(edits)s edits"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post protected label"
@@ -3763,6 +3843,8 @@ msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread starter info"
@@ -3918,7 +4000,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "thread moderation"
 msgid "Thread has been deleted."
-msgstr ""
+msgstr "Temat został usunięty."
 
 #: static/misago/js/misago.js:1
 msgctxt "thread moderation btn"
@@ -4168,7 +4250,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "merge posts"
 msgid ""
-"Are you sure you want to merge selected posts? This action is not reversible!"
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4323,8 +4406,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation merge"
 msgid ""
-"You need permission to start threads in category to be able to merge threads "
-"to it."
+"You need permission to start threads in category to be able to merge threads"
+" to it."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4544,7 +4627,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
 msgid "No threads matching specified criteria were found."
-msgstr ""
+msgstr "Szukanie nie znalazło żadnych pasujących tematów."
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list"
@@ -4597,6 +4680,8 @@ msgid_plural ""
 "There are %(threads)s new or updated threads. Click here to show them."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list title"
@@ -4710,6 +4795,8 @@ msgid "%(posters)s top poster from last %(days)s days."
 msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "users page title"
@@ -4722,6 +4809,8 @@ msgid "There is %(more)s more member with this role."
 msgid_plural "There are %(more)s more members with this role."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list empty"
@@ -4825,27 +4914,27 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "banned page"
 msgid "This ban expires on %(expires_on)s."
-msgstr ""
+msgstr "Ta blokada wygasa %(expires_on)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "banned page"
 msgid "This ban expires %(expires_on)s."
-msgstr ""
+msgstr "Ta blokada wygasa %(expires_on)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "banned page"
 msgid "This ban has expired."
-msgstr ""
+msgstr "Ta blokada wygasła."
 
 #: static/misago/js/misago.js:1
 msgctxt "banned page"
 msgid "This ban is permanent."
-msgstr ""
+msgstr "Ta blokada nigdy nie wygaśnie."
 
 #: static/misago/js/misago.js:1
 msgctxt "banned error title"
 msgid "You are banned"
-msgstr ""
+msgstr "Twoje konto jest zablokowane"
 
 #: static/misago/js/misago.js:1
 msgctxt "agreement validator"
@@ -4872,6 +4961,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "value length validator"
@@ -4883,6 +4974,8 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "username length validator"
@@ -4890,6 +4983,8 @@ msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "username length validator"
@@ -4897,6 +4992,8 @@ msgid "Username cannot be longer than %(limit_value)s character."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "username validator"
@@ -4913,9 +5010,12 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "password length validator"
 msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgid_plural ""
+"Valid password must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: static/misago/js/vendor.js:2
 msgid "<iframe frameborder='0' width='0' height='0'/>"

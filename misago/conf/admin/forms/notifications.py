@@ -19,7 +19,7 @@ class NotificationsSettingsForm(SettingsForm):
     watch_started_threads = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin notifications settings form",
-            "Notify about new replies in threads started by the user",
+            "Notify about new replies in threads started by them",
         ),
         choices=ThreadNotifications.choices,
         widget=forms.RadioSelect(),
@@ -28,7 +28,7 @@ class NotificationsSettingsForm(SettingsForm):
     watch_replied_threads = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin notifications settings form",
-            "Notify about new replies in threads replied to by the user",
+            "Notify about new replies in threads replied to by them",
         ),
         choices=ThreadNotifications.choices,
         widget=forms.RadioSelect(),

@@ -48,7 +48,7 @@ def check_version_with_api():
             ),
             "description": pgettext(
                 "admin version check",
-                "Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.",
+                "Version check feature relies on the API operated by the Python Package Index (pypi.org) to retrieve the latest Misago release version.",
             ),
         }
 

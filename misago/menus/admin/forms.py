@@ -25,7 +25,7 @@ class MenuItemForm(forms.ModelForm):
         label=pgettext_lazy("admin menu item form", "CSS class"),
         help_text=pgettext_lazy(
             "admin menu item form",
-            'If you want to set custom value for link\'s "class".',
+            'Optional. Additional CSS class to include in link\'s "class" HTML attribute.',
         ),
         required=False,
     )

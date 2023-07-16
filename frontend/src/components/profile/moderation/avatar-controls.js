@@ -106,7 +106,7 @@ export default class extends Form {
             label={pgettext("profile avatar moderation field", "User message")}
             helpText={pgettext(
               "profile avatar moderation field",
-              "Optional message for user explaining why he/she is prohibited form changing avatar."
+              "Optional message for user explaining why they are prohibited from changing their avatar."
             )}
             for="id_avatar_lock_user_message"
           >
@@ -124,7 +124,7 @@ export default class extends Form {
             label={pgettext("profile avatar moderation field", "Staff message")}
             helpText={pgettext(
               "profile avatar moderation field",
-              "Optional message for forum team members explaining why user is prohibited form changing avatar."
+              "Optional message for forum team members explaining why the user is prohibited form changing their avatar."
             )}
             for="id_avatar_lock_staff_message"
           >

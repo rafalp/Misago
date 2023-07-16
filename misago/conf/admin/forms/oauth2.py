@@ -76,7 +76,7 @@ class OAuth2SettingsForm(SettingsForm):
         label=pgettext_lazy("admin oauth2 settings form", "Login form URL"),
         help_text=pgettext_lazy(
             "admin oauth2 settings form",
-            "Address to login form on provider's server that users will be redirected to.",
+            "Address of the login form on provider's server that users will be redirected to.",
         ),
         max_length=500,
         required=False,
