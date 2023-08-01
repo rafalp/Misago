@@ -59,7 +59,7 @@ urlpatterns += [
         options.confirm_password_change,
         name="options-confirm-password-change",
     ),
-    path("options/dowload-data/", options.index, name="usercp-download-data"),
+    path("options/download-data/", options.index, name="usercp-download-data"),
     path("options/delete-account/", options.index, name="usercp-delete-account"),
 ]
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-16 13:17+0000\n"
+"POT-Creation-Date: 2023-07-22 11:22+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -1842,8 +1842,8 @@ msgstr ""
 "Aby pobrać kopię swoich danych ze strony, kliknij na \"Przygotuj kopię "
 "danych\". W zależności od ilości danych do zarchiwizowania oraz liczby "
 "użytkowników oczekujących na swoje dane, przygotowanie kopii może zająć "
-"nawet kilka dni. Kiedy twoje dane będą gotowe, otrzymasz e-mail z "
-"odnośnikiem do ich pobrania."
+"nawet kilka dni. Kiedy twoje dane będą gotowe do pobrania zostanie do ciebie"
+" wysłana wiadomość e-mail."
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data"
@@ -1851,16 +1851,18 @@ msgid ""
 "The download will only be available for limited amount of time, after which "
 "it will be deleted from the site and marked as expired."
 msgstr ""
+"Kopia będzie dostępna do pobrania tylko przez określony czas, po upływie "
+"którego zostanie usunięta ze strony i oznaczona jako wygasła."
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table"
 msgid "Requested on"
-msgstr ""
+msgstr "Zlecono"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table"
 msgid "Download"
-msgstr ""
+msgstr "Pobieranie"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table"
@@ -1875,17 +1877,17 @@ msgstr "Przygotuj kopię danych"
 #: static/misago/js/misago.js:1
 msgctxt "download your data table btn"
 msgid "Download is being prepared"
-msgstr ""
+msgstr "Kopia w przygotowaniu"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table btn"
 msgid "Download your data"
-msgstr "Pobierz swoje dane"
+msgstr "Pobierz kopię"
 
 #: static/misago/js/misago.js:1
 msgctxt "download your data table btn"
 msgid "Download is expired"
-msgstr ""
+msgstr "Kopia wygasła"
 
 #: static/misago/js/misago.js:1
 msgctxt "watch thread choice"
