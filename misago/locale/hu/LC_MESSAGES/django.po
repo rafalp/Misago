@@ -2,135 +2,138 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# uwnyuD, 2023
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 11:46+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2023-09-02 11:41+0000\n"
+"PO-Revision-Date: 2023-07-01 08:52+0000\n"
+"Last-Translator: uwnyuD, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/misago/teams/65369/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: acl/admin/__init__.py:24
 msgctxt "admin node"
 msgid "Permissions"
-msgstr ""
+msgstr "Engedélyek"
 
 #: acl/admin/forms.py:9
 msgctxt "admin role form"
 msgid "Role name"
-msgstr ""
+msgstr "Csoport név"
 
 #: acl/admin/views.py:15
 msgctxt "admin roles"
 msgid "Requested role does not exist."
-msgstr ""
+msgstr "A kért csoport nem létezik."
 
 #: acl/admin/views.py:52 categories/admin/views/perms.py:65
 msgctxt "admin form"
 msgid "Form contains errors."
-msgstr ""
+msgstr "Az űrlap hibákat tartalmaz."
 
 #: acl/admin/views.py:64
 #, python-format
 msgctxt "admin roles"
 msgid "New role \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Az új \"%(name)s\" csoport mentése megtörtént."
 
 #: acl/admin/views.py:68
 #, python-format
 msgctxt "admin roles"
 msgid "Role \"%(name)s\" has been changed."
-msgstr ""
+msgstr "A \"%(name)s\" csoport megváltozott."
 
 #: acl/admin/views.py:75
 #, python-format
 msgctxt "admin roles"
 msgid "Role \"%(name)s\" is special role and can't be deleted."
-msgstr ""
+msgstr "A %(name)s különleges csoport, és nem törölhető."
 
 #: acl/admin/views.py:81
 #, python-format
 msgctxt "admin roles"
 msgid "Role \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "A \"%(name)s\" csoport törölve."
 
 #: acl/migrations/0003_default_roles.py:10
 msgctxt "role name"
 msgid "Member"
-msgstr ""
+msgstr "Felhasználó"
 
 #: acl/migrations/0003_default_roles.py:48
 msgctxt "role name"
 msgid "Guest"
-msgstr ""
+msgstr "Látogató"
 
 #: acl/migrations/0003_default_roles.py:78
 #: users/migrations/0004_default_ranks.py:29
 msgctxt "role name"
 msgid "Moderator"
-msgstr ""
+msgstr "Moderátor"
 
 #: acl/migrations/0003_default_roles.py:133
 msgctxt "role name"
 msgid "Renaming users"
-msgstr ""
+msgstr "Felhasználók átnevezése"
 
 #: acl/migrations/0003_default_roles.py:141
 msgctxt "role name"
 msgid "Banning users"
-msgstr ""
+msgstr "Felhasználók kitiltása"
 
 #: acl/migrations/0003_default_roles.py:155
 #: users/migrations/0004_default_ranks.py:34
 msgctxt "role name"
 msgid "Deleting users"
-msgstr ""
+msgstr "Felhasználók törlése"
 
 #: acl/migrations/0003_default_roles.py:166
 msgctxt "role name"
 msgid "Can't be blocked"
-msgstr ""
+msgstr "Nem lehet letiltani"
 
 #: acl/migrations/0003_default_roles.py:174
 #: users/migrations/0004_default_ranks.py:30
 #: users/migrations/0004_default_ranks.py:37
 msgctxt "role name"
 msgid "Private threads"
-msgstr ""
+msgstr "Privát témák"
 
 #: acl/migrations/0003_default_roles.py:189
 #: users/migrations/0004_default_ranks.py:32
 msgctxt "role name"
 msgid "Private threads moderator"
-msgstr ""
+msgstr "Privát témák moderátora"
 
 #: acl/panels.py:8
 msgctxt "debug toolbar"
 msgid "Misago User ACL"
-msgstr ""
+msgstr "A Miasago felhasználó engedélyei"
 
 #: acl/panels.py:17
 msgctxt "debug toolbar"
 msgid "Anonymous user"
-msgstr ""
+msgstr "Névtelen felhasználó"
 
 #: admin/admin.py:6
 msgctxt "admin node"
 msgid "Dashboard"
-msgstr ""
+msgstr "Irányítópult"
 
 #: admin/auth.py:31
 msgctxt "admin auth"
 msgid "Your admin session has expired."
-msgstr ""
+msgstr "Az adminisztrátori munkamenet lejárt."
 
 #: admin/forms.py:47
 msgctxt "admin color field"
@@ -138,107 +141,113 @@ msgid ""
 "Value must be a 7-character string specifying an RGB color in a hexadecimal "
 "format."
 msgstr ""
+"Az értéknek egy 7 karakterből álló karakterláncnak kell lennie, amely RGB "
+"színt határoz meg hexadecimális formátumban."
 
 #: admin/forms.py:67 templates/misago/admin/users/edit.html:145
 #: templates/misago/admin/users/edit.html:163
 #: templates/misago/admin/users/edit.html:278
 msgctxt "admin yesno switch"
 msgid "Yes"
-msgstr ""
+msgstr "Igen"
 
 #: admin/forms.py:68 templates/misago/admin/users/edit.html:149
 #: templates/misago/admin/users/edit.html:167
 #: templates/misago/admin/users/edit.html:282
 msgctxt "admin yesno switch"
 msgid "No"
-msgstr ""
+msgstr "Nem"
 
 #: admin/views/auth.py:40
 msgctxt "admin auth"
 msgid "Your admin session has been closed."
-msgstr ""
+msgstr "Az adminisztrátori munkamenetét lezárták."
 
 #: admin/views/generic/list.py:39
 msgctxt "admin lists"
 msgid "Selected: 0"
-msgstr ""
+msgstr "Kiválasztva: 0"
 
 #: admin/views/generic/list.py:40
 msgctxt "admin lists"
 msgid "Select items"
-msgstr ""
+msgstr "Válassza ki az elemeket"
 
 #: admin/views/generic/list.py:289 admin/views/generic/list.py:296
 msgctxt "admin lists"
 msgid "You have to select one or more items."
-msgstr ""
+msgstr "Ki kell választani egy vagy több elemet."
 
 #: admin/views/generic/list.py:311
 msgctxt "admin lists"
 msgid "Action is not allowed."
-msgstr ""
+msgstr "A művelet nem megengedett."
 
 #: apiv2/decorators.py:13
 msgctxt "apiv2"
 msgid "You have to sign in to access this page."
-msgstr ""
+msgstr "Az oldal eléréséhez be kell jelentkeznie."
 
 #: apiv2/decorators.py:16
 msgctxt "apiv2"
 msgid "You have to sign in to perform this action."
-msgstr ""
+msgstr "A művelet végrehajtásához be kell jelentkeznie."
 
 #: categories/admin/__init__.py:65
 msgctxt "admin node"
 msgid "Categories"
-msgstr ""
+msgstr "Kategóriák"
 
 #: categories/admin/__init__.py:72
 msgctxt "admin node"
 msgid "Category permissions"
-msgstr ""
+msgstr "Kategória engedélyek"
 
 #: categories/admin/forms.py:50
 msgctxt "admin category form"
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #: categories/admin/forms.py:54
 msgctxt "admin category form"
 msgid "Short name"
-msgstr ""
+msgstr "Rövid név"
 
 #: categories/admin/forms.py:58
 msgctxt "admin category form"
 msgid ""
-"Optional, alternative or abbreviated name (eg. abbreviation) used on threads "
-"list."
+"Optional, alternative or abbreviated name (eg. abbreviation) used on threads"
+" list."
 msgstr ""
+"Opcionális, alternatív vagy rövidített név (pl. rövidítés), amelyet a témák "
+"listáján használnak."
 
 #: categories/admin/forms.py:63
 msgctxt "admin category form"
 msgid "Color"
-msgstr ""
+msgstr "Szín"
 
 #: categories/admin/forms.py:67
 msgctxt "admin category form"
 msgid "Optional but recommended, should be in hex format, eg. #F5A9B8."
 msgstr ""
+"Nem kötelező, de ajánlott, hexadecimális formátumban kell lennie, pl. "
+"#F5A9B8."
 
 #: categories/admin/forms.py:74
 msgctxt "admin category form"
 msgid "Entered value is not a valid color."
-msgstr ""
+msgstr "A megadott érték nem érvényes szín."
 
 #: categories/admin/forms.py:80
 msgctxt "admin category form"
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #: categories/admin/forms.py:86
 msgctxt "admin category form"
 msgid "Optional description explaining category intented purpose."
-msgstr ""
+msgstr "Opcionális leírás, amely elmagyarázza a kategória célját."
 
 #: categories/admin/forms.py:90
 msgctxt "admin category form"
@@ -251,41 +260,48 @@ msgid ""
 "Optional CSS class used to customize this category's appearance from "
 "templates."
 msgstr ""
+"Az opcionális CSS-osztály a kategória megjelenésének testreszabására szolgál"
+" sablonokból."
 
 #: categories/admin/forms.py:98
 msgctxt "admin category form"
 msgid "Closed category"
-msgstr ""
+msgstr "Lezárt kategória"
 
 #: categories/admin/forms.py:102
 msgctxt "admin category form"
 msgid "Only members with valid permissions can post in closed categories."
 msgstr ""
+"Csak érvényes engedéllyel rendelkező tagok posztolhatnak zárt kategóriákban."
 
 #: categories/admin/forms.py:106
 msgctxt "admin category form"
 msgid "Threads"
-msgstr ""
+msgstr "Témák"
 
 #: categories/admin/forms.py:110
 msgctxt "admin category form"
 msgid "All threads started in this category will require moderator approval."
 msgstr ""
+"Az ebben a kategóriában indított összes témához moderátor jóváhagyása "
+"szükséges."
 
 #: categories/admin/forms.py:114
 msgctxt "admin category form"
 msgid "Replies"
-msgstr ""
+msgstr "Válaszok"
 
 #: categories/admin/forms.py:118
 msgctxt "admin category form"
 msgid "All replies posted in this category will require moderator approval."
 msgstr ""
+"Az ebben a kategóriában közzétett összes válaszhoz moderátor jóváhagyása "
+"szükséges."
 
 #: categories/admin/forms.py:122
 msgctxt "admin category form"
 msgid "Edits"
-msgstr ""
+msgstr "Szerkesztések"
 
 #: categories/admin/forms.py:126
 msgctxt "admin category form"
@@ -293,23 +309,27 @@ msgid ""
 "Will make all edited replies return to unapproved state for moderator to "
 "review."
 msgstr ""
+"A szerkesztett válaszokat visszaállítja nem jóváhagyott állapotba, hogy a "
+"moderátor felülvizsgálja."
 
 #: categories/admin/forms.py:130
 msgctxt "admin category form"
 msgid "Thread age"
-msgstr ""
+msgstr "A téma kora"
 
 #: categories/admin/forms.py:134
 msgctxt "admin category form"
 msgid ""
-"Prune thread if number of days since its creation is greater than specified. "
-"Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified."
+" Enter 0 to disable this pruning criteria."
 msgstr ""
+"Metsze meg a témát, ha a létrehozása óta eltelt napok száma nagyobb a "
+"megadottnál. Írjon be 0-t a metszési feltétel letiltásához."
 
 #: categories/admin/forms.py:138
 msgctxt "admin category form"
 msgid "Last reply"
-msgstr ""
+msgstr "Utolsó válasz"
 
 #: categories/admin/forms.py:142
 msgctxt "admin category form"
@@ -317,26 +337,28 @@ msgid ""
 "Prune thread if number of days since last reply is greater than specified. "
 "Enter 0 to disable this pruning criteria."
 msgstr ""
+"Metsze meg a témát, ha az utolsó válasz óta eltelt napok száma nagyobb a "
+"megadottnál. Írjon be 0-t a metszési feltétel letiltásához."
 
 #: categories/admin/forms.py:168
 msgctxt "admin category form"
 msgid "Permissions cannot be copied from category into itself."
-msgstr ""
+msgstr "Az engedélyek nem másolhatók át a kategóriából önmagába."
 
 #: categories/admin/forms.py:177
 msgctxt "admin category form"
 msgid "Category cannot act as archive for itself."
-msgstr ""
+msgstr "A kategória önmagában nem működhet archívumként."
 
 #: categories/admin/forms.py:200
 msgctxt "admin category form"
 msgid "Parent category"
-msgstr ""
+msgstr "Szülő kategória"
 
 #: categories/admin/forms.py:206
 msgctxt "admin category form"
 msgid "Copy permissions"
-msgstr ""
+msgstr "Engedélyek másolása"
 
 #: categories/admin/forms.py:209
 msgctxt "admin category form"
@@ -344,32 +366,35 @@ msgid ""
 "You can replace this category permissions with permissions copied from "
 "category selected here."
 msgstr ""
+"Ezt a kategóriát lecserélheti az itt kiválasztott kategóriából másolt "
+"engedélyekre."
 
 #: categories/admin/forms.py:213
 msgctxt "admin category form"
 msgid "Don't copy permissions"
-msgstr ""
+msgstr "Ne másoljon engedélyeket"
 
 #: categories/admin/forms.py:218
 msgctxt "admin category form"
 msgid "Archive"
-msgstr ""
+msgstr "Archívum"
 
 #: categories/admin/forms.py:221
 msgctxt "admin category form"
 msgid ""
-"Instead of being deleted, pruned threads can be moved to designated category."
-msgstr ""
+"Instead of being deleted, pruned threads can be moved to designated "
+"category."
+msgstr "Törlés helyett a levágott témák áthelyezhetők a kijelölt kategóriába."
 
 #: categories/admin/forms.py:225
 msgctxt "admin category form"
 msgid "Don't archive pruned threads"
-msgstr ""
+msgstr "Ne archiválja a lemetszett témákat"
 
 #: categories/admin/forms.py:245
 msgctxt "admin category form"
 msgid "You are trying to move this category threads to itself."
-msgstr ""
+msgstr "Ön megpróbálja áthelyezni a kategória témáit önmagába."
 
 #: categories/admin/forms.py:253
 msgctxt "admin category form"
@@ -377,88 +402,90 @@ msgid ""
 "You are trying to move this category threads to a child category that will "
 "be deleted together with this category."
 msgstr ""
+"Ezt a kategóriaszálat egy gyermekkategóriába próbálja áthelyezni, amely "
+"ezzel a kategóriával együtt törlődik."
 
 #: categories/admin/forms.py:264
 msgctxt "admin category form"
 msgid "Move category threads to"
-msgstr ""
+msgstr "Kategóriatémák áthelyezése ide"
 
 #: categories/admin/forms.py:267 categories/admin/forms.py:281
 msgctxt "admin category form"
 msgid "Delete with category"
-msgstr ""
+msgstr "Törlés kategóriával"
 
 #: categories/admin/forms.py:279
 msgctxt "admin category form"
 msgid "Move child categories to"
-msgstr ""
+msgstr "Gyermekkategóriák áthelyezése ide"
 
 #: categories/admin/forms.py:289
 msgctxt "admin category role form"
 msgid "Role name"
-msgstr ""
+msgstr "Csoport név"
 
 #: categories/admin/forms.py:300 categories/admin/forms.py:315
 msgctxt "admin permissions form"
 msgid "Role"
-msgstr ""
+msgstr "Csoport"
 
 #: categories/admin/forms.py:304 categories/admin/forms.py:319
 msgctxt "admin permissions form"
 msgid "No access"
-msgstr ""
+msgstr "Nincs hozzáférés"
 
 #: categories/admin/views/categories.py:18
 msgctxt "admin categories"
 msgid "Requested category does not exist."
-msgstr ""
+msgstr "A kért kategória nem létezik."
 
 #: categories/admin/views/categories.py:99
 #, python-format
 msgctxt "admin categories"
 msgid "New category \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Az új \"%(name)s\" kategória mentése megtörtént."
 
 #: categories/admin/views/categories.py:105
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been edited."
-msgstr ""
+msgstr "A \"%(name)s\" kategória szerkesztve."
 
 #: categories/admin/views/categories.py:111
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "A \"%(name)s\" kategória törölve."
 
 #: categories/admin/views/categories.py:164
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been moved below \"%(other)s\"."
-msgstr ""
+msgstr "A \"%(name)s\" kategória átkerült a \"%(other)s\" alá."
 
 #: categories/admin/views/categories.py:183
 #, python-format
 msgctxt "admin categories"
 msgid "Category \"%(name)s\" has been moved above \"%(other)s\"."
-msgstr ""
+msgstr "A \"%(name)s\" kategória átkerült a \"%(other)s\" fölé."
 
 #: categories/admin/views/perms.py:24
 msgctxt "admin categories roles"
 msgid "Requested role does not exist."
-msgstr ""
+msgstr "A kért csoport nem létezik."
 
 #: categories/admin/views/perms.py:78
 #, python-format
 msgctxt "admin categories roles"
 msgid "New role \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Az új \"%(name)s\" csoport mentése megtörtént."
 
 #: categories/admin/views/perms.py:84
 #, python-format
 msgctxt "admin categories roles"
 msgid "Role \"%(name)s\" has been changed."
-msgstr ""
+msgstr "A \"%(name)s\" csoport megváltozott."
 
 #: categories/admin/views/perms.py:93
 #, python-format
@@ -501,28 +528,28 @@ msgstr ""
 
 #: categories/migrations/0002_default_categories.py:32
 msgid "First category"
-msgstr ""
+msgstr "Első kategória"
 
 #: categories/migrations/0003_categories_roles.py:10
 msgid "See only"
-msgstr ""
+msgstr "Lásd csak"
 
 #: categories/migrations/0003_categories_roles.py:18
 msgid "Read only"
-msgstr ""
+msgstr "Csak olvasható"
 
 #: categories/migrations/0003_categories_roles.py:33
 msgid "Reply to threads"
-msgstr ""
+msgstr "Válasz a témákra"
 
 #: categories/migrations/0003_categories_roles.py:51
 msgid "Start and reply threads"
-msgstr ""
+msgstr "Témák indítása és hozzászólás témákhoz"
 
 #: categories/migrations/0003_categories_roles.py:71
 #: categories/migrations/0003_categories_roles.py:117
 msgid "Moderator"
-msgstr ""
+msgstr "Moderátor"
 
 #: categories/migrations/0006_moderation_queue_roles.py:10
 msgid "In moderation queue"
@@ -530,57 +557,60 @@ msgstr ""
 
 #: categories/migrations/0007_best_answers_roles.py:11
 msgid "Q&A user"
-msgstr ""
+msgstr "K&V felhasználó"
 
 #: categories/migrations/0007_best_answers_roles.py:23
 msgid "Q&A moderator"
-msgstr ""
+msgstr "K&V moderátor"
 
 #: categories/permissions.py:13
 msgctxt "categories permission"
 msgid "Category access"
-msgstr ""
+msgstr "Kategória hozzáférés"
 
 #: categories/permissions.py:16
 msgctxt "categories permission"
 msgid "Can see category"
-msgstr ""
+msgstr "A kategória látható"
 
 #: categories/permissions.py:19
 msgctxt "categories permission"
 msgid "Can see category contents"
-msgstr ""
+msgstr "Megtekintheti a kategória tartalmát"
 
 #: categories/permissions.py:125
 #, python-format
 msgctxt "categories permission"
 msgid "You don't have permission to browse \"%(category)s\" contents."
-msgstr ""
+msgstr "Nincs engedélye a \"%(category)s\" tartalmának böngészésére."
 
 #: conf/admin/__init__.py:52
 msgctxt "admin node"
 msgid "Settings"
-msgstr ""
+msgstr "beállítások"
 
 #: conf/admin/__init__.py:59
 msgctxt "admin node"
 msgid "General"
-msgstr ""
+msgstr "Általános"
 
 #: conf/admin/__init__.py:61
 msgctxt "admin node"
 msgid "Change forum details like name, description or footer."
 msgstr ""
+"Módosítsa a fórum részleteit, például a nevet, a leírást vagy a láblécet."
 
 #: conf/admin/__init__.py:67 users/admin/__init__.py:74
 msgctxt "admin node"
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #: conf/admin/__init__.py:70
 msgctxt "admin node"
 msgid "Customize user accounts default behavior and features availability."
 msgstr ""
+"Testreszabhatja a felhasználói fiókok alapértelmezett viselkedését és a "
+"szolgáltatások elérhetőségét."
 
 #: conf/admin/__init__.py:77
 msgctxt "admin node"
@@ -590,29 +620,31 @@ msgstr ""
 #: conf/admin/__init__.py:80
 msgctxt "admin node"
 msgid "Setup protection against automatic registrations on the site."
-msgstr ""
+msgstr "Állítsa be az automatikus regisztráció elleni védelmet az oldalon."
 
 #: conf/admin/__init__.py:87
 msgctxt "admin node"
 msgid "Threads"
-msgstr ""
+msgstr "Témák"
 
 #: conf/admin/__init__.py:89
 msgctxt "admin node"
 msgid "Threads, posts, polls and attachments options."
-msgstr ""
+msgstr "Témák, posztok, szavazások és mellékletek beállításai."
 
 #: conf/admin/__init__.py:96
 msgctxt "admin node"
 msgid "Notifications"
-msgstr ""
+msgstr "Értesítések"
 
 #: conf/admin/__init__.py:99
 msgctxt "admin node"
 msgid ""
-"Those settings control default notification preferences of new user accounts "
-"and storage time of existing notifications."
+"Those settings control default notification preferences of new user accounts"
+" and storage time of existing notifications."
 msgstr ""
+"Ezek a beállítások szabályozzák az új felhasználói fiókok alapértelmezett "
+"értesítési beállításait és a meglévő értesítések tárolási idejét."
 
 #: conf/admin/__init__.py:106
 msgctxt "admin node"
@@ -648,14 +680,14 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:25
 msgctxt "admin analytics settings form"
-msgid "Site verification code"
+msgid "Site verification token"
 msgstr ""
 
 #: conf/admin/forms/analytics.py:28
 msgctxt "admin analytics settings form"
 msgid ""
-"This code was extracted from the uploaded site verification file. To change "
-"it, upload new verification file."
+"This token was extracted from uploaded site verification file. To change it,"
+" upload new verification file."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:35
@@ -672,12 +704,12 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:52
 msgctxt "admin analytics settings form"
-msgid "Uploaded file type is not HTML."
+msgid "Submitted file type is not HTML."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:62
 msgctxt "admin analytics settings form"
-msgid "Uploaded file doesn't contain a verification code."
+msgid "Submitted file doesn't contain a verification code."
 msgstr ""
 
 #: conf/admin/forms/captcha.py:21
@@ -833,7 +865,8 @@ msgstr ""
 #: conf/admin/forms/general.py:75
 msgctxt "admin general settings form"
 msgid ""
-"Image that will be displayed in forum navbar instead of a small logo or text."
+"Image that will be displayed in forum navbar instead of a small logo or "
+"text."
 msgstr ""
 
 #: conf/admin/forms/general.py:80
@@ -944,12 +977,12 @@ msgstr ""
 
 #: conf/admin/forms/notifications.py:22
 msgctxt "admin notifications settings form"
-msgid "Notify about new replies in threads started by them"
+msgid "Notify about new replies in threads started by the user"
 msgstr ""
 
 #: conf/admin/forms/notifications.py:31
 msgctxt "admin notifications settings form"
-msgid "Notify about new replies in threads replied to by them"
+msgid "Notify about new replies in threads replied to by the user"
 msgstr ""
 
 #: conf/admin/forms/notifications.py:41
@@ -1036,8 +1069,7 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:79
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Address of the login form on provider's server that users will be redirected "
-"to."
+"Address to login form on provider's server that users will be redirected to."
 msgstr ""
 
 #: conf/admin/forms/oauth2.py:86
@@ -1075,8 +1107,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:110
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Name of key containing the access token in JSON returned by the provider. If "
-"token is nested, use period (\".\") for path, eg: \"result.token\" will "
+"Name of key containing the access token in JSON returned by the provider. If"
+" token is nested, use period (\".\") for path, eg: \"result.token\" will "
 "retrieve the token from \"token\" key nested in \"result\"."
 msgstr ""
 
@@ -1123,8 +1155,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:167
 msgctxt "admin oauth2 settings form"
 msgid ""
-"List of extra headers to include in a HTTP request made to retrieve the user "
-"profile. Example header is \"Header-name: value\". Specify each header on "
+"List of extra headers to include in a HTTP request made to retrieve the user"
+" profile. Example header is \"Header-name: value\". Specify each header on "
 "separate line."
 msgstr ""
 
@@ -1264,10 +1296,10 @@ msgstr ""
 #: conf/admin/forms/threads.py:91
 msgctxt "admin threads settings form"
 msgid ""
-"Controls amount of data used by read-tracking system. All content older than "
-"number of days specified in this setting is considered old and read, even if "
-"the opposite is true for the user. Active forums can try lowering this value "
-"while less active ones may wish to increase it instead."
+"Controls amount of data used by read-tracking system. All content older than"
+" number of days specified in this setting is considered old and read, even "
+"if the opposite is true for the user. Active forums can try lowering this "
+"value while less active ones may wish to increase it instead."
 msgstr ""
 
 #: conf/admin/forms/threads.py:99
@@ -1365,8 +1397,8 @@ msgstr ""
 #: conf/admin/forms/users.py:75
 msgctxt "admin users settings form"
 msgid ""
-"Delete new inactive accounts if they weren't activated within this number of "
-"days"
+"Delete new inactive accounts if they weren't activated within this number of"
+" days"
 msgstr ""
 
 #: conf/admin/forms/users.py:79
@@ -1434,8 +1466,8 @@ msgstr ""
 #: conf/admin/forms/users.py:149
 msgctxt "admin users settings form"
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their e-"
-"mail address."
+"Select which avatar to use when user has no gravatar associated with their "
+"e-mail address."
 msgstr ""
 
 #: conf/admin/forms/users.py:154
@@ -1516,7 +1548,7 @@ msgstr ""
 
 #: conf/admin/forms/users.py:247
 msgctxt "admin users settings form"
-msgid "Maximum age in days of posts that should count to the ranking position"
+msgid "Maximum age in days of posts that should count to the ranking"
 msgstr ""
 
 #: conf/admin/forms/users.py:253
@@ -1682,8 +1714,8 @@ msgstr ""
 #: templates/misago/admin/dashboard/index.html:33
 msgctxt "admin version check"
 msgid ""
-"Version check feature relies on the API operated by the Python Package Index "
-"(pypi.org) to retrieve the latest Misago release version."
+"Version check feature relies on the API operated by the Python Package Index"
+" (pypi.org) API to retrieve latest Misago release version."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:76
@@ -1977,8 +2009,7 @@ msgstr ""
 
 #: menus/admin/forms.py:28
 msgctxt "admin menu item form"
-msgid ""
-"Optional. Additional CSS class to include in link's \"class\" HTML attribute."
+msgid "If you want to set custom value for link's \"class\"."
 msgstr ""
 
 #: menus/admin/forms.py:33
@@ -2109,8 +2140,7 @@ msgstr ""
 #: notifications/threads.py:262
 #, python-format
 msgctxt "new private thread email subject"
-msgid ""
-"%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr ""
 
 #: oauth2/exceptions.py:14
@@ -2130,7 +2160,8 @@ msgstr ""
 
 #: oauth2/exceptions.py:35
 msgctxt "oauth2 error"
-msgid "The OAuth2 state sent by the provider did not match one in the session."
+msgid ""
+"The OAuth2 state sent by the provider did not match one in the session."
 msgstr ""
 
 #: oauth2/exceptions.py:45
@@ -2179,7 +2210,7 @@ msgstr ""
 
 #: oauth2/exceptions.py:104
 msgctxt "oauth2 error"
-msgid "JSON sent by the OAuth2 provider did not contain a user ID."
+msgid "JSON sent by the OAuth2 provider did not contain a user id."
 msgstr ""
 
 #: oauth2/exceptions.py:112
@@ -2194,17 +2225,14 @@ msgctxt "oauth2 error"
 msgid "User profile retrieved from the OAuth2 provider did not validate."
 msgstr ""
 
-#: oauth2/user.py:100
+#: oauth2/user.py:98
 msgctxt "oauth2 error"
-msgid ""
-"Your e-mail address returned by the provider is not available for use on "
-"this site."
+msgid "This e-mail address is not available."
 msgstr ""
 
-#: oauth2/user.py:110
+#: oauth2/user.py:105
 msgctxt "oauth2 error"
-msgid ""
-"Your username returned by the provider is not available for use on this site."
+msgid "This username is not available."
 msgstr ""
 
 #: search/api.py:18
@@ -2261,10 +2289,10 @@ msgstr ""
 msgctxt "admin social auth provider form"
 msgid ""
 "This setting controls handling of e-mail collisions that occur when e-mail "
-"address returned from social site is already stored in the forum's database. "
-"Enabling this option will result in the user being signed in to pre-existing "
-"account. Otherwise they will be asked to specify a different e-mail to "
-"complete the sign in using social site."
+"address returned from social site is already stored in the forum's database."
+" Enabling this option will result in the user being signed in to pre-"
+"existing account. Otherwise they will be asked to specify a different e-mail"
+" to complete the sign in using social site."
 msgstr ""
 
 #: socialauth/admin/forms/base.py:59 socialauth/admin/forms/base.py:61
@@ -2344,8 +2372,8 @@ msgstr ""
 #, python-format
 msgctxt "social auth"
 msgid ""
-"The e-mail address associated with your %(backend)s account is not available "
-"for use on this site."
+"The e-mail address associated with your %(backend)s account is not available"
+" for use on this site."
 msgstr ""
 
 #: socialauth/pipeline.py:99
@@ -2370,7 +2398,10 @@ msgstr ""
 #: templates/misago/acl_debug.html:5
 #, python-format
 msgctxt "debug toolbar user acl"
-msgid "%(user)s roles"
+msgid ""
+"\n"
+"    %(user)s roles\n"
+"    "
 msgstr ""
 
 #: templates/misago/acl_debug.html:9
@@ -2439,8 +2470,8 @@ msgstr ""
 #: templates/misago/activation/request.html:32
 msgctxt "account activation page"
 msgid ""
-"The site administrator may impose a requirement on newly registered accounts "
-"to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts"
+" to be activated before users will be able to sign in."
 msgstr ""
 
 #: templates/misago/activation/request.html:35
@@ -2619,30 +2650,25 @@ msgstr ""
 
 #: templates/misago/admin/attachments/list.html:59
 msgctxt "admin orphaned attachment"
-msgid "This attachment is not associated with any existing post."
+msgid "None"
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:60
-msgctxt "admin orphaned attachment"
-msgid "Orphaned"
-msgstr ""
-
-#: templates/misago/admin/attachments/list.html:68
+#: templates/misago/admin/attachments/list.html:66
 msgctxt "admin attachments"
 msgid "Delete"
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:78
+#: templates/misago/admin/attachments/list.html:76
 msgctxt "admin attachments"
 msgid "No attachments matching criteria exist."
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:80
+#: templates/misago/admin/attachments/list.html:78
 msgctxt "admin attachments"
 msgid "No attachments exist."
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:115
+#: templates/misago/admin/attachments/list.html:113
 msgctxt "admin attachments"
 msgid "Are you sure you want to delete this attachment?"
 msgstr ""
@@ -2699,7 +2725,7 @@ msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:33
 msgctxt "admin attachments types list item"
-msgid "Uploading new files of this type is disabled."
+msgid "Uploading new files of this type is disabled"
 msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:34
@@ -2709,7 +2735,7 @@ msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:37
 msgctxt "admin attachments types list item"
-msgid "Uploading and downloading files of this type is disabled."
+msgid "Uploading and downloading files of this type is disabled"
 msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:38
@@ -3360,7 +3386,7 @@ msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:82
 msgctxt "admin site address check"
-msgid "Links in e-mails sent by Misago may be broken."
+msgid "Links in e-mails sentby Misago will be broken."
 msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:102
@@ -3384,7 +3410,7 @@ msgstr ""
 msgctxt "admin cache check"
 msgid ""
 "This will cause degraded performance and increased CPU usage by the site, "
-"leading to worse user experience and increased hosting costs."
+"possibly leading to increased hosting costs."
 msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:133
@@ -3571,7 +3597,7 @@ msgstr ""
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
 msgid ""
-"The link you've followed was incorrect or the page has been moved or deleted."
+"The link you clicked was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
@@ -3602,22 +3628,22 @@ msgstr ""
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgctxt "admin csrf error"
 msgid ""
-"The form was sent after being opened in the browser for a long time (eg. few "
-"days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few"
+" days) and cookie token has expired."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgctxt "admin csrf error"
 msgid ""
-"The site is configured to use the HTTPS, but this form was sent over the the "
-"HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the"
+" HTTP."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgctxt "admin csrf error"
 msgid ""
-"If you are an owner of this site, please check if the HTTPS certificate used "
-"by the site is valid and accepted by the browser."
+"If you are an owner of this site, please check if the HTTPS certificate used"
+" by the site is valid and accepted by the browser."
 msgstr ""
 
 #: templates/misago/admin/generic/filter_form.html:7
@@ -4156,8 +4182,8 @@ msgstr ""
 #, python-format
 msgctxt "admin social auth providers"
 msgid ""
-"OAuth2 client is enabled. Social authentication has been disabled with login "
-"and registration delegated to the %(provider)s."
+"OAuth2 client is enabled. Social authentication has been disabled with login"
+" and registration delegated to the %(provider)s."
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:109
@@ -4249,29 +4275,29 @@ msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:31
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #: templates/misago/admin/themes/assets/css.html:32
 msgid "Modified"
-msgstr ""
+msgstr "Módosított"
 
 #: templates/misago/admin/themes/assets/css.html:33
 msgid "Size"
-msgstr ""
+msgstr "Méret"
 
 #: templates/misago/admin/themes/assets/css.html:68
 msgid "Move down"
-msgstr ""
+msgstr "Mozgatás le"
 
 #: templates/misago/admin/themes/assets/css.html:73
 msgid "Move up"
-msgstr ""
+msgstr "Mozgatás fel"
 
 #: templates/misago/admin/themes/assets/css.html:80
 #: templates/misago/admin/themes/assets/css.html:84
 #: users/admin/djangoadmin.py:72
 msgid "Edit"
-msgstr ""
+msgstr "Szerkesztés"
 
 #: templates/misago/admin/themes/assets/css.html:94
 msgid "This theme has no CSS files."
@@ -4279,7 +4305,7 @@ msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:103
 msgid "Delete selected"
-msgstr ""
+msgstr "Kijelöltek eltávolítása"
 
 #: templates/misago/admin/themes/assets/list.html:6
 msgctxt "admin theme assets"
@@ -4524,7 +4550,7 @@ msgstr ""
 
 #: templates/misago/admin/users/ban.html:38
 msgid "Avatar"
-msgstr ""
+msgstr "Avatár"
 
 #: templates/misago/admin/users/ban.html:51
 #: templates/misago/admin/users/list.html:85
@@ -4715,8 +4741,8 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:264
 msgctxt "admin user form"
 msgid ""
-"No additional action is required. This account will be deleted automatically "
-"when process is completed."
+"No additional action is required. This account will be deleted automatically"
+" when process is completed."
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:307
@@ -4949,8 +4975,8 @@ msgstr ""
 #, python-format
 msgctxt "confirm email change email"
 msgid ""
-"%(user)s, you are receiving this message because you have changed your e-"
-"mail address."
+"%(user)s, you are receiving this message because you have changed your "
+"e-mail address."
 msgstr ""
 
 #: templates/misago/emails/change_email.html:11
@@ -5103,8 +5129,8 @@ msgstr ""
 #: templates/misago/emails/register/inactive.txt:15
 msgctxt "welcome email"
 msgid ""
-"This may take a while, but you will receive e-mail with notification once it "
-"happens."
+"This may take a while, but you will receive e-mail with notification once it"
+" happens."
 msgstr ""
 
 #: templates/misago/emails/register/inactive.html:17
@@ -5216,15 +5242,20 @@ msgstr ""
 #: templates/misago/errorpages/404.html:9
 #: templates/misago/errorpages/404.html:18
 #: templates/misago/errorpages/404.html:23
-#: templates/misago/errorpages/404.html:38
 msgctxt "error 404 page"
 msgid ""
-"The link you've followed was incorrect or the page has been moved or deleted."
+"The link you clicked was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/404.html:37
 msgctxt "error 404 page"
 msgid "Requested page could not be found."
+msgstr ""
+
+#: templates/misago/errorpages/404.html:38
+msgctxt "error 404 page"
+msgid ""
+"The link you followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/405.html:5
@@ -5456,8 +5487,8 @@ msgstr ""
 #: templates/misago/forgottenpassword/request.html:47
 msgctxt "forgotten password page"
 msgid ""
-"Instead, you can change your password using special secure form that will be "
-"available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be"
+" available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
 
@@ -5503,7 +5534,8 @@ msgctxt "cta"
 msgid "Register"
 msgstr ""
 
-#: templates/misago/notifications.html:5 templates/misago/notifications.html:18
+#: templates/misago/notifications.html:5
+#: templates/misago/notifications.html:18
 msgctxt "notifications page"
 msgid "Notifications"
 msgstr ""
@@ -5533,8 +5565,8 @@ msgstr ""
 #: templates/misago/notifications_disabled.html:19
 msgctxt "notifications disabled page"
 msgid ""
-"You will no longer receive e-mail notifications when someone replies to this "
-"thread."
+"You will no longer receive e-mail notifications when someone replies to this"
+" thread."
 msgstr ""
 
 #: templates/misago/notifications_disabled.html:20
@@ -6252,8 +6284,8 @@ msgstr ""
 #: templates/misago/thread/posts/post/flags.html:29
 msgctxt "post unapproved flag"
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its "
-"author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
 msgstr ""
 
 #: templates/misago/thread/posts/post/flags.html:35
@@ -6333,6 +6365,7 @@ msgstr ""
 #, python-format
 msgid "Started by %(starter)s on %(started_on)s in the %(category)s category."
 msgstr ""
+"Indította %(starter)s %(started_on)s dátumon a %(category)s kategóriában."
 
 #: templates/misago/thread/thread.html:21
 #: templates/misago/thread/thread.html:32
@@ -6350,7 +6383,7 @@ msgstr ""
 #: templates/misago/thread/thread.html:25
 #: templates/misago/thread/thread.html:36
 msgid "Closed."
-msgstr ""
+msgstr "Zárva."
 
 #: templates/misago/thread/toolbar_bottom.html:24
 #: templates/misago/thread/toolbar_top.html:41
@@ -7119,7 +7152,8 @@ msgstr ""
 #: threads/admin/forms.py:97
 msgctxt "admin attachment type form"
 msgid ""
-"List of comma separated file extensions associated with this attachment type."
+"List of comma separated file extensions associated with this attachment "
+"type."
 msgstr ""
 
 #: threads/admin/forms.py:101
@@ -7251,7 +7285,8 @@ msgstr ""
 #, python-format
 msgctxt "admin attachments types"
 msgid ""
-"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be "
+"deleted."
 msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:61
@@ -7481,7 +7516,8 @@ msgstr ""
 #: threads/api/threadendpoints/patch.py:272
 msgctxt "threads api"
 msgid ""
-"This post can't be unmarked because it's not currently marked as best answer."
+"This post can't be unmarked because it's not currently marked as best "
+"answer."
 msgstr ""
 
 #: threads/api/threadendpoints/patch.py:300
@@ -7736,8 +7772,8 @@ msgstr ""
 #, python-format
 msgctxt "best answers permission"
 msgid ""
-"You don't have permission to change this thread's marked answer because it's "
-"in the \"%(category)s\" category."
+"You don't have permission to change this thread's marked answer because it's"
+" in the \"%(category)s\" category."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:215
@@ -7809,8 +7845,8 @@ msgstr ""
 #: threads/permissions/bestanswers.py:297
 msgctxt "best answers permission"
 msgid ""
-"You can't unmark this thread's best answer because it's closed and you don't "
-"have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't"
+" have permission to open it."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:305
@@ -8116,8 +8152,8 @@ msgstr ""
 #: threads/permissions/privatethreads.py:66
 msgctxt "private threads permission"
 msgid ""
-"Allows user to report private threads they are participating in, making them "
-"accessible to moderators."
+"Allows user to report private threads they are participating in, making them"
+" accessible to moderators."
 msgstr ""
 
 #: threads/permissions/privatethreads.py:71
@@ -8216,8 +8252,8 @@ msgctxt "threads permission"
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging "
-"to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging"
+" to categories in which the user has permission to approve content."
 msgstr ""
 
 #: threads/permissions/threads.py:82
@@ -9690,7 +9726,7 @@ msgstr ""
 
 #: users/admin/djangoadmin.py:76
 msgid "Edit the user from Misago admin panel"
-msgstr ""
+msgstr "Szerkessze a felhasználót a Misago adminisztrációs panelból"
 
 #: users/admin/forms.py:21
 msgctxt "admin user form"
@@ -9726,8 +9762,8 @@ msgstr ""
 msgctxt "admin user form"
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to "
-"admin Django modules."
+"is enabled, this user will need additional permissions assigned within it to"
+" admin Django modules."
 msgstr ""
 
 #: users/admin/forms.py:88
@@ -9779,8 +9815,8 @@ msgstr ""
 #: users/admin/forms.py:117
 msgctxt "admin user form"
 msgid ""
-"Setting this to yes will stop user from changing their avatar, and will "
-"reset their avatar to procedurally generated one."
+"Setting this to yes will stop user from changing his/her avatar, and will "
+"reset his/her avatar to procedurally generated one."
 msgstr ""
 
 #: users/admin/forms.py:121 users/admin/forms.py:152
@@ -9791,7 +9827,7 @@ msgstr ""
 #: users/admin/forms.py:124
 msgctxt "admin user form"
 msgid ""
-"Optional message for user explaining why they are banned form changing "
+"Optional message for user explaining why he/she is banned form changing "
 "avatar."
 msgstr ""
 
@@ -9876,7 +9912,8 @@ msgstr ""
 #: users/admin/forms.py:226
 msgctxt "admin user form"
 msgid ""
-"Notify about new private thread invitations from users this user is following"
+"Notify about new private thread invitations from users this user is "
+"following"
 msgstr ""
 
 #: users/admin/forms.py:234
@@ -9989,8 +10026,8 @@ msgstr ""
 #: users/admin/forms.py:488
 msgctxt "admin rank form"
 msgid ""
-"Optional, singular version of rank name displayed by user names. For example "
-"\"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example"
+" \"GM\" or \"Dev\"."
 msgstr ""
 
 #: users/admin/forms.py:492
@@ -10134,8 +10171,8 @@ msgstr ""
 #: users/admin/forms.py:635
 msgctxt "admin ban form"
 msgid ""
-"This value is case-insensitive and accepts asterisk (*) for partial matches. "
-"For example, making IP ban for value \"83.*\" will ban all IP addresses "
+"This value is case-insensitive and accepts asterisk (*) for partial matches."
+" For example, making IP ban for value \"83.*\" will ban all IP addresses "
 "beginning with \"83.\"."
 msgstr ""
 
@@ -10257,8 +10294,8 @@ msgstr ""
 #: users/admin/forms.py:770
 msgctxt "admin data download request form"
 msgid ""
-"Enter every item in new line. Duplicates will be ignored. This field is case "
-"insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case"
+" insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 msgstr ""
@@ -10828,8 +10865,8 @@ msgstr ""
 #, python-format
 msgctxt "users api"
 msgid ""
-"This feature has been disabled. Please use %(provider)s to change your e-"
-"mail."
+"This feature has been disabled. Please use %(provider)s to change your "
+"e-mail."
 msgstr ""
 
 #: users/api/users.py:231
@@ -11619,9 +11656,9 @@ msgstr ""
 #: users/profilefields/default.py:42
 msgctxt "website profile field"
 msgid ""
-"If you own website in the internet you wish to share on your profile you may "
-"enter its address here. Remember to for it to be valid http address starting "
-"with either \"http://\" or \"https://\"."
+"If you own website in the internet you wish to share on your profile you may"
+" enter its address here. Remember to for it to be valid http address "
+"starting with either \"http://\" or \"https://\"."
 msgstr ""
 
 #: users/profilefields/default.py:48
@@ -11645,9 +11682,9 @@ msgstr ""
 #, python-format
 msgctxt "twitter handle profile field"
 msgid ""
-"If you own Twitter account, here you may enter your Twitter handle for other "
-"users to find you. Starting your handle with \"@\" sign is optional. Either "
-"\"@%(slug)s\" or \"%(slug)s\" are valid values."
+"If you own Twitter account, here you may enter your Twitter handle for other"
+" users to find you. Starting your handle with \"@\" sign is optional. Either"
+" \"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
 
 #: users/profilefields/default.py:74
@@ -11863,7 +11900,8 @@ msgstr ""
 #: users/views/forgottenpassword.py:45
 #, python-format
 msgctxt "user password"
-msgid "%(user)s, your link has expired. Please request new link and try again."
+msgid ""
+"%(user)s, your link has expired. Please request new link and try again."
 msgstr ""
 
 #: users/views/forgottenpassword.py:52
