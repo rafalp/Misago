@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-22 11:22+0000\n"
+"POT-Creation-Date: 2023-09-02 12:40+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -304,6 +304,8 @@ msgid ""
 "Will make all edited replies return to unapproved state for moderator to "
 "review."
 msgstr ""
+"Wszystkie zmienione odpowiedzi w tej kategorii będą wymagać zatwierdzenia "
+"przez moderatora."
 
 #: categories/admin/forms.py:130
 msgctxt "admin category form"
@@ -666,7 +668,7 @@ msgstr ""
 #: conf/admin/forms/analytics.py:25
 msgctxt "admin analytics settings form"
 msgid "Site verification code"
-msgstr "Kod weryfikujący własność"
+msgstr "Kod weryfikacyjny witryny"
 
 #: conf/admin/forms/analytics.py:28
 msgctxt "admin analytics settings form"
@@ -674,8 +676,8 @@ msgid ""
 "This code was extracted from the uploaded site verification file. To change "
 "it, upload new verification file."
 msgstr ""
-"Ten kod pochodzi z przesłanego pliku weryfikującego. Aby go zmienić prześlij"
-" nowy plik."
+"Ten kod pochodzi z przesłanego pliku weryfikującego własność witryny. Aby go"
+" zmienić, prześlij nowy plik."
 
 #: conf/admin/forms/analytics.py:35
 msgctxt "admin analytics settings form"
@@ -972,12 +974,12 @@ msgstr ""
 #: conf/admin/forms/notifications.py:22
 msgctxt "admin notifications settings form"
 msgid "Notify about new replies in threads started by them"
-msgstr "Powiadamiaj o nowych odpowiedziach w tematach zaczętych przez nich"
+msgstr ""
 
 #: conf/admin/forms/notifications.py:31
 msgctxt "admin notifications settings form"
 msgid "Notify about new replies in threads replied to by them"
-msgstr "Powiadamiaj o nowych odpowiedziach w tematach w których odpowiedzieli"
+msgstr ""
 
 #: conf/admin/forms/notifications.py:41
 msgctxt "admin notifications settings form"
@@ -1077,8 +1079,6 @@ msgid ""
 "Address of the login form on provider's server that users will be redirected"
 " to."
 msgstr ""
-"Adres formularza logowania na serwerze usługi do którego przekierowywani "
-"będą użytkownicy."
 
 #: conf/admin/forms/oauth2.py:86
 msgctxt "admin oauth2 settings form"
@@ -1585,7 +1585,6 @@ msgstr ""
 msgctxt "admin users settings form"
 msgid "Maximum age in days of posts that should count to the ranking position"
 msgstr ""
-"Maksymalny wiek postów (w dniach) które wliczają się do pozycji w rankingu"
 
 #: conf/admin/forms/users.py:253
 msgctxt "admin users settings form"
@@ -1758,8 +1757,6 @@ msgid ""
 "Version check feature relies on the API operated by the Python Package Index"
 " (pypi.org) to retrieve the latest Misago release version."
 msgstr ""
-"Funkcja sprawdzania wersji korzysta z API obsługiwanego przez Python Package"
-" Index (pypi.org) do ustalenia wersji najnowszego wydania Misago."
 
 #: graphql/admin/versioncheck.py:76
 msgctxt "admin version check"
@@ -2064,7 +2061,7 @@ msgctxt "admin menu item form"
 msgid ""
 "Optional. Additional CSS class to include in link's \"class\" HTML "
 "attribute."
-msgstr "Opcjonalna. Została włączona do wartości atrybutu HTML \"class\"."
+msgstr ""
 
 #: menus/admin/forms.py:33
 msgctxt "admin menu item form"
@@ -2077,6 +2074,8 @@ msgid ""
 "Enabling this option will result in the target=\"_blank\" attribute being "
 "added to this link's HTML element."
 msgstr ""
+"Włączenie tej opcji sprawi że kod HTML odnośnika zawierać będzie atrybut "
+"target=\"_blank\"."
 
 #: menus/admin/forms.py:41
 msgctxt "admin menu item form"
@@ -2273,7 +2272,7 @@ msgstr ""
 #: oauth2/exceptions.py:104
 msgctxt "oauth2 error"
 msgid "JSON sent by the OAuth2 provider did not contain a user ID."
-msgstr "JSON zwrócony przez usługę OAuth 2 nie zawierał ID profilu."
+msgstr ""
 
 #: oauth2/exceptions.py:112
 msgctxt "oauth2 error"
@@ -2295,8 +2294,6 @@ msgid ""
 "Your e-mail address returned by the provider is not available for use on "
 "this site."
 msgstr ""
-"Twój adres e-mail zwrócony przez usługę nie jest dostępny do użycia na tej "
-"stronie."
 
 #: oauth2/user.py:110
 msgctxt "oauth2 error"
@@ -2304,8 +2301,6 @@ msgid ""
 "Your username returned by the provider is not available for use on this "
 "site."
 msgstr ""
-"Twoja nazwa zwrócona przez usługę nie jest dostępny do użycia na tej "
-"stronie."
 
 #: search/api.py:18
 msgctxt "search api"
@@ -2330,7 +2325,7 @@ msgstr "Nie masz uprawnień do korzystania z funkcji szukania."
 #: socialauth/admin/__init__.py:40
 msgctxt "admin node"
 msgid "Social login"
-msgstr "Logowanie przez serwis społecznościowy"
+msgstr "Logowanie społecznościowe"
 
 #: socialauth/admin/__init__.py:43
 msgctxt "admin node"
@@ -2351,7 +2346,7 @@ msgstr "Kolor przycisku"
 #: socialauth/admin/forms/base.py:19
 msgctxt "admin social auth provider form"
 msgid "Enable this provider"
-msgstr "Włącz ten serwis"
+msgstr "Włącz logowanie z użyciem tej sieci społecznościowej"
 
 #: socialauth/admin/forms/base.py:46
 msgctxt "admin social auth provider form"
@@ -2361,11 +2356,19 @@ msgstr "Wiąż istniejące konta użytkowników po e-mailu"
 #: socialauth/admin/forms/base.py:50
 msgctxt "admin social auth provider form"
 msgid ""
-"Enabling this option will result in the user being signed in if their forum "
-"account was registered using same e-mail address as used on the social site."
-" Otherwise they will be asked to specify a different e-mail to continue sign"
-" in using social site."
+"This setting controls handling of e-mail collisions that occur when e-mail "
+"address returned from social site is already stored in the forum's database."
+" Enabling this option will result in the user being signed in to pre-"
+"existing account. Otherwise they will be asked to specify a different e-mail"
+" to complete the sign in using social site."
 msgstr ""
+"Ta opcja kontroluje obsługę kolizji adresów e-mail które mają miejsce kiedy "
+"adres e-mail zwrócony przez serwis społecznościowy już istnieje w bazie "
+"danych forum. Włączenie tej opcji sprawi że w sytuacji kiedy istnieje już w "
+"bazie danych konto użytkownika z adresem e-mail takim samym jak w profilu "
+"otrzymanym od sieci społecznościowej, profil ten zostanie powiązany z tym "
+"kontem. W przeciwnym wypadku użytkownik zostanie poproszony o podanie nowego"
+" adresu e-mail aby dokończyć logowanie."
 
 #: socialauth/admin/forms/base.py:59 socialauth/admin/forms/base.py:61
 msgid "This field is required."
@@ -2414,7 +2417,7 @@ msgstr "Prywatny klucz API konsumenta"
 #: socialauth/admin/views.py:16
 msgctxt "admin social auth providers"
 msgid "Requested social login provider does not exist."
-msgstr "Żądany serwis społecznościowy nie istnieje"
+msgstr "Żądana opcja logowania nie istnieje."
 
 #: socialauth/admin/views.py:64
 #, python-format
@@ -2432,7 +2435,7 @@ msgstr "Logowanie przez %(provider)s zostało wyłączone."
 #, python-format
 msgctxt "admin social auth providers"
 msgid "Login with %(provider)s has been moved after %(other)s."
-msgstr "Logowanie przez %(provider)s zostało przeniesione pod %(other)s."
+msgstr "Logowanie przez %(provider)s zostało przeniesione za %(other)s."
 
 #: socialauth/admin/views.py:123
 #, python-format
@@ -2471,7 +2474,7 @@ msgstr ""
 #, python-format
 msgctxt "debug toolbar user acl"
 msgid "%(user)s roles"
-msgstr "Role %(user)s"
+msgstr ""
 
 #: templates/misago/acl_debug.html:9
 msgctxt "debug toolbar user acl"
@@ -3485,7 +3488,7 @@ msgstr ""
 #: templates/misago/admin/dashboard/checks.html:82
 msgctxt "admin site address check"
 msgid "Links in e-mails sent by Misago may be broken."
-msgstr "Odnośniki w e-mailach wysyłanych przez Misago mogą być zepsute."
+msgstr "Odnośniki w e-mailach wysyłanych przez Misago mogą być nieprawidłowe."
 
 #: templates/misago/admin/dashboard/checks.html:102
 msgctxt "admin https check"
@@ -3512,9 +3515,6 @@ msgid ""
 "This will cause degraded performance and increased CPU usage by the site, "
 "leading to worse user experience and increased hosting costs."
 msgstr ""
-"Brak cache powoduje wolniejsze działanie strony i większe użycie CPU, "
-"prowadząc do gorszego doświadczenia dla użytkowników oraz wyższych kosztów "
-"utrzymania."
 
 #: templates/misago/admin/dashboard/checks.html:133
 #, python-format
@@ -3563,7 +3563,7 @@ msgstr ""
 #: templates/misago/admin/dashboard/index.html:11
 msgctxt "admin dashboard"
 msgid "Dashboard"
-msgstr "Biórko"
+msgstr "Biurko"
 
 #: templates/misago/admin/dashboard/index.html:28
 msgctxt "admin version check"
@@ -3656,7 +3656,7 @@ msgstr "Status"
 #: templates/misago/admin/datadownloads/list.html:19
 msgctxt "admin data downloads list"
 msgid "Requested on"
-msgstr "Zlecono"
+msgstr "Data zleconia"
 
 #: templates/misago/admin/datadownloads/list.html:21
 msgctxt "admin data downloads list"
@@ -3691,27 +3691,27 @@ msgstr "Nie istnieją żadne kopie danych."
 #: templates/misago/admin/errorpages/403.html:5
 msgctxt "admin error 403"
 msgid "Page not available"
-msgstr ""
+msgstr "Strona niedostępna"
 
 #: templates/misago/admin/errorpages/403.html:12
 msgctxt "admin error 403"
 msgid "Requested page is not available"
-msgstr ""
+msgstr "Żądana strona nie jest dostępna"
 
 #: templates/misago/admin/errorpages/403.html:18
 msgctxt "admin error 403"
 msgid "You don't have permission to access this page."
-msgstr ""
+msgstr "Nie masz uprawnień do dostępu do tej strony."
 
 #: templates/misago/admin/errorpages/404.html:5
 msgctxt "admin error 404"
 msgid "Page not found"
-msgstr ""
+msgstr "Nie znaleziono strony"
 
 #: templates/misago/admin/errorpages/404.html:12
 msgctxt "admin error 404"
 msgid "Requested page could not be found"
-msgstr ""
+msgstr "Żądana strona nie została znaleziona"
 
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
@@ -3719,8 +3719,6 @@ msgid ""
 "The link you've followed was incorrect or the page has been moved or "
 "deleted."
 msgstr ""
-"Użyty odnośnik był nieprawidłowy bądź strona została usunięta albo "
-"przeniesiona."
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
 #: templates/misago/admin/errorpages/csrf_failure.html:14
@@ -3728,7 +3726,7 @@ msgstr ""
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:12
 msgctxt "admin csrf error"
 msgid "Form submission rejected"
-msgstr ""
+msgstr "Formularz został odrzucony"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:3
 msgctxt "admin csrf error"
@@ -3736,16 +3734,19 @@ msgid ""
 "Your form submission was rejected because your browser didn't send the CSRF "
 "cookie, or the cookie sent was invalid."
 msgstr ""
+"Formularz został odrzucony ponieważ twoja przeglądarka nie przesłała "
+"ciasteczka CSRF, albo było ono nieprawidłowe."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:6
 msgctxt "admin csrf error"
 msgid "This is usually a result of one of following problems:"
-msgstr ""
+msgstr "Zwykle dzieje się tak na skutek jednej z przyczyn:"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:9
 msgctxt "admin csrf error"
 msgid "Your browser is configured to don't accept or send any cookies."
 msgstr ""
+"Twoja przeglądarka jest ustawiona aby nie przyjmować lub wysyłać ciasteczek."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgctxt "admin csrf error"
@@ -3753,6 +3754,8 @@ msgid ""
 "The form was sent after being opened in the browser for a long time (eg. few"
 " days) and cookie token has expired."
 msgstr ""
+"Formularz był otwarty w przeglądarce przez kilka dni i ciasteczko w "
+"międzyczasie wygasło."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgctxt "admin csrf error"
@@ -3760,6 +3763,7 @@ msgid ""
 "The site is configured to use the HTTPS, but this form was sent over the the"
 " HTTP."
 msgstr ""
+"Strona jest ustawiona pod HTTPS, ale formularz przesłano korzystając z HTTP."
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgctxt "admin csrf error"
@@ -3767,120 +3771,122 @@ msgid ""
 "If you are an owner of this site, please check if the HTTPS certificate used"
 " by the site is valid and accepted by the browser."
 msgstr ""
+"Jeśli jesteś właścicielem tej strony, sprawdź czy używany przez nią "
+"certyfikat HTTPS jest poprawny i akceptowany przez przeglądarkę."
 
 #: templates/misago/admin/generic/filter_form.html:7
 msgctxt "admin list filters"
 msgid "Filter"
-msgstr ""
+msgstr "Filtruj"
 
 #: templates/misago/admin/generic/filter_form.html:17
 msgctxt "admin list filters"
 msgid "Clear filters"
-msgstr ""
+msgstr "Wyczyść filtry"
 
 #: templates/misago/admin/generic/form.html:25
 msgctxt "admin form"
 msgid "Form was completed with errors."
-msgstr ""
+msgstr "Formularz zawiera błędy."
 
 #: templates/misago/admin/generic/form.html:36
 msgctxt "admin form"
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: templates/misago/admin/generic/form.html:42
 msgctxt "admin form action"
 msgid "Save and keep editing"
-msgstr ""
+msgstr "Zapisz i kontynuuj edycję"
 
 #: templates/misago/admin/generic/form.html:45
 msgctxt "admin form action"
 msgid "Save changes"
-msgstr ""
+msgstr "Zapisz zmiany"
 
 #: templates/misago/admin/generic/form.html:49
 msgctxt "admin form action"
 msgid "Save and add another"
-msgstr ""
+msgstr "Zapisz i dodaj kolejny"
 
 #: templates/misago/admin/generic/form.html:52
 msgctxt "admin form action"
 msgid "Save"
-msgstr ""
+msgstr "Zapisz"
 
 #: templates/misago/admin/generic/list.html:87
 msgctxt "admin list filters"
 msgid "Filters"
-msgstr ""
+msgstr "Filtry"
 
 #: templates/misago/admin/generic/list.html:90
 #: templates/misago/admin/generic/list.html:105
 msgctxt "admin list filters"
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #: templates/misago/admin/generic/list.html:108
 msgctxt "admin list filters"
 msgid "Done"
-msgstr ""
+msgstr "Ustaw"
 
 #: templates/misago/admin/generic/mass_actions.html:10
 msgctxt "admin list"
 msgid "With selected:"
-msgstr ""
+msgstr "Z wybranymi"
 
 #: templates/misago/admin/generic/order_by.html:5
 msgctxt "admin list ordering"
 msgid "Sort:"
-msgstr ""
+msgstr "Kolejność:"
 
 #: templates/misago/admin/generic/order_by.html:10
 msgctxt "admin list ordering"
 msgid "Change sorting to:"
-msgstr ""
+msgstr "Zmień kolejność na:"
 
 #: templates/misago/admin/generic/paginator.html:4
 msgctxt "admin paginator"
 msgid "Go to first page"
-msgstr ""
+msgstr "Idź do pierwszej strony"
 
 #: templates/misago/admin/generic/paginator.html:5
 #: templates/misago/admin/generic/paginator.html:9
 msgctxt "admin paginator"
 msgid "First"
-msgstr ""
+msgstr "Pierwsze"
 
 #: templates/misago/admin/generic/paginator.html:13
 msgctxt "admin paginator"
 msgid "Go to previous page"
-msgstr ""
+msgstr "Idź do poprzedniej strony"
 
 #: templates/misago/admin/generic/paginator.html:22
 msgctxt "admin paginator"
 msgid "Go to next page"
-msgstr ""
+msgstr "Idź do następnej strony"
 
 #: templates/misago/admin/generic/paginator.html:25
 msgctxt "admin paginator"
 msgid "Go to last page"
-msgstr ""
+msgstr "Idź do ostatniej strony"
 
 #: templates/misago/admin/generic/paginator.html:26
 #: templates/misago/admin/generic/paginator.html:33
 msgctxt "admin paginator"
 msgid "Last"
-msgstr ""
+msgstr "Ostatnie"
 
 #: templates/misago/admin/generic/paginator.html:38
 #, python-format
 msgctxt "admin paginator"
 msgid "Page %(page)s of %(pages)s"
-msgstr ""
+msgstr "Strona %(page)s z %(pages)s"
 
 #: templates/misago/admin/icons.html:8
 msgctxt "admin icons form"
 msgid "Favicon"
-msgstr ""
+msgstr "Favicon"
 
 #: templates/misago/admin/icons.html:11
 msgctxt "admin icons form"
@@ -3888,11 +3894,13 @@ msgid ""
 "Favicon is small icon that internet browsers display next to your site in "
 "its interface."
 msgstr ""
+"Favicon to mała ikona którą przeglądarki internetowe wyświetlają obok nazwy "
+"twojej strony w swoich interfejsach."
 
 #: templates/misago/admin/icons.html:68
 msgctxt "admin icons form"
 msgid "Apple Touch Icon"
-msgstr ""
+msgstr "Ikona Apple Touch"
 
 #: templates/misago/admin/icons.html:71
 msgctxt "admin icons form"
@@ -3900,57 +3908,59 @@ msgid ""
 "Apple devices and Safari web browser will use this image to represent the "
 "site in its interfaces."
 msgstr ""
+"Urządzenia Apple oraz przeglądarka safari będą używać tego obrazu dla strony"
+" w swoich interfejsach."
 
 #: templates/misago/admin/login.html:6
 msgctxt "admin login form"
 msgid "Log in"
-msgstr ""
+msgstr "Logowanie"
 
 #: templates/misago/admin/login.html:6
 msgctxt "admin title"
 msgid "Django Administration"
-msgstr ""
+msgstr "Administracja Django"
 
 #: templates/misago/admin/login.html:24
 msgctxt "admin login form"
 msgid "Administration"
-msgstr ""
+msgstr "Administracja"
 
 #: templates/misago/admin/login.html:29
 msgctxt "admin login form"
 msgid "Please try again."
-msgstr ""
+msgstr "Spróbuj ponownie."
 
 #: templates/misago/admin/login.html:48
 msgctxt "admin login form"
 msgid "Username or e-mail"
-msgstr ""
+msgstr "Nazwa użytkownika lub e-mail"
 
 #: templates/misago/admin/login.html:53
 msgctxt "admin login form"
 msgid "Password"
-msgstr ""
+msgstr "Hasło"
 
 #: templates/misago/admin/login.html:57
 msgctxt "admin login form"
 msgid "Sign in"
-msgstr ""
+msgstr "Zaloguj się"
 
 #: templates/misago/admin/login.html:60
 msgctxt "admin login form"
 msgid "Return to site"
-msgstr ""
+msgstr "Wróć do strony"
 
 #: templates/misago/admin/menuitems/form.html:9
 #: templates/misago/admin/menuitems/form.html:33
 msgctxt "admin menu item form"
 msgid "New menu item"
-msgstr ""
+msgstr "Nowy odnośnik"
 
 #: templates/misago/admin/menuitems/form.html:31
 msgctxt "admin menu item form"
 msgid "Edit menu item"
-msgstr ""
+msgstr "Zmień odnośnik"
 
 #: templates/misago/admin/menuitems/form.html:41
 msgctxt "admin menu item form"
@@ -3960,244 +3970,244 @@ msgstr "Podstawowe ustawienia"
 #: templates/misago/admin/menuitems/form.html:50
 msgctxt "admin menu item form"
 msgid "Behavior and appearance"
-msgstr ""
+msgstr "Działanie i wygląd"
 
 #: templates/misago/admin/menuitems/list.html:9
 msgctxt "admin menu items"
 msgid "New menu item"
-msgstr ""
+msgstr "Nowy odnośnik"
 
 #: templates/misago/admin/menuitems/list.html:16
 msgctxt "admin menu items list"
 msgid "Item"
-msgstr ""
+msgstr "Odnośnik"
 
 #: templates/misago/admin/menuitems/list.html:18
 msgctxt "admin menu items list"
 msgid "CSS Class"
-msgstr ""
+msgstr "Klasa CSS"
 
 #: templates/misago/admin/menuitems/list.html:19
 msgctxt "admin menu items list"
 msgid "Target"
-msgstr ""
+msgstr "Nowa karta"
 
 #: templates/misago/admin/menuitems/list.html:20
 msgctxt "admin menu items list"
 msgid "Rel"
-msgstr ""
+msgstr "Rel"
 
 #: templates/misago/admin/menuitems/list.html:40
 msgctxt "admin menu items"
 msgid "Is displayed on the forum navbar."
-msgstr ""
+msgstr "Wyświetlany w pasku nawigacji forum."
 
 #: templates/misago/admin/menuitems/list.html:45
 msgctxt "admin menu items"
 msgid "Is displayed on the forum footer."
-msgstr ""
+msgstr "Wyświetlany w stopce forum."
 
 #: templates/misago/admin/menuitems/list.html:54
 msgctxt "admin menu item css class"
 msgid "Not set"
-msgstr ""
+msgstr "Nie ustawiono"
 
 #: templates/misago/admin/menuitems/list.html:72
 msgctxt "admin menu items"
 msgid "Move down"
-msgstr ""
+msgstr "Przenieś w dół"
 
 #: templates/misago/admin/menuitems/list.html:86
 msgctxt "admin menu items"
 msgid "Move up"
-msgstr ""
+msgstr "Przenieś w górę"
 
 #: templates/misago/admin/menuitems/list.html:103
 msgctxt "admin menu items"
 msgid "Edit item"
-msgstr ""
+msgstr "Zmień odnośnik"
 
 #: templates/misago/admin/menuitems/list.html:108
 msgctxt "admin menu items"
 msgid "Remove item"
-msgstr ""
+msgstr "Usuń odnośnik"
 
 #: templates/misago/admin/menuitems/list.html:119
 msgctxt "admin menu items"
 msgid "No menu items are set."
-msgstr ""
+msgstr "Nie ustawiono własnych odnośników."
 
 #: templates/misago/admin/menuitems/list.html:129
 msgctxt "admin menu items"
 msgid "Are you sure you want to remove this menu item?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć ten odnośnik?"
 
 #: templates/misago/admin/navbar.html:12
 msgctxt "admin navbar"
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: templates/misago/admin/navbar.html:16
 msgctxt "admin navbar"
 msgid "Support forum"
-msgstr ""
+msgstr "Forum wsparcia"
 
 #: templates/misago/admin/navbar.html:20
 msgctxt "admin navbar"
 msgid "Site index"
-msgstr ""
+msgstr "Strona główna"
 
 #: templates/misago/admin/navbar.html:24
 msgctxt "admin navbar"
 msgid "Your avatar"
-msgstr ""
+msgstr "Twój awatar"
 
 #: templates/misago/admin/navbar.html:29
 msgctxt "admin navbar"
 msgid "Edit your account"
-msgstr ""
+msgstr "Zmień swoje konto"
 
 #: templates/misago/admin/navbar.html:35
 msgctxt "admin navbar"
 msgid "Close admin session"
-msgstr ""
+msgstr "Zamknij sesję administratora"
 
 #: templates/misago/admin/navbar.html:41
 msgctxt "admin navbar"
 msgid "Log out completely"
-msgstr ""
+msgstr "Wyloguj się całkowicie"
 
 #: templates/misago/admin/ranks/form.html:9
 #: templates/misago/admin/ranks/form.html:40
 msgctxt "admin rank form"
 msgid "New rank"
-msgstr ""
+msgstr "Nowa ranga"
 
 #: templates/misago/admin/ranks/form.html:29
 msgctxt "admin ranks"
 msgid "View on site"
-msgstr ""
+msgstr "Zobacz na stronie"
 
 #: templates/misago/admin/ranks/form.html:38
 msgctxt "admin rank form"
 msgid "Edit rank"
-msgstr ""
+msgstr "Zmień rangę"
 
 #: templates/misago/admin/ranks/form.html:48
 msgctxt "admin rank form"
 msgid "Name and description"
-msgstr ""
+msgstr "Nazwa i opis"
 
 #: templates/misago/admin/ranks/form.html:58
 msgctxt "admin rank form"
 msgid "Permissions"
-msgstr ""
+msgstr "Uprawnienia"
 
 #: templates/misago/admin/ranks/form.html:66
 msgctxt "admin rank form"
 msgid "Display and visibility"
-msgstr ""
+msgstr "Widoczność i wyświetlanie"
 
 #: templates/misago/admin/ranks/list.html:9
 msgctxt "admin ranks"
 msgid "New rank"
-msgstr ""
+msgstr "Nowa ranga"
 
 #: templates/misago/admin/ranks/list.html:17
 msgctxt "admin ranks list"
 msgid "Rank"
-msgstr ""
+msgstr "Ranga"
 
 #: templates/misago/admin/ranks/list.html:19
 msgctxt "admin ranks list"
 msgid "Title"
-msgstr ""
+msgstr "Tytuł"
 
 #: templates/misago/admin/ranks/list.html:20
 msgctxt "admin ranks list"
 msgid "CSS class"
-msgstr ""
+msgstr "Klasa CSS"
 
 #: templates/misago/admin/ranks/list.html:45
 msgctxt "admin ranks"
 msgid "Has dedicated page on users list"
-msgstr ""
+msgstr "Własna sekcja na listach użytkowników"
 
 #: templates/misago/admin/ranks/list.html:46
 msgctxt "admin rank has tab status"
 msgid "Tab"
-msgstr ""
+msgstr "Sekcja"
 
 #: templates/misago/admin/ranks/list.html:50
 msgctxt "admin ranks"
 msgid "This is default rank assigned to new members"
-msgstr ""
+msgstr "To jest domyślna ranga przypisywana nowym użytkownikom."
 
 #: templates/misago/admin/ranks/list.html:51
 msgctxt "admin rank is default status"
 msgid "Default"
-msgstr ""
+msgstr "Domyślna"
 
 #: templates/misago/admin/ranks/list.html:59
 msgctxt "admin rank user title"
 msgid "Not set"
-msgstr ""
+msgstr "Nie ustawiono"
 
 #: templates/misago/admin/ranks/list.html:66
 msgctxt "admin rank css class"
 msgid "Not set"
-msgstr ""
+msgstr "Nie ustawiona"
 
 #: templates/misago/admin/ranks/list.html:74
 msgctxt "admin ranks"
 msgid "Move down"
-msgstr ""
+msgstr "Przenieś w dół"
 
 #: templates/misago/admin/ranks/list.html:88
 msgctxt "admin ranks"
 msgid "Move up"
-msgstr ""
+msgstr "Przenieś w górę"
 
 #: templates/misago/admin/ranks/list.html:105
 msgctxt "admin ranks"
 msgid "List users"
-msgstr ""
+msgstr "Lista użytkowników"
 
 #: templates/misago/admin/ranks/list.html:111
 msgctxt "admin ranks"
 msgid "Set as default"
-msgstr ""
+msgstr "Ustaw jako domyślną"
 
 #: templates/misago/admin/ranks/list.html:116
 msgctxt "admin ranks"
 msgid "Edit rank"
-msgstr ""
+msgstr "Zmień rangę"
 
 #: templates/misago/admin/ranks/list.html:121
 msgctxt "admin ranks"
 msgid "Delete rank"
-msgstr ""
+msgstr "Usuń rangę"
 
 #: templates/misago/admin/ranks/list.html:132
 msgctxt "admin ranks"
 msgid "No user ranks are set."
-msgstr ""
+msgstr "Nie ustawiono żadnych rang użytkowników."
 
 #: templates/misago/admin/ranks/list.html:141
 msgctxt "admin ranks"
 msgid "Are you sure you want to delete this rank?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć tą rangę?"
 
 #: templates/misago/admin/roles/form.html:9
 #: templates/misago/admin/roles/form.html:28
 msgctxt "admin role form"
 msgid "New role"
-msgstr ""
+msgstr "Nowa rola"
 
 #: templates/misago/admin/roles/form.html:26
 msgctxt "admin role form"
 msgid "Edit role"
-msgstr ""
+msgstr "Zmień rolę"
 
 #: templates/misago/admin/roles/form.html:36
 msgctxt "admin role form"
@@ -4207,97 +4217,98 @@ msgstr "Podstawowe ustawienia"
 #: templates/misago/admin/roles/list.html:9
 msgctxt "admin roles"
 msgid "New role"
-msgstr ""
+msgstr "Nowa rola"
 
 #: templates/misago/admin/roles/list.html:16
 msgctxt "admin roles list"
 msgid "Role"
-msgstr ""
+msgstr "Rola"
 
 #: templates/misago/admin/roles/list.html:39
 msgctxt "admin roles"
 msgid "Users with role"
-msgstr ""
+msgstr "Użytkownicy z tą rolą"
 
 #: templates/misago/admin/roles/list.html:47
 msgctxt "admin roles"
 msgid "Delete role"
-msgstr ""
+msgstr "Usuń rolę"
 
 #: templates/misago/admin/roles/list.html:58
 msgctxt "admin roles"
 msgid "No user roles are set."
-msgstr ""
+msgstr "Nie ustawiono żadnych ról użytkowników."
 
 #: templates/misago/admin/roles/list.html:67
 msgctxt "admin roles"
 msgid "Are you sure you want to delete this role?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć tą rolę?"
 
 #: templates/misago/admin/socialauth/form.html:17
 msgctxt "admin social auth provider form"
 msgid "Edit social login"
-msgstr ""
+msgstr "Zmień opcję logowania przez sieć społecznościową"
 
 #: templates/misago/admin/socialauth/form.html:19
 msgctxt "admin social auth provider form"
 msgid "Setup social login"
-msgstr ""
+msgstr "Ustaw opcję logowania przez sieć społecznościową"
 
 #: templates/misago/admin/socialauth/form.html:27
 msgctxt "admin social auth provider form"
 msgid "General"
-msgstr ""
+msgstr "Ustawienia ogólne"
 
 #: templates/misago/admin/socialauth/form.html:40
 msgctxt "admin social auth provider form"
 msgid "Button appearance"
-msgstr ""
+msgstr "Wygląd przycisku"
 
 #: templates/misago/admin/socialauth/list.html:8
 msgctxt "admin social auth providers"
 msgid "Enabled login methods"
-msgstr ""
+msgstr "Włączone opcje logowania"
 
 #: templates/misago/admin/socialauth/list.html:15
+#: templates/misago/admin/socialauth/list.html:115
 msgctxt "admin social auth providers list"
 msgid "Provider"
-msgstr ""
+msgstr "Sieć społecznościowa"
 
 #: templates/misago/admin/socialauth/list.html:32
 msgctxt "admin social auth provider"
 msgid "Move down"
-msgstr ""
+msgstr "Przenieś w dół"
 
 #: templates/misago/admin/socialauth/list.html:46
 msgctxt "admin social auth provider"
 msgid "Move up"
-msgstr ""
+msgstr "Przenieś w górę"
 
 #: templates/misago/admin/socialauth/list.html:63
 msgctxt "admin social auth provider"
 msgid "Change settings"
-msgstr ""
+msgstr "Zmień ustawienia"
 
 #: templates/misago/admin/socialauth/list.html:68
 msgctxt "admin social auth provider"
 msgid "Disable login"
-msgstr ""
+msgstr "Wyłącz opcję logowania"
 
 #: templates/misago/admin/socialauth/list.html:79
 msgctxt "admin social auth providers"
 msgid "No social login methods are enabled."
-msgstr ""
+msgstr "Żadne opcje logowania przez sieci społecznościowe nie są włączone."
 
 #: templates/misago/admin/socialauth/list.html:88
 msgctxt "admin social auth providers"
 msgid "Are you sure you want to disable this social login provider?"
-msgstr ""
+msgstr "Na pewno chcesz wyłączyć tą opcję logowania?"
 
 #: templates/misago/admin/socialauth/list.html:97
 msgctxt "admin social auth providers"
 msgid "Note"
-msgstr ""
+msgstr "Uwaga"
 
 #: templates/misago/admin/socialauth/list.html:98
 #, python-format
@@ -4306,98 +4317,95 @@ msgid ""
 "OAuth2 client is enabled. Social authentication has been disabled with login"
 " and registration delegated to the %(provider)s."
 msgstr ""
+"Klient OAuth 2 jest włączony. Opcja logowania przez sieć społecznościową nie"
+" jest dostępna. Logowanie i rejestracja są obsługiwane przez %(provider)s."
 
 #: templates/misago/admin/socialauth/list.html:109
-msgctxt "admin social auth providers"
+msgctxt "admin social auth providers list"
 msgid "Setup new login method"
-msgstr ""
-
-#: templates/misago/admin/socialauth/list.html:115
-msgctxt "admin social auth providers"
-msgid "Provider"
-msgstr ""
+msgstr "Ustaw nową opcję logowania"
 
 #: templates/misago/admin/socialauth/list.html:128
 msgctxt "admin social auth providers"
 msgid "Setup login with this provider"
-msgstr ""
+msgstr "Ustaw tą opcję logowania"
 
 #: templates/misago/admin/socialauth/list.html:129
 msgctxt "admin social auth providers"
 msgid "Setup"
-msgstr ""
+msgstr "Ustaw"
 
 #: templates/misago/admin/socialauth/list.html:136
 msgctxt "admin social auth providers"
 msgid "No new login providers are available for setup."
-msgstr ""
+msgstr "Nie są dostępne żadne nieustawione opcje logowania."
 
 #: templates/misago/admin/themes/assets/css-editor-form.html:9
 #: templates/misago/admin/themes/assets/css-editor-form.html:41
 msgctxt "admin theme css form"
 msgid "New CSS"
-msgstr ""
+msgstr "Nowy CSS"
 
 #: templates/misago/admin/themes/assets/css-editor-form.html:39
 msgctxt "admin theme css form"
 msgid "Edit CSS"
-msgstr ""
+msgstr "Zmień CSS"
 
 #: templates/misago/admin/themes/assets/css-editor-form.html:58
 msgctxt "admin theme css form"
 msgid "Save and keep editing"
-msgstr ""
+msgstr "Zapisz i kontynuuj edycję"
 
 #: templates/misago/admin/themes/assets/css-editor-form.html:60
 msgctxt "admin theme css form"
 msgid "Save changes"
-msgstr ""
+msgstr "Zapisz zmiany"
 
 #: templates/misago/admin/themes/assets/css-editor-form.html:62
 msgctxt "admin theme css form"
 msgid "Save"
-msgstr ""
+msgstr "Zapisz"
 
 #: templates/misago/admin/themes/assets/css-editor-form.html:69
 msgctxt "admin theme css form"
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: templates/misago/admin/themes/assets/css-link-form.html:9
 #: templates/misago/admin/themes/assets/css-link-form.html:31
 msgctxt "admin theme css link form"
 msgid "New CSS link"
-msgstr ""
+msgstr "Nowy odnośnik do CSS"
 
 #: templates/misago/admin/themes/assets/css-link-form.html:29
 msgctxt "admin theme css link form"
 msgid "Edit CSS link"
-msgstr ""
+msgstr "Zmień odnośnik do CSS"
 
 #: templates/misago/admin/themes/assets/css-link-form.html:44
 msgctxt "admin theme css link form"
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: templates/misago/admin/themes/assets/css.html:7
 msgctxt "admin theme assets"
 msgid "CSS files"
-msgstr ""
+msgstr "Pliki CSS"
 
 #: templates/misago/admin/themes/assets/css.html:12
 msgctxt "admin theme assets"
 msgid "Upload"
-msgstr ""
+msgstr "Prześlij"
 
 #: templates/misago/admin/themes/assets/css.html:17
 msgctxt "admin theme assets"
 msgid "Link"
-msgstr ""
+msgstr "Zalinkuj"
 
 #: templates/misago/admin/themes/assets/css.html:22
 msgctxt "admin theme assets"
 msgid "Create"
-msgstr ""
+msgstr "Stwórz"
 
 #: templates/misago/admin/themes/assets/css.html:31
 msgid "Name"
@@ -4413,11 +4421,11 @@ msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:68
 msgid "Move down"
-msgstr ""
+msgstr "Przenieś w dół"
 
 #: templates/misago/admin/themes/assets/css.html:73
 msgid "Move up"
-msgstr ""
+msgstr "Przenieś w górę"
 
 #: templates/misago/admin/themes/assets/css.html:80
 #: templates/misago/admin/themes/assets/css.html:84
@@ -4436,102 +4444,102 @@ msgstr ""
 #: templates/misago/admin/themes/assets/list.html:6
 msgctxt "admin theme assets"
 msgid "Assets"
-msgstr ""
+msgstr "Źródła"
 
 #: templates/misago/admin/themes/assets/list.html:22
 msgctxt "admin themes"
 msgid "Edit theme"
-msgstr ""
+msgstr "Zmień motyw"
 
 #: templates/misago/admin/themes/assets/list.html:44
 msgctxt "admin theme assets"
 msgid "Are you sure you want to delete selected items?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć wybrane obiekty?"
 
 #: templates/misago/admin/themes/assets/media.html:7
 msgctxt "admin theme media assets"
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 #: templates/misago/admin/themes/assets/media.html:12
 msgctxt "admin theme media assets"
 msgid "Upload"
-msgstr ""
+msgstr "Prześlij"
 
 #: templates/misago/admin/themes/assets/media.html:21
 msgctxt "admin theme media assets"
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: templates/misago/admin/themes/assets/media.html:22
 msgctxt "admin theme media assets"
 msgid "Modified"
-msgstr ""
+msgstr "Zmieniono"
 
 #: templates/misago/admin/themes/assets/media.html:23
 msgctxt "admin theme media assets"
 msgid "Size"
-msgstr ""
+msgstr "Rozmiar"
 
 #: templates/misago/admin/themes/assets/media.html:24
 msgctxt "admin theme media assets"
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: templates/misago/admin/themes/assets/media.html:25
 msgctxt "admin theme media assets"
 msgid "Dimensions"
-msgstr ""
+msgstr "Wymiary"
 
 #: templates/misago/admin/themes/assets/media.html:70
 msgctxt "admin theme media assets"
 msgid "This theme has no media."
-msgstr ""
+msgstr "Ten motyw nie ma mediów."
 
 #: templates/misago/admin/themes/assets/media.html:79
 msgctxt "admin theme media assets"
 msgid "Delete selected"
-msgstr ""
+msgstr "Usuń wybrane"
 
 #: templates/misago/admin/themes/assets/upload-css.html:6
 msgctxt "admin theme css upload form"
 msgid "Upload CSS"
-msgstr ""
+msgstr "Prześlij CSS"
 
 #: templates/misago/admin/themes/assets/upload-css.html:7
 msgctxt "admin theme css upload form"
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #: templates/misago/admin/themes/assets/upload-css.html:15
 msgctxt "admin theme css upload form"
 msgid "Select CSS files to upload"
-msgstr ""
+msgstr "Wybierz pliki CSS do przesłania"
 
 #: templates/misago/admin/themes/assets/upload-css.html:20
 msgctxt "admin theme css upload form"
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: templates/misago/admin/themes/assets/upload-css.html:21
 msgctxt "admin theme css upload form"
 msgid "Upload"
-msgstr ""
+msgstr "Prześlij"
 
 #: templates/misago/admin/themes/assets/upload-media.html:6
 msgctxt "admin theme media upload form"
 msgid "Upload media"
-msgstr ""
+msgstr "Prześlij media"
 
 #: templates/misago/admin/themes/assets/upload-media.html:7
 msgctxt "admin theme media upload form"
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #: templates/misago/admin/themes/assets/upload-media.html:15
 msgctxt "admin theme media upload form"
 msgid "Select media files to upload"
-msgstr ""
+msgstr "Wybierz media do przesłania"
 
 #: templates/misago/admin/themes/assets/upload-media.html:18
 msgctxt "admin theme media upload form"
@@ -4539,6 +4547,8 @@ msgid ""
 "Media files are primarily image and font files that can be linked to from "
 "the CSS, but files of any type can be uploaded using this option."
 msgstr ""
+"Media to głównie pliki graficzne i z fontami które można wykorzystać w CSS, "
+"ale ta opcja umożliwia przesłanie plików dowolnego typu."
 
 #: templates/misago/admin/themes/assets/upload-media.html:21
 msgctxt "admin theme media upload form"
@@ -4546,95 +4556,97 @@ msgid ""
 "Theme CSS that use the \"url()\" to point to media files will be updated "
 "automatically."
 msgstr ""
+"CSS motywu używający \"url()\" aby odnieść się do mediów będzie "
+"automatycznie zaktualizowany."
 
 #: templates/misago/admin/themes/assets/upload-media.html:26
 msgctxt "admin theme media upload form"
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: templates/misago/admin/themes/assets/upload-media.html:27
 msgctxt "admin theme media upload form"
 msgid "Upload"
-msgstr ""
+msgstr "Prześlij"
 
 #: templates/misago/admin/themes/form.html:9
 #: templates/misago/admin/themes/form.html:40
 msgctxt "admin theme form"
 msgid "New theme"
-msgstr ""
+msgstr "Nowy motyw"
 
 #: templates/misago/admin/themes/form.html:29
 #: templates/misago/admin/themes/list.html:63
 msgctxt "admin themes"
 msgid "Edit assets"
-msgstr ""
+msgstr "Zmień źródła"
 
 #: templates/misago/admin/themes/form.html:38
 msgctxt "admin theme form"
 msgid "Edit theme"
-msgstr ""
+msgstr "Zmień motyw"
 
 #: templates/misago/admin/themes/form.html:48
 msgctxt "admin theme form"
 msgid "Settings"
-msgstr ""
+msgstr "Ustawienia"
 
 #: templates/misago/admin/themes/form.html:57
 msgctxt "admin theme form"
 msgid "Additional information (optional)"
-msgstr ""
+msgstr "Dodatkowe informacje (opcjonalne)"
 
 #: templates/misago/admin/themes/import.html:6
 #: templates/misago/admin/themes/import.html:11
 #: templates/misago/admin/themes/list.html:9
 msgctxt "admin themes"
 msgid "Import theme"
-msgstr ""
+msgstr "Importuj motyw"
 
 #: templates/misago/admin/themes/import.html:23
-msgctxt "admin theme import"
+msgctxt "admin theme import submit"
 msgid "Import"
-msgstr ""
+msgstr "Importuj"
 
 #: templates/misago/admin/themes/list.html:15
 msgctxt "admin themes"
 msgid "Create theme"
-msgstr ""
+msgstr "Stwórz motyw"
 
 #: templates/misago/admin/themes/list.html:22
 msgctxt "admin themes list"
 msgid "Theme"
-msgstr ""
+msgstr "Motyw"
 
 #: templates/misago/admin/themes/list.html:51
 msgctxt "admin theme active status"
 msgid "Active"
-msgstr ""
+msgstr "Aktywny"
 
 #: templates/misago/admin/themes/list.html:68
 msgctxt "admin themes"
 msgid "Edit information"
-msgstr ""
+msgstr "Zmień informacje"
 
 #: templates/misago/admin/themes/list.html:72
 msgctxt "admin themes"
 msgid "Create child theme"
-msgstr ""
+msgstr "Stwórz motyw podrzędny"
 
 #: templates/misago/admin/themes/list.html:78
 msgctxt "admin themes"
 msgid "Set as active"
-msgstr ""
+msgstr "Ustaw jako aktywny"
 
 #: templates/misago/admin/themes/list.html:86
 msgctxt "admin themes"
 msgid "Export theme"
-msgstr ""
+msgstr "Eksportuj motyw"
 
 #: templates/misago/admin/themes/list.html:94
 msgctxt "admin themes"
 msgid "Delete theme"
-msgstr ""
+msgstr "Usuń motyw"
 
 #: templates/misago/admin/themes/list.html:109
 msgctxt "admin themes"
@@ -4642,6 +4654,8 @@ msgid ""
 "Are you sure you want to delete this theme? Deleting theme will also delete "
 "its child themes."
 msgstr ""
+"Na pewno chcesz usunąć ten motyw? Usunięcie motywu usunie także jego motywy "
+"podrzędne."
 
 #: templates/misago/admin/users/ban.html:6
 #: templates/misago/admin/users/ban.html:83
@@ -4657,22 +4671,22 @@ msgstr "Zablokuj wybranych użytkowników"
 #: templates/misago/admin/users/ban.html:22
 msgctxt "admin ban users form"
 msgid "Users"
-msgstr ""
+msgstr "Użytkownicy"
 
 #: templates/misago/admin/users/ban.html:28
 msgctxt "admin ban users list"
 msgid "User"
-msgstr ""
+msgstr "Użytkownik"
 
 #: templates/misago/admin/users/ban.html:29
 msgctxt "admin ban users list"
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #: templates/misago/admin/users/ban.html:30
 msgctxt "admin ban users list"
 msgid "IP address"
-msgstr ""
+msgstr "Adres IP"
 
 #: templates/misago/admin/users/ban.html:38
 msgid "Avatar"
@@ -4682,7 +4696,7 @@ msgstr ""
 #: templates/misago/admin/users/list.html:85
 msgctxt "admin user ip deleted"
 msgid "IP removed"
-msgstr ""
+msgstr "IP usunięte"
 
 #: templates/misago/admin/users/ban.html:62
 msgctxt "admin ban users form"
@@ -4692,57 +4706,59 @@ msgstr "Ustawienia blokady"
 #: templates/misago/admin/users/ban.html:71
 msgctxt "admin ban users form"
 msgid "Messages"
-msgstr ""
+msgstr "Komunikaty"
 
 #: templates/misago/admin/users/ban.html:92
 msgctxt "admin ban users form"
 msgid "Never"
-msgstr ""
+msgstr "Nigdy"
 
 #: templates/misago/admin/users/ban.html:93
 msgctxt "admin ban users form"
 msgid "Set date"
-msgstr ""
+msgstr "Ustaw datę"
 
 #: templates/misago/admin/users/edit.html:23
 msgctxt "admin users"
 msgid "View on site"
-msgstr ""
+msgstr "Zobacz na stronie"
 
 #: templates/misago/admin/users/edit.html:31
 msgctxt "admin user form"
 msgid "Edit user"
-msgstr ""
+msgstr "Zmień użytkownika"
 
 #: templates/misago/admin/users/edit.html:44
 #: templates/misago/admin/users/list.html:47
 msgctxt "admin users list item"
 msgid "Can use admin control panel and manage other administrators"
 msgstr ""
+"Może korzystać z panelu administracyjnego i zarządzać innymi "
+"administratorami."
 
 #: templates/misago/admin/users/edit.html:45
 #: templates/misago/admin/users/list.html:48
 msgctxt "admin user super admin status"
 msgid "Super Admin"
-msgstr ""
+msgstr "Super administrator"
 
 #: templates/misago/admin/users/edit.html:48
 #: templates/misago/admin/users/list.html:51
 msgctxt "admin users list item"
 msgid "Can use admin control panel"
-msgstr ""
+msgstr "Może korzystać z panelu administracyjnego"
 
 #: templates/misago/admin/users/edit.html:49
 #: templates/misago/admin/users/list.html:52
 msgctxt "admin user admin status"
 msgid "Admin"
-msgstr ""
+msgstr "Administrator"
 
 #: templates/misago/admin/users/edit.html:53
 #: templates/misago/admin/users/list.html:56
 msgctxt "admin users list item"
 msgid "Requires activation by administrator"
-msgstr ""
+msgstr "Wymaga aktywacji przez administratora"
 
 #: templates/misago/admin/users/edit.html:54
 #: templates/misago/admin/users/edit.html:58
@@ -4750,57 +4766,57 @@ msgstr ""
 #: templates/misago/admin/users/list.html:61
 msgctxt "admin user inactive status"
 msgid "Inactive"
-msgstr ""
+msgstr "Nieaktywny"
 
 #: templates/misago/admin/users/edit.html:57
 #: templates/misago/admin/users/list.html:60
 msgctxt "admin users list item"
 msgid "Has to activate their account"
-msgstr ""
+msgstr "Musi aktywować swoje konto"
 
 #: templates/misago/admin/users/edit.html:62
 #: templates/misago/admin/users/list.html:65
 msgctxt "admin users list item"
 msgid "Account scheduled for deletion"
-msgstr ""
+msgstr "Konto zakolejkowane do usunięcia"
 
 #: templates/misago/admin/users/edit.html:63
 #: templates/misago/admin/users/list.html:66
 msgctxt "admin user deleted status"
 msgid "Deleted"
-msgstr ""
+msgstr "Usunięty"
 
 #: templates/misago/admin/users/edit.html:66
 #: templates/misago/admin/users/list.html:69
 msgctxt "admin users list item"
 msgid "Account disabled"
-msgstr ""
+msgstr "Konto wyłączone"
 
 #: templates/misago/admin/users/edit.html:67
 #: templates/misago/admin/users/list.html:70
 msgctxt "admin user disabled status"
 msgid "Disabled"
-msgstr ""
+msgstr "Wyłączony"
 
 #: templates/misago/admin/users/edit.html:92
 #, python-format
 msgctxt "admin user stats"
 msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%(posts)s post"
+msgstr[1] "%(posts)s posty"
+msgstr[2] "%(posts)s postów"
+msgstr[3] "%(posts)s postów"
 
 #: templates/misago/admin/users/edit.html:99
 #, python-format
 msgctxt "admin user stats"
 msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%(threads)s temat"
+msgstr[1] "%(threads)s tematy"
+msgstr[2] "%(threads)s tematów"
+msgstr[3] "%(threads)s tematy"
 
 #: templates/misago/admin/users/edit.html:110
 #: templates/misago/admin/users/new.html:18
@@ -4811,18 +4827,20 @@ msgstr "Podstawowe ustawienia konta"
 #: templates/misago/admin/users/edit.html:129
 msgctxt "admin user form"
 msgid "Administrator status"
-msgstr ""
+msgstr "Uprawnienia administratora"
 
 #: templates/misago/admin/users/edit.html:136
 msgctxt "admin user form"
 msgid "Only superusers can change other users administrator status."
 msgstr ""
+"Tylko super-administratorzy mogą zmieniać uprawnienia administratora innych "
+"użytkowników."
 
 #: templates/misago/admin/users/edit.html:180
 #: templates/misago/admin/users/new.html:37
 msgctxt "admin user form"
 msgid "Sign-in credentials"
-msgstr ""
+msgstr "Dane logowania"
 
 #: templates/misago/admin/users/edit.html:184
 msgctxt "admin user form"
@@ -4830,36 +4848,38 @@ msgid ""
 "This user has not set account password and uses other service to "
 "authenticate."
 msgstr ""
+"Ten użytkownik nie ma ustawionego żadnego hasła i korzysta z innej usługi do"
+" logowania."
 
 #: templates/misago/admin/users/edit.html:195
 msgctxt "admin user form"
 msgid "Avatar"
-msgstr ""
+msgstr "Awatar"
 
 #: templates/misago/admin/users/edit.html:205
 msgctxt "admin user form"
 msgid "Signature"
-msgstr ""
+msgstr "Podpis"
 
 #: templates/misago/admin/users/edit.html:228
 msgctxt "admin user form"
 msgid "Forum options"
-msgstr ""
+msgstr "Ustawienia forum"
 
 #: templates/misago/admin/users/edit.html:237
 msgctxt "admin user form"
 msgid "Automatic subscription preferences (deprecated)"
-msgstr ""
+msgstr "Preferencje automatycznych subskrypcji (nie używane)"
 
 #: templates/misago/admin/users/edit.html:246
 msgctxt "admin user form"
 msgid "Notifications preferences"
-msgstr ""
+msgstr "Preferencje powiadomień"
 
 #: templates/misago/admin/users/edit.html:259
 msgctxt "admin user form"
 msgid "Account status"
-msgstr ""
+msgstr "Status konta"
 
 #: templates/misago/admin/users/edit.html:263
 msgctxt "admin user form"
@@ -4867,73 +4887,77 @@ msgid ""
 "This user is deleting their account. It has been deactivated for the "
 "duration of the process."
 msgstr ""
+"Ten użytkownik właśnie usuwa swoje konto. Pozostanie ono wyłączone do "
+"zakończenia procesu."
 
 #: templates/misago/admin/users/edit.html:264
 msgctxt "admin user form"
 msgid ""
-"No additional action is required. This account will be deleted "
-"automatically."
+"No additional action is required. This account will be deleted automatically"
+" when process is completed."
 msgstr ""
+"Żadna dodatkowa akcja nie jest wymagana. To konto zostanie usunięte "
+"automatycznie kiedy proces dobiegnie końca."
 
 #: templates/misago/admin/users/edit.html:307
 msgctxt "admin user form"
 msgid "Agreements"
-msgstr ""
+msgstr "Wyrażone zgody"
 
 #: templates/misago/admin/users/edit.html:312
 msgctxt "admin user agreements list"
 msgid "Agreement"
-msgstr ""
+msgstr "Zgoda"
 
 #: templates/misago/admin/users/edit.html:313
 msgctxt "admin user agreements list"
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: templates/misago/admin/users/edit.html:314
 msgctxt "admin user agreements list"
 msgid "Accepted on"
-msgstr ""
+msgstr "Data"
 
 #: templates/misago/admin/users/edit.html:337
 msgctxt "admin user agreements list"
 msgid "This user didn't accept any agreements."
-msgstr ""
+msgstr "Ten użytkownik nie wyraził żadnych zgód."
 
 #: templates/misago/admin/users/list.html:9
 msgctxt "admin users"
 msgid "New user"
-msgstr ""
+msgstr "Nowy użytkownik"
 
 #: templates/misago/admin/users/list.html:17
 msgctxt "admin users list"
 msgid "User"
-msgstr ""
+msgstr "Użytkownik"
 
 #: templates/misago/admin/users/list.html:19
 msgctxt "admin users list"
 msgid "Rank"
-msgstr ""
+msgstr "Ranga"
 
 #: templates/misago/admin/users/list.html:20
 msgctxt "admin users list"
 msgid "Registration"
-msgstr ""
+msgstr "Rejestracja"
 
 #: templates/misago/admin/users/list.html:21
 msgctxt "admin users list"
 msgid "Posts"
-msgstr ""
+msgstr "Posty"
 
 #: templates/misago/admin/users/list.html:94
 msgctxt "admin users"
 msgid "Edit user"
-msgstr ""
+msgstr "Zmień użytkownika"
 
 #: templates/misago/admin/users/list.html:95
 msgctxt "admin users"
 msgid "Edit"
-msgstr ""
+msgstr "Zmień"
 
 #: templates/misago/admin/users/list.html:103
 msgctxt "admin users"
@@ -4943,33 +4967,33 @@ msgstr "Nie ma użytkowników pasujących do szukanych kryteriów."
 #: templates/misago/admin/users/list.html:111
 msgctxt "admin users filter form"
 msgid "You can include wildcard (\"*\") in username and email search:"
-msgstr ""
+msgstr "W szukaniu po nazwie i e-mailu możesz użyć gwiazdki (\"*\"):"
 
 #: templates/misago/admin/users/list.html:114
 msgctxt "admin users filter form"
 msgid "\"admin*\" will find both \"admin\" and \"administrator\"."
-msgstr ""
+msgstr "\"admin*\" zwróci \"admin\" i \"administrator\"."
 
 #: templates/misago/admin/users/list.html:117
 msgctxt "admin users filter form"
 msgid "\"*chan\" will match both \"chan\" and \"marichan\"."
-msgstr ""
+msgstr "\"*chan\" zwróci \"chan\" i \"marichan\"."
 
 #: templates/misago/admin/users/list.html:120
 msgctxt "admin users filter form"
 msgid "\"*son*\" will match \"son\", \"song\", \"firstson\" and \"firstsong\"."
-msgstr ""
+msgstr "\"*son*\" zwróci \"son\", \"song\", \"firstson\" i \"firstsong\"."
 
 #: templates/misago/admin/users/new.html:6
 #: templates/misago/admin/users/new.html:11
 msgctxt "admin user form"
 msgid "New user"
-msgstr ""
+msgstr "Nowy użytkownik"
 
 #: templates/misago/admin/users/new.html:47
 msgctxt "admin user form"
 msgid "Save user"
-msgstr ""
+msgstr "Zapisz użytkownika"
 
 #: templates/misago/categories/base.html:7
 #: templates/misago/categories/base.html:29
@@ -5010,7 +5034,7 @@ msgstr[3] ""
 #: templates/misago/categories/body.html:15
 msgctxt "categories page"
 msgid "No categories exist or you don't have permission to see them."
-msgstr ""
+msgstr "Nie istnieją żadne kategorie albo nie masz uprawnień aby je zobaczyć."
 
 #: templates/misago/categories/icon.html:4
 msgctxt "category status icon"
@@ -5077,13 +5101,13 @@ msgstr ""
 #: templates/misago/emails/activation/by_admin.html:12
 msgctxt "account activated email from admin sign in cta link"
 msgid "this form"
-msgstr ""
+msgstr "tego formularza"
 
 #: templates/misago/emails/activation/by_admin.html:14
 #, python-format
 msgctxt "account activated email from admin sign in cta"
 msgid "You can now sign in to it using %(login_form)s."
-msgstr ""
+msgstr "Od teraz możesz logować się do niego korzystając z %(login_form)s."
 
 #: templates/misago/emails/activation/by_admin.txt:10
 msgctxt "account activated email"
@@ -5367,7 +5391,7 @@ msgstr ""
 #: templates/misago/errorpages/403.html:53
 msgctxt "error 403 page"
 msgid "You don't have permission to access this page."
-msgstr ""
+msgstr "Nie masz uprawnień do dostępu do tej strony."
 
 #: templates/misago/errorpages/403.html:49
 msgctxt "error 403 page"
@@ -5390,8 +5414,6 @@ msgid ""
 "The link you've followed was incorrect or the page has been moved or "
 "deleted."
 msgstr ""
-"Użyty odnośnik był nieprawidłowy bądź strona została usunięta albo "
-"przeniesiona."
 
 #: templates/misago/errorpages/404.html:37
 msgctxt "error 404 page"
@@ -6943,152 +6965,157 @@ msgstr[3] ""
 #: themes/admin/__init__.py:94
 msgctxt "admin node"
 msgid "Themes"
-msgstr ""
+msgstr "Motywy"
 
 #: themes/admin/forms.py:21
 msgctxt "admin theme parent empty label"
 msgid "No parent"
-msgstr ""
+msgstr "Bez motywu nadrzędnego"
 
 #: themes/admin/forms.py:28 themes/admin/forms.py:61
 msgctxt "admin theme form"
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: themes/admin/forms.py:30 themes/admin/forms.py:70
 msgctxt "admin theme form"
 msgid "Parent"
-msgstr ""
+msgstr "Motyw nadrzędny"
 
 #: themes/admin/forms.py:33
 msgctxt "admin theme form"
 msgid "Version"
-msgstr ""
+msgstr "Wersja"
 
 #: themes/admin/forms.py:36
 msgctxt "admin theme form"
 msgid "Author(s)"
-msgstr ""
+msgstr "Autorzy"
 
 #: themes/admin/forms.py:38
 msgctxt "admin theme form"
 msgid "Url"
-msgstr ""
+msgstr "Adres"
 
 #: themes/admin/forms.py:64
 msgctxt "admin theme form"
 msgid "Leave this field empty to use theme name from imported file."
-msgstr ""
+msgstr "Zostaw to pole pusty aby użyć nazwy motywu z zaimportowanego pliku."
 
 #: themes/admin/forms.py:73
 msgctxt "admin theme form"
 msgid "Theme file"
-msgstr ""
+msgstr "Plik z motywem"
 
 #: themes/admin/forms.py:74
 msgctxt "admin theme form"
 msgid "Theme file should be a ZIP file."
-msgstr ""
+msgstr "Plik z motywem powinien być typu ZIP."
 
 #: themes/admin/forms.py:80
 msgctxt "admin theme form"
 msgid "Uploaded file is not a valid ZIP file."
-msgstr ""
+msgstr "Przesłany plik nie jest prawidłowym plikiem ZIP."
 
 #: themes/admin/forms.py:128
 msgctxt "admin theme assets form"
 msgid "No files have been uploaded."
-msgstr ""
+msgstr "Nie przesłano żadnych plików."
 
 #: themes/admin/forms.py:158
 #, python-format
 msgctxt "admin theme assets form"
 msgid "File \"%(file)s\" content type \"%(content_type)s\" is not allowed."
-msgstr ""
+msgstr "Plik \"%(file)s\" ma niedozwolony typ \"%(content_type)s\"."
 
 #: themes/admin/forms.py:171
 #, python-format
 msgctxt "admin theme assets form"
 msgid "File \"%(file)s\" extension is invalid."
-msgstr ""
+msgstr "Plik \"%(file)s\" ma nieprawidłowe rozszerzenie."
 
 #: themes/admin/forms.py:197
 msgctxt "admin theme css form"
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: themes/admin/forms.py:200
 msgctxt "admin theme css form"
 msgid ""
-"Should be an correct filename and include the .css extension. It will be "
+"Should be a correct filename and include the .css extension. It will be "
 "lowercased."
 msgstr ""
+"Powinna być prawidłową nazwą pliku i zawierać rozszerzenie \".css\". Wielkie"
+" litery zostaną zastąpione małymi."
 
 #: themes/admin/forms.py:219
 msgctxt "admin theme css form"
 msgid "You need to enter CSS for this file."
-msgstr ""
+msgstr "Musisz wprowadzić CSS dla tego pliku."
 
 #: themes/admin/forms.py:247
 msgctxt "admin theme css link form"
 msgid "Link name"
-msgstr ""
+msgstr "Nazwa odnośnika"
 
 #: themes/admin/forms.py:250
 msgctxt "admin theme css link form"
 msgid "Can be descriptive (e.g. \"roboto from fonts.google.com\")."
-msgstr ""
+msgstr "Może być opisowa (np. \"roboto z fonts.google.com\")."
 
 #: themes/admin/forms.py:254
 msgctxt "admin theme css link form"
 msgid "Remote CSS URL"
-msgstr ""
+msgstr "Adres URL zdalnego CSS"
 
 #: themes/admin/importer.py:22
 msgctxt "admin theme import"
 msgid ""
 "\"manifest.json\" contained by ZIP file is not a valid theme manifest file."
 msgstr ""
+"\"manifest.json\" zawarto w pliku ZIP nie jest prawidłowym manifestem "
+"motywu."
 
 #: themes/admin/importer.py:63
 msgctxt "admin theme import"
 msgid "Uploaded ZIP file could not be extracted."
-msgstr ""
+msgstr "Nie można wypakować przesłanego pliku ZIP."
 
 #: themes/admin/importer.py:71
 msgctxt "admin theme import"
 msgid "Uploaded ZIP file is empty."
-msgstr ""
+msgstr "Przesłany plik ZIP jest pusty."
 
 #: themes/admin/importer.py:77
 msgctxt "admin theme import"
 msgid "Uploaded ZIP file should contain single directory."
-msgstr ""
+msgstr "Przesłany plik ZIP powinien zawierać jeden katalog."
 
 #: themes/admin/importer.py:83
 msgctxt "admin theme import"
 msgid "Uploaded ZIP file didn't contain a directory."
-msgstr ""
+msgstr "Przesłany plik ZIP nie zawierał katalogu."
 
 #: themes/admin/importer.py:101
 msgctxt "admin theme import"
 msgid "Uploaded ZIP file didn't contain a \"manifest.json\"."
-msgstr ""
+msgstr "Przesłany plik ZIP nie zawierał \"manifest.json\"."
 
 #: themes/admin/importer.py:108
 msgctxt "admin theme import"
 msgid "\"manifest.json\" contained by ZIP file is not a valid JSON file."
 msgstr ""
+"\"manifest.json\" z przesłanego pliku ZIP nie jest prawidłowym plikiem JSON."
 
 #: themes/admin/validators.py:13
 msgctxt "admin css name validator"
 msgid "Name is missing an .css extension."
-msgstr ""
+msgstr "Nazwa pliku musi mieć rozszerzenie \".css\"."
 
 #: themes/admin/validators.py:18
 msgctxt "admin css name validator"
 msgid "Name can't start with period (\".\")."
-msgstr ""
+msgstr "Nazwa pliku nie może zaczynać się od kropki."
 
 #: themes/admin/validators.py:25
 msgctxt "admin css name validator"
@@ -7101,16 +7128,18 @@ msgstr ""
 msgctxt "admin css name validator"
 msgid "Name has to contain at least one latin alphabet character or digit."
 msgstr ""
+"Nazwa pliku musi zawierać przynajmniej jedną literę z alfabetu łacińskiego "
+"lub cyfrę."
 
 #: themes/admin/validators.py:46
 msgctxt "admin css name unique validator"
 msgid "This name is already in use by other asset."
-msgstr ""
+msgstr "Ta nazwa jest już wykorzystana przez inny plik motywu."
 
 #: themes/admin/views.py:28
 msgctxt "admin themes"
 msgid "Requested theme does not exist."
-msgstr ""
+msgstr "Żądany motyw nie istnieje."
 
 #: themes/admin/views.py:37
 #, python-format
@@ -7127,7 +7156,7 @@ msgstr "Motyw \"%(name)s\" został zmieniony."
 #: themes/admin/views.py:57
 msgctxt "admin themes"
 msgid "Default theme can't be edited."
-msgstr ""
+msgstr "Zawartości domyślnego motywu nie da się zmieniać."
 
 #: themes/admin/views.py:66
 #, python-format
@@ -7138,12 +7167,12 @@ msgstr "Motyw \"%(name)s\" został usunięty."
 #: themes/admin/views.py:70
 msgctxt "admin themes"
 msgid "Default theme can't be deleted."
-msgstr ""
+msgstr "Domyślnego motywu nie da się usunąć."
 
 #: themes/admin/views.py:72
 msgctxt "admin themes"
 msgid "Active theme can't be deleted."
-msgstr ""
+msgstr "Aktywnego motywu nie można usunąć."
 
 #: themes/admin/views.py:76
 #, python-format
@@ -7152,70 +7181,72 @@ msgid ""
 "Theme \"%(name)s\" can't be deleted because one of its child themes is set "
 "as an active theme."
 msgstr ""
+"Nie można usunąć motywu \"%(name)s\" ponieważ jeden z jego motywów "
+"podrzędnych jest ustawiony jako aktywny motyw."
 
 #: themes/admin/views.py:93
 #, python-format
 msgctxt "admin themes"
 msgid "Active theme has been changed to \"%(name)s\"."
-msgstr ""
+msgstr "Aktywny motyw został zmieniony na \"%(name)s\"."
 
 #: themes/admin/views.py:107
 msgctxt "admin themes"
 msgid "Default theme can't be exported."
-msgstr ""
+msgstr "Domyślnego motywu nie da się wyeksportować."
 
 #: themes/admin/views.py:127
 #, python-format
 msgctxt "admin themes"
 msgid "Theme \"%(name)s\" has been imported."
-msgstr ""
+msgstr "Motyw \"%(name)s\" został zaimportowany."
 
 #: themes/admin/views.py:134
 msgctxt "admin themes"
 msgid "Default theme assets can't be edited."
-msgstr ""
+msgstr "Zawartości domyślnego motywu nie da się zmieniać."
 
 #: themes/admin/views.py:162
 msgctxt "admin themes"
 msgid "Some css files could not have been added to the theme."
-msgstr ""
+msgstr "Części przesłanych plików CSS nie można było dodać do motywu."
 
 #: themes/admin/views.py:187
 msgctxt "admin themes"
 msgid "New CSS files have been added to the theme."
-msgstr ""
+msgstr "Nowe pliki CSS zostały dodane do motywu."
 
 #: themes/admin/views.py:194
 msgctxt "admin themes"
 msgid "New media files have been added to the theme."
-msgstr ""
+msgstr "Nowe pliki z mediami zostały dodane do motywu."
 
 #: themes/admin/views.py:227
 msgctxt "admin themes"
 msgid "Selected CSS files have been deleted."
-msgstr ""
+msgstr "Wybrane pliki CSS zostały usunięte."
 
 #: themes/admin/views.py:237
 msgctxt "admin themes"
 msgid "Selected media have been deleted."
-msgstr ""
+msgstr "Wybrane media zostały usunięte."
 
 #: themes/admin/views.py:258
 msgctxt "admin themes"
 msgid "Requested CSS could not be found in the theme."
-msgstr ""
+msgstr "Motyw nie zawiera żądanego CSS."
 
 #: themes/admin/views.py:286
 #, python-format
 msgctxt "admin themes"
 msgid "\"%s\" was moved up."
-msgstr ""
+msgstr "\"%s\" przeniesiono w górę."
 
 #: themes/admin/views.py:297
 #, python-format
 msgctxt "admin themes"
 msgid "\"%s\" was moved down."
-msgstr ""
+msgstr "\"%s\" przeniesiono w dół."
 
 #: themes/admin/views.py:340
 #, python-format
@@ -7233,7 +7264,7 @@ msgstr "CSS \"%(name)s\" został zmieniony."
 #, python-format
 msgctxt "admin themes"
 msgid "No changes have been made to \"%(css)s\"."
-msgstr ""
+msgstr "Nie wprowadzono zmian w \"%(css)s\"."
 
 #: themes/admin/views.py:388
 #, python-format
@@ -7250,97 +7281,97 @@ msgstr "Odnośnik do CSS \"%(name)s\" został zmieniony."
 #: themes/models.py:40
 msgctxt "default theme name"
 msgid "Default Misago Theme"
-msgstr ""
+msgstr "Domyślny motyw Misago"
 
 #: threads/admin/__init__.py:36
 msgctxt "admin node"
 msgid "Attachments"
-msgstr ""
+msgstr "Załączniki"
 
 #: threads/admin/__init__.py:43
 msgctxt "admin node"
 msgid "Attachment types"
-msgstr ""
+msgstr "Typy załączników"
 
 #: threads/admin/__init__.py:45
 msgctxt "admin node"
-msgid "Specify what files may be uploaded on the forum."
-msgstr ""
+msgid "Specify what files may be uploaded as part of user posts."
+msgstr "Określ jakie pliki użytkownicy mogą przesyłać w swoich postach."
 
 #: threads/admin/forms.py:8
 msgctxt "admin attachments type filter choice"
 msgid "All types"
-msgstr ""
+msgstr "Wszystkie type"
 
 #: threads/admin/forms.py:15
 msgctxt "admin attachments filter form"
 msgid "Uploader name contains"
-msgstr ""
+msgstr "Nazwa przesyłającego zawiera"
 
 #: threads/admin/forms.py:19
 msgctxt "admin attachments filter form"
 msgid "Filename contains"
-msgstr ""
+msgstr "Nazwa pliku zawiera"
 
 #: threads/admin/forms.py:23
 msgctxt "admin attachments filter form"
 msgid "File type"
-msgstr ""
+msgstr "Typ pliku"
 
 #: threads/admin/forms.py:30
 msgctxt "admin attachments filter form"
 msgid "State"
-msgstr ""
+msgstr "Stan"
 
 #: threads/admin/forms.py:37
 msgctxt "admin attachments orphan filter choice"
 msgid "All"
-msgstr ""
+msgstr "Wszystkie"
 
 #: threads/admin/forms.py:44
 msgctxt "admin attachments orphan filter choice"
 msgid "Only orphaned"
-msgstr ""
+msgstr "Tylko osierocone"
 
 #: threads/admin/forms.py:51
 msgctxt "admin attachments orphan filter choice"
 msgid "Not orphaned"
-msgstr ""
+msgstr "Tylko powiązane z postami"
 
 #: threads/admin/forms.py:78
 msgctxt "admin attachment type form"
 msgid "Type name"
-msgstr ""
+msgstr "Nazwa typu"
 
 #: threads/admin/forms.py:80
 msgctxt "admin attachment type form"
 msgid "File extensions"
-msgstr ""
+msgstr "Rozszerzenia pliku"
 
 #: threads/admin/forms.py:82
 msgctxt "admin attachment type form"
 msgid "Mimetypes"
-msgstr ""
+msgstr "Typy MIME"
 
 #: threads/admin/forms.py:84
 msgctxt "admin attachment type form"
 msgid "Maximum allowed uploaded file size"
-msgstr ""
+msgstr "Maksymalny dozwolony rozmiar przesłanego pliku"
 
 #: threads/admin/forms.py:86
 msgctxt "admin attachment type form"
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: threads/admin/forms.py:88
 msgctxt "admin attachment type form"
 msgid "Limit uploads to"
-msgstr ""
+msgstr "Ogranicz przesyłanie pliku do"
 
 #: threads/admin/forms.py:91
 msgctxt "admin attachment type form"
 msgid "Limit downloads to"
-msgstr ""
+msgstr "Ogranicz pobieranie pliku do"
 
 #: threads/admin/forms.py:97
 msgctxt "admin attachment type form"
@@ -7366,7 +7397,7 @@ msgstr ""
 #: threads/admin/forms.py:109
 msgctxt "admin attachment type form"
 msgid "Controls this attachment type availability on your site."
-msgstr ""
+msgstr "Określa dostępność załączników tego typu na twojej stronie."
 
 #: threads/admin/forms.py:113
 msgctxt "admin attachment type form"
@@ -7389,67 +7420,67 @@ msgstr ""
 #: threads/admin/forms.py:129
 msgctxt "admin attachment type form"
 msgid "This field is required."
-msgstr ""
+msgstr "To pole jest wymagane."
 
 #: threads/admin/views/attachments.py:15
 msgctxt "admin attachments"
-msgid "Requested attachment could not be found."
-msgstr ""
+msgid "Requested attachment does not exist."
+msgstr "Żądany załącznik nie istnieje."
 
 #: threads/admin/views/attachments.py:28
 msgctxt "admin attachments ordering choice"
 msgid "From newest"
-msgstr ""
+msgstr "Od najnowszego"
 
 #: threads/admin/views/attachments.py:29
 msgctxt "admin attachments ordering choice"
 msgid "From oldest"
-msgstr ""
+msgstr "Od najstarszego"
 
 #: threads/admin/views/attachments.py:30
 msgctxt "admin attachments ordering choice"
 msgid "A to z"
-msgstr ""
+msgstr "A do z"
 
 #: threads/admin/views/attachments.py:31
 msgctxt "admin attachments ordering choice"
 msgid "Z to a"
-msgstr ""
+msgstr "Z do a"
 
 #: threads/admin/views/attachments.py:32
 msgctxt "admin attachments ordering choice"
 msgid "Smallest files"
-msgstr ""
+msgstr "Od najmniejszego"
 
 #: threads/admin/views/attachments.py:33
 msgctxt "admin attachments ordering choice"
 msgid "Largest files"
-msgstr ""
+msgstr "Od największego"
 
 #: threads/admin/views/attachments.py:35
 msgctxt "admin attachments"
 msgid "With attachments: 0"
-msgstr ""
+msgstr "Z załącznikami: 0"
 
 #: threads/admin/views/attachments.py:36
 msgctxt "admin attachments"
 msgid "Select attachments"
-msgstr ""
+msgstr "Wybierz załączniki"
 
 #: threads/admin/views/attachments.py:40
 msgctxt "admin attachments"
 msgid "Delete attachments"
-msgstr ""
+msgstr "Usuń załączniki"
 
 #: threads/admin/views/attachments.py:43
 msgctxt "admin attachments"
 msgid "Are you sure you want to delete selected attachments?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć wybrane załączniki?"
 
 #: threads/admin/views/attachments.py:68
 msgctxt "admin attachments"
 msgid "Selected attachments have been deleted."
-msgstr ""
+msgstr "Wybrane załączniki zostały usunięte."
 
 #: threads/admin/views/attachments.py:91
 #, python-format
@@ -7459,8 +7490,8 @@ msgstr "Załącznik \"%(filename)s\" został usunięty."
 
 #: threads/admin/views/attachmenttypes.py:16
 msgctxt "admin attachments types"
-msgid "Requested attachment type could not be found."
-msgstr ""
+msgid "Requested attachment type does not exist."
+msgstr "Żądany typ załącznika nie istnieje."
 
 #: threads/admin/views/attachmenttypes.py:39
 #, python-format
@@ -7472,7 +7503,7 @@ msgstr "Nowy typ załącznika \"%(name)s\" został dodany."
 #, python-format
 msgctxt "admin attachments types"
 msgid "Attachment type \"%(name)s\" has been edited."
-msgstr ""
+msgstr "Typ załącznika \"%(name)s\" został zmieniony."
 
 #: threads/admin/views/attachmenttypes.py:54
 #, python-format
@@ -7481,6 +7512,8 @@ msgid ""
 "Attachment type \"%(name)s\" has associated attachments and can't be "
 "deleted."
 msgstr ""
+"Typ załączniku \"%(name)s\" jest powiązany z istniejącymi załącznikami i nie"
+" może być usunięty."
 
 #: threads/admin/views/attachmenttypes.py:61
 #, python-format
@@ -7491,7 +7524,7 @@ msgstr "Typ załącznika \"%(name)s\" został usunięty."
 #: threads/api/attachments.py:20
 msgctxt "attachments api"
 msgid "You don't have permission to upload new files."
-msgstr ""
+msgstr "Nie masz uprawnień do przesyłania nowych plików."
 
 #: threads/api/attachments.py:33
 msgctxt "attachments api"
@@ -7692,12 +7725,12 @@ msgstr ""
 #: threads/api/threadendpoints/patch.py:189
 msgctxt "threads api"
 msgid "You don't have permission to close this thread."
-msgstr ""
+msgstr "Nie masz uprawnień do zamknięcia tego tematu."
 
 #: threads/api/threadendpoints/patch.py:195
 msgctxt "threads api"
 msgid "You don't have permission to open this thread."
-msgstr ""
+msgstr "Nie masz uprawnień do otwarcia tego tematu."
 
 #: threads/api/threadendpoints/patch.py:221
 #: threads/api/threadendpoints/patch.py:262
@@ -9963,7 +9996,7 @@ msgstr "Kopie danych"
 #: users/admin/__init__.py:94
 msgctxt "admin node"
 msgid "Ranks"
-msgstr ""
+msgstr "Rangi"
 
 #: users/admin/djangoadmin.py:42
 msgid "Misago user data"
@@ -9980,32 +10013,32 @@ msgstr ""
 #: users/admin/forms.py:21
 msgctxt "admin user form"
 msgid "Username"
-msgstr ""
+msgstr "Nazwa użytkownika"
 
 #: users/admin/forms.py:23
 msgctxt "admin user form"
 msgid "Custom title"
-msgstr ""
+msgstr "Własny tytuł"
 
 #: users/admin/forms.py:26
 msgctxt "admin user form"
 msgid "E-mail address"
-msgstr ""
+msgstr "Adres e-mail"
 
 #: users/admin/forms.py:62
 msgctxt "admin user form"
 msgid "All registered members must have a \"Member\" role."
-msgstr ""
+msgstr "Wszyscy zarejestrowani użytkownicy muszą mieć rolę \"Członek\"."
 
 #: users/admin/forms.py:71
 msgctxt "admin user form"
 msgid "Password"
-msgstr ""
+msgstr "Hasło"
 
 #: users/admin/forms.py:82
 msgctxt "admin user form"
 msgid "Is administrator"
-msgstr ""
+msgstr "Jest administratorem"
 
 #: users/admin/forms.py:85
 msgctxt "admin user form"
@@ -10018,7 +10051,7 @@ msgstr ""
 #: users/admin/forms.py:88
 msgctxt "admin user form"
 msgid "Is superuser"
-msgstr ""
+msgstr "Jest super administratorem"
 
 #: users/admin/forms.py:91
 msgctxt "admin user form"
@@ -10030,7 +10063,7 @@ msgstr ""
 #: users/admin/forms.py:94
 msgctxt "admin user form"
 msgid "Is active"
-msgstr ""
+msgstr "Jest aktywowany"
 
 #: users/admin/forms.py:97
 msgctxt "admin user form"
@@ -10042,7 +10075,7 @@ msgstr ""
 #: users/admin/forms.py:100 users/admin/forms.py:130 users/admin/forms.py:161
 msgctxt "admin user form"
 msgid "Staff message"
-msgstr ""
+msgstr "Wiadomość dla członków zespołu forum"
 
 #: users/admin/forms.py:103
 msgctxt "admin user form"
@@ -10053,12 +10086,12 @@ msgstr ""
 
 #: users/admin/forms.py:107
 msgctxt "admin user form"
-msgid "Change password to"
+msgid "Set new password"
 msgstr ""
 
 #: users/admin/forms.py:114
 msgctxt "admin user form"
-msgid "Lock avatar"
+msgid "Lock avatar changes"
 msgstr ""
 
 #: users/admin/forms.py:117
@@ -10067,14 +10100,11 @@ msgid ""
 "Setting this to yes will stop user from changing their avatar, and will "
 "reset their avatar to procedurally generated one."
 msgstr ""
-"Wybór \"tak\" sprawi że ten użytkownik nie będzie mógł zmieniać jego "
-"awatara, a także zastąpi jego aktualny awatar nowym, wygenerowanym "
-"proceduralnie."
 
 #: users/admin/forms.py:121 users/admin/forms.py:152
 msgctxt "admin user form"
 msgid "User message"
-msgstr ""
+msgstr "Wiadomość dla użytkownika"
 
 #: users/admin/forms.py:124
 msgctxt "admin user form"
@@ -10082,8 +10112,6 @@ msgid ""
 "Optional message for user explaining why they are banned form changing "
 "avatar."
 msgstr ""
-"Opcjonalny komunikat dla użytkownika wyjaśniający dlaczego jego możliwość "
-"zmiany awatara została zablokowana."
 
 #: users/admin/forms.py:133
 msgctxt "admin user form"
@@ -10101,7 +10129,7 @@ msgstr ""
 
 #: users/admin/forms.py:145
 msgctxt "admin user form"
-msgid "Lock signature"
+msgid "Lock signature changes"
 msgstr ""
 
 #: users/admin/forms.py:148
@@ -10580,6 +10608,7 @@ msgid ""
 "You may not enter more than 20 items at a single time (You have entered "
 "%(show_value)s)."
 msgstr ""
+"Nie możesz podać więcej niż 20 elementów naraz (podano %(show_value)s)."
 
 #: users/admin/forms.py:804
 msgctxt "admin data download request form"
@@ -10786,47 +10815,47 @@ msgstr ""
 #: users/admin/views/users.py:58
 msgctxt "admin users ordering choice"
 msgid "From newest"
-msgstr ""
+msgstr "Od najnowszych"
 
 #: users/admin/views/users.py:59
 msgctxt "admin users ordering choice"
 msgid "From oldest"
-msgstr ""
+msgstr "Od najstarszych"
 
 #: users/admin/views/users.py:60
 msgctxt "admin users ordering choice"
 msgid "A to z"
-msgstr ""
+msgstr "A do z"
 
 #: users/admin/views/users.py:61
 msgctxt "admin users ordering choice"
 msgid "Z to a"
-msgstr ""
+msgstr "Z do a"
 
 #: users/admin/views/users.py:62
 msgctxt "admin users ordering choice"
 msgid "Biggest posters"
-msgstr ""
+msgstr "Od postujących najwięcej"
 
 #: users/admin/views/users.py:63
 msgctxt "admin users ordering choice"
 msgid "Smallest posters"
-msgstr ""
+msgstr "Od postujących najmniej"
 
 #: users/admin/views/users.py:65
 msgctxt "admin users"
 msgid "With users: 0"
-msgstr ""
+msgstr "Z użytkownikami: 0"
 
 #: users/admin/views/users.py:66
 msgctxt "admin users"
 msgid "Select users"
-msgstr ""
+msgstr "Wybierz użytkowników"
 
 #: users/admin/views/users.py:70
 msgctxt "admin users"
 msgid "Activate accounts"
-msgstr ""
+msgstr "Aktywuj konta"
 
 #: users/admin/views/users.py:74
 msgctxt "admin users"
@@ -10841,17 +10870,17 @@ msgstr "Utwórz kopie danych do pobrania"
 #: users/admin/views/users.py:83
 msgctxt "admin users"
 msgid "Delete accounts"
-msgstr ""
+msgstr "Usuń konta"
 
 #: users/admin/views/users.py:85
 msgctxt "admin users"
 msgid "Are you sure you want to delete selected users?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć wybranych użytkowników?"
 
 #: users/admin/views/users.py:90
 msgctxt "admin users"
 msgid "Delete with content"
-msgstr ""
+msgstr "Usuń wraz z treściami"
 
 #: users/admin/views/users.py:93
 msgctxt "admin users"
@@ -10859,11 +10888,13 @@ msgid ""
 "Are you sure you want to delete selected users? This will also delete all "
 "content associated with their accounts."
 msgstr ""
+"Na pewno chcesz usunąć wybranych użytkowników? Wraz z ich kontami zostaną "
+"usunięte powiązane z nimi treści."
 
 #: users/admin/views/users.py:113
 msgctxt "admin users"
 msgid "You have to select inactive users."
-msgstr ""
+msgstr "Musisz wybrać konta wymagające aktywacji. "
 
 #: users/admin/views/users.py:122
 #, python-format
@@ -10874,7 +10905,7 @@ msgstr ""
 #: users/admin/views/users.py:135
 msgctxt "admin users"
 msgid "Selected users accounts have been activated."
-msgstr ""
+msgstr "Wybrane konta użytkowników zostały aktywowane."
 
 #: users/admin/views/users.py:145
 #, python-format
@@ -10916,6 +10947,8 @@ msgid ""
 "Selected users have been disabled and queued for deletion together with "
 "their content."
 msgstr ""
+"Wybrane konta użytkowników zostały wyłączone i zakolejkowane do usunięcia "
+"wraz z ich treściami."
 
 #: users/admin/views/users.py:283
 #, python-format

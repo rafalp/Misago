@@ -104,14 +104,14 @@ class EditUserForm(UserBaseForm):
     )
 
     new_password = forms.CharField(
-        label=pgettext_lazy("admin user form", "Change password to"),
+        label=pgettext_lazy("admin user form", "Set new password"),
         strip=False,
         widget=forms.PasswordInput,
         required=False,
     )
 
     is_avatar_locked = YesNoSwitch(
-        label=pgettext_lazy("admin user form", "Lock avatar"),
+        label=pgettext_lazy("admin user form", "Lock avatar changes"),
         help_text=pgettext_lazy(
             "admin user form",
             "Setting this to yes will stop user from changing their avatar, and will reset their avatar to procedurally generated one.",
@@ -142,7 +142,7 @@ class EditUserForm(UserBaseForm):
         required=False,
     )
     is_signature_locked = YesNoSwitch(
-        label=pgettext_lazy("admin user form", "Lock signature"),
+        label=pgettext_lazy("admin user form", "Lock signature changes"),
         help_text=pgettext_lazy(
             "admin user form",
             "Setting this to yes will stop user from making changes to his/her signature.",

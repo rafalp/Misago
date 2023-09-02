@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 11:46+0000\n"
+"POT-Creation-Date: 2023-09-02 12:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -7038,7 +7038,7 @@ msgstr ""
 
 #: threads/admin/__init__.py:45
 msgctxt "admin node"
-msgid "Specify what files may be uploaded on the forum."
+msgid "Specify what files may be uploaded as part of user posts."
 msgstr ""
 
 #: threads/admin/forms.py:8
@@ -7166,7 +7166,7 @@ msgstr ""
 
 #: threads/admin/views/attachments.py:15
 msgctxt "admin attachments"
-msgid "Requested attachment could not be found."
+msgid "Requested attachment does not exist."
 msgstr ""
 
 #: threads/admin/views/attachments.py:28
@@ -7232,7 +7232,7 @@ msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:16
 msgctxt "admin attachments types"
-msgid "Requested attachment type could not be found."
+msgid "Requested attachment type does not exist."
 msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:39
@@ -9768,12 +9768,12 @@ msgstr ""
 
 #: users/admin/forms.py:107
 msgctxt "admin user form"
-msgid "Change password to"
+msgid "Set new password"
 msgstr ""
 
 #: users/admin/forms.py:114
 msgctxt "admin user form"
-msgid "Lock avatar"
+msgid "Lock avatar changes"
 msgstr ""
 
 #: users/admin/forms.py:117
@@ -9809,7 +9809,7 @@ msgstr ""
 
 #: users/admin/forms.py:145
 msgctxt "admin user form"
-msgid "Lock signature"
+msgid "Lock signature changes"
 msgstr ""
 
 #: users/admin/forms.py:148

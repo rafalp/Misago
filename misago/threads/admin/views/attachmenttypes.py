@@ -13,7 +13,7 @@ class AttachmentTypeAdmin(generic.AdminBaseMixin):
     form_class = AttachmentTypeForm
     templates_dir = "misago/admin/attachmenttypes"
     message_404 = pgettext_lazy(
-        "admin attachments types", "Requested attachment type could not be found."
+        "admin attachments types", "Requested attachment type does not exist."
     )
 
     def update_roles(self, target, roles):
