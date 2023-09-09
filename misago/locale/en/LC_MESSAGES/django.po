@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 11:29+0000\n"
+"POT-Creation-Date: 2023-09-09 13:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,7 @@ msgstr ""
 msgctxt "admin color field"
 msgid ""
 "Value must be a 7-character string specifying an RGB color in a hexadecimal "
-"format."
+"format (eg.: \"#F5A9B8\")."
 msgstr ""
 
 #: admin/forms.py:67 templates/misago/admin/users/edit.html:145
@@ -248,8 +248,7 @@ msgstr ""
 #: categories/admin/forms.py:94
 msgctxt "admin category form"
 msgid ""
-"Optional CSS class used to customize this category's appearance from "
-"templates."
+"Optional CSS class used to customize this category's appearance from themes."
 msgstr ""
 
 #: categories/admin/forms.py:98
@@ -375,7 +374,7 @@ msgstr ""
 msgctxt "admin category form"
 msgid ""
 "You are trying to move this category threads to a child category that will "
-"be deleted together with this category."
+"also be deleted."
 msgstr ""
 
 #: categories/admin/forms.py:264
@@ -930,7 +929,7 @@ msgstr ""
 msgctxt "admin general settings form"
 msgid ""
 "Hiding the link to the ACP from user menus reduces risk of malicious actors "
-"gaining access to admin session for admin users who are sharing their PC "
+"gaining access to admin session for admin users who are sharing their device "
 "with others or who are logging in to the site in public spaces."
 msgstr ""
 
@@ -1394,7 +1393,7 @@ msgstr ""
 msgctxt "admin users settings form"
 msgid ""
 "Turning this option off will forbid forum users from uploading custom "
-"avatars. Good for forums adressed at young users."
+"avatars."
 msgstr ""
 
 #: conf/admin/forms/users.py:108
@@ -1429,13 +1428,13 @@ msgstr ""
 
 #: conf/admin/forms/users.py:145
 msgctxt "admin users settings form"
-msgid "Fallback for default gravatar"
+msgid "Fallback for default Gravatar"
 msgstr ""
 
 #: conf/admin/forms/users.py:149
 msgctxt "admin users settings form"
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their e-"
+"Select which avatar to use when user has no Gravatar associated with their e-"
 "mail address."
 msgstr ""
 

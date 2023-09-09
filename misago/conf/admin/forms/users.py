@@ -100,7 +100,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Allow custom avatar uploads"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            "Turning this option off will forbid forum users from uploading custom avatars. Good for forums adressed at young users.",
+            "Turning this option off will forbid forum users from uploading custom avatars.",
         ),
     )
     avatar_upload_limit = forms.IntegerField(
@@ -142,11 +142,11 @@ class UsersSettingsForm(SettingsForm):
     )
     default_gravatar_fallback = forms.ChoiceField(
         label=pgettext_lazy(
-            "admin users settings form", "Fallback for default gravatar"
+            "admin users settings form", "Fallback for default Gravatar"
         ),
         help_text=pgettext_lazy(
             "admin users settings form",
-            "Select which avatar to use when user has no gravatar associated with their e-mail address.",
+            "Select which avatar to use when user has no Gravatar associated with their e-mail address.",
         ),
         choices=[
             (

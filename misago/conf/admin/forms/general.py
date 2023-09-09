@@ -150,7 +150,7 @@ class GeneralSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin general settings form",
-            "Hiding the link to the ACP from user menus reduces risk of malicious actors gaining access to admin session for admin users who are sharing their PC with others or who are logging in to the site in public spaces.",
+            "Hiding the link to the ACP from user menus reduces risk of malicious actors gaining access to admin session for admin users who are sharing their device with others or who are logging in to the site in public spaces.",
         ),
     )
 

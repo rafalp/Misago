@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 11:27+0000\n"
+"POT-Creation-Date: 2023-09-09 13:07+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -139,8 +139,10 @@ msgstr "Sesja administratora wygasła."
 msgctxt "admin color field"
 msgid ""
 "Value must be a 7-character string specifying an RGB color in a hexadecimal "
-"format."
+"format (eg.: \"#F5A9B8\")."
 msgstr ""
+"Wartość powinna mieć 7 znaków długości i być prawidłowym kolorem w zapisie "
+"heksadecymalnym (np.: \"#F5A9B8\")."
 
 #: admin/forms.py:67 templates/misago/admin/users/edit.html:145
 #: templates/misago/admin/users/edit.html:163
@@ -253,9 +255,9 @@ msgstr "Klasa CSS"
 #: categories/admin/forms.py:94
 msgctxt "admin category form"
 msgid ""
-"Optional CSS class used to customize this category's appearance from "
-"templates."
+"Optional CSS class used to customize this category's appearance from themes."
 msgstr ""
+"Opcjonalna klasa CSS używana do kustomizacji wyglądu kategorii przez motywy."
 
 #: categories/admin/forms.py:98
 msgctxt "admin category form"
@@ -318,6 +320,8 @@ msgid ""
 "Prune thread if number of days since its creation is greater than specified."
 " Enter 0 to disable this pruning criteria."
 msgstr ""
+"Usuń temat jeśli od jego utworzenia upłynęło więcej dni niż podano. Wpisz 0 "
+"aby wyłączyć ten warunek usuwania."
 
 #: categories/admin/forms.py:138
 msgctxt "admin category form"
@@ -330,6 +334,8 @@ msgid ""
 "Prune thread if number of days since last reply is greater than specified. "
 "Enter 0 to disable this pruning criteria."
 msgstr ""
+"Usuń temat jeśli od jego ostatniej odpowiedzi upłynęło więcej dni niż "
+"podano. Wpisz 0 aby wyłączyć ten warunek usuwania."
 
 #: categories/admin/forms.py:168
 msgctxt "admin category form"
@@ -357,6 +363,8 @@ msgid ""
 "You can replace this category permissions with permissions copied from "
 "category selected here."
 msgstr ""
+"Możesz zastąpić aktualne uprawnienia tej kategorii uprawnieniami "
+"skopiowanymi z innej kategorii wybranej tutaj."
 
 #: categories/admin/forms.py:213
 msgctxt "admin category form"
@@ -374,6 +382,7 @@ msgid ""
 "Instead of being deleted, pruned threads can be moved to designated "
 "category."
 msgstr ""
+"Zamiast usuwania, stare tematy mogą być przenoszone do wskazanej kategorii."
 
 #: categories/admin/forms.py:225
 msgctxt "admin category form"
@@ -389,8 +398,10 @@ msgstr "Próbujesz przenieść tematy tej kategorii do niej samej."
 msgctxt "admin category form"
 msgid ""
 "You are trying to move this category threads to a child category that will "
-"be deleted together with this category."
+"also be deleted."
 msgstr ""
+"Próbujesz przenieść tematy tej kategorii do jej podkategorii która również "
+"zostanie usunięta."
 
 #: categories/admin/forms.py:264
 msgctxt "admin category form"
@@ -664,6 +675,8 @@ msgid ""
 "Setting the Tracking ID will result in gtag.js file being included in your "
 "site's HTML markup, enabling Google Analytics integration."
 msgstr ""
+"Ustawienie Tracking ID  spowoduje załączenie pliku gtag.js w kodzie HTML "
+"twojej witryny i włączenie integracji z Google Analytics."
 
 #: conf/admin/forms/analytics.py:25
 msgctxt "admin analytics settings form"
@@ -690,6 +703,8 @@ msgid ""
 "Site verification file can be downloaded from Search Console's \"Ownership "
 "verification\" page."
 msgstr ""
+"Plik weryfikacyjny witryny może być pobrany ze strony weryfikacji własności "
+"witryny w ustawieniach Search Console."
 
 #: conf/admin/forms/analytics.py:52
 msgctxt "admin analytics settings form"
@@ -762,6 +777,8 @@ msgid ""
 "Turning this option on will result in Misago validating new user's e-mail "
 "and IP address against SFS database."
 msgstr ""
+"Włączenie tej opcji sprawi że Misago będzie sprawdzać e-mail i IP nowych "
+"użytkowników w bazie SFS."
 
 #: conf/admin/forms/captcha.py:77
 msgctxt "admin captcha settings form"
@@ -785,12 +802,12 @@ msgstr ""
 #: conf/admin/forms/captcha.py:96
 msgctxt "admin captcha settings form"
 msgid "You need to enter site key if selected CAPTCHA type is reCaptcha."
-msgstr ""
+msgstr "Musisz ustawić klucz witryny gdy wybrana CAPTCHA to reCaptcha."
 
 #: conf/admin/forms/captcha.py:105
 msgctxt "admin captcha settings form"
 msgid "You need to enter secret key if selected CAPTCHA type is reCaptcha."
-msgstr ""
+msgstr "Musisz ustawić klucz prywatny gdy wybrana CAPTCHA to reCaptcha."
 
 #: conf/admin/forms/captcha.py:115
 msgctxt "admin captcha settings form"
@@ -801,6 +818,8 @@ msgstr "Wybór CAPTCHA \"pytanie testowe\" wymaga ustawienia pytania i odpowiedz
 msgctxt "admin captcha settings form"
 msgid "You need to set question answers if selected CAPTCHA type is Q&A."
 msgstr ""
+"Musisz ustawić prawidłowe odpowiedzi gdy wybrana CAPTCHA to pytanie i "
+"odpowiedź."
 
 #: conf/admin/forms/general.py:28
 msgctxt "admin general settings form"
@@ -828,6 +847,8 @@ msgid ""
 "Short description of your forum that search and social sites may display "
 "next to link to your forum's index."
 msgstr ""
+"Krótki opis twojego forum który wyszukiwarki internetowe i serwisy "
+"społecznościowe mogą wyświetlić obok odnośnika do strony głównej forum."
 
 #: conf/admin/forms/general.py:52
 msgctxt "admin general settings form"
@@ -849,7 +870,7 @@ msgctxt "admin general settings form"
 msgid ""
 "This message will be displayed in page header on forum index, under the "
 "header text."
-msgstr ""
+msgstr "Ta wiadomość będzie wyświetlana pod nagłówkiem strony głównej forum."
 
 #: conf/admin/forms/general.py:72
 msgctxt "admin general settings form"
@@ -862,6 +883,8 @@ msgid ""
 "Image that will be displayed in forum navbar instead of a small logo or "
 "text."
 msgstr ""
+"Obraz który będzie wyświetlany w pasku nawigacyjnym forum zamiast małego "
+"logo lub tekstu."
 
 #: conf/admin/forms/general.py:80
 msgctxt "admin general settings form"
@@ -879,6 +902,8 @@ msgid ""
 "Image that will be displayed in the forum navbar next to the logo text if a "
 "large logo was not uploaded."
 msgstr ""
+"Obraz który będzie wyświetlany w pasku nawigacyjnym forum obok logo "
+"tekstowego jeśli obraz dużego logo nie został przesłany."
 
 #: conf/admin/forms/general.py:92
 msgctxt "admin general settings form"
@@ -897,6 +922,9 @@ msgid ""
 "text will be displayed right next to it. If a large logo was uploaded, it "
 "will replace both the small logo and the text."
 msgstr ""
+"Napis wyświetlany w pasku nawigacyjnym forum. Jeśli przesłano obraz małego "
+"logo, ten napis będzie wyświetlany obok niego. Jeśli przesłano obraz dużego "
+"logo, zastąpi on zarówno małe logo jak i logo tekstowe."
 
 #: conf/admin/forms/general.py:106
 msgctxt "admin general settings form"
@@ -910,6 +938,9 @@ msgid ""
 "sites. Facebook recommends that this image should be 1200 pixels wide and "
 "630 pixels tall."
 msgstr ""
+"Własny obraz który będzie wyświetlany obok odnośnik do twojego forum "
+"opublikowanych w serwisach społecznościowych. Facebook zaleca aby obraz ten "
+"miał 1200 pikseli szerokości i 630 pikseli wysokości."
 
 #: conf/admin/forms/general.py:114
 msgctxt "admin general settings form"
@@ -954,14 +985,20 @@ msgctxt "admin general settings form"
 msgid ""
 "Display the link to the Admin Control Panel in the administrator's user menu"
 msgstr ""
+"Wyświetlaj odnośnik do panelu administracyjnego w menu użytkownika dla "
+"zalogowanych administratorów"
 
 #: conf/admin/forms/general.py:153
 msgctxt "admin general settings form"
 msgid ""
 "Hiding the link to the ACP from user menus reduces risk of malicious actors "
-"gaining access to admin session for admin users who are sharing their PC "
-"with others or who are logging in to the site in public spaces."
+"gaining access to admin session for admin users who are sharing their device"
+" with others or who are logging in to the site in public spaces."
 msgstr ""
+"Ukrycie odnośnika do panelu administracyjnego z menu użytkownika zmniejsza "
+"ryzyko nieuprawnionego dostępu do sesji administratora użytkowników którzy "
+"współdzielą swoje urządzenie z innymi albo logują się na stronę w "
+"publicznych przestrzeniach."
 
 #: conf/admin/forms/general.py:163
 #, python-format
@@ -970,6 +1007,9 @@ msgid ""
 "Misago uses this setting to build links in e-mails sent to site users. "
 "Address under which site is running appears to be \"%(address)s\"."
 msgstr ""
+"Misago używa tego ustawienia do tworzenia linków w e-mailach wysyłanych do "
+"użytkowników strony. Aktualny adres pod którym prawdopodobnie działa strona "
+"to \"%(address)s\"."
 
 #: conf/admin/forms/notifications.py:22
 msgctxt "admin notifications settings form"
@@ -1268,6 +1308,9 @@ msgid ""
 "situations when forum is flooded by spam bots. Change to 0 to remove the "
 "limit."
 msgstr ""
+"Dzienny limit postów które mogą zostać napisane przez jednego użytkownika. "
+"Zabezpieczenie przed sytuacjami kiedy forum jest zalewane przez boty "
+"spamujące. Ustaw na 0 aby zdjąć to ograniczenie."
 
 #: conf/admin/forms/threads.py:36
 msgctxt "admin threads settings form"
@@ -1281,6 +1324,9 @@ msgid ""
 "situations when forum is flooded by spam bots. Change to 0 to remove the "
 "limit."
 msgstr ""
+"Godzinowy limit postów które mogą zostać napisane przez jednego użytkownika."
+" Zabezpieczenie przed sytuacjami kiedy forum jest zalewane przez boty "
+"spamujące. Ustaw na 0 aby zdjąć to ograniczenie."
 
 #: conf/admin/forms/threads.py:46
 msgctxt "admin threads settings form"
@@ -1318,6 +1364,8 @@ msgid ""
 "Period of time (in hours) after which user-uploaded files that weren't "
 "attached to any post are deleted from disk."
 msgstr ""
+"Liczba godzin po upływie których pliki przesłane przez użytkowników które "
+"nie są załączone do żadnego postu są usuwane z dysku."
 
 #: conf/admin/forms/threads.py:88
 msgctxt "admin threads settings form"
@@ -1332,6 +1380,10 @@ msgid ""
 "if the opposite is true for the user. Active forums can try lowering this "
 "value while less active ones may wish to increase it instead."
 msgstr ""
+"Określa liczbę danych używanych przez system śledzenia czytań. Wszystkie "
+"treści starsze niż podana liczba dni będą uznawane jako stare i już "
+"przeczytane, nawet jeśli nie jest to prawdą dla danego użytkownika. Aktywne "
+"fora mogą chcieć zmniejszyć tą wartość a mniej aktywne podnieść."
 
 #: conf/admin/forms/threads.py:99
 msgctxt "admin threads settings form"
@@ -1351,11 +1403,15 @@ msgstr "Limit sierot"
 #: conf/admin/forms/threads.py:114
 msgctxt "admin threads settings form"
 msgid ""
-"If number of posts to be displayed on the last page is less or equal to "
-"number specified in this setting, those posts will instead be displayed on "
-"previous page, reducing the total number of pages in thread and preventing "
-"situations when last page displays very few posts."
+"This setting prevents situations when the last page of a thread contains "
+"very few items. If number of posts to be displayed on the last page is less "
+"or equal to number specified in this setting, those posts will instead be "
+"appended to the previous page, reducing number of thread's pages."
 msgstr ""
+"Ta opcja zapobiega sytuacjom kiedy ostatnia strona tematu zawiera bardzo "
+"mało odpowiedzi. Jeśli liczba odpowiedzi do wyświetlenia na ostatniej "
+"stronie tematu będzie mniejsza lub równa tej liczbie, odpowiedzi tę będą "
+"wyświetlone na przedniej stronie, zmniejszając liczbę stron tematu."
 
 #: conf/admin/forms/threads.py:121
 msgctxt "admin threads settings form"
@@ -1373,6 +1429,8 @@ msgid ""
 "Attachments proxy will display this image in place of default one when user "
 "tries to access attachment they have no permission to see."
 msgstr ""
+"Proxy załączników wyświetli ustawiony obraz zamiast domyślnego jeśli "
+"użytkownik spróbuje zobaczyć załącznik do którego nie mają dostępu."
 
 #: conf/admin/forms/threads.py:136
 msgctxt "admin threads settings form"
@@ -1390,6 +1448,8 @@ msgid ""
 "Attachments proxy will display this image in place of default one when user "
 "tries to access attachment that doesn't exist."
 msgstr ""
+"Proxy załączników wyświetli ustawiony obraz zamiast domyślnego jeśli "
+"użytkownik spróbuje zobaczyć załącznik który nie istnieje."
 
 #: conf/admin/forms/threads.py:150
 msgctxt "admin threads settings form"
@@ -1432,6 +1492,8 @@ msgid ""
 "Delete new inactive accounts if they weren't activated within this number of"
 " days"
 msgstr ""
+"Usuwaj konta użytkowników jeśli nie zostały one aktywowane przed upływem "
+"podanej liczby dni"
 
 #: conf/admin/forms/users.py:79
 msgctxt "admin users settings form"
@@ -1457,8 +1519,10 @@ msgstr "Zezwól na przesyłanie własnych awatarów"
 msgctxt "admin users settings form"
 msgid ""
 "Turning this option off will forbid forum users from uploading custom "
-"avatars. Good for forums adressed at young users."
+"avatars."
 msgstr ""
+"Wyłączenie tej opcji uniemożliwi użytkownikom forum przesyłanie własnych "
+"obrazów awatara."
 
 #: conf/admin/forms/users.py:108
 msgctxt "admin users settings form"
@@ -1493,15 +1557,17 @@ msgstr "Losowy z galerii"
 
 #: conf/admin/forms/users.py:145
 msgctxt "admin users settings form"
-msgid "Fallback for default gravatar"
+msgid "Fallback for default Gravatar"
 msgstr "Alternatywa dla domyślnego Gravatara"
 
 #: conf/admin/forms/users.py:149
 msgctxt "admin users settings form"
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their "
+"Select which avatar to use when user has no Gravatar associated with their "
 "e-mail address."
 msgstr ""
+"Wybierz jakiego awatara użyć kiedy użytkownik nie ma żadnego Gravatara "
+"powiązanego z jego adresem e-mail."
 
 #: conf/admin/forms/users.py:154
 msgctxt "admin users gravatar fallback choice"
@@ -1579,11 +1645,15 @@ msgstr "Limit sierot"
 #: conf/admin/forms/users.py:239
 msgctxt "admin users settings form"
 msgid ""
-"If number of users to be displayed on the last page is less or equal to "
-"number specified in this setting, those users will instead be displayed  on "
-"previous page, reducing the total number of pages on the list and preventing"
-" situations when last page displays very few items."
+"This setting prevents situations when the last page of a users list contains"
+" very few items. If number of users to be displayed on the last page is less"
+" or equal to number specified in this setting, those users will instead be "
+"appended to the previous page, reducing number of list's pages."
 msgstr ""
+"Ta opcja zapobiega sytuacjom kiedy ostatnia strona listy użytkowników "
+"zawiera bardzo mało elementów. Jeśli liczba użytkowników do wyświetlenia na "
+"ostatniej stronie listy będzie mniejsza lub równa tej liczbie, użytkownicy "
+"ci będą wyświetleni na przedniej stronie, zmniejszając liczbę stron listy."
 
 #: conf/admin/forms/users.py:247
 msgctxt "admin users settings form"
@@ -10792,12 +10862,12 @@ msgstr "Blokada \"%(name)s\" została usunięta."
 #: users/admin/views/datadownloads.py:23
 msgctxt "admin data downloads ordering choice "
 msgid "From newest"
-msgstr ""
+msgstr "Od najnowszych"
 
 #: users/admin/views/datadownloads.py:24
 msgctxt "admin data downloads ordering choice "
 msgid "From oldest"
-msgstr ""
+msgstr "Od najstarszych"
 
 #: users/admin/views/datadownloads.py:26
 msgctxt "admin data downloads"
@@ -10847,7 +10917,7 @@ msgstr "Utworzono nowe kopie danych dla wybranych użytkowników."
 #: users/admin/views/ranks.py:16
 msgctxt "admin ranks"
 msgid "Requested rank does not exist."
-msgstr ""
+msgstr "Żądana ranga nie istnieje."
 
 #: users/admin/views/ranks.py:33
 #, python-format
@@ -10859,19 +10929,21 @@ msgstr "Nowa ranga \"%(name)s\" została dodana."
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" has been edited."
-msgstr ""
+msgstr "Ranga \"%(name)s\" została zmieniona."
 
 #: users/admin/views/ranks.py:45
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" is default rank and can't be deleted."
-msgstr ""
+msgstr "Ranga \"%(name)s\" jest domyślną rangą i nie może być usunięta."
 
 #: users/admin/views/ranks.py:51
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" is assigned to users and can't be deleted."
 msgstr ""
+"Ranga \"%(name)s\" jest przypisana do kont użytkowników i nie może zostać "
+"usunięta."
 
 #: users/admin/views/ranks.py:57
 #, python-format
@@ -10883,25 +10955,25 @@ msgstr "Ranga \"%(name)s\" została usunięta."
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" has been moved below \"%(other)s\"."
-msgstr ""
+msgstr "Ranga \"%(name)s\" została przeniesiona za \"%(other)s\"."
 
 #: users/admin/views/ranks.py:95
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" has been moved above \"%(other)s\"."
-msgstr ""
+msgstr "Ranga \"%(name)s\" została przeniesione przed \"%(other)s\"."
 
 #: users/admin/views/ranks.py:110
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" is already default."
-msgstr ""
+msgstr "Ranga \"%(name)s\" już jest domyślną rangą."
 
 #: users/admin/views/ranks.py:115
 #, python-format
 msgctxt "admin ranks"
 msgid "Rank \"%(name)s\" has been made default."
-msgstr ""
+msgstr "Ranga \"%(name)s\" została ustawiona jako domyślna."
 
 #: users/admin/views/users.py:58
 msgctxt "admin users ordering choice"
@@ -11019,18 +11091,18 @@ msgstr ""
 #: users/admin/views/users.py:236 users/admin/views/users.py:256
 msgctxt "admin users"
 msgid "You can't delete yourself."
-msgstr ""
+msgstr "Nie możesz usunąć własnego konta."
 
 #: users/admin/views/users.py:240 users/admin/views/users.py:260
 #, python-format
 msgctxt "admin users"
 msgid "%(user)s is admin and can't be deleted."
-msgstr ""
+msgstr "Konto %(user)s ma uprawnienia administratora i nie może być usunięte."
 
 #: users/admin/views/users.py:249
 msgctxt "admin users"
 msgid "Selected users have been deleted."
-msgstr ""
+msgstr "Wybrani użytkownicy zostali usunięci."
 
 #: users/admin/views/users.py:274
 msgctxt "admin users"
@@ -11045,13 +11117,13 @@ msgstr ""
 #, python-format
 msgctxt "admin users"
 msgid "New user \"%(user)s\" has been registered."
-msgstr ""
+msgstr "Nowy użytkownik \"%(user)s\" został zarejestrowany."
 
 #: users/admin/views/users.py:316
 #, python-format
 msgctxt "admin users"
 msgid "User \"%(user)s\" has been edited."
-msgstr ""
+msgstr "Użytkownik \"%(user)s\" został zmieniony."
 
 #: users/api/auth.py:41
 #, python-format
@@ -11469,7 +11541,7 @@ msgstr ""
 #: users/forms/auth.py:106
 msgctxt "admin login form"
 msgid "Your account does not have admin privileges."
-msgstr ""
+msgstr "Twoje konto nie ma uprawnień administratora."
 
 #: users/forms/auth.py:129
 msgctxt "auth email form"
