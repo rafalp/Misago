@@ -30,7 +30,7 @@ def get_unreleased_error():
         ),
         "description": pgettext(
             "admin version check",
-            "Unreleased versions of Misago can lack security features and there is no supported way to upgrade them to release versions later.",
+            "Unreleased versions of Misago can contain serious breaking bugs or miss security features. They are also unsupported and it may be impossible to upgrade them to released version later.",
         ),
     }
 

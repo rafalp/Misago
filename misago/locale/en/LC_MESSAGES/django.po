@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 12:40+0000\n"
+"POT-Creation-Date: 2023-09-09 10:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1574,10 +1574,12 @@ msgstr ""
 #: conf/admin/forms/users.py:312
 #, python-format
 msgctxt "admin users settings form"
-msgid "Uploaded image's edge should be at least %(size)s pixels long."
-msgstr ""
+msgid "Uploaded image's edge should be at least %(size)s pixel long."
+msgid_plural "Uploaded image's edge should be at least %(size)s pixels long."
+msgstr[0] ""
+msgstr[1] ""
 
-#: conf/admin/forms/users.py:328
+#: conf/admin/forms/users.py:330
 msgctxt "admin users settings form"
 msgid "This value must be lower than number of users per page."
 msgstr ""
@@ -1668,8 +1670,9 @@ msgstr ""
 #: graphql/admin/versioncheck.py:33
 msgctxt "admin version check"
 msgid ""
-"Unreleased versions of Misago can lack security features and there is no "
-"supported way to upgrade them to release versions later."
+"Unreleased versions of Misago can contain serious breaking bugs or miss "
+"security features. They are also unsupported and it may be impossible to "
+"upgrade them to released version later."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:47

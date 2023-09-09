@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import npgettext_lazy, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
 from ....core.validators import validate_image_square
@@ -307,9 +307,11 @@ class UsersSettingsForm(SettingsForm):
         min_size = max(settings.MISAGO_AVATARS_SIZES)
         if upload.image.width < min_size:
             raise forms.ValidationError(
-                pgettext_lazy(
+                npgettext_lazy(
                     "admin users settings form",
+                    "Uploaded image's edge should be at least %(size)s pixel long.",
                     "Uploaded image's edge should be at least %(size)s pixels long.",
+                    min_size,
                 )
                 % {"size": min_size}
             )

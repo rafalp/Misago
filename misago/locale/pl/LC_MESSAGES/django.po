@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 12:40+0000\n"
+"POT-Creation-Date: 2023-09-09 10:55+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -974,12 +974,12 @@ msgstr ""
 #: conf/admin/forms/notifications.py:22
 msgctxt "admin notifications settings form"
 msgid "Notify about new replies in threads started by them"
-msgstr ""
+msgstr "Powiadamiaj o nowych odpowiedziach w tematach które rozpoczęli"
 
 #: conf/admin/forms/notifications.py:31
 msgctxt "admin notifications settings form"
 msgid "Notify about new replies in threads replied to by them"
-msgstr ""
+msgstr "Powiadamiaj o nowych odpowiedziach w tematach w których odpowiedzieli"
 
 #: conf/admin/forms/notifications.py:41
 msgctxt "admin notifications settings form"
@@ -987,7 +987,7 @@ msgid ""
 "Notify about new replies in new private threads started by followed users"
 msgstr ""
 "Powiadamiaj o nowych odpowiedziach prywatnych tematach zaczętych przez "
-"obserwowanych użytkowników"
+"użytkowników których obserwuje"
 
 #: conf/admin/forms/notifications.py:50
 msgctxt "admin notifications settings form"
@@ -1000,7 +1000,7 @@ msgstr ""
 msgctxt "admin notifications settings form"
 msgid "Notify about new private threads started by followed users"
 msgstr ""
-"Powiadamiaj o nowych prywatnych tematach od obserwowanych użytkowników"
+"Powiadamiaj o nowych prywatnych tematach od użytkowników których obserwuje"
 
 #: conf/admin/forms/notifications.py:69
 msgctxt "admin notifications settings form"
@@ -1079,6 +1079,8 @@ msgid ""
 "Address of the login form on provider's server that users will be redirected"
 " to."
 msgstr ""
+"Adres formularza logowania na witrynie serwera OAuth 2 do którego będą "
+"przekierowywani użytkownicy."
 
 #: conf/admin/forms/oauth2.py:86
 msgctxt "admin oauth2 settings form"
@@ -1584,7 +1586,7 @@ msgstr ""
 #: conf/admin/forms/users.py:247
 msgctxt "admin users settings form"
 msgid "Maximum age in days of posts that should count to the ranking position"
-msgstr ""
+msgstr "Maksymalny wiek postów (w dniach) liczonych do pozycji w rankingu"
 
 #: conf/admin/forms/users.py:253
 msgctxt "admin users settings form"
@@ -1645,10 +1647,14 @@ msgstr ""
 #: conf/admin/forms/users.py:312
 #, python-format
 msgctxt "admin users settings form"
-msgid "Uploaded image's edge should be at least %(size)s pixels long."
-msgstr ""
+msgid "Uploaded image's edge should be at least %(size)s pixel long."
+msgid_plural "Uploaded image's edge should be at least %(size)s pixels long."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
-#: conf/admin/forms/users.py:328
+#: conf/admin/forms/users.py:330
 msgctxt "admin users settings form"
 msgid "This value must be lower than number of users per page."
 msgstr ""
@@ -1740,9 +1746,13 @@ msgstr "Ta strona działa na niewydanej wersji Misago."
 #: graphql/admin/versioncheck.py:33
 msgctxt "admin version check"
 msgid ""
-"Unreleased versions of Misago can lack security features and there is no "
-"supported way to upgrade them to release versions later."
+"Unreleased versions of Misago can contain serious breaking bugs or miss "
+"security features. They are also unsupported and it may be impossible to "
+"upgrade them to released version later."
 msgstr ""
+"Niewydane wersje Misago mogą mieć poważne błędy lub braki w "
+"zabezpieczeniach. Dodatkowo nie są one wspierane i mogą być nie możliwe do "
+"późniejszego zaktualizowania do wydanej wersji."
 
 #: graphql/admin/versioncheck.py:47
 msgctxt "admin version check"
@@ -1757,6 +1767,8 @@ msgid ""
 "Version check feature relies on the API operated by the Python Package Index"
 " (pypi.org) to retrieve the latest Misago release version."
 msgstr ""
+"Funkcja sprawdzania wersji korzysta z API obsługiwanego przez Python Package"
+" Index (pypi.org) do ustalenia najnowszej wydanej wersji Misago."
 
 #: graphql/admin/versioncheck.py:76
 msgctxt "admin version check"
@@ -1781,6 +1793,8 @@ msgid ""
 "The site is running Misago version %(version)s while version %(latest)s is "
 "available."
 msgstr ""
+"Ta strona działa na wersji %(version)s Misago podczas gdy dostępna jest już "
+"wersja %(latest)s."
 
 #: icons/admin/__init__.py:15
 msgctxt "admin node"
@@ -2062,6 +2076,8 @@ msgid ""
 "Optional. Additional CSS class to include in link's \"class\" HTML "
 "attribute."
 msgstr ""
+"Opcjonalne. Dodatkowe klasy CSS do umieszczenia w atrybucie HTML \"class\" "
+"odnośnika."
 
 #: menus/admin/forms.py:33
 msgctxt "admin menu item form"
@@ -3515,6 +3531,9 @@ msgid ""
 "This will cause degraded performance and increased CPU usage by the site, "
 "leading to worse user experience and increased hosting costs."
 msgstr ""
+"Spowoduje to obniżoną wydajność oraz podwyższone zużycie zasobów przez "
+"stronę, a w rezultacie gorsze działanie strony dla użytkowników oraz możliwe"
+" wyższe koszty utrzymania."
 
 #: templates/misago/admin/dashboard/checks.html:133
 #, python-format
@@ -3719,6 +3738,8 @@ msgid ""
 "The link you've followed was incorrect or the page has been moved or "
 "deleted."
 msgstr ""
+"Użyty odnośnik do strony był błędny albo strona została przeniesiona lub "
+"usunięta."
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
 #: templates/misago/admin/errorpages/csrf_failure.html:14
@@ -7123,6 +7144,8 @@ msgid ""
 "Name can contain only latin alphabet characters, digits, dots, underscores "
 "and dashes."
 msgstr ""
+"Nazwa może zawierać wyłącznie znaki alfabetu łacińskiego, cyfry, kropki, "
+"podkreślniki i myślniki."
 
 #: themes/admin/validators.py:33
 msgctxt "admin css name validator"
@@ -7379,6 +7402,8 @@ msgid ""
 "List of comma separated file extensions associated with this attachment "
 "type."
 msgstr ""
+"Lista rozdzielonych przecinkami rozszerzeń plików należących do tego typu "
+"załączników."
 
 #: threads/admin/forms.py:101
 msgctxt "admin attachment type form"
@@ -7386,6 +7411,8 @@ msgid ""
 "Optional list of comma separated mime types associated with this attachment "
 "type."
 msgstr ""
+"Opcjonalna lista rozdzielonych przecinkami typów MIME plików należących do "
+"tego typu załączników."
 
 #: threads/admin/forms.py:105
 msgctxt "admin attachment type form"
@@ -7393,6 +7420,9 @@ msgid ""
 "Maximum allowed uploaded file size for this type, in kb. This setting is "
 "deprecated and has no effect. It will be deleted in Misago 1.0."
 msgstr ""
+"Maksymalny dozwolony rozmiar przesłanego pliku tego typu, w kilobajtach. To "
+"ustawienie jest przestarzałe i nie jest już używane. Zostanie ono usunięte w"
+" Misago 1.0."
 
 #: threads/admin/forms.py:109
 msgctxt "admin attachment type form"
@@ -7407,6 +7437,10 @@ msgid ""
 "to allow all users with permission to upload attachments to be able to "
 "upload attachments of this type."
 msgstr ""
+"Jeśli chcesz ograniczyć przesyłanie plików tego typu do użytkowników z "
+"określonymi rolami, wybierz te role z listy. W przeciwnym razie nie "
+"zaznaczaj żadnych ról na liście aby wszyscy użytkownicy z uprawnieniami do "
+"przesyła załączników mogli przesyłać załączniki tego typu."
 
 #: threads/admin/forms.py:117
 msgctxt "admin attachment type form"
@@ -7416,6 +7450,10 @@ msgid ""
 "to allow all users with permission to download attachments to be able to "
 "download attachments of this type."
 msgstr ""
+"Jeśli chcesz ograniczyć pobieranie plików tego typu do użytkowników z "
+"określonymi rolami, wybierz te role z listy. W przeciwnym razie nie "
+"zaznaczaj żadnych ról na liście aby wszyscy użytkownicy z uprawnieniami do "
+"pobierania załączników mogli pobierać załączniki tego typu."
 
 #: threads/admin/forms.py:129
 msgctxt "admin attachment type form"
@@ -10047,6 +10085,10 @@ msgid ""
 "is enabled, this user will need additional permissions assigned within it to"
 " admin Django modules."
 msgstr ""
+"Określa czy ten użytkownik może logować się do panelu administracyjnego. "
+"Jeśli panel administracyjny Django również jest włączony, ten użytkownik "
+"będzie wymagać nadania w nim dodatkowych uprawnień aby móc korzystać z "
+"modułów admina w Django."
 
 #: users/admin/forms.py:88
 msgctxt "admin user form"
@@ -10059,6 +10101,9 @@ msgid ""
 "Only administrators can access admin sites. In addition to admin site "
 "access, superadmins can also change other members admin levels."
 msgstr ""
+"Tylko administratorzy mają dostęp do panelu administracyjnego. Super "
+"administratorzy dodatkowo mogą nadawać i usuwać dostęp administratora innym "
+"użytkownikom."
 
 #: users/admin/forms.py:94
 msgctxt "admin user form"
@@ -10071,6 +10116,8 @@ msgid ""
 "Designates whether this user should be treated as active. Turning this off "
 "is non-destructible way to remove user accounts."
 msgstr ""
+"Określa czy konto tego użytkownika jest aktywne. Wyłączanie kont to "
+"odwracalny sposób usuwania kont użytkowników."
 
 #: users/admin/forms.py:100 users/admin/forms.py:130 users/admin/forms.py:161
 msgctxt "admin user form"
@@ -10083,16 +10130,18 @@ msgid ""
 "Optional message for forum team members explaining why user's account has "
 "been disabled."
 msgstr ""
+"Opcjonalna wiadomość dla pozostałych członków zespołu forum wyjaśniających "
+"dlaczego konto tego użytkownika jest wyłączone."
 
 #: users/admin/forms.py:107
 msgctxt "admin user form"
 msgid "Set new password"
-msgstr ""
+msgstr "Ustaw nowe hasło"
 
 #: users/admin/forms.py:114
 msgctxt "admin user form"
 msgid "Lock avatar changes"
-msgstr ""
+msgstr "Zablokuj zmiany awatara"
 
 #: users/admin/forms.py:117
 msgctxt "admin user form"
@@ -10100,6 +10149,9 @@ msgid ""
 "Setting this to yes will stop user from changing their avatar, and will "
 "reset their avatar to procedurally generated one."
 msgstr ""
+"Zmiana tego ustawienia na \"tak\" uniemożliwi temu użytkownikowi zmienianie "
+"własnego awatara, oraz zastąpi obraz jego aktualny awatar nowym, "
+"wygenerowanym proceduralnie."
 
 #: users/admin/forms.py:121 users/admin/forms.py:152
 msgctxt "admin user form"
@@ -10112,6 +10164,8 @@ msgid ""
 "Optional message for user explaining why they are banned form changing "
 "avatar."
 msgstr ""
+"Opcjonalna wiadomość dla użytkownika wyjaśniająca dlaczego nie mogą zmieniać"
+" swojego awatara."
 
 #: users/admin/forms.py:133
 msgctxt "admin user form"
@@ -10130,13 +10184,15 @@ msgstr ""
 #: users/admin/forms.py:145
 msgctxt "admin user form"
 msgid "Lock signature changes"
-msgstr ""
+msgstr "Zablokuj zmiany podpisu"
 
 #: users/admin/forms.py:148
 msgctxt "admin user form"
 msgid ""
 "Setting this to yes will stop user from making changes to his/her signature."
 msgstr ""
+"Zmiana tego ustawienia na \"tak\" uniemożliwi temu użytkownikowi zmienianie "
+"własnego opisu."
 
 #: users/admin/forms.py:155
 msgctxt "admin user form"
@@ -10185,6 +10241,8 @@ msgid ""
 "Automatically watch private threads that the user was invited to by users "
 "they are following"
 msgstr ""
+"Automatycznie obserwuj prywatne tematy do których użytkownik został "
+"zaproszony przez użytkowników których obserwuje"
 
 #: users/admin/forms.py:218
 msgctxt "admin user form"
@@ -10192,6 +10250,8 @@ msgid ""
 "Automatically watch private threads that the user was invited to by other "
 "users"
 msgstr ""
+"Automatycznie obserwuj prywatne tematy do których użytkownik został "
+"zaproszony przez innych użytkowników."
 
 #: users/admin/forms.py:226
 msgctxt "admin user form"
@@ -10199,11 +10259,15 @@ msgid ""
 "Notify about new private thread invitations from users this user is "
 "following"
 msgstr ""
+"Powiadamiaj o nowych zaproszeniach do prywatnych tematów od użytkowników "
+"których obserwuje"
 
 #: users/admin/forms.py:234
 msgctxt "admin user form"
 msgid "Notify about new private thread invitations from other users"
 msgstr ""
+"Powiadamiaj o nowych zaproszeniach do prywatnych tematów od pozostałych "
+"użytkowników"
 
 #: users/admin/forms.py:287
 #, python-format
@@ -10226,6 +10290,8 @@ msgid ""
 "Ranks are used to group and distinguish users. They are also used to add "
 "permissions to groups of users."
 msgstr ""
+"Rangi służą do grupowania i wyróżniania użytkowników. Mogą być również "
+"używane do nadawania użytkownikom dodatkowych uprawnień."
 
 #: users/admin/forms.py:316
 msgctxt "admin user form"
@@ -10236,6 +10302,8 @@ msgstr ""
 msgctxt "admin user form"
 msgid "Individual roles of this user. All users must have a \"Member\" role."
 msgstr ""
+"Role przypisane do tego użytkownika. Wszyscy użytkownicy muszą mieć rolę "
+"\"Członek\"."
 
 #: users/admin/forms.py:381
 msgctxt "admin users filter form"
@@ -10303,6 +10371,8 @@ msgid ""
 "Short and descriptive name of all users with this rank. \"The Team\" or "
 "\"Game Masters\" are good examples."
 msgstr ""
+"Krótka i opisowa nazwa wszystkich użytkowników z tą rangą. Np. \"Zespół "
+"forum\" albo \"Mistrzowie gry\"."
 
 #: users/admin/forms.py:484
 msgctxt "admin rank form"
@@ -10315,6 +10385,8 @@ msgid ""
 "Optional, singular version of rank name displayed by user names. For example"
 " \"GM\" or \"Dev\"."
 msgstr ""
+"Opcjonalna alternatywna nazwa rangi w liczbie pojedynczej, wyświetlana obok "
+"nazw użytkowników. Np. \"mod\" lub \"recenzent\"."
 
 #: users/admin/forms.py:492
 msgctxt "admin rank form"
@@ -10327,6 +10399,7 @@ msgid ""
 "Optional description explaining function or status of members distincted "
 "with this rank."
 msgstr ""
+"Opcjonalny opis wyjaśniający rolę albo funkcję osób wyróżnionych tą rangą."
 
 #: users/admin/forms.py:502
 msgctxt "admin rank form"
@@ -10359,6 +10432,8 @@ msgid ""
 "Selecting this option will make users with this rank easily discoverable by "
 "others through dedicated page on forum users list."
 msgstr ""
+"Włączenie tej opcji sprawi że użytkownicy z tą rangą będą łatwi do odkrycia "
+"przez innych poprzez dedykowaną stronę na liście użytkowników."
 
 #: users/admin/forms.py:541
 msgctxt "admin rank form"
