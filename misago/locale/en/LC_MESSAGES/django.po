@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-01 11:49+0000\n"
+"POT-Creation-Date: 2023-09-24 12:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,7 @@ msgstr ""
 msgctxt "admin color field"
 msgid ""
 "Value must be a 7-character string specifying an RGB color in a hexadecimal "
-"format."
+"format (eg.: \"#F5A9B8\")."
 msgstr ""
 
 #: admin/forms.py:67 templates/misago/admin/users/edit.html:145
@@ -248,8 +248,7 @@ msgstr ""
 #: categories/admin/forms.py:94
 msgctxt "admin category form"
 msgid ""
-"Optional CSS class used to customize this category's appearance from "
-"templates."
+"Optional CSS class used to customize this category's appearance from themes."
 msgstr ""
 
 #: categories/admin/forms.py:98
@@ -375,7 +374,7 @@ msgstr ""
 msgctxt "admin category form"
 msgid ""
 "You are trying to move this category threads to a child category that will "
-"be deleted together with this category."
+"also be deleted."
 msgstr ""
 
 #: categories/admin/forms.py:264
@@ -648,14 +647,14 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:25
 msgctxt "admin analytics settings form"
-msgid "Site verification token"
+msgid "Site verification code"
 msgstr ""
 
 #: conf/admin/forms/analytics.py:28
 msgctxt "admin analytics settings form"
 msgid ""
-"This token was extracted from uploaded site verification file. To change it, "
-"upload new verification file."
+"This code was extracted from the uploaded site verification file. To change "
+"it, upload new verification file."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:35
@@ -672,12 +671,12 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:52
 msgctxt "admin analytics settings form"
-msgid "Submitted file type is not HTML."
+msgid "Uploaded file type is not HTML."
 msgstr ""
 
 #: conf/admin/forms/analytics.py:62
 msgctxt "admin analytics settings form"
-msgid "Submitted file doesn't contain a verification code."
+msgid "Uploaded file doesn't contain a verification code."
 msgstr ""
 
 #: conf/admin/forms/captcha.py:21
@@ -930,7 +929,7 @@ msgstr ""
 msgctxt "admin general settings form"
 msgid ""
 "Hiding the link to the ACP from user menus reduces risk of malicious actors "
-"gaining access to admin session for admin users who are sharing their PC "
+"gaining access to admin session for admin users who are sharing their device "
 "with others or who are logging in to the site in public spaces."
 msgstr ""
 
@@ -944,12 +943,12 @@ msgstr ""
 
 #: conf/admin/forms/notifications.py:22
 msgctxt "admin notifications settings form"
-msgid "Notify about new replies in threads started by the user"
+msgid "Notify about new replies in threads started by them"
 msgstr ""
 
 #: conf/admin/forms/notifications.py:31
 msgctxt "admin notifications settings form"
-msgid "Notify about new replies in threads replied to by the user"
+msgid "Notify about new replies in threads replied to by them"
 msgstr ""
 
 #: conf/admin/forms/notifications.py:41
@@ -1036,7 +1035,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:79
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Address to login form on provider's server that users will be redirected to."
+"Address of the login form on provider's server that users will be redirected "
+"to."
 msgstr ""
 
 #: conf/admin/forms/oauth2.py:86
@@ -1287,9 +1287,10 @@ msgstr ""
 #: conf/admin/forms/threads.py:114
 msgctxt "admin threads settings form"
 msgid ""
-"If number of posts to be displayed on the last page is less or equal to "
-"number specified in this setting, those posts will instead be displayed on "
-"previous page, reducing the total number of pages in thread."
+"This setting prevents situations when the last page of a thread contains "
+"very few items. If number of posts to be displayed on the last page is less "
+"or equal to number specified in this setting, those posts will instead be "
+"appended to the previous page, reducing number of thread's pages."
 msgstr ""
 
 #: conf/admin/forms/threads.py:121
@@ -1392,7 +1393,7 @@ msgstr ""
 msgctxt "admin users settings form"
 msgid ""
 "Turning this option off will forbid forum users from uploading custom "
-"avatars. Good for forums adressed at young users."
+"avatars."
 msgstr ""
 
 #: conf/admin/forms/users.py:108
@@ -1427,13 +1428,13 @@ msgstr ""
 
 #: conf/admin/forms/users.py:145
 msgctxt "admin users settings form"
-msgid "Fallback for default gravatar"
+msgid "Fallback for default Gravatar"
 msgstr ""
 
 #: conf/admin/forms/users.py:149
 msgctxt "admin users settings form"
 msgid ""
-"Select which avatar to use when user has no gravatar associated with their e-"
+"Select which avatar to use when user has no Gravatar associated with their e-"
 "mail address."
 msgstr ""
 
@@ -1508,14 +1509,15 @@ msgstr ""
 #: conf/admin/forms/users.py:239
 msgctxt "admin users settings form"
 msgid ""
-"If number of users to be displayed on the last page is less or equal to "
-"number specified in this setting, those users will instead be displayed  on "
-"previous page, reducing the total number of pages on the list."
+"This setting prevents situations when the last page of a users list contains "
+"very few items. If number of users to be displayed on the last page is less "
+"or equal to number specified in this setting, those users will instead be "
+"appended to the previous page, reducing number of list's pages."
 msgstr ""
 
 #: conf/admin/forms/users.py:247
 msgctxt "admin users settings form"
-msgid "Maximum age in days of posts that should count to the ranking"
+msgid "Maximum age in days of posts that should count to the ranking position"
 msgstr ""
 
 #: conf/admin/forms/users.py:253
@@ -1573,10 +1575,12 @@ msgstr ""
 #: conf/admin/forms/users.py:312
 #, python-format
 msgctxt "admin users settings form"
-msgid "Uploaded image's edge should be at least %(size)s pixels long."
-msgstr ""
+msgid "Uploaded image's edge should be at least %(size)s pixel long."
+msgid_plural "Uploaded image's edge should be at least %(size)s pixels long."
+msgstr[0] ""
+msgstr[1] ""
 
-#: conf/admin/forms/users.py:328
+#: conf/admin/forms/users.py:330
 msgctxt "admin users settings form"
 msgid "This value must be lower than number of users per page."
 msgstr ""
@@ -1667,8 +1671,9 @@ msgstr ""
 #: graphql/admin/versioncheck.py:33
 msgctxt "admin version check"
 msgid ""
-"Unreleased versions of Misago can lack security features and there is no "
-"supported way to upgrade them to release versions later."
+"Unreleased versions of Misago can contain serious breaking bugs or miss "
+"security features. They are also unsupported and it may be impossible to "
+"upgrade them to released version later."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:47
@@ -1682,7 +1687,7 @@ msgstr ""
 msgctxt "admin version check"
 msgid ""
 "Version check feature relies on the API operated by the Python Package Index "
-"(pypi.org) API to retrieve latest Misago release version."
+"(pypi.org) to retrieve the latest Misago release version."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:76
@@ -1976,7 +1981,8 @@ msgstr ""
 
 #: menus/admin/forms.py:28
 msgctxt "admin menu item form"
-msgid "If you want to set custom value for link's \"class\"."
+msgid ""
+"Optional. Additional CSS class to include in link's \"class\" HTML attribute."
 msgstr ""
 
 #: menus/admin/forms.py:33
@@ -2177,7 +2183,7 @@ msgstr ""
 
 #: oauth2/exceptions.py:104
 msgctxt "oauth2 error"
-msgid "JSON sent by the OAuth2 provider did not contain a user id."
+msgid "JSON sent by the OAuth2 provider did not contain a user ID."
 msgstr ""
 
 #: oauth2/exceptions.py:112
@@ -2192,14 +2198,17 @@ msgctxt "oauth2 error"
 msgid "User profile retrieved from the OAuth2 provider did not validate."
 msgstr ""
 
-#: oauth2/user.py:98
+#: oauth2/user.py:100
 msgctxt "oauth2 error"
-msgid "This e-mail address is not available."
+msgid ""
+"Your e-mail address returned by the provider is not available for use on "
+"this site."
 msgstr ""
 
-#: oauth2/user.py:105
+#: oauth2/user.py:110
 msgctxt "oauth2 error"
-msgid "This username is not available."
+msgid ""
+"Your username returned by the provider is not available for use on this site."
 msgstr ""
 
 #: search/api.py:18
@@ -2255,10 +2264,11 @@ msgstr ""
 #: socialauth/admin/forms/base.py:50
 msgctxt "admin social auth provider form"
 msgid ""
-"Enabling this option will result in the user being signed in if their forum "
-"account was registered using same e-mail address as used on the social site. "
-"Otherwise they will be asked to specify a different e-mail to continue sign "
-"in using social site."
+"This setting controls handling of e-mail collisions that occur when e-mail "
+"address returned from social site is already stored in the forum's database. "
+"Enabling this option will result in the user being signed in to pre-existing "
+"account. Otherwise they will be asked to specify a different e-mail to "
+"complete the sign in using social site."
 msgstr ""
 
 #: socialauth/admin/forms/base.py:59 socialauth/admin/forms/base.py:61
@@ -2364,10 +2374,7 @@ msgstr ""
 #: templates/misago/acl_debug.html:5
 #, python-format
 msgctxt "debug toolbar user acl"
-msgid ""
-"\n"
-"    %(user)s roles\n"
-"    "
+msgid "%(user)s roles"
 msgstr ""
 
 #: templates/misago/acl_debug.html:9
@@ -2616,25 +2623,30 @@ msgstr ""
 
 #: templates/misago/admin/attachments/list.html:59
 msgctxt "admin orphaned attachment"
-msgid "None"
+msgid "This attachment is not associated with any existing post."
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:66
+#: templates/misago/admin/attachments/list.html:60
+msgctxt "admin orphaned attachment"
+msgid "Orphaned"
+msgstr ""
+
+#: templates/misago/admin/attachments/list.html:68
 msgctxt "admin attachments"
 msgid "Delete"
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:76
+#: templates/misago/admin/attachments/list.html:78
 msgctxt "admin attachments"
 msgid "No attachments matching criteria exist."
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:78
+#: templates/misago/admin/attachments/list.html:80
 msgctxt "admin attachments"
 msgid "No attachments exist."
 msgstr ""
 
-#: templates/misago/admin/attachments/list.html:113
+#: templates/misago/admin/attachments/list.html:115
 msgctxt "admin attachments"
 msgid "Are you sure you want to delete this attachment?"
 msgstr ""
@@ -2691,7 +2703,7 @@ msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:33
 msgctxt "admin attachments types list item"
-msgid "Uploading new files of this type is disabled"
+msgid "Uploading new files of this type is disabled."
 msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:34
@@ -2701,7 +2713,7 @@ msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:37
 msgctxt "admin attachments types list item"
-msgid "Uploading and downloading files of this type is disabled"
+msgid "Uploading and downloading files of this type is disabled."
 msgstr ""
 
 #: templates/misago/admin/attachmenttypes/list.html:38
@@ -3352,7 +3364,7 @@ msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:82
 msgctxt "admin site address check"
-msgid "Links in e-mails sentby Misago will be broken."
+msgid "Links in e-mails sent by Misago may be broken."
 msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:102
@@ -3376,7 +3388,7 @@ msgstr ""
 msgctxt "admin cache check"
 msgid ""
 "This will cause degraded performance and increased CPU usage by the site, "
-"possibly leading to increased hosting costs."
+"leading to worse user experience and increased hosting costs."
 msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:133
@@ -3563,7 +3575,7 @@ msgstr ""
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
 msgid ""
-"The link you clicked was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
@@ -4104,6 +4116,7 @@ msgid "Enabled login methods"
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:15
+#: templates/misago/admin/socialauth/list.html:115
 msgctxt "admin social auth providers list"
 msgid "Provider"
 msgstr ""
@@ -4152,13 +4165,8 @@ msgid ""
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:109
-msgctxt "admin social auth providers"
+msgctxt "admin social auth providers list"
 msgid "Setup new login method"
-msgstr ""
-
-#: templates/misago/admin/socialauth/list.html:115
-msgctxt "admin social auth providers"
-msgid "Provider"
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:128
@@ -4436,7 +4444,7 @@ msgid "Import theme"
 msgstr ""
 
 #: templates/misago/admin/themes/import.html:23
-msgctxt "admin theme import"
+msgctxt "admin theme import submit"
 msgid "Import"
 msgstr ""
 
@@ -4711,7 +4719,8 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:264
 msgctxt "admin user form"
 msgid ""
-"No additional action is required. This account will be deleted automatically."
+"No additional action is required. This account will be deleted automatically "
+"when process is completed."
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:307
@@ -5211,20 +5220,15 @@ msgstr ""
 #: templates/misago/errorpages/404.html:9
 #: templates/misago/errorpages/404.html:18
 #: templates/misago/errorpages/404.html:23
+#: templates/misago/errorpages/404.html:38
 msgctxt "error 404 page"
 msgid ""
-"The link you clicked was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/404.html:37
 msgctxt "error 404 page"
 msgid "Requested page could not be found."
-msgstr ""
-
-#: templates/misago/errorpages/404.html:38
-msgctxt "error 404 page"
-msgid ""
-"The link you followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/405.html:5
@@ -6794,7 +6798,7 @@ msgstr ""
 #: themes/admin/forms.py:200
 msgctxt "admin theme css form"
 msgid ""
-"Should be an correct filename and include the .css extension. It will be "
+"Should be a correct filename and include the .css extension. It will be "
 "lowercased."
 msgstr ""
 
@@ -7036,9 +7040,9 @@ msgctxt "admin node"
 msgid "Attachment types"
 msgstr ""
 
-#: threads/admin/__init__.py:45
+#: threads/admin/__init__.py:46
 msgctxt "admin node"
-msgid "Specify what files may be uploaded on the forum."
+msgid "Specify what files may be uploaded as part of user posts."
 msgstr ""
 
 #: threads/admin/forms.py:8
@@ -7166,7 +7170,7 @@ msgstr ""
 
 #: threads/admin/views/attachments.py:15
 msgctxt "admin attachments"
-msgid "Requested attachment could not be found."
+msgid "Requested attachment does not exist."
 msgstr ""
 
 #: threads/admin/views/attachments.py:28
@@ -7232,7 +7236,7 @@ msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:16
 msgctxt "admin attachments types"
-msgid "Requested attachment type could not be found."
+msgid "Requested attachment type does not exist."
 msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:39
@@ -9768,19 +9772,19 @@ msgstr ""
 
 #: users/admin/forms.py:107
 msgctxt "admin user form"
-msgid "Change password to"
+msgid "Set new password"
 msgstr ""
 
 #: users/admin/forms.py:114
 msgctxt "admin user form"
-msgid "Lock avatar"
+msgid "Lock avatar changes"
 msgstr ""
 
 #: users/admin/forms.py:117
 msgctxt "admin user form"
 msgid ""
-"Setting this to yes will stop user from changing his/her avatar, and will "
-"reset his/her avatar to procedurally generated one."
+"Setting this to yes will stop user from changing their avatar, and will "
+"reset their avatar to procedurally generated one."
 msgstr ""
 
 #: users/admin/forms.py:121 users/admin/forms.py:152
@@ -9791,7 +9795,7 @@ msgstr ""
 #: users/admin/forms.py:124
 msgctxt "admin user form"
 msgid ""
-"Optional message for user explaining why he/she is banned form changing "
+"Optional message for user explaining why they are banned form changing "
 "avatar."
 msgstr ""
 
@@ -9809,7 +9813,7 @@ msgstr ""
 
 #: users/admin/forms.py:145
 msgctxt "admin user form"
-msgid "Lock signature"
+msgid "Lock signature changes"
 msgstr ""
 
 #: users/admin/forms.py:148
@@ -10037,87 +10041,87 @@ msgid ""
 "others through dedicated page on forum users list."
 msgstr ""
 
-#: users/admin/forms.py:541
+#: users/admin/forms.py:543
 msgctxt "admin rank form"
-msgid "This name collides with other rank."
+msgid "There's already an other rank with this name."
 msgstr ""
 
-#: users/admin/forms.py:549
+#: users/admin/forms.py:552
 msgctxt "admin ban users form"
 msgid "Values to ban"
 msgstr ""
 
-#: users/admin/forms.py:554
+#: users/admin/forms.py:557
 msgctxt "admin ban users form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:559
+#: users/admin/forms.py:562
 msgctxt "admin ban users form"
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:564 users/admin/forms.py:579
+#: users/admin/forms.py:567 users/admin/forms.py:582
 msgctxt "admin ban users form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:569
+#: users/admin/forms.py:572
 msgctxt "admin ban users form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:574
+#: users/admin/forms.py:577
 msgctxt "admin ban users form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:584
+#: users/admin/forms.py:587
 msgctxt "admin ban users form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:593
+#: users/admin/forms.py:596
 msgctxt "admin ban users form"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:594
+#: users/admin/forms.py:597
 msgctxt "admin ban users form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:595
+#: users/admin/forms.py:598
 msgctxt "admin ban users form"
 msgid "E-mail domains"
 msgstr ""
 
-#: users/admin/forms.py:601
+#: users/admin/forms.py:604
 msgctxt "admin ban users form"
 msgid "IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:605
+#: users/admin/forms.py:608
 msgctxt "admin ban users form"
 msgid "First segment of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:611
+#: users/admin/forms.py:614
 msgctxt "admin ban users form"
 msgid "First two segments of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:619
+#: users/admin/forms.py:622
 msgctxt "admin ban form"
 msgid "Check type"
 msgstr ""
 
-#: users/admin/forms.py:624
+#: users/admin/forms.py:627
 msgctxt "admin ban form"
 msgid "Restrict this ban to registrations"
 msgstr ""
 
-#: users/admin/forms.py:627
+#: users/admin/forms.py:630
 msgctxt "admin ban form"
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
@@ -10126,12 +10130,12 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: users/admin/forms.py:631
+#: users/admin/forms.py:634
 msgctxt "admin ban form"
 msgid "Banned value"
 msgstr ""
 
-#: users/admin/forms.py:635
+#: users/admin/forms.py:638
 msgctxt "admin ban form"
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for partial matches. "
@@ -10139,122 +10143,122 @@ msgid ""
 "beginning with \"83.\"."
 msgstr ""
 
-#: users/admin/forms.py:639
+#: users/admin/forms.py:642
 msgctxt "admin ban form"
 msgid "Banned value can't be longer than 250 characters."
 msgstr ""
 
-#: users/admin/forms.py:644
+#: users/admin/forms.py:647
 msgctxt "admin ban form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:649
+#: users/admin/forms.py:652
 msgctxt "admin ban form"
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:654 users/admin/forms.py:668
+#: users/admin/forms.py:657 users/admin/forms.py:671
 msgctxt "admin ban form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:659
+#: users/admin/forms.py:662
 msgctxt "admin ban form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:663
+#: users/admin/forms.py:666
 msgctxt "admin ban form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:673
+#: users/admin/forms.py:676
 msgctxt "admin ban form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:695
+#: users/admin/forms.py:698
 msgctxt "admin ban form"
 msgid "Banned value is too vague."
 msgstr ""
 
-#: users/admin/forms.py:703
+#: users/admin/forms.py:706
 msgctxt "admin bans filter form"
 msgid "Type"
 msgstr ""
 
-#: users/admin/forms.py:706
+#: users/admin/forms.py:709
 msgctxt "admin bans type filter choice"
 msgid "All bans"
 msgstr ""
 
-#: users/admin/forms.py:707
+#: users/admin/forms.py:710
 msgctxt "admin bans type filter choice"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:708
+#: users/admin/forms.py:711
 msgctxt "admin bans filter form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:709
+#: users/admin/forms.py:712
 msgctxt "admin bans type filter choice"
 msgid "IPs"
 msgstr ""
 
-#: users/admin/forms.py:713
+#: users/admin/forms.py:716
 msgctxt "admin bans filter form"
 msgid "Banned value begins with"
 msgstr ""
 
-#: users/admin/forms.py:717
+#: users/admin/forms.py:720
 msgctxt "admin bans filter form"
 msgid "Registration only"
 msgstr ""
 
-#: users/admin/forms.py:720
+#: users/admin/forms.py:723
 msgctxt "admin bans registration filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:721
+#: users/admin/forms.py:724
 msgctxt "admin bans registration filter choice"
 msgid "Yes"
 msgstr ""
 
-#: users/admin/forms.py:722
+#: users/admin/forms.py:725
 msgctxt "admin bans registration filter choice"
 msgid "No"
 msgstr ""
 
-#: users/admin/forms.py:726
+#: users/admin/forms.py:729
 msgctxt "admin bans filter form"
 msgid "State"
 msgstr ""
 
-#: users/admin/forms.py:729
+#: users/admin/forms.py:732
 msgctxt "admin bans state filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:730
+#: users/admin/forms.py:733
 msgctxt "admin bans state filter choice"
 msgid "Active"
 msgstr ""
 
-#: users/admin/forms.py:731
+#: users/admin/forms.py:734
 msgctxt "admin bans state filter choice"
 msgid "Expired"
 msgstr ""
 
-#: users/admin/forms.py:767
+#: users/admin/forms.py:770
 msgctxt "admin data download request form"
 msgid "Usernames or emails"
 msgstr ""
 
-#: users/admin/forms.py:770
+#: users/admin/forms.py:773
 msgctxt "admin data download request form"
 msgid ""
 "Enter every item in new line. Duplicates will be ignored. This field is case "
@@ -10263,7 +10267,7 @@ msgid ""
 "notification will be sent to every user once their download is ready."
 msgstr ""
 
-#: users/admin/forms.py:784
+#: users/admin/forms.py:787
 #, python-format
 msgctxt "admin data download request form"
 msgid ""
@@ -10271,22 +10275,22 @@ msgid ""
 "%(show_value)s)."
 msgstr ""
 
-#: users/admin/forms.py:804
+#: users/admin/forms.py:807
 msgctxt "admin data download request form"
 msgid "One or more specified users could not be found."
 msgstr ""
 
-#: users/admin/forms.py:813
+#: users/admin/forms.py:816
 msgctxt "admin data download requests filter form"
 msgid "Status"
 msgstr ""
 
-#: users/admin/forms.py:818
+#: users/admin/forms.py:821
 msgctxt "admin data download requests filter form"
 msgid "User"
 msgstr ""
 
-#: users/admin/forms.py:822
+#: users/admin/forms.py:825
 msgctxt "admin data download requests filter form"
 msgid "Requested by"
 msgstr ""

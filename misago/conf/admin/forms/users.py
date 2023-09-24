@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import npgettext_lazy, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
 from ....core.validators import validate_image_square
@@ -100,7 +100,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Allow custom avatar uploads"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            "Turning this option off will forbid forum users from uploading custom avatars. Good for forums adressed at young users.",
+            "Turning this option off will forbid forum users from uploading custom avatars.",
         ),
     )
     avatar_upload_limit = forms.IntegerField(
@@ -142,11 +142,11 @@ class UsersSettingsForm(SettingsForm):
     )
     default_gravatar_fallback = forms.ChoiceField(
         label=pgettext_lazy(
-            "admin users settings form", "Fallback for default gravatar"
+            "admin users settings form", "Fallback for default Gravatar"
         ),
         help_text=pgettext_lazy(
             "admin users settings form",
-            "Select which avatar to use when user has no gravatar associated with their e-mail address.",
+            "Select which avatar to use when user has no Gravatar associated with their e-mail address.",
         ),
         choices=[
             (
@@ -236,7 +236,7 @@ class UsersSettingsForm(SettingsForm):
         label=pgettext_lazy("admin users settings form", "Maximum orphans"),
         help_text=pgettext_lazy(
             "admin users settings form",
-            "If number of users to be displayed on the last page is less or equal to number specified in this setting, those users will instead be displayed  on previous page, reducing the total number of pages on the list.",
+            "This setting prevents situations when the last page of a users list contains very few items. If number of users to be displayed on the last page is less or equal to number specified in this setting, those users will instead be appended to the previous page, reducing number of list's pages.",
         ),
         min_value=0,
     )
@@ -244,7 +244,7 @@ class UsersSettingsForm(SettingsForm):
     top_posters_ranking_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin users settings form",
-            "Maximum age in days of posts that should count to the ranking",
+            "Maximum age in days of posts that should count to the ranking position",
         ),
         min_value=1,
     )
@@ -307,9 +307,11 @@ class UsersSettingsForm(SettingsForm):
         min_size = max(settings.MISAGO_AVATARS_SIZES)
         if upload.image.width < min_size:
             raise forms.ValidationError(
-                pgettext_lazy(
+                npgettext_lazy(
                     "admin users settings form",
+                    "Uploaded image's edge should be at least %(size)s pixel long.",
                     "Uploaded image's edge should be at least %(size)s pixels long.",
+                    min_size,
                 )
                 % {"size": min_size}
             )

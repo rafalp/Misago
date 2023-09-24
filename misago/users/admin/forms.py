@@ -104,24 +104,24 @@ class EditUserForm(UserBaseForm):
     )
 
     new_password = forms.CharField(
-        label=pgettext_lazy("admin user form", "Change password to"),
+        label=pgettext_lazy("admin user form", "Set new password"),
         strip=False,
         widget=forms.PasswordInput,
         required=False,
     )
 
     is_avatar_locked = YesNoSwitch(
-        label=pgettext_lazy("admin user form", "Lock avatar"),
+        label=pgettext_lazy("admin user form", "Lock avatar changes"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Setting this to yes will stop user from changing his/her avatar, and will reset his/her avatar to procedurally generated one.",
+            "Setting this to yes will stop user from changing their avatar, and will reset their avatar to procedurally generated one.",
         ),
     )
     avatar_lock_user_message = forms.CharField(
         label=pgettext_lazy("admin user form", "User message"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Optional message for user explaining why he/she is banned form changing avatar.",
+            "Optional message for user explaining why they are banned form changing avatar.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
@@ -142,7 +142,7 @@ class EditUserForm(UserBaseForm):
         required=False,
     )
     is_signature_locked = YesNoSwitch(
-        label=pgettext_lazy("admin user form", "Lock signature"),
+        label=pgettext_lazy("admin user form", "Lock signature changes"),
         help_text=pgettext_lazy(
             "admin user form",
             "Setting this to yes will stop user from making changes to his/her signature.",
@@ -537,8 +537,12 @@ class RankForm(forms.ModelForm):
             unique_qs = unique_qs.exclude(pk=self.instance.pk)
 
         if unique_qs.exists():
+            print("HERE")
             raise forms.ValidationError(
-                pgettext("admin rank form", "This name collides with other rank.")
+                pgettext(
+                    "admin rank form",
+                    "There's already an other rank with this name.",
+                )
             )
 
         return data

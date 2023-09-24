@@ -12,7 +12,9 @@ export default class extends React.Component {
   }
 
   onSuccess = () => {
-    snackbar.info(pgettext("edit details", "Your details have been updated."))
+    snackbar.info(
+      pgettext("profile details form", "Your details have been updated.")
+    )
   }
 
   render() {

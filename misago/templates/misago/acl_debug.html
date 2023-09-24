@@ -2,7 +2,7 @@
 
 <h4>
   {% if misago_user.is_authenticated %}
-    {% blocktrans with user=misago_user.username context "debug toolbar user acl" %}
+    {% blocktrans trimmed with user=misago_user.username context "debug toolbar user acl" %}
     {{ user }} roles
     {% endblocktrans %}
   {% else %}

@@ -197,7 +197,7 @@ class CssEditorForm(forms.ModelForm):
         label=pgettext_lazy("admin theme css form", "Name"),
         help_text=pgettext_lazy(
             "admin theme css form",
-            "Should be an correct filename and include the .css extension. It will be lowercased.",
+            "Should be a correct filename and include the .css extension. It will be lowercased.",
         ),
         validators=[validate_css_name],
     )

@@ -101,7 +101,7 @@ class OAuth2UserDataJSONError(OAuth2ProviderError):
 
 class OAuth2UserIdNotProvidedError(OAuth2Error):
     message = pgettext_lazy(
-        "oauth2 error", "JSON sent by the OAuth2 provider did not contain a user id."
+        "oauth2 error", "JSON sent by the OAuth2 provider did not contain a user ID."
     )
 
 

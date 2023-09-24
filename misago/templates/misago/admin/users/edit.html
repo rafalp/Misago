@@ -261,7 +261,7 @@
     {% if target.is_deleting_account %}
       <div class="alert alert-danger" role="alert">
         <p>{% trans "This user is deleting their account. It has been deactivated for the duration of the process." context "admin user form" %}</p>
-        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically." context "admin user form" %}</p>
+        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically when process is completed." context "admin user form" %}</p>
       </div>
     {% else %}
       {% if 'is_active' in form.fields %}

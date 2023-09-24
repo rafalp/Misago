@@ -91,7 +91,7 @@ class CategoryFormBase(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            "Optional CSS class used to customize this category's appearance from templates.",
+            "Optional CSS class used to customize this category's appearance from themes.",
         ),
     )
     is_closed = YesNoSwitch(
@@ -250,7 +250,7 @@ class DeleteCategoryFormBase(forms.ModelForm):
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
-                    "You are trying to move this category threads to a child category that will be deleted together with this category.",
+                    "You are trying to move this category threads to a child category that will also be deleted.",
                 )
                 raise forms.ValidationError(message)
 

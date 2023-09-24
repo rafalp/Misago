@@ -22,10 +22,10 @@ class AnalyticsSettingsForm(SettingsForm):
         required=False,
     )
     google_site_verification = forms.CharField(
-        label=pgettext_lazy("admin analytics settings form", "Site verification token"),
+        label=pgettext_lazy("admin analytics settings form", "Site verification code"),
         help_text=pgettext_lazy(
             "admin analytics settings form",
-            "This token was extracted from uploaded site verification file. To change it, upload new verification file.",
+            "This code was extracted from the uploaded site verification file. To change it, upload new verification file.",
         ),
         required=False,
         disabled=True,
@@ -49,7 +49,7 @@ class AnalyticsSettingsForm(SettingsForm):
         if upload.content_type != "text/html":
             raise forms.ValidationError(
                 pgettext_lazy(
-                    "admin analytics settings form", "Submitted file type is not HTML."
+                    "admin analytics settings form", "Uploaded file type is not HTML."
                 )
             )
 
@@ -59,7 +59,7 @@ class AnalyticsSettingsForm(SettingsForm):
             raise forms.ValidationError(
                 pgettext_lazy(
                     "admin analytics settings form",
-                    "Submitted file doesn't contain a verification code.",
+                    "Uploaded file doesn't contain a verification code.",
                 )
             )
 

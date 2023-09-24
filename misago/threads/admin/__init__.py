@@ -42,7 +42,8 @@ class MisagoAdminExtension:
         site.add_node(
             name=pgettext_lazy("admin node", "Attachment types"),
             description=pgettext_lazy(
-                "admin node", "Specify what files may be uploaded on the forum."
+                "admin node",
+                "Specify what files may be uploaded as part of user posts.",
             ),
             parent="settings",
             namespace="attachment-types",

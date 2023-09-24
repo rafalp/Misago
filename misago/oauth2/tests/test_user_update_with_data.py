@@ -98,7 +98,10 @@ def test_user_name_conflict_during_update_with_valid_data_is_handled(
                 {},
             )
 
-    assert excinfo.value.error_list == ["This username is not available."]
+    assert excinfo.value.error_list == [
+        "Your username returned by the provider is not available "
+        "for use on this site."
+    ]
 
 
 def test_user_email_conflict_during_update_with_valid_data_is_handled(
@@ -118,4 +121,7 @@ def test_user_email_conflict_during_update_with_valid_data_is_handled(
             {},
         )
 
-    assert excinfo.value.error_list == ["This e-mail address is not available."]
+    assert excinfo.value.error_list == [
+        "Your e-mail address returned by the provider is not available "
+        "for use on this site."
+    ]

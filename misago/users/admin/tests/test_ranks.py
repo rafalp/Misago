@@ -277,7 +277,7 @@ class RankAdminTests(AdminTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "This name collides with other rank.")
+        self.assertContains(response, "already an other rank with this name.")
 
         self.client.post(
             reverse("misago:admin:ranks:new"),
@@ -298,4 +298,4 @@ class RankAdminTests(AdminTestCase):
             data={"name": "Members", "roles": [test_role_a.pk]},
         )
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "This name collides with other rank.")
+        self.assertContains(response, "already an other rank with this name.")

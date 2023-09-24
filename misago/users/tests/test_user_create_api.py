@@ -127,7 +127,8 @@ class UserCreateTests(UserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"username": ["This username is not available."]}
+            response.json(),
+            {"username": ["This username is not available."]},
         )
 
     def test_registration_validates_username_ban(self):
@@ -188,7 +189,8 @@ class UserCreateTests(UserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"email": ["This e-mail address is not available."]}
+            response.json(),
+            {"email": ["This e-mail address is not available."]},
         )
 
     def test_registration_validates_email_ban(self):

@@ -111,7 +111,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Maximum orphans"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "If number of posts to be displayed on the last page is less or equal to number specified in this setting, those posts will instead be displayed on previous page, reducing the total number of pages in thread.",
+            "This setting prevents situations when the last page of a thread contains very few items. If number of posts to be displayed on the last page is less or equal to number specified in this setting, those posts will instead be appended to the previous page, reducing number of thread's pages.",
         ),
         min_value=0,
     )

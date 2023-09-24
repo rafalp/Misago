@@ -12,7 +12,7 @@ class AttachmentAdmin(generic.AdminBaseMixin):
     model = Attachment
     templates_dir = "misago/admin/attachments"
     message_404 = pgettext_lazy(
-        "admin attachments", "Requested attachment could not be found."
+        "admin attachments", "Requested attachment does not exist."
     )
 
     def get_queryset(self):
