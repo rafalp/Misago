@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-24 12:04+0000\n"
+"POT-Creation-Date: 2023-09-24 12:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -7040,7 +7040,7 @@ msgctxt "admin node"
 msgid "Attachment types"
 msgstr ""
 
-#: threads/admin/__init__.py:45
+#: threads/admin/__init__.py:46
 msgctxt "admin node"
 msgid "Specify what files may be uploaded as part of user posts."
 msgstr ""

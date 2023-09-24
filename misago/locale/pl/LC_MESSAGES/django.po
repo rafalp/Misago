@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-24 12:04+0000\n"
+"POT-Creation-Date: 2023-09-24 12:11+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -3534,7 +3534,7 @@ msgstr "Ładowanie..."
 #: templates/misago/admin/dashboard/checks.html:5
 msgctxt "admin checks title"
 msgid "System checks"
-msgstr "Sprawdzanie systemu"
+msgstr "Kontrola systemu"
 
 #: templates/misago/admin/dashboard/checks.html:12
 msgctxt "admin version check"
@@ -7402,7 +7402,7 @@ msgctxt "admin node"
 msgid "Attachment types"
 msgstr "Typy załączników"
 
-#: threads/admin/__init__.py:45
+#: threads/admin/__init__.py:46
 msgctxt "admin node"
 msgid "Specify what files may be uploaded as part of user posts."
 msgstr "Określ jakie pliki użytkownicy mogą przesyłać w swoich postach."
