@@ -537,6 +537,7 @@ class RankForm(forms.ModelForm):
             unique_qs = unique_qs.exclude(pk=self.instance.pk)
 
         if unique_qs.exists():
+            print("HERE")
             raise forms.ValidationError(
                 pgettext(
                     "admin rank form",

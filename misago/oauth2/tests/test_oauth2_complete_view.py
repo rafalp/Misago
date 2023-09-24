@@ -837,8 +837,15 @@ def test_oauth2_complete_view_returns_error_400_if_user_data_causes_integrity_er
             code_grant,
         )
     )
-
-    assert_contains(response, "This e-mail address is not available.", 400)
+    print(response.content)
+    assert_contains(
+        response,
+        (
+            "Your e-mail address returned by the provider is not available "
+            "for use on this site."
+        ),
+        400,
+    )
 
 
 @responses.activate

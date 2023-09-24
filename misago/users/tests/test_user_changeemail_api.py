@@ -70,7 +70,8 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"new_email": ["This e-mail address is not available."]}
+            response.json(),
+            {"new_email": ["This e-mail address is not available."]},
         )
 
     @override_dynamic_settings(forum_address="http://test.com/")
