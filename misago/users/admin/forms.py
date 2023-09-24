@@ -538,7 +538,10 @@ class RankForm(forms.ModelForm):
 
         if unique_qs.exists():
             raise forms.ValidationError(
-                pgettext("admin rank form", "This name collides with other rank.")
+                pgettext(
+                    "admin rank form",
+                    "There's already an other rank with this name.",
+                )
             )
 
         return data

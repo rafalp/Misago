@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 13:07+0000\n"
+"POT-Creation-Date: 2023-09-24 12:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10041,87 +10041,87 @@ msgid ""
 "others through dedicated page on forum users list."
 msgstr ""
 
-#: users/admin/forms.py:541
+#: users/admin/forms.py:543
 msgctxt "admin rank form"
-msgid "This name collides with other rank."
+msgid "There's already an other rank with this name."
 msgstr ""
 
-#: users/admin/forms.py:549
+#: users/admin/forms.py:552
 msgctxt "admin ban users form"
 msgid "Values to ban"
 msgstr ""
 
-#: users/admin/forms.py:554
+#: users/admin/forms.py:557
 msgctxt "admin ban users form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:559
+#: users/admin/forms.py:562
 msgctxt "admin ban users form"
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:564 users/admin/forms.py:579
+#: users/admin/forms.py:567 users/admin/forms.py:582
 msgctxt "admin ban users form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:569
+#: users/admin/forms.py:572
 msgctxt "admin ban users form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:574
+#: users/admin/forms.py:577
 msgctxt "admin ban users form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:584
+#: users/admin/forms.py:587
 msgctxt "admin ban users form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:593
+#: users/admin/forms.py:596
 msgctxt "admin ban users form"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:594
+#: users/admin/forms.py:597
 msgctxt "admin ban users form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:595
+#: users/admin/forms.py:598
 msgctxt "admin ban users form"
 msgid "E-mail domains"
 msgstr ""
 
-#: users/admin/forms.py:601
+#: users/admin/forms.py:604
 msgctxt "admin ban users form"
 msgid "IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:605
+#: users/admin/forms.py:608
 msgctxt "admin ban users form"
 msgid "First segment of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:611
+#: users/admin/forms.py:614
 msgctxt "admin ban users form"
 msgid "First two segments of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:619
+#: users/admin/forms.py:622
 msgctxt "admin ban form"
 msgid "Check type"
 msgstr ""
 
-#: users/admin/forms.py:624
+#: users/admin/forms.py:627
 msgctxt "admin ban form"
 msgid "Restrict this ban to registrations"
 msgstr ""
 
-#: users/admin/forms.py:627
+#: users/admin/forms.py:630
 msgctxt "admin ban form"
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
@@ -10130,12 +10130,12 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: users/admin/forms.py:631
+#: users/admin/forms.py:634
 msgctxt "admin ban form"
 msgid "Banned value"
 msgstr ""
 
-#: users/admin/forms.py:635
+#: users/admin/forms.py:638
 msgctxt "admin ban form"
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for partial matches. "
@@ -10143,122 +10143,122 @@ msgid ""
 "beginning with \"83.\"."
 msgstr ""
 
-#: users/admin/forms.py:639
+#: users/admin/forms.py:642
 msgctxt "admin ban form"
 msgid "Banned value can't be longer than 250 characters."
 msgstr ""
 
-#: users/admin/forms.py:644
+#: users/admin/forms.py:647
 msgctxt "admin ban form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:649
+#: users/admin/forms.py:652
 msgctxt "admin ban form"
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:654 users/admin/forms.py:668
+#: users/admin/forms.py:657 users/admin/forms.py:671
 msgctxt "admin ban form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:659
+#: users/admin/forms.py:662
 msgctxt "admin ban form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:663
+#: users/admin/forms.py:666
 msgctxt "admin ban form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:673
+#: users/admin/forms.py:676
 msgctxt "admin ban form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:695
+#: users/admin/forms.py:698
 msgctxt "admin ban form"
 msgid "Banned value is too vague."
 msgstr ""
 
-#: users/admin/forms.py:703
+#: users/admin/forms.py:706
 msgctxt "admin bans filter form"
 msgid "Type"
 msgstr ""
 
-#: users/admin/forms.py:706
+#: users/admin/forms.py:709
 msgctxt "admin bans type filter choice"
 msgid "All bans"
 msgstr ""
 
-#: users/admin/forms.py:707
+#: users/admin/forms.py:710
 msgctxt "admin bans type filter choice"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:708
+#: users/admin/forms.py:711
 msgctxt "admin bans filter form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:709
+#: users/admin/forms.py:712
 msgctxt "admin bans type filter choice"
 msgid "IPs"
 msgstr ""
 
-#: users/admin/forms.py:713
+#: users/admin/forms.py:716
 msgctxt "admin bans filter form"
 msgid "Banned value begins with"
 msgstr ""
 
-#: users/admin/forms.py:717
+#: users/admin/forms.py:720
 msgctxt "admin bans filter form"
 msgid "Registration only"
 msgstr ""
 
-#: users/admin/forms.py:720
+#: users/admin/forms.py:723
 msgctxt "admin bans registration filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:721
+#: users/admin/forms.py:724
 msgctxt "admin bans registration filter choice"
 msgid "Yes"
 msgstr ""
 
-#: users/admin/forms.py:722
+#: users/admin/forms.py:725
 msgctxt "admin bans registration filter choice"
 msgid "No"
 msgstr ""
 
-#: users/admin/forms.py:726
+#: users/admin/forms.py:729
 msgctxt "admin bans filter form"
 msgid "State"
 msgstr ""
 
-#: users/admin/forms.py:729
+#: users/admin/forms.py:732
 msgctxt "admin bans state filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:730
+#: users/admin/forms.py:733
 msgctxt "admin bans state filter choice"
 msgid "Active"
 msgstr ""
 
-#: users/admin/forms.py:731
+#: users/admin/forms.py:734
 msgctxt "admin bans state filter choice"
 msgid "Expired"
 msgstr ""
 
-#: users/admin/forms.py:767
+#: users/admin/forms.py:770
 msgctxt "admin data download request form"
 msgid "Usernames or emails"
 msgstr ""
 
-#: users/admin/forms.py:770
+#: users/admin/forms.py:773
 msgctxt "admin data download request form"
 msgid ""
 "Enter every item in new line. Duplicates will be ignored. This field is case "
@@ -10267,7 +10267,7 @@ msgid ""
 "notification will be sent to every user once their download is ready."
 msgstr ""
 
-#: users/admin/forms.py:784
+#: users/admin/forms.py:787
 #, python-format
 msgctxt "admin data download request form"
 msgid ""
@@ -10275,22 +10275,22 @@ msgid ""
 "%(show_value)s)."
 msgstr ""
 
-#: users/admin/forms.py:804
+#: users/admin/forms.py:807
 msgctxt "admin data download request form"
 msgid "One or more specified users could not be found."
 msgstr ""
 
-#: users/admin/forms.py:813
+#: users/admin/forms.py:816
 msgctxt "admin data download requests filter form"
 msgid "Status"
 msgstr ""
 
-#: users/admin/forms.py:818
+#: users/admin/forms.py:821
 msgctxt "admin data download requests filter form"
 msgid "User"
 msgstr ""
 
-#: users/admin/forms.py:822
+#: users/admin/forms.py:825
 msgctxt "admin data download requests filter form"
 msgid "Requested by"
 msgstr ""
