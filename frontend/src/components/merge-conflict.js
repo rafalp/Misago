@@ -115,7 +115,7 @@ export function BestAnswerSelect({ choices, onChange, value }) {
       label={pgettext("merge threads conflict best answer", "Best answer")}
       helpText={pgettext(
         "merge threads conflict best answer",
-        "Please select the best answer for your newly merged thread. No posts will be deleted during the merge."
+        "Select the best answer for your newly merged thread. No posts will be deleted during the merge."
       )}
       for="id_best_answer"
     >
@@ -145,7 +145,7 @@ export function PollSelect({ choices, onChange, value }) {
       label={pgettext("merge threads conflict poll", "Poll")}
       helpText={pgettext(
         "merge threads conflict poll",
-        "Please select the poll for your newly merged thread. Rejected polls will be permanently deleted and cannot be recovered."
+        "Select the poll for your newly merged thread. Rejected polls will be permanently deleted and cannot be recovered."
       )}
       for="id_poll"
     >

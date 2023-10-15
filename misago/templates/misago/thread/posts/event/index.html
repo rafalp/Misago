@@ -55,7 +55,7 @@
         {% elif post.event_type == 'pinned_globally' %}
           {% trans "Thread has been pinned globally." context "thread event" %}
         {% elif post.event_type == 'pinned_locally' %}
-          {% trans "Thread has been pinned locally." context "thread event" %}
+          {% trans "Thread has been pinned in category." context "thread event" %}
         {% elif post.event_type == 'unpinned' %}
           {% trans "Thread has been unpinned." context "thread event" %}
         {% elif post.event_type == 'moved' %}

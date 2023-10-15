@@ -61,7 +61,7 @@ export default class extends React.Component {
     snackbar.success(
       pgettext(
         "change username",
-        "Your username has been changed successfully."
+        "Your username has been changed."
       )
     )
   }

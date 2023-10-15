@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-24 12:16+0000\n"
+"POT-Creation-Date: 2023-10-15 12:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,28 +132,28 @@ msgid "Register account"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "register modal"
+msgctxt "account activation required"
 msgid ""
 "%(username)s, your account has been created but you need to activate it "
 "before you will be able to sign in."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "register modal"
+msgctxt "account activation required"
 msgid ""
-"%(username)s, your account has been created but board administrator will "
+"%(username)s, your account has been created but the site administrator will "
 "have to activate it before you will be able to sign in."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "register modal"
+msgctxt "account activation required"
 msgid ""
 "We have sent an e-mail to %(email)s with link that you have to click to "
 "activate your account."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "register modal"
+msgctxt "account activation required"
 msgid "We will send an e-mail to %(email)s when this takes place."
 msgstr ""
 
@@ -169,12 +169,12 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "register form"
-msgid "New registrations are currently disabled."
+msgid "Registration form is currently disabled by the site administrator."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "register form"
-msgid "Registration is currently unavailable due to an error."
+msgid "Registration form is currently unavailable due to an error."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -549,7 +549,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "merge threads conflict best answer"
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be "
+"Select the best answer for your newly merged thread. No posts will be "
 "deleted during the merge."
 msgstr ""
 
@@ -561,7 +561,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "merge threads conflict poll"
 msgid ""
-"Please select the poll for your newly merged thread. Rejected polls will be "
+"Select the poll for your newly merged thread. Rejected polls will be "
 "permanently deleted and cannot be recovered."
 msgstr ""
 
@@ -591,12 +591,12 @@ msgid "Ok"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "posts feed item body"
+msgctxt "post body invalid"
 msgid "This post's contents cannot be displayed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "posts feed item body"
+msgctxt "post body invalid"
 msgid "This error is caused by invalid post content manipulation."
 msgstr ""
 
@@ -686,6 +686,7 @@ msgid "Preview"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "markup editor"
 msgid "Post"
 msgstr ""
 
@@ -714,6 +715,7 @@ msgid "Code to insert"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "markup editor"
 msgid "Cancel"
 msgstr ""
 
@@ -1054,7 +1056,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
-msgid "Image address"
+msgid "Image URL"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1169,7 +1171,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
-msgid "Formatting help"
+msgid "Open formatting help"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1209,7 +1211,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post thread"
-msgid "Pinned locally"
+msgid "Pinned in category"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1259,17 +1261,12 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post thread submit"
-msgid "Post thread"
+msgid "Start thread"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "post thread"
 msgid "Thread title"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "post thread submit"
-msgid "Start thread"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1493,7 +1490,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "username history empty"
-msgid "No name changes have been recorded for your account."
+msgid "Your account has no record of name changes."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1584,22 +1581,38 @@ msgid "No categories exist or you don't have permission to see them."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "category status"
+msgctxt "category status"
+msgid "This category has no new posts. (closed)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "category status"
+msgid "This category has new posts. (closed)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "category status"
+msgid "This category has no new posts."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "category status"
+msgid "This category has new posts."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "category last thread"
-msgid "This category is empty. No threads were posted within it so far."
+msgid "Empty category"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "category last thread"
-msgid "This category is private. You can see only your own threads within it."
+msgid "Private category"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "category last thread"
-msgid "This category is protected. You can't browse its contents."
+msgid "Protected category"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1728,7 +1741,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
-msgid "Enter your password to confirm account deletion."
+msgid "Complete the form."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1743,40 +1756,33 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
-msgid ""
-"You are going to delete your account. This action is nonreversible, and will "
-"result in following data being deleted:"
+msgid "This form lets you delete your account. This action is not reversible."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"Stored IP addresses associated with content that you have posted will be "
-"deleted."
+"Your account will be deleted together with its profile details, IP addresses "
+"and notifications."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"Your username will become available for other user to rename to or for new "
-"user to register their account with."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "delete your account form"
-msgid "Your e-mail will become available for use in new account registration."
+"Other content will NOT be deleted, but username displayed next to it will be "
+"changed to one shared by all deleted accounts."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it "
-"will be changed to one shared by all deleted accounts."
+"Your username and e-maill address will become available again for use during "
+"registration or for other accounts to change to."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form field"
-msgid "Enter your password to confirm account deletion."
+msgid "Enter your password to confirm"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1786,7 +1792,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile details form"
-msgid "Your details have been updated."
+msgid "Your details have been changed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1903,7 +1909,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "forum options form"
-msgid "Your forum options have been updated."
+msgid "Your forum options have been changed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1934,8 +1940,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "forum options form"
 msgid ""
-"If you hide your presence, only members with permission to see hidden users "
-"will see when you are online."
+"If you hide your presence, only members with permission to see hidden "
+"presence will see when you are online."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2009,7 +2015,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change username"
-msgid "You have used up available name changes."
+msgid "You have changed your name allowed number of times."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2034,7 +2040,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change username form"
-msgid "Your new username is same as current one."
+msgid "New username is same as current one."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2049,7 +2055,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change username"
-msgid "Your username has been changed successfully."
+msgid "Your username has been changed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2078,6 +2084,7 @@ msgid "Change e-mail"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "change password form"
 msgid "Fill out all fields."
 msgstr ""
 
@@ -2113,14 +2120,14 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change sign in credentials title"
-msgid "Change email or password"
+msgid "Change e-mail or password"
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "change sign in credentials"
 msgid ""
-"You need to set a password for your account to be able to change your "
-"username or email."
+"You need to set a password for your account to be able to change your e-mail "
+"or password."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2205,7 +2212,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile details form"
-msgid "%(username)s's details have been updated."
+msgid "%(username)s's details have been changed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2307,11 +2314,6 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile username history"
-msgid "No name changes have been recorded for your account."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile username history"
 msgid "%(username)s's username was never changed."
 msgstr ""
 
@@ -2375,8 +2377,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile avatar moderation field"
 msgid ""
-"Optional message for user explaining why he/she is prohibited form changing "
-"avatar."
+"Optional message for user explaining why they are prohibited from changing "
+"their avatar."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2387,8 +2389,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile avatar moderation field"
 msgid ""
-"Optional message for forum team members explaining why user is prohibited "
-"form changing avatar."
+"Optional message for forum team members explaining why the user is "
+"prohibited form changing their avatar."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2639,7 +2641,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "request activation link form"
-msgid "Enter a valid email address."
+msgid "Enter a valid e-mail address."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2664,7 +2666,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "request password reset form"
-msgid "Enter a valid email address."
+msgid "Enter a valid e-mail address."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2714,12 +2716,12 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "password reset form"
-msgid "%(username)s, your password has been changed successfully."
+msgid "%(username)s, your password has been changed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "password reset form"
-msgid "You will have to sign in using new password before continuing."
+msgid "Sign in using new password to continue."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2749,7 +2751,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "search time"
-msgid "Search took %(time)s s to complete"
+msgid "Search took %(time)s s"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2804,7 +2806,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "social auth form title"
-msgid "Complete your details"
+msgid "Complete your account"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2820,20 +2822,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "social auth form btn"
 msgid "Sign in"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "social auth complete"
-msgid ""
-"%(username)s, your account has been created but you need to activate it "
-"before you will be able to sign in."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "social auth complete"
-msgid ""
-"%(username)s, your account has been created but board administrator will "
-"have to activate it before you will be able to sign in."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3056,7 +3044,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll vote"
-msgid "You need to select at least one choice"
+msgid "You need to select at least one choice."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3226,7 +3214,9 @@ msgid "Unhide"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgid "event delete"
+msgctxt "event delete"
+msgid ""
+"Are you sure you wish to delete this event? This action is not reversible!"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3256,7 +3246,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "event message"
-msgid "Thread has been pinned locally."
+msgid "Thread has been pinned in category."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3352,16 +3342,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post body hidden"
 msgid "This post is hidden. You cannot see its contents."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "post body invalid"
-msgid "This post's contents cannot be displayed."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "post body invalid"
-msgid "This error is caused by invalid post content manipulation."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3506,16 +3486,6 @@ msgid "See next change"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "post history modal btn"
-msgid "Revert post to state from before this edit."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "post history modal btn"
-msgid "Revert"
-msgstr ""
-
-#: static/misago/js/misago.js:1
 msgctxt "post history modal"
 msgid "By %(edited_by)s %(edited_on)s."
 msgstr ""
@@ -3568,7 +3538,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread weight choice"
-msgid "Pinned locally"
+msgid "Pinned in category"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3871,7 +3841,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread moderation"
-msgid "Thread has been pinned locally."
+msgid "Thread has been pinned in category."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3925,7 +3895,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "thread moderation btn"
-msgid "Pin locally"
+msgid "Pin in category"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4381,7 +4351,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation"
-msgid "Selected threads were pinned locally."
+msgid "Selected threads were pinned in category."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4852,7 +4822,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "email validator"
-msgid "Enter a valid email address."
+msgid "Enter a valid e-mail address."
 msgstr ""
 
 #: static/misago/js/misago.js:1

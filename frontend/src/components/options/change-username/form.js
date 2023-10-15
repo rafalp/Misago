@@ -79,7 +79,7 @@ export default class extends Form {
       snackbar.info(
         pgettext(
           "change username form",
-          "Your new username is same as current one."
+          "New username is same as current one."
         )
       )
       return false

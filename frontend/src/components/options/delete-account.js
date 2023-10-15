@@ -34,10 +34,7 @@ export default class extends React.Component {
 
     if (password.length == 0) {
       snackbar.error(
-        pgettext(
-          "delete your account form",
-          "Enter your password to confirm account deletion."
-        )
+        pgettext("delete your account form", "Complete the form.")
       )
       return false
     }
@@ -70,41 +67,28 @@ export default class extends React.Component {
             </h3>
           </div>
           <div className="panel-body">
-            <p className="lead">
-              {pgettext(
-                "delete your account form",
-                "You are going to delete your account. This action is nonreversible, and will result in following data being deleted:"
-              )}
-            </p>
-
-            <p>
-              -{" "}
-              {pgettext(
-                "delete your account form",
-                "Stored IP addresses associated with content that you have posted will be deleted."
-              )}
-            </p>
-            <p>
-              -{" "}
-              {pgettext(
-                "delete your account form",
-                "Your username will become available for other user to rename to or for new user to register their account with."
-              )}
-            </p>
-            <p>
-              -{" "}
-              {pgettext(
-                "delete your account form",
-                "Your e-mail will become available for use in new account registration."
-              )}
-            </p>
-
-            <hr />
-
             <p>
               {pgettext(
                 "delete your account form",
-                "All your posted content will NOT be deleted, but username associated with it will be changed to one shared by all deleted accounts."
+                "This form lets you delete your account. This action is not reversible."
+              )}
+            </p>
+            <p>
+              {pgettext(
+                "delete your account form",
+                "Your account will be deleted together with its profile details, IP addresses and notifications."
+              )}
+            </p>
+            <p>
+              {pgettext(
+                "delete your account form",
+                "Other content will NOT be deleted, but username displayed next to it will be changed to one shared by all deleted accounts."
+              )}
+            </p>
+            <p>
+              {pgettext(
+                "delete your account form",
+                "Your username and e-maill address will become available again for use during registration or for other accounts to change to."
               )}
             </p>
           </div>
@@ -117,9 +101,10 @@ export default class extends React.Component {
                 type="password"
                 placeholder={pgettext(
                   "delete your account form field",
-                  "Enter your password to confirm account deletion."
+                  "Enter your password to confirm"
                 )}
                 value={this.state.password}
+                required
                 onChange={this.onPasswordChange}
               />
               <span className="input-group-btn">

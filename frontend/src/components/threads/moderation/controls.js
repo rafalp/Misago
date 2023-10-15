@@ -96,7 +96,7 @@ export default class extends React.Component {
           value: 1,
         },
       ],
-      pgettext("threads moderation", "Selected threads were pinned locally.")
+      pgettext("threads moderation", "Selected threads were pinned in category.")
     )
   }
 

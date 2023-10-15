@@ -145,7 +145,7 @@ def test_error_was_raised_for_user_data_without_email(db, dynamic_settings):
             {},
         )
 
-    assert excinfo.value.error_list == ["Enter a valid email address."]
+    assert excinfo.value.error_list == ["Enter a valid e-mail address."]
 
 
 def test_error_was_raised_for_user_data_with_invalid_email(db, dynamic_settings):
@@ -162,7 +162,7 @@ def test_error_was_raised_for_user_data_with_invalid_email(db, dynamic_settings)
             {},
         )
 
-    assert excinfo.value.error_list == ["Enter a valid email address."]
+    assert excinfo.value.error_list == ["Enter a valid e-mail address."]
 
 
 def custom_oauth2_validator(request, user, user_data, raw_data):

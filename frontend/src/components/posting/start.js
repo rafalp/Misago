@@ -294,7 +294,7 @@ export default class extends Form {
             <MarkupEditor
               attachments={[]}
               value={""}
-              submitText={pgettext("post thread submit", "Post thread")}
+              submitText={pgettext("post thread submit", "Start thread")}
               disabled={true}
               onAttachmentsChange={() => {}}
               onChange={() => {}}

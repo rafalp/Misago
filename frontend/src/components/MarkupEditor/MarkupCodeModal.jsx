@@ -100,7 +100,7 @@ class MarkupCodeModal extends React.Component {
                 data-dismiss="modal"
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("markup editor", "Cancel")}
               </button>
               <button className="btn btn-primary">
                 {pgettext("markup editor", "Insert code")}

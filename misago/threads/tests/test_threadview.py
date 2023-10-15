@@ -226,7 +226,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
                 threads_moderation.pin_thread_globally,
                 "Thread has been pinned globally.",
             ),
-            (threads_moderation.pin_thread_locally, "Thread has been pinned locally."),
+            (threads_moderation.pin_thread_locally, "Thread has been pinned in category."),
             (threads_moderation.unpin_thread, "Thread has been unpinned."),
             (threads_moderation.approve_thread, "Thread has been approved."),
             (threads_moderation.close_thread, "Thread has been closed."),

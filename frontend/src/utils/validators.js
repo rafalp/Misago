@@ -31,7 +31,7 @@ export function email(message) {
   return function (value) {
     if (!EMAIL.test(value)) {
       return (
-        message || pgettext("email validator", "Enter a valid email address.")
+        message || pgettext("email validator", "Enter a valid e-mail address.")
       )
     }
   }

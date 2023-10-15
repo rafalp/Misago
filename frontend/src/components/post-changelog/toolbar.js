@@ -115,11 +115,11 @@ export function RevertBtn(props) {
         disabled={props.disabled}
         onClick={props.onClick}
         title={pgettext(
-          "post history modal btn",
+          "post revert btn",
           "Revert post to state from before this edit."
         )}
       >
-        {pgettext("post history modal btn", "Revert")}
+        {pgettext("post revert btn", "Revert")}
       </Button>
     </div>
   )

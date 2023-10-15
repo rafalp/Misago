@@ -15,7 +15,7 @@ export default class extends React.Component {
     } else {
       return pgettext(
         "change username",
-        "You have used up available name changes."
+        "You have changed your name allowed number of times."
       )
     }
   }

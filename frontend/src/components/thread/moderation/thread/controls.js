@@ -58,7 +58,7 @@ export default class extends React.Component {
           value: 1,
         },
       ],
-      pgettext("thread moderation", "Thread has been pinned locally.")
+      pgettext("thread moderation", "Thread has been pinned in category.")
     )
   }
 
@@ -215,7 +215,7 @@ export default class extends React.Component {
               type="button"
             >
               <span className="material-icon">bookmark_border</span>
-              {pgettext("thread moderation btn", "Pin locally")}
+              {pgettext("thread moderation btn", "Pin in category")}
             </button>
           </li>
         )}

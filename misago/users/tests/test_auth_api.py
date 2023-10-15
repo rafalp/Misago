@@ -323,7 +323,7 @@ class SendActivationApiTests(TestCase):
         )
 
     def test_submit_invalid_email(self):
-        """request activation link api errors for invalid email"""
+        """request activation link api errors for invalid e-mail"""
         response = self.client.post(self.link, data={"email": "fake@mail.com"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -438,7 +438,7 @@ class SendPasswordFormApiTests(TestCase):
         self.assertTrue(not mail.outbox)
 
     def test_submit_invalid(self):
-        """request change password form link api errors for invalid email"""
+        """request change password form link api errors for invalid e-mail"""
         response = self.client.post(self.link, data={"email": "fake@mail.com"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(

@@ -8,13 +8,13 @@ const Complete = ({ activation, backend_name, username }) => {
   let message = ""
   if (activation === "user") {
     message = pgettext(
-      "social auth complete",
+      "account activation required",
       "%(username)s, your account has been created but you need to activate it before you will be able to sign in."
     )
   } else if (activation === "admin") {
     message = pgettext(
-      "social auth complete",
-      "%(username)s, your account has been created but board administrator will have to activate it before you will be able to sign in."
+      "account activation required",
+      "%(username)s, your account has been created but the site administrator will have to activate it before you will be able to sign in."
     )
   } else {
     message = pgettext(

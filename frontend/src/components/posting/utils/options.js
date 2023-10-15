@@ -134,7 +134,7 @@ export function PinOptions(props) {
     case 1:
       icon = "bookmark_outline"
       onClick = props.onPinGlobally
-      label = pgettext("posting form", "Pinned locally")
+      label = pgettext("posting form", "Pinned in category")
 
       if (props.show == 2) {
         onClick = props.onPinGlobally

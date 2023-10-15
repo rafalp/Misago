@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-24 12:16+0000\n"
+"POT-Creation-Date: 2023-10-15 10:11+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -1014,7 +1014,7 @@ msgstr ""
 #: conf/admin/forms/notifications.py:22
 msgctxt "admin notifications settings form"
 msgid "Notify about new replies in threads started by them"
-msgstr "Powiadamiaj o nowych odpowiedziach w tematach które rozpoczęli"
+msgstr "Powiadamiaj o nowych odpowiedziach w tematach które założyli"
 
 #: conf/admin/forms/notifications.py:31
 msgctxt "admin notifications settings form"
@@ -1026,14 +1026,14 @@ msgctxt "admin notifications settings form"
 msgid ""
 "Notify about new replies in new private threads started by followed users"
 msgstr ""
-"Powiadamiaj o nowych odpowiedziach prywatnych tematach zaczętych przez "
+"Powiadamiaj o nowych odpowiedziach prywatnych tematach założonych przez "
 "użytkowników których obserwuje"
 
 #: conf/admin/forms/notifications.py:50
 msgctxt "admin notifications settings form"
 msgid "Notify about new replies in new private threads started by other users"
 msgstr ""
-"Powiadamiaj o nowych odpowiedziach prywatnych tematach zaczętych przez "
+"Powiadamiaj o nowych odpowiedziach prywatnych tematach założonych przez "
 "pozostałych użytkowników"
 
 #: conf/admin/forms/notifications.py:60
@@ -1253,7 +1253,7 @@ msgstr "Ścieżka do odnośnika do awatara użytkownika"
 #: conf/admin/forms/oauth2.py:201
 msgctxt "admin oauth2 settings form"
 msgid "Optional, leave empty to don't download avatar from provider."
-msgstr "Opcjonalne. Zostaw puste aby nie pobierać awataru z usługi."
+msgstr "Opcjonalne. Zostaw puste aby nie pobierać awatara z usługi."
 
 #: conf/admin/forms/oauth2.py:238
 msgctxt "admin oauth2 settings form"
@@ -1608,7 +1608,7 @@ msgstr "Maksymalna dozwolona długość podpisu"
 #: conf/admin/forms/users.py:187
 msgctxt "admin users settings form"
 msgid "Started threads"
-msgstr "Zaczęte tematy"
+msgstr "Założone tematy"
 
 #: conf/admin/forms/users.py:189 conf/admin/forms/users.py:210
 msgctxt "admin users settings form"
@@ -5165,17 +5165,17 @@ msgstr ""
 
 #: templates/misago/categories/last_thread.html:54
 msgctxt "category last reply"
-msgid "This category is empty. No threads were posted within it so far."
+msgid "Empty category"
 msgstr ""
 
 #: templates/misago/categories/last_thread.html:68
 msgctxt "category last reply"
-msgid "This category is private. You can see only your own threads within it."
+msgid "Private category"
 msgstr ""
 
 #: templates/misago/categories/last_thread.html:82
 msgctxt "category last reply"
-msgid "This category is protected. You can't browse it's contents."
+msgid "Protected category"
 msgstr ""
 
 #: templates/misago/categories/stats.html:5
@@ -5944,7 +5944,7 @@ msgstr ""
 #, python-format
 msgctxt "thread poll"
 msgid "Started by %(poster)s on %(posted_on)s."
-msgstr ""
+msgstr "Rozpoczęta przez %(poster)s %(posted_on)s."
 
 #: templates/misago/poll/results.html:21 templates/misago/poll/results.html:31
 #, python-format
@@ -6067,10 +6067,10 @@ msgstr[3] ""
 msgctxt "user profile page"
 msgid "Started %(threads)s thread."
 msgid_plural "Started %(threads)s threads."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Założył(a) %(threads)s temat."
+msgstr[1] "Założył(a) %(threads)s tematów."
+msgstr[2] "Założył(a) %(threads)s tematów."
+msgstr[3] "Założył(a) %(threads)s tematów."
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
@@ -6262,10 +6262,10 @@ msgstr ""
 msgctxt "user profile page threads"
 msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Założyłe/aś %(threads)s temat."
+msgstr[1] "Założyłe/aś %(threads)s tematy."
+msgstr[2] "Założyłe/aś %(threads)s tematów."
+msgstr[3] "Założyłe/aś %(threads)s tematów."
 
 #: templates/misago/profile/threads.html:26
 #, python-format
@@ -6316,8 +6316,8 @@ msgstr[2] ""
 msgstr[3] ""
 
 #: templates/misago/profile/username_history.html:83
-msgctxt "user profile page username history"
-msgid "Your username was never changed."
+msgctxt "username history empty"
+msgid "Your account has no record of name changes."
 msgstr ""
 
 #: templates/misago/profile/username_history.html:85
@@ -6809,7 +6809,7 @@ msgstr "Nie ma tematów pasujących do wskazanych kryteriów."
 #, python-format
 msgctxt "threads list"
 msgid "%(starter)s - original poster"
-msgstr ""
+msgstr "%(starter)s - założyciel(ka) tematu"
 
 #: templates/misago/threadslist/thread.html:24
 msgctxt "threads list"
@@ -6890,7 +6890,7 @@ msgstr ""
 #: templates/misago/threadslist/toolbar.html:77
 msgctxt "threads page nav"
 msgid "Start thread"
-msgstr ""
+msgstr "Załóż temat"
 
 #: templates/misago/userslists/active_posters.html:5
 msgctxt "active posters page"
@@ -10308,7 +10308,7 @@ msgstr "Kto może dodawać tego użytkownika do prywatnych tematów"
 #: users/admin/forms.py:181
 msgctxt "admin user form"
 msgid "Started threads"
-msgstr "Rozpoczęte tematy"
+msgstr "Założone tematy"
 
 #: users/admin/forms.py:186
 msgctxt "admin user form"
@@ -10527,89 +10527,89 @@ msgstr ""
 "Włączenie tej opcji sprawi że użytkownicy z tą rangą będą łatwi do odkrycia "
 "przez innych poprzez dedykowaną stronę na liście użytkowników."
 
-#: users/admin/forms.py:543
+#: users/admin/forms.py:544
 msgctxt "admin rank form"
 msgid "There's already an other rank with this name."
 msgstr "Istnieje już ranga z tą nazwą."
 
-#: users/admin/forms.py:552
+#: users/admin/forms.py:553
 msgctxt "admin ban users form"
 msgid "Values to ban"
 msgstr "Wartości do zablokowania"
 
-#: users/admin/forms.py:557
+#: users/admin/forms.py:558
 msgctxt "admin ban users form"
 msgid "User message"
 msgstr "Wiadomość dla użytkownika"
 
-#: users/admin/forms.py:562
+#: users/admin/forms.py:563
 msgctxt "admin ban users form"
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 "Opcjonalna wiadomość o blokadzie wyświetlana użytkownikom zamiast domyślnej."
 
-#: users/admin/forms.py:567 users/admin/forms.py:582
+#: users/admin/forms.py:568 users/admin/forms.py:583
 msgctxt "admin ban users form"
 msgid "Message can't be longer than 1000 characters."
 msgstr "Wiadomość nie może być dłuższa niż 1000 znaków."
 
-#: users/admin/forms.py:572
+#: users/admin/forms.py:573
 msgctxt "admin ban users form"
 msgid "Team message"
 msgstr "Wiadomość dla zespołu forum"
 
-#: users/admin/forms.py:577
+#: users/admin/forms.py:578
 msgctxt "admin ban users form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 "Opcjonalny komunikat blokady wyświetlany moderatorom i administratorom."
 
-#: users/admin/forms.py:587
+#: users/admin/forms.py:588
 msgctxt "admin ban users form"
 msgid "Expiration date"
 msgstr "Data wygaśnięcia"
 
-#: users/admin/forms.py:596
+#: users/admin/forms.py:597
 msgctxt "admin ban users form"
 msgid "Usernames"
 msgstr "Nazwy użytkowników"
 
-#: users/admin/forms.py:597
+#: users/admin/forms.py:598
 msgctxt "admin ban users form"
 msgid "E-mails"
 msgstr "Adresy e-mail"
 
-#: users/admin/forms.py:598
+#: users/admin/forms.py:599
 msgctxt "admin ban users form"
 msgid "E-mail domains"
 msgstr "Domeny e-mail"
 
-#: users/admin/forms.py:604
+#: users/admin/forms.py:605
 msgctxt "admin ban users form"
 msgid "IP addresses"
 msgstr "Adresy IP"
 
-#: users/admin/forms.py:608
+#: users/admin/forms.py:609
 msgctxt "admin ban users form"
 msgid "First segment of IP addresses"
 msgstr "Pierwszy oktet adresu IP"
 
-#: users/admin/forms.py:614
+#: users/admin/forms.py:615
 msgctxt "admin ban users form"
 msgid "First two segments of IP addresses"
 msgstr "Pierwsze dwa oktety adresu IP"
 
-#: users/admin/forms.py:622
+#: users/admin/forms.py:623
 msgctxt "admin ban form"
 msgid "Check type"
 msgstr "Typ blokady"
 
-#: users/admin/forms.py:627
+#: users/admin/forms.py:628
 msgctxt "admin ban form"
 msgid "Restrict this ban to registrations"
 msgstr "Ogranicz tą blokadę do rejestracji"
 
-#: users/admin/forms.py:630
+#: users/admin/forms.py:631
 msgctxt "admin ban form"
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
@@ -10622,12 +10622,12 @@ msgstr ""
 "uniemożliwić nowe rejestracje korzystające ze skrzynek e-mail używanych "
 "często przez spamerów bez szkody dla obecnych użytkowników."
 
-#: users/admin/forms.py:634
+#: users/admin/forms.py:635
 msgctxt "admin ban form"
 msgid "Banned value"
 msgstr "Zablokowana wartość"
 
-#: users/admin/forms.py:638
+#: users/admin/forms.py:639
 msgctxt "admin ban form"
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for partial matches."
@@ -10638,123 +10638,123 @@ msgstr ""
 "częściowych dopasowań. Przykładowo, blokada adresów IP dla wartości \"83.*\""
 " zablokuje wszystkie adresy IP zaczynające się od \"83.\"."
 
-#: users/admin/forms.py:642
+#: users/admin/forms.py:643
 msgctxt "admin ban form"
 msgid "Banned value can't be longer than 250 characters."
 msgstr "Zablokowana wartość nie może być dłuższa niż 250 znaków."
 
-#: users/admin/forms.py:647
+#: users/admin/forms.py:648
 msgctxt "admin ban form"
 msgid "User message"
 msgstr "Wiadomość dla użytkownika"
 
-#: users/admin/forms.py:652
+#: users/admin/forms.py:653
 msgctxt "admin ban form"
 msgid "Optional message displayed to user instead of default one."
 msgstr "Opcjonalna wiadomość wyświetlana użytkownikowi zamiast standardowej."
 
-#: users/admin/forms.py:657 users/admin/forms.py:671
+#: users/admin/forms.py:658 users/admin/forms.py:672
 msgctxt "admin ban form"
 msgid "Message can't be longer than 1000 characters."
 msgstr "Wiadomość nie może być dłuższa niż 1000 znaków."
 
-#: users/admin/forms.py:662
+#: users/admin/forms.py:663
 msgctxt "admin ban form"
 msgid "Team message"
 msgstr "Wiadomość dla zespołu forum"
 
-#: users/admin/forms.py:666
+#: users/admin/forms.py:667
 msgctxt "admin ban form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 "Opcjonalny komunikat blokady wyświetlany moderatorom i administratorom."
 
-#: users/admin/forms.py:676
+#: users/admin/forms.py:677
 msgctxt "admin ban form"
 msgid "Expiration date"
 msgstr "Data wygaśnięcia"
 
-#: users/admin/forms.py:698
+#: users/admin/forms.py:699
 msgctxt "admin ban form"
 msgid "Banned value is too vague."
 msgstr "Zablokowana wartość jest zbyt ogólna."
 
-#: users/admin/forms.py:706
+#: users/admin/forms.py:707
 msgctxt "admin bans filter form"
 msgid "Type"
 msgstr "Typ"
 
-#: users/admin/forms.py:709
+#: users/admin/forms.py:710
 msgctxt "admin bans type filter choice"
 msgid "All bans"
 msgstr "Wszystkie blokady"
 
-#: users/admin/forms.py:710
+#: users/admin/forms.py:711
 msgctxt "admin bans type filter choice"
 msgid "Usernames"
 msgstr "Nazwy użytkowników"
 
-#: users/admin/forms.py:711
+#: users/admin/forms.py:712
 msgctxt "admin bans filter form"
 msgid "E-mails"
 msgstr "Adresy e-mail"
 
-#: users/admin/forms.py:712
+#: users/admin/forms.py:713
 msgctxt "admin bans type filter choice"
 msgid "IPs"
 msgstr "Adresy IP"
 
-#: users/admin/forms.py:716
+#: users/admin/forms.py:717
 msgctxt "admin bans filter form"
 msgid "Banned value begins with"
 msgstr "Zablokowana wartość zaczyna się od"
 
-#: users/admin/forms.py:720
+#: users/admin/forms.py:721
 msgctxt "admin bans filter form"
 msgid "Registration only"
 msgstr "Tylko rejestracje"
 
-#: users/admin/forms.py:723
+#: users/admin/forms.py:724
 msgctxt "admin bans registration filter choice"
 msgid "Any"
 msgstr "Dowolnie"
 
-#: users/admin/forms.py:724
+#: users/admin/forms.py:725
 msgctxt "admin bans registration filter choice"
 msgid "Yes"
 msgstr "Tak"
 
-#: users/admin/forms.py:725
+#: users/admin/forms.py:726
 msgctxt "admin bans registration filter choice"
 msgid "No"
 msgstr "Nie"
 
-#: users/admin/forms.py:729
+#: users/admin/forms.py:730
 msgctxt "admin bans filter form"
 msgid "State"
 msgstr "Stan"
 
-#: users/admin/forms.py:732
+#: users/admin/forms.py:733
 msgctxt "admin bans state filter choice"
 msgid "Any"
 msgstr "Każdy"
 
-#: users/admin/forms.py:733
+#: users/admin/forms.py:734
 msgctxt "admin bans state filter choice"
 msgid "Active"
 msgstr "Aktywne"
 
-#: users/admin/forms.py:734
+#: users/admin/forms.py:735
 msgctxt "admin bans state filter choice"
 msgid "Expired"
 msgstr "Wygasłe"
 
-#: users/admin/forms.py:770
+#: users/admin/forms.py:771
 msgctxt "admin data download request form"
 msgid "Usernames or emails"
 msgstr "Nazwy użytkowników lub e-maile"
 
-#: users/admin/forms.py:773
+#: users/admin/forms.py:774
 msgctxt "admin data download request form"
 msgid ""
 "Enter every item in new line. Duplicates will be ignored. This field is case"
@@ -10769,7 +10769,7 @@ msgstr ""
 "e-mail z odnośnikiem do pobrania kopii swoich danych kiedy tylko ta zostanie"
 " przygotowana."
 
-#: users/admin/forms.py:787
+#: users/admin/forms.py:788
 #, python-format
 msgctxt "admin data download request form"
 msgid ""
@@ -10778,22 +10778,22 @@ msgid ""
 msgstr ""
 "Nie możesz podać więcej niż 20 elementów naraz (podano %(show_value)s)."
 
-#: users/admin/forms.py:807
+#: users/admin/forms.py:808
 msgctxt "admin data download request form"
 msgid "One or more specified users could not be found."
 msgstr "Jeden lub więcej wskazanych użytkowników nie zostało znalezionych."
 
-#: users/admin/forms.py:816
+#: users/admin/forms.py:817
 msgctxt "admin data download requests filter form"
 msgid "Status"
 msgstr "Status"
 
-#: users/admin/forms.py:821
+#: users/admin/forms.py:822
 msgctxt "admin data download requests filter form"
 msgid "User"
 msgstr "Użytkownik"
 
-#: users/admin/forms.py:825
+#: users/admin/forms.py:826
 msgctxt "admin data download requests filter form"
 msgid "Requested by"
 msgstr "Zlecający"
@@ -11399,7 +11399,7 @@ msgstr ""
 
 #: users/apps.py:45
 msgctxt "user options page"
-msgid "Change email or password"
+msgid "Change e-mail or password"
 msgstr ""
 
 #: users/apps.py:56

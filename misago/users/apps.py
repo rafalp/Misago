@@ -42,7 +42,7 @@ class MisagoUsersConfig(AppConfig):
         )
         usercp.add_section(
             link="misago:usercp-change-email-password",
-            name=pgettext_lazy("user options page", "Change email or password"),
+            name=pgettext_lazy("user options page", "Change e-mail or password"),
             component="sign-in-credentials",
             icon="vpn_key",
             visible_if=auth_is_not_delegated,
