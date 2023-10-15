@@ -33,9 +33,7 @@ export default class extends React.Component {
     const { user } = this.props
 
     if (password.length == 0) {
-      snackbar.error(
-        pgettext("delete your account form", "Complete the form.")
-      )
+      snackbar.error(pgettext("delete your account form", "Complete the form."))
       return false
     }
 

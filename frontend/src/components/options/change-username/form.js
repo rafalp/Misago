@@ -77,10 +77,7 @@ export default class extends Form {
     }
     if (this.state.username.trim() === this.props.user.username) {
       snackbar.info(
-        pgettext(
-          "change username form",
-          "New username is same as current one."
-        )
+        pgettext("change username form", "New username is same as current one.")
       )
       return false
     } else {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 12:33+0000\n"
+"POT-Creation-Date: 2023-10-15 13:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4279,7 +4279,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation merge"
 msgid ""
-"You can't move threads because there are no categories you are allowed to "
+"You can't merge threads because there are no categories you are allowed to "
 "move them to."
 msgstr ""
 
@@ -4421,7 +4421,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation btn"
-msgid "Pin threads locally"
+msgid "Pin threads in categories"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4649,8 +4649,10 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "top posters empty"
-msgid "No users have posted any new messages during last %(days)s days."
-msgstr ""
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural "No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "top posters list item"
@@ -4718,7 +4720,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "ajax client error"
-msgid "Could not connect to server."
+msgid "Could not connect to the site."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4728,16 +4730,26 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "ajax client error"
-msgid "Unknown error has occured."
+msgid "Unknown error has occurred."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "ajax client error"
-msgid "Upload was rejected by server as too large."
+msgctxt "api error"
+msgid "Could not connect to the site."
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "ajax client error"
+msgctxt "api error"
+msgid "Upload was rejected by the site as too large."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Action link is invalid."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
 msgid "Unknown error has occurred."
 msgstr ""
 
@@ -4753,7 +4765,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "captcha field"
-msgid "This test helps us prevent automated spam registrations on our site."
+msgid "This test helps us prevent automated spam registrations on the site."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4763,21 +4775,6 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "You are already working on other message. Do you want to discard it?"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "api error"
-msgid "Could not connect to server."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "api error"
-msgid "Action link is invalid."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "api error"
-msgid "Unknown error has occurrsed."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4863,7 +4860,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "username validator"
-msgid "Username can must contain Latin alphabet letters or digits."
+msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
 
 #: static/misago/js/misago.js:1

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 12:33+0000\n"
+"POT-Creation-Date: 2023-10-15 13:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6571,8 +6571,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/userslists/active_posters.html:16
-#: templates/misago/userslists/active_posters.html:35
-#: templates/misago/userslists/active_posters.html:50
+#: templates/misago/userslists/active_posters.html:52
 #, python-format
 msgctxt "active posters page meta"
 msgid "No users have posted any new messages during last %(days)s days."
@@ -6585,7 +6584,7 @@ msgid "Top posters"
 msgstr ""
 
 #: templates/misago/userslists/active_posters.html:29
-#: templates/misago/userslists/active_posters.html:44
+#: templates/misago/userslists/active_posters.html:46
 #, python-format
 msgctxt "active posters page meta"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6593,7 +6592,15 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:69
+#: templates/misago/userslists/active_posters.html:35
+#, python-format
+msgctxt "active posters page meta"
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural "No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/userslists/active_posters.html:71
 #, python-format
 msgctxt "active posters page"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6601,29 +6608,29 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:83
+#: templates/misago/userslists/active_posters.html:85
 msgctxt "active posters list item"
 msgid "Avatar"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:112
-#: templates/misago/userslists/active_posters.html:123
+#: templates/misago/userslists/active_posters.html:114
+#: templates/misago/userslists/active_posters.html:125
 msgctxt "active posters list item"
 msgid "Rank"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:116
-#: templates/misago/userslists/active_posters.html:128
+#: templates/misago/userslists/active_posters.html:118
+#: templates/misago/userslists/active_posters.html:130
 msgctxt "active posters list item"
 msgid "Ranked posts"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:133
+#: templates/misago/userslists/active_posters.html:135
 msgctxt "active posters list item"
 msgid "Total posts"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:145
+#: templates/misago/userslists/active_posters.html:147
 #, python-format
 msgctxt "active posters page"
 msgid "No users have posted any new messages during last %(days)s days."

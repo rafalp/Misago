@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 12:33+0000\n"
+"POT-Creation-Date: 2023-10-15 13:24+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Daniel Gerardo Rondón García, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/misago/teams/65369/es/)\n"
@@ -4418,11 +4418,9 @@ msgstr "Fusionar temas"
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation merge"
 msgid ""
-"You can't move threads because there are no categories you are allowed to "
+"You can't merge threads because there are no categories you are allowed to "
 "move them to."
 msgstr ""
-"No puedes mover temas porque no hay categorías a las que se te permita "
-"moverlos."
 
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation merge"
@@ -4568,8 +4566,8 @@ msgstr "Fijar temas globalmente"
 
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation btn"
-msgid "Pin threads locally"
-msgstr "Fijar temas localmente"
+msgid "Pin threads in categories"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation btn"
@@ -4803,10 +4801,12 @@ msgstr "No estás participando en ningún tema privado."
 
 #: static/misago/js/misago.js:1
 msgctxt "top posters empty"
-msgid "No users have posted any new messages during last %(days)s days."
-msgstr ""
-"Ningún usuario ha publicado nuevos mensajes durante los últimos %(days)s "
-"días."
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural ""
+"No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "top posters list item"
@@ -4876,8 +4876,8 @@ msgstr "No hay usuarios con este rango en este momento."
 
 #: static/misago/js/misago.js:1
 msgctxt "ajax client error"
-msgid "Could not connect to server."
-msgstr "No se pudo conectar al servidor."
+msgid "Could not connect to the site."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "ajax client error"
@@ -4886,18 +4886,28 @@ msgstr "El enlace de acción no es válido."
 
 #: static/misago/js/misago.js:1
 msgctxt "ajax client error"
-msgid "Unknown error has occured."
-msgstr "Ha ocurrido un error desconocido."
-
-#: static/misago/js/misago.js:1
-msgctxt "ajax client error"
-msgid "Upload was rejected by server as too large."
-msgstr "La carga fue rechazada por el servidor por ser demasiado grande."
-
-#: static/misago/js/misago.js:1
-msgctxt "ajax client error"
 msgid "Unknown error has occurred."
 msgstr "Ha ocurrido un error desconocido."
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Could not connect to the site."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Upload was rejected by the site as too large."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Action link is invalid."
+msgstr "El enlace de acción no es válido."
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Unknown error has occurred."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "captcha field"
@@ -4911,10 +4921,8 @@ msgstr "Por favor, resuelve la prueba rápida"
 
 #: static/misago/js/misago.js:1
 msgctxt "captcha field"
-msgid "This test helps us prevent automated spam registrations on our site."
+msgid "This test helps us prevent automated spam registrations on the site."
 msgstr ""
-"Esta prueba nos ayuda a prevenir registros de spam automatizados en nuestro "
-"sitio."
 
 #: static/misago/js/misago.js:1
 msgctxt "page title pagination"
@@ -4924,21 +4932,6 @@ msgstr "página: %(page)s"
 #: static/misago/js/misago.js:1
 msgid "You are already working on other message. Do you want to discard it?"
 msgstr "Ya estás trabajando en otro mensaje. ¿Quieres descartarlo?"
-
-#: static/misago/js/misago.js:1
-msgctxt "api error"
-msgid "Could not connect to server."
-msgstr "No se pudo conectar al servidor."
-
-#: static/misago/js/misago.js:1
-msgctxt "api error"
-msgid "Action link is invalid."
-msgstr "El enlace de acción no es válido."
-
-#: static/misago/js/misago.js:1
-msgctxt "api error"
-msgid "Unknown error has occurrsed."
-msgstr "Ha ocurrido un error desconocido."
 
 #: static/misago/js/misago.js:1
 msgctxt "api error"
@@ -5044,9 +5037,8 @@ msgstr[2] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "username validator"
-msgid "Username can must contain Latin alphabet letters or digits."
+msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
-"El nombre de usuario puede contener letras del alfabeto latino o dígitos."
 
 #: static/misago/js/misago.js:1
 msgctxt "username validator"

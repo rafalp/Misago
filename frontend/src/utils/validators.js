@@ -129,7 +129,7 @@ export function usernameContent() {
     if (!USERNAME_ALPHANUMERIC.test(valueTrimmed)) {
       return pgettext(
         "username validator",
-        "Username can must contain Latin alphabet letters or digits."
+        "Username must contain Latin alphabet letters or digits."
       )
     }
   }

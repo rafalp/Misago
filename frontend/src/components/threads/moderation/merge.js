@@ -340,7 +340,7 @@ export default class extends Form {
           <p className="lead">
             {pgettext(
               "threads moderation merge",
-              "You can't move threads because there are no categories you are allowed to move them to."
+              "You can't merge threads because there are no categories you are allowed to move them to."
             )}
           </p>
           <p>
