@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
 from django.contrib.auth import get_user_model
-from django.core.validators import validate_email
 from django.forms import ValidationError
 from django.utils.crypto import get_random_string
 from unidecode import unidecode
 
 from ..hooks import oauth2_validators, oauth2_user_data_filters
 from ..users.validators import (
+    dj_validate_email,
     validate_username_content,
     validate_username_length,
 )
@@ -27,7 +27,7 @@ def validate_user_data(request, user, user_data, response_json):
     try:
         validate_username_content(filtered_data["name"])
         validate_username_length(UsernameSettings, filtered_data["name"])
-        validate_email(filtered_data["email"])
+        dj_validate_email(filtered_data["email"])
 
         for plugin_oauth2_validator in oauth2_validators:
             plugin_oauth2_validator(request, user, user_data, response_json)

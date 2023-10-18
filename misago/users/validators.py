@@ -5,7 +5,7 @@ import re
 import requests
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email as validate_email_content
+from django.core.validators import EmailValidator
 from django.utils.encoding import force_str
 from django.utils.module_loading import import_string
 from django.utils.translation import npgettext, pgettext_lazy
@@ -24,11 +24,13 @@ User = get_user_model()
 
 
 # E-mail validators
-
+dj_validate_email = EmailValidator(
+    message=pgettext_lazy("email validator", "Enter a valid e-mail address.")
+)
 
 def validate_email(value, exclude=None):
     """shortcut function that does complete validation of email"""
-    validate_email_content(value)
+    dj_validate_email(value)
     validate_email_available(value, exclude)
     validate_email_banned(value)
 

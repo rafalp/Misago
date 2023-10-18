@@ -147,7 +147,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             reverse("misago:username-history", kwargs=self.link_kwargs)
         )
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Your username was never changed.")
+        self.assertContains(response, "Your account has no history of name changes.")
 
         self.user.set_username("RenamedAdmin")
         self.user.save()

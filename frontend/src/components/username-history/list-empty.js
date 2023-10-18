@@ -7,7 +7,7 @@ export default class extends React.Component {
     } else {
       return pgettext(
         "username history empty",
-        "Your account has no record of name changes."
+        "Your account has no history of name changes."
       )
     }
   }
