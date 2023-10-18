@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 12:55+0000\n"
+"POT-Creation-Date: 2023-10-18 17:16+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: uwnyuD, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/misago/teams/65369/hu/)\n"
@@ -4282,38 +4282,45 @@ msgid "Create"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:31
+msgctxt "admin theme assets"
 msgid "Name"
-msgstr "Név"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:32
+msgctxt "admin theme assets"
 msgid "Modified"
-msgstr "Módosított"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:33
+msgctxt "admin theme assets"
 msgid "Size"
-msgstr "Méret"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:68
+msgctxt "admin theme assets"
 msgid "Move down"
-msgstr "Mozgatás le"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:73
+msgctxt "admin theme assets"
 msgid "Move up"
-msgstr "Mozgatás fel"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:80
 #: templates/misago/admin/themes/assets/css.html:84
-#: users/admin/djangoadmin.py:72
+msgctxt "admin theme assets"
 msgid "Edit"
-msgstr "Szerkesztés"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:94
+msgctxt "admin theme assets"
 msgid "This theme has no CSS files."
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:103
+msgctxt "admin theme assets"
 msgid "Delete selected"
-msgstr "Kijelöltek eltávolítása"
+msgstr ""
 
 #: templates/misago/admin/themes/assets/list.html:6
 msgctxt "admin theme assets"
@@ -4908,17 +4915,17 @@ msgstr ""
 
 #: templates/misago/categories/last_thread.html:54
 msgctxt "category last reply"
-msgid "This category is empty. No threads were posted within it so far."
+msgid "Empty category"
 msgstr ""
 
 #: templates/misago/categories/last_thread.html:68
 msgctxt "category last reply"
-msgid "This category is private. You can see only your own threads within it."
+msgid "Private category"
 msgstr ""
 
 #: templates/misago/categories/last_thread.html:82
 msgctxt "category last reply"
-msgid "This category is protected. You can't browse it's contents."
+msgid "Protected category"
 msgstr ""
 
 #: templates/misago/categories/stats.html:5
@@ -6019,8 +6026,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/profile/username_history.html:83
-msgctxt "user profile page username history"
-msgid "Your username was never changed."
+msgctxt "username history empty"
+msgid "Your account has no record of name changes."
 msgstr ""
 
 #: templates/misago/profile/username_history.html:85
@@ -6151,7 +6158,7 @@ msgstr ""
 
 #: templates/misago/thread/posts/event/index.html:58
 msgctxt "thread event"
-msgid "Thread has been pinned locally."
+msgid "Thread has been pinned in category."
 msgstr ""
 
 #: templates/misago/thread/posts/event/index.html:60
@@ -6353,14 +6360,9 @@ msgid "Removed user"
 msgstr ""
 
 #: templates/misago/thread/private_thread.html:7
-#, python-format
-msgctxt "thread page title"
-msgid "page: %(page)s"
-msgstr ""
-
 #: templates/misago/thread/thread.html:7
 #, python-format
-msgctxt "private thread page title"
+msgctxt "page title pagination"
 msgid "page: %(page)s"
 msgstr ""
 
@@ -6604,8 +6606,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/userslists/active_posters.html:16
-#: templates/misago/userslists/active_posters.html:35
-#: templates/misago/userslists/active_posters.html:50
 #, python-format
 msgctxt "active posters page meta"
 msgid "No users have posted any new messages during last %(days)s days."
@@ -6618,7 +6618,7 @@ msgid "Top posters"
 msgstr ""
 
 #: templates/misago/userslists/active_posters.html:29
-#: templates/misago/userslists/active_posters.html:44
+#: templates/misago/userslists/active_posters.html:46
 #, python-format
 msgctxt "active posters page meta"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6626,7 +6626,18 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:69
+#: templates/misago/userslists/active_posters.html:35
+#: templates/misago/userslists/active_posters.html:52
+#: templates/misago/userslists/active_posters.html:149
+#, python-format
+msgctxt "active posters page meta"
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural ""
+"No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/userslists/active_posters.html:73
 #, python-format
 msgctxt "active posters page"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6634,32 +6645,26 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:83
+#: templates/misago/userslists/active_posters.html:87
 msgctxt "active posters list item"
 msgid "Avatar"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:112
-#: templates/misago/userslists/active_posters.html:123
+#: templates/misago/userslists/active_posters.html:116
+#: templates/misago/userslists/active_posters.html:127
 msgctxt "active posters list item"
 msgid "Rank"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:116
-#: templates/misago/userslists/active_posters.html:128
+#: templates/misago/userslists/active_posters.html:120
+#: templates/misago/userslists/active_posters.html:132
 msgctxt "active posters list item"
 msgid "Ranked posts"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:133
+#: templates/misago/userslists/active_posters.html:137
 msgctxt "active posters list item"
 msgid "Total posts"
-msgstr ""
-
-#: templates/misago/userslists/active_posters.html:145
-#, python-format
-msgctxt "active posters page"
-msgid "No users have posted any new messages during last %(days)s days."
 msgstr ""
 
 #: templates/misago/userslists/base.html:5
@@ -7073,7 +7078,7 @@ msgctxt "admin node"
 msgid "Attachment types"
 msgstr ""
 
-#: threads/admin/__init__.py:45
+#: threads/admin/__init__.py:46
 msgctxt "admin node"
 msgid "Specify what files may be uploaded as part of user posts."
 msgstr ""
@@ -9728,6 +9733,10 @@ msgstr ""
 msgid "Edit permissions and groups"
 msgstr ""
 
+#: users/admin/djangoadmin.py:72
+msgid "Edit"
+msgstr "Szerkesztés"
+
 #: users/admin/djangoadmin.py:76
 msgid "Edit the user from Misago admin panel"
 msgstr "Szerkessze a felhasználót a Misago adminisztrációs panelból"
@@ -10078,87 +10087,87 @@ msgid ""
 "others through dedicated page on forum users list."
 msgstr ""
 
-#: users/admin/forms.py:541
+#: users/admin/forms.py:544
 msgctxt "admin rank form"
-msgid "This name collides with other rank."
+msgid "There's already an other rank with this name."
 msgstr ""
 
-#: users/admin/forms.py:549
+#: users/admin/forms.py:553
 msgctxt "admin ban users form"
 msgid "Values to ban"
 msgstr ""
 
-#: users/admin/forms.py:554
+#: users/admin/forms.py:558
 msgctxt "admin ban users form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:559
+#: users/admin/forms.py:563
 msgctxt "admin ban users form"
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:564 users/admin/forms.py:579
+#: users/admin/forms.py:568 users/admin/forms.py:583
 msgctxt "admin ban users form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:569
+#: users/admin/forms.py:573
 msgctxt "admin ban users form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:574
+#: users/admin/forms.py:578
 msgctxt "admin ban users form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:584
+#: users/admin/forms.py:588
 msgctxt "admin ban users form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:593
+#: users/admin/forms.py:597
 msgctxt "admin ban users form"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:594
+#: users/admin/forms.py:598
 msgctxt "admin ban users form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:595
+#: users/admin/forms.py:599
 msgctxt "admin ban users form"
 msgid "E-mail domains"
 msgstr ""
 
-#: users/admin/forms.py:601
+#: users/admin/forms.py:605
 msgctxt "admin ban users form"
 msgid "IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:605
+#: users/admin/forms.py:609
 msgctxt "admin ban users form"
 msgid "First segment of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:611
+#: users/admin/forms.py:615
 msgctxt "admin ban users form"
 msgid "First two segments of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:619
+#: users/admin/forms.py:623
 msgctxt "admin ban form"
 msgid "Check type"
 msgstr ""
 
-#: users/admin/forms.py:624
+#: users/admin/forms.py:628
 msgctxt "admin ban form"
 msgid "Restrict this ban to registrations"
 msgstr ""
 
-#: users/admin/forms.py:627
+#: users/admin/forms.py:631
 msgctxt "admin ban form"
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
@@ -10167,12 +10176,12 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: users/admin/forms.py:631
+#: users/admin/forms.py:635
 msgctxt "admin ban form"
 msgid "Banned value"
 msgstr ""
 
-#: users/admin/forms.py:635
+#: users/admin/forms.py:639
 msgctxt "admin ban form"
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for partial matches."
@@ -10180,122 +10189,122 @@ msgid ""
 "beginning with \"83.\"."
 msgstr ""
 
-#: users/admin/forms.py:639
+#: users/admin/forms.py:643
 msgctxt "admin ban form"
 msgid "Banned value can't be longer than 250 characters."
 msgstr ""
 
-#: users/admin/forms.py:644
+#: users/admin/forms.py:648
 msgctxt "admin ban form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:649
+#: users/admin/forms.py:653
 msgctxt "admin ban form"
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:654 users/admin/forms.py:668
+#: users/admin/forms.py:658 users/admin/forms.py:672
 msgctxt "admin ban form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:659
+#: users/admin/forms.py:663
 msgctxt "admin ban form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:663
+#: users/admin/forms.py:667
 msgctxt "admin ban form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:673
+#: users/admin/forms.py:677
 msgctxt "admin ban form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:695
+#: users/admin/forms.py:699
 msgctxt "admin ban form"
 msgid "Banned value is too vague."
 msgstr ""
 
-#: users/admin/forms.py:703
+#: users/admin/forms.py:707
 msgctxt "admin bans filter form"
 msgid "Type"
 msgstr ""
 
-#: users/admin/forms.py:706
+#: users/admin/forms.py:710
 msgctxt "admin bans type filter choice"
 msgid "All bans"
 msgstr ""
 
-#: users/admin/forms.py:707
+#: users/admin/forms.py:711
 msgctxt "admin bans type filter choice"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:708
+#: users/admin/forms.py:712
 msgctxt "admin bans filter form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:709
+#: users/admin/forms.py:713
 msgctxt "admin bans type filter choice"
 msgid "IPs"
 msgstr ""
 
-#: users/admin/forms.py:713
+#: users/admin/forms.py:717
 msgctxt "admin bans filter form"
 msgid "Banned value begins with"
 msgstr ""
 
-#: users/admin/forms.py:717
+#: users/admin/forms.py:721
 msgctxt "admin bans filter form"
 msgid "Registration only"
 msgstr ""
 
-#: users/admin/forms.py:720
+#: users/admin/forms.py:724
 msgctxt "admin bans registration filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:721
+#: users/admin/forms.py:725
 msgctxt "admin bans registration filter choice"
 msgid "Yes"
 msgstr ""
 
-#: users/admin/forms.py:722
+#: users/admin/forms.py:726
 msgctxt "admin bans registration filter choice"
 msgid "No"
 msgstr ""
 
-#: users/admin/forms.py:726
+#: users/admin/forms.py:730
 msgctxt "admin bans filter form"
 msgid "State"
 msgstr ""
 
-#: users/admin/forms.py:729
+#: users/admin/forms.py:733
 msgctxt "admin bans state filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:730
+#: users/admin/forms.py:734
 msgctxt "admin bans state filter choice"
 msgid "Active"
 msgstr ""
 
-#: users/admin/forms.py:731
+#: users/admin/forms.py:735
 msgctxt "admin bans state filter choice"
 msgid "Expired"
 msgstr ""
 
-#: users/admin/forms.py:767
+#: users/admin/forms.py:771
 msgctxt "admin data download request form"
 msgid "Usernames or emails"
 msgstr ""
 
-#: users/admin/forms.py:770
+#: users/admin/forms.py:774
 msgctxt "admin data download request form"
 msgid ""
 "Enter every item in new line. Duplicates will be ignored. This field is case"
@@ -10304,7 +10313,7 @@ msgid ""
 "notification will be sent to every user once their download is ready."
 msgstr ""
 
-#: users/admin/forms.py:784
+#: users/admin/forms.py:788
 #, python-format
 msgctxt "admin data download request form"
 msgid ""
@@ -10312,22 +10321,22 @@ msgid ""
 "%(show_value)s)."
 msgstr ""
 
-#: users/admin/forms.py:804
+#: users/admin/forms.py:808
 msgctxt "admin data download request form"
 msgid "One or more specified users could not be found."
 msgstr ""
 
-#: users/admin/forms.py:813
+#: users/admin/forms.py:817
 msgctxt "admin data download requests filter form"
 msgid "Status"
 msgstr ""
 
-#: users/admin/forms.py:818
+#: users/admin/forms.py:822
 msgctxt "admin data download requests filter form"
 msgid "User"
 msgstr ""
 
-#: users/admin/forms.py:822
+#: users/admin/forms.py:826
 msgctxt "admin data download requests filter form"
 msgid "Requested by"
 msgstr ""
@@ -10923,7 +10932,7 @@ msgstr ""
 
 #: users/apps.py:45
 msgctxt "user options page"
-msgid "Change email or password"
+msgid "Change e-mail or password"
 msgstr ""
 
 #: users/apps.py:56
@@ -11805,39 +11814,44 @@ msgctxt "archived username history"
 msgid "Old username"
 msgstr ""
 
-#: users/validators.py:42
+#: users/validators.py:28
+msgctxt "email validator"
+msgid "Enter a valid e-mail address."
+msgstr ""
+
+#: users/validators.py:44
 msgctxt "user email validator"
 msgid "This e-mail address is not available."
 msgstr ""
 
-#: users/validators.py:58
+#: users/validators.py:60
 msgctxt "user email validator"
 msgid "This e-mail address is not allowed."
 msgstr ""
 
-#: users/validators.py:77
+#: users/validators.py:79
 msgctxt "username validator"
 msgid "This username is not available."
 msgstr ""
 
-#: users/validators.py:91
+#: users/validators.py:93
 msgctxt "username validator"
 msgid "This username is not allowed."
 msgstr ""
 
-#: users/validators.py:100
+#: users/validators.py:102
 msgctxt "username validator"
 msgid ""
 "Username can only contain Latin alphabet letters, digits, and an underscore "
 "sign."
 msgstr ""
 
-#: users/validators.py:108
+#: users/validators.py:110
 msgctxt "username validator"
 msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
 
-#: users/validators.py:117
+#: users/validators.py:119
 #, python-format
 msgctxt "username length validator"
 msgid "Username must be at least %(limit_value)s character long."
@@ -11845,7 +11859,7 @@ msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:126
+#: users/validators.py:128
 #, python-format
 msgctxt "username length validator"
 msgid "Username cannot be longer than %(limit_value)s characters."
@@ -11853,12 +11867,12 @@ msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:165
+#: users/validators.py:167
 msgctxt "stop forum spam validator"
 msgid "Data entered was found in spammers database."
 msgstr ""
 
-#: users/validators.py:180
+#: users/validators.py:182
 msgctxt "gmail email validator"
 msgid "This email is not allowed."
 msgstr ""

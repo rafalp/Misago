@@ -28,9 +28,9 @@
     <table class="table">
       <tr>
         <th style="width: 1px;">&nbsp;</th>
-        <th style="width: 250px;">{% trans "Name" %}</th>
-        <th style="width: 250px;">{% trans "Modified" %}</th>
-        <th>{% trans "Size" %}</th>
+        <th style="width: 250px;">{% trans "Name" context "admin theme assets" %}</th>
+        <th style="width: 250px;">{% trans "Modified" context "admin theme assets" %}</th>
+        <th>{% trans "Size" context "admin theme assets" %}</th>
         <th style="width: 1px;">&nbsp;</th>
         <th style="width: 1px;">&nbsp;</th>
         <th style="width: 1px;">&nbsp;</th>
@@ -65,23 +65,23 @@
             {{ item.size|filesizeformat }}
           </td>
           <td>
-            <button class="btn btn-light btn-sm btn-move" form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
+            <button class="btn btn-light btn-sm btn-move" form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' context 'admin theme assets' %}" {% if forloop.last %}disabled{% endif %}>
               <span class="fa fa-chevron-down"></span>
             </button>
           </td>
           <td>
-            <button class="btn btn-light btn-sm btn-move" form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
+            <button class="btn btn-light btn-sm btn-move" form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' context 'admin theme assets' %}" {% if forloop.first %}disabled{% endif %}>
               <span class="fa fa-chevron-up"></span>
             </button>
           </td>
           <td>
             {% if item.url %}
               <a href="{% url 'misago:admin:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
-                {% trans "Edit" %}
+                {% trans "Edit" context "admin theme assets" %}
               </a>
             {% else %}
               <a href="{% url 'misago:admin:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
-                {% trans "Edit" %}
+                {% trans "Edit" context "admin theme assets" %}
               </a>
             {% endif %}
           </td>
@@ -91,7 +91,7 @@
         </tr>
       {% empty %}
         <tr class="blankslate">
-          <td colspan="8">{% trans "This theme has no CSS files." %}</td>
+          <td colspan="8">{% trans "This theme has no CSS files." context "admin theme assets" %}</td>
         </tr>
       {% endfor %}
     </table>
@@ -100,7 +100,7 @@
         <form id="delete-css" action="{% url 'misago:admin:themes:delete-css' pk=theme.pk %}" method="post">
           {% csrf_token %}
           <button class="btn btn-light btn-sm" disabled>
-            {% trans "Delete selected" %}
+            {% trans "Delete selected" context "admin theme assets" %}
           </button>
         </form>
       </div>

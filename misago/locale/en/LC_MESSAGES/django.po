@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 13:24+0000\n"
+"POT-Creation-Date: 2023-10-18 17:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4252,36 +4252,43 @@ msgid "Create"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:31
+msgctxt "admin theme assets"
 msgid "Name"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:32
+msgctxt "admin theme assets"
 msgid "Modified"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:33
+msgctxt "admin theme assets"
 msgid "Size"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:68
+msgctxt "admin theme assets"
 msgid "Move down"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:73
+msgctxt "admin theme assets"
 msgid "Move up"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:80
 #: templates/misago/admin/themes/assets/css.html:84
-#: users/admin/djangoadmin.py:72
+msgctxt "admin theme assets"
 msgid "Edit"
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:94
+msgctxt "admin theme assets"
 msgid "This theme has no CSS files."
 msgstr ""
 
 #: templates/misago/admin/themes/assets/css.html:103
+msgctxt "admin theme assets"
 msgid "Delete selected"
 msgstr ""
 
@@ -6321,14 +6328,9 @@ msgid "Removed user"
 msgstr ""
 
 #: templates/misago/thread/private_thread.html:7
-#, python-format
-msgctxt "thread page title"
-msgid "page: %(page)s"
-msgstr ""
-
 #: templates/misago/thread/thread.html:7
 #, python-format
-msgctxt "private thread page title"
+msgctxt "page title pagination"
 msgid "page: %(page)s"
 msgstr ""
 
@@ -6571,7 +6573,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/userslists/active_posters.html:16
-#: templates/misago/userslists/active_posters.html:52
 #, python-format
 msgctxt "active posters page meta"
 msgid "No users have posted any new messages during last %(days)s days."
@@ -6593,6 +6594,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/userslists/active_posters.html:35
+#: templates/misago/userslists/active_posters.html:52
+#: templates/misago/userslists/active_posters.html:149
 #, python-format
 msgctxt "active posters page meta"
 msgid "No users have posted any new messages during last %(days)s day."
@@ -6600,7 +6603,7 @@ msgid_plural "No users have posted any new messages during last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:71
+#: templates/misago/userslists/active_posters.html:73
 #, python-format
 msgctxt "active posters page"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6608,32 +6611,26 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:85
+#: templates/misago/userslists/active_posters.html:87
 msgctxt "active posters list item"
 msgid "Avatar"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:114
-#: templates/misago/userslists/active_posters.html:125
+#: templates/misago/userslists/active_posters.html:116
+#: templates/misago/userslists/active_posters.html:127
 msgctxt "active posters list item"
 msgid "Rank"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:118
-#: templates/misago/userslists/active_posters.html:130
+#: templates/misago/userslists/active_posters.html:120
+#: templates/misago/userslists/active_posters.html:132
 msgctxt "active posters list item"
 msgid "Ranked posts"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:135
+#: templates/misago/userslists/active_posters.html:137
 msgctxt "active posters list item"
 msgid "Total posts"
-msgstr ""
-
-#: templates/misago/userslists/active_posters.html:147
-#, python-format
-msgctxt "active posters page"
-msgid "No users have posted any new messages during last %(days)s days."
 msgstr ""
 
 #: templates/misago/userslists/base.html:5
@@ -9699,6 +9696,10 @@ msgstr ""
 msgid "Edit permissions and groups"
 msgstr ""
 
+#: users/admin/djangoadmin.py:72
+msgid "Edit"
+msgstr ""
+
 #: users/admin/djangoadmin.py:76
 msgid "Edit the user from Misago admin panel"
 msgstr ""
@@ -11775,39 +11776,44 @@ msgctxt "archived username history"
 msgid "Old username"
 msgstr ""
 
-#: users/validators.py:42
+#: users/validators.py:28
+msgctxt "email validator"
+msgid "Enter a valid e-mail address."
+msgstr ""
+
+#: users/validators.py:44
 msgctxt "user email validator"
 msgid "This e-mail address is not available."
 msgstr ""
 
-#: users/validators.py:58
+#: users/validators.py:60
 msgctxt "user email validator"
 msgid "This e-mail address is not allowed."
 msgstr ""
 
-#: users/validators.py:77
+#: users/validators.py:79
 msgctxt "username validator"
 msgid "This username is not available."
 msgstr ""
 
-#: users/validators.py:91
+#: users/validators.py:93
 msgctxt "username validator"
 msgid "This username is not allowed."
 msgstr ""
 
-#: users/validators.py:100
+#: users/validators.py:102
 msgctxt "username validator"
 msgid ""
 "Username can only contain Latin alphabet letters, digits, and an underscore "
 "sign."
 msgstr ""
 
-#: users/validators.py:108
+#: users/validators.py:110
 msgctxt "username validator"
 msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
 
-#: users/validators.py:117
+#: users/validators.py:119
 #, python-format
 msgctxt "username length validator"
 msgid "Username must be at least %(limit_value)s character long."
@@ -11815,7 +11821,7 @@ msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:126
+#: users/validators.py:128
 #, python-format
 msgctxt "username length validator"
 msgid "Username cannot be longer than %(limit_value)s characters."
@@ -11823,12 +11829,12 @@ msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:165
+#: users/validators.py:167
 msgctxt "stop forum spam validator"
 msgid "Data entered was found in spammers database."
 msgstr ""
 
-#: users/validators.py:180
+#: users/validators.py:182
 msgctxt "gmail email validator"
 msgid "This email is not allowed."
 msgstr ""

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 13:24+0000\n"
+"POT-Creation-Date: 2023-10-18 17:14+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -158,11 +158,13 @@ msgid ""
 "We have sent an e-mail to %(email)s with link that you have to click to "
 "activate your account."
 msgstr ""
+"Na e-mail %(email)s wysłaliśmy wiadomość z odnośnikiem który należy kliknąć "
+"aby aktywować konto."
 
 #: static/misago/js/misago.js:1
 msgctxt "account activation required"
 msgid "We will send an e-mail to %(email)s when this takes place."
-msgstr ""
+msgstr "Wyślemy e-mail do %(email)s kiedy to się zadzieje."
 
 #: static/misago/js/misago.js:1
 msgctxt "register modal title"
@@ -1547,7 +1549,7 @@ msgstr "Offline"
 
 #: static/misago/js/misago.js:1
 msgctxt "username history empty"
-msgid "Your account has no record of name changes."
+msgid "Your account has no history of name changes."
 msgstr "Twoje konto nie ma historii zmian nazwy."
 
 #: static/misago/js/misago.js:1
@@ -4960,22 +4962,22 @@ msgstr "Wystąpił nieznany błąd."
 #: static/misago/js/misago.js:1
 msgctxt "api error"
 msgid "Could not connect to the site."
-msgstr ""
+msgstr "Nie udało się połączyć ze stroną."
 
 #: static/misago/js/misago.js:1
 msgctxt "api error"
 msgid "Upload was rejected by the site as too large."
-msgstr ""
+msgstr "Przesłany plik został odrzucony przez stronę jako za duży."
 
 #: static/misago/js/misago.js:1
 msgctxt "api error"
 msgid "Action link is invalid."
-msgstr ""
+msgstr "Odnośnik akcji jest błędny."
 
 #: static/misago/js/misago.js:1
 msgctxt "api error"
 msgid "Unknown error has occurred."
-msgstr ""
+msgstr "Wystąpił nieoczekiwany błąd."
 
 #: static/misago/js/misago.js:1
 msgctxt "captcha field"
@@ -5004,7 +5006,7 @@ msgstr "Jesteś w trakcie pisania innej wiadomości. Czy chcesz ją porzucić?"
 #: static/misago/js/misago.js:1
 msgctxt "api error"
 msgid "You don't have permission to perform this action."
-msgstr ""
+msgstr "Nie masz uprawnień do wykonania tej akcji."
 
 #: static/misago/js/misago.js:1
 msgctxt "banned page"
@@ -5113,6 +5115,7 @@ msgstr[3] "Nazwa użytkownika nie może być dłuższa niż %(limit_value)s znak
 msgctxt "username validator"
 msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
+"Nazwa użytkownika musi zawierać litery alfabetu łacińskiego lub cyfry."
 
 #: static/misago/js/misago.js:1
 msgctxt "username validator"
@@ -5120,6 +5123,8 @@ msgid ""
 "Username can only contain Latin alphabet letters, digits, and an underscore "
 "sign."
 msgstr ""
+"Nazwa użytkownika może zawierać wyłącznie litery alfabetu łacińskiego, cyfry"
+" i znak podkreślnika."
 
 #: static/misago/js/misago.js:1
 msgctxt "password length validator"
