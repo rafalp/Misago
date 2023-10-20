@@ -99,6 +99,7 @@ intro() {
     echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
     echo "    ${BOLD}fakedata${NORMAL}          populates database with testing data."
     echo "    ${BOLD}fakebigdata${NORMAL}       populates database with LARGE amount of testing data."
+    echo "    ${BOLD}pipcompile${NORMAL}        run pip-compile to update requirements.txt"
     echo
 }
 
@@ -310,6 +311,11 @@ create_fake_bigdata() {
     docker compose run --rm misago python manage.py createfakecategories 48
     docker compose run --rm misago python manage.py createfakecategories 24 1
     docker compose run --rm misago python manage.py createfakehistory 2190 120
+}
+
+# Pip compile
+pip_compile() {
+    docker compose run --rm misago pip-compile --output-file=requirements.txt requirements.in
 }
 
 # Command dispatcher
