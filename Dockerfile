@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     gettext
 
+# Install pip-tools
+RUN python -m pip install pip-tools
+
 # Add requirements and install them. We do this unnecessasy rebuilding.
 ADD requirements.txt /
 ADD requirements-plugins.txt /
