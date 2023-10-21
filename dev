@@ -369,6 +369,8 @@ if [[ $1 ]]; then
         create_fake_data
     elif [[ $1 = "fakebigdata" ]]; then
         create_fake_bigdata
+    elif [[ $1 = "pipcompile" ]]; then
+        pip_compile 
     else
         invalid_argument $1
     fi
