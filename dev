@@ -313,7 +313,7 @@ create_fake_bigdata() {
     docker compose run --rm misago python manage.py createfakehistory 2190 120
 }
 
-# Pip compile
+# Shortcut for pip compile new requirements.txt
 pip_compile() {
     docker compose run --rm misago pip-compile --output-file=requirements.txt requirements.in
 }
