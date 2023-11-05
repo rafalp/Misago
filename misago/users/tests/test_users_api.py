@@ -543,7 +543,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "You can't delete administrators."}
+            response.json(), {"detail": "Administrators can't be deleted."}
         )
 
     @patch_user_acl(
@@ -557,7 +557,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "You can't delete administrators."}
+            response.json(), {"detail": "Administrators can't be deleted."}
         )
 
     @patch_user_acl(

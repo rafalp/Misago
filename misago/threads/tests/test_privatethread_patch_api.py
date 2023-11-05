@@ -576,7 +576,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
             {
                 "id": self.thread.pk,
                 "detail": [
-                    "Only thread owner and moderators can appoint new thread owner."
+                    "Only thread owner and moderators can appoint a new thread owner."
                 ],
             },
         )
@@ -612,7 +612,9 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
             response.json(),
             {
                 "id": self.thread.pk,
-                "detail": ["Only moderators can change closed threads owners."],
+                "detail": [
+                    "Only moderators can appoint a new thread owner in a closed thread."
+                ],
             },
         )
 

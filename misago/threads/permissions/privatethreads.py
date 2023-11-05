@@ -339,7 +339,7 @@ def allow_add_participant(user_acl, target, target_acl):
         raise PermissionDenied(
             pgettext_lazy(
                 "private threads permission",
-                "%(user)s disabled invitations to private threads.",
+                "%(user)s has disabled invitations to private threads.",
             )
             % message_format
         )

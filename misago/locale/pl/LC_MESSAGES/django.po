@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-05 13:48+0000\n"
+"POT-Creation-Date: 2023-11-05 23:22+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -8615,7 +8615,7 @@ msgctxt "polls permission"
 msgid "This thread is closed. You can't vote in it."
 msgstr "Ten temat jest zamknięty. Nie możesz w nim głosować."
 
-#: threads/permissions/polls.py:327
+#: threads/permissions/polls.py:328
 msgctxt "polls permission"
 msgid "You dont have permission to see this poll's voters."
 msgstr "Nie masz uprawnień aby móc widzieć kto głosował w tej ankiecie."
@@ -8747,7 +8747,7 @@ msgstr "%(user)s blokuje ciebie."
 #: threads/permissions/privatethreads.py:342
 #, python-format
 msgctxt "private threads permission"
-msgid "%(user)s disabled invitations to private threads."
+msgid "%(user)s has disabled invitations to private threads."
 msgstr "%(user)s wyłączył(a) zaproszenia do prywatnych tematów."
 
 #: threads/permissions/privatethreads.py:352
@@ -9554,222 +9554,222 @@ msgstr[1] "Nie możesz usuwać postów starszych niż %(minutes)s minuty."
 msgstr[2] "Nie możesz usuwać postów starszych niż %(minutes)s minut."
 msgstr[3] "Nie możesz usuwać postów starszych niż %(minutes)s minut."
 
-#: threads/permissions/threads.py:1370
+#: threads/permissions/threads.py:1372
 msgctxt "threads permission"
 msgid "Thread's first post can only be deleted together with thread."
 msgstr "Pierwszy post tematu może być usunięty wyłącznie wraz z tematem."
 
-#: threads/permissions/threads.py:1378
+#: threads/permissions/threads.py:1381
 msgctxt "threads permission"
 msgid "This category is closed. You can't delete posts in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz usuwać w niej postów."
 
-#: threads/permissions/threads.py:1385
+#: threads/permissions/threads.py:1388
 msgctxt "threads permission"
 msgid "This thread is closed. You can't delete posts in it."
 msgstr "Ten temat jest zamknięty. Nie możesz usuwać w nim postów."
 
-#: threads/permissions/threads.py:1396
+#: threads/permissions/threads.py:1399
 msgctxt "threads permission"
 msgid "You have to sign in to protect posts."
 msgstr "Musisz być zalogowany/a aby móc chronić posty."
 
-#: threads/permissions/threads.py:1406
+#: threads/permissions/threads.py:1409
 msgctxt "threads permission"
 msgid "You can't protect posts in this category."
 msgstr "Nie możesz obejmować ochroną postów w tej kategorii."
 
-#: threads/permissions/threads.py:1412
+#: threads/permissions/threads.py:1415
 msgctxt "threads permission"
 msgid "You can't protect posts you can't edit."
 msgstr "Nie możesz obejmować ochroną postów których nie możesz zmieniać."
 
-#: threads/permissions/threads.py:1423
+#: threads/permissions/threads.py:1426
 msgctxt "threads permission"
 msgid "You have to sign in to approve posts."
 msgstr "Musisz być zalogowany/a aby móc zatwierdzać posty."
 
-#: threads/permissions/threads.py:1433
+#: threads/permissions/threads.py:1436
 msgctxt "threads permission"
 msgid "You can't approve posts in this category."
 msgstr "Nie możesz zatwierdzać postów w tej kategorii."
 
-#: threads/permissions/threads.py:1439
+#: threads/permissions/threads.py:1443
 msgctxt "threads permission"
 msgid "Thread's first post can only be approved together with thread."
 msgstr "Pierwszy post tematu może być zatwierdzony wyłącznie wraz z tematem."
 
-#: threads/permissions/threads.py:1450
+#: threads/permissions/threads.py:1454
 msgctxt "threads permission"
 msgid "You can't approve posts the content you can't see."
 msgstr "Nie możesz zatwierdzać postów których treści nie możesz zobaczyć."
 
-#: threads/permissions/threads.py:1459
+#: threads/permissions/threads.py:1463
 msgctxt "threads permission"
 msgid "This category is closed. You can't approve posts in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz zatwierdzać w niej postów."
 
-#: threads/permissions/threads.py:1466
+#: threads/permissions/threads.py:1470
 msgctxt "threads permission"
 msgid "This thread is closed. You can't approve posts in it."
 msgstr "Ten temat jest zamknięty. Nie możesz zatwierdzać w nim postów."
 
-#: threads/permissions/threads.py:1477
+#: threads/permissions/threads.py:1481
 msgctxt "threads permission"
 msgid "You have to sign in to move posts."
 msgstr "Musisz być zalogowany/a aby móc przenosić posty."
 
-#: threads/permissions/threads.py:1487
+#: threads/permissions/threads.py:1491
 msgctxt "threads permission"
 msgid "You can't move posts in this category."
 msgstr "Nie możesz przenosić postów w tej kategorii."
 
-#: threads/permissions/threads.py:1492
+#: threads/permissions/threads.py:1496
 msgctxt "threads permission"
 msgid "Events can't be moved."
 msgstr "Zdarzeń nie można przenosić."
 
-#: threads/permissions/threads.py:1496
+#: threads/permissions/threads.py:1502
 msgctxt "threads permission"
 msgid "Thread's first post can only be moved together with thread."
 msgstr "Pierwszy post tematu może być przeniesiony wyłącznie wraz z tematem."
 
-#: threads/permissions/threads.py:1501
+#: threads/permissions/threads.py:1508
 msgctxt "threads permission"
 msgid "You can't move posts the content you can't see."
 msgstr "Nie możesz przenosić postów których treści nie możesz zobaczyć."
 
-#: threads/permissions/threads.py:1510
+#: threads/permissions/threads.py:1517
 msgctxt "threads permission"
 msgid "This category is closed. You can't move posts in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz przenosić w niej postów."
 
-#: threads/permissions/threads.py:1517
+#: threads/permissions/threads.py:1524
 msgctxt "threads permission"
 msgid "This thread is closed. You can't move posts in it."
 msgstr "Ten temat jest zamknięty. Nie możesz przenosić w nim postów."
 
-#: threads/permissions/threads.py:1528
+#: threads/permissions/threads.py:1535
 msgctxt "threads permission"
 msgid "You have to sign in to merge posts."
 msgstr "Musisz być zalogowany/a aby móc łączyć posty."
 
-#: threads/permissions/threads.py:1538
+#: threads/permissions/threads.py:1545
 msgctxt "threads permission"
 msgid "You can't merge posts in this category."
 msgstr "Nie możesz łączyć postów w tej kategorii."
 
-#: threads/permissions/threads.py:1543
+#: threads/permissions/threads.py:1550
 msgctxt "threads permission"
 msgid "Events can't be merged."
 msgstr "Zdarzeń nie można łączyć."
 
-#: threads/permissions/threads.py:1552
+#: threads/permissions/threads.py:1559
 msgctxt "threads permission"
 msgid "You can't merge posts the content you can't see."
 msgstr "Nie możesz łączyć postów których treści nie możesz zobaczyć."
 
-#: threads/permissions/threads.py:1561
+#: threads/permissions/threads.py:1568
 msgctxt "threads permission"
 msgid "This category is closed. You can't merge posts in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz łączyć w niej postów."
 
-#: threads/permissions/threads.py:1568
+#: threads/permissions/threads.py:1575
 msgctxt "threads permission"
 msgid "This thread is closed. You can't merge posts in it."
 msgstr "Ten temat jest zamknięty. Nie możesz łączyć w nim postów."
 
-#: threads/permissions/threads.py:1579
+#: threads/permissions/threads.py:1586
 msgctxt "threads permission"
 msgid "You have to sign in to split posts."
 msgstr "Musisz być zalogowany/a aby móc wydzielać posty."
 
-#: threads/permissions/threads.py:1589
+#: threads/permissions/threads.py:1596
 msgctxt "threads permission"
 msgid "You can't split posts in this category."
 msgstr "Nie możesz wydzielać postów w tej kategorii."
 
-#: threads/permissions/threads.py:1594
+#: threads/permissions/threads.py:1601
 msgctxt "threads permission"
 msgid "Events can't be split."
 msgstr "Zdarzeń nie można wydzielać."
 
-#: threads/permissions/threads.py:1598
+#: threads/permissions/threads.py:1605
 msgctxt "threads permission"
 msgid "Thread's first post can't be split."
 msgstr "Pierwszego postu w temacie nie można wydzielić."
 
-#: threads/permissions/threads.py:1603
+#: threads/permissions/threads.py:1610
 msgctxt "threads permission"
 msgid "You can't split posts the content you can't see."
 msgstr "Nie możesz wydzielać postów których treści nie możesz zobaczyć."
 
-#: threads/permissions/threads.py:1612
+#: threads/permissions/threads.py:1619
 msgctxt "threads permission"
 msgid "This category is closed. You can't split posts in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz wydzielać w niej postów."
 
-#: threads/permissions/threads.py:1619
+#: threads/permissions/threads.py:1626
 msgctxt "threads permission"
 msgid "This thread is closed. You can't split posts in it."
 msgstr "Ten temat jest zamknięty. Nie możesz wydzielać z niego postów."
 
-#: threads/permissions/threads.py:1630
+#: threads/permissions/threads.py:1637
 msgctxt "threads permission"
 msgid "You have to sign in to reveal events."
 msgstr "Musisz być zalogowany/a aby móc odkrywać zdarzenia."
 
-#: threads/permissions/threads.py:1640
+#: threads/permissions/threads.py:1647
 msgctxt "threads permission"
 msgid "You can't reveal events in this category."
 msgstr "Nie możesz odkrywać zdarzeń w tej kategorii."
 
-#: threads/permissions/threads.py:1649
+#: threads/permissions/threads.py:1656
 msgctxt "threads permission"
 msgid "This category is closed. You can't reveal events in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz odkrywać w niej zdarzeń."
 
-#: threads/permissions/threads.py:1656
+#: threads/permissions/threads.py:1663
 msgctxt "threads permission"
 msgid "This thread is closed. You can't reveal events in it."
 msgstr "Ten temat jest zamknięty. Nie możesz odkrywać w nim zdarzeń."
 
-#: threads/permissions/threads.py:1667
+#: threads/permissions/threads.py:1674
 msgctxt "threads permission"
 msgid "You have to sign in to hide events."
 msgstr "Musisz być zalogowany/a aby móc ukrywać zdarzenia."
 
-#: threads/permissions/threads.py:1677
+#: threads/permissions/threads.py:1684
 msgctxt "threads permission"
 msgid "You can't hide events in this category."
 msgstr "Nie możesz ukrywać zdarzeń w tej kategorii."
 
-#: threads/permissions/threads.py:1686
+#: threads/permissions/threads.py:1693
 msgctxt "threads permission"
 msgid "This category is closed. You can't hide events in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz ukrywać w niej zdarzeń."
 
-#: threads/permissions/threads.py:1693
+#: threads/permissions/threads.py:1700
 msgctxt "threads permission"
 msgid "This thread is closed. You can't hide events in it."
 msgstr "Ten temat jest zamknięty. Nie możesz ukrywać w nim zdarzeń."
 
-#: threads/permissions/threads.py:1704
+#: threads/permissions/threads.py:1711
 msgctxt "threads permission"
 msgid "You have to sign in to delete events."
 msgstr "Musisz być zalogowany/a aby móc usuwać zdarzenia."
 
-#: threads/permissions/threads.py:1714
+#: threads/permissions/threads.py:1721
 msgctxt "threads permission"
 msgid "You can't delete events in this category."
 msgstr "Nie możesz usuwać zdarzeń w tej kategorii."
 
-#: threads/permissions/threads.py:1723
+#: threads/permissions/threads.py:1730
 msgctxt "threads permission"
 msgid "This category is closed. You can't delete events in it."
 msgstr "Ta kategoria jest zamknięta. Nie możesz usuwać w niej zdarzeń."
 
-#: threads/permissions/threads.py:1730
+#: threads/permissions/threads.py:1737
 msgctxt "threads permission"
 msgid "This thread is closed. You can't delete events in it."
 msgstr "Ten temat jest zamknięty. Nie możesz usuwać w nim zdarzeń."
@@ -11366,59 +11366,59 @@ msgctxt "avatar api"
 msgid "Your avatar is locked. You can't change it."
 msgstr "Twój awatar jest zablokowany. Nie możesz go zmienić."
 
-#: users/api/userendpoints/avatar.py:111
+#: users/api/userendpoints/avatar.py:113
 msgctxt "avatar api"
 msgid "This avatar type is not available."
 msgstr "Ten typ awatara nie jest dostępny."
 
-#: users/api/userendpoints/avatar.py:118
+#: users/api/userendpoints/avatar.py:122
 msgctxt "avatar api"
 msgid "Unknown avatar type."
 msgstr "Nieznany typ awatara."
 
-#: users/api/userendpoints/avatar.py:140
+#: users/api/userendpoints/avatar.py:144
 msgctxt "avatar api"
 msgid "New avatar based on your account was set."
 msgstr "Nowy awatar został ustawiony dla twojego konta."
 
-#: users/api/userendpoints/avatar.py:146
+#: users/api/userendpoints/avatar.py:150
 msgctxt "avatar api"
 msgid "Gravatar was downloaded and set as new avatar."
 msgstr "Gravatar został pobrany i ustawiony jako nowy awatar."
 
-#: users/api/userendpoints/avatar.py:150
+#: users/api/userendpoints/avatar.py:154
 msgctxt "avatar api"
 msgid "No Gravatar is associated with your e-mail address."
 msgstr ""
 "Do twojego adresu e-mail nie jest przypisany żaden Nie udało się połączyć z "
 "serwerem Gravatar."
 
-#: users/api/userendpoints/avatar.py:155
+#: users/api/userendpoints/avatar.py:158
 msgctxt "avatar api"
 msgid "Failed to connect to Gravatar."
 msgstr "Nie udało się połączyć z Gravatar."
 
-#: users/api/userendpoints/avatar.py:166
+#: users/api/userendpoints/avatar.py:168
 msgctxt "avatar api"
 msgid "Avatar from gallery was set."
 msgstr "Ustawiono awatar z galerii."
 
-#: users/api/userendpoints/avatar.py:168
+#: users/api/userendpoints/avatar.py:170
 msgctxt "avatar api"
 msgid "Incorrect image."
 msgstr "Nieprawidłowy obraz."
 
-#: users/api/userendpoints/avatar.py:174
+#: users/api/userendpoints/avatar.py:176
 msgctxt "avatar api"
 msgid "No file was sent."
 msgstr "Nie przesłano żadnego pliku."
 
-#: users/api/userendpoints/avatar.py:187
+#: users/api/userendpoints/avatar.py:189
 msgctxt "avatar api"
 msgid "Avatar was re-cropped."
 msgstr "Ponownie przycięto awatar."
 
-#: users/api/userendpoints/avatar.py:192
+#: users/api/userendpoints/avatar.py:194
 msgctxt "avatar api"
 msgid "Uploaded avatar was set."
 msgstr "Przesłany awatar został ustawiony."
@@ -12369,36 +12369,26 @@ msgctxt "skype id profile field"
 msgid "Skype ID"
 msgstr "Skype ID"
 
-#: users/profilefields/default.py:51
-msgctxt "skype id profile field"
-msgid ""
-"Entering your Skype ID may invite other users to contact you via Skype "
-"instead of through private threads."
-msgstr ""
-
-#: users/profilefields/default.py:57
+#: users/profilefields/default.py:53
 msgctxt "twitter handle profile field"
 msgid "X (formerly Twitter) handle"
 msgstr "Nazwa na X (dawniej Twitter)"
 
-#: users/profilefields/default.py:62
+#: users/profilefields/default.py:58
 #, python-format
 msgctxt "twitter handle profile field"
 msgid ""
-"If you own X account, here you may enter your X handle for other users to "
-"find you. Starting your handle with \"@\" sign is optional. Either "
+"If you own an X account, here you may enter your X handle for other users to"
+" find you. Starting your handle with \"@\" sign is optional. Either "
 "\"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
-"Jeśli posiadasz konto na X, tutaj możesz podać jego nazwę aby umożliwić "
-"innym użytkownikom odnalezienie ciebie. Poprzedzenie nazwy znakiem \"@\" "
-"jest opcjonalne. Zarówno \"@%(slug)s\" jak i \"%(slug)s\" są prawidłowe."
 
-#: users/profilefields/default.py:74
+#: users/profilefields/default.py:70
 msgctxt "twitter handle profile field"
 msgid "This is not a valid X handle."
 msgstr "To nie jest prawidłowa nazwa użytkownika w \"X\"."
 
-#: users/profilefields/default.py:82
+#: users/profilefields/default.py:78
 msgctxt "join ip profile field"
 msgid "Join IP"
 msgstr "IP rejestracji"
@@ -12504,27 +12494,27 @@ msgctxt "email validator"
 msgid "Enter a valid e-mail address."
 msgstr "Wpisz prawidłowy adres e-mail."
 
-#: users/validators.py:44
+#: users/validators.py:45
 msgctxt "user email validator"
 msgid "This e-mail address is not available."
 msgstr "Ten adres e-mail nie jest dostępny."
 
-#: users/validators.py:60
+#: users/validators.py:61
 msgctxt "user email validator"
 msgid "This e-mail address is not allowed."
 msgstr "Ten adres e-mail jest zabroniony."
 
-#: users/validators.py:79
+#: users/validators.py:80
 msgctxt "username validator"
 msgid "This username is not available."
 msgstr "Ta nazwa użytkownika nie jest dostępna."
 
-#: users/validators.py:93
+#: users/validators.py:94
 msgctxt "username validator"
 msgid "This username is not allowed."
 msgstr "Ta nazwa użytkownika jest zabroniona."
 
-#: users/validators.py:102
+#: users/validators.py:103
 msgctxt "username validator"
 msgid ""
 "Username can only contain Latin alphabet letters, digits, and an underscore "
@@ -12533,13 +12523,13 @@ msgstr ""
 "Nazwa użytkownika może zawierać wyłącznie litery alfabetu łacińskiego, cyfry"
 " i znak podkreślnika."
 
-#: users/validators.py:110
+#: users/validators.py:111
 msgctxt "username validator"
 msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
 "Nazwa użytkownika musi zawierać litery alfabetu łacińskiego lub cyfry."
 
-#: users/validators.py:119
+#: users/validators.py:120
 #, python-format
 msgctxt "username length validator"
 msgid "Username must be at least %(limit_value)s character long."
@@ -12553,7 +12543,7 @@ msgstr[2] ""
 msgstr[3] ""
 "Nazwa użytkownika musi mieć przynajmniej %(limit_value)s znaków długości."
 
-#: users/validators.py:128
+#: users/validators.py:129
 #, python-format
 msgctxt "username length validator"
 msgid "Username cannot be longer than %(limit_value)s characters."
@@ -12563,12 +12553,12 @@ msgstr[1] "Nazwa użytkownika nie może być dłuższa niż %(limit_value)s znak
 msgstr[2] "Nazwa użytkownika nie może być dłuższa niż %(limit_value)s znaków."
 msgstr[3] "Nazwa użytkownika nie może być dłuższa niż %(limit_value)s znaków."
 
-#: users/validators.py:167
+#: users/validators.py:168
 msgctxt "stop forum spam validator"
 msgid "Data entered was found in spammers database."
 msgstr "Wpisane dane zostały znalezione w bazie spamerów."
 
-#: users/validators.py:182
+#: users/validators.py:183
 msgctxt "gmail email validator"
 msgid "This e-mail is not allowed."
 msgstr "Ten e-mail nie jest dozwolony."

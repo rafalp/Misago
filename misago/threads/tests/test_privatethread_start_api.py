@@ -289,7 +289,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"to": ["Other_User is not allowing invitations to private threads."]},
+            {"to": ["Other_User has disabled invitations to private threads."]},
         )
 
         # allow us to bypass user preference check

@@ -55,7 +55,7 @@ class TwitterHandleField(basefields.TextProfileField):
     def get_help_text(self, user):
         return pgettext_lazy(
             "twitter handle profile field",
-            'If you own X account, here you may enter your X handle for other users to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or "%(slug)s" are valid values.',
+            'If you own an X account, here you may enter your X handle for other users to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or "%(slug)s" are valid values.',
         ) % {"slug": user.slug}
 
     def get_value_display_data(self, request, user, value):

@@ -319,7 +319,8 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json["detail"][0], "You can't approve thread's first post."
+            response_json["detail"][0],
+            "Thread's first post can only be approved together with thread.",
         )
 
         self.post.refresh_from_db()
@@ -504,7 +505,8 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json["detail"][0], "You can't hide thread's first post."
+            response_json["detail"][0],
+            "Thread's first post can only be hidden using the hide thread option.",
         )
 
     @patch_category_acl({"can_hide_posts": 1})
@@ -714,7 +716,8 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json["detail"][0], "You can't reveal thread's first post."
+            response_json["detail"][0],
+            "Thread's first post can only be revealed using the reveal thread option.",
         )
 
 

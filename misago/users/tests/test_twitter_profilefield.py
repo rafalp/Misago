@@ -82,7 +82,7 @@ class TwitterProfileFieldTests(AdminTestCase):
             },
         )
 
-        self.assertContains(response, "This is not a valid twitter handle.")
+        self.assertContains(response, "This is not a valid X handle.")
 
     def test_admin_edits_field(self):
         """admin form allows admins to edit field"""
@@ -175,7 +175,7 @@ class TwitterProfileFieldTests(AdminTestCase):
                     "fields": [
                         {
                             "fieldname": "twitter",
-                            "name": "Twitter handle",
+                            "name": "X (formerly Twitter) handle",
                             "text": "@lorem_ipsum",
                             "url": "https://twitter.com/lorem_ipsum",
                         }
@@ -206,9 +206,9 @@ class TwitterProfileFieldTests(AdminTestCase):
             found_field,
             {
                 "fieldname": "twitter",
-                "label": "Twitter handle",
+                "label": "X (formerly Twitter) handle",
                 "help_text": (
-                    "If you own Twitter account, here you may enter your Twitter "
+                    "If you own an X account, here you may enter your X "
                     'handle for other users to find you. Starting your handle with "@" '
                     'sign is optional. Either "@testsuperuser" or "testsuperuser" are '
                     "valid values."
@@ -240,7 +240,7 @@ class TwitterProfileFieldTests(AdminTestCase):
 
         response = self.client.post(test_link, data={"twitter": "@lorem!ipsum"})
         self.assertContains(
-            response, "This is not a valid twitter handle.", status_code=400
+            response, "This is not a valid X handle.", status_code=400
         )
 
     def test_api_edits_field(self):
