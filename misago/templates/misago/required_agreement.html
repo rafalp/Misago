@@ -7,7 +7,7 @@
         {% if not misago_agreement.link %}
           <p class="lead">
             {% blocktrans trimmed with agreement=misago_agreement.type context "agreement overlay" %}
-              Please review the updated {{ agreement }}:
+              {{ agreement }} has been updated:
             {% endblocktrans %}
           </p>
         {% endif %}

@@ -28,6 +28,7 @@ dj_validate_email = EmailValidator(
     message=pgettext_lazy("email validator", "Enter a valid e-mail address.")
 )
 
+
 def validate_email(value, exclude=None):
     """shortcut function that does complete validation of email"""
     dj_validate_email(value)
@@ -179,7 +180,7 @@ def validate_gmail_email(request, cleaned_data, add_error):
         add_error(
             "email",
             ValidationError(
-                pgettext_lazy("gmail email validator", "This email is not allowed.")
+                pgettext_lazy("gmail email validator", "This e-mail is not allowed.")
             ),
         )
 

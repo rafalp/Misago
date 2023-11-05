@@ -86,7 +86,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "You can't move posts in this thread."}
+            response.json(), {"detail": "You can't move posts from this thread."}
         )
 
     @patch_category_acl({"can_move_posts": True})

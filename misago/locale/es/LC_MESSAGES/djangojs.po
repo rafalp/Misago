@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 13:24+0000\n"
+"POT-Creation-Date: 2023-11-01 13:26+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Daniel Gerardo Rondón García, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/misago/teams/65369/es/)\n"
@@ -1527,7 +1527,7 @@ msgstr "Desconectado"
 
 #: static/misago/js/misago.js:1
 msgctxt "username history empty"
-msgid "Your account has no record of name changes."
+msgid "Your account has no history of name changes."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2653,13 +2653,13 @@ msgstr "Posts"
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
-msgid "You have no started threads."
-msgstr "No has iniciado ningún tema."
+msgid "You haven't started any threads."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
-msgid "%(username)s started no threads."
-msgstr "%(username)s no ha iniciado ningún tema."
+msgid "%(username)s hasn't started any threads"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
@@ -4641,8 +4641,8 @@ msgstr "¿Por qué no inicias uno tú mismo?"
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
-msgid "There are no threads on this forum... yet!"
-msgstr "No hay temas en este foro... ¡Empieza tú!"
+msgid "There are no threads on this site... yet!"
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
@@ -4838,16 +4838,16 @@ msgstr "Usuarios"
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list"
-msgid "There is %(more)s more member with this role."
-msgid_plural "There are %(more)s more members with this role."
-msgstr[0] "Hay %(more)s miembro más con este rol."
-msgstr[1] "Hay %(more)s miembros más con este rol."
-msgstr[2] "Hay %(more)s miembros más con este rol."
+msgid "There is %(more)s more member with this rank."
+msgid_plural "There are %(more)s more members with this rank."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list empty"
-msgid "There are no more members with this role."
-msgstr "No hay más miembros con este rol."
+msgid "There are no more members with this rank."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list paginator"

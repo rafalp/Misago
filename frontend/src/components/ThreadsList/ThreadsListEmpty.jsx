@@ -17,7 +17,7 @@ const ThreadsListEmpty = ({ category, list, message }) => {
           {category.special_role
             ? pgettext(
                 "threads list empty",
-                "There are no threads on this forum... yet!"
+                "There are no threads on this site... yet!"
               )
             : pgettext(
                 "threads list empty",

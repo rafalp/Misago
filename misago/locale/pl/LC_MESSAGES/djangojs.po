@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-18 17:14+0000\n"
+"POT-Creation-Date: 2023-11-05 13:37+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/misago/teams/65369/pl/)\n"
@@ -200,7 +200,7 @@ msgstr "Akceptuję %(agreement)s."
 #: static/misago/js/misago.js:1
 msgctxt "register form agreement prompt"
 msgid "the terms of service"
-msgstr "warunki korzystania z serwisu"
+msgstr "warunki regulaminu"
 
 #: static/misago/js/misago.js:1
 msgctxt "register form agreement prompt"
@@ -558,7 +558,7 @@ msgstr "(sukces)"
 #: static/misago/js/misago.js:1
 msgctxt "merge threads conflict best answer"
 msgid "Best answer"
-msgstr "Najlepsza odpowiedź"
+msgstr "Rozwiązanie"
 
 #: static/misago/js/misago.js:1
 msgctxt "merge threads conflict best answer"
@@ -566,8 +566,8 @@ msgid ""
 "Select the best answer for your newly merged thread. No posts will be "
 "deleted during the merge."
 msgstr ""
-"Wybierz najlepszą odpowiedź do połączonego tematu. Żadne posty nie zostaną "
-"usunięte w procesie łączenia."
+"Wybierz rozwiązanie do połączonego tematu. Żadne posty nie zostaną usunięte "
+"w procesie łączenia."
 
 #: static/misago/js/misago.js:1
 msgctxt "merge threads conflict poll"
@@ -1465,7 +1465,7 @@ msgstr "Albo użyj swojego konta na forum:"
 #: static/misago/js/misago.js:1
 msgctxt "sign in modal field"
 msgid "Username or e-mail"
-msgstr "Nazwa użytkownika bądź e-mail"
+msgstr "Nazwa użytkownika lub e-mail"
 
 #: static/misago/js/misago.js:1
 msgctxt "sign in modal field"
@@ -2000,7 +2000,7 @@ msgstr "Nikt nie może zaprosić mnie do swoich prywatnych tematów"
 #: static/misago/js/misago.js:1
 msgctxt "forum options form"
 msgid "Your forum options have been changed."
-msgstr "Twoje opcje forum zostały zmienione."
+msgstr "Twoje ustawienia forum zostały zmienione."
 
 #: static/misago/js/misago.js:1
 msgctxt "forum options form"
@@ -2010,12 +2010,12 @@ msgstr "Przeładuj stronę i spróbuj ponownie."
 #: static/misago/js/misago.js:1
 msgctxt "forum options title"
 msgid "Forum options"
-msgstr "Opcje forum"
+msgstr "Ustawienia forum"
 
 #: static/misago/js/misago.js:1
 msgctxt "forum options form title"
 msgid "Change forum options"
-msgstr "Zmień opcje forum"
+msgstr "Zmień ustawienia forum"
 
 #: static/misago/js/misago.js:1
 msgctxt "forum options form"
@@ -2699,12 +2699,12 @@ msgstr "Posty"
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
-msgid "You have no started threads."
+msgid "You haven't started any threads."
 msgstr "Nie założyłe/aś żadnych tematów."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
-msgid "%(username)s started no threads."
+msgid "%(username)s hasn't started any threads"
 msgstr "%(username)s nie założył(a) żadnych tematów."
 
 #: static/misago/js/misago.js:1
@@ -2762,10 +2762,10 @@ msgstr[3] "Obserwujesz %(users)s użytkowników."
 msgctxt "profile follows"
 msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
-msgstr[0] "%(username)s obserwuje %(users)s użytkonika."
-msgstr[1] "%(username)s obserwuje %(users)s użytkoników."
-msgstr[2] "%(username)s obserwuje %(users)s użytkoników."
-msgstr[3] "%(username)s obserwuje %(users)s użytkoników."
+msgstr[0] "%(username)s obserwuje %(users)s użytkownika."
+msgstr[1] "%(username)s obserwuje %(users)s użytkowników."
+msgstr[2] "%(username)s obserwuje %(users)s użytkowników."
+msgstr[3] "%(username)s obserwuje %(users)s użytkowników."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile follows"
@@ -2790,7 +2790,7 @@ msgstr "%(username)s nie obserwuje żadnych użytkowników."
 #: static/misago/js/misago.js:1
 msgctxt "request activation link form"
 msgid "Enter a valid e-mail address."
-msgstr "Podaj prawidłowy adres e-mail."
+msgstr "Wpisz prawidłowy adres e-mail."
 
 #: static/misago/js/misago.js:1
 msgctxt "request activation link form field"
@@ -2815,7 +2815,7 @@ msgstr "Poproś o nowy odnośnik"
 #: static/misago/js/misago.js:1
 msgctxt "request password reset form"
 msgid "Enter a valid e-mail address."
-msgstr "Podaj prawidłowy adres e-mail."
+msgstr "Wpisz prawidłowy adres e-mail."
 
 #: static/misago/js/misago.js:1
 msgctxt "request password reset form field"
@@ -3513,12 +3513,12 @@ msgstr "Ten post został ukryty. Nie możesz zobaczyć jego zawartości."
 #: static/misago/js/misago.js:1
 msgctxt "post best answer flag"
 msgid "Marked as best answer by you %(marked_on)s."
-msgstr "Oznaczony jako najlepsza odpowiedź przez ciebie %(marked_on)s."
+msgstr "Oznaczony jako rozwiązanie przez ciebie %(marked_on)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "post best answer flag"
 msgid "Marked as best answer by %(marked_by)s %(marked_on)s."
-msgstr "Oznaczony jako najlepsza odpowiedź przez %(marked_by)s %(marked_on)s."
+msgstr "Oznaczony jako rozwiązanie przez %(marked_by)s %(marked_on)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "post hidden flag"
@@ -3563,7 +3563,7 @@ msgstr[3] "%(likes)s polubień"
 #: static/misago/js/misago.js:1
 msgctxt "post footer btn"
 msgid "Best answer"
-msgstr "Najlepsza odpowiedź"
+msgstr "Rozwiązanie"
 
 #: static/misago/js/misago.js:1
 msgctxt "post footer btn"
@@ -3779,12 +3779,12 @@ msgstr "Zmień"
 #: static/misago/js/misago.js:1
 msgctxt "post options best answer btn"
 msgid "Mark as best answer"
-msgstr "Oznacz jako najlepsza odpowiedź"
+msgstr "Wybierz jako rozwiązanie"
 
 #: static/misago/js/misago.js:1
 msgctxt "post options best answer btn"
 msgid "Unmark best answer"
-msgstr "Odznacz najlepszą odpowiedź"
+msgstr "Usuń wybór rozwiązania"
 
 #: static/misago/js/misago.js:1
 msgctxt "post edits"
@@ -4407,7 +4407,7 @@ msgstr "Idź do nowego postu"
 #: static/misago/js/misago.js:1
 msgctxt "thread shortcut btn"
 msgid "Go to best answer"
-msgstr "Idź do najlepszej odpowiedzi"
+msgstr "Idź do rozwiązania"
 
 #: static/misago/js/misago.js:1
 msgctxt "thread shortcut btn"
@@ -4688,12 +4688,12 @@ msgstr "Załóż temat"
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
 msgid "Why not start one yourself?"
-msgstr "Dlaczego nie założysz jednego sam(a)?"
+msgstr "Dlaczego sam(a) jakiegoś nie założysz?"
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
-msgid "There are no threads on this forum... yet!"
-msgstr "Na tym forum nie ma żadnych tematów... jeszcze!"
+msgid "There are no threads on this site... yet!"
+msgstr "Na tej stronie nie ma żadnych tematów... jeszcze!"
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
@@ -4853,7 +4853,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "private threads list empty"
 msgid "You aren't participating in any private threads."
-msgstr "Nie uczestniczysz w żadnych prywatnych tematach."
+msgstr "Nie uczestniczysz w żadnym prywatnym temacie."
 
 #: static/misago/js/misago.js:1
 msgctxt "top posters empty"
@@ -4907,17 +4907,17 @@ msgstr "Użytkownicy"
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list"
-msgid "There is %(more)s more member with this role."
-msgid_plural "There are %(more)s more members with this role."
-msgstr[0] "Jest jeszcze %(more)s użytkownik z tą rolą."
-msgstr[1] "Jest jeszcze %(more)s użytkowników z tą rolą."
-msgstr[2] "Jest jeszcze %(more)s użytkowników z tą rolą."
-msgstr[3] "Jest jeszcze %(more)s użytkowników z tą rolą."
+msgid "There is %(more)s more user with this rank."
+msgid_plural "There are %(more)s more users with this rank."
+msgstr[0] "Jest jeszcze %(more)s użytkownik z tą rangą."
+msgstr[1] "Jest jeszcze %(more)s użytkowników z tą rangą."
+msgstr[2] "Jest jeszcze %(more)s użytkowników z tą rangą."
+msgstr[3] "Jest jeszcze %(more)s użytkowników z tą rangą."
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list empty"
-msgid "There are no more members with this role."
-msgstr "Nie ma użytkowników z tą rolą."
+msgid "There are no more users with this rank."
+msgstr "Nie innych użytkowników z tą rangą."
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list paginator"
@@ -5036,7 +5036,7 @@ msgstr "Twoje konto jest zablokowane"
 #: static/misago/js/misago.js:1
 msgctxt "agreement validator"
 msgid "You have to accept the terms of service."
-msgstr "Musisz zaakceptować warunki korzystania."
+msgstr "Musisz zaakceptować regulamin."
 
 #: static/misago/js/misago.js:1
 msgctxt "agreement validator"

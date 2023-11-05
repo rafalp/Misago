@@ -153,7 +153,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
         self.assertContains(
-            response, "This post is hidden. You cannot not see its contents."
+            response, "This post is hidden. You cannot see its contents."
         )
         self.assertNotContains(response, post.parsed)
 
@@ -164,7 +164,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
         self.assertContains(
-            response, "This post is hidden. You cannot not see its contents."
+            response, "This post is hidden. You cannot see its contents."
         )
         self.assertNotContains(response, post.parsed)
 
@@ -173,7 +173,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
             response = self.client.get(self.thread.get_absolute_url())
             self.assertContains(response, post.get_absolute_url())
             self.assertContains(
-                response, "This post is hidden. You cannot not see its contents."
+                response, "This post is hidden. You cannot see its contents."
             )
             self.assertNotContains(response, post.parsed)
 
@@ -186,7 +186,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
                 "This post is hidden. Only users with permission may see its contents.",
             )
             self.assertNotContains(
-                response, "This post is hidden. You cannot not see its contents."
+                response, "This post is hidden. You cannot see its contents."
             )
             self.assertContains(response, post.parsed)
 
@@ -226,7 +226,10 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
                 threads_moderation.pin_thread_globally,
                 "Thread has been pinned globally.",
             ),
-            (threads_moderation.pin_thread_locally, "Thread has been pinned in category."),
+            (
+                threads_moderation.pin_thread_locally,
+                "Thread has been pinned in category.",
+            ),
             (threads_moderation.unpin_thread, "Thread has been unpinned."),
             (threads_moderation.approve_thread, "Thread has been approved."),
             (threads_moderation.close_thread, "Thread has been closed."),

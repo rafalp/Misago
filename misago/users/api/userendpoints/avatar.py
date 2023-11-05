@@ -108,7 +108,11 @@ def avatar_post(request, options):
         type_options = options[avatar_type]
         if not type_options:
             return Response(
-                {"detail": pgettext("avatar api", "This avatar type is not allowed.")},
+                {
+                    "detail": pgettext(
+                        "avatar api", "This avatar type is not available."
+                    )
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -151,9 +155,7 @@ def avatar_gravatar(user, data):
             )
         )
     except avatars.gravatar.GravatarError:
-        raise AvatarError(
-            pgettext("avatar api", "Failed to connect to Gravatar servers.")
-        )
+        raise AvatarError(pgettext("avatar api", "Failed to connect to Gravatar."))
 
 
 def avatar_gallery(user, data):

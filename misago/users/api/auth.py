@@ -192,7 +192,7 @@ def change_forgotten_password(request, pk, token):
     """
     invalid_message = pgettext(
         "change forgotten password api",
-        "Form link is invalid. Please try again.",
+        "Form link is invalid. Please request new one.",
     )
     expired_message = pgettext(
         "change forgotten password api",

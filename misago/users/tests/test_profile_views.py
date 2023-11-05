@@ -73,7 +73,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "You have no started threads.")
+        self.assertContains(response, "You haven't started any threads.")
 
         thread = test.post_thread(category=self.category, poster=self.user)
 

@@ -236,7 +236,7 @@ def allow_change_owner(user_acl, target):
         raise PermissionDenied(
             pgettext_lazy(
                 "private threads permission",
-                "Only thread owner and moderators can change threads owners.",
+                "Only thread owner and moderators can appoint a new thread owner.",
             )
         )
 
@@ -244,7 +244,7 @@ def allow_change_owner(user_acl, target):
         raise PermissionDenied(
             pgettext_lazy(
                 "private threads permission",
-                "Only moderators can change closed threads owners.",
+                "Only moderators can appoint a new thread owner in a closed thread.",
             )
         )
 
@@ -339,7 +339,7 @@ def allow_add_participant(user_acl, target, target_acl):
         raise PermissionDenied(
             pgettext_lazy(
                 "private threads permission",
-                "%(user)s is not allowing invitations to private threads.",
+                "%(user)s disabled invitations to private threads.",
             )
             % message_format
         )

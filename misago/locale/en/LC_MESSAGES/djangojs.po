@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-18 17:16+0000\n"
+"POT-Creation-Date: 2023-11-05 13:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2561,12 +2561,12 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
-msgid "You have no started threads."
+msgid "You haven't started any threads."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "profile threads"
-msgid "%(username)s started no threads."
+msgid "%(username)s hasn't started any threads"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4496,7 +4496,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
-msgid "There are no threads on this forum... yet!"
+msgid "There are no threads on this site... yet!"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4683,14 +4683,14 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list"
-msgid "There is %(more)s more member with this role."
-msgid_plural "There are %(more)s more members with this role."
+msgid "There is %(more)s more user with this rank."
+msgid_plural "There are %(more)s more users with this rank."
 msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list empty"
-msgid "There are no more members with this role."
+msgid "There are no more users with this rank."
 msgstr ""
 
 #: static/misago/js/misago.js:1

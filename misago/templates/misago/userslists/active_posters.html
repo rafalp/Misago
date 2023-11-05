@@ -14,6 +14,8 @@
     {% endblocktrans %}
   {% else %}
     {% blocktrans trimmed with days=tracked_period context "active posters page meta" %}
+      No users have posted any new messages during last {{ days }} day.
+    {% plural %}
       No users have posted any new messages during last {{ days }} days.
     {% endblocktrans %}
   {% endif %}

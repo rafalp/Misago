@@ -53,7 +53,7 @@ class AttachmentViewSet(viewsets.ViewSet):
             except IOError:
                 raise ValidationError(
                     pgettext(
-                        "attachments api", "Uploaded image was corrupted or invalid."
+                        "attachments api", "Uploaded image is unsupported or invalid."
                     )
                 )
         else:

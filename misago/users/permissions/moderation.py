@@ -216,7 +216,7 @@ def allow_ban_user(user_acl, target):
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(
             pgettext_lazy(
-                "users moderation permission", "You can't ban administrators."
+                "users moderation permission", "Administrators can't be banned."
             )
         )
 

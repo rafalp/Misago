@@ -341,7 +341,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {"detail": "You can't reply to events."})
+        self.assertEqual(response.json(), {"detail": "Events can't be replied to."})
 
     @patch_category_acl({"can_reply_threads": True})
     def test_reply_to(self):
