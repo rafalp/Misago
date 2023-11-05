@@ -239,9 +239,7 @@ class TwitterProfileFieldTests(AdminTestCase):
         test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
         response = self.client.post(test_link, data={"twitter": "@lorem!ipsum"})
-        self.assertContains(
-            response, "This is not a valid X handle.", status_code=400
-        )
+        self.assertContains(response, "This is not a valid X handle.", status_code=400)
 
     def test_api_edits_field(self):
         """field can be edited via api"""
