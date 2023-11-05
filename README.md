@@ -4,7 +4,7 @@ Misago
 [![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master) ![Works on Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg) [![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB)
 
 
-**Development Status:** 🍌 [Bananas](https://en.wikipedia.org/wiki/Perpetual_beta>) 🍌
+**Development Status:** 🍌 [Bananas](https://en.wikipedia.org/wiki/Perpetual_beta) 🍌
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
