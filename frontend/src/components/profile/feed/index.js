@@ -4,7 +4,10 @@ import Route from "./route"
 export function Threads(props) {
   let emptyMessage = null
   if (props.user.id === props.profile.id) {
-    emptyMessage = pgettext("profile threads", "You haven't started any threads.")
+    emptyMessage = pgettext(
+      "profile threads",
+      "You haven't started any threads."
+    )
   } else {
     emptyMessage = interpolate(
       pgettext("profile threads", "%(username)s hasn't started any threads"),

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-01 13:26+0000\n"
+"POT-Creation-Date: 2023-11-06 19:09+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Daniel Gerardo Rondón García, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/misago/teams/65369/es/)\n"
@@ -4636,18 +4636,13 @@ msgstr "Iniciar tema"
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
-msgid "Why not start one yourself?"
-msgstr "¿Por qué no inicias uno tú mismo?"
-
-#: static/misago/js/misago.js:1
-msgctxt "threads list empty"
-msgid "There are no threads on this site... yet!"
+msgid "There are no threads on the site yet."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
-msgid "There are no threads in this category."
-msgstr "No hay temas en esta categoría."
+msgid "This category is empty."
+msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
@@ -4838,15 +4833,15 @@ msgstr "Usuarios"
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list"
-msgid "There is %(more)s more member with this rank."
-msgid_plural "There are %(more)s more members with this rank."
+msgid "There is %(more)s more user with this rank."
+msgid_plural "There are %(more)s more users with this rank."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "rank users list empty"
-msgid "There are no more members with this rank."
+msgid "There are no more users with this rank."
 msgstr ""
 
 #: static/misago/js/misago.js:1

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-05 23:30+0000\n"
+"POT-Creation-Date: 2023-11-06 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6393,27 +6393,21 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/threadslist/base.html:53
-msgctxt "threads list"
+msgctxt "threads list empty"
 msgid "There are no threads in this category."
 msgstr ""
 
 #: templates/misago/threadslist/base.html:55
-msgctxt "threads list"
-msgid "There are no threads on this site... yet!"
-msgstr ""
-
-#: templates/misago/threadslist/base.html:59
-#: templates/misago/threadslist/private_threads.html:62
 msgctxt "threads list empty"
-msgid "Why not start one yourself?"
+msgid "There are no threads on this site yet."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:63
-msgctxt "threads list"
+#: templates/misago/threadslist/base.html:60
+msgctxt "threads list empty"
 msgid "No threads matching specified criteria were found."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:78
+#: templates/misago/threadslist/base.html:75
 msgctxt "threads list paginator"
 msgid "Next page"
 msgstr ""
@@ -6430,7 +6424,7 @@ msgctxt "private threads page"
 msgid "You aren't participating in any private threads."
 msgstr ""
 
-#: templates/misago/threadslist/private_threads.html:65
+#: templates/misago/threadslist/private_threads.html:62
 msgctxt "private threads page"
 msgid "No threads matching specified criteria were found."
 msgstr ""

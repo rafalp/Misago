@@ -6,7 +6,6 @@ const ThreadsListEmpty = ({ category, list, message }) => {
       return (
         <li className="list-group-item empty-message">
           <p className="lead">{message}</p>
-          <p>{pgettext("threads list empty", "Why not start one yourself?")}</p>
         </li>
       )
     }
@@ -17,14 +16,13 @@ const ThreadsListEmpty = ({ category, list, message }) => {
           {category.special_role
             ? pgettext(
                 "threads list empty",
-                "There are no threads on this site... yet!"
+                "There are no threads on this site yet."
               )
             : pgettext(
                 "threads list empty",
                 "There are no threads in this category."
               )}
         </p>
-        <p>{pgettext("threads list empty", "Why not start one yourself?")}</p>
       </li>
     )
   }
