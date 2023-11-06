@@ -144,7 +144,7 @@ export default class ForumOptionsForm extends Form {
       })
     )
     snackbar.success(
-      pgettext("forum options form", "Your forum options have been updated.")
+      pgettext("forum options form", "Your forum options have been changed.")
     )
   }
 
@@ -184,7 +184,7 @@ export default class ForumOptionsForm extends Form {
                 label={pgettext("forum options form", "Hide my presence")}
                 helpText={pgettext(
                   "forum options form",
-                  "If you hide your presence, only members with permission to see hidden users will see when you are online."
+                  "If you hide your presence, only members with permission to see hidden presence will see when you are online."
                 )}
                 for="id_is_hiding_presence"
               >

@@ -714,7 +714,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_email_was_missing(
         )
     )
 
-    assert_contains(response, "Enter a valid email address.", 400)
+    assert_contains(response, "Enter a valid e-mail address.", 400)
 
 
 @responses.activate
@@ -777,7 +777,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_email_was_invalid(
         )
     )
 
-    assert_contains(response, "Enter a valid email address.", 400)
+    assert_contains(response, "Enter a valid e-mail address.", 400)
 
 
 @responses.activate

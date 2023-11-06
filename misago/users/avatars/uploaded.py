@@ -47,8 +47,8 @@ def validate_extension(uploaded_file):
             return True
     raise ValidationError(
         pgettext(
-            "avatar upload extension validator",
-            "Uploaded file type is not allowed.",
+            "avatar upload validator",
+            "Uploaded file type is not supported.",
         )
     )
 
@@ -57,8 +57,8 @@ def validate_mime(uploaded_file):
     if uploaded_file.content_type not in ALLOWED_MIME_TYPES:
         raise ValidationError(
             pgettext(
-                "avatar upload mimetype validator",
-                "Uploaded file type is not allowed.",
+                "avatar upload validator",
+                "Uploaded file type is not supported.",
             )
         )
 

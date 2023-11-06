@@ -1,4 +1,4 @@
-{% load misago_absoluteurl %}
+{% load i18n misago_absoluteurl %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
@@ -69,7 +69,11 @@
             <br>
             <div style="border-top: 1px solid #ddd; color: #666; font-size: 12px; line-height: 18px;">
               {% if settings.email_footer %}<br>{{ settings.email_footer }}{% endif %}
-              <br><a href="{{ settings.forum_address }}" style="color: #888; text-decoration: underline;">Sent from {{ forum_host }}</a>
+              <br><a href="{{ settings.forum_address }}" style="color: #888; text-decoration: underline;">
+                {% blocktrans trimmed with forum_host=forum_host context "email footer" %}
+                Sent from {{ forum_host }}
+                {% endblocktrans %}
+              </a>
             </div>
 
             <!-- ### END CONTENT ### -->

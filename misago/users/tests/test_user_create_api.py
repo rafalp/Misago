@@ -261,7 +261,7 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "email": ["This email is not allowed."],
+                "email": ["This e-mail is not allowed."],
                 "password": [
                     (
                         "This password is too short. "
@@ -286,7 +286,7 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "email": ["This email is not allowed."],
+                "email": ["This e-mail is not allowed."],
                 "password": ["The password is too similar to the username."],
             },
         )
@@ -429,7 +429,7 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "email": ["This email is not allowed."],
+                "email": ["This e-mail is not allowed."],
                 "password": [
                     "This password is too short. It must contain at least 7 characters."
                 ],

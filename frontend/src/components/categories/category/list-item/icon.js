@@ -19,20 +19,20 @@ export function getClassName(category) {
 export function getTitle(category) {
   if (category.is_closed) {
     if (category.is_read) {
-      return gettext(
+      return pgettext(
         "category status",
         "This category has no new posts. (closed)"
       )
     }
 
-    return gettext("category status", "This category has new posts. (closed)")
+    return pgettext("category status", "This category has new posts. (closed)")
   }
 
   if (category.is_read) {
-    return gettext("category status", "This category has no new posts.")
+    return pgettext("category status", "This category has no new posts.")
   }
 
-  return gettext("category status", "This category has new posts.")
+  return pgettext("category status", "This category has new posts.")
 }
 
 export function getIcon(category) {

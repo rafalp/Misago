@@ -38,13 +38,13 @@ export default class extends React.Component {
     if (isAuthenticated) {
       message = pgettext(
         "profile details form",
-        "Your details have been updated."
+        "Your details have been changed."
       )
     } else {
       message = interpolate(
         pgettext(
           "profile details form",
-          "%(username)s's details have been updated."
+          "%(username)s's details have been changed."
         ),
         {
           username: profile.username,

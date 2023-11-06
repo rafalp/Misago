@@ -217,7 +217,7 @@ export class ModerationForm extends Form {
       {
         value: 1,
         icon: "bookmark_border",
-        label: pgettext("thread weight choice", "Pinned locally"),
+        label: pgettext("thread weight choice", "Pinned in category"),
       },
     ]
 

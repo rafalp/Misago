@@ -10,7 +10,7 @@ export default class extends React.Component {
     title.set({
       title: pgettext(
         "change sign in credentials title",
-        "Change email or password"
+        "Change e-mail or password"
       ),
       parent: pgettext("forum options", "Change your options"),
     })

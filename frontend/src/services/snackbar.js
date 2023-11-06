@@ -52,11 +52,11 @@ export class Snackbar {
 
     if (!message) {
       if (rejection.status === 0) {
-        message = pgettext("api error", "Could not connect to server.")
+        message = pgettext("api error", "Could not connect to the site.")
       } else if (rejection.status === 404) {
         message = pgettext("api error", "Action link is invalid.")
       } else {
-        message = pgettext("api error", "Unknown error has occurrsed.")
+        message = pgettext("api error", "Unknown error has occurred.")
       }
     }
 

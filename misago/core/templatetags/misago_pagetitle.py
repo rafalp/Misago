@@ -8,7 +8,7 @@ register = template.Library()
 def pagetitle(title, **kwargs):
     if "page" in kwargs and kwargs["page"] > 1:
         title += " (%s)" % (
-            pgettext("page number in title", "page: %(page)s")
+            pgettext("page title pagination", "page: %(page)s")
             % {"page": kwargs["page"]}
         )
 

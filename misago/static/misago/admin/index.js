@@ -53435,7 +53435,7 @@ function updateNamedCousins(rootNode, props) {
   }
 } // In Chrome, assigning defaultValue to certain input types triggers input validation.
 // For number inputs, the display value loses trailing decimal points. For email inputs,
-// Chrome raises "The specified value <x> is not a valid email address".
+// Chrome raises "The specified value <x> is not a valid e-mail address".
 //
 // Here we check to see if the defaultValue has actually changed, avoiding these problems
 // when the user is inputting text

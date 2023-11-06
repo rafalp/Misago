@@ -140,7 +140,7 @@ class CategoryPermissionsForm(forms.Form):
     )
     thread_edit_time = forms.IntegerField(
         label=pgettext_lazy(
-            "threads permission", "Time limit for own threads edits, in minutes"
+            "threads permission", "Time limit for editing own threads, in minutes"
         ),
         help_text=pgettext_lazy(
             "threads permission", "Enter 0 to don't limit time for editing own threads."
@@ -165,7 +165,7 @@ class CategoryPermissionsForm(forms.Form):
         initial=0,
         choices=[
             (0, pgettext_lazy("threads pin permission choice", "No")),
-            (1, pgettext_lazy("threads pin permission choice", "Locally")),
+            (1, pgettext_lazy("threads pin permission choice", "In category")),
             (2, pgettext_lazy("threads pin permission choice", "Globally")),
         ],
     )
@@ -213,7 +213,7 @@ class CategoryPermissionsForm(forms.Form):
     )
     post_edit_time = forms.IntegerField(
         label=pgettext_lazy(
-            "threads permission", "Time limit for own post edits, in minutes"
+            "threads permission", "Time limit for editing own post, in minutes"
         ),
         help_text=pgettext_lazy(
             "threads permission", "Enter 0 to don't limit time for editing own posts."
@@ -1223,7 +1223,10 @@ def allow_unhide_post(user_acl, target):
 
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("threads permission", "You can't reveal thread's first post.")
+            pgettext_lazy(
+                "threads permission",
+                "Thread's first post can only be revealed using the reveal thread option.",
+            )
         )
 
     if not category_acl["can_close_threads"]:
@@ -1292,7 +1295,10 @@ def allow_hide_post(user_acl, target):
 
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("threads permission", "You can't hide thread's first post.")
+            pgettext_lazy(
+                "threads permission",
+                "Thread's first post can only be hidden using the hide thread option.",
+            )
         )
 
     if not category_acl["can_close_threads"]:
@@ -1361,7 +1367,10 @@ def allow_delete_post(user_acl, target):
 
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("threads permission", "You can't delete thread's first post.")
+            pgettext_lazy(
+                "threads permission",
+                "Thread's first post can only be deleted together with thread.",
+            )
         )
 
     if not category_acl["can_close_threads"]:
@@ -1430,7 +1439,8 @@ def allow_approve_post(user_acl, target):
     if target.is_first_post:
         raise PermissionDenied(
             pgettext_lazy(
-                "threads permission", "You can't approve thread's first post."
+                "threads permission",
+                "Thread's first post can only be approved together with thread.",
             )
         )
     if (
@@ -1487,7 +1497,10 @@ def allow_move_post(user_acl, target):
         )
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("threads permission", "You can't move thread's first post.")
+            pgettext_lazy(
+                "threads permission",
+                "Thread's first post can only be moved together with thread.",
+            )
         )
     if not category_acl["can_hide_posts"] and target.is_hidden:
         raise PermissionDenied(
@@ -1589,7 +1602,7 @@ def allow_split_post(user_acl, target):
         )
     if target.is_first_post:
         raise PermissionDenied(
-            pgettext_lazy("threads permission", "You can't split thread's first post.")
+            pgettext_lazy("threads permission", "Thread's first post can't be split.")
         )
     if not category_acl["can_hide_posts"] and target.is_hidden:
         raise PermissionDenied(

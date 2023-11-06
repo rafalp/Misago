@@ -13,13 +13,13 @@
         <abbr title="{{ poll.ends_on }}">{{ poll.ends_on|date }}</abbr>
       {% endcapture %}
       {% blocktrans trimmed with ends_on=ends_on|safe context "thread poll" %}
-        Voting ends on {{ ends_on }}.
+        Voting ends {{ ends_on }}.
       {% endblocktrans %}
     </li>
   {% endif %}
   {% if poll.is_public %}
     <li class="poll-info-public">
-      {% trans "Votes are public." context "thread poll" %}
+      {% trans "Voting is public." context "thread poll" %}
     </li>
   {% endif %}
   <li class="poll-info-creation">

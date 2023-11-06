@@ -22,13 +22,13 @@ export function Invalid(props) {
     <div className="post-body post-body-invalid">
       <p className="lead">
         {pgettext(
-          "posts feed item body",
+          "post body invalid",
           "This post's contents cannot be displayed."
         )}
       </p>
       <p className="text-muted">
         {pgettext(
-          "posts feed item body",
+          "post body invalid",
           "This error is caused by invalid post content manipulation."
         )}
       </p>

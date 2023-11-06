@@ -41,7 +41,7 @@ class MisagoSocialAuthConfig(AppConfig):
         )
         providers.add(
             provider="twitter",
-            name="Twitter",
+            name="X",
             auth_backend=TwitterOAuth,
             admin_form=TwitterForm,
             admin_template="misago/admin/socialauth/form.html",

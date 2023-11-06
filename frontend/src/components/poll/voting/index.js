@@ -70,7 +70,7 @@ export default class extends Form {
   clean() {
     if (this.state.choicesLeft === this.props.poll.allowed_choices) {
       snackbar.error(
-        pgettext("thread poll vote", "You need to select at least one choice")
+        pgettext("thread poll vote", "You need to select at least one choice.")
       )
       return false
     }

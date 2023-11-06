@@ -1,7 +1,7 @@
 {% load i18n misago_capture %}
 <div class="post-body post-body-hidden" itemprop="articleBody">
   <p class="lead">
-    {% trans "This post is hidden. You cannot not see its contents." context "post body hidden" %}
+    {% trans "This post is hidden. You cannot see its contents." context "post body hidden" %}
   </p>
   {% capture trimmed as hidden_by %}
     {% if post.hidden_by_id %}

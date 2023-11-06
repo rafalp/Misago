@@ -80,7 +80,7 @@ const MarkupEditorFooter = ({
       </Button>
     )}
     <Button className="btn-primary btn-auto" disabled={disabled || empty}>
-      {submitText || gettext("Post")}
+      {submitText || pgettext("markup editor", "Post")}
     </Button>
   </div>
 )

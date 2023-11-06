@@ -128,7 +128,7 @@ export class ReCaptcha extends BaseCaptcha {
         validation={kwargs.form.state.errors.captcha}
         helpText={pgettext(
           "captcha field",
-          "This test helps us prevent automated spam registrations on our site."
+          "This test helps us prevent automated spam registrations on the site."
         )}
       >
         <ReCaptchaComponent

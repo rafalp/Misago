@@ -7,8 +7,8 @@ const RankUsersLeft = ({ users }) => {
         {interpolate(
           npgettext(
             "rank users list",
-            "There is %(more)s more member with this role.",
-            "There are %(more)s more members with this role.",
+            "There is %(more)s more user with this rank.",
+            "There are %(more)s more users with this rank.",
             users.more
           ),
           { more: users.more },
@@ -22,7 +22,7 @@ const RankUsersLeft = ({ users }) => {
     <p>
       {pgettext(
         "rank users list empty",
-        "There are no more members with this role."
+        "There are no more users with this rank."
       )}
     </p>
   )

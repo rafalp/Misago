@@ -161,7 +161,7 @@ class AllThreadsListTests(ThreadsListTestCase):
             if url:
                 self.assertContains(response, "No threads matching specified criteria")
             else:
-                self.assertContains(response, "There are no threads on this forum")
+                self.assertContains(response, "There are no threads on this site")
 
             response = self.client.get(self.category_b.get_absolute_url() + url)
             self.assertEqual(response.status_code, 200)
@@ -187,7 +187,7 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "empty-message")
-        self.assertContains(response, "There are no threads on this forum")
+        self.assertContains(response, "There are no threads on this site")
 
         response = self.client.get(self.category_b.get_absolute_url())
         self.assertEqual(response.status_code, 200)

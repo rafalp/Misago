@@ -39,27 +39,23 @@ class WebsiteField(basefields.UrlProfileField):
     label = pgettext_lazy("website profile field", "Website")
     help_text = pgettext_lazy(
         "website profile field",
-        'If you own website in the internet you wish to share on your profile you may enter its address here. Remember to for it to be valid http address starting with either "http://" or "https://".',
+        'If you own a website you wish to share on your profile, you may enter its address here. Remember that, for it to be valid, it should start with either "http://" or "https://".',
     )
 
 
 class SkypeIdField(basefields.TextProfileField):
     fieldname = "skype"
     label = pgettext_lazy("skype id profile field", "Skype ID")
-    help_text = pgettext_lazy(
-        "skype id profile field",
-        "Entering your Skype ID in this field may invite other users to contact you over the Skype instead of via private threads.",
-    )
 
 
 class TwitterHandleField(basefields.TextProfileField):
     fieldname = "twitter"
-    label = pgettext_lazy("twitter handle profile field", "Twitter handle")
+    label = pgettext_lazy("twitter handle profile field", "X (formerly Twitter) handle")
 
     def get_help_text(self, user):
         return pgettext_lazy(
             "twitter handle profile field",
-            'If you own Twitter account, here you may enter your Twitter handle for other users to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or "%(slug)s" are valid values.',
+            'If you own an X account, here you may enter your X handle for other users to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or "%(slug)s" are valid values.',
         ) % {"slug": user.slug}
 
     def get_value_display_data(self, request, user, value):
@@ -71,7 +67,7 @@ class TwitterHandleField(basefields.TextProfileField):
             raise ValidationError(
                 pgettext(
                     "twitter handle profile field",
-                    "This is not a valid twitter handle.",
+                    "This is not a valid X handle.",
                 )
             )
         return data

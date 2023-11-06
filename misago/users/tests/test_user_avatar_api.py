@@ -191,7 +191,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"detail": "This avatar type is not allowed."}
+            response.json(), {"detail": "This avatar type is not available."}
         )
 
         response = self.client.post(
@@ -224,7 +224,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"detail": "This avatar type is not allowed."}
+            response.json(), {"detail": "This avatar type is not available."}
         )
 
     def test_gallery_image_validation(self):

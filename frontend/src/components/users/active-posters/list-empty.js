@@ -5,9 +5,11 @@ import UsersNav from "../UsersNav"
 export default class extends React.Component {
   getEmptyMessage() {
     return interpolate(
-      pgettext(
+      npgettext(
         "top posters empty",
-        "No users have posted any new messages during last %(days)s days."
+        "No users have posted any new messages during last %(days)s day.",
+        "No users have posted any new messages during last %(days)s days.",
+        this.props.trackedPeriod
       ),
       { days: this.props.trackedPeriod },
       true

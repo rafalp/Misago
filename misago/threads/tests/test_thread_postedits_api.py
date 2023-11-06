@@ -59,7 +59,7 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "Edits record is unavailable for this post."}
+            response.json(), {"detail": "This post has no changes history."}
         )
 
         self.logout_user()
@@ -67,7 +67,7 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "Edits record is unavailable for this post."}
+            response.json(), {"detail": "This post has no changes history."}
         )
 
     def test_empty_edit_id(self):

@@ -8,6 +8,6 @@
 {% endblocktrans %}
 <br>
 <br>
-<a href="{% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}">{% trans "Activate my account!" context "account activation email cta link" %}</a>
+<a href="{% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}">{% trans "Activate my account" context "account activation email cta link" %}</a>
 <br>
 {% endblock content %}

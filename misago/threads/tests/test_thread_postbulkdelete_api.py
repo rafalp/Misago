@@ -221,7 +221,8 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         response = self.delete(self.api_link, ids)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "You can't delete thread's first post."}
+            response.json(),
+            {"detail": "Thread's first post can only be deleted together with thread."},
         )
 
     @patch_category_acl({"can_hide_posts": 2, "can_hide_own_posts": 2})

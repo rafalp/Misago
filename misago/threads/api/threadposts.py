@@ -217,7 +217,7 @@ class ViewSet(viewsets.ViewSet):
         ).unwrap()
 
         if reply_to.is_event:
-            raise PermissionDenied(pgettext("posts api", "You can't reply to events."))
+            raise PermissionDenied(pgettext("posts api", "Events can't be replied to."))
         if reply_to.is_hidden and not reply_to.acl["can_see_hidden"]:
             raise PermissionDenied(
                 pgettext("posts api", "You can't reply to hidden posts.")

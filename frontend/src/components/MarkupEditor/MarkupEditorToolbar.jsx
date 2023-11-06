@@ -178,7 +178,7 @@ const MarkupEditorToolbar = ({
           </ul>
         </div>
         <MarkupEditorButton
-          title={pgettext("markup editor", "Formatting help")}
+          title={pgettext("markup editor", "Open formatting help")}
           icon="help_outline"
           onClick={() => {
             modal.show(<MarkupFormattingHelpModal />)

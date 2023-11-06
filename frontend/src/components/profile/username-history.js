@@ -183,8 +183,8 @@ export default class extends React.Component {
       )
     } else if (this.props.user.id === this.props.profile.id) {
       return pgettext(
-        "profile username history",
-        "No name changes have been recorded for your account."
+        "username history empty",
+        "Your account has no history of name changes."
       )
     } else {
       return interpolate(

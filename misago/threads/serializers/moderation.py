@@ -53,7 +53,7 @@ class DeletePostsSerializer(serializers.Serializer):
         child=serializers.IntegerField(
             error_messages={
                 "invalid": pgettext_lazy(
-                    "delete posts serializer",
+                    "invalid posts ids",
                     "One or more post ids received were invalid.",
                 )
             }
@@ -117,7 +117,7 @@ class MergePostsSerializer(serializers.Serializer):
         child=serializers.IntegerField(
             error_messages={
                 "invalid": pgettext_lazy(
-                    "merge posts serializer",
+                    "invalid posts ids",
                     "One or more post ids received were invalid.",
                 )
             }
@@ -228,7 +228,7 @@ class MovePostsSerializer(serializers.Serializer):
         child=serializers.IntegerField(
             error_messages={
                 "invalid": pgettext_lazy(
-                    "move posts serializer",
+                    "invalid posts ids",
                     "One or more post ids received were invalid.",
                 )
             }
@@ -248,7 +248,7 @@ class MovePostsSerializer(serializers.Serializer):
         new_thread_id = get_thread_id_from_url(request, data)
         if not new_thread_id:
             raise serializers.ValidationError(
-                pgettext("move posts serializer", "This is not a valid thread link.")
+                pgettext("invalid thread url", "This is not a valid thread link.")
             )
         if new_thread_id == thread.pk:
             raise serializers.ValidationError(
@@ -413,7 +413,7 @@ class SplitPostsSerializer(NewThreadSerializer):
         child=serializers.IntegerField(
             error_messages={
                 "invalid": pgettext_lazy(
-                    "split posts serializer",
+                    "invalid posts ids",
                     "One or more post ids received were invalid.",
                 )
             }
@@ -478,7 +478,7 @@ class DeleteThreadsSerializer(serializers.Serializer):
         child=serializers.IntegerField(
             error_messages={
                 "invalid": pgettext_lazy(
-                    "delete threads serializer",
+                    "invalid threads ids",
                     "One or more thread ids received were invalid.",
                 )
             }
@@ -547,13 +547,13 @@ class MergeThreadSerializer(serializers.Serializer):
     best_answer = serializers.IntegerField(
         required=False,
         error_messages={
-            "invalid": pgettext_lazy("merge thread serializer", "Invalid choice.")
+            "invalid": pgettext_lazy("merge threads serializer", "Invalid choice.")
         },
     )
     poll = serializers.IntegerField(
         required=False,
         error_messages={
-            "invalid": pgettext_lazy("merge thread serializer", "Invalid choice.")
+            "invalid": pgettext_lazy("merge threads serializer", "Invalid choice.")
         },
     )
 
@@ -565,7 +565,7 @@ class MergeThreadSerializer(serializers.Serializer):
         other_thread_id = get_thread_id_from_url(request, data)
         if not other_thread_id:
             raise ValidationError(
-                pgettext("merge thread serializer", "This is not a valid thread link.")
+                pgettext("invalid thread url", "This is not a valid thread link.")
             )
         if other_thread_id == thread.pk:
             raise ValidationError(
@@ -620,7 +620,7 @@ class MergeThreadsSerializer(NewThreadSerializer):
         child=serializers.IntegerField(
             error_messages={
                 "invalid": pgettext_lazy(
-                    "merge threads serializer",
+                    "invalid threads ids",
                     "One or more thread ids received were invalid.",
                 )
             }

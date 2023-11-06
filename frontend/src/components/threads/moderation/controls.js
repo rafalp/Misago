@@ -96,7 +96,10 @@ export default class extends React.Component {
           value: 1,
         },
       ],
-      pgettext("threads moderation", "Selected threads were pinned locally.")
+      pgettext(
+        "threads moderation",
+        "Selected threads were pinned in category."
+      )
     )
   }
 
@@ -324,7 +327,7 @@ export default class extends React.Component {
               onClick={this.pinLocally}
             >
               <span className="material-icon">bookmark_border</span>
-              {pgettext("threads moderation btn", "Pin threads locally")}
+              {pgettext("threads moderation btn", "Pin threads in categories")}
             </button>
           </li>
         )}

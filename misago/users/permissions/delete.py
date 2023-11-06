@@ -88,7 +88,7 @@ def allow_delete_user(user_acl, target):
         )
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(
-            pgettext_lazy("users delete permission", "You can't delete administrators.")
+            pgettext_lazy("users delete permission", "Administrators can't be deleted.")
         )
 
     if newer_than:

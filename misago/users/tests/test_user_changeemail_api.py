@@ -57,7 +57,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"new_email": ["Enter a valid email address."]}
+            response.json(), {"new_email": ["Enter a valid e-mail address."]}
         )
 
     def test_email_taken(self):

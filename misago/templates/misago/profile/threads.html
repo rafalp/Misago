@@ -39,10 +39,10 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You have no started threads." context "user profile page threads" %}
+        {% trans "You haven't started any threads." context "user profile page threads" %}
       {% else %}
         {% blocktrans trimmed with username=profile.username context "user profile page threads" %}
-          {{ username }} started no threads.
+          {{ username }} hasn't started any threads
         {% endblocktrans %}
       {% endif %}
     </p>

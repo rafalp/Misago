@@ -283,7 +283,7 @@ class EditUserForm(UserBaseForm):
         length_limit = self.settings.signature_length_max
         if len(data) > length_limit:
             message = npgettext(
-                "admin user form",
+                "signature length validator",
                 "Signature can't be longer than %(limit)s character.",
                 "Signature can't be longer than %(limit)s characters.",
                 length_limit,

@@ -27,7 +27,7 @@ def archive_user_details(sender, archive=None, **kwargs):
             pgettext("archived user details", "Username"): sender.username,
             pgettext("archived user details", "E-mail"): sender.email,
             pgettext("archived user details", "Joined on"): sender.joined_on,
-            pgettext("archived user details", "Joined from ip"): (
+            pgettext("archived user details", "Joined from IP"): (
                 sender.joined_from_ip or "unavailable"
             ),
         },

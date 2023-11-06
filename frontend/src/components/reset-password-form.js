@@ -85,7 +85,7 @@ export class PasswordChangedPage extends React.Component {
     return interpolate(
       pgettext(
         "password reset form",
-        "%(username)s, your password has been changed successfully."
+        "%(username)s, your password has been changed."
       ),
       {
         username: this.props.user.username,
@@ -112,7 +112,7 @@ export class PasswordChangedPage extends React.Component {
               <p>
                 {pgettext(
                   "password reset form",
-                  "You will have to sign in using new password before continuing."
+                  "Sign in using new password to continue."
                 )}
               </p>
               <p>

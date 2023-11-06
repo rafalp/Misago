@@ -80,7 +80,7 @@
       {% empty %}
         <li class="list-group-item empty-message">
           {% if is_authenticated_user %}
-            {% trans "Your username was never changed." context "user profile page username history" %}
+            {% trans "Your account has no history of name changes." context "username history empty" %}
           {% else %}
             {% blocktrans trimmed with username=profile.username context "user profile page username history" %}
               {{ username }}'s username was never changed.

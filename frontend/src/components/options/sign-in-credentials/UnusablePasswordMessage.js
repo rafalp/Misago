@@ -8,7 +8,7 @@ const UnusablePasswordMessage = () => {
         <h3 className="panel-title">
           {pgettext(
             "change sign in credentials title",
-            "Change email or password"
+            "Change e-mail or password"
           )}
         </h3>
       </div>
@@ -20,7 +20,7 @@ const UnusablePasswordMessage = () => {
           <p className="lead">
             {pgettext(
               "change sign in credentials",
-              "You need to set a password for your account to be able to change your username or email."
+              "You need to set a password for your account to be able to change your e-mail or password."
             )}
           </p>
           <p className="help-block">

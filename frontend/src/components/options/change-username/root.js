@@ -59,10 +59,7 @@ export default class extends React.Component {
     store.dispatch(updateUsername(this.props.user, username, slug))
 
     snackbar.success(
-      pgettext(
-        "change username",
-        "Your username has been changed successfully."
-      )
+      pgettext("change username", "Your username has been changed.")
     )
   }
 

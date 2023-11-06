@@ -164,7 +164,7 @@ def allow_block_user(user_acl, target):
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(
             pgettext_lazy(
-                "users profiles permission", "You can't block administrators."
+                "users profiles permission", "Administrators can't be blocked."
             )
         )
     if user_acl["user_id"] == target.id:

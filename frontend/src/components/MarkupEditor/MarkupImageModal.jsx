@@ -61,7 +61,7 @@ class MarkupImageModal extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <div className="modal-body">
               <FormGroup
-                for="markup_link_url"
+                for="markup_image_text"
                 label={pgettext("markup editor", "Image description")}
                 helpText={pgettext(
                   "markup editor",
@@ -69,7 +69,7 @@ class MarkupImageModal extends React.Component {
                 )}
               >
                 <input
-                  id="markup_link_text"
+                  id="markup_image_text"
                   className="form-control"
                   type="text"
                   value={this.state.text}
@@ -79,15 +79,16 @@ class MarkupImageModal extends React.Component {
                 />
               </FormGroup>
               <FormGroup
-                for="markup_link_url"
-                label={pgettext("markup editor", "Image address")}
+                for="markup_image_url"
+                label={pgettext("markup editor", "Image URL")}
                 validation={!!this.state.error ? [this.state.error] : undefined}
               >
                 <input
-                  id="markup_link_url"
+                  id="markup_image_url"
                   className="form-control"
                   type="text"
                   value={this.state.url}
+                  placeholder="http://domain.com/image.png"
                   onChange={(event) =>
                     this.setState({ url: event.target.value })
                   }
@@ -100,7 +101,7 @@ class MarkupImageModal extends React.Component {
                 data-dismiss="modal"
                 type="button"
               >
-                {gettext("Cancel")}
+                {pgettext("markup editor", "Cancel")}
               </button>
               <button className="btn btn-primary">
                 {pgettext("markup editor", "Insert image")}

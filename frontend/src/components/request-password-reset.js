@@ -28,7 +28,7 @@ export class RequestResetForm extends Form {
       return true
     } else {
       snackbar.error(
-        pgettext("request password reset form", "Enter a valid email address.")
+        pgettext("request password reset form", "Enter a valid e-mail address.")
       )
       return false
     }

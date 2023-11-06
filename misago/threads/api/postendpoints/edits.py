@@ -85,7 +85,7 @@ def get_edit(post, pk=None):
     edit = post.edits_record.first()
     if not edit:
         raise PermissionDenied(
-            pgettext("posts api", "Edits record is unavailable for this post.")
+            pgettext("posts api", "This post has no changes history.")
         )
     return edit
 

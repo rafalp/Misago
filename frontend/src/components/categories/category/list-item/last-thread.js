@@ -90,12 +90,7 @@ export function Empty({ category }) {
   if (category.last_thread_title) return null
 
   return (
-    <Message
-      message={pgettext(
-        "category last thread",
-        "This category is empty. No threads were posted within it so far."
-      )}
-    />
+    <Message message={pgettext("category last thread", "Empty category")} />
   )
 }
 
@@ -104,12 +99,7 @@ export function Private({ category }) {
   if (category.acl.can_see_all_threads) return null
 
   return (
-    <Message
-      message={pgettext(
-        "category last thread",
-        "This category is private. You can see only your own threads within it."
-      )}
-    />
+    <Message message={pgettext("category last thread", "Private category")} />
   )
 }
 
@@ -117,12 +107,7 @@ export function Protected({ category }) {
   if (category.acl.can_browse) return null
 
   return (
-    <Message
-      message={pgettext(
-        "category last thread",
-        "This category is protected. You can't browse its contents."
-      )}
-    />
+    <Message message={pgettext("category last thread", "Protected category")} />
   )
 }
 

@@ -50,17 +50,14 @@
                     {% if list_type == 'all' %}
                       <p class="lead">
                         {% if category.level %}
-                          {% trans "There are no threads in this category." context "threads list" %}
+                          {% trans "There are no threads in this category." context "threads list empty" %}
                         {% else %}
-                          {% trans "There are no threads on this forum... yet!" context "threads list" %}
+                          {% trans "There are no threads on this site yet." context "threads list empty" %}
                         {% endif %}
-                      </p>
-                      <p>
-                        {% trans "Why not start one yourself?" context "threads list" %}
                       </p>
                     {% else %}
                       <p class="lead">
-                        {% trans "No threads matching specified criteria were found." context "threads list" %}
+                        {% trans "No threads matching specified criteria were found." context "threads list empty" %}
                       </p>
                     {% endif %}
                   {% endblock list-empty-message %}

@@ -58,7 +58,7 @@ class RolePermissionsForm(forms.Form):
     )
     poll_edit_time = forms.IntegerField(
         label=pgettext_lazy(
-            "polls permission", "Time limit for own polls edits, in minutes"
+            "polls permission", "Time limit for editing own polls, in minutes"
         ),
         help_text=pgettext_lazy(
             "polls permission", "Enter 0 to don't limit time for editing own polls."
@@ -70,7 +70,7 @@ class RolePermissionsForm(forms.Form):
         label=pgettext_lazy("polls permission", "Can always see polls voters"),
         help_text=pgettext_lazy(
             "polls permission",
-            "Allows users to see who voted in poll even if poll votes are secret.",
+            "Allows users to see who voted in poll even if voting was not public.",
         ),
     )
 
@@ -324,7 +324,8 @@ def allow_see_poll_votes(user_acl, target):
     if not target.is_public and not user_acl["can_always_see_poll_voters"]:
         raise PermissionDenied(
             pgettext_lazy(
-                "polls permission", "You dont have permission to this poll's voters."
+                "polls permission",
+                "You dont have permission to see this poll's voters.",
             )
         )
 

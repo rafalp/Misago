@@ -154,7 +154,7 @@ export default class Register extends Form {
                     <h3 className="panel-title">
                       {pgettext(
                         "social auth form title",
-                        "Complete your details"
+                        "Complete your account"
                       )}
                     </h3>
                   </div>

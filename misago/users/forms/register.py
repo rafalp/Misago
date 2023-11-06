@@ -66,7 +66,7 @@ class BaseRegisterForm(forms.Form):
                 raise ValidationError(
                     pgettext(
                         "register form",
-                        "New registrations from this IP address are not allowed.",
+                        "New registrations from your current IP address are not allowed.",
                     )
                 )
 

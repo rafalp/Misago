@@ -62,7 +62,7 @@ export default function PostingThreadOptions({
               disabled={disabled}
             >
               <span className="material-icon">bookmark_outline</span>
-              {pgettext("post thread", "Pinned locally")}
+              {pgettext("post thread", "Pinned in category")}
             </button>
           </li>
         )}

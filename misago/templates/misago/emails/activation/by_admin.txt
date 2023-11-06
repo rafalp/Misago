@@ -4,7 +4,7 @@
 
 {% block content %}
 {% blocktrans trimmed with user=user context "account activated email" %}
-{{ user }}, your account has been activated by forum administrator.
+{{ user }}, your account has been activated by site administrator.
 {% endblocktrans %}
 
 {% blocktrans trimmed context "account activated email" %}

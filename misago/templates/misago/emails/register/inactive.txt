@@ -8,12 +8,12 @@
 {% endblocktrans %}
 {% if activation_by_admin %}
   {% blocktrans trimmed  context "welcome email"%}
-  Before you will be able to join discussion on our forums, one of our administrators will have to activate your account.
+  Before you will be able to join discussion on our site, one of administrators will have to activate your account.
   {% endblocktrans %}
 
 
   {% blocktrans trimmed context "welcome email" %}
-  This may take a while, but you will receive e-mail with notification once it happens.
+  You will receive an e-mail with notification once this happens.
   {% endblocktrans %}
 
 
@@ -23,7 +23,7 @@
 
 {% elif activation_by_user %}
   {% blocktrans trimmed  context "welcome email"%}
-  Before you will be able to join discussion on our forums, you have to activate your account. To do so, simply click the link below:
+  Before you will be able to join discussion on our site, you have to activate your account. To do so, simply click the link below:
   {% endblocktrans %}
   {% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}"
 

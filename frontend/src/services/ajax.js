@@ -45,7 +45,7 @@ export class Ajax {
           if (rejection.status === 0) {
             rejection.detail = pgettext(
               "ajax client error",
-              "Could not connect to server."
+              "Could not connect to the site."
             )
           }
 
@@ -61,7 +61,7 @@ export class Ajax {
           if (rejection.status === 500 && !rejection.detail) {
             rejection.detail = pgettext(
               "ajax client error",
-              "Unknown error has occured."
+              "Unknown error has occurred."
             )
           }
 
@@ -227,22 +227,22 @@ export class Ajax {
 
           if (rejection.status === 0) {
             rejection.detail = pgettext(
-              "ajax client error",
-              "Could not connect to server."
+              "api error",
+              "Could not connect to the site."
             )
           }
 
           if (rejection.status === 413 && !rejection.detail) {
             rejection.detail = pgettext(
-              "ajax client error",
-              "Upload was rejected by server as too large."
+              "api error",
+              "Upload was rejected by the site as too large."
             )
           }
 
           if (rejection.status === 404) {
             if (!rejection.detail || rejection.detail === "NOT FOUND") {
               rejection.detail = pgettext(
-                "ajax client error",
+                "api error",
                 "Action link is invalid."
               )
             }
@@ -250,7 +250,7 @@ export class Ajax {
 
           if (rejection.status === 500 && !rejection.detail) {
             rejection.detail = pgettext(
-              "ajax client error",
+              "api error",
               "Unknown error has occurred."
             )
           }

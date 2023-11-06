@@ -33,7 +33,7 @@ export default class extends Form {
     ]
 
     if (lengths.indexOf(0) !== -1) {
-      snackbar.error(gettext("Fill out all fields."))
+      snackbar.error(pgettext("change password form", "Fill out all fields."))
       return false
     }
 

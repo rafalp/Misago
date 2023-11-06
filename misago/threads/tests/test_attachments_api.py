@@ -150,7 +150,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             response = self.client.post(self.api_link, data={"upload": upload})
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
-                response.json(), {"detail": "Uploaded image was corrupted or invalid."}
+                response.json(), {"detail": "Uploaded image is unsupported or invalid."}
             )
 
     def test_document_upload(self):

@@ -8,7 +8,7 @@ from ...serializers import MovePostsSerializer
 def posts_move_endpoint(request, thread, viewmodel):
     if not thread.acl["can_move_posts"]:
         raise PermissionDenied(
-            pgettext("posts api", "You can't move posts in this thread.")
+            pgettext("posts api", "You can't move posts from this thread.")
         )
 
     serializer = MovePostsSerializer(

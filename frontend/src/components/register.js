@@ -254,13 +254,13 @@ export class RegisterComplete extends React.Component {
   getLead() {
     if (this.props.activation === "user") {
       return pgettext(
-        "register modal",
+        "account activation required",
         "%(username)s, your account has been created but you need to activate it before you will be able to sign in."
       )
     } else if (this.props.activation === "admin") {
       return pgettext(
-        "register modal",
-        "%(username)s, your account has been created but board administrator will have to activate it before you will be able to sign in."
+        "account activation required",
+        "%(username)s, your account has been created but the site administrator will have to activate it before you will be able to sign in."
       )
     }
   }
@@ -268,12 +268,12 @@ export class RegisterComplete extends React.Component {
   getSubscript() {
     if (this.props.activation === "user") {
       return pgettext(
-        "register modal",
+        "account activation required",
         "We have sent an e-mail to %(email)s with link that you have to click to activate your account."
       )
     } else if (this.props.activation === "admin") {
       return pgettext(
-        "register modal",
+        "account activation required",
         "We will send an e-mail to %(email)s when this takes place."
       )
     }

@@ -6,7 +6,10 @@ const MESSAGE = {
     "event message",
     "Thread has been pinned globally."
   ),
-  pinned_locally: pgettext("event message", "Thread has been pinned locally."),
+  pinned_locally: pgettext(
+    "event message",
+    "Thread has been pinned in category."
+  ),
   unpinned: pgettext("event message", "Thread has been unpinned."),
 
   approved: pgettext("event message", "Thread has been approved."),
