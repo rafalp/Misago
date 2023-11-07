@@ -1,0 +1,28 @@
+# serializer version: 1
+# name: test_absolute_link_to_site_is_changed_to_relative_link
+  '<p>clean_links step cleans <a href="/" target="_blank">example.com</a></p>'
+# ---
+# name: test_absolute_link_to_site_without_schema_is_changed_to_relative_link
+  '<p>clean_links step cleans <a href="/" target="_blank">example.com</a></p>'
+# ---
+# name: test_absolute_link_with_path_to_site_is_changed_to_relative_link
+  '<p>clean_links step cleans <a href="/somewhere-something/" target="_blank">example.com/somewhere-something/</a></p>'
+# ---
+# name: test_local_image_is_changed_to_relative_link
+  '<p>clean_links step cleans <img alt="example.com/media/img.png" src="/media/img.png" /></p>'
+# ---
+# name: test_parser_converts_unmarked_links_to_hrefs
+  '<p>Lorem ipsum <a href="http://test.com" rel="external nofollow noopener" target="_blank">test.com</a></p>'
+# ---
+# name: test_parser_skips_links_in_code_bbcode
+  '<pre><code>http://test.com</code></pre>'
+# ---
+# name: test_parser_skips_links_in_inline_code_bbcode
+  '''
+  <p>Lorem ipsum <br />
+  </p><pre><code>http://test.com</code></pre><p></p>
+  '''
+# ---
+# name: test_parser_skips_links_in_inline_code_markdown
+  '<p>Lorem ipsum <code>http://test.com</code></p>'
+# ---

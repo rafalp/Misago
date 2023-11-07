@@ -1,0 +1,49 @@
+# serializer version: 1
+# name: test_bold_bbcode
+  '<p>Lorem <b>ipsum</b>!</p>'
+# ---
+# name: test_image_bbcode
+  '<p>Lorem <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500" /> ipsum</p>'
+# ---
+# name: test_image_bbcode_is_case_insensitive
+  '<p>Lorem <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500" /> ipsum</p>'
+# ---
+# name: test_image_bbcode_is_escaped
+  '<p>Lorem <img alt="&lt;script language=&quot;application/javascript&quot;&gt;" src="http://&lt;script language=&quot;application/javascript&quot;&gt;" /> ipsum</p>'
+# ---
+# name: test_inline_bbcode_can_be_mixed
+  '<p>Lorem <b><u>ipsum</u></b>!</p>'
+# ---
+# name: test_inline_bbcode_can_be_mixed_with_markdown
+  '<p>Lorem <b><strong>ipsum</strong></b>!</p>'
+# ---
+# name: test_italics_bbcode
+  '<p>Lorem <i>ipsum</i>!</p>'
+# ---
+# name: test_simple_inline_bbcode_is_escaped
+  '<p>Lorem <b>ips &lt;script language=&quot;application/javascript&quot;&gt; um</b>!</p>'
+# ---
+# name: test_underline_bbcode
+  '<p>Lorem <u>ipsum</u>!</p>'
+# ---
+# name: test_url_bbcode
+  '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">placekitten.com/g/1200/500</a> ipsum</p>'
+# ---
+# name: test_url_bbcode_is_escaped
+  '<p>Lorem <a href="http://&lt;script language=&quot;application/javascript&quot;&gt;" rel="external nofollow noopener" target="_blank">&lt;script language=&quot;application/javascript&quot;&gt;</a> ipsum</p>'
+# ---
+# name: test_url_bbcode_link_text_is_escaped
+  '<p>Lorem <a href="http://&lt;script language=&quot;application/javascript&quot;&gt;" rel="external nofollow noopener" target="_blank">&lt;script language=&quot;application/javascript&quot;&gt;</a> ipsum</p>'
+# ---
+# name: test_url_bbcode_with_link_text
+  '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor</a> ipsum</p>'
+# ---
+# name: test_url_bbcode_with_long_link_text
+  '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor met</a> ipsum</p>'
+# ---
+# name: test_url_bbcode_with_quotes_and_link_text
+  '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor</a> ipsum</p>'
+# ---
+# name: test_url_bbcode_with_quotes_and_long_link_text
+  '<p>Lorem <a href="https://placekitten.com/g/1200/500" rel="external nofollow noopener" target="_blank">dolor met</a> ipsum</p>'
+# ---

@@ -1,0 +1,80 @@
+# serializer version: 1
+# name: test_multi_line_quote
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1"></div>
+  <blockquote class="quote-body" data-block="quote">
+  <p>Sit amet elit.</p>
+  <p>Another line.</p>
+  </blockquote>
+  </aside>
+  '''
+# ---
+# name: test_quote_can_contain_bbcode_or_markdown
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1"></div>
+  <blockquote class="quote-body" data-block="quote">
+  <p>Sit <strong>amet</strong> <u>elit</u>.</p>
+  </blockquote>
+  </aside>
+  '''
+# ---
+# name: test_quotes_can_be_nested
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1"></div>
+  <blockquote class="quote-body" data-block="quote">
+  <p>Sit amet elit.</p>
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1"></div>
+  <blockquote class="quote-body" data-block="quote">
+  <p>Nested quote</p>
+  </blockquote>
+  </aside>
+  </blockquote>
+  </aside>
+  '''
+# ---
+# name: test_quotes_can_contain_hr_markdown
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1"></div>
+  <blockquote class="quote-body" data-block="quote">
+  <p>Sit amet elit.</p>
+  <hr />
+  <p>Another line.</p>
+  </blockquote>
+  </aside>
+  '''
+# ---
+# name: test_single_line_authored_quote
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1">@Bob</div>
+  <blockquote class="quote-body" data-author="@Bob" data-block="quote">
+  <p>Sit amet elit.</p>
+  </blockquote>
+  </aside>
+  '''
+# ---
+# name: test_single_line_authored_quote_without_quotations
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1">@Bob</div>
+  <blockquote class="quote-body" data-author="@Bob" data-block="quote">
+  <p>Sit amet elit.</p>
+  </blockquote>
+  </aside>
+  '''
+# ---
+# name: test_single_line_quote
+  '''
+  <aside class="quote-block">
+  <div class="quote-heading" data-noquote="1"></div>
+  <blockquote class="quote-body" data-block="quote">
+  <p>Sit amet elit.</p>
+  </blockquote>
+  </aside>
+  '''
+# ---

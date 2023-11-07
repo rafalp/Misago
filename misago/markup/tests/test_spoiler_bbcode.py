@@ -4,13 +4,13 @@ from ..parser import parse
 def test_single_line_spoiler(request_mock, user, snapshot):
     text = "[spoiler]Daenerys and Jon live happily ever after![/spoiler]"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_spoiler_can_contain_bbcode_or_markdown(request_mock, user, snapshot):
     text = "[spoiler]Sit **amet** [u]elit[/u].[/spoiler]"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_multi_line_spoiler(request_mock, user, snapshot):
@@ -22,7 +22,7 @@ Another line.
 [/spoiler]
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_spoilers_can_be_nested(request_mock, user, snapshot):
@@ -33,7 +33,7 @@ Sit amet elit.
 [/spoiler]
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 # Regression test for weird edge case in which hr gets moved outside of spoiler
@@ -46,4 +46,4 @@ Another line.
 [/spoiler]
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]

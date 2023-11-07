@@ -4,19 +4,19 @@ from ..parser import parse
 def test_parser_converts_unmarked_links_to_hrefs(request_mock, user, snapshot):
     text = "Lorem ipsum http://test.com"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_parser_skips_links_in_inline_code_markdown(request_mock, user, snapshot):
     text = "Lorem ipsum `http://test.com`"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_parser_skips_links_in_inline_code_bbcode(request_mock, user, snapshot):
     text = "Lorem ipsum [code]http://test.com[/code]"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_parser_skips_links_in_code_bbcode(request_mock, user, snapshot):
@@ -26,7 +26,7 @@ http://test.com
 [/code]
     """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_absolute_link_to_site_is_changed_to_relative_link(
@@ -34,7 +34,7 @@ def test_absolute_link_to_site_is_changed_to_relative_link(
 ):
     text = "clean_links step cleans http://example.com"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_absolute_link_to_site_is_added_to_internal_links_list(request_mock, user):
@@ -48,7 +48,7 @@ def test_absolute_link_to_site_without_schema_is_changed_to_relative_link(
 ):
     text = "clean_links step cleans example.com"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_absolute_link_to_site_without_schema_is_added_to_internal_links_list(
@@ -64,7 +64,7 @@ def test_absolute_link_with_path_to_site_is_changed_to_relative_link(
 ):
     text = "clean_links step cleans http://example.com/somewhere-something/"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_absolute_link_with_path_to_site_is_added_to_internal_links_list(
@@ -110,7 +110,7 @@ def test_outgoing_link_with_path_is_added_to_outgoing_links_list(request_mock, u
 def test_local_image_is_changed_to_relative_link(request_mock, user, snapshot):
     text = "clean_links step cleans !(example.com/media/img.png)"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_local_image_is_added_to_images_list(request_mock, user):

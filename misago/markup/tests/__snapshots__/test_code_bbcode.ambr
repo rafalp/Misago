@@ -1,0 +1,20 @@
+# serializer version: 1
+# name: test_code_block_disables_parsing
+  '<pre><code>Dolor [b]met.[/b]</code></pre>'
+# ---
+# name: test_code_with_language_parameter
+  '<pre><code class="language-php">echo(&quot;Hello!&quot;);</code></pre>'
+# ---
+# name: test_code_with_quoted_language_parameter
+  '<pre><code class="language-php">echo(&quot;Hello!&quot;);</code></pre>'
+# ---
+# name: test_multi_line_code
+  '''
+  <pre><code>&lt;script&gt;
+  alert(&quot;!&quot;)
+  &lt;/script&gt;</code></pre>
+  '''
+# ---
+# name: test_single_line_code
+  '<pre><code>echo(&quot;Hello!&quot;);</code></pre>'
+# ---

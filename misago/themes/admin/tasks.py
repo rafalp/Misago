@@ -20,15 +20,11 @@ def update_remote_css_size(pk):
 
 def get_remote_css_size(url):
     try:
-        response = requests.head(url)
-        response.raise_for_status()
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()
+            return sum(len(chunk) for chunk in response.iter_content(4096))
     except RequestException:
         return 0
-    else:
-        try:
-            return int(response.headers.get("content-length", 0))
-        except (TypeError, ValueError):
-            return 0
 
 
 @shared_task

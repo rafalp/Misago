@@ -10,7 +10,7 @@ from ..tasks import build_single_theme_css, build_theme_css
 def assert_snapshot_match(snapshot, theme):
     def _assert_snapshot_match(result):
         result = result.replace(theme.dirname, "themedir")
-        snapshot.assert_match(result)
+        assert snapshot == result
 
     return _assert_snapshot_match
 
