@@ -1,0 +1,20 @@
+# serializer version: 1
+# name: test_multi_line_code_markdown
+  '''
+  <pre><code>&lt;script&gt;
+  alert(&quot;!&quot;)
+  &lt;/script&gt;
+  </code></pre>
+  '''
+# ---
+# name: test_multi_line_code_markdown_with_language
+  '''
+  <pre><code class="language-javascript">&lt;script&gt;
+  alert(&quot;!&quot;)
+  &lt;/script&gt;
+  </code></pre>
+  '''
+# ---
+# name: test_single_line_code_markdown
+  '<p><code>&lt;script&gt;alert(&quot;!&quot;)&lt;/script&gt;</code></p>'
+# ---

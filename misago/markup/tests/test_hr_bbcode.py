@@ -8,7 +8,7 @@ Lorem ipsum dolor met.
 Sit amet elit.
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_hr_bbcode_is_skipped_if_its_part_of_paragraph(request_mock, user, snapshot):

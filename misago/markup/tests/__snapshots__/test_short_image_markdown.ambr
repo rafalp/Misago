@@ -1,0 +1,16 @@
+# serializer version: 1
+# name: test_short_image_markdown[base]
+  '<p><img alt="somewhere.com/image.jpg" src="http://somewhere.com/image.jpg" /></p>'
+# ---
+# name: test_short_image_markdown[space-multiple-words]
+  '<p>! (space with other words)</p>'
+# ---
+# name: test_short_image_markdown[space-one-word]
+  '<p>! (space)</p>'
+# ---
+# name: test_short_image_markdown[text-before-mark]
+  '<p>Text before exclamation mark<img alt="somewhere.com/image.jpg" src="http://somewhere.com/image.jpg" /></p>'
+# ---
+# name: test_short_image_markdown[text-before-with-space]
+  '<p>Text before with space in between! (sometext)</p>'
+# ---

@@ -23,5 +23,5 @@ pytz
 requests
 responses
 ruff
-snapshottest
+syrupy
 unidecode

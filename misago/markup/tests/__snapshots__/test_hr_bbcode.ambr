@@ -1,0 +1,8 @@
+# serializer version: 1
+# name: test_hr_bbcode_is_replaced_if_its_alone_in_paragraph
+  '''
+  <p>Lorem ipsum dolor met.</p>
+  <hr />
+  <p>Sit amet elit.</p>
+  '''
+# ---

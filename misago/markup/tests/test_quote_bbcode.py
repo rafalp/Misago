@@ -4,25 +4,25 @@ from ..parser import parse
 def test_single_line_quote(request_mock, user, snapshot):
     text = "[quote]Sit amet elit.[/quote]"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_single_line_authored_quote(request_mock, user, snapshot):
     text = '[quote="@Bob"]Sit amet elit.[/quote]'
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_single_line_authored_quote_without_quotations(request_mock, user, snapshot):
     text = "[quote=@Bob]Sit amet elit.[/quote]"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_quote_can_contain_bbcode_or_markdown(request_mock, user, snapshot):
     text = "[quote]Sit **amet** [u]elit[/u].[/quote]"
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_multi_line_quote(request_mock, user, snapshot):
@@ -34,7 +34,7 @@ Another line.
 [/quote]
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 def test_quotes_can_be_nested(request_mock, user, snapshot):
@@ -45,7 +45,7 @@ Sit amet elit.
 [/quote]
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]
 
 
 # Regression test for weird edge case in which hr gets moved outside of quote
@@ -58,4 +58,4 @@ Another line.
 [/quote]
 """
     result = parse(text, request_mock, user)
-    snapshot.assert_match(result["parsed_text"])
+    assert snapshot == result["parsed_text"]

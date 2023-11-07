@@ -1,0 +1,4 @@
+# serializer version: 1
+# name: test_strikethrough_markdown
+  '<p>Lorem <del>ipsum</del> dolor met!</p>'
+# ---

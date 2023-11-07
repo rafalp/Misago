@@ -117,12 +117,34 @@ def create_media_file_manifest(allowed_path):
     return ThemeMediaFileManifest
 
 
+# Multiple file support from Django docs
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        if self.required and not data:
+            raise forms.ValidationError(
+                self.error_messages["required"], code="required"
+            )
+
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            return [single_file_clean(d, initial) for d in data]
+
+        return [single_file_clean(data, initial)]
+
+
 class UploadAssetsForm(forms.Form):
     allowed_content_types = []
     allowed_extensions = []
 
-    assets = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={"multiple": True}),
+    assets = MultipleFileField(
         error_messages={
             "required": pgettext_lazy(
                 "admin theme assets form", "No files have been uploaded."
