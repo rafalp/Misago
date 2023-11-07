@@ -2,7 +2,7 @@
 
 This directory contains reference documents for Misago developers.
 
-> **Note:** This documentation is a temporary solution. In future I aim to generate Misago's dev documentation from it's codebase.
+> **Note:** This documentation is a temporary solution. In future I aim to generate Misago's dev documentation from it's codebase, and use Docusaurus to both version it and make it more attractive to browse.
 
 
 ## Notifications
