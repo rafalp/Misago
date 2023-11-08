@@ -1,4 +1,4 @@
-# Notifications guide
+# Notifications reference
 
 Misago's notifications feature is implemented in the `misago.notifications` package.
 
@@ -41,16 +41,16 @@ def notify_user(
 This function performs two tasks:
 
 - It saves new `misago.notifications.models.Notification` instance to database.
-- It increases `user.unread_notifications` attribute in database.
+- It increases `user.unread_notifications` counter in database.
 
 It takes two required arguments:
 
 - `user`: an instance of `misago.users.models.User` representing user to notify.
 - `verb`: a `str` with notification's "verb", eg. `REPLIED`, `FOLLOWED`.
 
-It optionally takes following arguments:
+It takes four optional arguments:
 
-- `actor`: an instance of `misago.users.models.User` representing user who caused the event.
+- `actor`: an instance of `misago.users.models.User` representing the user who caused the event.
 - `category`: an instance of `misago.categories.models.Categry` representing category in which the event has occurred.
 - `thread`: an instance of `misago.threads.models.Thread` representing thread in which the event has occurred.
 - `post`: an instance of `misago.threads.models.Post` representing post in which the event has occurred.
@@ -71,7 +71,7 @@ notify_user(
 
 ## Adding custom notification
 
-Misago supports adding custom notifications for new events.
+Misago supports adding custom notifications for new events by plugins.
 
 
 ### Notification verb
@@ -115,13 +115,13 @@ import html
 from misago.notifications.registry import Notification, registry
 
 
-# `message` works as decorator
+# `message` works as a decorator
 @registry.message("CUSTOM")
 def get_custom_notification_message(notification: Notification) -> str:
     return html.escape(f"Custom notification in {notification.thread_title}")
 
 
-# And as setter
+# `message` can also be used as a setter
 def get_custom_notification_message(notification: Notification) -> str:
     return html.escape(f"Custom notification in {notification.thread_title}")
 
@@ -156,7 +156,7 @@ from django.urls import reverse
 from misago.notifications.registry import Notification, registry
 
 
-# `redirect` works as decorator
+# `redirect` works as a decorator
 @registry.redirect("CUSTOM")
 def get_custom_notification_redirect_url(
     request: HttpRequest, notification: Notification
@@ -170,7 +170,7 @@ def get_custom_notification_redirect_url(
     )
 
 
-# And as setter
+# `redirect` can also be used as a setter
 def get_custom_notification_redirect_url(
     request: HttpRequest, notification: Notification
 ) -> str:

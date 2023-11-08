@@ -1,7 +1,7 @@
 Misago
 ======
 
-[![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master) ![Works on Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg) [![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB)
+[![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master) ![Works on Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg) [![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB)
 
 
 **Development Status:** 🍌 [Bananas](https://en.wikipedia.org/wiki/Perpetual_beta) 🍌

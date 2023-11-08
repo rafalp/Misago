@@ -9,4 +9,4 @@ This directory contains reference documents for Misago developers.
 
 Misago's notifications feature is implemented in the `misago.notifications` package.
 
-- [Notifications guide](./notifications.md)
+- [Notifications reference](./notifications.md)
