@@ -10,7 +10,7 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 
 * **Homepage:** http://misago-project.org/
 * **Documentation:** https://misago.gitbook.io/docs/
-* **Code & BugTracker:** https://github.com/rafalp/Misago/
+* **Code & BugTracker:** https://github.com/rafalp/Misago/  
 
 
 Screenshots
