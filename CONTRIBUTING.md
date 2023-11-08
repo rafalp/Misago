@@ -17,7 +17,7 @@ Pull requests with new translations on GitHub will be rejected.
 Working on existing issue
 -------------------------
 
-Unless the issue is assigned to somebody, it's considered available for taking.
+Unless the issue is assigned to somebody, it's considered available for taking. Issues labeled with ["help wanted"](https://github.com/rafalp/Misago/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) are usually pre-triaged and considered good starting points.
 
 Please note that some of the issues may be very old and not up to date anymore. **Always ask** in the issue first before actually starting development.
 
