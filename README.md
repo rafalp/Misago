@@ -72,7 +72,6 @@ The `./dev` utility implements other features besides the `init`. Run it without
 
 ### Running Misago in development without `dev`
 
-
 You may skip `./dev init` and setup dev instance manually, running those commands:
 
 1. `docker compose build`: builds docker containers
@@ -94,25 +93,19 @@ Currently Misago defines following taks:
 
 To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in `frontend` directory, however special care should be taken when changing source javascripts.
 
-Misago defines template that allows you to include custom html and js code before Misago's JavaScript app is ran, named `scripts.html`.
+Misago defines template that allows you to include custom html and JavaScript code before Misago's JavaScript app is ran, named `scripts.html`.
 
 
-Bug reports, features and feedback
-----------------------------------
+Providing feedback and contributing
+-----------------------------------
 
-If you have found bug, please report it on [issue tracker](https://github.com/rafalp/Misago/issues).
+If you have found a bug, please report it either on the [issue tracker](https://github.com/rafalp/Misago/issues) or on the [project's forums](hhttps://misago-project.org/c/bug-reports/29/).
 
-For feature or support requests as well as general feedback please use [official forum](http://misago-project.org) instead. Your feedback means much to the project so please do share your thoughts!
+If you want to contribute to project, please see the [contributing](./CONTRIBUTING.md) document.
 
-There's also Gitter for those looking for instant-messaging approach for discussing Misago development.
+For feature or support requests as well as general feedback please use the [official forums](http://misago-project.org). Your feedback means much to the project so please do share your thoughts!
 
-
-Contributing
-------------
-
-If you have corrected spelling, wrote new tests or fixed a bug, feel free to open pull request.
-
-Many issues are open for takers. If you've found one you feel you could take care of, please announce your intent in issue discussion before you start working. That way situations when more than one person works on solving same issue can be avoided.
+There's also a [Discord server](https://discord.gg/fwvrZgB) for those looking for instant-messaging approach for getting in touch with Misago devs and users.
 
 
 Authors
