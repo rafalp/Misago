@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-06 19:19+0000\n"
+"POT-Creation-Date: 2023-11-11 22:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,21 +132,21 @@ msgctxt "admin auth"
 msgid "Your admin session has expired."
 msgstr ""
 
-#: admin/forms.py:47
+#: admin/forms.py:49
 msgctxt "admin color field"
 msgid ""
 "Value must be a 7-character string specifying an RGB color in a hexadecimal "
 "format (eg.: \"#F5A9B8\")."
 msgstr ""
 
-#: admin/forms.py:67 templates/misago/admin/users/edit.html:145
+#: admin/forms.py:69 templates/misago/admin/users/edit.html:145
 #: templates/misago/admin/users/edit.html:163
 #: templates/misago/admin/users/edit.html:278
 msgctxt "admin yesno switch"
 msgid "Yes"
 msgstr ""
 
-#: admin/forms.py:68 templates/misago/admin/users/edit.html:149
+#: admin/forms.py:70 templates/misago/admin/users/edit.html:149
 #: templates/misago/admin/users/edit.html:167
 #: templates/misago/admin/users/edit.html:282
 msgctxt "admin yesno switch"
@@ -6734,51 +6734,51 @@ msgctxt "admin theme form"
 msgid "Uploaded file is not a valid ZIP file."
 msgstr ""
 
-#: themes/admin/forms.py:128
+#: themes/admin/forms.py:150
 msgctxt "admin theme assets form"
 msgid "No files have been uploaded."
 msgstr ""
 
-#: themes/admin/forms.py:158
+#: themes/admin/forms.py:180
 #, python-format
 msgctxt "admin theme assets form"
 msgid "File \"%(file)s\" content type \"%(content_type)s\" is not allowed."
 msgstr ""
 
-#: themes/admin/forms.py:171
+#: themes/admin/forms.py:193
 #, python-format
 msgctxt "admin theme assets form"
 msgid "File \"%(file)s\" extension is invalid."
 msgstr ""
 
-#: themes/admin/forms.py:197
+#: themes/admin/forms.py:219
 msgctxt "admin theme css form"
 msgid "Name"
 msgstr ""
 
-#: themes/admin/forms.py:200
+#: themes/admin/forms.py:222
 msgctxt "admin theme css form"
 msgid ""
 "Should be a correct filename and include the .css extension. It will be "
 "lowercased."
 msgstr ""
 
-#: themes/admin/forms.py:219
+#: themes/admin/forms.py:241
 msgctxt "admin theme css form"
 msgid "You need to enter CSS for this file."
 msgstr ""
 
-#: themes/admin/forms.py:247
+#: themes/admin/forms.py:269
 msgctxt "admin theme css link form"
 msgid "Link name"
 msgstr ""
 
-#: themes/admin/forms.py:250
+#: themes/admin/forms.py:272
 msgctxt "admin theme css link form"
 msgid "Can be descriptive (e.g. \"roboto from fonts.google.com\")."
 msgstr ""
 
-#: themes/admin/forms.py:254
+#: themes/admin/forms.py:276
 msgctxt "admin theme css link form"
 msgid "Remote CSS URL"
 msgstr ""
