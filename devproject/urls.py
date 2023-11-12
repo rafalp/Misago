@@ -27,10 +27,14 @@ from misago.users.forms.auth import AdminAuthenticationForm
 
 
 # Cache key for django-i18n.js view that invalidates cache when
-# Misago version, release status or language code changes 
+# Misago version, release status or language code changes
 misago_i18n_cache_key = (
-    f"misagojsi18n_{settings.LANGUAGE_CODE}_{__version__}_{__released__}"
-).replace(".", "_").replace("-", "_").lower()
+    (f"misagojsi18n_{settings.LANGUAGE_CODE}_{__version__}_{__released__}")
+    .replace(".", "_")
+    .replace("-", "_")
+    .lower()
+)
+
 
 admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
