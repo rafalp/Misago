@@ -5,7 +5,7 @@ const USERNAME_ALPHANUMERIC = new RegExp("[0-9a-z]", "i")
 
 export function required(message) {
   return function (value) {
-    if (value === false || value === null || value.trim().length === 0) {
+    if (value === false || value === null || String(value).trim().length === 0) {
       return message || gettext("This field is required.")
     }
   }
