@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     libopenjp2-7-dev \
     locales \
     cron \
-    postgresql-client \
+    postgresql-client-15 \
     gettext
 
 # Install pip-tools
