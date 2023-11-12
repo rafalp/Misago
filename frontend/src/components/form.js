@@ -77,7 +77,10 @@ export default class extends React.Component {
       optional: (this.state.validators.optional || {})[name],
     }
 
-    let requiredError = validateRequired(value) || false
+    let requiredError = false
+    if (validators.required) {
+      requiredError = validateRequired(value) || false
+    }
 
     if (validators.required) {
       if (requiredError) {
