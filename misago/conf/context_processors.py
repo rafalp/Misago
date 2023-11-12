@@ -11,7 +11,7 @@ from . import settings
 
 # Simple but hard to guess version signature for current Misago version
 # Used to cache-bust django-i18n.js URL in the browser
-I18N_VERSION_HASH = sha256(
+I18N_VERSION_SIGNATURE = sha256(
     (
         f"{misago.__version__}{misago.__released__}"
         f"{settings.LANGUAGE_CODE}{settings.SECRET_KEY}"
@@ -25,7 +25,7 @@ def conf(request):
             request.settings.blank_avatar or static(settings.MISAGO_BLANK_AVATAR)
         ),
         "DEBUG": settings.DEBUG,
-        "I18N_VERSION_HASH": I18N_VERSION_HASH,
+        "I18N_VERSION_SIGNATURE": I18N_VERSION_SIGNATURE,
         "LANGUAGE_CODE_SHORT": get_language()[:2],
         "LOGIN_REDIRECT_URL": settings.LOGIN_REDIRECT_URL,
         "LOGIN_URL": settings.LOGIN_URL,
