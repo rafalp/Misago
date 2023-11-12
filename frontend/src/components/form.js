@@ -1,6 +1,6 @@
 import React from "react"
-import { required } from "misago/utils/validators"
-import snackbar from "misago/services/snackbar"
+import { required } from "../utils/validators"
+import snackbar from "../services/snackbar"
 
 let validateRequired = required()
 
@@ -77,10 +77,7 @@ export default class extends React.Component {
       optional: (this.state.validators.optional || {})[name],
     }
 
-    let requiredError = false
-    if (validators.required) {
-      requiredError = validateRequired(value) || false
-    }
+    let requiredError = validateRequired(value) || false
 
     if (validators.required) {
       if (requiredError) {
