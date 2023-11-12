@@ -22,7 +22,18 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 from django.views.i18n import JavaScriptCatalog
 
+from misago import __released__, __version__
 from misago.users.forms.auth import AdminAuthenticationForm
+
+
+# Cache key for django-i18n.js view that invalidates cache when
+# Misago version, release status or language code changes
+misago_i18n_cache_key = (
+    (f"misagojsi18n_{settings.LANGUAGE_CODE}_{__version__}_{__released__}")
+    .replace(".", "_")
+    .replace("-", "_")
+    .lower()
+)
 
 
 admin.autodiscover()
@@ -35,7 +46,7 @@ urlpatterns = [
     path(
         "django-i18n.js",
         last_modified(lambda req, **kw: timezone.now())(
-            cache_page(86400 * 2, key_prefix="misagojsi18n")(
+            cache_page(86400 * 21, key_prefix=misago_i18n_cache_key)(
                 JavaScriptCatalog.as_view(packages=["misago"])
             )
         ),

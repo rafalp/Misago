@@ -1,10 +1,22 @@
 import json
+from hashlib import sha256
 
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.translation import get_language
 
+import misago
 from . import settings
+
+
+# Simple but hard to guess version signature for current Misago version
+# Used to cache-bust django-i18n.js URL in the browser
+I18N_VERSION_SIGNATURE = sha256(
+    (
+        f"{misago.__version__}{misago.__released__}"
+        f"{settings.LANGUAGE_CODE}{settings.SECRET_KEY}"
+    ).encode("utf-8")
+).hexdigest()
 
 
 def conf(request):
@@ -13,6 +25,7 @@ def conf(request):
             request.settings.blank_avatar or static(settings.MISAGO_BLANK_AVATAR)
         ),
         "DEBUG": settings.DEBUG,
+        "I18N_VERSION_SIGNATURE": I18N_VERSION_SIGNATURE,
         "LANGUAGE_CODE_SHORT": get_language()[:2],
         "LOGIN_REDIRECT_URL": settings.LOGIN_REDIRECT_URL,
         "LOGIN_URL": settings.LOGIN_URL,
