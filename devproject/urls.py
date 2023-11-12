@@ -42,7 +42,7 @@ urlpatterns = [
     path(
         "django-i18n.js",
         last_modified(lambda req, **kw: timezone.now())(
-            cache_page(86400 * 180, key_prefix=misago_i18n_cache_key)(
+            cache_page(86400 * 21, key_prefix=misago_i18n_cache_key)(
                 JavaScriptCatalog.as_view(packages=["misago"])
             )
         ),
