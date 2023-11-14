@@ -16,4 +16,6 @@ class PollVote(models.Model):
     choice_hash = models.CharField(max_length=12, db_index=True)
 
     class Meta:
-        index_together = [["poll", "voter_name"]]
+        indexes = [
+            models.Index(fields=["poll", "voter_name"]),
+        ]

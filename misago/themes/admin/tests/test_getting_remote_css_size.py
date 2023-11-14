@@ -6,7 +6,7 @@ from ..tasks import update_remote_css_size
 @responses.activate
 def test_task_uses_response_body_to_set_css_size(css_link):
     content = "html {}"
-    content_bytes = content.encode("utf-8")
+    content_bytes = content.encode()
 
     responses.add(
         responses.GET,

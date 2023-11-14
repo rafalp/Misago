@@ -244,7 +244,7 @@ class CssEditorForm(forms.ModelForm):
 
     def save(self):
         name = self.cleaned_data["name"]
-        source = self.cleaned_data["source"].encode("utf-8")
+        source = self.cleaned_data["source"].encode()
         source_file = ContentFile(source, name)
 
         self.instance.name = name

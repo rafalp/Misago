@@ -63,7 +63,7 @@ def get_fake_username(fake):
 
 
 def get_fake_avatars(email):
-    email_hash = hashlib.md5(email.lower().encode("utf-8")).hexdigest()
+    email_hash = hashlib.md5(email.lower().encode()).hexdigest()
 
     return [
         {"size": size, "url": GRAVATAR_URL % (email_hash, size)}

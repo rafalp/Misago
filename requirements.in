@@ -3,7 +3,7 @@ ariadne_django
 black
 celery[redis]
 coveralls
-django<4
+django~=4.2
 djangorestframework
 django-debug-toolbar
 django-mptt
@@ -14,7 +14,7 @@ markdown
 social-auth-app-django
 pyjwt
 pillow
-psycopg2-binary
+psycopg[binary]
 pytest
 pytest-cov
 pytest-django
