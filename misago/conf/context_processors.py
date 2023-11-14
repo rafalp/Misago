@@ -15,7 +15,7 @@ I18N_VERSION_SIGNATURE = sha256(
     (
         f"{misago.__version__}{misago.__released__}"
         f"{settings.LANGUAGE_CODE}{settings.SECRET_KEY}"
-    ).encode("utf-8")
+    ).encode()
 ).hexdigest()
 
 

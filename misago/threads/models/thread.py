@@ -143,12 +143,9 @@ class Thread(models.Model):
                 fields=["is_hidden"],
                 condition=Q(is_hidden=False),
             ),
-        ]
-
-        index_together = [
-            ["category", "id"],
-            ["category", "last_post_on"],
-            ["category", "replies"],
+            models.Index(fields=["category", "id"]),
+            models.Index(fields=["category", "last_post_on"]),
+            models.Index(fields=["category", "replies"]),
         ]
 
     def __str__(self):

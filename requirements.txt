@@ -8,7 +8,7 @@ amqp==5.2.0
     # via kombu
 anyio==4.0.0
     # via starlette
-ariadne==0.20.1
+ariadne==0.21
     # via
     #   -r requirements.in
     #   ariadne-django
@@ -18,9 +18,9 @@ asgiref==3.7.2
     # via django
 billiard==4.2.0
     # via celery
-black==23.10.1
+black==23.11.0
     # via -r requirements.in
-celery[redis]==5.3.4
+celery[redis]==5.3.5
     # via -r requirements.in
 certifi==2023.7.22
     # via requests
@@ -53,7 +53,7 @@ defusedxml==0.8.0rc2
     # via
     #   python3-openid
     #   social-auth-core
-django==3.2.23
+django==4.2.7
     # via
     #   -r requirements.in
     #   ariadne-django
@@ -75,7 +75,7 @@ djangorestframework==3.14.0
     # via -r requirements.in
 docopt==0.6.2
     # via coveralls
-faker==19.13.0
+faker==20.0.0
     # via -r requirements.in
 graphql-core==3.2.3
     # via ariadne
@@ -109,14 +109,16 @@ pathspec==0.11.2
     # via black
 pillow==10.1.0
     # via -r requirements.in
-platformdirs==3.11.0
+platformdirs==4.0.0
     # via black
 pluggy==1.3.0
     # via pytest
-prompt-toolkit==3.0.39
+prompt-toolkit==3.0.40
     # via click-repl
-psycopg2-binary==2.9.9
+psycopg[binary]==3.1.12
     # via -r requirements.in
+psycopg-binary==3.1.12
+    # via psycopg
 pycparser==2.21
     # via cffi
 pyjwt==2.8.0
@@ -132,7 +134,7 @@ pytest==7.4.3
     #   syrupy
 pytest-cov==4.1.0
     # via -r requirements.in
-pytest-django==4.6.0
+pytest-django==4.7.0
     # via -r requirements.in
 pytest-mock==3.12.0
     # via -r requirements.in
@@ -145,11 +147,10 @@ python3-openid==3.2.0
 pytz==2023.3.post1
     # via
     #   -r requirements.in
-    #   django
     #   djangorestframework
 pyyaml==6.0.1
     # via responses
-redis==4.6.0
+redis==5.0.1
     # via celery
 requests==2.31.0
     # via
@@ -163,7 +164,7 @@ requests-oauthlib==1.3.1
     # via social-auth-core
 responses==0.24.0
     # via -r requirements.in
-ruff==0.1.4
+ruff==0.1.5
     # via -r requirements.in
 six==1.16.0
     # via
@@ -184,12 +185,14 @@ starlette==0.32.0.post1
 syrupy==4.6.0
     # via -r requirements.in
 typing-extensions==4.8.0
-    # via ariadne
+    # via
+    #   ariadne
+    #   psycopg
 tzdata==2023.3
     # via celery
 unidecode==1.3.7
     # via -r requirements.in
-urllib3==2.0.7
+urllib3==2.1.0
     # via
     #   requests
     #   responses

@@ -94,12 +94,10 @@ class Post(models.Model):
                 condition=Q(is_event=True),
             ),
             GinIndex(fields=["search_vector"]),
-        ]
-
-        index_together = [
-            ("thread", "id"),  # speed up threadview for team members
-            ("is_event", "is_hidden"),
-            ("poster", "posted_on"),
+            # Speed up threadview for team members
+            models.Index(fields=["thread", "id"]),
+            models.Index(fields=["is_event", "is_hidden"]),
+            models.Index(fields=["poster", "posted_on"]),
         ]
 
     def __str__(self):
