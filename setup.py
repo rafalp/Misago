@@ -29,6 +29,7 @@ setup(
         "with built in OAuth 2 client."
     ),
     long_description=README,
+    long_description_content_type="text/markdown",
     url="http://www.misago-project.org/",
     author="Rafał Pitoń",
     author_email="kontakt@rpiton.com",
@@ -44,7 +45,7 @@ setup(
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Internet :: WWW/HTTP :: WSGI",
