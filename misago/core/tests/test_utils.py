@@ -2,6 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import Resolver404, reverse
+from django.utils.functional import lazystr
 
 from ..utils import (
     clean_ids_list,
@@ -271,6 +272,9 @@ class GetExceptionMessageTests(TestCase):
         """helper's default message arg is optional"""
         message = get_exception_message(PermissionDenied("Lorem Ipsum"))
         self.assertEqual(message, "Lorem Ipsum")
+
+        message = get_exception_message(PermissionDenied(lazystr("Lazy Error")))
+        self.assertEqual(message, "Lazy Error")
 
         message = get_exception_message(PermissionDenied())
         self.assertIsNone(message)
