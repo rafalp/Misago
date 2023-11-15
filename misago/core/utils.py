@@ -7,6 +7,7 @@ from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import html, timezone
 from django.utils.encoding import force_str
+from django.utils.functional import Promise
 from django.utils.module_loading import import_string
 
 MISAGO_SLUGIFY = getattr(settings, "MISAGO_SLUGIFY", "misago.core.slugify.default")
@@ -143,7 +144,12 @@ def get_exception_message(exception=None, default_message=None):
         return default_message
 
     try:
-        return exception.args[0]
+        exception_message = exception.args[0]
+        if isinstance(exception_message, Promise):
+            return str(exception_message)
+        if isinstance(exception_message, str):
+            return exception_message
+        return default_message
     except IndexError:
         return default_message
 

@@ -20,7 +20,8 @@ def _is_ajax(request):
 
 def _ajax_error(code, exception=None, default_message=None):
     return JsonResponse(
-        {"detail": get_exception_message(exception, default_message)}, status=code
+        {"detail": get_exception_message(exception, default_message)},
+        status=code,
     )
 
 
