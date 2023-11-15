@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import Resolver404, reverse
-from django.utils.functional import lazystr
+from django.utils.functional import lazy, lazystr
 
 from ..utils import (
     clean_ids_list,

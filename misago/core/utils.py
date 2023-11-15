@@ -146,7 +146,7 @@ def get_exception_message(exception=None, default_message=None):
     try:
         exception_message = exception.args[0]
         if isinstance(exception_message, Promise):
-            exception_message = str(exception_message)
+            return str(exception_message)
         if isinstance(exception_message, str):
             return exception_message
         return default_message
