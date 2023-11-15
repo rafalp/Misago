@@ -143,7 +143,10 @@ def get_exception_message(exception=None, default_message=None):
         return default_message
 
     try:
-        return exception.args[0]
+        exception_message = exception.args[0]
+        if isinstance(exception_message, str):
+            return exception_message
+        return default_message
     except IndexError:
         return default_message
 

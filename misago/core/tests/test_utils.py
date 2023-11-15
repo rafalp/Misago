@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.urls import reverse
+from django.urls import Resolver404, reverse
 
 from ..utils import (
     clean_ids_list,
@@ -281,6 +281,9 @@ class GetExceptionMessageTests(TestCase):
         self.assertEqual(message, "Lorem Ipsum")
 
         message = get_exception_message(PermissionDenied(), "Default")
+        self.assertEqual(message, "Default")
+
+        message = get_exception_message(Resolver404({"path": "/invalid/"}), "Default")
         self.assertEqual(message, "Default")
 
         message = get_exception_message(default_message="Lorem Ipsum")
