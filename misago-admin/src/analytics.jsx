@@ -1,8 +1,7 @@
-import ApolloClient, { gql } from "apollo-boost"
+import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apollo/client';
 import React from "react"
 import ReactDOM from "react-dom"
 import Chart from "react-apexcharts"
-import { ApolloProvider, Query } from "react-apollo"
 import moment from "moment"
 
 const initAnalytics = ({ elementId, errorMessage, labels, title, uri }) => {
@@ -11,7 +10,8 @@ const initAnalytics = ({ elementId, errorMessage, labels, title, uri }) => {
 
   const client = new ApolloClient({
     credentials: "same-origin",
-    uri: uri
+    uri: uri,
+    cache: new InMemoryCache(),
   })
 
   ReactDOM.render(
@@ -54,76 +54,66 @@ const getAnalytics = gql`
   }
 `
 
-class Analytics extends React.Component {
-  state = { span: 30 }
+function Analytics({ errorMessage, labels, title }) {
+  const [span, setSpan] = React.useState(30)
+  const { loading, error, data } = useQuery(getAnalytics, { variables: { span }})
 
-  setSpan = span => {
-    this.setState({ span })
-  }
-
-  render() {
-    const { errorMessage, labels, title } = this.props
-    const { span } = this.state
-
-    return (
-      <div className="card card-admin-info">
-        <div className="card-body">
-          <div className="row align-items-center">
-            <div className="col">
-              <h4 className="card-title">{title}</h4>
-            </div>
-            <div className="col-auto">
-              <SpanPicker span={span} setSpan={this.setSpan} />
-            </div>
+  return (
+    <div className="card card-admin-info">
+      <div className="card-body">
+        <div className="row align-items-center">
+          <div className="col">
+            <h4 className="card-title">{title}</h4>
+          </div>
+          <div className="col-auto">
+            <SpanPicker span={span} setSpan={setSpan} />
           </div>
         </div>
-        <Query query={getAnalytics} variables={{ span }}>
-          {({ loading, error, data }) => {
-            if (loading) return <Spinner />
-            if (error) return <Error message={errorMessage} />
-
-            const { analytics } = data
-
-            return (
-              <>
-                <AnalyticsItem
-                  data={analytics.threads}
-                  name={labels.threads}
-                  span={span}
-                />
-                <AnalyticsItem
-                  data={analytics.posts}
-                  name={labels.posts}
-                  span={span}
-                />
-                <AnalyticsItem
-                  data={analytics.attachments}
-                  name={labels.attachments}
-                  span={span}
-                />
-                <AnalyticsItem
-                  data={analytics.users}
-                  name={labels.users}
-                  span={span}
-                />
-                <AnalyticsItem
-                  data={analytics.userDeletions}
-                  name={labels.userDeletions}
-                  negative={true}
-                  span={span}
-                />
-                <AnalyticsItem
-                  data={analytics.dataDownloads}
-                  name={labels.dataDownloads}
-                  span={span}
-                />
-              </>
-            )
-          }}
-        </Query>
       </div>
-    )
-  }
+      {(() => {
+        if (loading) return <Spinner />
+        if (error) return <Error message={errorMessage} />
+
+        const { analytics } = data
+
+        return (
+          <>
+            <AnalyticsItem
+              data={analytics.threads}
+              name={labels.threads}
+              span={span}
+            />
+            <AnalyticsItem
+              data={analytics.posts}
+              name={labels.posts}
+              span={span}
+            />
+            <AnalyticsItem
+              data={analytics.attachments}
+              name={labels.attachments}
+              span={span}
+            />
+            <AnalyticsItem
+              data={analytics.users}
+              name={labels.users}
+              span={span}
+            />
+            <AnalyticsItem
+              data={analytics.userDeletions}
+              name={labels.userDeletions}
+              negative={true}
+              span={span}
+            />
+            <AnalyticsItem
+              data={analytics.dataDownloads}
+              name={labels.dataDownloads}
+              span={span}
+            />
+          </>
+        )
+      })()}
+    </div>
+  )
 }
 
 const SpanPicker = ({ span, setSpan }) => (

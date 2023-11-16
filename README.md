@@ -84,16 +84,26 @@ You may skip `./dev init` and setup dev instance manually, running those command
 
 With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application uses webpack for building.
 
-Currently Misago defines following taks:
+Currently Misago's `package.json` defines following tasks:
 
-* `npm run build`: does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory.
-* `npm run start`: does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes.
+* `npm run build`: does production build of Misago's assets, bundling and minifying JavaScript, CSS and images, as well as moving them to the `misago/static/misago` directory.
+* `npm run start`: does quick build for assets:bundling, compiling less, deployment to `misago/static/misago`. Doesn't minify/optimize. Runs re-build when less/js file changes.
 * `npm run prettier`: formats code with prettier.
-* `npm run eslint`: lints code with eslint.
+* `npm run eslint`: lints the code with eslint.
 
-To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in `frontend` directory, however special care should be taken when changing source javascripts.
+To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in `frontend` directory, however special care should be taken when changing source JavaScript files as no test suite for those exists.
 
 Misago defines template that allows you to include custom html and JavaScript code before Misago's JavaScript app is ran, named `scripts.html`.
+
+
+### Admin
+
+Admin assets are stored in `misago-admin` directory and deployed to `misago/static/misago/admin` directory on build.
+
+To work on admin's JavaScript or CSS, `cd` to `misago-admin` and install dependencies with `npm install`. Now you can use following actions:
+
+* `npm run build`: does production build of assets, bundling and minifying JavaScript and CSS files.
+* `npm run dev`: does quick build for JavaScript and CSS assets, only bundling but not minifying. Also does a rebuild when one of the files changes.
 
 
 Providing feedback and contributing

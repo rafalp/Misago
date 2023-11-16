@@ -1,7 +1,6 @@
-import ApolloClient, { gql } from "apollo-boost"
+import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apollo/client';
 import React from "react"
 import ReactDOM from "react-dom"
-import { ApolloProvider, Query } from "react-apollo"
 
 const initVersionCheck = ({ elementId, errorMessage, loadingMessage, uri }) => {
   const element = document.getElementById(elementId)
@@ -9,7 +8,8 @@ const initVersionCheck = ({ elementId, errorMessage, loadingMessage, uri }) => {
 
   const client = new ApolloClient({
     credentials: "same-origin",
-    uri: uri
+    uri: uri,
+    cache: new InMemoryCache(),
   })
 
   ReactDOM.render(
@@ -34,16 +34,12 @@ const getVersion = gql`
 `
 
 const VersionCheck = ({ errorMessage, loadingMessage }) => {
-  return (
-    <Query query={getVersion}>
-      {({ loading, error, data }) => {
-        if (loading) return <Spinner {...loadingMessage} />
-        if (error) return <Error {...errorMessage} />
+  const { loading, error, data } = useQuery(getVersion)
 
-        return <CheckMessage {...data.version} />
-      }}
-    </Query>
-  )
+  if (loading) return <Spinner {...loadingMessage} />
+  if (error) return <Error {...errorMessage} />
+
+  return <CheckMessage {...data.version} />
 }
 
 const Spinner = ({ description, message }) => (
