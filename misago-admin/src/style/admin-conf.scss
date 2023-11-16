@@ -1,0 +1,37 @@
+// Admin configuration page
+
+// Remove vertical padding and add shadows to admin conf grid
+.card-admin-settings-grid {
+  @extend .shadow-sm;
+
+  .card-body {
+    @extend .py-1;
+  }
+}
+
+// Restyle settings group card to be pretend-button
+.card-admin-settings-card {
+  @extend .d-block;
+  @extend .m-1;
+  @extend .p-2;
+  @extend .rounded;
+
+  line-height: $line-height-sm;
+
+  color: $body-color;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+
+    background-color: $light;
+  }
+}
+
+// Reset settings group name size
+.card-admin-settings-card h5 {
+  @extend .mb-1;
+
+  font-size: $font-size-base;
+  line-height: $line-height-sm;
+}

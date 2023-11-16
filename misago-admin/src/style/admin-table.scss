@@ -1,0 +1,131 @@
+// Admin table
+//
+// Used to present actionable list of items in tabular form
+
+// Add fancy shadow to card
+.card-admin-table {
+  @extend .shadow-sm;
+}
+
+// Override card title sizing so it works with h4
+.card-admin-table .card-title {
+  @extend .m-0;
+
+  font-size: $font-size-lg;
+}
+
+// Remove margins from table
+.card-admin-table table {
+  @extend .m-0;
+}
+
+// Vertically align and compact table cells
+.card-admin-table th,
+.card-admin-table td {
+  @extend .py-1;
+
+  vertical-align: middle;
+}
+
+// Customize table head row to have configurable background,
+// don't wrap and be more compact
+.card-admin-table th {
+  @extend .border-bottom-0;
+  @extend .text-nowrap;
+
+  font-size: $font-size-sm;
+
+  color: $table-head-color;
+  background-color: $table-head-bg;
+}
+
+// Remove top border from table head if there's no card header
+.card-admin-table > :first-child th {
+  @extend .border-top-0;
+}
+
+// Make table checkboxes height constant
+.card-admin-table .row-select input,
+.card-admin-table th input {
+  font-size: $font-size-lg;
+}
+
+// Make card-body paddings same as in table
+.card-admin-table .card-body {
+  padding: $table-cell-padding;
+}
+
+// Add upper border to card-body proceeded by table
+.card-admin-table table + .card-body {
+  border-top: $table-border-width solid $table-border-color;
+}
+
+// Add border-radius to images in table
+.card-admin-table img {
+  @extend .rounded-lg;
+}
+
+// Support images buttons
+.card-admin-table .btn-thumbnail {
+  @extend .btn-light;
+  @extend .btn-block;
+
+  width: $font-size-base * 2;
+  height: $font-size-base * 2;
+  padding: 0;
+
+  background-color: transparent;
+  background-size: cover;
+}
+
+// Util for making item link stand out
+.card-admin-table .item-name {
+  @extend .font-weight-bold;
+
+  color: $body-color;
+}
+
+.card-admin-table h5 {
+  @extend .font-weight-bold;
+  @extend .m-0;
+
+  font-size: $font-size-sm;
+  line-height: $line-height-sm;
+
+  a {
+    color: $body-color;
+  }
+}
+
+// Badges column
+.card-admin-table .badges-list {
+  @extend .text-right;
+  @extend .text-nowrap;
+  @extend .pl-0;
+
+  width: 0%;
+}
+
+// Keep checkbox column as small as possible
+.card-admin-table .row-select {
+  width: 1px;
+}
+
+// Make checkbox easier to click
+.card-admin-table .row-select label {
+  @extend .text-center;
+  @extend .w-100;
+  @extend .m-0;
+  @extend .p-2;
+}
+
+// Remove underline from timestamp abbr
+.card-admin-table [data-timestamp] {
+  text-decoration: none;
+}
+
+// Center and space verticallt the blankslate message
+.card-admin-table .blankslate td {
+  @extend .text-center;
+  @extend .py-3;
+}
