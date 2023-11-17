@@ -1,6 +1,6 @@
-# This dockerfile is only meant for local development of Misago
-# If you are looking for a proper docker setup for running Misago in production,
-# please use misago-docker instead
+# This Dockerfile is intended solely for local development of Misago
+# If you are seeking a suitable Docker setup for running Misago in a 
+# production, please us misago-docker instead
 FROM python:3.12
 
 ENV PYTHONUNBUFFERED 1
@@ -27,8 +27,7 @@ ADD requirements.txt /
 ADD requirements-plugins.txt /
 
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install -r requirements-plugins.txt
+    pip install -r requirements.txt &&
 
 WORKDIR /srv/misago
 
