@@ -1,4 +1,4 @@
-from .plugins.pluginlist import load_plugin_list_if_exists
+from .plugins.loader import plugin_loader
 
 
 __version__ = "0.39.0"

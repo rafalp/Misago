@@ -208,7 +208,6 @@ bootstrap_plugins() {
     else
         echo "Skipping plugin bootstrap because plugins directory doesn't exist."
     fi
-    exit 1
 }
 
 # Clear existing dev project
