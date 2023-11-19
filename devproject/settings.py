@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
-from misago import plugin_loader
+from misago import discover_plugins
 from misago.settings import *
 
 
@@ -158,9 +158,9 @@ AUTHENTICATION_BACKENDS = ["misago.users.authbackends.MisagoBackend"]
 
 CSRF_FAILURE_VIEW = "misago.core.errorpages.csrf_failure"
 
-PLUGINS_LIST_PATH = os.path.join(os.path.dirname(BASE_DIR), "plugins.txt")
+PLUGINS_DIRECTORY = os.environ.get("MISAGO_PLUGINS")
 
-INSTALLED_PLUGINS = plugin_loader.get_plugins_apps()
+INSTALLED_PLUGINS = discover_plugins(PLUGINS_DIRECTORY)
 
 # Combine Misago's default installed apps with plugins
 INSTALLED_APPS = [

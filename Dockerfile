@@ -28,13 +28,13 @@ ADD plugins /app/plugins
 WORKDIR /app/
 
 # Install Misago requirements
-# RUN pip install --upgrade pip && \
-#     pip install -r /app/requirements.txt && \
-#     pip install pip-tools
+RUN pip install --upgrade pip && \
+    pip install -r /app/requirements.txt && \
+    pip install pip-tools
 
 # Bootstrap plugins
 RUN ./dev bootstrap_plugins
 
 EXPOSE 8000
 
-CMD python manage.py runserver 0.0.0.0:8000
+CMD python manage.py runserver 0.0.0.0:8000 --noreload
