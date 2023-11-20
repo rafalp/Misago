@@ -88,10 +88,12 @@ def is_select_field(field):
     return isinstance(field.field.widget, forms.Select)
 
 
+MULTIPLE_CHOICE_WIDGETS = (forms.CheckboxSelectMultiple, forms.SelectMultiple)
+
+
 @register.filter
 def is_multiple_choice_field(field):
-    multichoice_widgets = (forms.CheckboxSelectMultiple, forms.SelectMultiple)
-    return isinstance(field.field.widget, multichoice_widgets)
+    return isinstance(field.field.widget, MULTIPLE_CHOICE_WIDGETS)
 
 
 @register.filter
