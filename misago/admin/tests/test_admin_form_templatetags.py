@@ -27,6 +27,11 @@ class Form(forms.Form):
     select_field = forms.ChoiceField(
         label="Choice", choices=(("y", "Yes"), ("n", "No"))
     )
+    ratio_select_field = forms.ChoiceField(
+        label="Choice",
+        choices=(("y", "Yes"), ("n", "No")),
+        widget=forms.RadioSelect,
+    )
     checkbox_select_field = forms.MultipleChoiceField(
         label="Color",
         choices=(("r", "Red"), ("g", "Green"), ("b", "Blue")),
@@ -127,6 +132,9 @@ def test_image_field_help_text_is_rendered():
 class TestImage:
     url = "test-image.png"
 
+    def __str__(self):
+        return self.url
+
 
 def render_image(template_str):
     base_template = "{%% load misago_admin_form %%} %s"
@@ -135,43 +143,48 @@ def render_image(template_str):
     return template.render(context).strip()
 
 
-def test_image_row_with_value_renders_label():
+def test_image_row_with_value_renders_label(snapshot):
     html = render_image("{% form_image_row form.image_field %}")
-    assert "Image!" in html
+    assert snapshot == html
 
 
-def test_image_row_with_value_renders_help_text():
+def test_image_row_with_value_renders_help_text(snapshot):
     html = render_image("{% form_image_row form.image_field %}")
-    assert "I am a help text." in html
+    assert snapshot == html
 
 
-def test_image_row_with_value_renders_image_preview():
+def test_image_row_with_value_renders_image_preview(snapshot):
     html = render_image("{% form_image_row form.image_field %}")
     assert ('src="%s"' % TestImage.url) in html
+    assert snapshot == html
 
 
-def test_image_row_with_value_renders_input():
+def test_image_row_with_value_renders_input(snapshot):
     html = render_image("{% form_image_row form.image_field %}")
     assert "id_image_field" in html
+    assert snapshot == html
 
 
-def test_image_row_with_value_renders_input_and_label_css_class():
+def test_image_row_with_value_renders_input_and_label_css_class(snapshot):
     html = render_image('{% form_image_row form.image_field label_class="col-md-3" %}')
     assert "id_image_field" in html
     assert "col-md-3" in html
+    assert snapshot == html
 
 
-def test_image_row_with_value_renders_input_and_field_css_class():
+def test_image_row_with_value_renders_input_and_field_css_class(snapshot):
     html = render_image('{% form_image_row form.image_field field_class="col-md-9" %}')
     assert "id_image_field" in html
     assert "col-md-9" in html
+    assert snapshot == html
 
 
-def test_image_row_with_value_renders_input_and_label_and_field_css_classes():
+def test_image_row_with_value_renders_input_and_label_and_field_css_classes(snapshot):
     html = render_image('{% form_image_row form.image_field "col-md-3" "col-md-9" %}')
     assert "id_image_field" in html
     assert "col-md-3" in html
     assert "col-md-9" in html
+    assert snapshot == html
 
 
 def test_image_tag_without_field_raises_exception():
@@ -180,11 +193,16 @@ def test_image_tag_without_field_raises_exception():
 
 
 def test_for_field_with_radio_select_widget_filter_returns_true(form):
-    assert is_radio_select_field(form["yesno_field"])
+    assert is_radio_select_field(form["ratio_select_field"])
 
 
 def test_for_field_without_radio_select_widget_filter_returns_false(form):
     assert not is_radio_select_field(form["text_field"])
+
+
+def test_row_with_radio_select_field_is_rendered(snapshot):
+    html = render_image("{% form_image_row form.ratio_select_field %}")
+    assert snapshot == html
 
 
 def test_for_field_with_select_widget_filter_returns_true(form):
@@ -195,12 +213,22 @@ def teste_for_field_without_select_widget_filter_returns_false(form):
     assert not is_select_field(form["text_field"])
 
 
+def test_row_with_select_field_is_rendered(snapshot):
+    html = render_image("{% form_image_row form.select_field %}")
+    assert snapshot == html
+
+
 def test_for_field_with_checkbox_select_widget_filter_returns_true(form):
     assert is_multiple_choice_field(form["checkbox_select_field"])
 
 
 def test_for_field_without_checkbox_select_widget_filter_returns_false(form):
     assert not is_multiple_choice_field(form["text_field"])
+
+
+def test_row_with_checkbox_select_field_is_rendered(snapshot):
+    html = render_image("{% form_image_row form.checkbox_select_field %}")
+    assert snapshot == html
 
 
 def test_for_field_with_multiple_select_widget_filter_returns_true(form):
@@ -211,6 +239,11 @@ def test_for_field_without_multiple_select_widget_filter_returns_false(form):
     assert not is_multiple_choice_field(form["text_field"])
 
 
+def test_row_with_select_multiple_field_is_rendered(snapshot):
+    html = render_image("{% form_image_row form.multiple_select_field %}")
+    assert snapshot == html
+
+
 def test_for_field_with_textarea_widget_filter_returns_true(form):
     assert is_textarea_field(form["textarea_field"])
 
@@ -219,12 +252,22 @@ def test_for_field_without_textarea_widget_filter_returns_false(form):
     assert not is_textarea_field(form["text_field"])
 
 
+def test_row_with_textarea_field_is_rendered(snapshot):
+    html = render_image("{% form_image_row form.textarea_field %}")
+    assert snapshot == html
+
+
 def test_for_yes_no_field_filter_returns_true(form):
     assert is_yesno_switch_field(form["yesno_field"])
 
 
 def test_for_non_yes_no_field_filter_returns_false(form):
     assert not is_yesno_switch_field(form["text_field"])
+
+
+def test_row_with_yes_no_field_is_rendered(snapshot):
+    html = render_image("{% form_image_row form.yesno_field %}")
+    assert snapshot == html
 
 
 def test_specified_class_name_is_rendered():

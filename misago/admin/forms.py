@@ -2,9 +2,7 @@ import re
 
 from django.forms import (
     CharField,
-    ClearableFileInput,
     DateTimeField,
-    FileField,
     RadioSelect,
     TypedChoiceField,
     ValidationError,

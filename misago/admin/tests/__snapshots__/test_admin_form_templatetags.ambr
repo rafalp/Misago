@@ -1,0 +1,349 @@
+# serializer version: 1
+# name: test_image_row_with_value_renders_help_text
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label">
+        Image!:
+      </label>
+      <div class="">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_image_row_with_value_renders_image_preview
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label">
+        Image!:
+      </label>
+      <div class="">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_image_row_with_value_renders_input
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label">
+        Image!:
+      </label>
+      <div class="">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_image_row_with_value_renders_input_and_field_css_class
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label">
+        Image!:
+      </label>
+      <div class="col-md-9">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_image_row_with_value_renders_input_and_label_and_field_css_classes
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label col-md-3">
+        Image!:
+      </label>
+      <div class="col-md-9">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_image_row_with_value_renders_input_and_label_css_class
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label col-md-3">
+        Image!:
+      </label>
+      <div class="">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_image_row_with_value_renders_label
+  '''
+  <div class="form-group">
+      <label for="id_image_field" class="control-label">
+        Image!:
+      </label>
+      <div class="">
+        <div class="control-image-preview">
+          <img src="test-image.png" alt="" />
+          
+        </div>
+        
+  
+    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+  
+        
+        
+          <small class="form-text text-muted">I am a help text.</small>
+        
+      </div>
+    </div>
+  '''
+# ---
+# name: test_row_with_checkbox_select_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Color:
+    </label>
+    <div class="controls control-radioselect controls control-checkboxselect ">
+      
+  
+    
+  
+    <div class="form-check">
+      <input class_name="form-check-input" id="id_checkbox_select_field_0" name="checkbox_select_field" type="checkbox" value="r">
+      <label class="form-check-label" for="id_checkbox_select_field_0">
+        Red
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class_name="form-check-input" id="id_checkbox_select_field_1" name="checkbox_select_field" type="checkbox" value="g">
+      <label class="form-check-label" for="id_checkbox_select_field_1">
+        Green
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class_name="form-check-input" id="id_checkbox_select_field_2" name="checkbox_select_field" type="checkbox" value="b">
+      <label class="form-check-label" for="id_checkbox_select_field_2">
+        Blue
+      </label>
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_radio_select_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Choice:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
+    
+  
+    
+      <div class="form-check">
+        <input class_name="form-check-input" id="id_ratio_select_field_0" name="ratio_select_field" type="radio" value="y">
+        <label class="form-check-label" for="id_ratio_select_field_0">
+          Yes
+        </label>
+      </div>
+    
+      <div class="form-check">
+        <input class_name="form-check-input" id="id_ratio_select_field_1" name="ratio_select_field" type="radio" value="n">
+        <label class="form-check-label" for="id_ratio_select_field_1">
+          No
+        </label>
+      </div>
+    
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_select_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_select_field" class="control-label">
+      Choice:
+    </label>
+    <div class="">
+      
+  
+    
+  <select class="form-control" id="id_select_field" name="select_field" required>
+    
+      <option value="y" >
+        Yes
+      </option>
+    
+      <option value="n" >
+        No
+      </option>
+    
+  </select>
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_select_multiple_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_multiple_select_field" class="control-label">
+      Rank:
+    </label>
+    <div class="controls control-checkboxselect ">
+      
+  
+    
+  
+    <div class="form-check">
+      <input class_name="form-check-input" id="" name="multiple_select_field" type="checkbox" value="r">
+      <label class="form-check-label" for="">
+        Red
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class_name="form-check-input" id="" name="multiple_select_field" type="checkbox" value="g">
+      <label class="form-check-label" for="">
+        Green
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class_name="form-check-input" id="" name="multiple_select_field" type="checkbox" value="b">
+      <label class="form-check-label" for="">
+        Blue
+      </label>
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_textarea_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_textarea_field" class="control-label">
+      Message:
+    </label>
+    <div class="">
+      
+  
+    <textarea cols="40" rows="10" maxlength="255" class="form-control" id="id_textarea_field" name="textarea_field" required ></textarea>
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_yes_no_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Switch:
+    </label>
+    <div class="controls control-yesno-switch ">
+      
+  
+    
+  
+    
+      <label class="radio">
+        <input class="yesno-switch" id="id_yesno_field_0" name="yesno_field" type="radio" value="1">
+        Yes
+      </label>
+    
+      <label class="radio">
+        <input class="yesno-switch" id="id_yesno_field_1" name="yesno_field" type="radio" value="0" checked>
+        No
+      </label>
+    
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
