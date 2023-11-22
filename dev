@@ -174,6 +174,42 @@ after_init_message() {
     echo
 }
 
+# Bootstrap plugins at the build time
+bootstrap_plugins() {
+    require_in_docker
+    if [ -d $MISAGO_PLUGINS ]; then
+        echo "Bootstrapping plugins..."
+
+        glob_pattern="$MISAGO_PLUGINS/*/*/misago_plugin.py"
+        for plugin in $glob_pattern; do
+            plugin_dir=$(dirname $(dirname "$plugin"))
+            plugin_name=$(basename $plugin_dir)
+            plugin_pyproject="$plugin_dir/pyproject.toml"
+            plugin_requirements="$plugin_dir/requirements.txt"
+            plugin_requirements_dev="$plugin_dir/requirements-dev.txt"
+
+            if [ -f $plugin_pyproject ]; then
+                echo "Installing: $plugin_pyproject"
+                pip install -e "$plugin_dir[dev]"
+            elif [ -f $plugin_requirements ]; then
+                echo "Installing: $plugin_requirements"
+                pip install -r $plugin_requirements
+                if [ -f $plugin_requirements_dev ]; then
+                    echo "Installing: $plugin_requirements_dev"
+                    pip install -r $plugin_requirements_dev
+                fi
+            elif [ -f $plugin_requirements_dev ]; then
+                echo "Installing: $plugin_requirements_dev"
+                pip install -r $plugin_requirements_dev
+            else
+                echo "Skipping plugin bootstrap for: $plugin_name"
+            fi
+        done
+    else
+        echo "Skipping plugin bootstrap because plugins directory doesn't exist."
+    fi
+}
+
 # Clear existing dev project
 clear() {
     echo -e "${RED}Warning:${NORMAL} You are going to delete media files created during development and destroy docker containers."
@@ -326,6 +362,8 @@ if [[ $1 ]]; then
         init_in_docker
     elif [[ $1 = "afterinit" ]]; then
         after_init_message
+    elif [[ $1 = "bootstrap_plugins" ]]; then
+        bootstrap_plugins
     elif [[ $1 = "clear" ]]; then
         clear
     elif [[ $1 = "reset" ]]; then
@@ -370,7 +408,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "fakebigdata" ]]; then
         create_fake_bigdata
     elif [[ $1 = "pipcompile" ]]; then
-        pip_compile 
+        pip_compile
     else
         invalid_argument $1
     fi

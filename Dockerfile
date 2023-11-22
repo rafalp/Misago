@@ -1,12 +1,13 @@
-# This dockerfile is only meant for local development of Misago
-# If you are looking for a proper docker setup for running Misago in production,
-# please use misago-docker instead
+# This Dockerfile is intended solely for local development of Misago
+# If you are seeking a suitable Docker setup for running Misago in a 
+# production, please use misago-docker instead
 FROM python:3.12
 
 ENV PYTHONUNBUFFERED 1
 ENV IN_MISAGO_DOCKER 1
+ENV MISAGO_PLUGINS "/app/plugins"
 
-# Install dependencies in one single command/layer
+# Install env dependencies in one single command/layer
 RUN apt-get update && apt-get install -y \
     vim \
     libffi-dev \
@@ -19,19 +20,21 @@ RUN apt-get update && apt-get install -y \
     postgresql-client-15 \
     gettext
 
-# Install pip-tools
-RUN python -m pip install pip-tools
+# Add files and dirs for build step
+ADD dev /app/dev
+ADD requirements.txt /app/requirements.txt
+ADD plugins /app/plugins
 
-# Add requirements and install them. We do this unnecessasy rebuilding.
-ADD requirements.txt /
-ADD requirements-plugins.txt /
+WORKDIR /app/
 
+# Install Misago requirements
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install -r requirements-plugins.txt
+    pip install -r /app/requirements.txt && \
+    pip install pip-tools
 
-WORKDIR /srv/misago
+# Bootstrap plugins
+RUN ./dev bootstrap_plugins
 
 EXPOSE 8000
 
-CMD python manage.py runserver 0.0.0.0:8000
+CMD python manage.py runserver 0.0.0.0:8000 --noreload

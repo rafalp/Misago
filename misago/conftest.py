@@ -135,7 +135,7 @@ def client():
 
 
 @pytest.fixture
-def user_client(mocker, client, user):
+def user_client(client, user):
     client.force_login(user)
     session = client.session
     session.save()

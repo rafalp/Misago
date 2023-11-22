@@ -1,4 +1,4 @@
-from .plugins.pluginlist import load_plugin_list_if_exists
+from .plugins import MisagoPlugin, discover_plugins
 
 
 __version__ = "0.39.0"

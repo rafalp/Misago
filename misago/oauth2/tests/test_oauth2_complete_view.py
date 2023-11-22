@@ -837,7 +837,7 @@ def test_oauth2_complete_view_returns_error_400_if_user_data_causes_integrity_er
             code_grant,
         )
     )
-    print(response.content)
+
     assert_contains(
         response,
         (

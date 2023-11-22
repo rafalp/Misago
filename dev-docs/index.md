@@ -10,3 +10,11 @@ This directory contains reference documents for Misago developers.
 Misago's notifications feature is implemented in the `misago.notifications` package.
 
 - [Notifications reference](./notifications.md)
+
+
+## Plugins
+
+Misago implements a plugin system that extends [Django's existing application mechanism](https://docs.djangoproject.com/en/4.2/ref/applications/), allowing developers to customize and extend standard features.
+
+- [Plugin guide](./plugins/index.md)
+- [Plugin installation](./plugins/index.md#plugin-installation)
