@@ -5,9 +5,11 @@ Misago implements a plugin system that enables developers to customize and exten
 
 ## Plugin installation
 
-To install a plugin, place its directory in the standard 'plugins' directory within your Misago setup.
+To install a plugin, place its directory in the standard `plugins` directory within your Misago setup.
 
-Example plugin directory must contain a valid Python package, including a `misago_plugin.py` file. For example:
+Example plugin directory must contain a valid Python package with a `misago_plugin.py` file.
+
+This graph shows the file structure of a minimal valid plugin:
 
 ```
 - minimal-plugin
@@ -16,7 +18,7 @@ Example plugin directory must contain a valid Python package, including a `misag
     - misago_plugin.py
 ```
 
-The graph above shows the file structure of a minimal valid plugin:
+Minimal plugin has:
 
 - `minimal-plugin`: a directory that contains all plugin files.
 - `minimal_plugin`: a Python package (and a Django application) that Misago will import.
