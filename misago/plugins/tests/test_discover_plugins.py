@@ -23,6 +23,18 @@ def test_discover_plugins_doesnt_update_sys_path_if_plugins_path_is_empty(sys_mo
     assert sys_mock.path == []
 
 
+def test_discover_plugins_returns_empty_list_if_plugins_path_doesnt_exist(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        plugins = discover_plugins(str(Path(plugins_dir) / "doesnt_exist"))
+        assert plugins == []
+
+
+def test_discover_plugins_doesnt_update_sys_path_if_plugins_path_doesnt_exist(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        assert not discover_plugins(str(Path(plugins_dir) / "doesnt_exist"))
+        assert sys_mock.path == []
+
+
 def test_discover_plugins_returns_empty_list_if_plugins_dir_is_empty(sys_mock):
     with TemporaryDirectory() as plugins_dir:
         plugins = discover_plugins(plugins_dir)

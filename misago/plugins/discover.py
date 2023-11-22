@@ -9,7 +9,6 @@ def discover_plugins(plugins_path: str | None) -> List[str]:
 
     plugins_path_obj = Path(plugins_path)
     if not plugins_path_obj.is_dir():
-        print("HERE")
         return []
 
     return discover_plugins_in_directory(plugins_path_obj)

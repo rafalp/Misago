@@ -63,7 +63,6 @@ def notifications(request: HttpRequest) -> JsonResponse:
     elif not request.user.unread_notifications and unread_items_exist(
         filter_by, page.items
     ):
-        print("HERE!")
         count_limit = settings.MISAGO_UNREAD_NOTIFICATIONS_LIMIT + 1
         real_unread_notifications = Notification.objects.filter(
             user=request.user, is_read=False
