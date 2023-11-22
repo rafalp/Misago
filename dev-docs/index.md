@@ -17,3 +17,4 @@ Misago's notifications feature is implemented in the `misago.notifications` pack
 Misago implements a plugin system that extends [Django's existing application mechanism](https://docs.djangoproject.com/en/4.2/ref/applications/), allowing developers to customize and extend standard features.
 
 - [Plugin guide](./plugins/index.md)
+- [Plugin installation](./plugins/index.md#plugin-installation)
