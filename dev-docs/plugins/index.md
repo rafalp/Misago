@@ -42,6 +42,12 @@ Plugins following the above file structure are discovered and installed automati
 - plugin structure
 
 
+## Plugin data
+
+- explain what `plugin-data` model field is
+- generated list plugin data models
+
+
 ## Hooks
 
 - how to hooks
