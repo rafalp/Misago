@@ -69,9 +69,7 @@ def test_discover_plugins_returns_plugins_list(sys_mock):
         create_plugin(plugins_dir, "other-plugin", "other_plugin")
 
         plugins = discover_plugins(plugins_dir)
-        assert len(plugins) == 2
-        assert "mock_plugin" in plugins
-        assert "other_plugin" in plugins
+        assert plugins == ["mock_plugin", "other_plugin"]
 
 
 def test_discover_plugins_adds_plugins_to_python_path(sys_mock):
@@ -80,9 +78,10 @@ def test_discover_plugins_adds_plugins_to_python_path(sys_mock):
         create_plugin(plugins_dir, "other-plugin", "other_plugin")
 
         assert discover_plugins(plugins_dir)
-        assert len(sys_mock.path) == 2
-        assert f"{plugins_dir}/mock-plugin" in sys_mock.path
-        assert f"{plugins_dir}/other-plugin" in sys_mock.path
+        assert sys_mock.path == [
+            f"{plugins_dir}/mock-plugin",
+            f"{plugins_dir}/other-plugin",
+        ]
 
 
 def test_discover_plugins_doesnt_create_duplicates_in_python_path(sys_mock):
@@ -93,9 +92,10 @@ def test_discover_plugins_doesnt_create_duplicates_in_python_path(sys_mock):
         sys_mock.path.append(f"{plugins_dir}/mock-plugin")
 
         assert discover_plugins(plugins_dir)
-        assert len(sys_mock.path) == 2
-        assert f"{plugins_dir}/mock-plugin" in sys_mock.path
-        assert f"{plugins_dir}/other-plugin" in sys_mock.path
+        assert sys_mock.path == [
+            f"{plugins_dir}/mock-plugin",
+            f"{plugins_dir}/other-plugin",
+        ]
 
 
 def test_discover_plugins_skips_packages_without_misago_plugin_py(sys_mock):
@@ -107,6 +107,25 @@ def test_discover_plugins_skips_packages_without_misago_plugin_py(sys_mock):
 
         plugins = discover_plugins(plugins_dir)
         assert plugins == ["mock_plugin"]
+        assert sys_mock.path == [f"{plugins_dir}/mock-plugin"]
 
-        assert len(sys_mock.path) == 1
-        assert f"{plugins_dir}/mock-plugin" in sys_mock.path
+
+def test_discover_plugins_returns_plugins_apps_sorted_by_name(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        create_plugin(plugins_dir, "mock-plugin", "mock_plugin")
+        create_plugin(plugins_dir, "other-plugin", "alpha_plugin")
+
+        plugins = discover_plugins(plugins_dir)
+        assert plugins == ["alpha_plugin", "mock_plugin"]
+
+
+def test_discover_plugins_adds_plugins_to_python_path_ordered_by_app_name(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        create_plugin(plugins_dir, "mock-plugin", "mock_plugin")
+        create_plugin(plugins_dir, "other-plugin", "alpha_plugin")
+
+        assert discover_plugins(plugins_dir)
+        assert sys_mock.path == [
+            f"{plugins_dir}/other-plugin",
+            f"{plugins_dir}/mock-plugin",
+        ]
