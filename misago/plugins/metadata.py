@@ -180,7 +180,7 @@ def clean_plugin_url(value: Optional[str]) -> Optional[PluginMetadataUrl]:
     return None
 
 
-ICON_RE = re.compile("fa(r|s)? fa-[a-z]+")
+ICON_RE = re.compile("fa(r|s)? fa-[a-z-]+")
 
 
 def clean_plugin_icon(value: Optional[str]) -> Optional[str]:
