@@ -42,6 +42,7 @@ jobs:
           POSTGRES_USER: misago
           POSTGRES_PASSWORD: misago
           POSTGRES_HOST: localhost
+          MISAGO_PLUGINS: plugins
         run: |
           pytest --cov=misago
       - name: Linters
