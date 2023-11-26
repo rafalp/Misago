@@ -2,6 +2,7 @@
 
 __all__ = [
     "INSTALLED_APPS",
+    "INSTALLED_PLUGINS",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
@@ -50,6 +51,8 @@ INSTALLED_APPS = [
     "misago.plugins",
     "misago.apiv2",
 ]
+
+INSTALLED_PLUGINS = []
 
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.debug",

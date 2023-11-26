@@ -129,3 +129,16 @@ def test_discover_plugins_adds_plugins_to_python_path_ordered_by_app_name(sys_mo
             f"{plugins_dir}/other-plugin",
             f"{plugins_dir}/mock-plugin",
         ]
+
+
+def test_discover_plugins_skips_plugins_without_init(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        create_plugin(plugins_dir, "mock-plugin", "mock_plugin")
+
+        invalid_plugin_path = create_plugin(plugins_dir, "invalid-plugin", "invalid")
+        invalid_plugin_path_init = invalid_plugin_path.parent / "__init__.py"
+        invalid_plugin_path_init.unlink()
+
+        plugins = discover_plugins(plugins_dir)
+        assert plugins == ["mock_plugin"]
+        assert sys_mock.path == [f"{plugins_dir}/mock-plugin"]

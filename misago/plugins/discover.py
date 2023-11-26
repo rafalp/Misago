@@ -22,6 +22,11 @@ def discover_plugins_in_directory(plugins_path: Path) -> List[str]:
     for plugin_path in sorted(plugins_path.glob("*/*/misago_plugin.py")):
         plugin_package = plugin_path.parent
 
+        # Skip plugins that are not valid Python packages
+        plugin_package_init = plugin_package / "__init__.py"
+        if not plugin_package_init.is_file():
+            continue
+
         # Add plugin package name to Django apps for later import
         plugins_apps.append(plugin_package.name)
 

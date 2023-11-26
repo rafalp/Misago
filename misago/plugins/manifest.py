@@ -4,7 +4,7 @@ from typing import Optional
 
 @dataclass(frozen=True)
 class MisagoPlugin:
-    name: str
+    name: Optional[str] = None
     description: Optional[str] = None
     license: Optional[str] = None
     icon: Optional[str] = None
