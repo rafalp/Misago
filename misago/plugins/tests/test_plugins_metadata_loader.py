@@ -53,7 +53,7 @@ def test_plugins_metadata_loader_handles_plugins_with_full_manifests(plugins_met
     assert plugin_metadata.dirname == "full-manifest-plugin"
     assert plugin_metadata.has_manifest == True
     assert plugin_metadata.manifest_error is None
-    assert plugin_metadata.name == "Dev plugin with complete manifest"
+    assert plugin_metadata.name == "Example plugin with complete manifest"
 
 
 def test_plugins_metadata_loader_handles_plugins_with_invalid_manifests(
