@@ -68,3 +68,10 @@ def test_plugins_metadata_loader_handles_plugins_with_invalid_manifests(
     assert plugin_metadata.has_manifest == False
     assert plugin_metadata.manifest_error is not None
     assert plugin_metadata.name is None
+
+
+def test_plugins_metadata_loader_handles_empty_plugins_list():
+    plugins_metadata = PluginsMetadataLoader([])
+    metadata = plugins_metadata.get_metadata()
+    assert metadata == {}
+    assert id(metadata) == id(metadata)
