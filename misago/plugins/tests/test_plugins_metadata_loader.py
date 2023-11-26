@@ -15,7 +15,9 @@ def test_plugins_metadata_loader_returns_metadata_dict(plugins_metadata):
 
 
 def test_plugins_metadata_loader_caches_metadata(plugins_metadata):
-    raise NotImplementedError("TODO")
+    metadata = plugins_metadata.get_metadata()
+    other_metadata = plugins_metadata.get_metadata()
+    assert id(metadata) == id(other_metadata)
 
 
 def test_plugins_metadata_loader_handles_plugins_without_manifests(plugins_metadata):
