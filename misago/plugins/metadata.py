@@ -157,11 +157,11 @@ def create_plugin_metadata(
 
 def clean_plugin_str(value: Optional[str], max_length: int) -> Optional[str]:
     if isinstance(value, str):
-        return (value[:max_length].strip()) or None
+        return (value.strip()[:max_length].strip()) or None
     return None
 
 
-URL_RE = re.compile("https?://[A-Za-z0-9-_/?=&#.]+")
+URL_RE = re.compile("^https?://[A-Za-z0-9-_/?=&#.]+$")
 
 
 def clean_plugin_url(value: Optional[str]) -> Optional[PluginMetadataUrl]:
@@ -180,7 +180,7 @@ def clean_plugin_url(value: Optional[str]) -> Optional[PluginMetadataUrl]:
     return None
 
 
-ICON_RE = re.compile("fa(r|s)? fa-[a-z-]+")
+ICON_RE = re.compile("^fa(r|s)? fa-[a-z-]+$")
 
 
 def clean_plugin_icon(value: Optional[str]) -> Optional[str]:
@@ -189,12 +189,12 @@ def clean_plugin_icon(value: Optional[str]) -> Optional[str]:
     return None
 
 
-COLOR_RE = re.compile("#[0-9a-f]{6}", re.IGNORECASE)
+COLOR_RE = re.compile("^#[0-9a-f]{6}$", re.IGNORECASE)
 
 
 def clean_plugin_color(value: Optional[str]) -> Optional[str]:
     if isinstance(value, str) and COLOR_RE.match(value):
-        return value
+        return value.upper()
     return None
 
 

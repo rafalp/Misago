@@ -12,7 +12,7 @@ class MisagoPlugin:
     version: Optional[str] = None
     author: Optional[str] = None
     homepage: Optional[str] = None
-    help: Optional[str] = None
     sponsor: Optional[str] = None
+    help: Optional[str] = None
     bugs: Optional[str] = None
     repo: Optional[str] = None
