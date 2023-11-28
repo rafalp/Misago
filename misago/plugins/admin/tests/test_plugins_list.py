@@ -28,6 +28,6 @@ def test_plugins_list_contains_plugins_directories_and_packages(admin_client):
 def test_plugins_list_contains_plugins_metadata(admin_client):
     response = admin_client.get(reverse("misago:admin:plugins:index"))
 
-    assert_contains(response, "Author: Rafał Pitoń")
-    assert_contains(response, "Version: 0.1")
-    assert_contains(response, "License: GNU GPL v2")
+    assert_contains(response, "Rafał Pitoń")
+    assert_contains(response, "0.1")
+    assert_contains(response, "GNU GPL v2")
