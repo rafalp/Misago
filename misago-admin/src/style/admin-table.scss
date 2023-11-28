@@ -65,6 +65,11 @@
   @extend .rounded-lg;
 }
 
+// Make table larger (used for tables with longer text content), eg.: plugins
+.table-lg td {
+  @extend .py-3;
+}
+
 // Support images buttons
 .card-admin-table .btn-thumbnail {
   @extend .btn-light;
@@ -124,7 +129,7 @@
   text-decoration: none;
 }
 
-// Center and space verticallt the blankslate message
+// Center and space vertically the blankslate message
 .card-admin-table .blankslate td {
   @extend .text-center;
   @extend .py-3;
