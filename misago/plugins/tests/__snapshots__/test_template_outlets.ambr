@@ -1,0 +1,16 @@
+# serializer version: 1
+# name: test_empty_outlet_renders_nothing
+  '<div></div>'
+# ---
+# name: test_outlet_renders_appended_plugin
+  '<div><strong>none</strong></div>'
+# ---
+# name: test_outlet_renders_multiple_plugins
+  '<div><strong>none</strong><em>none</em><strong>none</strong></div>'
+# ---
+# name: test_outlet_renders_plugins_with_context
+  '<div><strong>context</strong><em>context</em><strong>context</strong></div>'
+# ---
+# name: test_outlet_renders_prepended_plugin
+  '<div><strong>none</strong></div>'
+# ---
