@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import pgettext_lazy
 
+from ...plugins.models import PluginDataModel
 
-class AttachmentType(models.Model):
+
+class AttachmentType(PluginDataModel):
     ENABLED = 0
     LOCKED = 1
     DISABLED = 2
