@@ -17,6 +17,7 @@ from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
 from ...notifications.threads import ThreadNotifications
+from ...plugins.models import PluginDataModel
 from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
@@ -99,7 +100,7 @@ class UserManager(BaseUserManager):
         return self.get(slug=slugify(login))
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     ACTIVATION_NONE = 0
     ACTIVATION_USER = 1
     ACTIVATION_ADMIN = 2
@@ -277,6 +278,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         indexes = [
+            *PluginDataModel.Meta.indexes,
             models.Index(
                 name="misago_user_is_staff_part",
                 fields=["is_staff"],

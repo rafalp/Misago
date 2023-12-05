@@ -9,11 +9,12 @@ from django.utils import timezone
 from ...conf import settings
 from ...core.utils import parse_iso8601_string
 from ...markup import finalize_markup
+from ...plugins.models import PluginDataModel
 from ..checksums import is_post_valid, update_post_checksum
 from ..filtersearch import filter_search
 
 
-class Post(models.Model):
+class Post(PluginDataModel):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
     poster = models.ForeignKey(
@@ -78,6 +79,7 @@ class Post(models.Model):
 
     class Meta:
         indexes = [
+            *PluginDataModel.Meta.indexes,
             models.Index(
                 name="misago_post_has_open_repo_part",
                 fields=["has_open_reports"],

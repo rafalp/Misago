@@ -5,8 +5,10 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from ...plugins.models import PluginDataModel
 
-class Poll(models.Model):
+
+class Poll(PluginDataModel):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.OneToOneField("misago_threads.Thread", on_delete=models.CASCADE)
     poster = models.ForeignKey(

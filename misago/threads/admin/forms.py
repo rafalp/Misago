@@ -73,7 +73,15 @@ class FilterAttachmentsForm(forms.Form):
 class AttachmentTypeForm(forms.ModelForm):
     class Meta:
         model = AttachmentType
-        fields = "__all__"
+        fields = [
+            "name",
+            "extensions",
+            "mimetypes",
+            "size_limit",
+            "status",
+            "limit_uploads_to",
+            "limit_downloads_to",
+        ]
         labels = {
             "name": pgettext_lazy("admin attachment type form", "Type name"),
             "extensions": pgettext_lazy(

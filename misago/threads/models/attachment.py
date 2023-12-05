@@ -12,6 +12,7 @@ from PIL import Image
 
 from ...conf import settings
 from ...core.utils import slugify
+from ...plugins.models import PluginDataModel
 
 
 def upload_to(instance, filename):
@@ -33,7 +34,7 @@ def upload_to(instance, filename):
     )
 
 
-class Attachment(models.Model):
+class Attachment(PluginDataModel):
     secret = models.CharField(max_length=64)
     filetype = models.ForeignKey("AttachmentType", on_delete=models.CASCADE)
     post = models.ForeignKey("Post", blank=True, null=True, on_delete=models.SET_NULL)
