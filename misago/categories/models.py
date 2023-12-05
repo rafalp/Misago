@@ -8,6 +8,7 @@ from ..acl.cache import clear_acl_cache
 from ..acl.models import BaseRole
 from ..conf import settings
 from ..core.utils import slugify
+from ..plugins.models import PluginDataModel
 from ..threads.threadtypes import trees_map
 
 CACHE_NAME = "misago_categories_tree"
@@ -53,7 +54,7 @@ class CategoryManager(TreeManager):
         cache.delete(CACHE_NAME)
 
 
-class Category(MPTTModel):
+class Category(MPTTModel, PluginDataModel):
     parent = TreeForeignKey(
         "self", null=True, blank=True, related_name="children", on_delete=models.CASCADE
     )
@@ -100,6 +101,9 @@ class Category(MPTTModel):
     css_class = models.CharField(max_length=255, null=True, blank=True)
 
     objects = CategoryManager()
+
+    class Meta:
+        indexes = PluginDataModel.Meta.indexes
 
     def __str__(self):
         return str(self.thread_type.get_category_name(self))

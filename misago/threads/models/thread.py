@@ -6,9 +6,10 @@ from django.utils.translation import pgettext_lazy
 
 from ...conf import settings
 from ...core.utils import slugify
+from ...plugins.models import PluginDataModel
 
 
-class Thread(models.Model):
+class Thread(PluginDataModel):
     WEIGHT_DEFAULT = 0
     WEIGHT_PINNED = 1
     WEIGHT_GLOBAL = 2
@@ -108,6 +109,7 @@ class Thread(models.Model):
 
     class Meta:
         indexes = [
+            *PluginDataModel.Meta.indexes,
             models.Index(
                 name="misago_thread_pinned_glob_part",
                 fields=["weight"],
