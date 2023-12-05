@@ -1,6 +1,6 @@
 # Plugin guide
 
-Misago implements a plugin system that enables customization and extension of the core functionality of the software. This plugin system itself extends the existing Django applications mechanism.
+Misago implements a plugin system that enables customization and extension of the core functionality of the software.
 
 > **Plugins vs forking Misago**
 >
