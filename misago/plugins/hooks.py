@@ -17,7 +17,7 @@ class ActionHook(Generic[Action]):
     def prepend(self, action: Action):
         self.actions.insert(0, action)
 
-    def call(self, *args, **kwargs) -> List[Any]:
+    def __call__(self, *args, **kwargs) -> List[Any]:
         if not self.actions:
             return []
 
@@ -52,7 +52,7 @@ class FilterHook(Generic[Action, Filter]):
 
         return reduce(reduce_filter, self.filters, action)
 
-    def filter(self, action: Action, *args, **kwargs):
+    def __call__(self, action: Action, *args, **kwargs):
         if self.cache is None:
             self.cache = self.get_reduced_action(action)
 
