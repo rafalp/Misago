@@ -6,38 +6,55 @@ Filter = TypeVar("Filter")
 
 
 class ActionHook(Generic[Action]):
-    actions: List[Action]
+    __slots__ = ("actions_first", "actions_last", "cache")
+
+    actions_first: List[Action]
+    actions_last: List[Action]
+    cache: List[Action] | None
 
     def __init__(self):
-        self.actions = []
+        self.actions_first = []
+        self.actions_last = []
+        self.cache = None
 
     def append(self, action: Action):
-        self.actions.append(action)
+        self.actions_last.append(action)
+        self.invalidate_cache()
 
     def prepend(self, action: Action):
-        self.actions.insert(0, action)
+        self.actions_first.insert(0, action)
+        self.invalidate_cache()
+
+    def invalidate_cache(self):
+        self.cache = None
 
     def __call__(self, *args, **kwargs) -> List[Any]:
-        if not self.actions:
+        if self.cache is None:
+            self.cache = self.actions_first + self.actions_last
+        if not self.cache:
             return []
 
-        return [action(*args, **kwargs) for action in self.actions]
+        return [action(*args, **kwargs) for action in self.cache]
 
 
 class FilterHook(Generic[Action, Filter]):
+    __slots__ = ("filters_first", "filters_last", "cache")
+
+    filters_first: List[Filter]
+    filters_last: List[Filter]
     cache: Action | None
-    filters: List[Filter]
 
     def __init__(self):
+        self.filters_first = []
+        self.filters_last = []
         self.cache = None
-        self.filters = []
 
     def append(self, filter_: Filter):
-        self.filters.append(filter_)
+        self.filters_last.append(filter_)
         self.invalidate_cache()
 
     def prepend(self, filter_: Filter):
-        self.filters.insert(0, filter_)
+        self.filters_first.insert(0, filter_)
         self.invalidate_cache()
 
     def invalidate_cache(self):
@@ -50,7 +67,8 @@ class FilterHook(Generic[Action, Filter]):
 
             return cast(Action, reduced_filter)
 
-        return reduce(reduce_filter, self.filters, action)
+        filters = self.filters_first + self.filters_last
+        return reduce(reduce_filter, filters, action)
 
     def __call__(self, action: Action, *args, **kwargs):
         if self.cache is None:

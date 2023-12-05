@@ -1,4 +1,5 @@
 from django import template
+from django.utils.safestring import mark_safe
 
 from ..outlets import template_outlets
 
@@ -14,4 +15,4 @@ def pluginoutlet(context, name: str):
     for plugin_content in template_outlets[name](context):
         if plugin_content is not None:
             content += plugin_content
-    return content
+    return mark_safe(content)

@@ -16,6 +16,10 @@ def uppercase_action(base: str) -> str:
     return base.upper()
 
 
+def reverse_action(base: str) -> str:
+    return "".join(reversed(base))
+
+
 @pytest.fixture
 def hook():
     return MockActionHook()
@@ -37,6 +41,7 @@ def test_action_hook_calls_multiple_actions_and_returns_their_results(hook):
 
 
 def test_action_hook_action_can_be_prepended_before_other_actions(hook):
-    hook.append(lowercase_action)
     hook.prepend(uppercase_action)
-    assert hook("TeSt") == ["TEST", "test"]
+    hook.append(lowercase_action)
+    hook.prepend(reverse_action)
+    assert hook("TeSt") == ["tSeT", "TEST", "test"]
