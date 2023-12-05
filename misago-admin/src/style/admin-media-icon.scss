@@ -1,0 +1,19 @@
+// Admin media icon
+//
+// Used in content tables to represent an item
+
+.media-admin-icon {
+  @extend .d-flex;
+  @extend .align-items-center;
+  @extend .justify-content-center;
+  @extend .rounded;
+
+  width: $admin-media-icon-size;
+  height: $admin-media-icon-size;
+
+  font-size: $font-size-base;
+  line-height: $font-size-base;
+
+  color: $admin-media-icon-color;
+  background: $admin-media-icon-bg;
+}

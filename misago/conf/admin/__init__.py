@@ -1,7 +1,6 @@
 from django.urls import path
 from django.utils.translation import pgettext_lazy
 
-from .views import index
 from .views import (
     AnalyticsSettingsView,
     CaptchaSettingsView,
@@ -10,6 +9,7 @@ from .views import (
     OAuth2SettingsView,
     ThreadsSettingsView,
     UsersSettingsView,
+    index,
 )
 
 

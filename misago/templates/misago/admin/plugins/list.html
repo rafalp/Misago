@@ -1,0 +1,136 @@
+{% extends "misago/admin/layout.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Plugins" context "admin plugins" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+  <h1>
+    <a href="{{ active_section.link }}">
+      {{ active_section.name }}
+    </a>
+  </h1>
+</div>
+
+<div class="card card-admin-table mb-3">
+  <table class="table table-lg">
+    <tr>
+      <th style="width: 1px;">&nbsp;</th>
+      <th>{% trans "Plugin" context "admin plugins" %}</th>
+      <th style="width: 1px;">&nbsp;</th>
+      <th style="width: 130px;">{% trans "Version" context "admin plugins" %}</th>
+      <th style="width: 130px;">{% trans "License" context "admin plugins" %}</th>
+      <th style="width: 180px;">{% trans "Author" context "admin plugins" %}</th>
+      <th style="width: 1px;">&nbsp;</th>
+    </tr>
+    {% for item in plugins %}
+      <tr>
+        <td class="pr-0">
+          <div class="media-admin-icon" {% if item.color %}style="background: {{ item.color }}; color: #fff;"{% endif %}>
+            <span class="{{ item.icon|default:'fa fa-cube' }}"></span>
+          </div>
+        </td>
+        <td>
+          <div class="item-name">
+            {% if item.name %}
+              {{ item.name }}
+            {% else %}
+              <i title="{% trans 'This plugin has no name specified.' context 'admin plugins' %}">
+                {{ item.dirname.title }}
+              </i>
+            {% endif %}
+          </div>
+          {% if item.description %}
+            <div>
+              {{ item.description }}
+            </div>
+          {% endif %}
+          {% if item.manifest_error %}
+            <div class="text-danger">
+              <em>
+                {% blocktrans trimmed with error=item.manifest_error context "admin plugins" %}
+                  Invalid manifest: {{ error }}
+                {% endblocktrans %}
+              </em>
+            </div>
+          {% elif not item.has_manifest %}
+            <div class="text-muted">
+              <em>
+                {% trans "This plugin does not export any manifest from its misago_plugin.py file." context "admin plugins" %}
+              </em>
+            </div>
+          {% endif %}
+        </td>
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-sm dropdown-toggle" type="button" id="plugin-location-{{ item.package }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{% trans 'See plugin location' context 'admin plugins' %}">
+              <span class="far fa-folder text-muted"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="plugin-location-{{ item.package }}">
+              <div class="dropdown-item disabled">
+                <code>{{ item.dirname }}/{{ item.package }}</code>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="small">
+          {{ item.version|default:"" }}
+        </td>
+        <td class="small">
+          {{ item.license|default:"" }}
+        </td>
+        <td class="small">
+          {{ item.author|default:"" }}
+        </td>
+        <td>
+          {% if item.has_urls %}
+            <div class="dropdown">
+              <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="plugin-links-{{ item.package }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{% trans 'See plugin links' context 'admin plugins links' %}">
+                <span class="fa fa-link"></span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="plugin-links-{{ item.package }}">
+                {% if item.homepage %}
+                  <h6 class="dropdown-header">{% trans "Homepage:" context "admin plugins url" %}</h6>
+                  <a class="dropdown-item" href="{{ item.homepage.url }}" target="_blank">
+                    {{ item.homepage.netloc }}
+                  </a>
+                {% endif %}
+                {% if item.sponsor %}
+                  <h6 class="dropdown-header">{% trans "Sponsor:" context "admin plugins url" %}</h6>
+                  <a class="dropdown-item" href="{{ item.sponsor.url }}" target="_blank">
+                    {{ item.sponsor.netloc }}
+                  </a>
+                {% endif %}
+                {% if item.help %}
+                  <h6 class="dropdown-header">{% trans "Help:" context "admin plugins url" %}</h6>
+                  <a class="dropdown-item" href="{{ item.help.url }}" target="_blank">
+                    {{ item.help.netloc }}
+                  </a>
+                {% endif %}
+                {% if item.bugs %}
+                  <h6 class="dropdown-header">{% trans "Bug reports:" context "admin plugins url" %}</h6>
+                  <a class="dropdown-item" href="{{ item.bugs.url }}" target="_blank">
+                    {{ item.bugs.netloc }}
+                  </a>
+                {% endif %}
+                {% if item.repo %}
+                  <h6 class="dropdown-header">{% trans "Repository:" context "admin plugins url" %}</h6>
+                  <a class="dropdown-item" href="{{ item.repo.url }}" target="_blank">
+                    {{ item.repo.netloc }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr class="blankslate">
+        <td colspan="7">{% trans "No plugins are installed on this site." context "admin plugins" %}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div><!-- /.card-admin-table -->
+{% endblock content %}

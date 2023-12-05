@@ -1,3 +1,6 @@
+from typing import Any, Dict, Optional
+
+from django.http import HttpRequest
 from django.urls import reverse, NoReverseMatch
 from django.utils.translation import get_language
 from django.shortcuts import render as dj_render
@@ -20,7 +23,12 @@ def get_protected_namespace(request):
             pass
 
 
-def render(request, template, context=None, error_page=False):
+def render(
+    request: HttpRequest,
+    template: str,
+    context: Optional[Dict[str, Any]] = None,
+    error_page: bool = False,
+):
     context = context or {}
 
     navigation = site.visible_branches(request)
