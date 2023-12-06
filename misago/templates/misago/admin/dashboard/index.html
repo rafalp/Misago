@@ -1,5 +1,5 @@
 {% extends "misago/admin/layout.html" %}
-{% load i18n misago_capture %}
+{% load i18n misago_plugins %}
 
 
 {% block title %}{% trans "Dashboard" context "admin dashboard" %} | {{ block.super }}{% endblock %}
@@ -12,9 +12,13 @@
   </div>
 </div>
 
+{% pluginoutlet ADMIN_DASHBOARD_START %}
 {% include "misago/admin/dashboard/checks.html" %}
+{% pluginoutlet ADMIN_DASHBOARD_AFTER_CHECKS %}
 {% include "misago/admin/dashboard/analytics.html" %}
+{% pluginoutlet ADMIN_DASHBOARD_AFTER_ANALYTICS %}
 {% include "misago/admin/dashboard/totals.html" %}
+{% pluginoutlet ADMIN_DASHBOARD_END %}
 {% endblock content %}
 
 

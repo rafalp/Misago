@@ -38,6 +38,15 @@ def test_filter_hook_without_filters_just_calls_action(hook):
     assert hook(action) == [ACTION]
 
 
+def test_filter_hook_without_actions_is_falsy(hook):
+    assert not hook
+
+
+def test_filter_hook_with_actions_is_truthy(hook):
+    hook.append(first_filter)
+    assert hook
+
+
 def test_filter_hook_calls_filter_before_action(hook):
     hook.append(first_filter)
     assert hook(action) == [ACTION, FIRST_FILTER]

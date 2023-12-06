@@ -17,6 +17,9 @@ class ActionHook(Generic[Action]):
         self.actions_last = []
         self.cache = None
 
+    def __bool__(self) -> bool:
+        return bool(self.actions_first or self.actions_last)
+
     def append(self, action: Action):
         self.actions_last.append(action)
         self.invalidate_cache()
@@ -48,6 +51,9 @@ class FilterHook(Generic[Action, Filter]):
         self.filters_first = []
         self.filters_last = []
         self.cache = None
+
+    def __bool__(self) -> bool:
+        return bool(self.filters_first or self.filters_last)
 
     def append(self, filter_: Filter):
         self.filters_last.append(filter_)
