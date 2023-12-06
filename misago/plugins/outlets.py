@@ -1,6 +1,9 @@
 from enum import StrEnum
 from typing import Any, Dict, List, Protocol
 
+from django.template import Context
+from django.utils.safestring import SafeString
+
 from .hooks import ActionHook
 
 
@@ -11,12 +14,12 @@ class PluginOutletName(StrEnum):
 
 
 class PluginOutletHookAction:
-    def __call__(self, context: dict) -> str | None:
+    def __call__(self, context: dict | Context) -> str | SafeString | None:
         pass
 
 
 class PluginOutletHook(ActionHook[PluginOutletHookAction]):
-    def __call__(self, context: dict) -> List[str | None]:
+    def __call__(self, context: dict | Context) -> List[str | SafeString | None]:
         return super().__call__(context)
 
 

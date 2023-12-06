@@ -29,6 +29,15 @@ def test_action_hook_without_actions_returns_empty_list(hook):
     assert hook("TeSt") == []
 
 
+def test_action_hook_without_actions_is_falsy(hook):
+    assert not hook
+
+
+def test_action_hook_with_actions_is_truthy(hook):
+    hook.append(lowercase_action)
+    assert hook
+
+
 def test_action_hook_calls_action_and_returns_its_result(hook):
     hook.append(lowercase_action)
     assert hook("TeSt") == ["test"]
