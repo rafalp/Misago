@@ -9,7 +9,6 @@ from ..outlets import template_outlets
 register = template.Library()
 
 PLUGINOUTLET_SYNTAX_ERROR = 'pluginoutlet tag syntax is "pluginoutlet OUTLET_NAME"'
-HASPLUGINS_SYNTAX_ERROR = 'hasplugins tag syntax is "hasplugins OUTLET_NAME"'
 
 
 @register.tag()
@@ -42,6 +41,9 @@ class PluginOutletNode(template.Node):
                 print(plugin_html)
                 outlet_html += conditional_escape(plugin_html)
         return mark_safe(outlet_html)
+
+
+HASPLUGINS_SYNTAX_ERROR = 'hasplugins tag syntax is "hasplugins OUTLET_NAME"'
 
 
 @register.tag()
