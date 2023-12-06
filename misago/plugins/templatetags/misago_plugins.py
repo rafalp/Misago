@@ -9,7 +9,7 @@ from ..outlets import template_outlets
 register = template.Library()
 
 PLUGINOUTLET_SYNTAX_ERROR = 'pluginoutlet tag syntax is "pluginoutlet OUTLET_NAME"'
-IFPLUGINS_SYNTAX_ERROR = 'ifplugins tag syntax is "ifplugins OUTLET_NAME"'
+HASPLUGINS_SYNTAX_ERROR = 'hasplugins tag syntax is "hasplugins OUTLET_NAME"'
 
 
 @register.tag()
@@ -45,33 +45,33 @@ class PluginOutletNode(template.Node):
 
 
 @register.tag()
-def ifplugins(parser, token):
+def hasplugins(parser, token):
     split_contents = token.split_contents()
     if len(split_contents) != 2:
-        raise template.TemplateSyntaxError(IFPLUGINS_SYNTAX_ERROR)
+        raise template.TemplateSyntaxError(HASPLUGINS_SYNTAX_ERROR)
 
     outlet_name = split_contents[1].strip()
     if not outlet_name:
-        raise template.TemplateSyntaxError(IFPLUGINS_SYNTAX_ERROR)
+        raise template.TemplateSyntaxError(HASPLUGINS_SYNTAX_ERROR)
 
-    nodelists: List[template.NodeList] = [parser.parse(("else", "endifplugins"))]
+    nodelists: List[template.NodeList] = [parser.parse(("else", "endhasplugins"))]
     token = parser.next_token()
 
     if token.contents == "else":
-        nodelists.append(parser.parse(("endifplugins",)))
+        nodelists.append(parser.parse(("endhasplugins",)))
         token = parser.next_token()
 
-    if token.contents != "endifplugins":
+    if token.contents != "endhasplugins":
         raise template.TemplateSyntaxError(
             'Malformed template tag at line {}: "{}"'.format(
                 token.lineno, token.contents
             )
         )
 
-    return IfPluginsNode(outlet_name, nodelists)
+    return HasPluginsNode(outlet_name, nodelists)
 
 
-class IfPluginsNode(template.Node):
+class HasPluginsNode(template.Node):
     outlet_name: str
     nodelist: template.NodeList
     nodelist_else: template.NodeList | None

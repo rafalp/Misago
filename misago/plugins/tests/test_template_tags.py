@@ -88,53 +88,53 @@ def test_outlet_renders_plugins_with_context(snapshot):
     assert snapshot == html
 
 
-def render_ifplugins_template(context: dict | None = None):
+def render_hasplugins_template(context: dict | None = None):
     template = Template(
         """
         {% load misago_plugins %}
-        <div>{% ifplugins TEST %}plugins{% endifplugins %}</div>
+        <div>{% hasplugins TEST %}plugins{% endhasplugins %}</div>
         """
     )
 
     return template.render(Context(context or {})).strip()
 
 
-def test_ifplugins_tag_renders_nothing_if_no_plugins_exist(snapshot):
+def test_hasplugins_tag_renders_nothing_if_no_plugins_exist(snapshot):
     with patch_outlets():
-        html = render_ifplugins_template()
+        html = render_hasplugins_template()
 
     assert snapshot == html
 
 
-def test_ifplugins_tag_renders_value_if_plugins_exist(snapshot):
+def test_hasplugins_tag_renders_value_if_plugins_exist(snapshot):
     with patch_outlets():
         append_template_plugin(PluginOutletName.TEST, strong_action)
-        html = render_ifplugins_template()
+        html = render_hasplugins_template()
 
     assert snapshot == html
 
 
-def render_ifpluginselse_template(context: dict | None = None):
+def render_haspluginselse_template(context: dict | None = None):
     template = Template(
         """
         {% load misago_plugins %}
-        <div>{% ifplugins TEST %}plugins{% else %}noplugins{% endifplugins %}</div>
+        <div>{% hasplugins TEST %}plugins{% else %}noplugins{% endhasplugins %}</div>
         """
     )
 
     return template.render(Context(context or {})).strip()
 
 
-def test_ifplugins_else_tag_renders_else_if_no_plugins_exist(snapshot):
+def test_hasplugins_else_tag_renders_else_if_no_plugins_exist(snapshot):
     with patch_outlets():
-        html = render_ifpluginselse_template()
+        html = render_haspluginselse_template()
 
     assert snapshot == html
 
 
-def test_ifplugins_else_tag_renders_value_if_plugins_exist(snapshot):
+def test_hasplugins_else_tag_renders_value_if_plugins_exist(snapshot):
     with patch_outlets():
         append_template_plugin(PluginOutletName.TEST, strong_action)
-        html = render_ifpluginselse_template()
+        html = render_haspluginselse_template()
 
     assert snapshot == html

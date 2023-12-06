@@ -2,16 +2,16 @@
 # name: test_empty_outlet_renders_nothing
   '<div></div>'
 # ---
-# name: test_ifplugins_else_tag_renders_else_if_no_plugins_exist
+# name: test_hasplugins_else_tag_renders_else_if_no_plugins_exist
   '<div>noplugins</div>'
 # ---
-# name: test_ifplugins_else_tag_renders_value_if_plugins_exist
+# name: test_hasplugins_else_tag_renders_value_if_plugins_exist
   '<div>plugins</div>'
 # ---
-# name: test_ifplugins_tag_renders_nothing_if_no_plugins_exist
+# name: test_hasplugins_tag_renders_nothing_if_no_plugins_exist
   '<div></div>'
 # ---
-# name: test_ifplugins_tag_renders_value_if_plugins_exist
+# name: test_hasplugins_tag_renders_value_if_plugins_exist
   '<div>plugins</div>'
 # ---
 # name: test_outlet_renders_appended_plugin
