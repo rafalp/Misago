@@ -205,6 +205,12 @@ bootstrap_plugins() {
                 echo "Skipping plugin bootstrap for: $plugin_name"
             fi
         done
+
+        pip_install="$MISAGO_PLUGINS/pip-install.txt"
+        if [ -f $pip_install ]; then
+            echo "Installing: $pip_install"
+            pip install -r $pip_install
+        fi
     else
         echo "Skipping plugin bootstrap because plugins directory doesn't exist."
     fi
