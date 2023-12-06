@@ -11,6 +11,10 @@ class PluginOutletName(StrEnum):
     """Enum with standard plugin outlets defined by Misago"""
 
     TEST = "TEST"
+    ADMIN_DASHBOARD_START = "ADMIN_DASHBOARD_START"
+    ADMIN_DASHBOARD_AFTER_CHECKS = "ADMIN_DASHBOARD_AFTER_CHECKS"
+    ADMIN_DASHBOARD_AFTER_ANALYTICS = "ADMIN_DASHBOARD_AFTER_ANALYTICS"
+    ADMIN_DASHBOARD_END = "ADMIN_DASHBOARD_END"
 
 
 class PluginOutletHookAction:
