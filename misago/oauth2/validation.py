@@ -5,13 +5,13 @@ from django.forms import ValidationError
 from django.utils.crypto import get_random_string
 from unidecode import unidecode
 
-from ..hooks import oauth2_validators, oauth2_user_data_filters
 from ..users.validators import (
     dj_validate_email,
     validate_username_content,
     validate_username_length,
 )
 from .exceptions import OAuth2UserDataValidationError
+from .hooks import filter_user_data_hook, validate_user_data_hook
 
 User = get_user_model()
 
@@ -22,37 +22,37 @@ class UsernameSettings:
 
 
 def validate_user_data(request, user, user_data, response_json):
-    filtered_data = filter_user_data(request, user, user_data)
-
     try:
-        validate_username_content(filtered_data["name"])
-        validate_username_length(UsernameSettings, filtered_data["name"])
-        dj_validate_email(filtered_data["email"])
-
-        for plugin_oauth2_validator in oauth2_validators:
-            plugin_oauth2_validator(request, user, user_data, response_json)
+        return validate_user_data_hook(
+            validate_user_data_action,
+            request,
+            user,
+            user_data,
+            response_json,
+        )
     except ValidationError as exc:
         raise OAuth2UserDataValidationError(error_list=[str(exc.message)])
 
+
+def validate_user_data_action(request, user, user_data, response_json):
+    filtered_data = filter_user_data(request, user, user_data)
+    validate_username_content(filtered_data["name"])
+    validate_username_length(UsernameSettings, filtered_data["name"])
+    dj_validate_email(filtered_data["email"])
     return filtered_data
 
 
 def filter_user_data(request, user, user_data):
-    filtered_data = {
+    return filter_user_data_hook(filter_user_data_action, request, user, user_data)
+
+
+def filter_user_data_action(request, user, user_data):
+    return {
         "id": user_data["id"],
-        "name": str(user_data["name"] or "").strip(),
+        "name": filter_name(user, str(user_data["name"] or "").strip()),
         "email": str(user_data["email"] or "").strip(),
         "avatar": filter_user_avatar(user_data["avatar"]),
     }
-
-    if oauth2_user_data_filters:
-        return filter_user_data_with_filters(
-            request, user, filtered_data, oauth2_user_data_filters
-        )
-    else:
-        filtered_data["name"] = filter_name(user, filtered_data["name"])
-
-    return filtered_data
 
 
 def filter_user_avatar(user_avatar):

@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -92,29 +92,20 @@ def test_user_is_created_with_admin_activation_from_valid_data(db, dynamic_setti
     assert user.requires_activation == User.ACTIVATION_ADMIN
 
 
-def user_noop_filter(*args):
-    pass
-
-
 def test_user_name_conflict_during_creation_from_valid_data_is_handled(
-    user, dynamic_settings
+    user, dynamic_settings, disable_user_data_filters
 ):
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
-        # Custom filters disable build in filters
-        with patch(
-            "misago.oauth2.validation.oauth2_user_data_filters",
-            [user_noop_filter],
-        ):
-            get_user_from_data(
-                Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
-                {
-                    "id": "1234",
-                    "name": user.username,
-                    "email": "test@example.com",
-                    "avatar": None,
-                },
-                {},
-            )
+        get_user_from_data(
+            Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
+            {
+                "id": "1234",
+                "name": user.username,
+                "email": "test@example.com",
+                "avatar": None,
+            },
+            {},
+        )
 
     assert excinfo.value.error_list == [
         "Your username returned by the provider is not available for use on this site."
