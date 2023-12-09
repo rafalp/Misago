@@ -1,0 +1,2 @@
+# Install Misago PyPI plugin
+misago-pypi-plugin==0.2
