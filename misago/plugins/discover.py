@@ -53,17 +53,17 @@ def discover_plugins_in_directory(plugins_path: Path) -> List[str]:
 
 
 def discover_plugins_in_pip_install(pip_install_path: Path) -> List[str]:
-    pip_install_lines = read_lines_from_pip_install(pip_install_path)
+    pip_install_lines = read_pip_install_file(pip_install_path)
     return validate_modules_from_pip_install(pip_install_lines)
 
 
 PIP_LINE_RE = re.compile("^[a-z0-9-_]+")
 
 
-def read_lines_from_pip_install(pip_install_path: Path) -> List[str]:
+def read_pip_install_file(pip_install_path: Path) -> List[str]:
     clean_lines: List[str] = []
     with open(pip_install_path, "r") as fp:
-        file_lines: List[str] = fp.read().splitlines()
+        file_lines: List[str] = fp.readlines()
         for file_line in file_lines:
             clean_line = file_line.strip()
             if clean_line.startswith("#"):

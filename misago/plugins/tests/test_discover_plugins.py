@@ -142,3 +142,49 @@ def test_discover_plugins_skips_plugins_without_init(sys_mock):
         plugins = discover_plugins(plugins_dir)
         assert plugins == ["mock_plugin"]
         assert sys_mock.path == [f"{plugins_dir}/mock-plugin"]
+
+
+def create_pip_install(plugins_dir: str, contents: list[str]):
+    with open(Path(plugins_dir) / "pip-install.txt", "w") as fp:
+        fp.write("\n".join(contents))
+
+
+@pytest.mark.xfail(reason="requires misago-pypi-plugin installed to pass")
+def test_discover_plugins_reads_plugins_from_pip_install_if_it_exists(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        create_pip_install(plugins_dir, ["misago-pypi-plugin"])
+
+        plugins = discover_plugins(plugins_dir)
+        assert plugins == ["misago_pypi_plugin"]
+        assert sys_mock.path == []
+
+
+@pytest.mark.xfail(reason="requires misago-pypi-plugin installed to pass")
+def test_discover_plugins_skips_pip_install_entries_that_arent_installed(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        create_pip_install(plugins_dir, ["misago-pypi-plugin", "misago-other-plugin"])
+
+        plugins = discover_plugins(plugins_dir)
+        assert plugins == ["misago_pypi_plugin"]
+        assert sys_mock.path == []
+
+
+@pytest.mark.xfail(reason="requires misago-pypi-plugin installed to pass")
+def test_discover_plugins_skips_pip_install_entries_that_arent_misago_plugins(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        create_pip_install(plugins_dir, ["misago-pypi-plugin", "django"])
+
+        plugins = discover_plugins(plugins_dir)
+        assert plugins == ["misago_pypi_plugin"]
+        assert sys_mock.path == []
+
+
+@pytest.mark.xfail(reason="requires misago-pypi-plugin installed to pass")
+def test_discover_plugins_skips_pip_install_if_its_directory(sys_mock):
+    with TemporaryDirectory() as plugins_dir:
+        pip_install_path = Path(plugins_dir) / "pip-install.txt"
+        pip_install_path.mkdir()
+
+        plugins = discover_plugins(plugins_dir)
+        assert plugins == []
+        assert sys_mock.path == []

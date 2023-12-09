@@ -38,7 +38,6 @@ class PluginOutletNode(template.Node):
         outlet_html = ""
         for plugin_html in outlet(context):
             if plugin_html is not None:
-                print(plugin_html)
                 outlet_html += conditional_escape(plugin_html)
         return mark_safe(outlet_html)
 
