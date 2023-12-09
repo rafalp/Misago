@@ -23,6 +23,8 @@ class PluginOutletHookAction:
 
 
 class PluginOutletHook(ActionHook[PluginOutletHookAction]):
+    __slots__ = ActionHook.__slots__
+
     def __call__(self, context: dict | Context) -> List[str | SafeString | None]:
         return super().__call__(context)
 
