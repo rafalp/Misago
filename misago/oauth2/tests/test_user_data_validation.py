@@ -48,7 +48,9 @@ def test_existing_user_valid_data_is_validated(user, dynamic_settings):
     }
 
 
-def test_error_was_raised_for_user_data_with_without_name(db, dynamic_settings):
+def test_error_was_raised_for_user_data_with_without_name(
+    db, dynamic_settings, disable_user_data_filters
+):
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
         validate_user_data(
             Mock(settings=dynamic_settings),
@@ -70,7 +72,9 @@ def test_error_was_raised_for_user_data_with_without_name(db, dynamic_settings):
     ]
 
 
-def test_error_was_raised_for_user_data_with_invalid_name(db, dynamic_settings):
+def test_error_was_raised_for_user_data_with_invalid_name(
+    db, dynamic_settings, disable_user_data_filters
+):
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
         validate_user_data(
             Mock(settings=dynamic_settings),

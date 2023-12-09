@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -72,31 +72,22 @@ def test_user_is_not_updated_with_unchanged_valid_data(user, dynamic_settings):
     assert user_by_email.id == user.id
 
 
-def user_noop_filter(*args):
-    pass
-
-
 def test_user_name_conflict_during_update_with_valid_data_is_handled(
-    user, other_user, dynamic_settings
+    user, other_user, dynamic_settings, disable_user_data_filters
 ):
     Subject.objects.create(sub="1234", user=user)
 
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
-        # Custom filters disable build in filters
-        with patch(
-            "misago.oauth2.validation.oauth2_user_data_filters",
-            [user_noop_filter],
-        ):
-            get_user_from_data(
-                Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
-                {
-                    "id": "1234",
-                    "name": other_user.username,
-                    "email": "test@example.com",
-                    "avatar": None,
-                },
-                {},
-            )
+        get_user_from_data(
+            Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
+            {
+                "id": "1234",
+                "name": other_user.username,
+                "email": "test@example.com",
+                "avatar": None,
+            },
+            {},
+        )
 
     assert excinfo.value.error_list == [
         "Your username returned by the provider is not available "
