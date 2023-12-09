@@ -1,3 +1,8 @@
+"""Filter user data from the OAuth 2 server.
+
+This hook wraps standard logic used by Misago to filter a `dic` containing user data retrieved from the OAuth 2 server.
+"""
+
 from typing import Optional, Protocol
 
 from django.http import HttpRequest

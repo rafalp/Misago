@@ -1,8 +1,17 @@
-# `filter_user_data_hook` hook
+# `filter_user_data_hook`: Filter user data from the OAuth 2 server.
+
+This hook wraps standard logic used by Misago to filter a `dic` containing user data retrieved from the OAuth 2 server.
+
+`filter_user_data_hook` is a **filter** hook.
 
 This hook can be imported from `misago.oauth2.hooks`:
 
 ```python
-# In your plugin's app.py...
+# exaple_plugin/register_hooks.py
 from misago.oauth2.hooks import filter_user_data_hook
+
+from .override_filter_user_data_hook import filter_user_data_hook
 ```
+
+
+# Filter# Action
