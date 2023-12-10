@@ -47,3 +47,21 @@ def test_none_is_returned_from_nested_objects():
         )
         is None
     )
+
+
+def test_json_value_returned_from_nested_objects_is_str():
+    assert (
+        get_value_from_json(
+            "val.child.val",
+            {
+                "val2": "nope",
+                "val": {
+                    "child": {
+                        "val2": "nope",
+                        "val": 21,
+                    },
+                },
+            },
+        )
+        == "21"
+    )

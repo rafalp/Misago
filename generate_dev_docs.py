@@ -2,7 +2,7 @@
 import ast
 from dataclasses import dataclass
 from pathlib import Path
-from textwrap import indent
+from textwrap import dedent, indent
 
 HOOKS_MODULES = ("misago.oauth2.hooks",)
 
@@ -57,7 +57,6 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
 def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.Module):
     hook_filename = f"{slugify_name(hook_name)}.md"
 
-    module_docstring = None
     module_classes = {}
     for item in hook_module.body:
         if isinstance(item, ast.ClassDef):
@@ -90,19 +89,21 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             elif class_name.endswith("HookFilter"):
                 hook_filter_ast = class_ast
 
+    hook_docstring: HookDocstring | None = None
+    hook_ast_docstring = get_class_docstring(hook_ast)
+    if hook_ast_docstring:
+        hook_docstring = parse_hook_docstring(hook_ast_docstring)
+
     with open(PLUGINS_HOOKS_PATH / hook_filename, "w") as fp:
         fp.write(f"# `{hook_name}`")
+        fp.write("\n\n")
 
-        if module_docstring and module_docstring.description:
-            fp.write("\n\n")
-            fp.write(module_docstring.description)
-
-        if hook_type == "FILTER":
-            fp.write("\n\n")
-            fp.write(f"`{hook_name}` is a **filter** hook.")
-        if hook_type == "ACTION":
-            fp.write("\n\n")
+        if hook_docstring and hook_docstring.description:
+            fp.write(hook_docstring.description)
+        elif hook_type == "ACTION":
             fp.write(f"`{hook_name}` is an **action** hook.")
+        elif hook_type == "FILTER":
+            fp.write(f"`{hook_name}` is a **filter** hook.")
 
         fp.write("\n\n\n")
         fp.write("## Location")
@@ -116,7 +117,7 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         fp.write("```")
 
         if hook_type == "ACTION":
-            pass
+            raise NotImplementedError()
         if hook_type == "FILTER":
             fp.write("\n\n\n")
             fp.write("## Filter")
@@ -143,7 +144,7 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 fp.write("```python")
                 fp.write("\n")
                 fp.write(
-                    f"def custom_{hook_cropped}_filter({hook_filter_args}) -> {hook_filter_returns}:"
+                    f"def custom_{hook_cropped}_filter({hook_filter_args}){hook_filter_returns}:"
                 )
                 fp.write("\n")
                 fp.write("    ...")
@@ -153,7 +154,7 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 hook_filter_docstring = get_class_docstring(hook_filter_ast)
                 if hook_filter_docstring:
                     fp.write("\n\n")
-                    fp.write(hook_filter_docstring)
+                    fp.write(indent_docstring_headers(hook_filter_docstring, level=2))
             else:
                 fp.write("_This section is empty._")
 
@@ -180,7 +181,7 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 fp.write("```python")
                 fp.write("\n")
                 fp.write(
-                    f"def {hook_cropped}_action({hook_action_args}) -> {hook_action_returns}:"
+                    f"def {hook_cropped}_action({hook_action_args}){hook_action_returns}:"
                 )
                 fp.write("\n")
                 fp.write("    ...")
@@ -190,13 +191,13 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 hook_action_docstring = get_class_docstring(hook_action_ast)
                 if hook_action_docstring:
                     fp.write("\n\n")
-                    fp.write(hook_action_docstring)
+                    fp.write(indent_docstring_headers(hook_action_docstring, level=2))
 
             else:
                 fp.write("_This section is empty._")
 
-        if module_docstring and module_docstring.examples:
-            for example_title, example_text in module_docstring.examples.items():
+        if hook_docstring and hook_docstring.examples:
+            for example_title, example_text in hook_docstring.examples.items():
                 fp.write("\n\n\n")
                 fp.write(f"## {example_title}")
                 fp.write("\n\n")
@@ -263,15 +264,17 @@ def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | No
             continue
 
         item_args = ast.unparse(item.args)
-        item_returns = ast.unparse(item.returns)
-
         if item_args.startswith("self, "):
             item_args = item_args[6:]
-
         if len(item_args) > 70:
             item_args = "\n" + indent(item_args.replace(", ", ",\n"), "    ") + ",\n"
         elif len(item_args) > 50:
             item_args = f"\n    {item_args}\n"
+
+        if item.returns:
+            item_returns = " -> " + ast.unparse(item.returns)
+        else:
+            item_returns = ""
 
         return item_args, item_returns
 
@@ -285,7 +288,7 @@ def get_class_docstring(class_def: ast.ClassDef) -> str | None:
             and isinstance(item.value, ast.Constant)
             and isinstance(item.value.value, str)
         ):
-            return item.value.value.strip()
+            return dedent(item.value.value).strip()
 
     return None
 
@@ -312,12 +315,36 @@ def split_docstring(docstring: str) -> list[str]:
             else:
                 block += line
 
-        block += "\n"
+        if in_code or not line.endswith(" "):
+            block += "\n"
 
     if block:
         blocks.append(block)
 
     return blocks
+
+
+def indent_docstring_headers(docstring: str, level: int = 1) -> list[str]:
+    in_code = False
+    prefix = "#" * level
+
+    new_docstring = ""
+    for line in docstring.splitlines():
+        if in_code:
+            if line == "```":
+                in_code = False
+            new_docstring += line
+        else:
+            if line.startswith("```"):
+                in_code = True
+            if not in_code and line.startswith("#"):
+                new_docstring += prefix
+            new_docstring += line
+
+        if in_code or not line.endswith(" "):
+            new_docstring += "\n"
+
+    return new_docstring.strip()
 
 
 def get_all_modules(file_path: str) -> dict[str, ast.Module]:

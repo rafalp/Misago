@@ -171,4 +171,4 @@ def get_value_from_json(path, json):
         if not data:
             return None
 
-    return data
+    return str(data).strip()
