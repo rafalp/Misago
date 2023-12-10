@@ -131,7 +131,7 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             for example_title, example_text in module_docstring.examples.items():
                 fp.write("\n\n\n")
                 fp.write(f"## {example_title}")
-                fp.write("\n\n\n")
+                fp.write("\n\n")
                 fp.write(example_text)
 
 
@@ -171,31 +171,51 @@ class HookDocstring:
 
 
 def parse_hook_docstring(docstring: str) -> HookDocstring:
-    description_lines: list[str] = []
+    description: str | None = None
     examples: dict[str, str] = {}
-    example: tuple[str, list[str]] | None = None
-    for line in docstring.strip().splitlines():
-        line_clean = line.strip()
-        if line_clean:
-            if example:
-                example[1].append(line_clean)
-            else:
-                if line_clean.startswith("#"):
-                    line_clean = line_clean.lstrip("# ")
-                    if line_clean.lower().startswith("Example"):
-                        if example:
-                            examples[example[0]] = "\n\n".join(example[1])
-                        example = (line_clean, [])
-                else:
-                    description_lines.append(line_clean)
 
-    if example:
-        examples[example[0]] = "\n\n".join(example[1])
-
-    if description_lines:
-        description = "\n\n".join(description_lines)
+    for block in split_docstring(docstring):
+        if (
+            block[:5].strip().startswith("# ")
+            and block.lstrip("# ").lower().startswith("example")
+        ):
+            example_name = block[:block.index("\n")].strip("# ")
+            example_block = block[block.index("\n"):].strip()
+            examples[example_name] = example_block
+        elif not block[:5].strip().startswith("# "):
+            description = block
 
     return HookDocstring(description=description, examples=examples or None)
+
+
+def split_docstring(docstring: str) -> list[str]:
+    blocks: list[str] = []
+    block: str = ""
+    in_code = False
+    for line in docstring.strip().splitlines():
+        if in_code:
+            if line == "```":
+                in_code = False
+            block += line
+        else:
+            if line.startswith("```"):
+                in_code = True
+                block += line
+
+            elif line.startswith("# "):
+                if block:
+                    blocks.append(block.strip())
+                block = line
+
+            else:
+                block += line
+
+        block += "\n"
+
+    if block:
+        blocks.append(block)
+
+    return blocks
 
 
 def get_all_modules(file_path: str) -> dict[str, ast.Module]:
