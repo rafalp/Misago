@@ -91,16 +91,11 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 hook_filter_ast = class_ast
 
     with open(PLUGINS_HOOKS_PATH / hook_filename, "w") as fp:
-        fp.write(f"# `{hook_name}` hook")
+        fp.write(f"# `{hook_name}`")
 
-        if module_docstring:
-            if module_docstring.summary:
-                fp.write("\n\n")
-                fp.write(f"> {module_docstring.summary}")
-
-            if module_docstring.description:
-                fp.write("\n\n")
-                fp.write(module_docstring.description)
+        if module_docstring and module_docstring.description:
+            fp.write("\n\n")
+            fp.write(module_docstring.description)
 
         if hook_type == "FILTER":
             fp.write("\n\n")
@@ -109,6 +104,8 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             fp.write("\n\n")
             fp.write(f"`{hook_name}` is an **action** hook.")
 
+        fp.write("\n\n\n")
+        fp.write("## Location")
         fp.write("\n\n")
         fp.write(f"This hook can be imported from `{import_from}`:")
         fp.write("\n\n")
@@ -129,6 +126,13 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         if hook_action_ast:
             fp.write("\n\n\n")
             fp.write("## Action")
+        
+        if module_docstring and module_docstring.examples:
+            for example_title, example_text in module_docstring.examples.items():
+                fp.write("\n\n\n")
+                fp.write(f"## {example_title}")
+                fp.write("\n\n\n")
+                fp.write(example_text)
 
 
 def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
@@ -162,29 +166,36 @@ def is_class_protocol(class_def: ast.ClassDef) -> bool:
 
 @dataclass
 class HookDocstring:
-    summary: str | None
     description: str | None
+    examples: dict[str, str] | None
 
 
 def parse_hook_docstring(docstring: str) -> HookDocstring:
-    if docstring.startswith("\n"):
-        title = None
-    else:
-        summary = docstring[: docstring.index("\n")].strip()
-        docstring = docstring[docstring.index("\n") :].strip()
-
     description_lines: list[str] = []
-    for line in docstring.splitlines():
+    examples: dict[str, str] = {}
+    example: tuple[str, list[str]] | None = None
+    for line in docstring.strip().splitlines():
         line_clean = line.strip()
         if line_clean:
-            if line_clean.startswith("#"):
-                break
-            description_lines.append(line_clean)
+            if example:
+                example[1].append(line_clean)
+            else:
+                if line_clean.startswith("#"):
+                    line_clean = line_clean.lstrip("# ")
+                    if line_clean.lower().startswith("Example"):
+                        if example:
+                            examples[example[0]] = "\n\n".join(example[1])
+                        example = (line_clean, [])
+                else:
+                    description_lines.append(line_clean)
+
+    if example:
+        examples[example[0]] = "\n\n".join(example[1])
 
     if description_lines:
         description = "\n\n".join(description_lines)
 
-    return HookDocstring(summary=summary, description=description)
+    return HookDocstring(description=description, examples=examples or None)
 
 
 def get_all_modules(file_path: str) -> dict[str, ast.Module]:

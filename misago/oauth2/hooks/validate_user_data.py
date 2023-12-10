@@ -41,11 +41,9 @@ class ValidateUserDataHook(
         user: Optional[User],
         user_data: dict,
         response_json: dict,
-        *args,
-        **kwargs,
     ) -> dict:
         return super().__call__(
-            action, request, user, user_data, response_json, *args, **kwargs
+            action, request, user, user_data, response_json
         )
 
 
