@@ -16,7 +16,7 @@ from misago.oauth2.hooks import filter_user_data_hook
 
 ## Filter
 
-Filter functions implemented by plugins should have the following signature:
+Filter function implemented by a plugin must have the following signature:
 
 ```python
 def custom_user_data_filter(
@@ -34,9 +34,13 @@ def custom_user_data_filter(
 Action callable passed as filter's `action` argument has the following signature:
 
 ```python
-def user_data_action():
+def filter_user_data_action(
+    request: HttpRequest, user: Optional[User], user_data: dict
+) -> dict:
     ...
 ```
+
+Misago's standard function used to filter the user's data, or a next filter in line.
 
 
 ## Example

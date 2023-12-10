@@ -42,9 +42,7 @@ class ValidateUserDataHook(
         user_data: dict,
         response_json: dict,
     ) -> dict:
-        return super().__call__(
-            action, request, user, user_data, response_json
-        )
+        return super().__call__(action, request, user, user_data, response_json)
 
 
 validate_user_data_hook = ValidateUserDataHook()

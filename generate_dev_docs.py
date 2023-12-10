@@ -129,22 +129,31 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 if hook_cropped.endswith("_hook"):
                     hook_cropped = hook_cropped[:-5]
 
-                hook_filter_signature = get_protocol_call_signature(hook_filter_ast)
+                hook_filter_signature = get_callable_class_signature(hook_filter_ast)
                 if hook_filter_signature:
                     hook_filter_args, hook_filter_returns = hook_filter_signature
                 else:
                     hook_filter_args = ""
-                    hook_filter_returns = "Unkown"
+                    hook_filter_returns = "Unknown"
 
-                fp.write("Filter functions implemented by plugins should have the following signature:")
+                fp.write(
+                    "Filter function implemented by a plugin must have the following signature:"
+                )
                 fp.write("\n\n")
                 fp.write("```python")
                 fp.write("\n")
-                fp.write(f"def custom_{hook_cropped}_filter({hook_filter_args}) -> {hook_filter_returns}:")
+                fp.write(
+                    f"def custom_{hook_cropped}_filter({hook_filter_args}) -> {hook_filter_returns}:"
+                )
                 fp.write("\n")
                 fp.write("    ...")
                 fp.write("\n")
                 fp.write("```")
+
+                hook_filter_docstring = get_class_docstring(hook_filter_ast)
+                if hook_filter_docstring:
+                    fp.write("\n\n")
+                    fp.write(hook_filter_docstring)
             else:
                 fp.write("_This section is empty._")
 
@@ -153,18 +162,39 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             fp.write("\n\n")
 
             if hook_action_ast:
-                fp.write("Action callable passed as filter's `action` argument has the following signature:")
+                hook_cropped = hook_name
+                if hook_cropped.endswith("_hook"):
+                    hook_cropped = hook_cropped[:-5]
+
+                hook_action_signature = get_callable_class_signature(hook_action_ast)
+                if hook_action_signature:
+                    hook_action_args, hook_action_returns = hook_action_signature
+                else:
+                    hook_action_args = ""
+                    hook_action_returns = "Unknown"
+
+                fp.write(
+                    "Action callable passed as filter's `action` argument has the following signature:"
+                )
                 fp.write("\n\n")
                 fp.write("```python")
                 fp.write("\n")
-                fp.write(f"def {hook_cropped}_action():")
+                fp.write(
+                    f"def {hook_cropped}_action({hook_action_args}) -> {hook_action_returns}:"
+                )
                 fp.write("\n")
                 fp.write("    ...")
                 fp.write("\n")
                 fp.write("```")
+
+                hook_action_docstring = get_class_docstring(hook_action_ast)
+                if hook_action_docstring:
+                    fp.write("\n\n")
+                    fp.write(hook_action_docstring)
+
             else:
                 fp.write("_This section is empty._")
-        
+
         if module_docstring and module_docstring.examples:
             for example_title, example_text in module_docstring.examples.items():
                 fp.write("\n\n\n")
@@ -213,12 +243,11 @@ def parse_hook_docstring(docstring: str) -> HookDocstring:
     examples: dict[str, str] = {}
 
     for block in split_docstring(docstring):
-        if (
-            block[:5].strip().startswith("# ")
-            and block.lstrip("# ").lower().startswith("example")
+        if block[:5].strip().startswith("# ") and block.lstrip("# ").lower().startswith(
+            "example"
         ):
-            example_name = block[:block.index("\n")].strip("# ")
-            example_block = block[block.index("\n"):].strip()
+            example_name = block[: block.index("\n")].strip("# ")
+            example_block = block[block.index("\n") :].strip()
             examples[example_name] = example_block
         elif not block[:5].strip().startswith("# "):
             description = block
@@ -226,8 +255,8 @@ def parse_hook_docstring(docstring: str) -> HookDocstring:
     return HookDocstring(description=description, examples=examples or None)
 
 
-def get_protocol_call_signature(protocol: ast.ClassDef) -> tuple[str, str | None]:
-    for item in protocol.body:
+def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | None]:
+    for item in class_def.body:
         if not isinstance(item, ast.FunctionDef):
             continue
         if item.name != "__call__":
@@ -238,12 +267,26 @@ def get_protocol_call_signature(protocol: ast.ClassDef) -> tuple[str, str | None
 
         if item_args.startswith("self, "):
             item_args = item_args[6:]
-        
+
         if len(item_args) > 70:
             item_args = "\n" + indent(item_args.replace(", ", ",\n"), "    ") + ",\n"
+        elif len(item_args) > 50:
+            item_args = f"\n    {item_args}\n"
 
         return item_args, item_returns
-    
+
+    return None
+
+
+def get_class_docstring(class_def: ast.ClassDef) -> str | None:
+    for item in class_def.body:
+        if (
+            isinstance(item, ast.Expr)
+            and isinstance(item.value, ast.Constant)
+            and isinstance(item.value.value, str)
+        ):
+            return item.value.value.strip()
+
     return None
 
 
