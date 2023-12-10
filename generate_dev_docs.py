@@ -75,31 +75,38 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 )
             module_docstring = parse_hook_docstring(item.value.value)
 
-    hook_action: ast.ClassDef | None = None
-    hook_filter: ast.ClassDef | None = None
-    hook_def: ast.ClassDef | None = None
     hook_type: str | None = None
+    hook_ast: ast.ClassDef | None = None
+    hook_action_ast: ast.ClassDef | None = None
+    hook_filter_ast: ast.ClassDef | None = None
     for class_name, class_ast in module_classes.items():
         class_hook_type = is_class_base_hook(class_ast)
         if class_hook_type:
+            hook_ast = class_ast
             hook_type = class_hook_type
-
-        print(class_name, class_hook_type)
-        print(class_ast.__dict__)
+        elif is_class_protocol(class_ast):
+            if class_name.endswith("HookAction"):
+                hook_action_ast = class_ast
+            elif class_name.endswith("HookFilter"):
+                hook_filter_ast = class_ast
 
     with open(PLUGINS_HOOKS_PATH / hook_filename, "w") as fp:
-        if module_docstring and module_docstring.title:
-            fp.write(f"# `{hook_name}`: {module_docstring.title}")
+        fp.write(f"# `{hook_name}` hook")
+
+        if module_docstring:
+            if module_docstring.summary:
+                fp.write("\n\n")
+                fp.write(f"> {module_docstring.summary}")
+
             if module_docstring.description:
                 fp.write("\n\n")
                 fp.write(module_docstring.description)
-        else:
-            fp.write(f"# `{hook_name}` hook")
 
-        fp.write("\n\n")
         if hook_type == "FILTER":
+            fp.write("\n\n")
             fp.write(f"`{hook_name}` is a **filter** hook.")
         if hook_type == "ACTION":
+            fp.write("\n\n")
             fp.write(f"`{hook_name}` is an **action** hook.")
 
         fp.write("\n\n")
@@ -114,9 +121,14 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         fp.write(f"from .override_{hook_name} import {hook_name}")
         fp.write("\n")
         fp.write("```")
-        fp.write("\n\n\n")
-        fp.write("# Filter")
-        fp.write("# Action")
+
+        if hook_filter_ast:
+            fp.write("\n\n\n")
+            fp.write("## Filter")
+
+        if hook_action_ast:
+            fp.write("\n\n\n")
+            fp.write("## Action")
 
 
 def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
@@ -137,9 +149,20 @@ def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
     return None
 
 
+def is_class_protocol(class_def: ast.ClassDef) -> bool:
+    if not class_def.bases or len(class_def.bases) != 1:
+        return False
+
+    return (
+        isinstance(class_def.bases[0], ast.Name)
+        and isinstance(class_def.bases[0].id, str)
+        and class_def.bases[0].id == "Protocol"
+    )
+
+
 @dataclass
 class HookDocstring:
-    title: str | None
+    summary: str | None
     description: str | None
 
 
@@ -147,7 +170,7 @@ def parse_hook_docstring(docstring: str) -> HookDocstring:
     if docstring.startswith("\n"):
         title = None
     else:
-        title = docstring[: docstring.index("\n")].strip()
+        summary = docstring[: docstring.index("\n")].strip()
         docstring = docstring[docstring.index("\n") :].strip()
 
     description_lines: list[str] = []
@@ -161,7 +184,7 @@ def parse_hook_docstring(docstring: str) -> HookDocstring:
     if description_lines:
         description = "\n\n".join(description_lines)
 
-    return HookDocstring(title=title, description=description)
+    return HookDocstring(summary=summary, description=description)
 
 
 def get_all_modules(file_path: str) -> dict[str, ast.Module]:
