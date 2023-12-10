@@ -34,6 +34,10 @@ from ...users.models import User
 
 
 class FilterUserDataHookAction(Protocol):
+    """
+    Misago's standard function used to filter the user's data, or a next filter in line.
+    """
+
     def __call__(
         self,
         request: HttpRequest,

@@ -10,17 +10,33 @@ This hook wraps the standard function used by Misago to filter a Python `dict` c
 This hook can be imported from `misago.oauth2.hooks`:
 
 ```python
-# exaple_plugin/register_hooks.py
 from misago.oauth2.hooks import filter_user_data_hook
-
-from .override_filter_user_data_hook import filter_user_data_hook
 ```
 
 
 ## Filter
 
+Filter functions implemented by plugins should have the following signature:
+
+```python
+def custom_user_data_filter(
+    action: FilterUserDataHookAction,
+    request: HttpRequest,
+    user: Optional[User],
+    user_data: dict,
+) -> dict:
+    ...
+```
+
 
 ## Action
+
+Action callable passed as filter's `action` argument has the following signature:
+
+```python
+def user_data_action():
+    ...
+```
 
 
 ## Example

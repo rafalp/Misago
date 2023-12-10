@@ -2,7 +2,7 @@
 import ast
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Union
+from textwrap import indent
 
 HOOKS_MODULES = ("misago.oauth2.hooks",)
 
@@ -111,21 +111,59 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         fp.write("\n\n")
         fp.write("```python")
         fp.write("\n")
-        fp.write("# exaple_plugin/register_hooks.py")
-        fp.write("\n")
         fp.write(f"from {import_from} import {hook_name}")
-        fp.write("\n\n")
-        fp.write(f"from .override_{hook_name} import {hook_name}")
         fp.write("\n")
         fp.write("```")
 
-        if hook_filter_ast:
+        if hook_type == "ACTION":
+            pass
+        if hook_type == "FILTER":
             fp.write("\n\n\n")
             fp.write("## Filter")
+            fp.write("\n\n")
 
-        if hook_action_ast:
+            if hook_filter_ast:
+                hook_cropped = hook_name
+                if hook_cropped.startswith("filter_"):
+                    hook_cropped = hook_cropped[7:]
+                if hook_cropped.endswith("_hook"):
+                    hook_cropped = hook_cropped[:-5]
+
+                hook_filter_signature = get_protocol_call_signature(hook_filter_ast)
+                if hook_filter_signature:
+                    hook_filter_args, hook_filter_returns = hook_filter_signature
+                else:
+                    hook_filter_args = ""
+                    hook_filter_returns = "Unkown"
+
+                fp.write("Filter functions implemented by plugins should have the following signature:")
+                fp.write("\n\n")
+                fp.write("```python")
+                fp.write("\n")
+                fp.write(f"def custom_{hook_cropped}_filter({hook_filter_args}) -> {hook_filter_returns}:")
+                fp.write("\n")
+                fp.write("    ...")
+                fp.write("\n")
+                fp.write("```")
+            else:
+                fp.write("_This section is empty._")
+
             fp.write("\n\n\n")
             fp.write("## Action")
+            fp.write("\n\n")
+
+            if hook_action_ast:
+                fp.write("Action callable passed as filter's `action` argument has the following signature:")
+                fp.write("\n\n")
+                fp.write("```python")
+                fp.write("\n")
+                fp.write(f"def {hook_cropped}_action():")
+                fp.write("\n")
+                fp.write("    ...")
+                fp.write("\n")
+                fp.write("```")
+            else:
+                fp.write("_This section is empty._")
         
         if module_docstring and module_docstring.examples:
             for example_title, example_text in module_docstring.examples.items():
@@ -145,10 +183,10 @@ def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
             and isinstance(base.value, ast.Name)
             and isinstance(base.value.id, str)
         ):
-            if base.value.id == "FilterHook":
-                return "FILTER"
             if base.value.id == "ActionHook":
                 return "ACTION"
+            if base.value.id == "FilterHook":
+                return "FILTER"
 
     return None
 
@@ -186,6 +224,27 @@ def parse_hook_docstring(docstring: str) -> HookDocstring:
             description = block
 
     return HookDocstring(description=description, examples=examples or None)
+
+
+def get_protocol_call_signature(protocol: ast.ClassDef) -> tuple[str, str | None]:
+    for item in protocol.body:
+        if not isinstance(item, ast.FunctionDef):
+            continue
+        if item.name != "__call__":
+            continue
+
+        item_args = ast.unparse(item.args)
+        item_returns = ast.unparse(item.returns)
+
+        if item_args.startswith("self, "):
+            item_args = item_args[6:]
+        
+        if len(item_args) > 70:
+            item_args = "\n" + indent(item_args.replace(", ", ",\n"), "    ") + ",\n"
+
+        return item_args, item_returns
+    
+    return None
 
 
 def split_docstring(docstring: str) -> list[str]:
