@@ -1,4 +1,4 @@
-# Built-in hook reference
+# Built-in hooks reference
 
 This document contains a list of all standard plugin hooks existing in Misago.
 

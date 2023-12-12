@@ -31,7 +31,7 @@ def generate_hooks_reference():
 
 def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]]):
     with open(PLUGINS_HOOKS_PATH / "reference.md", "w") as fp:
-        fp.write("# Built-in hook reference")
+        fp.write("# Built-in hooks reference")
         fp.write("\n\n")
         fp.write(
             "This document contains a list of all standard plugin hooks existing in Misago."
