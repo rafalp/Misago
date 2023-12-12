@@ -56,11 +56,11 @@ class FilterHook(Generic[Action, Filter]):
         return bool(self.filters_first or self.filters_last)
 
     def append(self, filter_: Filter):
-        self.filters_last.append(filter_)
+        self.filters_first.append(filter_)
         self.invalidate_cache()
 
     def prepend(self, filter_: Filter):
-        self.filters_first.insert(0, filter_)
+        self.filters_last.insert(0, filter_)
         self.invalidate_cache()
 
     def invalidate_cache(self):

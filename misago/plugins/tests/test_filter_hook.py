@@ -13,20 +13,16 @@ class MockFilterHook(FilterHook):
 
 
 def action(data):
-    data.append(ACTION)
-    return data
+    return [ACTION]
 
 
 def first_filter(action, data):
-    data = action(data)
-    data.append(FIRST_FILTER)
-    return data
+    return [action(data), FIRST_FILTER]
 
 
 def second_filter(action, data):
     data = action(data)
-    data.append(SECOND_FILTER)
-    return data
+    return [action(data), SECOND_FILTER]
 
 
 @pytest.fixture
@@ -49,16 +45,16 @@ def test_filter_hook_with_actions_is_truthy(hook):
 
 def test_filter_hook_calls_filter_before_action(hook):
     hook.append(first_filter)
-    assert hook(action) == [ACTION, FIRST_FILTER]
+    assert hook(action) == [[ACTION], FIRST_FILTER]
 
 
 def test_filter_hook_calls_filters_in_order_of_adding(hook):
     hook.append(first_filter)
     hook.append(second_filter)
-    assert hook(action) == [ACTION, FIRST_FILTER, SECOND_FILTER]
+    assert hook(action) == [[[ACTION], FIRST_FILTER], SECOND_FILTER]
 
 
 def test_filter_can_be_inserted_before_other_filters(hook):
-    hook.append(first_filter)
     hook.prepend(second_filter)
-    assert hook(action) == [ACTION, SECOND_FILTER, FIRST_FILTER]
+    hook.append(first_filter)
+    assert hook(action) == [[[ACTION], FIRST_FILTER], SECOND_FILTER]
