@@ -25,7 +25,7 @@ The list of available hooks, generated from Misago's source code, is available h
 
 ## Implementing custom hooks
 
-Following guides show how to implement a new hook:
+There's a dedicated developer guide for implementing a new hook of each type:
 
 - [Implementing an action hook](./action-hook.md)
 - [Implementing a filter hook](./filter-hook.md)
