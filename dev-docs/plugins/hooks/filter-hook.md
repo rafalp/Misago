@@ -2,24 +2,25 @@
 
 Filter hooks wrap the existing Misago functions. They can execute custom code before, after, or instead of the standard one.
 
-This guide will show the entire process of adding a hook to a pre-existing example function in Misago.
+This guide will show the entire process of adding a filter hook to a pre-existing example function in Misago.
 
 
 ## The example function
 
-Because hooks wrap the existing functions, we'll need one for this guide. Let's imagine a function that parses a user-posted message into an HTML string:
+Because filter hooks wrap the existing functions, we'll need one for this guide. Let's imagine a function that parses a user-posted message into an HTML string:
 
 ```python
 from django.http import HttpRequest
+
 
 def parse_user_message(request: HttpRequest, message: str) -> str:
     ...  # Function's body is not important for us in this example
 ```
 
 
-## Creating hooks package
+## Creating `hooks` package
 
-Hooks can be defined anywhere, but the convention used by Misago is to create a hooks package for every Django app that defines its own hooks.
+Hooks can be defined anywhere, but the convention used by Misago is to create a `hooks` package for every Django app that defines its own hooks.
 
 Our example function lives in an example Django app, looking like this:
 
@@ -39,7 +40,7 @@ parser_app/
   parser.py
 ```
 
-Next, we will create an empty `parse_user_message.py` file in hooks:
+Next, we will create an empty `parse_user_message.py` file in `hooks`:
 
 ```
 parser_app/
@@ -63,7 +64,7 @@ from misago.plugins.hooks import FilterHook
 
 
 class ParseUserMessageHook(FilterHook):
-    __slots__ = FilterHook.__slots__  # important for low memory usage!
+    __slots__ = FilterHook.__slots__  # important for memory usage!
 
 
 parse_user_message_hook = ParseUserMessageHook()
@@ -79,7 +80,7 @@ from misago.plugins.hooks import FilterHook
 
 
 class ParseUserMessageHook(FilterHook):
-    __slots__ = FilterHook.__slots__  # important for low memory usage!
+    __slots__ = FilterHook.__slots__  # important for memory usage!
 
     def __call__(
         self, action, request: HttpRequest, message: str
@@ -93,7 +94,7 @@ parse_user_message_hook = ParseUserMessageHook()
 
 ## Adding type annotations
 
-We will extend our hook to include type annotations for the original function this hook wraps (an "actiom") and for the filter functions it accepts from plugins ("filters"). Both of these annotations will be `Protocol`s:
+We will extend our hook to include type annotations for the original function this hook wraps (an "action") and for the filter functions it accepts from plugins ("filters"). Both of these annotations will be `Protocol`s:
 
 ```python
 # parse_user_message.py
@@ -119,7 +120,7 @@ class ParseUserMessageHookFilter(Protocol):
 class ParseUserMessageHook(
     FilterHook[ParseUserMessageHookAction, ParseUserMessageHookFilter]
 ):
-    __slots__ = FilterHook.__slots__  # important for low memory usage!
+    __slots__ = FilterHook.__slots__  # important for memory usage!
 
     def __call__(
         self, action: FilterUserDataHookAction, request: HttpRequest, message: str
@@ -184,7 +185,7 @@ class ParseUserMessageHook(
     and placed at the end of the document.
     """
 
-    __slots__ = FilterHook.__slots__  # important for low memory usage!
+    __slots__ = FilterHook.__slots__  # important for memory usage!
 
     def __call__(
         self, action: FilterUserDataHookAction, request: HttpRequest, message: str
@@ -234,6 +235,9 @@ Now we will be able to import this hook with `from .hooks import parse_user_mess
 With our hook completed, we can now update the original code to use it. First, we will add the `_action` suffix to the original function's name:
 
 ```python
+from django.http import HttpRequest
+
+
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
     ...  # Function's body is not important for us in this example
 ```
@@ -241,6 +245,9 @@ def parse_user_message_action(request: HttpRequest, message: str) -> str:
 Now we will create a shallow wrapper for this function, using its original name and signature:
 
 ```python
+from django.http import HttpRequest
+
+
 # Copied signature
 def parse_user_message(request: HttpRequest, message: str) -> str:
     return parse_user_message_action(request, message)
@@ -254,6 +261,8 @@ def parse_user_message_action(request: HttpRequest, message: str) -> str:
 Final step is updating our wrapper to use our new hook to call wrap all `parse_user_message_action` calls:
 
 ```python
+from django.http import HttpRequest
+
 from .hooks import parse_user_message_hook
 
 
