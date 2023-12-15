@@ -149,25 +149,25 @@ class AvatarSetterTests(TestCase):
     def test_downloaded(self):
         """specific image is downloaded"""
         self.assertNoAvatarIsSet()
-        downloaded.set_avatar(self.user, "http://placekitten.com/500/500")
+        downloaded.set_avatar(self.user, "http://dummyimage.com/500/500")
         self.assertAvatarWasSet()
 
     def test_downloaded_width_greater_than_height(self):
         """specific image is downloaded and cropped into square"""
         self.assertNoAvatarIsSet()
-        downloaded.set_avatar(self.user, "http://placekitten.com/700/500")
+        downloaded.set_avatar(self.user, "http://dummyimage.com/700/500")
         self.assertAvatarWasSet()
 
     def test_downloaded_height_greater_than_width(self):
         """specific image is downloaded and cropped into square"""
         self.assertNoAvatarIsSet()
-        downloaded.set_avatar(self.user, "http://placekitten.com/500/700")
+        downloaded.set_avatar(self.user, "http://dummyimage.com/500/700")
         self.assertAvatarWasSet()
 
     def test_default_avatar_downloaded(self):
         """default downloaded avatar is set"""
         self.assertNoAvatarIsSet()
-        set_default_avatar_from_url(self.user, "http://placekitten.com/500/500")
+        set_default_avatar_from_url(self.user, "http://dummyimage.com/500/500")
         self.assertAvatarWasSet()
 
     def test_default_avatar_downloaded(self):

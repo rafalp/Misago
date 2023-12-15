@@ -38,7 +38,7 @@ def test_inline_bbcode_can_be_mixed_with_markdown(request_mock, user, snapshot):
 
 
 def test_image_bbcode(request_mock, user, snapshot):
-    text = "Lorem [img]https://placekitten.com/g/1200/500[/img] ipsum"
+    text = "Lorem [img]https://dummyimage.com/g/1200/500[/img] ipsum"
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 
@@ -50,13 +50,13 @@ def test_image_bbcode_is_escaped(request_mock, user, snapshot):
 
 
 def test_image_bbcode_is_case_insensitive(request_mock, user, snapshot):
-    text = "Lorem [iMg]https://placekitten.com/g/1200/500[/ImG] ipsum"
+    text = "Lorem [iMg]https://dummyimage.com/g/1200/500[/ImG] ipsum"
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 
 
 def test_url_bbcode(request_mock, user, snapshot):
-    text = "Lorem [url]https://placekitten.com/g/1200/500[/url] ipsum"
+    text = "Lorem [url]https://dummyimage.com/g/1200/500[/url] ipsum"
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 
@@ -68,25 +68,25 @@ def test_url_bbcode_is_escaped(request_mock, user, snapshot):
 
 
 def test_url_bbcode_with_link_text(request_mock, user, snapshot):
-    text = "Lorem [url=https://placekitten.com/g/1200/500]dolor[/url] ipsum"
+    text = "Lorem [url=https://dummyimage.com/g/1200/500]dolor[/url] ipsum"
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 
 
 def test_url_bbcode_with_long_link_text(request_mock, user, snapshot):
-    text = "Lorem [url=https://placekitten.com/g/1200/500]dolor met[/url] ipsum"
+    text = "Lorem [url=https://dummyimage.com/g/1200/500]dolor met[/url] ipsum"
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 
 
 def test_url_bbcode_with_quotes_and_link_text(request_mock, user, snapshot):
-    text = 'Lorem [url="https://placekitten.com/g/1200/500"]dolor[/url] ipsum'
+    text = 'Lorem [url="https://dummyimage.com/g/1200/500"]dolor[/url] ipsum'
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 
 
 def test_url_bbcode_with_quotes_and_long_link_text(request_mock, user, snapshot):
-    text = 'Lorem [url="https://placekitten.com/g/1200/500"]dolor met[/url] ipsum'
+    text = 'Lorem [url="https://dummyimage.com/g/1200/500"]dolor met[/url] ipsum'
     result = parse(text, request_mock, user)
     assert snapshot == result["parsed_text"]
 

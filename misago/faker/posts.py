@@ -7,7 +7,7 @@ from ..threads.models import Post
 from .englishcorpus import EnglishCorpus
 from .users import get_fake_username
 
-PLACEKITTEN_URL = "https://placekitten.com/g/%s/%s"
+PLACEKITTEN_URL = "https://dummyimage.com/g/%s/%s"
 
 corpus = EnglishCorpus()
 

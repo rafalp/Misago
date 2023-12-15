@@ -31,7 +31,7 @@ class AuthenticateApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            [{"avatar": "http://placekitten.com/100/100", "username": "User"}],
+            [{"avatar": "http://dummyimage.com/100/100", "username": "User"}],
         )
 
         # case insensitive match
@@ -39,7 +39,7 @@ class AuthenticateApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            [{"avatar": "http://placekitten.com/100/100", "username": "User"}],
+            [{"avatar": "http://dummyimage.com/100/100", "username": "User"}],
         )
 
         # eager case insensitive match
@@ -47,7 +47,7 @@ class AuthenticateApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            [{"avatar": "http://placekitten.com/100/100", "username": "User"}],
+            [{"avatar": "http://dummyimage.com/100/100", "username": "User"}],
         )
 
         # invalid match

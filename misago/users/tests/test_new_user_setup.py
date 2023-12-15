@@ -6,7 +6,7 @@ from ..setupnewuser import setup_new_user
 
 User = get_user_model()
 
-AVATAR_URL = "https://placekitten.com/600/500"
+AVATAR_URL = "https://dummyimage.com/600/500"
 
 
 def user(db):
