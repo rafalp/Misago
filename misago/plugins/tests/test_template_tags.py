@@ -6,8 +6,8 @@ from django.utils.safestring import mark_safe
 from ..outlets import (
     PluginOutletName,
     PluginOutletHook,
-    append_template_plugin,
-    prepend_template_plugin,
+    append_outlet_action,
+    prepend_outlet_action,
     template_outlets,
 )
 
@@ -54,7 +54,7 @@ def test_empty_outlet_renders_nothing(snapshot):
 
 def test_outlet_renders_appended_plugin(snapshot):
     with patch_outlets():
-        append_template_plugin(PluginOutletName.TEST, strong_action)
+        append_outlet_action(PluginOutletName.TEST, strong_action)
         html = render_outlet_template()
 
     assert snapshot == html
@@ -62,7 +62,7 @@ def test_outlet_renders_appended_plugin(snapshot):
 
 def test_outlet_renders_prepended_plugin(snapshot):
     with patch_outlets():
-        prepend_template_plugin(PluginOutletName.TEST, strong_action)
+        prepend_outlet_action(PluginOutletName.TEST, strong_action)
         html = render_outlet_template()
 
     assert snapshot == html
@@ -70,9 +70,9 @@ def test_outlet_renders_prepended_plugin(snapshot):
 
 def test_outlet_renders_multiple_plugins(snapshot):
     with patch_outlets():
-        append_template_plugin(PluginOutletName.TEST, strong_action)
-        prepend_template_plugin(PluginOutletName.TEST, em_action)
-        prepend_template_plugin(PluginOutletName.TEST, strong_action)
+        append_outlet_action(PluginOutletName.TEST, strong_action)
+        prepend_outlet_action(PluginOutletName.TEST, em_action)
+        prepend_outlet_action(PluginOutletName.TEST, strong_action)
         html = render_outlet_template()
 
     assert snapshot == html
@@ -80,9 +80,9 @@ def test_outlet_renders_multiple_plugins(snapshot):
 
 def test_outlet_renders_plugins_with_context(snapshot):
     with patch_outlets():
-        append_template_plugin(PluginOutletName.TEST, strong_action)
-        prepend_template_plugin(PluginOutletName.TEST, em_action)
-        prepend_template_plugin(PluginOutletName.TEST, strong_action)
+        append_outlet_action(PluginOutletName.TEST, strong_action)
+        prepend_outlet_action(PluginOutletName.TEST, em_action)
+        prepend_outlet_action(PluginOutletName.TEST, strong_action)
         html = render_outlet_template({"value": "context"})
 
     assert snapshot == html
@@ -108,7 +108,7 @@ def test_hasplugins_tag_renders_nothing_if_no_plugins_exist(snapshot):
 
 def test_hasplugins_tag_renders_value_if_plugins_exist(snapshot):
     with patch_outlets():
-        append_template_plugin(PluginOutletName.TEST, strong_action)
+        append_outlet_action(PluginOutletName.TEST, strong_action)
         html = render_hasplugins_template()
 
     assert snapshot == html
@@ -134,7 +134,7 @@ def test_hasplugins_else_tag_renders_else_if_no_plugins_exist(snapshot):
 
 def test_hasplugins_else_tag_renders_value_if_plugins_exist(snapshot):
     with patch_outlets():
-        append_template_plugin(PluginOutletName.TEST, strong_action)
+        append_outlet_action(PluginOutletName.TEST, strong_action)
         html = render_haspluginselse_template()
 
     assert snapshot == html

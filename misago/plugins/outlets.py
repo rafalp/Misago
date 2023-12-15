@@ -34,16 +34,16 @@ for plugin_outlet in PluginOutletName:
     template_outlets[plugin_outlet.value] = PluginOutletHook()
 
 
-def append_template_plugin(
-    outlet_name: str | PluginOutletName, plugin: PluginOutletHookAction
+def append_outlet_action(
+    outlet_name: str | PluginOutletName, action: PluginOutletHookAction
 ):
-    get_outlet(outlet_name).append_action(plugin)
+    get_outlet(outlet_name).append_action(action)
 
 
-def prepend_template_plugin(
-    outlet_name: str | PluginOutletName, plugin: PluginOutletHookAction
+def prepend_outlet_action(
+    outlet_name: str | PluginOutletName, action: PluginOutletHookAction
 ):
-    get_outlet(outlet_name).append_action(plugin)
+    get_outlet(outlet_name).prepend_action(action)
 
 
 def get_outlet(outlet_name: str | PluginOutletName) -> PluginOutletHook:
