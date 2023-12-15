@@ -161,10 +161,10 @@ export default function MarkupFormattingHelpModal() {
 
           <h4>{pgettext("markup help", "Image")}</h4>
           <ExampleFormatting
-            markup="!(http://placekitten.com/38/38)"
+            markup="!(http://dummyimage.com/38/38)"
             result={
               <p>
-                <img alt="" src="http://placekitten.com/38/38" />
+                <img alt="" src="http://dummyimage.com/38/38" />
               </p>
             }
           />
@@ -176,13 +176,13 @@ export default function MarkupFormattingHelpModal() {
             markup={
               "![" +
               pgettext("markup help", "Image text") +
-              "](http://placekitten.com/38/38)"
+              "](http://dummyimage.com/38/38)"
             }
             result={
               <p>
                 <img
                   alt={pgettext("markup help", "Image text")}
-                  src="http://placekitten.com/38/38"
+                  src="http://dummyimage.com/38/38"
                 />
               </p>
             }
@@ -192,10 +192,10 @@ export default function MarkupFormattingHelpModal() {
 
           <h4>{pgettext("markup help", "Image (BBCode)")}</h4>
           <ExampleFormatting
-            markup="[img]http://placekitten.com/38/38[/img]"
+            markup="[img]http://dummyimage.com/38/38[/img]"
             result={
               <p>
-                <img alt="" src="http://placekitten.com/38/38" />
+                <img alt="" src="http://dummyimage.com/38/38" />
               </p>
             }
           />

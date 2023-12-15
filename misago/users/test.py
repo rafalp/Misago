@@ -74,7 +74,7 @@ def create_test_superuser(username, email, password=None, **extra_fields):
 
 
 user_placeholder_avatars = [
-    {"size": 400, "url": "http://placekitten.com/400/400"},
-    {"size": 200, "url": "http://placekitten.com/200/200"},
-    {"size": 100, "url": "http://placekitten.com/100/100"},
+    {"size": 400, "url": "http://dummyimage.com/400/400"},
+    {"size": 200, "url": "http://dummyimage.com/200/200"},
+    {"size": 100, "url": "http://dummyimage.com/100/100"},
 ]
