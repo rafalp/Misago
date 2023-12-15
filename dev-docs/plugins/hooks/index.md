@@ -12,58 +12,76 @@ Actions are extra functions called at a given point in Misago's logic. Functions
 Filters wrap existing Misago functions, allowing them to execute custom code before, after, or instead of the standard one. The last function to be registered in a hook is the first one called.
 
 
-### Registering function in a hook
+### Registering a function in an action hook
 
-To register plugin's function in a hook, use **either** the `append` or `prepend` method:
+To register plugin's function in an action hook, use the `append_action` or `prepend_action` method:
 
 ```python
-from misago.oauth2.hooks import filter_user_data_hook
-
-
-# Append and prepend can be used as decorators
-@filter_user_data_hook.append
-def plugin_function():
+# append_action and prepend_action can be used as decorators
+@action_hook.append_action
+def plugin_function(...):
     ...
 
 
-@filter_user_data_hook.prepend
-def plugin_function():
+@action_hook.prepend_action
+def plugin_function(...):
     ...
 
 
-# And called with function as a argument
-filter_user_data_hook.append(plugin_function)
-
-filter_user_data_hook.prepend(plugin_function)
+# And called with function as an argument
+action_hook.append_action(plugin_function)
+action_hook.prepend_action(plugin_function)
 ```
 
 In action hooks, prepended functions are guaranteed to be called before the appended ones:
 
 ```python
-action_hook.append(function_1)
-action_hook.prepend(function_2)
-action_hook.append(function_3)
-action_hook.prepend(function_4)
+action_hook.append_action(function_1)
+action_hook.prepend_action(function_2)
+action_hook.append_action(function_3)
+action_hook.prepend_action(function_4)
 
 action_hook()
 ```
 
 In the above example, functions `function_2` and `function_4` will always be called before `function_1` and `function_3`.
 
+
+### Registering a function in a filter hook
+
+To register plugin's function in a filter hook, use the `append_filter` or `prepend_filter` method:
+
+```python
+# append_filter and prepend_filter can be used as decorators
+@filter_hook.append_filter
+def plugin_function(...):
+    ...
+
+
+@filter_hook.prepend_filter
+def plugin_function(...):
+    ...
+
+
+# And called with function as an argument
+filter_hook.append_filter(plugin_function)
+filter_hook.prepend_filter(plugin_function)
+```
+
 Because filter hooks stack their function calls, appended functions are in the lower part of the stack (closer to the wrapped function), while prepended functions are in the top part of the stack (further from the wrapped function):
 
 ```python
-filter_hook.append(function_1)
-filter_hook.prepend(function_2)
-filter_hook.append(function_3)
-filter_hook.prepend(function_4)
+filter_hook.append_filter(function_1)
+filter_hook.prepend_filter(function_2)
+filter_hook.append_filter(function_3)
+filter_hook.prepend_filter(function_4)
 
 filter_hook()
 ```
 
 In the above example, functions `function_2` and `function_4` will always be called before `function_1` and `function_3`.
 
-Hooks provide no other guarantees regarding the order of execution of registered functions. This order may change on docker image rebuild or server restart.
+> **Note:** Hooks provide no other guarantees regarding the order of execution of registered functions. This order may change on docker image rebuild or server restart.
 
 
 ## Built-in hooks reference
@@ -79,7 +97,7 @@ The list of available hooks, generated from Misago's source code, is available h
 
 ## Implementing custom hooks
 
-There's a dedicated developer guide for implementing a new hook of each type:
+The following developer guides document the implementation of a new hook for each type:
 
 - [Implementing an action hook](./action-hook.md)
 - [Implementing a filter hook](./filter-hook.md)
