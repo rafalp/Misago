@@ -14,7 +14,7 @@ from django.http import HttpRequest
 
 
 def get_forum_stats(request: HttpRequest) -> dict[str, str]:
-    return {}  # Function's body is not important for us in this example
+    return {}  # Function's body is not important to us in this example
 ```
 
 
@@ -194,7 +194,6 @@ Let's make our new hook directly importable from the `hooks` package we've creat
 
 ```python
 # hooks/__init__.py
-
 from .get_stats import get_stats_hook
 
 __all__ = ["get_stats_hook"]
@@ -212,7 +211,7 @@ from .hooks import get_stats_hook
 
 
 def get_forum_stats(request: HttpRequest) -> dict[str, str]:
-    forum_stats = {}  # Function's body is not important for us in this example
+    forum_stats = {}  # Function's body is not important to us in this example
 
     # Add results from `get_stats_hook` to function's original result
     for result in get_stats_hook(request):
@@ -274,7 +273,7 @@ from .hooks import get_stats_hook
 
 
 def get_forum_stats(request: HttpRequest) -> dict[str, str]:
-    forum_stats = {}  # Function's body is not important for us in this example
+    forum_stats = {}  # Function's body is not important to us in this example
     forum_stats.update(get_stats_hook(request))
     return forum_stats
 ```

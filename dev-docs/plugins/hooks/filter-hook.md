@@ -14,7 +14,7 @@ from django.http import HttpRequest
 
 
 def parse_user_message(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important for us in this example
+    ...  # Function's body is not important to us in this example
 ```
 
 
@@ -168,7 +168,7 @@ class ParseUserMessageHookFilter(Protocol):
     """
 
     def __call__(
-        self, action: FilterUserDataHookAction, request: HttpRequest, message: str
+        self, action: ParseUserMessageHookAction, request: HttpRequest, message: str
     ) -> str:
         ...
 
@@ -188,7 +188,7 @@ class ParseUserMessageHook(
     __slots__ = FilterHook.__slots__  # important for memory usage!
 
     def __call__(
-        self, action: FilterUserDataHookAction, request: HttpRequest, message: str
+        self, action: ParseUserMessageHookAction, request: HttpRequest, message: str
     ) -> str:
         return super().__call__(action, request, message)
 
@@ -221,7 +221,6 @@ Let's make our new hook directly importable from the `hooks` package we've creat
 
 ```python
 # hooks/__init__.py
-
 from .parse_user_message import parse_user_message_hook
 
 __all__ = ["parse_user_message"]
@@ -239,7 +238,7 @@ from django.http import HttpRequest
 
 
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important for us in this example
+    ...  # Function's body is not important to us in this example
 ```
 
 Now we will create a shallow wrapper for this function, using its original name and signature:
@@ -255,7 +254,7 @@ def parse_user_message(request: HttpRequest, message: str) -> str:
 
 # Original function
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important for us in this example
+    ...  # Function's body is not important to us in this example
 ```
 
 Final step is updating our wrapper to use our new hook to call wrap all `parse_user_message_action` calls:
@@ -273,7 +272,7 @@ def parse_user_message(request: HttpRequest, message: str) -> str:
 
 # Original function
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important for us in this example
+    ...  # Function's body is not important to us in this example
 ```
 
 With this change the rest of the codebase that used the `parse_user_message` function will now call its new version that includes plugins, without needing further changes.

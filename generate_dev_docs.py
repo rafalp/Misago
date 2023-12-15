@@ -137,9 +137,6 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                     hook_filter_args = ""
                     hook_filter_returns = "Unknown"
 
-                fp.write(
-                    "Filter function implemented by a plugin must have the following signature:"
-                )
                 fp.write("\n\n")
                 fp.write("```python")
                 fp.write("\n")
@@ -174,9 +171,6 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                     hook_action_args = ""
                     hook_action_returns = "Unknown"
 
-                fp.write(
-                    "Action callable passed as filter's `action` argument has the following signature:"
-                )
                 fp.write("\n\n")
                 fp.write("```python")
                 fp.write("\n")

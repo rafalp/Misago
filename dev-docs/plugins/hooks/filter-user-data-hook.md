@@ -79,5 +79,5 @@ def normalize_gmail_email(
 
     return action(user_data, request, user, user_data)
 
-filter_user_data_hook.append(normalize_gmail_email)
+filter_user_data_hook.append_filter(normalize_gmail_email)
 ```

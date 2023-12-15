@@ -37,13 +37,13 @@ for plugin_outlet in PluginOutletName:
 def append_template_plugin(
     outlet_name: str | PluginOutletName, plugin: PluginOutletHookAction
 ):
-    get_outlet(outlet_name).append(plugin)
+    get_outlet(outlet_name).append_action(plugin)
 
 
 def prepend_template_plugin(
     outlet_name: str | PluginOutletName, plugin: PluginOutletHookAction
 ):
-    get_outlet(outlet_name).prepend(plugin)
+    get_outlet(outlet_name).append_action(plugin)
 
 
 def get_outlet(outlet_name: str | PluginOutletName) -> PluginOutletHook:

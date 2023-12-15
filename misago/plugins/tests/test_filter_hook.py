@@ -39,22 +39,22 @@ def test_filter_hook_without_actions_is_falsy(hook):
 
 
 def test_filter_hook_with_actions_is_truthy(hook):
-    hook.append(first_filter)
+    hook.append_filter(first_filter)
     assert hook
 
 
 def test_filter_hook_calls_filter_before_action(hook):
-    hook.append(first_filter)
+    hook.append_filter(first_filter)
     assert hook(action) == [[ACTION], FIRST_FILTER]
 
 
 def test_filter_hook_calls_filters_in_order_of_adding(hook):
-    hook.append(first_filter)
-    hook.append(second_filter)
+    hook.append_filter(first_filter)
+    hook.append_filter(second_filter)
     assert hook(action) == [[[ACTION], FIRST_FILTER], SECOND_FILTER]
 
 
 def test_filter_can_be_inserted_before_other_filters(hook):
-    hook.prepend(second_filter)
-    hook.append(first_filter)
+    hook.prepend_filter(second_filter)
+    hook.append_filter(first_filter)
     assert hook(action) == [[[ACTION], FIRST_FILTER], SECOND_FILTER]

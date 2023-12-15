@@ -6,65 +6,65 @@ Filter = TypeVar("Filter")
 
 
 class ActionHook(Generic[Action]):
-    __slots__ = ("actions_first", "actions_last", "cache")
+    __slots__ = ("_actions_first", "_actions_last", "_cache")
 
-    actions_first: List[Action]
-    actions_last: List[Action]
-    cache: List[Action] | None
+    _actions_first: List[Action]
+    _actions_last: List[Action]
+    _cache: List[Action] | None
 
     def __init__(self):
-        self.actions_first = []
-        self.actions_last = []
-        self.cache = None
+        self._actions_first = []
+        self._actions_last = []
+        self._cache = None
 
     def __bool__(self) -> bool:
-        return bool(self.actions_first or self.actions_last)
+        return bool(self._actions_first or self._actions_last)
 
-    def append(self, action: Action):
-        self.actions_last.append(action)
+    def append_action(self, action: Action):
+        self._actions_last.append(action)
         self.invalidate_cache()
 
-    def prepend(self, action: Action):
-        self.actions_first.insert(0, action)
+    def prepend_action(self, action: Action):
+        self._actions_first.insert(0, action)
         self.invalidate_cache()
 
     def invalidate_cache(self):
-        self.cache = None
+        self._cache = None
 
     def __call__(self, *args, **kwargs) -> List[Any]:
-        if self.cache is None:
-            self.cache = self.actions_first + self.actions_last
-        if not self.cache:
+        if self._cache is None:
+            self._cache = self._actions_first + self._actions_last
+        if not self._cache:
             return []
 
-        return [action(*args, **kwargs) for action in self.cache]
+        return [action(*args, **kwargs) for action in self._cache]
 
 
 class FilterHook(Generic[Action, Filter]):
-    __slots__ = ("filters_first", "filters_last", "cache")
+    __slots__ = ("_filters_first", "_filters_last", "_cache")
 
-    filters_first: List[Filter]
-    filters_last: List[Filter]
-    cache: Action | None
+    _filters_first: List[Filter]
+    _filters_last: List[Filter]
+    _cache: Action | None
 
     def __init__(self):
-        self.filters_first = []
-        self.filters_last = []
-        self.cache = None
+        self._filters_first = []
+        self._filters_last = []
+        self._cache = None
 
     def __bool__(self) -> bool:
-        return bool(self.filters_first or self.filters_last)
+        return bool(self._filters_first or self._filters_last)
 
-    def append(self, filter_: Filter):
-        self.filters_first.append(filter_)
+    def append_filter(self, filter_: Filter):
+        self._filters_first.append(filter_)
         self.invalidate_cache()
 
-    def prepend(self, filter_: Filter):
-        self.filters_last.insert(0, filter_)
+    def prepend_filter(self, filter_: Filter):
+        self._filters_last.insert(0, filter_)
         self.invalidate_cache()
 
     def invalidate_cache(self):
-        self.cache = None
+        self._cache = None
 
     def get_reduced_action(self, action: Action) -> Action:
         def reduce_filter(action: Action, next_filter: Filter) -> Action:
@@ -73,11 +73,11 @@ class FilterHook(Generic[Action, Filter]):
 
             return cast(Action, reduced_filter)
 
-        filters = self.filters_first + self.filters_last
+        filters = self._filters_first + self._filters_last
         return reduce(reduce_filter, filters, action)
 
     def __call__(self, action: Action, *args, **kwargs):
-        if self.cache is None:
-            self.cache = self.get_reduced_action(action)
+        if self._cache is None:
+            self._cache = self.get_reduced_action(action)
 
-        return self.cache(*args, **kwargs)  # type: ignore
+        return self._cache(*args, **kwargs)  # type: ignore
