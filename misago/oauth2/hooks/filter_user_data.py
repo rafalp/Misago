@@ -8,7 +8,7 @@ from ...users.models import User
 
 class FilterUserDataHookAction(Protocol):
     """
-    A standard Misago function used for filtering the user data, or the next 
+    A standard Misago function used for filtering the user data, or the next
     filter function from another plugin.
 
     # Arguments
@@ -19,8 +19,8 @@ class FilterUserDataHookAction(Protocol):
 
     ## `user: Optional[User]`
 
-    A `User` object associated with `user_data["id"]` or `user_data["email"]`, 
-    or `None` if it's the user's first time signing in with OAuth and the user's 
+    A `User` object associated with `user_data["id"]` or `user_data["email"]`,
+    or `None` if it's the user's first time signing in with OAuth and the user's
     account hasn't been created yet.
 
     ## `user_data: dict`
@@ -65,7 +65,7 @@ class FilterUserDataHookFilter(Protocol):
 
     ## `action: FilterUserDataHookAction`
 
-    A standard Misago function used for filtering the user data, or the next 
+    A standard Misago function used for filtering the user data, or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.
@@ -76,8 +76,8 @@ class FilterUserDataHookFilter(Protocol):
 
     ## `user: Optional[User]`
 
-    A `User` object associated with `user_data["id"]` or `user_data["email"]`, 
-    or `None` if it's the user's first time signing in with OAuth and the user's 
+    A `User` object associated with `user_data["id"]` or `user_data["email"]`,
+    or `None` if it's the user's first time signing in with OAuth and the user's
     account hasn't been created yet.
 
     ## `user_data: dict`
@@ -123,7 +123,7 @@ class FilterUserDataHook(
     containing the user data extracted from the OAuth 2 server's response.
 
     User data filtering is part of the [user data validation by the OAuth 2
-    client](./validate-user-data-hook.md), which itself is part of a process that
+    client](./validate-user-data-hook.md), which itself is part of a function that
     creates a new user account or updates an existing one if user data has changed.
 
     Standard user data filtering doesn't validate the data but instead tries to
@@ -157,6 +157,7 @@ class FilterUserDataHook(
             new_user_email = user_data["email"][:-10].replace(".", "")
             user_data["email"] = new_user_email + "@gmail.com"
 
+        # Call the next function in chain
         return action(user_data, request, user, user_data)
     ```
     """
