@@ -129,12 +129,12 @@ def get_user_data(request, access_token):
     except (ValueError, TypeError):
         raise exceptions.OAuth2UserDataJSONError()
 
-    clean_data = {
+    user_data = {
         key: get_value_from_json(getattr(request.settings, setting), response_json)
         for key, setting in JSON_MAPPING.items()
     }
 
-    return clean_data, response_json
+    return user_data, response_json
 
 
 def get_redirect_uri(request):
