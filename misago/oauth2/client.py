@@ -1,4 +1,5 @@
 from urllib.parse import urlencode
+from typing import Any
 
 import requests
 from django.urls import reverse
@@ -129,12 +130,12 @@ def get_user_data(request, access_token):
     except (ValueError, TypeError):
         raise exceptions.OAuth2UserDataJSONError()
 
-    clean_data = {
+    user_data = {
         key: get_value_from_json(getattr(request.settings, setting), response_json)
         for key, setting in JSON_MAPPING.items()
     }
 
-    return clean_data, response_json
+    return user_data, response_json
 
 
 def get_redirect_uri(request):
@@ -163,12 +164,25 @@ def get_value_from_json(path, json):
         return None
 
     if "." not in path:
-        return str(json.get(path, "")).strip() or None
+        return clear_json_value(json.get(path))
 
     data = json
     for path_part in path.split("."):
-        data = data.get(path_part)
-        if not data:
+        if not isinstance(data, dict):
             return None
 
-    return data
+        data = data.get(path_part)
+        if data is None:
+            return None
+
+    return clear_json_value(data)
+
+
+def clear_json_value(value: Any) -> str | None:
+    if isinstance(value, str):
+        return value.strip() or None
+
+    if isinstance(value, int) and value is not True and value is not False:
+        return str(value)
+
+    return None

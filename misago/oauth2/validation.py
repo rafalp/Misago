@@ -49,16 +49,10 @@ def filter_user_data(request, user, user_data):
 def filter_user_data_action(request, user, user_data):
     return {
         "id": user_data["id"],
-        "name": filter_name(user, str(user_data["name"] or "").strip()),
-        "email": str(user_data["email"] or "").strip(),
-        "avatar": filter_user_avatar(user_data["avatar"]),
+        "name": filter_name(user, user_data["name"] or ""),
+        "email": user_data["email"] or "",
+        "avatar": user_data["avatar"],
     }
-
-
-def filter_user_avatar(user_avatar):
-    if user_avatar:
-        return str(user_avatar).strip() or None
-    return None
 
 
 def filter_user_data_with_filters(request, user, user_data, filters):

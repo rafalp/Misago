@@ -34,23 +34,23 @@ def test_action_hook_without_actions_is_falsy(hook):
 
 
 def test_action_hook_with_actions_is_truthy(hook):
-    hook.append(lowercase_action)
+    hook.append_action(lowercase_action)
     assert hook
 
 
 def test_action_hook_calls_action_and_returns_its_result(hook):
-    hook.append(lowercase_action)
+    hook.append_action(lowercase_action)
     assert hook("TeSt") == ["test"]
 
 
 def test_action_hook_calls_multiple_actions_and_returns_their_results(hook):
-    hook.append(lowercase_action)
-    hook.append(uppercase_action)
+    hook.append_action(lowercase_action)
+    hook.append_action(uppercase_action)
     assert hook("TeSt") == ["test", "TEST"]
 
 
 def test_action_hook_action_can_be_prepended_before_other_actions(hook):
-    hook.prepend(uppercase_action)
-    hook.append(lowercase_action)
-    hook.prepend(reverse_action)
+    hook.prepend_action(uppercase_action)
+    hook.append_action(lowercase_action)
+    hook.prepend_action(reverse_action)
     assert hook("TeSt") == ["tSeT", "TEST", "test"]

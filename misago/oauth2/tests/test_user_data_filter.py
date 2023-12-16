@@ -53,7 +53,7 @@ def test_empty_user_name_is_replaced_with_placeholder_one(db, request):
         },
     )
 
-    assert len(filtered_data["name"].strip())
+    assert filtered_data["name"].strip()
 
 
 def test_missing_user_name_is_replaced_with_placeholder_one(db, request):
@@ -68,47 +68,7 @@ def test_missing_user_name_is_replaced_with_placeholder_one(db, request):
         },
     )
 
-    assert len(filtered_data["name"].strip())
-
-
-def test_user_name_is_converted_to_str(db, request):
-    filtered_data = filter_user_data(
-        request,
-        None,
-        {
-            "id": "242132",
-            "name": 123456,
-            "email": "oauth2@example.com",
-            "avatar": None,
-        },
-    )
-
-    assert filtered_data == {
-        "id": "242132",
-        "name": "123456",
-        "email": "oauth2@example.com",
-        "avatar": None,
-    }
-
-
-def test_user_email_is_converted_to_str(db, request):
-    filtered_data = filter_user_data(
-        request,
-        None,
-        {
-            "id": "242132",
-            "name": "New User",
-            "email": [1, 2, 4, "d"],
-            "avatar": None,
-        },
-    )
-
-    assert filtered_data == {
-        "id": "242132",
-        "name": "New_User",
-        "email": "[1, 2, 4, 'd']",
-        "avatar": None,
-    }
+    assert filtered_data["name"].strip()
 
 
 def test_missing_user_email_is_set_as_empty_str(db, request):
@@ -128,77 +88,6 @@ def test_missing_user_email_is_set_as_empty_str(db, request):
         "name": "New_User",
         "email": "",
         "avatar": None,
-    }
-
-
-def test_user_avatar_is_converted_to_str(db, request):
-    filtered_data = filter_user_data(
-        request,
-        None,
-        {
-            "id": "242132",
-            "name": "New User",
-            "email": "oauth2@example.com",
-            "avatar": 123456,
-        },
-    )
-
-    assert filtered_data == {
-        "id": "242132",
-        "name": "New_User",
-        "email": "oauth2@example.com",
-        "avatar": "123456",
-    }
-
-
-def test_empty_user_avatar_is_filtered_to_none(db, request):
-    filtered_data = filter_user_data(
-        request,
-        None,
-        {
-            "id": "242132",
-            "name": "New User",
-            "email": "oauth2@example.com",
-            "avatar": "",
-        },
-    )
-
-    assert filtered_data == {
-        "id": "242132",
-        "name": "New_User",
-        "email": "oauth2@example.com",
-        "avatar": None,
-    }
-
-
-def user_request_filter(request, user, user_data):
-    assert request
-
-
-def user_id_filter(request, user, user_data):
-    return {
-        "id": "".join(reversed(user_data["id"])),
-        "name": user_data["name"],
-        "email": user_data["email"],
-        "avatar": user_data["avatar"],
-    }
-
-
-def user_name_filter(request, user, user_data):
-    return {
-        "id": user_data["id"],
-        "name": "".join(reversed(user_data["name"])),
-        "email": user_data["email"],
-        "avatar": user_data["avatar"],
-    }
-
-
-def user_email_filter(request, user, user_data):
-    return {
-        "id": user_data["id"],
-        "name": user_data["name"],
-        "email": "filtered_%s" % user_data["email"],
-        "avatar": user_data["avatar"],
     }
 
 
