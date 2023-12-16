@@ -7,7 +7,7 @@ This guide will show the entire process of adding an action hook to a pre-existi
 
 ## The example function
 
-Because action hooks execute extra functions at a given point during code execution, we'll need one such point for this guide.  Let's imagine a function that takes a `request` object and returns a `dict` with forum stats:
+Let's imagine a function that takes a `request` object and returns a `dict` with forum stats:
 
 ```python
 from django.http import HttpRequest

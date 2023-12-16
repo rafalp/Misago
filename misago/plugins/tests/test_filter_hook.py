@@ -55,6 +55,6 @@ def test_filter_hook_calls_filters_in_order_of_adding(hook):
 
 
 def test_filter_can_be_inserted_before_other_filters(hook):
-    hook.prepend_filter(second_filter)
     hook.append_filter(first_filter)
-    assert hook(action) == [[[ACTION], FIRST_FILTER], SECOND_FILTER]
+    hook.prepend_filter(second_filter)
+    assert hook(action) == [[[ACTION], SECOND_FILTER], FIRST_FILTER]

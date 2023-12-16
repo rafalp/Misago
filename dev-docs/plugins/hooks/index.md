@@ -1,4 +1,4 @@
-# Hooks
+# Hooks guide
 
 Hooks are predefined locations in Misago's code where plugins can inject custom Python functions to execute as part of Misago's standard logic. They make one of multiple extension points implemented by Misago.
 
@@ -82,7 +82,7 @@ filter_hook.append_filter(plugin_function)
 filter_hook.prepend_filter(plugin_function)
 ```
 
-Because filter hooks stack their function calls, appended functions are in the lower part of the stack (closer to the wrapped function), while prepended functions are in the top part of the stack (further from the wrapped function):
+Because filter hooks stack their function calls, appended functions are in the top part of the stack (further from the wrapped function), while prepended functions are in the lower part of the stack (closer to the wrapped function):
 
 ```python
 filter_hook.append_filter(function_1)
@@ -93,9 +93,7 @@ filter_hook.prepend_filter(function_4)
 filter_hook()
 ```
 
-In the above example, functions `function_2` and `function_4` will always be called before `function_1` and `function_3`.
-
-> **Note:** Hooks provide no other guarantees regarding the order of execution of registered functions. This order may change on docker image rebuild or server restart.
+In the above example, functions `function_1` and `function_3` will always be called before `function_2` and `function_4`.
 
 
 ## Built-in hooks reference

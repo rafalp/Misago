@@ -7,14 +7,14 @@ This guide will show the entire process of adding a filter hook to a pre-existin
 
 ## The example function
 
-Because filter hooks wrap the existing functions, we'll need one for this guide. Let's imagine a function that parses a user-posted message into an HTML string:
+Let's imagine a function that parses a user-posted message into an HTML string:
 
 ```python
 from django.http import HttpRequest
 
 
 def parse_user_message(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important to us in this example
+    return str(message)  # Function's body is not important to us in this example
 ```
 
 
@@ -238,7 +238,7 @@ from django.http import HttpRequest
 
 
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important to us in this example
+    return str(message)  # Function's body is not important to us in this example
 ```
 
 Now we will create a shallow wrapper for this function, using its original name and signature:
@@ -254,7 +254,7 @@ def parse_user_message(request: HttpRequest, message: str) -> str:
 
 # Original function
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important to us in this example
+    return str(message)  # Function's body is not important to us in this example
 ```
 
 Final step is updating our wrapper to use our new hook to call wrap all `parse_user_message_action` calls:
@@ -272,7 +272,7 @@ def parse_user_message(request: HttpRequest, message: str) -> str:
 
 # Original function
 def parse_user_message_action(request: HttpRequest, message: str) -> str:
-    ...  # Function's body is not important to us in this example
+    return str(message)  # Function's body is not important to us in this example
 ```
 
 With this change the rest of the codebase that used the `parse_user_message` function will now call its new version that includes plugins, without needing further changes.

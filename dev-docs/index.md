@@ -18,5 +18,5 @@ Misago implements a plugin system that extends [Django's existing application me
 
 - [Plugin guide](./plugins/index.md)
 - [Plugin installation](./plugins/index.md#plugin-installation)
-- [Hooks](./plugins/hooks/index.md)
+- [Hooks guide](./plugins/hooks/index.md)
 - [Built-in hook reference](./plugins/hooks/reference.md)

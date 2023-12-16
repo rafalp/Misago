@@ -52,5 +52,5 @@ Plugins following the above file structure are discovered and installed automati
 
 Hooks are predefined locations in Misago's code where plugins can inject custom Python functions to execute as part of Misago's standard logic.
 
-- [Hooks](./hooks/index.md)
+- [Hooks guide](./hooks/index.md)
 - [Built-in hook reference](./hooks/reference.md)
