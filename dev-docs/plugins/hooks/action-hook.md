@@ -120,7 +120,7 @@ class GetStatsHook(ActionHook[GetStatsHookAction]):
 get_stats_hook = GetStatsHook()
 ```
 
-Those type annotations serve no function for the hook itself, but they are important for developers and tools. Developers now have an idea about the real signatures of the hook, and the action functions that plugins can add to it.
+Those type annotations serve no function for the hook itself, but they are important for developers and tools. Developers now have an idea about how the hook, and the action functions that plugins can add to it look like.
 
 Also, annotations enable type hints for this hook, which work with Python type checkers.
 
@@ -129,7 +129,7 @@ Finally, annotations enable documentation generation, which is a massive win for
 
 ## Adding documentation
 
-Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how the hook and the function that they need to implement in their plugin will look like.
+Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how the hook and the function that they need to implement in their plugin look like.
 
 Adding docstrings to those classes will result in the contents of those also being included in the generated document:
 

@@ -15,7 +15,6 @@ def get_user_from_data(request, user_data, user_data_raw):
     if not user_data["id"]:
         raise OAuth2UserIdNotProvidedError()
 
-    user_data["id"] = str(user_data["id"])
     user = get_user_by_subject(user_data["id"])
     if not user and user_data["email"]:
         user = get_user_by_email(user_data["id"], user_data["email"])

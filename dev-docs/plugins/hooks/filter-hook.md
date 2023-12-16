@@ -131,7 +131,7 @@ class ParseUserMessageHook(
 parse_user_message_hook = ParseUserMessageHook()
 ```
 
-Those type annotations serve no function for the hook itself, but they are important for developers and tools. Developers now have an idea about the real signatures of the hook, the original function it wraps, and the filter functions that plugins can add to it.
+Those type annotations serve no function for the hook itself, but they are important for developers and tools. Developers now have an idea about how of the hook, the original function it wraps, and the filter functions that plugins can add to it look like.
 
 Also, annotations enable type hints for this hook, which work with Python type checkers.
 
@@ -140,7 +140,7 @@ Finally, annotations enable documentation generation, which is a massive win for
 
 ## Adding documentation
 
-Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how both the function wrapped by the hook and the function that they need to implement in their plugin will look like.
+Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how both the function wrapped by the hook and the function that they need to implement in their plugin look like.
 
 Adding docstrings to those classes will result in the contents of those also being included in the generated document:
 
@@ -279,4 +279,4 @@ def parse_user_message_action(request: HttpRequest, message: str) -> str:
 
 With this change the rest of the codebase that used the `parse_user_message` function will now call its new version that includes plugins, without needing further changes.
 
-The original parse_user_message_action is still easily discernable, separate from the hook implementation.
+The original `parse_user_message_action` is still easily discernable, separate from the hook implementation.

@@ -11,7 +11,7 @@ class ValidateUserDataHookAction(Protocol):
     A standard Misago function used for validating the user data, or the next
     filter function from another plugin.
 
-    Raises Django's `ValidationError` if data is invalid.
+    Should raise a Django's `ValidationError` if data is invalid.
 
     # Arguments
 
@@ -36,6 +36,8 @@ class ValidateUserDataHookAction(Protocol):
         email: str | None
         avatar: str | None
     ```
+
+    This `dict` will be unfiltered unless it was filtered by an `action` call or `filter_user_data` was used by the plugin to filter it.
 
     ## `response_json: dict`
 
@@ -68,7 +70,7 @@ class ValidateUserDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
-    Raises Django's `ValidationError` if data is invalid.
+    Should raise a Django's `ValidationError` if data is invalid.
 
     # Arguments
 
@@ -100,6 +102,8 @@ class ValidateUserDataHookFilter(Protocol):
         email: str | None
         avatar: str | None
     ```
+
+    This `dict` will be unfiltered unless it was filtered by an `action` call or `filter_user_data` was used by the plugin to filter it.
 
     ## `response_json: dict`
 
@@ -136,11 +140,11 @@ class ValidateUserDataHook(
     This hook wraps the standard function that Misago uses to validate a Python
     `dict` containing the user data extracted from the OAuth 2 server's response.
 
-    Raises Django's `ValidationError` if data is invalid.
+    Should raise a Django's `ValidationError` if data is invalid.
 
     # Example
 
-    The code below implements a custom validation function that extends the standard
+    The code below implements a custom validator function that extends the standard
     logic with additional check for a permission to use the forum by the user:
 
     ```python
@@ -152,6 +156,8 @@ class ValidateUserDataHook(
         user_data: dict,
         response_json: dict,
     ) -> dict:
+        # Prevent user from completing the OAuth 2 flow unless they are a member
+        # of the "forum" group
         if (
             not response_json.get("groups")
             or not isinstance(response_json["groups"], list)
