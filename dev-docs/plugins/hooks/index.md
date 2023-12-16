@@ -1,15 +1,29 @@
 # Hooks
 
-Hooks are predefined locations in Misago's code where plugins can inject custom Python functions to execute as part of Misago's standard logic. They are one of multiple extension points implemented by Misago.
+Hooks are predefined locations in Misago's code where plugins can inject custom Python functions to execute as part of Misago's standard logic. They make one of multiple extension points implemented by Misago.
 
 
 ## Actions and filters
 
 Hooks come in two flavors: actions and filters.
 
-Actions are extra functions called at a given point in Misago's logic. Functions registered in a hook are executed serially, one after another. Depending on the individual hook, they may be used as event handlers, or they can return values of a predetermined type for later use.
+Actions are extra functions called at a given point in Misago's logic. Depending on the individual hook, they may be used as event handlers, or they can return values of a predetermined type for later use:
 
-Filters wrap existing Misago functions, allowing them to execute custom code before, after, or instead of the standard one. The last function to be registered in a hook is the first one called.
+```python
+# Action returning a dict with extra forum stat to display somewhere
+def plugin_action(request: HttpRequest) -> dict:
+    return {"name": "Unapproved threads", "count": count_unapproved_threads()}
+```
+
+Filters wrap existing Misago functions, allowing them to execute custom code before, after, or instead of the standard one:
+
+```python
+# Filter that wraps standard Misago parse function (an "action")
+# with simple bad words censor
+def plugin_filter(action: MessageParser, request: HttpRequest, message: str) -> str:
+    parsed_message = action(request, message)
+    return parsed_message.replace("gamble", "****")
+```
 
 
 ### Registering a function in an action hook

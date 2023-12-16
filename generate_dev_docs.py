@@ -121,7 +121,6 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         if hook_type == "FILTER":
             fp.write("\n\n\n")
             fp.write("## Filter")
-            fp.write("\n\n")
 
             if hook_filter_ast:
                 hook_cropped = hook_name
@@ -157,7 +156,6 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
 
             fp.write("\n\n\n")
             fp.write("## Action")
-            fp.write("\n\n")
 
             if hook_action_ast:
                 hook_cropped = hook_name
