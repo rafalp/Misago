@@ -122,14 +122,16 @@ get_stats_hook = GetStatsHook()
 
 Those type annotations serve no function for the hook itself, but they are important for developers and tools. Developers now have an idea about the real signatures of the hook, and the action functions that plugins can add to it.
 
-Annotations enable type hints for this hook, which work with Python type checkers.
+Also, annotations enable type hints for this hook, which work with Python type checkers.
 
 Finally, annotations enable documentation generation, which is a massive win for the maintainability of a project the size Misago is.
 
 
 ## Adding documentation
 
-Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how the hook and the function that they need to implement in their plugin will look like. Adding docstrings to those classes will result in the contents of those also being included in the generated document:
+Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how the hook and the function that they need to implement in their plugin will look like.
+
+Adding docstrings to those classes will result in the contents of those also being included in the generated document:
 
 ```python
 # get_stats.py
@@ -204,7 +206,7 @@ Now we will be able to import this hook with `from .hooks import get_stats_hook`
 
 ## Updating core logic
 
-With our hook completed, we can now update the original code to use it. Let's import it in 
+With our hook completed, we can now update the original function to use it:
 
 ```python
 from .hooks import get_stats_hook
@@ -220,9 +222,9 @@ def get_forum_stats(request: HttpRequest) -> dict[str, str]:
     return forum_stats
 ```
 
-With this change the rest of the codebase that used the `get_stats` function will now call its new version that includes plugins, without needing further changes.
+With this change the rest of the codebase that calls the `get_stats` function will now use its new version that includes plugins, without needing further changes.
 
-If you don't like `for result in get_stats_hook(request)` look in new `get_forum_stats`, you can change hook's `__call__` to gather those stats into single `dict` in it:
+If you don't like how `for result in get_stats_hook(request)` looks in new `get_forum_stats`, you can change hook's `__call__` to gather those stats into a single `dict`:
 
 ```python
 # get_stats.py

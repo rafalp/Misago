@@ -133,14 +133,16 @@ parse_user_message_hook = ParseUserMessageHook()
 
 Those type annotations serve no function for the hook itself, but they are important for developers and tools. Developers now have an idea about the real signatures of the hook, the original function it wraps, and the filter functions that plugins can add to it.
 
-Annotations enable type hints for this hook, which work with Python type checkers.
+Also, annotations enable type hints for this hook, which work with Python type checkers.
 
 Finally, annotations enable documentation generation, which is a massive win for the maintainability of a project the size Misago is.
 
 
 ## Adding documentation
 
-Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how both the function wrapped by the hook and the function that they need to implement in their plugin will look like. Adding docstrings to those classes will result in the contents of those also being included in the generated document:
+Misago's hooks documentation is generated from its code. Just the annotations that were added in the previous step will enable the generated document to show plugin developers how both the function wrapped by the hook and the function that they need to implement in their plugin will look like.
+
+Adding docstrings to those classes will result in the contents of those also being included in the generated document:
 
 ```python
 # parse_user_message.py
@@ -231,7 +233,7 @@ Now we will be able to import this hook with `from .hooks import parse_user_mess
 
 ## Updating core logic
 
-With our hook completed, we can now update the original code to use it. First, we will add the `_action` suffix to the original function's name:
+With our hook completed, we can now update the code to use it. First, we will add the `_action` suffix to the original function's name:
 
 ```python
 from django.http import HttpRequest
