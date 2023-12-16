@@ -301,22 +301,21 @@ def split_docstring(docstring: str) -> list[str]:
 
             elif line.startswith("# "):
                 if block:
-                    blocks.append(block.strip())
+                    blocks.append(wrap_docstring_lines(block.strip()))
                 block = line
 
             else:
                 block += line
 
-        if in_code or not line.endswith(" "):
-            block += "\n"
+        block += "\n"
 
     if block:
-        blocks.append(block)
+        blocks.append(wrap_docstring_lines(block))
 
     return blocks
 
 
-def indent_docstring_headers(docstring: str, level: int = 1) -> list[str]:
+def indent_docstring_headers(docstring: str, level: int = 1) -> str:
     in_code = False
     prefix = "#" * level
 
@@ -333,8 +332,43 @@ def indent_docstring_headers(docstring: str, level: int = 1) -> list[str]:
                 new_docstring += prefix
             new_docstring += line
 
-        if in_code or not line.endswith(" "):
+        new_docstring += "\n"
+
+    return wrap_docstring_lines(new_docstring.strip())
+
+
+def wrap_docstring_lines(docstring: str) -> str:
+    in_code = False
+    new_docstring = ""
+    previous_line = ""
+
+    for line in docstring.splitlines():
+        if in_code:
+            new_docstring += line
             new_docstring += "\n"
+
+            if line == "```":
+                in_code = False
+        else:
+            if line.startswith("```"):
+                in_code = True
+                new_docstring += line
+                new_docstring += "\n"
+            elif line.startswith("#"):
+                if new_docstring and not previous_line.startswith("#"):
+                    new_docstring += "\n"
+                new_docstring += line
+                new_docstring += "\n\n"
+            elif line:
+                if new_docstring and not new_docstring.endswith("\n"):
+                    new_docstring += " "
+                new_docstring += line
+            elif not previous_line.startswith("#"):
+                while not new_docstring.endswith("\n\n"):
+                    new_docstring += "\n"
+
+            if line:
+                previous_line = line
 
     return new_docstring.strip()
 

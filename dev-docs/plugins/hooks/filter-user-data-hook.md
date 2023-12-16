@@ -1,24 +1,12 @@
 # `filter_user_data_hook`
 
-This hook wraps the standard function that Misago uses to filter a Python `dict`
-containing the user data extracted from the OAuth 2 server's response.
+This hook wraps the standard function that Misago uses to filter a Python `dict` containing the user data extracted from the OAuth 2 server's response.
 
-User data filtering is part of the [user data validation by the OAuth 2
-client](./validate-user-data-hook.md), which itself is part of a function that
-creates a new user account or updates an existing one if user data has changed.
+User data filtering is part of the [user data validation by the OAuth 2 client](./validate-user-data-hook.md), which itself is part of a function that creates a new user account or updates an existing one if user data has changed.
 
-Standard user data filtering doesn't validate the data but instead tries to
-improve it to increase its chances of passing the validation. It converts the
-`name` into a valid Misago username (e.g., `Łukasz Kowalski` becomes
-`Lukasz_Kowalski`). It also appends a random string at the end of the name if
-it's already taken by another user (e.g., `RickSanchez` becomes
-`RickSanchez_C137`). If the name is empty, a placeholder one is generated,
-e.g., `User_d6a9`. Lastly, it replaces an `email` with an empty string if
-it's `None`, to prevent a type error from being raised by e-mail validation
-that happens in the next step.
+Standard user data filtering doesn't validate the data but instead tries to improve it to increase its chances of passing the validation. It converts the `name` into a valid Misago username (e.g., `Łukasz Kowalski` becomes `Lukasz_Kowalski`). It also appends a random string at the end of the name if it's already taken by another user (e.g., `RickSanchez` becomes `RickSanchez_C137`). If the name is empty, a placeholder one is generated, e.g., `User_d6a9`. Lastly, it replaces an `email` with an empty string if it's `None`, to prevent a type error from being raised by e-mail validation that happens in the next step.
 
-Plugin filters can still raise Django's `ValidationError` on an invalid value
-instead of attempting to fix it if this is a preferable resolution.
+Plugin filters can still raise Django's `ValidationError` on an invalid value instead of attempting to fix it if this is a preferable resolution.
 
 
 ## Location
@@ -44,24 +32,25 @@ def custom_user_data_filter(
 
 A function implemented by a plugin that can be registered in this hook.
 
+
 ### Arguments
 
 #### `action: FilterUserDataHookAction`
 
-A standard Misago function used for filtering the user data, or the next
-filter function from another plugin.
+A standard Misago function used for filtering the user data, or the next filter function from another plugin.
 
 See the [action](#action) section for details.
+
 
 #### `request: HttpRequest`
 
 The request object.
 
+
 #### `user: Optional[User]`
 
-A `User` object associated with `user_data["id"]` or `user_data["email"]`,
-or `None` if it's the user's first time signing in with OAuth and the user's
-account hasn't been created yet.
+A `User` object associated with `user_data["id"]` or `user_data["email"]`, or `None` if it's the user's first time signing in with OAuth and the user's account hasn't been created yet.
+
 
 #### `user_data: dict`
 
@@ -74,6 +63,7 @@ class UserData(TypedDict):
     email: str | None
     avatar: str | None
 ```
+
 
 ### Return value
 
@@ -97,8 +87,8 @@ def filter_user_data_action(
     ...
 ```
 
-A standard Misago function used for filtering the user data, or the next
-filter function from another plugin.
+A standard Misago function used for filtering the user data, or the next filter function from another plugin.
+
 
 ### Arguments
 
@@ -106,11 +96,11 @@ filter function from another plugin.
 
 The request object.
 
+
 #### `user: Optional[User]`
 
-A `User` object associated with `user_data["id"]` or `user_data["email"]`,
-or `None` if it's the user's first time signing in with OAuth and the user's
-account hasn't been created yet.
+A `User` object associated with `user_data["id"]` or `user_data["email"]`, or `None` if it's the user's first time signing in with OAuth and the user's account hasn't been created yet.
+
 
 #### `user_data: dict`
 
@@ -123,6 +113,7 @@ class UserData(TypedDict):
     email: str | None
     avatar: str | None
 ```
+
 
 ### Return value
 
@@ -139,8 +130,7 @@ class UserData(TypedDict):
 
 ## Example
 
-The code below implements a custom filter function that extends the standard
-logic with additional user e-mail normalization for Gmail e-mails:
+The code below implements a custom filter function that extends the standard logic with additional user e-mail normalization for Gmail e-mails:
 
 ```python
 @filter_user_data_hook.append_filter
