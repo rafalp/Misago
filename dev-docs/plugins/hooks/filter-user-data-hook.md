@@ -2,6 +2,10 @@
 
 This hook wraps the standard function that Misago uses to filter a Python `dict` containing the user data extracted from the OAuth 2 server's response.
 
+Standard user data filtering replaces an `email` with an empty string if its `None` and converts the `name` into a valid Misago username (eg. `Łukasz Kowalski` becomes `Lukasz_Kowalski`). It also appends a random string at the end of the name if its already taken by the other user (eg. `RickSanchez` becomes `RickSanchez_C137`).
+
+User data filtering is part of the [user data validation logic in the OAuth 2 client](./validate-user-data-hook.md). Filter doesn't validate the data
+
 
 ## Location
 
@@ -30,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: FilterUserDataHookAction`
 
-Built in function used by Misago to filter user data, or next filter.
+Built in function used by Misago to filter user data, or a next filter.
 
 See the [action](#action) section for details.
 
@@ -78,7 +82,7 @@ def filter_user_data_action(
     ...
 ```
 
-A standard Misago function is used for filtering the user data, or a partial filter function from another plugin.
+A standard Misago function used for filtering the user data, or a next filter function from another plugin.
 
 ### Arguments
 

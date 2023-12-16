@@ -8,7 +8,7 @@ from ...users.models import User
 
 class FilterUserDataHookAction(Protocol):
     """
-    A standard Misago function is used for filtering the user data, or a partial 
+    A standard Misago function used for filtering the user data, or a next
     filter function from another plugin.
 
     # Arguments
@@ -65,7 +65,7 @@ class FilterUserDataHookFilter(Protocol):
 
     ## `action: FilterUserDataHookAction`
 
-    Built in function used by Misago to filter user data, or next filter.
+    Built in function used by Misago to filter user data, or a next filter.
 
     See the [action](#action) section for details.
 
@@ -118,12 +118,29 @@ class FilterUserDataHook(
     FilterHook[FilterUserDataHookAction, FilterUserDataHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to filter a Python `dict` 
+    This hook wraps the standard function that Misago uses to filter a Python `dict`
     containing the user data extracted from the OAuth 2 server's response.
+
+    User data filtering is part of the [user data validation by the OAuth 2
+    client](./validate-user-data-hook.md), which itself is part of a process that
+    creates a new user account or updates an existing one if the user data has changed.
+
+    Standard user data filtering doesn't validate the data but instead tries to
+    improve it to increase its chances of passing the validation. It converts the
+    `name` into a valid Misago username (e.g., `Łukasz Kowalski` becomes
+    `Lukasz_Kowalski`). It also appends a random string at the end of the name if
+    it's already taken by another user (e.g., `RickSanchez` becomes
+    `RickSanchez_C137`). If the name is empty, a placeholder one is generated,
+    e.g., `User_d6a9`. Lastly, it replaces an `email` with an empty string if
+    it's `None`, to prevent a type error from being raised by e-mail validation
+    that happens in the next step.
+
+    Plugin filters can still raise Django's `ValidationError` on an invalid value
+    instead of attempting to fix it if this is a preferable resolution.
 
     # Example
 
-    The code below implements a custom filter function that extends the standard 
+    The code below implements a custom filter function that extends the standard
     logic with additional user e-mail normalization for Gmail e-mails:
 
     ```python
