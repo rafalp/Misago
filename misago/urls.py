@@ -8,7 +8,7 @@ from .core.views import forum_index
 app_name = "misago"
 
 # Register Misago Apps
-urlpatterns = hooks.urlpatterns + [
+urlpatterns = [
     path("", include("misago.analytics.urls")),
     path("", include("misago.legal.urls")),
     path("", include("misago.users.urls")),

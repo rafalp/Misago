@@ -1,5 +1,4 @@
 apipatterns = []
-urlpatterns = []
 context_processors = []
 
 new_registrations_validators = []
