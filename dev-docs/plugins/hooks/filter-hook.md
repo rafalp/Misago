@@ -196,19 +196,19 @@ class ParseUserMessageHook(
 parse_user_message_hook = ParseUserMessageHook()
 ```
 
-Docstrings can use Markdown formatting. If you want to break a line in a docstring but prevent the documentation generator from doing the same, put a space character before the line break:
+Docstrings can use Markdown formatting:
 
 ```python
 class Example:
     """
-    Lorem **ipsum** dolor 
+    Lorem **ipsum** dolor
     sit amet elit.
 
     Another paragraph
     """
 ```
 
-Will be converted by documentation generator into:
+The above docstring will be converted by the documentation generator into:
 
 > Lorem **ipsum** dolor sit amet elit.
 > 
