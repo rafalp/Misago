@@ -2,55 +2,65 @@
 
 Misago implements a plugin system that enables customization and extension of the core functionality of the software.
 
-> **Plugins vs forking Misago**
->
-> It may seem simpler (and faster) to fork and change Misago directly instead of using a plugins. While this is possible, the time required to later keep the fork in sync with new versions of Misago for every site update may quickly add up, resulting in a net loss of time.
->
-> It is recommended to attempt achieving as much as possible through plugins. In situations where this is not feasible, consider [reaching out to the developers](https://misago-project.org/c/development/31/) before resorting to forking. Misago's current extension points list is not complete, and new ones may be added in future releases based on user feedback.
+
+## Installing plugins
+
+The default Misago setup supports installing plugins from both PyPI and the filesystem.
 
 
-## Plugin installation
+### Installing a plugin from PyPI
 
-To install a plugin, place its directory in the standard `plugins` directory within your Misago setup.
+To install a plugin from PyPI, first, create a `pip-install.txt` file in your Misago's `plugins` directory.
 
-Example plugin must be a directory containing a valid Python package with a `misago_plugin.py` file.
-
-This graph shows the file structure of a minimal valid plugin:
+Inside this file, specify each plugin to install from PyPI on a separate line:
 
 ```
-- minimal-plugin
-  - minimal_plugin
-    - __init__.py
-    - misago_plugin.py
+# pip-install.txt
+misago-first-plugin
+misago-other-plugin~=3.0
 ```
 
-Minimal plugin has:
+`pip-install.txt` a [PIP requirements file](https://pip.pypa.io/en/stable/reference/requirements-file-format/), but Misago only supports specifying package names and their versions (and comments). Other features like package URLs or installation options are not supported.
 
-- `minimal-plugin`: a directory that contains all the plugin's files.
-- `minimal_plugin`: a Python package (and a Django application) that Misago will import.
-- `__init__.py`: a file that makes `minimal_plugin` directory a Python package.
-- `misago_plugin.py`: a file that makes `minimal_plugin` directory a Misago plugin.
-
-The  `minimal-plugin` and `minimal_plugin` directories can contain additional files and directories. The `minimal-plugin` directory may include a `pyproject.toml` or `requirements.txt` file to define the plugin's dependencies. It could also include a hidden `.git` directory if plugin was cloned from a Git repository.
-
-Plugins following the above file structure are discovered and installed automatically at the Misago's Docker image build time.
+To install the specified plugins, [rebuild and restart the Docker container](./#rebuilding-misago-docker-image-to-install-plugins).
 
 
-## Writing custom plugin
+### Installing a plugin from the filesystem
 
-- django applications mechanism
-- plugin structure
+To install a plugin from the filesystem, place its directory in your Misago's `plugins` directory.
+
+A plugin must be a directory containing a Python package with a `misago_plugin.py` file:
+
+```
+example-plugin/
+  example_plugin/
+    __init__.py
+    misago_plugin.py
+```
+
+A valid plugin has:
+
+- `example-plugin`: a directory containing all the plugin's files.
+- `example_plugin`: a Python package (and a Django application) that Misago will import.
+- `__init__.py`: a file that makes the `example_plugin` directory a Python package.
+- `misago_plugin.py`: a file that makes the `example_plugin` directory a Misago plugin.
+
+The `example-plugin` directory may include a `pyproject.toml` or `requirements.txt` file to define the plugin's dependencies. It could also include a hidden `.git` directory if the plugin was cloned from a Git repository.
+
+Plugins following the above file structure are automatically discovered and installed during [the Misago Docker image build](./#rebuilding-misago-docker-image-to-install-plugins).
 
 
-## Plugin data
+## Rebuilding Misago Docker image to install plugins
 
-- explain what `plugin-data` model field is
-- generated list plugin data models
+Plugins are installed during the Misago Docker image build.
+
+If you are using [`misago-docker`](https://github.com/rafalp/misago-docker) to run your site, use the `./appctl rebuild` command.
+
+If you are using the [local development setup](https://github.com/rafalp/misago), run the `./dev rebuild` command instead.
 
 
-## Hooks
+## Creating a custom plugin
 
-Hooks are predefined locations in Misago's code where plugins can inject custom Python functions to execute as part of Misago's standard logic.
+If you are interested in creating a custom plugin, please see the [plugin tutorial](./plugin-development.md).
 
-- [Hooks guide](./hooks/index.md)
-- [Built-in hook reference](./hooks/reference.md)
+Once you have your basic plugin up and running, the [extending Misago](./extending-misago.md) document contains a list of all available extension points.

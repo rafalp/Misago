@@ -23,6 +23,7 @@ from django.views.decorators.http import last_modified
 from django.views.i18n import JavaScriptCatalog
 
 from misago import __released__, __version__
+from misago.plugins.urlpatterns import discover_plugins_urlpatterns
 from misago.users.forms.auth import AdminAuthenticationForm
 
 
@@ -40,7 +41,7 @@ admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
 
 
-urlpatterns = [
+urlpatterns = discover_plugins_urlpatterns(settings.INSTALLED_PLUGINS) + [
     path("", include("misago.urls", namespace="misago")),
     # Javascript translations
     path(
