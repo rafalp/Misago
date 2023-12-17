@@ -69,7 +69,7 @@ notify_user(
 ```
 
 
-## Adding custom notification
+## Adding custom notifications
 
 Misago supports adding custom notifications for new events by plugins.
 
