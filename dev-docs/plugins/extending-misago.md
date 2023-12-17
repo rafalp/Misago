@@ -44,7 +44,7 @@ The following models currently define this field:
 
 ## Urls
 
-Plugin [`urls`](https://docs.djangoproject.com/en/5.0/topics/http/urls/#example) modules are automatically [included](https://docs.djangoproject.com/en/5.0/topics/http/urls/#including-other-urlconfs) in the site's urlcofn before `misago.urls`.
+Plugin [`urls`](https://docs.djangoproject.com/en/5.0/topics/http/urls/#example) modules are automatically [included](https://docs.djangoproject.com/en/5.0/topics/http/urls/#including-other-urlconfs) in the site's `urlconf` before `misago.urls`.
 
 If both Misago and a plugin define a URL with the same path, the plugin's URL takes precedence over Misago's. This enables plugins to replace Misago's URLs and views.
 
