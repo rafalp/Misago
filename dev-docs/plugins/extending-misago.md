@@ -14,7 +14,33 @@ All standard Django extension points work out of the box in Misago plugins:
 - Database migrations in the `migrations` directory.
 - Translations in the `locale` directory.
 - Templates in the `templates` directory.
+- Template tags in the `templatetags` directory.
 - Static files in the `static` directory.
+
+
+## App configs
+
+Plugin should define an [application config](https://docs.djangoproject.com/en/5.0/ref/applications/#for-application-authors). The [`ready`](https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.AppConfig.ready) method should be used to register extensions in Misago:
+
+```python
+# my_plugin/apps.py
+from django.apps import AppConfig
+from misago.oauth2.hooks import validate_user_data_hook
+
+from .validators import validate_user_forum_permissions
+
+
+class MyPluginConfig(AppConfig):
+    name = "my_plugin"
+    verbose_name = "My Plugin"
+
+    def ready(self):
+        # Register functions in hooks directly in `ready()`
+        validate_user_data_hook.append_filter(validate_user_forum_permissions)
+
+        # Or import a Python module to execute its logic
+        from . import validators as _
+```
 
 
 ## Hooks
@@ -42,7 +68,7 @@ The following models currently define this field:
 `plugin_data` is not a replacement for models. Use it for [denormalization](https://en.wikipedia.org/wiki/Denormalization), storing small bits of data that are frequently accessed or used in queries. 
 
 
-## Urls
+## URLs
 
 Plugin [`urls`](https://docs.djangoproject.com/en/5.0/topics/http/urls/#example) modules are automatically [included](https://docs.djangoproject.com/en/5.0/topics/http/urls/#including-other-urlconfs) in the site's `urlconf` before `misago.urls`.
 
@@ -57,3 +83,36 @@ The Notifications document provides a guide for adding custom notifications to M
 
 [Adding custom notifications](../notifications.md#adding-custom-notification)
 
+
+## Templates
+
+Plugins can define custom templates in their `templates` directory. Those templates should be namespaced by keeping them in an extra directory within `templates`, e.g.:
+
+```
+# Good:
+my_plugin/
+  templates/
+    my_plugin/
+      template.html
+
+# Bad:
+my_plugin/
+  templates/
+    template.html
+```
+
+
+### Overriding default templates
+
+If a plugin defines a template with the same path and file as a template that already exists in Misago, the plugin's template will be loaded instead of Misago's.
+
+For example, a plugin that replaces Misago's navbar with a custom one should have a `navbar.html` template in its `templates/misago` directory:
+
+```
+my_plugin/
+  templates/
+    misago/
+      navbar.html
+```
+
+Note that site owners can still override Misago and plugin templates through the `theme/templates` directory, which is part of the `misago-docker` setup.
