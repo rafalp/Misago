@@ -1,15 +1,14 @@
 from functools import wraps
-from typing import Any, Dict, List, Protocol
+from typing import Dict, List, Protocol
 
 from django.template import Context
-from django.template.loader import render_to_string
 from django.utils.safestring import SafeString, mark_safe
 
 from .enums import PluginOutlet
 from .hooks import ActionHook
 
 
-class PluginOutletHookAction:
+class PluginOutletHookAction(Protocol):
     def __call__(self, context: dict | Context) -> str | SafeString | None:
         pass
 

@@ -103,8 +103,7 @@ def display_forum_stats(context: Context) -> str:
         "users": User.objects.count(),
     }
 
-    with context.update(forum_stats) as new_context:
-        return render_to_string("my_plugin/forum_stats.html", new_context)
+    return render_to_string("my_plugin/forum_stats.html", forum_stats)
 ```
 
 
@@ -156,7 +155,7 @@ from misago.users.models import User
 
 
 @template_outlet_action
-def display_forum_stats(context: Context) -> Tuple[str, dict]:
+def display_forum_stats(context: Context) -> Tuple[str, dict] | None:
     # Hide forum stats from unregistered users
     if context["user"].is_anonymous:
         return None
