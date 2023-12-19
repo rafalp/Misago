@@ -255,7 +255,7 @@ def generate_outlets_reference():
     outlets_path, outlets_attr = OUTLETS_ENUM.rsplit(".", 1)
     outlets_enum = getattr(import_module(outlets_path), outlets_attr)
     outlets_dict = {outlet.name: outlet.value for outlet in outlets_enum}
-    
+
     with open(PLUGINS_PATH / "template-outlets-reference.md", "w") as fp:
         fp.write("# Built-in template outlets reference")
         fp.write("\n\n")
