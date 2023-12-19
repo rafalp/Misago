@@ -6,6 +6,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 
 HOOKS_MODULES = ("misago.oauth2.hooks",)
+PLUGIN_MANIFEST = "misago.plugins.manifest.MisagoPlugin"
 OUTLETS_ENUM = "misago.plugins.enums.PluginOutlet"
 
 BASE_PATH = Path(__file__).parent
@@ -15,8 +16,19 @@ PLUGINS_HOOKS_PATH = PLUGINS_PATH / "hooks"
 
 
 def main():
+    generate_plugin_manifest_reference()
     generate_hooks_reference()
     generate_outlets_reference()
+
+
+def generate_plugin_manifest_reference():
+    manifest_path, manifest_attr = PLUGIN_MANIFEST.rsplit(".", 1)
+    manifest_type = getattr(import_module(manifest_path), manifest_attr)
+
+    with open(PLUGINS_PATH / "plugin-manifest-reference.md", "w") as fp:
+        fp.write("# Plugin manifest reference")
+        fp.write("\n\n")
+        fp.write(indent_docstring_headers(dedent(manifest_type.__doc__)).strip())
 
 
 def generate_hooks_reference():

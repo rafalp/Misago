@@ -56,3 +56,26 @@ The `misago-users-online-plugin` directory can contain additional files and dire
 Misago's admin control panel has a "Plugins" page that displays a list of all installed plugins on your Misago site. To access the admin control panel, start the development server with the `docker compose up` command and visit http://127.0.0.1:8000/admincp/ in your browser. You will see a login page for the Misago admin control panel. Log in using the `admin` username and `password` password.
 
 After logging in, find the "Plugins" link in the menu on the left and click on it. The list of plugins should include our new plugin as "Misago-Users-Online-Plugin". If it's not there, make sure you've restarted the development server and that the plugin structure is correct.
+
+
+## Adding a plugin manifest
+
+Misago will display a message next to our plugin that its missing a manifest in it's `misago_plugin.py` file. Plugin manifest is an instance of `MisagoPlugin` dataclass populate with plugin's data.
+Misago will display a message next to our plugin that it's missing a manifest in its `misago_plugin.py` file. The plugin manifest is an instance of the `MisagoPlugin` data class populated with the plugin's data.
+
+Let's update the `misago_plugin.py` file to include a basic manifest for our plugin:
+
+```python
+# misago_users_online_plugin/misago_plugin.py
+from misago import MisagoPlugin
+
+
+manifest = MisagoPlugin(
+    name="Users Online",
+    description="Displays users online list on the categories page.",
+)
+```
+
+Save the updated file and refresh the admin's plugins page. Our plugin will now be displayed as "Users Online", along with a brief description of its functionality.
+
+The `MisagoPlugin` class allows plugin authors to specify additional information about their plugins. Refer to the [plugin manifest reference](./plugin-manifest-reference.md) document for a comprehensive list of available fields.
