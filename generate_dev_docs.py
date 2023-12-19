@@ -1,10 +1,12 @@
 # Script for generating some of documents in `dev-docs` from Misago's code
 import ast
 from dataclasses import dataclass
+from importlib import import_module
 from pathlib import Path
 from textwrap import dedent, indent
 
 HOOKS_MODULES = ("misago.oauth2.hooks",)
+OUTLETS_ENUM = "misago.plugins.enums.PluginOutlet"
 
 BASE_PATH = Path(__file__).parent
 DOCS_PATH = BASE_PATH / "dev-docs"
@@ -14,6 +16,7 @@ PLUGINS_HOOKS_PATH = PLUGINS_PATH / "hooks"
 
 def main():
     generate_hooks_reference()
+    generate_outlets_reference()
 
 
 def generate_hooks_reference():
@@ -246,6 +249,24 @@ def parse_hook_docstring(docstring: str) -> HookDocstring:
             description = block
 
     return HookDocstring(description=description, examples=examples or None)
+
+
+def generate_outlets_reference():
+    outlets_path, outlets_attr = OUTLETS_ENUM.rsplit(".", 1)
+    outlets_enum = getattr(import_module(outlets_path), outlets_attr)
+    outlets_dict = {outlet.name: outlet.value for outlet in outlets_enum}
+    
+    with open(PLUGINS_PATH / "template-outlets-reference.md", "w") as fp:
+        fp.write("# Built-in template outlets reference")
+        fp.write("\n\n")
+        fp.write(
+            "This document contains a list of all built-in template outlets in Misago."
+        )
+        for outlet_name in sorted(outlets_dict):
+            fp.write("\n\n\n")
+            fp.write(f"## `{outlet_name}`")
+            fp.write("\n\n")
+            fp.write(outlets_dict[outlet_name])
 
 
 def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | None]:

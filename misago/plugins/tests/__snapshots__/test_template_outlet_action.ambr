@@ -1,0 +1,10 @@
+# serializer version: 1
+# name: test_noop_template_action_renders_nothing
+  '<div></div>'
+# ---
+# name: test_template_name_action_renders_template_with_standard_context
+  '<div><div>Plugin returned message: Standard context</div></div>'
+# ---
+# name: test_template_name_context_action_renders_template_with_updated_context
+  '<div><div>Plugin returned message: Custom context</div></div>'
+# ---

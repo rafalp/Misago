@@ -51,37 +51,12 @@ Hooks are predefined locations in Misago's code where plugins can inject custom 
 - [Built-in hook reference](./hooks/reference.md)
 
 
-## Plugin data
+## Template outlets
 
-Some of Misago models have a special `plugin_data` JSON field that defaults to an empty JSON object (`{}`). This field can be used as a convenient storage space for plugins to store their data on Misago objects. Additionally, a GIN index is created on this field, allowing it to be [used in queries](https://docs.djangoproject.com/en/5.0/topics/db/queries/#querying-jsonfield).
+Template outlets are special hooks located in Misago's templates where plugins can include extra HTML.
 
-The following models currently define this field:
-
-- `misago.categories.models.Category`
-- `misago.threads.models.Attachment`
-- `misago.threads.models.AttachmentType`
-- `misago.threads.models.Poll`
-- `misago.threads.models.Post`
-- `misago.threads.models.Thread`
-- `misago.users.models.User`
-
-`plugin_data` is not a replacement for models. Use it for [denormalization](https://en.wikipedia.org/wiki/Denormalization), storing small bits of data that are frequently accessed or used in queries. 
-
-
-## URLs
-
-Plugin [`urls`](https://docs.djangoproject.com/en/5.0/topics/http/urls/#example) modules are automatically [included](https://docs.djangoproject.com/en/5.0/topics/http/urls/#including-other-urlconfs) in the site's `urlconf` before `misago.urls`.
-
-If both Misago and a plugin define a URL with the same path, the plugin's URL takes precedence over Misago's. This enables plugins to replace Misago's URLs and views.
-
-By default, included plugin URLs are not namespaced. If you want your plugin's URLs to be namespaced, you need to [define the namespace](https://docs.djangoproject.com/en/5.0/topics/http/urls/#url-namespaces-and-included-urlconfs) in your plugin's URLs module.
-
-
-## Notifications
-
-The Notifications document provides a guide for adding custom notifications to Misago:
-
-[Adding custom notifications](../notifications.md#adding-custom-notification)
+- [Template outlets guide](./template-outlets.md)
+- [Built-in template outlets reference](./template-outlets-reference.md)
 
 
 ## Templates
@@ -116,3 +91,36 @@ my_plugin/
 ```
 
 Note that site owners can still override Misago and plugin templates through the `theme/templates` directory, which is part of the `misago-docker` setup.
+
+
+## Plugin data
+
+Some of Misago models have a special `plugin_data` JSON field that defaults to an empty JSON object (`{}`). This field can be used as a convenient storage space for plugins to store their data on Misago objects. Additionally, a GIN index is created on this field, allowing it to be [used in queries](https://docs.djangoproject.com/en/5.0/topics/db/queries/#querying-jsonfield).
+
+The following models currently define this field:
+
+- `misago.categories.models.Category`
+- `misago.threads.models.Attachment`
+- `misago.threads.models.AttachmentType`
+- `misago.threads.models.Poll`
+- `misago.threads.models.Post`
+- `misago.threads.models.Thread`
+- `misago.users.models.User`
+
+`plugin_data` is not a replacement for models. Use it for [denormalization](https://en.wikipedia.org/wiki/Denormalization), storing small bits of data that are frequently accessed or used in queries. 
+
+
+## URLs
+
+Plugin [`urls`](https://docs.djangoproject.com/en/5.0/topics/http/urls/#example) modules are automatically [included](https://docs.djangoproject.com/en/5.0/topics/http/urls/#including-other-urlconfs) in the site's `urlconf` before `misago.urls`.
+
+If both Misago and a plugin define a URL with the same path, the plugin's URL takes precedence over Misago's. This enables plugins to replace Misago's URLs and views.
+
+By default, included plugin URLs are not namespaced. If you want your plugin's URLs to be namespaced, you need to [define the namespace](https://docs.djangoproject.com/en/5.0/topics/http/urls/#url-namespaces-and-included-urlconfs) in your plugin's URLs module.
+
+
+## Notifications
+
+The Notifications document provides a guide for adding custom notifications to Misago:
+
+[Adding custom notifications](../notifications.md#adding-custom-notification)
