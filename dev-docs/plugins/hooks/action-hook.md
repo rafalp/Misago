@@ -26,29 +26,29 @@ Our example Django app looks like this:
 
 ```
 stats_app/
-  __init__.py
-  stats.py
+    __init__.py
+    stats.py
 ```
 
 We will create a new Python package inside the `stats_app` and name it `hooks`:
 
 ```
 stats_app/
-  hooks/
+    hooks/
+        __init__.py
     __init__.py
-  __init__.py
-  stats.py
+    stats.py
 ```
 
 Next, we will create an empty `get_stats.py` file in `hooks`:
 
 ```
 stats_app/
-  hooks/
+    hooks/
+        __init__.py
+        get_stats.py
     __init__.py
-    get_stats.py
-  __init__.py
-  stats.py
+    stats.py
 ```
 
 Our hook's definition will be located in the `get_stats.py` file, but its instance will be re-exported from the `hooks/__init__.py` file.
