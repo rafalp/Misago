@@ -81,7 +81,7 @@ def _include_template(
     template_name: str, context: Context, new_context: dict | None = None
 ):
     """Subset of Django include template tag.
-    
+
     Works only with Django template engine.
     """
     cache = context.render_context.dicts[0].setdefault("_template_outlet_action", {})
