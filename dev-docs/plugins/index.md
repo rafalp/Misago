@@ -33,9 +33,9 @@ A plugin must be a directory containing a Python package with a `misago_plugin.p
 
 ```
 example-plugin/
-  example_plugin/
-    __init__.py
-    misago_plugin.py
+    example_plugin/
+        __init__.py
+        misago_plugin.py
 ```
 
 A valid plugin has:

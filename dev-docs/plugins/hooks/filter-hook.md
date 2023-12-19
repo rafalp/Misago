@@ -26,29 +26,29 @@ Our example function lives in an example Django app, looking like this:
 
 ```
 parser_app/
-  __init__.py
-  parser.py
+    __init__.py
+    parser.py
 ```
 
 We will create a new Python package inside the `parser_app` and name it `hooks`:
 
 ```
 parser_app/
-  hooks/
+    hooks/
+        __init__.py
     __init__.py
-  __init__.py
-  parser.py
+    parser.py
 ```
 
 Next, we will create an empty `parse_user_message.py` file in `hooks`:
 
 ```
 parser_app/
-  hooks/
+    hooks/
+        __init__.py
+        parse_user_message.py
     __init__.py
-    parse_user_message.py
-  __init__.py
-  parser.py
+    parser.py
 ```
 
 Our hook's definition will be located in the `parse_user_message.py` file, but its instance will be re-exported from the `hooks/__init__.py` file.
