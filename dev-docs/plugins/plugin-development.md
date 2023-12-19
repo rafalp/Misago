@@ -1,3 +1,0 @@
-# Plugin dev tutorial
-
-TODO
