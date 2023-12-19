@@ -67,22 +67,24 @@ def template_outlet_action(f):
             return ""
 
         if isinstance(template_data, str):
-            return _render_template(template_data, context)
+            return _include_template(template_data, context)
 
         if isinstance(template_data, tuple):
             template_name, new_context = template_data
-            return _render_template(template_name, context, new_context)
+            return _include_template(template_name, context, new_context)
 
         return ""
 
     return wrapped_outlet_action
 
 
-def _render_template(
+def _include_template(
     template_name: str, context: Context, new_context: dict | None = None
 ):
-    # Template inclusion logic inspired by Django's include tag
-    # This logic is Django-specific and doesn't work with other template engines
+    """Subset of Django include template tag.
+    
+    Works only with Django template engine.
+    """
     cache = context.render_context.dicts[0].setdefault("_template_outlet_action", {})
     template = cache.get(template_name)
     if template is None:
