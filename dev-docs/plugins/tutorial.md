@@ -60,7 +60,6 @@ After logging in, find the "Plugins" link in the menu on the left and click on i
 
 ## Adding a plugin manifest
 
-Misago will display a message next to our plugin that its missing a manifest in it's `misago_plugin.py` file. Plugin manifest is an instance of `MisagoPlugin` dataclass populate with plugin's data.
 Misago will display a message next to our plugin that it's missing a manifest in its `misago_plugin.py` file. The plugin manifest is an instance of the `MisagoPlugin` data class populated with the plugin's data.
 
 Let's update the `misago_plugin.py` file to include a basic manifest for our plugin:
