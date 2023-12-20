@@ -1,7 +1,7 @@
 from django.db import migrations
 
 from ...core.utils import slugify
-from ..trees import CategoriesTree
+from ..enums import CategoryTreeDeprecated
 
 _ = lambda s: s
 
@@ -15,7 +15,7 @@ def create_default_categories_tree(apps, schema_editor):
         slug="private",
         lft=1,
         rght=2,
-        tree_id=CategoriesTree.PRIVATE_THREADS,
+        tree_id=CategoryTreeDeprecated.PRIVATE_THREADS,
         level=0,
     )
 
@@ -25,7 +25,7 @@ def create_default_categories_tree(apps, schema_editor):
         slug="root",
         lft=3,
         rght=6,
-        tree_id=CategoriesTree.THREADS,
+        tree_id=CategoryTreeDeprecated.THREADS,
         level=0,
     )
 
@@ -36,7 +36,7 @@ def create_default_categories_tree(apps, schema_editor):
         lft=4,
         rght=5,
         tree_id=1,
-        level=CategoriesTree.THREADS,
+        level=CategoryTreeDeprecated.THREADS,
         name=category_name,
         slug=slugify(category_name),
     )

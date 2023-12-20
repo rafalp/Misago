@@ -1,0 +1,83 @@
+{% load i18n misago_avatars misago_capture %}
+<div class="col-xs-12 col-sm-6 col-md-4 category-last-thread">
+  {% if category_data.is_protected %}
+    <div class="media category-thread-message">
+      <div class="media-left">
+        <span class="material-icon">
+          info_outline
+        </span>
+      </div>
+      <div class="media-body">
+        <p>
+          {% trans "Protected category" context "category last reply" %}
+        </p>
+      </div>
+    </div>
+  {% elif category_data.is_private %}
+    <div class="media category-thread-message">
+      <div class="media-left">
+        <span class="material-icon">
+          info_outline
+        </span>
+      </div>
+      <div class="media-body">
+        <p>
+          {% trans "Private category" context "category last reply" %}
+        </p>
+      </div>
+    </div>
+  {% elif last_thread %}
+    <div class="media">
+      <div class="media-left hidden-xs">
+        {% if last_thread.last_poster %}
+          <a href="{{ last_thread.last_poster.get_absolute_url }}" class="last-poster-avatar" title="{{ last_thread.last_poster_name }}">
+            <img src="{{ last_thread.last_poster|avatar:40 }}" width="40" height="40" alt="">
+          </a>
+        {% else %}
+          <span class="last-poster-avatar" title="{{ last_thread.last_poster_name }}">
+            <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
+          </span>
+        {% endif %}
+      </div>
+      <div class="media-body">
+        <div class="media-heading">
+          <a class="item-title thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
+            {{ last_thread.title }}
+          </a>
+        </div>
+        <ul class="list-inline">
+          <li class="category-last-thread-poster">
+            {% if last_thread.last_poster %}
+              <a href="{{ last_thread.last_poster.get_absolute_url }}" class="item-title">
+                {{ last_thread.last_poster_name }}
+              </a>
+            {% else %}
+              <span class="item-title">{{ last_thread.last_poster_name }}</span>
+            {% endif %}
+          </li>
+          <li class="divider">
+            &#8212;
+          </li>
+          <li class="category-last-thread-date">
+            <a href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}" misago-timestamp="{{ last_thread.last_post_on.isoformat }}">
+              {{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  {% else %}
+    <div class="media category-thread-message">
+      <div class="media-left">
+        <span class="material-icon">
+          info_outline
+        </span>
+      </div>
+      <div class="media-body">
+        <p>
+          {% trans "Empty category" context "category last reply" %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+</div>

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Callable, Dict, overload
 from django.http import HttpRequest
 from django.utils.translation import pgettext
 
-from ..categories.trees import CategoriesTree
+from ..categories.enums import CategoryTree
 from ..threads.views.goto import PrivateThreadGotoPostView, ThreadGotoPostView
 from .verbs import NotificationVerb
 from .exceptions import NotificationVerbError
@@ -156,7 +156,7 @@ go_to_private_thread_post = PrivateThreadGotoPostView.as_view()
 def get_replied_notification_url(
     request: HttpRequest, notification: "Notification"
 ) -> str:
-    if notification.category.tree_id == CategoriesTree.PRIVATE_THREADS:
+    if notification.category.tree_id == CategoryTree.PRIVATE_THREADS:
         view = go_to_private_thread_post
     else:
         view = go_to_thread_post

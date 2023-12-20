@@ -1,0 +1,4 @@
+{% load i18n %}
+{% for item in items %}
+  {% include "misago/categories/categories_list_category.html" with category=item.category category_data=item %}
+{% endfor %}
