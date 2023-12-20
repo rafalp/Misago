@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-11 22:33+0000\n"
+"POT-Creation-Date: 2023-12-20 17:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -322,46 +322,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:1
-msgctxt "time ago"
-msgid "moment ago"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "time ago"
-msgid "now"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "day at time"
-msgid "%(day)s at %(time)s"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "day at time"
-msgid "Tomorrow at %(time)s"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "day at time"
-msgid "Yesterday at %(time)s"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "short minutes"
-msgid "%(time)sm"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "short hours"
-msgid "%(time)sh"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "short days"
-msgid "%(time)sd"
-msgstr ""
-
-#: static/misago/js/misago.js:1
 msgctxt "avatar modal btn"
 msgid "Download my Gravatar"
 msgstr ""
@@ -542,6 +502,26 @@ msgid "(success)"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "merge threads conflict form"
+msgid "Are you sure you want to delete all polls?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict modal title"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict btn"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgctxt "merge threads conflict best answer"
 msgid "Best answer"
 msgstr ""
@@ -563,26 +543,6 @@ msgctxt "merge threads conflict poll"
 msgid ""
 "Select the poll for your newly merged thread. Rejected polls will be "
 "permanently deleted and cannot be recovered."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "merge threads conflict form"
-msgid "Are you sure you want to delete all polls?"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "merge threads conflict modal title"
-msgid "Merge threads"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "merge threads conflict btn"
-msgid "Cancel"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "merge threads conflict btn"
-msgid "Merge threads"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1535,6 +1495,46 @@ msgid "no"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "moment ago"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "now"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "%(day)s at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Tomorrow at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short minutes"
+msgid "%(time)sm"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short hours"
+msgid "%(time)sh"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short days"
+msgid "%(time)sd"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgctxt "accept agreement prompt"
 msgid ""
 "Declining will result in immediate deactivation and deletion of your "
@@ -1574,60 +1574,6 @@ msgstr ""
 msgctxt "auth message"
 msgid "or press F5 key."
 msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "categories list"
-msgid "No categories exist or you don't have permission to see them."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category status"
-msgid "This category has no new posts. (closed)"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category status"
-msgid "This category has new posts. (closed)"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category status"
-msgid "This category has no new posts."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category status"
-msgid "This category has new posts."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category last thread"
-msgid "Empty category"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category last thread"
-msgid "Private category"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category last thread"
-msgid "Protected category"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category stats"
-msgid "%(threads)s thread"
-msgid_plural "%(threads)s threads"
-msgstr[0] ""
-msgstr[1] ""
-
-#: static/misago/js/misago.js:1
-msgctxt "category stats"
-msgid "%(posts)s post"
-msgid_plural "%(posts)s posts"
-msgstr[0] ""
-msgstr[1] ""
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications title"
@@ -2277,6 +2223,52 @@ msgid "Search users..."
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "profile follows title"
+msgid "Follows"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Found %(users)s user."
+msgid_plural "Found %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "You are following %(users)s user."
+msgid_plural "You are following %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "%(username)s is following %(users)s user."
+msgid_plural "%(username)s is following %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Loading..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Search returned no users matching specified criteria."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "You are not following any users."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "%(username)s is not following any users."
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgctxt "profile username history title"
 msgid "Username history"
 msgstr ""
@@ -2591,52 +2583,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "profile threads title"
 msgid "Threads"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows title"
-msgid "Follows"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "Found %(users)s user."
-msgid_plural "Found %(users)s users."
-msgstr[0] ""
-msgstr[1] ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "You are following %(users)s user."
-msgid_plural "You are following %(users)s users."
-msgstr[0] ""
-msgstr[1] ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "%(username)s is following %(users)s user."
-msgid_plural "%(username)s is following %(users)s users."
-msgstr[0] ""
-msgstr[1] ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "Loading..."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "Search returned no users matching specified criteria."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "You are not following any users."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "profile follows"
-msgid "%(username)s is not following any users."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -3372,6 +3318,17 @@ msgid "This post is protected. Only moderators may change it."
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "post delete"
+msgid ""
+"Are you sure you want to delete this post? This action is not reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post delete"
+msgid "Post has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgctxt "post likes modal"
 msgid "No users have liked this post."
 msgstr ""
@@ -3656,17 +3613,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post options hide btn"
 msgid "Unhide"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "post delete"
-msgid ""
-"Are you sure you want to delete this post? This action is not reversible!"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "post delete"
-msgid "Post has been deleted."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4039,6 +3985,19 @@ msgid "%(username)s on %(posted_on)s"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "merge posts"
+msgid ""
+"Are you sure you want to merge selected posts? This action is not reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete posts"
+msgid ""
+"Are you sure you want to delete selected posts? This action is not "
+"reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgctxt "thread posts moderation move"
 msgid "You have to enter link to the other thread."
 msgstr ""
@@ -4129,12 +4088,6 @@ msgid "Approve"
 msgstr ""
 
 #: static/misago/js/misago.js:1
-msgctxt "merge posts"
-msgid ""
-"Are you sure you want to merge selected posts? This action is not reversible!"
-msgstr ""
-
-#: static/misago/js/misago.js:1
 msgctxt "thread posts moderation"
 msgid "Merge"
 msgstr ""
@@ -4167,13 +4120,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "thread posts moderation"
 msgid "Unhide"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "delete posts"
-msgid ""
-"Are you sure you want to delete selected posts? This action is not "
-"reversible!"
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -4567,6 +4513,23 @@ msgid "Show more"
 msgstr ""
 
 #: static/misago/js/misago.js:1
+msgctxt "private threads title"
+msgid "Private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads list"
+msgid ""
+"Private threads are threads which only those that started them and those "
+"they have invited may see and participate in."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads list empty"
+msgid "You aren't participating in any private threads."
+msgstr ""
+
+#: static/misago/js/misago.js:1
 msgctxt "threads list"
 msgid "All"
 msgstr ""
@@ -4623,23 +4586,6 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "threads list"
 msgid "Unapproved content"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "private threads title"
-msgid "Private threads"
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "private threads list"
-msgid ""
-"Private threads are threads which only those that started them and those "
-"they have invited may see and participate in."
-msgstr ""
-
-#: static/misago/js/misago.js:1
-msgctxt "private threads list empty"
-msgid "You aren't participating in any private threads."
 msgstr ""
 
 #: static/misago/js/misago.js:1
