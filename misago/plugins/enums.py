@@ -14,3 +14,5 @@ class PluginOutlet(Enum):
         "On the Admin Dashboard page, below the Analytics card."
     )
     ADMIN_DASHBOARD_END = "On the Admin Dashboard page, below all other content."
+    CATEGORIES_LIST_START = "On the categories page, above the list."
+    CATEGORIES_LIST_END = "On the categories page, under the list."

@@ -4,7 +4,7 @@
     <div class="col-xs-12 col-sm-6 col-md-6 category-main">
       <div class="media">
         <div class="media-left">
-          {% include "misago/categories/icon.html" %}
+          {% include "misago/categories/categories_list_category_row_icon.html" %}
         </div>
         <div class="media-body">
           <h4 class="media-heading">
@@ -20,31 +20,35 @@
         </div>
       </div>
     </div>
-    {% include "misago/categories/stats.html" %}
-    {% include "misago/categories/last_thread.html" %}
+    {% include "misago/categories/categories_list_category_row_stats.html" %}
+    {% if category.level == 1 %}
+      {% include "misago/categories/categories_list_category_row_last_thread.html" with last_thread=category_data.last_thread %}
+    {% else %}
+      {% include "misago/categories/categories_list_category_row_last_thread.html" with last_thread=category_data.children_last_thread %}
+    {% endif %}
   </div>
-  {% if category.subcategories and not first %}
+  {% if category_data.children and category.level > 1 %}
     <div class="row subcategories-list">
-      {% for subcategory in category.subcategories %}
+      {% for child_data in category_data.children %}
         <div class="col-xs-12 col-sm-4 col-md-3">
-          <a class="btn btn-default btn-block btn-sm btn-subcategory {{ subcategory.is_read|iffalse:'btn-subcategory-new' }}" href="{{ subcategory.get_absolute_url }}">
+          <a class="btn btn-default btn-block btn-sm btn-subcategory {{ child_data.new_posts|iftrue:'btn-subcategory-new' }}" href="{{ child_data.category.get_absolute_url }}">
             <span class="material-icon">
-              {% if category.is_closed %}
-                {% if category.is_read %}
-                  lock_outline
-                {% else %}
+              {% if child_data.category.is_closed %}
+                {% if child_data.new_posts %}
                   lock
+                {% else %}
+                  lock_outline
                 {% endif %}
               {% else %}
-                {% if category.is_read %}
-                  chat_bubble_outline
-                {% else %}
+                {% if child_data.new_posts %}
                   chat_bubble
+                {% else %}
+                  chat_bubble_outline
                 {% endif %}
               {% endif %}
             </span>
             <span class="icon-text">
-              {{ subcategory }}
+              {{ child_data.category }}
             </span>
           </a>
         </div>

@@ -5,7 +5,7 @@ from django.db.models import IntegerChoices
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..acl.useracl import get_user_acl
-from ..categories.trees import CategoriesTree
+from ..categories.enums import CategoryTree
 from ..conf.dynamicsettings import DynamicSettings
 from ..core.mail import build_mail
 from ..threads.models import Post, Thread, ThreadParticipant
@@ -105,7 +105,7 @@ def notify_watcher_on_new_thread_reply(
     cache_versions: Dict[str, str],
     settings: DynamicSettings,
 ):
-    is_private = post.category.tree_id == CategoriesTree.PRIVATE_THREADS
+    is_private = post.category.tree_id == CategoryTree.PRIVATE_THREADS
     user_acl = get_user_acl(watched_thread.user, cache_versions)
 
     if not user_can_see_post(watched_thread.user, user_acl, post, is_private):

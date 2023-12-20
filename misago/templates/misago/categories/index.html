@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_absoluteurl misago_shorthands %}
+{% load i18n misago_absoluteurl misago_plugins misago_shorthands %}
 
 
 {% block title %}
@@ -76,7 +76,13 @@
 <div class="page page-categories{{ categories|iffalse:' page-message' }}">
   {% include "misago/categories/header.html" %}
   <div class="container page-container">
-    {% include "misago/categories/body.html" %}
+    {% pluginoutlet CATEGORIES_LIST_START %}
+    {% if categories_list %}
+      {% include "misago/categories/categories_list_body.html" with items=categories_list %}
+    {% else %}
+      {% include "misago/categories/empty_message.html" %}
+    {% endif %}
+    {% pluginoutlet CATEGORIES_LIST_END %}
   </div>
 </div>
 {% endblock content %}

@@ -1,7 +1,0 @@
-{% load i18n misago_shorthands %}
-<ul class="list-group list-group-category {% if category.css_class %}list-group-category-has-flavor list-group-category-{{ category.css_class }}{% endif %}">
-  {% include "misago/categories/list_item.html" with category=category first=True %}
-  {% for subcategory in category.subcategories %}
-    {% include "misago/categories/list_item.html" with category=subcategory first=False %}
-  {% endfor %}
-</ul>
