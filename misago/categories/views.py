@@ -83,14 +83,18 @@ def get_categories_list(request: HttpRequest):
                 }
             )
 
-        if request.user.is_authenticated:
-            item["new_posts"] = new_posts[category.id]
+        if request.user.is_authenticated and new_posts[category.id]:
+            item["new_posts"] = True
+            item["children_new_posts"] = True
 
         if category.level > 1:
             parent = categories_map[category.parent_id]
+
+            # Add item's aggregated stats to parent's
             parent["children_threads"] += item["children_threads"]
             parent["children_posts"] += item["children_posts"]
 
+            # Update parent's last thread if they don't have one or its older
             item_last_thread = item["children_last_thread"]
             parent_last_thread = parent["children_last_thread"]
             if item_last_thread and (
@@ -99,8 +103,8 @@ def get_categories_list(request: HttpRequest):
             ):
                 parent["children_last_thread"] = item_last_thread
 
-            if item["new_posts"]:
-                item["children_new_posts"] = True
+            # Propagate to parent the new posts status
+            if item["children_new_posts"]:
                 parent["children_new_posts"] = True
 
             parent["children"].insert(0, item)
