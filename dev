@@ -90,6 +90,12 @@ intro() {
     echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
     echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations with Transifex."
     echo
+    echo "Plugins:"
+    echo
+    echo "    ${BOLD}pluginmakemessages plugin${NORMAL}      update translation files for \"en\" language in \"plugin\"."
+    echo "    ${BOLD}pluginmakemessages plugin lang${NORMAL} update translation files for \"lang\" language in \"plugin\"."
+    echo "    ${BOLD}plugincompilemessages plugin${NORMAL}   compile translation files in \"plugin\" to \"mo\" format."
+    echo
     echo "Shortcuts:"
     echo
     echo "    ${BOLD}manage.py${NORMAL}         runs \"python manage.py\" inside docker."
@@ -268,6 +274,52 @@ test() {
     docker compose run --rm misago pytest "${@:2}"
 }
 
+# Make plugin's messages
+plugin_makemessages() {
+    docker compose run --rm --no-deps misago ./dev plugin_makemessages_in_docker $1 $2
+}
+
+# Docker part of plugin's makemessages
+plugin_makemessages_in_docker() {
+    require_in_docker
+    plugin_path="./plugins/$1" 
+
+    if [ -d $plugin_path ]; then
+        cd $plugin_path
+        if [[ $2 ]]; then
+            echo "Extracting messages in the $1 plugin for $2 language:"
+            echo "Processing .py and .html files..."
+            django-admin makemessages -l $2 --no-obsolete -e html,txt,py > /dev/null
+
+            echo "Processing .js files..."
+            django-admin makemessages -l $2 --no-obsolete -d djangojs > /dev/null
+        else
+            echo "Extracting messages in $1 plugin for all languages:"
+            django-admin makemessages --all --no-obsolete -e html,txt,py > /dev/null
+            django-admin makemessages --all --no-obsolete -d djangojs > /dev/null
+        fi
+    else
+        echo "Could not find the $1 plugin!"
+    fi
+}
+
+# Compile plugin's messages
+plugin_compilemessages() {
+    docker compose run --rm --no-deps misago ./dev plugin_compilemessages_in_docker $1
+}
+
+# Docker part of plugin's compile messages
+plugin_compilemessages_in_docker() {
+    require_in_docker
+    plugin_path="./plugins/$1" 
+    if [ -d $plugin_path ]; then
+        cd $plugin_path
+        django-admin compilemessages
+    else
+        echo "Could not find the $1 plugin!"
+    fi
+}
+
 # Make messages
 makemessages() {
     docker compose run --rm --no-deps misago ./dev makemessages_in_docker $1
@@ -378,6 +430,14 @@ if [[ $1 ]]; then
         rebuild $@
     elif [[ $1 = "test" ]]; then
         test $@
+    elif [[ $1 = "pluginmakemessages" ]]; then
+        plugin_makemessages $2 $3
+    elif [[ $1 = "plugin_makemessages_in_docker" ]]; then
+        plugin_makemessages_in_docker $2 $3
+    elif [[ $1 = "plugincompilemessages" ]]; then
+        plugin_compilemessages $2
+    elif [[ $1 = "plugin_compilemessages_in_docker" ]]; then
+        plugin_compilemessages_in_docker $2
     elif [[ $1 = "makemessages" ]]; then
         makemessages $2
     elif [[ $1 = "makemessages_in_docker" ]]; then

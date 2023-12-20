@@ -1,6 +1,7 @@
 from functools import wraps
 from typing import Dict, List, Protocol
 
+from django.http import HttpRequest
 from django.template import Context
 from django.utils.safestring import SafeString, mark_safe
 
@@ -9,15 +10,19 @@ from .hooks import ActionHook
 
 
 class PluginOutletHookAction(Protocol):
-    def __call__(self, context: dict | Context) -> str | SafeString | None:
+    def __call__(
+        self, request: HttpRequest, context: dict | Context
+    ) -> str | SafeString | None:
         pass
 
 
 class PluginOutletHook(ActionHook[PluginOutletHookAction]):
     __slots__ = ActionHook.__slots__
 
-    def __call__(self, context: dict | Context) -> List[str | SafeString | None]:
-        return super().__call__(context)
+    def __call__(
+        self, request: HttpRequest, context: dict | Context
+    ) -> List[str | SafeString | None]:
+        return super().__call__(request, context)
 
 
 template_outlets: Dict[str, PluginOutletHook] = {}
@@ -60,8 +65,8 @@ def template_outlet_action(f):
 
     @wraps(f)
     @mark_safe
-    def wrapped_outlet_action(context: Context):
-        template_data = f(context)
+    def wrapped_outlet_action(request: HttpRequest, context: Context):
+        template_data = f(request, context)
         if template_data is None:
             return ""
 
