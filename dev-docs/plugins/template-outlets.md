@@ -5,7 +5,7 @@ Template outlets are special hooks located in Misago's templates where plugins c
 
 ## Template outlet function
 
-Functions registered in template outlets are called with two arguments: the `request` object and a `django.template.Context` instance, and return either `None`, `str` or `SafeText`:
+Functions registered in template outlets are called with two arguments: the `request` object and a `django.template.Context` instance, and return either `str`, `SafeText` or `None`:
 
 ```python
 from django.http import HttpRequest
@@ -109,7 +109,7 @@ def display_forum_stats(request: HttpRequest, context: Context) -> str:
     return render_to_string("my_plugin/forum_stats.html", forum_stats)
 ```
 
-Note that if a function decorated with `mark_safe` returns `None`, it will be cast to a `str` and displayed in a template. Instead, return an empty string when using the `mark_safe` decorator.
+Note that when a function decorated with `mark_safe` returns `None`, it will be cast to a `str` and displayed in a template. Instead, return an empty string when using the `mark_safe` decorator.
 
 
 ## `template_outlet_action` decorator
