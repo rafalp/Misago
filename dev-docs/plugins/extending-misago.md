@@ -105,6 +105,7 @@ The following models currently define this field:
 - `misago.threads.models.Poll`
 - `misago.threads.models.Post`
 - `misago.threads.models.Thread`
+- `misago.users.models.Group`
 - `misago.users.models.User`
 
 `plugin_data` is not a replacement for models. Use it for [denormalization](https://en.wikipedia.org/wiki/Denormalization), storing small bits of data that are frequently accessed or used in queries. 
