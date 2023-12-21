@@ -20,4 +20,5 @@ class Group(PluginDataModel):
     is_moderator = models.BooleanField(default=False)
 
     class Meta:
+        indexes = PluginDataModel.Meta.indexes
         ordering = ["ordering"]
