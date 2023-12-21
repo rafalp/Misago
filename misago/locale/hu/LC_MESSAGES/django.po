@@ -2,23 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # uwnyuD, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-29 13:35+0000\n"
+"POT-Creation-Date: 2023-12-20 20:02+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: uwnyuD, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/misago/teams/65369/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: acl/admin/__init__.py:24
@@ -214,8 +214,8 @@ msgstr "Rövid név"
 #: categories/admin/forms.py:58
 msgctxt "admin category form"
 msgid ""
-"Optional, alternative or abbreviated name (eg. abbreviation) used on threads"
-" list."
+"Optional, alternative or abbreviated name (eg. abbreviation) used on threads "
+"list."
 msgstr ""
 "Opcionális, alternatív vagy rövidített név (pl. rövidítés), amelyet a témák "
 "listáján használnak."
@@ -315,8 +315,8 @@ msgstr "A téma kora"
 #: categories/admin/forms.py:134
 msgctxt "admin category form"
 msgid ""
-"Prune thread if number of days since its creation is greater than specified."
-" Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified. "
+"Enter 0 to disable this pruning criteria."
 msgstr ""
 "Metsze meg a témát, ha a létrehozása óta eltelt napok száma nagyobb a "
 "megadottnál. Írjon be 0-t a metszési feltétel letiltásához."
@@ -377,8 +377,7 @@ msgstr "Archívum"
 #: categories/admin/forms.py:221
 msgctxt "admin category form"
 msgid ""
-"Instead of being deleted, pruned threads can be moved to designated "
-"category."
+"Instead of being deleted, pruned threads can be moved to designated category."
 msgstr "Törlés helyett a levágott témák áthelyezhetők a kijelölt kategóriába."
 
 #: categories/admin/forms.py:225
@@ -633,8 +632,8 @@ msgstr "Értesítések"
 #: conf/admin/__init__.py:99
 msgctxt "admin node"
 msgid ""
-"Those settings control default notification preferences of new user accounts"
-" and storage time of existing notifications."
+"Those settings control default notification preferences of new user accounts "
+"and storage time of existing notifications."
 msgstr ""
 "Ezek a beállítások szabályozzák az új felhasználói fiókok alapértelmezett "
 "értesítési beállításait és a meglévő értesítések tárolási idejét."
@@ -858,8 +857,7 @@ msgstr ""
 #: conf/admin/forms/general.py:75
 msgctxt "admin general settings form"
 msgid ""
-"Image that will be displayed in forum navbar instead of a small logo or "
-"text."
+"Image that will be displayed in forum navbar instead of a small logo or text."
 msgstr ""
 
 #: conf/admin/forms/general.py:80
@@ -956,8 +954,8 @@ msgstr ""
 msgctxt "admin general settings form"
 msgid ""
 "Hiding the link to the ACP from user menus reduces risk of malicious actors "
-"gaining access to admin session for admin users who are sharing their device"
-" with others or who are logging in to the site in public spaces."
+"gaining access to admin session for admin users who are sharing their device "
+"with others or who are logging in to the site in public spaces."
 msgstr ""
 
 #: conf/admin/forms/general.py:163
@@ -1062,8 +1060,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:79
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Address of the login form on provider's server that users will be redirected"
-" to."
+"Address of the login form on provider's server that users will be redirected "
+"to."
 msgstr ""
 
 #: conf/admin/forms/oauth2.py:86
@@ -1101,8 +1099,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:110
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Name of key containing the access token in JSON returned by the provider. If"
-" token is nested, use period (\".\") for path, eg: \"result.token\" will "
+"Name of key containing the access token in JSON returned by the provider. If "
+"token is nested, use period (\".\") for path, eg: \"result.token\" will "
 "retrieve the token from \"token\" key nested in \"result\"."
 msgstr ""
 
@@ -1149,8 +1147,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:167
 msgctxt "admin oauth2 settings form"
 msgid ""
-"List of extra headers to include in a HTTP request made to retrieve the user"
-" profile. Example header is \"Header-name: value\". Specify each header on "
+"List of extra headers to include in a HTTP request made to retrieve the user "
+"profile. Example header is \"Header-name: value\". Specify each header on "
 "separate line."
 msgstr ""
 
@@ -1290,10 +1288,10 @@ msgstr ""
 #: conf/admin/forms/threads.py:91
 msgctxt "admin threads settings form"
 msgid ""
-"Controls amount of data used by read-tracking system. All content older than"
-" number of days specified in this setting is considered old and read, even "
-"if the opposite is true for the user. Active forums can try lowering this "
-"value while less active ones may wish to increase it instead."
+"Controls amount of data used by read-tracking system. All content older than "
+"number of days specified in this setting is considered old and read, even if "
+"the opposite is true for the user. Active forums can try lowering this value "
+"while less active ones may wish to increase it instead."
 msgstr ""
 
 #: conf/admin/forms/threads.py:99
@@ -1392,8 +1390,8 @@ msgstr ""
 #: conf/admin/forms/users.py:75
 msgctxt "admin users settings form"
 msgid ""
-"Delete new inactive accounts if they weren't activated within this number of"
-" days"
+"Delete new inactive accounts if they weren't activated within this number of "
+"days"
 msgstr ""
 
 #: conf/admin/forms/users.py:79
@@ -1461,8 +1459,8 @@ msgstr ""
 #: conf/admin/forms/users.py:149
 msgctxt "admin users settings form"
 msgid ""
-"Select which avatar to use when user has no Gravatar associated with their "
-"e-mail address."
+"Select which avatar to use when user has no Gravatar associated with their e-"
+"mail address."
 msgstr ""
 
 #: conf/admin/forms/users.py:154
@@ -1536,9 +1534,9 @@ msgstr ""
 #: conf/admin/forms/users.py:239
 msgctxt "admin users settings form"
 msgid ""
-"This setting prevents situations when the last page of a users list contains"
-" very few items. If number of users to be displayed on the last page is less"
-" or equal to number specified in this setting, those users will instead be "
+"This setting prevents situations when the last page of a users list contains "
+"very few items. If number of users to be displayed on the last page is less "
+"or equal to number specified in this setting, those users will instead be "
 "appended to the previous page, reducing number of list's pages."
 msgstr ""
 
@@ -1617,47 +1615,47 @@ msgctxt "admin settings"
 msgid "Settings have been saved."
 msgstr ""
 
-#: core/errorpages.py:51
+#: core/errorpages.py:52
 msgctxt "api"
 msgid "Permission denied."
 msgstr ""
 
-#: core/errorpages.py:81
+#: core/errorpages.py:82
 msgctxt "social auth"
 msgid ""
 "A problem was encountered when disconnecting your account from the remote "
 "site."
 msgstr ""
 
-#: core/errorpages.py:85
+#: core/errorpages.py:86
 msgctxt "social auth"
 msgid ""
 "You are not allowed to disconnect your account from the other site, because "
 "currently it's the only way to sign in to your account."
 msgstr ""
 
-#: core/errorpages.py:90
+#: core/errorpages.py:91
 #, python-format
 msgctxt "social auth"
 msgid "A problem was encountered when signing you in using %(backend)s."
 msgstr ""
 
-#: core/errorpages.py:95
+#: core/errorpages.py:96
 msgctxt "social auth"
 msgid "The sign in process has been canceled by user."
 msgstr ""
 
-#: core/errorpages.py:99
+#: core/errorpages.py:100
 msgctxt "social auth"
 msgid "The other service could not be reached."
 msgstr ""
 
-#: core/errorpages.py:108
+#: core/errorpages.py:109
 msgctxt "social auth"
 msgid "Unexpected problem has been encountered during sign in process."
 msgstr ""
 
-#: core/errorpages.py:131
+#: core/errorpages.py:132
 msgctxt "api"
 msgid ""
 "Your request was rejected because your browser didn't send the CSRF cookie, "
@@ -1712,11 +1710,11 @@ msgstr ""
 
 #: graphql/admin/versioncheck.py:51
 #: templates/misago/admin/dashboard/checks.html:17
-#: templates/misago/admin/dashboard/index.html:33
+#: templates/misago/admin/dashboard/index.html:37
 msgctxt "admin version check"
 msgid ""
-"Version check feature relies on the API operated by the Python Package Index"
-" (pypi.org) to retrieve the latest Misago release version."
+"Version check feature relies on the API operated by the Python Package Index "
+"(pypi.org) to retrieve the latest Misago release version."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:76
@@ -2011,8 +2009,7 @@ msgstr ""
 #: menus/admin/forms.py:28
 msgctxt "admin menu item form"
 msgid ""
-"Optional. Additional CSS class to include in link's \"class\" HTML "
-"attribute."
+"Optional. Additional CSS class to include in link's \"class\" HTML attribute."
 msgstr ""
 
 #: menus/admin/forms.py:33
@@ -2143,7 +2140,8 @@ msgstr ""
 #: notifications/threads.py:262
 #, python-format
 msgctxt "new private thread email subject"
-msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgid ""
+"%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr ""
 
 #: oauth2/exceptions.py:14
@@ -2163,8 +2161,7 @@ msgstr ""
 
 #: oauth2/exceptions.py:35
 msgctxt "oauth2 error"
-msgid ""
-"The OAuth2 state sent by the provider did not match one in the session."
+msgid "The OAuth2 state sent by the provider did not match one in the session."
 msgstr ""
 
 #: oauth2/exceptions.py:45
@@ -2228,18 +2225,30 @@ msgctxt "oauth2 error"
 msgid "User profile retrieved from the OAuth2 provider did not validate."
 msgstr ""
 
-#: oauth2/user.py:100
+#: oauth2/user.py:99
 msgctxt "oauth2 error"
 msgid ""
 "Your e-mail address returned by the provider is not available for use on "
 "this site."
 msgstr ""
 
-#: oauth2/user.py:110
+#: oauth2/user.py:109
 msgctxt "oauth2 error"
 msgid ""
-"Your username returned by the provider is not available for use on this "
-"site."
+"Your username returned by the provider is not available for use on this site."
+msgstr ""
+
+#: plugins/admin/__init__.py:15
+msgctxt "admin node"
+msgid "Plugins"
+msgstr ""
+
+#: plugins/metadata.py:86
+#, python-format
+msgctxt "plugins metadata"
+msgid ""
+"Plugin manifest is of an unexpected type '%(manifest_type)s' (expected "
+"MisagoPlugin instance)"
 msgstr ""
 
 #: search/api.py:18
@@ -2296,10 +2305,10 @@ msgstr ""
 msgctxt "admin social auth provider form"
 msgid ""
 "This setting controls handling of e-mail collisions that occur when e-mail "
-"address returned from social site is already stored in the forum's database."
-" Enabling this option will result in the user being signed in to pre-"
-"existing account. Otherwise they will be asked to specify a different e-mail"
-" to complete the sign in using social site."
+"address returned from social site is already stored in the forum's database. "
+"Enabling this option will result in the user being signed in to pre-existing "
+"account. Otherwise they will be asked to specify a different e-mail to "
+"complete the sign in using social site."
 msgstr ""
 
 #: socialauth/admin/forms/base.py:59 socialauth/admin/forms/base.py:61
@@ -2379,8 +2388,8 @@ msgstr ""
 #, python-format
 msgctxt "social auth"
 msgid ""
-"The e-mail address associated with your %(backend)s account is not available"
-" for use on this site."
+"The e-mail address associated with your %(backend)s account is not available "
+"for use on this site."
 msgstr ""
 
 #: socialauth/pipeline.py:99
@@ -2474,8 +2483,8 @@ msgstr ""
 #: templates/misago/activation/request.html:32
 msgctxt "account activation page"
 msgid ""
-"The site administrator may impose a requirement on newly registered accounts"
-" to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts "
+"to be activated before users will be able to sign in."
 msgstr ""
 
 #: templates/misago/activation/request.html:35
@@ -3332,7 +3341,7 @@ msgid "Top posters ranking"
 msgstr ""
 
 #: templates/misago/admin/dashboard/analytics.html:7
-#: templates/misago/admin/dashboard/index.html:40
+#: templates/misago/admin/dashboard/index.html:44
 msgctxt "admin analytics"
 msgid "Analytics"
 msgstr ""
@@ -3353,7 +3362,7 @@ msgid "Loading..."
 msgstr ""
 
 #: templates/misago/admin/dashboard/checks.html:16
-#: templates/misago/admin/dashboard/index.html:32
+#: templates/misago/admin/dashboard/index.html:36
 msgctxt "admin version check"
 msgid "Checking Misago version used by the site..."
 msgstr ""
@@ -3457,47 +3466,47 @@ msgctxt "admin dashboard"
 msgid "Dashboard"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:28
+#: templates/misago/admin/dashboard/index.html:32
 msgctxt "admin version check"
 msgid "Version check is currently unavailable due to an error."
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:29
+#: templates/misago/admin/dashboard/index.html:33
 msgctxt "admin version check"
 msgid "Misago admin API did not answer or answered with an error."
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:42
+#: templates/misago/admin/dashboard/index.html:46
 msgctxt "admin analytics"
 msgid "User registrations"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:43
+#: templates/misago/admin/dashboard/index.html:47
 msgctxt "admin analytics"
 msgid "User deletions"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:44
+#: templates/misago/admin/dashboard/index.html:48
 msgctxt "admin analytics"
 msgid "Threads started"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:45
+#: templates/misago/admin/dashboard/index.html:49
 msgctxt "admin analytics"
 msgid "Posts"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:46
+#: templates/misago/admin/dashboard/index.html:50
 msgctxt "admin analytics"
 msgid "Attachments uploaded"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:47
+#: templates/misago/admin/dashboard/index.html:51
 msgctxt "admin analytics"
 msgid "Data download requests"
 msgstr ""
 
-#: templates/misago/admin/dashboard/index.html:49
+#: templates/misago/admin/dashboard/index.html:53
 msgctxt "admin analytics"
 msgid "Site analytics are currently unavailable due to an error."
 msgstr ""
@@ -3606,8 +3615,7 @@ msgstr ""
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
 msgid ""
-"The link you've followed was incorrect or the page has been moved or "
-"deleted."
+"The link you've followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
@@ -3638,22 +3646,22 @@ msgstr ""
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgctxt "admin csrf error"
 msgid ""
-"The form was sent after being opened in the browser for a long time (eg. few"
-" days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few "
+"days) and cookie token has expired."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgctxt "admin csrf error"
 msgid ""
-"The site is configured to use the HTTPS, but this form was sent over the the"
-" HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the "
+"HTTP."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgctxt "admin csrf error"
 msgid ""
-"If you are an owner of this site, please check if the HTTPS certificate used"
-" by the site is valid and accepted by the browser."
+"If you are an owner of this site, please check if the HTTPS certificate used "
+"by the site is valid and accepted by the browser."
 msgstr ""
 
 #: templates/misago/admin/generic/filter_form.html:7
@@ -3955,6 +3963,91 @@ msgctxt "admin navbar"
 msgid "Log out completely"
 msgstr ""
 
+#: templates/misago/admin/plugins/list.html:5
+msgctxt "admin plugins"
+msgid "Plugins"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:21
+msgctxt "admin plugins"
+msgid "Plugin"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:23
+#, fuzzy
+#| msgctxt "admin node"
+#| msgid "Permissions"
+msgctxt "admin plugins"
+msgid "Version"
+msgstr "Engedélyek"
+
+#: templates/misago/admin/plugins/list.html:24
+msgctxt "admin plugins"
+msgid "License"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:25
+msgctxt "admin plugins"
+msgid "Author"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:40
+msgctxt "admin plugins"
+msgid "This plugin has no name specified."
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:53
+#, python-format
+msgctxt "admin plugins"
+msgid "Invalid manifest: %(error)s"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:61
+msgctxt "admin plugins"
+msgid ""
+"This plugin does not export any manifest from its misago_plugin.py file."
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:68
+msgctxt "admin plugins"
+msgid "See plugin location"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:90
+msgctxt "admin plugins links"
+msgid "See plugin links"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:95
+msgctxt "admin plugins url"
+msgid "Homepage:"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:101
+msgctxt "admin plugins url"
+msgid "Sponsor:"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:107
+msgctxt "admin plugins url"
+msgid "Help:"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:113
+msgctxt "admin plugins url"
+msgid "Bug reports:"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:119
+msgctxt "admin plugins url"
+msgid "Repository:"
+msgstr ""
+
+#: templates/misago/admin/plugins/list.html:131
+msgctxt "admin plugins"
+msgid "No plugins are installed on this site."
+msgstr ""
+
 #: templates/misago/admin/ranks/form.html:9
 #: templates/misago/admin/ranks/form.html:40
 msgctxt "admin rank form"
@@ -4192,8 +4285,8 @@ msgstr ""
 #, python-format
 msgctxt "admin social auth providers"
 msgid ""
-"OAuth2 client is enabled. Social authentication has been disabled with login"
-" and registration delegated to the %(provider)s."
+"OAuth2 client is enabled. Social authentication has been disabled with login "
+"and registration delegated to the %(provider)s."
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:109
@@ -4758,8 +4851,8 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:264
 msgctxt "admin user form"
 msgid ""
-"No additional action is required. This account will be deleted automatically"
-" when process is completed."
+"No additional action is required. This account will be deleted automatically "
+"when process is completed."
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:307
@@ -4858,17 +4951,73 @@ msgctxt "admin user form"
 msgid "Save user"
 msgstr ""
 
-#: templates/misago/categories/base.html:7
-#: templates/misago/categories/base.html:29
-#: templates/misago/categories/base.html:38
+#: templates/misago/categories/categories_list_category_row_icon.html:4
+msgctxt "category status icon"
+msgid "This category has new posts. (closed)"
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_icon.html:10
+msgctxt "category status icon"
+msgid "This category has no new posts. (closed)"
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_icon.html:18
+msgctxt "category status icon"
+msgid "This category has new posts."
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_icon.html:24
+msgctxt "category status icon"
+msgid "This category has no new posts."
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_last_thread.html:12
+msgctxt "category last reply"
+msgid "Protected category"
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_last_thread.html:25
+msgctxt "category last reply"
+msgid "Private category"
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_last_thread.html:78
+msgctxt "category last reply"
+msgid "Empty category"
+msgstr ""
+
+#: templates/misago/categories/categories_list_category_row_stats.html:5
+#, python-format
+msgctxt "category stats"
+msgid "%(threads)s thread"
+msgid_plural "%(threads)s threads"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/categories/categories_list_category_row_stats.html:12
+#, python-format
+msgctxt "category stats"
+msgid "%(posts)s post"
+msgid_plural "%(posts)s posts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/categories/empty_message.html:8
+msgctxt "categories page"
+msgid "No categories exist or you don't have permission to see them."
+msgstr ""
+
 #: templates/misago/categories/header.html:35
+#: templates/misago/categories/index.html:7
+#: templates/misago/categories/index.html:29
+#: templates/misago/categories/index.html:38
 msgctxt "categories page"
 msgid "Categories"
 msgstr ""
 
-#: templates/misago/categories/base.html:18
-#: templates/misago/categories/base.html:49
-#: templates/misago/categories/base.html:62
+#: templates/misago/categories/index.html:18
+#: templates/misago/categories/index.html:49
+#: templates/misago/categories/index.html:62
 #, python-format
 msgctxt "categories page"
 msgid ""
@@ -4877,62 +5026,6 @@ msgid ""
 msgid_plural ""
 "There are %(categories)s main categories currenty available on the "
 "%(forum_name)s."
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/misago/categories/body.html:15
-msgctxt "categories page"
-msgid "No categories exist or you don't have permission to see them."
-msgstr ""
-
-#: templates/misago/categories/icon.html:4
-msgctxt "category status icon"
-msgid "This category has no new posts. (closed)"
-msgstr ""
-
-#: templates/misago/categories/icon.html:10
-msgctxt "category status icon"
-msgid "This category has new posts. (closed)"
-msgstr ""
-
-#: templates/misago/categories/icon.html:18
-msgctxt "category status icon"
-msgid "This category has no new posts."
-msgstr ""
-
-#: templates/misago/categories/icon.html:24
-msgctxt "category status icon"
-msgid "This category has new posts."
-msgstr ""
-
-#: templates/misago/categories/last_thread.html:54
-msgctxt "category last reply"
-msgid "Empty category"
-msgstr ""
-
-#: templates/misago/categories/last_thread.html:68
-msgctxt "category last reply"
-msgid "Private category"
-msgstr ""
-
-#: templates/misago/categories/last_thread.html:82
-msgctxt "category last reply"
-msgid "Protected category"
-msgstr ""
-
-#: templates/misago/categories/stats.html:5
-#, python-format
-msgctxt "category stats"
-msgid "%(threads)s thread"
-msgid_plural "%(threads)s threads"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/misago/categories/stats.html:12
-#, python-format
-msgctxt "category stats"
-msgid "%(posts)s post"
-msgid_plural "%(posts)s posts"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -4982,8 +5075,8 @@ msgstr ""
 #, python-format
 msgctxt "confirm email change email"
 msgid ""
-"%(user)s, you are receiving this message because you have changed your "
-"e-mail address."
+"%(user)s, you are receiving this message because you have changed your e-"
+"mail address."
 msgstr ""
 
 #: templates/misago/emails/change_email.html:11
@@ -5148,8 +5241,8 @@ msgstr ""
 #: templates/misago/emails/register/inactive.txt:25
 msgctxt "welcome email"
 msgid ""
-"Before you will be able to join discussion on our site, you have to activate"
-" your account. To do so, simply click the link below:"
+"Before you will be able to join discussion on our site, you have to activate "
+"your account. To do so, simply click the link below:"
 msgstr ""
 
 #: templates/misago/emails/register/inactive.html:27
@@ -5250,8 +5343,7 @@ msgstr ""
 #: templates/misago/errorpages/404.html:38
 msgctxt "error 404 page"
 msgid ""
-"The link you've followed was incorrect or the page has been moved or "
-"deleted."
+"The link you've followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/404.html:37
@@ -5307,8 +5399,8 @@ msgstr ""
 #: templates/misago/errorpages/csrf_failure.html:9
 msgctxt "error csrf page"
 msgid ""
-"This error is usually caused by your browser not accepting or using outdated"
-" cookies. Check your browser configuration and try again."
+"This error is usually caused by your browser not accepting or using outdated "
+"cookies. Check your browser configuration and try again."
 msgstr ""
 
 #: templates/misago/errorpages/csrf_failure.html:23
@@ -5482,8 +5574,8 @@ msgstr ""
 #: templates/misago/forgottenpassword/request.html:47
 msgctxt "forgotten password page"
 msgid ""
-"Instead, you can change your password using special secure form that will be"
-" available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be "
+"available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
 
@@ -5529,8 +5621,7 @@ msgctxt "cta"
 msgid "Register"
 msgstr ""
 
-#: templates/misago/notifications.html:5
-#: templates/misago/notifications.html:18
+#: templates/misago/notifications.html:5 templates/misago/notifications.html:18
 msgctxt "notifications page"
 msgid "Notifications"
 msgstr ""
@@ -5560,8 +5651,8 @@ msgstr ""
 #: templates/misago/notifications_disabled.html:19
 msgctxt "notifications disabled page"
 msgid ""
-"You will no longer receive e-mail notifications when someone replies to this"
-" thread."
+"You will no longer receive e-mail notifications when someone replies to this "
+"thread."
 msgstr ""
 
 #: templates/misago/notifications_disabled.html:20
@@ -6271,8 +6362,8 @@ msgstr ""
 #: templates/misago/thread/posts/post/flags.html:29
 msgctxt "post unapproved flag"
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
 msgstr ""
 
 #: templates/misago/thread/posts/post/flags.html:35
@@ -6345,6 +6436,7 @@ msgstr ""
 #: templates/misago/thread/thread.html:21
 #: templates/misago/thread/thread.html:32
 #, python-format
+msgctxt "thread page meta"
 msgid "%(replies)s reply, last one from %(last_post_on)s."
 msgid_plural "%(replies)s replies, last one from %(last_post_on)s."
 msgstr[0] ""
@@ -6374,6 +6466,8 @@ msgid "Go to top"
 msgstr ""
 
 #: templates/misago/thread/toolbar_top.html:6
+#: templates/misago/thread/toolbar_top.html:32
+msgctxt "thread page options"
 msgid "Shortcuts"
 msgstr ""
 
@@ -6381,11 +6475,6 @@ msgstr ""
 #: templates/misago/thread/toolbar_top.html:47
 msgctxt "thread page options"
 msgid "Add poll"
-msgstr ""
-
-#: templates/misago/thread/toolbar_top.html:32
-msgctxt "thread page options"
-msgid "Shortcuts"
 msgstr ""
 
 #: templates/misago/thread_flags.html:7
@@ -6427,27 +6516,21 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/threadslist/base.html:53
-msgctxt "threads list"
+msgctxt "threads list empty"
 msgid "There are no threads in this category."
 msgstr ""
 
 #: templates/misago/threadslist/base.html:55
-msgctxt "threads list"
-msgid "There are no threads on this site... yet!"
-msgstr ""
-
-#: templates/misago/threadslist/base.html:59
-#: templates/misago/threadslist/private_threads.html:62
 msgctxt "threads list empty"
-msgid "Why not start one yourself?"
+msgid "There are no threads on this site yet."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:63
-msgctxt "threads list"
+#: templates/misago/threadslist/base.html:60
+msgctxt "threads list empty"
 msgid "No threads matching specified criteria were found."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:78
+#: templates/misago/threadslist/base.html:75
 msgctxt "threads list paginator"
 msgid "Next page"
 msgstr ""
@@ -6464,7 +6547,7 @@ msgctxt "private threads page"
 msgid "You aren't participating in any private threads."
 msgstr ""
 
-#: templates/misago/threadslist/private_threads.html:65
+#: templates/misago/threadslist/private_threads.html:62
 msgctxt "private threads page"
 msgid "No threads matching specified criteria were found."
 msgstr ""
@@ -6575,19 +6658,24 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/userslists/active_posters.html:16
+#: templates/misago/userslists/active_posters.html:37
+#: templates/misago/userslists/active_posters.html:54
+#: templates/misago/userslists/active_posters.html:151
 #, python-format
 msgctxt "active posters page meta"
-msgid "No users have posted any new messages during last %(days)s days."
-msgstr ""
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural "No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:23
-#: templates/misago/userslists/active_posters.html:24
+#: templates/misago/userslists/active_posters.html:25
+#: templates/misago/userslists/active_posters.html:26
 msgctxt "active posters page meta"
 msgid "Top posters"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:29
-#: templates/misago/userslists/active_posters.html:46
+#: templates/misago/userslists/active_posters.html:31
+#: templates/misago/userslists/active_posters.html:48
 #, python-format
 msgctxt "active posters page meta"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6595,18 +6683,7 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:35
-#: templates/misago/userslists/active_posters.html:52
-#: templates/misago/userslists/active_posters.html:149
-#, python-format
-msgctxt "active posters page meta"
-msgid "No users have posted any new messages during last %(days)s day."
-msgid_plural ""
-"No users have posted any new messages during last %(days)s days."
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/misago/userslists/active_posters.html:73
+#: templates/misago/userslists/active_posters.html:75
 #, python-format
 msgctxt "active posters page"
 msgid "%(posters)s top poster from last %(days)s days."
@@ -6614,24 +6691,24 @@ msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:87
+#: templates/misago/userslists/active_posters.html:89
 msgctxt "active posters list item"
 msgid "Avatar"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:116
-#: templates/misago/userslists/active_posters.html:127
+#: templates/misago/userslists/active_posters.html:118
+#: templates/misago/userslists/active_posters.html:129
 msgctxt "active posters list item"
 msgid "Rank"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:120
-#: templates/misago/userslists/active_posters.html:132
+#: templates/misago/userslists/active_posters.html:122
+#: templates/misago/userslists/active_posters.html:134
 msgctxt "active posters list item"
 msgid "Ranked posts"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:137
+#: templates/misago/userslists/active_posters.html:139
 msgctxt "active posters list item"
 msgid "Total posts"
 msgstr ""
@@ -6655,14 +6732,14 @@ msgstr[1] ""
 #: templates/misago/userslists/rank.html:102
 #, python-format
 msgctxt "rank users page"
-msgid "There is %(more)s more members with this role."
-msgid_plural "There are %(more)s more members with this role."
+msgid "There is %(more)s more users with this rank."
+msgid_plural "There are %(more)s more users with this rank."
 msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/userslists/rank.html:108
 msgctxt "rank users page"
-msgid "There are no more members with this role."
+msgid "There are no more users with this rank."
 msgstr ""
 
 #: templates/misago/userslists/rank.html:117
@@ -6780,51 +6857,51 @@ msgctxt "admin theme form"
 msgid "Uploaded file is not a valid ZIP file."
 msgstr ""
 
-#: themes/admin/forms.py:128
+#: themes/admin/forms.py:150
 msgctxt "admin theme assets form"
 msgid "No files have been uploaded."
 msgstr ""
 
-#: themes/admin/forms.py:158
+#: themes/admin/forms.py:180
 #, python-format
 msgctxt "admin theme assets form"
 msgid "File \"%(file)s\" content type \"%(content_type)s\" is not allowed."
 msgstr ""
 
-#: themes/admin/forms.py:171
+#: themes/admin/forms.py:193
 #, python-format
 msgctxt "admin theme assets form"
 msgid "File \"%(file)s\" extension is invalid."
 msgstr ""
 
-#: themes/admin/forms.py:197
+#: themes/admin/forms.py:219
 msgctxt "admin theme css form"
 msgid "Name"
 msgstr ""
 
-#: themes/admin/forms.py:200
+#: themes/admin/forms.py:222
 msgctxt "admin theme css form"
 msgid ""
 "Should be a correct filename and include the .css extension. It will be "
 "lowercased."
 msgstr ""
 
-#: themes/admin/forms.py:219
+#: themes/admin/forms.py:241
 msgctxt "admin theme css form"
 msgid "You need to enter CSS for this file."
 msgstr ""
 
-#: themes/admin/forms.py:247
+#: themes/admin/forms.py:269
 msgctxt "admin theme css link form"
 msgid "Link name"
 msgstr ""
 
-#: themes/admin/forms.py:250
+#: themes/admin/forms.py:272
 msgctxt "admin theme css link form"
 msgid "Can be descriptive (e.g. \"roboto from fonts.google.com\")."
 msgstr ""
 
-#: themes/admin/forms.py:254
+#: themes/admin/forms.py:276
 msgctxt "admin theme css link form"
 msgid "Remote CSS URL"
 msgstr ""
@@ -7092,68 +7169,67 @@ msgctxt "admin attachments orphan filter choice"
 msgid "Not orphaned"
 msgstr ""
 
-#: threads/admin/forms.py:78
+#: threads/admin/forms.py:86
 msgctxt "admin attachment type form"
 msgid "Type name"
 msgstr ""
 
-#: threads/admin/forms.py:80
+#: threads/admin/forms.py:88
 msgctxt "admin attachment type form"
 msgid "File extensions"
 msgstr ""
 
-#: threads/admin/forms.py:82
+#: threads/admin/forms.py:90
 msgctxt "admin attachment type form"
 msgid "Mimetypes"
 msgstr ""
 
-#: threads/admin/forms.py:84
+#: threads/admin/forms.py:92
 msgctxt "admin attachment type form"
 msgid "Maximum allowed uploaded file size"
 msgstr ""
 
-#: threads/admin/forms.py:86
+#: threads/admin/forms.py:94
 msgctxt "admin attachment type form"
 msgid "Status"
 msgstr ""
 
-#: threads/admin/forms.py:88
+#: threads/admin/forms.py:96
 msgctxt "admin attachment type form"
 msgid "Limit uploads to"
 msgstr ""
 
-#: threads/admin/forms.py:91
+#: threads/admin/forms.py:99
 msgctxt "admin attachment type form"
 msgid "Limit downloads to"
 msgstr ""
 
-#: threads/admin/forms.py:97
+#: threads/admin/forms.py:105
 msgctxt "admin attachment type form"
 msgid ""
-"List of comma separated file extensions associated with this attachment "
-"type."
+"List of comma separated file extensions associated with this attachment type."
 msgstr ""
 
-#: threads/admin/forms.py:101
+#: threads/admin/forms.py:109
 msgctxt "admin attachment type form"
 msgid ""
 "Optional list of comma separated mime types associated with this attachment "
 "type."
 msgstr ""
 
-#: threads/admin/forms.py:105
+#: threads/admin/forms.py:113
 msgctxt "admin attachment type form"
 msgid ""
 "Maximum allowed uploaded file size for this type, in kb. This setting is "
 "deprecated and has no effect. It will be deleted in Misago 1.0."
 msgstr ""
 
-#: threads/admin/forms.py:109
+#: threads/admin/forms.py:117
 msgctxt "admin attachment type form"
 msgid "Controls this attachment type availability on your site."
 msgstr ""
 
-#: threads/admin/forms.py:113
+#: threads/admin/forms.py:121
 msgctxt "admin attachment type form"
 msgid ""
 "If you wish to limit option to upload files of this type to users with "
@@ -7162,7 +7238,7 @@ msgid ""
 "upload attachments of this type."
 msgstr ""
 
-#: threads/admin/forms.py:117
+#: threads/admin/forms.py:125
 msgctxt "admin attachment type form"
 msgid ""
 "If you wish to limit option to download files of this type to users with "
@@ -7171,7 +7247,7 @@ msgid ""
 "download attachments of this type."
 msgstr ""
 
-#: threads/admin/forms.py:129
+#: threads/admin/forms.py:137
 msgctxt "admin attachment type form"
 msgid "This field is required."
 msgstr ""
@@ -7263,8 +7339,7 @@ msgstr ""
 #, python-format
 msgctxt "admin attachments types"
 msgid ""
-"Attachment type \"%(name)s\" has associated attachments and can't be "
-"deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
 msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:61
@@ -7285,7 +7360,7 @@ msgstr ""
 
 #: threads/api/attachments.py:56
 msgctxt "attachments api"
-msgid "Uploaded image was corrupted or invalid."
+msgid "Uploaded image is unsupported or invalid."
 msgstr ""
 
 #: threads/api/attachments.py:97
@@ -7302,7 +7377,7 @@ msgstr ""
 
 #: threads/api/postendpoints/edits.py:88
 msgctxt "posts api"
-msgid "Edits record is unavailable for this post."
+msgid "This post has no changes history."
 msgstr ""
 
 #: threads/api/postendpoints/merge.py:12
@@ -7312,7 +7387,7 @@ msgstr ""
 
 #: threads/api/postendpoints/move.py:11
 msgctxt "posts api"
-msgid "You can't move posts in this thread."
+msgid "You can't move posts from this thread."
 msgstr ""
 
 #: threads/api/postendpoints/patch_post.py:37
@@ -7494,8 +7569,7 @@ msgstr ""
 #: threads/api/threadendpoints/patch.py:272
 msgctxt "threads api"
 msgid ""
-"This post can't be unmarked because it's not currently marked as best "
-"answer."
+"This post can't be unmarked because it's not currently marked as best answer."
 msgstr ""
 
 #: threads/api/threadendpoints/patch.py:300
@@ -7544,7 +7618,7 @@ msgstr ""
 
 #: threads/api/threadposts.py:220
 msgctxt "posts api"
-msgid "You can't reply to events."
+msgid "Events can't be replied to."
 msgstr ""
 
 #: threads/api/threadposts.py:223
@@ -7577,32 +7651,32 @@ msgctxt "merge conflict invalid resolution"
 msgid "Invalid choice."
 msgstr ""
 
-#: threads/models/attachmenttype.py:21
+#: threads/models/attachmenttype.py:23
 msgctxt "attachment availability choice"
 msgid "Allow uploads and downloads"
 msgstr ""
 
-#: threads/models/attachmenttype.py:28
+#: threads/models/attachmenttype.py:30
 msgctxt "attachment availability choice"
 msgid "Allow downloads only"
 msgstr ""
 
-#: threads/models/attachmenttype.py:35
+#: threads/models/attachmenttype.py:37
 msgctxt "attachment availability choice"
 msgid "Disallow both uploading and downloading"
 msgstr ""
 
-#: threads/models/thread.py:19
+#: threads/models/thread.py:20
 msgctxt "thread weight choice"
 msgid "Not pinned"
 msgstr ""
 
-#: threads/models/thread.py:23
+#: threads/models/thread.py:24
 msgctxt "thread weight choice"
 msgid "Pinned in category"
 msgstr ""
 
-#: threads/models/thread.py:27
+#: threads/models/thread.py:28
 msgctxt "thread weight choice"
 msgid "Pinned globally"
 msgstr ""
@@ -7750,8 +7824,8 @@ msgstr ""
 #, python-format
 msgctxt "best answers permission"
 msgid ""
-"You don't have permission to change this thread's marked answer because it's"
-" in the \"%(category)s\" category."
+"You don't have permission to change this thread's marked answer because it's "
+"in the \"%(category)s\" category."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:215
@@ -7823,8 +7897,8 @@ msgstr ""
 #: threads/permissions/bestanswers.py:297
 msgctxt "best answers permission"
 msgid ""
-"You can't unmark this thread's best answer because it's closed and you don't"
-" have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't "
+"have permission to open it."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:305
@@ -8082,7 +8156,7 @@ msgctxt "polls permission"
 msgid "This thread is closed. You can't vote in it."
 msgstr ""
 
-#: threads/permissions/polls.py:327
+#: threads/permissions/polls.py:328
 msgctxt "polls permission"
 msgid "You dont have permission to see this poll's voters."
 msgstr ""
@@ -8130,8 +8204,8 @@ msgstr ""
 #: threads/permissions/privatethreads.py:66
 msgctxt "private threads permission"
 msgid ""
-"Allows user to report private threads they are participating in, making them"
-" accessible to moderators."
+"Allows user to report private threads they are participating in, making them "
+"accessible to moderators."
 msgstr ""
 
 #: threads/permissions/privatethreads.py:71
@@ -8206,7 +8280,7 @@ msgstr ""
 #: threads/permissions/privatethreads.py:342
 #, python-format
 msgctxt "private threads permission"
-msgid "%(user)s disabled invitations to private threads."
+msgid "%(user)s has disabled invitations to private threads."
 msgstr ""
 
 #: threads/permissions/privatethreads.py:352
@@ -8230,8 +8304,8 @@ msgctxt "threads permission"
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging"
-" to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging "
+"to categories in which the user has permission to approve content."
 msgstr ""
 
 #: threads/permissions/threads.py:82
@@ -8982,222 +9056,222 @@ msgid_plural "You can't delete posts that are older than %(minutes)s minutes."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/permissions/threads.py:1370
+#: threads/permissions/threads.py:1372
 msgctxt "threads permission"
 msgid "Thread's first post can only be deleted together with thread."
 msgstr ""
 
-#: threads/permissions/threads.py:1378
+#: threads/permissions/threads.py:1381
 msgctxt "threads permission"
 msgid "This category is closed. You can't delete posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1385
+#: threads/permissions/threads.py:1388
 msgctxt "threads permission"
 msgid "This thread is closed. You can't delete posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1396
+#: threads/permissions/threads.py:1399
 msgctxt "threads permission"
 msgid "You have to sign in to protect posts."
 msgstr ""
 
-#: threads/permissions/threads.py:1406
+#: threads/permissions/threads.py:1409
 msgctxt "threads permission"
 msgid "You can't protect posts in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1412
+#: threads/permissions/threads.py:1415
 msgctxt "threads permission"
 msgid "You can't protect posts you can't edit."
 msgstr ""
 
-#: threads/permissions/threads.py:1423
+#: threads/permissions/threads.py:1426
 msgctxt "threads permission"
 msgid "You have to sign in to approve posts."
 msgstr ""
 
-#: threads/permissions/threads.py:1433
+#: threads/permissions/threads.py:1436
 msgctxt "threads permission"
 msgid "You can't approve posts in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1439
+#: threads/permissions/threads.py:1443
 msgctxt "threads permission"
 msgid "Thread's first post can only be approved together with thread."
 msgstr ""
 
-#: threads/permissions/threads.py:1450
+#: threads/permissions/threads.py:1454
 msgctxt "threads permission"
 msgid "You can't approve posts the content you can't see."
 msgstr ""
 
-#: threads/permissions/threads.py:1459
+#: threads/permissions/threads.py:1463
 msgctxt "threads permission"
 msgid "This category is closed. You can't approve posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1466
+#: threads/permissions/threads.py:1470
 msgctxt "threads permission"
 msgid "This thread is closed. You can't approve posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1477
+#: threads/permissions/threads.py:1481
 msgctxt "threads permission"
 msgid "You have to sign in to move posts."
 msgstr ""
 
-#: threads/permissions/threads.py:1487
+#: threads/permissions/threads.py:1491
 msgctxt "threads permission"
 msgid "You can't move posts in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1492
+#: threads/permissions/threads.py:1496
 msgctxt "threads permission"
 msgid "Events can't be moved."
 msgstr ""
 
-#: threads/permissions/threads.py:1496
+#: threads/permissions/threads.py:1502
 msgctxt "threads permission"
 msgid "Thread's first post can only be moved together with thread."
 msgstr ""
 
-#: threads/permissions/threads.py:1501
+#: threads/permissions/threads.py:1508
 msgctxt "threads permission"
 msgid "You can't move posts the content you can't see."
 msgstr ""
 
-#: threads/permissions/threads.py:1510
+#: threads/permissions/threads.py:1517
 msgctxt "threads permission"
 msgid "This category is closed. You can't move posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1517
+#: threads/permissions/threads.py:1524
 msgctxt "threads permission"
 msgid "This thread is closed. You can't move posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1528
+#: threads/permissions/threads.py:1535
 msgctxt "threads permission"
 msgid "You have to sign in to merge posts."
 msgstr ""
 
-#: threads/permissions/threads.py:1538
+#: threads/permissions/threads.py:1545
 msgctxt "threads permission"
 msgid "You can't merge posts in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1543
+#: threads/permissions/threads.py:1550
 msgctxt "threads permission"
 msgid "Events can't be merged."
 msgstr ""
 
-#: threads/permissions/threads.py:1552
+#: threads/permissions/threads.py:1559
 msgctxt "threads permission"
 msgid "You can't merge posts the content you can't see."
 msgstr ""
 
-#: threads/permissions/threads.py:1561
+#: threads/permissions/threads.py:1568
 msgctxt "threads permission"
 msgid "This category is closed. You can't merge posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1568
+#: threads/permissions/threads.py:1575
 msgctxt "threads permission"
 msgid "This thread is closed. You can't merge posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1579
+#: threads/permissions/threads.py:1586
 msgctxt "threads permission"
 msgid "You have to sign in to split posts."
 msgstr ""
 
-#: threads/permissions/threads.py:1589
+#: threads/permissions/threads.py:1596
 msgctxt "threads permission"
 msgid "You can't split posts in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1594
+#: threads/permissions/threads.py:1601
 msgctxt "threads permission"
 msgid "Events can't be split."
 msgstr ""
 
-#: threads/permissions/threads.py:1598
+#: threads/permissions/threads.py:1605
 msgctxt "threads permission"
 msgid "Thread's first post can't be split."
 msgstr ""
 
-#: threads/permissions/threads.py:1603
+#: threads/permissions/threads.py:1610
 msgctxt "threads permission"
 msgid "You can't split posts the content you can't see."
 msgstr ""
 
-#: threads/permissions/threads.py:1612
+#: threads/permissions/threads.py:1619
 msgctxt "threads permission"
 msgid "This category is closed. You can't split posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1619
+#: threads/permissions/threads.py:1626
 msgctxt "threads permission"
 msgid "This thread is closed. You can't split posts in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1630
+#: threads/permissions/threads.py:1637
 msgctxt "threads permission"
 msgid "You have to sign in to reveal events."
 msgstr ""
 
-#: threads/permissions/threads.py:1640
+#: threads/permissions/threads.py:1647
 msgctxt "threads permission"
 msgid "You can't reveal events in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1649
+#: threads/permissions/threads.py:1656
 msgctxt "threads permission"
 msgid "This category is closed. You can't reveal events in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1656
+#: threads/permissions/threads.py:1663
 msgctxt "threads permission"
 msgid "This thread is closed. You can't reveal events in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1667
+#: threads/permissions/threads.py:1674
 msgctxt "threads permission"
 msgid "You have to sign in to hide events."
 msgstr ""
 
-#: threads/permissions/threads.py:1677
+#: threads/permissions/threads.py:1684
 msgctxt "threads permission"
 msgid "You can't hide events in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1686
+#: threads/permissions/threads.py:1693
 msgctxt "threads permission"
 msgid "This category is closed. You can't hide events in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1693
+#: threads/permissions/threads.py:1700
 msgctxt "threads permission"
 msgid "This thread is closed. You can't hide events in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1704
+#: threads/permissions/threads.py:1711
 msgctxt "threads permission"
 msgid "You have to sign in to delete events."
 msgstr ""
 
-#: threads/permissions/threads.py:1714
+#: threads/permissions/threads.py:1721
 msgctxt "threads permission"
 msgid "You can't delete events in this category."
 msgstr ""
 
-#: threads/permissions/threads.py:1723
+#: threads/permissions/threads.py:1730
 msgctxt "threads permission"
 msgid "This category is closed. You can't delete events in it."
 msgstr ""
 
-#: threads/permissions/threads.py:1730
+#: threads/permissions/threads.py:1737
 msgctxt "threads permission"
 msgid "This thread is closed. You can't delete events in it."
 msgstr ""
@@ -9212,8 +9286,9 @@ msgctxt "delete posts serializer"
 msgid "You have to specify at least one post to delete."
 msgstr ""
 
-#: threads/serializers/moderation.py:57
-msgctxt "delete posts serializer"
+#: threads/serializers/moderation.py:57 threads/serializers/moderation.py:121
+#: threads/serializers/moderation.py:232 threads/serializers/moderation.py:417
+msgctxt "invalid posts ids"
 msgid "One or more post ids received were invalid."
 msgstr ""
 
@@ -9233,11 +9308,6 @@ msgstr ""
 #: threads/serializers/moderation.py:113
 msgctxt "merge posts serializer"
 msgid "You have to select at least two posts to merge."
-msgstr ""
-
-#: threads/serializers/moderation.py:121
-msgctxt "merge posts serializer"
-msgid "One or more post ids received were invalid."
 msgstr ""
 
 #: threads/serializers/moderation.py:140
@@ -9278,13 +9348,8 @@ msgctxt "move posts serializer"
 msgid "Enter link to new thread."
 msgstr ""
 
-#: threads/serializers/moderation.py:232
-msgctxt "move posts serializer"
-msgid "One or more post ids received were invalid."
-msgstr ""
-
-#: threads/serializers/moderation.py:251
-msgctxt "move posts serializer"
+#: threads/serializers/moderation.py:251 threads/serializers/moderation.py:568
+msgctxt "invalid thread url"
 msgid "This is not a valid thread link."
 msgstr ""
 
@@ -9348,11 +9413,6 @@ msgctxt "split posts serializer"
 msgid "You have to specify at least one post to split."
 msgstr ""
 
-#: threads/serializers/moderation.py:417
-msgctxt "split posts serializer"
-msgid "One or more post ids received were invalid."
-msgstr ""
-
 #: threads/serializers/moderation.py:433
 #, python-format
 msgctxt "split posts serializer"
@@ -9371,8 +9431,8 @@ msgctxt "delete threads serializer"
 msgid "You have to specify at least one thread to delete."
 msgstr ""
 
-#: threads/serializers/moderation.py:482
-msgctxt "delete threads serializer"
+#: threads/serializers/moderation.py:482 threads/serializers/moderation.py:624
+msgctxt "invalid threads ids"
 msgid "One or more thread ids received were invalid."
 msgstr ""
 
@@ -9395,13 +9455,9 @@ msgid "Enter link to new thread."
 msgstr ""
 
 #: threads/serializers/moderation.py:550 threads/serializers/moderation.py:556
-msgctxt "merge thread serializer"
+#: threads/serializers/moderation.py:638 threads/serializers/moderation.py:644
+msgctxt "merge threads serializer"
 msgid "Invalid choice."
-msgstr ""
-
-#: threads/serializers/moderation.py:568
-msgctxt "merge thread serializer"
-msgid "This is not a valid thread link."
 msgstr ""
 
 #: threads/serializers/moderation.py:573
@@ -9424,16 +9480,6 @@ msgstr ""
 #: threads/serializers/moderation.py:614
 msgctxt "merge threads serializer"
 msgid "You have to select at least two threads to merge."
-msgstr ""
-
-#: threads/serializers/moderation.py:624
-msgctxt "merge threads serializer"
-msgid "One or more thread ids received were invalid."
-msgstr ""
-
-#: threads/serializers/moderation.py:638 threads/serializers/moderation.py:644
-msgctxt "merge threads serializer"
-msgid "Invalid choice."
 msgstr ""
 
 #: threads/serializers/moderation.py:653
@@ -9735,8 +9781,8 @@ msgstr ""
 msgctxt "admin user form"
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to"
-" admin Django modules."
+"is enabled, this user will need additional permissions assigned within it to "
+"admin Django modules."
 msgstr ""
 
 #: users/admin/forms.py:88
@@ -9885,8 +9931,7 @@ msgstr ""
 #: users/admin/forms.py:226
 msgctxt "admin user form"
 msgid ""
-"Notify about new private thread invitations from users this user is "
-"following"
+"Notify about new private thread invitations from users this user is following"
 msgstr ""
 
 #: users/admin/forms.py:234
@@ -9999,8 +10044,8 @@ msgstr ""
 #: users/admin/forms.py:488
 msgctxt "admin rank form"
 msgid ""
-"Optional, singular version of rank name displayed by user names. For example"
-" \"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example "
+"\"GM\" or \"Dev\"."
 msgstr ""
 
 #: users/admin/forms.py:492
@@ -10047,87 +10092,87 @@ msgid ""
 "others through dedicated page on forum users list."
 msgstr ""
 
-#: users/admin/forms.py:544
+#: users/admin/forms.py:543
 msgctxt "admin rank form"
 msgid "There's already an other rank with this name."
 msgstr ""
 
-#: users/admin/forms.py:553
+#: users/admin/forms.py:552
 msgctxt "admin ban users form"
 msgid "Values to ban"
 msgstr ""
 
-#: users/admin/forms.py:558
+#: users/admin/forms.py:557
 msgctxt "admin ban users form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:563
+#: users/admin/forms.py:562
 msgctxt "admin ban users form"
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:568 users/admin/forms.py:583
+#: users/admin/forms.py:567 users/admin/forms.py:582
 msgctxt "admin ban users form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:573
+#: users/admin/forms.py:572
 msgctxt "admin ban users form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:578
+#: users/admin/forms.py:577
 msgctxt "admin ban users form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:588
+#: users/admin/forms.py:587
 msgctxt "admin ban users form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:597
+#: users/admin/forms.py:596
 msgctxt "admin ban users form"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:598
+#: users/admin/forms.py:597
 msgctxt "admin ban users form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:599
+#: users/admin/forms.py:598
 msgctxt "admin ban users form"
 msgid "E-mail domains"
 msgstr ""
 
-#: users/admin/forms.py:605
+#: users/admin/forms.py:604
 msgctxt "admin ban users form"
 msgid "IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:609
+#: users/admin/forms.py:608
 msgctxt "admin ban users form"
 msgid "First segment of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:615
+#: users/admin/forms.py:614
 msgctxt "admin ban users form"
 msgid "First two segments of IP addresses"
 msgstr ""
 
-#: users/admin/forms.py:623
+#: users/admin/forms.py:622
 msgctxt "admin ban form"
 msgid "Check type"
 msgstr ""
 
-#: users/admin/forms.py:628
+#: users/admin/forms.py:627
 msgctxt "admin ban form"
 msgid "Restrict this ban to registrations"
 msgstr ""
 
-#: users/admin/forms.py:631
+#: users/admin/forms.py:630
 msgctxt "admin ban form"
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
@@ -10136,144 +10181,144 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: users/admin/forms.py:635
+#: users/admin/forms.py:634
 msgctxt "admin ban form"
 msgid "Banned value"
 msgstr ""
 
-#: users/admin/forms.py:639
+#: users/admin/forms.py:638
 msgctxt "admin ban form"
 msgid ""
-"This value is case-insensitive and accepts asterisk (*) for partial matches."
-" For example, making IP ban for value \"83.*\" will ban all IP addresses "
+"This value is case-insensitive and accepts asterisk (*) for partial matches. "
+"For example, making IP ban for value \"83.*\" will ban all IP addresses "
 "beginning with \"83.\"."
 msgstr ""
 
-#: users/admin/forms.py:643
+#: users/admin/forms.py:642
 msgctxt "admin ban form"
 msgid "Banned value can't be longer than 250 characters."
 msgstr ""
 
-#: users/admin/forms.py:648
+#: users/admin/forms.py:647
 msgctxt "admin ban form"
 msgid "User message"
 msgstr ""
 
-#: users/admin/forms.py:653
+#: users/admin/forms.py:652
 msgctxt "admin ban form"
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
 
-#: users/admin/forms.py:658 users/admin/forms.py:672
+#: users/admin/forms.py:657 users/admin/forms.py:671
 msgctxt "admin ban form"
 msgid "Message can't be longer than 1000 characters."
 msgstr ""
 
-#: users/admin/forms.py:663
+#: users/admin/forms.py:662
 msgctxt "admin ban form"
 msgid "Team message"
 msgstr ""
 
-#: users/admin/forms.py:667
+#: users/admin/forms.py:666
 msgctxt "admin ban form"
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 
-#: users/admin/forms.py:677
+#: users/admin/forms.py:676
 msgctxt "admin ban form"
 msgid "Expiration date"
 msgstr ""
 
-#: users/admin/forms.py:699
+#: users/admin/forms.py:698
 msgctxt "admin ban form"
 msgid "Banned value is too vague."
 msgstr ""
 
-#: users/admin/forms.py:707
+#: users/admin/forms.py:706
 msgctxt "admin bans filter form"
 msgid "Type"
 msgstr ""
 
-#: users/admin/forms.py:710
+#: users/admin/forms.py:709
 msgctxt "admin bans type filter choice"
 msgid "All bans"
 msgstr ""
 
-#: users/admin/forms.py:711
+#: users/admin/forms.py:710
 msgctxt "admin bans type filter choice"
 msgid "Usernames"
 msgstr ""
 
-#: users/admin/forms.py:712
+#: users/admin/forms.py:711
 msgctxt "admin bans filter form"
 msgid "E-mails"
 msgstr ""
 
-#: users/admin/forms.py:713
+#: users/admin/forms.py:712
 msgctxt "admin bans type filter choice"
 msgid "IPs"
 msgstr ""
 
-#: users/admin/forms.py:717
+#: users/admin/forms.py:716
 msgctxt "admin bans filter form"
 msgid "Banned value begins with"
 msgstr ""
 
-#: users/admin/forms.py:721
+#: users/admin/forms.py:720
 msgctxt "admin bans filter form"
 msgid "Registration only"
 msgstr ""
 
-#: users/admin/forms.py:724
+#: users/admin/forms.py:723
 msgctxt "admin bans registration filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:725
+#: users/admin/forms.py:724
 msgctxt "admin bans registration filter choice"
 msgid "Yes"
 msgstr ""
 
-#: users/admin/forms.py:726
+#: users/admin/forms.py:725
 msgctxt "admin bans registration filter choice"
 msgid "No"
 msgstr ""
 
-#: users/admin/forms.py:730
+#: users/admin/forms.py:729
 msgctxt "admin bans filter form"
 msgid "State"
 msgstr ""
 
-#: users/admin/forms.py:733
+#: users/admin/forms.py:732
 msgctxt "admin bans state filter choice"
 msgid "Any"
 msgstr ""
 
-#: users/admin/forms.py:734
+#: users/admin/forms.py:733
 msgctxt "admin bans state filter choice"
 msgid "Active"
 msgstr ""
 
-#: users/admin/forms.py:735
+#: users/admin/forms.py:734
 msgctxt "admin bans state filter choice"
 msgid "Expired"
 msgstr ""
 
-#: users/admin/forms.py:771
+#: users/admin/forms.py:770
 msgctxt "admin data download request form"
 msgid "Usernames or emails"
 msgstr ""
 
-#: users/admin/forms.py:774
+#: users/admin/forms.py:773
 msgctxt "admin data download request form"
 msgid ""
-"Enter every item in new line. Duplicates will be ignored. This field is case"
-" insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case "
+"insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 msgstr ""
 
-#: users/admin/forms.py:788
+#: users/admin/forms.py:787
 #, python-format
 msgctxt "admin data download request form"
 msgid ""
@@ -10281,22 +10326,22 @@ msgid ""
 "%(show_value)s)."
 msgstr ""
 
-#: users/admin/forms.py:808
+#: users/admin/forms.py:807
 msgctxt "admin data download request form"
 msgid "One or more specified users could not be found."
 msgstr ""
 
-#: users/admin/forms.py:817
+#: users/admin/forms.py:816
 msgctxt "admin data download requests filter form"
 msgid "Status"
 msgstr ""
 
-#: users/admin/forms.py:822
+#: users/admin/forms.py:821
 msgctxt "admin data download requests filter form"
 msgid "User"
 msgstr ""
 
-#: users/admin/forms.py:826
+#: users/admin/forms.py:825
 msgctxt "admin data download requests filter form"
 msgid "Requested by"
 msgstr ""
@@ -10647,7 +10692,7 @@ msgstr ""
 
 #: users/api/auth.py:195
 msgctxt "change forgotten password api"
-msgid "Form link is invalid. Please try again."
+msgid "Form link is invalid. Please request new one."
 msgstr ""
 
 #: users/api/auth.py:199
@@ -10665,57 +10710,57 @@ msgctxt "avatar api"
 msgid "Your avatar is locked. You can't change it."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:111
+#: users/api/userendpoints/avatar.py:113
 msgctxt "avatar api"
-msgid "This avatar type is not allowed."
+msgid "This avatar type is not available."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:118
+#: users/api/userendpoints/avatar.py:122
 msgctxt "avatar api"
 msgid "Unknown avatar type."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:140
+#: users/api/userendpoints/avatar.py:144
 msgctxt "avatar api"
 msgid "New avatar based on your account was set."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:146
+#: users/api/userendpoints/avatar.py:150
 msgctxt "avatar api"
 msgid "Gravatar was downloaded and set as new avatar."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:150
+#: users/api/userendpoints/avatar.py:154
 msgctxt "avatar api"
 msgid "No Gravatar is associated with your e-mail address."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:155
+#: users/api/userendpoints/avatar.py:158
 msgctxt "avatar api"
-msgid "Failed to connect to Gravatar servers."
-msgstr ""
-
-#: users/api/userendpoints/avatar.py:166
-msgctxt "avatar api"
-msgid "Avatar from gallery was set."
+msgid "Failed to connect to Gravatar."
 msgstr ""
 
 #: users/api/userendpoints/avatar.py:168
 msgctxt "avatar api"
+msgid "Avatar from gallery was set."
+msgstr ""
+
+#: users/api/userendpoints/avatar.py:170
+msgctxt "avatar api"
 msgid "Incorrect image."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:174
+#: users/api/userendpoints/avatar.py:176
 msgctxt "avatar api"
 msgid "No file was sent."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:187
+#: users/api/userendpoints/avatar.py:189
 msgctxt "avatar api"
 msgid "Avatar was re-cropped."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:192
+#: users/api/userendpoints/avatar.py:194
 msgctxt "avatar api"
 msgid "Uploaded avatar was set."
 msgstr ""
@@ -10838,8 +10883,8 @@ msgstr ""
 #, python-format
 msgctxt "users api"
 msgid ""
-"This feature has been disabled. Please use %(provider)s to change your "
-"e-mail."
+"This feature has been disabled. Please use %(provider)s to change your e-"
+"mail."
 msgstr ""
 
 #: users/api/users.py:231
@@ -10950,14 +10995,9 @@ msgctxt "avatar upload size validator"
 msgid "Uploaded file is too big."
 msgstr ""
 
-#: users/avatars/uploaded.py:51
-msgctxt "avatar upload extension validator"
-msgid "Uploaded file type is not allowed."
-msgstr ""
-
-#: users/avatars/uploaded.py:61
-msgctxt "avatar upload mimetype validator"
-msgid "Uploaded file type is not allowed."
+#: users/avatars/uploaded.py:51 users/avatars/uploaded.py:61
+msgctxt "avatar upload validator"
+msgid "Uploaded file type is not supported."
 msgstr ""
 
 #: users/avatars/uploaded.py:73
@@ -11177,62 +11217,62 @@ msgctxt "user deleted by"
 msgid "By system"
 msgstr ""
 
-#: users/models/user.py:80
+#: users/models/user.py:81
 msgctxt "default rank"
 msgid "Forum team"
 msgstr ""
 
-#: users/models/user.py:114
+#: users/models/user.py:115
 msgctxt "user default subscription choice"
 msgid "No"
 msgstr ""
 
-#: users/models/user.py:118
+#: users/models/user.py:119
 msgctxt "user default subscription choice"
 msgid "Notify"
 msgstr ""
 
-#: users/models/user.py:122
+#: users/models/user.py:123
 msgctxt "user default subscription choice"
 msgid "Notify with e-mail"
 msgstr ""
 
-#: users/models/user.py:133
+#: users/models/user.py:134
 msgctxt "user default invites choice"
 msgid "Everybody"
 msgstr ""
 
-#: users/models/user.py:137
+#: users/models/user.py:138
 msgctxt "user default invites choice"
 msgid "Users I follow"
 msgstr ""
 
-#: users/models/user.py:141
+#: users/models/user.py:142
 msgctxt "user default invites choice"
 msgid "Nobody"
 msgstr ""
 
-#: users/models/user.py:161
+#: users/models/user.py:162
 msgctxt "user"
 msgid "joined on"
 msgstr ""
 
-#: users/models/user.py:173
+#: users/models/user.py:174
 msgctxt "user"
 msgid "staff status"
 msgstr ""
 
-#: users/models/user.py:176
+#: users/models/user.py:177
 msgctxt "user"
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
 
-#: users/models/user.py:184
+#: users/models/user.py:185
 msgctxt "user"
 msgid "active"
 msgstr ""
 
-#: users/models/user.py:189
+#: users/models/user.py:190
 msgctxt "user"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
@@ -11629,9 +11669,9 @@ msgstr ""
 #: users/profilefields/default.py:42
 msgctxt "website profile field"
 msgid ""
-"If you own website in the internet you wish to share on your profile you may"
-" enter its address here. Remember to for it to be valid http address "
-"starting with either \"http://\" or \"https://\"."
+"If you own a website you wish to share on your profile, you may enter its "
+"address here. Remember that, for it to be valid, it should start with either "
+"\"http://\" or \"https://\"."
 msgstr ""
 
 #: users/profilefields/default.py:48
@@ -11639,33 +11679,26 @@ msgctxt "skype id profile field"
 msgid "Skype ID"
 msgstr ""
 
-#: users/profilefields/default.py:51
-msgctxt "skype id profile field"
-msgid ""
-"Entering your Skype ID in this field may invite other users to contact you "
-"over the Skype instead of via private threads."
-msgstr ""
-
-#: users/profilefields/default.py:57
+#: users/profilefields/default.py:53
 msgctxt "twitter handle profile field"
 msgid "X (formerly Twitter) handle"
 msgstr ""
 
-#: users/profilefields/default.py:62
+#: users/profilefields/default.py:58
 #, python-format
 msgctxt "twitter handle profile field"
 msgid ""
-"If you own X account, here you may enter your X handle for other users to "
+"If you own an X account, here you may enter your X handle for other users to "
 "find you. Starting your handle with \"@\" sign is optional. Either "
 "\"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
 
-#: users/profilefields/default.py:74
+#: users/profilefields/default.py:70
 msgctxt "twitter handle profile field"
 msgid "This is not a valid X handle."
 msgstr ""
 
-#: users/profilefields/default.py:82
+#: users/profilefields/default.py:78
 msgctxt "join ip profile field"
 msgid "Join IP"
 msgstr ""
@@ -11771,39 +11804,39 @@ msgctxt "email validator"
 msgid "Enter a valid e-mail address."
 msgstr ""
 
-#: users/validators.py:44
+#: users/validators.py:45
 msgctxt "user email validator"
 msgid "This e-mail address is not available."
 msgstr ""
 
-#: users/validators.py:60
+#: users/validators.py:61
 msgctxt "user email validator"
 msgid "This e-mail address is not allowed."
 msgstr ""
 
-#: users/validators.py:79
+#: users/validators.py:80
 msgctxt "username validator"
 msgid "This username is not available."
 msgstr ""
 
-#: users/validators.py:93
+#: users/validators.py:94
 msgctxt "username validator"
 msgid "This username is not allowed."
 msgstr ""
 
-#: users/validators.py:102
+#: users/validators.py:103
 msgctxt "username validator"
 msgid ""
 "Username can only contain Latin alphabet letters, digits, and an underscore "
 "sign."
 msgstr ""
 
-#: users/validators.py:110
+#: users/validators.py:111
 msgctxt "username validator"
 msgid "Username must contain Latin alphabet letters or digits."
 msgstr ""
 
-#: users/validators.py:119
+#: users/validators.py:120
 #, python-format
 msgctxt "username length validator"
 msgid "Username must be at least %(limit_value)s character long."
@@ -11811,7 +11844,7 @@ msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:128
+#: users/validators.py:129
 #, python-format
 msgctxt "username length validator"
 msgid "Username cannot be longer than %(limit_value)s characters."
@@ -11819,12 +11852,12 @@ msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: users/validators.py:167
+#: users/validators.py:168
 msgctxt "stop forum spam validator"
 msgid "Data entered was found in spammers database."
 msgstr ""
 
-#: users/validators.py:182
+#: users/validators.py:183
 msgctxt "gmail email validator"
 msgid "This e-mail is not allowed."
 msgstr ""
@@ -11870,8 +11903,7 @@ msgstr ""
 #: users/views/forgottenpassword.py:45
 #, python-format
 msgctxt "user password"
-msgid ""
-"%(user)s, your link has expired. Please request new link and try again."
+msgid "%(user)s, your link has expired. Please request new link and try again."
 msgstr ""
 
 #: users/views/forgottenpassword.py:52

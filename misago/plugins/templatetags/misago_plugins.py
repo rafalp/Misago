@@ -35,8 +35,10 @@ class PluginOutletNode(template.Node):
         if not outlet:
             return ""
 
+        request = context.get("request")
+
         outlet_html = ""
-        for plugin_html in outlet(context):
+        for plugin_html in outlet(request, context):
             if plugin_html is not None:
                 outlet_html += conditional_escape(plugin_html)
         return mark_safe(outlet_html)

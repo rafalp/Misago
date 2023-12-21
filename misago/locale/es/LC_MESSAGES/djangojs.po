@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Daniel Gerardo Rondón García, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-20 17:24+0000\n"
+"POT-Creation-Date: 2023-12-20 20:02+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Daniel Gerardo Rondón García, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/misago/teams/65369/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications list"
@@ -564,8 +565,7 @@ msgstr "El contenido de este mensaje no se puede mostrar."
 msgctxt "post body invalid"
 msgid "This error is caused by invalid post content manipulation."
 msgstr ""
-"Este error es causado por una manipulación de contenido de mensaje no "
-"válida."
+"Este error es causado por una manipulación de contenido de mensaje no válida."
 
 #: static/misago/js/misago.js:1
 msgctxt "posts feed item header"
@@ -1071,7 +1071,8 @@ msgstr "Autor o fuente de la cita"
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
 msgid "Optional. If it's username, put \"@\" before it (\"@JohnDoe\")."
-msgstr "Opcional. Si es un nombre de usuario, pon \"@\" antes de él (\"@JohnDoe\")."
+msgstr ""
+"Opcional. Si es un nombre de usuario, pon \"@\" antes de él (\"@JohnDoe\")."
 
 #: static/misago/js/misago.js:1
 msgctxt "markup editor"
@@ -1351,11 +1352,11 @@ msgstr[0] ""
 "El mensaje publicado no puede tener más de %(limit_value)s carácter (tiene "
 "%(show_value)s)."
 msgstr[1] ""
-"El mensaje publicado no puede tener más de %(limit_value)s caracteres (tiene"
-" %(show_value)s)."
+"El mensaje publicado no puede tener más de %(limit_value)s caracteres (tiene "
+"%(show_value)s)."
 msgstr[2] ""
-"El mensaje publicado no puede tener más de %(limit_value)s caracteres (tiene"
-" %(show_value)s)."
+"El mensaje publicado no puede tener más de %(limit_value)s caracteres (tiene "
+"%(show_value)s)."
 
 #: static/misago/js/misago.js:1
 msgctxt "post length validator"
@@ -1580,8 +1581,8 @@ msgid ""
 "Declining will result in immediate deactivation and deletion of your "
 "account. This action is not reversible."
 msgstr ""
-"Rechazar resultará en la desactivación inmediata y eliminación de tu cuenta."
-" Esta acción no es reversible."
+"Rechazar resultará en la desactivación inmediata y eliminación de tu cuenta. "
+"Esta acción no es reversible."
 
 #: static/misago/js/misago.js:1
 msgctxt "accept agreement choice"
@@ -1754,22 +1755,22 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"Your account will be deleted together with its profile details, IP addresses"
-" and notifications."
+"Your account will be deleted together with its profile details, IP addresses "
+"and notifications."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"Other content will NOT be deleted, but username displayed next to it will be"
-" changed to one shared by all deleted accounts."
+"Other content will NOT be deleted, but username displayed next to it will be "
+"changed to one shared by all deleted accounts."
 msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "delete your account form"
 msgid ""
-"Your username and e-maill address will become available again for use during"
-" registration or for other accounts to change to."
+"Your username and e-maill address will become available again for use during "
+"registration or for other accounts to change to."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -1985,8 +1986,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications options"
-msgid ""
-"Automatically watch new private threads I'm invited to by other members"
+msgid "Automatically watch new private threads I'm invited to by other members"
 msgstr ""
 "Ver automáticamente los nuevos temas privados a los que me invitan otros "
 "miembros"
@@ -1997,8 +1997,8 @@ msgid ""
 "Notify me about new private thread invitations from the members I am "
 "following"
 msgstr ""
-"Notificarme sobre las nuevas invitaciones a temas privados de los miembros a"
-" los que sigo"
+"Notificarme sobre las nuevas invitaciones a temas privados de los miembros a "
+"los que sigo"
 
 #: static/misago/js/misago.js:1
 msgctxt "notifications options"
@@ -2142,8 +2142,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "change sign in credentials"
 msgid ""
-"You need to set a password for your account to be able to change your e-mail"
-" or password."
+"You need to set a password for your account to be able to change your e-mail "
+"or password."
 msgstr ""
 
 #: static/misago/js/misago.js:1
@@ -2519,8 +2519,8 @@ msgctxt "profile delete"
 msgid ""
 "%(username)s's account, threads, posts and other content has been deleted."
 msgstr ""
-"La cuenta de %(username)s, los temas, los mensajes y otro contenido han sido"
-" eliminados."
+"La cuenta de %(username)s, los temas, los mensajes y otro contenido han sido "
+"eliminados."
 
 #: static/misago/js/misago.js:1
 msgctxt "profile delete"
@@ -2846,8 +2846,7 @@ msgstr "Rellena todos los campos."
 #: static/misago/js/misago.js:1
 msgctxt "social auth form"
 msgid "Your e-mail address has been verified by %(backend)s."
-msgstr ""
-"Tu dirección de correo electrónico ha sido verificada por %(backend)s."
+msgstr "Tu dirección de correo electrónico ha sido verificada por %(backend)s."
 
 #: static/misago/js/misago.js:1
 msgctxt "social auth form title"
@@ -3036,8 +3035,8 @@ msgctxt "thread poll"
 msgid ""
 "Are you sure you want to delete this poll? This action is not reversible."
 msgstr ""
-"¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede"
-" deshacer."
+"¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede "
+"deshacer."
 
 #: static/misago/js/misago.js:1
 msgctxt "thread poll"
@@ -3248,8 +3247,8 @@ msgid ""
 "for all polls."
 msgstr ""
 "Hacer pública la votación permitirá a todo el mundo acceder a una lista "
-"detallada de votos, mostrando qué usuarios votaron por qué opciones y en qué"
-" momentos. Esta opción no se puede cambiar después de la creación de la "
+"detallada de votos, mostrando qué usuarios votaron por qué opciones y en qué "
+"momentos. Esta opción no se puede cambiar después de la creación de la "
 "encuesta. Los moderadores pueden ver los detalles de la votación de todas "
 "las encuestas."
 
@@ -3424,8 +3423,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "post unapproved flag"
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its"
-" author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its "
+"author may see its contents."
 msgstr ""
 "Este mensaje no está aprobado. Solo los usuarios con permiso para aprobar "
 "mensajes y su autor pueden ver su contenido."
@@ -3440,8 +3439,8 @@ msgctxt "post delete"
 msgid ""
 "Are you sure you want to delete this post? This action is not reversible!"
 msgstr ""
-"¿Estás seguro de que quieres eliminar este mensaje? ¡Esta acción no se puede"
-" deshacer!"
+"¿Estás seguro de que quieres eliminar este mensaje? ¡Esta acción no se puede "
+"deshacer!"
 
 #: static/misago/js/misago.js:1
 msgctxt "post delete"
@@ -3572,11 +3571,10 @@ msgstr "Por %(edited_by)s %(edited_on)s."
 #: static/misago/js/misago.js:1
 msgctxt "post revert"
 msgid ""
-"Are you sure you with to revert this post to the state from before this "
-"edit?"
+"Are you sure you with to revert this post to the state from before this edit?"
 msgstr ""
-"¿Estás seguro de que quieres revertir este mensaje al estado anterior a esta"
-" edición?"
+"¿Estás seguro de que quieres revertir este mensaje al estado anterior a esta "
+"edición?"
 
 #: static/misago/js/misago.js:1
 msgctxt "post revert"
@@ -4119,8 +4117,7 @@ msgstr "%(username)s en %(posted_on)s"
 #: static/misago/js/misago.js:1
 msgctxt "merge posts"
 msgid ""
-"Are you sure you want to merge selected posts? This action is not "
-"reversible!"
+"Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
 "¿Estás seguro de que quieres fusionar los mensajes seleccionados? ¡Esta "
 "acción no se puede deshacer!"
@@ -4369,8 +4366,8 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "threads moderation merge"
 msgid ""
-"You need permission to start threads in category to be able to merge threads"
-" to it."
+"You need permission to start threads in category to be able to merge threads "
+"to it."
 msgstr ""
 "Necesitas permiso para iniciar temas en la categoría para poder fusionar "
 "temas en ella."
@@ -4591,8 +4588,7 @@ msgstr ""
 #: static/misago/js/misago.js:1
 msgctxt "threads list empty"
 msgid "No threads matching specified criteria were found."
-msgstr ""
-"No se encontraron temas que coincidan con los criterios especificados."
+msgstr "No se encontraron temas que coincidan con los criterios especificados."
 
 #: static/misago/js/misago.js:1
 msgctxt "threads list"
@@ -4741,8 +4737,7 @@ msgstr "Contenido no aprobado"
 #: static/misago/js/misago.js:1
 msgctxt "top posters empty"
 msgid "No users have posted any new messages during last %(days)s day."
-msgid_plural ""
-"No users have posted any new messages during last %(days)s days."
+msgid_plural "No users have posted any new messages during last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -4929,11 +4924,11 @@ msgstr[0] ""
 "Asegúrate de que este valor tiene al menos %(limit_value)s carácter (tiene "
 "%(show_value)s)."
 msgstr[1] ""
-"Asegúrate de que este valor tiene al menos %(limit_value)s caracteres (tiene"
-" %(show_value)s)."
+"Asegúrate de que este valor tiene al menos %(limit_value)s caracteres (tiene "
+"%(show_value)s)."
 msgstr[2] ""
-"Asegúrate de que este valor tiene al menos %(limit_value)s caracteres (tiene"
-" %(show_value)s)."
+"Asegúrate de que este valor tiene al menos %(limit_value)s caracteres (tiene "
+"%(show_value)s)."
 
 #: static/misago/js/misago.js:1
 msgctxt "value length validator"
@@ -4985,14 +4980,13 @@ msgid ""
 "Username can only contain Latin alphabet letters, digits, and an underscore "
 "sign."
 msgstr ""
-"El nombre de usuario solo puede contener letras del alfabeto latino, dígitos"
-" y un signo de subrayado."
+"El nombre de usuario solo puede contener letras del alfabeto latino, dígitos "
+"y un signo de subrayado."
 
 #: static/misago/js/misago.js:1
 msgctxt "password length validator"
 msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural ""
-"Valid password must be at least %(limit_value)s characters long."
+msgid_plural "Valid password must be at least %(limit_value)s characters long."
 msgstr[0] "La contraseña válida debe tener al menos %(limit_value)s carácter."
 msgstr[1] ""
 "La contraseña válida debe tener al menos %(limit_value)s caracteres."

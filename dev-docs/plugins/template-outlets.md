@@ -5,9 +5,10 @@ Template outlets are special hooks located in Misago's templates where plugins c
 
 ## Template outlet function
 
-Functions registered in template outlets are called with a single argument: a `django.template.Context` instance, and return either a `str` or `SafeText`:
+Functions registered in template outlets are called with two arguments: the `request` object and a `django.template.Context` instance, and return either `str`, `SafeText` or `None`:
 
 ```python
+from django.http import HttpRequest
 from django.template import Context
 from django.utils.html import format_html
 from django.utils.safestring import SafeText
@@ -16,7 +17,7 @@ from misago.threads.models import Post, Thread
 from misago.users.models import User
 
 
-def display_forum_stats(context: Context) -> SafeText:
+def display_forum_stats(request: HttpRequest, context: Context) -> SafeText:
     return format_html(
         (
             "<ul class=\"forum-stats\">"
@@ -37,6 +38,7 @@ def display_forum_stats(context: Context) -> SafeText:
 A function can return `None` to don't render anything in a template outlet:
 
 ```python
+from django.http import HttpRequest
 from django.template import Context
 from django.utils.html import format_html
 from django.utils.safestring import SafeText
@@ -45,7 +47,7 @@ from misago.threads.models import Post, Thread
 from misago.users.models import User
 
 
-def display_forum_stats(context: Context) -> SafeText | None:
+def display_forum_stats(request: HttpRequest, context: Context) -> SafeText | None:
     # Hide forum stats from unregistered users
     if context["user"].is_anonymous:
         return None
@@ -70,7 +72,7 @@ def display_forum_stats(context: Context) -> SafeText | None:
 If the function returns a `str`, it will be automatically escaped before its insertion in a template:
 
 ```python
-def display_hello_message(context: Context) -> str:
+def display_hello_message(request: HttpRequest, context: Context) -> str:
     return (
         f"<div class=\"alert alert-info\">Welcome, {context['user'].username}!</div>"
     )
@@ -87,6 +89,7 @@ To prevent this escaping, use the [`format_html`](https://docs.djangoproject.com
 Especially, `mark_safe` is useful if your function renders a template as its output:
 
 ```python
+from django.http import HttpRequest
 from django.template import Context
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -96,7 +99,7 @@ from misago.users.models import User
 
 
 @mark_safe
-def display_forum_stats(context: Context) -> str:
+def display_forum_stats(request: HttpRequest, context: Context) -> str:
     forum_stats = {
         "threads": Thread.objects.count(),
         "posts": Post.objects.count(),
@@ -106,6 +109,8 @@ def display_forum_stats(context: Context) -> str:
     return render_to_string("my_plugin/forum_stats.html", forum_stats)
 ```
 
+Note that when a function decorated with `mark_safe` returns `None`, it will be cast to a `str` and displayed in a template. Instead, return an empty string when using the `mark_safe` decorator.
+
 
 ## `template_outlet_action` decorator
 
@@ -114,6 +119,7 @@ The `display_forum_stats` function from the previous section can be simplified w
 ```python
 from typing import Tuple
 
+from django.http import HttpRequest
 from django.template import Context
 
 from misago.plugins.outlets import template_outlet_action
@@ -122,7 +128,7 @@ from misago.users.models import User
 
 
 @template_outlet_action
-def display_forum_stats(context: Context) -> Tuple[str, dict]:
+def display_forum_stats(request: HttpRequest, context: Context) -> Tuple[str, dict]:
     return (
         "my_plugin/forum_stats.html",
         {
@@ -146,6 +152,7 @@ This enables advanced use cases:
 ```python
 from typing import Tuple
 
+from django.http import HttpRequest
 from django.template import Context
 
 import misago
@@ -155,9 +162,9 @@ from misago.users.models import User
 
 
 @template_outlet_action
-def display_forum_stats(context: Context) -> Tuple[str, dict] | None:
+def display_forum_stats(request: HttpRequest, context: Context) -> Tuple[str, dict] | None:
     # Hide forum stats from unregistered users
-    if context["user"].is_anonymous:
+    if request.user.is_anonymous:
         return None
 
     forum_stats = {
@@ -167,7 +174,7 @@ def display_forum_stats(context: Context) -> Tuple[str, dict] | None:
     }
 
     # Display full forum stats for admins
-    if context["user"].is_staff:
+    if request.user.is_staff:
         forum_stats.update({
             "attachments": Attachment.objects.count(),
             "misago": misago.__version__,
@@ -186,7 +193,7 @@ To register a function in a template outlet, use the `append_outlet_action` or `
 from misago.plugins.outlets import append_outlet_action
 
 
-def display_forum_stats(context: Context):
+def display_forum_stats(request: HttpRequest, context: Context):
     ...
 
 

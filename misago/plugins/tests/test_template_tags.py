@@ -4,12 +4,12 @@ from django.utils.safestring import mark_safe
 from ..outlets import PluginOutlet, append_outlet_action, prepend_outlet_action
 
 
-def strong_action(context):
+def strong_action(request, context):
     body = context.get("value") or "none"
     return mark_safe(f"<strong>{body}</strong>")
 
 
-def em_action(context):
+def em_action(request, context):
     body = context.get("value") or "none"
     return mark_safe(f"<em>{body}</em>")
 

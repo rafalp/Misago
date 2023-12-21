@@ -2,7 +2,7 @@ from ..outlets import PluginOutlet, append_outlet_action, template_outlet_action
 
 
 @template_outlet_action
-def noop_action(context):
+def noop_action(request, context):
     return None
 
 
@@ -15,7 +15,7 @@ def test_noop_template_action_renders_nothing(
 
 
 @template_outlet_action
-def template_name_action(context):
+def template_name_action(request, context):
     return "misago/template_outlet_action_test.html"
 
 
@@ -28,7 +28,7 @@ def test_template_name_action_renders_template_with_standard_context(
 
 
 @template_outlet_action
-def template_name_context_action(context):
+def template_name_context_action(request, context):
     return "misago/template_outlet_action_test.html", {"message": "Custom context"}
 
 
