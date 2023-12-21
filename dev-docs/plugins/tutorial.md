@@ -400,7 +400,7 @@ We should make our plugin use Django's localization features so that it supports
 {% load i18n %}
 <div class="panel panel-default panel-users-online">
     <div class="panel-heading">
-        <h3 class="panel-title">{% trans "Users online" context "misago users online plugin" %}</h3>
+        <h3 class="panel-title">{% trans "Users online" context "users online plugin" %}</h3>
     </div>
     <div class="panel-body">
         {% for online in users_online %}
@@ -431,3 +431,180 @@ Remember to repeat this process after all changes to translation messages in the
 
 ## Adding users online view
 
+Let's learn how to use plugins to add new views to Misago. We will create a single view for our plugin: a list of users online, only accessible to the forum administrators.
+
+First, we need to create a `views.py` file with a basic view that only displays a "Hello world!" message in a plain text:
+
+```python
+# misago_users_online_plugin/views.py
+from django.http import HttpRequest, HttpResponse
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    return HttpResponse("Hello world!")
+```
+
+Now, let's create an `urls.py` file next to it with plugin's URLs:
+
+```python
+# misago_users_online_plugin/urls.py
+from django.urls import path
+
+from . import views
+
+app_name = "users-online-plugin"
+urlpatterns = [
+    path("users-online/", views.index, name="index"),
+]
+```
+
+Misago discovers and includes plugins' `urls.py` files automatically on server start. If you already have a running dev server, restart it.
+
+After the development server has started, visit http://127.0.0.1:8000/users-online/ in your browser. You will see a "Hello world!" message from the plugin.
+
+Now, let's update the `users_online_card.html` template to include a link to our new view:
+
+```html
+<!-- misago_users_online_plugin/templates/misago_users_online_plugin/users_online_card.html -->
+{% load i18n %}
+<div class="panel panel-default panel-users-online">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <a href="{% url 'users-online-plugin:index' %}">{% trans "Users online" context "users online plugin" %}</a>
+        </h3>
+    </div>
+    <div class="panel-body">
+        {% for online in users_online %}
+            <a href="{{ online.user.get_absolute_url }}" class="item-title">{{ online.user }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+</div>
+```
+
+The `app_name` in `urls.py` is used to define a namespace under which the URLs defined by the plugin will exist. Our plugin uses the `users-online-plugin` namespace and has a single URL named `index`. To reverse a URL to our view, we can use the `users-online-plugin:index` namespaced URL name.
+
+Visit http://127.0.0.1:8000/categories/ in your browser and scroll down to the users online card. Its title will now be a link to our page.
+
+Let's return to our view and update it to verify that the user visiting the page is an admin:
+
+```python
+# misago_users_online_plugin/views.py
+from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.utils.translation import pgettext
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    if not request.user.is_authenticated or not request.user.is_staff:
+        raise PermissionDenied(
+            pgettext(
+                "users online plugin",
+                "You need to be an administrator to view this page.",
+            )
+        )
+
+    return HttpResponse("Hello world!")
+```
+
+Let's walk through the new code line by line:
+
+First, we check if the user is not authenticated or they are not an administrator (`is_staff` is Django's flag for administrator status).
+
+Next, if the check passes (meaning the user can't view the page), we raise a `PermissionError` with a message about the missing administrator status.
+
+[`pgettext`](https://docs.djangoproject.com/en/5.0/topics/i18n/translation/#contextual-markers) is a translation message with a context specifying that it's a part of the `users online plugin`.
+
+Visit http://127.0.0.1:8000/users-online/ without being signed in. Misago will display an error message informing us that the page we are trying to access is not available.
+
+Let's change our model to actually fetch a list of users online in last 15 minutes and create a response from a template:
+
+```python
+# misago_users_online_plugin/views.py
+from datetime import timedelta
+
+from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
+from django.utils import timezone
+from django.utils.translation import pgettext
+from misago.users.models import Online
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    if not request.user.is_authenticated or not request.user.is_staff:
+        raise PermissionDenied(
+            pgettext(
+                "users online plugin",
+                "You need to be an administrator to view this page.",
+            )
+        )
+
+    users_online = Online.objects.filter(
+        last_click__gte=timezone.now() - timedelta(minutes=15),
+    ).select_related("user")
+
+    return render(
+        request,
+        "misago_users_online_plugin/index.html",
+        {"users_online": users_online},
+    )
+```
+
+Finally, create a `misago_users_online_plugin/index.html` template file with those contents:
+
+```html
+{% extends "misago/base.html" %}
+{% load i18n misago_batch %}
+
+
+{% block title %}
+  {% trans "Users online" context "users online plugin" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-users-online">
+  <div class="container page-header-container">
+    <div class="page-header page-header-users-online">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-users-online">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <h1>{% trans "Users online" context "users online plugin" %}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container page-container">
+    {% for row in users_online|batch:4 %}
+      <div class="row">
+        {% for user_online in row %}
+          <div class="col-xs-12 col-md-3">
+            <a href="{{ user_online.user.get_absolute_url }}" class="item-title">{{ user_online.user }}</a>
+            <br />
+            <span misago-timestamp="{{ user_online.last_click.isoformat }}">
+              {{ user_online.last_click|date:"DATETIME_FORMAT" }}
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}
+```
+
+Refresh the users online page. It will now contain a simple list of user names, together with the timestamp of their last click.
+
+Here are some parts of the template explained:
+
+`{% block title %}` defaults to `{{ settings.forum_name }}` as a default page title. We are using Django's template inheritance to prepend the "Users online" text before it.
+
+`|batch:4` is a custom filter loaded from `misago_batch`. This filter splits an iterable into an iterable of iterables, which is very helpful when a grid system is used. Misago uses a Bootstrap version that requires for every row of the grid to be wrapped in a `<div class="row"></div>` HTML, and displays no more than 4 users per row.
+
+`misago-timestamp="{{ user_online.last_click.isoformat }}"` is a custom HTML attribute specific to Misago's JavaScript. The presence of this attribute tells the UI that this element displays a timestamp that should be updated every minute with a relative timestamp from the `user_online.last_click.isoformat` value. `{{ user_online.last_click|date:"DATETIME_FORMAT" }}` is a default displayed timestamp as full date time, shown to the clients without JavaScript.
