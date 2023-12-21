@@ -44,7 +44,7 @@ def create_default_category_permissions(apps, schema_editor):
                 Permission(
                     category_id=category.id,
                     group_id=group_id,
-                    permission=permission,
+                    permission=permission.name,
                 )
             )
 

@@ -43,6 +43,7 @@ class UserManager(BaseUserManager):
             extra_fields["rank"] = Rank.objects.get_default()
 
         if not extra_fields.get("group_id"):
+            raise NotImplementedError("write a `get_default_group_id` util!")
             extra_fields["group_id"] = (
                 Group.objects.filter(is_default=True)
                 .values_list("id", flat=True)
@@ -50,6 +51,7 @@ class UserManager(BaseUserManager):
                 or DefaultGroupId.MEMBERS.value
             )
 
+        raise NotImplementedError("write a `set_user_groups` util!")
         extra_fields["groups_ids"] = [extra_fields["group_id"]]
         extra_fields["permissions_id"] = get_permissions_id(extra_fields["groups_ids"])
 
