@@ -15,7 +15,7 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name context "categories page" %}
+    {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
@@ -46,7 +46,7 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name context "categories page" %}
+    {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
@@ -59,7 +59,7 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name context "categories page" %}
+    {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
