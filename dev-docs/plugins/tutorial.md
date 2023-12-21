@@ -608,3 +608,15 @@ Here are some parts of the template explained:
 `|batch:4` is a custom filter loaded from `misago_batch`. This filter splits an iterable into an iterable of iterables, which is very helpful when a grid system is used. Misago uses a Bootstrap version that requires for every row of the grid to be wrapped in a `<div class="row"></div>` HTML, and displays no more than 4 users per row.
 
 `misago-timestamp="{{ user_online.last_click.isoformat }}"` is a custom HTML attribute specific to Misago's JavaScript. The presence of this attribute tells the UI that this element displays a timestamp that should be updated every minute with a relative timestamp from the `user_online.last_click.isoformat` value. `{{ user_online.last_click|date:"DATETIME_FORMAT" }}` is a default displayed timestamp as full date time, shown to the clients without JavaScript.
+
+
+## Note about tutorial plugin's utility
+
+The plugin we've created over the course of this tutorial can be used in production, but it has performance issues that limit its utility only to small forums. Without an index on the `last_click` column, which would make filtering faster when the online table contains entries for thousands of users, finding only users who were active within the last 15 minutes will be very slow on medium to large forums.
+
+Other developers are welcome to use this plugin as a base for implementing a "proper" plugin with an online users list that will be safe to use in production on all forums.
+
+
+## Completed plugin code
+
+A repository with completed plugin's code is available on [GitHub](https://github.com/rafalp/misago-users-online-plugin).
