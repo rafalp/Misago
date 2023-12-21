@@ -4,9 +4,13 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
+aiohttp==3.9.1
+    # via black
+aiosignal==1.3.1
+    # via aiohttp
 amqp==5.2.0
     # via kombu
-anyio==4.0.0
+anyio==4.2.0
     # via starlette
 ariadne==0.21
     # via
@@ -16,13 +20,15 @@ ariadne-django==0.3.0
     # via -r requirements.in
 asgiref==3.7.2
     # via django
+attrs==23.1.0
+    # via aiohttp
 billiard==4.2.0
     # via celery
-black==23.11.0
+black==23.12.0
     # via -r requirements.in
-celery[redis]==5.3.5
+celery[redis]==5.3.6
     # via -r requirements.in
-certifi==2023.7.22
+certifi==2023.11.17
     # via requests
 cffi==1.16.0
     # via cryptography
@@ -47,13 +53,13 @@ coverage[toml]==6.5.0
     #   pytest-cov
 coveralls==3.3.1
     # via -r requirements.in
-cryptography==41.0.5
+cryptography==41.0.7
     # via social-auth-core
 defusedxml==0.8.0rc2
     # via
     #   python3-openid
     #   social-auth-core
-django==4.2.7
+django==4.2.8
     # via
     #   -r requirements.in
     #   ariadne-django
@@ -65,7 +71,7 @@ django==4.2.7
     #   webservices
 django-debug-toolbar==4.2.0
     # via -r requirements.in
-django-js-asset==2.1.0
+django-js-asset==2.2.0
     # via django-mptt
 django-mptt==0.15.0
     # via -r requirements.in
@@ -75,26 +81,35 @@ djangorestframework==3.14.0
     # via -r requirements.in
 docopt==0.6.2
     # via coveralls
-faker==20.0.0
+faker==21.0.0
     # via -r requirements.in
+frozenlist==1.4.1
+    # via
+    #   aiohttp
+    #   aiosignal
 graphql-core==3.2.3
     # via ariadne
 html5lib==1.1
     # via -r requirements.in
-idna==3.4
+idna==3.6
     # via
     #   anyio
     #   requests
+    #   yarl
 iniconfig==2.0.0
     # via pytest
 itsdangerous==0.24
     # via
     #   django-simple-sso
     #   webservices
-kombu==5.3.3
+kombu==5.3.4
     # via celery
 markdown==3.5.1
     # via -r requirements.in
+multidict==6.0.4
+    # via
+    #   aiohttp
+    #   yarl
 mypy-extensions==1.0.0
     # via black
 oauthlib==3.2.2
@@ -105,19 +120,19 @@ packaging==23.2
     # via
     #   black
     #   pytest
-pathspec==0.11.2
+pathspec==0.12.1
     # via black
 pillow==10.1.0
     # via -r requirements.in
-platformdirs==4.0.0
+platformdirs==4.1.0
     # via black
 pluggy==1.3.0
     # via pytest
-prompt-toolkit==3.0.40
+prompt-toolkit==3.0.43
     # via click-repl
-psycopg[binary]==3.1.12
+psycopg[binary]==3.1.16
     # via -r requirements.in
-psycopg-binary==3.1.12
+psycopg-binary==3.1.16
     # via psycopg
 pycparser==2.21
     # via cffi
@@ -162,9 +177,9 @@ requests==2.31.0
     #   webservices
 requests-oauthlib==1.3.1
     # via social-auth-core
-responses==0.24.0
+responses==0.24.1
     # via -r requirements.in
-ruff==0.1.5
+ruff==0.1.8
     # via -r requirements.in
 six==1.16.0
     # via
@@ -174,17 +189,17 @@ sniffio==1.3.0
     # via anyio
 social-auth-app-django==5.4.0
     # via -r requirements.in
-social-auth-core==4.5.0
+social-auth-core==4.5.1
     # via social-auth-app-django
 sqlparse==0.4.4
     # via
     #   django
     #   django-debug-toolbar
-starlette==0.32.0.post1
+starlette==0.34.0
     # via ariadne
 syrupy==4.6.0
     # via -r requirements.in
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via
     #   ariadne
     #   psycopg
@@ -201,9 +216,11 @@ vine==5.1.0
     #   amqp
     #   celery
     #   kombu
-wcwidth==0.2.9
+wcwidth==0.2.12
     # via prompt-toolkit
 webencodings==0.5.1
     # via html5lib
 webservices[django]==0.7
     # via django-simple-sso
+yarl==1.9.4
+    # via aiohttp
