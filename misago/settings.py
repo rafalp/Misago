@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "misago.notifications",
     "misago.categories",
     "misago.threads",
+    "misago.permissions",
     "misago.readtracker",
     "misago.search",
     "misago.oauth2",

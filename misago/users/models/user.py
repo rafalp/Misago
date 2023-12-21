@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.postgres.fields import ArrayField, HStoreField
+from django.contrib.postgres.indexes import GinIndex
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
@@ -167,7 +168,12 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     rank = models.ForeignKey(
         "Rank", null=True, blank=True, on_delete=models.deletion.PROTECT
     )
+    group = models.ForeignKey("misago_users.Group", on_delete=models.deletion.PROTECT)
+    groups_ids = ArrayField(models.PositiveIntegerField(), default=list)
+    permissions_id = models.CharField(max_length=12)
+
     title = models.CharField(max_length=255, null=True, blank=True)
+
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
     is_staff = models.BooleanField(
@@ -177,6 +183,7 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
             "user", "Designates whether the user can log into admin sites."
         ),
     )
+    is_moderator = models.BooleanField(default=False)
 
     roles = models.ManyToManyField("misago_acl.Role")
     acl_key = models.CharField(max_length=12, null=True, blank=True)
@@ -293,6 +300,10 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                 name="misago_user_is_deleting_a_part",
                 fields=["is_deleting_account"],
                 condition=Q(is_deleting_account=True),
+            ),
+            GinIndex(
+                name="misago_user_groups_ids",
+                fields=["groups_ids"],
             ),
         ]
 
