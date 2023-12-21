@@ -18,10 +18,13 @@ from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
 from ...notifications.threads import ThreadNotifications
+from ...permissions.permissionsid import get_permissions_id
 from ...plugins.models import PluginDataModel
 from ..avatars import store as avatars_store, delete_avatar
+from ..enums import DefaultGroupId
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
+from .group import Group
 from .online import Online
 from .rank import Rank
 
@@ -38,6 +41,17 @@ class UserManager(BaseUserManager):
 
         if not extra_fields.get("rank"):
             extra_fields["rank"] = Rank.objects.get_default()
+
+        if not extra_fields.get("group_id"):
+            extra_fields["group_id"] = (
+                Group.objects.filter(is_default=True)
+                .values_list("id", flat=True)
+                .first()
+                or DefaultGroupId.MEMBERS.value
+            )
+
+        extra_fields["groups_ids"] = [extra_fields["group_id"]]
+        extra_fields["permissions_id"] = get_permissions_id(extra_fields["groups_ids"])
 
         user = self.model(**extra_fields)
         user.set_username(username)
@@ -86,6 +100,9 @@ class UserManager(BaseUserManager):
                     extra_fields["rank"] = forum_team_rank
         except Rank.DoesNotExist:
             pass
+
+        if not extra_fields.get("group_id"):
+            extra_fields["group_id"] = DefaultGroupId.ADMINS.value
 
         return self._create_user(username, email, password, **extra_fields)
 

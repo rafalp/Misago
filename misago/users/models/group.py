@@ -12,9 +12,9 @@ class Group(PluginDataModel):
     css_suffix = models.CharField(max_length=50, null=True, blank=True)
 
     ordering = models.PositiveIntegerField(default=0)
-    is_list_tab = models.BooleanField(default=False, unique=True)
+    is_list_tab = models.BooleanField(default=False)
 
-    is_default = models.BooleanField(default=False, unique=True)
+    is_default = models.BooleanField(default=False)
 
     is_admin = models.BooleanField(default=False)
     is_moderator = models.BooleanField(default=False)
