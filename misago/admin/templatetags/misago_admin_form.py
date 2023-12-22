@@ -106,6 +106,5 @@ def get_options(widget):
     """Filter that extracts field choices into an easily iterable list"""
     options = []
     for _, optgroup, _ in widget["optgroups"]:
-        print(optgroup)
         options += optgroup
     return options

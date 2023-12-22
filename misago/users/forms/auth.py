@@ -111,7 +111,7 @@ class AdminAuthenticationForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
 
     def confirm_login_allowed(self, user):
-        if not user.is_staff:
+        if not user.is_misago_root and 1 not in user.groups_ids:
             raise forms.ValidationError(
                 self.error_messages["not_staff"], code="not_staff"
             )

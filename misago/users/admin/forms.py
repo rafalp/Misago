@@ -89,12 +89,6 @@ class NewUserForm(UserBaseForm):
 
 
 class EditUserForm(UserBaseForm):
-    IS_STAFF_LABEL = pgettext_lazy("admin user form", "Is administrator")
-    IS_STAFF_HELP_TEXT = pgettext_lazy(
-        "admin user form",
-        "Designates whether the user can log into admin sites. If Django admin site is enabled, this user will need additional permissions assigned within it to admin Django modules.",
-    )
-
     IS_SUPERUSER_LABEL = pgettext_lazy("admin user form", "Is superuser")
     IS_SUPERUSER_HELP_TEXT = pgettext_lazy(
         "admin user form",
@@ -118,6 +112,15 @@ class EditUserForm(UserBaseForm):
         strip=False,
         widget=forms.PasswordInput,
         required=False,
+    )
+
+    is_misago_root = YesNoSwitch(
+        label=pgettext_lazy("admin user form", "Is root administrator"),
+        help_text=pgettext_lazy(
+            "admin user form",
+            "Root administrators can sign in to Misago's admin control panel and change other users' admin access. You need to be a root administrator to change this field.",
+        ),
+        disabled=True,
     )
 
     is_avatar_locked = YesNoSwitch(
@@ -253,6 +256,7 @@ class EditUserForm(UserBaseForm):
             "username",
             "email",
             "title",
+            "is_misago_root",
             "is_avatar_locked",
             "avatar_lock_user_message",
             "avatar_lock_staff_message",
@@ -274,6 +278,13 @@ class EditUserForm(UserBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if (
+            kwargs["request"].user.is_misago_root
+            and kwargs["request"].user != self.instance
+        ):
+            self.fields["is_misago_root"].disabled = False
+
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
     def get_profile_fields_groups(self):
@@ -286,6 +297,76 @@ class EditUserForm(UserBaseForm):
 
             profile_fields_groups.append(fields_group)
         return profile_fields_groups
+
+    def clean_group(self):
+        group = super().clean_group()
+
+        if self.request.user.is_misago_root:
+            return group
+
+        if group.id != self.instance.group.id:
+            if self.instance.group.is_admin:
+                raise forms.ValidationError(
+                    pgettext(
+                        "admin user form",
+                        "You must be a root administrator to change this user's main group.",
+                    )
+                )
+
+            if group.is_admin:
+                raise forms.ValidationError(
+                    pgettext(
+                        "admin user form",
+                        "You must be a root administrator to change this user's main group to the %(group)s.",
+                    )
+                    % {"group": group}
+                )
+
+        return group
+
+    def clean_secondary_groups(self):
+        secondary_groups = super().clean_secondary_groups()
+
+        if self.request.user.is_misago_root:
+            return secondary_groups
+
+        missing_groups: list[str] = []
+        invalid_groups: list[str] = []
+        for old_group_id in self.instance.groups_ids:
+            if old_group_id == self.instance.group.id:
+                continue
+
+            group = self.groups_dict.get(old_group_id)
+            if group and group.is_admin and group not in secondary_groups:
+                missing_groups.append(str(group))
+
+        for group in secondary_groups:
+            if (
+                group.is_admin
+                and group != self.instance.group
+                and group.id not in self.instance.groups_ids
+            ):
+                invalid_groups.append(str(group))
+
+        if missing_groups:
+            raise forms.ValidationError(
+                pgettext(
+                    "admin user form",
+                    "You must be a root administrator to remove this user from the following groups: %(groups)s",
+                )
+                % {"groups": ", ".join(missing_groups)}
+            )
+
+        if invalid_groups:
+            raise forms.ValidationError(
+                pgettext(
+                    "admin user form",
+                    "You must be a root administrator to add this user to the following groups: %(groups)s",
+                )
+                % {"groups": ", ".join(invalid_groups)}
+            )
+
+        return secondary_groups
 
     def clean_signature(self):
         data = self.cleaned_data["signature"]
@@ -308,7 +389,7 @@ class EditUserForm(UserBaseForm):
 
 
 def user_form_factory(
-    form_type,
+    base_form_type,
     instance,
     admin_user,
 ):
@@ -318,19 +399,13 @@ def user_form_factory(
     if instance.group_id:
         instance.group = groups_data[instance.group_id]
 
-    instance_is_admin = is_form_instance_admin(instance, groups)
-
-    all_choices = [(group.id, str(group)) for group in groups]
-    safe_choices = [(group.id, str(group)) for group in groups if not group.is_admin]
-
-    disable_group_field = False
-    group_choices = all_choices
-    secondary_groups_choices = all_choices
-
-    # Only a superuser can create a new admin group member
-    if not instance.id and not admin_user.is_superuser:
-        group_choices = safe_choices
-        secondary_groups_choices = safe_choices
+    # Only a root admin can create a new admin group members
+    if not instance.id and not admin_user.is_misago_root:
+        groups_choices = [
+            (group.id, str(group)) for group in groups if not group.is_admin
+        ]
+    else:
+        groups_choices = [(group.id, str(group)) for group in groups]
 
     secondary_groups_initial = instance.groups_ids[:]
     if instance.group_id in secondary_groups_initial:
@@ -339,16 +414,15 @@ def user_form_factory(
     form_attrs = {
         "groups_dict": groups_data,
         "group": forms.TypedChoiceField(
-            label=pgettext_lazy("admin user form", "Group"),
+            label=pgettext_lazy("admin user form", "Main group"),
             coerce=int,
-            choices=group_choices,
+            choices=groups_choices,
             initial=instance.group_id,
-            disabled=disable_group_field,
         ),
         "secondary_groups": forms.TypedMultipleChoiceField(
             label=pgettext_lazy("admin user form", "Secondary groups"),
             coerce=int,
-            choices=secondary_groups_choices,
+            choices=groups_choices,
             initial=secondary_groups_initial,
             widget=forms.CheckboxSelectMultiple,
             required=False,
@@ -381,10 +455,7 @@ def user_form_factory(
         instance.id
         and instance.id != admin_user.id
         and not instance.is_deleting_account
-        and (
-            not instance_is_admin
-            or (not instance.is_superuser and admin_user.is_superuser)
-        )
+        and (not instance.is_misago_root or admin_user.is_misago_root)
     ):
         form_attrs.update(
             {
@@ -403,35 +474,7 @@ def user_form_factory(
             }
         )
 
-    if admin_user.is_superuser and instance.id != admin_user.id:
-        form_attrs.update(
-            {
-                "is_staff": YesNoSwitch(
-                    label=EditUserForm.IS_STAFF_LABEL,
-                    help_text=EditUserForm.IS_STAFF_HELP_TEXT,
-                    initial=instance.is_staff,
-                ),
-                "is_superuser": YesNoSwitch(
-                    label=EditUserForm.IS_SUPERUSER_LABEL,
-                    help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
-                    initial=instance.is_superuser,
-                ),
-            }
-        )
-
-    return type("UserForm", (form_type,), form_attrs)
-
-
-def is_form_instance_admin(instance: User, groups: list[Group]) -> bool:
-    if not instance.id:
-        return False
-
-    if instance.is_staff or instance.is_superuser:
-        return True
-
-    for group in groups:
-        if group.is_admin and group.id in instance.groups_ids:
-            return True
+    return type("UserForm", (base_form_type,), form_attrs)
 
 
 class BaseFilterUsersForm(forms.Form):

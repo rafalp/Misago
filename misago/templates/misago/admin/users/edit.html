@@ -109,67 +109,28 @@
     <legend>{% trans "Basic account settings" context "admin user form" %}</legend>
 
     {% form_row form.username %}
-
-    {% form_row form.group %}
-    {% form_row form.secondary_groups %}
-
-    {% if 'rank' in form.fields %}
-      {% form_row form.rank %}
-    {% endif %}
-
     {% form_row form.title %}
-    {% form_row form.roles %}
 
   </fieldset>
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Administrator status" context "admin user form" %}</legend>
+    <legend>{% trans "User permissions" context "admin user form" %}</legend>
 
-    {% if 'is_staff' in form.fields %}
-      {% form_row form.is_staff %}
-      {% form_row form.is_superuser %}
-    {% else %}
-      <div class="alert alert-info" role="alert">
-        {% trans "Only superusers can change other users administrator status." context "admin user form" %}
-      </div>
-      <div id="div_id_is_staff" class="form-group">
-        <label class="control-label">
-          {{ form.IS_STAFF_LABEL }}:
-        </label>
-        <div class="controls control-yesno-switch">
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if target.is_staff %} checked=""{% endif %}>
-            {% trans "Yes" context "admin yesno switch" %}
-          </label>
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if not target.is_staff %} checked=""{% endif %}>
-            {% trans "No" context "admin yesno switch" %}
-          </label>
-        </div>
-        <small class="form-text text-muted">
-          {{ form.IS_STAFF_HELP_TEXT }}
-        </small>
-      </div>
-      <div id="div_id_is_superuser" class="form-group">
-        <label class="control-label">
-          {{ form.IS_SUPERUSER_LABEL }}:
-        </label>
-        <div class="controls control-yesno-switch">
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if target.is_superuser %} checked=""{% endif %}>
-            {% trans "Yes" context "admin yesno switch" %}
-          </label>
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if not target.is_superuser %} checked=""{% endif %}>
-            {% trans "No" context "admin yesno switch" %}
-          </label>
-        </div>
-        <small class="form-text text-muted">
-          {{ form.IS_SUPERUSER_HELP_TEXT }}
-        </small>
-      </div>
+    {% form_row form.group %}
+    {% form_row form.secondary_groups %}
+    {% form_row form.is_misago_root %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User permissions (deprecated)" context "admin user form" %}</legend>
+
+    {% if 'rank' in form.fields %}
+      {% form_row form.rank %}
     {% endif %}
+    {% form_row form.roles %}
 
   </fieldset>
 </div>

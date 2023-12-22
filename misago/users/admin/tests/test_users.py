@@ -41,7 +41,6 @@ def test_new_user_can_be_created(admin_client, members_group):
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
             "new_password": "pass123",
-            "staff_level": "0",
         },
     )
 
@@ -53,8 +52,7 @@ def test_new_user_can_be_created(admin_client, members_group):
     assert user.rank == default_rank
     assert authenticated_role in user.roles.all()
     assert user.check_password("pass123")
-    assert not user.is_staff
-    assert not user.is_superuser
+    assert not user.is_misago_root
 
 
 def test_new_user_can_be_created_with_whitespace_around_password(
@@ -72,41 +70,11 @@ def test_new_user_can_be_created_with_whitespace_around_password(
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
             "new_password": "  pass123  ",
-            "staff_level": "0",
         },
     )
 
     user = User.objects.get_by_email("user@example.com")
     assert user.check_password("  pass123  ")
-
-
-def test_new_user_can_be_created_with_admin_group(admin_client, admins_group):
-    default_rank = Rank.objects.get_default()
-    authenticated_role = Role.objects.get(special_role="authenticated")
-
-    admin_client.post(
-        reverse("misago:admin:users:new"),
-        data={
-            "username": "User",
-            "group": str(admins_group.id),
-            "rank": str(default_rank.pk),
-            "roles": str(authenticated_role.pk),
-            "email": "user@example.com",
-            "new_password": "pass123",
-            "staff_level": "0",
-        },
-    )
-
-    user = User.objects.get_by_email("user@example.com")
-    assert user.username == "User"
-    assert user.group == admins_group
-    assert user.groups_ids == [admins_group.id]
-    assert user.permissions_id == get_permissions_id(user.groups_ids)
-    assert user.rank == default_rank
-    assert authenticated_role in user.roles.all()
-    assert user.check_password("pass123")
-    assert not user.is_staff
-    assert not user.is_superuser
 
 
 def test_new_user_can_be_created_with_secondary_groups(
@@ -125,7 +93,6 @@ def test_new_user_can_be_created_with_secondary_groups(
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
             "new_password": "pass123",
-            "staff_level": "0",
         },
     )
 
@@ -137,8 +104,66 @@ def test_new_user_can_be_created_with_secondary_groups(
     assert user.rank == default_rank
     assert authenticated_role in user.roles.all()
     assert user.check_password("pass123")
-    assert not user.is_staff
-    assert not user.is_superuser
+    assert not user.is_misago_root
+
+
+def test_root_admin_can_create_user_with_admin_main_group(
+    root_admin_client, admins_group
+):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    root_admin_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(admins_group.id),
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "pass123",
+        },
+    )
+
+    user = User.objects.get_by_email("user@example.com")
+    assert user.username == "User"
+    assert user.group == admins_group
+    assert user.groups_ids == [admins_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+    assert user.rank == default_rank
+    assert authenticated_role in user.roles.all()
+    assert user.check_password("pass123")
+    assert not user.is_misago_root
+
+
+def test_root_admin_can_create_user_with_admin_secondary_group(
+    root_admin_client, admins_group, members_group
+):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    root_admin_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(members_group.id),
+            "secondary_groups": [str(admins_group.id)],
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "pass123",
+        },
+    )
+
+    user = User.objects.get_by_email("user@example.com")
+    assert user.username == "User"
+    assert user.group == members_group
+    assert user.groups_ids == [admins_group.id, members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+    assert user.rank == default_rank
+    assert authenticated_role in user.roles.all()
+    assert user.check_password("pass123")
+    assert not user.is_misago_root
 
 
 def test_new_user_creation_fails_because_user_was_not_given_group(
@@ -155,7 +180,6 @@ def test_new_user_creation_fails_because_user_was_not_given_group(
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
             "new_password": "pass123",
-            "staff_level": "0",
         },
     )
 
@@ -163,13 +187,13 @@ def test_new_user_creation_fails_because_user_was_not_given_group(
         User.objects.get_by_email("user@example.com")
 
 
-def test_new_user_creation_fails_because_staff_user_cant_assign_admin_group(
-    staff_client, admins_group
+def test_new_user_creation_fails_because_admin_user_cant_set_admin_group(
+    admin_client, admins_group
 ):
     default_rank = Rank.objects.get_default()
     authenticated_role = Role.objects.get(special_role="authenticated")
 
-    staff_client.post(
+    admin_client.post(
         reverse("misago:admin:users:new"),
         data={
             "username": "User",
@@ -178,7 +202,6 @@ def test_new_user_creation_fails_because_staff_user_cant_assign_admin_group(
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
             "new_password": "pass123",
-            "staff_level": "0",
         },
     )
 
@@ -186,13 +209,13 @@ def test_new_user_creation_fails_because_staff_user_cant_assign_admin_group(
         User.objects.get_by_email("user@example.com")
 
 
-def test_new_user_creation_fails_because_staff_user_cant_assign_secondary_admin_group(
-    staff_client, admins_group, members_group
+def test_new_user_creation_fails_because_admin_user_cant_set_secondary_admin_group(
+    admin_client, admins_group, members_group
 ):
     default_rank = Rank.objects.get_default()
     authenticated_role = Role.objects.get(special_role="authenticated")
 
-    staff_client.post(
+    admin_client.post(
         reverse("misago:admin:users:new"),
         data={
             "username": "User",
@@ -202,7 +225,6 @@ def test_new_user_creation_fails_because_staff_user_cant_assign_secondary_admin_
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
             "new_password": "pass123",
-            "staff_level": "0",
         },
     )
 
@@ -225,7 +247,6 @@ def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(
             "roles": str(guest_role.pk),
             "email": "user@example.com",
             "new_password": "pass123",
-            "staff_level": "0",
         },
     )
 
@@ -294,10 +315,8 @@ def get_default_edit_form_data(user):
         "is_active": "1",
     }
 
-    if user.is_staff:
-        data["is_staff"] = "1"
-    if user.is_superuser:
-        data["is_superuser"] = "1"
+    if user.is_misago_root:
+        data["is_misago_root"] = "1"
 
     return data
 
@@ -434,16 +453,16 @@ def test_edit_form_preserves_whitespace_in_new_user_password(admin_client, user)
     assert user.check_password("  newpassword123  ")
 
 
-def test_admin_editing_their_own_password_is_not_logged_out(admin_client, superuser):
-    form_data = get_default_edit_form_data(superuser)
+def test_admin_editing_their_own_password_is_not_logged_out(admin_client, admin):
+    form_data = get_default_edit_form_data(admin)
     form_data["new_password"] = "newpassword123"
 
     admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
+        reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}), data=form_data
     )
 
     user = admin_client.get("/api/auth/")
-    assert user.json()["id"] == superuser.id
+    assert user.json()["id"] == admin.id
 
 
 def test_staff_user_cannot_degrade_superuser_to_staff_user(staff_client, superuser):
@@ -500,7 +519,7 @@ def test_staff_user_cannot_promote_regular_user_to_staff(staff_client, user):
     )
 
     user.refresh_from_db()
-    assert not user.is_staff
+    assert not user.is_misago_root
 
 
 def test_staff_user_cannot_promote_regular_user_to_superuser(staff_client, user):
@@ -512,7 +531,6 @@ def test_staff_user_cannot_promote_regular_user_to_superuser(staff_client, user)
     )
 
     user.refresh_from_db()
-    assert not user.is_superuser
 
 
 def test_staff_user_cannot_promote_themselves_to_superuser(staff_client, staffuser):
@@ -539,103 +557,43 @@ def test_staff_user_cannot_degrade_themselves_to_regular_user(staff_client, staf
     assert staffuser.is_staff
 
 
-def test_superuser_cannot_degrade_themselves_to_staff_user(admin_client, superuser):
-    form_data = get_default_edit_form_data(superuser)
-    form_data.pop("is_superuser")
+def test_root_admin_cannot_remove_their_own_root_status(root_admin_client, root_admin):
+    form_data = get_default_edit_form_data(root_admin)
+    form_data.pop("is_misago_root")
 
-    admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}), data=form_data
     )
 
-    superuser.refresh_from_db()
-    assert superuser.is_superuser
+    root_admin.refresh_from_db()
+    assert root_admin.is_misago_root
 
 
-def test_superuser_cannot_degrade_themselves_to_regular_user(admin_client, superuser):
-    form_data = get_default_edit_form_data(superuser)
-    form_data.pop("is_staff")
-    form_data.pop("is_superuser")
-
-    admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
-    )
-
-    superuser.refresh_from_db()
-    assert superuser.is_staff
-    assert superuser.is_superuser
-
-
-def test_superuser_can_degrade_other_superuser_to_staff_user(
-    admin_client, other_superuser
+def test_root_admin_can_remove_other_user_root_status(
+    root_admin_client, other_root_admin
 ):
-    form_data = get_default_edit_form_data(other_superuser)
-    form_data.pop("is_superuser")
+    form_data = get_default_edit_form_data(other_root_admin)
+    form_data.pop("is_misago_root")
 
-    admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
         data=form_data,
     )
 
-    other_superuser.refresh_from_db()
-    assert other_superuser.is_staff
-    assert not other_superuser.is_superuser
+    other_root_admin.refresh_from_db()
+    assert not other_root_admin.is_misago_root
 
 
-def test_superuser_can_degrade_other_superuser_to_regular_user(
-    admin_client, other_superuser
-):
-    form_data = get_default_edit_form_data(other_superuser)
-    form_data.pop("is_staff")
-    form_data.pop("is_superuser")
-
-    admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
-        data=form_data,
-    )
-
-    other_superuser.refresh_from_db()
-    assert not other_superuser.is_staff
-    assert not other_superuser.is_superuser
-
-
-def test_superuser_can_promote_to_staff_user_to_superuser(admin_client, staffuser):
-    form_data = get_default_edit_form_data(staffuser)
-    form_data["is_superuser"] = "1"
-
-    admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
-    )
-
-    staffuser.refresh_from_db()
-    assert staffuser.is_staff
-    assert staffuser.is_superuser
-
-
-def test_superuser_can_promote_to_regular_user_to_staff_user(admin_client, user):
+def test_root_admin_can_promote_other_user_root_status(root_admin_client, user):
     form_data = get_default_edit_form_data(user)
-    form_data["is_staff"] = "1"
+    form_data["is_misago_root"] = "1"
 
-    admin_client.post(
+    root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
-    assert user.is_staff
-    assert not user.is_superuser
-
-
-def test_superuser_can_promote_to_regular_user_to_superuser(admin_client, user):
-    form_data = get_default_edit_form_data(user)
-    form_data["is_staff"] = "1"
-    form_data["is_superuser"] = "1"
-
-    admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
-    )
-
-    user.refresh_from_db()
-    assert user.is_staff
-    assert user.is_superuser
+    assert user.is_misago_root
 
 
 def test_superuser_can_disable_other_superuser_account(admin_client, other_superuser):

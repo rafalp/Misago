@@ -18,8 +18,8 @@ class CategoryAdmin(generic.AdminBaseMixin):
         "admin categories", "Requested category does not exist."
     )
 
-    def get_target(self, kwargs):
-        target = super().get_target(kwargs)
+    def get_target(self, request, kwargs):
+        target = super().get_target(request, kwargs)
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 

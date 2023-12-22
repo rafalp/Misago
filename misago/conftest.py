@@ -85,8 +85,6 @@ def other_user_acl(other_user, cache_versions):
 @pytest.fixture
 def staffuser(db, user_password):
     user = create_test_superuser("Staff_User", "staffuser@example.com", user_password)
-    # user.is_staff = False
-    # user.is_superuser = False
     user.is_misago_root = False
     user.save()
     return user
@@ -123,6 +121,44 @@ def other_superuser(db, user_password):
     return create_test_superuser(
         "OtherSuperUser", "othersuperuser@example.com", user_password
     )
+
+
+@pytest.fixture
+def admin(db, user_password):
+    user = create_test_superuser("Admin_User", "adminuser@example.com", user_password)
+    user.is_staff = False
+    user.is_superuser = False
+    user.is_misago_root = False
+    user.save()
+    return user
+
+
+@pytest.fixture
+def other_admin(db, user_password):
+    user = create_test_superuser("Other_Admin", "otheradmin@example.com", user_password)
+    user.is_staff = False
+    user.is_superuser = False
+    user.is_misago_root = False
+    user.save()
+    return user
+
+
+@pytest.fixture
+def root_admin(db, user_password):
+    user = create_test_superuser("Root_Admin", "rootadmin@example.com", user_password)
+    user.is_staff = False
+    user.is_superuser = False
+    user.save()
+    return user
+
+
+@pytest.fixture
+def other_root_admin(db, user_password):
+    user = create_test_superuser("Other_Root", "otherroot@example.com", user_password)
+    user.is_staff = False
+    user.is_superuser = False
+    user.save()
+    return user
 
 
 @pytest.fixture
@@ -166,10 +202,19 @@ def user_client(client, user):
 
 
 @pytest.fixture
-def admin_client(mocker, client, superuser):
-    client.force_login(superuser)
+def admin_client(mocker, client, admin):
+    client.force_login(admin)
     session = client.session
-    authorize_admin(mocker.Mock(session=session, user=superuser))
+    authorize_admin(mocker.Mock(session=session, user=admin))
+    session.save()
+    return client
+
+
+@pytest.fixture
+def root_admin_client(mocker, client, root_admin):
+    client.force_login(root_admin)
+    session = client.session
+    authorize_admin(mocker.Mock(session=session, user=root_admin))
     session.save()
     return client
 

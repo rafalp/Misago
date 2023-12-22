@@ -16,7 +16,7 @@ class SocialAuthProviderAdmin(generic.AdminBaseMixin):
         "admin social auth providers", "Requested social login provider does not exist."
     )
 
-    def get_target(self, kwargs):
+    def get_target(self, request, kwargs):
         queryset = SocialAuthProvider.objects.filter(is_active=True)
         if self.is_atomic:
             queryset = queryset.select_for_update()
@@ -37,7 +37,7 @@ class SocialAuthProvidersList(SocialAuthProviderAdmin, generic.ListView):
 
 
 class EditSocialAuthProvider(SocialAuthProviderAdmin, generic.ModelFormView):
-    def get_target(self, kwargs):
+    def get_target(self, request, kwargs):
         try:
             return SocialAuthProvider.objects.get(provider=kwargs["pk"])
         except SocialAuthProvider.DoesNotExist:
