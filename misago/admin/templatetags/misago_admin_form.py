@@ -102,10 +102,10 @@ def is_textarea_field(field):
 
 
 @register.filter
-def get_options(field):
+def get_options(widget):
     """Filter that extracts field choices into an easily iterable list"""
-    widget = field.field.widget
-    attrs = dict(id=field.auto_id, **widget.attrs)
-    context = widget.get_context(field.html_name, field.value(), attrs)
-    widget_context = context["widget"]
-    return widget.options(widget_context["name"], widget_context["value"], attrs)
+    options = []
+    for _, optgroup, _ in widget["optgroups"]:
+        print(optgroup)
+        options += optgroup
+    return options

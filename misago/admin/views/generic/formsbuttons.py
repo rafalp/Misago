@@ -4,12 +4,14 @@ from django.shortcuts import redirect
 
 from .base import AdminView
 
+SAFE_HTTP_METHODS = ("GET", "HEAD", "OPTIONS", "TRACE")
+
 
 class TargetedView(AdminView):
     is_atomic = True
 
     def dispatch(self, request, *args, **kwargs):
-        if self.is_atomic:
+        if self.is_atomic and request.method not in SAFE_HTTP_METHODS:
             with transaction.atomic():
                 return self.wrapped_dispatch(request, *args, **kwargs)
         return self.wrapped_dispatch(request, *args, **kwargs)
@@ -31,18 +33,18 @@ class TargetedView(AdminView):
 
     def get_target_or_none(self, request, kwargs):
         try:
-            return self.get_target(kwargs)
+            return self.get_target(request, kwargs)
         except self.get_model().DoesNotExist:
             return None
 
-    def get_target(self, kwargs):
+    def get_target(self, request, kwargs):
         if len(kwargs) > 1:
             raise ValueError("TargetedView.get_target() received more than one kwarg")
         if len(kwargs) != 1:
             return self.get_model()()
 
         queryset = self.get_model().objects
-        if self.is_atomic:
+        if self.is_atomic and request.method not in SAFE_HTTP_METHODS:
             queryset = queryset.select_for_update()
         (pk,) = kwargs.values()
         return queryset.get(pk=pk)

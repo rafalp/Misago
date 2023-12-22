@@ -69,6 +69,9 @@ def set_users_default_groups(apps, schema_editor):
         permissions_id=get_permissions_id([DefaultGroupId.ADMINS.value]),
     )
 
+    # Set all superusers as root admins
+    User.objects.filter(is_superuser=True).update(is_root_admin=True)
+
     # Put all non-staff users in members group
     User.objects.filter(is_staff=False).update(
         group_id=DefaultGroupId.MEMBERS,

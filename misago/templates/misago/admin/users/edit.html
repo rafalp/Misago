@@ -75,7 +75,6 @@
         </a>
       </li>
       <li class="list-inline-item">
-        <span class="">
         {{ target.rank }}
       </li>
       <li class="list-inline-item">
@@ -111,16 +110,15 @@
 
     {% form_row form.username %}
 
+    {% form_row form.group %}
+    {% form_row form.secondary_groups %}
+
     {% if 'rank' in form.fields %}
       {% form_row form.rank %}
     {% endif %}
 
     {% form_row form.title %}
     {% form_row form.roles %}
-
-    {% if 'staff_level' in form.fields %}
-      {% form_row form.staff_level %}
-    {% endif %}
 
   </fieldset>
 </div>

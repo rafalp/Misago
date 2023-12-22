@@ -9,7 +9,7 @@ from ...admin.forms import IsoDateTimeField, YesNoSwitch
 from ...core.validators import validate_sluggable
 from ...notifications.threads import ThreadNotifications
 from ...search.filter_queryset import filter_queryset
-from ..models import Ban, DataDownload, Rank
+from ..models import Ban, DataDownload, Group, Rank
 from ..profilefields import profilefields
 from ..utils import hash_email, slugify_username
 from ..validators import validate_email, validate_username
@@ -18,6 +18,8 @@ User = get_user_model()
 
 
 class UserBaseForm(forms.ModelForm):
+    groups_dict: dict[int, Group]
+
     username = forms.CharField(label=pgettext_lazy("admin user form", "Username"))
     title = forms.CharField(
         label=pgettext_lazy("admin user form", "Custom title"),
@@ -50,6 +52,14 @@ class UserBaseForm(forms.ModelForm):
         if data:
             validate_password(data, user=self.instance)
         return data
+
+    def clean_group(self):
+        data = self.cleaned_data["group"]
+        return self.groups_dict[data]
+
+    def clean_secondary_groups(self):
+        data = self.cleaned_data["secondary_groups"]
+        return [self.groups_dict[item] for item in data]
 
     def clean_roles(self):
         data = self.cleaned_data["roles"]
@@ -297,22 +307,65 @@ class EditUserForm(UserBaseForm):
         return profilefields.clean_form(self.request, self.instance, self, data)
 
 
-def UserFormFactory(FormType, instance):
-    extra_fields = {}
+def user_form_factory(
+    form_type,
+    instance,
+    admin_user,
+):
+    groups = list(Group.objects.all())
+    groups_data = {group.id: group for group in groups}
 
-    extra_fields["rank"] = forms.ModelChoiceField(
-        label=pgettext_lazy("admin user form", "Rank"),
-        help_text=pgettext_lazy(
-            "admin user form",
-            "Ranks are used to group and distinguish users. They are also used to add permissions to groups of users.",
+    if instance.group_id:
+        instance.group = groups_data[instance.group_id]
+
+    instance_is_admin = is_form_instance_admin(instance, groups)
+
+    all_choices = [(group.id, str(group)) for group in groups]
+    safe_choices = [(group.id, str(group)) for group in groups if not group.is_admin]
+
+    group_choices = all_choices
+    secondary_groups_choices = all_choices
+
+    # Only a superuser can create a new admin group member
+    if not instance.id and not admin_user.is_superuser:
+        group_choices = safe_choices
+        secondary_groups_choices = safe_choices
+
+    secondary_groups_initial = instance.groups_ids[:]
+    if instance.group_id in secondary_groups_initial:
+        secondary_groups_initial.remove(instance.group_id)
+
+    form_attrs = {
+        "groups_dict": groups_data,
+        "group": forms.TypedChoiceField(
+            label=pgettext_lazy("admin user form", "Group"),
+            coerce=int,
+            choices=group_choices,
+            initial=instance.group_id,
+            disabled=disable_group_field,
         ),
-        queryset=Rank.objects.order_by("name"),
-        initial=instance.rank,
-    )
+        "secondary_groups": forms.TypedMultipleChoiceField(
+            label=pgettext_lazy("admin user form", "Secondary groups"),
+            coerce=int,
+            choices=secondary_groups_choices,
+            initial=secondary_groups_initial,
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+        ),
+        "rank": forms.ModelChoiceField(
+            label=pgettext_lazy("admin user form", "Rank"),
+            help_text=pgettext_lazy(
+                "admin user form",
+                "Ranks are used to group and distinguish users. They are also used to add permissions to groups of users.",
+            ),
+            queryset=Rank.objects.order_by("name"),
+            initial=instance.rank,
+        ),
+    }
 
     roles = Role.objects.order_by("name")
 
-    extra_fields["roles"] = forms.ModelMultipleChoiceField(
+    form_attrs["roles"] = forms.ModelMultipleChoiceField(
         label=pgettext_lazy("admin user form", "Roles"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -323,57 +376,61 @@ def UserFormFactory(FormType, instance):
         widget=forms.CheckboxSelectMultiple,
     )
 
-    return type("UserFormFinal", (FormType,), extra_fields)
+    if (
+        instance.id
+        and instance.id != admin_user.id
+        and not instance.is_deleting_account
+        and (
+            not instance_is_admin
+            or (not instance.is_superuser and admin_user.is_superuser_)
+        )
+    ):
+        form_attrs.update(
+            {
+                "is_active": YesNoSwitch(
+                    label=EditUserForm.IS_ACTIVE_LABEL,
+                    help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
+                    initial=instance.is_active,
+                ),
+                "is_active_staff_message": forms.CharField(
+                    label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
+                    help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
+                    initial=instance.is_active_staff_message,
+                    widget=forms.Textarea(attrs={"rows": 3}),
+                    required=False,
+                ),
+            }
+        )
+
+    if admin_user.is_superuser and instance.id != admin_user.id:
+        form_attrs.update(
+            {
+                "is_staff": YesNoSwitch(
+                    label=EditUserForm.IS_STAFF_LABEL,
+                    help_text=EditUserForm.IS_STAFF_HELP_TEXT,
+                    initial=instance.is_staff,
+                ),
+                "is_superuser": YesNoSwitch(
+                    label=EditUserForm.IS_SUPERUSER_LABEL,
+                    help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
+                    initial=instance.is_superuser,
+                ),
+            }
+        )
+
+    return type("UserForm", (form_type,), form_attrs)
 
 
-def StaffFlagUserFormFactory(FormType, instance):
-    staff_fields = {
-        "is_staff": YesNoSwitch(
-            label=EditUserForm.IS_STAFF_LABEL,
-            help_text=EditUserForm.IS_STAFF_HELP_TEXT,
-            initial=instance.is_staff,
-        ),
-        "is_superuser": YesNoSwitch(
-            label=EditUserForm.IS_SUPERUSER_LABEL,
-            help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
-            initial=instance.is_superuser,
-        ),
-    }
+def is_form_instance_admin(instance: User, groups: list[Group]) -> bool:
+    if not instance.id:
+        return False
 
-    return type("StaffUserForm", (FormType,), staff_fields)
+    if instance.is_staff or instance.is_superuser:
+        return True
 
-
-def UserIsActiveFormFactory(FormType, instance):
-    is_active_fields = {
-        "is_active": YesNoSwitch(
-            label=EditUserForm.IS_ACTIVE_LABEL,
-            help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
-            initial=instance.is_active,
-        ),
-        "is_active_staff_message": forms.CharField(
-            label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
-            help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
-            initial=instance.is_active_staff_message,
-            widget=forms.Textarea(attrs={"rows": 3}),
-            required=False,
-        ),
-    }
-
-    return type("UserIsActiveForm", (FormType,), is_active_fields)
-
-
-def EditUserFormFactory(
-    FormType, instance, add_is_active_fields=False, add_admin_fields=False
-):
-    FormType = UserFormFactory(FormType, instance)
-
-    if add_is_active_fields:
-        FormType = UserIsActiveFormFactory(FormType, instance)
-
-    if add_admin_fields:
-        FormType = StaffFlagUserFormFactory(FormType, instance)
-
-    return FormType
+    for group in groups:
+        if group.is_admin and group.id in instance.groups_ids:
+            return True
 
 
 class BaseFilterUsersForm(forms.Form):

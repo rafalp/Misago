@@ -25,7 +25,7 @@ class Group(PluginDataModel):
         ordering = ["ordering"]
 
     def __str__(self) -> str:
-        return pgettext(pgettext("default user group", self.name))
+        return pgettext("default user group", self.name)
 
     def translated_user_title(self) -> str | None:
         if self.user_title:

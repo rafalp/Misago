@@ -17,9 +17,9 @@ from ...signatures import set_user_signature
 from ..forms import (
     BanUsersForm,
     EditUserForm,
-    EditUserFormFactory,
     NewUserForm,
     create_filter_users_form,
+    user_form_factory,
 )
 from ..tasks import delete_user_with_content
 
@@ -32,24 +32,7 @@ class UserAdmin(generic.AdminBaseMixin):
     model = User
 
     def get_form_class(self, request, target):
-        add_is_active_fields = False
-        add_admin_fields = False
-
-        if not target.is_deleting_account:
-            if not target.is_staff:
-                add_is_active_fields = True
-            elif request.user.is_superuser:
-                add_is_active_fields = request.user.pk != target.pk
-
-        if request.user.is_superuser:
-            add_admin_fields = request.user.pk != target.pk
-
-        return EditUserFormFactory(
-            self.form_class,
-            target,
-            add_is_active_fields=add_is_active_fields,
-            add_admin_fields=add_admin_fields,
-        )
+        return user_form_factory(self.form_class, target, request.user)
 
 
 class UsersList(UserAdmin, generic.ListView):
@@ -295,6 +278,8 @@ class NewUser(UserAdmin, generic.ModelFormView):
             form.cleaned_data["username"],
             form.cleaned_data["email"],
             form.cleaned_data["new_password"],
+            group=form.cleaned_data["group"],
+            secondary_groups=form.cleaned_data["secondary_groups"],
             title=form.cleaned_data["title"],
             rank=form.cleaned_data.get("rank"),
             joined_from_ip=request.user_ip,
@@ -354,6 +339,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
                 "is_active_staff_message"
             )
 
+        target.set_groups(
+            form.cleaned_data["group"], form.cleaned_data["secondary_groups"]
+        )
         target.rank = form.cleaned_data.get("rank")
 
         target.roles.clear()

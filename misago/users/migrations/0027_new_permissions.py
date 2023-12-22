@@ -51,11 +51,6 @@ class Migration(migrations.Migration):
                 base_field=models.PositiveIntegerField(), default=list, size=None
             ),
         ),
-        migrations.AddField(
-            model_name="user",
-            name="is_moderator",
-            field=models.BooleanField(default=False),
-        ),
         migrations.AddIndex(
             model_name="user",
             index=django.contrib.postgres.indexes.GinIndex(
@@ -76,5 +71,18 @@ class Migration(migrations.Migration):
             model_name="user",
             name="permissions_id",
             field=models.CharField(blank=True, max_length=16, null=True),
+        ),
+        migrations.AddField(
+            model_name="user",
+            name="is_root_admin",
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddIndex(
+            model_name="user",
+            index=models.Index(
+                condition=models.Q(("is_root_admin", True)),
+                fields=["is_root_admin"],
+                name="misago_user_is_root_admin",
+            ),
         ),
     ]

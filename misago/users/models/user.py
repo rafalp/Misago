@@ -80,11 +80,14 @@ class UserManager(BaseUserManager):
                 "set as an argument."
             )
 
+        secondary_groups = extra_fields.pop("secondary_groups", None)
+        secondary_groups_ids = extra_fields.pop("secondary_groups_ids", None)
+
         groups_ids = [extra_fields["group_id"]]
-        if extra_fields.get("secondary_groups"):
-            groups_ids += [group.id for group in extra_fields.pop("secondary_groups")]
-        elif extra_fields.get("secondary_groups_ids"):
-            groups_ids += extra_fields.pop("secondary_groups_ids")
+        if secondary_groups:
+            groups_ids += [group.id for group in secondary_groups]
+        elif secondary_groups_ids:
+            groups_ids += secondary_groups_ids
 
         extra_fields["groups_ids"] = sorted(set(groups_ids))
         extra_fields["permissions_id"] = get_permissions_id(extra_fields["groups_ids"])
@@ -225,10 +228,15 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     groups_ids = ArrayField(models.PositiveIntegerField(), default=list)
     permissions_id = models.CharField(max_length=12)
 
+    # Misago's root admin status
+    # Root admin can admin everything in Misago admin panel (other admins included)
+    is_root_admin = models.BooleanField(default=False)
+
     title = models.CharField(max_length=255, null=True, blank=True)
 
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
+    # Controls user access to the Django site (not used by Misago)
     is_staff = models.BooleanField(
         pgettext_lazy("user", "staff status"),
         default=False,
@@ -236,7 +244,6 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
             "user", "Designates whether the user can log into admin sites."
         ),
     )
-    is_moderator = models.BooleanField(default=False)
 
     roles = models.ManyToManyField("misago_acl.Role")
     acl_key = models.CharField(max_length=12, null=True, blank=True)
@@ -353,6 +360,11 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                 name="misago_user_is_deleting_a_part",
                 fields=["is_deleting_account"],
                 condition=Q(is_deleting_account=True),
+            ),
+            models.Index(
+                name="misago_user_is_root_admin",
+                fields=["is_root_admin"],
+                condition=Q(is_root_admin=True),
             ),
             GinIndex(
                 name="misago_user_groups_ids",
@@ -514,6 +526,15 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
         self.email_hash = hash_email(new_email)
+
+    def set_groups(self, group: Group, secondary_groups: list[Group] | None = None):
+        self.group = group
+        groups_ids = [group.id]
+        if secondary_groups:
+            groups_ids += [secondary_group.id for secondary_group in secondary_groups]
+
+        self.groups_ids = sorted(set(groups_ids))
+        self.permissions_id = get_permissions_id(self.groups_ids)
 
     def get_any_title(self):
         if self.title:

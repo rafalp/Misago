@@ -5,6 +5,7 @@ from django.urls import reverse
 from ....acl.models import Role
 from ....legal.models import Agreement
 from ....legal.utils import save_user_agreement_acceptance
+from ....permissions.permissionsid import get_permissions_id
 from ....test import assert_contains
 from ...models import Rank
 from ...utils import hash_email
@@ -27,7 +28,122 @@ def test_new_user_form_renders(admin_client):
     assert response.status_code == 200
 
 
-def test_new_user_can_be_created(admin_client):
+def test_new_user_can_be_created(admin_client, members_group):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    admin_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(members_group.id),
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "pass123",
+            "staff_level": "0",
+        },
+    )
+
+    user = User.objects.get_by_email("user@example.com")
+    assert user.username == "User"
+    assert user.group == members_group
+    assert user.groups_ids == [members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+    assert user.rank == default_rank
+    assert authenticated_role in user.roles.all()
+    assert user.check_password("pass123")
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_new_user_can_be_created_with_whitespace_around_password(
+    admin_client, members_group
+):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    admin_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(members_group.id),
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "  pass123  ",
+            "staff_level": "0",
+        },
+    )
+
+    user = User.objects.get_by_email("user@example.com")
+    assert user.check_password("  pass123  ")
+
+
+def test_new_user_can_be_created_with_admin_group(admin_client, admins_group):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    admin_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(admins_group.id),
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "pass123",
+            "staff_level": "0",
+        },
+    )
+
+    user = User.objects.get_by_email("user@example.com")
+    assert user.username == "User"
+    assert user.group == admins_group
+    assert user.groups_ids == [admins_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+    assert user.rank == default_rank
+    assert authenticated_role in user.roles.all()
+    assert user.check_password("pass123")
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_new_user_can_be_created_with_secondary_groups(
+    admin_client, moderators_group, members_group, guests_group
+):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    admin_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(members_group.id),
+            "secondary_groups": [str(moderators_group.id), str(guests_group.id)],
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "pass123",
+            "staff_level": "0",
+        },
+    )
+
+    user = User.objects.get_by_email("user@example.com")
+    assert user.username == "User"
+    assert user.group == members_group
+    assert user.groups_ids == [moderators_group.id, members_group.id, guests_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+    assert user.rank == default_rank
+    assert authenticated_role in user.roles.all()
+    assert user.check_password("pass123")
+    assert not user.is_staff
+    assert not user.is_superuser
+
+
+def test_new_user_creation_fails_because_user_was_not_given_group(
+    admin_client,
+):
     default_rank = Rank.objects.get_default()
     authenticated_role = Role.objects.get(special_role="authenticated")
 
@@ -43,37 +159,59 @@ def test_new_user_can_be_created(admin_client):
         },
     )
 
-    user = User.objects.get_by_email("user@example.com")
-    assert user.username == "User"
-    assert user.rank == default_rank
-    assert authenticated_role in user.roles.all()
-    assert user.check_password("pass123")
-    assert not user.is_staff
-    assert not user.is_superuser
+    with pytest.raises(User.DoesNotExist):
+        User.objects.get_by_email("user@example.com")
 
 
-def test_new_user_can_be_created_with_whitespace_around_password(admin_client):
+def test_new_user_creation_fails_because_staff_user_cant_assign_admin_group(
+    staff_client, admins_group
+):
     default_rank = Rank.objects.get_default()
     authenticated_role = Role.objects.get(special_role="authenticated")
 
-    admin_client.post(
+    staff_client.post(
         reverse("misago:admin:users:new"),
         data={
             "username": "User",
+            "group": str(admins_group.id),
             "rank": str(default_rank.pk),
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
-            "new_password": "  pass123  ",
+            "new_password": "pass123",
             "staff_level": "0",
         },
     )
 
-    user = User.objects.get_by_email("user@example.com")
-    assert user.check_password("  pass123  ")
+    with pytest.raises(User.DoesNotExist):
+        User.objects.get_by_email("user@example.com")
+
+
+def test_new_user_creation_fails_because_staff_user_cant_assign_secondary_admin_group(
+    staff_client, admins_group, members_group
+):
+    default_rank = Rank.objects.get_default()
+    authenticated_role = Role.objects.get(special_role="authenticated")
+
+    staff_client.post(
+        reverse("misago:admin:users:new"),
+        data={
+            "username": "User",
+            "group": str(members_group.id),
+            "secondary_groups": [str(admins_group.id)],
+            "rank": str(default_rank.pk),
+            "roles": str(authenticated_role.pk),
+            "email": "user@example.com",
+            "new_password": "pass123",
+            "staff_level": "0",
+        },
+    )
+
+    with pytest.raises(User.DoesNotExist):
+        User.objects.get_by_email("user@example.com")
 
 
 def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(
-    admin_client,
+    admin_client, members_group
 ):
     default_rank = Rank.objects.get_default()
     guest_role = Role.objects.get(special_role="anonymous")
@@ -82,6 +220,7 @@ def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(
         reverse("misago:admin:users:new"),
         data={
             "username": "User",
+            "group": str(members_group.id),
             "rank": str(default_rank.pk),
             "roles": str(guest_role.pk),
             "email": "user@example.com",
@@ -123,10 +262,9 @@ def test_edit_superuser_form_renders_for_staff_user(staff_client, superuser):
 
 
 def get_default_edit_form_data(user):
-    default_rank = Rank.objects.get_default()
-    authenticated_role = Role.objects.get(special_role="authenticated")
     data = {
         "username": user.username,
+        "group": str(user.group_id),
         "rank": str(user.rank_id),
         "roles": str(user.roles.all()[0].id),
         "email": user.email,
