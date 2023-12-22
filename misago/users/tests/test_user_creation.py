@@ -14,6 +14,10 @@ def test_user_is_created(db):
     assert user.pk
     assert user.joined_on
 
+    assert not user.is_staff
+    assert not user.is_superuser
+    assert not user.is_misago_root
+
 
 def test_user_is_created_with_username_and_slug(db):
     user = User.objects.create_user("UserName", "test@example.com")
@@ -196,6 +200,7 @@ def test_create_superuser(db):
     user = User.objects.create_superuser("User", "test@example.com")
     assert user.is_staff
     assert user.is_superuser
+    assert user.is_misago_root
 
 
 def test_superuser_is_created_with_team_rank(db):

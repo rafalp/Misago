@@ -323,6 +323,7 @@ def user_form_factory(
     all_choices = [(group.id, str(group)) for group in groups]
     safe_choices = [(group.id, str(group)) for group in groups if not group.is_admin]
 
+    disable_group_field = False
     group_choices = all_choices
     secondary_groups_choices = all_choices
 
@@ -382,7 +383,7 @@ def user_form_factory(
         and not instance.is_deleting_account
         and (
             not instance_is_admin
-            or (not instance.is_superuser and admin_user.is_superuser_)
+            or (not instance.is_superuser and admin_user.is_superuser)
         )
     ):
         form_attrs.update(

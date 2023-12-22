@@ -118,16 +118,20 @@ class UserManager(BaseUserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_misago_root", False)
         return self._create_user(username, email, password, **extra_fields)
 
     def create_superuser(self, username, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_misago_root", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
+        if extra_fields.get("is_misago_root") is not True:
+            raise ValueError("Superuser must have is_misago_root=True.")
 
         try:
             if not extra_fields.get("rank"):
@@ -229,14 +233,16 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     permissions_id = models.CharField(max_length=12)
 
     # Misago's root admin status
-    # Root admin can admin everything in Misago admin panel (other admins included)
-    is_root_admin = models.BooleanField(default=False)
+    # Root admin can do everything in Misago's admin panel but has no power in
+    # Django's admin panel.
+    is_misago_root = models.BooleanField(default=False)
 
     title = models.CharField(max_length=255, null=True, blank=True)
 
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
     # Controls user access to the Django site (not used by Misago)
+    # This field is hardcoded in Django's admin logic, so we can't delete it.
     is_staff = models.BooleanField(
         pgettext_lazy("user", "staff status"),
         default=False,
@@ -362,9 +368,9 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                 condition=Q(is_deleting_account=True),
             ),
             models.Index(
-                name="misago_user_is_root_admin",
-                fields=["is_root_admin"],
-                condition=Q(is_root_admin=True),
+                name="misago_user_is_misago_root",
+                fields=["is_misago_root"],
+                condition=Q(is_misago_root=True),
             ),
             GinIndex(
                 name="misago_user_groups_ids",

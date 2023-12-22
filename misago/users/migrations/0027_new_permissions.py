@@ -74,15 +74,15 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="user",
-            name="is_root_admin",
+            name="is_misago_root",
             field=models.BooleanField(default=False),
         ),
         migrations.AddIndex(
             model_name="user",
             index=models.Index(
-                condition=models.Q(("is_root_admin", True)),
-                fields=["is_root_admin"],
-                name="misago_user_is_root_admin",
+                condition=models.Q(("is_misago_root", True)),
+                fields=["is_misago_root"],
+                name="misago_user_is_root",
             ),
         ),
     ]

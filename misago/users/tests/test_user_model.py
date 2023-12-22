@@ -69,16 +69,16 @@ def test_username_group_setter_updates_group_and_permissions_id(admins_group):
     user = User()
     user.set_groups(admins_group)
     assert user.group == admins_group
-    assert user.groups_id == [admins_group.id]
-    assert user.permissions_id == get_permissions_id(user.groups_id)
+    assert user.groups_ids == [admins_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
 
 
 def test_username_group_setter_updates_secondary_groups(admins_group, members_group):
     user = User()
     user.set_groups(admins_group, [members_group])
     assert user.group == admins_group
-    assert user.groups_id == [admins_group.id, members_group.id]
-    assert user.permissions_id == get_permissions_id(user.groups_id)
+    assert user.groups_ids == [admins_group.id, members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
 
 
 def test_real_name_getter_returns_name_entered_in_profile_field(user):
