@@ -638,6 +638,7 @@ class UsernameChange(models.Model):
 
 
 class AnonymousUser(DjangoAnonymousUser):
+    is_misago_root = False
     acl_key = "anonymous"
 
     @property

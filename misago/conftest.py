@@ -85,8 +85,8 @@ def other_user_acl(other_user, cache_versions):
 @pytest.fixture
 def staffuser(db, user_password):
     user = create_test_superuser("Staff_User", "staffuser@example.com", user_password)
-    user.is_staff = False
-    user.is_superuser = False
+    # user.is_staff = False
+    # user.is_superuser = False
     user.is_misago_root = False
     user.save()
     return user

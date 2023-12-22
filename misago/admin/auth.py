@@ -54,7 +54,7 @@ def make_user_admin_token(user):
     return md5(":".join(formula).encode()).hexdigest()
 
 
-# Login/logout exposed
+# Re-export login/logout from Django Admin
 login = dj_auth.login
 logout = dj_auth.logout
 
