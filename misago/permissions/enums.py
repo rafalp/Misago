@@ -1,6 +1,8 @@
 from enum import StrEnum
 
-from django.utils.translation import pgettext_lazy
+
+def pgettext_lazy(context: str, message: str):
+    return message
 
 
 class CategoryPermission(StrEnum):

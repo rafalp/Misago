@@ -42,17 +42,51 @@ class UserManager(BaseUserManager):
         if not extra_fields.get("rank"):
             extra_fields["rank"] = Rank.objects.get_default()
 
-        if not extra_fields.get("group_id"):
-            raise NotImplementedError("write a `get_default_group_id` util!")
+        if (
+            extra_fields.get("group")
+            and extra_fields.get("group_id")
+            and extra_fields.get("group").id != extra_fields.get("group_id")
+        ):
+            raise ValueError(
+                "'group' and 'group_id' arguments can't be used simultaneously."
+            )
+
+        if extra_fields.get("group"):
+            extra_fields["group_id"] = extra_fields.pop("group").id
+        elif not extra_fields.get("group_id"):
+            # Find default group's ID in database or fall back to the hardcoded one
             extra_fields["group_id"] = (
                 Group.objects.filter(is_default=True)
                 .values_list("id", flat=True)
                 .first()
-                or DefaultGroupId.MEMBERS.value
+            ) or DefaultGroupId.MEMBERS.value
+
+        if extra_fields.get("secondary_groups") and extra_fields.get(
+            "secondary_groups_ids"
+        ):
+            raise ValueError(
+                "'secondary_groups' and 'secondary_groups_ids' arguments can't be "
+                "used simultaneously."
             )
 
-        raise NotImplementedError("write a `set_user_groups` util!")
-        extra_fields["groups_ids"] = [extra_fields["group_id"]]
+        if extra_fields.get("groups_id"):
+            raise ValueError(
+                "'groups_id' value is calculated from 'group' and 'secondary_groups' "
+                "and can't be set as an argument."
+            )
+        if extra_fields.get("permissions_id"):
+            raise ValueError(
+                "'permissions_id' value is calculated from user's groups and can't be "
+                "set as an argument."
+            )
+
+        groups_ids = [extra_fields["group_id"]]
+        if extra_fields.get("secondary_groups"):
+            groups_ids += [group.id for group in extra_fields.pop("secondary_groups")]
+        elif extra_fields.get("secondary_groups_ids"):
+            groups_ids += extra_fields.pop("secondary_groups_ids")
+
+        extra_fields["groups_ids"] = sorted(set(groups_ids))
         extra_fields["permissions_id"] = get_permissions_id(extra_fields["groups_ids"])
 
         user = self.model(**extra_fields)

@@ -16,7 +16,8 @@ from .themes import THEME_CACHE
 from .threads.models import Thread
 from .threads.test import post_thread, reply_thread
 from .users import BANS_CACHE
-from .users.models import AnonymousUser
+from .users.enums import DefaultGroupId
+from .users.models import AnonymousUser, Group
 from .users.test import create_test_superuser, create_test_user
 
 
@@ -127,6 +128,26 @@ def inactive_user(db, user_password):
     return create_test_user(
         "Inactive_User", "inactiveuser@example.com", user_password, is_active=False
     )
+
+
+@pytest.fixture
+def admins_group(db):
+    return Group.objects.get(id=DefaultGroupId.ADMINS)
+
+
+@pytest.fixture
+def moderators_group(db):
+    return Group.objects.get(id=DefaultGroupId.MODERATORS)
+
+
+@pytest.fixture
+def members_group(db):
+    return Group.objects.get(id=DefaultGroupId.MEMBERS)
+
+
+@pytest.fixture
+def guests_group(db):
+    return Group.objects.get(id=DefaultGroupId.GUESTS)
 
 
 @pytest.fixture
