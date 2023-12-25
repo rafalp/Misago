@@ -279,11 +279,20 @@ class EditUserForm(UserBaseForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if (
-            kwargs["request"].user.is_misago_root
-            and kwargs["request"].user != self.instance
-        ):
+        request_user = kwargs["request"].user
+
+        if request_user.is_misago_root and request_user != self.instance:
             self.fields["is_misago_root"].disabled = False
+
+        if is_form_user_admin(self.instance, self.groups_dict) and not (
+            request_user.is_misago_root
+            or request_user == self.instance
+        ):
+            self.credentials_require_root = True
+            self.fields["new_password"].disabled = True
+            self.fields["email"].disabled = True
+        else:
+            self.credentials_require_root = False
 
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
@@ -367,6 +376,42 @@ class EditUserForm(UserBaseForm):
             )
 
         return secondary_groups
+
+    def clean_email(self):
+        data = super().clean_email()
+
+        if (
+            data != self.instance.email
+            and self.instance != self.request.user
+            and not self.request.user.is_misago_root
+            and self.instance_is_admin
+        ):
+            raise forms.ValidationError(
+                pgettext(
+                    "admin user form",
+                    "You must be a root administrator to change this user's email address.",
+                )
+            )
+
+        return data
+
+    def clean_new_password(self):
+        data = super().clean_new_password()
+
+        if (
+            data
+            and self.instance != self.request.user
+            and not self.request.user.is_misago_root
+            and self.instance_is_admin
+        ):
+            raise forms.ValidationError(
+                pgettext(
+                    "admin user form",
+                    "You must be a root administrator to change this user's password.",
+                )
+            )
+
+        return data
 
     def clean_signature(self):
         data = self.cleaned_data["signature"]
@@ -475,6 +520,18 @@ def user_form_factory(
         )
 
     return type("UserForm", (base_form_type,), form_attrs)
+
+
+def is_form_user_admin(user: User, groups: dict[int, Group]) -> bool:
+    if user.is_misago_root:
+        return True
+
+    for group_id in user.groups_ids:
+        group = groups.get(group_id)
+        if group and group.is_admin:
+            return True
+
+    return False
 
 
 class BaseFilterUsersForm(forms.Form):

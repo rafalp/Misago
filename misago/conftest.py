@@ -144,6 +144,14 @@ def other_admin(db, user_password):
 
 
 @pytest.fixture
+def secondary_admin(db, user_password, admins_group, members_group):
+    user = create_test_user("Second_Admin", "secondary@example.com", user_password)
+    user.set_groups(members_group, [admins_group])
+    user.save()
+    return user
+
+
+@pytest.fixture
 def root_admin(db, user_password):
     user = create_test_superuser("Root_Admin", "rootadmin@example.com", user_password)
     user.is_staff = False

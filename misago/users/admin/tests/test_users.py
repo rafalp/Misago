@@ -193,7 +193,7 @@ def test_new_user_creation_fails_because_admin_user_cant_set_admin_group(
     default_rank = Rank.objects.get_default()
     authenticated_role = Role.objects.get(special_role="authenticated")
 
-    admin_client.post(
+    response = admin_client.post(
         reverse("misago:admin:users:new"),
         data={
             "username": "User",
@@ -204,6 +204,7 @@ def test_new_user_creation_fails_because_admin_user_cant_set_admin_group(
             "new_password": "pass123",
         },
     )
+    assert_contains(response, "1 is not one of the available choices")
 
     with pytest.raises(User.DoesNotExist):
         User.objects.get_by_email("user@example.com")
@@ -215,7 +216,7 @@ def test_new_user_creation_fails_because_admin_user_cant_set_secondary_admin_gro
     default_rank = Rank.objects.get_default()
     authenticated_role = Role.objects.get(special_role="authenticated")
 
-    admin_client.post(
+    response = admin_client.post(
         reverse("misago:admin:users:new"),
         data={
             "username": "User",
@@ -227,6 +228,7 @@ def test_new_user_creation_fails_because_admin_user_cant_set_secondary_admin_gro
             "new_password": "pass123",
         },
     )
+    assert_contains(response, "1 is not one of the available choices")
 
     with pytest.raises(User.DoesNotExist):
         User.objects.get_by_email("user@example.com")
@@ -261,23 +263,39 @@ def test_edit_user_form_renders(admin_client, user):
     assert response.status_code == 200
 
 
-def test_edit_user_form_renders_for_staff_user(staff_client, user):
-    response = staff_client.get(
+def test_edit_user_form_renders_for_root_admin(root_admin_client, user):
+    response = root_admin_client.get(
         reverse("misago:admin:users:edit", kwargs={"pk": user.pk})
     )
     assert response.status_code == 200
 
 
-def test_edit_staff_form_renders_for_staff_user(staff_client, other_staffuser):
-    response = staff_client.get(
-        reverse("misago:admin:users:edit", kwargs={"pk": other_staffuser.pk})
+def test_edit_admin_form_renders_for_admin_user(admin_client, other_admin):
+    response = admin_client.get(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk})
     )
     assert response.status_code == 200
 
 
-def test_edit_superuser_form_renders_for_staff_user(staff_client, superuser):
-    response = staff_client.get(
-        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk})
+def test_edit_admin_form_renders_for_root_admin(root_admin_client, other_admin):
+    response = root_admin_client.get(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk})
+    )
+    assert response.status_code == 200
+
+
+def test_edit_root_admin_form_renders_for_admin_user(admin_client, root_admin):
+    response = admin_client.get(
+        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk})
+    )
+    assert response.status_code == 200
+
+
+def test_edit_root_admin_form_renders_for_root_admin(
+    root_admin_client, other_root_admin
+):
+    response = root_admin_client.get(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk})
     )
     assert response.status_code == 200
 
@@ -286,6 +304,9 @@ def get_default_edit_form_data(user):
     data = {
         "username": user.username,
         "group": str(user.group_id),
+        "secondary_groups": [
+            str(group_id) for group_id in user.groups_ids if group_id != group_id
+        ],
         "rank": str(user.rank_id),
         "roles": str(user.roles.all()[0].id),
         "email": user.email,
@@ -453,6 +474,93 @@ def test_edit_form_preserves_whitespace_in_new_user_password(admin_client, user)
     assert user.check_password("  newpassword123  ")
 
 
+def test_root_admin_can_change_own_password(root_admin_client, root_admin):
+    form_data = get_default_edit_form_data(root_admin)
+    form_data["new_password"] = "newpassword123"
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}), data=form_data
+    )
+
+    root_admin.refresh_from_db()
+    assert root_admin.check_password("newpassword123")
+
+
+def test_root_admin_can_change_other_root_password(root_admin_client, other_root_admin):
+    form_data = get_default_edit_form_data(other_root_admin)
+    form_data["new_password"] = "newpassword123"
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
+        data=form_data,
+    )
+
+    other_root_admin.refresh_from_db()
+    assert other_root_admin.check_password("newpassword123")
+
+
+def test_root_admin_can_change_admin_password(root_admin_client, admin):
+    form_data = get_default_edit_form_data(admin)
+    form_data["new_password"] = "newpassword123"
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}), data=form_data
+    )
+
+    admin.refresh_from_db()
+    assert admin.check_password("newpassword123")
+
+
+def test_admin_can_change_own_password(admin_client, admin):
+    form_data = get_default_edit_form_data(admin)
+    form_data["new_password"] = "newpassword123"
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}), data=form_data
+    )
+
+    admin.refresh_from_db()
+    assert admin.check_password("newpassword123")
+
+
+def test_admin_cant_change_root_admin_password(
+    admin_client, other_root_admin, user_password
+):
+    form_data = get_default_edit_form_data(other_root_admin)
+    form_data["new_password"] = "newpassword123"
+
+    response = admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
+        data=form_data,
+    )
+    assert_contains(
+        response,
+        "You must be a root administrator to change this user&#x27;s password.",
+    )
+
+    other_root_admin.refresh_from_db()
+    assert other_root_admin.check_password(user_password)
+
+
+def test_admin_can_change_other_admin_password(
+    admin_client, other_admin, user_password
+):
+    form_data = get_default_edit_form_data(other_admin)
+    form_data["new_password"] = "newpassword123"
+
+    response = admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk}),
+        data=form_data,
+    )
+    assert_contains(
+        response,
+        "You must be a root administrator to change this user&#x27;s password.",
+    )
+
+    other_admin.refresh_from_db()
+    assert other_admin.check_password(user_password)
+
+
 def test_admin_editing_their_own_password_is_not_logged_out(admin_client, admin):
     form_data = get_default_edit_form_data(admin)
     form_data["new_password"] = "newpassword123"
@@ -465,108 +573,176 @@ def test_admin_editing_their_own_password_is_not_logged_out(admin_client, admin)
     assert user.json()["id"] == admin.id
 
 
-def test_staff_user_cannot_degrade_superuser_to_staff_user(staff_client, superuser):
-    form_data = get_default_edit_form_data(superuser)
-    form_data["is_staff"] = "1"
-    form_data.pop("is_superuser")
-
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
-    )
-
-    superuser.refresh_from_db()
-    assert superuser.is_staff
-    assert superuser.is_superuser
-
-
-def test_staff_user_cannot_degrade_superuser_to_regular_user(staff_client, superuser):
-    form_data = get_default_edit_form_data(superuser)
-    form_data.pop("is_staff")
-    form_data.pop("is_superuser")
-
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
-    )
-
-    superuser.refresh_from_db()
-    assert superuser.is_staff
-    assert superuser.is_superuser
-
-
-def test_staff_user_cannot_promote_other_staff_user_to_superuser(
-    staff_client, other_staffuser
+def test_root_admin_can_change_other_user_main_group_to_admin(
+    root_admin_client, user, admins_group
 ):
-    form_data = get_default_edit_form_data(other_staffuser)
-    form_data["is_staff"] = "1"
-    form_data["is_superuser"] = "1"
+    form_data = get_default_edit_form_data(user)
+    form_data["group"] = str(admins_group.id)
 
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": other_staffuser.pk}),
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
+    )
+
+    user.refresh_from_db()
+    assert user.group_id == admins_group.id
+    assert user.groups_ids == [admins_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+
+
+def test_root_admin_can_change_other_user_secondary_group_to_admin(
+    root_admin_client, user, admins_group, members_group
+):
+    form_data = get_default_edit_form_data(user)
+    form_data["secondary_groups"] = [str(admins_group.id)]
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
+    )
+
+    user.refresh_from_db()
+    assert user.group_id == members_group.id
+    assert user.groups_ids == [admins_group.id, members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+
+
+def test_admin_cant_change_other_user_main_group_to_admin(
+    admin_client, user, admins_group, members_group
+):
+    form_data = get_default_edit_form_data(user)
+    form_data["group"] = str(admins_group.id)
+
+    response = admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
+    )
+    assert_contains(
+        response,
+        (
+            "You must be a root administrator "
+            "to change this user&#x27;s main group to the Administrators"
+        ),
+    )
+
+    user.refresh_from_db()
+    assert user.group_id == members_group.id
+    assert user.groups_ids == [members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+
+
+def test_admin_cant_change_other_user_secondary_group_to_admin(
+    admin_client, user, admins_group, members_group
+):
+    form_data = get_default_edit_form_data(user)
+    form_data["secondary_groups"] = [str(admins_group.id)]
+
+    response = admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
+    )
+    assert_contains(
+        response,
+        (
+            "You must be a root administrator to add this user "
+            "to the following groups: Administrators"
+        ),
+    )
+
+    user.refresh_from_db()
+    assert user.group_id == members_group.id
+    assert user.groups_ids == [members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+
+
+def test_root_admin_can_change_other_user_main_group_from_admin(
+    root_admin_client, admin, members_group
+):
+    form_data = get_default_edit_form_data(admin)
+    form_data["group"] = str(members_group.id)
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}), data=form_data
+    )
+
+    admin.refresh_from_db()
+    assert admin.group_id == members_group.id
+    assert admin.groups_ids == [members_group.id]
+    assert admin.permissions_id == get_permissions_id(admin.groups_ids)
+
+
+def test_root_admin_can_change_other_user_secondary_group_from_admin(
+    root_admin_client, secondary_admin, members_group
+):
+    form_data = get_default_edit_form_data(secondary_admin)
+    form_data.pop("secondary_groups")
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": secondary_admin.pk}),
         data=form_data,
     )
 
-    other_staffuser.refresh_from_db()
-    assert other_staffuser.is_staff
-    assert not other_staffuser.is_superuser
+    secondary_admin.refresh_from_db()
+    assert secondary_admin.group_id == members_group.id
+    assert secondary_admin.groups_ids == [members_group.id]
+    assert secondary_admin.permissions_id == get_permissions_id(
+        secondary_admin.groups_ids
+    )
 
 
-def test_staff_user_cannot_promote_regular_user_to_staff(staff_client, user):
+def test_admin_cant_change_other_user_main_group_from_admin(
+    admin_client, other_admin, admins_group, members_group
+):
+    form_data = get_default_edit_form_data(other_admin)
+    form_data["group"] = str(members_group.id)
+
+    response = admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk}),
+        data=form_data,
+    )
+    assert_contains(
+        response,
+        "You must be a root administrator to change this user&#x27;s main group.",
+    )
+
+    other_admin.refresh_from_db()
+    assert other_admin.group_id == admins_group.id
+    assert other_admin.groups_ids == [admins_group.id]
+    assert other_admin.permissions_id == get_permissions_id(other_admin.groups_ids)
+
+
+def test_admin_cant_change_other_user_secondary_group_from_admin(
+    admin_client, secondary_admin, admins_group, members_group
+):
+    form_data = get_default_edit_form_data(secondary_admin)
+    form_data.pop("secondary_groups")
+
+    response = admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": secondary_admin.pk}),
+        data=form_data,
+    )
+    assert_contains(
+        response,
+        (
+            "You must be a root administrator to remove this user "
+            "from the following groups: Administrator"
+        ),
+    )
+
+    secondary_admin.refresh_from_db()
+    assert secondary_admin.group_id == members_group.id
+    assert secondary_admin.groups_ids == [admins_group.id, members_group.id]
+    assert secondary_admin.permissions_id == get_permissions_id(
+        secondary_admin.groups_ids
+    )
+
+
+def test_root_admin_can_promote_other_user_to_root(root_admin_client, user):
     form_data = get_default_edit_form_data(user)
-    form_data["is_staff"] = "1"
-
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
-    )
-
-    user.refresh_from_db()
-    assert not user.is_misago_root
-
-
-def test_staff_user_cannot_promote_regular_user_to_superuser(staff_client, user):
-    form_data = get_default_edit_form_data(user)
-    form_data["is_superuser"] = "1"
-
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
-    )
-
-    user.refresh_from_db()
-
-
-def test_staff_user_cannot_promote_themselves_to_superuser(staff_client, staffuser):
-    form_data = get_default_edit_form_data(staffuser)
-    form_data["is_superuser"] = "1"
-
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
-    )
-
-    staffuser.refresh_from_db()
-    assert not staffuser.is_superuser
-
-
-def test_staff_user_cannot_degrade_themselves_to_regular_user(staff_client, staffuser):
-    form_data = get_default_edit_form_data(staffuser)
-    form_data.pop("is_staff")
-
-    staff_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
-    )
-
-    staffuser.refresh_from_db()
-    assert staffuser.is_staff
-
-
-def test_root_admin_cannot_remove_their_own_root_status(root_admin_client, root_admin):
-    form_data = get_default_edit_form_data(root_admin)
-    form_data.pop("is_misago_root")
+    form_data["is_misago_root"] = "1"
 
     root_admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}), data=form_data
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
-    root_admin.refresh_from_db()
-    assert root_admin.is_misago_root
+    user.refresh_from_db()
+    assert user.is_misago_root
 
 
 def test_root_admin_can_remove_other_user_root_status(
@@ -584,16 +760,40 @@ def test_root_admin_can_remove_other_user_root_status(
     assert not other_root_admin.is_misago_root
 
 
-def test_root_admin_can_promote_other_user_root_status(root_admin_client, user):
+def test_root_admin_cannot_remove_their_own_root_status(root_admin_client, root_admin):
+    form_data = get_default_edit_form_data(root_admin)
+    form_data.pop("is_misago_root")
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}), data=form_data
+    )
+
+    root_admin.refresh_from_db()
+    assert root_admin.is_misago_root
+
+
+def test_admin_cant_promote_other_user_to_root_status(admin_client, user):
     form_data = get_default_edit_form_data(user)
     form_data["is_misago_root"] = "1"
 
-    root_admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
-    assert user.is_misago_root
+    assert not user.is_misago_root
+
+
+def test_admin_cant_remove_other_user_root_status(admin_client, root_admin):
+    form_data = get_default_edit_form_data(root_admin)
+    form_data.pop("is_misago_root")
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}), data=form_data
+    )
+
+    root_admin.refresh_from_db()
+    assert root_admin.is_misago_root
 
 
 def test_superuser_can_disable_other_superuser_account(admin_client, other_superuser):

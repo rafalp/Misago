@@ -138,6 +138,12 @@
   <fieldset>
     <legend>{% trans "Sign-in credentials" context "admin user form" %}</legend>
     
+    {% if form.credentials_require_root %}
+      <div class="alert alert-warning alert-protected-credentials" role="alert">
+        {% trans "You must be a root administrator to change this user's sign-in credentials." context "admin user form" %}
+      </div>
+    {% endif %}
+
     {% if not target.has_usable_password %}
       <div class="alert alert-info alert-has-unusable-password" role="alert">
         {% trans "This user has not set account password and uses other service to authenticate." context "admin user form" %}
