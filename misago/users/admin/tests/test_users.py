@@ -204,7 +204,13 @@ def test_new_user_creation_fails_because_admin_user_cant_set_admin_group(
             "new_password": "pass123",
         },
     )
-    assert_contains(response, "1 is not one of the available choices")
+    assert_contains(
+        response,
+        (
+            "You must be a root administrator to set this user&#x27;s "
+            "main group to the Administrators."
+        ),
+    )
 
     with pytest.raises(User.DoesNotExist):
         User.objects.get_by_email("user@example.com")
@@ -228,7 +234,13 @@ def test_new_user_creation_fails_because_admin_user_cant_set_secondary_admin_gro
             "new_password": "pass123",
         },
     )
-    assert_contains(response, "1 is not one of the available choices")
+    assert_contains(
+        response,
+        (
+            "You must be a root administrator to add this user "
+            "to the Administrators group."
+        ),
+    )
 
     with pytest.raises(User.DoesNotExist):
         User.objects.get_by_email("user@example.com")
@@ -305,7 +317,7 @@ def get_default_edit_form_data(user):
         "username": user.username,
         "group": str(user.group_id),
         "secondary_groups": [
-            str(group_id) for group_id in user.groups_ids if group_id != group_id
+            str(group_id) for group_id in user.groups_ids if group_id != user.group_id
         ],
         "rank": str(user.rank_id),
         "roles": str(user.roles.all()[0].id),
@@ -486,7 +498,9 @@ def test_root_admin_can_change_own_password(root_admin_client, root_admin):
     assert root_admin.check_password("newpassword123")
 
 
-def test_root_admin_can_change_other_root_password(root_admin_client, other_root_admin):
+def test_root_admin_can_change_other_root_admin_password(
+    root_admin_client, other_root_admin
+):
     form_data = get_default_edit_form_data(other_root_admin)
     form_data["new_password"] = "newpassword123"
 
@@ -529,13 +543,9 @@ def test_admin_cant_change_root_admin_password(
     form_data = get_default_edit_form_data(other_root_admin)
     form_data["new_password"] = "newpassword123"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
         data=form_data,
-    )
-    assert_contains(
-        response,
-        "You must be a root administrator to change this user&#x27;s password.",
     )
 
     other_root_admin.refresh_from_db()
@@ -548,13 +558,9 @@ def test_admin_can_change_other_admin_password(
     form_data = get_default_edit_form_data(other_admin)
     form_data["new_password"] = "newpassword123"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk}),
         data=form_data,
-    )
-    assert_contains(
-        response,
-        "You must be a root administrator to change this user&#x27;s password.",
     )
 
     other_admin.refresh_from_db()
@@ -641,7 +647,7 @@ def test_admin_cant_change_other_user_secondary_group_to_admin(
         response,
         (
             "You must be a root administrator to add this user "
-            "to the following groups: Administrators"
+            "to the Administrators group."
         ),
     )
 
@@ -698,7 +704,10 @@ def test_admin_cant_change_other_user_main_group_from_admin(
     )
     assert_contains(
         response,
-        "You must be a root administrator to change this user&#x27;s main group.",
+        (
+            "You must be a root administrator to change this user&#x27;s "
+            "main group from the Administrators."
+        ),
     )
 
     other_admin.refresh_from_db()
@@ -721,8 +730,72 @@ def test_admin_cant_change_other_user_secondary_group_from_admin(
         response,
         (
             "You must be a root administrator to remove this user "
-            "from the following groups: Administrator"
+            "from the Administrators group."
         ),
+    )
+
+    secondary_admin.refresh_from_db()
+    assert secondary_admin.group_id == members_group.id
+    assert secondary_admin.groups_ids == [admins_group.id, members_group.id]
+    assert secondary_admin.permissions_id == get_permissions_id(
+        secondary_admin.groups_ids
+    )
+
+
+def test_admin_can_change_other_admin_main_group(
+    admin_client, secondary_admin, admins_group, moderators_group
+):
+    form_data = get_default_edit_form_data(secondary_admin)
+    form_data["group"] = str(moderators_group.id)
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": secondary_admin.pk}),
+        data=form_data,
+    )
+
+    secondary_admin.refresh_from_db()
+    assert secondary_admin.group_id == moderators_group.id
+    assert secondary_admin.groups_ids == [admins_group.id, moderators_group.id]
+    assert secondary_admin.permissions_id == get_permissions_id(
+        secondary_admin.groups_ids
+    )
+
+
+def test_admin_can_add_other_admin_secondary_group(
+    admin_client, secondary_admin, admins_group, moderators_group, members_group
+):
+    form_data = get_default_edit_form_data(secondary_admin)
+    form_data["secondary_groups"] = [str(admins_group.id), str(moderators_group.id)]
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": secondary_admin.pk}),
+        data=form_data,
+    )
+
+    secondary_admin.refresh_from_db()
+    assert secondary_admin.group_id == members_group.id
+    assert secondary_admin.groups_ids == [
+        admins_group.id,
+        moderators_group.id,
+        members_group.id,
+    ]
+    assert secondary_admin.permissions_id == get_permissions_id(
+        secondary_admin.groups_ids
+    )
+
+
+def test_admin_can_remove_other_admin_secondary_group(
+    admin_client, secondary_admin, admins_group, moderators_group, members_group
+):
+    secondary_admin.set_groups(members_group, [admins_group, moderators_group])
+    secondary_admin.save()
+
+    form_data = get_default_edit_form_data(secondary_admin)
+    form_data["secondary_groups"] = [str(admins_group.id)]
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": secondary_admin.pk}),
+        data=form_data,
     )
 
     secondary_admin.refresh_from_db()

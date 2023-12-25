@@ -9,6 +9,7 @@ from ...admin.forms import IsoDateTimeField, YesNoSwitch
 from ...core.validators import validate_sluggable
 from ...notifications.threads import ThreadNotifications
 from ...search.filter_queryset import filter_queryset
+from ..enums import DefaultGroupId
 from ..models import Ban, DataDownload, Group, Rank
 from ..profilefields import profilefields
 from ..utils import hash_email, slugify_username
@@ -87,14 +88,38 @@ class NewUserForm(UserBaseForm):
         model = User
         fields = ["username", "email", "title"]
 
+    def clean_group(self):
+        data = self.cleaned_data["group"]
+        group = self.groups_dict[data]
+
+        if not self.request.user.is_misago_root and data == DefaultGroupId.ADMINS:
+            raise forms.ValidationError(
+                pgettext(
+                    "admin user form",
+                    "You must be a root administrator to set this user's main group to the %(group)s.",
+                )
+                % {"group": group}
+            )
+
+        return group
+
+    def clean_secondary_groups(self):
+        data = self.cleaned_data["secondary_groups"]
+
+        if not self.request.user.is_misago_root and DefaultGroupId.ADMINS in data:
+            admins_group = self.groups_dict[DefaultGroupId.ADMINS]
+            raise forms.ValidationError(
+                pgettext(
+                    "admin user form",
+                    "You must be a root administrator to add this user to the %(group)s group.",
+                )
+                % {"group": admins_group}
+            )
+
+        return [self.groups_dict[item] for item in data]
+
 
 class EditUserForm(UserBaseForm):
-    IS_SUPERUSER_LABEL = pgettext_lazy("admin user form", "Is superuser")
-    IS_SUPERUSER_HELP_TEXT = pgettext_lazy(
-        "admin user form",
-        "Only administrators can access admin sites. In addition to admin site access, superadmins can also change other members admin levels.",
-    )
-
     IS_ACTIVE_LABEL = pgettext_lazy("admin user form", "Is active")
     IS_ACTIVE_HELP_TEXT = pgettext_lazy(
         "admin user form",
@@ -108,7 +133,7 @@ class EditUserForm(UserBaseForm):
     )
 
     new_password = forms.CharField(
-        label=pgettext_lazy("admin user form", "Set new password"),
+        label=pgettext_lazy("admin user form", "New password"),
         strip=False,
         widget=forms.PasswordInput,
         required=False,
@@ -118,7 +143,7 @@ class EditUserForm(UserBaseForm):
         label=pgettext_lazy("admin user form", "Is root administrator"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Root administrators can sign in to Misago's admin control panel and change other users' admin access. You need to be a root administrator to change this field.",
+            "Root administrators can sign in to Misago's admin control panel and change other users' admin status. You need to be a root administrator to change this field.",
         ),
         disabled=True,
     )
@@ -284,9 +309,8 @@ class EditUserForm(UserBaseForm):
         if request_user.is_misago_root and request_user != self.instance:
             self.fields["is_misago_root"].disabled = False
 
-        if is_form_user_admin(self.instance, self.groups_dict) and not (
-            request_user.is_misago_root
-            or request_user == self.instance
+        if self.instance.is_misago_admin and not (
+            request_user.is_misago_root or request_user == self.instance
         ):
             self.credentials_require_root = True
             self.fields["new_password"].disabled = True
@@ -314,15 +338,16 @@ class EditUserForm(UserBaseForm):
             return group
 
         if group.id != self.instance.group.id:
-            if self.instance.group.is_admin:
+            if self.instance.group.id == DefaultGroupId.ADMINS:
                 raise forms.ValidationError(
                     pgettext(
                         "admin user form",
-                        "You must be a root administrator to change this user's main group.",
+                        "You must be a root administrator to change this user's main group from the %(group)s.",
                     )
+                    % {"group": self.instance.group}
                 )
 
-            if group.is_admin:
+            if group.id == DefaultGroupId.ADMINS:
                 raise forms.ValidationError(
                     pgettext(
                         "admin user form",
@@ -339,79 +364,39 @@ class EditUserForm(UserBaseForm):
         if self.request.user.is_misago_root:
             return secondary_groups
 
-        missing_groups: list[str] = []
-        invalid_groups: list[str] = []
-        for old_group_id in self.instance.groups_ids:
-            if old_group_id == self.instance.group.id:
-                continue
+        admins_id = DefaultGroupId.ADMINS.value
+        initial_secondary_groups_ids = [
+            group_id
+            for group_id in self.instance.groups_ids
+            if group_id != self.instance.group_id
+        ]
+        updated_secondary_groups_ids = [group.id for group in secondary_groups]
 
-            group = self.groups_dict.get(old_group_id)
-            if group and group.is_admin and group not in secondary_groups:
-                missing_groups.append(str(group))
-
-        for group in secondary_groups:
-            if (
-                group.is_admin
-                and group != self.instance.group
-                and group.id not in self.instance.groups_ids
-            ):
-                invalid_groups.append(str(group))
-
-        if missing_groups:
+        if (
+            admins_id in initial_secondary_groups_ids
+            and admins_id not in updated_secondary_groups_ids
+        ):
             raise forms.ValidationError(
                 pgettext(
                     "admin user form",
-                    "You must be a root administrator to remove this user from the following groups: %(groups)s",
+                    "You must be a root administrator to remove this user from the %(group)s group.",
                 )
-                % {"groups": ", ".join(missing_groups)}
+                % {"group": self.groups_dict[admins_id]}
             )
 
-        if invalid_groups:
+        if (
+            admins_id not in initial_secondary_groups_ids
+            and admins_id in updated_secondary_groups_ids
+        ):
             raise forms.ValidationError(
                 pgettext(
                     "admin user form",
-                    "You must be a root administrator to add this user to the following groups: %(groups)s",
+                    "You must be a root administrator to add this user to the %(group)s group.",
                 )
-                % {"groups": ", ".join(invalid_groups)}
+                % {"group": self.groups_dict[admins_id]}
             )
 
         return secondary_groups
-
-    def clean_email(self):
-        data = super().clean_email()
-
-        if (
-            data != self.instance.email
-            and self.instance != self.request.user
-            and not self.request.user.is_misago_root
-            and self.instance_is_admin
-        ):
-            raise forms.ValidationError(
-                pgettext(
-                    "admin user form",
-                    "You must be a root administrator to change this user's email address.",
-                )
-            )
-
-        return data
-
-    def clean_new_password(self):
-        data = super().clean_new_password()
-
-        if (
-            data
-            and self.instance != self.request.user
-            and not self.request.user.is_misago_root
-            and self.instance_is_admin
-        ):
-            raise forms.ValidationError(
-                pgettext(
-                    "admin user form",
-                    "You must be a root administrator to change this user's password.",
-                )
-            )
-
-        return data
 
     def clean_signature(self):
         data = self.cleaned_data["signature"]
@@ -441,16 +426,15 @@ def user_form_factory(
     groups = list(Group.objects.all())
     groups_data = {group.id: group for group in groups}
 
+    groups_choices = []
+    for group in groups:
+        if group.id == DefaultGroupId.ADMINS:
+            groups_choices.append((group.id, f"{group}*"))
+        else:
+            groups_choices.append((group.id, str(group)))
+
     if instance.group_id:
         instance.group = groups_data[instance.group_id]
-
-    # Only a root admin can create a new admin group members
-    if not instance.id and not admin_user.is_misago_root:
-        groups_choices = [
-            (group.id, str(group)) for group in groups if not group.is_admin
-        ]
-    else:
-        groups_choices = [(group.id, str(group)) for group in groups]
 
     secondary_groups_initial = instance.groups_ids[:]
     if instance.group_id in secondary_groups_initial:
@@ -520,18 +504,6 @@ def user_form_factory(
         )
 
     return type("UserForm", (base_form_type,), form_attrs)
-
-
-def is_form_user_admin(user: User, groups: dict[int, Group]) -> bool:
-    if user.is_misago_root:
-        return True
-
-    for group_id in user.groups_ids:
-        group = groups.get(group_id)
-        if group and group.is_admin:
-            return True
-
-    return False
 
 
 class BaseFilterUsersForm(forms.Form):

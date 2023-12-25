@@ -424,6 +424,10 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
         anonymize_user_data.send(sender=self)
 
     @property
+    def is_misago_admin(self):
+        return self.is_misago_root or DefaultGroupId.ADMINS in self.groups_ids
+
+    @property
     def requires_activation_by_admin(self):
         return self.requires_activation == self.ACTIVATION_ADMIN
 
