@@ -403,6 +403,75 @@ def test_edit_form_changes_user_email(admin_client, user):
     assert user.email_hash == hash_email("edited@example.com")
 
 
+def test_admin_can_change_own_email(admin_client, admin):
+    form_data = get_default_edit_form_data(admin)
+    form_data["email"] = "edited@example.com"
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}), data=form_data
+    )
+
+    admin.refresh_from_db()
+    assert admin.email == "edited@example.com"
+    assert admin.email_hash == hash_email("edited@example.com")
+
+
+def test_admin_cant_change_other_admin_email(admin_client, other_admin):
+    form_data = get_default_edit_form_data(other_admin)
+    form_data["email"] = "edited@example.com"
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk}),
+        data=form_data,
+    )
+
+    other_admin.refresh_from_db()
+    assert other_admin.email == "otheradmin@example.com"
+    assert other_admin.email_hash == hash_email("otheradmin@example.com")
+
+
+def test_admin_cant_change_root_admin_email(admin_client, root_admin):
+    form_data = get_default_edit_form_data(root_admin)
+    form_data["email"] = "edited@example.com"
+
+    admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}), data=form_data
+    )
+
+    root_admin.refresh_from_db()
+    assert root_admin.email == "rootadmin@example.com"
+    assert root_admin.email_hash == hash_email("rootadmin@example.com")
+
+
+def test_root_admin_can_change_admin_email(root_admin_client, admin):
+    form_data = get_default_edit_form_data(admin)
+    form_data["email"] = "edited@example.com"
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}), data=form_data
+    )
+
+    admin.refresh_from_db()
+    assert admin.email == "edited@example.com"
+    assert admin.email_hash == hash_email("edited@example.com")
+
+
+def test_root_admin_can_change_other_root_admin_email(
+    root_admin_client, other_root_admin
+):
+    form_data = get_default_edit_form_data(other_root_admin)
+    form_data["email"] = "edited@example.com"
+
+    root_admin_client.post(
+        reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
+        data=form_data,
+    )
+
+    other_root_admin.refresh_from_db()
+    assert other_root_admin.email == "edited@example.com"
+    assert other_root_admin.email_hash == hash_email("edited@example.com")
+
+
 def test_edit_form_doesnt_remove_current_user_password_if_new_password_is_omitted(
     admin_client, user, user_password
 ):
