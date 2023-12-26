@@ -19,7 +19,7 @@ from ..templatetags.misago_admin_form import (
 
 class Form(forms.Form):
     text_field = forms.CharField(
-        label="Hello!", max_length=255, help_text="I am a help text."
+        label="Hello", max_length=255, help_text="I am a help text."
     )
     textarea_field = forms.CharField(
         label="Message", max_length=255, widget=forms.Textarea()
@@ -56,9 +56,22 @@ def render(template_str, form=None):
     return template.render(context).strip()
 
 
-def test_row_with_field_input_is_rendered():
+def test_row_with_input_field_is_rendered(snapshot):
     html = render("{% form_row form.text_field %}")
-    assert "id_text_field" in html
+    assert snapshot == html
+
+
+def test_row_with_disabled_input_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["text_field"].disabled = True
+    html = render("{% form_row form.text_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_input_field_with_value_is_rendered(snapshot):
+    form = Form({"text_field": "Hello world!"})
+    html = render("{% form_row form.text_field %}", form)
+    assert snapshot == html
 
 
 def test_row_with_field_input_and_label_css_class_is_rendered():
@@ -82,7 +95,7 @@ def test_row_with_field_input_and_label_and_field_css_classes_is_rendered():
 
 def test_field_label_is_rendered():
     html = render("{% form_row form.text_field %}")
-    assert "Hello!" in html
+    assert "Hello" in html
 
 
 def test_field_help_text_is_rendered():
@@ -201,7 +214,20 @@ def test_for_field_without_radio_select_widget_filter_returns_false(form):
 
 
 def test_row_with_radio_select_field_is_rendered(snapshot):
-    html = render_image("{% form_image_row form.ratio_select_field %}")
+    html = render("{% form_row form.ratio_select_field %}")
+    assert snapshot == html
+
+
+def test_row_with_disabled_radio_select_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["ratio_select_field"].disabled = True
+    html = render("{% form_row form.ratio_select_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_radio_select_field_with_value_is_rendered(snapshot):
+    form = Form({"ratio_select_field": "y"})
+    html = render("{% form_row form.ratio_select_field %}", form)
     assert snapshot == html
 
 
@@ -214,7 +240,20 @@ def teste_for_field_without_select_widget_filter_returns_false(form):
 
 
 def test_row_with_select_field_is_rendered(snapshot):
-    html = render_image("{% form_image_row form.select_field %}")
+    html = render("{% form_row form.select_field %}")
+    assert snapshot == html
+
+
+def test_row_with_disabled_select_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["select_field"].disabled = True
+    html = render("{% form_row form.select_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_select_field_with_value_is_rendered(snapshot):
+    form = Form({"select_field": "y"})
+    html = render("{% form_row form.select_field %}", form)
     assert snapshot == html
 
 
@@ -227,7 +266,7 @@ def test_for_field_without_checkbox_select_widget_filter_returns_false(form):
 
 
 def test_row_with_checkbox_select_field_is_rendered(snapshot):
-    html = render_image("{% form_image_row form.checkbox_select_field %}")
+    html = render("{% form_row form.checkbox_select_field %}")
     assert snapshot == html
 
 
@@ -240,7 +279,20 @@ def test_for_field_without_multiple_select_widget_filter_returns_false(form):
 
 
 def test_row_with_select_multiple_field_is_rendered(snapshot):
-    html = render_image("{% form_image_row form.multiple_select_field %}")
+    html = render("{% form_row form.multiple_select_field %}")
+    assert snapshot == html
+
+
+def test_row_with_disabled_select_multiple_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["multiple_select_field"].disabled = True
+    html = render("{% form_row form.multiple_select_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_select_multiple_field_with_value_is_rendered(snapshot):
+    form = Form({"multiple_select_field": ["r", "b"]})
+    html = render("{% form_row form.multiple_select_field %}", form)
     assert snapshot == html
 
 
@@ -253,7 +305,20 @@ def test_for_field_without_textarea_widget_filter_returns_false(form):
 
 
 def test_row_with_textarea_field_is_rendered(snapshot):
-    html = render_image("{% form_image_row form.textarea_field %}")
+    html = render("{% form_row form.textarea_field %}")
+    assert snapshot == html
+
+
+def test_row_with_disabled_textarea_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["textarea_field"].disabled = True
+    html = render("{% form_row form.textarea_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_textarea_field_with_value_is_rendered(snapshot):
+    form = Form({"textarea_field": "Hello world!"})
+    html = render("{% form_row form.textarea_field %}", form)
     assert snapshot == html
 
 
@@ -266,68 +331,81 @@ def test_for_non_yes_no_field_filter_returns_false(form):
 
 
 def test_row_with_yes_no_field_is_rendered(snapshot):
-    html = render_image("{% form_image_row form.yesno_field %}")
+    html = render("{% form_row form.yesno_field %}")
+    assert snapshot == html
+
+
+def test_row_with_disabled_yes_no_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["yesno_field"].disabled = True
+    html = render("{% form_row form.yesno_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_yes_no_field_with_value_is_rendered(snapshot):
+    form = Form({"yesno_field": True})
+    html = render("{% form_row form.yesno_field %}", form)
     assert snapshot == html
 
 
 def test_specified_class_name_is_rendered():
-    result = render_attrs({"attrs": {}}, class_name="form-control")
+    result = render_attrs({}, class_name="form-control")
     assert result == 'class="form-control"'
 
 
 def test_specified_class_name_overrided_by_class_attr():
-    result = render_attrs({"attrs": {"class": "custom"}}, class_name="form-control")
+    result = render_attrs({"class": "custom"}, class_name="form-control")
     assert result == 'class="custom"'
 
 
 def test_attr_with_string_value_is_rendered():
-    result = render_attrs({"attrs": {"name": "lorem"}})
+    result = render_attrs({"name": "lorem"})
     assert result == 'name="lorem"'
 
 
 def test_attr_with_int_value_is_rendered():
-    result = render_attrs({"attrs": {"cols": 5}})
+    result = render_attrs({"cols": 5})
     assert result == 'cols="5"'
 
 
 def test_attr_with_boolean_true_value_is_not_rendered():
-    result = render_attrs({"attrs": {"selected": True}})
+    result = render_attrs({"selected": True})
     assert result == ""
 
 
 def test_attr_with_boolean_false_value_is_not_rendered():
-    result = render_attrs({"attrs": {"selected": False}})
+    result = render_attrs({"selected": False})
     assert result == ""
 
 
 def test_attr_with_none_value_is_not_rendered():
-    result = render_attrs({"attrs": {"selected": None}})
+    result = render_attrs({"selected": None})
     assert result == ""
 
 
 def test_attr_name_is_escaped():
-    result = render_attrs({"attrs": {'"': "test"}})
+    result = render_attrs({'"': "test"})
     assert result == '&quot;="test"'
 
 
 def test_attr_value_is_escaped():
-    result = render_attrs({"attrs": {"name": '"'}})
+    result = render_attrs({"name": '"'})
     assert result == 'name="&quot;"'
 
 
 def test_multiple_valid_attrs_are_rendered():
-    result = render_attrs({"attrs": {"name": "lorem", "cols": 5}})
+    result = render_attrs({"name": "lorem", "cols": 5})
     assert result == 'name="lorem" cols="5"'
 
 
 def test_empty_attr_dict_is_not_rendered():
-    result = render_attrs({"attrs": {}})
+    result = render_attrs({})
     assert result == ""
 
 
 def test_attr_with_boolean_true_value_is_rendered():
-    result = render_bool_attrs({"bool": True})
-    assert result == "bool"
+    result = render_bool_attrs({"selected": True})
+    assert result == "selected"
 
 
 def test_bool_attr_with_string_value_is_not_rendered():
@@ -361,8 +439,8 @@ def test_multiple_bool_attrs_with_boolean_true_value_are_rendered():
 
 
 def test_only_bool_attrs_with_boolean_true_value_are_rendered():
-    result = render_bool_attrs({"bool": True, "string": "hello", "int": 123})
-    assert result == "bool"
+    result = render_bool_attrs({"selected": True, "string": "hello", "int": 123})
+    assert result == "selected"
 
 
 def test_util_turns_dimensions_tuple_into_dict():
