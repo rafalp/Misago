@@ -81,7 +81,7 @@ class UsersList(UserAdmin, generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related("rank")
+        return qs.prefetch_related("rank", "group")
 
     def get_filter_form(self, request):
         return create_filter_users_form()
@@ -218,11 +218,22 @@ class UsersList(UserAdmin, generic.ListView):
                 raise generic.MassActionError(
                     pgettext("admin users", "You can't delete yourself.")
                 )
-            if user.is_staff or user.is_superuser:
-                message = pgettext(
-                    "admin users", "%(user)s is admin and can't be deleted."
-                ) % {"user": user.username}
-                raise generic.MassActionError(message)
+            if user.is_misago_admin:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Misago administrator.",
+                    )
+                    % {"user": user.username}
+                )
+            if user.is_staff or user.is_superuser or user.is_misago_admin:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Django administrator.",
+                    )
+                    % {"user": user.username}
+                )
 
         for user in users:
             user.delete(anonymous_username=request.settings.anonymous_username)
@@ -238,11 +249,22 @@ class UsersList(UserAdmin, generic.ListView):
                 raise generic.MassActionError(
                     pgettext("admin users", "You can't delete yourself.")
                 )
-            if user.is_staff or user.is_superuser:
-                message = pgettext(
-                    "admin users", "%(user)s is admin and can't be deleted."
-                ) % {"user": user.username}
-                raise generic.MassActionError(message)
+            if user.is_misago_admin:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Misago administrator.",
+                    )
+                    % {"user": user.username}
+                )
+            if user.is_staff or user.is_superuser or user.is_misago_admin:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Django administrator.",
+                    )
+                    % {"user": user.username}
+                )
 
         for user in users:
             user.is_active = False

@@ -514,10 +514,10 @@ class BaseFilterUsersForm(forms.Form):
     is_inactive = forms.BooleanField(
         label=pgettext_lazy("admin users filter form", "Requires activation")
     )
-    is_disabled = forms.BooleanField(
-        label=pgettext_lazy("admin users filter form", "Account disabled")
+    is_deactivated = forms.BooleanField(
+        label=pgettext_lazy("admin users filter form", "Account deactivated")
     )
-    is_staff = forms.BooleanField(
+    is_admin = forms.BooleanField(
         label=pgettext_lazy("admin users filter form", "Administrator")
     )
     is_deleting_account = forms.BooleanField(
@@ -535,6 +535,12 @@ class BaseFilterUsersForm(forms.Form):
                 queryset, "email", criteria["email"], case_sensitive=False
             )
 
+        if criteria.get("main_group"):
+            queryset = queryset.filter(group_id=criteria["main_group"])
+
+        if criteria.get("group"):
+            queryset = queryset.filter(groups_ids__contains=[criteria["group"]])
+
         if criteria.get("rank"):
             queryset = queryset.filter(rank_id=criteria["rank"])
 
@@ -544,11 +550,13 @@ class BaseFilterUsersForm(forms.Form):
         if criteria.get("is_inactive"):
             queryset = queryset.filter(requires_activation__gt=0)
 
-        if criteria.get("is_disabled"):
+        if criteria.get("is_deactivated"):
             queryset = queryset.filter(is_active=False)
 
-        if criteria.get("is_staff"):
-            queryset = queryset.filter(is_staff=True)
+        if criteria.get("is_admin"):
+            queryset = queryset.filter(
+                Q(is_misago_root=True) | Q(groups_ids__contains=[DefaultGroupId.ADMINS])
+            )
 
         if criteria.get("is_deleting_account"):
             queryset = queryset.filter(is_deleting_account=True)
@@ -567,6 +575,12 @@ def create_filter_users_form():
     and makes those ranks and roles typed choice fields that play nice
     with passing values via GET
     """
+    groups_choices = [
+        ("", pgettext_lazy("admin users group filter choice", "All groups"))
+    ]
+    for group in Group.objects.order_by("name").iterator():
+        groups_choices.append((group.pk, str(group)))
+
     ranks_choices = [("", pgettext_lazy("admin users rank filter choice", "All ranks"))]
     for rank in Rank.objects.order_by("name").iterator():
         ranks_choices.append((rank.pk, str(rank)))
@@ -576,6 +590,18 @@ def create_filter_users_form():
         roles_choices.append((role.pk, str(role)))
 
     extra_fields = {
+        "main_group": forms.TypedChoiceField(
+            label=pgettext_lazy("admin users filter form", "Main group"),
+            coerce=int,
+            required=False,
+            choices=groups_choices,
+        ),
+        "group": forms.TypedChoiceField(
+            label=pgettext_lazy("admin users filter form", "Has group"),
+            coerce=int,
+            required=False,
+            choices=groups_choices,
+        ),
         "rank": forms.TypedChoiceField(
             label=pgettext_lazy("admin users filter form", "Has rank"),
             coerce=int,

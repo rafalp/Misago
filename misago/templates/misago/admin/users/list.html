@@ -16,6 +16,7 @@
 <th style="width: 1px;">&nbsp;</th>
 <th>{% trans "User" context "admin users list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
+<th style="width: 150px;">{% trans "Group" context "admin users list" %}</th>
 <th style="width: 150px;">{% trans "Rank" context "admin users list" %}</th>
 <th style="width: 200px;">{% trans "Registration" context "admin users list" %}</th>
 <th style="width: 150px;">{% trans "Posts" context "admin users list" %}</th>
@@ -43,13 +44,18 @@
   </div>
 </td>
 <td class="badges-list">
-  {% if item.is_superuser %}
-    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' context 'admin users list item' %}">
-      {% trans "Super Admin" context "admin user super admin status" %}
+  {% if item.is_misago_root %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use the Misago admin control panel and manage other administrators' context 'admin users list item' %}">
+      {% trans "Misago Root" context "admin user super admin status" %}
     </span>
-  {% elif item.is_staff %}
-    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' context 'admin users list item' %}">
-      {% trans "Admin" context "admin user admin status" %}
+  {% elif item.is_misago_admin %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use the Misago admin control panel' context 'admin users list item' %}">
+      {% trans "Misago Admin" context "admin user admin status" %}
+    </span>
+  {% endif %}
+  {% if item.is_staff %}
+    <span class="badge badge-success" data-tooltip="top" title="{% trans 'Can use the Django admin site' context 'admin users list item' %}">
+      {% trans "Django Admin" context "admin user admin status" %}
     </span>
   {% endif %}
   {% if item.requires_activation_by_admin %}
@@ -66,10 +72,13 @@
       {% trans "Deleted" context "admin user deleted status" %}
     </span>
   {% elif not item.is_active %}
-    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' context 'admin users list item' %}">
-      {% trans "Disabled" context "admin user disabled status" %}
+    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account deactivated' context 'admin users list item' %}">
+      {% trans "Deactivated" context "admin user deactivated status" %}
     </span>
   {% endif %}
+</td>
+<td class="small">
+  {{ item.group }}
 </td>
 <td class="small">
   {{ item.rank }}
@@ -130,6 +139,14 @@
 </div>
 <div class="row">
   <div class="col">
+    {% form_row filter_form.main_group %}
+  </div>
+  <div class="col">
+    {% form_row filter_form.group %}
+  </div>
+</div>
+<div class="row">
+  <div class="col">
     {% form_row filter_form.rank %}
   </div>
   <div class="col">
@@ -146,7 +163,7 @@
     {% form_checkbox_row filter_form.is_inactive %}
   </div>
   <div class="col">
-    {% form_checkbox_row filter_form.is_disabled %}
+    {% form_checkbox_row filter_form.is_deactivated %}
   </div>
 </div>
 <div class="row">
@@ -154,7 +171,7 @@
     {% form_checkbox_row filter_form.is_deleting_account %}
   </div>
   <div class="col">
-    {% form_checkbox_row filter_form.is_staff %}
+    {% form_checkbox_row filter_form.is_admin %}
   </div>
 </div>
 {% endblock filters-modal-body %}
