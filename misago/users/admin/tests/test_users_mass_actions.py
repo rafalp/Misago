@@ -8,6 +8,7 @@ from ... import BANS_CACHE
 from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message, assert_not_contains
 from ...datadownloads import request_user_data_download
+from ...enums import DefaultGroupId
 from ...models import Ban, DataDownload, DeletedUser
 from ...test import create_test_user
 
@@ -285,6 +286,40 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_the
 
     superuser.refresh_from_db()
     assert superuser.is_active
+
+
+def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_admin(
+    admin_client, users_admin_link, mock_delete_user_with_content
+):
+    users = create_multiple_users(group_id=DefaultGroupId.ADMINS)
+    response = admin_client.post(
+        users_admin_link,
+        data={"action": "delete_all", "selected_items": [u.id for u in users]},
+    )
+
+    assert_has_error_message(response)
+    mock_delete_user_with_content.assert_not_called()
+
+    for user in users:
+        user.refresh_from_db()
+        assert user.is_active
+
+
+def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_root_admin(
+    admin_client, users_admin_link, mock_delete_user_with_content
+):
+    users = create_multiple_users(is_misago_root=True)
+    response = admin_client.post(
+        users_admin_link,
+        data={"action": "delete_all", "selected_items": [u.id for u in users]},
+    )
+
+    assert_has_error_message(response)
+    mock_delete_user_with_content.assert_not_called()
+
+    for user in users:
+        user.refresh_from_db()
+        assert user.is_active
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_staff(
