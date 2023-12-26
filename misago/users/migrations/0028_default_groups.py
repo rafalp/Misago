@@ -23,8 +23,6 @@ def create_default_groups(apps, schema_editor):
                 css_suffix="admin",
                 ordering=0,
                 is_list_tab=True,
-                is_admin=True,
-                is_moderator=True,
             ),
             Group(
                 id=DefaultGroupId.MODERATORS,
@@ -35,8 +33,6 @@ def create_default_groups(apps, schema_editor):
                 css_suffix="moderator",
                 ordering=1,
                 is_list_tab=True,
-                is_admin=False,
-                is_moderator=True,
             ),
             Group(
                 id=DefaultGroupId.MEMBERS,
@@ -44,16 +40,12 @@ def create_default_groups(apps, schema_editor):
                 slug="members",
                 ordering=2,
                 is_default=True,
-                is_admin=False,
-                is_moderator=False,
             ),
             Group(
                 id=DefaultGroupId.GUESTS,
                 name=pgettext("default user group", "Guests"),
                 slug="guests",
                 ordering=3,
-                is_admin=False,
-                is_moderator=False,
             ),
         ]
     )

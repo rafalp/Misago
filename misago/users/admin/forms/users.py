@@ -1,24 +1,25 @@
+from typing import Type
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.db.models import Q
 from django.utils.translation import npgettext, pgettext, pgettext_lazy
 
-from ...acl.models import Role
-from ...admin.forms import IsoDateTimeField, YesNoSwitch
-from ...core.validators import validate_sluggable
-from ...notifications.threads import ThreadNotifications
-from ...search.filter_queryset import filter_queryset
-from ..enums import DefaultGroupId
-from ..models import Ban, DataDownload, Group, Rank
-from ..profilefields import profilefields
-from ..utils import hash_email, slugify_username
-from ..validators import validate_email, validate_username
+from ....acl.models import Role
+from ....admin.forms import IsoDateTimeField, YesNoSwitch
+from ....notifications.threads import ThreadNotifications
+from ....search.filter_queryset import filter_queryset
+from ...enums import DefaultGroupId
+from ...models import Group, Rank
+from ...profilefields import profilefields
+from ...utils import slugify_username
+from ...validators import validate_email, validate_username
 
 User = get_user_model()
 
 
-class UserBaseForm(forms.ModelForm):
+class BaseUserForm(forms.ModelForm):
     groups_dict: dict[int, Group]
 
     username = forms.CharField(label=pgettext_lazy("admin user form", "Username"))
@@ -77,7 +78,7 @@ class UserBaseForm(forms.ModelForm):
         return data
 
 
-class NewUserForm(UserBaseForm):
+class NewUserForm(BaseUserForm):
     new_password = forms.CharField(
         label=pgettext_lazy("admin user form", "Password"),
         strip=False,
@@ -119,7 +120,7 @@ class NewUserForm(UserBaseForm):
         return [self.groups_dict[item] for item in data]
 
 
-class EditUserForm(UserBaseForm):
+class EditUserForm(BaseUserForm):
     new_password = forms.CharField(
         label=pgettext_lazy("admin user form", "New password"),
         strip=False,
@@ -433,11 +434,7 @@ class EditUserForm(UserBaseForm):
         return profilefields.clean_form(self.request, self.instance, self, data)
 
 
-def user_form_factory(
-    base_form_type,
-    instance,
-    admin_user,
-):
+def user_form_factory(base_form_type: Type[BaseUserForm], instance: User):
     groups = list(Group.objects.all())
     groups_data = {group.id: group for group in groups}
 
@@ -619,82 +616,6 @@ def create_filter_users_form():
     return type("FilterUsersForm", (BaseFilterUsersForm,), extra_fields)
 
 
-class RankForm(forms.ModelForm):
-    name = forms.CharField(
-        label=pgettext_lazy("admin rank form", "Name"),
-        validators=[validate_sluggable()],
-        help_text=pgettext_lazy(
-            "admin rank form",
-            'Short and descriptive name of all users with this rank. "The Team" or "Game Masters" are good examples.',
-        ),
-    )
-    title = forms.CharField(
-        label=pgettext_lazy("admin rank form", "User title"),
-        required=False,
-        help_text=pgettext_lazy(
-            "admin rank form",
-            'Optional, singular version of rank name displayed by user names. For example "GM" or "Dev".',
-        ),
-    )
-    description = forms.CharField(
-        label=pgettext_lazy("admin rank form", "Description"),
-        max_length=2048,
-        required=False,
-        widget=forms.Textarea(attrs={"rows": 3}),
-        help_text=pgettext_lazy(
-            "admin rank form",
-            "Optional description explaining function or status of members distincted with this rank.",
-        ),
-    )
-    roles = forms.ModelMultipleChoiceField(
-        label=pgettext_lazy("admin rank form", "User roles"),
-        widget=forms.CheckboxSelectMultiple,
-        queryset=Role.objects.order_by("name"),
-        required=False,
-        help_text=pgettext_lazy(
-            "admin rank form", "Rank can give additional roles to users with it."
-        ),
-    )
-    css_class = forms.CharField(
-        label=pgettext_lazy("admin rank form", "CSS class"),
-        required=False,
-        help_text=pgettext_lazy(
-            "admin rank form",
-            "Optional css class added to content belonging to this rank owner.",
-        ),
-    )
-    is_tab = YesNoSwitch(
-        label=pgettext_lazy("admin rank form", "Give rank dedicated tab on users list"),
-        required=False,
-        help_text=pgettext_lazy(
-            "admin rank form",
-            "Selecting this option will make users with this rank easily discoverable by others through dedicated page on forum users list.",
-        ),
-    )
-
-    class Meta:
-        model = Rank
-        fields = ["name", "description", "css_class", "title", "roles", "is_tab"]
-
-    def clean_name(self):
-        data = self.cleaned_data["name"]
-        self.instance.set_name(data)
-
-        unique_qs = Rank.objects.filter(slug=self.instance.slug)
-        if self.instance.pk:
-            unique_qs = unique_qs.exclude(pk=self.instance.pk)
-
-        if unique_qs.exists():
-            raise forms.ValidationError(
-                pgettext(
-                    "admin rank form",
-                    "There's already an other rank with this name.",
-                )
-            )
-
-        return data
-
-
 class BanUsersForm(forms.Form):
     ban_type = forms.MultipleChoiceField(
         label=pgettext_lazy("admin ban users form", "Values to ban"),
@@ -763,227 +684,3 @@ class BanUsersForm(forms.Form):
                     ),
                 ),
             ]
-
-
-class BanForm(forms.ModelForm):
-    check_type = forms.TypedChoiceField(
-        label=pgettext_lazy("admin ban form", "Check type"),
-        coerce=int,
-        choices=Ban.CHOICES,
-    )
-    registration_only = YesNoSwitch(
-        label=pgettext_lazy("admin ban form", "Restrict this ban to registrations"),
-        help_text=pgettext_lazy(
-            "admin ban form",
-            "Changing this to yes will make this ban check be only performed on registration step. This is good if you want to block certain registrations like ones from recently compromised e-mail providers, without harming existing users.",
-        ),
-    )
-    banned_value = forms.CharField(
-        label=pgettext_lazy("admin ban form", "Banned value"),
-        max_length=250,
-        help_text=pgettext_lazy(
-            "admin ban form",
-            'This value is case-insensitive and accepts asterisk (*) for partial matches. For example, making IP ban for value "83.*" will ban all IP addresses beginning with "83.".',
-        ),
-        error_messages={
-            "max_length": pgettext_lazy(
-                "admin ban form", "Banned value can't be longer than 250 characters."
-            )
-        },
-    )
-    user_message = forms.CharField(
-        label=pgettext_lazy("admin ban form", "User message"),
-        required=False,
-        max_length=1000,
-        help_text=pgettext_lazy(
-            "admin ban form",
-            "Optional message displayed to user instead of default one.",
-        ),
-        widget=forms.Textarea(attrs={"rows": 3}),
-        error_messages={
-            "max_length": pgettext_lazy(
-                "admin ban form", "Message can't be longer than 1000 characters."
-            )
-        },
-    )
-    staff_message = forms.CharField(
-        label=pgettext_lazy("admin ban form", "Team message"),
-        required=False,
-        max_length=1000,
-        help_text=pgettext_lazy(
-            "admin ban form", "Optional ban message for moderators and administrators."
-        ),
-        widget=forms.Textarea(attrs={"rows": 3}),
-        error_messages={
-            "max_length": pgettext_lazy(
-                "admin ban form", "Message can't be longer than 1000 characters."
-            )
-        },
-    )
-    expires_on = IsoDateTimeField(
-        label=pgettext_lazy("admin ban form", "Expiration date"),
-        required=False,
-    )
-
-    class Meta:
-        model = Ban
-        fields = [
-            "check_type",
-            "registration_only",
-            "banned_value",
-            "user_message",
-            "staff_message",
-            "expires_on",
-        ]
-
-    def clean_banned_value(self):
-        data = self.cleaned_data["banned_value"]
-        while "**" in data:
-            data = data.replace("**", "*")
-
-        if data == "*":
-            raise forms.ValidationError(
-                pgettext("admin ban form", "Banned value is too vague.")
-            )
-
-        return data
-
-
-class FilterBansForm(forms.Form):
-    check_type = forms.ChoiceField(
-        label=pgettext_lazy("admin bans filter form", "Type"),
-        required=False,
-        choices=[
-            ("", pgettext_lazy("admin bans type filter choice", "All bans")),
-            ("names", pgettext_lazy("admin bans type filter choice", "Usernames")),
-            ("emails", pgettext_lazy("admin bans filter form", "E-mails")),
-            ("ips", pgettext_lazy("admin bans type filter choice", "IPs")),
-        ],
-    )
-    value = forms.CharField(
-        label=pgettext_lazy("admin bans filter form", "Banned value begins with"),
-        required=False,
-    )
-    registration_only = forms.ChoiceField(
-        label=pgettext_lazy("admin bans filter form", "Registration only"),
-        required=False,
-        choices=[
-            ("", pgettext_lazy("admin bans registration filter choice", "Any")),
-            ("only", pgettext_lazy("admin bans registration filter choice", "Yes")),
-            ("exclude", pgettext_lazy("admin bans registration filter choice", "No")),
-        ],
-    )
-    state = forms.ChoiceField(
-        label=pgettext_lazy("admin bans filter form", "State"),
-        required=False,
-        choices=[
-            ("", pgettext_lazy("admin bans state filter choice", "Any")),
-            ("used", pgettext_lazy("admin bans state filter choice", "Active")),
-            ("unused", pgettext_lazy("admin bans state filter choice", "Expired")),
-        ],
-    )
-
-    def filter_queryset(self, criteria, queryset):
-        if criteria.get("check_type") == "names":
-            queryset = queryset.filter(check_type=0)
-
-        if criteria.get("check_type") == "emails":
-            queryset = queryset.filter(check_type=1)
-
-        if criteria.get("check_type") == "ips":
-            queryset = queryset.filter(check_type=2)
-
-        if criteria.get("value"):
-            queryset = queryset.filter(
-                banned_value__startswith=criteria.get("value").lower()
-            )
-
-        if criteria.get("state") == "used":
-            queryset = queryset.filter(is_checked=True)
-
-        if criteria.get("state") == "unused":
-            queryset = queryset.filter(is_checked=False)
-
-        if criteria.get("registration_only") == "only":
-            queryset = queryset.filter(registration_only=True)
-
-        if criteria.get("registration_only") == "exclude":
-            queryset = queryset.filter(registration_only=False)
-
-        return queryset
-
-
-class RequestDataDownloadsForm(forms.Form):
-    user_identifiers = forms.CharField(
-        label=pgettext_lazy("admin data download request form", "Usernames or emails"),
-        help_text=pgettext_lazy(
-            "admin data download request form",
-            "Enter every item in new line. Duplicates will be ignored. This field is case insensitive. Depending on site configuration and amount of data to archive it may take up to few days for requests to complete. E-mail will notification will be sent to every user once their download is ready.",
-        ),
-        widget=forms.Textarea,
-    )
-
-    def clean_user_identifiers(self):
-        user_identifiers = self.cleaned_data["user_identifiers"].lower().splitlines()
-        user_identifiers = list(filter(bool, user_identifiers))
-        user_identifiers = list(set(user_identifiers))
-
-        if len(user_identifiers) > 20:
-            raise forms.ValidationError(
-                pgettext(
-                    "admin data download request form",
-                    "You may not enter more than 20 items at a single time (You have entered %(show_value)s).",
-                )
-                % {"show_value": len(user_identifiers)}
-            )
-
-        return user_identifiers
-
-    def clean(self):
-        data = super().clean()
-
-        if data.get("user_identifiers"):
-            username_match = Q(slug__in=data["user_identifiers"])
-            email_match = Q(email_hash__in=map(hash_email, data["user_identifiers"]))
-
-            data["users"] = list(User.objects.filter(username_match | email_match))
-
-            if len(data["users"]) != len(data["user_identifiers"]):
-                raise forms.ValidationError(
-                    pgettext(
-                        "admin data download request form",
-                        "One or more specified users could not be found.",
-                    )
-                )
-
-        return data
-
-
-class FilterDataDownloadsForm(forms.Form):
-    status = forms.ChoiceField(
-        label=pgettext_lazy("admin data download requests filter form", "Status"),
-        required=False,
-        choices=DataDownload.STATUS_CHOICES,
-    )
-    user = forms.CharField(
-        label=pgettext_lazy("admin data download requests filter form", "User"),
-        required=False,
-    )
-    requested_by = forms.CharField(
-        label=pgettext_lazy("admin data download requests filter form", "Requested by"),
-        required=False,
-    )
-
-    def filter_queryset(self, criteria, queryset):
-        if criteria.get("status") is not None:
-            queryset = queryset.filter(status=criteria["status"])
-
-        if criteria.get("user"):
-            queryset = queryset.filter(user__slug__istartswith=criteria["user"])
-
-        if criteria.get("requested_by"):
-            queryset = queryset.filter(
-                requester__slug__istartswith=criteria["requested_by"]
-            )
-
-        return queryset

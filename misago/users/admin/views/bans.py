@@ -3,7 +3,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.views import generic
 from ...models import Ban
-from ..forms import BanForm, FilterBansForm
+from ..forms.bans import BanForm, FilterBansForm
 
 
 class BanAdmin(generic.AdminBaseMixin):

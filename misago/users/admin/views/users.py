@@ -14,7 +14,7 @@ from ...models import Ban
 from ...profilefields import profilefields
 from ...setupnewuser import setup_new_user
 from ...signatures import set_user_signature
-from ..forms import (
+from ..forms.users import (
     BanUsersForm,
     EditUserForm,
     NewUserForm,
@@ -32,7 +32,7 @@ class UserAdmin(generic.AdminBaseMixin):
     model = User
 
     def get_form_class(self, request, target):
-        return user_form_factory(self.form_class, target, request.user)
+        return user_form_factory(self.form_class, target)
 
 
 class UsersList(UserAdmin, generic.ListView):

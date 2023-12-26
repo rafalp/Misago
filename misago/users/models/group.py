@@ -17,9 +17,6 @@ class Group(PluginDataModel):
 
     is_default = models.BooleanField(default=False)
 
-    is_admin = models.BooleanField(default=False)
-    is_moderator = models.BooleanField(default=False)
-
     class Meta:
         indexes = PluginDataModel.Meta.indexes
         ordering = ["ordering"]

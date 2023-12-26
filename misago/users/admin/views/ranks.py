@@ -5,7 +5,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.views import generic
 from ...models import Rank
-from ..forms import RankForm
+from ..forms.ranks import RankForm
 
 
 class RankAdmin(generic.AdminBaseMixin):
