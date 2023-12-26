@@ -81,7 +81,7 @@ def test_creation_form_renders(admin_client):
 
 
 def test_form_creates_new_agreement(admin_client):
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
@@ -98,8 +98,8 @@ def test_form_creates_new_agreement(admin_client):
     assert agreement.link == "https://example.com/rules/"
 
 
-def test_form_sets_new_agreement_creator(admin_client, superuser):
-    response = admin_client.post(
+def test_form_sets_new_agreement_creator(admin_client, admin):
+    admin_client.post(
         reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
@@ -110,15 +110,15 @@ def test_form_sets_new_agreement_creator(admin_client, superuser):
     )
 
     agreement = Agreement.objects.get()
-    assert agreement.created_by == superuser
-    assert agreement.created_by_name == superuser.username
+    assert agreement.created_by == admin
+    assert agreement.created_by_name == admin.username
 
 
 def test_form_creates_active_agreement(mocker, admin_client):
     set_agreement_as_active = mocker.patch(
         "misago.legal.admin.forms.set_agreement_as_active"
     )
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
@@ -137,7 +137,7 @@ def test_form_creates_active_agreement(mocker, admin_client):
 def test_newly_created_active_agreement_replaces_current_one(
     admin_client, active_agreement
 ):
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
@@ -181,7 +181,7 @@ def test_edit_form_updates_agreement(admin_client, agreement):
     assert agreement.link == "https://example.com/terms/"
 
 
-def test_edit_form_updates_agreement_modified_entry(admin_client, agreement, superuser):
+def test_edit_form_updates_agreement_modified_entry(admin_client, agreement, admin):
     response = admin_client.post(
         reverse("misago:admin:settings:agreements:edit", kwargs={"pk": agreement.pk}),
         data={
@@ -195,8 +195,8 @@ def test_edit_form_updates_agreement_modified_entry(admin_client, agreement, sup
 
     agreement.refresh_from_db()
     assert agreement.last_modified_on
-    assert agreement.last_modified_by == superuser
-    assert agreement.last_modified_by_name == superuser.username
+    assert agreement.last_modified_by == admin
+    assert agreement.last_modified_by_name == admin.username
 
 
 def test_edit_form_changes_active_agreement(
