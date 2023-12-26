@@ -314,10 +314,8 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         target.username = target.old_username
-        if target.username != form.cleaned_data.get("username"):
-            target.set_username(
-                form.cleaned_data.get("username"), changed_by=request.user
-            )
+        if target.username != form.cleaned_data["username"]:
+            target.set_username(form.cleaned_data["username"], changed_by=request.user)
 
         if form.cleaned_data.get("new_password"):
             target.set_password(form.cleaned_data["new_password"])
@@ -329,19 +327,21 @@ class EditUser(UserAdmin, generic.ModelFormView):
             if not target.old_is_avatar_locked:
                 set_dynamic_avatar(target)
 
-        if "is_staff" in form.fields and "is_superuser" in form.fields:
-            target.is_staff = form.cleaned_data.get("is_staff")
-            target.is_superuser = form.cleaned_data.get("is_superuser")
+        if not form.fields["is_misago_root"].disabled:
+            target.is_misago_root = form.cleaned_data["is_misago_root"]
 
-        if "is_active" in form.fields and "is_active_staff_message" in form.fields:
-            target.is_active = form.cleaned_data.get("is_active")
+        if not form.fields["is_active"].disabled:
+            target.is_active = form.cleaned_data["is_active"]
+        if not form.fields["is_active_staff_message"].disabled:
             target.is_active_staff_message = form.cleaned_data.get(
                 "is_active_staff_message"
             )
 
         target.set_groups(
-            form.cleaned_data["group"], form.cleaned_data["secondary_groups"]
+            form.cleaned_data["group"],
+            form.cleaned_data["secondary_groups"],
         )
+
         target.rank = form.cleaned_data.get("rank")
 
         target.roles.clear()

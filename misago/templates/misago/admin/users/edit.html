@@ -40,17 +40,17 @@
   <div class="media-body">
     <h5 class="mt-0">
       {{ target }}
-      {% if target.is_superuser %}
-        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' context 'admin users list item' %}">
-          {% trans "Super Admin" context "admin user super admin status" %}
+      {% if target.is_misago_root %}
+        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use Misago\'s admin control panel and manage other administrators' context 'admin users list item' %}">
+          {% trans "Misago Root" context "admin user super admin status" %}
         </span>
-      {% elif target.is_staff %}
-        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' context 'admin users list item' %}">
-          {% trans "Admin" context "admin user admin status" %}
+      {% elif target.is_misago_admin %}
+        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use Misago\'s admin control panel' context 'admin users list item' %}">
+          {% trans "Misago Admin" context "admin user admin status" %}
         </span>
       {% endif %}
       {% if target.requires_activation_by_admin %}
-        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' context 'admin users list item' %}">
+        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by an administrator' context 'admin users list item' %}">
           {% trans "Inactive" context "admin user inactive status" %}
         </span>
       {% elif target.requires_activation_by_user %}
@@ -62,9 +62,9 @@
         <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' context 'admin users list item' %}">
           {% trans "Deleted" context "admin user deleted status" %}
         </span>
-      {% elif not target.is_active %}}
-        <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' context 'admin users list item' %}">
-          {% trans "Disabled" context "admin user disabled status" %}
+      {% elif not target.is_active %}
+        <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account deactivated' context 'admin users list item' %}">
+          {% trans "Deactivated" context "admin user deactivated status" %}
         </span>
       {% endif %}
     </h5>
@@ -73,6 +73,9 @@
         <a href="mailto:{{ target.email }}">
           {{ target.email }}
         </a>
+      </li>
+      <li class="list-inline-item">
+        {{ target.group }}
       </li>
       <li class="list-inline-item">
         {{ target.rank }}
@@ -225,45 +228,21 @@
 
     {% if target.is_deleting_account %}
       <div class="alert alert-danger" role="alert">
-        <p>{% trans "This user is deleting their account. It has been deactivated for the duration of the process." context "admin user form" %}</p>
-        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically when process is completed." context "admin user form" %}</p>
+        <p>{% trans "This user's account is being deleted. It has been deactivated for the duration of the process." context "admin user form" %}</p>
+        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically when the process is completed." context "admin user form" %}</p>
       </div>
-    {% else %}
-      {% if 'is_active' in form.fields %}
-        {% form_row form.is_active %}
-        {% form_row form.is_active_staff_message %}
-      {% else %}
-        <div id="div_id_is_active" class="form-group">
-          <label class="control-label">
-            {{ form.IS_ACTIVE_LABEL }}:
-          </label>
-          <div class="controls control-yesno-switch">
-            <label class="radio">
-              <input class="yesno-switch" type="radio" disabled{% if target.is_active %} checked=""{% endif %}>
-              {% trans "Yes" context "admin yesno switch" %}
-            </label>
-            <label class="radio">
-              <input class="yesno-switch" type="radio" disabled{% if not target.is_active %} checked=""{% endif %}>
-              {% trans "No" context "admin yesno switch" %}
-            </label>
-          </div>
-          <small class="form-text text-muted">
-            {{ form.IS_ACTIVE_HELP_TEXT }}
-          </small>
-        </div>
-        <div id="div_id_is_superuser" class="form-group">
-          <label class="control-label">
-            {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
-          </label>
-          <textarea class="form-control" rows="4">
-            {{ target.is_active_staff_message|default:"" }}
-          </textarea>
-          <small class="form-text text-muted">
-            {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
-          </small>
-        </div>
-      {% endif %}
+    {% elif target == user %}
+      <div class="alert alert-warning alert-protected-credentials" role="alert">
+        {% trans "You can't deactivate your own account." context "admin user form" %}
+      </div>
+    {% elif target.is_misago_admin and form.is_active.field.disabled %}
+      <div class="alert alert-warning alert-protected-credentials" role="alert">
+        {% trans "You must be a root administrator to activate or deactivate this user's account." context "admin user form" %}
+      </div>
     {% endif %}
+
+    {% form_row form.is_active %}
+    {% form_row form.is_active_staff_message %}
 
   </fieldset>
 </div>

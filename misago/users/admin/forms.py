@@ -120,18 +120,6 @@ class NewUserForm(UserBaseForm):
 
 
 class EditUserForm(UserBaseForm):
-    IS_ACTIVE_LABEL = pgettext_lazy("admin user form", "Is active")
-    IS_ACTIVE_HELP_TEXT = pgettext_lazy(
-        "admin user form",
-        "Designates whether this user should be treated as active. Turning this off is non-destructible way to remove user accounts.",
-    )
-
-    IS_ACTIVE_STAFF_MESSAGE_LABEL = pgettext_lazy("admin user form", "Staff message")
-    IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT = pgettext_lazy(
-        "admin user form",
-        "Optional message for forum team members explaining why user's account has been disabled.",
-    )
-
     new_password = forms.CharField(
         label=pgettext_lazy("admin user form", "New password"),
         strip=False,
@@ -146,6 +134,23 @@ class EditUserForm(UserBaseForm):
             "Root administrators can sign in to Misago's admin control panel and change other users' admin status. You need to be a root administrator to change this field.",
         ),
         disabled=True,
+    )
+
+    is_active = YesNoSwitch(
+        label=pgettext_lazy("admin user form", "Is active"),
+        help_text=pgettext_lazy(
+            "admin user form",
+            "Designates whether this user should be treated as active. Turning this off is non-destructible way to remove user accounts.",
+        ),
+    )
+    is_active_staff_message = forms.CharField(
+        label=pgettext_lazy("admin user form", "Staff message"),
+        help_text=pgettext_lazy(
+            "admin user form",
+            "Optional message for forum team members explaining why user's account has been disabled.",
+        ),
+        widget=forms.Textarea(attrs={"rows": 3}),
+        required=False,
     )
 
     is_avatar_locked = YesNoSwitch(
@@ -282,6 +287,8 @@ class EditUserForm(UserBaseForm):
             "email",
             "title",
             "is_misago_root",
+            "is_active",
+            "is_active_staff_message",
             "is_avatar_locked",
             "avatar_lock_user_message",
             "avatar_lock_staff_message",
@@ -317,6 +324,14 @@ class EditUserForm(UserBaseForm):
             self.fields["email"].disabled = True
         else:
             self.credentials_require_root = False
+
+        if (
+            self.instance.is_deleting_account
+            or request_user == self.instance
+            or (self.instance.is_misago_admin and not request_user.is_misago_root)
+        ):
+            self.fields["is_active"].disabled = True
+            self.fields["is_active_staff_message"].disabled = True
 
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
@@ -479,29 +494,6 @@ def user_form_factory(
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple,
     )
-
-    if (
-        instance.id
-        and instance.id != admin_user.id
-        and not instance.is_deleting_account
-        and (not instance.is_misago_root or admin_user.is_misago_root)
-    ):
-        form_attrs.update(
-            {
-                "is_active": YesNoSwitch(
-                    label=EditUserForm.IS_ACTIVE_LABEL,
-                    help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
-                    initial=instance.is_active,
-                ),
-                "is_active_staff_message": forms.CharField(
-                    label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
-                    help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
-                    initial=instance.is_active_staff_message,
-                    widget=forms.Textarea(attrs={"rows": 3}),
-                    required=False,
-                ),
-            }
-        )
 
     return type("UserForm", (base_form_type,), form_attrs)
 

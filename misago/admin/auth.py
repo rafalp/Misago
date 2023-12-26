@@ -16,7 +16,7 @@ def is_admin_authorized(request):
     if request.user.is_anonymous:
         return False
 
-    if not request.user.is_misago_root and 1 not in request.user.groups_ids:
+    if not request.user.is_misago_admin:
         return False
 
     admin_token = request.session.get(TOKEN_KEY)
@@ -66,7 +66,7 @@ def django_login_handler(sender, **kwargs):
         admin_namespace = request.admin_namespace
     except AttributeError:
         admin_namespace = False
-    if admin_namespace and (user.is_misago_root or 1 in user.groups_ids):
+    if admin_namespace and user.is_misago_admin:
         authorize_admin(request)
 
 
