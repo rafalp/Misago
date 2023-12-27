@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-DEFAULT_GROUPS_IDS = 100
+CUSTOM_GROUP_ID_START = 100
 
 
 class DefaultGroupId(IntEnum):

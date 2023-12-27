@@ -1,3 +1,4 @@
+from ..enums import CUSTOM_GROUP_ID_START
 from ..models import Group
 
 
@@ -27,3 +28,8 @@ def test_standard_groups_are_protected(
 def test_custom_group_is_not_protected(db):
     group = Group.objects.create(name="Custom", slug="custom")
     assert not group.is_protected
+
+
+def test_custom_group_id_is_greater_than_default_groups_ids(db):
+    group = Group.objects.create(name="Custom", slug="custom")
+    assert group.id >= CUSTOM_GROUP_ID_START

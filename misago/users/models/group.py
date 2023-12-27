@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import pgettext
 
 from ...plugins.models import PluginDataModel
-from ..enums import DEFAULT_GROUPS_IDS, DefaultGroupId
+from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
 
 class Group(PluginDataModel):
@@ -31,7 +31,7 @@ class Group(PluginDataModel):
 
     @property
     def is_protected(self):
-        return self.id < DEFAULT_GROUPS_IDS
+        return self.id < CUSTOM_GROUP_ID_START
 
     def translated_user_title(self) -> str | None:
         if self.user_title:
