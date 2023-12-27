@@ -14,7 +14,9 @@ class Group(PluginDataModel):
     css_suffix = models.CharField(max_length=50, null=True, blank=True)
 
     ordering = models.PositiveIntegerField(default=0)
-    is_list_tab = models.BooleanField(default=False)
+
+    is_page = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
 
     is_default = models.BooleanField(default=False)
 

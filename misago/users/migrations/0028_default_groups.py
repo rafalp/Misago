@@ -22,7 +22,7 @@ def create_default_groups(apps, schema_editor):
                 user_title=pgettext("default user group", "Admin"),
                 css_suffix="admin",
                 ordering=0,
-                is_list_tab=True,
+                is_page=True,
             ),
             Group(
                 id=DefaultGroupId.MODERATORS,
@@ -32,20 +32,21 @@ def create_default_groups(apps, schema_editor):
                 user_title=pgettext("default user group", "Moderator"),
                 css_suffix="moderator",
                 ordering=1,
-                is_list_tab=True,
+                is_page=True,
             ),
             Group(
                 id=DefaultGroupId.MEMBERS,
                 name=pgettext("default user group", "Members"),
                 slug="members",
                 ordering=2,
-                is_default=True,
+                is_page=True,
             ),
             Group(
                 id=DefaultGroupId.GUESTS,
                 name=pgettext("default user group", "Guests"),
                 slug="guests",
                 ordering=3,
+                is_hidden=True,
             ),
         ]
     )

@@ -166,7 +166,7 @@
     <label for="" class="control-label">
       Color:
     </label>
-    <div class="controls control-radioselect controls control-checkboxselect ">
+    <div class="controls control-checkboxselect ">
       
   
     

@@ -458,7 +458,7 @@ def user_form_factory(base_form_type: Type[BaseUserForm], instance: User):
             label=pgettext_lazy("admin user form", "Main group"),
             help_text=pgettext_lazy(
                 "admin user form",
-                "An asterisk (*) after the group's name denotes the administrators group.",
+                "An asterisk (*) after the group's name signifies the administrators group.",
             ),
             coerce=int,
             choices=groups_choices,
@@ -468,7 +468,7 @@ def user_form_factory(base_form_type: Type[BaseUserForm], instance: User):
             label=pgettext_lazy("admin user form", "Secondary groups"),
             help_text=pgettext_lazy(
                 "admin user form",
-                "Optional, other groups this user should be a member of. An asterisk (*) after the group's name denotes the administrators group.",
+                "Optional, other groups this user should be a member of. An asterisk (*) after the group's name signifies the administrators group.",
             ),
             coerce=int,
             choices=groups_choices,

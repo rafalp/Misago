@@ -4,6 +4,7 @@
 .control-checkboxselect .form-check,
 .control-radioselect .form-check {
   padding: 0;
+  padding-left: $card-spacer-x;
 }
 
 // Decrease size of option labels
