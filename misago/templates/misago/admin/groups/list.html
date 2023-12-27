@@ -1,0 +1,141 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block page-actions %}
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:groups:new' %}" class="btn btn-primary btn-sm">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New group" context "admin groups" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th style="width: 1px;">&nbsp;</th>
+<th>{% trans "Group" context "admin groups list" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th>{% trans "Title" context "admin groups list" %}</th>
+<th>{% trans "Icon" context "admin groups list" %}</th>
+<th>{% trans "CSS class" context "admin groups list" %}</th>
+<th>{% trans "Members" context "admin groups list" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="pr-0">
+  <button type="button" class="btn btn-sm btn-handle">
+    <span class="fa fa-grip-vertical"></span>
+  </button>
+</td>
+<td class="pr-0">
+  <a href="{% url 'misago:admin:groups:edit' pk=item.pk %}" class="item-name small">
+    {{ item }}
+  </a>
+</td>
+<td class="badges-list">
+  {% if item.is_admin %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Members of this group can access the Misago Admin Control Panel.' context 'admin groups' %}">
+      {% trans "Admin" context "admin rank is admin status" %}
+    </span>
+  {% endif %}
+  {% if item.is_default %}
+    <span class="badge badge-success" data-tooltip="top" title="{% trans 'This is the default group to which new users are assigned.' context 'admin groups' %}">
+      {% trans "Default" context "admin rank is default status" %}
+    </span>
+  {% endif %}
+  {% if item.is_page %}
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'This group has a dedicated section on the users\' page.' context 'admin groups' %}">
+      {% trans "Page" context "admin rank is default status" %}
+    </span>
+  {% endif %}
+  {% if item.is_hidden %}
+    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'This group will not appear on users\' cards, profiles, and postbits.' context 'admin groups' %}">
+      {% trans "Hidden" context "admin rank is default status" %}
+    </span>
+  {% endif %}
+  {% if item.is_protected %}
+    <span class="badge badge-light" data-tooltip="top" title="{% trans 'This group serves a special function in Misago and cannot be deleted.' context 'admin groups' %}">
+      {% trans "Protected" context "admin rank is default status" %}
+    </span>
+  {% endif %}
+</td>
+<td class="small">
+  {% if item.user_title %}
+    {{ item.translated_user_title }}
+  {% else %}
+    <i class="text-muted">{% trans "Not set" context "admin group user title" %}</i>
+  {% endif %}
+</td>
+<td class="small">
+  {% if item.user_icon %}
+    <pre class="m-0">{{ item.user_icon }}</pre>
+  {% else %}
+    <i class="text-muted">{% trans "Not set" context "admin group user icon" %}</i>
+  {% endif %}
+</td>
+<td class="small">
+  {% if item.css_suffix %}
+    <pre class="m-0">{{ item.css_suffix }}</pre>
+  {% else %}
+    <i class="text-muted">{% trans "Not set" context "admin group css class" %}</i>
+  {% endif %}
+</td>
+<td class="small">
+  <a href="{% url 'misago:admin:groups:members' pk=item.pk %}" target="_blank">{{ item.members_count|default:0 }}</a>
+</td>
+<td>
+  <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-ellipsis-h"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
+      <h6 class="dropdown-header">{% trans "Show members" context "admin groups" %}</h6>
+      <a class="dropdown-item" href="{% url 'misago:admin:groups:members' pk=item.pk %}" target="_blank">
+        {% trans "All members" context "admin groups" %}
+      </a>
+      <a class="dropdown-item" href="{% url 'misago:admin:groups:members-main' pk=item.pk %}" target="_blank">
+        {% trans "Main group" context "admin groups" %}
+      </a>
+      <h6 class="dropdown-header">{% trans "Admin group" context "admin groups" %}</h6>
+      {% if not item.is_default %}
+        <form action="{% url 'misago:admin:groups:default' pk=item.pk %}" method="post">
+          {% csrf_token %}
+          <button class="dropdown-item">
+            {% trans "Set as default" context "admin groups" %}
+          </button>
+        </form>
+      {% endif %}
+      <a class="dropdown-item" href="{% url 'misago:admin:groups:edit' pk=item.pk %}">
+        {% trans "Edit group" context "admin groups" %}
+      </a>
+      {% if item.is_protected %}
+        <button class="dropdown-item" disabled>
+          {% trans "Delete group" context "admin groups" %}
+        </button>
+      {% else %}
+        <form action="{% url 'misago:admin:groups:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+          {% csrf_token %}
+          <button class="dropdown-item">
+            {% trans "Delete group" context "admin groups" %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</td>
+{% endblock %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to delete this group?' context 'admin groups' %}"
+  )
+
+  window.misago.initReorderItems("{% url 'misago:admin:groups:reorder' %}")
+</script>
+{% endblock %}

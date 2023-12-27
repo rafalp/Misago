@@ -60,6 +60,11 @@
   border-top: $table-border-width solid $table-border-color;
 }
 
+// Add background to dragged table rows
+.card-admin-table .sortable-drag {
+  background-color: $table-bg;
+}
+
 // Add border-radius to images in table
 .card-admin-table img {
   @extend .rounded-lg;

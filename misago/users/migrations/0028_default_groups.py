@@ -3,7 +3,7 @@
 from django.db import migrations
 
 from ...permissions.permissionsid import get_permissions_id
-from ..enums import DefaultGroupId
+from ..enums import DEFAULT_GROUPS_IDS, DefaultGroupId
 
 
 def pgettext(context: str, message: str):
@@ -87,7 +87,7 @@ class Migration(migrations.Migration):
             migrations.RunPython.noop,
         ),
         migrations.RunSQL(
-            "ALTER SEQUENCE misago_users_group_id_seq RESTART WITH 100;",
+            f"ALTER SEQUENCE misago_users_group_id_seq RESTART WITH {DEFAULT_GROUPS_IDS};",
             migrations.RunSQL.noop,
         ),
     ]

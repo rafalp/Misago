@@ -6,6 +6,16 @@ from django.utils.translation import pgettext_lazy
 from .djangoadmin import UserAdminModel
 from .views.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.datadownloads import DataDownloadsList, RequestDataDownloads
+from .views.groups import (
+    DefaultGroup,
+    DeleteGroup,
+    EditGroup,
+    GroupsList,
+    GroupMembers,
+    GroupMembersMain,
+    NewGroup,
+    ReorderGroups,
+)
 from .views.ranks import (
     DefaultRank,
     DeleteRank,
@@ -55,6 +65,20 @@ class MisagoAdminExtension:
             path("request/", RequestDataDownloads.as_view(), name="request"),
         )
 
+        # Groups section
+        urlpatterns.namespace("groups/", "groups")
+        urlpatterns.patterns(
+            "groups",
+            path("", GroupsList.as_view(), name="index"),
+            path("reorder/", ReorderGroups.as_view(), name="reorder"),
+            path("new/", NewGroup.as_view(), name="new"),
+            path("edit/<int:pk>/", EditGroup.as_view(), name="edit"),
+            path("default/<int:pk>/", DefaultGroup.as_view(), name="default"),
+            path("members/<int:pk>/", GroupMembers.as_view(), name="members"),
+            path("members-main/<int:pk>/", GroupMembersMain.as_view(), name="members-main"),
+            path("delete/<int:pk>/", DeleteGroup.as_view(), name="delete"),
+        )
+
         # Ranks
         urlpatterns.namespace("ranks/", "ranks")
         urlpatterns.patterns(
@@ -91,8 +115,15 @@ class MisagoAdminExtension:
         )
 
         site.add_node(
+            name=pgettext_lazy("admin node", "Groups"),
+            icon="fas fa-adjust",
+            after="users:index",
+            namespace="groups",
+        )
+
+        site.add_node(
             name=pgettext_lazy("admin node", "Ranks"),
             icon="fas fa-shield-alt",
-            after="users:index",
+            after="groups:index",
             namespace="ranks",
         )

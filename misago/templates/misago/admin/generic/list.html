@@ -43,7 +43,7 @@
     <tbody>
       {% block table-items %}
         {% for item in items %}
-          <tr>
+          <tr data-item-id="{{ item.pk }}">
             {% block table-row %}{% endblock table-row %}
             {% if mass_actions %}
               <td class="row-select">

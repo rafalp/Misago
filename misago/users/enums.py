@@ -1,5 +1,7 @@
 from enum import IntEnum
 
+DEFAULT_GROUPS_IDS = 100
+
 
 class DefaultGroupId(IntEnum):
     ADMINS = 1
