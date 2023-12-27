@@ -6,16 +6,7 @@ from django.utils.translation import pgettext_lazy
 from .djangoadmin import UserAdminModel
 from .views.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.datadownloads import DataDownloadsList, RequestDataDownloads
-from .views.groups import (
-    DefaultGroup,
-    DeleteGroup,
-    EditGroup,
-    GroupsList,
-    GroupMembers,
-    GroupMembersMain,
-    NewGroup,
-    OrderGroups,
-)
+from .views import groups
 from .views.ranks import (
     DefaultRank,
     DeleteRank,
@@ -69,18 +60,18 @@ class MisagoAdminExtension:
         urlpatterns.namespace("groups/", "groups")
         urlpatterns.patterns(
             "groups",
-            path("", GroupsList.as_view(), name="index"),
-            path("order/", OrderGroups.as_view(), name="order"),
-            path("new/", NewGroup.as_view(), name="new"),
-            path("edit/<int:pk>/", EditGroup.as_view(), name="edit"),
-            path("default/<int:pk>/", DefaultGroup.as_view(), name="default"),
-            path("members/<int:pk>/", GroupMembers.as_view(), name="members"),
+            path("", groups.ListView.as_view(), name="index"),
+            path("ordering/", groups.OrderingView.as_view(), name="ordering"),
+            path("new/", groups.NewView.as_view(), name="new"),
+            path("edit/<int:pk>/", groups.EditView.as_view(), name="edit"),
+            path("default/<int:pk>/", groups.MakeDefaultView.as_view(), name="default"),
+            path("members/<int:pk>/", groups.MembersView.as_view(), name="members"),
             path(
                 "members-main/<int:pk>/",
-                GroupMembersMain.as_view(),
+                groups.MembersMainView.as_view(),
                 name="members-main",
             ),
-            path("delete/<int:pk>/", DeleteGroup.as_view(), name="delete"),
+            path("delete/<int:pk>/", groups.DeleteView.as_view(), name="delete"),
         )
 
         # Ranks

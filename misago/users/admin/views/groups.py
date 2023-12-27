@@ -14,7 +14,7 @@ class GroupAdmin(generic.AdminBaseMixin):
     model = Group
 
 
-class GroupsList(GroupAdmin, generic.ListView):
+class ListView(GroupAdmin, generic.ListView):
     def process_context(self, request, context):
         items = list(context["items"])
         items_dict = {item.id: item for item in items}
@@ -26,7 +26,7 @@ class GroupsList(GroupAdmin, generic.ListView):
         return context
 
 
-class OrderGroups(GroupAdmin, generic.OrderingView):
+class OrderingView(GroupAdmin, generic.OrderingView):
     def order_items(self, request, items: list[Group]):
         items_update = []
         for ordering, item in enumerate(items):
@@ -36,29 +36,29 @@ class OrderGroups(GroupAdmin, generic.OrderingView):
         Group.objects.bulk_update(items_update, ["ordering"])
 
 
-class GroupMembers(GroupAdmin, generic.TargetedView):
+class MembersView(GroupAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
         redirect_url = reverse("misago:admin:users:index")
         return redirect(f"{redirect_url}?group={target.pk}")
 
 
-class GroupMembersMain(GroupAdmin, generic.TargetedView):
+class MembersMainView(GroupAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
         redirect_url = reverse("misago:admin:users:index")
         return redirect(f"{redirect_url}?main_group={target.pk}")
 
 
-class NewGroup(GroupAdmin, generic.ModelFormView):
+class NewView(GroupAdmin, generic.ModelFormView):
     message_submit = pgettext_lazy(
         "admin groups", 'New group "%(name)s" has been saved.'
     )
 
 
-class EditGroup(GroupAdmin, generic.ModelFormView):
+class EditView(GroupAdmin, generic.ModelFormView):
     message_submit = pgettext_lazy("admin groups", 'Group "%(name)s" has been edited.')
 
 
-class DeleteGroup(GroupAdmin, generic.ButtonView):
+class DeleteView(GroupAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         message_format = {"name": target.name}
         if target.is_default:
@@ -80,7 +80,7 @@ class DeleteGroup(GroupAdmin, generic.ButtonView):
         messages.success(request, message % {"name": target.name})
 
 
-class DefaultGroup(GroupAdmin, generic.ButtonView):
+class MakeDefaultView(GroupAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.is_default:
             message = pgettext("admin ranks", 'Group "%(name)s" is already default.')
