@@ -29,6 +29,7 @@ class BioProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 "username": "Edited",
+                "group": str(self.user.group_id),
                 "rank": str(self.user.rank_id),
                 "roles": str(self.user.roles.all()[0].pk),
                 "email": "reg@stered.com",
@@ -36,6 +37,7 @@ class BioProfileFieldTests(AdminTestCase):
                 "signature": "",
                 "is_signature_locked": "0",
                 "is_hiding_presence": "0",
+                "is_active": "1",
                 "limits_private_thread_invites_to": "0",
                 "signature_lock_staff_message": "",
                 "signature_lock_user_message": "",
@@ -60,6 +62,7 @@ class BioProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 "username": "Edited",
+                "group": str(self.user.group_id),
                 "rank": str(self.user.rank_id),
                 "roles": str(self.user.roles.all()[0].pk),
                 "email": "reg@stered.com",
@@ -68,6 +71,7 @@ class BioProfileFieldTests(AdminTestCase):
                 "signature": "",
                 "is_signature_locked": "0",
                 "is_hiding_presence": "0",
+                "is_active": "1",
                 "limits_private_thread_invites_to": "0",
                 "signature_lock_staff_message": "",
                 "signature_lock_user_message": "",
