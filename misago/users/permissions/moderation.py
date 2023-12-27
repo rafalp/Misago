@@ -135,7 +135,7 @@ def allow_rename_user(user_acl, target):
         raise PermissionDenied(
             pgettext_lazy("users moderation permission", "You can't rename users.")
         )
-    if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
+    if not user_acl["is_root"] and target.is_misago_admin:
         raise PermissionDenied(
             pgettext_lazy(
                 "users moderation permission", "You can't rename administrators."
@@ -151,7 +151,7 @@ def allow_moderate_avatar(user_acl, target):
         raise PermissionDenied(
             pgettext_lazy("users moderation permission", "You can't moderate avatars.")
         )
-    if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
+    if not user_acl["is_root"] and (target.is_misago_admin):
         raise PermissionDenied(
             pgettext_lazy(
                 "users moderation permission",
@@ -170,7 +170,7 @@ def allow_moderate_signature(user_acl, target):
                 "users moderation permission", "You can't moderate signatures."
             )
         )
-    if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
+    if not user_acl["is_root"] and target.is_misago_admin:
         message = pgettext_lazy(
             "users moderation permission",
             "You can't moderate administrators signatures.",
@@ -198,7 +198,7 @@ def allow_edit_profile_details(user_acl, target):
                 "users moderation permission", "You can't edit other users details."
             )
         )
-    if not user_acl["is_superuser"] and (target.is_staff or target.is_superuser):
+    if not user_acl["is_root"] and target.is_misago_admin:
         message = pgettext_lazy(
             "users moderation permission", "You can't edit administrators details."
         )
@@ -213,7 +213,7 @@ def allow_ban_user(user_acl, target):
         raise PermissionDenied(
             pgettext_lazy("users moderation permission", "You can't ban users.")
         )
-    if target.is_staff or target.is_superuser:
+    if target.is_misago_admin:
         raise PermissionDenied(
             pgettext_lazy(
                 "users moderation permission", "Administrators can't be banned."
