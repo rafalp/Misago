@@ -132,7 +132,7 @@ class EditUserForm(BaseUserForm):
         label=pgettext_lazy("admin user form", "Is root administrator"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Root administrators can sign in to Misago's admin control panel and change other users' admin status. You need to be a root administrator to change this field.",
+            "Root administrators can sign in to the Misago Admin Control Panel and change other users' admin status. You need to be a root administrator to change this field.",
         ),
         disabled=True,
     )

@@ -34,9 +34,7 @@ def test_getter_returns_anonymous_user_acl(db, cache_versions, anonymous_user):
     assert acl["is_anonymous"] is True
 
 
-def test_admin_acl_includes_admin_but_not_root_status(
-    cache_versions, admin
-):
+def test_admin_acl_includes_admin_but_not_root_status(cache_versions, admin):
     acl = get_user_acl(admin, cache_versions)
 
     assert acl
@@ -44,9 +42,7 @@ def test_admin_acl_includes_admin_but_not_root_status(
     assert acl["is_root"] is False
 
 
-def test_root_admin_acl_includes_admin_and_root_true_status(
-    cache_versions, root_admin
-):
+def test_root_admin_acl_includes_admin_and_root_true_status(cache_versions, root_admin):
     acl = get_user_acl(root_admin, cache_versions)
 
     assert acl
