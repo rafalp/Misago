@@ -18,17 +18,21 @@ class ReorderView(AdminView):
 
     def get_queryset(self):
         return self.get_model().objects.all()
-    
-    def get_ordered_items(self, request: HttpRequest, items: dict[int, Model]) -> list[Model]:
+
+    def get_ordered_items(
+        self, request: HttpRequest, items: dict[int, Model]
+    ) -> list[Model]:
         ordered_items: dict[int, Model] = {}
         for item_id_str in request.POST.getlist("item"):
             try:
                 item_id = int(item_id_str)
             except (TypeError, ValueError):
                 raise ValidationError(
-                    pgettext("admin reorder", "One or more items were of an invalid type.")
+                    pgettext(
+                        "admin reorder", "One or more items were of an invalid type."
+                    )
                 )
-            
+
             if item_id in ordered_items:
                 raise ValidationError(
                     pgettext("admin reorder", "One or more items were non-unique.")
@@ -42,6 +46,6 @@ class ReorderView(AdminView):
                 )
 
         return list(ordered_items.values())
-    
+
     def reorder_items(self, request: HttpRequest, items: list[Model]):
         pass

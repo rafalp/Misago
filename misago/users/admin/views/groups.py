@@ -32,7 +32,7 @@ class ReorderGroups(GroupAdmin, generic.ReorderView):
         for ordering, item in enumerate(items):
             item.ordering = ordering
             items_update.append(item)
-        
+
         Group.objects.bulk_update(items_update, ["ordering"])
 
 

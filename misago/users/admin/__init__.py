@@ -75,7 +75,11 @@ class MisagoAdminExtension:
             path("edit/<int:pk>/", EditGroup.as_view(), name="edit"),
             path("default/<int:pk>/", DefaultGroup.as_view(), name="default"),
             path("members/<int:pk>/", GroupMembers.as_view(), name="members"),
-            path("members-main/<int:pk>/", GroupMembersMain.as_view(), name="members-main"),
+            path(
+                "members-main/<int:pk>/",
+                GroupMembersMain.as_view(),
+                name="members-main",
+            ),
             path("delete/<int:pk>/", DeleteGroup.as_view(), name="delete"),
         )
 

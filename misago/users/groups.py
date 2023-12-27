@@ -5,6 +5,10 @@ User = get_user_model()
 
 
 def count_groups_members() -> list[tuple[int, int]]:
+    """Returns a list of (group id, members count) tuples.
+
+    Excludes groups without any members from results.
+    """
     with connection.cursor() as cursor:
         user_table = User._meta.db_table
         cursor.execute(
