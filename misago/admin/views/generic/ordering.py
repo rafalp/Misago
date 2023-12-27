@@ -6,12 +6,12 @@ from django.utils.translation import pgettext
 from .base import AdminView
 
 
-class ReorderView(AdminView):
+class OrderingView(AdminView):
     def post(self, request: HttpRequest):
         items = {item.pk: item for item in self.get_queryset()}
         try:
             ordered_items = self.get_ordered_items(request, items)
-            self.reorder_items(request, ordered_items)
+            self.order_items(request, ordered_items)
             return HttpResponse(status=204)
         except ValidationError as error:
             return HttpResponse(error.message, status=400)
@@ -52,5 +52,5 @@ class ReorderView(AdminView):
 
         return list(ordered_items.values())
 
-    def reorder_items(self, request: HttpRequest, items: list[Model]):
+    def order_items(self, request: HttpRequest, items: list[Model]):
         pass

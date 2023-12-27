@@ -1,6 +1,6 @@
 import Sortable from 'sortablejs'
 
-export default function initReorderItems(url) {
+export default function initItemsOrdering(url) {
   const tbody = document.querySelector(".card-admin-table tbody")
   const sortable = new Sortable(
     tbody,

@@ -11,7 +11,7 @@ import initConfirmation from "./confirmation"
 import initDatepicker from "./datepicker"
 import initMassActions from "./massActions"
 import initMassDelete from "./massDelete"
-import initReorderItems from "./reorderItems"
+import initItemsOrdering from "./itemsOrdering"
 import initTimestamps from "./timestamps"
 import initTooltips from "./tooltips"
 import initValidation from "./validation"
@@ -25,7 +25,7 @@ window.misago = {
   initDatepicker,
   initMassActions,
   initMassDelete,
-  initReorderItems,
+  initItemsOrdering,
   initVersionCheck,
 
   init: () => {

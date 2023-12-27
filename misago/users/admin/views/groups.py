@@ -26,8 +26,8 @@ class GroupsList(GroupAdmin, generic.ListView):
         return context
 
 
-class ReorderGroups(GroupAdmin, generic.ReorderView):
-    def reorder_items(self, request, items: list[Group]):
+class OrderGroups(GroupAdmin, generic.OrderingView):
+    def order_items(self, request, items: list[Group]):
         items_update = []
         for ordering, item in enumerate(items):
             item.ordering = ordering

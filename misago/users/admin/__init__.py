@@ -14,7 +14,7 @@ from .views.groups import (
     GroupMembers,
     GroupMembersMain,
     NewGroup,
-    ReorderGroups,
+    OrderGroups,
 )
 from .views.ranks import (
     DefaultRank,
@@ -70,7 +70,7 @@ class MisagoAdminExtension:
         urlpatterns.patterns(
             "groups",
             path("", GroupsList.as_view(), name="index"),
-            path("reorder/", ReorderGroups.as_view(), name="reorder"),
+            path("order/", OrderGroups.as_view(), name="order"),
             path("new/", NewGroup.as_view(), name="new"),
             path("edit/<int:pk>/", EditGroup.as_view(), name="edit"),
             path("default/<int:pk>/", DefaultGroup.as_view(), name="default"),
