@@ -83,10 +83,12 @@ class DeleteView(GroupAdmin, generic.ButtonView):
 class MakeDefaultView(GroupAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.is_default:
-            message = pgettext("admin ranks", 'Group "%(name)s" is already default.')
+            message = pgettext("admin groups", 'Group "%(name)s" is already default.')
             return message % {"name": target.name}
 
     def button_action(self, request, target):
-        Group.objects.make_rank_default(target)
-        message = pgettext("admin ranks", 'Group "%(name)s" has been made default.')
+        Group.objects.filter(id=target.id).update(is_default=True)
+        Group.objects.exclude(id=target.id).update(is_default=False)
+
+        message = pgettext("admin groups", 'Group "%(name)s" has been made default.')
         messages.success(request, message % {"name": target.name})
