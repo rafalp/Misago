@@ -59,7 +59,7 @@ class UserManager(BaseUserManager):
                 Group.objects.filter(is_default=True)
                 .values_list("id", flat=True)
                 .first()
-            ) or DefaultGroupId.MEMBERS.value
+            ) or DefaultGroupId.MEMBERS
 
         if extra_fields.get("secondary_groups") and extra_fields.get(
             "secondary_groups_ids"
