@@ -85,7 +85,7 @@ from .models import GroupPromotionRule
 @delete_group_hook.append_filter
 def delete_group_promotion_rules(
     action, group: Group, request: HttpRequest | None = None
-) -> dict:
+) -> None:
     # Delete promotion rules related with this group bypassing the Django ORM
     delete_all(GroupPromotionRule, group_id=group.id)
 

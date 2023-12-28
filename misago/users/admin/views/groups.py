@@ -7,8 +7,14 @@ from ....admin.views import generic
 from ....cache.enums import CacheName
 from ....cache.versions import invalidate_cache
 from ...enums import DefaultGroupId
-from ...groups import count_groups_members, delete_group, set_default_group
+from ...groups import (
+    count_groups_members,
+    create_group,
+    delete_group,
+    set_default_group,
+)
 from ...models import Group
+from ..forms.groups import NewGroupForm
 
 INVALID_DEFAULT_GROUP_IDS = (
     DefaultGroupId.ADMINS,
@@ -60,9 +66,25 @@ class MembersMainView(GroupAdmin, generic.TargetedView):
 
 
 class NewView(GroupAdmin, generic.ModelFormView):
+    template_name = "new.html"
+    form_class = NewGroupForm
     message_submit = pgettext_lazy(
-        "admin groups", 'New group "%(name)s" has been saved.'
+        "admin groups", 'The "%(name)s" group has been created.'
     )
+
+    def handle_form(self, form, request, target):
+        group = create_group(
+            name=form.cleaned_data["name"],
+            request=request,
+            form=form,
+        )
+
+        if form.cleaned_data["copy_permissions"]:
+            raise NotImplementedError("TODO: copy permissions")
+
+        messages.success(request, self.message_submit % {"name": group.name})
+        # return redirect("misago:admin:groups:edit", pk=group.pk)
+        return redirect("misago:admin:groups:index")
 
 
 class EditView(GroupAdmin, generic.ModelFormView):

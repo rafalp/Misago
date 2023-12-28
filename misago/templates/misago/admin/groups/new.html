@@ -1,0 +1,27 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block title %}
+{% trans "New group" context "admin group form" %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block form-header %}
+{% trans "New group" context "admin group form" %}
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+
+  {% form_row form.name %}
+  {% form_row form.copy_permissions %}
+
+</div>
+{% endblock form-body %}
+
+
+{% block form-footer %}
+<button class="btn btn-primary btn-sm">{% trans "Create group" context "admin group form" %}</button>
+{% endblock form-footer %}

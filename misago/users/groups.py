@@ -1,20 +1,54 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
+from ..core.utils import slugify
 from ..permissions.models import CategoryGroupPermission, CategoryModerator
 from ..postgres.delete import delete_all, delete_one
 from ..postgres.execute import execute_fetch_all
-from .hooks import delete_group_hook, set_default_group_hook
+from .hooks import (
+    create_group_hook,
+    delete_group_hook,
+    set_default_group_hook,
+)
 from .models import Group
 from .tasks import remove_group_from_users_groups_ids
 
 __all__ = [
     "count_groups_members",
+    "create_group",
     "delete_group",
     "set_default_group",
 ]
 
 User = get_user_model()
+
+
+def create_group(**kwargs) -> Group:
+    if not kwargs.get("name"):
+        raise ValueError("The 'name' named argument is required.")
+
+    kwargs.setdefault("request", None)
+    kwargs.setdefault("form", None)
+    kwargs.setdefault("plugin_data", {})
+
+    return create_group_hook(_create_group_action, **kwargs)
+
+
+def _create_group_action(**kwargs) -> Group:
+    ordering = (
+        Group.objects.order_by("-ordering").values_list("ordering", flat=True).first()
+    )
+    kwargs["ordering"] = ordering + 1
+
+    if not kwargs.get("slug"):
+        kwargs["slug"] = slugify(kwargs["name"])
+
+    if "request" in kwargs:
+        kwargs.pop("request")
+    if "form" in kwargs:
+        kwargs.pop("form")
+
+    return Group.objects.create(**kwargs)
 
 
 def count_groups_members() -> list[tuple[int, int]]:

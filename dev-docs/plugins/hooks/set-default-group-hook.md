@@ -84,7 +84,7 @@ logger = getLogger(__file__)
 @set_default_group_hook.append_filter
 def log_default_group_change(
     action, group: Group, request: HttpRequest | None = None
-) -> dict:
+) -> None:
     if request:
         logger.info(
             "%s (#%s) changed default user group to %s (#%s)",
