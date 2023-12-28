@@ -5,7 +5,10 @@ from importlib import import_module
 from pathlib import Path
 from textwrap import dedent, indent
 
-HOOKS_MODULES = ("misago.oauth2.hooks",)
+HOOKS_MODULES = (
+    "misago.oauth2.hooks",
+    "misago.users.hooks",
+)
 PLUGIN_MANIFEST = "misago.plugins.manifest.MisagoPlugin"
 OUTLETS_ENUM = "misago.plugins.enums.PluginOutlet"
 

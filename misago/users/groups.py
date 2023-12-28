@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from ..permissions.models import CategoryGroupPermission, CategoryModerator
 from ..postgres.delete import delete_all, delete_one
 from ..postgres.execute import execute_fetch_all
+from .hooks import delete_group_hook
 from .models import Group
 from .tasks import remove_group_from_users_groups_ids
 
@@ -27,7 +28,7 @@ def count_groups_members() -> list[tuple[int, int]]:
 
 def delete_group(group: Group, request: HttpRequest | None = None):
     """Deletes group with its relations from the database, bypassing the Django ORM."""
-    _delete_group_action(group, request)
+    delete_group_hook(_delete_group_action, group, request)
 
 
 def _delete_group_action(group: Group, request: HttpRequest | None = None):
