@@ -6,8 +6,15 @@ from django.utils.translation import pgettext, pgettext_lazy
 from ....admin.views import generic
 from ....cache.enums import CacheName
 from ....cache.versions import invalidate_cache
-from ...groups import count_groups_members, delete_group
+from ...enums import DefaultGroupId
+from ...groups import count_groups_members, delete_group, set_default_group
 from ...models import Group
+
+INVALID_DEFAULT_GROUP_IDS = (
+    DefaultGroupId.ADMINS,
+    DefaultGroupId.MODERATORS,
+    DefaultGroupId.GUESTS,
+)
 
 
 class GroupAdmin(generic.AdminBaseMixin):
@@ -26,6 +33,7 @@ class ListView(GroupAdmin, generic.ListView):
             items_dict[group_id].members_count = members_count
 
         context["items"] = items
+        context["invalid_default_group_ids"] = INVALID_DEFAULT_GROUP_IDS
         return context
 
 
@@ -102,13 +110,26 @@ class DeleteView(GroupAdmin, generic.ButtonView):
 
 class MakeDefaultView(GroupAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
+        message_format = {"name": target.name}
+
         if target.is_default:
-            message = pgettext("admin groups", 'Group "%(name)s" is already default.')
-            return message % {"name": target.name}
+            return (
+                pgettext("admin groups", 'The "%(name)s" group is already the default.')
+                % message_format
+            )
+
+        if target.id in INVALID_DEFAULT_GROUP_IDS:
+            return (
+                pgettext(
+                    "admin groups", 'The "%(name)s" group can\'t be set as default.'
+                )
+                % message_format
+            )
 
     def button_action(self, request, target):
-        Group.objects.filter(id=target.id).update(is_default=True)
-        Group.objects.exclude(id=target.id).update(is_default=False)
+        set_default_group(target, request)
 
-        message = pgettext("admin groups", 'Group "%(name)s" has been made default.')
+        message = pgettext(
+            "admin groups", 'The "%(name)s" group has been made a default.'
+        )
         messages.success(request, message % {"name": target.name})

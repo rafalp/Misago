@@ -4,11 +4,15 @@ from django.http import HttpRequest
 from ..permissions.models import CategoryGroupPermission, CategoryModerator
 from ..postgres.delete import delete_all, delete_one
 from ..postgres.execute import execute_fetch_all
-from .hooks import delete_group_hook
+from .hooks import delete_group_hook, set_default_group_hook
 from .models import Group
 from .tasks import remove_group_from_users_groups_ids
 
-__all__ = ["count_groups_members", "delete_group"]
+__all__ = [
+    "count_groups_members",
+    "delete_group",
+    "set_default_group",
+]
 
 User = get_user_model()
 
@@ -24,6 +28,16 @@ def count_groups_members() -> list[tuple[int, int]]:
         f'SELECT UNNEST("groups_ids") AS "gid", COUNT(*) FROM "{user_table}" GROUP BY "gid";'
     )
     return list(map(tuple, result))
+
+
+def set_default_group(group: Group, request: HttpRequest | None = None):
+    """Sets group as default"""
+    set_default_group_hook(_set_default_group_action, group, HttpRequest)
+
+
+def _set_default_group_action(group: Group, request: HttpRequest | None = None):
+    Group.objects.filter(id=group.id).update(is_default=True)
+    Group.objects.exclude(id=group.id).update(is_default=False)
 
 
 def delete_group(group: Group, request: HttpRequest | None = None):

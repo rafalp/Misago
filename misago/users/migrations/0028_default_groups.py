@@ -40,6 +40,7 @@ def create_default_groups(apps, schema_editor):
                 slug="members",
                 ordering=2,
                 is_page=True,
+                is_default=True,
             ),
             Group(
                 id=DefaultGroupId.GUESTS,

@@ -100,7 +100,7 @@
         {% trans "Main group" context "admin groups" %}
       </a>
       <h6 class="dropdown-header">{% trans "Admin group" context "admin groups" %}</h6>
-      {% if not item.is_default %}
+      {% if not item.is_default and item.id not in invalid_default_group_ids %}
         <form action="{% url 'misago:admin:groups:default' pk=item.pk %}" method="post">
           {% csrf_token %}
           <button class="dropdown-item">
@@ -111,11 +111,7 @@
       <a class="dropdown-item" href="{% url 'misago:admin:groups:edit' pk=item.pk %}">
         {% trans "Edit group" context "admin groups" %}
       </a>
-      {% if item.is_protected %}
-        <button class="dropdown-item" disabled>
-          {% trans "Delete group" context "admin groups" %}
-        </button>
-      {% else %}
+      {% if not item.is_protected %}
         <form action="{% url 'misago:admin:groups:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
           {% csrf_token %}
           <button class="dropdown-item">
