@@ -11,9 +11,10 @@ from ...models import Group
 
 
 class GroupAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:users:index"
+    root_link = "misago:admin:groups:index"
     templates_dir = "misago/admin/groups"
     model = Group
+    message_404 = pgettext_lazy("admin groups", "Requested group does not exist.")
 
 
 class ListView(GroupAdmin, generic.ListView):

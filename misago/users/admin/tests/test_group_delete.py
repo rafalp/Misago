@@ -75,3 +75,10 @@ def test_main_group_cant_be_deleted(admin_client, custom_group, user):
         response,
         "Can't delete the \"Custom Group\" group because it's a main group for some users.",
     )
+
+
+def test_non_existing_group_cant_be_deleted(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:groups:delete", kwargs={"pk": 404})
+    )
+    assert_has_error_message(response, "Requested group does not exist.")
