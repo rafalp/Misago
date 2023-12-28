@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.db import connection
+
+from ..postgres.execute import execute_fetch_all
 
 User = get_user_model()
 
@@ -9,9 +10,9 @@ def count_groups_members() -> list[tuple[int, int]]:
 
     Excludes groups without any members from results.
     """
-    with connection.cursor() as cursor:
-        user_table = User._meta.db_table
-        cursor.execute(
-            f"SELECT UNNEST(groups_ids) AS gid, COUNT(*) FROM {user_table} GROUP BY gid;"
-        )
-        return list(map(tuple, cursor.fetchall()))
+
+    user_table = User._meta.db_table
+    result = execute_fetch_all(
+        f'SELECT UNNEST("groups_ids") AS "gid", COUNT(*) FROM "{user_table}" GROUP BY "gid";'
+    )
+    return list(map(tuple, result))

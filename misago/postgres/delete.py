@@ -21,12 +21,16 @@ def delete_many(model: Type[Model], **where):
 
     Requires at least ONE kwarg with a name of model field to use in the delete:
 
-    `delete_many(User, group_id=9)` executes the `DELETE FROM "misago_users_user" WHERE "group_id" = 9;` query.
-    `delete_many(User, pk=[1, 3, 4])` executes the `DELETE FROM "misago_users_user" WHERE "id" IN (1, 3, 4);` query.
+    `delete_many(User, group_id=9)` executes the 
+    `DELETE FROM "misago_users_user" WHERE "group_id" = 9;` query.
+    `delete_many(User, pk=[1, 3, 4])` executes the 
+    `DELETE FROM "misago_users_user" WHERE "id" IN (1, 3, 4);` query.
 
     Multiple kwargs are joined with the "AND" keyword:
 
-    `delete_many(User, group_id=9, is_misago_admin=False)` will execute the `DELETE FROM "misago_users_user" WHERE "group_id" = 9 AND "is_misago_admin" = FALSE;` query.
+    `delete_many(User, group_id=9, is_misago_admin=False)` will execute the
+    `DELETE FROM "misago_users_user" WHERE "group_id" = 9 AND "is_misago_admin" = FALSE;`
+    query.
 
     Returns a number of deleted rows.
     """
