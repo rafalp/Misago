@@ -29,7 +29,7 @@ GROUPS_PERMISSIONS = {
 
 
 def create_default_category_permissions(apps, schema_editor):
-    Permission = apps.get_model("misago_permissions", "CategoryPermission")
+    Permission = apps.get_model("misago_permissions", "CategoryGroupPermission")
     Category = apps.get_model("misago_categories", "Category")
 
     try:

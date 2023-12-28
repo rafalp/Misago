@@ -202,6 +202,15 @@ def guests_group(db):
 
 
 @pytest.fixture
+def custom_group(db):
+    return Group.objects.create(
+        name="Custom Group",
+        slug="custom-group",
+        ordering=4,
+    )
+
+
+@pytest.fixture
 def client():
     return MisagoClient()
 

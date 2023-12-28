@@ -1,9 +1,6 @@
-import pytest
 from django.urls import reverse
 
-from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains
-from ...models import Group
 
 groups_list = reverse("misago:admin:groups:index")
 

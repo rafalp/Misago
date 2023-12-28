@@ -1,8 +1,10 @@
+from enum import StrEnum
+
 from .versions import get_cache_versions
 
 
 class assert_invalidates_cache:
-    def __init__(self, cache):
+    def __init__(self, cache: str | StrEnum):
         self.cache = cache
 
     def __enter__(self):

@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ...test import assert_has_message
+from ...test import assert_has_info_message
 from ..auth import is_admin_authorized
 
 admin_logout_link = reverse("misago:admin:logout")
@@ -22,7 +22,7 @@ def test_admin_is_redirected_to_login_form_on_logout(admin_client):
 
 def test_admin_is_displayed_message_after_logout(admin_client):
     response = admin_client.post(admin_logout_link)
-    assert_has_message(response, "Your admin session has been closed.")
+    assert_has_info_message(response, "Your admin session has been closed.")
 
 
 def test_admin_can_logout_from_entire_site(admin_client):

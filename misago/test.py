@@ -15,47 +15,56 @@ def assert_not_contains(response, string, status_code=200):
     assert string not in response.content.decode("utf-8"), fail_message
 
 
-def assert_has_error_message(response):
+def assert_has_error_message(response, message: str | None = None):
     messages = get_messages(response.wsgi_request)
     levels = [i.level for i in messages]
 
     assert levels, "No messages were set during the request"
     assert ERROR in levels, "No error messages were set during the request"
 
+    if message:
+        _assert_message_exists(messages, ERROR, message)
 
-def assert_has_info_message(response):
+
+def assert_has_info_message(response, message: str | None = None):
     messages = get_messages(response.wsgi_request)
     levels = [i.level for i in messages]
 
     assert levels, "No messages were set during the request"
     assert INFO in levels, "No info messages were set during the request"
 
+    if message:
+        _assert_message_exists(messages, INFO, message)
 
-def assert_has_success_message(response):
+
+def assert_has_success_message(response, message: str | None = None):
     messages = get_messages(response.wsgi_request)
     levels = [i.level for i in messages]
 
     assert levels, "No messages were set during the request"
     assert SUCCESS in levels, "No success messages were set during the request"
 
+    if message:
+        _assert_message_exists(messages, SUCCESS, message)
 
-def assert_has_message(response, message, level=None):
-    messages = get_messages(response.wsgi_request)
-    found = False
-    for msg in messages:
-        if message in str(msg):
-            if level and level != msg.level:
-                error = (
-                    'Message containing "%s" was set '
-                    "but didn't have level %s (it had %s)"
-                )
-                raise AssertionError(error % (message, level, message.level))
-            found = True
 
-    if not found:
-        raise AssertionError(
-            'Message containing "%s" was not set during the request' % message
-        )
+def _assert_message_exists(messages, level, message: str) -> bool:
+    for m in messages:
+        if m.level == ERROR and message == str(m.message):
+            return
+
+    messages = "\n".join([m.message for message in messages])
+
+    raise AssertionError(
+        f"Expected message was not set during the request: {message}\n"
+        f"Found messages:\n\n{messages}"
+    )
+
+
+def print_groups(response):
+    """An utility"""
+    for message in get_messages(response.wsgi_request):
+        print(message.message)
 
 
 class MisagoClient(Client):

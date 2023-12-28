@@ -1,6 +1,13 @@
 from django.contrib.auth import get_user_model
+from django.http import HttpRequest
 
+from ..permissions.models import CategoryGroupPermission, CategoryModerator
+from ..postgres.delete import delete_all, delete_one
 from ..postgres.execute import execute_fetch_all
+from .models import Group
+from .tasks import remove_group_from_users_groups_ids
+
+__all__ = ["count_groups_members", "delete_group"]
 
 User = get_user_model()
 
@@ -16,3 +23,16 @@ def count_groups_members() -> list[tuple[int, int]]:
         f'SELECT UNNEST("groups_ids") AS "gid", COUNT(*) FROM "{user_table}" GROUP BY "gid";'
     )
     return list(map(tuple, result))
+
+
+def delete_group(group: Group, request: HttpRequest | None = None):
+    """Deletes group with its relations from the database, bypassing the Django ORM."""
+    _delete_group_action(group, request)
+
+
+def _delete_group_action(group: Group, request: HttpRequest | None = None):
+    delete_all(CategoryGroupPermission, group_id=group.id)
+    delete_all(CategoryModerator, group_id=group.id)
+    delete_one(group)
+
+    remove_group_from_users_groups_ids.delay(group.id)

@@ -4,7 +4,9 @@ from django.urls import reverse
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.views import generic
-from ...groups import count_groups_members
+from ....cache.enums import CacheName
+from ....cache.versions import invalidate_cache
+from ...groups import count_groups_members, delete_group
 from ...models import Group
 
 
@@ -61,22 +63,39 @@ class EditView(GroupAdmin, generic.ModelFormView):
 class DeleteView(GroupAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         message_format = {"name": target.name}
+
+        if target.is_protected:
+            return (
+                pgettext(
+                    "admin groups",
+                    'Can\'t delete a protected group "%(name)s".',
+                )
+                % message_format
+            )
+
         if target.is_default:
-            message = pgettext(
-                "admin groups",
-                'Group "%(name)s" is a default group and can\'t be deleted.',
+            return (
+                pgettext(
+                    "admin groups",
+                    'Can\'t delete the default group "%(name)s".',
+                )
+                % message_format
             )
-            return message % message_format
+
         if target.user_set.exists():
-            message = pgettext(
-                "admin groups",
-                'Group "%(name)s" is assigned to users and can\'t be deleted.',
+            return (
+                pgettext(
+                    "admin groups",
+                    "Can't delete the \"%(name)s\" group because it's a main group for some users.",
+                )
+                % message_format
             )
-            return message % message_format
 
     def button_action(self, request, target):
-        target.delete()
-        message = pgettext("admin groups", 'Group "%(name)s" has been deleted.')
+        delete_group(target, request)
+        invalidate_cache(CacheName.PERMISSIONS)
+
+        message = pgettext("admin groups", 'The "%(name)s" group has been deleted.')
         messages.success(request, message % {"name": target.name})
 
 

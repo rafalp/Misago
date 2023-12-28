@@ -1,6 +1,6 @@
 from django.urls import reverse
 from ...models import Setting
-from ....test import ERROR, assert_has_message, assert_contains
+from ....test import assert_contains, assert_has_error_message
 
 
 def test_oauth2_can_be_enabled(admin_client):
@@ -151,7 +151,7 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         )
 
         assert response.status_code == 302
-        assert_has_message(response, "You need to complete the configuration", ERROR)
+        assert_has_error_message(response, "You need to complete the configuration")
 
         settings = {row.setting: row.value for row in Setting.objects.all()}
 
