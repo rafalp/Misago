@@ -50,10 +50,10 @@ def assert_has_success_message(response, message: str | None = None):
 
 def _assert_message_exists(messages, level, message: str) -> bool:
     for m in messages:
-        if m.level == ERROR and message == str(m.message):
+        if m.level == level and message == str(m.message):
             return
 
-    messages = "\n".join([m.message for message in messages])
+    messages = "\n".join([m.message for m in messages])
 
     raise AssertionError(
         f"Expected message was not set during the request: {message}\n"

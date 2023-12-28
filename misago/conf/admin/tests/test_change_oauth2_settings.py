@@ -151,7 +151,10 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         )
 
         assert response.status_code == 302
-        assert_has_error_message(response, "You need to complete the configuration")
+        assert_has_error_message(
+            response,
+            "You need to complete the configuration before you will be able to enable OAuth 2 on your site.",
+        )
 
         settings = {row.setting: row.value for row in Setting.objects.all()}
 
