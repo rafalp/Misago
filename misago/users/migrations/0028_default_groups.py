@@ -18,36 +18,44 @@ def create_default_groups(apps, schema_editor):
                 id=DefaultGroupId.ADMINS,
                 name=pgettext("default user group", "Administrators"),
                 slug="administrators",
-                user_icon="fas fa-shield",
-                user_title=pgettext("default user group", "Admin"),
+                icon="fas fa-shield",
                 css_suffix="admin",
-                ordering=0,
+                user_title=pgettext("default user group", "Admin"),
                 is_page=True,
+                ordering=0,
+                # Permissions
+                can_see_user_profiles=True,
             ),
             Group(
                 id=DefaultGroupId.MODERATORS,
                 name=pgettext("default user group", "Moderators"),
                 slug="moderators",
-                user_icon="fas fa-shield",
-                user_title=pgettext("default user group", "Moderator"),
+                icon="fas fa-shield",
                 css_suffix="moderator",
-                ordering=1,
+                user_title=pgettext("default user group", "Moderator"),
                 is_page=True,
+                ordering=1,
+                # Permissions
+                can_see_user_profiles=True,
             ),
             Group(
                 id=DefaultGroupId.MEMBERS,
                 name=pgettext("default user group", "Members"),
                 slug="members",
-                ordering=2,
-                is_page=True,
+                is_hidden=True,
                 is_default=True,
+                ordering=2,
+                # Permissions
+                can_see_user_profiles=True,
             ),
             Group(
                 id=DefaultGroupId.GUESTS,
                 name=pgettext("default user group", "Guests"),
                 slug="guests",
-                ordering=3,
                 is_hidden=True,
+                ordering=3,
+                # Permissions
+                can_see_user_profiles=True,
             ),
         ]
     )

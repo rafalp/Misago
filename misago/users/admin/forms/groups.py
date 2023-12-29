@@ -39,11 +39,46 @@ class EditGroupForm(forms.ModelForm):
         required=False,
     )
 
+    icon = forms.CharField(
+        label=pgettext_lazy("admin group form", "Icon"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Lorem ipsum dolor met",
+        ),
+        required=False,
+    )
+    css_suffix = forms.CharField(
+        label=pgettext_lazy("admin group form", "CSS suffix"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Lorem ipsum dolor met",
+        ),
+        required=False,
+    )
+    user_title = forms.CharField(
+        label=pgettext_lazy("admin group form", "User title"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Lorem ipsum dolor met",
+        ),
+        required=False,
+    )
+
     is_page = YesNoSwitch(
-        label=pgettext_lazy("admin group form", "Page"),
+        label=pgettext_lazy(
+            "admin group form", "Give this group a dedicated section on the Users page"
+        ),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Enabling this option will allow users to view all members of this group on a dedicated section of the Users page.",
+        ),
     )
     is_hidden = YesNoSwitch(
-        label=pgettext_lazy("admin group form", "Hidden"),
+        label=pgettext_lazy("admin group form", "Hide this group on user details"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Enabling this option will prevent this group from appearing on members' cards, profiles, and postbits.",
+        ),
     )
 
     copy_permissions = forms.ModelChoiceField(
@@ -57,16 +92,21 @@ class EditGroupForm(forms.ModelForm):
         empty_label=pgettext_lazy("admin group form", "(Don't copy permissions)"),
     )
 
+    can_see_user_profiles = YesNoSwitch(
+        label=pgettext_lazy("admin group form", "Can see other users profiles"),
+    )
+
     class Meta:
         model = Group
         fields = [
             "name",
             "slug",
+            "icon",
             "css_suffix",
             "user_title",
-            "user_icon",
             "is_page",
             "is_hidden",
+            "can_see_user_profiles",
         ]
 
     def __init__(self, *args, **kwargs):

@@ -4,6 +4,17 @@ from ..copy import copy_group_permissions
 from ..models import CategoryGroupPermission
 
 
+def test_copy_group_permissions_copies_group_permissions(members_group, custom_group):
+    assert not custom_group.can_see_user_profiles
+
+    copy_group_permissions(members_group, custom_group)
+
+    assert custom_group.can_see_user_profiles
+
+    custom_group.refresh_from_db()
+    assert custom_group.can_see_user_profiles
+
+
 def test_copy_group_permissions_copies_category_permission(
     members_group, custom_group, other_category
 ):

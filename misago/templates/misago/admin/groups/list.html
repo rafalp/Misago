@@ -16,9 +16,9 @@
 <th style="width: 1px;">&nbsp;</th>
 <th>{% trans "Group" context "admin groups list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "Title" context "admin groups list" %}</th>
 <th>{% trans "Icon" context "admin groups list" %}</th>
-<th>{% trans "CSS class" context "admin groups list" %}</th>
+<th>{% trans "CSS suffix" context "admin groups list" %}</th>
+<th>{% trans "User title" context "admin groups list" %}</th>
 <th>{% trans "Members" context "admin groups list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
@@ -47,12 +47,12 @@
     </span>
   {% endif %}
   {% if item.is_page %}
-    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'This group has a dedicated section on the Users\' page.' context 'admin groups' %}">
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'This group has a dedicated section on the Users page.' context 'admin groups' %}">
       {% trans "Page" context "admin rank is default status" %}
     </span>
   {% endif %}
   {% if item.is_hidden %}
-    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'This group will not appear on users\' cards, profiles, and postbits.' context 'admin groups' %}">
+    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'This group will not appear on members\' cards, profiles, and postbits.' context 'admin groups' %}">
       {% trans "Hidden" context "admin rank is default status" %}
     </span>
   {% endif %}
@@ -60,13 +60,6 @@
     <span class="badge badge-light" data-tooltip="top" title="{% trans 'This group serves a special function in Misago and cannot be deleted.' context 'admin groups' %}">
       {% trans "Protected" context "admin rank is default status" %}
     </span>
-  {% endif %}
-</td>
-<td class="small">
-  {% if item.user_title %}
-    {{ item.translated_user_title }}
-  {% else %}
-    <i class="text-muted">{% trans "Not set" context "admin group user title" %}</i>
   {% endif %}
 </td>
 <td class="small">
@@ -81,6 +74,13 @@
     <pre class="m-0">{{ item.css_suffix }}</pre>
   {% else %}
     <i class="text-muted">{% trans "Not set" context "admin group css class" %}</i>
+  {% endif %}
+</td>
+<td class="small">
+  {% if item.user_title %}
+    {{ item.translated_user_title }}
+  {% else %}
+    <i class="text-muted">{% trans "Not set" context "admin group user title" %}</i>
   {% endif %}
 </td>
 <td class="small">

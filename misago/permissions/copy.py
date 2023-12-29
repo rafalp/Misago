@@ -42,12 +42,20 @@ def _copy_category_permissions_action(
         CategoryGroupPermission.objects.bulk_create(copied_permissions)
 
 
+COPY_GROUP_PERMISSIONS = ("can_see_user_profiles",)
+
+
 def copy_group_permissions(
     src: Group,
     dst: Group,
     request: HttpRequest | None = None,
 ) -> None:
     copy_group_permissions_hook(_copy_group_permissions_action, src, dst, request)
+
+    for group_permission in COPY_GROUP_PERMISSIONS:
+        setattr(dst, group_permission, getattr(src, group_permission))
+
+    dst.save()
 
 
 def _copy_group_permissions_action(

@@ -9,16 +9,17 @@ class Group(PluginDataModel):
     name = models.CharField(max_length=150)
     slug = models.CharField(max_length=150, unique=True)
 
+    icon = models.CharField(max_length=50, null=True, blank=True)
     css_suffix = models.CharField(max_length=50, null=True, blank=True)
     user_title = models.CharField(max_length=150, null=True, blank=True)
-    user_icon = models.CharField(max_length=50, null=True, blank=True)
 
     is_page = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
 
     ordering = models.PositiveIntegerField(default=0)
 
-    is_default = models.BooleanField(default=False)
+    can_see_user_profiles = models.BooleanField(default=False)
 
     class Meta:
         indexes = PluginDataModel.Meta.indexes
