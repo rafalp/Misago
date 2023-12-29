@@ -21,6 +21,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.permissions.hooks` defines the following hooks:
 
+- [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
 
 
 ## `misago.users.hooks`

@@ -104,7 +104,7 @@ A newly created `Group` instance.
 
 ## Example
 
-The code below implements a custom filter function that stores an ID of user who created the group, if its available
+The code below implements a custom filter function that stores an ID of user who created the group, if its available:
 
 ```python
 from django.http import HttpRequest
