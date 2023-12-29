@@ -52,6 +52,7 @@ class OrderingView(GroupAdmin, generic.OrderingView):
             items_update.append(item)
 
         Group.objects.bulk_update(items_update, ["ordering"])
+        invalidate_cache(CacheName.GROUPS)
 
 
 class MembersView(GroupAdmin, generic.TargetedView):
@@ -154,6 +155,7 @@ class MakeDefaultView(GroupAdmin, generic.ButtonView):
 
     def button_action(self, request, target):
         set_default_group(target, request)
+        invalidate_cache(CacheName.GROUPS)
 
         message = pgettext(
             "admin groups", 'The "%(name)s" group has been made a default.'

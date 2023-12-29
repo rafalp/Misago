@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from ....cache.enums import CacheName
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains
 
 groups_list = reverse("misago:admin:groups:index")
@@ -47,3 +49,20 @@ def test_groups_can_be_reordered(
 
     guests_group.refresh_from_db()
     assert guests_group.ordering == 1
+
+
+def test_reordering_groups_invalidates_groups_cache(
+    admin_client, admins_group, moderators_group, members_group, guests_group
+):
+    with assert_invalidates_cache(CacheName.GROUPS):
+        admin_client.post(
+            reverse("misago:admin:groups:ordering"),
+            {
+                "item": [
+                    str(members_group.id),
+                    str(guests_group.id),
+                    str(admins_group.id),
+                    str(moderators_group.id),
+                ],
+            },
+        )

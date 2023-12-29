@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from ....cache.enums import CacheName
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_has_error_message
 
 
@@ -19,6 +21,15 @@ def test_make_default_group_changes_default_group(
 
     members_group.refresh_from_db()
     assert not members_group.is_default
+
+
+def test_make_default_group_invalidates_groups_cache(
+    admin_client, members_group, custom_group
+):
+    with assert_invalidates_cache(CacheName.GROUPS):
+        admin_client.post(
+            reverse("misago:admin:groups:default", kwargs={"pk": custom_group.pk})
+        )
 
 
 def test_make_default_group_handles_nonexisting_group(admin_client):
