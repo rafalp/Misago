@@ -1,0 +1,120 @@
+{% extends "misago/admin/generic/base.html" %}
+{% load i18n %}
+
+
+{% block view %}
+<div class="row">
+  <div class="col {% block form-main-col-class %}{% endblock form-main-col-class %}">
+
+    <div class="card card-admin-form">
+      <form role="form" method="post" {% block form-extra %}{% endblock form-extra %}>
+        {% csrf_token %}
+
+        <h5 class="card-header">
+          {% block form-header %}{% endblock form-header %}
+        </h5>
+        <table class="table admin-permissions-table">
+          <thead>
+            <tr>
+              <th style="width: 320px;">{% block item-header %}{% endblock item-header %}</th>
+              {% for permission in table_permissions %}
+                <th>
+                  <div class="admin-permissions-table-label">
+                    <span title="{{ permission.name }}">{{ permission.name }}</span>
+                    <button class="btn btn-light" type="button" data-deselect="{{ permission.id }}">
+                      <span class="fa fa-minus"></span>
+                    </button>
+                    <button class="btn btn-light" type="button" data-select="{{ permission.id }}">
+                      <span class="fa fa-plus"></span>
+                    </button>
+                  </div>
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in table_items %}
+              <tr>
+                <td>
+                  <div class="admin-permissions-table-label">
+                    <span class="item-name" title="{{ item.name }}">{{ item.name }}</span>
+                    <button class="btn btn-light" type="button" data-row-deselect>
+                      <span class="fa fa-minus"></span>
+                    </button>
+                    <button class="btn btn-light" type="button" data-row-select>
+                      <span class="fa fa-plus"></span>
+                    </button>
+                  </div>
+                </td>
+                {% for permission in table_permissions %}
+                  <td class="admin-permissions-table-check">
+                    <label style="background-color: {{ permission.color }};">
+                      <input class="form-check-input" type="checkbox" name="permissions[{{ item.id }}]" value="{{ permission.id }}"{% if permission.id in item.permissions %} checked{% endif %}>
+                    </label>
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="card-footer text-right">
+          {% block form-footer-cancel %}
+            <a href="{% url root_link %}" class="btn btn-light btn-sm" data-cancel-confirmation="true">
+              {% trans "Cancel" context "admin form" %}
+            </a>
+          {% endblock %}
+          {% block form-footer %}
+            {% include "misago/admin/generic/form_footer.html" %}
+          {% endblock %}
+        </div>
+
+      </form>
+    </div><!-- /.form-panel -->
+
+  </div>
+</div>
+{% endblock view %}
+
+{% block javascripts %}
+  <script type="text/javascript">
+    function checkboxesToggle(inputs, checked) {
+      for (const input of inputs) {
+        input.checked = checked;
+      }
+    }
+
+    const permsTable = document.querySelector(".admin-permissions-table")
+
+    for (const btn of permsTable.querySelectorAll("button")) {
+      if (btn.hasAttribute("data-select")) {
+        btn.addEventListener("click", () => {
+          const permission = btn.getAttribute("data-select")
+          const inputs = permsTable.querySelectorAll("input[value=" + permission + "]")
+          checkboxesToggle(inputs, true)
+        })
+      }
+
+      if (btn.hasAttribute("data-deselect")) {
+        btn.addEventListener("click", () => {
+          const permission = btn.getAttribute("data-deselect")
+          const inputs = permsTable.querySelectorAll("input[value=" + permission + "]")
+          checkboxesToggle(inputs, false)
+        })
+      }
+
+      if (btn.hasAttribute("data-row-select")) {
+        btn.addEventListener("click", () => {
+          const inputs = btn.closest("tr").querySelectorAll("input")
+          checkboxesToggle(inputs, true)
+        })
+      }
+
+      if (btn.hasAttribute("data-row-deselect")) {
+        btn.addEventListener("click", () => {
+          const inputs = btn.closest("tr").querySelectorAll("input")
+          checkboxesToggle(inputs, false)
+        })
+      }
+    }
+  </script>
+{% endblock javascripts %}

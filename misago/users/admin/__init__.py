@@ -64,6 +64,11 @@ class MisagoAdminExtension:
             path("ordering/", groups.OrderingView.as_view(), name="ordering"),
             path("new/", groups.NewView.as_view(), name="new"),
             path("edit/<int:pk>/", groups.EditView.as_view(), name="edit"),
+            path(
+                "categories/<int:pk>/",
+                groups.CategoryPermissionsView.as_view(),
+                name="categories",
+            ),
             path("default/<int:pk>/", groups.MakeDefaultView.as_view(), name="default"),
             path("members/<int:pk>/", groups.MembersView.as_view(), name="members"),
             path(

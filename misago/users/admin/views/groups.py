@@ -6,7 +6,10 @@ from django.utils.translation import pgettext, pgettext_lazy
 from ....admin.views import generic
 from ....cache.enums import CacheName
 from ....cache.versions import invalidate_cache
+from ....categories.enums import CategoryTree
+from ....categories.models import Category
 from ....permissions.copy import copy_group_permissions
+from ....permissions.models import CategoryGroupPermission
 from ...enums import DefaultGroupId
 from ...groups import (
     count_groups_members,
@@ -114,6 +117,78 @@ class EditView(GroupAdmin, generic.ModelFormView):
             copy_group_permissions(copy_permissions, target, request)
 
         invalidate_cache(CacheName.GROUPS, CacheName.PERMISSIONS)
+
+        messages.success(request, self.message_submit % {"name": target.name})
+
+
+class CategoryPermissionsView(GroupAdmin, generic.PermissionsFormView):
+    template_name = "categories.html"
+    message_submit = pgettext_lazy(
+        "admin groups", 'The "%(name)s" category permissions have been updated.'
+    )
+
+    def get_permissions(self, request, target):
+        return [
+            {
+                "id": "SEE",
+                "color": "#eff6ff",
+                "name": "See",
+                "help_text": "Lorem ipsum",
+            },
+            {
+                "id": "READ",
+                "color": "#f5f3ff",
+                "name": "Read",
+                "help_text": "Lorem ipsum",
+            },
+            {
+                "id": "START",
+                "color": "#fef2f2",
+                "name": "Start",
+                "help_text": "Lorem ipsum",
+            },
+            {
+                "id": "REPLY",
+                "color": "#fefce8",
+                "name": "Reply",
+                "help_text": "Lorem ipsum",
+            },
+            {
+                "id": "ATTACHMENTS",
+                "color": "#ecfdf5",
+                "name": "Attachments",
+                "help_text": "Lorem ipsum",
+            },
+        ]
+
+    def get_items(self, request, target):
+        return Category.objects.filter(
+            tree_id=CategoryTree.THREADS, level__gt=0
+        ).values("id", "name", "level")
+
+    def get_initial_data(self, request, target):
+        return CategoryGroupPermission.objects.filter(group=target).values_list(
+            "category_id", "permission"
+        )
+
+    def handle_form(self, data, request, target):
+        CategoryGroupPermission.objects.filter(group=target).delete()
+
+        new_permissions = []
+        for category_id, permissions in data.items():
+            for permission in permissions:
+                new_permissions.append(
+                    CategoryGroupPermission(
+                        group=target,
+                        category_id=category_id,
+                        permission=permission,
+                    )
+                )
+
+        if new_permissions:
+            CategoryGroupPermission.objects.bulk_create(new_permissions)
+
+        invalidate_cache(CacheName.PERMISSIONS)
 
         messages.success(request, self.message_submit % {"name": target.name})
 

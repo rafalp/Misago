@@ -1,0 +1,96 @@
+// Make table items equal width
+.admin-permissions-table {
+  table-layout: fixed;
+
+  margin: 0;
+}
+
+// Style table headers
+.admin-permissions-table thead th {
+  border: 0;
+  vertical-align: middle;
+
+  font-size: $font-size-sm;
+
+  color: $table-head-color;
+  background-color: $table-head-bg;
+}
+
+// Style table cells
+.admin-permissions-table td {
+  font-size: $font-size-sm;
+
+  vertical-align: middle;
+
+  .item-name {
+    font-weight: bold;
+  }
+}
+
+// Make labels vertically aligned, ellipsis overflowing text
+.admin-permissions-table-label {
+  display: flex;
+  width: 100%;
+
+  align-items: center;
+
+  span {
+    width: 100%;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .btn {
+    flex-shrink: 0;
+  }
+}
+
+// Make buttons very smol
+.admin-permissions-table .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: $table-cell-padding-sm;
+  padding: 0;
+
+  width: 24px;
+  height: 24px;
+}
+
+// Style table checkboxes
+.admin-permissions-table-check {
+  text-align: center;
+  vertical-align: center;
+}
+
+.admin-permissions-table-check label {
+  display: flex;
+  width: 100%;
+  height: $input-height;
+  margin: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  background-color: $input-bg;
+  border: $input-border-width solid $input-border-color;
+  box-shadow: inset 0 0 0 3px $table-bg;
+  @include border-radius($input-border-radius, 0);
+
+  cursor: pointer;
+
+  &:hover {
+    border-color: $input-focus-border-color;
+  }
+}
+
+.admin-permissions-table-check .form-check-input {
+  position: static;
+  margin: 0;
+
+  width: 1rem;
+  height: 1rem;
+}

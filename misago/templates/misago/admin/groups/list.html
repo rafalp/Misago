@@ -21,6 +21,8 @@
 <th>{% trans "User title" context "admin groups list" %}</th>
 <th>{% trans "Members" context "admin groups list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -87,6 +89,16 @@
   <a href="{% url 'misago:admin:groups:members' pk=item.pk %}" target="_blank">{{ item.members_count|default:0 }}</a>
 </td>
 <td>
+  <a class="btn btn-light btn-sm" href="{% url 'misago:admin:groups:categories' pk=item.pk %}" title="{% trans 'Category permissions' context 'admin groups' %}">
+    <i class="fas fa-sitemap"></i>
+  </a>
+</td>
+<td>
+  <a class="btn btn-light btn-sm" href="{% url 'misago:admin:groups:edit' pk=item.pk %}" title="{% trans 'Edit group' context 'admin groups' %}">
+    <i class="fas fa-edit"></i>
+  </a>
+</td>
+<td>
   <div class="dropdown">
     <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <i class="fas fa-ellipsis-h"></i>
@@ -99,6 +111,7 @@
       <a class="dropdown-item" href="{% url 'misago:admin:groups:members-main' pk=item.pk %}" target="_blank">
         {% trans "Main group" context "admin groups" %}
       </a>
+      <div class="dropdown-divider"></div>
       <h6 class="dropdown-header">{% trans "Admin group" context "admin groups" %}</h6>
       {% if not item.is_default and item.id not in invalid_default_group_ids %}
         <form action="{% url 'misago:admin:groups:default' pk=item.pk %}" method="post">
@@ -111,7 +124,11 @@
       <a class="dropdown-item" href="{% url 'misago:admin:groups:edit' pk=item.pk %}">
         {% trans "Edit group" context "admin groups" %}
       </a>
+      <a class="dropdown-item" href="{% url 'misago:admin:groups:categories' pk=item.pk %}">
+        {% trans "Category permissions" context "admin groups" %}
+      </a>
       {% if not item.is_protected %}
+        <div class="dropdown-divider"></div>
         <form action="{% url 'misago:admin:groups:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
           {% csrf_token %}
           <button class="dropdown-item">
