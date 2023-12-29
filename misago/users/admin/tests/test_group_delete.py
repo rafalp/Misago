@@ -23,6 +23,16 @@ def test_custom_group_is_deleted(
 
 
 @patch("misago.users.groups.remove_group_from_users_groups_ids")
+def test_deleting_group_invalidates_groups_cache(
+    mock_remove_group_from_users_groups_ids, admin_client, custom_group
+):
+    with assert_invalidates_cache(CacheName.GROUPS):
+        admin_client.post(
+            reverse("misago:admin:groups:delete", kwargs={"pk": custom_group.id})
+        )
+
+
+@patch("misago.users.groups.remove_group_from_users_groups_ids")
 def test_deleting_group_invalidates_permissions_cache(
     mock_remove_group_from_users_groups_ids, admin_client, custom_group
 ):

@@ -85,9 +85,10 @@ class NewView(GroupAdmin, generic.ModelFormView):
                 form.cleaned_data["copy_permissions"], group, request
             )
 
+        invalidate_cache(CacheName.GROUPS, CacheName.PERMISSIONS)
+
         messages.success(request, self.message_submit % {"name": group.name})
-        # return redirect("misago:admin:groups:edit", pk=group.pk)
-        return redirect("misago:admin:groups:index")
+        return redirect("misago:admin:groups:edit", pk=group.pk)
 
 
 class EditView(GroupAdmin, generic.ModelFormView):
@@ -127,7 +128,7 @@ class DeleteView(GroupAdmin, generic.ButtonView):
 
     def button_action(self, request, target):
         delete_group(target, request)
-        invalidate_cache(CacheName.PERMISSIONS)
+        invalidate_cache(CacheName.GROUPS, CacheName.PERMISSIONS)
 
         message = pgettext("admin groups", 'The "%(name)s" group has been deleted.')
         messages.success(request, message % {"name": target.name})
