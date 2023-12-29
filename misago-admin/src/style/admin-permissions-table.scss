@@ -1,3 +1,25 @@
+// Make horizontal paddings in header and footer equal with the table
+.card-admin-permissions-table {
+  .card-header,
+  .card-footer {
+    padding: $table-cell-padding;
+  }
+}
+
+// Make hint small and right-aligned
+.card-admin-permissions-table .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-admin-permissions-table .card-header-hint {
+  float: right;
+
+  font-size: $font-size-sm;
+  font-weight: normal;
+}
+
 // Make table items equal width
 .admin-permissions-table {
   table-layout: fixed;

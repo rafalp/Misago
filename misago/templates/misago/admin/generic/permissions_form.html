@@ -6,12 +6,16 @@
 <div class="row">
   <div class="col {% block form-main-col-class %}{% endblock form-main-col-class %}">
 
-    <div class="card card-admin-form">
+    <div class="card card-admin-form card-admin-permissions-table">
       <form role="form" method="post" {% block form-extra %}{% endblock form-extra %}>
         {% csrf_token %}
 
         <h5 class="card-header">
           {% block form-header %}{% endblock form-header %}
+          <span class="card-header-hint">
+            <strong>{% trans "Hint:" context "admin permissions table" %}</strong>
+            {% trans "Click on permission or item name to quickly toggle selection." context "admin permissions table" %}
+          </span>
         </h5>
         <table class="table admin-permissions-table">
           <thead>
@@ -19,15 +23,9 @@
               <th style="width: 320px;">{% block item-header %}{% endblock item-header %}</th>
               {% for permission in table_permissions %}
                 <th>
-                  <div class="admin-permissions-table-label">
-                    <span title="{{ permission.name }}">{{ permission.name }}</span>
-                    <button class="btn btn-light" type="button" data-deselect="{{ permission.id }}">
-                      <span class="fa fa-minus"></span>
-                    </button>
-                    <button class="btn btn-light" type="button" data-select="{{ permission.id }}">
-                      <span class="fa fa-plus"></span>
-                    </button>
-                  </div>
+                  <button class="btn btn-sm btn-block" type="button" title="{{ permission.name }}" data-toggle-col="{{ permission.id }}">
+                    {{ permission.name }}
+                  </button>
                 </th>
               {% endfor %}
             </tr>
@@ -37,12 +35,8 @@
               <tr>
                 <td>
                   <div class="admin-permissions-table-label">
-                    <span class="item-name" title="{{ item.name }}">{{ item.name }}</span>
-                    <button class="btn btn-light" type="button" data-row-deselect>
-                      <span class="fa fa-minus"></span>
-                    </button>
-                    <button class="btn btn-light" type="button" data-row-select>
-                      <span class="fa fa-plus"></span>
+                    <button class="btn" type="button" data-toggle-row>
+                      {{ item.name }}
                     </button>
                   </div>
                 </td>
@@ -77,42 +71,34 @@
 
 {% block javascripts %}
   <script type="text/javascript">
-    function checkboxesToggle(inputs, checked) {
+    function togglePermissions(inputs) {
+      // If there are unchecked items, check them, otherwise uncheck all
+      let check = false
       for (const input of inputs) {
-        input.checked = checked;
+        if (!input.checked) {
+          check = true
+        }
+      }
+      for (const input of inputs) {
+        input.checked = check;
       }
     }
 
     const permsTable = document.querySelector(".admin-permissions-table")
 
     for (const btn of permsTable.querySelectorAll("button")) {
-      if (btn.hasAttribute("data-select")) {
+      if (btn.hasAttribute("data-toggle-col")) {
         btn.addEventListener("click", () => {
-          const permission = btn.getAttribute("data-select")
+          const permission = btn.getAttribute("data-toggle-col")
           const inputs = permsTable.querySelectorAll("input[value=" + permission + "]")
-          checkboxesToggle(inputs, true)
+          togglePermissions(inputs)
         })
       }
 
-      if (btn.hasAttribute("data-deselect")) {
-        btn.addEventListener("click", () => {
-          const permission = btn.getAttribute("data-deselect")
-          const inputs = permsTable.querySelectorAll("input[value=" + permission + "]")
-          checkboxesToggle(inputs, false)
-        })
-      }
-
-      if (btn.hasAttribute("data-row-select")) {
+      if (btn.hasAttribute("data-toggle-row")) {
         btn.addEventListener("click", () => {
           const inputs = btn.closest("tr").querySelectorAll("input")
-          checkboxesToggle(inputs, true)
-        })
-      }
-
-      if (btn.hasAttribute("data-row-deselect")) {
-        btn.addEventListener("click", () => {
-          const inputs = btn.closest("tr").querySelectorAll("input")
-          checkboxesToggle(inputs, false)
+          togglePermissions(inputs)
         })
       }
     }
