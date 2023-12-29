@@ -79,7 +79,7 @@ def _update_group_action(group: Group, **kwargs) -> Group:
         if attr_name not in GROUP_FIELDS:
             raise TypeError(f"cannot set '{attr_name}' attribute on 'Group'")
 
-        setattr(group, attr_name, value)
+        setattr(group, attr_name, None if value == "" else value)
 
     group.save()
     return group

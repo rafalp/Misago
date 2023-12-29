@@ -3,7 +3,7 @@ from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
-from ....core.validators import validate_sluggable
+from ....core.validators import validate_css_name, validate_sluggable
 from ...models import Group
 
 
@@ -35,6 +35,10 @@ class EditGroupForm(forms.ModelForm):
     )
     slug = forms.CharField(
         label=pgettext_lazy("admin group form", "Slug"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Leave this field empty to set a default slug from the group's name.",
+        ),
         validators=[validate_slug],
         required=False,
     )
@@ -43,7 +47,7 @@ class EditGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group form", "Icon"),
         help_text=pgettext_lazy(
             "admin group form",
-            "Lorem ipsum dolor met",
+            "Optional icon displayed next to the group's name (or member titles) in the interface.",
         ),
         required=False,
     )
@@ -51,15 +55,16 @@ class EditGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group form", "CSS suffix"),
         help_text=pgettext_lazy(
             "admin group form",
-            "Lorem ipsum dolor met",
+            "Optional CSS suffix added to various interface elements, enabling customization of how content from group members is displayed.",
         ),
+        validators=[validate_css_name],
         required=False,
     )
     user_title = forms.CharField(
         label=pgettext_lazy("admin group form", "User title"),
         help_text=pgettext_lazy(
             "admin group form",
-            "Lorem ipsum dolor met",
+            "Optional user title displayed instead of the group's name next to group members in the interface.",
         ),
         required=False,
     )
