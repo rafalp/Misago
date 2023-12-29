@@ -6,6 +6,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 from ....admin.views import generic
 from ....cache.enums import CacheName
 from ....cache.versions import invalidate_cache
+from ....permissions.copy import copy_group_permissions
 from ...enums import DefaultGroupId
 from ...groups import (
     count_groups_members,
@@ -80,7 +81,9 @@ class NewView(GroupAdmin, generic.ModelFormView):
         )
 
         if form.cleaned_data["copy_permissions"]:
-            raise NotImplementedError("TODO: copy permissions")
+            copy_group_permissions(
+                form.cleaned_data["copy_permissions"], group, request
+            )
 
         messages.success(request, self.message_submit % {"name": group.name})
         # return redirect("misago:admin:groups:edit", pk=group.pk)

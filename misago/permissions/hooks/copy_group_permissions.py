@@ -76,12 +76,12 @@ class CopyGroupPermissionsHook(
     FilterHook[CopyGroupPermissionsHookAction, CopyGroupPermissionsHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to copy groups permissions.
+    This hook wraps the standard function that Misago uses to copy group permissions.
 
     # Example
 
     The code below implements a custom filter function that copies a permission from
-    one group's `plugin_data` to the other
+    one group's `plugin_data` to the other:
 
     ```python
     from django.http import HttpRequest
