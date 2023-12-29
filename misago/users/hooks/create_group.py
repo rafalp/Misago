@@ -104,11 +104,9 @@ class CreateGroupHook(FilterHook[CreateGroupHookAction, CreateGroupHookFilter]):
     from misago.postgres.delete import delete_all
     from misago.users.models import Group
 
-    from .models import GroupPromotionRule
-
     @create_group_hook.append_filter
     def set_group_creator_id(action, **kwargs) -> Group:
-        # request and  key is guaranteed to exist in `kwargs`
+        # request and plugin_data keys are guaranteed to be set in `kwargs`
         if kwargs["request"] and kwargs["request"].user.id:
             kwargs["plugin_data"]["creator_id"] = kwargs["request"].user.id
 

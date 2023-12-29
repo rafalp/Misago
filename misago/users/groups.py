@@ -9,6 +9,7 @@ from .hooks import (
     create_group_hook,
     delete_group_hook,
     set_default_group_hook,
+    update_group_hook,
 )
 from .models import Group
 from .tasks import remove_group_from_users_groups_ids
@@ -49,6 +50,34 @@ def _create_group_action(**kwargs) -> Group:
         kwargs.pop("form")
 
     return Group.objects.create(**kwargs)
+
+
+def update_group(group: Group, **kwargs) -> Group:
+    kwargs.setdefault("request", None)
+    kwargs.setdefault("form", None)
+    return update_group_hook(_update_group_action, group, **kwargs)
+
+
+GROUP_FIELDS = tuple(field.name for field in Group._meta.get_fields())
+
+
+def _update_group_action(group: Group, **kwargs) -> Group:
+    if "request" in kwargs:
+        kwargs.pop("request")
+    if "form" in kwargs:
+        kwargs.pop("form")
+
+    if kwargs.get("name") and not kwargs.get("slug"):
+        group.slug = slugify(kwargs["name"])
+
+    for attr_name, value in kwargs.items():
+        if attr_name not in GROUP_FIELDS:
+            raise TypeError(f"cannot set '{attr_name}' attribute on 'Group'")
+
+        setattr(group, attr_name, value)
+
+    group.save()
+    return group
 
 
 def count_groups_members() -> list[tuple[int, int]]:
