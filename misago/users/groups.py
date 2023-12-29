@@ -67,8 +67,13 @@ def _update_group_action(group: Group, **kwargs) -> Group:
     if "form" in kwargs:
         kwargs.pop("form")
 
-    if kwargs.get("name") and not kwargs.get("slug"):
-        group.slug = slugify(kwargs["name"])
+    if "slug" in kwargs and not kwargs["slug"]:
+        if kwargs.get("name"):
+            kwargs["slug"] = slugify(kwargs["name"])
+        else:
+            kwargs["slug"] = slugify(group.name)
+    elif kwargs.get("name") and not kwargs.get("slug"):
+        kwargs["slug"] = slugify(kwargs["name"])
 
     for attr_name, value in kwargs.items():
         if attr_name not in GROUP_FIELDS:

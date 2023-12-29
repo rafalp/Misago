@@ -13,9 +13,10 @@ from ...groups import (
     create_group,
     delete_group,
     set_default_group,
+    update_group,
 )
 from ...models import Group
-from ..forms.groups import NewGroupForm
+from ..forms.groups import EditGroupForm, NewGroupForm
 
 INVALID_DEFAULT_GROUP_IDS = (
     DefaultGroupId.ADMINS,
@@ -93,7 +94,28 @@ class NewView(GroupAdmin, generic.ModelFormView):
 
 
 class EditView(GroupAdmin, generic.ModelFormView):
-    message_submit = pgettext_lazy("admin groups", 'Group "%(name)s" has been edited.')
+    template_name = "edit.html"
+    form_class = EditGroupForm
+    message_submit = pgettext_lazy(
+        "admin groups", 'The "%(name)s" group has been updated.'
+    )
+
+    def handle_form(self, form, request, target):
+        copy_permissions = form.cleaned_data.pop("copy_permissions", None)
+
+        target = update_group(
+            target,
+            request=request,
+            form=form,
+            **form.cleaned_data,
+        )
+
+        if copy_permissions:
+            copy_group_permissions(copy_permissions, target, request)
+
+        invalidate_cache(CacheName.GROUPS, CacheName.PERMISSIONS)
+
+        messages.success(request, self.message_submit % {"name": target.name})
 
 
 class DeleteView(GroupAdmin, generic.ButtonView):

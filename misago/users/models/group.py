@@ -9,14 +9,14 @@ class Group(PluginDataModel):
     name = models.CharField(max_length=150)
     slug = models.CharField(max_length=150, unique=True)
 
-    user_icon = models.CharField(max_length=50, null=True, blank=True)
-    user_title = models.CharField(max_length=150, null=True, blank=True)
     css_suffix = models.CharField(max_length=50, null=True, blank=True)
-
-    ordering = models.PositiveIntegerField(default=0)
+    user_title = models.CharField(max_length=150, null=True, blank=True)
+    user_icon = models.CharField(max_length=50, null=True, blank=True)
 
     is_page = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
+
+    ordering = models.PositiveIntegerField(default=0)
 
     is_default = models.BooleanField(default=False)
 

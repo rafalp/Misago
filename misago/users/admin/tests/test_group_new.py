@@ -4,7 +4,6 @@ from django.urls import reverse
 from ....cache.enums import CacheName
 from ....cache.test import assert_invalidates_cache
 from ....permissions.models import CategoryGroupPermission
-from ....test import assert_has_error_message
 from ...models import Group
 
 
@@ -21,22 +20,6 @@ def test_new_group_form_creates_new_group(admin_client):
     assert response.status_code == 302
 
     Group.objects.get(slug="new-group")
-
-
-def test_new_group_form_invalidates_groups_cache(admin_client):
-    with assert_invalidates_cache(CacheName.GROUPS):
-        admin_client.post(
-            reverse("misago:admin:groups:new"),
-            {"name": "New Group"},
-        )
-
-
-def test_new_group_form_invalidates_permissions_cache(admin_client):
-    with assert_invalidates_cache(CacheName.PERMISSIONS):
-        admin_client.post(
-            reverse("misago:admin:groups:new"),
-            {"name": "New Group"},
-        )
 
 
 def test_new_group_form_copies_group_permissions(
@@ -60,3 +43,19 @@ def test_new_group_form_copies_group_permissions(
         category=other_category,
         permission="copied",
     )
+
+
+def test_new_group_form_invalidates_groups_cache(admin_client):
+    with assert_invalidates_cache(CacheName.GROUPS):
+        admin_client.post(
+            reverse("misago:admin:groups:new"),
+            {"name": "New Group"},
+        )
+
+
+def test_new_group_form_invalidates_permissions_cache(admin_client):
+    with assert_invalidates_cache(CacheName.PERMISSIONS):
+        admin_client.post(
+            reverse("misago:admin:groups:new"),
+            {"name": "New Group"},
+        )
