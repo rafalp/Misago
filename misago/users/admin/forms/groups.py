@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
@@ -34,6 +35,7 @@ class EditGroupForm(forms.ModelForm):
     )
     slug = forms.CharField(
         label=pgettext_lazy("admin group form", "Slug"),
+        validators=[validate_slug],
         required=False,
     )
 
@@ -43,6 +45,7 @@ class EditGroupForm(forms.ModelForm):
     is_hidden = YesNoSwitch(
         label=pgettext_lazy("admin group form", "Hidden"),
     )
+
     copy_permissions = forms.ModelChoiceField(
         label=pgettext_lazy("admin group form", "Copy permissions from"),
         help_text=pgettext_lazy(
