@@ -136,8 +136,26 @@ class PermissionsFormView(TargetedView):
     def get_permissions(self, request, target):
         return []
 
+    @staticmethod
+    def create_permission(
+        id: str,
+        name: str,
+        help_text: str | None = None,
+        color: str | None = None,
+    ) -> dict:
+        return {
+            "id": id,
+            "name": str(name),
+            "help_text": str(help_text) if help_text else None,
+            "color": color or "#fff",
+        }
+
     def get_items(self, request, target):
         return []
+
+    @staticmethod
+    def create_item(id: str, name: str, level: int = 0) -> dict:
+        return {"id": id, "name": str(name), "level": level, "permissions": []}
 
     def get_initial_data(self, request, target) -> list[tuple[int, str]]:
         return []
@@ -146,8 +164,8 @@ class PermissionsFormView(TargetedView):
         pass
 
     def real_dispatch(self, request, target):
-        permissions = self.get_permissions(request, target)
-        items = self.get_items(request, target)
+        permissions = list(self.get_permissions(request, target))
+        items = list(self.get_items(request, target))
 
         if not items:
             messages.info(request, self.message_empty)
