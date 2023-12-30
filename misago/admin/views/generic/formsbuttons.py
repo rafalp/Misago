@@ -144,6 +144,9 @@ class PermissionsFormView(TargetedView):
         permissions = self.get_permissions(request, target)
         items = self.get_items(request, target)
 
+        if not items:
+            return redirect(self.root_link)
+
         if request.method == "POST":
             data = {}
             for item in items:

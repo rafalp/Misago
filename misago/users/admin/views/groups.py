@@ -162,9 +162,14 @@ class CategoryPermissionsView(GroupAdmin, generic.PermissionsFormView):
         ]
 
     def get_items(self, request, target):
-        return Category.objects.filter(
+        categories = Category.objects.filter(
             tree_id=CategoryTree.THREADS, level__gt=0
-        ).values("id", "name", "level")
+        ).values("id", "name", "parent_id", "level")
+
+        for category in categories:
+            category["level"] = "-" * (category["level"] - 1)
+
+        return categories
 
     def get_initial_data(self, request, target):
         return CategoryGroupPermission.objects.filter(group=target).values_list(

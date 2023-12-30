@@ -46,77 +46,63 @@
   text-overflow: ellipsis;
 }
 
-// Set small padding and middle valign on all cells
-td.admin-permissions-table-item,
-td.admin-permissions-table-check {
+// Item names (leftmost column)
+td.admin-permissions-table-item-name {
   padding: $table-cell-padding-sm;
-
   vertical-align: middle;
-}
 
-// Style buttons with item names
-td.admin-permissions-table-item .btn {
-  display: block;
-  width: 100%;
-
-  text-align: left;
-  font-weight: bold;
-
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-}
-
-// Make labels vertically aligned, ellipsis overflowing text
-.admin-permissions-table-label {
-  display: flex;
-  width: 100%;
-
-  align-items: center;
-
-  span {
+  .btn {
+    display: block;
     width: 100%;
+
+    text-align: left;
+    font-weight: bold;
 
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
   }
 
-  .btn {
-    flex-shrink: 0;
+  .item-level {
+    margin-right: $btn-padding-x-sm;
+
+    color: $gray-400;
   }
 }
 
-// Style table checkboxes
-.admin-permissions-table-check {
+// Style table checkboxes cells
+td.admin-permissions-table-check {
+  padding: $table-cell-padding-sm;
+  vertical-align: middle;
+
   text-align: center;
-}
 
-.admin-permissions-table-check label {
-  display: flex;
-  width: 100%;
-  height: $input-height;
-  margin: 0;
+  label {
+    display: flex;
+    width: 100%;
+    height: $input-height;
+    margin: 0;
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
 
-  background-color: $input-bg;
-  @include border-radius($input-border-radius, 0);
+    background-color: $input-bg;
+    @include border-radius($input-border-radius, 0);
 
-  cursor: pointer;
+    cursor: pointer;
 
-  &:hover {
-    border: $input-border-width solid $input-focus-border-color;
-    box-shadow: inset 0 0 0 3px $table-bg;
+    &:hover {
+      border: $input-border-width solid $input-focus-border-color;
+      box-shadow: inset 0 0 0 3px $table-bg;
+    }
   }
-}
 
-.admin-permissions-table-check .form-check-input {
-  position: static;
-  margin: 0;
+  .form-check-input {
+    position: static;
+    margin: 0;
 
-  width: 1rem;
-  height: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
 }

@@ -33,12 +33,11 @@
           <tbody>
             {% for item in table_items %}
               <tr>
-                <td class="admin-permissions-table-item">
-                  <div class="admin-permissions-table-label">
-                    <button class="btn btn-sm" type="button" data-toggle-row>
-                      {{ item.name }}
-                    </button>
-                  </div>
+                <td class="admin-permissions-table-item-name">
+                  <button class="btn btn-sm" type="button" data-toggle-row>
+                    {% for _ in item.level %}<span class="item-level">&#8594;</span>{% endfor %}
+                    {{ item.name }}
+                  </button>
                 </td>
                 {% for permission in table_permissions %}
                   <td class="admin-permissions-table-check">
