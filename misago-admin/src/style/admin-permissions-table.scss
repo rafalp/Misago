@@ -30,23 +30,42 @@
 // Style table headers
 .admin-permissions-table thead th {
   border: 0;
-  vertical-align: middle;
-
-  font-size: $font-size-sm;
-
-  color: $table-head-color;
-  background-color: $table-head-bg;
+  padding: $table-cell-padding-sm $table-cell-padding;
 }
 
-// Style table cells
-.admin-permissions-table td {
-  font-size: $font-size-sm;
+// Style permission buttons
+.admin-permissions-table-permission .btn {
+  display: block;
+  width: 100%;
+
+  color: $table-head-color;
+  font-weight: bold;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// Set small padding and middle valign on all cells
+td.admin-permissions-table-item,
+td.admin-permissions-table-check {
+  padding: $table-cell-padding-sm;
 
   vertical-align: middle;
+}
 
-  .item-name {
-    font-weight: bold;
-  }
+// Style buttons with item names
+td.admin-permissions-table-item .btn {
+  display: block;
+  width: 100%;
+
+  text-align: left;
+  font-weight: bold;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
 }
 
 // Make labels vertically aligned, ellipsis overflowing text
@@ -69,23 +88,9 @@
   }
 }
 
-// Make buttons very smol
-.admin-permissions-table .btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-left: $table-cell-padding-sm;
-  padding: 0;
-
-  width: 24px;
-  height: 24px;
-}
-
 // Style table checkboxes
 .admin-permissions-table-check {
   text-align: center;
-  vertical-align: center;
 }
 
 .admin-permissions-table-check label {
@@ -98,14 +103,13 @@
   justify-content: center;
 
   background-color: $input-bg;
-  border: $input-border-width solid $input-border-color;
-  box-shadow: inset 0 0 0 3px $table-bg;
   @include border-radius($input-border-radius, 0);
 
   cursor: pointer;
 
   &:hover {
-    border-color: $input-focus-border-color;
+    border: $input-border-width solid $input-focus-border-color;
+    box-shadow: inset 0 0 0 3px $table-bg;
   }
 }
 

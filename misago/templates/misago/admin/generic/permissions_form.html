@@ -20,10 +20,10 @@
         <table class="table admin-permissions-table">
           <thead>
             <tr>
-              <th style="width: 320px;">{% block item-header %}{% endblock item-header %}</th>
+              <th style="width: 320px;"></th>
               {% for permission in table_permissions %}
-                <th>
-                  <button class="btn btn-sm btn-block" type="button" title="{{ permission.name }}" data-toggle-col="{{ permission.id }}">
+                <th class="admin-permissions-table-permission">
+                  <button class="btn btn-sm" type="button" title="{{ permission.name }}" data-toggle-col="{{ permission.id }}">
                     {{ permission.name }}
                   </button>
                 </th>
@@ -33,9 +33,9 @@
           <tbody>
             {% for item in table_items %}
               <tr>
-                <td>
+                <td class="admin-permissions-table-item">
                   <div class="admin-permissions-table-label">
-                    <button class="btn" type="button" data-toggle-row>
+                    <button class="btn btn-sm" type="button" data-toggle-row>
                       {{ item.name }}
                     </button>
                   </div>

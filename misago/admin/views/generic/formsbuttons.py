@@ -135,7 +135,7 @@ class PermissionsFormView(TargetedView):
         return []
 
     def get_initial_data(self, request, target) -> list[tuple[int, str]]:
-        pass
+        return []
 
     def handle_form(self, request, target, data):
         pass
