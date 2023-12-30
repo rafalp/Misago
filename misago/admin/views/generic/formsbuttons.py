@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import redirect
+from django.utils.translation import pgettext_lazy
 
 from ....users.models import Group
 from .base import AdminView
@@ -128,6 +129,10 @@ class ModelFormView(FormView):
 
 
 class PermissionsFormView(TargetedView):
+    message_empty = pgettext_lazy(
+        "admin permissions table", "No items exist to set permissions for."
+    )
+
     def get_permissions(self, request, target):
         return []
 
@@ -145,6 +150,7 @@ class PermissionsFormView(TargetedView):
         items = self.get_items(request, target)
 
         if not items:
+            messages.info(request, self.message_empty)
             return redirect(self.root_link)
 
         if request.method == "POST":

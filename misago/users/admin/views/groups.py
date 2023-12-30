@@ -123,6 +123,9 @@ class EditView(GroupAdmin, generic.ModelFormView):
 
 class CategoryPermissionsView(GroupAdmin, generic.PermissionsFormView):
     template_name = "categories.html"
+    message_empty = pgettext_lazy(
+        "admin groups", "No categories exist to set groups permissions for."
+    )
     message_submit = pgettext_lazy(
         "admin groups", 'The "%(name)s" category permissions have been updated.'
     )
