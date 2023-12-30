@@ -138,6 +138,7 @@ class PermissionsFormView(TargetedView):
 
     @staticmethod
     def create_permission(
+        *,
         id: str,
         name: str,
         help_text: str | None = None,
@@ -154,8 +155,8 @@ class PermissionsFormView(TargetedView):
         return []
 
     @staticmethod
-    def create_item(id: str, name: str, level: int = 0) -> dict:
-        return {"id": id, "name": str(name), "level": level, "permissions": []}
+    def create_item(*, id: str, name: str, level: int = 0) -> dict:
+        return {"id": id, "name": str(name), "level": level * "-", "permissions": []}
 
     def get_initial_data(self, request, target) -> list[tuple[int, str]]:
         return []

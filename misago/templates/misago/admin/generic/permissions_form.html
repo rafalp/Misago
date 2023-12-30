@@ -23,7 +23,7 @@
               <th style="width: 320px;"></th>
               {% for permission in table_permissions %}
                 <th class="admin-permissions-table-permission">
-                  <button class="btn btn-sm" type="button" title="{{ permission.name }}" data-toggle-col="{{ permission.id }}">
+                  <button class="btn btn-sm" type="button"{% if permission.help_text %} title="{{ permission.help_text }}"{% endif %} data-toggle-col="{{ permission.id }}">
                     {{ permission.name }}
                   </button>
                 </th>

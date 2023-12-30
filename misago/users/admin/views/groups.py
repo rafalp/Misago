@@ -8,6 +8,7 @@ from ....cache.enums import CacheName
 from ....cache.versions import invalidate_cache
 from ....categories.enums import CategoryTree
 from ....categories.models import Category
+from ....permissions.admin import get_admin_category_permissions
 from ....permissions.copy import copy_group_permissions
 from ....permissions.models import CategoryGroupPermission
 from ...enums import DefaultGroupId
@@ -131,48 +132,19 @@ class CategoryPermissionsView(GroupAdmin, generic.PermissionsFormView):
     )
 
     def get_permissions(self, request, target):
-        return [
-            {
-                "id": "SEE",
-                "color": "#eff6ff",
-                "name": "See",
-                "help_text": "Lorem ipsum",
-            },
-            {
-                "id": "READ",
-                "color": "#f5f3ff",
-                "name": "Read",
-                "help_text": "Lorem ipsum",
-            },
-            {
-                "id": "START",
-                "color": "#fef2f2",
-                "name": "Start",
-                "help_text": "Lorem ipsum",
-            },
-            {
-                "id": "REPLY",
-                "color": "#fefce8",
-                "name": "Reply",
-                "help_text": "Lorem ipsum",
-            },
-            {
-                "id": "ATTACHMENTS",
-                "color": "#ecfdf5",
-                "name": "Attachments",
-                "help_text": "Lorem ipsum",
-            },
-        ]
+        return get_admin_category_permissions(self)
 
     def get_items(self, request, target):
-        categories = Category.objects.filter(
+        queryset = Category.objects.filter(
             tree_id=CategoryTree.THREADS, level__gt=0
-        ).values("id", "name", "parent_id", "level")
+        ).values("id", "name", "level")
 
-        for category in categories:
-            category["level"] = "-" * (category["level"] - 1)
-
-        return categories
+        for category in queryset:
+            yield self.create_item(
+                id=category["id"],
+                name=category["name"],
+                level=category["level"] - 1,
+            )
 
     def get_initial_data(self, request, target):
         return CategoryGroupPermission.objects.filter(group=target).values_list(
