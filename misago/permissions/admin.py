@@ -40,6 +40,6 @@ def get_admin_category_permissions(form: PermissionsFormView) -> list[dict]:
         ),
     ]
 
-    get_admin_category_permissions_hook(form)
+    perms += get_admin_category_permissions_hook(form)
 
     return perms
