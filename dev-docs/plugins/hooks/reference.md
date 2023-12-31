@@ -23,6 +23,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`copy_category_permissions_hook`](./copy-category-permissions-hook.md)
 - [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
+- [`get_admin_category_permissions_hook`](./get-admin-category-permissions-hook.md)
 
 
 ## `misago.users.hooks`

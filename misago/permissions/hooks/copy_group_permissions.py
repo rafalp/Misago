@@ -85,7 +85,9 @@ class CopyGroupPermissionsHook(
 
     ```python
     from django.http import HttpRequest
+    from misago.permissions.hooks import copy_group_permissions_hook
     from misago.users.models import Group
+
 
     @copy_group_permissions_hook.append_filter
     def copy_group_plugin_perms(

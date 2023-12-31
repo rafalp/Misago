@@ -2,10 +2,11 @@ from django.utils.translation import pgettext
 
 from ..admin.views.generic import PermissionsFormView
 from .enums import CategoryPermission
+from .hooks import get_admin_category_permissions_hook
 
 
 def get_admin_category_permissions(form: PermissionsFormView) -> list[dict]:
-    perms = (
+    perms = [
         form.create_permission(
             id=CategoryPermission.SEE,
             name=pgettext("category permission", "See category"),
@@ -37,6 +38,8 @@ def get_admin_category_permissions(form: PermissionsFormView) -> list[dict]:
             ),
             color="#ecfdf5",
         ),
-    )
+    ]
+
+    get_admin_category_permissions_hook(form)
 
     return perms

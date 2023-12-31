@@ -85,12 +85,13 @@ class CopyCategoryPermissionsHook(
 
     ```python
     from django.http import HttpRequest
+    from misago.permissions.hooks import copy_category_permissions_hook
     from misago.users.models import Category
 
     from .models PluginCategoryPermissions
 
 
-    @copy_group_permissions_hook.append_filter
+    @copy_category_permissions_hook.append_filter
     def copy_group_plugin_perms(
         action, src: Category, dst: Category, request: HttpRequest | None = None,
     ) -> None:
