@@ -136,7 +136,39 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         fp.write("```")
 
         if hook_type == "ACTION":
-            raise NotImplementedError()
+            fp.write("\n\n\n")
+            fp.write("## Action")
+
+            if hook_action_ast:
+                hook_cropped = hook_name
+                if hook_cropped.endswith("_hook"):
+                    hook_cropped = hook_cropped[:-5]
+
+                hook_action_signature = get_callable_class_signature(hook_action_ast)
+                if hook_action_signature:
+                    hook_action_args, hook_action_returns = hook_action_signature
+                else:
+                    hook_action_args = ""
+                    hook_action_returns = "Unknown"
+
+                fp.write("\n\n")
+                fp.write("```python")
+                fp.write("\n")
+                fp.write(
+                    f"def custom_{hook_cropped}_filter({hook_action_args}){hook_action_returns}:"
+                )
+                fp.write("\n")
+                fp.write("    ...")
+                fp.write("\n")
+                fp.write("```")
+
+                hook_action_docstring = get_class_docstring(hook_action_ast)
+                if hook_action_docstring:
+                    fp.write("\n\n")
+                    fp.write(indent_docstring_headers(hook_action_docstring, level=2))
+            else:
+                fp.write("_This section is empty._")
+
         if hook_type == "FILTER":
             fp.write("\n\n\n")
             fp.write("## Filter")
