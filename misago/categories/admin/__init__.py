@@ -1,14 +1,7 @@
 from django.urls import path
 from django.utils.translation import pgettext_lazy
 
-from .views.categories import (
-    CategoriesList,
-    DeleteCategory,
-    EditCategory,
-    MoveDownCategory,
-    MoveUpCategory,
-    NewCategory,
-)
+from .views import categories
 from .views.perms import (
     CategoryPermissions,
     CategoryRolesList,
@@ -27,17 +20,28 @@ class MisagoAdminExtension:
         # Nodes
         urlpatterns.patterns(
             "categories",
-            path("", CategoriesList.as_view(), name="index"),
-            path("new/", NewCategory.as_view(), name="new"),
-            path("edit/<int:pk>/", EditCategory.as_view(), name="edit"),
+            path("", categories.CategoriesList.as_view(), name="index"),
+            path("new/", categories.NewCategory.as_view(), name="new"),
+            path("edit/<int:pk>/", categories.EditCategory.as_view(), name="edit"),
             path(
                 "permissions/<int:pk>/",
-                CategoryPermissions.as_view(),
+                categories.CategoryPermissionsView.as_view(),
                 name="permissions",
             ),
-            path("move/down/<int:pk>/", MoveDownCategory.as_view(), name="down"),
-            path("move/up/<int:pk>/", MoveUpCategory.as_view(), name="up"),
-            path("delete/<int:pk>/", DeleteCategory.as_view(), name="delete"),
+            path(
+                "permissions-deprecated/<int:pk>/",
+                CategoryPermissions.as_view(),
+                name="permissions-deprecated",
+            ),
+            path(
+                "move/down/<int:pk>/",
+                categories.MoveDownCategory.as_view(),
+                name="down",
+            ),
+            path("move/up/<int:pk>/", categories.MoveUpCategory.as_view(), name="up"),
+            path(
+                "delete/<int:pk>/", categories.DeleteCategory.as_view(), name="delete"
+            ),
         )
 
         # Category Roles

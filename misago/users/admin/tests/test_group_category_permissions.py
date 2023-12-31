@@ -6,7 +6,7 @@ from ....cache.test import assert_invalidates_cache
 from ....categories.models import Category
 from ....permissions.enums import CategoryPermission
 from ....permissions.models import CategoryGroupPermission
-from ....test import assert_contains, assert_has_info_message
+from ....test import assert_contains, assert_has_error_message, assert_has_info_message
 
 
 def test_group_category_permissions_form_is_rendered(
@@ -15,6 +15,7 @@ def test_group_category_permissions_form_is_rendered(
     response = admin_client.get(
         reverse("misago:admin:groups:categories", kwargs={"pk": custom_group.id})
     )
+    assert_contains(response, custom_group.name)
     assert_contains(response, sibling_category.name)
 
 
@@ -65,3 +66,16 @@ def test_group_category_permissions_form_redirects_to_groups_list_if_no_categori
     assert_has_info_message(
         response, "No categories exist to set group permissions for."
     )
+
+
+def test_group_category_permissions_form_handles_not_existing_group_id(
+    admin_client, custom_group
+):
+    response = admin_client.get(
+        reverse(
+            "misago:admin:groups:categories",
+            kwargs={"pk": custom_group.id + 1000},
+        )
+    )
+    assert response.status_code == 302
+    assert_has_error_message(response, "Requested group does not exist.")
