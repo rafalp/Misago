@@ -103,7 +103,7 @@ class AdminSite:
         iterations = 0
         while self.nodes_record:
             iterations += 1
-            if iterations > 512:
+            if iterations > 1024:
                 message = (
                     "Misago Admin hierarchy is invalid or too complex to resolve. "
                     "Nodes left: %s"

@@ -1,0 +1,47 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block page-actions %}
+{% endblock %}
+
+
+{% block table-header %}
+<th style="width: 1px;">&nbsp;</th>
+<th>{% trans "Moderator" context "admin moderators list" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="pr-0">
+  [U]
+</td>
+<td class="pr-0">
+  [ITEM]
+</td>
+<td>
+  <a class="btn btn-light btn-sm" href="" title="">
+    <i class="fas fa-sitemap"></i>
+  </a>
+</td>
+<td>
+  <a class="btn btn-light btn-sm" href="" title="">
+    <i class="fas fa-edit"></i>
+  </a>
+</td>
+<td>
+  [...]
+</td>
+{% endblock %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to delete this moderator?' context 'admin moderators' %}"
+  )
+</script>
+{% endblock %}
