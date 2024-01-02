@@ -23,3 +23,15 @@ class ListView(ModeratorAdmin, generic.ListView):
             auto_id="new_moderator_form_%s",
         )
         return context
+
+
+class NewView(ModeratorAdmin, generic.FormView):
+    pass
+
+
+class EditView(ModeratorAdmin, generic.FormView):
+    pass
+
+
+class DeleteView(ModeratorAdmin, generic.ButtonView):
+    pass

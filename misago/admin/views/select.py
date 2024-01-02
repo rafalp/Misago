@@ -19,4 +19,6 @@ def select_user(request):
     else:
         choices = User.objects.none()
 
-    return render(request, "misago/admin/select/user.html", {"search": search, "choices": choices})
+    return render(
+        request, "misago/admin/select/user.html", {"search": search, "choices": choices}
+    )

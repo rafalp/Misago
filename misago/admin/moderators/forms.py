@@ -9,8 +9,11 @@ class NewModeratorModalForm(forms.Form):
         label=pgettext_lazy("admin moderators form", "Moderator type"),
         choices=[
             ("group", pgettext_lazy("admin moderators form type choice", "User group")),
-            ("user", pgettext_lazy("admin moderators form type choice", "Individual user")),
-        ]
+            (
+                "user",
+                pgettext_lazy("admin moderators form type choice", "Individual user"),
+            ),
+        ],
     )
     group = forms.TypedChoiceField(
         label=pgettext_lazy("admin moderators form", "Group"),
@@ -28,6 +31,4 @@ class NewModeratorModalForm(forms.Form):
 
         self.fields["group"].choices = []
         for group in Group.objects.all():
-            self.fields["group"].choices.append(
-                (group.id, str(group))
-            )
+            self.fields["group"].choices.append((group.id, str(group)))

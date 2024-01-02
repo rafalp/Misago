@@ -1,7 +1,7 @@
 {% load i18n misago_avatars %}
 {% if search %}
   {% for choice in choices %}
-    <button type="button" class="dropdown-item admin-user-select-item" data-value="{{ user.id }}">
+    <button type="button" class="dropdown-item admin-user-select-item" data-value="{{ choice.id }}">
       <img src="{{ choice|avatar:20 }}" alt="" width="20" height="20">
       <span class="item-name">{{ choice.username }}</span>
     </button>

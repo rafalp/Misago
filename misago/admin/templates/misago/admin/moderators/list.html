@@ -114,10 +114,19 @@
     event.preventDefault()
 
     const formData = new FormData(event.target)
+    const group = formData.get("group").trim()
+    const user = formData.get("user").trim()
+
+    console.log(group, user)
+
     if (formData.get("moderator_type") == "group") {
-
-    } else if (formData.get("user").trim().length) {
-
+      const url = "{% url 'misago:admin:moderators:new-group' group=1 %}"
+      window.location = url.replace("1", group)
+    } else if (user.length) {
+      const url = "{% url 'misago:admin:moderators:new-user' user=1 %}"
+      window.location = url.replace("1", user)
+    } else {
+      console.log("set error!")
     }
   })
 </script>
