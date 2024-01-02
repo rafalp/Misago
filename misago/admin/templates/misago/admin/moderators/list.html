@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n misago_admin_form %}
+{% load i18n misago_admin_form misago_avatars %}
 
 
 {% block page-actions %}
@@ -22,27 +22,38 @@
 
 {% block table-row %}
 <td class="pr-0">
-  [U]
+  {% if item.group %}
+  {% else %}
+    <a href="{{ item.user.get_absolute_url }}" style="line-height: 0; font-size: 24px;">
+      <img src="{{ item.user|avatar:24 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
+    </a>
+  {% endif %}
 </td>
 <td class="pr-0">
-  {% if item.group %}
-    {{ item.group }}
-  {% else %}
-    {{ item.user.username }}
+  <a href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" class="item-name">
+    {% if item.group %}
+      {{ item.group }}
+    {% else %}
+      {{ item.user.username }}
+    {% endif %}
+  </a>
+</td>
+<td class="badges-list">
+  {% if item.is_global %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can moderate all content they have access to' context 'admin moderators list item' %}">
+      {% trans "Global" context "admin moderators admin global status" %}
+    </span>
+  {% endif %}
+  {% if item.is_protected %}
+    <span class="badge badge-light" data-tooltip="top" title="{% trans 'This moderator permission can\'t be changed or removed' context 'admin moderators list item' %}">
+      {% trans "Protected" context "admin moderators admin protected status" %}
+    </span>
   {% endif %}
 </td>
 <td>
-  <a class="btn btn-light btn-sm" href="" title="">
-    <i class="fas fa-sitemap"></i>
-  </a>
-</td>
-<td>
-  <a class="btn btn-light btn-sm" href="" title="">
+  <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" title="">
     <i class="fas fa-edit"></i>
   </a>
-</td>
-<td>
-  [...]
 </td>
 {% endblock %}
 

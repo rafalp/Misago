@@ -1,0 +1,35 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block title %}
+{% if target.pk %}
+  {{ target }}
+{% else %}
+  {% trans "New moderator" context "admin moderator form" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-header %}
+{{ block.super }}
+<small>
+  {% if target.group %}{{ target.group }}{% else %}{{ target.user.username }}{% endif %}
+</small>
+{% endblock page-header %}
+
+
+{% block form-header %}
+{% if target.pk %}
+    {% trans "Edit moderator" context "admin moderator form" %}
+{% else %}
+  {% trans "New moderator" context "admin moderator form" %}
+{% endif %}
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  {% form_row form.is_global %}
+</div>
+{% endblock form-body %}

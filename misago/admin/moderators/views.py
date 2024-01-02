@@ -1,8 +1,15 @@
-from django.utils.translation import pgettext_lazy
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ...permissions.models import Moderator
+from ...users.models import Group
 from ..views import generic
-from .forms import NewModeratorModalForm
+from .forms import ModeratorForm, NewModeratorModalForm
+
+User = get_user_model()
 
 
 class ModeratorAdmin(generic.AdminBaseMixin):
@@ -25,12 +32,49 @@ class ListView(ModeratorAdmin, generic.ListView):
         return context
 
 
-class NewView(ModeratorAdmin, generic.FormView):
-    pass
+class NewView(ModeratorAdmin, generic.ModelFormView):
+    template_name = "form.html"
+    form_class = ModeratorForm
+
+    def get_target(self, request, kwargs):
+        if kwargs.get("group"):
+            group = Group.objects.get(id=kwargs["group"])
+            return Moderator(group=group)
+        else:
+            user = User.objects.get(id=kwargs["user"])
+            return Moderator(user=user)
+
+    def real_dispatch(self, request, target):
+        # If moderator already exists for given group or user, redirect to it
+        if target.group_id:
+            instance = Moderator.objects.filter(group=target.group).first()
+        else:
+            instance = Moderator.objects.filter(user=target.user).first()
+        if instance:
+            return redirect(
+                reverse("misago:admin:moderators:edit", kwargs={"pk": instance.id})
+            )
+
+        return super().real_dispatch(request, target)
 
 
-class EditView(ModeratorAdmin, generic.FormView):
-    pass
+class EditView(ModeratorAdmin, generic.ModelFormView):
+    template_name = "form.html"
+    form_class = ModeratorForm
+
+    def real_dispatch(self, request, target):
+        if target.is_protected:
+            messages.info(
+                request,
+                pgettext(
+                    "admin moderators",
+                    'The "%(target)s" group moderator permissions are protected and can\'t be changed.',
+                )
+                % {"target": target.group},
+            )
+            return redirect(self.root_link)
+
+        return super().real_dispatch(request, target)
 
 
 class DeleteView(ModeratorAdmin, generic.ButtonView):

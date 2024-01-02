@@ -24,6 +24,6 @@ class MisagoAdminExtension:
                 "new/group/<int:group>/", moderators.NewView.as_view(), name="new-group"
             ),
             path("new/user/<int:user>/", moderators.NewView.as_view(), name="new-user"),
-            path("edit/<int:pk>/", moderators.ListView.as_view(), name="edit"),
+            path("edit/<int:pk>/", moderators.EditView.as_view(), name="edit"),
             path("delete/<int:pk>/", moderators.DeleteView.as_view(), name="delete"),
         )
