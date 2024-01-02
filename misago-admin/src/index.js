@@ -4,6 +4,7 @@ import "bootstrap/js/dist/dropdown"
 import "bootstrap/js/dist/tooltip"
 import "bootstrap/js/dist/modal"
 import moment from "moment"
+import htmx from "htmx.org"
 import "./style/index.scss"
 import initAnalytics from "./analytics"
 import initColorpicker from "./colorpicker"
@@ -14,10 +15,13 @@ import initMassDelete from "./massDelete"
 import initItemsOrdering from "./itemsOrdering"
 import initTimestamps from "./timestamps"
 import initTooltips from "./tooltips"
+import initUserSelect from "./userSelect"
 import initValidation from "./validation"
 import initVersionCheck from "./versionCheck"
 
 window.moment = moment
+window.htmx = htmx
+
 window.misago = {
   initAnalytics,
   initColorpicker,
@@ -26,6 +30,7 @@ window.misago = {
   initMassActions,
   initMassDelete,
   initItemsOrdering,
+  initUserSelect,
   initVersionCheck,
 
   init: () => {

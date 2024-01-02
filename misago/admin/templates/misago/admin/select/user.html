@@ -1,0 +1,17 @@
+{% load i18n misago_avatars %}
+{% if search %}
+  {% for choice in choices %}
+    <button type="button" class="dropdown-item admin-user-select-item" data-value="{{ user.id }}">
+      <img src="{{ choice|avatar:20 }}" alt="" width="20" height="20">
+      <span class="item-name">{{ choice.username }}</span>
+    </button>
+  {% empty %}
+    <div class="admin-user-select-message">
+      {% trans "No users have been found." context "admin select user" %}
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="admin-user-select-message">
+    {% trans "Enter a user name to search." context "admin select user" %}
+  </div>
+{% endif %}

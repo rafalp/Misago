@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.db import migrations, models
+import django.contrib.postgres.fields
 import django.db.models.deletion
 
 
@@ -45,7 +46,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="CategoryModerator",
+            name="Moderator",
             fields=[
                 (
                     "id",
@@ -56,11 +57,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("is_global", models.BooleanField(default=True)),
                 (
-                    "category",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="misago_categories.category",
+                    "categories",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.PositiveIntegerField(),
+                        default=list,
+                        size=None,
                     ),
                 ),
                 (

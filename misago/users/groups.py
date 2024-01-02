@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
 from ..core.utils import slugify
-from ..permissions.models import CategoryGroupPermission, CategoryModerator
+from ..permissions.models import CategoryGroupPermission, Moderator
 from ..postgres.delete import delete_all, delete_one
 from ..postgres.execute import execute_fetch_all
 from .hooks import (
@@ -115,7 +115,7 @@ def delete_group(group: Group, request: HttpRequest | None = None):
 
 def _delete_group_action(group: Group, request: HttpRequest | None = None):
     delete_all(CategoryGroupPermission, group_id=group.id)
-    delete_all(CategoryModerator, group_id=group.id)
+    delete_all(Moderator, group_id=group.id)
     delete_one(group)
 
     remove_group_from_users_groups_ids.delay(group.id)

@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
             index=models.Index(
                 condition=models.Q(("is_misago_root", True)),
                 fields=["is_misago_root"],
-                name="misago_user_is_root",
+                name="misago_user_is_misago_root",
             ),
         ),
     ]

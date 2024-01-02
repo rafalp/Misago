@@ -1,8 +1,14 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n %}
+{% load i18n misago_admin_form %}
 
 
 {% block page-actions %}
+<div class="col-auto page-action">
+  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#new-moderator-modal">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New moderator" context "admin moderators" %}
+  </button>
+</div>
 {% endblock %}
 
 
@@ -19,7 +25,11 @@
   [U]
 </td>
 <td class="pr-0">
-  [ITEM]
+  {% if item.group %}
+    {{ item.group }}
+  {% else %}
+    {{ item.user.username }}
+  {% endif %}
 </td>
 <td>
   <a class="btn btn-light btn-sm" href="" title="">
@@ -37,11 +47,78 @@
 {% endblock %}
 
 
+{% block content %}
+{{ block.super }}
+
+<div class="modal fade" id="new-moderator-modal" tabindex="-1" aria-labelledby="new-moderator-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-moderator-label">{% trans "New moderator" context "admin moderators form" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'admin dialog' %}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form>
+        <div class="modal-body">
+          {% form_row new_moderator_form.moderator_type %}
+          <div id="new-moderator-modal-group">
+            {% form_row new_moderator_form.group %}
+          </div>
+          <div id="new-moderator-modal-user" class-off="d-none">
+            {% form_row new_moderator_form.user %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">
+            {% trans "Add moderator" context "admin moderators form" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
 {% block javascripts %}
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-delete-confirmation]",
     "{% trans 'Are you sure you want to delete this moderator?' context 'admin moderators' %}"
   )
+
+  window.misago.initUserSelect(
+    {
+      input: document.querySelector("#new-moderator-modal-user input"),
+      api: "{% url 'misago:admin:select-user' %}",
+      initial: "{% trans 'Enter a user name to search.' context 'admin select user' %}",
+      clear: "{% trans 'Clear' context 'admin select user' %}",
+    } 
+  )
+
+  document.querySelector("#new-moderator-modal select").addEventListener("change", (event) => {
+    const group = document.getElementById("new-moderator-modal-group")
+    const user = document.getElementById("new-moderator-modal-user")
+  
+    if (event.target.value == "group") {
+      group.classList.remove("d-none")
+      user.classList.add("d-none")
+    } else {
+      group.classList.add("d-none")
+      user.classList.remove("d-none")
+    }
+  })
+
+  document.querySelector("#new-moderator-modal form").addEventListener("submit", (event) => {
+    event.preventDefault()
+
+    const formData = new FormData(event.target)
+    if (formData.get("moderator_type") == "group") {
+
+    } else if (formData.get("user").trim().length) {
+
+    }
+  })
 </script>
 {% endblock %}
