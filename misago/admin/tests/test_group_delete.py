@@ -83,7 +83,7 @@ def test_main_group_cant_be_deleted(admin_client, custom_group, user):
     )
     assert_has_error_message(
         response,
-        "Can't delete the \"Custom Group\" group because it's a main group for some users.",
+        "Can't delete \"Custom Group\" group because it's a main group for some users.",
     )
 
 

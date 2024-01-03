@@ -80,13 +80,13 @@ class NewView(ModeratorAdmin, generic.ModelFormView):
         if target.group and target.group.is_default:
             return pgettext_lazy(
                 "admin moderators",
-                "The \"%(target)s\" group can't be given moderator permissions because it's the default group.",
+                "Can't grant \"%(target)s\" moderator permissions because it's the default group.",
             )
 
         if target.group and target.group.is_protected:
             return pgettext_lazy(
                 "admin moderators",
-                "The \"%(target)s\" group can't be given moderator permissions because it's protected.",
+                "Can't grant \"%(target)s\" moderator permissions because it's protected group.",
             )
 
     def handle_form(self, data, request, target):
@@ -98,14 +98,14 @@ class EditView(ModeratorAdmin, generic.ModelFormView):
     template_name = "form.html"
     form_class = ModeratorForm
     success_message = pgettext_lazy(
-        "admin moderators", 'The "%(name)s" moderator has been updated.'
+        "admin moderators", '"%(name)s" moderator has been updated.'
     )
 
     def check_permissions(self, request, target):
         if target.is_protected:
             return pgettext(
                 "admin moderators",
-                'The "%(target)s" group moderator permissions are protected and can\'t be changed.',
+                'Can\'t change "%(target)s" moderator permissions because they are protected.',
             ) % {"target": target.group}
 
     def handle_form(self, data, request, target):
@@ -118,22 +118,12 @@ class DeleteView(ModeratorAdmin, generic.ButtonView):
         if target.is_protected:
             return pgettext(
                 "admin moderators",
-                'The "%(target)s" group moderator permissions are protected and can\'t be removed.',
+                'Can\'t remove "%(target)s" moderator permissions because they are protected.',
             ) % {"target": target.group}
 
     def button_action(self, request, target):
         target.delete()
         invalidate_cache(CacheName.MODERATORS)
 
-        if target.group_id:
-            message = pgettext(
-                "admin moderators",
-                'The "%(name)s" group moderator has been deleted.',
-            )
-        else:
-            message = pgettext(
-                "admin moderators",
-                'The "%(name)s" moderator has been deleted.',
-            )
-
+        message = pgettext("admin moderators", '"%(name)s" moderator has been deleted.')
         messages.success(request, message % {"name": target.name})

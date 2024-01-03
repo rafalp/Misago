@@ -75,9 +75,7 @@ class MembersMainView(GroupAdmin, generic.TargetedView):
 class NewView(GroupAdmin, generic.ModelFormView):
     template_name = "new.html"
     form_class = NewGroupForm
-    message_submit = pgettext_lazy(
-        "admin groups", 'The "%(name)s" group has been created.'
-    )
+    message_submit = pgettext_lazy("admin groups", '"%(name)s" group has been created.')
 
     def handle_form(self, form, request, target):
         group = create_group(
@@ -100,9 +98,7 @@ class NewView(GroupAdmin, generic.ModelFormView):
 class EditView(GroupAdmin, generic.ModelFormView):
     template_name = "edit.html"
     form_class = EditGroupForm
-    message_submit = pgettext_lazy(
-        "admin groups", 'The "%(name)s" group has been updated.'
-    )
+    message_submit = pgettext_lazy("admin groups", '"%(name)s" group has been updated.')
 
     def handle_form(self, form, request, target):
         copy_permissions = form.cleaned_data.pop("copy_permissions", None)
@@ -128,7 +124,7 @@ class CategoryPermissionsView(GroupAdmin, generic.PermissionsFormView):
         "admin groups", "No categories exist to set group permissions for."
     )
     message_submit = pgettext_lazy(
-        "admin groups", 'The "%(name)s" category permissions have been updated.'
+        "admin groups", '"%(name)s" category permissions have been updated.'
     )
 
     def get_permissions(self, request, target):
@@ -199,7 +195,7 @@ class DeleteView(GroupAdmin, generic.ButtonView):
             return (
                 pgettext(
                     "admin groups",
-                    "Can't delete the \"%(name)s\" group because it's a main group for some users.",
+                    "Can't delete \"%(name)s\" group because it's a main group for some users.",
                 )
                 % message_format
             )
@@ -208,7 +204,7 @@ class DeleteView(GroupAdmin, generic.ButtonView):
         delete_group(target, request)
         invalidate_cache(CacheName.GROUPS, CacheName.PERMISSIONS)
 
-        message = pgettext("admin groups", 'The "%(name)s" group has been deleted.')
+        message = pgettext("admin groups", '"%(name)s" group has been deleted.')
         messages.success(request, message % {"name": target.name})
 
 
@@ -218,15 +214,13 @@ class MakeDefaultView(GroupAdmin, generic.ButtonView):
 
         if target.is_default:
             return (
-                pgettext("admin groups", 'The "%(name)s" group is already the default.')
+                pgettext("admin groups", '"%(name)s" group is already the default.')
                 % message_format
             )
 
         if target.id in INVALID_DEFAULT_GROUP_IDS:
             return (
-                pgettext(
-                    "admin groups", 'The "%(name)s" group can\'t be set as default.'
-                )
+                pgettext("admin groups", '"%(name)s" group can\'t be set as default.')
                 % message_format
             )
 
@@ -234,7 +228,7 @@ class MakeDefaultView(GroupAdmin, generic.ButtonView):
             return (
                 pgettext(
                     "admin groups",
-                    'The "%(name)s" group can\'t be set as default because it has moderator permissions.',
+                    'Can\'t set "%(name)s" group as default because it has moderator permissions.',
                 )
                 % message_format
             )
@@ -243,7 +237,5 @@ class MakeDefaultView(GroupAdmin, generic.ButtonView):
         set_default_group(target, request)
         invalidate_cache(CacheName.GROUPS)
 
-        message = pgettext(
-            "admin groups", 'The "%(name)s" group has been made a default.'
-        )
+        message = pgettext("admin groups", '"%(name)s" group has been made a default.')
         messages.success(request, message % {"name": target.name})

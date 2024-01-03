@@ -46,7 +46,7 @@ def test_make_default_group_handles_already_default_group(admin_client, members_
         reverse("misago:admin:groups:default", kwargs={"pk": members_group.id})
     )
     assert response.status_code == 302
-    assert_has_error_message(response, 'The "Members" group is already the default.')
+    assert_has_error_message(response, '"Members" group is already the default.')
 
 
 def test_make_default_group_rejects_admins_group(admin_client, admins_group):
@@ -55,7 +55,7 @@ def test_make_default_group_rejects_admins_group(admin_client, admins_group):
     )
     assert response.status_code == 302
     assert_has_error_message(
-        response, 'The "Administrators" group can\'t be set as default.'
+        response, '"Administrators" group can\'t be set as default.'
     )
 
 
@@ -64,9 +64,7 @@ def test_make_default_group_rejects_moderators_group(admin_client, moderators_gr
         reverse("misago:admin:groups:default", kwargs={"pk": moderators_group.id})
     )
     assert response.status_code == 302
-    assert_has_error_message(
-        response, 'The "Moderators" group can\'t be set as default.'
-    )
+    assert_has_error_message(response, '"Moderators" group can\'t be set as default.')
 
 
 def test_make_default_group_rejects_guests_group(admin_client, guests_group):
@@ -74,7 +72,7 @@ def test_make_default_group_rejects_guests_group(admin_client, guests_group):
         reverse("misago:admin:groups:default", kwargs={"pk": guests_group.id})
     )
     assert response.status_code == 302
-    assert_has_error_message(response, 'The "Guests" group can\'t be set as default.')
+    assert_has_error_message(response, '"Guests" group can\'t be set as default.')
 
 
 def test_make_default_group_rejects_custom_moderators_group(admin_client, custom_group):
@@ -86,5 +84,5 @@ def test_make_default_group_rejects_custom_moderators_group(admin_client, custom
     assert response.status_code == 302
     assert_has_error_message(
         response,
-        'The "Custom Group" group can\'t be set as default because it has moderator permissions.',
+        'Can\'t set "Custom Group" group as default because it has moderator permissions.',
     )

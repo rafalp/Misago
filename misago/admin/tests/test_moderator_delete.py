@@ -48,7 +48,7 @@ def test_protected_moderator_cant_be_deleted(admin_client, admins_group):
     )
     assert_has_error_message(
         response,
-        'The "Administrators" group moderator permissions are protected and can\'t be removed.',
+        'Can\'t remove "Administrators" moderator permissions because they are protected.',
     )
 
 
