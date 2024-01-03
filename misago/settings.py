@@ -3,6 +3,7 @@
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
+    "MISAGO_MIDDLEWARE",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     "misago.themes",
     "misago.markup",
     "misago.menus",
+    "misago.middleware",
     "misago.notifications",
     "misago.oauth2",
     "misago.permissions",
@@ -89,6 +91,28 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     # Note: keep frontend_context processor last for previous processors
     # to be able to expose data UI app via request.frontend_context
     "misago.core.context_processors.frontend_context",
+]
+
+MISAGO_MIDDLEWARE = [
+    "misago.users.middleware.RealIPMiddleware",
+    "misago.core.middleware.FrontendContextMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "misago.cache.middleware.cache_versions_middleware",
+    "misago.conf.middleware.dynamic_settings_middleware",
+    "misago.socialauth.middleware.socialauth_providers_middleware",
+    "misago.users.middleware.UserMiddleware",
+    "misago.middleware.permissions.permissions_middleware",
+    "misago.acl.middleware.user_acl_middleware",
+    "misago.core.middleware.ExceptionHandlerMiddleware",
+    "misago.users.middleware.OnlineTrackerMiddleware",
+    "misago.admin.middleware.AdminAuthMiddleware",
+    "misago.threads.middleware.UnreadThreadsCountMiddleware",
 ]
 
 MISAGO_NOTIFICATIONS_RETRY_DELAY = 5  # Seconds

@@ -178,25 +178,7 @@ LOGOUT_URL = "misago:logout"
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    "misago.users.middleware.RealIPMiddleware",
-    "misago.core.middleware.FrontendContextMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "misago.cache.middleware.cache_versions_middleware",
-    "misago.conf.middleware.dynamic_settings_middleware",
-    "misago.socialauth.middleware.socialauth_providers_middleware",
-    "misago.users.middleware.UserMiddleware",
-    "misago.acl.middleware.user_acl_middleware",
-    "misago.core.middleware.ExceptionHandlerMiddleware",
-    "misago.users.middleware.OnlineTrackerMiddleware",
-    "misago.admin.middleware.AdminAuthMiddleware",
-    "misago.threads.middleware.UnreadThreadsCountMiddleware",
-]
+] + MISAGO_MIDDLEWARE
 
 ROOT_URLCONF = "devproject.urls"
 
@@ -257,6 +239,7 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.headers.HeadersPanel",
     "debug_toolbar.panels.request.RequestPanel",
     "debug_toolbar.panels.sql.SQLPanel",
+    "misago.permissions.panels.MisagoUserPermissionsPanel",
     "misago.acl.panels.MisagoACLPanel",
     "debug_toolbar.panels.staticfiles.StaticFilesPanel",
     "debug_toolbar.panels.templates.TemplatesPanel",

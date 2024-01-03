@@ -6,6 +6,7 @@ class MisagoUserPermissionsPanel(Panel):
     """Panel that displays current user's permission"""
 
     title = pgettext_lazy("debug toolbar", "Misago User Permissions")
+    nav_title = pgettext_lazy("debug toolbar", "Misago Permissions")
     template = "misago/permissions_panel.html"
 
     @property

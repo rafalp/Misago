@@ -191,7 +191,7 @@ class PermissionsFormView(TargetedView):
         initial_data = {}
         for item_id, permission in self.get_initial_data(request, target):
             initial_data.setdefault(item_id, []).append(permission)
-
+        print(initial_data)
         for item in items:
             item["permissions"] = initial_data.get(item["id"], [])
 

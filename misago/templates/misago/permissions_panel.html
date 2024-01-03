@@ -1,0 +1,74 @@
+{% load i18n %}
+<h4>
+  {% trans "Proxy status" context "debug toolbar user permissions" %}
+</h4>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 180px;">{% trans "Attribute" context "debug toolbar user permissions" %}</th>
+      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{% trans "User ID" context "debug toolbar user permissions" %}</td>
+      <td>
+        {% if misago_permissions.user.is_authenticated %}
+          #{{ misago_permissions.user.id }}
+        {% else %}
+          <i>{% trans "Anonymous" context "debug toolbar user permissions" %}</i>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>{% trans "Accessed permissions" context "debug toolbar user permissions" %}</td>
+      <td>
+        {% if misago_permissions.permissions_accessed %}
+          {% trans "Yes" context "debug toolbar user permissions" %}
+        {% else %}
+          {% trans "No" context "debug toolbar user permissions" %}
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>
+  {% trans "Permissions" context "debug toolbar user permissions" %}
+</h4>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 180px;">{% trans "Permission" context "debug toolbar user permissions" %}</th>
+      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for permission_name, permission_value in misago_permissions.permissions.items %}
+      {% if not permission_name == "category" %}
+        <tr>
+          <td>{{ permission_name }}</td>
+          <td>{{ permission_value }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+<h4>
+  {% trans "Category Permissions" context "debug toolbar user permissions" %}
+</h4>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 180px;">{% trans "Permission" context "debug toolbar user permissions" %}</th>
+      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for permission_name, permission_value in misago_permissions.permissions.category.items %}
+      <tr>
+        <td>{{ permission_name }}</td>
+        <td>{{ permission_value }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
