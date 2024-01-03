@@ -120,23 +120,23 @@ def _build_user_category_permissions_action(
         ):
             continue
 
-        # Skip category if can't see it
+        # Skip category if we can't see it
         perms = category_permissions.get(category_id, [])
-        if CategoryPermission.SEE not in perms:
+        if CategoryPermission.SEE.value not in perms:
             continue
 
         permissions[CategoryPermission.SEE].append(category_id)
 
-        if CategoryPermission.BROWSE in perms:
+        if CategoryPermission.BROWSE.value in perms:
             permissions[CategoryPermission.BROWSE].append(category_id)
         else:
             continue  # Skip rest of permissions if we can't read its contents
 
-        if CategoryPermission.START in perms:
+        if CategoryPermission.START.value in perms:
             permissions[CategoryPermission.START].append(category_id)
-        if CategoryPermission.REPLY in perms:
+        if CategoryPermission.REPLY.value in perms:
             permissions[CategoryPermission.REPLY].append(category_id)
-        if CategoryPermission.ATTACHMENTS in perms:
+        if CategoryPermission.ATTACHMENTS.value in perms:
             permissions[CategoryPermission.ATTACHMENTS].append(category_id)
 
     return permissions
