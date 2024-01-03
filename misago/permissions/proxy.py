@@ -12,16 +12,16 @@ User = get_user_model()
 class UserPermissionsProxy:
     user: User | AnonymousUser
     cache_versions: dict
-    permissions_accessed: bool
+    accessed_permissions: bool
 
     def __init__(self, user: User | AnonymousUser, cache_versions: dict):
         self.user = user
         self.cache_versions = cache_versions
-        self.permissions_accessed = False
+        self.accessed_permissions = False
 
     @cached_property
     def permissions(self):
-        self.permissions_accessed = True
+        self.accessed_permissions = True
         return get_user_permissions(self.user, self.cache_versions)
 
     def __getattr__(self, name: str) -> Any:
