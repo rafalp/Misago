@@ -3,13 +3,13 @@ from django.utils import timezone
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
+from .cache.enums import CacheName
 from .categories.models import Category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
-from .notifications.threads import ThreadNotifications
 from .socialauth import SOCIALAUTH_CACHE
 from .test import MisagoClient
 from .themes import THEME_CACHE
@@ -23,6 +23,9 @@ from .users.test import create_test_superuser, create_test_user
 
 def get_cache_versions():
     return {
+        CacheName.GROUPS: "abcdefgh",
+        CacheName.MODERATORS: "abcdefgh",
+        CacheName.PERMISSIONS: "abcdefgh",
         ACL_CACHE: "abcdefgh",
         BANS_CACHE: "abcdefgh",
         SETTINGS_CACHE: "abcdefgh",

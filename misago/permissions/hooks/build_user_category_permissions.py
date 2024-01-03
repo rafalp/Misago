@@ -1,7 +1,5 @@
 from typing import Protocol
 
-from django.contrib.auth import get_user_model
-
 from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 from ...users.models import Group

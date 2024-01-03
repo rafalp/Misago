@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 
 from ...plugins.hooks import FilterHook
 
@@ -15,7 +16,7 @@ class GetUserPermissionsHookAction(Protocol):
 
     # Arguments
 
-    ## `user: User`
+    ## `user: User | AnonymousUser`
 
     A user to return permissions for.
 
@@ -28,7 +29,7 @@ class GetUserPermissionsHookAction(Protocol):
     A Python `dict` with user permissions.
     """
 
-    def __call__(self, user: User, cache_versions: dict) -> dict:
+    def __call__(self, user: User | AnonymousUser, cache_versions: dict) -> dict:
         ...
 
 
@@ -45,7 +46,7 @@ class GetUserPermissionsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user: User`
+    ## `user: User | AnonymousUser`
 
     A user to return permissions for.
 
@@ -61,7 +62,7 @@ class GetUserPermissionsHookFilter(Protocol):
     def __call__(
         self,
         action: GetUserPermissionsHookAction,
-        user: User,
+        user: User | AnonymousUser,
         cache_versions: dict,
     ) -> dict:
         ...
@@ -86,13 +87,14 @@ class GetUserPermissionsHook(
     `plugin_data` attribute:
 
     ```python
+    from django.contrib.auth.models import AnonymousUser
     from misago.permissions.hooks import build_user_permissions_hook
     from misago.users.models import User
 
 
     @get_user_permissions_hook.append_filter
     def include_plugin_permission(
-        action, user: User, cache_versions: dict
+        action, user: User | AnonymousUser, cache_versions: dict
     ) -> dict:
         permissions = action(user, cache_versions)
         permissions["plugin_permission"] = False
@@ -109,7 +111,7 @@ class GetUserPermissionsHook(
     def __call__(
         self,
         action: GetUserPermissionsHookAction,
-        user: User,
+        user: User | AnonymousUser,
         cache_versions: dict,
     ) -> dict:
         return super().__call__(action, user, cache_versions)

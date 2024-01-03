@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
 from ..cache.enums import CacheName
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
+from ..users.enums import DefaultGroupId
 from ..users.models import Group
 from .enums import CategoryPermission
 from .hooks import (
@@ -16,11 +18,13 @@ from .models import CategoryGroupPermission
 User = get_user_model()
 
 
-def get_user_permissions(user: User, cache_versions: dict) -> dict:
+def get_user_permissions(user: User | AnonymousUser, cache_versions: dict) -> dict:
     return get_user_permissions_hook(_get_user_permissions_action, user, cache_versions)
 
 
-def _get_user_permissions_action(user: User, cache_versions: dict) -> dict:
+def _get_user_permissions_action(
+    user: User | AnonymousUser, cache_versions: dict
+) -> dict:
     cache_key = get_user_permissions_cache_key(user, cache_versions)
     permissions = cache.get(cache_key)
 
@@ -31,18 +35,22 @@ def _get_user_permissions_action(user: User, cache_versions: dict) -> dict:
     return permissions
 
 
-def get_user_permissions_cache_key(user: User, cache_versions: dict) -> str:
-    return ":".join(
-        (
-            user.permissions_id,
-            cache_versions[CacheName.PERMISSIONS],
-            cache_versions[CacheName.MODERATORS],
-        )
-    )
+def get_user_permissions_cache_key(
+    user: User | AnonymousUser, cache_versions: dict
+) -> str:
+    if user.is_anonymous:
+        return f"anonymous:{cache_versions[CacheName.PERMISSIONS]}"
+
+    return f"{user.permissions_id}:{cache_versions[CacheName.PERMISSIONS]}"
 
 
-def build_user_permissions(user: User) -> dict:
-    groups: list[Group] = list(Group.objects.filter(id__in=user.groups_ids))
+def build_user_permissions(user: User | AnonymousUser) -> dict:
+    if user.is_anonymous:
+        groups_ids = [DefaultGroupId.GUESTS]
+    else:
+        groups_ids = user.groups_ids
+
+    groups: list[Group] = list(Group.objects.filter(id__in=groups_ids))
     permissions = build_user_permissions_hook(_build_user_permissions_action, groups)
 
     permissions["category"] = build_user_category_permissions(groups, permissions)
