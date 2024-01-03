@@ -78,13 +78,13 @@ class NewView(ModeratorAdmin, generic.ModelFormView):
         if target.group and target.group.is_default:
             return pgettext_lazy(
                 "admin moderators",
-                'The "%(target)s" group can\'t be given moderator permissions because it\'s the default group.',
+                "The \"%(target)s\" group can't be given moderator permissions because it's the default group.",
             )
 
         if target.group and target.group.is_protected:
             return pgettext_lazy(
                 "admin moderators",
-                'The "%(target)s" group can\'t be given moderator permissions because it\'s protected.',
+                "The \"%(target)s\" group can't be given moderator permissions because it's protected.",
             )
 
 

@@ -17,13 +17,14 @@
 <th>{% trans "Moderator" context "admin moderators list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
 <td class="pr-0">
   {% if item.group %}
-    <span class="media-admin-icon" style="width: 24px; height: 24px;">
+    <span class="media-admin-icon" style="width: 24px; height: 24px;" data-tooltip="top" title="{% trans 'User group' context 'admin moderators list item' %}">
       <span class="fas fa-adjust"></span>
     </span>
   {% else %}
@@ -56,12 +57,26 @@
 <td>
   {% if item.is_protected %}
     <button type="button" class="btn btn-light btn-sm" disabled>
-      <i class="fas fa-edit"></i>
+      <span class="fas fa-edit fa-fw"></span>
     </button>
   {% else %}
-    <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" title="{% trans 'Edit moderator' context 'admin moderators' %}">
-      <i class="fas fa-edit"></i>
+    <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" data-tooltip="top" title="{% trans 'Edit moderator' context 'admin moderators' %}">
+      <span class="fas fa-edit fa-fw"></span>
     </a>
+  {% endif %}
+</td>
+<td>
+  {% if item.is_protected %}
+    <button type="button" class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-times fa-fw"></span>
+    </button>
+  {% else %}
+    <form action="{% url 'misago:admin:moderators:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Delete moderator' context 'admin moderators' %}">
+        <span class="fa fa-times fa-fw"></span>
+      </button>
+    </form>
   {% endif %}
 </td>
 {% endblock %}

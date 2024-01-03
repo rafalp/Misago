@@ -29,7 +29,7 @@
 {% block table-row %}
 <td class="pr-0">
   <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-sm">
-    <span class="fas fa-external-link-alt"></span>
+    <span class="fas fa-external-link-alt fa-fw"></span>
   </a>
 </td>
 <td>
@@ -65,12 +65,12 @@
     <form action="{% url 'misago:admin:categories:down' pk=item.pk %}" method="post">
       {% csrf_token %}
       <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' context 'admin categories' %}">
-        <span class="fa fa-chevron-down"></span>
+        <span class="fa fa-chevron-down fa-fw"></span>
       </button>
     </form>
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
-      <span class="fa fa-chevron-down"></span>
+      <span class="fa fa-chevron-down fa-fw"></span>
     </button>
   {% endif %}
 </td>
@@ -79,24 +79,24 @@
     <form action="{% url 'misago:admin:categories:up' pk=item.pk %}" method="post">
       {% csrf_token %}
       <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' context 'admin categories' %}">
-        <span class="fa fa-chevron-up"></span>
+        <span class="fa fa-chevron-up fa-fw"></span>
       </button>
     </form>
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
-      <span class="fa fa-chevron-up"></span>
+      <span class="fa fa-chevron-up fa-fw"></span>
     </button>
   {% endif %}
 </td>
 <td>
   <a href="{% url 'misago:admin:categories:permissions' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Change permissions' context 'admin categories' %}">
-    <span class="fa fa-adjust"></span>
+    <span class="fa fa-adjust fa-fw"></span>
   </a>
 </td>
 <td>
   <div class="dropdown">
     <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fas fa-ellipsis-h"></i>
+      <span class="fas fa-ellipsis-h fa-fw"></span>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
       <a class="dropdown-item" href="{% url 'misago:admin:categories:permissions' pk=item.pk %}">
