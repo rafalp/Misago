@@ -22,11 +22,24 @@
     {% form_row form.group %}
     {% form_row form.secondary_groups %}
 
+    {% form_row form.title %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User permissions (deprecated)" context "admin user form" %}</legend>
+
+    <div class="alert alert-warning" role="alert">
+      <strong>{% trans "Deprecation warning" context "admin user form" %}:</strong>
+      {% blocktranslate trimmed context "admin user form" %}
+      User ranks and roles have been replaced with user groups and moderators and will be removed in a future version of Misago.
+      {% endblocktranslate %}
+    </div>
+
     {% if 'rank' in form.fields %}
       {% form_row form.rank %}
     {% endif %}
-
-    {% form_row form.title %}
     {% form_row form.roles %}
 
   </fieldset>

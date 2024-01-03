@@ -12,6 +12,13 @@
 {% endblock %}
 
 
+{% block view %}
+{% include "misago/admin/ranks/deprecated.html" %}
+
+{{ block.super }}
+{% endblock view %}
+
+
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
 <th>{% trans "Rank" context "admin ranks list" %}</th>

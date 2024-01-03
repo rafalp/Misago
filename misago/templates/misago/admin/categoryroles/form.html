@@ -21,6 +21,13 @@
 {% endblock page-header %}
 
 
+{% block view %}
+{% include "misago/admin/categoryroles/deprecated.html" %}
+
+{{ block.super }}
+{% endblock view %}
+
+
 {% block form-header %}
 {% if target.pk %}
   {% trans "Edit category role" context "admin category role form" %}

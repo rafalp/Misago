@@ -135,6 +135,13 @@
   <fieldset>
     <legend>{% trans "User permissions (deprecated)" context "admin user form" %}</legend>
 
+    <div class="alert alert-warning" role="alert">
+      <strong>{% trans "Deprecation warning" context "admin user form" %}:</strong>
+      {% blocktranslate trimmed context "admin user form" %}
+      User ranks and roles have been replaced with user groups and moderators and will be removed in a future version of Misago.
+      {% endblocktranslate %}
+    </div>
+
     {% if 'rank' in form.fields %}
       {% form_row form.rank %}
     {% endif %}

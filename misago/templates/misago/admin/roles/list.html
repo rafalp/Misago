@@ -12,6 +12,13 @@
 {% endblock %}
 
 
+{% block view %}
+{% include "misago/admin/roles/deprecated.html" %}
+
+{{ block.super }}
+{% endblock view %}
+
+
 {% block table-header %}
 <th>{% trans "Role" context "admin roles list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
