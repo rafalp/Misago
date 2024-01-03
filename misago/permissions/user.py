@@ -61,7 +61,7 @@ def build_user_permissions(user: User | AnonymousUser) -> dict:
 def _build_user_permissions_action(groups: list[Group]) -> dict:
     permissions = {
         "user_profiles": False,
-        "category": {},
+        "categories": {},
     }
 
     for group in groups:
