@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ...cache.enums import CacheName
+from ...cache.versions import invalidate_cache
 from ...permissions.models import Moderator
 from ...users.models import Group
 from ..views import generic
@@ -87,10 +89,17 @@ class NewView(ModeratorAdmin, generic.ModelFormView):
                 "The \"%(target)s\" group can't be given moderator permissions because it's protected.",
             )
 
+    def handle_form(self, data, request, target):
+        super().handle_form(data, request, target)
+        invalidate_cache(CacheName.MODERATORS)
+
 
 class EditView(ModeratorAdmin, generic.ModelFormView):
     template_name = "form.html"
     form_class = ModeratorForm
+    success_message = pgettext_lazy(
+        "admin moderators", 'The "%(name)s" moderator has been updated.'
+    )
 
     def check_permissions(self, request, target):
         if target.is_protected:
@@ -98,6 +107,10 @@ class EditView(ModeratorAdmin, generic.ModelFormView):
                 "admin moderators",
                 'The "%(target)s" group moderator permissions are protected and can\'t be changed.',
             ) % {"target": target.group}
+
+    def handle_form(self, data, request, target):
+        super().handle_form(data, request, target)
+        invalidate_cache(CacheName.MODERATORS)
 
 
 class DeleteView(ModeratorAdmin, generic.ButtonView):
@@ -107,3 +120,20 @@ class DeleteView(ModeratorAdmin, generic.ButtonView):
                 "admin moderators",
                 'The "%(target)s" group moderator permissions are protected and can\'t be removed.',
             ) % {"target": target.group}
+
+    def button_action(self, request, target):
+        target.delete()
+        invalidate_cache(CacheName.MODERATORS)
+
+        if target.group_id:
+            message = pgettext(
+                "admin moderators",
+                'The "%(name)s" group moderator has been deleted.',
+            )
+        else:
+            message = pgettext(
+                "admin moderators",
+                'The "%(name)s" moderator has been deleted.',
+            )
+
+        messages.success(request, message % {"name": target.name})

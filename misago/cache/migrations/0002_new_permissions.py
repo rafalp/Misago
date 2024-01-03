@@ -13,5 +13,6 @@ class Migration(migrations.Migration):
 
     operations = [
         StartCacheVersioning(CacheName.GROUPS),
+        StartCacheVersioning(CacheName.MODERATORS),
         StartCacheVersioning(CacheName.PERMISSIONS),
     ]

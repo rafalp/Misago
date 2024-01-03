@@ -24,3 +24,9 @@ class Moderator(models.Model):
     @property
     def is_protected(self):
         return self.group_id in (DefaultGroupId.ADMINS, DefaultGroupId.MODERATORS)
+
+    @property
+    def name(self):
+        if self.group_id:
+            return str(self.group)
+        return str(self.user)
