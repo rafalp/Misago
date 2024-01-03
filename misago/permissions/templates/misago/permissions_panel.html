@@ -44,7 +44,7 @@
   </thead>
   <tbody>
     {% for permission_name, permission_value in misago_permissions.permissions.items %}
-      {% if not permission_name == "category" %}
+      {% if not permission_name == "categories" %}
         <tr>
           <td>{{ permission_name }}</td>
           <td>{{ permission_value }}</td>
@@ -64,7 +64,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for permission_name, permission_value in misago_permissions.permissions.category.items %}
+    {% for permission_name, permission_value in misago_permissions.permissions.categories.items %}
       <tr>
         <td>{{ permission_name }}</td>
         <td>{{ permission_value }}</td>

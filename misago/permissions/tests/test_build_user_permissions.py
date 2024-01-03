@@ -32,7 +32,7 @@ def test_build_user_permissions_builds_user_category_permissions(
     user, default_category
 ):
     permissions = build_user_permissions(user)
-    assert permissions["category"] == {
+    assert permissions["categories"] == {
         CategoryPermission.SEE: [default_category.id],
         CategoryPermission.BROWSE: [default_category.id],
         CategoryPermission.START: [default_category.id],
@@ -45,7 +45,7 @@ def test_build_user_permissions_builds_anonymous_user_category_permissions(
     anonymous_user, default_category
 ):
     permissions = build_user_permissions(anonymous_user)
-    assert permissions["category"] == {
+    assert permissions["categories"] == {
         CategoryPermission.SEE: [default_category.id],
         CategoryPermission.BROWSE: [default_category.id],
         CategoryPermission.START: [],
