@@ -1,4 +1,3 @@
-# parse_user_message.py
 from typing import Optional, Protocol
 
 from django.http import HttpRequest

@@ -33,7 +33,7 @@ def test_category_permissions_form_replaces_old_category_permissions_with_new(
         reverse(
             "misago:admin:categories:permissions", kwargs={"pk": sibling_category.id}
         ),
-        {f"permissions[{custom_group.id}]": [CategoryPermission.READ]},
+        {f"permissions[{custom_group.id}]": [CategoryPermission.BROWSE]},
     )
     assert response.status_code == 302
 
@@ -43,7 +43,7 @@ def test_category_permissions_form_replaces_old_category_permissions_with_new(
     CategoryGroupPermission.objects.get(
         group=custom_group,
         category=sibling_category,
-        permission=CategoryPermission.READ,
+        permission=CategoryPermission.BROWSE,
     )
 
 
@@ -56,7 +56,7 @@ def test_category_permissions_form_invalidates_permissions_cache(
                 "misago:admin:categories:permissions",
                 kwargs={"pk": sibling_category.id},
             ),
-            {f"permissions[{custom_group.id}]": [CategoryPermission.READ]},
+            {f"permissions[{custom_group.id}]": [CategoryPermission.BROWSE]},
         )
 
 

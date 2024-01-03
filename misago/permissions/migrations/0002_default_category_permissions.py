@@ -8,7 +8,7 @@ from ..enums import CategoryPermission
 
 FULL_CATEGORY_PERMISSIONS = (
     CategoryPermission.SEE,
-    CategoryPermission.READ,
+    CategoryPermission.BROWSE,
     CategoryPermission.START,
     CategoryPermission.REPLY,
     CategoryPermission.ATTACHMENTS,
@@ -16,7 +16,7 @@ FULL_CATEGORY_PERMISSIONS = (
 
 GUEST_CATEGORY_PERMISSIONS = (
     CategoryPermission.SEE,
-    CategoryPermission.READ,
+    CategoryPermission.BROWSE,
     CategoryPermission.ATTACHMENTS,
 )
 

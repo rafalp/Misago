@@ -16,8 +16,8 @@ def get_admin_category_permissions(form: PermissionsFormView) -> list[dict]:
             color="#eff6ff",
         ),
         form.create_permission(
-            id=CategoryPermission.READ,
-            name=pgettext("category permission", "Read threads"),
+            id=CategoryPermission.BROWSE,
+            name=pgettext("category permission", "Browse contents"),
             color="#f5f3ff",
         ),
         form.create_permission(

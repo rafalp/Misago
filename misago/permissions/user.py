@@ -5,12 +5,21 @@ from ..cache.enums import CacheName
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..users.models import Group
-from .hooks import build_user_permissions_hook
+from .enums import CategoryPermission
+from .hooks import (
+    build_user_permissions_hook,
+    get_user_permissions_hook,
+)
+from .models import CategoryGroupPermission
 
 User = get_user_model()
 
 
 def get_user_permissions(user: User, cache_versions: dict) -> dict:
+    return get_user_permissions_hook(_get_user_permissions_action, user, cache_versions)
+
+
+def _get_user_permissions_action(user: User, cache_versions: dict) -> dict:
     cache_key = get_user_permissions_cache_key(user, cache_versions)
     permissions = cache.get(cache_key)
 
@@ -41,7 +50,15 @@ def build_user_permissions(user: User) -> dict:
 
 
 def _build_user_permissions_action(groups: list[Group]) -> dict:
-    permissions = {"category": {}}
+    permissions = {
+        "user_profiles": False,
+        "category": {},
+    }
+
+    for group in groups:
+        if group.can_see_user_profiles:
+            permissions["user_profiles"] = True
+
     return permissions
 
 
@@ -54,14 +71,59 @@ def build_user_category_permissions(groups: list[Group], permissions: dict) -> d
         )
     }
 
-    return _build_user_category_permissions_action(groups, categories, permissions)
+    category_permissions_queryset = CategoryGroupPermission.objects.filter(
+        group__in=groups,
+        category__in=categories.values(),
+    ).values_list("category_id", "permission")
+
+    category_permissions: dict[int, list[str]] = {}
+    for category_id, permission in category_permissions_queryset:
+        category_permissions.setdefault(category_id, []).append(permission)
+
+    return _build_user_category_permissions_action(
+        groups, categories, category_permissions, permissions
+    )
 
 
 def _build_user_category_permissions_action(
-    user: User,
     groups: list[Group],
     categories: dict[int, Category],
-    permissions: dict,
+    category_permissions: dict[int, list[str]],
+    user_permissions: dict,
 ) -> dict:
-    category_permissions = {}
-    return category_permissions
+    permissions = {
+        CategoryPermission.SEE: [],
+        CategoryPermission.BROWSE: [],
+        CategoryPermission.START: [],
+        CategoryPermission.REPLY: [],
+        CategoryPermission.ATTACHMENTS: [],
+    }
+
+    for category_id, category in categories.items():
+        # Skip category if we can't see its parent
+        if (
+            category.level > 1
+            and category.parent_id not in permissions[CategoryPermission.BROWSE]
+        ):
+            continue
+
+        # Skip category if can't see it
+        perms = category_permissions.get(category_id, [])
+        if CategoryPermission.SEE not in perms:
+            continue
+
+        permissions[CategoryPermission.SEE].append(category_id)
+
+        if CategoryPermission.BROWSE in perms:
+            permissions[CategoryPermission.BROWSE].append(category_id)
+        else:
+            continue  # Skip rest of permissions if we can't read its contents
+
+        if CategoryPermission.START in perms:
+            permissions[CategoryPermission.START].append(category_id)
+        if CategoryPermission.REPLY in perms:
+            permissions[CategoryPermission.REPLY].append(category_id)
+        if CategoryPermission.ATTACHMENTS in perms:
+            permissions[CategoryPermission.ATTACHMENTS].append(category_id)
+
+    return permissions

@@ -30,7 +30,7 @@ def test_group_category_permissions_form_replaces_old_category_permissions_with_
 
     response = admin_client.post(
         reverse("misago:admin:groups:categories", kwargs={"pk": custom_group.id}),
-        {f"permissions[{sibling_category.id}]": [CategoryPermission.READ]},
+        {f"permissions[{sibling_category.id}]": [CategoryPermission.BROWSE]},
     )
     assert response.status_code == 302
 
@@ -40,7 +40,7 @@ def test_group_category_permissions_form_replaces_old_category_permissions_with_
     CategoryGroupPermission.objects.get(
         group=custom_group,
         category=sibling_category,
-        permission=CategoryPermission.READ,
+        permission=CategoryPermission.BROWSE,
     )
 
 
@@ -50,7 +50,7 @@ def test_group_category_permissions_form_invalidates_permissions_cache(
     with assert_invalidates_cache(CacheName.PERMISSIONS):
         admin_client.post(
             reverse("misago:admin:groups:categories", kwargs={"pk": custom_group.id}),
-            {f"permissions[{sibling_category.id}]": [CategoryPermission.READ]},
+            {f"permissions[{sibling_category.id}]": [CategoryPermission.BROWSE]},
         )
 
 

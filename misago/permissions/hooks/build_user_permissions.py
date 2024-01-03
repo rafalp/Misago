@@ -1,7 +1,4 @@
-# parse_user_message.py
 from typing import Protocol
-
-from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
 from ...users.models import Group
