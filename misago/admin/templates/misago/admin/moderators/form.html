@@ -33,3 +33,13 @@
   {% form_row form.is_global %}
 </div>
 {% endblock form-body %}
+
+{% block form-footer %}
+{% if target.pk %}
+  {% include "misago/admin/generic/form_footer.html" %}
+{% else %}
+  <button class="btn btn-primary btn-sm">
+    {% trans "Create moderator" context "admin moderator form action" %}
+  </button>
+{% endif %}
+{% endblock %}
