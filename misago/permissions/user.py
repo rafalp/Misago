@@ -87,7 +87,11 @@ def build_user_category_permissions(groups: list[Group], permissions: dict) -> d
 
     category_permissions: dict[int, list[str]] = {}
     for category_id, permission in category_permissions_queryset:
-        category_permissions.setdefault(category_id, []).append(permission)
+        if category_id not in category_permissions:
+            category_permissions[category_id] = []
+
+        if permission not in category_permissions[category_id]:
+            category_permissions[category_id].append(permission)
 
     return build_user_category_permissions_hook(
         _build_user_category_permissions_action,
@@ -122,21 +126,21 @@ def _build_user_category_permissions_action(
 
         # Skip category if we can't see it
         perms = category_permissions.get(category_id, [])
-        if CategoryPermission.SEE.value not in perms:
+        if CategoryPermission.SEE not in perms:
             continue
 
         permissions[CategoryPermission.SEE].append(category_id)
 
-        if CategoryPermission.BROWSE.value in perms:
+        if CategoryPermission.BROWSE in perms:
             permissions[CategoryPermission.BROWSE].append(category_id)
         else:
             continue  # Skip rest of permissions if we can't read its contents
 
-        if CategoryPermission.START.value in perms:
+        if CategoryPermission.START in perms:
             permissions[CategoryPermission.START].append(category_id)
-        if CategoryPermission.REPLY.value in perms:
+        if CategoryPermission.REPLY in perms:
             permissions[CategoryPermission.REPLY].append(category_id)
-        if CategoryPermission.ATTACHMENTS.value in perms:
+        if CategoryPermission.ATTACHMENTS in perms:
             permissions[CategoryPermission.ATTACHMENTS].append(category_id)
 
     return permissions
