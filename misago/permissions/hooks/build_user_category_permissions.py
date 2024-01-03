@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 User = get_user_model()
 
 
-class GetUserPermissionsHookAction(Protocol):
+class BuildUserCategoryPermissionsHookAction(Protocol):
     """
     A standard Misago function used to get user permissions.
 
@@ -32,43 +32,41 @@ class GetUserPermissionsHookAction(Protocol):
         ...
 
 
-class GetUserPermissionsHookFilter(Protocol):
+class BuildUserCategoryPermissionsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetUserPermissionsHookAction`
+    ## `action: BuildUserCategoryPermissionsHookAction`
 
     A standard Misago function used to get user permissions or the next filter
     function from another plugin.
 
     See the [action](#action) section for details.
 
-    ## `user: User`
+    ## `groups: list[Group]`
 
-    A user to return permissions for.
-
-    ## `cache_versions: dict`
-
-    A Python `dict` with cache versions.
+    A list of groups user belongs to.
 
     # Return value
 
-    A Python `dict` with user permissions.
+    A Python `dict` with user permissions build from their groups.
     """
 
     def __call__(
         self,
-        action: GetUserPermissionsHookAction,
+        action: BuildUserCategoryPermissionsHookAction,
         user: User,
         cache_versions: dict,
     ) -> dict:
         ...
 
 
-class GetUserPermissionsHook(
-    FilterHook[GetUserPermissionsHookAction, GetUserPermissionsHookFilter]
+class BuildUserCategoryPermissionsHook(
+    FilterHook[
+        BuildUserCategoryPermissionsHookAction, BuildUserCategoryPermissionsHookFilter
+    ]
 ):
     """
     This hook wraps the standard function that Misago uses to get user permissions.
@@ -108,11 +106,11 @@ class GetUserPermissionsHook(
 
     def __call__(
         self,
-        action: GetUserPermissionsHookAction,
+        action: BuildUserCategoryPermissionsHookAction,
         user: User,
         cache_versions: dict,
     ) -> dict:
         return super().__call__(action, user, cache_versions)
 
 
-get_user_permissions_hook = GetUserPermissionsHook()
+build_user_category_permissions_hook = BuildUserCategoryPermissionsHook()

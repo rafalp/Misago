@@ -7,6 +7,7 @@ from ..categories.models import Category
 from ..users.models import Group
 from .enums import CategoryPermission
 from .hooks import (
+    build_user_category_permissions_hook,
     build_user_permissions_hook,
     get_user_permissions_hook,
 )
@@ -80,8 +81,12 @@ def build_user_category_permissions(groups: list[Group], permissions: dict) -> d
     for category_id, permission in category_permissions_queryset:
         category_permissions.setdefault(category_id, []).append(permission)
 
-    return _build_user_category_permissions_action(
-        groups, categories, category_permissions, permissions
+    return build_user_category_permissions_hook(
+        _build_user_category_permissions_action,
+        groups,
+        categories,
+        category_permissions,
+        permissions,
     )
 
 

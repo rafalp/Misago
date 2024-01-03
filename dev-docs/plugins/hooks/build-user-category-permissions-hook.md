@@ -1,4 +1,4 @@
-# `get_user_permissions_hook`
+# `build_user_category_permissions_hook`
 
 This hook wraps the standard function that Misago uses to get user permissions.
 
@@ -12,15 +12,17 @@ Plugins can use this hook to make additional changes to the final Python `dict` 
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import get_user_permissions_hook
+from misago.permissions.hooks import build_user_category_permissions_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_user_permissions_filter(
-    action: GetUserPermissionsHookAction, user: User, cache_versions: dict
+def custom_build_user_category_permissions_filter(
+    action: BuildUserCategoryPermissionsHookAction,
+    user: User,
+    cache_versions: dict,
 ) -> dict:
     ...
 ```
@@ -30,32 +32,27 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetUserPermissionsHookAction`
+#### `action: BuildUserCategoryPermissionsHookAction`
 
 A standard Misago function used to get user permissions or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
 
-#### `user: User`
+#### `groups: list[Group]`
 
-A user to return permissions for.
-
-
-#### `cache_versions: dict`
-
-A Python `dict` with cache versions.
+A list of groups user belongs to.
 
 
 ### Return value
 
-A Python `dict` with user permissions.
+A Python `dict` with user permissions build from their groups.
 
 
 ## Action
 
 ```python
-def get_user_permissions_action(user: User, cache_versions: dict) -> dict:
+def build_user_category_permissions_action(user: User, cache_versions: dict) -> dict:
     ...
 ```
 
