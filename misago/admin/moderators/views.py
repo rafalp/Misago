@@ -54,6 +54,9 @@ def sort_moderators(items):
 class NewView(ModeratorAdmin, generic.ModelFormView):
     template_name = "form.html"
     form_class = ModeratorForm
+    message_404 = pgettext_lazy(
+        "admin moderators", "Requested user or group does not exist."
+    )
 
     def get_target(self, request, kwargs):
         if kwargs.get("group"):
@@ -62,6 +65,12 @@ class NewView(ModeratorAdmin, generic.ModelFormView):
         else:
             user = User.objects.get(id=kwargs["user"])
             return Moderator(user=user)
+
+    def get_target_or_none(self, request, kwargs):
+        try:
+            return self.get_target(request, kwargs)
+        except (Group.DoesNotExist, User.DoesNotExist):
+            return None
 
     def real_dispatch(self, request, target):
         # If moderator already exists for given group or user, redirect to it
@@ -80,14 +89,14 @@ class NewView(ModeratorAdmin, generic.ModelFormView):
         if target.group and target.group.is_default:
             return pgettext_lazy(
                 "admin moderators",
-                "Can't grant \"%(target)s\" moderator permissions because it's the default group.",
-            )
+                "Can't grant \"%(name)s\" moderator permissions because it's the default group.",
+            ) % {"name": target.name}
 
         if target.group and target.group.is_protected:
             return pgettext_lazy(
                 "admin moderators",
-                "Can't grant \"%(target)s\" moderator permissions because it's protected group.",
-            )
+                "Can't grant \"%(name)s\" moderator permissions because it's protected group.",
+            ) % {"name": target.name}
 
     def handle_form(self, data, request, target):
         super().handle_form(data, request, target)
@@ -105,8 +114,8 @@ class EditView(ModeratorAdmin, generic.ModelFormView):
         if target.is_protected:
             return pgettext(
                 "admin moderators",
-                'Can\'t change "%(target)s" moderator permissions because they are protected.',
-            ) % {"target": target.group}
+                'Can\'t change "%(name)s" moderator permissions because they are protected.',
+            ) % {"name": target.group}
 
     def handle_form(self, data, request, target):
         super().handle_form(data, request, target)
@@ -118,8 +127,8 @@ class DeleteView(ModeratorAdmin, generic.ButtonView):
         if target.is_protected:
             return pgettext(
                 "admin moderators",
-                'Can\'t remove "%(target)s" moderator permissions because they are protected.',
-            ) % {"target": target.group}
+                'Can\'t remove "%(name)s" moderator permissions because they are protected.',
+            ) % {"name": target.group}
 
     def button_action(self, request, target):
         target.delete()

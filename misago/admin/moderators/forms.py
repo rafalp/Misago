@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
+from ...categories.enums import CategoryTree
+from ...categories.models import Category
 from ...permissions.models import Moderator
 from ...users.models import Group
 from ..forms import YesNoSwitch
@@ -44,10 +46,37 @@ class ModeratorForm(forms.ModelForm):
             "Global moderators can moderate all content they have access to.",
         ),
     )
+    categories = forms.TypedMultipleChoiceField(
+        label=pgettext_lazy("admin moderators form", "Moderated categories"),
+        help_text=pgettext_lazy(
+            "admin moderators form",
+            "Lorem ipsum",
+        ),
+        coerce=int,
+        required=False,
+    )
 
     class Meta:
         model = Moderator
-        fields = ["is_global"]
+        fields = ["is_global", "categories"]
 
     def __init__(self, *args, **kwarg):
         super().__init__(*args, **kwarg)
+
+        self.fields["categories"].choices = get_categories_choices()
+
+
+def get_categories_choices():
+    categories_queryset = Category.objects.filter(
+        level__gt=0, tree_id=CategoryTree.THREADS
+    ).values_list("id", "name", "level")
+
+    categories_choices = []
+    for category_id, category_name, category_level in categories_queryset:
+        prefix = ""
+        if category_level > 1:
+            prefix = " → " * (category_level - 1)
+
+        categories_choices.append((category_id, f"{prefix}{category_name}"))
+
+    return categories_choices

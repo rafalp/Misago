@@ -30,7 +30,20 @@
 
 {% block form-body %}
 <div class="form-fieldset">
-  {% form_row form.is_global %}
+  <fieldset>
+    <legend>{% trans "Basic settings" context "admin moderator form" %}</legend>
+
+    {% form_row form.is_global %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Categories" context "admin moderator form" %}</legend>
+
+    {% form_row form.categories %}
+
+  </fieldset>
 </div>
 {% endblock form-body %}
 
