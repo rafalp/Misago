@@ -26,10 +26,27 @@ class ListView(ModeratorAdmin, generic.ListView):
         return self.get_model().objects.prefetch_related("group", "user")
 
     def process_context(self, request, context):
+        context["items"] = sort_moderators(context["items"])
+
         context["new_moderator_form"] = NewModeratorModalForm(
             auto_id="new_moderator_form_%s",
         )
         return context
+
+
+def sort_moderators(items):
+    groups = []
+    users = []
+
+    for item in items:
+        if item.group_id:
+            groups.append(item)
+        else:
+            users.append(item)
+
+    groups = sorted(groups, key=lambda i: i.group.id)
+    users = sorted(users, key=lambda i: i.user.username)
+    return groups + users
 
 
 class NewView(ModeratorAdmin, generic.ModelFormView):
@@ -57,25 +74,36 @@ class NewView(ModeratorAdmin, generic.ModelFormView):
 
         return super().real_dispatch(request, target)
 
+    def check_permissions(self, request, target):
+        if target.group and target.group.is_default:
+            return pgettext_lazy(
+                "admin moderators",
+                'The "%(target)s" group can\'t be given moderator permissions because it\'s the default group.',
+            )
+
+        if target.group and target.group.is_protected:
+            return pgettext_lazy(
+                "admin moderators",
+                'The "%(target)s" group can\'t be given moderator permissions because it\'s protected.',
+            )
+
 
 class EditView(ModeratorAdmin, generic.ModelFormView):
     template_name = "form.html"
     form_class = ModeratorForm
 
-    def real_dispatch(self, request, target):
+    def check_permissions(self, request, target):
         if target.is_protected:
-            messages.info(
-                request,
-                pgettext(
-                    "admin moderators",
-                    'The "%(target)s" group moderator permissions are protected and can\'t be changed.',
-                )
-                % {"target": target.group},
-            )
-            return redirect(self.root_link)
-
-        return super().real_dispatch(request, target)
+            return pgettext(
+                "admin moderators",
+                'The "%(target)s" group moderator permissions are protected and can\'t be changed.',
+            ) % {"target": target.group}
 
 
 class DeleteView(ModeratorAdmin, generic.ButtonView):
-    pass
+    def check_permissions(self, request, target):
+        if target.is_protected:
+            return pgettext(
+                "admin moderators",
+                'The "%(target)s" group moderator permissions are protected and can\'t be removed.',
+            ) % {"target": target.group}

@@ -4,7 +4,7 @@
 
 {% block page-actions %}
 <div class="col-auto page-action">
-  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#new-moderator-modal">
+  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#new-moderator-modal" data-backdrop="static">
     <span class="fa fa-plus-circle"></span>
     {% trans "New moderator" context "admin moderators" %}
   </button>
@@ -23,13 +23,16 @@
 {% block table-row %}
 <td class="pr-0">
   {% if item.group %}
+    <span class="media-admin-icon" style="width: 24px; height: 24px;">
+      <span class="fas fa-adjust"></span>
+    </span>
   {% else %}
     <a href="{{ item.user.get_absolute_url }}" style="line-height: 0; font-size: 24px;">
       <img src="{{ item.user|avatar:24 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
     </a>
   {% endif %}
 </td>
-<td class="pr-0">
+<td>
   <a href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" class="item-name">
     {% if item.group %}
       {{ item.group }}
@@ -51,9 +54,15 @@
   {% endif %}
 </td>
 <td>
-  <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" title="">
-    <i class="fas fa-edit"></i>
-  </a>
+  {% if item.is_protected %}
+    <button type="button" class="btn btn-light btn-sm" disabled>
+      <i class="fas fa-edit"></i>
+    </button>
+  {% else %}
+    <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" title="{% trans 'Edit moderator' context 'admin moderators' %}">
+      <i class="fas fa-edit"></i>
+    </a>
+  {% endif %}
 </td>
 {% endblock %}
 
@@ -99,9 +108,11 @@
     "{% trans 'Are you sure you want to delete this moderator?' context 'admin moderators' %}"
   )
 
+  const userInput = document.getElementById("new_moderator_form_user")
+
   window.misago.initUserSelect(
     {
-      input: document.querySelector("#new-moderator-modal-user input"),
+      input: userInput,
       api: "{% url 'misago:admin:select-user' %}",
       initial: "{% trans 'Enter a user name to search.' context 'admin select user' %}",
       clear: "{% trans 'Clear' context 'admin select user' %}",
@@ -112,6 +123,8 @@
     const group = document.getElementById("new-moderator-modal-group")
     const user = document.getElementById("new-moderator-modal-user")
   
+    misago.clearFieldError(userInput)
+
     if (event.target.value == "group") {
       group.classList.remove("d-none")
       user.classList.add("d-none")
@@ -128,16 +141,17 @@
     const group = formData.get("group").trim()
     const user = formData.get("user").trim()
 
-    console.log(group, user)
-
     if (formData.get("moderator_type") == "group") {
       const url = "{% url 'misago:admin:moderators:new-group' group=1 %}"
       window.location = url.replace("1", group)
     } else if (user.length) {
       const url = "{% url 'misago:admin:moderators:new-user' user=1 %}"
       window.location = url.replace("1", user)
-    } else {
-      console.log("set error!")
+    } else if (!misago.hasFieldError(userInput)) {
+      misago.setFieldError(
+        userInput,
+        "{% trans 'You must select a user.' context 'admin select user' %}",
+      )
     }
   })
 </script>

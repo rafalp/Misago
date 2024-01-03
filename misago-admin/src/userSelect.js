@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import { clearFieldError } from "./fieldError"
 
 class UserSelect {
   constructor(options) {
@@ -184,6 +185,8 @@ class UserSelect {
   }
 
   selectChoice = (choice) => {
+    clearFieldError(this.input)
+
     this.hidden.value = choice.getAttribute("data-value")
     this.hideDropdown()
     this.hideInput()

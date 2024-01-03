@@ -27,6 +27,7 @@ class TargetedView(AdminView):
         error = self.check_permissions(  # pylint: disable=assignment-from-no-return
             request, target
         )
+        print(error)
         if error:
             messages.error(request, error)
             return redirect(self.root_link)

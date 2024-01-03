@@ -18,6 +18,7 @@ import initTooltips from "./tooltips"
 import initUserSelect from "./userSelect"
 import initValidation from "./validation"
 import initVersionCheck from "./versionCheck"
+import { clearFieldError, hasFieldError, setFieldError } from "./fieldError"
 
 window.moment = moment
 window.htmx = htmx
@@ -32,6 +33,10 @@ window.misago = {
   initItemsOrdering,
   initUserSelect,
   initVersionCheck,
+
+  clearFieldError,
+  hasFieldError,
+  setFieldError,
 
   init: () => {
     const locale = document.querySelector("html").lang
