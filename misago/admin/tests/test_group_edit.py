@@ -1,10 +1,10 @@
 from django.urls import reverse
 
-from ....cache.enums import CacheName
-from ....cache.test import assert_invalidates_cache
-from ....permissions.models import CategoryGroupPermission
-from ....test import assert_contains
-from ...models import Group
+from ...cache.enums import CacheName
+from ...cache.test import assert_invalidates_cache
+from ...permissions.models import CategoryGroupPermission
+from ...test import assert_contains
+from ...users.models import Group
 
 
 def get_form_data(group: Group) -> dict:

@@ -1,8 +1,9 @@
 from django.urls import reverse
 
-from ....cache.enums import CacheName
-from ....cache.test import assert_invalidates_cache
-from ....test import assert_has_error_message
+from ...cache.enums import CacheName
+from ...cache.test import assert_invalidates_cache
+from ...permissions.models import Moderator
+from ...test import assert_has_error_message
 
 
 def test_make_default_group_changes_default_group(
@@ -74,3 +75,16 @@ def test_make_default_group_rejects_guests_group(admin_client, guests_group):
     )
     assert response.status_code == 302
     assert_has_error_message(response, 'The "Guests" group can\'t be set as default.')
+
+
+def test_make_default_group_rejects_custom_moderators_group(admin_client, custom_group):
+    Moderator.objects.create(group=custom_group, is_global=True)
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:default", kwargs={"pk": custom_group.id})
+    )
+    assert response.status_code == 302
+    assert_has_error_message(
+        response,
+        'The "Custom Group" group can\'t be set as default because it has moderator permissions.',
+    )

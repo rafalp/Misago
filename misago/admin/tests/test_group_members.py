@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ....test import assert_has_error_message
+from ...test import assert_has_error_message
 
 
 def test_group_members_shortcut_handles_non_existing_group(admin_client):

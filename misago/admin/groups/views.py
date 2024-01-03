@@ -3,24 +3,24 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ....admin.views import generic
-from ....cache.enums import CacheName
-from ....cache.versions import invalidate_cache
-from ....categories.enums import CategoryTree
-from ....categories.models import Category
-from ....permissions.admin import get_admin_category_permissions
-from ....permissions.copy import copy_group_permissions
-from ....permissions.models import CategoryGroupPermission
-from ...enums import DefaultGroupId
-from ...groups import (
+from ...cache.enums import CacheName
+from ...cache.versions import invalidate_cache
+from ...categories.enums import CategoryTree
+from ...categories.models import Category
+from ...permissions.admin import get_admin_category_permissions
+from ...permissions.copy import copy_group_permissions
+from ...permissions.models import CategoryGroupPermission, Moderator
+from ...users.enums import DefaultGroupId
+from ...users.groups import (
     count_groups_members,
     create_group,
     delete_group,
     set_default_group,
     update_group,
 )
-from ...models import Group
-from ..forms.groups import EditGroupForm, NewGroupForm
+from ...users.models import Group
+from ..views import generic
+from .forms import EditGroupForm, NewGroupForm
 
 INVALID_DEFAULT_GROUP_IDS = (
     DefaultGroupId.ADMINS,
@@ -226,6 +226,15 @@ class MakeDefaultView(GroupAdmin, generic.ButtonView):
             return (
                 pgettext(
                     "admin groups", 'The "%(name)s" group can\'t be set as default.'
+                )
+                % message_format
+            )
+
+        if Moderator.objects.filter(group=target).exists():
+            return (
+                pgettext(
+                    "admin groups",
+                    'The "%(name)s" group can\'t be set as default because it has moderator permissions.',
                 )
                 % message_format
             )

@@ -1,8 +1,8 @@
 from django.urls import reverse
 
-from ....cache.enums import CacheName
-from ....cache.test import assert_invalidates_cache
-from ....test import assert_contains
+from ...cache.enums import CacheName
+from ...cache.test import assert_invalidates_cache
+from ...test import assert_contains
 
 groups_list = reverse("misago:admin:groups:index")
 

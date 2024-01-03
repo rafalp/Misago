@@ -1,10 +1,10 @@
 import pytest
 from django.urls import reverse
 
-from ....cache.enums import CacheName
-from ....cache.test import assert_invalidates_cache
-from ....permissions.models import CategoryGroupPermission
-from ...models import Group
+from ...cache.enums import CacheName
+from ...cache.test import assert_invalidates_cache
+from ...permissions.models import CategoryGroupPermission
+from ...users.models import Group
 
 
 def test_new_group_form_is_rendered(admin_client):

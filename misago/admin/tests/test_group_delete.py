@@ -3,10 +3,10 @@ from unittest.mock import patch
 import pytest
 from django.urls import reverse
 
-from ....cache.enums import CacheName
-from ....cache.test import assert_invalidates_cache
-from ....test import assert_has_error_message
-from ...models import Group
+from ...cache.enums import CacheName
+from ...cache.test import assert_invalidates_cache
+from ...test import assert_has_error_message
+from ...users.models import Group
 
 
 @patch("misago.users.groups.remove_group_from_users_groups_ids")

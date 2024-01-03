@@ -2,9 +2,9 @@ from django import forms
 from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
-from ....admin.forms import YesNoSwitch
-from ....core.validators import validate_css_name, validate_sluggable
-from ...models import Group
+from ...core.validators import validate_css_name, validate_sluggable
+from ...users.models import Group
+from ..forms import YesNoSwitch
 
 
 class NewGroupForm(forms.ModelForm):
