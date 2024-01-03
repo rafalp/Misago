@@ -43,15 +43,11 @@ class ModeratorForm(forms.ModelForm):
         label=pgettext_lazy("admin moderators form", "Is global moderator"),
         help_text=pgettext_lazy(
             "admin moderators form",
-            "Global moderators can moderate all content they have access to.",
+            "Global moderators can moderate all content they have access to. Other options have no effect if this setting is enabled.",
         ),
     )
     categories = forms.TypedMultipleChoiceField(
         label=pgettext_lazy("admin moderators form", "Moderated categories"),
-        help_text=pgettext_lazy(
-            "admin moderators form",
-            "Lorem ipsum",
-        ),
         coerce=int,
         required=False,
     )

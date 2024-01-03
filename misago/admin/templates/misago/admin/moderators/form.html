@@ -29,7 +29,7 @@
 
 
 {% block form-body %}
-<div class="form-fieldset">
+<div class="form-fieldset form-fieldset-global">
   <fieldset>
     <legend>{% trans "Basic settings" context "admin moderator form" %}</legend>
 
@@ -37,7 +37,7 @@
 
   </fieldset>
 </div>
-<div class="form-fieldset">
+<div class="form-fieldset form-fieldset-dynamic{% if target.is_global %} d-none{% endif %}">
   <fieldset>
     <legend>{% trans "Categories" context "admin moderator form" %}</legend>
 
@@ -47,6 +47,7 @@
 </div>
 {% endblock form-body %}
 
+
 {% block form-footer %}
 {% if target.pk %}
   {% include "misago/admin/generic/form_footer.html" %}
@@ -55,4 +56,27 @@
     {% trans "Create moderator" context "admin moderator form action" %}
   </button>
 {% endif %}
+{% endblock %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  const fieldsets = document.querySelectorAll(".form-fieldset-dynamic")
+
+  const inputs = document.querySelectorAll(".form-fieldset-global input")
+  const isGlobalEnabled = inputs[0]
+  const isGlobalDisabled = inputs[1]
+
+  isGlobalEnabled.addEventListener("change", (event) => {
+    for (let fieldset of fieldsets) {
+      fieldset.classList.add("d-none")
+    }
+  })
+
+  isGlobalDisabled.addEventListener("change", (event) => {
+    for (let fieldset of fieldsets) {
+      fieldset.classList.remove("d-none")
+    }
+  })
+</script>
 {% endblock %}
