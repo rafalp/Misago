@@ -2,7 +2,7 @@
 
 This hook wraps the standard function that Misago uses to build user category permissions.
 
-Category permissions are stored as a Python `dict` with permission names as keys and values being category IDs with the associated permission.:
+Category permissions are stored as a Python `dict` with permission names as keys and values being category IDs with the associated permission:
 
 ```python
 category_permissions = {
@@ -32,10 +32,8 @@ from misago.permissions.hooks import build_user_category_permissions_hook
 def custom_build_user_category_permissions_filter(
     action: BuildUserCategoryPermissionsHookAction,
     groups: list[Group],
-    categories: dict[int,
-    Category],
-    category_permissions: dict[int,
-    list[str]],
+    categories: dict[int, Category],
+    category_permissions: dict[int, list[str]],
     user_permissions: dict,
 ) -> dict:
     ...
@@ -83,10 +81,8 @@ A Python `dict` with category permissions.
 ```python
 def build_user_category_permissions_action(
     groups: list[Group],
-    categories: dict[int,
-    Category],
-    category_permissions: dict[int,
-    list[str]],
+    categories: dict[int, Category],
+    category_permissions: dict[int, list[str]],
     user_permissions: dict,
 ) -> dict:
     ...

@@ -99,7 +99,7 @@ class BuildUserCategoryPermissionsHook(
     permissions.
 
     Category permissions are stored as a Python `dict` with permission names as keys
-    and values being category IDs with the associated permission.:
+    and values being category IDs with the associated permission:
 
     ```python
     category_permissions = {

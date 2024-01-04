@@ -327,8 +327,22 @@ def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | No
         item_args = ast.unparse(item.args)
         if item_args.startswith("self, "):
             item_args = item_args[6:]
+
         if len(item_args) > 70:
-            item_args = "\n" + indent(item_args.replace(", ", ",\n"), "    ") + ",\n"
+            item_args = item_args.replace(", ", ",\n")
+            # Hack to fix invalid linebreaks in `[T1, T2]`...
+            offset = 0
+            for _ in range(item_args.count("[")):
+                position = item_args.find("[", offset)
+                end_position = item_args.find("]", position)
+                if ",\n" in item_args[position:end_position]:
+                    item_args_copy = item_args
+                    item_args = item_args_copy[:position]
+                    item_args += item_args_copy[position:end_position].replace(",\n", ", ")
+                    item_args += item_args_copy[end_position:]
+                offset = position + 1
+            item_args = "\n" + indent(item_args, "    ") + ",\n"
+
         elif len(item_args) > 50:
             item_args = f"\n    {item_args}\n"
 
