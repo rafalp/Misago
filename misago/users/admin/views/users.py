@@ -14,12 +14,12 @@ from ...models import Ban
 from ...profilefields import profilefields
 from ...setupnewuser import setup_new_user
 from ...signatures import set_user_signature
-from ..forms import (
+from ..forms.users import (
     BanUsersForm,
     EditUserForm,
-    EditUserFormFactory,
     NewUserForm,
     create_filter_users_form,
+    user_form_factory,
 )
 from ..tasks import delete_user_with_content
 
@@ -32,24 +32,7 @@ class UserAdmin(generic.AdminBaseMixin):
     model = User
 
     def get_form_class(self, request, target):
-        add_is_active_fields = False
-        add_admin_fields = False
-
-        if not target.is_deleting_account:
-            if not target.is_staff:
-                add_is_active_fields = True
-            elif request.user.is_superuser:
-                add_is_active_fields = request.user.pk != target.pk
-
-        if request.user.is_superuser:
-            add_admin_fields = request.user.pk != target.pk
-
-        return EditUserFormFactory(
-            self.form_class,
-            target,
-            add_is_active_fields=add_is_active_fields,
-            add_admin_fields=add_admin_fields,
-        )
+        return user_form_factory(self.form_class, target)
 
 
 class UsersList(UserAdmin, generic.ListView):
@@ -98,7 +81,7 @@ class UsersList(UserAdmin, generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related("rank")
+        return qs.prefetch_related("rank", "group")
 
     def get_filter_form(self, request):
         return create_filter_users_form()
@@ -140,9 +123,9 @@ class UsersList(UserAdmin, generic.ListView):
     ):  # pylint: disable=too-many-locals, too-many-nested-blocks, too-many-branches
         users = users.order_by("slug")
         for user in users:
-            if user.is_superuser:
+            if user.is_staff:
                 message = pgettext(
-                    "admin users", "%(user)s is super admin and can't be banned."
+                    "admin users", "%(user)s is admin and can't be banned."
                 )
                 mesage = message % {"user": user.username}
                 raise generic.MassActionError(mesage)
@@ -235,11 +218,22 @@ class UsersList(UserAdmin, generic.ListView):
                 raise generic.MassActionError(
                     pgettext("admin users", "You can't delete yourself.")
                 )
-            if user.is_staff or user.is_superuser:
-                message = pgettext(
-                    "admin users", "%(user)s is admin and can't be deleted."
-                ) % {"user": user.username}
-                raise generic.MassActionError(message)
+            if user.is_misago_admin:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Misago administrator.",
+                    )
+                    % {"user": user.username}
+                )
+            if user.is_staff:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Django staff.",
+                    )
+                    % {"user": user.username}
+                )
 
         for user in users:
             user.delete(anonymous_username=request.settings.anonymous_username)
@@ -255,11 +249,22 @@ class UsersList(UserAdmin, generic.ListView):
                 raise generic.MassActionError(
                     pgettext("admin users", "You can't delete yourself.")
                 )
-            if user.is_staff or user.is_superuser:
-                message = pgettext(
-                    "admin users", "%(user)s is admin and can't be deleted."
-                ) % {"user": user.username}
-                raise generic.MassActionError(message)
+            if user.is_misago_admin:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Misago administrator.",
+                    )
+                    % {"user": user.username}
+                )
+            if user.is_staff:
+                raise generic.MassActionError(
+                    pgettext(
+                        "admin users",
+                        "%(user)s can't be deleted because they are a Django staff.",
+                    )
+                    % {"user": user.username}
+                )
 
         for user in users:
             user.is_active = False
@@ -295,6 +300,8 @@ class NewUser(UserAdmin, generic.ModelFormView):
             form.cleaned_data["username"],
             form.cleaned_data["email"],
             form.cleaned_data["new_password"],
+            group=form.cleaned_data["group"],
+            secondary_groups=form.cleaned_data["secondary_groups"],
             title=form.cleaned_data["title"],
             rank=form.cleaned_data.get("rank"),
             joined_from_ip=request.user_ip,
@@ -329,10 +336,8 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         target.username = target.old_username
-        if target.username != form.cleaned_data.get("username"):
-            target.set_username(
-                form.cleaned_data.get("username"), changed_by=request.user
-            )
+        if target.username != form.cleaned_data["username"]:
+            target.set_username(form.cleaned_data["username"], changed_by=request.user)
 
         if form.cleaned_data.get("new_password"):
             target.set_password(form.cleaned_data["new_password"])
@@ -344,15 +349,20 @@ class EditUser(UserAdmin, generic.ModelFormView):
             if not target.old_is_avatar_locked:
                 set_dynamic_avatar(target)
 
-        if "is_staff" in form.fields and "is_superuser" in form.fields:
-            target.is_staff = form.cleaned_data.get("is_staff")
-            target.is_superuser = form.cleaned_data.get("is_superuser")
+        if not form.fields["is_misago_root"].disabled:
+            target.is_misago_root = form.cleaned_data["is_misago_root"]
 
-        if "is_active" in form.fields and "is_active_staff_message" in form.fields:
-            target.is_active = form.cleaned_data.get("is_active")
+        if not form.fields["is_active"].disabled:
+            target.is_active = form.cleaned_data["is_active"]
+        if not form.fields["is_active_staff_message"].disabled:
             target.is_active_staff_message = form.cleaned_data.get(
                 "is_active_staff_message"
             )
+
+        target.set_groups(
+            form.cleaned_data["group"],
+            form.cleaned_data["secondary_groups"],
+        )
 
         target.rank = form.cleaned_data.get("rank")
 

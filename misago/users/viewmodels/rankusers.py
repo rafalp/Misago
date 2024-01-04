@@ -9,7 +9,7 @@ class RankUsers:
             "rank", "ban_cache", "online_tracker"
         ).order_by("slug")
 
-        if not request.user.is_staff:
+        if not request.user.is_misago_admin:
             queryset = queryset.filter(is_active=True)
 
         list_page = paginate(

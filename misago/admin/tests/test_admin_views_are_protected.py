@@ -23,8 +23,8 @@ def test_authenticated_user_is_asked_to_login_to_access_admin_view(client, user)
     assert_requires_admin_login(response)
 
 
-def test_unathorized_admin_is_asked_to_login_to_access_admin_view(client, superuser):
-    client.force_login(superuser)
+def test_unauthorized_admin_is_asked_to_login_to_access_admin_view(client, admin):
+    client.force_login(admin)
     response = client.get(admin_link)
     assert_requires_admin_login(response)
 

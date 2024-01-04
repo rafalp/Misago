@@ -1,0 +1,173 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_admin_form misago_avatars %}
+
+
+{% block page-actions %}
+<div class="col-auto page-action">
+  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#new-moderator-modal" data-backdrop="static">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New moderator" context "admin moderators" %}
+  </button>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th style="width: 1px;">&nbsp;</th>
+<th>{% trans "Moderator" context "admin moderators list" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="pr-0">
+  {% if item.group %}
+    <span class="media-admin-icon" style="width: 24px; height: 24px;" data-tooltip="top" title="{% trans 'User group' context 'admin moderators list item' %}">
+      <span class="fas fa-adjust"></span>
+    </span>
+  {% else %}
+    <a href="{{ item.user.get_absolute_url }}" style="line-height: 0; font-size: 24px;">
+      <img src="{{ item.user|avatar:24 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
+    </a>
+  {% endif %}
+</td>
+<td>
+  <a href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" class="item-name">
+    {% if item.group %}
+      {{ item.group }}
+    {% else %}
+      {{ item.user.username }}
+    {% endif %}
+  </a>
+</td>
+<td class="badges-list">
+  {% if item.is_global %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can moderate all content they have access to' context 'admin moderators list item' %}">
+      {% trans "Global" context "admin moderators admin global status" %}
+    </span>
+  {% endif %}
+  {% if item.is_protected %}
+    <span class="badge badge-light" data-tooltip="top" title="{% trans 'This moderator permission can\'t be changed or removed' context 'admin moderators list item' %}">
+      {% trans "Protected" context "admin moderators admin protected status" %}
+    </span>
+  {% endif %}
+</td>
+<td>
+  {% if item.is_protected %}
+    <button type="button" class="btn btn-light btn-sm" disabled>
+      <span class="fas fa-edit fa-fw"></span>
+    </button>
+  {% else %}
+    <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" data-tooltip="top" title="{% trans 'Edit moderator' context 'admin moderators' %}">
+      <span class="fas fa-edit fa-fw"></span>
+    </a>
+  {% endif %}
+</td>
+<td>
+  {% if item.is_protected %}
+    <button type="button" class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-times fa-fw"></span>
+    </button>
+  {% else %}
+    <form action="{% url 'misago:admin:moderators:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Delete moderator' context 'admin moderators' %}">
+        <span class="fa fa-times fa-fw"></span>
+      </button>
+    </form>
+  {% endif %}
+</td>
+{% endblock %}
+
+
+{% block content %}
+{{ block.super }}
+
+<div class="modal fade" id="new-moderator-modal" tabindex="-1" aria-labelledby="new-moderator-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-moderator-label">{% trans "New moderator" context "admin moderators form" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'admin dialog' %}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form>
+        <div class="modal-body">
+          {% form_row new_moderator_form.moderator_type %}
+          <div id="new-moderator-modal-group">
+            {% form_row new_moderator_form.group %}
+          </div>
+          <div id="new-moderator-modal-user" class="d-none">
+            {% form_row new_moderator_form.user %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">
+            {% trans "Add moderator" context "admin moderators form" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to delete this moderator?' context 'admin moderators' %}"
+  )
+
+  const userInput = document.getElementById("new_moderator_form_user")
+
+  window.misago.initUserSelect(
+    {
+      input: userInput,
+      api: "{% url 'misago:admin:select-user' %}",
+      initial: "{% trans 'Enter a user name to search.' context 'admin select user' %}",
+      clear: "{% trans 'Clear' context 'admin select user' %}",
+    } 
+  )
+
+  document.querySelector("#new-moderator-modal select").addEventListener("change", (event) => {
+    const group = document.getElementById("new-moderator-modal-group")
+    const user = document.getElementById("new-moderator-modal-user")
+  
+    misago.clearFieldError(userInput)
+
+    if (event.target.value == "group") {
+      group.classList.remove("d-none")
+      user.classList.add("d-none")
+    } else {
+      group.classList.add("d-none")
+      user.classList.remove("d-none")
+    }
+  })
+
+  document.querySelector("#new-moderator-modal form").addEventListener("submit", (event) => {
+    event.preventDefault()
+
+    const formData = new FormData(event.target)
+    const group = formData.get("group").trim()
+    const user = formData.get("user").trim()
+
+    if (formData.get("moderator_type") == "group") {
+      const url = "{% url 'misago:admin:moderators:new-group' group=1 %}"
+      window.location = url.replace("1", group)
+    } else if (user.length) {
+      const url = "{% url 'misago:admin:moderators:new-user' user=1 %}"
+      window.location = url.replace("1", user)
+    } else if (!misago.hasFieldError(userInput)) {
+      misago.setFieldError(
+        userInput,
+        "{% trans 'You must select a user.' context 'admin select user' %}",
+      )
+    }
+  })
+</script>
+{% endblock %}

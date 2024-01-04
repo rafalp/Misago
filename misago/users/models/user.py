@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.postgres.fields import ArrayField, HStoreField
+from django.contrib.postgres.indexes import GinIndex
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
@@ -17,10 +18,13 @@ from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
 from ...notifications.threads import ThreadNotifications
+from ...permissions.permissionsid import get_permissions_id
 from ...plugins.models import PluginDataModel
 from ..avatars import store as avatars_store, delete_avatar
+from ..enums import DefaultGroupId
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
+from .group import Group
 from .online import Online
 from .rank import Rank
 
@@ -37,6 +41,56 @@ class UserManager(BaseUserManager):
 
         if not extra_fields.get("rank"):
             extra_fields["rank"] = Rank.objects.get_default()
+
+        if (
+            extra_fields.get("group")
+            and extra_fields.get("group_id")
+            and extra_fields.get("group").id != extra_fields.get("group_id")
+        ):
+            raise ValueError(
+                "'group' and 'group_id' arguments can't be used simultaneously."
+            )
+
+        if extra_fields.get("group"):
+            extra_fields["group_id"] = extra_fields.pop("group").id
+        elif not extra_fields.get("group_id"):
+            # Find default group's ID in database or fall back to the hardcoded one
+            extra_fields["group_id"] = (
+                Group.objects.filter(is_default=True)
+                .values_list("id", flat=True)
+                .first()
+            ) or DefaultGroupId.MEMBERS
+
+        if extra_fields.get("secondary_groups") and extra_fields.get(
+            "secondary_groups_ids"
+        ):
+            raise ValueError(
+                "'secondary_groups' and 'secondary_groups_ids' arguments can't be "
+                "used simultaneously."
+            )
+
+        if extra_fields.get("groups_id"):
+            raise ValueError(
+                "'groups_id' value is calculated from 'group' and 'secondary_groups' "
+                "and can't be set as an argument."
+            )
+        if extra_fields.get("permissions_id"):
+            raise ValueError(
+                "'permissions_id' value is calculated from user's groups and can't be "
+                "set as an argument."
+            )
+
+        secondary_groups = extra_fields.pop("secondary_groups", None)
+        secondary_groups_ids = extra_fields.pop("secondary_groups_ids", None)
+
+        groups_ids = [extra_fields["group_id"]]
+        if secondary_groups:
+            groups_ids += [group.id for group in secondary_groups]
+        elif secondary_groups_ids:
+            groups_ids += secondary_groups_ids
+
+        extra_fields["groups_ids"] = sorted(set(groups_ids))
+        extra_fields["permissions_id"] = get_permissions_id(extra_fields["groups_ids"])
 
         user = self.model(**extra_fields)
         user.set_username(username)
@@ -64,16 +118,20 @@ class UserManager(BaseUserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_misago_root", False)
         return self._create_user(username, email, password, **extra_fields)
 
     def create_superuser(self, username, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_misago_root", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
+        if extra_fields.get("is_misago_root") is not True:
+            raise ValueError("Superuser must have is_misago_root=True.")
 
         try:
             if not extra_fields.get("rank"):
@@ -85,6 +143,9 @@ class UserManager(BaseUserManager):
                     extra_fields["rank"] = forum_team_rank
         except Rank.DoesNotExist:
             pass
+
+        if not extra_fields.get("group_id"):
+            extra_fields["group_id"] = DefaultGroupId.ADMINS.value
 
         return self._create_user(username, email, password, **extra_fields)
 
@@ -167,9 +228,21 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     rank = models.ForeignKey(
         "Rank", null=True, blank=True, on_delete=models.deletion.PROTECT
     )
+    group = models.ForeignKey("misago_users.Group", on_delete=models.deletion.PROTECT)
+    groups_ids = ArrayField(models.PositiveIntegerField(), default=list)
+    permissions_id = models.CharField(max_length=12)
+
+    # Misago's root admin status
+    # Root admin can do everything in Misago's admin panel but has no power in
+    # Django's admin panel.
+    is_misago_root = models.BooleanField(default=False)
+
     title = models.CharField(max_length=255, null=True, blank=True)
+
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
+    # Controls user access to the Django site (not used by Misago)
+    # This field is hardcoded in Django's admin logic, so we can't delete it.
     is_staff = models.BooleanField(
         pgettext_lazy("user", "staff status"),
         default=False,
@@ -294,6 +367,15 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                 fields=["is_deleting_account"],
                 condition=Q(is_deleting_account=True),
             ),
+            models.Index(
+                name="misago_user_is_misago_root",
+                fields=["is_misago_root"],
+                condition=Q(is_misago_root=True),
+            ),
+            GinIndex(
+                name="misago_user_groups_ids",
+                fields=["groups_ids"],
+            ),
         ]
 
     def clean(self):
@@ -340,6 +422,10 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
         from ..signals import anonymize_user_data
 
         anonymize_user_data.send(sender=self)
+
+    @property
+    def is_misago_admin(self):
+        return self.is_misago_root or DefaultGroupId.ADMINS in self.groups_ids
 
     @property
     def requires_activation_by_admin(self):
@@ -451,6 +537,15 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
         self.email = UserManager.normalize_email(new_email)
         self.email_hash = hash_email(new_email)
 
+    def set_groups(self, group: Group, secondary_groups: list[Group] | None = None):
+        self.group = group
+        groups_ids = [group.id]
+        if secondary_groups:
+            groups_ids += [secondary_group.id for secondary_group in secondary_groups]
+
+        self.groups_ids = sorted(set(groups_ids))
+        self.permissions_id = get_permissions_id(self.groups_ids)
+
     def get_any_title(self):
         if self.title:
             return self.title
@@ -547,6 +642,8 @@ class UsernameChange(models.Model):
 
 
 class AnonymousUser(DjangoAnonymousUser):
+    is_misago_admin = False
+    is_misago_root = False
     acl_key = "anonymous"
 
     @property

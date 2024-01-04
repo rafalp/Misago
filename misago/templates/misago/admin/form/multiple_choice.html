@@ -1,8 +1,8 @@
-{% load misago_admin_form %}
-{% for option in field|get_options %}
+{% load misago_admin_form misago_shorthands %}
+{% for option in widget|get_options %}
   <div class="form-check">
-    <input class_name="form-check-input" id="{{ option.attrs.id }}" name="{{ widget.name }}" type="checkbox"{% if option.value is not None %} value="{{ option.value }}"{% endif %}{% if option.selected %} checked{% endif %}>
-    <label class="form-check-label" for="{{ option.attrs.id }}">
+    <input class="form-check-input" name="{{ option.name }}" type="checkbox" id="{{ widget.attrs.id }}_{{ option.index }}"{% if option.value != None %} value="{{ option.value|stringformat:'s' }}"{% endif %}{{ option.selected|iftrue:" checked" }}{{ widget.attrs.disabled|iftrue:" disabled" }}>
+    <label class="form-check-label" for="{{ widget.attrs.id }}_{{ option.index }}">
       {{ option.label }}
     </label>
   </div>

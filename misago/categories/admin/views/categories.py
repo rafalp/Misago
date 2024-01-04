@@ -5,7 +5,13 @@ from django.utils.translation import pgettext_lazy
 from ... import THREADS_ROOT_NAME
 from ....acl.cache import clear_acl_cache
 from ....admin.views import generic
+from ....cache.enums import CacheName
+from ....cache.versions import invalidate_cache
+from ....permissions.admin import get_admin_category_permissions
+from ....permissions.copy import copy_category_permissions
+from ....permissions.models import CategoryGroupPermission
 from ....threads.threadtypes import trees_map
+from ....users.models import Group
 from ...models import Category, RoleCategoryACL
 from ..forms import CategoryFormFactory, DeleteFormFactory
 
@@ -18,8 +24,8 @@ class CategoryAdmin(generic.AdminBaseMixin):
         "admin categories", "Requested category does not exist."
     )
 
-    def get_target(self, kwargs):
-        target = super().get_target(kwargs)
+    def get_target(self, request, kwargs):
+        target = super().get_target(request, kwargs)
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 
@@ -90,7 +96,13 @@ class CategoryFormMixin:
             if copied_acls:
                 RoleCategoryACL.objects.bulk_create(copied_acls)
 
+            copy_category_permissions(
+                form.cleaned_data["copy_permissions"], form.instance, request
+            )
+
         clear_acl_cache()
+        invalidate_cache(CacheName.PERMISSIONS)
+
         messages.success(request, self.message_submit % {"name": target.name})
 
 
@@ -104,6 +116,49 @@ class EditCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
     message_submit = pgettext_lazy(
         "admin categories", 'Category "%(name)s" has been edited.'
     )
+
+
+class CategoryPermissionsView(CategoryAdmin, generic.PermissionsFormView):
+    template_name = "permissions.html"
+    message_submit = pgettext_lazy(
+        "admin categories", 'The "%(name)s" category permissions have been updated.'
+    )
+
+    def get_permissions(self, request, target):
+        return get_admin_category_permissions(self)
+
+    def get_items(self, request, target):
+        for group in Group.objects.values("id", "name"):
+            yield self.create_item(
+                id=group["id"],
+                name=group["name"],
+            )
+
+    def get_initial_data(self, request, target):
+        return CategoryGroupPermission.objects.filter(category=target).values_list(
+            "group_id", "permission"
+        )
+
+    def handle_form(self, data, request, target):
+        CategoryGroupPermission.objects.filter(category=target).delete()
+
+        new_permissions = []
+        for group_id, permissions in data.items():
+            for permission in permissions:
+                new_permissions.append(
+                    CategoryGroupPermission(
+                        category=target,
+                        group_id=group_id,
+                        permission=permission,
+                    )
+                )
+
+        if new_permissions:
+            CategoryGroupPermission.objects.bulk_create(new_permissions)
+
+        invalidate_cache(CacheName.PERMISSIONS)
+
+        messages.success(request, self.message_submit % {"name": target.name})
 
 
 class DeleteCategory(CategoryAdmin, generic.ModelFormView):

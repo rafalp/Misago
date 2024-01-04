@@ -1,102 +1,155 @@
 import json
 
+import pytest
 from django.urls import reverse
 
 from ...users.test import AuthenticatedUserTestCase
 from ..models import Agreement
 
 
-class SubmitAgreementTests(AuthenticatedUserTestCase):
-    def setUp(self):
-        super().setUp()
+@pytest.fixture
+def agreement(db):
+    return Agreement.objects.create(
+        type=Agreement.TYPE_TOS,
+        text="Lorem ipsum",
+        is_active=True,
+    )
 
-        self.agreement = Agreement.objects.create(
-            type=Agreement.TYPE_TOS, text="Lorem ipsum", is_active=True
-        )
 
-        self.api_link = reverse(
-            "misago:api:submit-agreement", kwargs={"pk": self.agreement.pk}
-        )
+def test_submit_agreement_api_returns_403_error_if_user_is_anonymous(client, agreement):
+    response = client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+    )
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "This action is not available to guests.",
+    }
 
-    def post_json(self, data):
-        return self.client.post(
-            self.api_link, json.dumps(data), content_type="application/json"
-        )
 
-    def test_anonymous(self):
-        self.logout_user()
+def test_submit_agreement_api_returns_405_error_if_request_method_is_get(
+    client, agreement
+):
+    response = client.get(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+    )
+    assert response.status_code == 405
+    assert json.loads(response.content) == {"detail": 'Method "GET" not allowed.'}
 
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
 
-    def test_get_request(self):
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 405)
-        self.assertEqual(response.json(), {"detail": 'Method "GET" not allowed.'})
+def test_submit_agreement_api_returns_404_error_if_agreement_id_is_invalid(
+    user_client, agreement
+):
+    response = user_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id + 1}),
+    )
+    assert response.status_code == 404
+    assert json.loads(response.content) == {"detail": "Not found."}
 
-    def test_invalid_agreement_id(self):
-        api_link = reverse(
-            "misago:api:submit-agreement", kwargs={"pk": self.agreement.pk + 1}
-        )
 
-        response = self.client.post(api_link)
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {"detail": "Not found."})
+def test_submit_agreement_api_returns_403_error_if_agreement_was_already_accepted(
+    user_client, user, agreement
+):
+    user.agreements.append(agreement.id)
+    user.save()
 
-    def test_agreement_already_accepted(self):
-        self.user.agreements.append(self.agreement.id)
-        self.user.save()
+    response = user_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+    )
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You have already accepted this agreement.",
+    }
 
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have already accepted this agreement."}
-        )
 
-    def test_no_accept_sent(self):
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You need to submit a valid choice."}
-        )
+def test_submit_agreement_api_returns_403_error_if_request_was_missing_payload(
+    user_client, agreement
+):
+    response = user_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+    )
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You need to submit a valid choice.",
+    }
 
-    def test_invalid_accept_sent(self):
-        response = self.post_json({"accept": 1})
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You need to submit a valid choice."}
-        )
 
-    def test_accept_false(self):
-        response = self.post_json({"accept": False})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"detail": "ok"})
+def test_submit_agreement_api_returns_403_error_if_request_payload_was_invalid(
+    user_client, agreement
+):
+    response = user_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+        json={"accept": 1},
+    )
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You need to submit a valid choice.",
+    }
 
-        self.user.refresh_from_db()
-        self.assertTrue(self.user.is_deleting_account)
-        self.assertFalse(self.user.is_active)
 
-    def test_accept_false_staff(self):
-        self.user.is_staff = True
-        self.user.save()
+def test_submit_agreement_api_records_user_acceptance(user_client, user, agreement):
+    response = user_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+        json={"accept": True},
+    )
+    assert response.status_code == 200
 
-        response = self.post_json({"accept": False})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"detail": "ok"})
+    user.refresh_from_db()
+    assert user.agreements == [agreement.id]
+    assert user.is_active
+    assert not user.is_deleting_account
 
-        self.user.refresh_from_db()
-        self.assertFalse(self.user.is_deleting_account)
-        self.assertTrue(self.user.is_active)
 
-    def test_accept_true(self):
-        response = self.post_json({"accept": True})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"detail": "ok"})
+def test_submit_agreement_api_marks_user_for_deletion_on_rejection(
+    user_client, user, agreement
+):
+    response = user_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+        json={"accept": False},
+    )
+    assert response.status_code == 200
 
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.agreements, [self.agreement.id])
-        self.assertFalse(self.user.is_deleting_account)
-        self.assertTrue(self.user.is_active)
+    user.refresh_from_db()
+    assert not user.is_active
+    assert user.is_deleting_account
+
+
+def test_submit_agreement_api_allows_staff_reject_agreement(
+    staff_client, staffuser, agreement
+):
+    response = staff_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+        json={"accept": False},
+    )
+    assert response.status_code == 200
+
+    staffuser.refresh_from_db()
+    assert staffuser.is_active
+    assert not staffuser.is_deleting_account
+
+
+def test_submit_agreement_api_allows_admin_reject_agreement(
+    admin_client, admin, agreement
+):
+    response = admin_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+        json={"accept": False},
+    )
+    assert response.status_code == 200
+
+    admin.refresh_from_db()
+    assert admin.is_active
+    assert not admin.is_deleting_account
+
+
+def test_submit_agreement_api_allows_root_admin_reject_agreement(
+    root_admin_client, root_admin, agreement
+):
+    response = root_admin_client.post(
+        reverse("misago:api:submit-agreement", kwargs={"pk": agreement.id}),
+        json={"accept": False},
+    )
+    assert response.status_code == 200
+
+    root_admin.refresh_from_db()
+    assert root_admin.is_active
+    assert not root_admin.is_deleting_account

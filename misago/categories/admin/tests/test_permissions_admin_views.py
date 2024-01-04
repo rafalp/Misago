@@ -179,7 +179,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # See if form page is rendered
         response = self.client.get(
             reverse(
-                "misago:admin:categories:permissions", kwargs={"pk": test_category.pk}
+                "misago:admin:categories:permissions-deprecated",
+                kwargs={"pk": test_category.pk},
             )
         )
         self.assertContains(response, test_category.name)
@@ -191,7 +192,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # Assign roles to categories
         response = self.client.post(
             reverse(
-                "misago:admin:categories:permissions", kwargs={"pk": test_category.pk}
+                "misago:admin:categories:permissions-deprecated",
+                kwargs={"pk": test_category.pk},
             ),
             data={
                 ("%s-category_role" % test_role_a.pk): role_full.pk,
@@ -213,7 +215,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         with assert_invalidates_cache(ACL_CACHE):
             self.client.post(
                 reverse(
-                    "misago:admin:categories:permissions",
+                    "misago:admin:categories:permissions-deprecated",
                     kwargs={"pk": test_category.pk},
                 ),
                 data={

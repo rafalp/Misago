@@ -93,6 +93,6 @@ class MisagoAdminExtension:
         site.add_node(
             name=pgettext_lazy("admin node", "Ranks"),
             icon="fas fa-shield-alt",
-            after="users:index",
+            after="groups:index",
             namespace="ranks",
         )

@@ -1,6 +1,7 @@
 import json
 from datetime import timedelta
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -137,65 +138,57 @@ class FollowsListTests(AuthenticatedUserTestCase):
         self.assertContains(response, follower.username)
 
 
-class RankListTests(AuthenticatedUserTestCase):
-    """tests for generic list (GET /users/) filtered by rank"""
+def test_users_api_rank_filter_returns_404_for_not_existing_rank(client, db):
+    response = client.get("/api/users/?rank=404")
+    assert response.status_code == 404
 
-    def setUp(self):
-        super().setUp()
-        self.link = "/api/users/?rank=%s"
 
-    def test_nonexistent_rank(self):
-        """list for non-existing rank returns 404"""
-        response = self.client.get(self.link % 1421)
-        self.assertEqual(response.status_code, 404)
+def test_users_api_rank_filter_returns_404_if_rank_tab_is_disabled(client, db):
+    rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=False)
 
-    def test_empty_list(self):
-        """tab rank without members returns 200"""
-        test_rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
+    response = client.get(f"/api/users/?rank={rank.id}")
+    assert response.status_code == 404
 
-        response = self.client.get(self.link % test_rank.pk)
-        self.assertEqual(response.status_code, 200)
 
-    def test_disabled_list(self):
-        """non-tab rank returns 404"""
-        self.user.rank.is_tab = False
-        self.user.rank.save()
+def test_users_api_rank_filter_returns_empty_list(client, other_user):
+    rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
 
-        response = self.client.get(self.link % self.user.rank.pk)
-        self.assertEqual(response.status_code, 404)
+    response = client.get(f"/api/users/?rank={rank.id}")
+    assert json.loads(response.content)["results"] == []
 
-    def test_list_search(self):
-        """rank list is not searchable"""
-        api_link = self.link % self.user.rank.pk
 
-        response = self.client.get("%s&name=%s" % (api_link, "test"))
-        self.assertEqual(response.status_code, 404)
+def test_users_api_rank_filter_returns_list_with_rank_user(client, other_user):
+    rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
 
-    def test_filled_list(self):
-        """tab rank with members return 200"""
-        self.user.rank.is_tab = True
-        self.user.rank.save()
+    other_user.rank = rank
+    other_user.save()
 
-        response = self.client.get(self.link % self.user.rank.pk)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.user.username)
+    response = client.get(f"/api/users/?rank={rank.id}")
+    assert json.loads(response.content)["results"][0]["id"] == other_user.id
 
-    def test_disabled_users(self):
-        """api follows disabled users visibility"""
-        rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
-        user = create_test_user(
-            "DisabledUser", "disabled@example.com", rank=rank, is_active=False
-        )
 
-        response = self.client.get(self.link % rank.pk)
-        self.assertNotContains(response, user.get_absolute_url())
+def test_users_api_rank_filter_returns_excluded_deactivated_users(
+    client, inactive_user
+):
+    rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
 
-        # api shows disabled accounts to staff
-        self.user.is_staff = True
-        self.user.save()
+    inactive_user.rank = rank
+    inactive_user.save()
 
-        response = self.client.get(self.link % rank.pk)
-        self.assertContains(response, user.get_absolute_url())
+    response = client.get(f"/api/users/?rank={rank.id}")
+    assert json.loads(response.content)["results"] == []
+
+
+def test_users_api_rank_filter_returns_deactivated_users_for_admin(
+    admin_client, inactive_user
+):
+    rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
+
+    inactive_user.rank = rank
+    inactive_user.save()
+
+    response = admin_client.get(f"/api/users/?rank={rank.id}")
+    assert json.loads(response.content)["results"][0]["id"] == inactive_user.id
 
 
 class SearchNamesListTests(AuthenticatedUserTestCase):
@@ -216,34 +209,29 @@ class SearchNamesListTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 404)
 
 
-class UserRetrieveTests(AuthenticatedUserTestCase):
-    def setUp(self):
-        super().setUp()
+def test_user_api_returns_404_for_nonexisting_user(client, db):
+    response = client.get(reverse("misago:api:user-detail", kwargs={"pk": 404}))
+    assert response.status_code == 404
 
-        self.other_user = create_test_user("Other_User", "otheruser@example.com")
-        self.link = reverse("misago:api:user-detail", kwargs={"pk": self.other_user.pk})
 
-    def test_get_user(self):
-        """api user retrieve endpoint has no showstoppers"""
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
+def test_user_api_returns_user_data(client, user):
+    response = client.get(reverse("misago:api:user-detail", kwargs={"pk": user.id}))
+    assert response.status_code == 200
+    assert json.loads(response.content)["id"] == user.id
 
-    def test_disabled_user(self):
-        """api user retrieve handles disabled users"""
-        self.user.is_staff = False
-        self.user.save()
 
-        self.other_user.is_active = False
-        self.other_user.save()
+def test_user_api_returns_404_for_deactivated_user(client, inactive_user):
+    response = client.get(
+        reverse("misago:api:user-detail", kwargs={"pk": inactive_user.id})
+    )
+    assert response.status_code == 404
 
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 404)
 
-        self.user.is_staff = True
-        self.user.save()
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
+def test_user_api_returns_deactivated_user_data_for_admins(admin_client, inactive_user):
+    response = admin_client.get(
+        reverse("misago:api:user-detail", kwargs={"pk": inactive_user.id})
+    )
+    assert json.loads(response.content)["id"] == inactive_user.id
 
 
 class UserFollowTests(AuthenticatedUserTestCase):
@@ -355,105 +343,9 @@ class UserBanTests(AuthenticatedUserTestCase):
         self.assertEqual(ban_json["user_message"]["html"], "<p>Nope!</p>")
 
 
-class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
-    """
-    tests for user request own account delete RPC
-    (POST to /api/users/1/delete-own-account/)
-    """
-
-    def setUp(self):
-        super().setUp()
-        self.api_link = "/api/users/%s/delete-own-account/" % self.user.pk
-
-    @override_dynamic_settings(allow_delete_own_account=False)
-    def test_delete_own_account_feature_disabled(self):
-        """
-        raises 403 error when attempting to delete own account but feature is disabled
-        """
-        response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
-
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {"detail": "You can't delete your account."})
-
-        self.reload_user()
-        self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.is_deleting_account)
-
-    @override_dynamic_settings(allow_delete_own_account=True)
-    def test_delete_own_account_is_staff(self):
-        """raises 403 error when attempting to delete own account as admin"""
-        self.user.is_staff = True
-        self.user.save()
-
-        response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {
-                "detail": (
-                    "You can't delete your account because you are an administrator."
-                )
-            },
-        )
-
-        self.reload_user()
-        self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.is_deleting_account)
-
-    @override_dynamic_settings(allow_delete_own_account=True)
-    def test_delete_own_account_is_superuser(self):
-        """raises 403 error when attempting to delete own account as superadmin"""
-        self.user.is_superuser = True
-        self.user.save()
-
-        response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {
-                "detail": (
-                    "You can't delete your account because you are an administrator."
-                )
-            },
-        )
-
-        self.reload_user()
-        self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.is_deleting_account)
-
-    @override_dynamic_settings(allow_delete_own_account=True)
-    def test_delete_own_account_invalid_password(self):
-        """
-        raises 400 error when attempting to delete own account with invalid password
-        """
-        response = self.client.post(self.api_link, {"password": "hello"})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {"password": ["Entered password is invalid."]}
-        )
-
-        self.reload_user()
-        self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.is_deleting_account)
-
-    @override_dynamic_settings(allow_delete_own_account=True)
-    def test_delete_own_account(self):
-        """deactivates account and marks it for deletion"""
-        response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
-        self.assertEqual(response.status_code, 200)
-
-        self.reload_user()
-        self.assertFalse(self.user.is_active)
-        self.assertTrue(self.user.is_deleting_account)
-
-
-@override_dynamic_settings(
-    allow_delete_own_account=True,
-    enable_oauth2_client=True,
-    oauth2_provider="Lorem",
-)
-def test_delete_own_account_api_returns_403_if_oauth_is_enabled(
-    user, user_password, user_client
+@override_dynamic_settings(allow_delete_own_account=False)
+def test_delete_own_account_api_returns_403_if_delete_own_account_option_is_disabled(
+    user_client, user, user_password
 ):
     response = user_client.post(
         reverse("misago:api:user-delete-own-account", kwargs={"pk": user.pk}),
@@ -462,149 +354,238 @@ def test_delete_own_account_api_returns_403_if_oauth_is_enabled(
         },
     )
     assert response.status_code == 403
+    assert json.loads(response.content) == {"detail": "You can't delete your account."}
 
 
-class UserDeleteTests(AuthenticatedUserTestCase):
-    """tests for user delete RPC (POST to /api/users/1/delete/)"""
-
-    def setUp(self):
-        super().setUp()
-
-        self.other_user = create_test_user("Other_User", "otheruser@example.com")
-        self.link = "/api/users/%s/delete/" % self.other_user.pk
-
-        self.threads = Thread.objects.count()
-        self.posts = Post.objects.count()
-
-        self.category = Category.objects.all_categories()[:1][0]
-
-        post_thread(self.category, poster=self.other_user)
-        self.other_user.posts = 1
-        self.other_user.threads = 1
-        self.other_user.save()
-
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 0, "can_delete_users_with_less_posts_than": 0}
+@override_dynamic_settings(allow_delete_own_account=False)
+def test_delete_own_account_api_returns_400_if_password_is_invalid(user_client, user):
+    response = user_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": user.pk}),
+        {
+            "password": "invalid-password",
+        },
     )
-    def test_delete_no_permission(self):
-        """raises 403 error when no permission to delete"""
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {"detail": "You can't delete users."})
+    assert response.status_code == 400
+    assert json.loads(response.content) == {
+        "password": ["Entered password is invalid."],
+    }
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 0, "can_delete_users_with_less_posts_than": 5}
+
+@override_dynamic_settings(allow_delete_own_account=True)
+def test_delete_own_account_api_returns_403_if_user_is_staff(
+    staff_client, staffuser, user_password
+):
+    response = staff_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": staffuser.pk}),
+        {
+            "password": user_password,
+        },
     )
-    def test_delete_too_many_posts(self):
-        """raises 403 error when user has too many posts"""
-        self.other_user.posts = 6
-        self.other_user.save()
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You can't delete your account because you are a staff user.",
+    }
 
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {"detail": "You can't delete users that made more than 5 posts."},
-        )
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 5, "can_delete_users_with_less_posts_than": 0}
+@override_dynamic_settings(allow_delete_own_account=True)
+def test_delete_own_account_api_returns_403_if_user_is_admin(
+    admin_client, admin, user_password
+):
+    response = admin_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": admin.pk}),
+        {
+            "password": user_password,
+        },
     )
-    def test_delete_too_old_member(self):
-        """raises 403 error when user is too old"""
-        self.other_user.joined_on -= timedelta(days=6)
-        self.other_user.save()
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You can't delete your account because you are an administrator.",
+    }
 
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {"detail": "You can't delete users that are members for more than 5 days."},
-        )
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+@override_dynamic_settings(allow_delete_own_account=True)
+def test_delete_own_account_api_returns_403_if_user_is_root_admin(
+    root_admin_client, root_admin, user_password
+):
+    response = root_admin_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": root_admin.pk}),
+        {
+            "password": user_password,
+        },
     )
-    def test_delete_self(self):
-        """raises 403 error when attempting to delete oneself"""
-        response = self.client.post("/api/users/%s/delete/" % self.user.pk)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {"detail": "You can't delete your account."})
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You can't delete your account because you are an administrator.",
+    }
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+
+@override_dynamic_settings(
+    allow_delete_own_account=True,
+    enable_oauth2_client=True,
+    oauth2_provider="Lorem",
+)
+def test_delete_own_account_api_returns_403_if_oauth_is_enabled(
+    user_client, user, user_password
+):
+    response = user_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": user.pk}),
+        {
+            "password": user_password,
+        },
     )
-    def test_delete_admin(self):
-        """raises 403 error when attempting to delete admin"""
-        self.other_user.is_staff = True
-        self.other_user.save()
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "This feature has been disabled. Please use Lorem to delete your account.",
+    }
 
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "Administrators can't be deleted."}
-        )
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+@override_dynamic_settings(allow_delete_own_account=True)
+def test_delete_own_account_api_marks_user_account_for_deletion(
+    user_client, user, user_password
+):
+    response = user_client.post(
+        reverse("misago:api:user-delete-own-account", kwargs={"pk": user.pk}),
+        {
+            "password": user_password,
+        },
     )
-    def test_delete_superadmin(self):
-        """raises 403 error when attempting to delete superadmin"""
-        self.other_user.is_superuser = True
-        self.other_user.save()
+    assert response.status_code == 200
 
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "Administrators can't be deleted."}
-        )
+    user.refresh_from_db()
+    assert not user.is_active
+    assert user.is_deleting_account
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+
+def test_user_delete_api_prevents_deletion_if_user_no_permission(
+    user_client, other_user
+):
+    response = user_client.post(f"/api/users/{other_user.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {"detail": "You can't delete users."}
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 5, "can_delete_users_with_less_posts_than": 0}
+)
+def test_user_delete_api_prevents_deletion_if_user_is_too_old(user_client, other_user):
+    other_user.joined_on -= timedelta(days=6)
+    other_user.save()
+
+    response = user_client.post(f"/api/users/{other_user.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You can't delete users that are members for more than 5 days.",
+    }
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_prevents_deletion_if_user_has_too_many_posts(
+    user_client, other_user
+):
+    other_user.posts = 6
+    other_user.save()
+
+    response = user_client.post(f"/api/users/{other_user.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You can't delete users that made more than 5 posts.",
+    }
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_prevents_deletion_if_user_is_staff(user_client, staffuser):
+    response = user_client.post(f"/api/users/{staffuser.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "Django staff users can't be deleted.",
+    }
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_prevents_deletion_if_user_is_admin(user_client, admin):
+    response = user_client.post(f"/api/users/{admin.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "Administrators can't be deleted.",
+    }
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_prevents_deletion_if_user_is_root_admin(
+    user_client, root_admin
+):
+    response = user_client.post(f"/api/users/{root_admin.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "Administrators can't be deleted.",
+    }
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_prevents_deletion_if_user_is_self(user_client, user):
+    response = user_client.post(f"/api/users/{user.id}/delete/")
+    assert response.status_code == 403
+    assert json.loads(response.content) == {
+        "detail": "You can't delete your account.",
+    }
+
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_deletes_user_with_content(
+    user_client, default_category, other_user
+):
+    thread = post_thread(default_category, poster=other_user)
+
+    response = user_client.post(
+        f"/api/users/{other_user.id}/delete/",
+        json={"with_content": True},
     )
-    def test_delete_with_content(self):
-        """returns 200 and deletes user with content"""
-        response = self.client.post(
-            self.link,
-            json.dumps({"with_content": True}),
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
+    assert response.status_code == 200
 
-        with self.assertRaises(User.DoesNotExist):
-            self.other_user.refresh_from_db()
+    with pytest.raises(User.DoesNotExist):
+        other_user.refresh_from_db()
 
-        self.assertEqual(Thread.objects.count(), self.threads)
-        self.assertEqual(Post.objects.count(), self.posts)
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
+)
+def test_user_delete_api_deletes_user_without_content(
+    user_client, default_category, other_user
+):
+    thread = post_thread(default_category, poster=other_user)
+
+    response = user_client.post(
+        f"/api/users/{other_user.id}/delete/",
+        json={"with_content": False},
     )
-    def test_delete_without_content(self):
-        """returns 200 and deletes user without content"""
-        response = self.client.post(
-            self.link,
-            json.dumps({"with_content": False}),
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
+    assert response.status_code == 200
 
-        with self.assertRaises(User.DoesNotExist):
-            self.other_user.refresh_from_db()
+    with pytest.raises(User.DoesNotExist):
+        other_user.refresh_from_db()
 
-        self.assertEqual(Thread.objects.count(), self.threads + 1)
-        self.assertEqual(Post.objects.count(), self.posts + 2)
+    thread.refresh_from_db()
 
-    @patch_user_acl(
-        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
-    )
-    def test_deleting_user_using_api_records_deletion_by_staff(self):
-        response = self.client.post(
-            self.link,
-            json.dumps({"with_content": False}),
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 200)
 
-        DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_STAFF)
+@patch_user_acl(
+    {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+)
+def test_user_delete_api_creates_deleted_user_entry(user_client, other_user):
+    response = user_client.post(f"/api/users/{other_user.id}/delete/")
+    assert response.status_code == 200
+
+    DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_STAFF)

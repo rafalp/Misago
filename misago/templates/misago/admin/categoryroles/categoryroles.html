@@ -4,7 +4,7 @@
 
 {% block title %}
 {% blocktrans trimmed with category=target context "admin category roles form" %}
-  {{ category }}: Permissions
+  {{ category }}: Permissions (deprecated)
 {% endblocktrans %} | {{ block.super }}
 {% endblock title %}
 
@@ -12,9 +12,16 @@
 {% block page-header %}
 {{ block.super }}
 <small>
-  {{ category }}
+  {{ target }}
 </small>
 {% endblock page-header %}
+
+
+{% block view %}
+{% include "misago/admin/categoryroles/deprecated.html" %}
+
+{{ block.super }}
+{% endblock view %}
 
 
 {% block page-actions %}
@@ -34,7 +41,7 @@
 
 
 {% block form-header %}
-{% trans "Change permissions" context "admin category roles form" %}
+{% trans "Change permissions (deprecated)" context "admin category roles form" %}
 {% endblock form-header %}
 
 

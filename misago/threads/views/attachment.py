@@ -32,7 +32,7 @@ def serve_file(request, pk, secret, thumbnail):
         # this saves user suprise of deleted attachment still showing in posts/quotes
         raise Http404()
 
-    if not request.user.is_staff:
+    if not request.user.is_misago_admin:
         allow_file_download(request, attachment)
 
     if attachment.is_image:

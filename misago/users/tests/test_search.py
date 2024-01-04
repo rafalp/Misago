@@ -1,3 +1,5 @@
+import json
+
 from django.urls import reverse
 
 from ...acl.test import patch_user_acl
@@ -99,37 +101,32 @@ class SearchApiTests(AuthenticatedUserTestCase):
             if provider["id"] == "users":
                 self.assertEqual(provider["results"]["results"], [])
 
-    def test_search_disabled_user(self):
-        """api respects disabled users visibility"""
-        disabled_user = create_test_user(
-            "DisabledUser", "disableduser@example.com", is_active=False
-        )
 
-        response = self.client.get("%s?q=DisabledUser" % self.api_link)
-        self.assertEqual(response.status_code, 200)
+def search_users(client, query=None):
+    api_link = reverse("misago:api:search")
+    if query:
+        api_link += f"?q={query}"
 
-        response_json = response.json()
-        self.assertIn("users", [p["id"] for p in response_json])
+    response = client.get(api_link)
+    assert response.status_code == 200
 
-        for provider in response_json:
-            if provider["id"] == "users":
-                self.assertEqual(provider["results"]["results"], [])
+    for search_results in json.loads(response.content):
+        if search_results["id"] == "users":
+            return search_results["results"]["results"]
 
-        # user shows in search performed by staff
-        self.user.is_staff = True
-        self.user.save()
+    raise AssertionError("Search results did not include users!")
 
-        response = self.client.get("%s?q=DisabledUser" % self.api_link)
-        self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn("users", [p["id"] for p in response_json])
+def test_search_users_api_excludes_deactivated_users(client, inactive_user):
+    results = search_users(client, inactive_user.username)
+    assert results == []
 
-        for provider in response_json:
-            if provider["id"] == "users":
-                results = provider["results"]["results"]
-                self.assertEqual(len(results), 1)
-                self.assertEqual(results[0]["id"], disabled_user.id)
+
+def test_search_users_api_includes_deactivated_users_if_client_is_admin(
+    admin_client, inactive_user
+):
+    results = search_users(admin_client, inactive_user.username)
+    assert results[0]["id"] == inactive_user.id
 
 
 class SearchProviderApiTests(SearchApiTests):

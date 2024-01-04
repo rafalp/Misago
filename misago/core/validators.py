@@ -1,4 +1,7 @@
+import re
+
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.utils.translation import pgettext_lazy
 
 from .utils import slugify
@@ -28,3 +31,13 @@ def validate_image_square(image):
         raise ValidationError(
             pgettext_lazy("image validator", "Uploaded image is not a square.")
         )
+
+
+validate_css_name = RegexValidator(
+    re.compile(r"^[a-zA-Z_-]+([a-zA-Z0-9-_]+)?$"),
+    pgettext_lazy(
+        "css name validator",
+        "Enter a valid CSS class name that starts with a Latin letter, underscore, or a hyphen, and is followed by any combination of Latin letters, numbers, hyphens, and underscore characters.",
+    ),
+    "invalid",
+)

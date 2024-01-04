@@ -10,12 +10,12 @@ def test_getter_returns_authenticated_user_acl(cache_versions, user):
     assert acl["is_anonymous"] is False
 
 
-def test_user_acl_includes_staff_and_superuser_false_status(cache_versions, user):
+def test_user_acl_excludes_admin_and_root_status(cache_versions, user):
     acl = get_user_acl(user, cache_versions)
 
     assert acl
-    assert acl["is_staff"] is False
-    assert acl["is_superuser"] is False
+    assert acl["is_admin"] is False
+    assert acl["is_root"] is False
 
 
 def test_user_acl_includes_cache_versions(cache_versions, user):
@@ -34,24 +34,20 @@ def test_getter_returns_anonymous_user_acl(db, cache_versions, anonymous_user):
     assert acl["is_anonymous"] is True
 
 
-def test_superuser_acl_includes_staff_and_superuser_true_status(
-    cache_versions, superuser
-):
-    acl = get_user_acl(superuser, cache_versions)
+def test_admin_acl_includes_admin_but_not_root_status(cache_versions, admin):
+    acl = get_user_acl(admin, cache_versions)
 
     assert acl
-    assert acl["is_staff"] is True
-    assert acl["is_superuser"] is True
+    assert acl["is_admin"] is True
+    assert acl["is_root"] is False
 
 
-def test_staffuser_acl_includes_staff_and_superuser_true_status(
-    cache_versions, staffuser
-):
-    acl = get_user_acl(staffuser, cache_versions)
+def test_root_admin_acl_includes_admin_and_root_true_status(cache_versions, root_admin):
+    acl = get_user_acl(root_admin, cache_versions)
 
     assert acl
-    assert acl["is_staff"] is True
-    assert acl["is_superuser"] is False
+    assert acl["is_admin"] is True
+    assert acl["is_root"] is True
 
 
 def test_getter_returns_acl_from_cache(mocker, db, cache_versions, anonymous_user):

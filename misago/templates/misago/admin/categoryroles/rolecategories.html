@@ -17,6 +17,13 @@
 {% endblock page-header %}
 
 
+{% block view %}
+{% include "misago/admin/categoryroles/deprecated.html" %}
+
+{{ block.super }}
+{% endblock view %}
+
+
 {% block page-actions %}
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:permissions:edit' pk=target.pk %}" class="btn btn-primary btn-sm">

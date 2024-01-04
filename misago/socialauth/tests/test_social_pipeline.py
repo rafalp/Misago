@@ -1,6 +1,7 @@
 import json
 from unittest.mock import Mock
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import RequestFactory
@@ -721,60 +722,59 @@ class RequireActivationTests(PipelineTestCase):
         )
 
 
-class ValidateIpNotBannedTests(PipelineTestCase):
-    def test_skip_if_user_not_set(self):
-        """pipeline step is skipped if no user was passed"""
-        result = validate_ip_not_banned(None, {}, GithubOAuth2)
-        self.assertIsNone(result)
+def test_validate_ip_not_banned_step_returns_none_if_user_not_set(db):
+    result = validate_ip_not_banned(MockStrategy(user_ip="188.1.2.3"), {}, GithubOAuth2)
+    assert result is None
 
-    def test_raise_if_banned(self):
-        """pipeline raises if user's IP is banned"""
-        Ban.objects.create(banned_value="188.*", check_type=Ban.IP)
 
-        try:
-            validate_ip_not_banned(
-                MockStrategy(user_ip="188.1.2.3"), {}, GithubOAuth2, self.user
-            )
-            self.fail("validate_ip_not_banned should raise SocialAuthBanned")
-        except SocialAuthBanned as e:
-            self.assertTrue(isinstance(e.ban, Ban))
+def test_validate_ip_not_banned_does_nothing_if_user_ip_is_not_banned(user):
+    result = validate_ip_not_banned(
+        MockStrategy(user_ip="188.1.2.3"), {}, GithubOAuth2, user
+    )
+    assert result is None
 
-    def test_exclude_staff(self):
-        """pipeline excludes staff from bans"""
-        self.user.is_staff = True
-        self.user.save()
 
-        Ban.objects.create(banned_value="188.*", check_type=Ban.IP)
+def test_validate_ip_not_banned_step_raises_error_if_user_ip_is_banned(user):
+    Ban.objects.create(banned_value="188.*", check_type=Ban.IP)
 
-        result = validate_ip_not_banned(
-            MockStrategy(user_ip="188.1.2.3"), {}, GithubOAuth2, self.user
+    with pytest.raises(SocialAuthBanned) as exc_info:
+        validate_ip_not_banned(
+            MockStrategy(user_ip="188.1.2.3"), {}, GithubOAuth2, user
         )
-        self.assertIsNone(result)
+
+    assert isinstance(exc_info.value.ban, Ban)
 
 
-class ValidateUserNotBannedTests(PipelineTestCase):
-    def test_skip_if_user_not_set(self):
-        """pipeline step is skipped if no user was passed"""
-        result = validate_user_not_banned(None, {}, GithubOAuth2)
-        self.assertIsNone(result)
+def test_validate_ip_not_banned_step_does_nothing_if_banned_user_is_admin(admin):
+    Ban.objects.create(banned_value="188.*", check_type=Ban.IP)
 
-    def test_raise_if_banned(self):
-        """pipeline raises if user's IP is banned"""
-        Ban.objects.create(banned_value=self.user.username, check_type=Ban.USERNAME)
+    result = validate_ip_not_banned(
+        MockStrategy(user_ip="188.1.2.3"), {}, GithubOAuth2, admin
+    )
+    assert result is None
 
-        try:
-            validate_user_not_banned(MockStrategy(), {}, GithubOAuth2, self.user)
-            self.fail("validate_ip_not_banned should raise SocialAuthBanned")
-        except SocialAuthBanned as e:
-            self.assertEqual(e.ban.user, self.user)
-            self.assertTrue(isinstance(e.ban, BanCache))
 
-    def test_exclude_staff(self):
-        """pipeline excludes staff from bans"""
-        self.user.is_staff = True
-        self.user.save()
+def test_validate_user_not_banned_step_returns_none_if_user_not_set(db):
+    result = validate_user_not_banned(MockStrategy(), {}, GithubOAuth2)
+    assert result is None
 
-        Ban.objects.create(banned_value=self.user.username, check_type=Ban.USERNAME)
 
-        result = validate_user_not_banned(MockStrategy(), {}, GithubOAuth2, self.user)
-        self.assertIsNone(result)
+def test_validate_user_not_banned_does_nothing_if_user_is_not_banned(user):
+    result = validate_user_not_banned(MockStrategy(), {}, GithubOAuth2, user)
+    assert result is None
+
+
+def test_validate_user_not_banned_step_raises_error_if_user_is_banned(user):
+    Ban.objects.create(banned_value=user.username, check_type=Ban.USERNAME)
+
+    with pytest.raises(SocialAuthBanned) as exc_info:
+        validate_user_not_banned(MockStrategy(), {}, GithubOAuth2, user)
+
+    assert isinstance(exc_info.value.ban, BanCache)
+
+
+def test_validate_user_not_banned_step_does_nothing_if_banned_user_is_admin(admin):
+    Ban.objects.create(banned_value=admin.username, check_type=Ban.USERNAME)
+
+    result = validate_user_not_banned(MockStrategy(), {}, GithubOAuth2, admin)
+    assert result is None

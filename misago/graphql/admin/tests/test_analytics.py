@@ -218,10 +218,8 @@ def test_old_attachment_is_excluded_from_analytics(
     assert sum(analytics["previous"]) == 0
 
 
-def test_recent_data_download_appears_in_current_analytics(
-    admin_graphql_client, superuser
-):
-    request_user_data_download(superuser)
+def test_recent_data_download_appears_in_current_analytics(admin_graphql_client, user):
+    request_user_data_download(user)
 
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["dataDownloads"]
@@ -229,10 +227,8 @@ def test_recent_data_download_appears_in_current_analytics(
     assert sum(analytics["previous"]) == 0
 
 
-def test_older_data_download_appears_in_previous_analytics(
-    admin_graphql_client, superuser
-):
-    download = request_user_data_download(superuser)
+def test_older_data_download_appears_in_previous_analytics(admin_graphql_client, user):
+    download = request_user_data_download(user)
     download.requested_on = previous_datetime
     download.save()
 
@@ -242,8 +238,8 @@ def test_older_data_download_appears_in_previous_analytics(
     assert sum(analytics["previous"]) == 1
 
 
-def test_old_data_download_is_excluded_from_analytics(admin_graphql_client, superuser):
-    download = request_user_data_download(superuser)
+def test_old_data_download_is_excluded_from_analytics(admin_graphql_client, user):
+    download = request_user_data_download(user)
     download.requested_on = excluded_datetime
     download.save()
 

@@ -63,7 +63,7 @@ class TwitterHandleField(basefields.TextProfileField):
 
     def clean(self, request, user, data):
         data = data.lstrip("@")
-        if data and not re.search("^[A-Za-z0-9_]+$", data):
+        if data and not re.search(r"^[A-Za-z0-9_]+$", data):
             raise ValidationError(
                 pgettext(
                     "twitter handle profile field",

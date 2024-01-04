@@ -151,11 +151,17 @@ class UserData(TypedDict):
 The code below implements a custom validator function that extends the standard logic with additional check for a permission to use the forum by the user:
 
 ```python
+from django.forms import ValidationError
+from django.http import HttpRequest
+from misago.oauth.hooks import validate_user_data_hook
+from misago.users.models import User
+
+
 @validate_user_data_hook.append_filter
 def normalize_gmail_email(
     action,
     request: HttpRequest,
-    user: Optional[User],
+    user: User | None,
     user_data: dict,
     response_json: dict,
 ) -> dict:

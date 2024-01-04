@@ -20,24 +20,20 @@ def test_attempt_to_login_using_invalid_credentials_fails(db, client):
     assert_contains(response, "Login or password is incorrect.")
 
 
-def test_attempt_to_login_using_invalid_password_fails(client, superuser):
-    response = client.post(
-        admin_link, {"username": superuser.username, "password": "no"}
-    )
+def test_attempt_to_login_using_invalid_password_fails(client, admin):
+    response = client.post(admin_link, {"username": admin.username, "password": "no"})
     assert_contains(response, "Login or password is incorrect.")
 
 
-def test_attempt_to_login_without_staff_status_fails(client, user, user_password):
+def test_attempt_to_login_without_admin_status_fails(client, user, user_password):
     response = client.post(
         admin_link, {"username": user.username, "password": user_password}
     )
     assert_contains(response, "Your account does not have admin privileges.")
 
 
-def test_attempt_to_login_as_superuser_without_staff_status_fails(
-    client, user, user_password
-):
-    user.is_superuser = True
+def test_attempt_to_login_as_django_staff_user_fails(client, user, user_password):
+    user.is_staff = True
     user.save()
 
     response = client.post(
@@ -46,18 +42,49 @@ def test_attempt_to_login_as_superuser_without_staff_status_fails(
     assert_contains(response, "Your account does not have admin privileges.")
 
 
-def test_user_with_staff_status_is_logged_to_admin(client, staffuser, user_password):
+def test_attempt_to_login_as_django_superuser_user_fails(
+    client, superuser, user_password
+):
     response = client.post(
-        admin_link, {"username": staffuser.username, "password": user_password}
+        admin_link, {"username": superuser.username, "password": user_password}
+    )
+    assert_contains(response, "Your account does not have admin privileges.")
+
+
+def test_attempt_to_login_as_django_non_staff_superuser_user_fails(
+    client, superuser, user_password
+):
+    superuser.is_staff = False
+    superuser.save()
+
+    response = client.post(
+        admin_link, {"username": superuser.username, "password": user_password}
+    )
+    assert_contains(response, "Your account does not have admin privileges.")
+
+
+def test_user_with_admin_status_is_logged_to_admin(client, admin, user_password):
+    response = client.post(
+        admin_link, {"username": admin.username, "password": user_password}
     )
     assert is_admin_authorized(response.wsgi_request)
-    assert response.wsgi_request.user == staffuser
+    assert response.wsgi_request.user == admin
+
+
+def test_user_with_root_admin_status_is_logged_to_admin(
+    client, root_admin, user_password
+):
+    response = client.post(
+        admin_link, {"username": root_admin.username, "password": user_password}
+    )
+    assert is_admin_authorized(response.wsgi_request)
+    assert response.wsgi_request.user == root_admin
 
 
 def test_login_form_redirects_user_to_admin_index_after_successful_login(
-    client, staffuser, user_password
+    client, admin, user_password
 ):
     response = client.post(
-        admin_link, {"username": staffuser.username, "password": user_password}
+        admin_link, {"username": admin.username, "password": user_password}
     )
     assert response["location"] == admin_link

@@ -8,7 +8,7 @@ from ...datadownloads import (
     user_has_data_download_request,
 )
 from ...models import DataDownload
-from ..forms import RequestDataDownloadsForm, FilterDataDownloadsForm
+from ..forms.datadownloads import RequestDataDownloadsForm, FilterDataDownloadsForm
 
 
 class DataDownloadAdmin(generic.AdminBaseMixin):

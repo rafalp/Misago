@@ -91,7 +91,7 @@ def preload_settings_json(request):
 
     if (
         request.user.is_authenticated
-        and request.user.is_staff
+        and request.user.is_misago_admin
         and request.settings.show_admin_panel_link_in_ui
     ):
         request.frontend_context["ADMIN_URL"] = reverse("misago:admin:index")

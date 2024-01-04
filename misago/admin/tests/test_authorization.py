@@ -14,26 +14,25 @@ from ..auth import (
 )
 
 
-@pytest.fixture
-def admin_request(superuser):
-    request = Mock(session={}, user=superuser)
-    authorize_admin(request)
-    return request
-
-
 def test_authorizing_admin_updates_request_session(user):
     request = Mock(session={}, user=user)
     authorize_admin(request)
     assert request.session
 
 
-def test_staff_user_can_be_authorized(staffuser):
-    request = Mock(session={}, user=staffuser)
+def test_admin_user_can_be_authorized(admin):
+    request = Mock(session={}, user=admin)
     authorize_admin(request)
     assert is_admin_authorized(request)
 
 
-def test_non_staff_user_admin_authorization_is_never_valid(user):
+def test_root_admin_user_can_be_authorized(root_admin):
+    request = Mock(session={}, user=root_admin)
+    authorize_admin(request)
+    assert is_admin_authorized(request)
+
+
+def test_non_admin_user_admin_authorization_is_never_valid(user):
     request = Mock(session={}, user=user)
     authorize_admin(request)
     assert not is_admin_authorized(request)
@@ -46,15 +45,36 @@ def test_anonymous_user_admin_authorization_is_never_valid(user, anonymous_user)
     assert not is_admin_authorized(request)
 
 
-def test_superuser_without_staff_flag_admin_authorization_is_never_valid(staffuser):
+def test_django_staff_admin_authorization_is_never_valid(staffuser):
     request = Mock(session={}, user=staffuser)
     authorize_admin(request)
-    request.user.is_staff = False
     assert not is_admin_authorized(request)
 
 
-def test_admin_authorization_is_invalidated_by_user_pk_change(admin_request, superuser):
-    admin_request.user.pk = superuser.pk + 1
+def test_django_superuser_admin_authorization_is_never_valid(superuser):
+    request = Mock(session={}, user=superuser)
+    authorize_admin(request)
+    assert not is_admin_authorized(request)
+
+
+def test_django_non_staff_superuser_admin_authorization_is_never_valid(superuser):
+    superuser.is_staff = False
+    superuser.save()
+
+    request = Mock(session={}, user=superuser)
+    authorize_admin(request)
+    assert not is_admin_authorized(request)
+
+
+@pytest.fixture
+def admin_request(admin):
+    request = Mock(session={}, user=admin)
+    authorize_admin(request)
+    return request
+
+
+def test_admin_authorization_is_invalidated_by_user_pk_change(admin_request, admin):
+    admin_request.user.pk = admin.pk + 1
     assert not is_admin_authorized(admin_request)
 
 

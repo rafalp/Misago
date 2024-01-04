@@ -4,6 +4,7 @@ from ..categories import (
     fake_category_name,
     fake_closed_category,
 )
+from ...permissions.models import CategoryGroupPermission
 
 
 def test_fake_category_can_be_created(fake, root_category):
@@ -15,12 +16,14 @@ def test_fake_category_is_created_with_specified_parent(fake, default_category):
     assert category.parent == default_category
 
 
-def test_fake_category_can_be_created_with_copy_of_other_category_acls(
+def test_fake_category_can_be_created_with_copy_of_other_category_permissions(
     fake, root_category, default_category
 ):
-    category = fake_category(fake, root_category, copy_acl_from=default_category)
+    category = fake_category(fake, root_category, copy_permissions=default_category)
     for acl in default_category.category_role_set.all():
         category.category_role_set.get(role=acl.role, category_role=acl.category_role)
+
+    assert CategoryGroupPermission.objects.filter(category=category).exists()
 
 
 def test_fake_closed_category_can_be_created(fake, root_category):

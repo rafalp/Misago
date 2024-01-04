@@ -16,7 +16,7 @@ def is_admin_authorized(request):
     if request.user.is_anonymous:
         return False
 
-    if not request.user.is_staff:
+    if not request.user.is_misago_admin:
         return False
 
     admin_token = request.session.get(TOKEN_KEY)
@@ -54,7 +54,7 @@ def make_user_admin_token(user):
     return md5(":".join(formula).encode()).hexdigest()
 
 
-# Login/logout exposed
+# Re-export login/logout from Django Admin
 login = dj_auth.login
 logout = dj_auth.logout
 
@@ -66,7 +66,7 @@ def django_login_handler(sender, **kwargs):
         admin_namespace = request.admin_namespace
     except AttributeError:
         admin_namespace = False
-    if admin_namespace and user.is_staff:
+    if admin_namespace and user.is_misago_admin:
         authorize_admin(request)
 
 

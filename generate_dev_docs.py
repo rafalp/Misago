@@ -5,7 +5,11 @@ from importlib import import_module
 from pathlib import Path
 from textwrap import dedent, indent
 
-HOOKS_MODULES = ("misago.oauth2.hooks",)
+HOOKS_MODULES = (
+    "misago.oauth2.hooks",
+    "misago.permissions.hooks",
+    "misago.users.hooks",
+)
 PLUGIN_MANIFEST = "misago.plugins.manifest.MisagoPlugin"
 OUTLETS_ENUM = "misago.plugins.enums.PluginOutlet"
 
@@ -132,7 +136,39 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         fp.write("```")
 
         if hook_type == "ACTION":
-            raise NotImplementedError()
+            fp.write("\n\n\n")
+            fp.write("## Action")
+
+            if hook_action_ast:
+                hook_cropped = hook_name
+                if hook_cropped.endswith("_hook"):
+                    hook_cropped = hook_cropped[:-5]
+
+                hook_action_signature = get_callable_class_signature(hook_action_ast)
+                if hook_action_signature:
+                    hook_action_args, hook_action_returns = hook_action_signature
+                else:
+                    hook_action_args = ""
+                    hook_action_returns = "Unknown"
+
+                fp.write("\n\n")
+                fp.write("```python")
+                fp.write("\n")
+                fp.write(
+                    f"def custom_{hook_cropped}_filter({hook_action_args}){hook_action_returns}:"
+                )
+                fp.write("\n")
+                fp.write("    ...")
+                fp.write("\n")
+                fp.write("```")
+
+                hook_action_docstring = get_class_docstring(hook_action_ast)
+                if hook_action_docstring:
+                    fp.write("\n\n")
+                    fp.write(indent_docstring_headers(hook_action_docstring, level=2))
+            else:
+                fp.write("_This section is empty._")
+
         if hook_type == "FILTER":
             fp.write("\n\n\n")
             fp.write("## Filter")
@@ -291,8 +327,24 @@ def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | No
         item_args = ast.unparse(item.args)
         if item_args.startswith("self, "):
             item_args = item_args[6:]
+
         if len(item_args) > 70:
-            item_args = "\n" + indent(item_args.replace(", ", ",\n"), "    ") + ",\n"
+            item_args = item_args.replace(", ", ",\n")
+            # Hack to fix invalid linebreaks in `[T1, T2]`...
+            offset = 0
+            for _ in range(item_args.count("[")):
+                position = item_args.find("[", offset)
+                end_position = item_args.find("]", position)
+                if ",\n" in item_args[position:end_position]:
+                    item_args_copy = item_args
+                    item_args = item_args_copy[:position]
+                    item_args += item_args_copy[position:end_position].replace(
+                        ",\n", ", "
+                    )
+                    item_args += item_args_copy[end_position:]
+                offset = position + 1
+            item_args = "\n" + indent(item_args, "    ") + ",\n"
+
         elif len(item_args) > 50:
             item_args = f"\n    {item_args}\n"
 

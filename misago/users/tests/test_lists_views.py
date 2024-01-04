@@ -2,6 +2,7 @@ from django.urls import reverse
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
+from ...test import assert_contains, assert_not_contains
 from ...threads.test import post_thread
 from ..activepostersranking import build_active_posters_ranking
 from ..models import Rank
@@ -55,57 +56,45 @@ class ActivePostersTests(UsersListTestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class UsersRankTests(UsersListTestCase):
-    def test_ranks(self):
-        """ranks lists are handled correctly"""
-        rank_user = create_test_user("Visible", "visible@te.com")
+def test_rank_users_list_is_not_available_if_rank_is_not_tab(client, other_user):
+    rank = Rank.objects.create(name="Test Rank", is_tab=False)
 
-        for rank in Rank.objects.iterator():
-            rank_user.rank = rank
-            rank_user.save()
+    other_user.rank = rank
+    other_user.save()
 
-            rank_link = reverse("misago:users-rank", kwargs={"slug": rank.slug})
-            response = self.client.get(rank_link)
+    response = client.get(reverse("misago:users-rank", kwargs={"slug": rank.slug}))
+    assert response.status_code == 404
 
-            if rank.is_tab:
-                self.assertEqual(response.status_code, 200)
-                self.assertContains(response, rank_user.get_absolute_url())
-            else:
-                self.assertEqual(response.status_code, 404)
 
-    def test_disabled_users(self):
-        """ranks lists excludes disabled accounts"""
-        rank_user = create_test_user("Visible", "visible@te.com", is_active=False)
+def test_rank_users_list_displays_rank_users_if_rank_is_tab(client, other_user):
+    rank = Rank.objects.create(name="Test Rank", is_tab=True)
 
-        for rank in Rank.objects.iterator():
-            rank_user.rank = rank
-            rank_user.save()
+    other_user.rank = rank
+    other_user.save()
 
-            rank_link = reverse("misago:users-rank", kwargs={"slug": rank.slug})
-            response = self.client.get(rank_link)
+    response = client.get(reverse("misago:users-rank", kwargs={"slug": rank.slug}))
+    assert_contains(response, other_user.get_absolute_url())
 
-            if rank.is_tab:
-                self.assertEqual(response.status_code, 200)
-                self.assertNotContains(response, rank_user.get_absolute_url())
-            else:
-                self.assertEqual(response.status_code, 404)
 
-    def test_staff_see_disabled_users(self):
-        """ranks lists shows disabled accounts for staff members"""
-        self.user.is_staff = True
-        self.user.save()
+def test_rank_users_list_excludes_deactivated_users(client, inactive_user):
+    rank = Rank.objects.create(name="Test Rank", is_tab=True)
 
-        rank_user = create_test_user("Visible", "visible@te.com", is_active=False)
+    inactive_user.rank = rank
+    inactive_user.save()
 
-        for rank in Rank.objects.iterator():
-            rank_user.rank = rank
-            rank_user.save()
+    response = client.get(reverse("misago:users-rank", kwargs={"slug": rank.slug}))
+    assert_not_contains(response, inactive_user.get_absolute_url())
 
-            rank_link = reverse("misago:users-rank", kwargs={"slug": rank.slug})
-            response = self.client.get(rank_link)
 
-            if rank.is_tab:
-                self.assertEqual(response.status_code, 200)
-                self.assertContains(response, rank_user.get_absolute_url())
-            else:
-                self.assertEqual(response.status_code, 404)
+def test_rank_users_list_displays_deactivated_users_for_admin(
+    admin_client, inactive_user
+):
+    rank = Rank.objects.create(name="Test Rank", is_tab=True)
+
+    inactive_user.rank = rank
+    inactive_user.save()
+
+    response = admin_client.get(
+        reverse("misago:users-rank", kwargs={"slug": rank.slug})
+    )
+    assert_contains(response, inactive_user.get_absolute_url())

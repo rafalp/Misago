@@ -1,0 +1,7 @@
+{% load i18n %}
+<div class="alert alert-warning" role="alert">
+  <strong>{% trans "Deprecation warning" context "admin roles" %}:</strong>
+  {% blocktranslate trimmed context "admin roles" %}
+  Roles have been replaced with user groups and moderators and will be removed in a future version of Misago.
+  {% endblocktranslate %}
+</div>

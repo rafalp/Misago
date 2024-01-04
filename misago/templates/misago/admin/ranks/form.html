@@ -33,6 +33,13 @@
 {% endblock %}
 
 
+{% block view %}
+{% include "misago/admin/ranks/deprecated.html" %}
+
+{{ block.super }}
+{% endblock view %}
+
+
 {% block form-header %}
 {% if target.pk %}
   {% trans "Edit rank" context "admin rank form" %}

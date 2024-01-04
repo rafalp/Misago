@@ -6,7 +6,7 @@
 {% elif field|is_select_field %}
   {% include "misago/admin/form/select.html" %}
 {% elif field|is_textarea_field %}
-  <textarea {% render_attrs widget class_name="form-control" %} id="{{ field.id_for_label }}" name="{{ widget.name }}" {% render_bool_attrs widget %} {% if field.field.disabled %}disabled{% endif %}>{% if widget.value is not None %}{{ widget.value }}{% endif %}</textarea>
+  <textarea {% render_attrs widget.attrs class_name="form-control" %} name="{{ widget.name }}" {% render_bool_attrs widget.attrs %}>{% if widget.value != None %}{{ widget.value|stringformat:'s' }}{% endif %}</textarea>
 {% else %}
-  <input {% render_attrs widget class_name="form-control" %} id="{{ field.id_for_label }}" name="{{ widget.name }}" type="{{ widget.type }}"{% if widget.value is not None %} value="{{ widget.value }}"{% endif %} {% render_bool_attrs widget %} {% if field.field.disabled %}disabled{% endif %}>
+  <input {% render_attrs widget.attrs class_name="form-control" %} name="{{ widget.name }}" type="{{ widget.type }}" {% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %} {% render_bool_attrs widget.attrs %}>
 {% endif %}

@@ -4,7 +4,6 @@ import pytest
 from django.urls import reverse
 from django.utils import timezone
 
-from ....admin.test import AdminTestCase
 from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains
 from ... import BANS_CACHE

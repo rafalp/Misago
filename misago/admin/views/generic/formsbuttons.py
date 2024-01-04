@@ -1,15 +1,19 @@
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import redirect
+from django.utils.translation import pgettext_lazy
 
+from ....users.models import Group
 from .base import AdminView
+
+SAFE_HTTP_METHODS = ("GET", "HEAD", "OPTIONS", "TRACE")
 
 
 class TargetedView(AdminView):
     is_atomic = True
 
     def dispatch(self, request, *args, **kwargs):
-        if self.is_atomic:
+        if self.is_atomic and request.method not in SAFE_HTTP_METHODS:
             with transaction.atomic():
                 return self.wrapped_dispatch(request, *args, **kwargs)
         return self.wrapped_dispatch(request, *args, **kwargs)
@@ -31,18 +35,18 @@ class TargetedView(AdminView):
 
     def get_target_or_none(self, request, kwargs):
         try:
-            return self.get_target(kwargs)
+            return self.get_target(request, kwargs)
         except self.get_model().DoesNotExist:
             return None
 
-    def get_target(self, kwargs):
+    def get_target(self, request, kwargs):
         if len(kwargs) > 1:
             raise ValueError("TargetedView.get_target() received more than one kwarg")
         if len(kwargs) != 1:
             return self.get_model()()
 
         queryset = self.get_model().objects
-        if self.is_atomic:
+        if self.is_atomic and request.method not in SAFE_HTTP_METHODS:
             queryset = queryset.select_for_update()
         (pk,) = kwargs.values()
         return queryset.get(pk=pk)
@@ -119,6 +123,88 @@ class ModelFormView(FormView):
 
         template_name = self.get_template_name(request, target)
         return self.render(request, {"form": form, "target": target}, template_name)
+
+    def get_template_name(self, request, target):
+        return "%s/%s" % (self.templates_dir, self.template_name)
+
+
+class PermissionsFormView(TargetedView):
+    message_empty = pgettext_lazy(
+        "admin permissions table", "No items exist to set permissions for."
+    )
+
+    def get_permissions(self, request, target):
+        return []
+
+    @staticmethod
+    def create_permission(
+        *,
+        id: str,
+        name: str,
+        help_text: str | None = None,
+        color: str | None = None,
+    ) -> dict:
+        return {
+            "id": id,
+            "name": str(name),
+            "help_text": str(help_text) if help_text else None,
+            "color": color or "#fff",
+        }
+
+    def get_items(self, request, target):
+        return []
+
+    @staticmethod
+    def create_item(*, id: str, name: str, level: int = 0) -> dict:
+        return {"id": id, "name": str(name), "level": level * "-", "permissions": []}
+
+    def get_initial_data(self, request, target) -> list[tuple[int, str]]:
+        return []
+
+    def handle_form(self, request, target, data):
+        pass
+
+    def real_dispatch(self, request, target):
+        permissions = list(self.get_permissions(request, target))
+        items = list(self.get_items(request, target))
+
+        if not items:
+            messages.info(request, self.message_empty)
+            return redirect(self.root_link)
+
+        if request.method == "POST":
+            data = {}
+            for item in items:
+                data[item["id"]] = []
+                row_permissions = request.POST.getlist(f"permissions[{item['id']}]")
+                for permission in permissions:
+                    if permission["id"] in row_permissions:
+                        data[item["id"]].append(permission["id"])
+
+            response = self.handle_form(data, request, target)
+            if response:
+                return response
+            if "stay" in request.POST:
+                return redirect(request.path)
+            return redirect(self.root_link)
+
+        initial_data = {}
+        for item_id, permission in self.get_initial_data(request, target):
+            initial_data.setdefault(item_id, []).append(permission)
+
+        for item in items:
+            item["permissions"] = initial_data.get(item["id"], [])
+
+        template_name = self.get_template_name(request, target)
+        return self.render(
+            request,
+            {
+                "target": target,
+                "table_permissions": permissions,
+                "table_items": items,
+            },
+            template_name,
+        )
 
     def get_template_name(self, request, target):
         return "%s/%s" % (self.templates_dir, self.template_name)

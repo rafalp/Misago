@@ -56,9 +56,9 @@ class Command(BaseCommand):
             parent = random.choice(categories)
 
             if random.randint(0, 100) > 90:
-                fake_closed_category(fake, parent, copy_acl_from=acl_source)
+                fake_closed_category(fake, parent, copy_permissions=acl_source)
             else:
-                fake_category(fake, parent, copy_acl_from=acl_source)
+                fake_category(fake, parent, copy_permissions=acl_source)
 
             created_count += 1
             show_progress(self, created_count, items_to_create, start_time)

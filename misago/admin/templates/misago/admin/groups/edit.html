@@ -1,0 +1,71 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block title %}
+{{ target }} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-header %}
+{{ block.super }}
+<small>
+  {{ target }}
+</small>
+{% endblock page-header %}
+
+
+{% block page-actions %}
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:groups:categories' pk=target.pk %}" class="btn btn-primary btn-sm">
+    <span class="fa fa-sitemap"></span>
+    {% trans "Category permissions" context "admin groups" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block form-header %}
+{% trans "Edit group" context "admin group form" %}
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic settings" context "admin group form" %}</legend>
+
+    {% form_row form.name %}
+    {% form_row form.slug %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Display and appearance" context "admin group form" %}</legend>
+
+    {% form_row form.icon %}
+    {% form_row form.css_suffix %}
+    {% form_row form.user_title %}
+    {% form_row form.is_page %}
+    {% form_row form.is_hidden %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Permissions" context "admin group form" %}</legend>
+
+    {% form_row form.copy_permissions %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User profiles" context "admin group form" %}</legend>
+
+    {% form_row form.can_see_user_profiles %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

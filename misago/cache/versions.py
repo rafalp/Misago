@@ -7,8 +7,8 @@ def get_cache_versions():
     return {i.cache: i.version for i in queryset}
 
 
-def invalidate_cache(cache_name):
-    CacheVersion.objects.filter(cache=cache_name).update(
+def invalidate_cache(*cache_name: str):
+    CacheVersion.objects.filter(cache__in=cache_name).update(
         version=generate_version_string()
     )
 

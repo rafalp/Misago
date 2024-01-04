@@ -57,7 +57,7 @@ def discover_plugins_in_pip_install(pip_install_path: Path) -> List[str]:
     return validate_modules_from_pip_install(pip_install_lines)
 
 
-PIP_LINE_RE = re.compile("^[a-z0-9-_]+")
+PIP_LINE_RE = re.compile(r"^[a-z0-9-_]+")
 
 
 def read_pip_install_file(pip_install_path: Path) -> List[str]:

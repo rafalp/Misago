@@ -1,0 +1,108 @@
+// Make horizontal paddings in header and footer equal with the table
+.card-admin-permissions-table {
+  .card-header,
+  .card-footer {
+    padding: $table-cell-padding;
+  }
+}
+
+// Make hint small and right-aligned
+.card-admin-permissions-table .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-admin-permissions-table .card-header-hint {
+  float: right;
+
+  font-size: $font-size-sm;
+  font-weight: normal;
+}
+
+// Make table items equal width
+.admin-permissions-table {
+  table-layout: fixed;
+
+  margin: 0;
+}
+
+// Style table headers
+.admin-permissions-table thead th {
+  border: 0;
+  padding: $table-cell-padding-sm $table-cell-padding;
+}
+
+// Style permission buttons
+.admin-permissions-table-permission .btn {
+  display: block;
+  width: 100%;
+
+  color: $table-head-color;
+  font-weight: bold;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// Item names (leftmost column)
+td.admin-permissions-table-item-name {
+  padding: $table-cell-padding-sm;
+  vertical-align: middle;
+
+  .btn {
+    display: block;
+    width: 100%;
+
+    text-align: left;
+    font-weight: bold;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+  }
+
+  .item-level {
+    margin-right: $btn-padding-x-sm;
+
+    color: $gray-400;
+  }
+}
+
+// Style table checkboxes cells
+td.admin-permissions-table-check {
+  padding: $table-cell-padding-sm;
+  vertical-align: middle;
+
+  text-align: center;
+
+  label {
+    display: flex;
+    width: 100%;
+    height: $input-height;
+    margin: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: $input-bg;
+    @include border-radius($input-border-radius, 0);
+
+    cursor: pointer;
+
+    &:hover {
+      border: $input-border-width solid $input-focus-border-color;
+      box-shadow: inset 0 0 0 3px $table-bg;
+    }
+  }
+
+  .form-check-input {
+    position: static;
+    margin: 0;
+
+    width: 1rem;
+    height: 1rem;
+  }
+}

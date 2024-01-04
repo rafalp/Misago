@@ -12,7 +12,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -35,7 +35,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -58,7 +58,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -81,7 +81,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -104,7 +104,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -127,7 +127,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -150,7 +150,7 @@
         </div>
         
   
-    <input accept="image/*" class="form-control" id="id_image_field" name="image_field" type="file" value="test-image.png" required is_initial >
+    <input accept="image/*" id="id_image_field" class="form-control" name="image_field" type="file"  value="test-image.png" required>
   
         
         
@@ -166,27 +166,27 @@
     <label for="" class="control-label">
       Color:
     </label>
-    <div class="controls control-radioselect controls control-checkboxselect ">
+    <div class="controls control-checkboxselect ">
       
   
     
   
     <div class="form-check">
-      <input class_name="form-check-input" id="id_checkbox_select_field_0" name="checkbox_select_field" type="checkbox" value="r">
+      <input class="form-check-input" name="checkbox_select_field" type="checkbox" id="id_checkbox_select_field_0" value="r">
       <label class="form-check-label" for="id_checkbox_select_field_0">
         Red
       </label>
     </div>
   
     <div class="form-check">
-      <input class_name="form-check-input" id="id_checkbox_select_field_1" name="checkbox_select_field" type="checkbox" value="g">
+      <input class="form-check-input" name="checkbox_select_field" type="checkbox" id="id_checkbox_select_field_1" value="g">
       <label class="form-check-label" for="id_checkbox_select_field_1">
         Green
       </label>
     </div>
   
     <div class="form-check">
-      <input class_name="form-check-input" id="id_checkbox_select_field_2" name="checkbox_select_field" type="checkbox" value="b">
+      <input class="form-check-input" name="checkbox_select_field" type="checkbox" id="id_checkbox_select_field_2" value="b">
       <label class="form-check-label" for="id_checkbox_select_field_2">
         Blue
       </label>
@@ -194,6 +194,211 @@
   
   
       
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_input_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_text_field" class="control-label">
+      Hello:
+    </label>
+    <div class="">
+      
+  
+    <input maxlength="255" id="id_text_field" class="form-control" name="text_field" type="text"  disabled>
+  
+      
+      
+        <small class="form-text text-muted">I am a help text.</small>
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_radio_select_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Choice:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
+    
+  
+    
+      <div class="form-check">
+        <input class="form-check-input" name="ratio_select_field" type="radio" value="y" id="id_ratio_select_field_0" disabled>
+        <label class="form-check-label" for="id_ratio_select_field_0">
+          Yes
+        </label>
+      </div>
+    
+      <div class="form-check">
+        <input class="form-check-input" name="ratio_select_field" type="radio" value="n" id="id_ratio_select_field_1" disabled>
+        <label class="form-check-label" for="id_ratio_select_field_1">
+          No
+        </label>
+      </div>
+    
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_select_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_select_field" class="control-label">
+      Choice:
+    </label>
+    <div class="">
+      
+  
+    
+  <select name="select_field" id="id_select_field" class="form-control" disabled>
+    
+      <option value="y" >
+        Yes
+      </option>
+    
+      <option value="n" >
+        No
+      </option>
+    
+  </select>
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_select_multiple_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_multiple_select_field" class="control-label">
+      Rank:
+    </label>
+    <div class="controls control-checkboxselect ">
+      
+  
+    
+  
+    <div class="form-check">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_0" value="r" disabled>
+      <label class="form-check-label" for="id_multiple_select_field_0">
+        Red
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_1" value="g" disabled>
+      <label class="form-check-label" for="id_multiple_select_field_1">
+        Green
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_2" value="b" disabled>
+      <label class="form-check-label" for="id_multiple_select_field_2">
+        Blue
+      </label>
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_textarea_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_textarea_field" class="control-label">
+      Message:
+    </label>
+    <div class="">
+      
+  
+    <textarea cols="40" rows="10" maxlength="255" id="id_textarea_field" class="form-control" name="textarea_field" disabled></textarea>
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_yes_no_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Switch:
+    </label>
+    <div class="controls control-yesno-switch ">
+      
+  
+    
+  
+    
+      <label class="radio">
+        <input type="radio" name="yesno_field" value="1" class="yesno-switch" id="id_yesno_field_0" disabled>
+        Yes
+      </label>
+    
+      <label class="radio">
+        <input type="radio" name="yesno_field" value="0" class="yesno-switch" id="id_yesno_field_1" disabled checked>
+        No
+      </label>
+    
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_input_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_text_field" class="control-label">
+      Hello:
+    </label>
+    <div class="">
+      
+  
+    <input maxlength="255" id="id_text_field" class="form-control" name="text_field" type="text"  required>
+  
+      
+      
+        <small class="form-text text-muted">I am a help text.</small>
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_input_field_with_value_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_text_field" class="control-label">
+      Hello:
+    </label>
+    <div class="">
+      
+  
+    <input maxlength="255" id="id_text_field" class="form-control" name="text_field" type="text"  value="Hello world!" required>
+  
+      
+      
+        <small class="form-text text-muted">I am a help text.</small>
       
     </div>
   </div>
@@ -212,14 +417,48 @@
   
     
       <div class="form-check">
-        <input class_name="form-check-input" id="id_ratio_select_field_0" name="ratio_select_field" type="radio" value="y">
+        <input class="form-check-input" name="ratio_select_field" type="radio" value="y" id="id_ratio_select_field_0" required>
         <label class="form-check-label" for="id_ratio_select_field_0">
           Yes
         </label>
       </div>
     
       <div class="form-check">
-        <input class_name="form-check-input" id="id_ratio_select_field_1" name="ratio_select_field" type="radio" value="n">
+        <input class="form-check-input" name="ratio_select_field" type="radio" value="n" id="id_ratio_select_field_1" required>
+        <label class="form-check-label" for="id_ratio_select_field_1">
+          No
+        </label>
+      </div>
+    
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_radio_select_field_with_value_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Choice:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
+    
+  
+    
+      <div class="form-check">
+        <input class="form-check-input" name="ratio_select_field" type="radio" value="y" id="id_ratio_select_field_0" required checked>
+        <label class="form-check-label" for="id_ratio_select_field_0">
+          Yes
+        </label>
+      </div>
+    
+      <div class="form-check">
+        <input class="form-check-input" name="ratio_select_field" type="radio" value="n" id="id_ratio_select_field_1" required>
         <label class="form-check-label" for="id_ratio_select_field_1">
           No
         </label>
@@ -243,9 +482,37 @@
       
   
     
-  <select class="form-control" id="id_select_field" name="select_field" required>
+  <select name="select_field" id="id_select_field" class="form-control" required>
     
       <option value="y" >
+        Yes
+      </option>
+    
+      <option value="n" >
+        No
+      </option>
+    
+  </select>
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_select_field_with_value_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_select_field" class="control-label">
+      Choice:
+    </label>
+    <div class="">
+      
+  
+    
+  <select name="select_field" id="id_select_field" class="form-control" required>
+    
+      <option value="y" selected>
         Yes
       </option>
     
@@ -273,22 +540,61 @@
     
   
     <div class="form-check">
-      <input class_name="form-check-input" id="" name="multiple_select_field" type="checkbox" value="r">
-      <label class="form-check-label" for="">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_0" value="r">
+      <label class="form-check-label" for="id_multiple_select_field_0">
         Red
       </label>
     </div>
   
     <div class="form-check">
-      <input class_name="form-check-input" id="" name="multiple_select_field" type="checkbox" value="g">
-      <label class="form-check-label" for="">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_1" value="g">
+      <label class="form-check-label" for="id_multiple_select_field_1">
         Green
       </label>
     </div>
   
     <div class="form-check">
-      <input class_name="form-check-input" id="" name="multiple_select_field" type="checkbox" value="b">
-      <label class="form-check-label" for="">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_2" value="b">
+      <label class="form-check-label" for="id_multiple_select_field_2">
+        Blue
+      </label>
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_select_multiple_field_with_value_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_multiple_select_field" class="control-label">
+      Rank:
+    </label>
+    <div class="controls control-checkboxselect ">
+      
+  
+    
+  
+    <div class="form-check">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_0" value="r" checked>
+      <label class="form-check-label" for="id_multiple_select_field_0">
+        Red
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_1" value="g">
+      <label class="form-check-label" for="id_multiple_select_field_1">
+        Green
+      </label>
+    </div>
+  
+    <div class="form-check">
+      <input class="form-check-input" name="multiple_select_field" type="checkbox" id="id_multiple_select_field_2" value="b" checked>
+      <label class="form-check-label" for="id_multiple_select_field_2">
         Blue
       </label>
     </div>
@@ -309,7 +615,24 @@
     <div class="">
       
   
-    <textarea cols="40" rows="10" maxlength="255" class="form-control" id="id_textarea_field" name="textarea_field" required ></textarea>
+    <textarea cols="40" rows="10" maxlength="255" id="id_textarea_field" class="form-control" name="textarea_field" required></textarea>
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_textarea_field_with_value_is_rendered
+  '''
+  <div class="form-group">
+    <label for="id_textarea_field" class="control-label">
+      Message:
+    </label>
+    <div class="">
+      
+  
+    <textarea cols="40" rows="10" maxlength="255" id="id_textarea_field" class="form-control" name="textarea_field" required>Hello world!</textarea>
   
       
       
@@ -330,12 +653,42 @@
   
     
       <label class="radio">
-        <input class="yesno-switch" id="id_yesno_field_0" name="yesno_field" type="radio" value="1">
+        <input type="radio" name="yesno_field" value="1" class="yesno-switch" id="id_yesno_field_0" required>
         Yes
       </label>
     
       <label class="radio">
-        <input class="yesno-switch" id="id_yesno_field_1" name="yesno_field" type="radio" value="0" checked>
+        <input type="radio" name="yesno_field" value="0" class="yesno-switch" id="id_yesno_field_1" required checked>
+        No
+      </label>
+    
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_yes_no_field_with_value_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Switch:
+    </label>
+    <div class="controls control-yesno-switch ">
+      
+  
+    
+  
+    
+      <label class="radio">
+        <input type="radio" name="yesno_field" value="1" class="yesno-switch" id="id_yesno_field_0" required checked>
+        Yes
+      </label>
+    
+      <label class="radio">
+        <input type="radio" name="yesno_field" value="0" class="yesno-switch" id="id_yesno_field_1" required>
         No
       </label>
     

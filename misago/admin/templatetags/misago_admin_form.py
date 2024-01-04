@@ -46,29 +46,36 @@ def form_checkbox_row(field, label_class=None, field_class=None):
 
 @register.inclusion_tag("misago/admin/form/input.html")
 def form_input(field):
-    attrs = field.field.widget.attrs
+    attrs = {"id": field.auto_id}
+    if field.field.disabled:
+        attrs["disabled"] = True
+    elif field.field.required:
+        attrs["required"] = True
+
     context = field.field.widget.get_context(field.html_name, field.value(), attrs)
-    context["attrs"] = attrs
     context["field"] = field
     return context
 
 
 @register.simple_tag
-def render_attrs(widget, class_name=None):
+def render_attrs(attrs, class_name=None):
     rendered_attrs = []
-    for attr, value in widget["attrs"].items():
+    for attr, value in attrs.items():
         if value not in (True, False, None):
             rendered_attrs.append((attr, value))
-    if not widget["attrs"].get("class") and class_name:
+    if not attrs.get("class") and class_name:
         rendered_attrs.append(("class", class_name))
     return format_html_join(" ", '{}="{}"', rendered_attrs)
 
 
+BOOL_ATTRS = ("selected", "checked", "disabled", "required", "readonly")
+
+
 @register.simple_tag
-def render_bool_attrs(widget):
+def render_bool_attrs(attrs):
     attrs_html = []
-    for attr, value in widget.items():
-        if value is True:
+    for attr, value in attrs.items():
+        if attr in BOOL_ATTRS and value is True:
             attrs_html.append(attr)
     return " ".join(attrs_html)
 
@@ -102,10 +109,9 @@ def is_textarea_field(field):
 
 
 @register.filter
-def get_options(field):
+def get_options(widget):
     """Filter that extracts field choices into an easily iterable list"""
-    widget = field.field.widget
-    attrs = dict(id=field.auto_id, **widget.attrs)
-    context = widget.get_context(field.html_name, field.value(), attrs)
-    widget_context = context["widget"]
-    return widget.options(widget_context["name"], widget_context["value"], attrs)
+    options = []
+    for _, optgroup, _ in widget["optgroups"]:
+        options += optgroup
+    return options

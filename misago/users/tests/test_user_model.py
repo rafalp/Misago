@@ -4,6 +4,7 @@ import pytest
 
 from ...conf import settings
 from ...core.utils import slugify
+from ...permissions.permissionsid import get_permissions_id
 from ..avatars import dynamic
 from ..datadownloads import request_user_data_download
 from ..models import Avatar, DataDownload, User
@@ -62,6 +63,22 @@ def test_email_setter_also_sets_email_hash():
     user = User()
     user.set_email("us3R@example.com")
     assert user.email_hash == hash_email("us3R@example.com")
+
+
+def test_user_group_setter_updates_group_and_permissions_id(admins_group):
+    user = User()
+    user.set_groups(admins_group)
+    assert user.group == admins_group
+    assert user.groups_ids == [admins_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
+
+
+def test_user_group_setter_updates_secondary_groups(admins_group, members_group):
+    user = User()
+    user.set_groups(admins_group, [members_group])
+    assert user.group == admins_group
+    assert user.groups_ids == [admins_group.id, members_group.id]
+    assert user.permissions_id == get_permissions_id(user.groups_ids)
 
 
 def test_real_name_getter_returns_name_entered_in_profile_field(user):

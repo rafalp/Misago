@@ -40,17 +40,22 @@
   <div class="media-body">
     <h5 class="mt-0">
       {{ target }}
-      {% if target.is_superuser %}
-        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' context 'admin users list item' %}">
-          {% trans "Super Admin" context "admin user super admin status" %}
+      {% if target.is_misago_root %}
+        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use the Misago Admin Control Panel and manage other administrators' context 'admin users list item' %}">
+          {% trans "Misago Root" context "admin user super admin status" %}
         </span>
-      {% elif target.is_staff %}
-        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' context 'admin users list item' %}">
-          {% trans "Admin" context "admin user admin status" %}
+      {% elif target.is_misago_admin %}
+        <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use the Misago Admin Control Panel' context 'admin users list item' %}">
+          {% trans "Misago Admin" context "admin user admin status" %}
+        </span>
+      {% endif %}
+      {% if item.is_staff %}
+        <span class="badge badge-success" data-tooltip="top" title="{% trans 'Can use the Django Admin Site' context 'admin users list item' %}">
+          {% trans "Django Staff" context "admin user admin status" %}
         </span>
       {% endif %}
       {% if target.requires_activation_by_admin %}
-        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' context 'admin users list item' %}">
+        <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by an administrator' context 'admin users list item' %}">
           {% trans "Inactive" context "admin user inactive status" %}
         </span>
       {% elif target.requires_activation_by_user %}
@@ -62,9 +67,9 @@
         <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' context 'admin users list item' %}">
           {% trans "Deleted" context "admin user deleted status" %}
         </span>
-      {% elif not target.is_active %}}
-        <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' context 'admin users list item' %}">
-          {% trans "Disabled" context "admin user disabled status" %}
+      {% elif not target.is_active %}
+        <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account deactivated' context 'admin users list item' %}">
+          {% trans "Deactivated" context "admin user deactivated status" %}
         </span>
       {% endif %}
     </h5>
@@ -75,7 +80,9 @@
         </a>
       </li>
       <li class="list-inline-item">
-        <span class="">
+        {{ target.group }}
+      </li>
+      <li class="list-inline-item">
         {{ target.rank }}
       </li>
       <li class="list-inline-item">
@@ -110,68 +117,35 @@
     <legend>{% trans "Basic account settings" context "admin user form" %}</legend>
 
     {% form_row form.username %}
-
-    {% if 'rank' in form.fields %}
-      {% form_row form.rank %}
-    {% endif %}
-
     {% form_row form.title %}
-    {% form_row form.roles %}
-
-    {% if 'staff_level' in form.fields %}
-      {% form_row form.staff_level %}
-    {% endif %}
 
   </fieldset>
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Administrator status" context "admin user form" %}</legend>
+    <legend>{% trans "User permissions" context "admin user form" %}</legend>
 
-    {% if 'is_staff' in form.fields %}
-      {% form_row form.is_staff %}
-      {% form_row form.is_superuser %}
-    {% else %}
-      <div class="alert alert-info" role="alert">
-        {% trans "Only superusers can change other users administrator status." context "admin user form" %}
-      </div>
-      <div id="div_id_is_staff" class="form-group">
-        <label class="control-label">
-          {{ form.IS_STAFF_LABEL }}:
-        </label>
-        <div class="controls control-yesno-switch">
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if target.is_staff %} checked=""{% endif %}>
-            {% trans "Yes" context "admin yesno switch" %}
-          </label>
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if not target.is_staff %} checked=""{% endif %}>
-            {% trans "No" context "admin yesno switch" %}
-          </label>
-        </div>
-        <small class="form-text text-muted">
-          {{ form.IS_STAFF_HELP_TEXT }}
-        </small>
-      </div>
-      <div id="div_id_is_superuser" class="form-group">
-        <label class="control-label">
-          {{ form.IS_SUPERUSER_LABEL }}:
-        </label>
-        <div class="controls control-yesno-switch">
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if target.is_superuser %} checked=""{% endif %}>
-            {% trans "Yes" context "admin yesno switch" %}
-          </label>
-          <label class="radio">
-            <input class="yesno-switch" type="radio" disabled{% if not target.is_superuser %} checked=""{% endif %}>
-            {% trans "No" context "admin yesno switch" %}
-          </label>
-        </div>
-        <small class="form-text text-muted">
-          {{ form.IS_SUPERUSER_HELP_TEXT }}
-        </small>
-      </div>
+    {% form_row form.group %}
+    {% form_row form.secondary_groups %}
+    {% form_row form.is_misago_root %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User permissions (deprecated)" context "admin user form" %}</legend>
+
+    <div class="alert alert-warning" role="alert">
+      <strong>{% trans "Deprecation warning" context "admin user form" %}:</strong>
+      {% blocktranslate trimmed context "admin user form" %}
+      User ranks and roles have been replaced with user groups and moderators and will be removed in a future version of Misago.
+      {% endblocktranslate %}
+    </div>
+
+    {% if 'rank' in form.fields %}
+      {% form_row form.rank %}
     {% endif %}
+    {% form_row form.roles %}
 
   </fieldset>
 </div>
@@ -179,6 +153,12 @@
   <fieldset>
     <legend>{% trans "Sign-in credentials" context "admin user form" %}</legend>
     
+    {% if form.credentials_require_root %}
+      <div class="alert alert-warning alert-protected-credentials" role="alert">
+        {% trans "You must be a root administrator to change this user's sign-in credentials." context "admin user form" %}
+      </div>
+    {% endif %}
+
     {% if not target.has_usable_password %}
       <div class="alert alert-info alert-has-unusable-password" role="alert">
         {% trans "This user has not set account password and uses other service to authenticate." context "admin user form" %}
@@ -260,45 +240,21 @@
 
     {% if target.is_deleting_account %}
       <div class="alert alert-danger" role="alert">
-        <p>{% trans "This user is deleting their account. It has been deactivated for the duration of the process." context "admin user form" %}</p>
-        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically when process is completed." context "admin user form" %}</p>
+        <p>{% trans "This user's account is being deleted. It has been deactivated for the duration of the process." context "admin user form" %}</p>
+        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically when the process is completed." context "admin user form" %}</p>
       </div>
-    {% else %}
-      {% if 'is_active' in form.fields %}
-        {% form_row form.is_active %}
-        {% form_row form.is_active_staff_message %}
-      {% else %}
-        <div id="div_id_is_active" class="form-group">
-          <label class="control-label">
-            {{ form.IS_ACTIVE_LABEL }}:
-          </label>
-          <div class="controls control-yesno-switch">
-            <label class="radio">
-              <input class="yesno-switch" type="radio" disabled{% if target.is_active %} checked=""{% endif %}>
-              {% trans "Yes" context "admin yesno switch" %}
-            </label>
-            <label class="radio">
-              <input class="yesno-switch" type="radio" disabled{% if not target.is_active %} checked=""{% endif %}>
-              {% trans "No" context "admin yesno switch" %}
-            </label>
-          </div>
-          <small class="form-text text-muted">
-            {{ form.IS_ACTIVE_HELP_TEXT }}
-          </small>
-        </div>
-        <div id="div_id_is_superuser" class="form-group">
-          <label class="control-label">
-            {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
-          </label>
-          <textarea class="form-control" rows="4">
-            {{ target.is_active_staff_message|default:"" }}
-          </textarea>
-          <small class="form-text text-muted">
-            {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
-          </small>
-        </div>
-      {% endif %}
+    {% elif target == user %}
+      <div class="alert alert-warning alert-protected-credentials" role="alert">
+        {% trans "You can't deactivate your own account." context "admin user form" %}
+      </div>
+    {% elif target.is_misago_admin and form.is_active.field.disabled %}
+      <div class="alert alert-warning alert-protected-credentials" role="alert">
+        {% trans "You must be a root administrator to activate or deactivate this user's account." context "admin user form" %}
+      </div>
     {% endif %}
+
+    {% form_row form.is_active %}
+    {% form_row form.is_active_staff_message %}
 
   </fieldset>
 </div>

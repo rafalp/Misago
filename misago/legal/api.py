@@ -21,7 +21,7 @@ def submit_agreement(request, pk):
     if request.data.get("accept") is True:
         save_user_agreement_acceptance(request.user, agreement, commit=True)
     elif request.data.get("accept") is False:
-        if not request.user.is_staff:
+        if not request.user.is_misago_admin and not request.user.is_staff:
             request.user.mark_for_delete()
             logout(request)
     else:

@@ -23,6 +23,6 @@ class MisagoAdminExtension:
         site.add_node(
             name=pgettext_lazy("admin node", "Permissions"),
             icon="fa fa-adjust",
-            after="categories:index",
+            after="moderators:index",
             namespace="permissions",
         )

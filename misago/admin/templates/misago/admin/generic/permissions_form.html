@@ -1,0 +1,105 @@
+{% extends "misago/admin/generic/base.html" %}
+{% load i18n %}
+
+
+{% block view %}
+<div class="row">
+  <div class="col {% block form-main-col-class %}{% endblock form-main-col-class %}">
+
+    <div class="card card-admin-form card-admin-permissions-table">
+      <form role="form" method="post" {% block form-extra %}{% endblock form-extra %}>
+        {% csrf_token %}
+
+        <h5 class="card-header">
+          {% block form-header %}{% endblock form-header %}
+          <span class="card-header-hint">
+            <strong>{% trans "Hint:" context "admin permissions table" %}</strong>
+            {% trans "Click on permission or item name to quickly toggle selection." context "admin permissions table" %}
+          </span>
+        </h5>
+        <table class="table admin-permissions-table">
+          <thead>
+            <tr>
+              <th style="width: 320px;"></th>
+              {% for permission in table_permissions %}
+                <th class="admin-permissions-table-permission">
+                  <button class="btn btn-sm" type="button"{% if permission.help_text %} title="{{ permission.help_text }}"{% endif %} data-toggle-col="{{ permission.id }}">
+                    {{ permission.name }}
+                  </button>
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in table_items %}
+              <tr>
+                <td class="admin-permissions-table-item-name">
+                  <button class="btn btn-sm" type="button" data-toggle-row>
+                    {% for _ in item.level %}<span class="item-level">&#8594;</span>{% endfor %}
+                    {{ item.name }}
+                  </button>
+                </td>
+                {% for permission in table_permissions %}
+                  <td class="admin-permissions-table-check">
+                    <label style="background-color: {{ permission.color }};">
+                      <input class="form-check-input" type="checkbox" name="permissions[{{ item.id }}]" value="{{ permission.id }}"{% if permission.id in item.permissions %} checked{% endif %}>
+                    </label>
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="card-footer text-right">
+          {% block form-footer-cancel %}
+            <a href="{% url root_link %}" class="btn btn-light btn-sm" data-cancel-confirmation="true">
+              {% trans "Cancel" context "admin form" %}
+            </a>
+          {% endblock %}
+          {% block form-footer %}
+            {% include "misago/admin/generic/form_footer.html" %}
+          {% endblock %}
+        </div>
+
+      </form>
+    </div><!-- /.form-panel -->
+
+  </div>
+</div>
+{% endblock view %}
+
+{% block javascripts %}
+  <script type="text/javascript">
+    function togglePermissions(inputs) {
+      // If there are unchecked items, check them, otherwise uncheck all
+      let check = false
+      for (const input of inputs) {
+        if (!input.checked) {
+          check = true
+        }
+      }
+      for (const input of inputs) {
+        input.checked = check;
+      }
+    }
+
+    const permsTable = document.querySelector(".admin-permissions-table")
+
+    for (const btn of permsTable.querySelectorAll("button")) {
+      if (btn.hasAttribute("data-toggle-col")) {
+        btn.addEventListener("click", () => {
+          const permission = btn.getAttribute("data-toggle-col")
+          const inputs = permsTable.querySelectorAll("input[value=" + permission + "]")
+          togglePermissions(inputs)
+        })
+      }
+
+      if (btn.hasAttribute("data-toggle-row")) {
+        btn.addEventListener("click", () => {
+          const inputs = btn.closest("tr").querySelectorAll("input")
+          togglePermissions(inputs)
+        })
+      }
+    }
+  </script>
+{% endblock javascripts %}

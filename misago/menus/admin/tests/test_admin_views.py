@@ -20,7 +20,7 @@ def test_list_renders_menu_item(admin_client, list_url, menu_item):
     assert_contains(response, menu_item.title)
 
 
-def test_menu_items_can_be_mass_deleted(admin_client, list_url, superuser):
+def test_menu_items_can_be_mass_deleted(admin_client, list_url):
     items = []
     for _ in range(10):
         item = MenuItem.objects.create(

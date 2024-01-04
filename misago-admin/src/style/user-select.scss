@@ -1,0 +1,34 @@
+.admin-user-select .dropdown-menu.show {
+  width: 100%;
+}
+
+.admin-user-select-message {
+  padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+
+  text-align: center;
+}
+
+.admin-user-select-item {
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-right: 0.5rem;
+    border-radius: $border-radius-sm;
+  }
+}
+
+.admin-user-select-with-value {
+  display: flex;
+  align-items: center;
+  height: $input-height;
+
+  img {
+    margin-right: 0.5rem;
+    border-radius: $border-radius-sm;
+  }
+
+  button {
+    margin-left: auto;
+  }
+}

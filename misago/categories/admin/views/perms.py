@@ -158,8 +158,8 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
 
 
 CategoriesList.add_item_action(
-    name=pgettext_lazy("admin categories", "Change permissions"),
-    link="misago:admin:categories:permissions",
+    name=pgettext_lazy("admin categories", "Change permissions (deprecated)"),
+    link="misago:admin:categories:permissions-deprecated",
 )
 
 

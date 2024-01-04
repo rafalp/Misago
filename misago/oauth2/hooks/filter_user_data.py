@@ -145,9 +145,14 @@ class FilterUserDataHook(
     logic with additional user e-mail normalization for Gmail e-mails:
 
     ```python
+    from django.http import HttpRequest
+    from misago.oauth.hooks import filter_user_data_hook
+    from misago.users.models import User
+
+
     @filter_user_data_hook.append_filter
     def normalize_gmail_email(
-        action, request: HttpRequest, user: Optional[User], user_data: dict
+        action, request: HttpRequest, user: User | None, user_data: dict
     ) -> dict:
         if (
             user_data["email"]
