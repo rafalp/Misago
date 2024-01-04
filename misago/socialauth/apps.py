@@ -15,7 +15,13 @@ class MisagoSocialAuthConfig(AppConfig):
 
     def ready(self):
         # Register default providers
-        from .admin.forms import DiscordForm, FacebookForm, GitHubForm, GoogleForm, TwitterForm
+        from .admin.forms import (
+            DiscordForm,
+            FacebookForm,
+            GitHubForm,
+            GoogleForm,
+            TwitterForm,
+        )
 
         providers.add(
             provider="discord",
