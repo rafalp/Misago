@@ -123,9 +123,9 @@ class UsersList(UserAdmin, generic.ListView):
     ):  # pylint: disable=too-many-locals, too-many-nested-blocks, too-many-branches
         users = users.order_by("slug")
         for user in users:
-            if user.is_superuser:
+            if user.is_staff:
                 message = pgettext(
-                    "admin users", "%(user)s is super admin and can't be banned."
+                    "admin users", "%(user)s is admin and can't be banned."
                 )
                 mesage = message % {"user": user.username}
                 raise generic.MassActionError(mesage)
@@ -226,11 +226,11 @@ class UsersList(UserAdmin, generic.ListView):
                     )
                     % {"user": user.username}
                 )
-            if user.is_staff or user.is_superuser or user.is_misago_admin:
+            if user.is_staff:
                 raise generic.MassActionError(
                     pgettext(
                         "admin users",
-                        "%(user)s can't be deleted because they are a Django administrator.",
+                        "%(user)s can't be deleted because they are a Django staff.",
                     )
                     % {"user": user.username}
                 )
@@ -257,11 +257,11 @@ class UsersList(UserAdmin, generic.ListView):
                     )
                     % {"user": user.username}
                 )
-            if user.is_staff or user.is_superuser or user.is_misago_admin:
+            if user.is_staff:
                 raise generic.MassActionError(
                     pgettext(
                         "admin users",
-                        "%(user)s can't be deleted because they are a Django administrator.",
+                        "%(user)s can't be deleted because they are a Django staff.",
                     )
                     % {"user": user.username}
                 )

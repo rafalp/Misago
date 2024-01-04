@@ -161,7 +161,7 @@ can_follow_user = return_boolean(allow_follow_user)
 
 @authenticated_only
 def allow_block_user(user_acl, target):
-    if target.is_staff or target.is_superuser:
+    if target.is_misago_admin or target.is_staff:
         raise PermissionDenied(
             pgettext_lazy(
                 "users profiles permission", "Administrators can't be blocked."

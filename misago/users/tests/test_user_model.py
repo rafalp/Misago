@@ -65,7 +65,7 @@ def test_email_setter_also_sets_email_hash():
     assert user.email_hash == hash_email("us3R@example.com")
 
 
-def test_username_group_setter_updates_group_and_permissions_id(admins_group):
+def test_user_group_setter_updates_group_and_permissions_id(admins_group):
     user = User()
     user.set_groups(admins_group)
     assert user.group == admins_group
@@ -73,7 +73,7 @@ def test_username_group_setter_updates_group_and_permissions_id(admins_group):
     assert user.permissions_id == get_permissions_id(user.groups_ids)
 
 
-def test_username_group_setter_updates_secondary_groups(admins_group, members_group):
+def test_user_group_setter_updates_secondary_groups(admins_group, members_group):
     user = User()
     user.set_groups(admins_group, [members_group])
     assert user.group == admins_group

@@ -79,7 +79,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     def get_user(self, request, pk):
         user = get_object_or_404(self.get_queryset(), pk=get_int_or_404(pk))
-        if not user.is_active and not request.user.is_staff:
+        if not user.is_active and not request.user.is_misago_admin:
             raise Http404()
         return user
 

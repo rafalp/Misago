@@ -36,7 +36,7 @@ class MisagoAuthMixin:
             )
 
     def confirm_user_not_banned(self, user):
-        if not user.is_staff:
+        if not user.is_misago_admin:
             self.user_ban = get_user_ban(user, self.request.cache_versions)
             if self.user_ban:
                 raise ValidationError("", code="banned")

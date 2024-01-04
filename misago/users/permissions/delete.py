@@ -86,9 +86,15 @@ def allow_delete_user(user_acl, target):
         raise PermissionDenied(
             pgettext_lazy("users delete permission", "You can't delete your account.")
         )
-    if target.is_staff or target.is_superuser:
+    if target.is_misago_admin:
         raise PermissionDenied(
             pgettext_lazy("users delete permission", "Administrators can't be deleted.")
+        )
+    if target.is_staff:
+        raise PermissionDenied(
+            pgettext_lazy(
+                "users delete permission", "Django staff users can't be deleted."
+            )
         )
 
     if newer_than:
@@ -121,15 +127,25 @@ def allow_delete_own_account(settings, user, target):
                 "users delete permission", "You can't delete other users accounts."
             )
         )
+
     if not settings.allow_delete_own_account and not user.is_deleting_account:
         raise PermissionDenied(
             pgettext_lazy("users delete permission", "You can't delete your account.")
         )
-    if user.is_staff or user.is_superuser:
+
+    if user.is_misago_admin:
         raise PermissionDenied(
             pgettext_lazy(
                 "users delete permission",
                 "You can't delete your account because you are an administrator.",
+            )
+        )
+
+    if user.is_staff:
+        raise PermissionDenied(
+            pgettext_lazy(
+                "users delete permission",
+                "You can't delete your account because you are a staff user.",
             )
         )
 

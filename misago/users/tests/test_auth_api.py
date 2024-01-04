@@ -1,3 +1,4 @@
+import json
 from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
@@ -127,30 +128,6 @@ class GatewayTests(TestCase):
         user_json = response.json()
         self.assertIsNone(user_json["id"])
 
-    def test_login_banned_staff(self):
-        """login api signs banned staff member in"""
-        user = create_test_user("User", "user@example.com", "password")
-        user.is_staff = True
-        user.save()
-
-        Ban.objects.create(
-            check_type=Ban.USERNAME,
-            banned_value="user",
-            user_message="You are tragically banned.",
-        )
-
-        response = self.client.post(
-            "/api/auth/", data={"username": "User", "password": "password"}
-        )
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.get("/api/auth/")
-        self.assertEqual(response.status_code, 200)
-
-        user_json = response.json()
-        self.assertEqual(user_json["id"], user.id)
-        self.assertEqual(user_json["username"], user.username)
-
     def test_login_ban_registration_only(self):
         """login api ignores registration-only bans"""
         user = create_test_user("User", "user@example.com", "password")
@@ -207,26 +184,58 @@ class GatewayTests(TestCase):
         user_json = response.json()
         self.assertIsNone(user_json["id"])
 
-    def test_login_disabled_user(self):
-        """its impossible to sign in to disabled account"""
-        user = create_test_user("User", "user@example.com", "password", is_active=False)
-        user.is_staff = True
-        user.save()
 
-        response = self.client.post(
-            "/api/auth/", data={"username": "User", "password": "password"}
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"code": "invalid_login", "detail": "Login or password is incorrect."},
-        )
+def test_auth_api_returns_403_for_banned_ip(client, user, user_password):
+    Ban.objects.create(
+        check_type=Ban.IP,
+        banned_value="127.0.0.1",
+        user_message="IP TEST BAN",
+    )
 
-        response = self.client.get("/api/auth/")
-        self.assertEqual(response.status_code, 200)
+    response = client.post(
+        "/api/auth/", data={"username": user.username, "password": user_password}
+    )
+    assert response.status_code == 403
+    assert json.loads(response.content)["ban"]["message"]["plain"] == "IP TEST BAN"
 
-        user_json = response.json()
-        self.assertIsNone(user_json["id"])
+
+def test_auth_api_returns_403_for_banned_user(client, user, user_password):
+    Ban.objects.create(
+        check_type=Ban.USERNAME,
+        banned_value=user.username,
+        user_message="USER TEST BAN",
+    )
+
+    response = client.post(
+        "/api/auth/", data={"username": user.username, "password": user_password}
+    )
+    assert response.status_code == 400
+    assert json.loads(response.content)["code"] == "banned"
+
+
+def test_auth_api_authenticates_banned_admin(client, admin, user_password):
+    Ban.objects.create(
+        check_type=Ban.USERNAME,
+        banned_value=admin.username,
+        user_message="USER TEST BAN",
+    )
+
+    response = client.post(
+        "/api/auth/", data={"username": admin.username, "password": user_password}
+    )
+    assert response.status_code == 200
+    assert json.loads(response.content)["id"] == admin.id
+
+
+def test_auth_api_returns_400_for_deactivated_user(
+    client, inactive_user, user_password
+):
+    response = client.post(
+        "/api/auth/",
+        data={"username": inactive_user.username, "password": user_password},
+    )
+    assert response.status_code == 400
+    assert json.loads(response.content)["code"] == "invalid_login"
 
 
 @override_dynamic_settings(

@@ -6,7 +6,6 @@ from ...acl.test import patch_user_acl
 from ...conf import settings
 from ...conf.test import override_dynamic_settings
 from ..models import Attachment, AttachmentType
-from ..test import post_thread
 
 
 @pytest.fixture
@@ -201,10 +200,10 @@ def test_proxy_blocks_user_from_other_users_orphaned_attachment_if_link_has_shva
     assert_404(response)
 
 
-def test_proxy_redirects_staff_to_other_users_orphaned_attachment(
-    staff_client, orphaned_attachment
+def test_proxy_redirects_admin_to_other_users_orphaned_attachment(
+    admin_client, orphaned_attachment
 ):
-    response = staff_client.get("%s?shva=1" % orphaned_attachment.get_absolute_url())
+    response = admin_client.get("%s?shva=1" % orphaned_attachment.get_absolute_url())
     assert response.status_code == 302
     assert response["location"].endswith("test.txt")
 
@@ -246,10 +245,10 @@ def test_proxy_allows_user_with_role_to_download_attachment_with_limited_type(
     assert response["location"].endswith("test.txt")
 
 
-def test_proxy_allows_staff_user_without_role_to_download_attachment_with_limited_type(
-    staff_client, role, attachment, limited_attachment_type
+def test_proxy_allows_admin_without_role_to_download_attachment_with_limited_type(
+    admin_client, attachment, limited_attachment_type
 ):
-    response = staff_client.get(attachment.get_absolute_url())
+    response = admin_client.get(attachment.get_absolute_url())
     assert response.status_code == 302
     assert response["location"].endswith("test.txt")
 

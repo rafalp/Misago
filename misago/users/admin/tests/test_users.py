@@ -18,9 +18,9 @@ def test_link_is_registered_in_admin_nav(admin_client):
     assert_contains(response, reverse("misago:admin:users:index"))
 
 
-def test_list_renders_with_item(admin_client, users_admin_link, superuser):
+def test_list_renders_with_item(admin_client, users_admin_link, other_user):
     response = admin_client.get(users_admin_link)
-    assert_contains(response, superuser.username)
+    assert_contains(response, other_user.username)
 
 
 def test_new_user_form_renders(admin_client):
@@ -938,23 +938,19 @@ def test_admin_cant_remove_other_user_root_status(admin_client, root_admin):
     assert root_admin.is_misago_root
 
 
-def test_admin_can_activate_user_account(admin_client, user):
-    user.is_active = False
-    user.is_active_staff_message = None
-    user.save()
-
-    form_data = get_default_edit_form_data(user)
+def test_admin_can_activate_user_account(admin_client, inactive_user):
+    form_data = get_default_edit_form_data(inactive_user)
     form_data["is_active"] = "1"
     form_data["is_active_staff_message"] = "Message"
 
     admin_client.post(
-        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": inactive_user.pk}),
         data=form_data,
     )
 
-    user.refresh_from_db()
-    assert user.is_active
-    assert user.is_active_staff_message == "Message"
+    inactive_user.refresh_from_db()
+    assert inactive_user.is_active
+    assert inactive_user.is_active_staff_message == "Message"
 
 
 def test_root_admin_can_activate_admin_account(root_admin_client, admin):

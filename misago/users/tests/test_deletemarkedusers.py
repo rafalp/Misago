@@ -1,5 +1,6 @@
 from io import StringIO
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
@@ -12,78 +13,81 @@ from ..test import create_test_user
 User = get_user_model()
 
 
-class DeleteMarkedUsersTests(TestCase):
-    def setUp(self):
-        self.user = create_test_user("User", "user@example.com")
-        self.user.mark_for_delete()
+def call_deletemarkedusers():
+    out = StringIO()
+    call_command(deletemarkedusers.Command(), stdout=out)
+    return out.getvalue().splitlines()[0].strip()
 
-    def test_delete_marked_user(self):
-        """deletes marked user"""
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, "Deleted users: 1")
+@pytest.fixture
+def user_marked_for_delete(user):
+    user.mark_for_delete()
+    return user
 
-        with self.assertRaises(User.DoesNotExist):
-            self.user.refresh_from_db()
 
-    def test_marked_user_deletion_is_recorded(self):
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
+def test_deletemarkedusers_command_deletes_marked_user(user_marked_for_delete):
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 1"
 
-        self.assertEqual(command_output, "Deleted users: 1")
+    with pytest.raises(User.DoesNotExist):
+        user_marked_for_delete.refresh_from_db()
 
-        DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_SELF)
 
-    @override_dynamic_settings(allow_delete_own_account=False)
-    def test_delete_disabled(self):
-        """deletion respects user decision even if configuration has changed"""
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
+def test_deletemarkedusers_command_records_user_deletion(user_marked_for_delete):
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 1"
 
-        self.assertEqual(command_output, "Deleted users: 1")
+    DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_SELF)
 
-        with self.assertRaises(User.DoesNotExist):
-            self.user.refresh_from_db()
 
-    def test_delete_not_marked(self):
-        """user has to be marked to be deletable"""
-        self.user.is_deleting_account = False
-        self.user.save()
+@override_dynamic_settings(allow_delete_own_account=False)
+def test_deletemarkedusers_command_ignores_delete_own_account_setting_change(
+    user_marked_for_delete,
+):
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 1"
 
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
+    with pytest.raises(User.DoesNotExist):
+        user_marked_for_delete.refresh_from_db()
 
-        self.assertEqual(command_output, "Deleted users: 0")
 
-        self.user.refresh_from_db()
+def test_deletemarkedusers_command_excludes_users_not_marked_for_deletion(user):
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 0"
 
-    def test_delete_is_staff(self):
-        """staff users are extempt from deletion"""
-        self.user.is_staff = True
-        self.user.save()
+    user.refresh_from_db()
 
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, "Deleted users: 0")
+def test_deletemarkedusers_command_excludes_staff_users(user_marked_for_delete):
+    """staff users are extempt from deletion"""
+    user_marked_for_delete.is_staff = True
+    user_marked_for_delete.save()
 
-        self.user.refresh_from_db()
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 0"
 
-    def test_delete_superuser(self):
-        """superusers are extempt from deletion"""
-        self.user.is_superuser = True
-        self.user.save()
+    user_marked_for_delete.refresh_from_db()
 
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, "Deleted users: 0")
+def test_deletemarkedusers_command_excludes_admins(
+    user_marked_for_delete, admins_group
+):
+    """staff users are extempt from deletion"""
+    user_marked_for_delete.set_groups(admins_group)
+    user_marked_for_delete.save()
 
-        self.user.refresh_from_db()
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 0"
+
+    user_marked_for_delete.refresh_from_db()
+
+
+def test_deletemarkedusers_command_excludes_root_admins(user_marked_for_delete):
+    """staff users are extempt from deletion"""
+    user_marked_for_delete.is_misago_root = True
+    user_marked_for_delete.save()
+
+    output = call_deletemarkedusers()
+    assert output == "Deleted users: 0"
+
+    user_marked_for_delete.refresh_from_db()

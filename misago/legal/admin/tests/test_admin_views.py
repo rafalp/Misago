@@ -13,13 +13,13 @@ def list_url(admin_client):
 
 
 @pytest.fixture
-def agreement(superuser):
+def agreement(admin):
     return Agreement.objects.create(
         type=Agreement.TYPE_TOS,
         title="Test TOS",
         link="https://rules.com",
-        created_by=superuser,
-        created_by_name=superuser.username,
+        created_by=admin,
+        created_by_name=admin.username,
     )
 
 
@@ -31,13 +31,13 @@ def active_agreement(agreement):
 
 
 @pytest.fixture
-def other_agreement(superuser):
+def other_agreement(admin):
     return Agreement.objects.create(
         type=Agreement.TYPE_TOS,
         title="Test TOS",
         link="https://rules.com",
-        created_by=superuser,
-        created_by_name=superuser.username,
+        created_by=admin,
+        created_by_name=admin.username,
     )
 
 
@@ -56,15 +56,15 @@ def test_list_renders_agreement(admin_client, list_url, agreement):
     assert_contains(response, agreement.title)
 
 
-def test_agreements_can_be_mass_deleted(admin_client, list_url, superuser):
+def test_agreements_can_be_mass_deleted(admin_client, list_url, admin):
     agreements = []
     for _ in range(10):
         agreement = Agreement.objects.create(
             type=Agreement.TYPE_TOS,
             title="Test TOS",
             link="https://rules.com",
-            created_by=superuser,
-            created_by_name=superuser.username,
+            created_by=admin,
+            created_by_name=admin.username,
         )
         agreements.append(agreement.pk)
 

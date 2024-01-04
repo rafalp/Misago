@@ -20,10 +20,8 @@ def test_attempt_to_login_using_invalid_credentials_fails(db, client):
     assert_contains(response, "Login or password is incorrect.")
 
 
-def test_attempt_to_login_using_invalid_password_fails(client, superuser):
-    response = client.post(
-        admin_link, {"username": superuser.username, "password": "no"}
-    )
+def test_attempt_to_login_using_invalid_password_fails(client, admin):
+    response = client.post(admin_link, {"username": admin.username, "password": "no"})
     assert_contains(response, "Login or password is incorrect.")
 
 

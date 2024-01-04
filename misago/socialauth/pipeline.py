@@ -36,7 +36,7 @@ def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwarg
     """
     Pipeline step that interrupts pipeline if found user is non-staff and IP banned
     """
-    if not user or user.is_staff:
+    if not user or user.is_misago_admin:
         return None
 
     ban = get_request_ip_ban(strategy.request)
@@ -49,7 +49,7 @@ def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwarg
 
 def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwargs):
     """Pipeline step that interrupts pipeline if found user is non-staff and banned"""
-    if not user or user.is_staff:
+    if not user or user.is_misago_admin:
         return None
 
     user_ban = get_user_ban(user, strategy.request.cache_versions)

@@ -851,14 +851,11 @@ def test_oauth2_complete_view_returns_error_400_if_user_data_causes_integrity_er
 @responses.activate
 @override_dynamic_settings(**TEST_SETTINGS)
 def test_oauth2_complete_view_updates_deactivated_user_but_returns_error_400(
-    user, client, dynamic_settings, mailoutbox
+    inactive_user, client, dynamic_settings, mailoutbox
 ):
     assert dynamic_settings.enable_oauth2_client is True
 
-    Subject.objects.create(sub="1234", user=user)
-
-    user.is_active = False
-    user.save()
+    Subject.objects.create(sub="1234", user=inactive_user)
 
     code_grant = "12345grant"
     session_state = "12345state"
@@ -921,11 +918,11 @@ def test_oauth2_complete_view_updates_deactivated_user_but_returns_error_400(
     )
 
     # User is updated but still deactivated
-    user.refresh_from_db()
-    assert user.username == "John_Doe"
-    assert user.slug == "john-doe"
-    assert user.email == "john@example.com"
-    assert user.is_active is False
+    inactive_user.refresh_from_db()
+    assert inactive_user.username == "John_Doe"
+    assert inactive_user.slug == "john-doe"
+    assert inactive_user.email == "john@example.com"
+    assert inactive_user.is_active is False
 
     # User is not authenticated
     auth_api = client.get(reverse("misago:api:auth")).json()

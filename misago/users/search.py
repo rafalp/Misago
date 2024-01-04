@@ -26,7 +26,7 @@ class SearchUsers(SearchProvider):
     def search(self, query, page=1):
         if query:
             results = search_users(
-                search_disabled=self.request.user.is_staff, username=query
+                search_deactivated=self.request.user.is_misago_admin, username=query
             )
         else:
             results = []
@@ -42,7 +42,7 @@ def search_users(**filters):
         "rank", "ban_cache", "online_tracker"
     )
 
-    if not filters.get("search_disabled", False):
+    if not filters.get("search_deactivated", False):
         queryset = queryset.filter(is_active=True)
 
     username = slugify_username(filters.get("username", ""))

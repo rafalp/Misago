@@ -2,9 +2,28 @@ from django.urls import reverse
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
+from ...test import assert_contains
 from ...threads import test
 from ..models import Ban
 from ..test import AuthenticatedUserTestCase, create_test_user
+
+
+def test_deactivated_user_profile_returns_404_to_anonymous_user(client, inactive_user):
+    response = client.get(inactive_user.get_absolute_url())
+    assert response.status_code == 404
+
+
+def test_deactivated_user_profile_returns_404_to_other_user(user_client, inactive_user):
+    response = user_client.get(inactive_user.get_absolute_url())
+    assert response.status_code == 404
+
+
+def test_deactivated_user_profile_displays_for_admin(admin_client, inactive_user):
+    response = admin_client.get(inactive_user.get_absolute_url())
+    assert response.status_code == 302
+
+    response = admin_client.get(response["location"])
+    assert_contains(response, "account has been disabled")
 
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):
@@ -21,29 +40,6 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         )
 
         self.assertEqual(response.status_code, 301)
-
-    def test_user_disabled(self):
-        """disabled user's profile returns 404 for non-admins"""
-        self.user.is_staff = False
-        self.user.save()
-
-        disabled_user = create_test_user("DisabledUser", "disabled@example.com")
-
-        disabled_user.is_active = False
-        disabled_user.save()
-
-        response = self.client.get(disabled_user.get_absolute_url())
-        self.assertEqual(response.status_code, 404)
-
-        self.user.is_staff = True
-        self.user.save()
-
-        response = self.client.get(disabled_user.get_absolute_url())
-        self.assertEqual(response.status_code, 302)
-
-        # profile page displays notice about user being disabled
-        response = self.client.get(response["location"])
-        self.assertContains(response, "account has been disabled")
 
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""

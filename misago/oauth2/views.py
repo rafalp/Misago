@@ -60,7 +60,7 @@ def oauth2_complete(request):
         if not user.is_active:
             raise OAuth2UserAccountDeactivatedError()
 
-        if not user.is_staff:
+        if not user.is_misago_admin:
             if user_ban := get_user_ban(user, request.cache_versions):
                 raise Banned(user_ban)
     except OAuth2UserDataValidationError as error:

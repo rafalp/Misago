@@ -39,7 +39,7 @@ class ProfileView(View):
 
         profile = get_object_or_404(queryset, pk=pk)
 
-        if not profile.is_active and not request.user.is_staff:
+        if not profile.is_active and not request.user.is_misago_admin:
             raise Http404()
 
         validate_slug(profile, slug)

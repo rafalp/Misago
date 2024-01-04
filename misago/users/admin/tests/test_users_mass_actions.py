@@ -36,7 +36,7 @@ def test_multiple_users_can_be_activated_with_mass_action(
     admin_client, users_admin_link
 ):
     users = create_multiple_users(requires_activation=1)
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={"action": "activate", "selected_items": [u.id for u in users]},
     )
@@ -50,7 +50,7 @@ def test_activating_multiple_users_sends_email_notifications_to_them(
     admin_client, users_admin_link
 ):
     users_ids = get_multiple_users_ids(requires_activation=1)
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link, data={"action": "activate", "selected_items": users_ids}
     )
 
@@ -111,7 +111,7 @@ def test_multiple_users_ips_can_be_banned_with_mass_action(
     admin_client, users_admin_link
 ):
     users_ids = get_multiple_users_ids(joined_from_ip="1.2.3.4")
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={
             "action": "ban",
@@ -145,7 +145,7 @@ def test_data_downloads_can_be_requested_for_multiple_users_with_mass_action(
     admin_client, users_admin_link
 ):
     users = create_multiple_users()
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={
             "action": "request_data_download",
@@ -163,7 +163,7 @@ def test_mass_action_is_not_requesting_data_downloads_for_users_with_existing_re
     users = create_multiple_users()
     downloads_ids = [request_user_data_download(u).id for u in users]
 
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={
             "action": "request_data_download",
@@ -176,7 +176,7 @@ def test_mass_action_is_not_requesting_data_downloads_for_users_with_existing_re
 
 def test_multiple_users_can_be_deleted_with_mass_action(admin_client, users_admin_link):
     users = create_multiple_users()
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
     )
@@ -186,9 +186,9 @@ def test_multiple_users_can_be_deleted_with_mass_action(admin_client, users_admi
             user.refresh_from_db()
 
 
-def test_mass_action_records_users_deletion_by_staff(admin_client, users_admin_link):
+def test_mass_action_records_users_deletion_by_admin(admin_client, users_admin_link):
     users = create_multiple_users()
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
     )
@@ -200,14 +200,14 @@ def test_mass_action_records_users_deletion_by_staff(admin_client, users_admin_l
 
 
 def test_delete_users_mass_action_fails_if_user_tries_to_delete_themselves(
-    admin_client, users_admin_link, superuser
+    admin_client, users_admin_link, admin
 ):
     response = admin_client.post(
         users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [superuser.id]},
+        data={"action": "delete_accounts", "selected_items": [admin.id]},
     )
     assert_has_error_message(response)
-    superuser.refresh_from_db()
+    admin.refresh_from_db()
 
 
 def test_delete_users_mass_action_fails_if_user_tries_to_delete_staff_members(
@@ -224,10 +224,28 @@ def test_delete_users_mass_action_fails_if_user_tries_to_delete_staff_members(
         user.refresh_from_db()
 
 
-def test_delete_users_mass_action_fails_if_user_tries_to_delete_superusers(
+def test_delete_users_mass_action_fails_if_user_tries_to_delete_admins(
+    admin_client, users_admin_link, admins_group
+):
+    users = create_multiple_users()
+    for user in users:
+        user.set_groups(admins_group)
+        user.save()
+
+    response = admin_client.post(
+        users_admin_link,
+        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
+    )
+    assert_has_error_message(response)
+
+    for user in users:
+        user.refresh_from_db()
+
+
+def test_delete_users_mass_action_fails_if_user_tries_to_delete_root_admins(
     admin_client, users_admin_link
 ):
-    users = create_multiple_users(is_superuser=True)
+    users = create_multiple_users(is_misago_root=True)
     response = admin_client.post(
         users_admin_link,
         data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
@@ -251,7 +269,7 @@ def mock_delete_user_with_content(mocker):
 def test_multiple_users_can_be_deleted_together_with_content_by_mass_action(
     admin_client, users_admin_link, users_ids, mock_delete_user_with_content
 ):
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link, data={"action": "delete_all", "selected_items": users_ids}
     )
 
@@ -263,7 +281,7 @@ def test_deleting_multiple_users_with_content_disables_their_accounts(
     admin_client, users_admin_link, mock_delete_user_with_content
 ):
     users = create_multiple_users()
-    response = admin_client.post(
+    admin_client.post(
         users_admin_link,
         data={"action": "delete_all", "selected_items": [u.id for u in users]},
     )
@@ -274,18 +292,18 @@ def test_deleting_multiple_users_with_content_disables_their_accounts(
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_themselves(
-    admin_client, users_admin_link, superuser, mock_delete_user_with_content
+    admin_client, users_admin_link, admin, mock_delete_user_with_content
 ):
     response = admin_client.post(
         users_admin_link,
-        data={"action": "delete_all", "selected_items": [superuser.id]},
+        data={"action": "delete_all", "selected_items": [admin.id]},
     )
 
     assert_has_error_message(response)
     mock_delete_user_with_content.assert_not_called()
 
-    superuser.refresh_from_db()
-    assert superuser.is_active
+    admin.refresh_from_db()
+    assert admin.is_active
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_admin(
@@ -326,23 +344,6 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_sta
     admin_client, users_admin_link, mock_delete_user_with_content
 ):
     users = create_multiple_users(is_staff=True)
-    response = admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": [u.id for u in users]},
-    )
-
-    assert_has_error_message(response)
-    mock_delete_user_with_content.assert_not_called()
-
-    for user in users:
-        user.refresh_from_db()
-        assert user.is_active
-
-
-def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_superusers(
-    admin_client, users_admin_link, mock_delete_user_with_content
-):
-    users = create_multiple_users(is_superuser=True)
     response = admin_client.post(
         users_admin_link,
         data={"action": "delete_all", "selected_items": [u.id for u in users]},
