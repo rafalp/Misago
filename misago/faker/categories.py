@@ -1,10 +1,11 @@
 import random
 
 from ..categories.models import Category, RoleCategoryACL
+from ..permissions.copy import copy_category_permissions
 from .colors import COLORS
 
 
-def fake_category(fake, parent, copy_acl_from=None):
+def fake_category(fake, parent, copy_permissions=None):
     category = Category()
     category.set_name(fake_category_name(fake))
 
@@ -16,14 +17,15 @@ def fake_category(fake, parent, copy_acl_from=None):
 
     category.insert_at(parent, position="last-child", save=True)
 
-    if copy_acl_from:
-        copy_acl_to_fake_category(copy_acl_from, category)
+    if copy_permissions:
+        copy_category_permissions(copy_permissions, category)
+        copy_acl_to_fake_category(copy_permissions, category)
 
     return category
 
 
-def fake_closed_category(fake, parent, copy_acl_from=None):
-    category = fake_category(fake, parent, copy_acl_from)
+def fake_closed_category(fake, parent, copy_permissions=None):
+    category = fake_category(fake, parent, copy_permissions)
     category.is_closed = True
     category.save(update_fields=["is_closed"])
 

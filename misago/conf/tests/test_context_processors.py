@@ -23,10 +23,18 @@ def test_admin_panel_link_is_included_in_frontend_context_for_admins(admin_clien
 
 
 @override_dynamic_settings(show_admin_panel_link_in_ui=False)
-def test_admin_panel_link_is_included_from_frontend_context_for_admins_if_disabled(
+def test_admin_panel_link_is_excluded_from_frontend_context_for_admins_if_disabled(
     admin_client,
 ):
     response = admin_client.get("/")
+    assert response.status_code == 200
+    assert '"ADMIN_URL": "' not in response.content.decode("utf-8")
+
+
+def test_admin_panel_link_is_excluded_from_frontend_context_for_staff_users(
+    staff_client,
+):
+    response = staff_client.get("/")
     assert response.status_code == 200
     assert '"ADMIN_URL": "' not in response.content.decode("utf-8")
 
