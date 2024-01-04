@@ -34,7 +34,7 @@ def validate_image_square(image):
 
 
 validate_css_name = RegexValidator(
-    re.compile("^[a-zA-Z_-]+([a-zA-Z0-9-_]+)?$"),
+    re.compile(r"^[a-zA-Z_-]+([a-zA-Z0-9-_]+)?$"),
     pgettext_lazy(
         "css name validator",
         "Enter a valid CSS class name that starts with a Latin letter, underscore, or a hyphen, and is followed by any combination of Latin letters, numbers, hyphens, and underscore characters.",
