@@ -29,7 +29,7 @@ class GetAdminCategoryPermissionsHook(
     ActionHook[GetAdminCategoryPermissionsHookAction]
 ):
     """
-    This hook enables plugins to add permissions to Admin Category Permissions Forms.
+    This hook lets plugins add permissions to Admin Category Permissions forms.
 
     # Example
 

@@ -1,6 +1,6 @@
 # `get_admin_category_permissions_hook`
 
-This hook enables plugins to add permissions to Admin Category Permissions Forms.
+This hook lets plugins add permissions to Admin Category Permissions forms.
 
 
 ## Location
