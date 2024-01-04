@@ -6,7 +6,7 @@ from django.utils.translation import pgettext_lazy
 from .base import SettingsForm
 
 GOOGLE_SITE_VERIFICATION = re.compile(
-    "^google-site-verification: google([0-9a-z]+)\.html$"
+    r"^google-site-verification: google([0-9a-z]+)\.html$"
 )
 
 

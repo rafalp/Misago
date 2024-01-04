@@ -338,7 +338,9 @@ def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | No
                 if ",\n" in item_args[position:end_position]:
                     item_args_copy = item_args
                     item_args = item_args_copy[:position]
-                    item_args += item_args_copy[position:end_position].replace(",\n", ", ")
+                    item_args += item_args_copy[position:end_position].replace(
+                        ",\n", ", "
+                    )
                     item_args += item_args_copy[end_position:]
                 offset = position + 1
             item_args = "\n" + indent(item_args, "    ") + ",\n"
