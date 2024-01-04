@@ -5,12 +5,12 @@ from ...models import MenuItem
 
 
 @pytest.fixture
-def list_url(admin_client):
+def list_url():
     return reverse("misago:admin:settings:menu-items:index")
 
 
 @pytest.fixture
-def menu_item(superuser):
+def menu_item(db):
     return MenuItem.objects.create(
         menu=MenuItem.MENU_NAVBAR,
         title="Test TMLA",
@@ -20,7 +20,7 @@ def menu_item(superuser):
 
 
 @pytest.fixture
-def other_menu_item(superuser):
+def other_menu_item(db):
     return MenuItem.objects.create(
         menu=MenuItem.MENU_BOTH,
         title="Other Menu Item",

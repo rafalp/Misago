@@ -42,25 +42,23 @@ def test_attempt_to_login_as_django_staff_user_fails(client, user, user_password
     assert_contains(response, "Your account does not have admin privileges.")
 
 
-def test_attempt_to_login_as_django_superuser_user_fails(client, user, user_password):
-    user.is_superuser = True
-    user.save()
-
+def test_attempt_to_login_as_django_superuser_user_fails(
+    client, superuser, user_password
+):
     response = client.post(
-        admin_link, {"username": user.username, "password": user_password}
+        admin_link, {"username": superuser.username, "password": user_password}
     )
     assert_contains(response, "Your account does not have admin privileges.")
 
 
-def test_attempt_to_login_as_django_staff_superuser_user_fails(
-    client, user, user_password
+def test_attempt_to_login_as_django_non_staff_superuser_user_fails(
+    client, superuser, user_password
 ):
-    user.is_staff = True
-    user.is_superuser = True
-    user.save()
+    superuser.is_staff = False
+    superuser.save()
 
     response = client.post(
-        admin_link, {"username": user.username, "password": user_password}
+        admin_link, {"username": superuser.username, "password": user_password}
     )
     assert_contains(response, "Your account does not have admin privileges.")
 

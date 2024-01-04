@@ -8,12 +8,13 @@ User = get_user_model()
 
 
 @shared_task
-def delete_user_with_content(pk):
+def delete_user_with_content(id):
     try:
-        user = User.objects.get(pk=pk, is_staff=False, is_superuser=False)
+        user = User.objects.get(id=id)
     except User.DoesNotExist:
-        pass
-    else:
+        return
+
+    if not user.is_misago_admin and not user.is_staff:
         settings = get_dynamic_settings()
         user.delete(anonymous_username=settings.anonymous_username, delete_content=True)
         record_user_deleted_by_staff()

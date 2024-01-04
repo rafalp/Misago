@@ -11,14 +11,14 @@ def test_task_does_nothing_for_nonexisting_user_id(db):
     delete_user_with_content(1)
 
 
-def test_task_does_nothing_for_staff_user_id(staffuser):
+def test_task_does_nothing_for_staff_id(staffuser):
     delete_user_with_content(staffuser.id)
     staffuser.refresh_from_db()
 
 
-def test_task_does_nothing_for_superuser_id(superuser):
-    delete_user_with_content(superuser.id)
-    superuser.refresh_from_db()
+def test_task_does_nothing_for_admin_id(admin):
+    delete_user_with_content(admin.id)
+    admin.refresh_from_db()
 
 
 def test_task_deletes_user(user):
@@ -27,6 +27,6 @@ def test_task_deletes_user(user):
         user.refresh_from_db()
 
 
-def test_task_records_user_deletion_by_staff(user):
+def test_task_records_user_deletion(user):
     delete_user_with_content(user.id)
     DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_STAFF)
