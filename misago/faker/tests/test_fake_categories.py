@@ -22,7 +22,8 @@ def test_fake_category_can_be_created_with_copy_of_other_category_permissions(
     category = fake_category(fake, root_category, copy_permissions=default_category)
     for acl in default_category.category_role_set.all():
         category.category_role_set.get(role=acl.role, category_role=acl.category_role)
-    assert CategoryGroupPermission.objects.filter(category).exists()
+
+    assert CategoryGroupPermission.objects.filter(category=category).exists()
 
 
 def test_fake_closed_category_can_be_created(fake, root_category):
