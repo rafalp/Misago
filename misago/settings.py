@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "misago.middleware",
     "misago.notifications",
     "misago.oauth2",
+    "misago.parser",
     "misago.permissions",
     "misago.plugins",
     "misago.postgres",
@@ -116,3 +117,5 @@ MISAGO_MIDDLEWARE = [
 ]
 
 MISAGO_NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
+
+MISAGO_PARSER_MAX_MENTIONS = 25
