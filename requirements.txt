@@ -106,6 +106,8 @@ kombu==5.3.4
     # via celery
 markdown==3.5.1
     # via -r requirements.in
+mistune==3.0.2
+    # via -r requirements.in
 multidict==6.0.4
     # via
     #   aiohttp

@@ -11,6 +11,7 @@ django-simple-sso
 Faker
 html5lib
 markdown
+mistune
 social-auth-app-django
 pyjwt
 pillow
