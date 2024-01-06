@@ -7,6 +7,7 @@ from textwrap import dedent, indent
 
 HOOKS_MODULES = (
     "misago.oauth2.hooks",
+    "misago.parser.hooks",
     "misago.permissions.hooks",
     "misago.users.hooks",
 )
