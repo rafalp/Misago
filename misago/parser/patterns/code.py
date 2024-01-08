@@ -23,9 +23,9 @@ class FencedCodeMarkdown(Pattern):
         }
 
 
-CODE_BBCODE_PATTERN = r"\[code(=.+)?\]((.|\n)*?)\[/code\]"
+CODE_BBCODE_PATTERN = r"\[code(=.+)?\](.*?)\[/code\]"
 CODE_BBCODE_CONTENTS = re.compile(
-    r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[/code\]", re.IGNORECASE
+    r"\[code(=(?P<syntax>(.+)))?\](?P<code>(.*?))\[/code\]", re.IGNORECASE
 )
 
 
@@ -38,4 +38,14 @@ class CodeBBCode(Pattern):
             "type": "code",
             "syntax": str(contents.group("syntax") or "").strip("\"' ") or None,
             "code": dedent(contents.group("code").rstrip()).strip(),
+        }
+
+
+class InlineCodeMarkdown(Pattern):
+    pattern: str = r"`(.|\n)*?`"
+
+    def parse(self, parser: Parser, match: str) -> dict:
+        return {
+            "type": "inline-code",
+            "code": match.strip("`"),
         }

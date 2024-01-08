@@ -23,13 +23,6 @@ class LineBreak(Pattern):
         return {"type": "line_break"}
 
 
-class Text(Pattern):
-    pattern = r".+"
-
-    def parse(self, parser: "Parser", match: str) -> dict:
-        return {"type": "text", "text": match}
-
-
 class Parser:
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
@@ -47,10 +40,34 @@ class Parser:
         return blocks
 
     def parse_blocks(self, markup: str) -> list[dict]:
-        return self._parse(markup, self._final_block_patterns, self._block_re)
+        result: list[dict] = []
+        for m in self._block_re.finditer(markup):
+            for key, pattern in self._final_block_patterns.items():
+                block_match = m.group(key)
+                if block_match is not None:
+                    result.append(pattern.parse(self, block_match))
+                    break
+
+        return result
 
     def parse_inline(self, markup: str) -> list[dict]:
-        return self._parse(markup, self._final_inline_patterns, self._inline_re)
+        result: list[dict] = []
+        cursor = 0
+        for m in self._inline_re.finditer(markup):
+            for key, pattern in self._final_inline_patterns.items():
+                block_match = m.group(key)
+                if block_match is not None:
+                    start = m.start()
+                    if start > cursor:
+                        result.append({"type": "text", "text": markup[cursor:start]})
+                    result.append(pattern.parse(self, block_match))
+                    cursor = m.end()
+                    break
+
+        if cursor < len(markup):
+            result.append({"type": "text", "text": markup[cursor:]})
+
+        return result
 
     def _parse(
         self, markup: str, patterns: dict[str, Pattern], pattern: re.Pattern
@@ -78,7 +95,7 @@ class Parser:
     @cached_property
     def _final_inline_patterns(self) -> dict[str, Pattern]:
         patterns: list[Pattern] = self.inline_patterns.copy()
-        patterns += [LineBreak(), Text()]
+        patterns += [LineBreak()]
         return {f"i_{i}": pattern for i, pattern in enumerate(patterns)}
 
     @cached_property

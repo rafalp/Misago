@@ -1,6 +1,6 @@
 from ..parser import Pattern
 
-from .code import CodeBBCode, FencedCodeMarkdown
+from .code import CodeBBCode, FencedCodeMarkdown, InlineCodeMarkdown
 
 
 block_patterns: list[Pattern] = [
@@ -8,4 +8,6 @@ block_patterns: list[Pattern] = [
     CodeBBCode(),
 ]
 
-inline_patterns: list[Pattern] = []
+inline_patterns: list[Pattern] = [
+    InlineCodeMarkdown(),
+]
