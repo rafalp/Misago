@@ -26,3 +26,17 @@ def test_multiple_inline_code(parse_markup):
             ],
         }
     ]
+
+
+def test_inline_code_is_not_parsed(parse_markup):
+    result = parse_markup("Hello `<http://misago-project.org>`.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {"type": "inline-code", "code": "<http://misago-project.org>"},
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
