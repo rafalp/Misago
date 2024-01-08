@@ -1,9 +1,7 @@
-from typing import Callable
-
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
-from .hooks import create_parser
+from .hooks import create_parser_hook
 from .parser import Parser, Pattern
 from .patterns import block_patterns, inline_patterns
 
@@ -16,7 +14,7 @@ def create_parser(
     request: HttpRequest | None = None,
     content_type: str | None = None,
 ) -> Parser:
-    return create_parser(
+    return create_parser_hook(
         _create_parser_action,
         block_patterns=block_patterns.copy(),
         inline_patterns=inline_patterns.copy(),
