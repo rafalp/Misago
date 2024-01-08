@@ -1,13 +1,3 @@
-import pytest
-
-from ..factory import create_markdown
-
-
-@pytest.fixture
-def markdown():
-    return create_markdown()
-
-
 def test_parser_html_blocks_support_is_disabled(markdown):
     result = markdown("<h1>Lorem ipsum</h1>\n<div>Dolor **met**.</div>")
     assert result == [
