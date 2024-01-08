@@ -84,7 +84,7 @@ def test_fenced_code_dedents_code(parse_markup):
     ]
 
 
-def test_fenced_code_strips_code_whitespace(parse_markup):
+def test_fenced_code_trims_code(parse_markup):
     result = parse_markup(
         """
         ~~~

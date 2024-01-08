@@ -21,3 +21,21 @@ class FencedCodeMarkdown(Pattern):
             "syntax": str(contents.group("syntax") or "").strip() or None,
             "code": dedent(contents.group("code").rstrip()).strip(),
         }
+
+
+CODE_BBCODE_PATTERN = r"\[code(=.+)?\]((.|\n)*?)\[/code\]"
+CODE_BBCODE_CONTENTS = re.compile(
+    r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[/code\]", re.IGNORECASE
+)
+
+
+class CodeBBCode(Pattern):
+    pattern: str = CODE_BBCODE_PATTERN
+
+    def parse(self, parser: Parser, match: str) -> dict:
+        contents = CODE_BBCODE_CONTENTS.match(match.strip())
+        return {
+            "type": "code",
+            "syntax": str(contents.group("syntax") or "").strip("\"' ") or None,
+            "code": dedent(contents.group("code").rstrip()).strip(),
+        }
