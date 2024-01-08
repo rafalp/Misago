@@ -51,8 +51,9 @@ class Parser:
         return result
 
     def parse_inline(self, markup: str) -> list[dict]:
-        result: list[dict] = []
         cursor = 0
+
+        result: list[dict] = []
         for m in self._inline_re.finditer(markup):
             for key, pattern in self._final_inline_patterns.items():
                 block_match = m.group(key)
