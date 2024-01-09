@@ -23,9 +23,9 @@ class FencedCodeMarkdown(Pattern):
         }
 
 
-CODE_BBCODE_PATTERN = r"\[code(=.+)?\](.*?)\[/code\]"
+CODE_BBCODE_PATTERN = r"\[code(=.+)?\]((.|\n)*?)\[\/code\]"
 CODE_BBCODE_CONTENTS = re.compile(
-    r"\[code(=(?P<syntax>(.+)))?\](?P<code>(.*?))\[/code\]", re.IGNORECASE
+    r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[\/code\]", re.IGNORECASE
 )
 
 
