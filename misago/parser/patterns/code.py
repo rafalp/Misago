@@ -35,7 +35,7 @@ class CodeBBCode(Pattern):
     def parse(self, parser: Parser, match: str) -> dict:
         contents = CODE_BBCODE_CONTENTS.match(match.strip())
         return {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": str(contents.group("syntax") or "").strip("\"' ") or None,
             "code": dedent(contents.group("code").rstrip()).strip(),
         }

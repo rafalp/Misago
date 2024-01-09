@@ -6,7 +6,7 @@ def test_code_bbcode_can_be_one_liner(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": 'print("hello!")',
         }
@@ -24,7 +24,7 @@ def test_code_bbcode_can_be_multiline(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -42,7 +42,7 @@ def test_code_bbcode_dedents_content(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -62,7 +62,7 @@ def test_code_bbcode_trims_content(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -80,7 +80,7 @@ def test_code_bbcode_supports_syntax(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": "python",
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -98,7 +98,7 @@ def test_code_bbcode_trims_syntax(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": "python",
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -116,7 +116,7 @@ def test_code_bbcode_trims_syntax_quotes(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": "python",
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -134,7 +134,7 @@ def test_code_bbcode_trims_syntax_single_quotes(parse_markup):
     )
     assert result == [
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": "python",
             "code": 'print("hello!")\nprint("world!")',
         }
@@ -158,7 +158,7 @@ def test_code_bbcode_can_be_mixed_with_other_blocks(parse_markup):
             "children": [{"type": "text", "text": "Here is the code:"}],
         },
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": "1 + 3",
         },
@@ -188,12 +188,12 @@ def test_code_bbcode_can_be_used_next_to_each_other(parse_markup):
             "children": [{"type": "text", "text": "Here is the code:"}],
         },
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": "1 + 3",
         },
         {
-            "type": "code",
+            "type": "code-bbcode",
             "syntax": None,
             "code": "5 x 3",
         },
