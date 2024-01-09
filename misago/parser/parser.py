@@ -5,7 +5,7 @@ from functools import cached_property
 class Pattern:
     pattern: str
 
-    def parse(self, parser: "Parser", match: str) -> dict:
+    def parse(self, parser: "Parser", match: str) -> dict | list[dict]:
         raise NotImplementedError()
 
 
@@ -45,7 +45,11 @@ class Parser:
             for key, pattern in self._final_block_patterns.items():
                 block_match = m.group(key)
                 if block_match is not None:
-                    result.append(pattern.parse(self, block_match))
+                    block_ast = pattern.parse(self, block_match)
+                    if isinstance(block_ast, list):
+                        result += block_ast
+                    elif isinstance(block_ast, dict):
+                        result.append(block_ast)
                     break
 
         return result
@@ -61,7 +65,11 @@ class Parser:
                     start = m.start()
                     if start > cursor:
                         result.append({"type": "text", "text": markup[cursor:start]})
-                    result.append(pattern.parse(self, block_match))
+                    block_ast = pattern.parse(self, block_match)
+                    if isinstance(block_ast, list):
+                        result += block_ast
+                    elif isinstance(block_ast, dict):
+                        result.append(block_ast)
                     cursor = m.end()
                     break
 
