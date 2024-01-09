@@ -18,13 +18,11 @@ class ListMarkdown(Pattern):
 def parse_list_items(parser: Parser, match: str) -> list[tuple[int, str, list[dict]]]:
     items: list[tuple[int, str, list[dict]]] = []
     for item in LIST_CONTENTS.finditer(dedent(match)):
-        previous_level = items[-1][0] if items else 0
         level = len(item.group("prefix") or "")
         if level % 2 != 0:
             level -= 1
-        if level > previous_level:
-            level = previous_level + 1
-        print(level)
+        if level:
+            level = int(level / 2)  # TODO: normalize levels across items somehow
 
         marker = item.group("marker")
         if marker not in "-*+":
@@ -47,6 +45,7 @@ def get_lists_from_items(
 
     for item_level, item_marker, children in items:
         if item_level != level or item_marker != marker:
+            # Fixme: this always makes new list when item_level < level
             list_ast = {
                 "type": "list",
                 "ordered": item_marker == "n",
@@ -56,6 +55,7 @@ def get_lists_from_items(
             # Remove N levels from stack
             if item_level < level:
                 for _ in range(level - item_level):
+                    print("POP")
                     lists_stack.pop(-1)
 
             elif item_level == level:
