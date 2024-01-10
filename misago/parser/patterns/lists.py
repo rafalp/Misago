@@ -19,19 +19,29 @@ class ListMarkdown(Pattern):
 
 def parse_list_items(parser: Parser, match: str) -> list[ListItem]:
     items: list[ListItem] = []
-    for i, item in enumerate(LIST_CONTENTS.finditer(dedent(match))):
+    prev_level: int | None = None
+    for item in LIST_CONTENTS.finditer(dedent(match).strip()):
         level = len(item.group("prefix") or "")
         if level % 2 != 0:
             level -= 1
         if level:
-            level = int(level / 2)  # TODO: normalize levels across items somehow
+            level = int(level / 2)
+
+        clean_level = level
+        if prev_level is not None:
+            if level == prev_level:
+                clean_level = items[-1][0]
+            elif level > prev_level or level > items[-1][0] + 1:
+                clean_level = items[-1][0] + 1
+
+        prev_level = level
 
         marker = item.group("marker")
         if marker not in "-*+":
             marker = "n"
 
         text = item.group("text").strip()
-        items.append((level, marker, parser.parse_inline(text)))
+        items.append((clean_level, marker, parser.parse_inline(text)))
 
     return items
 

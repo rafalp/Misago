@@ -477,3 +477,69 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
             ],
         }
     ]
+
+
+def test_list_items_with_too_deep_levels_are_fixed(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+            - Ipsum
+            - Dolor
+          - Sit
+        - Lorem
+        """
+    )
+    expected_result = parse_markup(
+        """
+        - Met
+          - Ipsum
+          - Dolor
+          - Sit
+        - Lorem
+        """
+    )
+    assert result == expected_result
+
+
+def test_list_with_too_deep_item_followed_by_valid_item_is_fixed(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+                - Ipsum
+            - Dolor
+          - Sit
+        - Lorem
+        """
+    )
+    expected_result = parse_markup(
+        """
+        - Met
+          - Ipsum
+            - Dolor
+          - Sit
+        - Lorem
+        """
+    )
+    assert result == expected_result
+
+
+def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+                - Ipsum
+              - Dolor
+          - Sit
+        - Lorem
+        """
+    )
+    expected_result = parse_markup(
+        """
+        - Met
+          - Ipsum
+            - Dolor
+          - Sit
+        - Lorem
+        """
+    )
+    assert result == expected_result
