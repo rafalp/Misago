@@ -543,3 +543,29 @@ def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
         """
     )
     assert result == expected_result
+
+
+def test_list_with_first_item_indented_is_fixed(parse_markup):
+    result = parse_markup(
+        """
+        Lorem ipsum
+
+              - Met
+              - Ipsum
+            - Dolor
+            - Sit
+            - Lorem
+        """
+    )
+    expected_result = parse_markup(
+        """
+        Lorem ipsum
+
+        - Met
+          - Ipsum
+        - Dolor
+        - Sit
+        - Lorem
+        """
+    )
+    assert result == expected_result
