@@ -404,3 +404,76 @@ def test_list_with_second_item_subitems(parse_markup):
             ],
         }
     ]
+
+
+def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+          - Ipsum
+            - Dolor
+        - Lorem
+        """
+    )
+    assert result == [
+        {
+            "type": "list",
+            "ordered": False,
+            "items": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Met",
+                        },
+                    ],
+                    "lists": [
+                        {
+                            "type": "list",
+                            "ordered": False,
+                            "items": [
+                                {
+                                    "type": "list-item",
+                                    "children": [
+                                        {
+                                            "type": "text",
+                                            "text": "Ipsum",
+                                        },
+                                    ],
+                                    "lists": [
+                                        {
+                                            "type": "list",
+                                            "ordered": False,
+                                            "items": [
+                                                {
+                                                    "type": "list-item",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "text": "Dolor",
+                                                        },
+                                                    ],
+                                                    "lists": [],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Lorem",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        }
+    ]
