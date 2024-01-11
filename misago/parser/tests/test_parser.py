@@ -67,3 +67,17 @@ def test_parser_parses_line_breaks():
             ],
         },
     ]
+
+
+def test_parser_parses_line_breaks_surrounded_by_spaces():
+    result = parse("Paragraph with  \n   a line break.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Paragraph with"},
+                {"type": "line_break"},
+                {"type": "text", "text": "a line break."},
+            ],
+        },
+    ]

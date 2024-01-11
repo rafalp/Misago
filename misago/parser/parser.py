@@ -10,15 +10,8 @@ class Pattern:
         raise NotImplementedError()
 
 
-class Paragraph(Pattern):
-    pattern = r".+(\n.+)*"
-
-    def parse(self, parser: "Parser", match: str) -> dict:
-        return {"type": "paragraph", "children": parser.parse_inline(match)}
-
-
 class LineBreak(Pattern):
-    pattern = r"\n"
+    pattern = r" *\n *"
 
     def parse(self, parser: "Parser", match: str) -> dict:
         return {"type": "line_break"}
@@ -47,18 +40,45 @@ class Parser:
         return ast
 
     def parse_blocks(self, markup: str) -> list[dict]:
+        cursor = 0
+
         result: list[dict] = []
         for m in self._block_re.finditer(markup):
             for key, pattern in self._final_block_patterns.items():
                 block_match = m.group(key)
                 if block_match is not None:
+                    start = m.start()
+                    if start > cursor:
+                        result += self.parse_paragraphs(markup[cursor:start])
+
                     block_ast = pattern.parse(self, block_match)
                     if isinstance(block_ast, list):
                         result += block_ast
                     elif isinstance(block_ast, dict):
                         result.append(block_ast)
+
+                    cursor = m.end()
                     break
 
+        if cursor < len(markup):
+            result += self.parse_paragraphs(markup[cursor:])
+
+        return result
+
+    def parse_paragraphs(self, markup: str) -> list[dict]:
+        markup = markup.strip()
+
+        if not markup:
+            return []
+
+        result: list[dict] = []
+        for m in self._paragraph_re.finditer(markup):
+            result.append(
+                {
+                    "type": "paragraph",
+                    "children": self.parse_inline(m.group(0).strip()),
+                }
+            )
         return result
 
     def parse_inline(self, markup: str) -> list[dict]:
@@ -72,11 +92,13 @@ class Parser:
                     start = m.start()
                     if start > cursor:
                         result.append({"type": "text", "text": markup[cursor:start]})
+
                     block_ast = pattern.parse(self, block_match)
                     if isinstance(block_ast, list):
                         result += block_ast
                     elif isinstance(block_ast, dict):
                         result.append(block_ast)
+
                     cursor = m.end()
                     break
 
@@ -101,12 +123,15 @@ class Parser:
     @cached_property
     def _final_block_patterns(self) -> dict[str, Pattern]:
         patterns: list[Pattern] = self.block_patterns.copy()
-        patterns.append(Paragraph())
         return {f"b_{i}": pattern for i, pattern in enumerate(patterns)}
 
     @cached_property
     def _block_re(self) -> re.Pattern:
         return self._build_re_pattern(self._final_block_patterns)
+
+    @cached_property
+    def _paragraph_re(self) -> re.Pattern:
+        return re.compile(r".+(\n.+)*")
 
     @cached_property
     def _final_inline_patterns(self) -> dict[str, Pattern]:
