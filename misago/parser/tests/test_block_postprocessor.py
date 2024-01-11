@@ -53,7 +53,7 @@ def test_block_post_processor_wraps_block(parser, post_processor):
     ]
 
 
-def test_block_post_processor_wraps_nested_block(parser, post_processor):
+def test_block_post_processor_wraps_block_in_other_block(parser, post_processor):
     result = post_processor(
         parser,
         [
@@ -88,7 +88,9 @@ def test_block_post_processor_wraps_nested_block(parser, post_processor):
     ]
 
 
-def test_block_post_processor_removes_empty_nested_block(parser, post_processor):
+def test_block_post_processor_removes_empty_block_in_other_block(
+    parser, post_processor
+):
     result = post_processor(
         parser,
         [
@@ -105,5 +107,37 @@ def test_block_post_processor_removes_empty_nested_block(parser, post_processor)
         {
             "type": "other-block",
             "children": [],
+        },
+    ]
+
+
+def test_block_post_processor_wraps_block_in_block(parser, post_processor):
+    result = post_processor(
+        parser,
+        [
+            {"type": "mock-open"},
+            {"type": "mock-open"},
+            {
+                "type": "paragraph",
+                "children": [{"type": "text", "text": "Hello world!"}],
+            },
+            {"type": "mock-close"},
+            {"type": "mock-close"},
+        ],
+    )
+    assert result == [
+        {
+            "type": "mock",
+            "children": [
+                {
+                    "type": "mock",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [{"type": "text", "text": "Hello world!"}],
+                        },
+                    ],
+                }
+            ],
         },
     ]
