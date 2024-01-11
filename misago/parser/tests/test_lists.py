@@ -94,6 +94,38 @@ def test_unordered_list_with_asterisk(parse_markup):
     ]
 
 
+def test_unordered_list_with_plus(parse_markup):
+    result = parse_markup("+ Lorem\n+ Ipsum")
+    assert result == [
+        {
+            "type": "list",
+            "ordered": False,
+            "items": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Lorem",
+                        },
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Ipsum",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        }
+    ]
+
+
 def test_unordered_list_with_indent(parse_markup):
     result = parse_markup("  - Lorem\n  - Ipsum")
     assert result == [
@@ -201,7 +233,7 @@ def test_list_with_separating_blank_lines(parse_markup):
 
 
 def test_multiple_lists_separated_by_marker(parse_markup):
-    result = parse_markup("- Lorem\n- Ipsum\n* Dolor\n* Met\n+ Sit")
+    result = parse_markup("- Lorem\n- Ipsum\n* Dolor\n* Met\n+ Sit\n1. Amet")
     assert result == [
         {
             "type": "list",
@@ -265,6 +297,22 @@ def test_multiple_lists_separated_by_marker(parse_markup):
                         {
                             "type": "text",
                             "text": "Sit",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+        {
+            "type": "list",
+            "ordered": True,
+            "items": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Amet",
                         },
                     ],
                     "lists": [],
