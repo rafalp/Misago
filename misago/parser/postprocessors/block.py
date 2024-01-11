@@ -29,7 +29,8 @@ class BlockPostProcessor:
                 new_ast.append(self.process_other_block(parser, block_ast))
 
         for opening_block, children in stack:
-            new_ast += [opening_block, self(parser, children)]
+            new_ast.append(opening_block)
+            new_ast += self(parser, children)
 
         return new_ast
 
