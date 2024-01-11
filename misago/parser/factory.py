@@ -6,6 +6,7 @@ from django.http import HttpRequest
 from .hooks import create_parser_hook
 from .parser import Parser, Pattern
 from .patterns import block_patterns, inline_patterns
+from .postprocessors import post_processors
 
 User = get_user_model()
 
@@ -20,7 +21,7 @@ def create_parser(
         _create_parser_action,
         block_patterns=block_patterns.copy(),
         inline_patterns=inline_patterns.copy(),
-        post_processors=[],
+        post_processors=post_processors.copy(),
         user=user,
         request=request,
         content_type=content_type,

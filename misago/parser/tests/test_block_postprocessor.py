@@ -298,3 +298,30 @@ def test_block_post_processor_handles_extra_closing_block(parser, post_processor
         },
         {"type": "mock-close"},
     ]
+
+
+def test_block_post_processor_handles_extra_opening_block(parser, post_processor):
+    result = post_processor(
+        parser,
+        [
+            {"type": "mock-open"},
+            {"type": "mock-open"},
+            {
+                "type": "paragraph",
+                "children": [{"type": "text", "text": "Hello world!"}],
+            },
+            {"type": "mock-close"},
+        ],
+    )
+    assert result == [
+        {"type": "mock-open"},
+        {
+            "type": "mock",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
