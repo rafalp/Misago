@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Callable, Protocol
 
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
@@ -24,6 +24,18 @@ class CreateParserHookAction(Protocol):
 
     A list of `Pattern` instances of inline patterns to be used by the parser.
 
+    ## `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
+
+    A list of post-processor functions called by the parser to finalize the AST.
+
+    A post-processor function should have the following signature:
+
+    ```python
+    def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
+        # Do something with the 'ast'...
+        return ast
+    ```
+
     ## `user: User | None = None`
 
     A `User` instance with the parsed text's author or `None` if not provided.
@@ -47,6 +59,7 @@ class CreateParserHookAction(Protocol):
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
+        post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
         user: User | None = None,
         request: HttpRequest | None = None,
         content_type: str | None = None,
@@ -75,6 +88,18 @@ class CreateParserHookFilter(Protocol):
 
     A list of `Pattern` instances of inline patterns to be used by the parser.
 
+    ## `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
+
+    A list of post-processor functions called by the parser to finalize the AST.
+
+    A post-processor function should have the following signature:
+
+    ```python
+    def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
+        # Do something with the 'ast'...
+        return ast
+    ```
+
     ## `user: User | None = None`
 
     A `User` instance with the parsed text's author or `None` if not provided.
@@ -99,6 +124,7 @@ class CreateParserHookFilter(Protocol):
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
+        post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
         user: User | None = None,
         request: HttpRequest | None = None,
         content_type: str | None = None,
@@ -141,6 +167,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
+        post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
         user: User | None = None,
         request: HttpRequest | None = None,
         content_type: str | None = None,
@@ -149,6 +176,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
             action,
             block_patterns=block_patterns,
             inline_patterns=inline_patterns,
+            post_processors=post_processors,
             user=user,
             request=request,
             content_type=content_type,

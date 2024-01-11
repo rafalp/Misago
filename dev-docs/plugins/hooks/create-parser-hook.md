@@ -20,6 +20,7 @@ def custom_create_parser_filter(
     *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
+    post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
     user: User | None=None,
     request: HttpRequest | None=None,
     content_type: str | None=None,
@@ -49,6 +50,19 @@ A list of `Pattern` instances of block patterns to be used by the parser.
 A list of `Pattern` instances of inline patterns to be used by the parser.
 
 
+#### `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
+
+A list of post-processor functions called by the parser to finalize the AST.
+
+A post-processor function should have the following signature:
+
+```python
+def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
+    # Do something with the 'ast'...
+    return ast
+```
+
+
 #### `user: User | None = None`
 
 A `User` instance with the parsed text's author or `None` if not provided.
@@ -76,6 +90,8 @@ def create_parser_action(
     *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
+    post_processors: list[Callable[[Parser, list[dict]],
+    list[dict]]],
     user: User | None=None,
     request: HttpRequest | None=None,
     content_type: str | None=None,
@@ -96,6 +112,19 @@ A list of `Pattern` instances of block patterns to be used by the parser.
 #### `inline_patterns: list[Pattern]`
 
 A list of `Pattern` instances of inline patterns to be used by the parser.
+
+
+#### `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
+
+A list of post-processor functions called by the parser to finalize the AST.
+
+A post-processor function should have the following signature:
+
+```python
+def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
+    # Do something with the 'ast'...
+    return ast
+```
 
 
 #### `user: User | None = None`

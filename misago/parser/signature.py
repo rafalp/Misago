@@ -4,7 +4,6 @@ from django.http import HttpRequest
 from .enums import ContentType
 from .factory import create_parser
 from .metadata import get_ast_metadata
-from .postprocess import post_process_ast
 
 User = get_user_model()
 
@@ -23,5 +22,4 @@ def parse_user_signature(
     )
 
     ast = parser(markup)
-    ast = post_process_ast(ast, content_type=ContentType.SIGNATURE)
     return ast, get_ast_metadata(ast)

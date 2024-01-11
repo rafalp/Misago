@@ -1,5 +1,6 @@
 import re
 from functools import cached_property
+from typing import Callable
 
 
 class Pattern:
@@ -26,18 +27,24 @@ class LineBreak(Pattern):
 class Parser:
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
+    post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
 
     def __init__(
         self,
         block_patterns: list[Pattern] | None = None,
         inline_patterns: list[Pattern] | None = None,
+        post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
+        | None = None,
     ):
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
+        self.post_processors = post_processors or []
 
     def __call__(self, markup: str) -> list[dict]:
-        blocks = self.parse_blocks(markup)
-        return blocks
+        ast = self.parse_blocks(markup)
+        for post_processor in self.post_processors:
+            ast = post_processor(self, ast)
+        return ast
 
     def parse_blocks(self, markup: str) -> list[dict]:
         result: list[dict] = []

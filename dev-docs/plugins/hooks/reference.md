@@ -23,7 +23,6 @@ Hooks instances are importable from the following Python modules:
 `misago.parser.hooks` defines the following hooks:
 
 - [`create_parser_hook`](./create-parser-hook.md)
-- [`filter_ast_hook`](./filter-ast-hook.md)
 
 
 ## `misago.permissions.hooks`
