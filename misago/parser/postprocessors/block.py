@@ -24,9 +24,9 @@ class BlockPostProcessor:
                         else:
                             new_ast.append(wrapped_block)
                 else:
-                    stack[-1][1].append(block_ast)
+                    stack[-1][1].append(self.process_other_block(parser, block_ast))
             else:
-                new_ast.append(block_ast)
+                new_ast.append(self.process_other_block(parser, block_ast))
 
         for opening_block, children in stack:
             new_ast += [opening_block, self(parser, children)]
@@ -45,7 +45,10 @@ class BlockPostProcessor:
 
         new_children: list[dict]
         for block_ast in children:
-            if block_ast["type"] != "paragraph" and block_ast.get("children"):
-                block_ast["children"] = self(parser, block_ast["children"])
-            new_children.append(block_ast)
+            new_children.append(self.process_other_block(parser, block_ast))
         return new_children
+
+    def process_other_block(self, parser: Parser, block_ast: dict) -> dict:
+        if block_ast["type"] != "paragraph" and block_ast.get("children"):
+            block_ast["children"] = self(parser, block_ast["children"])
+        return block_ast
