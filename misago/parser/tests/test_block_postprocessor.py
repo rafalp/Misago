@@ -86,3 +86,24 @@ def test_block_post_processor_wraps_nested_block(parser, post_processor):
             ],
         },
     ]
+
+
+def test_block_post_processor_removes_empty_nested_block(parser, post_processor):
+    result = post_processor(
+        parser,
+        [
+            {
+                "type": "other-block",
+                "children": [
+                    {"type": "mock-open"},
+                    {"type": "mock-close"},
+                ],
+            },
+        ],
+    )
+    assert result == [
+        {
+            "type": "other-block",
+            "children": [],
+        },
+    ]
