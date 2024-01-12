@@ -29,6 +29,19 @@ class FencedCodeMarkdown(Pattern):
         }
 
 
+class IndentedCodeMarkdown(Pattern):
+    pattern: str = r"(\n|^) {4}.+(\n {4}.+)*"
+
+    def parse(self, parser: Parser, match: str) -> dict:
+        return {
+            "type": "indented-code",
+            "syntax": None,
+            "code": parser.reverse_patterns(
+                dedent(match.strip("\n")).strip(),
+            ),
+        }
+
+
 CODE_BBCODE_PATTERN = r"\[code(=.+)?\]((.|\n)*?)\[\/code\]"
 CODE_BBCODE_CONTENTS = re.compile(
     r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[\/code\]", re.IGNORECASE
