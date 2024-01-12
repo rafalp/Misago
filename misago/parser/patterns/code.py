@@ -16,10 +16,16 @@ class FencedCodeMarkdown(Pattern):
 
     def parse(self, parser: Parser, match: str) -> dict:
         contents = CODE_FENCE_CONTENTS.match(match.strip()[3:-3])
+        syntax = str(contents.group("syntax") or "").strip()
+        if syntax:
+            syntax = parser.reverse_patterns(syntax)
+
         return {
             "type": "code",
-            "syntax": str(contents.group("syntax") or "").strip() or None,
-            "code": dedent(contents.group("code").rstrip()).strip(),
+            "syntax": syntax or None,
+            "code": parser.reverse_patterns(
+                dedent(contents.group("code").rstrip()).strip(),
+            ),
         }
 
 
@@ -34,18 +40,31 @@ class CodeBBCode(Pattern):
 
     def parse(self, parser: Parser, match: str) -> dict:
         contents = CODE_BBCODE_CONTENTS.match(match.strip())
+        syntax = str(contents.group("syntax") or "").strip("\"' ")
+        if syntax:
+            syntax = parser.reverse_patterns(syntax)
+
         return {
             "type": "code-bbcode",
-            "syntax": str(contents.group("syntax") or "").strip("\"' ") or None,
-            "code": dedent(contents.group("code").rstrip()).strip(),
+            "syntax": syntax or None,
+            "code": parser.reverse_patterns(
+                dedent(contents.group("code").rstrip()).strip(),
+            ),
         }
 
 
 class InlineCodeMarkdown(Pattern):
     pattern: str = r"`(.|\n)*?`"
+    linebreaks_pattern = re.compile(r"\n+")
 
     def parse(self, parser: Parser, match: str) -> dict:
+        code = match.strip("`")
+        if "\n" in code:
+            print("pre", repr(code))
+            code = self.linebreaks_pattern.sub(" ", code)
+            print("aft", repr(code))
+
         return {
             "type": "inline-code",
-            "code": match.strip("`"),
+            "code": code,
         }

@@ -8,7 +8,9 @@ class QuoteBBCodeOpen(Pattern):
     pattern: str = r"\[quote(=.*?)?\]"
 
     def parse(self, parser: Parser, match: str) -> dict:
-        args = parse_args(match[6:-1].strip("\"' ="))
+        args = parse_args(
+            parser.reverse_patterns(match[6:-1].strip("\"' =")),
+        )
 
         return {
             "type": "quote-bbcode-open",
