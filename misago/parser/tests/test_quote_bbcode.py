@@ -66,6 +66,23 @@ def test_quote_bbcode_with_author_and_post(parse_markup):
     ]
 
 
+def test_quote_bbcode_with_author_and_empty_post(parse_markup):
+    result = parse_markup("[quote=John; post:]Hello world![/quote]")
+    assert result == [
+        {
+            "type": "quote-bbcode",
+            "author": "John",
+            "post": None,
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
+
+
 def test_quote_bbcode_strips_quotes_and_spaces_from_author(parse_markup):
     result = parse_markup('[quote="  Dune, part 2 "]Hello world![/quote]')
     assert result == [
