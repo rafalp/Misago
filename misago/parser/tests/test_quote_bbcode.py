@@ -3,6 +3,76 @@ def test_quote_bbcode(parse_markup):
     assert result == [
         {
             "type": "quote-bbcode",
+            "author": None,
+            "post": None,
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
+
+
+def test_quote_bbcode_with_empty_author(parse_markup):
+    result = parse_markup("[quote=]Hello world![/quote]")
+    assert result == [
+        {
+            "type": "quote-bbcode",
+            "author": None,
+            "post": None,
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
+
+
+def test_quote_bbcode_with_author(parse_markup):
+    result = parse_markup("[quote=Dune, part 2]Hello world![/quote]")
+    assert result == [
+        {
+            "type": "quote-bbcode",
+            "author": "Dune, part 2",
+            "post": None,
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
+
+
+def test_quote_bbcode_with_author_and_post(parse_markup):
+    result = parse_markup("[quote=John; post:2137]Hello world![/quote]")
+    assert result == [
+        {
+            "type": "quote-bbcode",
+            "author": "John",
+            "post": 2137,
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
+
+
+def test_quote_bbcode_strips_quotes_and_spaces_from_author(parse_markup):
+    result = parse_markup('[quote="  Dune, part 2 "]Hello world![/quote]')
+    assert result == [
+        {
+            "type": "quote-bbcode",
+            "author": "Dune, part 2",
+            "post": None,
             "children": [
                 {
                     "type": "paragraph",
@@ -32,6 +102,8 @@ def test_quote_bbcode_next_to_paragraph_is_parsed(parse_markup):
         },
         {
             "type": "quote-bbcode",
+            "author": None,
+            "post": None,
             "children": [
                 {
                     "type": "paragraph",
