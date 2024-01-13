@@ -4,6 +4,25 @@ from textwrap import dedent
 from ..parser import Parser, Pattern
 
 
+class QuoteMarkdown(Pattern):
+    pattern: str = r" ? ? ?>.*(\n ? ? ?>.*)*"
+
+    def parse(self, parser: Parser, match: str) -> dict | list[dict]:
+        content = clean_quote_markdown_content(match)
+
+        if not content.strip():
+            return []
+
+        return {
+            "type": "quote",
+            "children": parser.parse_blocks(content),
+        }
+
+
+def clean_quote_markdown_content(match: str) -> str:
+    return "\n".join(line.lstrip()[1:] for line in match.splitlines())
+
+
 class QuoteBBCodeOpen(Pattern):
     pattern: str = r"\[quote(=.*?)?\]"
 

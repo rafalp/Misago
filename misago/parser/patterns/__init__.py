@@ -7,7 +7,7 @@ from .code import (
     InlineCodeMarkdown,
 )
 from .lists import ListMarkdown
-from .quote import QuoteBBCodeOpen, QuoteBBCodeClose
+from .quote import QuoteBBCodeOpen, QuoteBBCodeClose, QuoteMarkdown
 
 
 block_patterns: list[Pattern] = [
@@ -15,6 +15,7 @@ block_patterns: list[Pattern] = [
     CodeBBCode(),
     ListMarkdown(),
     IndentedCodeMarkdown(),
+    QuoteMarkdown(),
     QuoteBBCodeOpen(),
     QuoteBBCodeClose(),
 ]
