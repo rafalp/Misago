@@ -151,7 +151,7 @@ def test_quote_bbcode_with_space_around_post(parse_markup):
     ]
 
 
-def test_quote_bbcode_strips_quotes_and_spaces_from_author(parse_markup):
+def test_quote_bbcode_strips_quotations_and_spaces_from_author(parse_markup):
     result = parse_markup('[quote="  Dune, part 2 "]Hello world![/quote]')
     assert result == [
         {

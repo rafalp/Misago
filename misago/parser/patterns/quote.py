@@ -1,6 +1,3 @@
-import re
-from textwrap import dedent
-
 from ..parser import Parser, Pattern
 
 

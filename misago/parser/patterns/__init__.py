@@ -8,6 +8,7 @@ from .code import (
 )
 from .lists import ListMarkdown
 from .quote import QuoteBBCodeOpen, QuoteBBCodeClose, QuoteMarkdown
+from .spoiler import SpoilerBBCodeOpen, SpoilerBBCodeClose
 
 
 block_patterns: list[Pattern] = [
@@ -18,6 +19,8 @@ block_patterns: list[Pattern] = [
     QuoteMarkdown(),
     QuoteBBCodeOpen(),
     QuoteBBCodeClose(),
+    SpoilerBBCodeOpen(),
+    SpoilerBBCodeClose(),
 ]
 
 inline_patterns: list[Pattern] = [
