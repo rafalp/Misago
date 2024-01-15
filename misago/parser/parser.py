@@ -65,7 +65,7 @@ class Parser:
 
         return self.reserve_inline_code.sub(replace_pattern, markup)
 
-    def reverse_patterns(self, value: str) -> str:
+    def reverse_reservations(self, value: str) -> str:
         if not self._reserved_patterns or "%%" not in value:
             return value
 
@@ -105,7 +105,7 @@ class Parser:
         if not markup:
             return []
 
-        markup = self.reverse_patterns(markup)
+        markup = self.reverse_reservations(markup)
 
         result: list[dict] = []
         for m in self._paragraph_re.finditer(markup):
@@ -117,9 +117,11 @@ class Parser:
             )
         return result
 
-    def parse_inline(self, markup: str, reverse_patterns: bool = False) -> list[dict]:
-        if reverse_patterns:
-            markup = self.reverse_patterns(markup)
+    def parse_inline(
+        self, markup: str, reverse_reservations: bool = False
+    ) -> list[dict]:
+        if reverse_reservations:
+            markup = self.reverse_reservations(markup)
 
         cursor = 0
 

@@ -42,7 +42,7 @@ def parse_list_items(parser: Parser, match: str) -> list[ListItem]:
 
         text = item.group("text").strip()
         items.append(
-            (clean_level, marker, parser.parse_inline(text, reverse_patterns=True))
+            (clean_level, marker, parser.parse_inline(text, reverse_reservations=True))
         )
 
     return items
