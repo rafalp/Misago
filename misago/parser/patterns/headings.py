@@ -20,7 +20,7 @@ class AtxHeading(Pattern):
 
 
 class SetexHeading(Pattern):
-    pattern: str = r"(\n|^).+\n((=+)|(-+))(\s+|$)"
+    pattern: str = r"(\n|^).+\n((=+)|(-+)) *(\n|$)"
 
     def parse(self, parser: Parser, match: str) -> dict | list[dict]:
         content, underline = match.strip().splitlines()
