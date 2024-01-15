@@ -6,6 +6,7 @@ from .code import (
     IndentedCodeMarkdown,
     InlineCodeMarkdown,
 )
+from .headings import AtxHeading
 from .lists import ListMarkdown
 from .quote import QuoteBBCodeOpen, QuoteBBCodeClose, QuoteMarkdown
 from .spoiler import SpoilerBBCodeOpen, SpoilerBBCodeClose
@@ -16,6 +17,7 @@ block_patterns: list[Pattern] = [
     CodeBBCode(),
     ListMarkdown(),
     IndentedCodeMarkdown(),
+    AtxHeading(),
     QuoteMarkdown(),
     QuoteBBCodeOpen(),
     QuoteBBCodeClose(),
