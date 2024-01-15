@@ -105,6 +105,8 @@ class Parser:
         if not markup:
             return []
 
+        markup = self.reverse_patterns(markup)
+
         result: list[dict] = []
         for m in self._paragraph_re.finditer(markup):
             result.append(
@@ -115,8 +117,9 @@ class Parser:
             )
         return result
 
-    def parse_inline(self, markup: str) -> list[dict]:
-        markup = self.reverse_patterns(markup)
+    def parse_inline(self, markup: str, reverse_patterns: bool = False) -> list[dict]:
+        if reverse_patterns:
+            markup = self.reverse_patterns(markup)
 
         cursor = 0
 

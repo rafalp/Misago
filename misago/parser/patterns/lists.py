@@ -41,7 +41,9 @@ def parse_list_items(parser: Parser, match: str) -> list[ListItem]:
             marker = "n"
 
         text = item.group("text").strip()
-        items.append((clean_level, marker, parser.parse_inline(text)))
+        items.append(
+            (clean_level, marker, parser.parse_inline(text, reverse_patterns=True))
+        )
 
     return items
 

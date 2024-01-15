@@ -15,7 +15,7 @@ class AtxHeading(Pattern):
         return {
             "type": "heading",
             "level": level,
-            "children": parser.parse_inline(content.strip()),
+            "children": parser.parse_inline(content.strip(), reverse_patterns=True),
         }
 
 
@@ -27,5 +27,5 @@ class SetexHeading(Pattern):
         return {
             "type": "heading-setex",
             "level": 1 if underline[0] == "=" else 2,
-            "children": parser.parse_inline(content.strip()),
+            "children": parser.parse_inline(content.strip(), reverse_patterns=True),
         }
