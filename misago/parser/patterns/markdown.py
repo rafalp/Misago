@@ -49,14 +49,14 @@ class StrongUnderscoreMarkdown(InlineMarkdownPattern):
 
 class EmphasisMarkdown(InlineMarkdownPattern):
     pattern_type: str = "emphasis"
-    pattern: str = r"*.+(\n.+)*?*"
+    pattern: str = r"\*.+(\n.+)*?\*"
     pattern_length: int = 1
     invalid_parents: list[str] = ["emphasis-underscore"]
 
 
 class StrongMarkdown(InlineMarkdownPattern):
     pattern_type: str = "strong"
-    pattern: str = r"**.+(\n.+)*?**"
+    pattern: str = r"\*\*.+(\n.+)*?\*\*"
     pattern_length: int = 2
     invalid_parents: list[str] = ["strong-underscore"]
 
