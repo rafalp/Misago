@@ -1,5 +1,13 @@
 from ..parser import Pattern
 
+from .bbcode import (
+    BoldBBCodePattern,
+    InlineBBCodePattern,
+    ItalicsBBCodePattern,
+    SubscriptBBCodePattern,
+    SuperscriptBBCodePattern,
+    UnderlineBBCodePattern,
+)
 from .code import (
     CodeBBCode,
     FencedCodeMarkdown,
@@ -29,6 +37,17 @@ block_patterns: list[Pattern] = [
     SpoilerBBCodeClose(),
 ]
 
+bold_bbcode = BoldBBCodePattern()
+italics_bbcode = ItalicsBBCodePattern()
+underline_bbcode = UnderlineBBCodePattern()
+superscript_bbcode = SuperscriptBBCodePattern()
+subscript_bbcode = SubscriptBBCodePattern()
+
 inline_patterns: list[Pattern] = [
     InlineCodeMarkdown(),
+    bold_bbcode,
+    italics_bbcode,
+    underline_bbcode,
+    superscript_bbcode,
+    subscript_bbcode,
 ]
