@@ -63,5 +63,5 @@ class StrongMarkdown(InlineMarkdownPattern):
 
 class StrikethroughMarkdown(InlineMarkdownPattern):
     pattern_type: str = "strikethrough"
-    pattern: str = r"~~.+(\n.+)*?~~"
+    pattern: str = r"~~.+?(\n.+)*?~~"
     pattern_length: int = 2
