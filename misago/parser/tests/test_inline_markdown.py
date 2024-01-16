@@ -70,6 +70,30 @@ def test_emphasis_underscores_next_to_each_other(parse_markup):
     ]
 
 
+def test_emphasis_underscore_without_content_is_removed(parse_markup):
+    result = parse_markup(f"Hello __.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_underscore_with_only_whitespaces_is_removed(parse_markup):
+    result = parse_markup(f"Hello _  \n  _.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
 INVALID_EMPHASIS_UNDERSCORE = (
     "_lorem_ipsum",
     "lorem_ips_um",
@@ -146,6 +170,30 @@ def test_strong_underscores_next_to_each_other(parse_markup):
                     "children": [{"type": "text", "text": "ipsum"}],
                 },
                 {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_underscores_without_content_is_removed(parse_markup):
+    result = parse_markup(f"Hello ____.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_strong_underscores_with_whitespaces_only_is_removed(parse_markup):
+    result = parse_markup(f"Hello __  \n  __.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
             ],
         }
     ]
@@ -327,6 +375,30 @@ def test_strikethrough_next_to_another(parse_markup):
                     ],
                 },
                 {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strikethrough_without_content_is_removed(parse_markup):
+    result = parse_markup(f"Hello ~~~~.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_strikethrough_with_whitespaces_only_is_removed(parse_markup):
+    result = parse_markup(f"Hello ~~  \n  ~~.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
             ],
         }
     ]

@@ -141,19 +141,43 @@ class Parser:
                 if block_match is not None:
                     start = m.start()
                     if start > cursor:
-                        result.append({"type": "text", "text": markup[cursor:start]})
+                        if result and result[-1]["type"] == "text":
+                            result[-1]["text"] += markup[cursor:start]
+                        else:
+                            result.append(
+                                {"type": "text", "text": markup[cursor:start]}
+                            )
 
                     block_ast = pattern.parse(self, block_match, parents)
                     if isinstance(block_ast, list):
-                        result += block_ast
+                        for child in block_ast:
+                            if (
+                                result
+                                and child["type"] == "text"
+                                and result[-1]["type"] == "text"
+                            ):
+                                result[-1]["text"] += child["text"]
+                            else:
+                                result.append(child)
+
                     elif isinstance(block_ast, dict):
-                        result.append(block_ast)
+                        if (
+                            result
+                            and block_ast["type"] == "text"
+                            and result[-1]["type"] == "text"
+                        ):
+                            result[-1]["text"] += child["text"]
+                        else:
+                            result.append(block_ast)
 
                     cursor = m.end()
                     break
 
         if cursor < len(markup):
-            result.append({"type": "text", "text": markup[cursor:]})
+            if result and result[-1]["type"] == "text":
+                result[-1]["text"] += markup[cursor:]
+            else:
+                result.append({"type": "text", "text": markup[cursor:]})
 
         return result
 

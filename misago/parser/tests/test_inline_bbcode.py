@@ -38,27 +38,25 @@ def test_inline_bbcode_with_new_line(parse_markup):
     ]
 
 
-def test_inline_bbcode_without_content_is_skipped(parse_markup):
+def test_inline_bbcode_without_content_is_removed(parse_markup):
     result = parse_markup("Hello [b][/b]!")
     assert result == [
         {
             "type": "paragraph",
             "children": [
-                {"type": "text", "text": "Hello "},
-                {"type": "text", "text": "!"},
+                {"type": "text", "text": "Hello !"},
             ],
         }
     ]
 
 
-def test_inline_bbcode_with_only_spaces_is_skipped(parse_markup):
-    result = parse_markup("Hello [b]   [/b]!")
+def test_inline_bbcode_with_only_whitespaces_is_removed(parse_markup):
+    result = parse_markup("Hello [b] \n  [/b]!")
     assert result == [
         {
             "type": "paragraph",
             "children": [
-                {"type": "text", "text": "Hello "},
-                {"type": "text", "text": "!"},
+                {"type": "text", "text": "Hello !"},
             ],
         }
     ]
@@ -74,8 +72,7 @@ def test_inline_bbcode_with_invalid_parent_is_unwrapped(parse_markup):
                 {
                     "type": "subscript-bbcode",
                     "children": [
-                        {"type": "text", "text": "Bob "},
-                        {"type": "text", "text": "Doe"},
+                        {"type": "text", "text": "Bob Doe"},
                     ],
                 },
                 {"type": "text", "text": "!"},

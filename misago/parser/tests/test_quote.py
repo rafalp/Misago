@@ -1,4 +1,4 @@
-def test_empty_quote_is_skipped(parse_markup):
+def test_empty_quote_is_removed(parse_markup):
     result = parse_markup("> ")
     assert result == []
 
