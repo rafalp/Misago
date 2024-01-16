@@ -39,36 +39,36 @@ class InlineBBCodePattern(Pattern):
         return False
 
 
-class BoldBBCodePattern(InlineBBCodePattern):
+class BoldBBCode(InlineBBCodePattern):
     pattern_type: str = "bold-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("b")
-    invalid_parents: list[str] = ["strong", "emphasis"]
+    invalid_parents: list[str] = ["strong", "strong-underline"]
 
 
-class ItalicsBBCodePattern(InlineBBCodePattern):
+class ItalicsBBCode(InlineBBCodePattern):
     pattern_type: str = "italics-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("i")
-    invalid_parents: list[str] = ["strong", "emphasis"]
+    invalid_parents: list[str] = ["emphasis", "emphasis-underline"]
 
 
-class UnderlineBBCodePattern(InlineBBCodePattern):
+class UnderlineBBCode(InlineBBCodePattern):
     pattern_type: str = "underline-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("u")
 
 
-class StrikethroughBBCodePattern(InlineBBCodePattern):
+class StrikethroughBBCode(InlineBBCodePattern):
     pattern_type: str = "strikethrough-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("s")
     invalid_parents: list[str] = ["strikethrough"]
 
 
-class SuperscriptBBCodePattern(InlineBBCodePattern):
+class SuperscriptBBCode(InlineBBCodePattern):
     pattern_type: str = "superscript-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("sup")
     invalid_parents: list[str] = ["subscript-bbcode"]
 
 
-class SubscriptBBCodePattern(InlineBBCodePattern):
+class SubscriptBBCode(InlineBBCodePattern):
     pattern_type: str = "subscript-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("sub")
     invalid_parents: list[str] = ["superscript-bbcode"]
