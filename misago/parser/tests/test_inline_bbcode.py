@@ -141,6 +141,25 @@ def test_underline_bbcode(parse_markup):
     ]
 
 
+def test_strikethrough_bbcode(parse_markup):
+    result = parse_markup("Hello [s]guest[/s]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strikethrough-bbcode",
+                    "children": [
+                        {"type": "text", "text": "guest"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_superscript_bbcode(parse_markup):
     result = parse_markup("Hello [sup]guest[/sup]!")
     assert result == [

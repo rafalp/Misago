@@ -56,6 +56,12 @@ class UnderlineBBCodePattern(InlineBBCodePattern):
     pattern: str = InlineBBCodePattern.create_pattern("u")
 
 
+class StrikethroughBBCodePattern(InlineBBCodePattern):
+    pattern_type: str = "strikethrough-bbcode"
+    pattern: str = InlineBBCodePattern.create_pattern("s")
+    invalid_parents: list[str] = ["strikethrough"]
+
+
 class SuperscriptBBCodePattern(InlineBBCodePattern):
     pattern_type: str = "superscript-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("sup")
