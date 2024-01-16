@@ -30,7 +30,7 @@ def test_multi_line_quote(parse_markup):
                     "type": "paragraph",
                     "children": [
                         {"type": "text", "text": "Lorem ipsum"},
-                        {"type": "line_break"},
+                        {"type": "line-break"},
                         {"type": "text", "text": "Dolor met"},
                     ],
                 },

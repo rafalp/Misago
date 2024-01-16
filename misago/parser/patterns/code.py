@@ -12,31 +12,33 @@ CODE_FENCE_CONTENTS = re.compile(r"(?P<syntax>(.+))?\n(?P<code>(.|\n)+)\n")
 
 
 class FencedCodeMarkdown(Pattern):
+    pattern_type: str = "code"
     pattern: str = BLOCK_START + f"{CODE_FENCE}|{CODE_FENCE_ALT}" + BLOCK_END
 
-    def parse(self, parser: Parser, match: str) -> dict:
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         contents = CODE_FENCE_CONTENTS.match(match.strip()[3:-3])
         syntax = str(contents.group("syntax") or "").strip()
         if syntax:
-            syntax = parser.reverse_patterns(syntax)
+            syntax = parser.reverse_reservations(syntax)
 
         return {
-            "type": "code",
+            "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": parser.reverse_patterns(
+            "code": parser.reverse_reservations(
                 dedent(contents.group("code").rstrip()).strip(),
             ),
         }
 
 
 class IndentedCodeMarkdown(Pattern):
+    pattern_type = "indented-code"
     pattern: str = r"(\n|^) {4}.+(\n {4}.+)*"
 
-    def parse(self, parser: Parser, match: str) -> dict:
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         return {
-            "type": "indented-code",
+            "type": self.pattern_type,
             "syntax": None,
-            "code": parser.reverse_patterns(
+            "code": parser.reverse_reservations(
                 dedent(match.strip("\n")).strip(),
             ),
         }
@@ -49,28 +51,30 @@ CODE_BBCODE_CONTENTS = re.compile(
 
 
 class CodeBBCode(Pattern):
+    pattern_type: str = "code-bbcode"
     pattern: str = CODE_BBCODE_PATTERN
 
-    def parse(self, parser: Parser, match: str) -> dict:
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         contents = CODE_BBCODE_CONTENTS.match(match.strip())
         syntax = str(contents.group("syntax") or "").strip("\"' ")
         if syntax:
-            syntax = parser.reverse_patterns(syntax)
+            syntax = parser.reverse_reservations(syntax)
 
         return {
-            "type": "code-bbcode",
+            "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": parser.reverse_patterns(
+            "code": parser.reverse_reservations(
                 dedent(contents.group("code").rstrip()).strip(),
             ),
         }
 
 
 class InlineCodeMarkdown(Pattern):
+    pattern_type: str = "inline-code"
     pattern: str = r"`(.|\n)*?`"
     linebreaks_pattern = re.compile(r"\n+")
 
-    def parse(self, parser: Parser, match: str) -> dict:
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         code = match.strip("`")
         if "\n" in code:
             print("pre", repr(code))
@@ -78,6 +82,6 @@ class InlineCodeMarkdown(Pattern):
             print("aft", repr(code))
 
         return {
-            "type": "inline-code",
+            "type": self.pattern_type,
             "code": code,
         }

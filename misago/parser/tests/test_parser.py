@@ -62,7 +62,7 @@ def test_parser_parses_line_breaks():
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Paragraph with"},
-                {"type": "line_break"},
+                {"type": "line-break"},
                 {"type": "text", "text": "a line break."},
             ],
         },
@@ -76,7 +76,7 @@ def test_parser_parses_line_breaks_surrounded_by_spaces():
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Paragraph with"},
-                {"type": "line_break"},
+                {"type": "line-break"},
                 {"type": "text", "text": "a line break."},
             ],
         },

@@ -2,17 +2,20 @@ from ..parser import Parser, Pattern
 
 
 class QuoteMarkdown(Pattern):
+    pattern_type: str = "quote"
     pattern: str = r" ? ? ?>.*(\n ? ? ?>.*)*"
 
-    def parse(self, parser: Parser, match: str) -> dict | list[dict]:
+    def parse(
+        self, parser: Parser, match: str, parents: list[str]
+    ) -> dict | list[dict]:
         content = clean_quote_markdown_content(match)
 
         if not content.strip():
             return []
 
         return {
-            "type": "quote",
-            "children": parser.parse_blocks(content),
+            "type": self.pattern_type,
+            "children": parser.parse_blocks(content, parents + [self.pattern_type]),
         }
 
 
@@ -21,15 +24,16 @@ def clean_quote_markdown_content(match: str) -> str:
 
 
 class QuoteBBCodeOpen(Pattern):
+    pattern_type: str = "quote-bbcode-open"
     pattern: str = r"\[quote(=.*?)?\]"
 
-    def parse(self, parser: Parser, match: str) -> dict:
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         args = parse_args(
-            parser.reverse_patterns(match[6:-1].strip("\"' =")),
+            parser.reverse_reservations(match[6:-1].strip("\"' =")),
         )
 
         return {
-            "type": "quote-bbcode-open",
+            "type": self.pattern_type,
             "author": args["author"],
             "post": args["post"],
         }
@@ -53,9 +57,8 @@ def parse_args(args: str) -> dict:
 
 
 class QuoteBBCodeClose(Pattern):
+    pattern_type: str = "quote-bbcode-close"
     pattern: str = r"\[\/quote\]"
 
-    def parse(self, parser: Parser, match: str) -> dict:
-        return {
-            "type": "quote-bbcode-close",
-        }
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
+        return {"type": self.pattern_type}

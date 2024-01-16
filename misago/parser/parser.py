@@ -6,17 +6,21 @@ from django.utils.crypto import get_random_string
 
 
 class Pattern:
+    pattern_type: str
     pattern: str
 
-    def parse(self, parser: "Parser", match: str) -> dict | list[dict]:
+    def parse(
+        self, parser: "Parser", match: str, parents: list[str]
+    ) -> dict | list[dict]:
         raise NotImplementedError()
 
 
 class LineBreak(Pattern):
+    pattern_type = "line-break"
     pattern = r" *\n *"
 
-    def parse(self, parser: "Parser", match: str) -> dict:
-        return {"type": "line_break"}
+    def parse(self, parser: "Parser", match: str, parents: list[str]) -> dict:
+        return {"type": self.pattern_type}
 
 
 class Parser:
@@ -42,7 +46,7 @@ class Parser:
 
     def __call__(self, markup: str) -> list[dict]:
         markup = self.reserve_patterns(markup)
-        ast = self.parse_blocks(markup)
+        ast = self.parse_blocks(markup, [])
         for post_processor in self.post_processors:
             ast = post_processor(self, ast)
         return ast
@@ -73,7 +77,7 @@ class Parser:
             value = value.replace(pattern, org)
         return value
 
-    def parse_blocks(self, markup: str) -> list[dict]:
+    def parse_blocks(self, markup: str, parents: list[str]) -> list[dict]:
         cursor = 0
 
         result: list[dict] = []
@@ -83,9 +87,9 @@ class Parser:
                 if block_match is not None:
                     start = m.start()
                     if start > cursor:
-                        result += self.parse_paragraphs(markup[cursor:start])
+                        result += self.parse_paragraphs(markup[cursor:start], parents)
 
-                    block_ast = pattern.parse(self, block_match)
+                    block_ast = pattern.parse(self, block_match, parents)
                     if isinstance(block_ast, list):
                         result += block_ast
                     elif isinstance(block_ast, dict):
@@ -95,30 +99,35 @@ class Parser:
                     break
 
         if cursor < len(markup):
-            result += self.parse_paragraphs(markup[cursor:])
+            result += self.parse_paragraphs(markup[cursor:], parents)
 
         return result
 
-    def parse_paragraphs(self, markup: str) -> list[dict]:
+    def parse_paragraphs(self, markup: str, parents: list[str]) -> list[dict]:
         markup = markup.strip()
 
         if not markup:
             return []
 
-        markup = self.reverse_reservations(markup)
+        parents = parents + ["paragraph"]
 
         result: list[dict] = []
         for m in self._paragraph_re.finditer(markup):
             result.append(
                 {
                     "type": "paragraph",
-                    "children": self.parse_inline(m.group(0).strip()),
+                    "children": self.parse_inline(
+                        m.group(0).strip(), parents, reverse_reservations=True
+                    ),
                 }
             )
         return result
 
     def parse_inline(
-        self, markup: str, reverse_reservations: bool = False
+        self,
+        markup: str,
+        parents: list[str],
+        reverse_reservations: bool = False,
     ) -> list[dict]:
         if reverse_reservations:
             markup = self.reverse_reservations(markup)
@@ -134,7 +143,7 @@ class Parser:
                     if start > cursor:
                         result.append({"type": "text", "text": markup[cursor:start]})
 
-                    block_ast = pattern.parse(self, block_match)
+                    block_ast = pattern.parse(self, block_match, parents)
                     if isinstance(block_ast, list):
                         result += block_ast
                     elif isinstance(block_ast, dict):
@@ -145,19 +154,6 @@ class Parser:
 
         if cursor < len(markup):
             result.append({"type": "text", "text": markup[cursor:]})
-
-        return result
-
-    def _parse(
-        self, markup: str, patterns: dict[str, Pattern], pattern: re.Pattern
-    ) -> list[dict]:
-        result: list[dict] = []
-        for m in pattern.finditer(markup):
-            for key, pattern in patterns.items():
-                block_match = m.group(key)
-                if block_match is not None:
-                    result.append(pattern.parse(self, block_match))
-                    break
 
         return result
 

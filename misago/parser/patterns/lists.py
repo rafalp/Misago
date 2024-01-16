@@ -10,14 +10,17 @@ ListItem = tuple[int, str, list[dict]]
 
 
 class ListMarkdown(Pattern):
+    pattern_type: str = "list"
     pattern: str = LIST_PATTERN
 
-    def parse(self, parser: Parser, match: str) -> list[dict]:
-        items = parse_list_items(parser, match)
+    def parse(self, parser: Parser, match: str, parents: list[str]) -> list[dict]:
+        items = parse_list_items(
+            parser, match, parents + [self.pattern_type, "list-item"]
+        )
         return get_lists_from_items(items)
 
 
-def parse_list_items(parser: Parser, match: str) -> list[ListItem]:
+def parse_list_items(parser: Parser, match: str, parents: list[str]) -> list[ListItem]:
     items: list[ListItem] = []
     prev_level: int | None = None
     for item in LIST_CONTENTS.finditer(dedent(match).strip()):
@@ -42,15 +45,17 @@ def parse_list_items(parser: Parser, match: str) -> list[ListItem]:
 
         text = item.group("text").strip()
         items.append(
-            (clean_level, marker, parser.parse_inline(text, reverse_reservations=True))
+            (
+                clean_level,
+                marker,
+                parser.parse_inline(text, parents, reverse_reservations=True),
+            )
         )
 
     return items
 
 
-def get_lists_from_items(
-    items: list[ListItem],
-) -> list[dict]:
+def get_lists_from_items(items: list[ListItem]) -> list[dict]:
     lists_asts: list[dict] = []
     lists_stack: list[dict] = []
 
@@ -60,7 +65,7 @@ def get_lists_from_items(
     for item_level, item_marker, children in items:
         if item_level > level or item_marker != marker:
             list_ast = {
-                "type": "list",
+                "type": ListMarkdown.pattern_type,
                 "ordered": item_marker == "n",
                 "items": [],
             }
