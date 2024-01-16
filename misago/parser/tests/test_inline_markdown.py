@@ -1,5 +1,346 @@
 import pytest
 
+
+def test_emphasis_whole_word(parse_markup):
+    result = parse_markup(f"Hello *word*.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "word"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_two_words(parse_markup):
+    result = parse_markup(f"Hello *two words*.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "two words"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_word_start(parse_markup):
+    result = parse_markup(f"Hello *lorem*ipsum.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "lorem"}],
+                },
+                {"type": "text", "text": "ipsum."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_word_part(parse_markup):
+    result = parse_markup(f"Hello lo*rem*ipsum.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello lo"},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "rem"}],
+                },
+                {"type": "text", "text": "ipsum."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_word_end(parse_markup):
+    result = parse_markup(f"Hello lorem*ipsum*.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello lorem"},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "ipsum"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_two_word_parts(parse_markup):
+    result = parse_markup(f"Hello lo*rem*i*ps*um.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello lo"},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "rem"}],
+                },
+                {"type": "text", "text": "i"},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "ps"}],
+                },
+                {"type": "text", "text": "um."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_without_content_is_removed(parse_markup):
+    result = parse_markup(f"Hello **.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_with_only_whitespaces_is_removed(parse_markup):
+    result = parse_markup(f"Hello *    *.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_containing_strong_underscore(parse_markup):
+    result = parse_markup(f"Hello *__world__*.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis",
+                    "children": [
+                        {
+                            "type": "strong-underscore",
+                            "children": [{"type": "text", "text": "world"}],
+                        },
+                    ],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_containing_emphasis_underscore_is_unwrapped(parse_markup):
+    result = parse_markup(f"Hello *_world_*.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "world"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_whole_word(parse_markup):
+    result = parse_markup(f"Hello **word**.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "word"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_two_words(parse_markup):
+    result = parse_markup(f"Hello **two words**.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "two words"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_word_start(parse_markup):
+    result = parse_markup(f"Hello **lorem**ipsum.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "lorem"}],
+                },
+                {"type": "text", "text": "ipsum."},
+            ],
+        }
+    ]
+
+
+def test_strong_word_part(parse_markup):
+    result = parse_markup(f"Hello lo**rem**ipsum.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello lo"},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "rem"}],
+                },
+                {"type": "text", "text": "ipsum."},
+            ],
+        }
+    ]
+
+
+def test_strong_word_end(parse_markup):
+    result = parse_markup(f"Hello lorem**ipsum**.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello lorem"},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "ipsum"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_two_word_parts(parse_markup):
+    result = parse_markup(f"Hello lo**rem**i**ps**um.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello lo"},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "rem"}],
+                },
+                {"type": "text", "text": "i"},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "ps"}],
+                },
+                {"type": "text", "text": "um."},
+            ],
+        }
+    ]
+
+
+def test_strong_without_content_is_removed(parse_markup):
+    result = parse_markup(f"Hello ****.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_strong_with_only_whitespaces_is_removed(parse_markup):
+    result = parse_markup(f"Hello **    **.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_strong_containing_emphasis_underscore(parse_markup):
+    result = parse_markup(f"Hello **_world_**.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong",
+                    "children": [
+                        {
+                            "type": "emphasis-underscore",
+                            "children": [{"type": "text", "text": "world"}],
+                        },
+                    ],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_containing_strong_underscore_is_unwrapped(parse_markup):
+    result = parse_markup(f"Hello **__world__**.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "world"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
 VALID_UNDERSCORE = (
     "world",
     "two worlds",
@@ -89,6 +430,45 @@ def test_emphasis_underscore_with_only_whitespaces_is_removed(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_underscore_containing_strong(parse_markup):
+    result = parse_markup(f"Hello _**world**_.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis-underscore",
+                    "children": [
+                        {
+                            "type": "strong",
+                            "children": [{"type": "text", "text": "world"}],
+                        },
+                    ],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_emphasis_underscore_containing_emphasis_is_unwrapped(parse_markup):
+    result = parse_markup(f"Hello _*world*_.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis-underscore",
+                    "children": [{"type": "text", "text": "world"}],
+                },
+                {"type": "text", "text": "."},
             ],
         }
     ]
@@ -194,6 +574,45 @@ def test_strong_underscores_with_whitespaces_only_is_removed(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello ."},
+            ],
+        }
+    ]
+
+
+def test_strong_underscore_containing_emphasis(parse_markup):
+    result = parse_markup(f"Hello __*world*__.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong-underscore",
+                    "children": [
+                        {
+                            "type": "emphasis",
+                            "children": [{"type": "text", "text": "world"}],
+                        },
+                    ],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_strong_underscore_containing_strong_is_unwrapped(parse_markup):
+    result = parse_markup(f"Hello __**world**__.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "strong-underscore",
+                    "children": [{"type": "text", "text": "world"}],
+                },
+                {"type": "text", "text": "."},
             ],
         }
     ]
