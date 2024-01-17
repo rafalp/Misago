@@ -1,10 +1,11 @@
+from ..parents import has_invalid_parent
 from ..parser import Parser, Pattern
 
 
 class InlineBBCodePattern(Pattern):
     pattern_type: str
     pattern: str
-    invalid_parents: list[str] | None = None
+    invalid_parents: set[str] | None = None
 
     @staticmethod
     def create_pattern(bbcode: str) -> str:
@@ -20,7 +21,7 @@ class InlineBBCodePattern(Pattern):
         if not content.strip():
             return []
 
-        if self.has_invalid_parent(parents):
+        if has_invalid_parent(self.invalid_parents, parents):
             return parser.parse_inline(content, parents)
 
         return {
@@ -28,47 +29,38 @@ class InlineBBCodePattern(Pattern):
             "children": parser.parse_inline(content, parents + [self.pattern_type]),
         }
 
-    def has_invalid_parent(self, parents: list[str]) -> bool:
-        if self.pattern_type in parents:
-            return True
-        if self.invalid_parents:
-            for invalid_parent in self.invalid_parents:
-                if invalid_parent in parents:
-                    return True
-
-        return False
-
 
 class BoldBBCode(InlineBBCodePattern):
     pattern_type: str = "bold-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("b")
-    invalid_parents: list[str] = ["strong", "strong-underline"]
+    invalid_parents: set[str] = {pattern_type, "strong", "strong-underline"}
 
 
 class ItalicsBBCode(InlineBBCodePattern):
     pattern_type: str = "italics-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("i")
-    invalid_parents: list[str] = ["emphasis", "emphasis-underline"]
+    invalid_parents: set[str] = {pattern_type, "emphasis", "emphasis-underline"}
 
 
 class UnderlineBBCode(InlineBBCodePattern):
     pattern_type: str = "underline-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("u")
+    invalid_parents: set[str] = {pattern_type}
 
 
 class StrikethroughBBCode(InlineBBCodePattern):
     pattern_type: str = "strikethrough-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("s")
-    invalid_parents: list[str] = ["strikethrough"]
+    invalid_parents: set[str] = {pattern_type, "strikethrough"}
 
 
 class SuperscriptBBCode(InlineBBCodePattern):
     pattern_type: str = "superscript-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("sup")
-    invalid_parents: list[str] = ["subscript-bbcode"]
+    invalid_parents: set[str] = {pattern_type, "subscript-bbcode"}
 
 
 class SubscriptBBCode(InlineBBCodePattern):
     pattern_type: str = "subscript-bbcode"
     pattern: str = InlineBBCodePattern.create_pattern("sub")
-    invalid_parents: list[str] = ["superscript-bbcode"]
+    invalid_parents: set[str] = {pattern_type, "superscript-bbcode"}

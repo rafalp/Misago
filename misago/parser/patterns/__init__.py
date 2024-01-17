@@ -27,7 +27,14 @@ from .markdown import (
 from .quote import QuoteBBCodeOpen, QuoteBBCodeClose, QuoteMarkdown
 from .spoiler import SpoilerBBCodeOpen, SpoilerBBCodeClose
 from .thematicbreak import ThematicBreakBBCode, ThematicBreakMarkdown
-
+from .urls import (
+    AutolinkMarkdown,
+    AutoUrl,
+    ImgBBCode,
+    ImgMarkdown,
+    UrlBBCode,
+    UrlMarkdown,
+)
 
 block_patterns: list[Pattern] = [
     FencedCodeMarkdown(),
@@ -60,6 +67,12 @@ strong_underscore_markdown = StrongUnderscoreMarkdown()
 
 strikethrough_markdown = StrikethroughMarkdown()
 
+img_bbcode = ImgBBCode()
+img_markdown = ImgMarkdown()
+
+url_bbcode = UrlBBCode()
+url_markdown = UrlMarkdown()
+
 inline_patterns: list[Pattern] = [
     InlineCodeMarkdown(),
     bold_bbcode,
@@ -73,4 +86,10 @@ inline_patterns: list[Pattern] = [
     strong_underscore_markdown,
     emphasis_underscore_markdown,
     strikethrough_markdown,
+    # AutolinkMarkdown(),
+    img_markdown,
+    url_markdown,
+    img_bbcode,
+    # url_bbcode,
+    # AutoUrl(),
 ]
