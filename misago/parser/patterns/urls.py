@@ -137,17 +137,27 @@ class UrlMarkdown(Pattern):
         return text
 
     def extract_url_from_source(self, source: str) -> tuple[str, int]:
-        opens = source.count("(")
-        ends = source.count(")")
+        opening = source.count("(")
+        closing = source.count(")")
 
         # Simplest case, one opening parenthesis matched by one closing
-        if opens == ends and opens == 1:
+        if opening == closing and opening == 1:
             url = source[1 : source.find(")")].strip()
             return url, source.find(")") + 1
 
-        raise Exception(source)
-        closing_parenthesis = source.find(")")
-        return "", 0
+        # Walk the string to find pairs of parentheses
+        nesting = 0
+        length = 0
+        for i, c in enumerate(source):
+            if c == "(":
+                nesting += 1
+            elif c == ")":
+                nesting -= 1
+                if nesting >= 0:
+                    length = i
+
+        url = source[1:length].strip()
+        return url, length + 1
 
     def make_link_ast(
         self, parser: Parser, text: str, url: str, parents: list[dict]
