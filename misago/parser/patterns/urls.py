@@ -89,11 +89,14 @@ class UrlMarkdown(Pattern):
         urls_starts_last = len(urls_starts) - 1
         for i, m in enumerate(urls_starts):
             if m.start() > cursor:
-                ast += parser.parse_inline(clean_match[cursor : m.start()], parents)
+                markup = clean_match[cursor : m.start()]
+                if reserved_patterns:
+                    markup = self.reverse_text_patterns(markup, reserved_patterns)
+                ast += parser.parse_inline(markup, parents)
 
             text = m.group(0)[1:-2]
             if reserved_patterns:
-                text = self.reverse_link_text(text, reserved_patterns)
+                text = self.reverse_text_patterns(text, reserved_patterns)
 
             url_source_start = m.end() - 1
             if i < urls_starts_last:
@@ -108,7 +111,10 @@ class UrlMarkdown(Pattern):
             ast.append(self.make_link_ast(parser, text, url, parents))
 
         if cursor < len(clean_match):
-            ast += parser.parse_inline(clean_match[cursor:], parents)
+            markup = clean_match[cursor:]
+            if reserved_patterns:
+                markup = self.reverse_text_patterns(markup, reserved_patterns)
+            ast += parser.parse_inline(markup, parents)
 
         return ast
 
@@ -131,7 +137,7 @@ class UrlMarkdown(Pattern):
 
         return clean_match, reserved_patterns
 
-    def reverse_link_text(self, text: str, reserved_patterns: dict) -> str:
+    def reverse_text_patterns(self, text: str, reserved_patterns: dict) -> str:
         for token, value in reserved_patterns.items():
             text = text.replace(token, value)
         return text

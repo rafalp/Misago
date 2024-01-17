@@ -186,3 +186,64 @@ def test_url_with_extra_closing_parenthesis_excludes_them(parse_markup):
             ],
         }
     ]
+
+
+def test_image_between_two_urls(parse_markup):
+    result = parse_markup(
+        "Hello [Lorem](https://image.com/) "
+        "![Image Alt](https://image.com/image.jpg) "
+        "[Ipsum](https://other.com/)!"
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://image.com/",
+                    "children": [{"type": "text", "text": "Lorem"}],
+                },
+                {"type": "text", "text": " "},
+                {
+                    "type": "image",
+                    "alt": "Image Alt",
+                    "src": "https://image.com/image.jpg",
+                },
+                {"type": "text", "text": " "},
+                {
+                    "type": "url",
+                    "href": "https://other.com/",
+                    "children": [{"type": "text", "text": "Ipsum"}],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_after_url(parse_markup):
+    result = parse_markup(
+        "Hello [Lorem](https://image.com/) "
+        "![Image Alt](https://image.com/image.jpg)!"
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://image.com/",
+                    "children": [{"type": "text", "text": "Lorem"}],
+                },
+                {"type": "text", "text": " "},
+                {
+                    "type": "image",
+                    "alt": "Image Alt",
+                    "src": "https://image.com/image.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
