@@ -106,9 +106,18 @@ class UrlMarkdown(Pattern):
                 url_source = clean_match[url_source_start:]
 
             url, end = self.extract_url_from_source(url_source)
-            cursor = m.end() - 1 + end
+            if text and url:
+                ast.append(self.make_link_ast(parser, text, url, parents))
+                cursor = m.end() - 1 + end
+            else:
+                markup = self.reverse_text_patterns(m.group(0), reserved_patterns)
+                for ast_node in parser.parse_inline(markup, parents):
+                    if ast_node["type"] == "text" and ast and ast[-1]["type"] == "text":
+                        ast[-1]["text"] += ast_node["text"]
+                    else:
+                        ast.append(ast_node)
 
-            ast.append(self.make_link_ast(parser, text, url, parents))
+                cursor = m.end()
 
         if cursor < len(clean_match):
             markup = clean_match[cursor:]

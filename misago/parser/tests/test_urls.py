@@ -168,6 +168,32 @@ def test_url_with_missing_closing_parenthesis_is_trimmed_to_last_one(parse_marku
     ]
 
 
+def test_url_with_missing_closing_parenthesis_next_to_other_url(parse_markup):
+    result = parse_markup(
+        "Hello [link label](https://example.com/link "
+        "[other link](https://example.com/other)!"
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {
+                    "type": "text",
+                    "text": "Hello [link label](https://example.com/link ",
+                },
+                {
+                    "type": "url",
+                    "href": "https://example.com/other",
+                    "children": [
+                        {"type": "text", "text": "other link"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_url_with_extra_closing_parenthesis_excludes_them(parse_markup):
     result = parse_markup("Hello [link label](https://example.com/Link_(Film)))!")
     assert result == [
