@@ -59,7 +59,7 @@ class ImgBBCode(UrlBBCode):
     invalid_parents: set[str] = {pattern_type, "image"}
 
 
-INLINE_CODE_PATTERN = r"`(.|\n)*?`"
+INLINE_CODE_PATTERN = r"(?<!\\)`(.|\n)*?(?<!\\)`"
 
 IMAGE_PATTERN = r"!(\[(.|\n)*?\])?\(.*?\)"
 IMAGE_RE = re.compile(IMAGE_PATTERN)
@@ -159,6 +159,9 @@ class UrlMarkdown(Pattern):
         if opening == closing and opening == 1:
             url = source[1 : source.find(")")].strip()
             return url, source.find(")") + 1
+
+        if not closing:
+            return "", 0
 
         # Walk the string to find pairs of parentheses
         nesting = 0

@@ -71,15 +71,13 @@ class CodeBBCode(Pattern):
 
 class InlineCodeMarkdown(Pattern):
     pattern_type: str = "inline-code"
-    pattern: str = r"`(.|\n)*?`"
+    pattern: str = r"(?<!\\)`(.|\n)*?(?<!\\)`"
     linebreaks_pattern = re.compile(r"\n+")
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         code = match.strip("`")
         if "\n" in code:
-            print("pre", repr(code))
             code = self.linebreaks_pattern.sub(" ", code)
-            print("aft", repr(code))
 
         return {
             "type": self.pattern_type,
