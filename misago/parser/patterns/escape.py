@@ -8,4 +8,4 @@ class Escape(Pattern):
     def parse(
         self, parser: Parser, match: str, parents: list[str]
     ) -> dict | list[dict]:
-        return {"type": self.pattern_type, "sign": match[1:]}
+        return {"type": self.pattern_type, "character": match[1:]}

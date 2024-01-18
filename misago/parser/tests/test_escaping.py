@@ -4,7 +4,7 @@ def test_escaped_atx_heading(parse_markup):
         {
             "type": "paragraph",
             "children": [
-                {"type": "escape", "sign": "#"},
+                {"type": "escape", "character": "#"},
                 {"type": "text", "text": " Lorem ipsum"},
             ],
         }
@@ -18,9 +18,9 @@ def test_escaped_inline_code(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Lorem ipsum "},
-                {"type": "escape", "sign": "`"},
+                {"type": "escape", "character": "`"},
                 {"type": "text", "text": "dolor"},
-                {"type": "escape", "sign": "`"},
+                {"type": "escape", "character": "`"},
                 {"type": "text", "text": " met."},
             ],
         }
