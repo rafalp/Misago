@@ -90,7 +90,7 @@ inline_patterns: list[Pattern] = [
     # AutolinkMarkdown(),
     img_markdown,
     url_markdown,
-    img_bbcode,
+    # img_bbcode,
     # url_bbcode,
     # AutoUrl(),
     Escape(),
