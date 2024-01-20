@@ -2,7 +2,7 @@ def test_fenced_code_supports_backticks(parse_markup):
     result = parse_markup(
         """
         ```
-        print("hello!")
+        alert("hello!")
         ```
         """
     )
@@ -10,7 +10,7 @@ def test_fenced_code_supports_backticks(parse_markup):
         {
             "type": "code",
             "syntax": None,
-            "code": 'print("hello!")',
+            "code": 'alert("hello!")',
         }
     ]
 
@@ -19,7 +19,7 @@ def test_fenced_code_supports_tildes(parse_markup):
     result = parse_markup(
         """
         ~~~
-        print("hello!")
+        alert("hello!")
         ~~~
         """
     )
@@ -27,7 +27,7 @@ def test_fenced_code_supports_tildes(parse_markup):
         {
             "type": "code",
             "syntax": None,
-            "code": 'print("hello!")',
+            "code": 'alert("hello!")',
         }
     ]
 
@@ -36,7 +36,7 @@ def test_fenced_code_supports_syntax(parse_markup):
     result = parse_markup(
         """
         ~~~python
-        print("hello!")
+        alert("hello!")
         ~~~
         """
     )
@@ -44,7 +44,7 @@ def test_fenced_code_supports_syntax(parse_markup):
         {
             "type": "code",
             "syntax": "python",
-            "code": 'print("hello!")',
+            "code": 'alert("hello!")',
         }
     ]
 
@@ -53,7 +53,7 @@ def test_fenced_code_trims_syntax(parse_markup):
     result = parse_markup(
         """
         ~~~   python   
-        print("hello!")
+        alert("hello!")
         ~~~
         """
     )
@@ -61,7 +61,7 @@ def test_fenced_code_trims_syntax(parse_markup):
         {
             "type": "code",
             "syntax": "python",
-            "code": 'print("hello!")',
+            "code": 'alert("hello!")',
         }
     ]
 

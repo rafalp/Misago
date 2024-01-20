@@ -1,14 +1,14 @@
 def test_code_bbcode_can_be_one_liner(parse_markup):
     result = parse_markup(
         """
-        [code]print("hello!")[/code]
+        [code]alert("hello!")[/code]
         """
     )
     assert result == [
         {
             "type": "code-bbcode",
             "syntax": None,
-            "code": 'print("hello!")',
+            "code": 'alert("hello!")',
         }
     ]
 
@@ -17,8 +17,8 @@ def test_code_bbcode_can_be_multiline(parse_markup):
     result = parse_markup(
         """
         [code]
-        print("hello!")
-        print("world!")
+        alert("hello!")
+        alert("world!")
         [/code]
         """
     )
@@ -26,7 +26,7 @@ def test_code_bbcode_can_be_multiline(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": None,
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 
@@ -35,8 +35,8 @@ def test_code_bbcode_dedents_content(parse_markup):
     result = parse_markup(
         """
         [code]
-          print("hello!")
-          print("world!")
+          alert("hello!")
+          alert("world!")
         [/code]
         """
     )
@@ -44,7 +44,7 @@ def test_code_bbcode_dedents_content(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": None,
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 
@@ -54,8 +54,8 @@ def test_code_bbcode_trims_content(parse_markup):
         """
         [code]
 
-          print("hello!")
-          print("world!")
+          alert("hello!")
+          alert("world!")
 
         [/code]
         """
@@ -64,7 +64,7 @@ def test_code_bbcode_trims_content(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": None,
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 
@@ -73,8 +73,8 @@ def test_code_bbcode_supports_syntax(parse_markup):
     result = parse_markup(
         """
         [code=python]
-        print("hello!")
-        print("world!")
+        alert("hello!")
+        alert("world!")
         [/code]
         """
     )
@@ -82,7 +82,7 @@ def test_code_bbcode_supports_syntax(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": "python",
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 
@@ -91,8 +91,8 @@ def test_code_bbcode_trims_syntax(parse_markup):
     result = parse_markup(
         """
         [code=  python   ]
-        print("hello!")
-        print("world!")
+        alert("hello!")
+        alert("world!")
         [/code]
         """
     )
@@ -100,7 +100,7 @@ def test_code_bbcode_trims_syntax(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": "python",
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 
@@ -109,8 +109,8 @@ def test_code_bbcode_trims_syntax_quotes(parse_markup):
     result = parse_markup(
         """
         [code="  python  "]
-        print("hello!")
-        print("world!")
+        alert("hello!")
+        alert("world!")
         [/code]
         """
     )
@@ -118,7 +118,7 @@ def test_code_bbcode_trims_syntax_quotes(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": "python",
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 
@@ -127,8 +127,8 @@ def test_code_bbcode_trims_syntax_single_quotes(parse_markup):
     result = parse_markup(
         """
         [code='  python  ']
-        print("hello!")
-        print("world!")
+        alert("hello!")
+        alert("world!")
         [/code]
         """
     )
@@ -136,7 +136,7 @@ def test_code_bbcode_trims_syntax_single_quotes(parse_markup):
         {
             "type": "code-bbcode",
             "syntax": "python",
-            "code": 'print("hello!")\nprint("world!")',
+            "code": 'alert("hello!")\nalert("world!")',
         }
     ]
 

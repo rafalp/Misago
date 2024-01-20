@@ -460,6 +460,7 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
         - Met
           - Ipsum
             - Dolor
+          - Elit
         - Lorem
         """
     )
@@ -508,6 +509,118 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
                                         },
                                     ],
                                 },
+                                {
+                                    "type": "list-item",
+                                    "children": [
+                                        {
+                                            "type": "text",
+                                            "text": "Elit",
+                                        },
+                                    ],
+                                    "lists": [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Lorem",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        }
+    ]
+
+
+def test_list_with_first_item_children_three_levels_deep(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+          - Ipsum
+            - Dolor
+              - Pacem
+          - Elit
+        - Lorem
+        """
+    )
+    assert result == [
+        {
+            "type": "list",
+            "ordered": False,
+            "items": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Met",
+                        },
+                    ],
+                    "lists": [
+                        {
+                            "type": "list",
+                            "ordered": False,
+                            "items": [
+                                {
+                                    "type": "list-item",
+                                    "children": [
+                                        {
+                                            "type": "text",
+                                            "text": "Ipsum",
+                                        },
+                                    ],
+                                    "lists": [
+                                        {
+                                            "type": "list",
+                                            "ordered": False,
+                                            "items": [
+                                                {
+                                                    "type": "list-item",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "text": "Dolor",
+                                                        },
+                                                    ],
+                                                    "lists": [
+                                                        {
+                                                            "type": "list",
+                                                            "ordered": False,
+                                                            "items": [
+                                                                {
+                                                                    "type": "list-item",
+                                                                    "children": [
+                                                                        {
+                                                                            "type": "text",
+                                                                            "text": "Pacem",
+                                                                        },
+                                                                    ],
+                                                                    "lists": [],
+                                                                },
+                                                            ],
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                                {
+                                    "type": "list-item",
+                                    "children": [
+                                        {
+                                            "type": "text",
+                                            "text": "Elit",
+                                        },
+                                    ],
+                                    "lists": [],
+                                },
                             ],
                         },
                     ],
@@ -549,7 +662,7 @@ def test_list_items_with_too_deep_levels_are_fixed(parse_markup):
     assert result == expected_result
 
 
-def test_list_with_too_deep_item_followed_by_valid_item_is_fixed(parse_markup):
+def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -563,7 +676,7 @@ def test_list_with_too_deep_item_followed_by_valid_item_is_fixed(parse_markup):
         """
         - Met
           - Ipsum
-            - Dolor
+          - Dolor
           - Sit
         - Lorem
         """
@@ -571,7 +684,7 @@ def test_list_with_too_deep_item_followed_by_valid_item_is_fixed(parse_markup):
     assert result == expected_result
 
 
-def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
+def test_list_with_too_deep_item_followed_by_two_too_deep_items_is_fixed(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -585,7 +698,7 @@ def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
         """
         - Met
           - Ipsum
-            - Dolor
+          - Dolor
           - Sit
         - Lorem
         """
@@ -611,6 +724,28 @@ def test_list_with_first_item_indented_is_fixed(parse_markup):
 
         - Met
           - Ipsum
+        - Dolor
+        - Sit
+        - Lorem
+        """
+    )
+    assert result == expected_result
+
+
+def test_list_items_with_not_deep_levels_are_fixed(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+         - Ipsum
+          - Dolor
+           - Sit
+        - Lorem
+        """
+    )
+    expected_result = parse_markup(
+        """
+        - Met
+        - Ipsum
         - Dolor
         - Sit
         - Lorem
