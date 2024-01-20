@@ -278,10 +278,14 @@ class AutolinkMarkdown(Pattern):
 
         url = clean_url(url)
 
-        if not url or has_invalid_parent(self.invalid_parents, parents):
+        if (
+            not url
+            or (is_image and url.startswith("mailto:"))
+            or has_invalid_parent(self.invalid_parents, parents)
+        ):
             return {"type": "text", "text": match}
 
-        return {"type": self.pattern_type, "href": url}
+        return {"type": self.pattern_type, "image": is_image, "href": url}
 
 
 class AutoUrl(AutolinkMarkdown):

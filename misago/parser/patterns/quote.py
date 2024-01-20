@@ -3,7 +3,7 @@ from ..parser import Parser, Pattern
 
 class QuoteMarkdown(Pattern):
     pattern_type: str = "quote"
-    pattern: str = r" ? ? ?>.*(\n ? ? ?>.*)*"
+    pattern: str = r"(\n|^) ? ? ?>.*(\n ? ? ?>.*)*"
 
     def parse(
         self, parser: Parser, match: str, parents: list[str]

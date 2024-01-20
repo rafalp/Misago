@@ -68,6 +68,8 @@ strong_underscore_markdown = StrongUnderscoreMarkdown()
 
 strikethrough_markdown = StrikethroughMarkdown()
 
+autolink_markdown = AutolinkMarkdown()
+
 img_bbcode = ImgBBCode()
 img_markdown = ImgMarkdown()
 
@@ -87,7 +89,7 @@ inline_patterns: list[Pattern] = [
     strong_underscore_markdown,
     emphasis_underscore_markdown,
     strikethrough_markdown,
-    # AutolinkMarkdown(),
+    autolink_markdown,
     img_markdown,
     url_markdown,
     img_bbcode,
