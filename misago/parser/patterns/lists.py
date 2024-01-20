@@ -3,8 +3,8 @@ from textwrap import dedent
 
 from ..parser import Parser, Pattern
 
-LIST_PATTERN = r"(\n|^) *([-*+]|(1[.)])).+(\n\n* *([-*+]|([0-9]+[.)])).+)*"
-LIST_CONTENTS = re.compile(r"(?P<prefix> *)(?P<marker>[-*+i]|([0-9]+[.)]))(?P<text>.+)")
+LIST_PATTERN = r"(\n|^) *([-*+]|(1[.)])).*(\n\n* *([-*+]|([0-9]+[.)])).*)*"
+LIST_CONTENTS = re.compile(r"(?P<prefix> *)(?P<marker>[-*+i]|([0-9]+[.)]))(?P<text>.*)")
 
 ListItem = tuple[int, str, list[dict]]
 
