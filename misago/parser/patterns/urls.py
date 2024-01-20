@@ -289,7 +289,10 @@ class AutolinkMarkdown(Pattern):
 
 
 class AutoUrl(AutolinkMarkdown):
-    pattern: str = r"(?<!\w)(https?://(www\.)?)|(www\.))\w+(-|\w)*(\.\w+(-|\w)*)+[^\s]*"
+    pattern_type: str = "auto-url"
+    pattern: str = (
+        r"(?<!\w)((https?://(www\.)?)|(www\.))\w+(-|\w)*(\.\w+(-|\w)*)+[^\s)]*"
+    )
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:
         url = clean_url(match)

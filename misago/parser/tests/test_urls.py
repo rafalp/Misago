@@ -177,10 +177,12 @@ def test_url_with_missing_closing_parenthesis_next_to_other_url(parse_markup):
         {
             "type": "paragraph",
             "children": [
+                {"type": "text", "text": "Hello [link label]("},
                 {
-                    "type": "text",
-                    "text": "Hello [link label](https://example.com/link ",
+                    "type": "auto-url",
+                    "href": "https://example.com/link",
                 },
+                {"type": "text", "text": " "},
                 {
                     "type": "url",
                     "href": "https://example.com/other",
