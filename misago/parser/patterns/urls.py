@@ -37,26 +37,67 @@ class UrlBBCode(Pattern):
     invalid_parents: set[str] = {pattern_type, "url"}
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:
-        contents = BBCODE_CONTENTS.match(match[1:-1]).groupdict()
-        raise Exception(contents)
-        arg = contents["arg"].strip(" \"'") if contents.get("arg") else None
+        contents = BBCODE_CONTENTS.match(match).groupdict()
+
+        arg = contents["arg"].strip(" \"'") if contents["arg"] else None
         content = contents["content"]
 
         if arg:
             url = clean_url(arg)
+        elif content:
+            url = clean_url(content.strip())
+            content = None
         else:
-            content = clean_url(content)
+            url = None
 
-        if not url or has_invalid_parent(self.invalid_parents, parents):
+        if (
+            not url
+            or not contents["content"].strip()
+            or has_invalid_parent(self.invalid_parents, parents)
+        ):
             return {"type": "text", "text": match}
 
-        return {"type": self.pattern_type, "href": url}
+        return self.make_ast(parser, match, url, content, parents)
+
+    def make_ast(
+        self,
+        parser: Parser,
+        match: str,
+        url: str | None,
+        content: str,
+        parents: list[dict],
+    ) -> dict:
+        return {
+            "type": self.pattern_type,
+            "href": url,
+            "children": parser.parse_inline(content, parents + [self.pattern_type]),
+        }
 
 
 class ImgBBCode(UrlBBCode):
     pattern_type: str = "image-bbcode"
     pattern: str = r"((\[img=.+?\](.|\n)*?)|(\[img\].*?))\[\/img\]"
     invalid_parents: set[str] = {pattern_type, "image"}
+
+    def make_ast(
+        self,
+        parser: Parser,
+        match: str,
+        url: str | None,
+        alt_text: str | None,
+        parents: list[dict],
+    ) -> dict:
+        if url.startswith("mailto:"):
+            return {"type": "text", "text": match}
+
+        if alt_text:
+            alt_text = alt_text.strip()
+
+        return {
+            "type": self.pattern_type,
+            "alt": alt_text or None,
+            "src": url,
+        }
 
 
 INLINE_CODE_PATTERN = r"(?<!\\)`(.|\n)*?(?<!\\)`"
@@ -214,7 +255,7 @@ class ImgMarkdown(Pattern):
                 "src": src,
             }
 
-        return match
+        return {"type": "text", "text": match}
 
 
 class AutolinkMarkdown(Pattern):

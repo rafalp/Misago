@@ -1,3 +1,6 @@
+from ..patterns import unescape_markup
+
+
 def test_escaped_atx_heading(parse_markup):
     result = parse_markup("\\# Lorem ipsum")
     assert result == [
@@ -37,3 +40,7 @@ def test_escape_is_not_working_for_characters(parse_markup):
             ],
         }
     ]
+
+
+def test_unescape_markup_removes_slashes():
+    assert unescape_markup("Lorem \\*Ipsum\\*") == "Lorem *Ipsum*"

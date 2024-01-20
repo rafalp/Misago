@@ -166,7 +166,7 @@ class Parser:
                             and block_ast["type"] == "text"
                             and result[-1]["type"] == "text"
                         ):
-                            result[-1]["text"] += child["text"]
+                            result[-1]["text"] += block_ast["text"]
                         else:
                             result.append(block_ast)
 
