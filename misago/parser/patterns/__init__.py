@@ -25,6 +25,7 @@ from .markdown import (
     StrongMarkdown,
     StrongUnderscoreMarkdown,
 )
+from .mention import Mention
 from .quote import QuoteBBCodeOpen, QuoteBBCodeClose, QuoteMarkdown
 from .spoiler import SpoilerBBCodeOpen, SpoilerBBCodeClose
 from .thematicbreak import ThematicBreakBBCode, ThematicBreakMarkdown
@@ -77,6 +78,8 @@ img_markdown = ImgMarkdown()
 url_bbcode = UrlBBCode()
 url_markdown = UrlMarkdown()
 
+mention = Mention()
+
 inline_patterns: list[Pattern] = [
     InlineCodeMarkdown(),
     bold_bbcode,
@@ -96,5 +99,6 @@ inline_patterns: list[Pattern] = [
     img_bbcode,
     url_bbcode,
     auto_url,
+    mention,
     Escape(),
 ]
