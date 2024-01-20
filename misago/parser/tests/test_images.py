@@ -1,4 +1,4 @@
-def test_image_markdown(parse_markup):
+def test_image(parse_markup):
     result = parse_markup("Hello !(https://image.com/img.jpg)!")
     assert result == [
         {
@@ -16,7 +16,7 @@ def test_image_markdown(parse_markup):
     ]
 
 
-def test_image_markdown_with_alt_markdown(parse_markup):
+def test_image_with_alt_text(parse_markup):
     result = parse_markup("Hello ![Image Alt](https://image.com/img.jpg)!")
     assert result == [
         {
@@ -34,7 +34,7 @@ def test_image_markdown_with_alt_markdown(parse_markup):
     ]
 
 
-def test_image_markdown_alt_whitespace_is_stripped(parse_markup):
+def test_image_alt_text_whitespace_is_stripped(parse_markup):
     result = parse_markup("Hello ![  Image Alt   ](https://image.com/img.jpg)!")
     assert result == [
         {
@@ -52,7 +52,7 @@ def test_image_markdown_alt_whitespace_is_stripped(parse_markup):
     ]
 
 
-def test_image_markdown_alt_is_empty(parse_markup):
+def test_image_alt_text_is_empty(parse_markup):
     result = parse_markup("Hello ![](https://image.com/img.jpg)!")
     assert result == [
         {
@@ -70,7 +70,7 @@ def test_image_markdown_alt_is_empty(parse_markup):
     ]
 
 
-def test_image_markdown_alt_is_not_parsed(parse_markup):
+def test_image_alt_text_is_not_parsed(parse_markup):
     result = parse_markup("Hello ![*Image Alt*](https://image.com/img.jpg)!")
     assert result == [
         {
@@ -88,7 +88,7 @@ def test_image_markdown_alt_is_not_parsed(parse_markup):
     ]
 
 
-def test_image_alt_reserved_tokens_are_reversed(parse_markup):
+def test_image_alt_text_reserved_tokens_are_reversed(parse_markup):
     result = parse_markup("Hello ![`Image`](https://image.com/img.jpg)!")
     assert result == [
         {
@@ -106,7 +106,7 @@ def test_image_alt_reserved_tokens_are_reversed(parse_markup):
     ]
 
 
-def test_image_markdown_invalid_url(parse_markup):
+def test_image_with_invalid_url(parse_markup):
     result = parse_markup("Hello !(invalid url)!")
     assert result == [
         {
@@ -118,7 +118,7 @@ def test_image_markdown_invalid_url(parse_markup):
     ]
 
 
-def test_image_markdown_email_url(parse_markup):
+def test_image_with_email_url(parse_markup):
     result = parse_markup("Hello !(lorem@ipsum.com).")
     assert result == [
         {
@@ -130,7 +130,7 @@ def test_image_markdown_email_url(parse_markup):
     ]
 
 
-def test_image_markdown_empty_url(parse_markup):
+def test_image_with_empty_url(parse_markup):
     result = parse_markup("Hello !().")
     assert result == [
         {
@@ -142,7 +142,7 @@ def test_image_markdown_empty_url(parse_markup):
     ]
 
 
-def test_image_with_alt_markdown_next_to_another(parse_markup):
+def test_image_with_alt_text_next_to_another_image_with_alt_text(parse_markup):
     result = parse_markup(
         "Hello ![Image Alt](https://image.com/img.jpg)"
         " ![Other Alt](https://image.com/other.jpg)!"
@@ -205,7 +205,7 @@ def test_image_bbcode_url_whitespace_is_stripped(parse_markup):
     ]
 
 
-def test_image_bbcode_invalid_url(parse_markup):
+def test_image_bbcode_with_invalid_url(parse_markup):
     result = parse_markup("Hello [img] invalid url [/img]!")
     assert result == [
         {
@@ -217,7 +217,7 @@ def test_image_bbcode_invalid_url(parse_markup):
     ]
 
 
-def test_image_bbcode_email_url(parse_markup):
+def test_image_bbcode_with_email_url(parse_markup):
     result = parse_markup("Hello [img]lorem@ipsum.com[/img]!")
     assert result == [
         {
@@ -229,7 +229,7 @@ def test_image_bbcode_email_url(parse_markup):
     ]
 
 
-def test_image_bbcode_alt_text(parse_markup):
+def test_image_bbcode_with_alt_text(parse_markup):
     result = parse_markup("Hello [img=https://image.com/img.jpg]alt text[/img]!")
     assert result == [
         {
@@ -283,6 +283,24 @@ def test_image_bbcode_alt_text_is_not_parsed(parse_markup):
     ]
 
 
+def test_image_bbcode_alt_text_reserved_patterns_are_reversed(parse_markup):
+    result = parse_markup("Hello [img=https://image.com/img.jpg]`alt text`[/img]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image-bbcode",
+                    "alt": "`alt text`",
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_image_bbcode_with_alt_text_url_is_trimmed(parse_markup):
     result = parse_markup("Hello [img='  https://image.com/img.jpg' ]alt text[/img]!")
     assert result == [
@@ -296,6 +314,30 @@ def test_image_bbcode_with_alt_text_url_is_trimmed(parse_markup):
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_bbcode_with_alt_text_empty_url(parse_markup):
+    result = parse_markup("Hello [img=]alt text[/img]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [img=]alt text[/img]!"},
+            ],
+        }
+    ]
+
+
+def test_image_bbcode_with_alt_text_invalid_url(parse_markup):
+    result = parse_markup("Hello [img=invalid url]alt text[/img]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [img=invalid url]alt text[/img]!"},
             ],
         }
     ]

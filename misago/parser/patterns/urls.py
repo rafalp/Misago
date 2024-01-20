@@ -67,10 +67,15 @@ class UrlBBCode(Pattern):
         content: str,
         parents: list[dict],
     ) -> dict:
+        if content:
+            children = parser.parse_inline(content, parents + [self.pattern_type])
+        else:
+            children = []
+
         return {
             "type": self.pattern_type,
             "href": url,
-            "children": parser.parse_inline(content, parents + [self.pattern_type]),
+            "children": children,
         }
 
 

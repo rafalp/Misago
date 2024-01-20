@@ -300,3 +300,151 @@ def test_image_after_url(parse_markup):
             ],
         }
     ]
+
+
+def test_url_bbcode(parse_markup):
+    result = parse_markup("Hello [url]https://image.com/img.jpg[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "https://image.com/img.jpg",
+                    "children": [],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_url_whitespace_is_stripped(parse_markup):
+    result = parse_markup("Hello [url]   https://image.com/img.jpg  [/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "https://image.com/img.jpg",
+                    "children": [],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_with_invalid_url(parse_markup):
+    result = parse_markup("Hello [url] invalid url [/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [url] invalid url [/url]!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_with_email_url(parse_markup):
+    result = parse_markup("Hello [url]lorem@ipsum.com[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "mailto:lorem@ipsum.com",
+                    "children": [],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_with_empty_url(parse_markup):
+    result = parse_markup("Hello [url] [/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [url] [/url]!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_with_children(parse_markup):
+    result = parse_markup("Hello [url=example.com]Alt text[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "example.com",
+                    "children": [
+                        {"type": "text", "text": "Alt text"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_with_children_empty_url(parse_markup):
+    result = parse_markup("Hello [url=]Alt text[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [url=]Alt text[/url]!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_with_children_invalid_url(parse_markup):
+    result = parse_markup("Hello [url=invalid url]Alt text[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [url=invalid url]Alt text[/url]!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_children_are_parsed(parse_markup):
+    result = parse_markup("Hello [url=example.com]Alt **text**[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "example.com",
+                    "children": [
+                        {"type": "text", "text": "Alt "},
+                        {
+                            "type": "strong",
+                            "children": [
+                                {"type": "text", "text": "text"},
+                            ],
+                        },
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
