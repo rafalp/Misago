@@ -448,3 +448,15 @@ def test_url_bbcode_children_are_parsed(parse_markup):
             ],
         }
     ]
+
+
+def test_url_bbcode_with_empty_children(parse_markup):
+    result = parse_markup("Hello [url=example.com][/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello [url=example.com][/url]!"},
+            ],
+        }
+    ]
