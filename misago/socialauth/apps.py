@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from social_core.backends.discord import DiscordOAuth2
 from social_core.backends.facebook import FacebookOAuth2
 from social_core.backends.github import GithubOAuth2
 from social_core.backends.google import GoogleOAuth2
@@ -14,8 +15,22 @@ class MisagoSocialAuthConfig(AppConfig):
 
     def ready(self):
         # Register default providers
-        from .admin.forms import FacebookForm, GitHubForm, GoogleForm, TwitterForm
+        from .admin.forms import (
+            DiscordForm,
+            FacebookForm,
+            GitHubForm,
+            GoogleForm,
+            TwitterForm,
+        )
 
+        providers.add(
+            provider="discord",
+            name="Discord",
+            auth_backend=DiscordOAuth2,
+            settings={"scope": ["email"]},
+            admin_form=DiscordForm,
+            admin_template="misago/admin/socialauth/form.html",
+        )
         providers.add(
             provider="facebook",
             name="Facebook",
