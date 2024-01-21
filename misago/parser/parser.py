@@ -148,9 +148,9 @@ class Parser:
                                 {"type": "text", "text": markup[cursor:start]}
                             )
 
-                    block_ast = pattern.parse(self, block_match, parents)
-                    if isinstance(block_ast, list):
-                        for child in block_ast:
+                    inline_ast = pattern.parse(self, block_match, parents)
+                    if isinstance(inline_ast, list):
+                        for child in inline_ast:
                             if (
                                 result
                                 and child["type"] == "text"
@@ -160,15 +160,15 @@ class Parser:
                             else:
                                 result.append(child)
 
-                    elif isinstance(block_ast, dict):
+                    elif isinstance(inline_ast, dict):
                         if (
                             result
-                            and block_ast["type"] == "text"
+                            and inline_ast["type"] == "text"
                             and result[-1]["type"] == "text"
                         ):
-                            result[-1]["text"] += block_ast["text"]
+                            result[-1]["text"] += inline_ast["text"]
                         else:
-                            result.append(block_ast)
+                            result.append(inline_ast)
 
                     cursor = m.end()
                     break
