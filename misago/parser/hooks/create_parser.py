@@ -148,7 +148,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
     from .patterns import PluginPattern
 
 
-    @create_markdown_hook.append_filter
+    @create_parser_hook.append_filter
     def register_custom_pattern(
         action: CreateParserHookAction, *, block_patterns, **kwargs
     ) -> Parser:

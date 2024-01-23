@@ -3,6 +3,7 @@ from typing import Callable
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
+from .context import ParserContext
 from .hooks import create_parser_hook
 from .parser import Parser, Pattern
 from .patterns import block_patterns, inline_patterns
@@ -12,9 +13,7 @@ User = get_user_model()
 
 
 def create_parser(
-    *,
-    user: User | None = None,
-    request: HttpRequest | None = None,
+    context: ParserContext,
     content_type: str | None = None,
 ) -> Parser:
     return create_parser_hook(
@@ -22,19 +21,17 @@ def create_parser(
         block_patterns=block_patterns.copy(),
         inline_patterns=inline_patterns.copy(),
         post_processors=post_processors.copy(),
-        user=user,
-        request=request,
+        context=context,
         content_type=content_type,
     )
 
 
 def _create_parser_action(
     *,
+    context: ParserContext,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
     post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-    user: User | None = None,
-    request: HttpRequest | None = None,
     content_type: str | None = None,
 ) -> Parser:
     return Parser(block_patterns, inline_patterns, post_processors)

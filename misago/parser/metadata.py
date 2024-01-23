@@ -1,9 +1,20 @@
+from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
 from ..core.utils import slugify
+from .hooks import (
+    create_ast_metadata_hook,
+    update_ast_metadata_from_node_hook,
+)
+
+User = get_user_model()
 
 
-def get_ast_metadata(ast: list, request: HttpRequest | None = None) -> dict:
+def create_ast_metadata(
+    ast: list[dict],
+    user: User | None = None,
+    request: HttpRequest | None = None,
+) -> dict:
     metadata = {
         "mentions": set(),
         "users": {},
@@ -13,23 +24,47 @@ def get_ast_metadata(ast: list, request: HttpRequest | None = None) -> dict:
         },
     }
 
-    for ast_node in ast:
-        get_ast_node_metadata(metadata, ast_node, request)
+    return create_ast_metadata_hook(
+        _create_ast_metadata_action, metadata, ast, user, request
+    )
 
-    _set_metadata_posts_action(metadata, request)
-    _set_metadata_users_action(metadata, request)
+
+def _create_ast_metadata_action(
+    metadata: dict,
+    ast: list[dict],
+    user: User | None = None,
+    request: HttpRequest | None = None,
+) -> dict:
+    for ast_node in ast:
+        update_ast_metadata_from_node(metadata, ast_node, user, request)
+
+    _update_ast_metadata_posts_action(metadata, user, request)
+    _update_ast_metadata_users_action(metadata, user, request)
 
     return metadata
 
 
-def get_ast_node_metadata(metadata: dict, ast_node: dict, request: HttpRequest | None = None) -> None:
-    _get_ast_node_metadata_action(metadata, ast_node, request)
+def update_ast_metadata_from_node(
+    metadata: dict,
+    ast_node: dict,
+    user: User | None = None,
+    request: HttpRequest | None = None,
+) -> None:
+    update_ast_metadata_from_node_hook(
+        _update_ast_metadata_from_node_action, metadata, ast_node, user, request
+    )
 
 
-def _get_ast_node_metadata_action(metadata: dict, ast_node: dict, request: HttpRequest | None = None) -> None:
+def _update_ast_metadata_from_node_action(
+    metadata: dict,
+    ast_node: dict,
+    user: User | None = None,
+    request: HttpRequest | None = None,
+) -> None:
     if ast_node["type"] == "mention":
         metadata["mentions"].add(slugify(ast_node["username"]))
-    if ast_node["quote"] == "quote-bbcode":
+
+    elif ast_node["type"] == "quote-bbcode":
         if ast_node["author"]:
             metadata["mentions"].add(slugify(ast_node["author"]))
         if ast_node["post"]:
@@ -37,22 +72,30 @@ def _get_ast_node_metadata_action(metadata: dict, ast_node: dict, request: HttpR
 
     if ast_node.get("children"):
         for child_node in ast_node["children"]:
-            get_ast_node_metadata(metadata, child_node, request)
+            update_ast_metadata_from_node(metadata, child_node, user, request)
 
     if ast_node.get("items"):
         for child_node in ast_node["items"]:
-            get_ast_node_metadata(metadata, child_node, request)
+            update_ast_metadata_from_node(metadata, child_node, user, request)
 
     if ast_node.get("lists"):
         for child_node in ast_node["lists"]:
-            get_ast_node_metadata(metadata, child_node, request)
+            update_ast_metadata_from_node(metadata, child_node, user, request)
 
 
-def _set_metadata_posts_action(metadata: dict, request: HttpRequest | None = None) -> None:
+def _update_ast_metadata_posts_action(
+    metadata: dict,
+    user: User | None = None,
+    request: HttpRequest | None = None,
+) -> None:
     if not metadata["posts"]["ids"]:
         return
 
 
-def _set_metadata_users_action(metadata: dict, request: HttpRequest | None = None) -> None:
+def _update_ast_metadata_users_action(
+    metadata: dict,
+    user: User | None = None,
+    request: HttpRequest | None = None,
+) -> None:
     if not metadata["mentions"]["slugs"]:
         return

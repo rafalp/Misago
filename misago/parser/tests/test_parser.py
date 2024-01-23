@@ -55,6 +55,42 @@ def test_parser_parses_skips_extra_linebreaks_between_blocks():
     ]
 
 
+def test_parser_parses_skips_whitespace_between_paragraphs():
+    result = parse("First paragraph.\n   \nSecond paragraph.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "First paragraph."},
+            ],
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Second paragraph."},
+            ],
+        },
+    ]
+
+
+def test_parser_parses_skips_tabs_between_paragraphs():
+    result = parse("First paragraph.\n\t\nSecond paragraph.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "First paragraph."},
+            ],
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Second paragraph."},
+            ],
+        },
+    ]
+
+
 def test_parser_parses_line_breaks():
     result = parse("Paragraph with\na line break.")
     assert result == [
