@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.proxy import UserPermissionsProxy
 from .forumaddress import ForumAddress
-from .hooks import create_parser_context_hook
+from .hooks import setup_parser_context_hook
 
 User = get_user_model()
 
@@ -31,24 +31,6 @@ def create_parser_context(
     settings: DynamicSettings,
     cache_versions: dict,
     content_type: str | None = None,
-) -> ParserContext:
-    return create_parser_context_hook(
-        _create_parser_context_action,
-        request=request,
-        user_permissions=user_permissions,
-        settings=settings,
-        cache_versions=cache_versions,
-        content_type=content_type,
-    )
-
-
-def _create_parser_context_action(
-    *,
-    request: HttpRequest | None,
-    user_permissions: UserPermissionsProxy,
-    settings: dict,
-    cache_versions: dict,
-    content_type: str | None,
 ) -> ParserContext:
     data = {
         "user_permissions": None,
@@ -76,9 +58,17 @@ def _create_parser_context_action(
     else:
         raise ValueError("'cache_versions' argument is required")
 
-    return ParserContext(
+    context = ParserContext(
         content_type=content_type,
         forum_address=DynamicSettings(data["settings"]),
         request=request,
         **data,
     )
+
+    if not setup_parser_context_hook:
+        return context
+
+    return setup_parser_context_hook(_context_lambda, context)
+
+
+_context_lambda = lambda c: c
