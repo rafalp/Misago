@@ -1,12 +1,10 @@
-from typing import Callable, Protocol
-
-from django.contrib.auth import get_user_model
-from django.http import HttpRequest
+from typing import TYPE_CHECKING, Callable, Protocol
 
 from ...plugins.hooks import FilterHook
 from ..parser import Parser, Pattern
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ..context import ParserContext
 
 
 class CreateParserHookAction(Protocol):
@@ -15,6 +13,11 @@ class CreateParserHookAction(Protocol):
     next filter function from another plugin.
 
     # Arguments
+
+    ## `context: ParserContext`
+
+    An instance of the `ParserContext` dataclass that contains dependencies
+    used at different stages of parsing process.
 
     ## `block_patterns: list[Pattern]`
 
@@ -36,33 +39,18 @@ class CreateParserHookAction(Protocol):
         return ast
     ```
 
-    ## `user: User | None = None`
-
-    A `User` instance with the parsed text's author or `None` if not provided.
-
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if it was not provided.
-
-    ## `content_type: str | None = None`
-
-    A `str` with the name of the content type to be parsed (e.g., `post` or `signature`)
-    or `None` if not provided.
-
     # Return value
 
-    An instance of the `Parser` class from the `mistune` library.
+    An instance of the `Parser` class.
     """
 
     def __call__(
         self,
+        context: "ParserContext",
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-        user: User | None = None,
-        request: HttpRequest | None = None,
-        content_type: str | None = None,
     ) -> Parser:
         ...
 
@@ -80,6 +68,11 @@ class CreateParserHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
+    ## `context: ParserContext`
+
+    An instance of the `ParserContext` dataclass that contains dependencies
+    used at different stages of parsing process.
+
     ## `block_patterns: list[Pattern]`
 
     A list of `Pattern` instances of block patterns to be used by the parser.
@@ -100,34 +93,19 @@ class CreateParserHookFilter(Protocol):
         return ast
     ```
 
-    ## `user: User | None = None`
-
-    A `User` instance with the parsed text's author or `None` if not provided.
-
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if it was not provided.
-
-    ## `content_type: str | None = None`
-
-    A `str` with the name of the content type to be parsed (e.g., `post` or `signature`)
-    or `None` if not provided.
-
     # Return value
 
-    An instance of the `Parser` class from the `mistune` library.
+    An instance of the `Parser` class.
     """
 
     def __call__(
         self,
         action: CreateParserHookAction,
+        context: "ParserContext",
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-        user: User | None = None,
-        request: HttpRequest | None = None,
-        content_type: str | None = None,
     ) -> Parser:
         ...
 
@@ -143,6 +121,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
     to the parser:
 
     ```python
+    from misago.parser.context import ParserContext
     from misago.parser.parser import Parser
 
     from .patterns import PluginPattern
@@ -150,12 +129,16 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
 
     @create_parser_hook.append_filter
     def register_custom_pattern(
-        action: CreateParserHookAction, *, block_patterns, **kwargs
+        action: CreateParserHookAction,
+        context: ParserContext,
+        *,
+        block_patterns,
+        **kwargs,
     ) -> Parser:
         block_patterns.append(PluginPattern)
 
         # Call the next function in chain
-        return action(block_patterns=block_patterns, **kwargs)
+        return action(context, block_patterns=block_patterns, **kwargs)
     ```
     """
 
@@ -164,22 +147,18 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
     def __call__(
         self,
         action: CreateParserHookAction,
+        context: "ParserContext",
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-        user: User | None = None,
-        request: HttpRequest | None = None,
-        content_type: str | None = None,
     ) -> Parser:
         return super().__call__(
             action,
+            context,
             block_patterns=block_patterns,
             inline_patterns=inline_patterns,
             post_processors=post_processors,
-            user=user,
-            request=request,
-            content_type=content_type,
         )
 
 

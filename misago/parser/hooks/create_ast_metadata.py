@@ -1,11 +1,9 @@
-from typing import Protocol
-
-from django.contrib.auth import get_user_model
-from django.http import HttpRequest
+from typing import TYPE_CHECKING, Protocol
 
 from ...plugins.hooks import FilterHook
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ..context import ParserContext
 
 
 class CreateAstMetadataHookAction(Protocol):
@@ -24,13 +22,10 @@ class CreateAstMetadataHookAction(Protocol):
 
     A list of `dict`s representing parsed markup.
 
-    ## `user: User | None = None`
+    ## `context: ParserContext`
 
-    A `User` instance with the parsed text's author or `None` if not provided.
-
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if it was not provided.
+    An instance of the `ParserContext` dataclass that contains dependencies
+    used at different stages of parsing process.
 
     # Return value
 
@@ -42,8 +37,7 @@ class CreateAstMetadataHookAction(Protocol):
         *,
         metadata: dict,
         ast: list[dict],
-        user: User | None = None,
-        request: HttpRequest | None = None,
+        context: "ParserContext",
     ) -> dict:
         ...
 
@@ -70,13 +64,10 @@ class CreateAstMetadataHookFilter(Protocol):
 
     A list of `dict`s representing parsed markup.
 
-    ## `user: User | None = None`
+    ## `context: ParserContext`
 
-    A `User` instance with the parsed text's author or `None` if not provided.
-
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if it was not provided.
+    An instance of the `ParserContext` dataclass that contains dependencies
+    used at different stages of parsing process.
 
     # Return value
 
@@ -88,8 +79,7 @@ class CreateAstMetadataHookFilter(Protocol):
         action: CreateAstMetadataHookAction,
         metadata: dict,
         ast: list[dict],
-        user: User | None = None,
-        request: HttpRequest | None = None,
+        context: "ParserContext",
     ) -> dict:
         ...
 
@@ -111,11 +101,8 @@ class CreateAstMetadataHook(
     metadata and populates it with threads:
 
     ```python
-    from django.contrib.auth import get_user_model
-    from django.http import HttpRequest
+    from misago.parser.context import ParserContext
     from misago.threads.models import Thread
-
-    User = get_user_model()
 
 
     @create_ast_metadata_hook.append_filter
@@ -123,8 +110,7 @@ class CreateAstMetadataHook(
         action: CreateAstMetadataHookAction,
         metadata: dict,
         ast: list[dict],
-        user: User | None = None,
-        request: HttpRequest | None = None,
+        context: ParserContext,
     ) -> dict:
         metadata["threads"] = {
             "ids": set(),
@@ -150,10 +136,9 @@ class CreateAstMetadataHook(
         action: CreateAstMetadataHookAction,
         metadata: dict,
         ast: list[dict],
-        user: User | None = None,
-        request: HttpRequest | None = None,
+        context: "ParserContext",
     ) -> dict:
-        return super().__call__(action, metadata, ast, user, request)
+        return super().__call__(action, metadata, ast, context)
 
 
 create_ast_metadata_hook = CreateAstMetadataHook()

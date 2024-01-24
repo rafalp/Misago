@@ -12,26 +12,21 @@ from .postprocessors import post_processors
 User = get_user_model()
 
 
-def create_parser(
-    context: ParserContext,
-    content_type: str | None = None,
-) -> Parser:
+def create_parser(context: ParserContext) -> Parser:
     return create_parser_hook(
         _create_parser_action,
+        context,
         block_patterns=block_patterns.copy(),
         inline_patterns=inline_patterns.copy(),
         post_processors=post_processors.copy(),
-        context=context,
-        content_type=content_type,
     )
 
 
 def _create_parser_action(
-    *,
     context: ParserContext,
+    *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
     post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-    content_type: str | None = None,
 ) -> Parser:
     return Parser(block_patterns, inline_patterns, post_processors)

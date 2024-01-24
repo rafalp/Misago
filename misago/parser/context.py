@@ -17,19 +17,19 @@ class ParserContext:
     content_type: str | None
     forum_address: ForumAddress
     request: HttpRequest | None
-    user_permissions: UserPermissionsProxy
     user: User | AnonymousUser
+    user_permissions: UserPermissionsProxy
     settings: DynamicSettings
     cache_versions: dict
     plugin_data: dict
 
 
 def create_parser_context(
-    *,
     request: HttpRequest | None = None,
-    user_permissions: UserPermissionsProxy,
-    settings: DynamicSettings,
-    cache_versions: dict,
+    *,
+    user_permissions: UserPermissionsProxy | None = None,
+    settings: DynamicSettings | None = None,
+    cache_versions: dict | None = None,
     content_type: str | None = None,
 ) -> ParserContext:
     data = {
@@ -41,26 +41,33 @@ def create_parser_context(
     }
 
     if user_permissions:
-        data["user_permissions"] = user_permissions
         data["user"] = user_permissions.user
+        data["user_permissions"] = user_permissions
+    elif request:
+        data["user"] = request.user
+        data["user_permissions"] = request.user_permissions
+    else:
+        raise TypeError(
+            "'user_permissions' argument is required if 'request' is not set"
+        )
 
     if settings:
         data["settings"] = settings
     elif request:
         data["settings"] = request.settings
     else:
-        raise ValueError("'settings' argument is required")
+        raise TypeError("'settings' argument is required if 'request' is not set")
 
     if cache_versions:
         data["cache_versions"] = cache_versions
     elif request:
         data["cache_versions"] = request.cache_versions
     else:
-        raise ValueError("'cache_versions' argument is required")
+        raise TypeError("'cache_versions' argument is required if 'request' is not set")
 
     context = ParserContext(
         content_type=content_type,
-        forum_address=DynamicSettings(data["settings"]),
+        forum_address=ForumAddress(data["settings"]),
         request=request,
         **data,
     )
