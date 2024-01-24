@@ -24,8 +24,8 @@ class CreateAstMetadataHookAction(Protocol):
 
     ## `context: ParserContext`
 
-    An instance of the `ParserContext` dataclass that contains dependencies
-    used at different stages of parsing process.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
 
     # Return value
 
@@ -66,8 +66,8 @@ class CreateAstMetadataHookFilter(Protocol):
 
     ## `context: ParserContext`
 
-    An instance of the `ParserContext` dataclass that contains dependencies
-    used at different stages of parsing process.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
 
     # Return value
 

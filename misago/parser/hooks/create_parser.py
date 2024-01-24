@@ -16,8 +16,8 @@ class CreateParserHookAction(Protocol):
 
     ## `context: ParserContext`
 
-    An instance of the `ParserContext` dataclass that contains dependencies
-    used at different stages of parsing process.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
 
     ## `block_patterns: list[Pattern]`
 
@@ -70,8 +70,8 @@ class CreateParserHookFilter(Protocol):
 
     ## `context: ParserContext`
 
-    An instance of the `ParserContext` dataclass that contains dependencies
-    used at different stages of parsing process.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
 
     ## `block_patterns: list[Pattern]`
 

@@ -19,7 +19,7 @@ class SetupParserContextHookAction(Protocol):
 
     # Return value
 
-    A `ParserContext` instance to use by the parser.
+    A `ParserContext` instance to use during parsing.
     """
 
     def __call__(self, context: "ParserContext") -> "ParserContext":
@@ -45,7 +45,7 @@ class SetupParserContextHookFilter(Protocol):
 
     # Return value
 
-    A `ParserContext` instance to use by the parser.
+    A `ParserContext` instance to use during parsing.
     """
 
     def __call__(

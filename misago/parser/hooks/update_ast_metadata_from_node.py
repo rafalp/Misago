@@ -1,11 +1,9 @@
-from typing import Protocol
-
-from django.contrib.auth import get_user_model
-from django.http import HttpRequest
+from typing import TYPE_CHECKING, Protocol
 
 from ...plugins.hooks import FilterHook
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ..context import ParserContext
 
 
 class UpdateAstMetadataFromNodeHookAction(Protocol):
@@ -23,13 +21,10 @@ class UpdateAstMetadataFromNodeHookAction(Protocol):
 
     A `dict` with the individual node.
 
-    ## `user: User | None = None`
+    ## `context: ParserContext`
 
-    A `User` instance with the parsed text's author or `None` if not provided.
-
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if it was not provided.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
     """
 
     def __call__(
@@ -37,7 +32,7 @@ class UpdateAstMetadataFromNodeHookAction(Protocol):
         *,
         metadata: dict,
         ast_node: dict,
-        request: HttpRequest | None = None,
+        context: "ParserContext",
     ) -> None:
         ...
 
@@ -64,13 +59,10 @@ class UpdateAstMetadataFromNodeHookFilter(Protocol):
 
     A `dict` with the individual node.
 
-    ## `user: User | None = None`
+    ## `context: ParserContext`
 
-    A `User` instance with the parsed text's author or `None` if not provided.
-
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if it was not provided.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
     """
 
     def __call__(
@@ -78,7 +70,7 @@ class UpdateAstMetadataFromNodeHookFilter(Protocol):
         action: UpdateAstMetadataFromNodeHookAction,
         metadata: dict,
         ast_node: dict,
-        request: HttpRequest | None = None,
+        context: "ParserContext",
     ) -> None:
         ...
 
@@ -96,11 +88,8 @@ class UpdateAstMetadataFromNodeHook(
     the metadata with threads ids extracted them the `url` nodes:
 
     ```python
-    from django.contrib.auth import get_user_model
-    from django.http import HttpRequest
     from django.urls import Resolver404, resolve
-
-    User = get_user_model()
+    from misago.parser.context import ParserContext
 
 
     @update_ast_metadata_from_node_hook.append_filter
@@ -108,20 +97,22 @@ class UpdateAstMetadataFromNodeHook(
         action: UpdateAstMetadataFromNodeHookAction,
         metadata: dict,
         ast_node: dict,
-        user: User | None = None,
-        request: HttpRequest | None = None,
+        context: ParserContext,
     ) -> None:
         if ast_node["type"] in ("url", "url-bbcode", "autolink", "auto-url"):
-            if thread_id := get_thread_id_from_url(ast_node["href"])
+            if thread_id := get_thread_id_from_url(context, ast_node["href"])
                 metadata["threads"]["ids"].add(thread_id)
 
         action(ast_node, metadata, request)
 
 
-    def get_thread_id_from_url(url: str) -> int | None:
+    def get_thread_id_from_url(context: ParserContext, url: str) -> int | None:
         try:
             resolver_match = resolve(url)
         except Resolver404:
+            return None
+
+        if not context.forum_address.is_inbound_link(url):
             return None
 
         if (
@@ -145,10 +136,9 @@ class UpdateAstMetadataFromNodeHook(
         action: UpdateAstMetadataFromNodeHookAction,
         metadata: dict,
         ast_node: dict,
-        user: User | None = None,
-        request: HttpRequest | None = None,
+        context: "ParserContext",
     ) -> None:
-        return super().__call__(action, metadata, ast_node, user, request)
+        return super().__call__(action, metadata, ast_node, context)
 
 
 update_ast_metadata_from_node_hook = UpdateAstMetadataFromNodeHook()
