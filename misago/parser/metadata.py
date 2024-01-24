@@ -1,9 +1,15 @@
+from django.contrib.auth.models import get_user_model
+
 from ..core.utils import slugify
 from .context import ParserContext
 from .hooks import (
     create_ast_metadata_hook,
     update_ast_metadata_from_node_hook,
+    update_ast_metadata_posts_hook,
+    update_ast_metadata_users_hook,
 )
+
+User = get_user_model()
 
 
 def create_ast_metadata(
@@ -15,7 +21,7 @@ def create_ast_metadata(
         "users": {},
         "posts": {
             "ids": set(),
-            "posts": {},
+            "objs": {},
         },
     }
 
@@ -30,8 +36,9 @@ def _create_ast_metadata_action(
     for ast_node in ast:
         update_ast_metadata_from_node(metadata, ast_node, context)
 
-    _update_ast_metadata_posts_action(metadata, context)
-    _update_ast_metadata_users_action(metadata, context)
+    update_ast_metadata_posts_hook(_update_ast_metadata_posts_action, metadata, context)
+
+    update_ast_metadata_users_hook(_update_ast_metadata_users_action, metadata, context)
 
     return metadata
 
@@ -76,6 +83,8 @@ def _update_ast_metadata_from_node_action(
 def _update_ast_metadata_posts_action(metadata: dict, context: ParserContext) -> None:
     if not metadata["posts"]["ids"]:
         return
+
+    return  # TODO when posts perms are done!
 
 
 def _update_ast_metadata_users_action(metadata: dict, context: ParserContext) -> None:
