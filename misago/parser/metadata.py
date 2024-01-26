@@ -20,7 +20,7 @@ def create_ast_metadata(
     ast: list[dict],
 ) -> dict:
     metadata = {
-        "mentions": set(),
+        "usernames": set(),
         "users": {},
         "posts": {
             "ids": set(),
@@ -60,25 +60,25 @@ def _update_ast_metadata_from_node_action(
     metadata: dict,
 ) -> None:
     if ast_node["type"] == "mention":
-        metadata["mentions"].add(slugify(ast_node["username"]))
+        metadata["usernames"].add(slugify(ast_node["username"]))
 
     elif ast_node["type"] == "quote-bbcode":
         if ast_node["author"]:
-            metadata["mentions"].add(slugify(ast_node["author"]))
+            metadata["usernames"].add(slugify(ast_node["author"]))
         if ast_node["post"]:
             metadata["posts"]["ids"].add(ast_node["post"])
 
     if ast_node.get("children"):
         for child_node in ast_node["children"]:
-            update_ast_metadata_from_node(metadata, child_node, context)
+            update_ast_metadata_from_node(context, child_node, metadata)
 
     if ast_node.get("items"):
         for child_node in ast_node["items"]:
-            update_ast_metadata_from_node(metadata, child_node, context)
+            update_ast_metadata_from_node(context, child_node, metadata)
 
     if ast_node.get("lists"):
         for child_node in ast_node["lists"]:
-            update_ast_metadata_from_node(metadata, child_node, context)
+            update_ast_metadata_from_node(context, child_node, metadata)
 
 
 def update_ast_metadata_users(context: ParserContext, metadata: dict) -> None:
@@ -86,15 +86,15 @@ def update_ast_metadata_users(context: ParserContext, metadata: dict) -> None:
 
 
 def _update_ast_metadata_users_action(context: ParserContext, metadata: dict) -> None:
-    if not metadata["mentions"]:
+    if not metadata["usernames"]:
         return
 
-    mentions = sorted(metadata["mentions"])
-    if len(mentions) > settings.MISAGO_PARSER_MAX_MENTIONS:
+    usernames = sorted(metadata["usernames"])
+    if len(usernames) > settings.MISAGO_PARSER_MAX_USERS:
         return
 
-    if mentions:
-        queryset = get_ast_metadata_users_queryset(context, mentions)
+    if usernames:
+        queryset = get_ast_metadata_users_queryset(context, usernames)
         for user in queryset:
             metadata["users"][user.slug] = user
 
