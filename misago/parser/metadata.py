@@ -39,7 +39,7 @@ def _update_ast_metadata_action(
     for ast_node in ast:
         update_ast_metadata_from_node(context, ast_node, metadata)
 
-    update_ast_metadata_users_hook(_update_ast_metadata_users_action, context, metadata)
+    update_ast_metadata_users(context, metadata)
 
     return metadata
 
@@ -79,6 +79,10 @@ def _update_ast_metadata_from_node_action(
     if ast_node.get("lists"):
         for child_node in ast_node["lists"]:
             update_ast_metadata_from_node(metadata, child_node, context)
+
+
+def update_ast_metadata_users(context: ParserContext, metadata: dict) -> None:
+    update_ast_metadata_users_hook(_update_ast_metadata_users_action, context, metadata)
 
 
 def _update_ast_metadata_users_action(context: ParserContext, metadata: dict) -> None:
