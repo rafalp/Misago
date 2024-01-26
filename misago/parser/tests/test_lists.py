@@ -4,6 +4,7 @@ def test_unordered_list(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -26,6 +27,7 @@ def test_unordered_list_with_multiple_items(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -68,6 +70,7 @@ def test_unordered_list_with_asterisk(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "*",
             "items": [
                 {
                     "type": "list-item",
@@ -100,6 +103,7 @@ def test_unordered_list_with_plus(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "+",
             "items": [
                 {
                     "type": "list-item",
@@ -132,6 +136,7 @@ def test_unordered_list_with_indent(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -164,6 +169,7 @@ def test_ordered_list(parse_markup):
         {
             "type": "list",
             "ordered": True,
+            "sign": None,
             "items": [
                 {
                     "type": "list-item",
@@ -206,6 +212,7 @@ def test_list_with_separating_blank_lines(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -238,6 +245,7 @@ def test_multiple_lists_separated_by_marker(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -264,6 +272,7 @@ def test_multiple_lists_separated_by_marker(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "*",
             "items": [
                 {
                     "type": "list-item",
@@ -290,6 +299,7 @@ def test_multiple_lists_separated_by_marker(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "+",
             "items": [
                 {
                     "type": "list-item",
@@ -306,6 +316,7 @@ def test_multiple_lists_separated_by_marker(parse_markup):
         {
             "type": "list",
             "ordered": True,
+            "sign": None,
             "items": [
                 {
                     "type": "list-item",
@@ -335,6 +346,7 @@ def test_list_with_first_item_subitems(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -348,6 +360,7 @@ def test_list_with_first_item_subitems(parse_markup):
                         {
                             "type": "list",
                             "ordered": False,
+                            "sign": "-",
                             "items": [
                                 {
                                     "type": "list-item",
@@ -401,6 +414,7 @@ def test_list_with_second_item_subitems(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -424,6 +438,7 @@ def test_list_with_second_item_subitems(parse_markup):
                         {
                             "type": "list",
                             "ordered": False,
+                            "sign": "-",
                             "items": [
                                 {
                                     "type": "list-item",
@@ -468,6 +483,7 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -481,6 +497,7 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
                         {
                             "type": "list",
                             "ordered": False,
+                            "sign": "-",
                             "items": [
                                 {
                                     "type": "list-item",
@@ -494,6 +511,7 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
                                         {
                                             "type": "list",
                                             "ordered": False,
+                                            "sign": "-",
                                             "items": [
                                                 {
                                                     "type": "list-item",
@@ -553,6 +571,7 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -566,6 +585,7 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
                         {
                             "type": "list",
                             "ordered": False,
+                            "sign": "-",
                             "items": [
                                 {
                                     "type": "list-item",
@@ -579,6 +599,7 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
                                         {
                                             "type": "list",
                                             "ordered": False,
+                                            "sign": "-",
                                             "items": [
                                                 {
                                                     "type": "list-item",
@@ -592,6 +613,7 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
                                                         {
                                                             "type": "list",
                                                             "ordered": False,
+                                                            "sign": "-",
                                                             "items": [
                                                                 {
                                                                     "type": "list-item",
@@ -653,6 +675,7 @@ def test_list_with_empty_item(parse_markup):
         {
             "type": "list",
             "ordered": False,
+            "sign": "-",
             "items": [
                 {
                     "type": "list-item",
@@ -666,6 +689,7 @@ def test_list_with_empty_item(parse_markup):
                         {
                             "type": "list",
                             "ordered": False,
+                            "sign": "-",
                             "items": [
                                 {
                                     "type": "list-item",

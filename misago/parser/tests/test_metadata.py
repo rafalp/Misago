@@ -181,3 +181,104 @@ def test_create_ast_metadata_outbound_links_excludes_inbound_link(parser_context
         ],
     )
     assert metadata["outbound-links"] == set()
+
+
+def test_create_ast_metadata_visits_lists_items(parser_context, user):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "heading",
+                "level": 1,
+                "children": [
+                    {"type": "text", "text": "Hello!"},
+                ],
+            },
+            {
+                "type": "list",
+                "ordered": False,
+                "sign": "+",
+                "items": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "text",
+                                "text": "Lorem ",
+                            },
+                            {"type": "mention", "username": user.username},
+                        ],
+                        "lists": [],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "text",
+                                "text": "Ipsum",
+                            },
+                        ],
+                        "lists": [],
+                    },
+                ],
+            },
+        ],
+    )
+    assert metadata["usernames"] == set([user.slug])
+    assert metadata["users"] == {user.slug: user}
+
+
+def test_create_ast_metadata_visits_nested_lists_items(parser_context, user):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "heading",
+                "level": 1,
+                "children": [
+                    {"type": "text", "text": "Hello!"},
+                ],
+            },
+            {
+                "type": "list",
+                "ordered": False,
+                "sign": "-",
+                "items": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "text",
+                                "text": "Lorem ",
+                            },
+                        ],
+                        "lists": [
+                            {
+                                "type": "list",
+                                "ordered": True,
+                                "sign": None,
+                                "items": [
+                                    {
+                                        "type": "list-item",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "text": "Ipsum",
+                                            },
+                                            {
+                                                "type": "mention",
+                                                "username": user.username,
+                                            },
+                                        ],
+                                        "lists": [],
+                                    },
+                                ],
+                            }
+                        ],
+                    },
+                ],
+            },
+        ],
+    )
+    assert metadata["usernames"] == set([user.slug])
+    assert metadata["users"] == {user.slug: user}

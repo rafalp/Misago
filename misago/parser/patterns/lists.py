@@ -67,11 +67,12 @@ class ListMarkdown(Pattern):
         level: int = -1
         marker: str | None = None
 
-        for _, item_level, item_marker, children in items:
-            if item_level > level or item_marker != marker:
+        for _, item_level, item_sign, children in items:
+            if item_level > level or item_sign != marker:
                 list_ast = {
                     "type": ListMarkdown.pattern_type,
-                    "ordered": item_marker == "n",
+                    "ordered": item_sign == "n",
+                    "sign": item_sign if item_sign != "n" else None,
                     "items": [],
                 }
 
@@ -90,9 +91,9 @@ class ListMarkdown(Pattern):
                 for _ in range(level - item_level):
                     lists_stack.pop(-1)
 
-            if item_level != level or item_marker != marker:
+            if item_level != level or item_sign != marker:
                 level = item_level
-                marker = item_marker
+                marker = item_sign
 
             lists_stack[-1]["items"].append(
                 {
