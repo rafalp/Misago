@@ -2,6 +2,47 @@
 # name: test_render_ast_to_html_bold_bbcode_text
   '<p>Hello <b>world</b>!</p>'
 # ---
+# name: test_render_ast_to_html_code
+  '''
+  <pre><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_bbcode
+  '''
+  <pre><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_bbcode_with_syntax
+  '''
+  <pre class="language-python"><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_indented
+  '''
+  <p>Hello:</p>
+  <pre><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_with_syntax
+  '''
+  <pre class="language-python"><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
 # name: test_render_ast_to_html_emphasis_text
   '<p>Hello <em>world</em>!</p>'
 # ---

@@ -62,6 +62,83 @@ def test_render_ast_to_html_thematic_break_bbcode(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_code(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        ```
+            if random.randint(0, 10) > 4:
+                print("Gotcha!")
+                return True
+            return False
+        ```
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_code_with_syntax(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        ```python
+            if random.randint(0, 10) > 4:
+                print("Gotcha!")
+                return True
+            return False
+        ```
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_code_bbcode(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        [code]
+            if random.randint(0, 10) > 4:
+                print("Gotcha!")
+                return True
+            return False
+        [/code]
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_code_bbcode_with_syntax(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        """
+        [code=python]
+            if random.randint(0, 10) > 4:
+                print("Gotcha!")
+                return True
+            return False
+        [/code]
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_code_indented(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        Hello:
+
+            if random.randint(0, 10) > 4:
+                print("Gotcha!")
+                return True
+            return False
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_inline_code(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello `world`!")
     metadata = create_ast_metadata(parser_context, ast)

@@ -31,7 +31,7 @@ class FencedCodeMarkdown(Pattern):
 
 
 class IndentedCodeMarkdown(Pattern):
-    pattern_type = "indented-code"
+    pattern_type = "code-indented"
     pattern: str = r"(\n|^) {4}.+(\n {4}.+)*"
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:

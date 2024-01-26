@@ -43,6 +43,16 @@ def _render_ast_node_to_html_action(
         children = render_inline_ast_to_html(context, ast_node["children"], metadata)
         return f"<p>{children}</p>"
 
+    if ast_type in ("code", "code-bbcode"):
+        if ast_node["syntax"]:
+            html_class = f" class=\"language-{ast_node['syntax']}\""
+        else:
+            html_class = ""
+        return f"<pre{html_class}><code>{escape(ast_node['code'])}</code></pre>"
+
+    if ast_type == "code-indented":
+        return f"<pre><code>{escape(ast_node['code'])}</code></pre>"
+
     if ast_type == "code-inline":
         return f"<code>{escape(ast_node['code'])}</code>"
 
