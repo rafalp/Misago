@@ -43,6 +43,14 @@ def _render_ast_node_to_html_action(
         children = render_inline_ast_to_html(context, ast_node["children"], metadata)
         return f"<p>{children}</p>"
 
+    if ast_type in ("emphasis", "emphasis-underscore"):
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<em>{children}</em>"
+
+    if ast_type in ("strong", "strong-underscore"):
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<strong>{children}</strong>"
+
     if ast_type == "line-break":
         return "<br />"
 

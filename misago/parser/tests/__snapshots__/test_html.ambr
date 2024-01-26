@@ -1,4 +1,10 @@
 # serializer version: 1
+# name: test_render_ast_to_html_emphasis_text
+  '<p>Hello <em>world</em>!</p>'
+# ---
+# name: test_render_ast_to_html_emphasis_underscore_text
+  '<p>Hello <em>world</em>!</p>'
+# ---
 # name: test_render_ast_to_html_heading[# Hello world!]
   '<h1>Hello world!</h1>'
 # ---
@@ -28,6 +34,12 @@
 # ---
 # name: test_render_ast_to_html_soft_linebreak
   '<p>Hello world!<br />How&#x27;s going?</p>'
+# ---
+# name: test_render_ast_to_html_strong_text
+  '<p>Hello <strong>world</strong>!</p>'
+# ---
+# name: test_render_ast_to_html_strong_underscore_text
+  '<p>Hello <strong>world</strong>!</p>'
 # ---
 # name: test_render_ast_to_html_thematic_break
   '''
