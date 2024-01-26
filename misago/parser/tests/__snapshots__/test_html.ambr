@@ -49,6 +49,9 @@
 # name: test_render_ast_to_html_emphasis_underscore_text
   '<p>Hello <em>world</em>!</p>'
 # ---
+# name: test_render_ast_to_html_escaped_characters
+  '<p>Hello[hr]World!</p>'
+# ---
 # name: test_render_ast_to_html_heading[# Hello world!]
   '<h1>Hello world!</h1>'
 # ---

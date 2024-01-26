@@ -88,6 +88,9 @@ def _render_ast_node_to_html_action(
         children = render_inline_ast_to_html(context, ast_node["children"], metadata)
         return f"<sub>{children}</sub>"
 
+    if ast_type == "escape":
+        return escape(ast_node["character"])
+
     if ast_type == "line-break":
         return "<br />"
 
