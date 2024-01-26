@@ -1,11 +1,11 @@
-from django.contrib.auth.models import get_user_model
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from ..core.utils import slugify
 from .context import ParserContext
 from .hooks import (
-    create_ast_metadata_hook,
+    update_ast_metadata_hook,
     update_ast_metadata_from_node_hook,
-    update_ast_metadata_posts_hook,
     update_ast_metadata_users_hook,
 )
 
@@ -13,8 +13,8 @@ User = get_user_model()
 
 
 def create_ast_metadata(
-    ast: list[dict],
     context: ParserContext,
+    ast: list[dict],
 ) -> dict:
     metadata = {
         "mentions": set(),
@@ -25,38 +25,36 @@ def create_ast_metadata(
         },
     }
 
-    return create_ast_metadata_hook(_create_ast_metadata_action, metadata, ast, context)
+    return update_ast_metadata_hook(_update_ast_metadata_action, context, ast, metadata)
 
 
-def _create_ast_metadata_action(
-    metadata: dict,
-    ast: list[dict],
+def _update_ast_metadata_action(
     context: ParserContext,
+    ast: list[dict],
+    metadata: dict,
 ) -> dict:
     for ast_node in ast:
-        update_ast_metadata_from_node(metadata, ast_node, context)
+        update_ast_metadata_from_node(context, ast_node, metadata)
 
-    update_ast_metadata_posts_hook(_update_ast_metadata_posts_action, metadata, context)
-
-    update_ast_metadata_users_hook(_update_ast_metadata_users_action, metadata, context)
+    update_ast_metadata_users_hook(_update_ast_metadata_users_action, context, metadata)
 
     return metadata
 
 
 def update_ast_metadata_from_node(
-    metadata: dict,
-    ast_node: dict,
     context: ParserContext,
+    ast_node: dict,
+    metadata: dict,
 ) -> None:
     update_ast_metadata_from_node_hook(
-        _update_ast_metadata_from_node_action, metadata, ast_node, context
+        _update_ast_metadata_from_node_action, context, ast_node, metadata
     )
 
 
 def _update_ast_metadata_from_node_action(
-    metadata: dict,
-    ast_node: dict,
     context: ParserContext,
+    ast_node: dict,
+    metadata: dict,
 ) -> None:
     if ast_node["type"] == "mention":
         metadata["mentions"].add(slugify(ast_node["username"]))
@@ -80,13 +78,26 @@ def _update_ast_metadata_from_node_action(
             update_ast_metadata_from_node(metadata, child_node, context)
 
 
-def _update_ast_metadata_posts_action(metadata: dict, context: ParserContext) -> None:
-    if not metadata["posts"]["ids"]:
+def _update_ast_metadata_users_action(context: ParserContext, metadata: dict) -> None:
+    if not metadata["mentions"]:
         return
 
-    return  # TODO when posts perms are done!
-
-
-def _update_ast_metadata_users_action(metadata: dict, context: ParserContext) -> None:
-    if not metadata["mentions"]["slugs"]:
+    mentions = sorted(metadata["mentions"])
+    if len(mentions) > settings.MISAGO_PARSER_MAX_MENTIONS:
         return
+
+    if mentions:
+        queryset = get_ast_metadata_users_queryset(context, mentions)
+        for user in queryset:
+            metadata["users"][user.slug] = user
+
+
+def get_ast_metadata_users_queryset(context: ParserContext, mentions: list[str]):
+    return _get_ast_metadata_users_queryset_action(context, mentions)
+
+
+def _get_ast_metadata_users_queryset_action(
+    context: ParserContext,
+    mentions: list[str],
+):
+    return User.objects.filter(slug__in=mentions)

@@ -14,26 +14,26 @@ class UpdateAstMetadataFromNodeHookAction(Protocol):
 
     # Arguments
 
-    ## `metadata: dict`
+    ## `context: ParserContext`
 
-    A `dict` with metadata to update.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
 
     ## `ast_node: dict`
 
     A `dict` with the individual node.
 
-    ## `context: ParserContext`
+    ## `metadata: dict`
 
-    An instance of the `ParserContext` data class that contains dependencies
-    used during parsing.
+    A `dict` with metadata to update.
     """
 
     def __call__(
         self,
         *,
-        metadata: dict,
-        ast_node: dict,
         context: "ParserContext",
+        ast_node: dict,
+        metadata: dict,
     ) -> None:
         ...
 
@@ -52,26 +52,26 @@ class UpdateAstMetadataFromNodeHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `metadata: dict`
+    ## `context: ParserContext`
 
-    A `dict` with metadata to update.
+    An instance of the `ParserContext` data class that contains dependencies
+    used during parsing.
 
     ## `ast_node: dict`
 
     A `dict` with the individual node.
 
-    ## `context: ParserContext`
+    ## `metadata: dict`
 
-    An instance of the `ParserContext` data class that contains dependencies
-    used during parsing.
+    A `dict` with metadata to update.
     """
 
     def __call__(
         self,
         action: UpdateAstMetadataFromNodeHookAction,
-        metadata: dict,
-        ast_node: dict,
         context: "ParserContext",
+        ast_node: dict,
+        metadata: dict,
     ) -> None:
         ...
 
@@ -96,9 +96,9 @@ class UpdateAstMetadataFromNodeHook(
     @update_ast_metadata_from_node_hook.append_filter
     def update_ast_metadata_threads(
         action: UpdateAstMetadataFromNodeHookAction,
-        metadata: dict,
-        ast_node: dict,
         context: ParserContext,
+        ast_node: dict,
+        metadata: dict,
     ) -> None:
         if ast_node["type"] in ("url", "url-bbcode", "autolink", "auto-url"):
             if thread_id := get_thread_id_from_url(context, ast_node["href"])
@@ -135,11 +135,11 @@ class UpdateAstMetadataFromNodeHook(
     def __call__(
         self,
         action: UpdateAstMetadataFromNodeHookAction,
-        metadata: dict,
-        ast_node: dict,
         context: "ParserContext",
+        ast_node: dict,
+        metadata: dict,
     ) -> None:
-        return super().__call__(action, metadata, ast_node, context)
+        return super().__call__(action, context, ast_node, metadata)
 
 
 update_ast_metadata_from_node_hook = UpdateAstMetadataFromNodeHook()
