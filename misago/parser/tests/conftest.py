@@ -14,6 +14,8 @@ def parser(parser_context):
 
 @pytest.fixture
 def parser_context(dynamic_settings, cache_versions, user):
+    dynamic_settings.forum_address = "http://example.org"
+
     return create_parser_context(
         user_permissions=UserPermissionsProxy(user, cache_versions),
         settings=dynamic_settings,

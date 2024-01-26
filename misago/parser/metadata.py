@@ -20,6 +20,7 @@ def create_ast_metadata(
     ast: list[dict],
 ) -> dict:
     metadata = {
+        "outbound-links": set(),
         "usernames": set(),
         "users": {},
         "posts": {
@@ -67,6 +68,10 @@ def _update_ast_metadata_from_node_action(
             metadata["usernames"].add(slugify(ast_node["author"]))
         if ast_node["post"]:
             metadata["posts"]["ids"].add(ast_node["post"])
+
+    elif ast_node["type"] in ("auto-link", "auto-url", "url", "url-bbcode"):
+        if not context.forum_address.is_inbound_link(ast_node["href"]):
+            metadata["outbound-links"].add(ast_node["href"])
 
     if ast_node.get("children"):
         for child_node in ast_node["children"]:

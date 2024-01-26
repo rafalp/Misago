@@ -3,6 +3,7 @@ from ..metadata import create_ast_metadata
 
 def test_create_ast_metadata_creates_metadata_for_empty_ast(parser_context):
     metadata = create_ast_metadata(parser_context, [])
+    assert metadata["outbound-links"] == set()
     assert metadata["usernames"] == set()
     assert metadata["users"] == {}
 
@@ -122,3 +123,61 @@ def test_create_ast_metadata_normalizes_mentioned_users_names(parser_context, us
     )
     assert metadata["usernames"] == set([user.slug])
     assert metadata["users"] == {user.slug: user}
+
+
+def test_create_ast_metadata_includes_an_outbound_link(parser_context):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "heading",
+                "level": 1,
+                "children": [
+                    {"type": "text", "text": "Hello!"},
+                ],
+            },
+            {
+                "type": "paragraph",
+                "children": [
+                    {"type": "text", "text": "See "},
+                    {
+                        "type": "url",
+                        "href": "my-website.com",
+                        "children": [{"type": "text", "text": "my homepage"}],
+                    },
+                    {"type": "text", "text": "!"},
+                ],
+            },
+            {"type": "thematic-break"},
+        ],
+    )
+    assert metadata["outbound-links"] == set(["my-website.com"])
+
+
+def test_create_ast_metadata_outbound_links_excludes_inbound_link(parser_context):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "heading",
+                "level": 1,
+                "children": [
+                    {"type": "text", "text": "Hello!"},
+                ],
+            },
+            {
+                "type": "paragraph",
+                "children": [
+                    {"type": "text", "text": "See "},
+                    {
+                        "type": "url",
+                        "href": "example.org/t/123/",
+                        "children": [{"type": "text", "text": "this thread"}],
+                    },
+                    {"type": "text", "text": "!"},
+                ],
+            },
+            {"type": "thematic-break"},
+        ],
+    )
+    assert metadata["outbound-links"] == set()
