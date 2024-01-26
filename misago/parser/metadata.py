@@ -96,15 +96,14 @@ def _update_ast_metadata_users_action(context: ParserContext, metadata: dict) ->
 
 
 def get_ast_metadata_users_queryset(
-    context: ParserContext, mentions: list[str]
+    context: ParserContext, usernames: list[str]
 ) -> Iterable[User]:
     return get_ast_metadata_users_queryset_hook(
-        _get_ast_metadata_users_queryset_action, context, mentions
+        _get_ast_metadata_users_queryset_action, context, usernames
     )
 
 
 def _get_ast_metadata_users_queryset_action(
-    context: ParserContext,
-    mentions: list[str],
+    context: ParserContext, usernames: list[str]
 ) -> Iterable[User]:
-    return User.objects.filter(slug__in=mentions)
+    return User.objects.filter(slug__in=usernames)

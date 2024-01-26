@@ -22,7 +22,7 @@ class GetAstMetadataUsersQuerysetHookAction(Protocol):
     An instance of the `ParserContext` data class that contains dependencies
     used during parsing.
 
-    ## `mentions: list[str]`
+    ## `usernames: list[str]`
 
     A list of normalized usernames of `User` instance to retrieve from the database.
 
@@ -37,7 +37,7 @@ class GetAstMetadataUsersQuerysetHookAction(Protocol):
         self,
         *,
         context: "ParserContext",
-        mentions: list[str],
+        usernames: list[str],
     ) -> Iterable[User]:
         ...
 
@@ -60,7 +60,7 @@ class GetAstMetadataUsersQuerysetHookFilter(Protocol):
     An instance of the `ParserContext` data class that contains dependencies
     used during parsing.
 
-    ## `mentions: list[str]`
+    ## `usernames: list[str]`
 
     A list of normalized usernames of `User` instance to retrieve from the database.
 
@@ -75,7 +75,7 @@ class GetAstMetadataUsersQuerysetHookFilter(Protocol):
         self,
         action: GetAstMetadataUsersQuerysetHookAction,
         context: "ParserContext",
-        mentions: list[str],
+        usernames: list[str],
     ) -> Iterable[User]:
         ...
 
@@ -102,12 +102,12 @@ class GetAstMetadataUsersQuerysetHook(
     from misago.parser.context import ParserContext
 
     @get_ast_metadata_users_queryset_hook.append_filter
-    def get_ast_metadata_users_queryset_exclude_admin(
+    def get_ast_metadata_users_queryset_exclude_promotors(
         action: GetAstMetadataUsersQuerysetHookAction,
         context: ParserContext,
-        mentions: list[str],
+        usernames: list[str],
     ) -> dict:
-        return action(context, mentions).exclude(group_id=10)
+        return action(context, usernames).exclude(group_id=10)
     ```
     """
 
@@ -117,9 +117,9 @@ class GetAstMetadataUsersQuerysetHook(
         self,
         action: GetAstMetadataUsersQuerysetHookAction,
         context: "ParserContext",
-        mentions: list[str],
+        usernames: list[str],
     ) -> Iterable[User]:
-        return super().__call__(action, context, mentions)
+        return super().__call__(action, context, usernames)
 
 
 get_ast_metadata_users_queryset_hook = GetAstMetadataUsersQuerysetHook()
