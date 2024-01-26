@@ -68,7 +68,9 @@ def test_render_ast_to_html_emphasis_text(parser_context, parse_markup, snapshot
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_emphasis_underscore_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_html_emphasis_underscore_text(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup("Hello _world_!")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
@@ -80,8 +82,52 @@ def test_render_ast_to_html_strong_text(parser_context, parse_markup, snapshot):
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_strong_underscore_text(parser_context, parse_markup, snapshot):
-    ast = parse_markup("Hello __world__!")
+def test_render_ast_to_html_strikethrough_text(parser_context, parse_markup, snapshot):
+    ast = parse_markup("Hello ~~world~~!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_bold_bbcode_text(parser_context, parse_markup, snapshot):
+    ast = parse_markup("Hello [b]world[/b]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_italics_bbcode_text(parser_context, parse_markup, snapshot):
+    ast = parse_markup("Hello [i]world[/i]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_underline_bbcode_text(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("Hello [u]world[/u]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_strikethrough_bbcode_text(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("Hello [s]world[/s]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_superscript_bbcode_text(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("Hello [sup]world[/sup]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_subscript_bbcode_text(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("Hello [sub]world[/sub]!")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 

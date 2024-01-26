@@ -1,4 +1,7 @@
 # serializer version: 1
+# name: test_render_ast_to_html_bold_bbcode_text
+  '<p>Hello <b>world</b>!</p>'
+# ---
 # name: test_render_ast_to_html_emphasis_text
   '<p>Hello <em>world</em>!</p>'
 # ---
@@ -23,6 +26,9 @@
 # name: test_render_ast_to_html_heading[###### Hello world!]
   '<h6>Hello world!</h6>'
 # ---
+# name: test_render_ast_to_html_italics_bbcode_text
+  '<p>Hello <i>world</i>!</p>'
+# ---
 # name: test_render_ast_to_html_paragraph
   '<p>Hello world!</p>'
 # ---
@@ -35,11 +41,20 @@
 # name: test_render_ast_to_html_soft_linebreak
   '<p>Hello world!<br />How&#x27;s going?</p>'
 # ---
+# name: test_render_ast_to_html_strikethrough_bbcode_text
+  '<p>Hello <del>world</del>!</p>'
+# ---
+# name: test_render_ast_to_html_strikethrough_text
+  '<p>Hello <del>world</del>!</p>'
+# ---
 # name: test_render_ast_to_html_strong_text
   '<p>Hello <strong>world</strong>!</p>'
 # ---
-# name: test_render_ast_to_html_strong_underscore_text
-  '<p>Hello <strong>world</strong>!</p>'
+# name: test_render_ast_to_html_subscript_bbcode_text
+  '<p>Hello <sub>world</sub>!</p>'
+# ---
+# name: test_render_ast_to_html_superscript_bbcode_text
+  '<p>Hello <sup>world</sup>!</p>'
 # ---
 # name: test_render_ast_to_html_thematic_break
   '''
@@ -60,4 +75,7 @@
   <p>Hello world!</p>
   <p>How&#x27;s going?</p>
   '''
+# ---
+# name: test_render_ast_to_html_underline_bbcode_text
+  '<p>Hello <u>world</u>!</p>'
 # ---

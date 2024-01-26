@@ -51,6 +51,30 @@ def _render_ast_node_to_html_action(
         children = render_inline_ast_to_html(context, ast_node["children"], metadata)
         return f"<strong>{children}</strong>"
 
+    if ast_type in ("strikethrough", "strikethrough-bbcode"):
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<del>{children}</del>"
+
+    if ast_type == "bold-bbcode":
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<b>{children}</b>"
+
+    if ast_type == "italics-bbcode":
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<i>{children}</i>"
+
+    if ast_type == "underline-bbcode":
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<u>{children}</u>"
+
+    if ast_type == "superscript-bbcode":
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<sup>{children}</sup>"
+
+    if ast_type == "subscript-bbcode":
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<sub>{children}</sub>"
+
     if ast_type == "line-break":
         return "<br />"
 
