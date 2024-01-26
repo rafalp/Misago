@@ -1,9 +1,12 @@
+from typing import Iterable
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from ..core.utils import slugify
 from .context import ParserContext
 from .hooks import (
+    get_ast_metadata_users_queryset_hook,
     update_ast_metadata_hook,
     update_ast_metadata_from_node_hook,
     update_ast_metadata_users_hook,
@@ -92,12 +95,16 @@ def _update_ast_metadata_users_action(context: ParserContext, metadata: dict) ->
             metadata["users"][user.slug] = user
 
 
-def get_ast_metadata_users_queryset(context: ParserContext, mentions: list[str]):
-    return _get_ast_metadata_users_queryset_action(context, mentions)
+def get_ast_metadata_users_queryset(
+    context: ParserContext, mentions: list[str]
+) -> Iterable[User]:
+    return get_ast_metadata_users_queryset_hook(
+        _get_ast_metadata_users_queryset_action, context, mentions
+    )
 
 
 def _get_ast_metadata_users_queryset_action(
     context: ParserContext,
     mentions: list[str],
-):
+) -> Iterable[User]:
     return User.objects.filter(slug__in=mentions)

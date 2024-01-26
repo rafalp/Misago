@@ -8,8 +8,8 @@ if TYPE_CHECKING:
 
 class UpdateAstMetadataFromNodeHookAction(Protocol):
     """
-    A standard Misago function used to update metadata from an individual node
-    from the Abstract Syntax Tree representation of parsed markup,  or the next
+    A standard Misago function used to update the metadata from an individual node
+    from the Abstract Syntax Tree representation of parsed markup or the next
     filter function from another plugin.
 
     # Arguments
@@ -46,7 +46,7 @@ class UpdateAstMetadataFromNodeHookFilter(Protocol):
 
     ## `action: UpdateAstMetadataFromNodeHookAction`
 
-    A standard Misago function used to update metadata from an individual node
+    A standard Misago function used to update the metadata from an individual node
     from the Abstract Syntax Tree representation of parsed markup or the next
     filter function from another plugin.
 
@@ -80,8 +80,9 @@ class UpdateAstMetadataFromNodeHook(
     FilterHook[UpdateAstMetadataFromNodeHookAction, UpdateAstMetadataFromNodeHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to update metadata from an
-    individual node from the Abstract Syntax Tree representation of parsed markup.
+    This hook wraps the standard function that Misago uses to update the metadata
+    from an individual node from the Abstract Syntax Tree representation
+    of parsed markup.
 
     # Example
 

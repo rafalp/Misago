@@ -8,26 +8,26 @@ if TYPE_CHECKING:
 
 class UpdateAstMetadataUsersHookAction(Protocol):
     """
-    A standard Misago function used to update metadata with users from the database,
+    A standard Misago function used to update the metadata with users from the database,
     or the next filter function from another plugin.
 
     # Arguments
-
-    ## `metadata: dict`
-
-    A `dict` with metadata to update.
 
     ## `context: ParserContext`
 
     An instance of the `ParserContext` data class that contains dependencies
     used during parsing.
+
+    ## `metadata: dict`
+
+    A `dict` with metadata to update.
     """
 
     def __call__(
         self,
         *,
-        metadata: dict,
         context: "ParserContext",
+        metadata: dict,
     ) -> None:
         ...
 
@@ -40,26 +40,26 @@ class UpdateAstMetadataUsersHookFilter(Protocol):
 
     ## `action: UpdateAstMetadataUsersHookAction`
 
-    A standard Misago function used to update metadata with users from the database,
+    A standard Misago function used to update the metadata with users from the database,
     or the next filter function from another plugin.
 
     See the [action](#action) section for details.
-
-    ## `metadata: dict`
-
-    A `dict` with metadata to update.
 
     ## `context: ParserContext`
 
     An instance of the `ParserContext` data class that contains dependencies
     used during parsing.
+
+    ## `metadata: dict`
+
+    A `dict` with metadata to update.
     """
 
     def __call__(
         self,
         action: UpdateAstMetadataUsersHookAction,
-        metadata: dict,
         context: "ParserContext",
+        metadata: dict,
     ) -> None:
         ...
 
@@ -68,54 +68,29 @@ class UpdateAstMetadataUsersHook(
     FilterHook[UpdateAstMetadataUsersHookAction, UpdateAstMetadataUsersHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to update metadata
+    This hook wraps the standard function that Misago uses to update the metadata
     with users from the database.
 
     # Example
 
-    The code below implements a custom filter function that populates `threads` entry in
-    the metadata with threads ids extracted them the `url` nodes:
+    The code below implements a custom filter function that removes users with extra
+    flag in their `plugin_data`:
 
     ```python
-    from django.urls import Resolver404, resolve
     from misago.parser.context import ParserContext
 
 
-    @update_ast_metadata_from_node_hook.append_filter
-    def update_ast_metadata_threads(
+    @update_ast_metadata_users_hook.append_filter
+    def update_ast_metadata_users_remove_(
         action: UpdateAstMetadataUsersHookAction,
-        metadata: dict,
-        ast_node: dict,
         context: ParserContext,
+        metadata: dict,
     ) -> None:
-        if ast_node["type"] in ("url", "url-bbcode", "autolink", "auto-url"):
-            if thread_id := get_thread_id_from_url(context, ast_node["href"])
-                metadata["threads"]["ids"].add(thread_id)
+        for key, user in list(metadata["users"].items()):
+            if user.plugin_data.get("disable_mentions"):
+                del metadata["users"][key]
 
-        action(ast_node, metadata, request)
-
-
-    def get_thread_id_from_url(context: ParserContext, url: str) -> int | None:
-        try:
-            resolver_match = resolve(url)
-        except Resolver404:
-            return None
-
-        if not context.forum_address.is_inbound_link(url):
-            return None
-
-        if (
-            resolver_match.namespace == "misago" and
-            resolver_match.url_name == "thread" and
-            resolver_match.captured_kwargs.get("pk")
-        )
-            return resolver_match.captured_kwargs.get("pk")
-
-        return None
-    ```
-
-    For an explanation on `metadata["threads"]`, please see the
-    `create_ast_metadata_hook` reference.
+        action(context, metadata)
     """
 
     __slots__ = FilterHook.__slots__
@@ -123,10 +98,10 @@ class UpdateAstMetadataUsersHook(
     def __call__(
         self,
         action: UpdateAstMetadataUsersHookAction,
-        metadata: dict,
         context: "ParserContext",
+        metadata: dict,
     ) -> None:
-        return super().__call__(action, metadata, context)
+        return super().__call__(action, context, metadata)
 
 
 update_ast_metadata_users_hook = UpdateAstMetadataUsersHook()

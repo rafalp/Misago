@@ -66,7 +66,7 @@ class SetupParserContextHook(
     # Example
 
     The code below implements a custom filter function that adds extra data to
-    `plugins_data` dictionary on `ParserContext`:
+    `plugin_data` dictionary on `ParserContext`:
 
     ```python
     from misago.parser.context import ParserContext
