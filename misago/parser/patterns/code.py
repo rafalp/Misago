@@ -70,7 +70,7 @@ class CodeBBCode(Pattern):
 
 
 class InlineCodeMarkdown(Pattern):
-    pattern_type: str = "inline-code"
+    pattern_type: str = "code-inline"
     pattern: str = r"(?<!\\)`(.|\n)*?(?<!\\)`"
     linebreaks_pattern = re.compile(r"\n+")
 

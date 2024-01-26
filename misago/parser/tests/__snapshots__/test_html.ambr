@@ -26,6 +26,9 @@
 # name: test_render_ast_to_html_heading[###### Hello world!]
   '<h6>Hello world!</h6>'
 # ---
+# name: test_render_ast_to_html_inline_code
+  '<p>Hello <code>world</code>!</p>'
+# ---
 # name: test_render_ast_to_html_italics_bbcode_text
   '<p>Hello <i>world</i>!</p>'
 # ---

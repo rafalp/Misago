@@ -5,7 +5,7 @@ def test_inline_code(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello "},
-                {"type": "inline-code", "code": "world"},
+                {"type": "code-inline", "code": "world"},
                 {"type": "text", "text": "."},
             ],
         }
@@ -19,9 +19,9 @@ def test_multiple_inline_code(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello "},
-                {"type": "inline-code", "code": "world"},
+                {"type": "code-inline", "code": "world"},
                 {"type": "text", "text": ", how's "},
-                {"type": "inline-code", "code": "going"},
+                {"type": "code-inline", "code": "going"},
                 {"type": "text", "text": "?"},
             ],
         }
@@ -35,7 +35,7 @@ def test_inline_code_linebreak_is_replaced_with_space(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello "},
-                {"type": "inline-code", "code": "lorem ipsum"},
+                {"type": "code-inline", "code": "lorem ipsum"},
                 {"type": "text", "text": "."},
             ],
         }
@@ -49,7 +49,7 @@ def test_inline_code_linebreaks_are_replaced_with_single_space(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello "},
-                {"type": "inline-code", "code": "lorem ipsum"},
+                {"type": "code-inline", "code": "lorem ipsum"},
                 {"type": "text", "text": "."},
             ],
         }
@@ -63,7 +63,7 @@ def test_inline_code_content_is_skipped_by_block_parser(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello "},
-                {"type": "inline-code", "code": "[quote]Text[/quote]"},
+                {"type": "code-inline", "code": "[quote]Text[/quote]"},
                 {"type": "text", "text": "."},
             ],
         }
@@ -77,7 +77,7 @@ def test_inline_code_content_is_skipped_by_inline_parser(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello "},
-                {"type": "inline-code", "code": "<http://misago-project.org>"},
+                {"type": "code-inline", "code": "<http://misago-project.org>"},
                 {"type": "text", "text": "."},
             ],
         }

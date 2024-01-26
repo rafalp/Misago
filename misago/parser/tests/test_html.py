@@ -62,6 +62,12 @@ def test_render_ast_to_html_thematic_break_bbcode(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_inline_code(parser_context, parse_markup, snapshot):
+    ast = parse_markup("Hello `world`!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_emphasis_text(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello *world*!")
     metadata = create_ast_metadata(parser_context, ast)
