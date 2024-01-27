@@ -132,9 +132,6 @@ def _render_ast_node_to_html_action(
     if ast_type in ("thematic-break", "thematic-break-bbcode"):
         return "<hr />"
 
-    if ast_type == "text":
-        return escape(ast_node["text"])
-
     if ast_type in ("image", "image-bbcode"):
         src = escape(clean_href(ast_node["src"]))
         alt = escape(ast_node["alt"]) if ast_node["alt"] else ""
@@ -161,6 +158,9 @@ def _render_ast_node_to_html_action(
 
         user = metadata["users"][username]
         return f'<a href="{user.get_absolute_url()}">@{escape(user.username)}</a>'
+
+    if ast_type == "text":
+        return escape(ast_node["text"])
 
     raise ValueError(f"Unknown AST type: {ast_type}")
 
