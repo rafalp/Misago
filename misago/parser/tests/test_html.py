@@ -282,7 +282,11 @@ def test_render_ast_to_html_soft_linebreak(parser_context, parse_markup, snapsho
 
 
 def test_render_ast_to_html_mention(parser_context, parse_markup, snapshot, user):
-    user.id = 100
+    user.id = 1000
+    user.set_username("MentionedUser")
+    user.set_email("mentioned@example.com")
+    user.save()
+
     ast = parse_markup(f"How's going, @{user.username}?")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
