@@ -36,6 +36,20 @@ def test_render_ast_to_html_setex_heading(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_spoiler(parser_context, parse_markup, snapshot):
+    ast = parse_markup("[spoiler]Hello world![/spoiler]")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_spoiler_with_summary(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[spoiler=Secret message]Hello world![/spoiler]")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_paragraph(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello world!")
     metadata = create_ast_metadata(parser_context, ast)

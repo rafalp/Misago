@@ -35,6 +35,14 @@ def _render_ast_node_to_html_action(
 ) -> str:
     ast_type = ast_node["type"]
 
+    if ast_type == "spoiler-bbcode":
+        if ast_node["summary"]:
+            summary = escape(ast_node["summary"])
+        else:
+            summary = "<spoiler-summary-message>"
+        children = render_ast_to_html(context, ast_node["children"], metadata)
+        return f"<details><summary>{summary}</summary>{children}</details>"
+
     if ast_type in ("code", "code-bbcode"):
         if ast_node["syntax"]:
             html_class = f" class=\"language-{ast_node['syntax']}\""

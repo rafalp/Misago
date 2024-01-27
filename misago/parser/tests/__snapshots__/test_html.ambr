@@ -77,7 +77,7 @@
   '<p>Hello <i>world</i>!</p>'
 # ---
 # name: test_render_ast_to_html_mention
-  '<p>How&#x27;s going, <a href="/u/user/31/">@User</a>?</p>'
+  '<p>How&#x27;s going, <a href="/u/user/33/">@User</a>?</p>'
 # ---
 # name: test_render_ast_to_html_mention_non_existing_user
   '<p>How&#x27;s going, @JohnDoe?</p>'
@@ -93,6 +93,12 @@
 # ---
 # name: test_render_ast_to_html_soft_linebreak
   '<p>Hello world!<br />How&#x27;s going?</p>'
+# ---
+# name: test_render_ast_to_html_spoiler
+  '<details><summary><spoiler-summary-message></summary><p>Hello world!</p></details>'
+# ---
+# name: test_render_ast_to_html_spoiler_with_summary
+  '<details><summary>Secret message</summary><p>Hello world!</p></details>'
 # ---
 # name: test_render_ast_to_html_strikethrough_bbcode_text
   '<p>Hello <del>world</del>!</p>'
