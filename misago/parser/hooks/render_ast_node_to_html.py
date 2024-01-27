@@ -111,17 +111,17 @@ class RenderAstNodeToHtmlHook(
                 "image": True,
                 "href": ast_node["href"],
             }
-            return action(context, ast_node, metadata)
+            return action(context, new_ast_node, metadata)
 
         # Call the next function in chain
         return action(context, ast_node, metadata)
-    ```
 
     def is_twitter_media(href: str) -> bool:
         return bool(
             href.startswith("https://pbs.twimg.com/media/") and
             "?format=jpg&" in href
         )
+    ```
     """
 
     __slots__ = FilterHook.__slots__
