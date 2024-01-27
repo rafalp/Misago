@@ -101,7 +101,7 @@ class UpdateAstMetadataFromNodeHook(
         ast_node: dict,
         metadata: dict,
     ) -> None:
-        if ast_node["type"] in ("url", "url-bbcode", "autolink", "auto-url"):
+        if ast_node["type"] in ("url", "url-bbcode", "auto-link", "auto-url"):
             if thread_id := get_thread_id_from_url(context, ast_node["href"])
                 metadata["threads"]["ids"].add(thread_id)
 

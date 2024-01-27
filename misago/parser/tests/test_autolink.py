@@ -6,7 +6,7 @@ def test_autolink(parse_markup):
             "children": [
                 {"type": "text", "text": "Hello "},
                 {
-                    "type": "autolink",
+                    "type": "auto-link",
                     "image": False,
                     "href": "https://image.com/",
                 },
@@ -24,7 +24,7 @@ def test_autolink_image(parse_markup):
             "children": [
                 {"type": "text", "text": "Hello "},
                 {
-                    "type": "autolink",
+                    "type": "auto-link",
                     "image": True,
                     "href": "https://image.com/",
                 },

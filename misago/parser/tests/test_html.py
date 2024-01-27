@@ -313,6 +313,38 @@ def test_render_ast_to_html_soft_linebreak(parser_context, parse_markup, snapsho
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_url(parser_context, parse_markup, snapshot):
+    ast = parse_markup(f"See [*the site*](https://misago-project.org)!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_url_bbcode(parser_context, parse_markup, snapshot):
+    ast = parse_markup(f"See [url]https://misago-project.org[/url]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_url_bbcode_with_text(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See [url=https://misago-project.org]*the site*[/url]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_auto_link(parser_context, parse_markup, snapshot):
+    ast = parse_markup(f"See the site: <https://misago-project.org>")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_auto_url(parser_context, parse_markup, snapshot):
+    ast = parse_markup(f"See the site: https://misago-project.org")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_mention(parser_context, parse_markup, snapshot, user):
     user.id = 1000
     user.set_username("MentionedUser")

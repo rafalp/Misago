@@ -264,7 +264,7 @@ class ImgMarkdown(Pattern):
 
 
 class AutolinkMarkdown(Pattern):
-    pattern_type: str = "autolink"
+    pattern_type: str = "auto-link"
     pattern: str = r"\<!?[^\s]*?\>"
     invalid_parents: set[str] = {UrlMarkdown.pattern_type, UrlBBCode.pattern_type}
 

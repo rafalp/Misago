@@ -142,6 +142,17 @@ def _render_ast_node_to_html_action(
     if ast_type == "text":
         return escape(ast_node["text"])
 
+    if ast_type in ("url", "url-bbcode"):
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        href = escape(clean_href(ast_node["href"]))
+        rel = "external nofollow noopener"
+        return f'<a href="{href}" rel="{rel}" target="_blank">{children or href}</a>'
+
+    if ast_type in ("auto-link", "auto-url"):
+        href = escape(clean_href(ast_node["href"]))
+        rel = "external nofollow noopener"
+        return f'<a href="{href}" rel="{rel}" target="_blank">{href}</a>'
+
     if ast_type == "mention":
         username = slugify(ast_node["username"])
         if username not in metadata["users"]:
@@ -151,3 +162,11 @@ def _render_ast_node_to_html_action(
         return f'<a href="{user.get_absolute_url()}">@{escape(user.username)}</a>'
 
     raise ValueError(f"Unknown AST type: {ast_type}")
+
+
+def clean_href(href: str) -> str:
+    if href.startswith("://"):
+        return "http" + href
+    if "://" not in href:
+        return "http://" + href
+    return href
