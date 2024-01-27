@@ -108,6 +108,22 @@ def test_emphasis_two_word_parts(parse_markup):
     ]
 
 
+def test_emphasis_first_word_is_parsed_correctly(parse_markup):
+    result = parse_markup(f"*Hello* world.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "Hello"}],
+                },
+                {"type": "text", "text": " world."},
+            ],
+        }
+    ]
+
+
 def test_emphasis_without_content_is_skipped(parse_markup):
     result = parse_markup(f"Hello **.")
     assert result == [
@@ -273,6 +289,22 @@ def test_strong_two_word_parts(parse_markup):
                     "children": [{"type": "text", "text": "ps"}],
                 },
                 {"type": "text", "text": "um."},
+            ],
+        }
+    ]
+
+
+def test_strong_first_word_is_parsed_correctly(parse_markup):
+    result = parse_markup(f"**Hello** world.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {
+                    "type": "strong",
+                    "children": [{"type": "text", "text": "Hello"}],
+                },
+                {"type": "text", "text": " world."},
             ],
         }
     ]

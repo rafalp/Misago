@@ -662,7 +662,117 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
     ]
 
 
-def test_list_with_empty_item(parse_markup):
+def test_list_with_empty_first_item(parse_markup):
+    result = parse_markup(
+        """
+        -
+        - Met
+        - Ipsum
+        - Lorem
+        """
+    )
+    assert result == [
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "-",
+            "items": [
+                {
+                    "type": "list-item",
+                    "children": [],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Met",
+                        },
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Ipsum",
+                        },
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Lorem",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        }
+    ]
+
+
+def test_list_with_empty_middle_item(parse_markup):
+    result = parse_markup(
+        """
+        - Met
+        - Ipsum
+        -
+        - Lorem
+        """
+    )
+    assert result == [
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "-",
+            "items": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Met",
+                        },
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Ipsum",
+                        },
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "Lorem",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        }
+    ]
+
+
+def test_list_with_empty_nested_item(parse_markup):
     result = parse_markup(
         """
         - Met
