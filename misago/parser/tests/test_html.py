@@ -36,6 +36,38 @@ def test_render_ast_to_html_setex_heading(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_quote(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        > Hello world!
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_quote_bbcode(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        [quote]Hello world![/quote]
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_quote_bbcode_with_author(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        """
+        [quote=Author]Hello world![/quote]
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_unordered_list(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """

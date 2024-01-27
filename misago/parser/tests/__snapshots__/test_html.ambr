@@ -88,6 +88,15 @@
 # name: test_render_ast_to_html_paragraph
   '<p>Hello world!</p>'
 # ---
+# name: test_render_ast_to_html_quote
+  '<blockquote><p>Hello world!</p></blockquote>'
+# ---
+# name: test_render_ast_to_html_quote_bbcode
+  '<aside><div class="quote-heading" data-noquote="1"><quote-title-message></div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+# ---
+# name: test_render_ast_to_html_quote_bbcode_with_author
+  '<aside><div class="quote-heading" data-noquote="1"><quote-title><quote-title-author>Author</quote-title-author></quote-title></div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+# ---
 # name: test_render_ast_to_html_setex_heading[Hello world!\n-----]
   '<h2>Hello world!</h2>'
 # ---
