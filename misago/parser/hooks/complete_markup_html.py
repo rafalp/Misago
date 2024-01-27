@@ -17,12 +17,16 @@ class CompleteMarkupHtmlHookAction(Protocol):
 
     An HTML representation of parsed markup to complete.
 
+    ## `**kwargs`
+
+    Additional data that can be used to complete the HTML.
+
     # Return value
 
     A `str` with completed HTML representation of parsed markup.
     """
 
-    def __call__(self, html: str) -> str:
+    def __call__(self, html: str, **kwargs) -> str:
         ...
 
 
@@ -43,6 +47,10 @@ class CompleteMarkupHtmlHookFilter(Protocol):
 
     An HTML representation of parsed markup to complete.
 
+    ## `**kwargs`
+
+    Additional data that can be used to complete the HTML.
+
     # Return value
 
     A `str` with completed HTML representation of parsed markup.
@@ -52,6 +60,7 @@ class CompleteMarkupHtmlHookFilter(Protocol):
         self,
         action: CompleteMarkupHtmlHookAction,
         html: str,
+        **kwargs,
     ) -> str:
         ...
 
@@ -82,6 +91,7 @@ class CompleteMarkupHtmlHook(
     def complete_markup_html_with_custom_spoiler-summary(
         action: CompleteMarkupHtmlHookAction,
         html: str,
+        **kwargs,
     ) -> str:
         if SPOILER_SUMMARY in html:
             html = html.replace(
@@ -89,7 +99,7 @@ class CompleteMarkupHtmlHook(
             )
 
         # Call the next function in chain
-        return action(context, html)
+        return action(context, html, **kwargs)
     ```
     """
 
@@ -99,8 +109,9 @@ class CompleteMarkupHtmlHook(
         self,
         action: CompleteMarkupHtmlHookAction,
         html: str,
+        **kwargs,
     ) -> str:
-        return super().__call__(action, html)
+        return super().__call__(action, html, **kwargs)
 
 
 complete_markup_html_hook = CompleteMarkupHtmlHook()

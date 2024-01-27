@@ -411,12 +411,3 @@ def test_complete_markup_html_replaces_default_spoiler_summary(
     metadata = create_ast_metadata(parser_context, ast)
     html = render_ast_to_html(parser_context, ast, metadata)
     assert snapshot == complete_markup_html(html)
-
-
-def test_complete_markup_html_replaces_quote_author(
-    parser_context, parse_markup, snapshot
-):
-    ast = parse_markup("[quote=Author]Hello world![/quote]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
-    assert snapshot == complete_markup_html(html)

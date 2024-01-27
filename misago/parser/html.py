@@ -165,11 +165,11 @@ def _render_ast_node_to_html_action(
     raise ValueError(f"Unknown AST type: {ast_type}")
 
 
-def complete_markup_html(html: str) -> str:
-    return complete_markup_html_hook(_complete_markup_html_action, html)
+def complete_markup_html(html: str, **kwargs) -> str:
+    return complete_markup_html_hook(_complete_markup_html_action, html, **kwargs)
 
 
-def _complete_markup_html_action(html: str) -> str:
+def _complete_markup_html_action(html: str, **kwargs) -> str:
     html = complete_markup_html_spoiler_summary(html)
     return html
 
