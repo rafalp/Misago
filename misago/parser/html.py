@@ -2,6 +2,8 @@ from html import escape
 
 from ..core.utils import slugify
 from .context import ParserContext
+from .hooks import render_ast_node_to_html_hook
+from .urls import clean_href
 
 
 def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) -> str:
@@ -16,7 +18,9 @@ def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) 
 def render_ast_node_to_html(
     context: ParserContext, ast_node: dict, metadata: dict
 ) -> str:
-    return _render_ast_node_to_html_action(context, ast_node, metadata)
+    return render_ast_node_to_html_hook(
+        _render_ast_node_to_html_action, context, ast_node, metadata
+    )
 
 
 def _render_ast_node_to_html_action(
@@ -159,11 +163,3 @@ def _render_ast_node_to_html_action(
         return f'<a href="{user.get_absolute_url()}">@{escape(user.username)}</a>'
 
     raise ValueError(f"Unknown AST type: {ast_type}")
-
-
-def clean_href(href: str) -> str:
-    if href.startswith("://"):
-        return "http" + href
-    if "://" not in href:
-        return "http://" + href
-    return href

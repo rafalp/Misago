@@ -302,7 +302,7 @@ def test_render_ast_to_html_subscript_bbcode_text(
 
 
 def test_render_ast_to_html_escaped_characters(parser_context, parse_markup, snapshot):
-    ast = parse_markup("Hello\[hr\]World!")
+    ast = parse_markup(r"Hello\[hr\]World!")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
