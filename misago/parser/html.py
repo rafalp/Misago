@@ -142,6 +142,11 @@ def _render_ast_node_to_html_action(
     if ast_type == "text":
         return escape(ast_node["text"])
 
+    if ast_type in ("image", "image-bbcode"):
+        src = escape(clean_href(ast_node["src"]))
+        alt = escape(ast_node["alt"]) if ast_node["alt"] else ""
+        return f'<img src="{src}" alt="{alt}" />'
+
     if ast_type in ("url", "url-bbcode"):
         children = render_inline_ast_to_html(context, ast_node["children"], metadata)
         href = escape(clean_href(ast_node["href"]))
@@ -151,7 +156,10 @@ def _render_ast_node_to_html_action(
     if ast_type in ("auto-link", "auto-url"):
         href = escape(clean_href(ast_node["href"]))
         rel = "external nofollow noopener"
-        return f'<a href="{href}" rel="{rel}" target="_blank">{href}</a>'
+        if ast_node.get("image"):
+            return f'<img src="{href}" alt="" />'
+        else:
+            return f'<a href="{href}" rel="{rel}" target="_blank">{href}</a>'
 
     if ast_type == "mention":
         username = slugify(ast_node["username"])

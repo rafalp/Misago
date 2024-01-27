@@ -76,6 +76,21 @@
 # name: test_render_ast_to_html_heading[###### Hello world!]
   '<h6>Hello world!</h6>'
 # ---
+# name: test_render_ast_to_html_img
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
+# ---
+# name: test_render_ast_to_html_img_auto_link
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
+# ---
+# name: test_render_ast_to_html_img_bbcode
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
+# ---
+# name: test_render_ast_to_html_img_bbcode_with_alt_text
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" /></p>'
+# ---
+# name: test_render_ast_to_html_img_with_alt_text
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" /></p>'
+# ---
 # name: test_render_ast_to_html_inline_code
   '<p>Hello <code>world</code>!</p>'
 # ---
