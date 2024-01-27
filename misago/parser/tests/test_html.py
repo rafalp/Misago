@@ -326,9 +326,7 @@ def test_render_ast_to_html_img(parser_context, parse_markup, snapshot):
 
 
 def test_render_ast_to_html_img_with_alt_text(parser_context, parse_markup, snapshot):
-    ast = parse_markup(
-        f"See the logo: ![Alt text](https://misago-project.org/img.png)"
-    )
+    ast = parse_markup(f"See the logo: ![Alt text](https://misago-project.org/img.png)")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
@@ -339,7 +337,9 @@ def test_render_ast_to_html_img_bbcode(parser_context, parse_markup, snapshot):
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_img_bbcode_with_alt_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_html_img_bbcode_with_alt_text(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup(
         f"See the logo: [img=https://misago-project.org/img.png]Alt text[/img]"
     )
