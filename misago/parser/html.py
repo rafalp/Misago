@@ -1,9 +1,13 @@
 from html import escape
 
+from django.utils.translation import pgettext
+
 from ..core.utils import slugify
 from .context import ParserContext
-from .hooks import render_ast_node_to_html_hook
+from .hooks import complete_markup_html_hook, render_ast_node_to_html_hook
 from .urls import clean_href
+
+SPOILER_SUMMARY = "<spoiler-summary-message>"
 
 
 def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) -> str:
@@ -46,20 +50,16 @@ def _render_ast_node_to_html_action(
         return f"<blockquote>{children}</blockquote>"
 
     if ast_type == "quote-bbcode":
-        if ast_node["author"]:
-            title = (
-                "<quote-title>"
-                f"<quote-title-author>{escape(ast_node['author'])}</quote-title-author>"
-                "</quote-title>"
-            )
-        else:
-            title = "<quote-title-message>"
-
         children = render_ast_to_html(context, ast_node["children"], metadata)
 
+        if not ast_node["author"]:
+            return f"<blockquote>{children}</blockquote>"
+
+        heading = escape(ast_node["author"])
+
         return (
-            "<aside>"
-            f'<div class="quote-heading" data-noquote="1">{title}</div>'
+            '<aside class="quote-block">'
+            f'<div class="quote-heading" data-noquote="1">{heading}</div>'
             f'<blockquote class="quote-body">{children}</blockquote>'
             "</aside>"
         )
@@ -68,7 +68,7 @@ def _render_ast_node_to_html_action(
         if ast_node["summary"]:
             summary = escape(ast_node["summary"])
         else:
-            summary = "<spoiler-summary-message>"
+            summary = SPOILER_SUMMARY
         children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<details><summary>{summary}</summary>{children}</details>"
 
@@ -163,3 +163,21 @@ def _render_ast_node_to_html_action(
         return f'<a href="{user.get_absolute_url()}">@{escape(user.username)}</a>'
 
     raise ValueError(f"Unknown AST type: {ast_type}")
+
+
+def complete_markup_html(html: str) -> str:
+    return complete_markup_html_hook(_complete_markup_html_action, html)
+
+
+def _complete_markup_html_action(html: str) -> str:
+    html = complete_markup_html_spoiler_summary(html)
+    return html
+
+
+def complete_markup_html_spoiler_summary(html: str) -> str:
+    if SPOILER_SUMMARY in html:
+        html = html.replace(
+            SPOILER_SUMMARY, pgettext("spoiler summary", "Reveal spoiler")
+        )
+
+    return html

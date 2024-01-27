@@ -1,6 +1,6 @@
 import pytest
 
-from ..html import render_ast_to_html
+from ..html import complete_markup_html, render_ast_to_html
 from ..metadata import create_ast_metadata
 
 
@@ -402,3 +402,21 @@ def test_render_ast_to_html_for_unsupported_ast_raises_error(parser_context):
     with pytest.raises(ValueError):
         metadata = create_ast_metadata(parser_context, [])
         render_ast_to_html(parser_context, [{"type": "unsupported"}], metadata)
+
+
+def test_complete_markup_html_replaces_default_spoiler_summary(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[spoiler]Hello world![/spoiler]")
+    metadata = create_ast_metadata(parser_context, ast)
+    html = render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == complete_markup_html(html)
+
+
+def test_complete_markup_html_replaces_quote_author(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[quote=Author]Hello world![/quote]")
+    metadata = create_ast_metadata(parser_context, ast)
+    html = render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == complete_markup_html(html)

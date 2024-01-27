@@ -73,7 +73,7 @@ class SetupParserContextHook(
 
 
     @setup_parser_context_hook.append_filter
-    def register_plugin_data(
+    def register_plugin_data_in_parser_context(
         action: SetupParserContextHookAction, context: ParserContext
     ) -> dict:
         if context.request:

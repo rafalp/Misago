@@ -1,4 +1,10 @@
 # serializer version: 1
+# name: test_complete_markup_html_replaces_default_spoiler_summary
+  '<details><summary>Reveal spoiler</summary><p>Hello world!</p></details>'
+# ---
+# name: test_complete_markup_html_replaces_quote_author
+  '<aside class="quote-block"><div class="quote-heading" data-noquote="1">Author</div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+# ---
 # name: test_render_ast_to_html_auto_link
   '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
 # ---
@@ -112,10 +118,10 @@
   '<blockquote><p>Hello world!</p></blockquote>'
 # ---
 # name: test_render_ast_to_html_quote_bbcode
-  '<aside><div class="quote-heading" data-noquote="1"><quote-title-message></div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+  '<blockquote><p>Hello world!</p></blockquote>'
 # ---
 # name: test_render_ast_to_html_quote_bbcode_with_author
-  '<aside><div class="quote-heading" data-noquote="1"><quote-title><quote-title-author>Author</quote-title-author></quote-title></div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+  '<aside class="quote-block"><div class="quote-heading" data-noquote="1">Author</div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
 # ---
 # name: test_render_ast_to_html_setex_heading[Hello world!\n-----]
   '<h2>Hello world!</h2>'
