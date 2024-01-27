@@ -14,9 +14,10 @@ Misago's notifications feature is implemented in the `misago.notifications` pack
 
 ## Markup parser
 
-Misago's notifications feature is implemented in the `misago.notifications` package.
+Misago's markup syntax, parser and renderers that convert parsed markup into an HTML or other representations are implemented in the `misago.parser` package.
 
 - [Markup parser](./parser/index.md)
+- [Markup AST](./parser/ast.md)
 
 
 ## Plugins
