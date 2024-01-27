@@ -17,6 +17,88 @@ Hello world!
 ```
 
 
+## Thematic break
+
+```markdown
+- - -
+```
+
+```json
+{"type": "thematic-break"}
+```
+
+
+## Thematic break (BBCode)
+
+```markdown
+[hr]
+```
+
+```json
+{"type": "thematic-break-bbcode"}
+```
+
+
+## Image
+
+```markdown
+!(https://misago-project.org/logo.png)
+```
+
+```json
+{
+    "type": "image",
+    "src": "https://misago-project.org/logo.png",
+    "alt": null
+}
+```
+
+
+## Image with alt text
+
+```markdown
+![Misago Forums](https://misago-project.org/logo.png)
+```
+
+```json
+{
+    "type": "url",
+    "src": "https://misago-project.org/logo.png",
+    "alt": "Misago Forums"
+}
+```
+
+
+## Image (BBCode)
+
+```markdown
+[img]https://misago-project.org/logo.png[/img]
+```
+
+```json
+{
+    "type": "img-bbcode",
+    "src": "https://misago-project.org/logo.png",
+    "alt": null
+}
+```
+
+
+## Image (BBCode with alt text)
+
+```markdown
+[url=https://misago-project.org/logo.png]Misago forums[/url]
+```
+
+```json
+{
+    "type": "img-bbcode",
+    "src": "https://misago-project.org/logo.png",
+    "alt": "Misago Forums"
+}
+```
+
+
 ## URL
 
 ```markdown
@@ -124,6 +206,31 @@ https://misago-project.org/logo.png
 ```
 
 `username` value represents username as it was entered in the mention. It needs to be normalized before processing further (eg. with `misago.core.utils.slugify`).
+
+
+## Escaped special character
+
+```markdown
+\*
+```
+
+```json
+{
+    "type": "escape",
+    "character": "*"
+}
+```
+
+
+## Line break
+
+```markdown
+\n
+```
+
+```json
+{"type": "line-break"}
+```
 
 
 ## Text

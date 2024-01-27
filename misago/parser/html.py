@@ -123,12 +123,6 @@ def _render_ast_node_to_html_action(
         children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<sub>{children}</sub>"
 
-    if ast_type == "escape":
-        return escape(ast_node["character"])
-
-    if ast_type == "line-break":
-        return "<br />"
-
     if ast_type in ("thematic-break", "thematic-break-bbcode"):
         return "<hr />"
 
@@ -158,6 +152,12 @@ def _render_ast_node_to_html_action(
 
         user = metadata["users"][username]
         return f'<a href="{user.get_absolute_url()}">@{escape(user.username)}</a>'
+
+    if ast_type == "escape":
+        return escape(ast_node["character"])
+
+    if ast_type == "line-break":
+        return "<br />"
 
     if ast_type == "text":
         return escape(ast_node["text"])
