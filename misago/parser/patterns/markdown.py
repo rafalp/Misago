@@ -12,8 +12,12 @@ class InlineMarkdownPattern(Pattern):
         self, parser: Parser, match: str, parents: list[str]
     ) -> dict | list[dict]:
         content = match[self.pattern_length : self.pattern_length * -1]
+        if not content:
+            return {"type": "text", "text": match}
+
         if not content.strip():
-            return []
+            pattern = {"type": "text", "text": match[: self.pattern_length]}
+            return [pattern] + parser.parse_inline(content, parents) + [pattern]
 
         if has_invalid_parent(self.invalid_parents, parents):
             return parser.parse_inline(content, parents)
@@ -26,7 +30,7 @@ class InlineMarkdownPattern(Pattern):
 
 class EmphasisUnderscoreMarkdown(InlineMarkdownPattern):
     pattern_type: str = "emphasis-underscore"
-    pattern: str = r"(?<!\w)_.*?(\n.+)*?_(?!\w)"
+    pattern: str = r"(?<!\w)_.+?(\n.+)*?_(?!\w)"
     pattern_length: int = 1
     invalid_parents: set[str] = {pattern_type, "emphasis"}
 
@@ -40,7 +44,7 @@ class StrongUnderscoreMarkdown(InlineMarkdownPattern):
 
 class EmphasisMarkdown(InlineMarkdownPattern):
     pattern_type: str = "emphasis"
-    pattern: str = r"\*.*?(\n.+)*?\*"
+    pattern: str = r"\*.+?(\n.+)*?\*"
     pattern_length: int = 1
     invalid_parents: set[str] = {pattern_type, "emphasis-underscore"}
 
@@ -54,5 +58,5 @@ class StrongMarkdown(InlineMarkdownPattern):
 
 class StrikethroughMarkdown(InlineMarkdownPattern):
     pattern_type: str = "strikethrough"
-    pattern: str = r"~~.*?(\n.+)*?~~"
+    pattern: str = r"~~.+?(\n.+)*?~~"
     pattern_length: int = 2
