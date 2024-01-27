@@ -654,6 +654,22 @@ def test_strong_underscore_containing_strong_is_unwrapped(parse_markup):
     ]
 
 
+def test_emphasis_preceded_by_extra_ampersand(parse_markup):
+    result = parse_markup(f"**L*orem ipsum.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {
+                    "type": "emphasis",
+                    "children": [{"type": "text", "text": "*L"}],
+                },
+                {"type": "text", "text": "orem ipsum."},
+            ],
+        }
+    ]
+
+
 INVALID_STRONG_UNDERSCORE = (
     "__lorem__ipsum",
     "lorem__ips__um",
