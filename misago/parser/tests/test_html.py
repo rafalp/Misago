@@ -227,6 +227,20 @@ def test_render_ast_to_html_soft_linebreak(parser_context, parse_markup, snapsho
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_mention(parser_context, parse_markup, snapshot, user):
+    ast = parse_markup(f"How's going, @{user.username}?")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_mention_non_existing_user(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"How's going, @JohnDoe?")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_for_unsupported_ast_raises_error(parser_context):
     with pytest.raises(ValueError):
         metadata = create_ast_metadata(parser_context, [])

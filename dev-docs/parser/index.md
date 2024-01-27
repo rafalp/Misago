@@ -44,3 +44,44 @@ from misago.parser.context import create_parser_context
 
 context = create_parser_context(request)
 ```
+
+## Abstract Syntax Tree
+
+Parsed markup is represented as an abstract syntax tree. This three is a `list` of `dict`s.
+
+For example, this markup:
+
+```markdown
+Hello world! How's *going*?
+```
+
+Is parsed to the following AST:
+
+```json
+[
+    {
+        "type": "paragraph",
+        "children": [
+            {
+                "type": "text",
+                "text": "Hello world! How's "
+            },
+            {
+                "type": "emphasis",
+                "children": [
+                    {
+                        "type": "text",
+                        "text": "going"
+                    }
+                ]
+            },
+            {
+                "type": "text",
+                "text": "Hello world! How's "
+            }
+        ]
+    }
+]
+```
+
+Misago's markup AST reference is available [here](./ast.md).

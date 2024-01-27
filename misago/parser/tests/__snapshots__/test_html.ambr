@@ -76,6 +76,12 @@
 # name: test_render_ast_to_html_italics_bbcode_text
   '<p>Hello <i>world</i>!</p>'
 # ---
+# name: test_render_ast_to_html_mention
+  '<p>How&#x27;s going, <a href="/u/user/31/">@User</a>?</p>'
+# ---
+# name: test_render_ast_to_html_mention_non_existing_user
+  '<p>How&#x27;s going, @JohnDoe?</p>'
+# ---
 # name: test_render_ast_to_html_paragraph
   '<p>Hello world!</p>'
 # ---

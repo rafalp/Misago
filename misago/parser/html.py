@@ -1,5 +1,6 @@
 from html import escape
 
+from ..core.utils import slugify
 from .context import ParserContext
 
 
@@ -34,15 +35,6 @@ def _render_ast_node_to_html_action(
 ) -> str:
     ast_type = ast_node["type"]
 
-    if ast_type in ("heading", "heading-setex"):
-        html_tag = f"h{ast_node['level']}"
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
-        return f"<{html_tag}>{children}</{html_tag}>"
-
-    if ast_type == "paragraph":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
-        return f"<p>{children}</p>"
-
     if ast_type in ("code", "code-bbcode"):
         if ast_node["syntax"]:
             html_class = f" class=\"language-{ast_node['syntax']}\""
@@ -55,6 +47,15 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "code-inline":
         return f"<code>{escape(ast_node['code'])}</code>"
+
+    if ast_type in ("heading", "heading-setex"):
+        html_tag = f"h{ast_node['level']}"
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<{html_tag}>{children}</{html_tag}>"
+
+    if ast_type == "paragraph":
+        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        return f"<p>{children}</p>"
 
     if ast_type in ("emphasis", "emphasis-underscore"):
         children = render_inline_ast_to_html(context, ast_node["children"], metadata)
@@ -99,5 +100,13 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "text":
         return escape(ast_node["text"])
+
+    if ast_type == "mention":
+        username = slugify(ast_node["username"])
+        if username not in metadata["users"]:
+            return escape("@" + ast_node["username"])
+
+        user = metadata["users"][username]
+        return f'<a href="{user.get_absolute_url()}">@{escape(user.username)}</a>'
 
     raise ValueError(f"Unknown AST type: {ast_type}")
