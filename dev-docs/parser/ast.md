@@ -17,6 +17,38 @@ Hello world!
 ```
 
 
+## Superscript (BBCode)
+
+```markdown
+[sup]Text[/sup]
+```
+
+```json
+{
+    "type": "superscript-bbcode",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Subscript (BBCode)
+
+```markdown
+[sub]Text[/sub]
+```
+
+```json
+{
+    "type": "subscript-bbcode",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
 ## Thematic break
 
 ```markdown
