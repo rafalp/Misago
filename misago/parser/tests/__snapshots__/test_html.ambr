@@ -77,10 +77,13 @@
   '<p>Hello <i>world</i>!</p>'
 # ---
 # name: test_render_ast_to_html_mention
-  '<p>How&#x27;s going, <a href="/u/user/33/">@User</a>?</p>'
+  '<p>How&#x27;s going, <a href="/u/user/36/">@User</a>?</p>'
 # ---
 # name: test_render_ast_to_html_mention_non_existing_user
   '<p>How&#x27;s going, @JohnDoe?</p>'
+# ---
+# name: test_render_ast_to_html_ordered_list
+  '<ol><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ol>'
 # ---
 # name: test_render_ast_to_html_paragraph
   '<p>Hello world!</p>'
@@ -137,4 +140,10 @@
 # ---
 # name: test_render_ast_to_html_underline_bbcode_text
   '<p>Hello <u>world</u>!</p>'
+# ---
+# name: test_render_ast_to_html_unordered_list
+  '<ul><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ul>'
+# ---
+# name: test_render_ast_to_html_unordered_list_with_nested_list
+  '<ul><li>Lorem</li><li><em>Ipsum</em><ul><li>Met</li><li>Elit</li></ul></li><li>Dolor</li></ul>'
 # ---

@@ -35,6 +35,16 @@ def _render_ast_node_to_html_action(
 ) -> str:
     ast_type = ast_node["type"]
 
+    if ast_type == "list":
+        html_tag = "ol" if ast_node["ordered"] else "ul"
+        children = render_inline_ast_to_html(context, ast_node["items"], metadata)
+        return f"<{html_tag}>{children}</{html_tag}>"
+
+    if ast_type == "list-item":
+        text = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_inline_ast_to_html(context, ast_node["lists"], metadata)
+        return f"<li>{text}{children}</li>"
+
     if ast_type == "spoiler-bbcode":
         if ast_node["summary"]:
             summary = escape(ast_node["summary"])

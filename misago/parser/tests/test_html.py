@@ -36,6 +36,46 @@ def test_render_ast_to_html_setex_heading(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_unordered_list(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        - Lorem
+        - _Ipsum_
+        - Dolor
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_ordered_list(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        1. Lorem
+        2. _Ipsum_
+        3. Dolor
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
+def test_render_ast_to_html_unordered_list_with_nested_list(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        """
+        - Lorem
+        - _Ipsum_
+          - Met
+          - Elit
+        - Dolor
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_spoiler(parser_context, parse_markup, snapshot):
     ast = parse_markup("[spoiler]Hello world![/spoiler]")
     metadata = create_ast_metadata(parser_context, ast)
@@ -242,6 +282,7 @@ def test_render_ast_to_html_soft_linebreak(parser_context, parse_markup, snapsho
 
 
 def test_render_ast_to_html_mention(parser_context, parse_markup, snapshot, user):
+    user.id = 100
     ast = parse_markup(f"How's going, @{user.username}?")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
