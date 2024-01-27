@@ -9,18 +9,7 @@ def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) 
     for ast_node in ast:
         node_html = render_ast_node_to_html(context, ast_node, metadata)
         if node_html:
-            if html:
-                html += "\n"
             html += node_html
-    return html
-
-
-def render_inline_ast_to_html(
-    context: ParserContext, ast: list[dict], metadata: dict
-) -> str:
-    html = ""
-    for ast_node in ast:
-        html += render_ast_node_to_html(context, ast_node, metadata)
     return html
 
 
@@ -81,53 +70,53 @@ def _render_ast_node_to_html_action(
 
     if ast_type in ("heading", "heading-setex"):
         html_tag = f"h{ast_node['level']}"
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<{html_tag}>{children}</{html_tag}>"
 
     if ast_type == "list":
         html_tag = "ol" if ast_node["ordered"] else "ul"
-        children = render_inline_ast_to_html(context, ast_node["items"], metadata)
+        children = render_ast_to_html(context, ast_node["items"], metadata)
         return f"<{html_tag}>{children}</{html_tag}>"
 
     if ast_type == "list-item":
-        text = render_inline_ast_to_html(context, ast_node["children"], metadata)
-        children = render_inline_ast_to_html(context, ast_node["lists"], metadata)
+        text = render_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["lists"], metadata)
         return f"<li>{text}{children}</li>"
 
     if ast_type == "paragraph":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<p>{children}</p>"
 
     if ast_type in ("emphasis", "emphasis-underscore"):
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<em>{children}</em>"
 
     if ast_type in ("strong", "strong-underscore"):
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<strong>{children}</strong>"
 
     if ast_type in ("strikethrough", "strikethrough-bbcode"):
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<del>{children}</del>"
 
     if ast_type == "bold-bbcode":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<b>{children}</b>"
 
     if ast_type == "italics-bbcode":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<i>{children}</i>"
 
     if ast_type == "underline-bbcode":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<u>{children}</u>"
 
     if ast_type == "superscript-bbcode":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<sup>{children}</sup>"
 
     if ast_type == "subscript-bbcode":
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<sub>{children}</sub>"
 
     if ast_type == "escape":
@@ -148,7 +137,7 @@ def _render_ast_node_to_html_action(
         return f'<img src="{src}" alt="{alt}" />'
 
     if ast_type in ("url", "url-bbcode"):
-        children = render_inline_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         href = escape(clean_href(ast_node["href"]))
         rel = "external nofollow noopener"
         return f'<a href="{href}" rel="{rel}" target="_blank">{children or href}</a>'

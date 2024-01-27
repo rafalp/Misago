@@ -34,8 +34,7 @@
 # ---
 # name: test_render_ast_to_html_code_indented
   '''
-  <p>Hello:</p>
-  <pre><code>if random.randint(0, 10) &gt; 4:
+  <p>Hello:</p><pre><code>if random.randint(0, 10) &gt; 4:
       print(&quot;Gotcha!&quot;)
       return True
   return False</code></pre>
@@ -149,24 +148,13 @@
   '<p>Hello <sup>world</sup>!</p>'
 # ---
 # name: test_render_ast_to_html_thematic_break
-  '''
-  <p>Hello world!</p>
-  <hr />
-  <p>How&#x27;s going?</p>
-  '''
+  '<p>Hello world!</p><hr /><p>How&#x27;s going?</p>'
 # ---
 # name: test_render_ast_to_html_thematic_break_bbcode
-  '''
-  <p>Hello world!</p>
-  <hr />
-  <p>How&#x27;s going?</p>
-  '''
+  '<p>Hello world!</p><hr /><p>How&#x27;s going?</p>'
 # ---
 # name: test_render_ast_to_html_two_paragraphs
-  '''
-  <p>Hello world!</p>
-  <p>How&#x27;s going?</p>
-  '''
+  '<p>Hello world!</p><p>How&#x27;s going?</p>'
 # ---
 # name: test_render_ast_to_html_underline_bbcode_text
   '<p>Hello <u>world</u>!</p>'
