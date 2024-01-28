@@ -6,7 +6,6 @@ from django.dispatch import Signal, receiver
 from django.utils import timezone
 from django.utils.translation import pgettext
 
-from ..core.pgutils import chunk_queryset
 from .models import AuditTrail
 from .profilefields import profilefields
 
@@ -51,20 +50,20 @@ def archive_user_profile_fields(sender, archive=None, **kwargs):
 def archive_user_avatar(sender, archive=None, **kwargs):
     archive.add_model_file(sender.avatar_tmp, directory="avatar", prefix="tmp")
     archive.add_model_file(sender.avatar_src, directory="avatar", prefix="src")
-    for avatar in sender.avatar_set.iterator():
+    for avatar in sender.avatar_set.iterator(chunk_size=50):
         archive.add_model_file(avatar.image, directory="avatar", prefix=avatar.size)
 
 
 @receiver(archive_user_data)
 def archive_user_audit_trail(sender, archive=None, **kwargs):
-    for audit_trail in chunk_queryset(sender.audittrail_set):
+    for audit_trail in sender.audittrail_set.order_by("id").iterator(chunk_size=50):
         item_name = audit_trail.created_on.strftime("%H%M%S-audit-trail")
         archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_on)
 
 
 @receiver(archive_user_data)
 def archive_user_name_history(sender, archive=None, **kwargs):
-    for name_change in sender.namechanges.order_by("id").iterator():
+    for name_change in sender.namechanges.order_by("id").iterator(chunk_size=50):
         item_name = name_change.changed_on.strftime("%H%M%S-name-change")
         archive.add_dict(
             item_name,
@@ -103,5 +102,5 @@ def remove_old_audit_trails(sender, *, ip_storage_time, **kwargs):
 
 @receiver(anonymize_user_data)
 def delete_data_downloads(sender, **kwargs):
-    for data_download in chunk_queryset(sender.datadownload_set):
+    for data_download in sender.datadownload_set.iterator(chunk_size=50):
         data_download.delete()

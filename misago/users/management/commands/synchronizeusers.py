@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 
 from ....categories.models import Category
 from ....core.management.progressbar import show_progress
-from ....core.pgutils import chunk_queryset
 
 User = get_user_model()
 
@@ -30,7 +29,7 @@ class Command(BaseCommand):
         show_progress(self, synchronized_count, users_to_sync)
         start_time = time.time()
 
-        for user in chunk_queryset(User.objects.all()):
+        for user in User.objects.iterator(chunk_size=50):
             user.threads = user.thread_set.filter(
                 category__in=categories, is_hidden=False, is_unapproved=False
             ).count()

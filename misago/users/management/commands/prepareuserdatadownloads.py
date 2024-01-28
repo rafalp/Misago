@@ -6,7 +6,6 @@ from django.utils.translation import pgettext
 from ....conf import settings
 from ....conf.shortcuts import get_dynamic_settings
 from ....core.mail import mail_user
-from ....core.pgutils import chunk_queryset
 from ...datadownloads import prepare_user_data_download
 from ...models import DataDownload
 
@@ -32,7 +31,7 @@ class Command(BaseCommand):
         downloads_prepared = 0
         queryset = DataDownload.objects.select_related("user")
         queryset = queryset.filter(status=DataDownload.STATUS_PENDING)
-        for data_download in chunk_queryset(queryset):
+        for data_download in queryset.iterator(chunk_size=50):
             if prepare_user_data_download(data_download, expires_in, logger):
                 subject = pgettext(
                     "data download ready email subject",

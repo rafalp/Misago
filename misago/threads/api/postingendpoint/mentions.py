@@ -16,4 +16,6 @@ class MentionsMiddleware(PostingMiddleware):
             self.post.mentions.add(*new_mentions)
 
     def get_existing_mentions(self):
-        return [u["id"] for u in self.post.mentions.values("id").iterator()]
+        return [
+            u["id"] for u in self.post.mentions.values("id").iterator(chunk_size=50)
+        ]

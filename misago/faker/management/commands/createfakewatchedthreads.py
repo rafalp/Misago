@@ -31,8 +31,8 @@ class Command(BaseCommand):
         start_time = time.time()
         show_progress(self, processed_count, total_watched_threads)
 
-        for user in User.objects.iterator():
-            for thread in Thread.objects.iterator():
+        for user in User.objects.iterator(chunk_size=50):
+            for thread in Thread.objects.iterator(chunk_size=50):
                 WatchedThread.objects.create(
                     user=user,
                     category_id=thread.category_id,
