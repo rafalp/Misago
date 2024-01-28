@@ -363,6 +363,73 @@ def test_render_ast_to_plaintext_image_bbcode_with_alt_text(
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
+def test_render_ast_to_plaintext_image_auto_link_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See the logo: <!https://misago-project.org/img.png>")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_image_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See the logo: !(https://misago-project.org/img.png)")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_image_with_alt_text_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See the logo: ![Alt text](https://misago-project.org/img.png)")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_image_bbcode_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See the logo: [img]https://misago-project.org/img.png[/img]")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_image_bbcode_with_alt_text_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        f"See the logo: [img=https://misago-project.org/img.png]Alt text[/img]"
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
 def test_render_ast_to_plaintext_url(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See [*the site*](https://misago-project.org)!")
     metadata = create_ast_metadata(parser_context, ast)
@@ -393,6 +460,71 @@ def test_render_ast_to_plaintext_auto_url(parser_context, parse_markup, snapshot
     ast = parse_markup(f"See the site: https://misago-project.org")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
+
+
+def test_render_ast_to_plaintext_url_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See [*the site*](https://misago-project.org)!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_url_bbcode_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See [url]https://misago-project.org[/url]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_url_bbcode_with_text_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See [url=https://misago-project.org]*the site*[/url]!")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_auto_link_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See the site: <https://misago-project.org>")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
+
+
+def test_render_ast_to_plaintext_auto_url_meta_description(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(f"See the site: https://misago-project.org")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(
+        parser_context,
+        ast,
+        metadata,
+        PlainTextFormat.META_DESCRIPTION,
+    )
 
 
 def test_render_ast_to_plaintext_mention(parser_context, parse_markup, snapshot, user):

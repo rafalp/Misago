@@ -2,8 +2,14 @@
 # name: test_render_ast_to_plaintext_auto_link
   'See the site: https://misago-project.org'
 # ---
+# name: test_render_ast_to_plaintext_auto_link_meta_description
+  'See the site:'
+# ---
 # name: test_render_ast_to_plaintext_auto_url
   'See the site: https://misago-project.org'
+# ---
+# name: test_render_ast_to_plaintext_auto_url_meta_description
+  'See the site:'
 # ---
 # name: test_render_ast_to_plaintext_bold_bbcode_text
   'Hello world!'
@@ -56,14 +62,29 @@
 # name: test_render_ast_to_plaintext_image_auto_link
   'See the logo: https://misago-project.org/img.png'
 # ---
+# name: test_render_ast_to_plaintext_image_auto_link_meta_description
+  'See the logo:'
+# ---
 # name: test_render_ast_to_plaintext_image_bbcode
   'See the logo: https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_bbcode_meta_description
+  'See the logo:'
 # ---
 # name: test_render_ast_to_plaintext_image_bbcode_with_alt_text
   'See the logo: Alt text https://misago-project.org/img.png'
 # ---
+# name: test_render_ast_to_plaintext_image_bbcode_with_alt_text_meta_description
+  'See the logo: Alt text'
+# ---
+# name: test_render_ast_to_plaintext_image_meta_description
+  'See the logo:'
+# ---
 # name: test_render_ast_to_plaintext_image_with_alt_text
   'See the logo: Alt text https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_with_alt_text_meta_description
+  'See the logo: Alt text'
 # ---
 # name: test_render_ast_to_plaintext_inline_code
   'Hello world!'
@@ -146,6 +167,15 @@
 # name: test_render_ast_to_plaintext_url_bbcode
   'See https://misago-project.org!'
 # ---
+# name: test_render_ast_to_plaintext_url_bbcode_meta_description
+  'See !'
+# ---
 # name: test_render_ast_to_plaintext_url_bbcode_with_text
   'See the site https://misago-project.org!'
+# ---
+# name: test_render_ast_to_plaintext_url_bbcode_with_text_meta_description
+  'See the site!'
+# ---
+# name: test_render_ast_to_plaintext_url_meta_description
+  'See the site!'
 # ---
