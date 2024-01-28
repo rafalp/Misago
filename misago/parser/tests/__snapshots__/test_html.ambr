@@ -1,0 +1,179 @@
+# serializer version: 1
+# name: test_complete_markup_html_replaces_default_spoiler_summary
+  '<details><summary>Reveal spoiler</summary><p>Hello world!</p></details>'
+# ---
+# name: test_render_ast_to_html_auto_link
+  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+# ---
+# name: test_render_ast_to_html_auto_url
+  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+# ---
+# name: test_render_ast_to_html_bold_bbcode_text
+  '<p>Hello <b>world</b>!</p>'
+# ---
+# name: test_render_ast_to_html_code
+  '''
+  <pre><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_bbcode
+  '''
+  <pre><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_bbcode_with_syntax
+  '''
+  <pre class="language-python"><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_indented
+  '''
+  <p>Hello:</p><pre><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_code_with_syntax
+  '''
+  <pre class="language-python"><code>if random.randint(0, 10) &gt; 4:
+      print(&quot;Gotcha!&quot;)
+      return True
+  return False</code></pre>
+  '''
+# ---
+# name: test_render_ast_to_html_emphasis_text
+  '<p>Hello <em>world</em>!</p>'
+# ---
+# name: test_render_ast_to_html_emphasis_underscore_text
+  '<p>Hello <em>world</em>!</p>'
+# ---
+# name: test_render_ast_to_html_escaped_characters
+  '<p>Hello[hr]World!</p>'
+# ---
+# name: test_render_ast_to_html_heading[# Hello world!]
+  '<h1>Hello world!</h1>'
+# ---
+# name: test_render_ast_to_html_heading[## Hello world!]
+  '<h2>Hello world!</h2>'
+# ---
+# name: test_render_ast_to_html_heading[### Hello world!]
+  '<h3>Hello world!</h3>'
+# ---
+# name: test_render_ast_to_html_heading[#### Hello world!]
+  '<h4>Hello world!</h4>'
+# ---
+# name: test_render_ast_to_html_heading[##### Hello world!]
+  '<h5>Hello world!</h5>'
+# ---
+# name: test_render_ast_to_html_heading[###### Hello world!]
+  '<h6>Hello world!</h6>'
+# ---
+# name: test_render_ast_to_html_image
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
+# ---
+# name: test_render_ast_to_html_image_auto_link
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
+# ---
+# name: test_render_ast_to_html_image_bbcode
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
+# ---
+# name: test_render_ast_to_html_image_bbcode_with_alt_text
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" /></p>'
+# ---
+# name: test_render_ast_to_html_image_with_alt_text
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" /></p>'
+# ---
+# name: test_render_ast_to_html_inline_code
+  '<p>Hello <code>world</code>!</p>'
+# ---
+# name: test_render_ast_to_html_italics_bbcode_text
+  '<p>Hello <i>world</i>!</p>'
+# ---
+# name: test_render_ast_to_html_mention
+  '<p>How&#x27;s going, <a href="/u/mentioneduser/1000/">@MentionedUser</a>?</p>'
+# ---
+# name: test_render_ast_to_html_mention_non_existing_user
+  '<p>How&#x27;s going, @JohnDoe?</p>'
+# ---
+# name: test_render_ast_to_html_ordered_list
+  '<ol><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ol>'
+# ---
+# name: test_render_ast_to_html_paragraph
+  '<p>Hello world!</p>'
+# ---
+# name: test_render_ast_to_html_quote
+  '<blockquote><p>Hello world!</p></blockquote>'
+# ---
+# name: test_render_ast_to_html_quote_bbcode
+  '<blockquote><p>Hello world!</p></blockquote>'
+# ---
+# name: test_render_ast_to_html_quote_bbcode_with_author
+  '<aside class="quote-block"><div class="quote-heading" data-noquote="1">Author</div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+# ---
+# name: test_render_ast_to_html_setex_heading[Hello world!\n-----]
+  '<h2>Hello world!</h2>'
+# ---
+# name: test_render_ast_to_html_setex_heading[Hello world!\n=====]
+  '<h1>Hello world!</h1>'
+# ---
+# name: test_render_ast_to_html_soft_linebreak
+  '<p>Hello world!<br />How&#x27;s going?</p>'
+# ---
+# name: test_render_ast_to_html_spoiler
+  '<details><summary><spoiler-summary-message></summary><p>Hello world!</p></details>'
+# ---
+# name: test_render_ast_to_html_spoiler_with_summary
+  '<details><summary>Secret message</summary><p>Hello world!</p></details>'
+# ---
+# name: test_render_ast_to_html_strikethrough_bbcode_text
+  '<p>Hello <del>world</del>!</p>'
+# ---
+# name: test_render_ast_to_html_strikethrough_text
+  '<p>Hello <del>world</del>!</p>'
+# ---
+# name: test_render_ast_to_html_strong_text
+  '<p>Hello <strong>world</strong>!</p>'
+# ---
+# name: test_render_ast_to_html_subscript_bbcode_text
+  '<p>Hello <sub>world</sub>!</p>'
+# ---
+# name: test_render_ast_to_html_superscript_bbcode_text
+  '<p>Hello <sup>world</sup>!</p>'
+# ---
+# name: test_render_ast_to_html_thematic_break
+  '<p>Hello world!</p><hr /><p>How&#x27;s going?</p>'
+# ---
+# name: test_render_ast_to_html_thematic_break_bbcode
+  '<p>Hello world!</p><hr /><p>How&#x27;s going?</p>'
+# ---
+# name: test_render_ast_to_html_two_paragraphs
+  '<p>Hello world!</p><p>How&#x27;s going?</p>'
+# ---
+# name: test_render_ast_to_html_underline_bbcode_text
+  '<p>Hello <u>world</u>!</p>'
+# ---
+# name: test_render_ast_to_html_unordered_list
+  '<ul><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ul>'
+# ---
+# name: test_render_ast_to_html_unordered_list_with_nested_list
+  '<ul><li>Lorem</li><li><em>Ipsum</em><ul><li>Met</li><li>Elit</li></ul></li><li>Dolor</li></ul>'
+# ---
+# name: test_render_ast_to_html_url
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+# ---
+# name: test_render_ast_to_html_url_bbcode
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a>!</p>'
+# ---
+# name: test_render_ast_to_html_url_bbcode_with_text
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+# ---

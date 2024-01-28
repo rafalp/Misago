@@ -164,4 +164,4 @@ class GeneralSettingsForm(SettingsForm):
         ) % {"address": address}
 
     def clean_forum_address(self):
-        return self.cleaned_data["forum_address"].lower()
+        return self.cleaned_data["forum_address"].lower().rstrip("/")

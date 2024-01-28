@@ -1,0 +1,2 @@
+class AstError(ValueError):
+    pass

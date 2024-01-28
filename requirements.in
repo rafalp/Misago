@@ -15,6 +15,7 @@ social-auth-app-django
 pyjwt
 pillow
 psycopg[binary]
+pygments
 pytest
 pytest-cov
 pytest-django

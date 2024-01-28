@@ -3,8 +3,12 @@
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
+    "MISAGO_FORUM_ADDRESS_HISTORY",
     "MISAGO_MIDDLEWARE",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
+    "MISAGO_PARSER_MAX_ATTACHMENTS",
+    "MISAGO_PARSER_MAX_POSTS",
+    "MISAGO_PARSER_MAX_USERS",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
     "misago.middleware",
     "misago.notifications",
     "misago.oauth2",
+    "misago.parser",
     "misago.permissions",
     "misago.plugins",
     "misago.postgres",
@@ -116,3 +121,9 @@ MISAGO_MIDDLEWARE = [
 ]
 
 MISAGO_NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
+
+MISAGO_PARSER_MAX_ATTACHMENTS = 30
+MISAGO_PARSER_MAX_POSTS = 20
+MISAGO_PARSER_MAX_USERS = 25
+
+MISAGO_FORUM_ADDRESS_HISTORY = []

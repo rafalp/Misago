@@ -1,5 +1,3 @@
-from unittest.mock import Mock
-
 import pytest
 from django import forms
 from django.template import Context, Template, TemplateSyntaxError

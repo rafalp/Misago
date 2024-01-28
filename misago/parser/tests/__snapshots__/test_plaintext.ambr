@@ -1,0 +1,181 @@
+# serializer version: 1
+# name: test_render_ast_to_plaintext_auto_link
+  'See the site: https://misago-project.org'
+# ---
+# name: test_render_ast_to_plaintext_auto_link_meta_description
+  'See the site:'
+# ---
+# name: test_render_ast_to_plaintext_auto_url
+  'See the site: https://misago-project.org'
+# ---
+# name: test_render_ast_to_plaintext_auto_url_meta_description
+  'See the site:'
+# ---
+# name: test_render_ast_to_plaintext_bold_bbcode_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_code
+  'if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+# ---
+# name: test_render_ast_to_plaintext_code_bbcode
+  'if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+# ---
+# name: test_render_ast_to_plaintext_code_bbcode_with_syntax
+  'python: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+# ---
+# name: test_render_ast_to_plaintext_code_indented
+  'Hello: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+# ---
+# name: test_render_ast_to_plaintext_code_with_syntax
+  'python: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+# ---
+# name: test_render_ast_to_plaintext_emphasis_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_emphasis_underscore_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_escaped_characters
+  'Hello[hr]World!'
+# ---
+# name: test_render_ast_to_plaintext_heading[# Hello world!]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_heading[## Hello world!]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_heading[### Hello world!]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_heading[#### Hello world!]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_heading[##### Hello world!]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_heading[###### Hello world!]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_image
+  'See the logo: https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_auto_link
+  'See the logo: https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_auto_link_meta_description
+  'See the logo:'
+# ---
+# name: test_render_ast_to_plaintext_image_bbcode
+  'See the logo: https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_bbcode_meta_description
+  'See the logo:'
+# ---
+# name: test_render_ast_to_plaintext_image_bbcode_with_alt_text
+  'See the logo: Alt text https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_bbcode_with_alt_text_meta_description
+  'See the logo: Alt text'
+# ---
+# name: test_render_ast_to_plaintext_image_meta_description
+  'See the logo:'
+# ---
+# name: test_render_ast_to_plaintext_image_with_alt_text
+  'See the logo: Alt text https://misago-project.org/img.png'
+# ---
+# name: test_render_ast_to_plaintext_image_with_alt_text_meta_description
+  'See the logo: Alt text'
+# ---
+# name: test_render_ast_to_plaintext_inline_code
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_italics_bbcode_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_mention
+  "How's going, @MentionedUser?"
+# ---
+# name: test_render_ast_to_plaintext_mention_non_existing_user
+  "How's going, @JohnDoe?"
+# ---
+# name: test_render_ast_to_plaintext_ordered_list
+  '1. Lorem 2. Ipsum 3. Dolor'
+# ---
+# name: test_render_ast_to_plaintext_paragraph
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_quote
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_quote_bbcode
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_quote_bbcode_with_author
+  'Author: Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_setex_heading[Hello world!\n-----]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_setex_heading[Hello world!\n=====]
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_soft_linebreak
+  "Hello world!How's going?"
+# ---
+# name: test_render_ast_to_plaintext_spoiler
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_spoiler_with_summary
+  'Secret message: Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_strikethrough_bbcode_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_strikethrough_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_strong_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_subscript_bbcode_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_superscript_bbcode_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_thematic_break
+  "Hello world! How's going?"
+# ---
+# name: test_render_ast_to_plaintext_thematic_break_bbcode
+  "Hello world! How's going?"
+# ---
+# name: test_render_ast_to_plaintext_two_paragraphs
+  "Hello world! How's going?"
+# ---
+# name: test_render_ast_to_plaintext_underline_bbcode_text
+  'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_unordered_list
+  '- Lorem - Ipsum - Dolor'
+# ---
+# name: test_render_ast_to_plaintext_unordered_list_with_nested_list
+  '- Lorem - Ipsum - Met - Elit - Dolor'
+# ---
+# name: test_render_ast_to_plaintext_url
+  'See the site https://misago-project.org!'
+# ---
+# name: test_render_ast_to_plaintext_url_bbcode
+  'See https://misago-project.org!'
+# ---
+# name: test_render_ast_to_plaintext_url_bbcode_meta_description
+  'See !'
+# ---
+# name: test_render_ast_to_plaintext_url_bbcode_with_text
+  'See the site https://misago-project.org!'
+# ---
+# name: test_render_ast_to_plaintext_url_bbcode_with_text_meta_description
+  'See the site!'
+# ---
+# name: test_render_ast_to_plaintext_url_meta_description
+  'See the site!'
+# ---
