@@ -209,13 +209,117 @@ Hello world
 ## Code (inlined)
 
 ```markdown
-`alert("print")``
+`alert("print")`
 ```
 
 ```json
 {
     "type": "code-inline",
     "code": "alert(\"print\")"
+}
+```
+
+
+## Quote
+
+```markdown
+> Hello world!
+```
+
+```json
+{
+    "type": "quote",
+    "children": [
+        {"type": "text", "text": "Hello world!"}
+    ]
+}
+```
+
+
+## Quote (BBCode)
+
+```markdown
+[quote]Hello world![/quote]
+```
+
+```json
+{
+    "type": "quote-bbcode",
+    "author": null,
+    "post": null,
+    "children": [
+        {"type": "text", "text": "Hello world!"}
+    ]
+}
+```
+
+
+## Quote with author (BBCode)
+
+```markdown
+[quote=Author]Hello world![/quote]
+```
+
+```json
+{
+    "type": "quote-bbcode",
+    "author": "Author",
+    "post": null,
+    "children": [
+        {"type": "text", "text": "Hello world!"}
+    ]
+}
+```
+
+
+## Quote with author and post (BBCode)
+
+```markdown
+[quote=Author;post=123]Hello world![/quote]
+```
+
+```json
+{
+    "type": "quote-bbcode",
+    "author": "Author",
+    "post": 123,
+    "children": [
+        {"type": "text", "text": "Hello world!"}
+    ]
+}
+```
+
+
+## Spoiler (BBCode)
+
+```markdown
+[spoiler]Hello world![/spoiler]
+```
+
+```json
+{
+    "type": "spoiler-bbcode",
+    "summary": null,
+    "children": [
+        {"type": "text", "text": "Hello world!"}
+    ]
+}
+```
+
+
+## Spoiler with summary (BBCode)
+
+```markdown
+[spoiler=Very secret stuff]Hello world![/spoiler]
+```
+
+```json
+{
+    "type": "spoiler-bbcode",
+    "summary": "Very secret stuff",
+    "children": [
+        {"type": "text", "text": "Hello world!"}
+    ]
 }
 ```
 
@@ -230,7 +334,7 @@ Hello world!
 {
     "type": "paragraph",
     "children": [
-        {"type": "text", "text": "Hello world"}
+        {"type": "text", "text": "Hello world!"}
     ]
 }
 ```
