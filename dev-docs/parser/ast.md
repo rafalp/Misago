@@ -134,13 +134,17 @@ Hello world
 
 ## Code
 
-```markdown
-```
-alert("print")
-```
-```
+    ```
+    alert("print")
+    ```
 
-
+```json
+{
+    "type": "code",
+    "syntax": null,
+    "code": "alert(\"print\")"
+}
+```
 
 
 ## Paragraph
