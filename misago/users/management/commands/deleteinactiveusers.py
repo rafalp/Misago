@@ -28,7 +28,8 @@ class Command(BaseCommand):
         )
 
         queryset = User.objects.filter(
-            requires_activation__gt=User.ACTIVATION_NONE, joined_on__lt=joined_on_cutoff
+            requires_activation__gt=User.ACTIVATION_NONE,
+            joined_on__lt=joined_on_cutoff,
         )
 
         for user in queryset.iterator(chunk_size=50):

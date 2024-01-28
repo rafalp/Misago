@@ -12,7 +12,8 @@ class Command(BaseCommand):
         downloads_expired = 0
         queryset = DataDownload.objects.select_related("user")
         queryset = queryset.filter(
-            status=DataDownload.STATUS_READY, expires_on__lte=timezone.now()
+            status=DataDownload.STATUS_READY,
+            expires_on__lte=timezone.now(),
         )
 
         for data_download in queryset.iterator(chunk_size=50):
