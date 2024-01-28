@@ -17,13 +17,12 @@ from misago.parser.hooks import create_parser_hook
 ```python
 def custom_create_parser_filter(
     action: CreateParserHookAction,
+    context: 'ParserContext',
     *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
-    post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-    user: User | None=None,
-    request: HttpRequest | None=None,
-    content_type: str | None=None,
+    post_processors: list[Callable[[Parser, list[dict]],
+    list[dict]]],
 ) -> Parser:
     ...
 ```
@@ -40,6 +39,11 @@ A standard Misago function used to create a markup parser instance or the next f
 See the [action](#action) section for details.
 
 
+#### `context: ParserContext`
+
+An instance of the `ParserContext` data class that contains dependencies used during parsing.
+
+
 #### `block_patterns: list[Pattern]`
 
 A list of `Pattern` instances of block patterns to be used by the parser.
@@ -63,38 +67,21 @@ def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
 ```
 
 
-#### `user: User | None = None`
-
-A `User` instance with the parsed text's author or `None` if not provided.
-
-
-#### `request: HttpRequest | None = None`
-
-The request object or `None` if it was not provided.
-
-
-#### `content_type: str | None = None`
-
-A `str` with the name of the content type to be parsed (e.g., `post` or `signature`) or `None` if not provided.
-
-
 ### Return value
 
-An instance of the `Parser` class from the `mistune` library.
+An instance of the `Parser` class.
 
 
 ## Action
 
 ```python
 def create_parser_action(
+    context: 'ParserContext',
     *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
     post_processors: list[Callable[[Parser, list[dict]],
     list[dict]]],
-    user: User | None=None,
-    request: HttpRequest | None=None,
-    content_type: str | None=None,
 ) -> Parser:
     ...
 ```
@@ -104,6 +91,11 @@ A standard Misago function used to create a markup parser instance or the next f
 
 ### Arguments
 
+#### `context: ParserContext`
+
+An instance of the `ParserContext` data class that contains dependencies used during parsing.
+
+
 #### `block_patterns: list[Pattern]`
 
 A list of `Pattern` instances of block patterns to be used by the parser.
@@ -127,24 +119,9 @@ def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
 ```
 
 
-#### `user: User | None = None`
-
-A `User` instance with the parsed text's author or `None` if not provided.
-
-
-#### `request: HttpRequest | None = None`
-
-The request object or `None` if it was not provided.
-
-
-#### `content_type: str | None = None`
-
-A `str` with the name of the content type to be parsed (e.g., `post` or `signature`) or `None` if not provided.
-
-
 ### Return value
 
-An instance of the `Parser` class from the `mistune` library.
+An instance of the `Parser` class.
 
 
 ## Example
@@ -152,17 +129,22 @@ An instance of the `Parser` class from the `mistune` library.
 The code below implements a custom filter function that adds new block pattern to the parser:
 
 ```python
+from misago.parser.context import ParserContext
 from misago.parser.parser import Parser
 
 from .patterns import PluginPattern
 
 
-@create_markdown_hook.append_filter
-def register_custom_pattern(
-    action: CreateParserHookAction, *, block_patterns, **kwargs
+@create_parser_hook.append_filter
+def create_parser_with_custom_pattern(
+    action: CreateParserHookAction,
+    context: ParserContext,
+    *,
+    block_patterns,
+    **kwargs,
 ) -> Parser:
     block_patterns.append(PluginPattern)
 
     # Call the next function in chain
-    return action(block_patterns=block_patterns, **kwargs)
+    return action(context, block_patterns=block_patterns, **kwargs)
 ```
