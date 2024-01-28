@@ -32,6 +32,21 @@ def _render_ast_node_to_html_action(
 ) -> str:
     ast_type = ast_node["type"]
 
+    if ast_type in ("heading", "heading-setex"):
+        html_tag = f"h{ast_node['level']}"
+        children = render_ast_to_html(context, ast_node["children"], metadata)
+        return f"<{html_tag}>{children}</{html_tag}>"
+
+    if ast_type == "list":
+        html_tag = "ol" if ast_node["ordered"] else "ul"
+        children = render_ast_to_html(context, ast_node["items"], metadata)
+        return f"<{html_tag}>{children}</{html_tag}>"
+
+    if ast_type == "list-item":
+        text = render_ast_to_html(context, ast_node["children"], metadata)
+        children = render_ast_to_html(context, ast_node["lists"], metadata)
+        return f"<li>{text}{children}</li>"
+
     if ast_type in ("code", "code-bbcode"):
         if ast_node["syntax"]:
             html_class = f" class=\"language-{ast_node['syntax']}\""
@@ -71,21 +86,6 @@ def _render_ast_node_to_html_action(
             summary = SPOILER_SUMMARY
         children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<details><summary>{summary}</summary>{children}</details>"
-
-    if ast_type in ("heading", "heading-setex"):
-        html_tag = f"h{ast_node['level']}"
-        children = render_ast_to_html(context, ast_node["children"], metadata)
-        return f"<{html_tag}>{children}</{html_tag}>"
-
-    if ast_type == "list":
-        html_tag = "ol" if ast_node["ordered"] else "ul"
-        children = render_ast_to_html(context, ast_node["items"], metadata)
-        return f"<{html_tag}>{children}</{html_tag}>"
-
-    if ast_type == "list-item":
-        text = render_ast_to_html(context, ast_node["children"], metadata)
-        children = render_ast_to_html(context, ast_node["lists"], metadata)
-        return f"<li>{text}{children}</li>"
 
     if ast_type == "paragraph":
         children = render_ast_to_html(context, ast_node["children"], metadata)

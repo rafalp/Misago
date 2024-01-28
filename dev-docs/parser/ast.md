@@ -1,6 +1,148 @@
 # Misago Parser AST Reference
 
 
+## Heading (ATX)
+
+```markdown
+# Hello world
+```
+
+```json
+{
+    "type": "heading",
+    "level": 1,
+    "children": [
+        {"type": "text", "text": "Hello world"}
+    ]
+}
+```
+
+
+## Heading (Setex)
+
+```markdown
+Hello world
+===========
+```
+
+```json
+{
+    "type": "heading-setex",
+    "level": 1,
+    "children": [
+        {"type": "text", "text": "Hello world"}
+    ]
+}
+```
+
+
+## List (unordered)
+
+```markdown
+- Lorem
+- Ipsum
+  - Dolor
+```
+
+```json
+{
+    "type": "list",
+    "ordered": false,
+    "sign": "-",
+    "items": [
+        {
+            "type": "list-item",
+            "children": [
+                {"type": "text", "text": "Lorem"}
+            ],
+            "lists": []
+        },
+        {
+            "type": "list-item",
+            "children": [
+                {"type": "text", "text": "Ipsum"}
+            ],
+            "lists": [
+                {
+                    "type": "list",
+                    "ordered": false,
+                    "sign": "-",
+                    "items": [
+                        {
+                            "type": "list-item",
+                            "children": [
+                                {"type": "text", "text": "Dolor"}
+                            ],
+                            "lists": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
+
+## List (ordered)
+
+```markdown
+1. Lorem
+2. Ipsum
+  1. Dolor
+```
+
+```json
+{
+    "type": "list",
+    "ordered": true,
+    "sign": null,
+    "items": [
+        {
+            "type": "list-item",
+            "children": [
+                {"type": "text", "text": "Lorem"}
+            ],
+            "lists": []
+        },
+        {
+            "type": "list-item",
+            "children": [
+                {"type": "text", "text": "Ipsum"}
+            ],
+            "lists": [
+                {
+                    "type": "list",
+                    "ordered": true,
+                    "sign": null,
+                    "items": [
+                        {
+                            "type": "list-item",
+                            "children": [
+                                {"type": "text", "text": "Dolor"}
+                            ],
+                            "lists": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
+
+## Code
+
+```markdown
+```
+alert("print")
+```
+```
+
+
+
+
 ## Paragraph
 
 ```markdown
@@ -12,6 +154,150 @@ Hello world!
     "type": "paragraph",
     "children": [
         {"type": "text", "text": "Hello world"}
+    ]
+}
+```
+
+
+## Emphasis
+
+```markdown
+*Text*
+```
+
+```json
+{
+    "type": "emphasis",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Emphasis (underscore)
+
+```markdown
+_Text_
+```
+
+```json
+{
+    "type": "emphasis-underscore",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Strong
+
+```markdown
+**Text**
+```
+
+```json
+{
+    "type": "strong",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Strong (underscore)
+
+```markdown
+__Text__
+```
+
+```json
+{
+    "type": "strong-underscore",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Strikethrough
+
+```markdown
+~~Text~~
+```
+
+```json
+{
+    "type": "strikethrough",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Strikethrough (BBCode)
+
+```markdown
+[s]Text[/s]
+```
+
+```json
+{
+    "type": "strikethrough-bbcode",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Bold (BBCode)
+
+```markdown
+[b]Text[/b]
+```
+
+```json
+{
+    "type": "bold-bbcode",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Italics (BBCode)
+
+```markdown
+[i]Text[/i]
+```
+
+```json
+{
+    "type": "italics-bbcode",
+    "children": [
+        {"type": "text", "text": "Text"}
+    ]
+}
+```
+
+
+## Underline (BBCode)
+
+```markdown
+[u]Text[/u]
+```
+
+```json
+{
+    "type": "underline-bbcode",
+    "children": [
+        {"type": "text", "text": "Text"}
     ]
 }
 ```
