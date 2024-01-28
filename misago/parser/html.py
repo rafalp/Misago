@@ -4,6 +4,7 @@ from django.utils.translation import pgettext
 
 from ..core.utils import slugify
 from .context import ParserContext
+from .exceptions import AstError
 from .hooks import complete_markup_html_hook, render_ast_node_to_html_hook
 from .urls import clean_href
 
@@ -162,7 +163,7 @@ def _render_ast_node_to_html_action(
     if ast_type == "text":
         return escape(ast_node["text"])
 
-    raise ValueError(f"Unknown AST type: {ast_type}")
+    raise AstError(f"Unknown AST node type: {ast_type}")
 
 
 def complete_markup_html(html: str, **kwargs) -> str:

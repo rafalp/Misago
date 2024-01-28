@@ -106,7 +106,7 @@ class GetAstMetadataUsersQuerysetHook(
         action: GetAstMetadataUsersQuerysetHookAction,
         context: ParserContext,
         usernames: list[str],
-    ) -> dict:
+    ):
         return action(context, usernames).exclude(group_id=10)
     ```
     """
@@ -118,7 +118,7 @@ class GetAstMetadataUsersQuerysetHook(
         action: GetAstMetadataUsersQuerysetHookAction,
         context: "ParserContext",
         usernames: list[str],
-    ) -> Iterable[User]:
+    ):
         return super().__call__(action, context, usernames)
 
 

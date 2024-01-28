@@ -27,7 +27,7 @@ class RenderAstNodeToHtmlHookAction(Protocol):
 
     # Return value
 
-    A `str` with HTML representation of the AST node.
+    A `str` with an HTML representation of the AST node.
     """
 
     def __call__(
@@ -66,7 +66,7 @@ class RenderAstNodeToHtmlHookFilter(Protocol):
 
     # Return value
 
-    A `str` with HTML representation of the AST node.
+    A `str` with an HTML representation of the AST node.
     """
 
     def __call__(
@@ -101,7 +101,7 @@ class RenderAstNodeToHtmlHook(
         context: ParserContext,
         ast_node: dict,
         metadata: dict,
-    ) -> dict:
+    ) -> str:
         if (
             ast_node["type"] in ("auto-link", "auto-url") and
             is_twitter_media(ast_node["href"])

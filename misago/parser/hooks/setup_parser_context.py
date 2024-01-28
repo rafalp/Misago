@@ -75,7 +75,7 @@ class SetupParserContextHook(
     @setup_parser_context_hook.append_filter
     def register_plugin_data_in_parser_context(
         action: SetupParserContextHookAction, context: ParserContext
-    ) -> dict:
+    ) -> ParserContext:
         if context.request:
             context.plugin_data["my_plugin"] = request.my_plugin.get_parser_context()
 

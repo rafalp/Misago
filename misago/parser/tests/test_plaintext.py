@@ -1,7 +1,7 @@
 import pytest
 
-from ..html import complete_markup_html, render_ast_to_html
 from ..metadata import create_ast_metadata
+from ..plaintext import PlainTextFormat, render_ast_to_plaintext
 
 
 @pytest.mark.parametrize(
@@ -15,10 +15,12 @@ from ..metadata import create_ast_metadata
         "###### Hello world!",
     ),
 )
-def test_render_ast_to_html_heading(markup, parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_heading(
+    markup, parser_context, parse_markup, snapshot
+):
     ast = parse_markup(markup)
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
 @pytest.mark.parametrize(
@@ -28,35 +30,35 @@ def test_render_ast_to_html_heading(markup, parser_context, parse_markup, snapsh
         "Hello world!\n-----",
     ),
 )
-def test_render_ast_to_html_setex_heading(
+def test_render_ast_to_plaintext_setex_heading(
     markup, parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(markup)
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_quote(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_quote(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         > Hello world!
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_quote_bbcode(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_quote_bbcode(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         [quote]Hello world![/quote]
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_quote_bbcode_with_author(
+def test_render_ast_to_plaintext_quote_bbcode_with_author(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(
@@ -65,10 +67,10 @@ def test_render_ast_to_html_quote_bbcode_with_author(
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_unordered_list(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_unordered_list(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         - Lorem
@@ -77,10 +79,10 @@ def test_render_ast_to_html_unordered_list(parser_context, parse_markup, snapsho
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_ordered_list(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_ordered_list(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         1. Lorem
@@ -89,10 +91,10 @@ def test_render_ast_to_html_ordered_list(parser_context, parse_markup, snapshot)
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_unordered_list_with_nested_list(
+def test_render_ast_to_plaintext_unordered_list_with_nested_list(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(
@@ -105,50 +107,50 @@ def test_render_ast_to_html_unordered_list_with_nested_list(
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_spoiler(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_spoiler(parser_context, parse_markup, snapshot):
     ast = parse_markup("[spoiler]Hello world![/spoiler]")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_spoiler_with_summary(
+def test_render_ast_to_plaintext_spoiler_with_summary(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("[spoiler=Secret message]Hello world![/spoiler]")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_paragraph(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_paragraph(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello world!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_two_paragraphs(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_two_paragraphs(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello world!\n\nHow's going?")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_thematic_break(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_thematic_break(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello world!\n- - -\nHow's going?")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_thematic_break_bbcode(
+def test_render_ast_to_plaintext_thematic_break_bbcode(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("Hello world!\n[hr]\nHow's going?")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_code(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_code(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         ```
@@ -160,10 +162,12 @@ def test_render_ast_to_html_code(parser_context, parse_markup, snapshot):
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_code_with_syntax(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_code_with_syntax(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup(
         """
         ```python
@@ -175,10 +179,10 @@ def test_render_ast_to_html_code_with_syntax(parser_context, parse_markup, snaps
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_code_bbcode(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_code_bbcode(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         [code]
@@ -190,10 +194,10 @@ def test_render_ast_to_html_code_bbcode(parser_context, parse_markup, snapshot):
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_code_bbcode_with_syntax(
+def test_render_ast_to_plaintext_code_bbcode_with_syntax(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(
@@ -207,10 +211,10 @@ def test_render_ast_to_html_code_bbcode_with_syntax(
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_code_indented(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_code_indented(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         Hello:
@@ -222,164 +226,176 @@ def test_render_ast_to_html_code_indented(parser_context, parse_markup, snapshot
         """
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_inline_code(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_inline_code(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello `world`!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_emphasis_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_emphasis_text(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello *world*!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_emphasis_underscore_text(
+def test_render_ast_to_plaintext_emphasis_underscore_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("Hello _world_!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_strong_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_strong_text(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello **world**!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_strikethrough_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_strikethrough_text(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup("Hello ~~world~~!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_bold_bbcode_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_bold_bbcode_text(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup("Hello [b]world[/b]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_italics_bbcode_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_italics_bbcode_text(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup("Hello [i]world[/i]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_underline_bbcode_text(
+def test_render_ast_to_plaintext_underline_bbcode_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("Hello [u]world[/u]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_strikethrough_bbcode_text(
+def test_render_ast_to_plaintext_strikethrough_bbcode_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("Hello [s]world[/s]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_superscript_bbcode_text(
+def test_render_ast_to_plaintext_superscript_bbcode_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("Hello [sup]world[/sup]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_subscript_bbcode_text(
+def test_render_ast_to_plaintext_subscript_bbcode_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup("Hello [sub]world[/sub]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_escaped_characters(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_escaped_characters(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup(r"Hello\[hr\]World!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_soft_linebreak(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_soft_linebreak(parser_context, parse_markup, snapshot):
     ast = parse_markup("Hello world!\nHow's going?")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_image_auto_link(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_image_auto_link(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup(f"See the logo: <!https://misago-project.org/img.png>")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_image(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_image(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See the logo: !(https://misago-project.org/img.png)")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_image_with_alt_text(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_image_with_alt_text(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup(f"See the logo: ![Alt text](https://misago-project.org/img.png)")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_image_bbcode(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_image_bbcode(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See the logo: [img]https://misago-project.org/img.png[/img]")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_image_bbcode_with_alt_text(
+def test_render_ast_to_plaintext_image_bbcode_with_alt_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(
         f"See the logo: [img=https://misago-project.org/img.png]Alt text[/img]"
     )
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_url(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_url(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See [*the site*](https://misago-project.org)!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_url_bbcode(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_url_bbcode(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See [url]https://misago-project.org[/url]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_url_bbcode_with_text(
+def test_render_ast_to_plaintext_url_bbcode_with_text(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(f"See [url=https://misago-project.org]*the site*[/url]!")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_auto_link(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_auto_link(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See the site: <https://misago-project.org>")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_auto_url(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_auto_url(parser_context, parse_markup, snapshot):
     ast = parse_markup(f"See the site: https://misago-project.org")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_mention(parser_context, parse_markup, snapshot, user):
+def test_render_ast_to_plaintext_mention(parser_context, parse_markup, snapshot, user):
     user.id = 1000
     user.set_username("MentionedUser")
     user.set_email("mentioned@example.com")
@@ -387,27 +403,18 @@ def test_render_ast_to_html_mention(parser_context, parse_markup, snapshot, user
 
     ast = parse_markup(f"How's going, @{user.username}?")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_mention_non_existing_user(
+def test_render_ast_to_plaintext_mention_non_existing_user(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(f"How's going, @JohnDoe?")
     metadata = create_ast_metadata(parser_context, ast)
-    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_html_for_unsupported_ast_raises_error(parser_context):
+def test_render_ast_to_plaintext_for_unsupported_ast_raises_error(parser_context):
     with pytest.raises(ValueError):
         metadata = create_ast_metadata(parser_context, [])
-        render_ast_to_html(parser_context, [{"type": "unsupported"}], metadata)
-
-
-def test_complete_markup_html_replaces_default_spoiler_summary(
-    parser_context, parse_markup, snapshot
-):
-    ast = parse_markup("[spoiler]Hello world![/spoiler]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
-    assert snapshot == complete_markup_html(html)
+        render_ast_to_plaintext(parser_context, [{"type": "unsupported"}], metadata)

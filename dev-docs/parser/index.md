@@ -151,7 +151,7 @@ Because there are multiple uses for "plain text", you can specify the target for
 from misago.parser.plaintext import PlainTextFormat, render_ast_to_plaintext
 
 text = render_ast_to_plaintext(
-    context, ast, metadata, format=PlainTextFormat.SEARCH_DOCUMENT
+    context, ast, metadata, text_format=PlainTextFormat.SEARCH_DOCUMENT
 )
 ```
 
