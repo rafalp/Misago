@@ -2,6 +2,8 @@
 
 This document contains a reference to all standard abstract syntax tree elements used to represent a parsed markup.
 
+Plugins may modify standard AST as well as add their own AST elements.
+
 
 ## Heading (ATX)
 
