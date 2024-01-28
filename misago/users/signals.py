@@ -50,7 +50,7 @@ def archive_user_profile_fields(sender, archive=None, **kwargs):
 def archive_user_avatar(sender, archive=None, **kwargs):
     archive.add_model_file(sender.avatar_tmp, directory="avatar", prefix="tmp")
     archive.add_model_file(sender.avatar_src, directory="avatar", prefix="src")
-    for avatar in sender.avatar_set.iterator():
+    for avatar in sender.avatar_set.iterator(chunk_size=50):
         archive.add_model_file(avatar.image, directory="avatar", prefix=avatar.size)
 
 
@@ -63,7 +63,7 @@ def archive_user_audit_trail(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_name_history(sender, archive=None, **kwargs):
-    for name_change in sender.namechanges.order_by("id").iterator():
+    for name_change in sender.namechanges.order_by("id").iterator(chunk_size=50):
         item_name = name_change.changed_on.strftime("%H%M%S-name-change")
         archive.add_dict(
             item_name,
@@ -102,6 +102,5 @@ def remove_old_audit_trails(sender, *, ip_storage_time, **kwargs):
 
 @receiver(anonymize_user_data)
 def delete_data_downloads(sender, **kwargs):
-    queryset = sender.datadownload_set.order_by("id")
-    for data_download in queryset.iterator(chunk_size=50):
+    for data_download in sender.datadownload_set.iterator(chunk_size=50):
         data_download.delete()

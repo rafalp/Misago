@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         queryset = User.objects.filter(is_deleting_account=True)
 
-        for user in queryset.order_by("id").iterator(chunk_size=24):
+        for user in queryset.iterator(chunk_size=50):
             if can_delete_own_account(settings, user, user):
                 user.delete(anonymous_username=settings.anonymous_username)
                 record_user_deleted_by_self()

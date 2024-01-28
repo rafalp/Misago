@@ -42,8 +42,8 @@ class Command(BaseCommand):
             "posted_on",
         )
 
-        for user in User.objects.iterator():
-            for post in Post.objects.values(*post_fields).iterator():
+        for user in User.objects.iterator(chunk_size=50):
+            for post in Post.objects.values(*post_fields).iterator(chunk_size=50):
                 Notification.objects.create(
                     user=user,
                     category_id=post["category_id"],

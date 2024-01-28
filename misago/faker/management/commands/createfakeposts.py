@@ -65,7 +65,7 @@ class Command(BaseCommand):
             thread.synchronize()
             thread.save()
 
-        for category in Category.objects.all():
+        for category in Category.objects.iterator():
             category.synchronize()
             category.save()
 

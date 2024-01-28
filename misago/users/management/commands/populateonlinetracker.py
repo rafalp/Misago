@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         entries_created = 0
         queryset = User.objects.filter(online_tracker__isnull=True)
-        for user in queryset.order_by("id").iterator(chunk_size=24):
+        for user in queryset.iterator(chunk_size=50):
             Online.objects.create(user=user, last_click=user.last_login)
             entries_created += 1
 

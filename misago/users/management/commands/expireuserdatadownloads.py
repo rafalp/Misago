@@ -15,7 +15,7 @@ class Command(BaseCommand):
             status=DataDownload.STATUS_READY, expires_on__lte=timezone.now()
         )
 
-        for data_download in queryset.iterator(chunk_size=20):
+        for data_download in queryset.iterator(chunk_size=50):
             expire_user_data_download(data_download)
             downloads_expired += 1
 

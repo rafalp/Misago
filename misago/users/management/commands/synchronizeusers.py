@@ -29,7 +29,7 @@ class Command(BaseCommand):
         show_progress(self, synchronized_count, users_to_sync)
         start_time = time.time()
 
-        for user in User.objects.order_by("-id").iterator(chunk_size=24):
+        for user in User.objects.iterator(chunk_size=50):
             user.threads = user.thread_set.filter(
                 category__in=categories, is_hidden=False, is_unapproved=False
             ).count()

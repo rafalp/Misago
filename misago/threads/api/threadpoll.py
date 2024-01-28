@@ -158,7 +158,7 @@ class ViewSet(viewsets.ViewSet):
             "voter_id", "voter_name", "voter_slug", "voted_on", "choice_hash"
         )
 
-        for voter in queryset.order_by("voter_name").iterator():
+        for voter in queryset.order_by("voter_name").iterator(chunk_size=50):
             voters[voter["choice_hash"]].append(PollVoteSerializer(voter).data)
 
         return Response(choices)

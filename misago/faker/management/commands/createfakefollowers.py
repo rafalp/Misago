@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
         start_time = time.time()
         show_progress(self, processed_count, total_users)
-        for user in User.objects.iterator():
+        for user in User.objects.iterator(chunk_size=50):
             user.followed_by.clear()
             followers_to_create = random.randint(0, total_users - 1)
             while followers_to_create:
@@ -46,7 +46,7 @@ class Command(BaseCommand):
             show_progress(self, processed_count, total_users)
 
         self.stdout.write("\nSynchronizing users...")
-        for user in User.objects.iterator():
+        for user in User.objects.iterator(chunk_size=50):
             user.followers = user.followed_by.count()
             user.following = user.follows.count()
             user.save(update_fields=["followers", "following"])

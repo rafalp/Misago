@@ -14,7 +14,7 @@ from .threads import (
     notify_watcher_on_new_thread_reply,
 )
 
-NOTIFY_CHUNK_SIZE = 20
+NOTIFY_CHUNK_SIZE = 32
 
 User = get_user_model()
 logger = getLogger("misago.notifications")

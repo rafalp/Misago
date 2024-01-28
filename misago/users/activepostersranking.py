@@ -46,7 +46,7 @@ def build_active_posters_ranking() -> list[ActivityRanking]:
     )[: settings.top_posters_ranking_size]
 
     new_ranking = []
-    for ranking in queryset.iterator():
+    for ranking in queryset.iterator(chunk_size=50):
         new_ranking.append(ActivityRanking(user=ranking, score=ranking.score))
 
     ActivityRanking.objects.bulk_create(new_ranking)

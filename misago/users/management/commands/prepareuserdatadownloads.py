@@ -31,7 +31,7 @@ class Command(BaseCommand):
         downloads_prepared = 0
         queryset = DataDownload.objects.select_related("user")
         queryset = queryset.filter(status=DataDownload.STATUS_PENDING)
-        for data_download in queryset.order_by("id").iterator(chunk_size=50):
+        for data_download in queryset.iterator(chunk_size=50):
             if prepare_user_data_download(data_download, expires_in, logger):
                 subject = pgettext(
                     "data download ready email subject",

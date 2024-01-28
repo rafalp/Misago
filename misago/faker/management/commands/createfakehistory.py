@@ -325,8 +325,7 @@ class Command(BaseCommand):
         self.stdout.write("\nSynchronizing watched threads...")
         start_time = time.time()
 
-        queryset = WatchedThread.objects.select_related("thread").all()
-
+        queryset = WatchedThread.objects.select_related("thread")
         for watched_thread in queryset.iterator(chunk_size=50):
             watched_thread.read_at = watched_thread.thread.last_post_on
             watched_thread.save(update_fields=["read_at"])

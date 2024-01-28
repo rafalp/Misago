@@ -43,7 +43,7 @@ class BansManager(models.Manager):
         elif checks:
             queryset = queryset.filter(check_type__in=checks)
 
-        for ban in queryset.order_by("-id").iterator():
+        for ban in queryset.iterator(chunk_size=50):
             if ban.is_expired:
                 continue
             elif (

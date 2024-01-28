@@ -31,7 +31,7 @@ class Command(BaseCommand):
             requires_activation__gt=User.ACTIVATION_NONE, joined_on__lt=joined_on_cutoff
         )
 
-        for user in queryset.order_by("id").iterator(chunk_size=24):
+        for user in queryset.iterator(chunk_size=50):
             user.delete(anonymous_username=settings.anonymous_username)
             record_user_deleted_by_system()
             users_deleted += 1

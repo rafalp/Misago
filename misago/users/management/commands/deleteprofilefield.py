@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         queryset = User.objects.filter(profile_fields__has_keys=[fieldname])
 
-        for user in queryset.order_by("id").iterator():
+        for user in queryset.iterator(chunk_size=50):
             if fieldname in user.profile_fields.keys():
                 user.profile_fields.pop(fieldname)
                 user.save(update_fields=["profile_fields"])

@@ -68,10 +68,9 @@ class Analytics:
 
     def get_data_for_model(self, model, date_attr):
         filter_kwarg = {"%s__gte" % date_attr: self.cutoff}
-        queryset = model.objects.filter(**filter_kwarg).order_by("-pk")
-
+        queryset = model.objects.filter(**filter_kwarg)
         data = self.get_empty_data()
-        for item in queryset.values(date_attr).iterator():
+        for item in queryset.values(date_attr).iterator(chunk_size=200):
             date = item[date_attr].strftime("%x")
             if date in data:
                 data[date] += 1

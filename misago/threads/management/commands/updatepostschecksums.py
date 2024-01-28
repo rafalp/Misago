@@ -26,7 +26,7 @@ class Command(BaseCommand):
         start_time = time.time()
 
         queryset = Post.objects.filter(is_event=False)
-        for post in queryset.order_by("-id").iterator(chunk_size=50):
+        for post in queryset.iterator(chunk_size=50):
             update_post_checksum(post)
             post.save(update_fields=["checksum"])
 

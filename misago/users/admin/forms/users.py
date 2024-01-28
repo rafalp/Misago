@@ -583,15 +583,15 @@ def create_filter_users_form():
     groups_choices = [
         ("", pgettext_lazy("admin users group filter choice", "All groups"))
     ]
-    for group in Group.objects.order_by("name").iterator():
+    for group in Group.objects.order_by("name").iterator(chunk_size=50):
         groups_choices.append((group.pk, str(group)))
 
     ranks_choices = [("", pgettext_lazy("admin users rank filter choice", "All ranks"))]
-    for rank in Rank.objects.order_by("name").iterator():
+    for rank in Rank.objects.order_by("name").iterator(chunk_size=50):
         ranks_choices.append((rank.pk, str(rank)))
 
     roles_choices = [("", pgettext_lazy("admin users role filter choice", "All roles"))]
-    for role in Role.objects.order_by("name").iterator():
+    for role in Role.objects.order_by("name").iterator(chunk_size=50):
         roles_choices.append((role.pk, str(role)))
 
     extra_fields = {
