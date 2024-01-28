@@ -3,8 +3,6 @@
 from django.db import migrations
 from django.utils import timezone
 
-from ...core.pgutils import chunk_queryset
-
 BATCH_SIZE_LIMIT = 50
 
 
@@ -18,7 +16,7 @@ def migrate_threads_subscriptions(apps, schema_editor):
     batch = []
     batch_size = 0
 
-    for subscription in chunk_queryset(Subscription.objects.all()):
+    for subscription in Subscription.objects.iterator(chunk_size=100):
         batch.append(
             WatchedThread(
                 user_id=subscription.user_id,

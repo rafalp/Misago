@@ -10,6 +10,9 @@ from .models import Category
 def index(request):
     categories_list = get_categories_list(request)
 
+    from time import time
+    from misago.threads.models import Post
+
     return render(
         request,
         "misago/categories/index.html",

@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 
 from ..cache.versions import get_cache_versions
 from ..conf.dynamicsettings import DynamicSettings
-from ..core.pgutils import chunk_queryset
 from ..users.bans import get_user_ban
 from ..threads.models import Post, Thread
 from .models import WatchedThread
@@ -39,7 +38,7 @@ def notify_on_new_thread_reply(reply_id: int):
 
     queryset = WatchedThread.objects.filter(thread=post.thread).select_related("user")
 
-    for watched_thread in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
+    for watched_thread in queryset.iterator(chunk_size=NOTIFY_CHUNK_SIZE):
         if (
             watched_thread.user == post.poster
             or not watched_thread.user.is_active
@@ -77,7 +76,7 @@ def notify_on_new_private_thread(
 
     queryset = User.objects.filter(id__in=participants)
 
-    for participant in chunk_queryset(queryset, NOTIFY_CHUNK_SIZE):
+    for participant in queryset.iterator(chunk_size=NOTIFY_CHUNK_SIZE):
         if not participant.is_active or get_user_ban(participant, cache_versions):
             continue  # Skip inactive or banned participants
 

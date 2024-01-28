@@ -3,7 +3,6 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db.models.signals import pre_delete
 
-from ..core.pgutils import chunk_queryset
 from ..users.signals import (
     anonymize_user_data,
     archive_user_data,
@@ -20,7 +19,7 @@ def archive_user_notifications(sender, archive=None, **kwargs):
         "id"
     )
 
-    for notification in chunk_queryset(queryset):
+    for notification in queryset.iterator(chunk_size=50):
         item_name = notification.created_at.strftime("%H%M%S-notification")
         archive.add_text(
             item_name,

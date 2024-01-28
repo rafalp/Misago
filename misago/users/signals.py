@@ -6,7 +6,6 @@ from django.dispatch import Signal, receiver
 from django.utils import timezone
 from django.utils.translation import pgettext
 
-from ..core.pgutils import chunk_queryset
 from .models import AuditTrail
 from .profilefields import profilefields
 
@@ -57,7 +56,7 @@ def archive_user_avatar(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_audit_trail(sender, archive=None, **kwargs):
-    for audit_trail in chunk_queryset(sender.audittrail_set):
+    for audit_trail in sender.audittrail_set.order_by("id").iterator(chunk_size=50):
         item_name = audit_trail.created_on.strftime("%H%M%S-audit-trail")
         archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_on)
 
@@ -103,5 +102,6 @@ def remove_old_audit_trails(sender, *, ip_storage_time, **kwargs):
 
 @receiver(anonymize_user_data)
 def delete_data_downloads(sender, **kwargs):
-    for data_download in chunk_queryset(sender.datadownload_set):
+    queryset = sender.datadownload_set.order_by("id")
+    for data_download in queryset.iterator(chunk_size=50):
         data_download.delete()

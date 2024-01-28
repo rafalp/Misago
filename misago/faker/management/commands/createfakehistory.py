@@ -9,7 +9,6 @@ from django.utils import timezone
 from faker import Factory
 
 from ....categories.models import Category
-from ....core.pgutils import chunk_queryset
 from ....notifications.models import Notification, WatchedThread
 from ....notifications.verbs import NotificationVerb
 from ....threads.checksums import update_post_checksum
@@ -298,7 +297,7 @@ class Command(BaseCommand):
         self.stdout.write("\nSynchronizing threads...")
         start_time = time.time()
 
-        for thread in chunk_queryset(Thread.objects.all()):
+        for thread in Thread.objects.iterator(chunk_size=50):
             thread.synchronize()
             thread.save()
 
@@ -328,7 +327,7 @@ class Command(BaseCommand):
 
         queryset = WatchedThread.objects.select_related("thread").all()
 
-        for watched_thread in chunk_queryset(queryset):
+        for watched_thread in queryset.iterator(chunk_size=50):
             watched_thread.read_at = watched_thread.thread.last_post_on
             watched_thread.save(update_fields=["read_at"])
 
