@@ -19,8 +19,8 @@ class ParserContext:
     request: HttpRequest | None
     user: User | AnonymousUser
     user_permissions: UserPermissionsProxy
-    settings: DynamicSettings
     cache_versions: dict
+    settings: DynamicSettings
     plugin_data: dict
 
 
@@ -28,15 +28,15 @@ def create_parser_context(
     request: HttpRequest | None = None,
     *,
     user_permissions: UserPermissionsProxy | None = None,
-    settings: DynamicSettings | None = None,
     cache_versions: dict | None = None,
+    settings: DynamicSettings | None = None,
     content_type: str | None = None,
 ) -> ParserContext:
     data = {
         "user_permissions": None,
         "user": None,
-        "settings": None,
         "cache_versions": None,
+        "settings": None,
         "plugin_data": {},
     }
 
@@ -51,19 +51,19 @@ def create_parser_context(
             "'user_permissions' argument is required if 'request' is not set"
         )
 
-    if settings:
-        data["settings"] = settings
-    elif request:
-        data["settings"] = request.settings
-    else:
-        raise TypeError("'settings' argument is required if 'request' is not set")
-
     if cache_versions:
         data["cache_versions"] = cache_versions
     elif request:
         data["cache_versions"] = request.cache_versions
     else:
         raise TypeError("'cache_versions' argument is required if 'request' is not set")
+
+    if settings:
+        data["settings"] = settings
+    elif request:
+        data["settings"] = request.settings
+    else:
+        raise TypeError("'settings' argument is required if 'request' is not set")
 
     context = ParserContext(
         content_type=content_type,
