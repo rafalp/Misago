@@ -66,7 +66,7 @@ def test_fenced_code_trims_syntax(parse_markup):
     ]
 
 
-def test_fenced_code_dedents_code(parse_markup):
+def test_fenced_code_doesnt_dedent_code(parse_markup):
     result = parse_markup(
         """
         ~~~
@@ -79,7 +79,7 @@ def test_fenced_code_dedents_code(parse_markup):
         {
             "type": "code",
             "syntax": None,
-            "code": "def hello():\n    return 1",
+            "code": "    def hello():\n        return 1",
         }
     ]
 
@@ -98,7 +98,7 @@ def test_fenced_code_trims_code(parse_markup):
         {
             "type": "code",
             "syntax": None,
-            "code": "1 + 3",
+            "code": "    1 + 3",
         }
     ]
 

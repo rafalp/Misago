@@ -152,10 +152,10 @@ def test_render_ast_to_html_code(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         ```
-            if random.randint(0, 10) > 4:
-                print("Gotcha!")
-                return True
-            return False
+        if random.randint(0, 10) > 4:
+            print("Gotcha!")
+            return True
+        return False
         ```
         """
     )
@@ -167,10 +167,10 @@ def test_render_ast_to_html_code_with_syntax(parser_context, parse_markup, snaps
     ast = parse_markup(
         """
         ```python
-            if random.randint(0, 10) > 4:
-                print("Gotcha!")
-                return True
-            return False
+        if random.randint(0, 10) > 4:
+            print("Gotcha!")
+            return True
+        return False
         ```
         """
     )

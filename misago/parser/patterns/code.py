@@ -25,7 +25,7 @@ class FencedCodeMarkdown(Pattern):
             "type": self.pattern_type,
             "syntax": syntax or None,
             "code": parser.reverse_reservations(
-                dedent(contents.group("code").rstrip()).strip(),
+                contents.group("code").lstrip("\n").rstrip(),
             ),
         }
 
