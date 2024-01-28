@@ -147,6 +147,79 @@ Hello world
 ```
 
 
+## Code with syntax
+
+    ```javascript
+    alert("print")
+    ```
+
+```json
+{
+    "type": "code",
+    "syntax": "javascript",
+    "code": "alert(\"print\")"
+}
+```
+
+
+## Code (BBCode)
+
+```
+[code]alert("print")[/code]
+```
+
+```json
+{
+    "type": "code-bbcode",
+    "syntax": null,
+    "code": "alert(\"print\")"
+}
+```
+
+
+## Code with syntax (BBCode)
+
+```markdown
+[code=javascript]alert("print")[/code]
+```
+
+```json
+{
+    "type": "code-bbcode",
+    "syntax": "javascript",
+    "code": "alert(\"print\")"
+}
+```
+
+
+## Code (indented)
+
+```markdown
+    alert("print")
+```
+
+```json
+{
+    "type": "code-indented",
+    "code": "alert(\"print\")"
+}
+```
+
+
+## Code (inlined)
+
+```markdown
+`alert("print")``
+```
+
+```json
+{
+    "type": "code-inline",
+    "code": "alert(\"print\")"
+}
+```
+
+
 ## Paragraph
 
 ```markdown
