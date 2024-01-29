@@ -36,6 +36,7 @@ class SettingsView(AdminView):
             form = self.form_class(
                 request.POST, request.FILES, request=request, initial=initial
             )
+
             if form.is_valid():
                 form.save(settings)
                 messages.success(

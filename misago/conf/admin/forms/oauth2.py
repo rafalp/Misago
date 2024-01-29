@@ -10,6 +10,7 @@ OAUTH2_OPTIONAL_FIELDS = (
     "oauth2_user_extra_headers",
     "oauth2_send_welcome_email",
     "oauth2_json_avatar_path",
+    "oauth2_enable_pkce",
 )
 
 
@@ -19,6 +20,8 @@ class OAuth2SettingsForm(SettingsForm):
         "oauth2_provider",
         "oauth2_client_id",
         "oauth2_client_secret",
+        "oauth2_enable_pkce",
+        "oauth2_pkce_code_challenge_method",
         "oauth2_scopes",
         "oauth2_login_url",
         "oauth2_token_url",
@@ -203,7 +206,25 @@ class OAuth2SettingsForm(SettingsForm):
         max_length=200,
         required=False,
     )
-
+    oauth2_enable_pkce = YesNoSwitch(
+        label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 PKCE"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "Enabling OAuth2 PKCE (Proof Key for Code Exchange) will add additional protection during code to token exchanges if OAuth2 server supports it."),
+        required=False
+    )
+    oauth2_pkce_code_challenge_method = forms.ChoiceField(
+        label=pgettext_lazy("admin oauth2 settings form", "PKCE Code Challenge method"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "When PKCE is enabled this hashing method is used to generate the PKCE code challenge for OAuth2.",
+        ),
+        choices=[
+            ("S256", "S256"),
+            ("plain", "plain (no hashing)"),
+        ],
+        widget=forms.RadioSelect(),
+    )
     def clean_oauth2_scopes(self):
         # Remove duplicates and extra spaces, keep order of scopes
         clean_scopes = []
