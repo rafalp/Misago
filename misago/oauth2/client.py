@@ -1,8 +1,8 @@
-from secrets import token_urlsafe
 from base64 import urlsafe_b64encode
 from hashlib import sha256
-from urllib.parse import urlencode
+from secrets import token_urlsafe
 from typing import Any
+from urllib.parse import urlencode
 
 import requests
 from django.urls import reverse
@@ -35,9 +35,9 @@ def create_login_url(request):
         querystring["code_challenge"] = get_code_challenge(
             code_verifier, request.settings.oauth2_pkce_code_challenge_method
         )
-        querystring["code_challenge_method"] = (
-            request.settings.oauth2_pkce_code_challenge_method
-        )
+        querystring[
+            "code_challenge_method"
+        ] = request.settings.oauth2_pkce_code_challenge_method
 
     return "%s?%s" % (request.settings.oauth2_login_url, urlencode(querystring))
 
