@@ -27,7 +27,7 @@ def test_oauth2_can_be_enabled(admin_client):
             "oauth2_json_email_path": "email",
             "oauth2_json_avatar_path": "avatar",
             "oauth2_enable_pkce": "0",
-            "oauth2_pkce_code_challenge_method": "S256"
+            "oauth2_pkce_code_challenge_method": "S256",
         },
     )
 
@@ -82,7 +82,7 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
             "oauth2_json_email_path": "email",
             "oauth2_json_avatar_path": "",
             "oauth2_enable_pkce": "0",
-            "oauth2_pkce_code_challenge_method": "S256"
+            "oauth2_pkce_code_challenge_method": "S256",
         },
     )
 
@@ -133,7 +133,7 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         "oauth2_json_email_path": "email",
         "oauth2_json_avatar_path": "",
         "oauth2_enable_pkce": "0",
-        "oauth2_pkce_code_challenge_method": "S256"
+        "oauth2_pkce_code_challenge_method": "S256",
     }
 
     skip_settings = (
@@ -145,7 +145,7 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         "oauth2_user_extra_headers",
         "oauth2_send_welcome_email",
         "oauth2_enable_pkce",
-        "oauth2_pkce_code_challenge_method"
+        "oauth2_pkce_code_challenge_method",
     )
 
     for setting in data:
@@ -159,7 +159,7 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
             reverse("misago:admin:settings:oauth2:index"),
             new_data,
         )
-        
+
         assert response.status_code == 302
         assert_has_error_message(
             response,
@@ -226,7 +226,7 @@ def test_oauth2_scopes_are_normalized(admin_client):
             "oauth2_json_email_path": "email",
             "oauth2_json_avatar_path": "",
             "oauth2_enable_pkce": "0",
-            "oauth2_pkce_code_challenge_method": "S256"
+            "oauth2_pkce_code_challenge_method": "S256",
         },
     )
 
@@ -259,7 +259,7 @@ def test_oauth2_extra_token_headers_are_normalized(admin_client):
             "oauth2_json_email_path": "email",
             "oauth2_json_avatar_path": "",
             "oauth2_enable_pkce": "0",
-            "oauth2_pkce_code_challenge_method": "S256"
+            "oauth2_pkce_code_challenge_method": "S256",
         },
     )
 
@@ -322,7 +322,7 @@ def test_oauth2_extra_user_headers_are_normalized(admin_client):
             "oauth2_json_email_path": "email",
             "oauth2_json_avatar_path": "",
             "oauth2_enable_pkce": "0",
-            "oauth2_pkce_code_challenge_method": "S256"
+            "oauth2_pkce_code_challenge_method": "S256",
         },
     )
 
@@ -477,6 +477,7 @@ def test_oauth2_extra_headers_are_validated_to_be_unique(admin_client):
 
     assert_contains(response, "&quot;Accept&quot; header is entered more than once.")
 
+
 def test_oauth2_can_be_enabled_with_pkce(admin_client):
     response = admin_client.post(
         reverse("misago:admin:settings:oauth2:index"),
@@ -501,7 +502,7 @@ def test_oauth2_can_be_enabled_with_pkce(admin_client):
             "oauth2_json_email_path": "email",
             "oauth2_json_avatar_path": "avatar",
             "oauth2_enable_pkce": "1",
-            "oauth2_pkce_code_challenge_method": "S256"
+            "oauth2_pkce_code_challenge_method": "S256",
         },
     )
 

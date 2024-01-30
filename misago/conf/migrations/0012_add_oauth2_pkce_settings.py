@@ -11,8 +11,12 @@ settings = [
         "wet_value": False,
         "is_public": False,
     },
-    {"setting": "oauth2_pkce_code_challenge_method", "dry_value": "S256", "is_public": False},
-    ]
+    {
+        "setting": "oauth2_pkce_code_challenge_method",
+        "dry_value": "S256",
+        "is_public": False,
+    },
+]
 
 
 def create_settings(apps, _):

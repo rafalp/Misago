@@ -210,8 +210,9 @@ class OAuth2SettingsForm(SettingsForm):
         label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 PKCE"),
         help_text=pgettext_lazy(
             "admin oauth2 settings form",
-            "Enabling OAuth2 PKCE (Proof Key for Code Exchange) will add additional protection during code to token exchanges if OAuth2 server supports it."),
-        required=False
+            "Enabling OAuth2 PKCE (Proof Key for Code Exchange) will add additional protection during code to token exchanges if OAuth2 server supports it.",
+        ),
+        required=False,
     )
     oauth2_pkce_code_challenge_method = forms.ChoiceField(
         label=pgettext_lazy("admin oauth2 settings form", "PKCE Code Challenge method"),
@@ -225,6 +226,7 @@ class OAuth2SettingsForm(SettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+
     def clean_oauth2_scopes(self):
         # Remove duplicates and extra spaces, keep order of scopes
         clean_scopes = []

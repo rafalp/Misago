@@ -1,4 +1,4 @@
-import secrets
+from secrets import token_urlsafe
 from base64 import urlsafe_b64encode
 from hashlib import sha256
 from urllib.parse import urlencode
@@ -16,11 +16,12 @@ STATE_LENGTH = 40
 REQUESTS_TIMEOUT = 30
 SESSION_CODE_VERIFIER = "oauth2_code_verifier"
 
+
 def create_login_url(request):
     state = get_random_string(STATE_LENGTH)
     request.session[SESSION_STATE] = state
 
-    quote = {
+    querystring = {
         "response_type": "code",
         "client_id": request.settings.oauth2_client_id,
         "redirect_uri": get_redirect_uri(request),
@@ -29,12 +30,16 @@ def create_login_url(request):
     }
 
     if request.settings.oauth2_enable_pkce:
-        code_verifier = secrets.token_urlsafe()
+        code_verifier = token_urlsafe()
         request.session[SESSION_CODE_VERIFIER] = code_verifier
-        quote["code_challenge"] = get_code_challenge(code_verifier, request.settings.oauth2_pkce_code_challenge_method)
-        quote["code_challenge_method"] = request.settings.oauth2_pkce_code_challenge_method
+        querystring["code_challenge"] = get_code_challenge(
+            code_verifier, request.settings.oauth2_pkce_code_challenge_method
+        )
+        querystring["code_challenge_method"] = (
+            request.settings.oauth2_pkce_code_challenge_method
+        )
 
-    return "%s?%s" % (request.settings.oauth2_login_url, urlencode(quote))
+    return "%s?%s" % (request.settings.oauth2_login_url, urlencode(querystring))
 
 
 def get_code_grant(request):
@@ -208,9 +213,7 @@ def get_code_challenge(code_verifier, code_challenge_method):
         return code_verifier
     elif code_challenge_method == "S256":
         return (
-            urlsafe_b64encode(
-                sha256(code_verifier.encode("ascii")).digest()
-            )
+            urlsafe_b64encode(sha256(code_verifier.encode("ascii")).digest())
             .decode("ascii")
             .rstrip("=")
         )
