@@ -218,7 +218,7 @@ class OAuth2SettingsForm(SettingsForm):
         label=pgettext_lazy("admin oauth2 settings form", "PKCE Code Challenge method"),
         help_text=pgettext_lazy(
             "admin oauth2 settings form",
-            "When PKCE is enabled this hashing method is used to generate the PKCE code challenge for OAuth2.",
+            "When PKCE is enabled this hashing method is used to generate the PKCE code challenge for the OAuth2 server.",
         ),
         choices=[
             ("S256", "S256"),
