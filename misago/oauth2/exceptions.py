@@ -137,5 +137,5 @@ class OAuth2NotSupportedHashMethodError(OAuth2Error):
     recoverable = False
     message = pgettext_lazy(
         "oauth2 error",
-        "The OAuth2 code challenge generator does not support this hash method.",
+        "The OAuth2 code challenge hash method is not supported.",
     )
