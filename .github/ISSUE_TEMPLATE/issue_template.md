@@ -1,6 +1,6 @@
 ---
-name: Issue
-about: Use this template.
+name: New issue
+about: Misago uses GitHub issues for tracking work to do and triaged bugs to fix.
 ---
 
 Misago uses GitHub issues for tracking work to do and bugs to fix.
