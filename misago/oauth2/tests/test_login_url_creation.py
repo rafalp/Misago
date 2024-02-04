@@ -2,7 +2,11 @@ from unittest.mock import Mock, patch
 from urllib.parse import parse_qsl, urlparse
 
 from ...conf.test import override_dynamic_settings
-from ..client import SESSION_STATE, create_login_url, SESSION_CODE_VERIFIER
+from ..client import (
+    SESSION_CODE_VERIFIER,
+    SESSION_STATE,
+    create_login_url,
+)
 
 
 @override_dynamic_settings(
