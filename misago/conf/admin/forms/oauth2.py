@@ -222,7 +222,12 @@ class OAuth2SettingsForm(SettingsForm):
         ),
         choices=[
             ("S256", "S256"),
-            ("plain", pgettext_lazy("admin oauth2 settings pkce choice", "plain (no hashing)")),
+            (
+                "plain",
+                pgettext_lazy(
+                    "admin oauth2 settings pkce choice", "plain (no hashing)"
+                ),
+            ),
         ],
         widget=forms.RadioSelect(),
     )
