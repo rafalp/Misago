@@ -5,7 +5,11 @@ from requests.exceptions import Timeout
 
 from ...conf.test import override_dynamic_settings
 from .. import exceptions
-from ..client import REQUESTS_TIMEOUT, get_access_token, SESSION_CODE_VERIFIER
+from ..client import (
+    REQUESTS_TIMEOUT,
+    SESSION_CODE_VERIFIER,
+    get_access_token,
+)
 
 ACCESS_TOKEN = "acc3ss-t0k3n"
 CODE_GRANT = "valid-code"
