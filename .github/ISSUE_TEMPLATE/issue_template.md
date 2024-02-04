@@ -1,3 +1,8 @@
+---
+name: Issue
+about: Use this template.
+---
+
 Misago uses GitHub issues for tracking work to do and bugs to fix.
 
 DO NOT open new issues to ask for help or request/propose new features. Use Misago forums instead:
