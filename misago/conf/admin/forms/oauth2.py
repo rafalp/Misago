@@ -210,7 +210,7 @@ class OAuth2SettingsForm(SettingsForm):
         label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 PKCE"),
         help_text=pgettext_lazy(
             "admin oauth2 settings form",
-            "Enabling OAuth2 PKCE (Proof Key for Code Exchange) will add additional protection during code to token exchanges if OAuth2 server supports it.",
+            "Enabling this option will make Misago's OAuth2 client use PKCE (Proof Key for Code Exchange), increasing the security of the authentication process. The OAuth 2 server must also support PKCE.",
         ),
         required=False,
     )
