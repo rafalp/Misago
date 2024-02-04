@@ -6,11 +6,11 @@ from ....admin.forms import YesNoSwitch
 from .base import SettingsForm
 
 OAUTH2_OPTIONAL_FIELDS = (
+    "oauth2_enable_pkce",
     "oauth2_token_extra_headers",
     "oauth2_user_extra_headers",
     "oauth2_send_welcome_email",
     "oauth2_json_avatar_path",
-    "oauth2_enable_pkce",
 )
 
 
@@ -222,7 +222,7 @@ class OAuth2SettingsForm(SettingsForm):
         ),
         choices=[
             ("S256", "S256"),
-            ("plain", "plain (no hashing)"),
+            ("plain", pgettext_lazy("admin oauth2 settings pkce choice", "plain (no hashing)")),
         ],
         widget=forms.RadioSelect(),
     )

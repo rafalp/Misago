@@ -33,8 +33,8 @@ def create_settings(apps, _):
 
 def remove_settings(apps, _):
     Setting = apps.get_model("misago_conf", "Setting")
-    for setting in settings:
-        Setting.objects.filter(setting=setting["setting"]).delete()
+    settings_to_delete = [setting["setting"] for setting in settings]
+    Setting.objects.filter(setting__in=settings_to_delete).delete()
 
 
 class Migration(migrations.Migration):
