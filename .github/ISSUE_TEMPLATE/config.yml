@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask for help
+    url: https://misago-project.org/c/support/30/
+    about: Please ask usage and configuration questions here.
+  - name: Report a bug
+    url: https://misago-project.org/c/bug-reports/29/
+    about: Bugs are triaged on Misago forums before issues for them are created on GitHub.
+  - name: Request a new feature
+    url: https://misago-project.org/c/feedback/28/
+    about: New features and improvements should first be discussed on Misago forums before a roadmap item is created for them.
