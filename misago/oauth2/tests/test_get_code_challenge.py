@@ -12,7 +12,7 @@ def test_exception_is_raised_if_code_verifier_is_not_provided():
         get_code_challenge("", "S256")
 
 
-def test_exception_is_raised_if_not_supported_code_challenge_method():
+def test_exception_is_raised_if_code_challenge_method_is_not_supported():
     with pytest.raises(exceptions.OAuth2NotSupportedHashMethodError):
         get_code_challenge("hYfgN", "ABC")
 
