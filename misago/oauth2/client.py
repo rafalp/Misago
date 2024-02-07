@@ -205,7 +205,7 @@ def clear_json_value(value: Any) -> str | None:
     return None
 
 
-def get_code_challenge(code_verifier, code_challenge_method):
+def get_code_challenge(code_verifier: str, code_challenge_method: str) -> str:
     if not code_verifier:
         raise exceptions.OAuth2CodeVerifierNotProvidedError()
 
