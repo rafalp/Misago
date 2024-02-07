@@ -23,6 +23,6 @@ def test_code_challenge_is_returned_S256_hash_method():
     assert get_code_challenge(code_verifier, "S256") == code_challenge
 
 
-def test_code_challenge_is_returned_plain_hash_method():
+def test_code_challenge_is_returned_using_plain_hash_method():
     code_verifier = "hYfgNABC"
     assert get_code_challenge(code_verifier, "plain") == code_verifier
