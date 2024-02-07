@@ -17,7 +17,7 @@ def test_exception_is_raised_if_code_challenge_method_is_not_supported():
         get_code_challenge("hYfgN", "ABC")
 
 
-def test_code_challenge_is_returned_S256_hash_method():
+def test_code_challenge_is_returned_using_S256_hash_method():
     code_verifier = "hYfgNABC"
     code_challenge = "E5AZUNDQx0-aVDeEVgNFTEglcG1bWgOuygG_elkz_io"
     assert get_code_challenge(code_verifier, "S256") == code_challenge
