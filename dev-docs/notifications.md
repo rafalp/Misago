@@ -185,3 +185,10 @@ def get_custom_notification_redirect_url(
 
 registry.redirect("CUSTOM", get_custom_notification_redirect_url)
 ```
+
+
+## Unsupported notification verbs
+
+It is possible for a notification to have a verb that is not recognized by Misago. Such a notification may have been created by a plugin that is no longer installed or that was changed to no longer support it.
+
+When this happens, Misago will produce a fallback notification message using the `{actor} {verb} {thread_title}` scheme. It will also display the "page not found" error when the user clicks on the notification.

@@ -1,7 +1,8 @@
 from django.db.models import F
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from .exceptions import NotificationVerbError
 from .models import Notification, WatchedThread
 from .permissions import allow_use_notifications
 from .registry import registry
@@ -46,7 +47,10 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
             user.unread_notifications = F("unread_notifications") - 1
             user.save(update_fields=["unread_notifications"])
 
-    return redirect(registry.get_redirect_url(request, notification))
+    try:
+        return redirect(registry.get_redirect_url(request, notification))
+    except NotificationVerbError as error:
+        raise Http404() from error
 
 
 def disable_email_notifications(

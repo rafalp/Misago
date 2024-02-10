@@ -34,13 +34,43 @@ def test_notification_registry_can_have_message_set_with_decorator():
     assert message == "Hello #1"
 
 
-def test_notification_registry_get_message_raises_verb_error_for_unknown_verb():
+def test_notification_registry_get_message_produces_message_for_unsupported_verb():
     notification_registry = NotificationRegistry()
 
-    with pytest.raises(NotificationVerbError) as excinfo:
-        notification_registry.get_message(Notification(id=1, verb="TEST"))
+    message = notification_registry.get_message(Notification(id=1, verb="REMOVED"))
+    assert message == "REMOVED"
 
-    assert "TEST" in str(excinfo)
+
+def test_notification_registry_get_message_produces_message_with_actor_name_for_unsupported_verb():
+    notification_registry = NotificationRegistry()
+
+    message = notification_registry.get_message(
+        Notification(id=1, verb="REMOVED", actor_name="ACTOR")
+    )
+    assert message == "<b>ACTOR</b> REMOVED"
+
+
+def test_notification_registry_get_message_produces_message_with_thread_title_for_unsupported_verb():
+    notification_registry = NotificationRegistry()
+
+    message = notification_registry.get_message(
+        Notification(id=1, verb="REMOVED", thread_title="THREAD")
+    )
+    assert message == "REMOVED <b>THREAD</b>"
+
+
+def test_notification_registry_get_message_produces_message_with_actor_and_thread_for_unsupported_verb():
+    notification_registry = NotificationRegistry()
+
+    message = notification_registry.get_message(
+        Notification(
+            id=1,
+            verb="REMOVED",
+            actor_name="ACTOR",
+            thread_title="THREAD",
+        )
+    )
+    assert message == "<b>ACTOR</b> REMOVED <b>THREAD</b>"
 
 
 def test_notification_registry_can_have_redirect_set_with_setter(request_mock):
