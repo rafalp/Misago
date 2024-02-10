@@ -11,6 +11,8 @@ def test_oauth2_can_be_enabled(admin_client):
             "oauth2_provider": "Lorem",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
+            "oauth2_enable_pkce": "0",
+            "oauth2_pkce_code_challenge_method": "S256",
             "oauth2_scopes": "some scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
@@ -37,6 +39,8 @@ def test_oauth2_can_be_enabled(admin_client):
     assert settings["oauth2_provider"] == "Lorem"
     assert settings["oauth2_client_id"] == "id"
     assert settings["oauth2_client_secret"] == "secret"
+    assert settings["oauth2_enable_pkce"] is False
+    assert settings["oauth2_pkce_code_challenge_method"] == "S256"
     assert settings["oauth2_scopes"] == "some scope"
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
@@ -62,6 +66,8 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
             "oauth2_provider": "Lorem",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
+            "oauth2_enable_pkce": "0",
+            "oauth2_pkce_code_challenge_method": "S256",
             "oauth2_scopes": "some scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
@@ -88,6 +94,8 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
     assert settings["oauth2_provider"] == "Lorem"
     assert settings["oauth2_client_id"] == "id"
     assert settings["oauth2_client_secret"] == "secret"
+    assert settings["oauth2_enable_pkce"] is False
+    assert settings["oauth2_pkce_code_challenge_method"] == "S256"
     assert settings["oauth2_scopes"] == "some scope"
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
@@ -98,7 +106,7 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
     assert settings["oauth2_user_token_location"] == "HEADER"
     assert settings["oauth2_user_token_name"] == "access_token"
     assert settings["oauth2_user_extra_headers"] == ""
-    assert settings["oauth2_send_welcome_email"] == False
+    assert settings["oauth2_send_welcome_email"] is False
     assert settings["oauth2_json_id_path"] == "id"
     assert settings["oauth2_json_name_path"] == "name"
     assert settings["oauth2_json_email_path"] == "email"
@@ -111,6 +119,8 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
         "oauth2_provider": "Lorem",
         "oauth2_client_id": "id",
         "oauth2_client_secret": "secret",
+        "oauth2_enable_pkce": "0",
+        "oauth2_pkce_code_challenge_method": "S256",
         "oauth2_scopes": "some scope",
         "oauth2_login_url": "https://example.com/login/",
         "oauth2_token_url": "https://example.com/token/",
@@ -130,6 +140,8 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
 
     skip_settings = (
         "enable_oauth2_client",
+        "oauth2_enable_pkce",
+        "oauth2_pkce_code_challenge_method",
         "oauth2_json_avatar_path",
         "oauth2_token_extra_headers",
         "oauth2_user_method",
@@ -201,6 +213,8 @@ def test_oauth2_scopes_are_normalized(admin_client):
             "enable_oauth2_client": "0",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
+            "oauth2_enable_pkce": "0",
+            "oauth2_pkce_code_challenge_method": "S256",
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
@@ -231,6 +245,8 @@ def test_oauth2_extra_token_headers_are_normalized(admin_client):
             "enable_oauth2_client": "0",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
+            "oauth2_enable_pkce": "0",
+            "oauth2_pkce_code_challenge_method": "S256",
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
@@ -292,6 +308,8 @@ def test_oauth2_extra_user_headers_are_normalized(admin_client):
             "enable_oauth2_client": "0",
             "oauth2_client_id": "id",
             "oauth2_client_secret": "secret",
+            "oauth2_enable_pkce": "0",
+            "oauth2_pkce_code_challenge_method": "S256",
             "oauth2_scopes": "some some    scope",
             "oauth2_login_url": "https://example.com/login/",
             "oauth2_token_url": "https://example.com/token/",
@@ -460,3 +478,58 @@ def test_oauth2_extra_headers_are_validated_to_be_unique(admin_client):
     )
 
     assert_contains(response, "&quot;Accept&quot; header is entered more than once.")
+
+
+def test_oauth2_can_be_enabled_with_pkce(admin_client):
+    response = admin_client.post(
+        reverse("misago:admin:settings:oauth2:index"),
+        {
+            "enable_oauth2_client": "1",
+            "oauth2_provider": "Lorem",
+            "oauth2_client_id": "id",
+            "oauth2_client_secret": "secret",
+            "oauth2_enable_pkce": "1",
+            "oauth2_pkce_code_challenge_method": "S256",
+            "oauth2_scopes": "some scope",
+            "oauth2_login_url": "https://example.com/login/",
+            "oauth2_token_url": "https://example.com/token/",
+            "oauth2_token_extra_headers": "",
+            "oauth2_json_token_path": "access_token",
+            "oauth2_user_url": "https://example.com/user/",
+            "oauth2_user_method": "GET",
+            "oauth2_user_token_location": "HEADER",
+            "oauth2_user_token_name": "access_token",
+            "oauth2_user_extra_headers": "",
+            "oauth2_send_welcome_email": "",
+            "oauth2_json_id_path": "id",
+            "oauth2_json_name_path": "name",
+            "oauth2_json_email_path": "email",
+            "oauth2_json_avatar_path": "avatar",
+        },
+    )
+
+    assert response.status_code == 302
+
+    settings = {row.setting: row.value for row in Setting.objects.all()}
+
+    assert settings["enable_oauth2_client"] is True
+    assert settings["oauth2_provider"] == "Lorem"
+    assert settings["oauth2_client_id"] == "id"
+    assert settings["oauth2_client_secret"] == "secret"
+    assert settings["oauth2_enable_pkce"] is True
+    assert settings["oauth2_pkce_code_challenge_method"] == "S256"
+    assert settings["oauth2_scopes"] == "some scope"
+    assert settings["oauth2_login_url"] == "https://example.com/login/"
+    assert settings["oauth2_token_url"] == "https://example.com/token/"
+    assert settings["oauth2_token_extra_headers"] == ""
+    assert settings["oauth2_json_token_path"] == "access_token"
+    assert settings["oauth2_user_url"] == "https://example.com/user/"
+    assert settings["oauth2_user_method"] == "GET"
+    assert settings["oauth2_user_token_location"] == "HEADER"
+    assert settings["oauth2_user_token_name"] == "access_token"
+    assert settings["oauth2_user_extra_headers"] == ""
+    assert settings["oauth2_send_welcome_email"] is False
+    assert settings["oauth2_json_id_path"] == "id"
+    assert settings["oauth2_json_name_path"] == "name"
+    assert settings["oauth2_json_email_path"] == "email"
+    assert settings["oauth2_json_avatar_path"] == "avatar"

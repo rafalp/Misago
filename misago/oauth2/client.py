@@ -1,5 +1,8 @@
-from urllib.parse import urlencode
+from base64 import urlsafe_b64encode
+from hashlib import sha256
+from secrets import token_urlsafe
 from typing import Any
+from urllib.parse import urlencode
 
 import requests
 from django.urls import reverse
@@ -11,13 +14,14 @@ from . import exceptions
 SESSION_STATE = "oauth2_state"
 STATE_LENGTH = 40
 REQUESTS_TIMEOUT = 30
+SESSION_CODE_VERIFIER = "oauth2_code_verifier"
 
 
 def create_login_url(request):
     state = get_random_string(STATE_LENGTH)
     request.session[SESSION_STATE] = state
 
-    quote = {
+    querystring = {
         "response_type": "code",
         "client_id": request.settings.oauth2_client_id,
         "redirect_uri": get_redirect_uri(request),
@@ -25,7 +29,17 @@ def create_login_url(request):
         "state": state,
     }
 
-    return "%s?%s" % (request.settings.oauth2_login_url, urlencode(quote))
+    if request.settings.oauth2_enable_pkce:
+        code_verifier = token_urlsafe()
+        request.session[SESSION_CODE_VERIFIER] = code_verifier
+        querystring["code_challenge"] = get_code_challenge(
+            code_verifier, request.settings.oauth2_pkce_code_challenge_method
+        )
+        querystring[
+            "code_challenge_method"
+        ] = request.settings.oauth2_pkce_code_challenge_method
+
+    return "%s?%s" % (request.settings.oauth2_login_url, urlencode(querystring))
 
 
 def get_code_grant(request):
@@ -59,6 +73,9 @@ def get_access_token(request, code_grant):
         "redirect_uri": get_redirect_uri(request),
         "code": code_grant,
     }
+    if request.settings.oauth2_enable_pkce:
+        data["code_verifier"] = request.session.pop(SESSION_CODE_VERIFIER, None)
+
     headers = get_headers_dict(request.settings.oauth2_token_extra_headers)
 
     try:
@@ -186,3 +203,19 @@ def clear_json_value(value: Any) -> str | None:
         return str(value)
 
     return None
+
+
+def get_code_challenge(code_verifier: str, code_challenge_method: str) -> str:
+    if not code_verifier:
+        raise exceptions.OAuth2CodeVerifierNotProvidedError()
+
+    if code_challenge_method == "plain":
+        return code_verifier
+    elif code_challenge_method == "S256":
+        return (
+            urlsafe_b64encode(sha256(code_verifier.encode("ascii")).digest())
+            .decode("ascii")
+            .rstrip("=")
+        )
+
+    raise exceptions.OAuth2NotSupportedHashMethodError()

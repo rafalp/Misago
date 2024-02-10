@@ -6,6 +6,7 @@ from ....admin.forms import YesNoSwitch
 from .base import SettingsForm
 
 OAUTH2_OPTIONAL_FIELDS = (
+    "oauth2_enable_pkce",
     "oauth2_token_extra_headers",
     "oauth2_user_extra_headers",
     "oauth2_send_welcome_email",
@@ -19,6 +20,8 @@ class OAuth2SettingsForm(SettingsForm):
         "oauth2_provider",
         "oauth2_client_id",
         "oauth2_client_secret",
+        "oauth2_enable_pkce",
+        "oauth2_pkce_code_challenge_method",
         "oauth2_scopes",
         "oauth2_login_url",
         "oauth2_token_url",
@@ -202,6 +205,31 @@ class OAuth2SettingsForm(SettingsForm):
         ),
         max_length=200,
         required=False,
+    )
+    oauth2_enable_pkce = YesNoSwitch(
+        label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 PKCE"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "Enabling this option will make Misago's OAuth2 client use PKCE (Proof Key for Code Exchange), increasing the security of the authentication process. The OAuth 2 server must also support PKCE.",
+        ),
+        required=False,
+    )
+    oauth2_pkce_code_challenge_method = forms.ChoiceField(
+        label=pgettext_lazy("admin oauth2 settings form", "PKCE Code Challenge method"),
+        help_text=pgettext_lazy(
+            "admin oauth2 settings form",
+            "When PKCE is enabled this hashing method is used to generate the PKCE code challenge for the OAuth2 server.",
+        ),
+        choices=[
+            ("S256", "S256"),
+            (
+                "plain",
+                pgettext_lazy(
+                    "admin oauth2 settings pkce choice", "plain (no hashing)"
+                ),
+            ),
+        ],
+        widget=forms.RadioSelect(),
     )
 
     def clean_oauth2_scopes(self):

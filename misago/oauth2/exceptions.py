@@ -123,3 +123,19 @@ class OAuth2UserDataValidationError(OAuth2ProviderError):
 
     def __init__(self, error_list: list[str]):
         self.error_list = error_list
+
+
+class OAuth2CodeVerifierNotProvidedError(OAuth2Error):
+    recoverable = False
+    message = pgettext_lazy(
+        "oauth2 error",
+        "The OAuth2 authorization flow is missing code verifier.",
+    )
+
+
+class OAuth2NotSupportedHashMethodError(OAuth2Error):
+    recoverable = False
+    message = pgettext_lazy(
+        "oauth2 error",
+        "The OAuth2 code challenge hash method is not supported.",
+    )
