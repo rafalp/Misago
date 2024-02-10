@@ -66,8 +66,8 @@ class NotificationRegistry:
         """
         try:
             return self._messages[notification.verb](notification)
-        except KeyError as exc:
-            raise NotificationVerbError(notification.verb) from exc
+        except KeyError:
+            return notification.verb
 
     @overload
     def redirect(self, verb: str) -> Callable[[RedirectFactory], RedirectFactory]:
