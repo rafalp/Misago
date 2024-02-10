@@ -39,6 +39,8 @@ def test_oauth2_can_be_enabled(admin_client):
     assert settings["oauth2_provider"] == "Lorem"
     assert settings["oauth2_client_id"] == "id"
     assert settings["oauth2_client_secret"] == "secret"
+    assert settings["oauth2_enable_pkce"] is False
+    assert settings["oauth2_pkce_code_challenge_method"] == "S256"
     assert settings["oauth2_scopes"] == "some scope"
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
@@ -54,8 +56,6 @@ def test_oauth2_can_be_enabled(admin_client):
     assert settings["oauth2_json_name_path"] == "name"
     assert settings["oauth2_json_email_path"] == "email"
     assert settings["oauth2_json_avatar_path"] == "avatar"
-    assert settings["oauth2_enable_pkce"] is False
-    assert settings["oauth2_pkce_code_challenge_method"] == "S256"
 
 
 def test_oauth2_can_be_enabled_without_avatar(admin_client):
@@ -94,6 +94,8 @@ def test_oauth2_can_be_enabled_without_avatar(admin_client):
     assert settings["oauth2_provider"] == "Lorem"
     assert settings["oauth2_client_id"] == "id"
     assert settings["oauth2_client_secret"] == "secret"
+    assert settings["oauth2_enable_pkce"] is False
+    assert settings["oauth2_pkce_code_challenge_method"] == "S256"
     assert settings["oauth2_scopes"] == "some scope"
     assert settings["oauth2_login_url"] == "https://example.com/login/"
     assert settings["oauth2_token_url"] == "https://example.com/token/"
@@ -138,14 +140,14 @@ def test_oauth2_cant_be_enabled_with_some_value_missing(admin_client):
 
     skip_settings = (
         "enable_oauth2_client",
+        "oauth2_enable_pkce",
+        "oauth2_pkce_code_challenge_method",
         "oauth2_json_avatar_path",
         "oauth2_token_extra_headers",
         "oauth2_user_method",
         "oauth2_user_token_location",
         "oauth2_user_extra_headers",
         "oauth2_send_welcome_email",
-        "oauth2_enable_pkce",
-        "oauth2_pkce_code_challenge_method",
     )
 
     for setting in data:
