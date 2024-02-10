@@ -67,7 +67,7 @@ class NotificationRegistry:
         try:
             return self._messages[notification.verb](notification)
         except KeyError:
-            return notification.verb
+            return get_unsupported_verb_notification_message(notification)
 
     @overload
     def redirect(self, verb: str) -> Callable[[RedirectFactory], RedirectFactory]:
@@ -117,6 +117,18 @@ class NotificationRegistry:
 
 
 registry = NotificationRegistry()
+
+
+# Fallback: used to produce messages for unsupported verbs
+def get_unsupported_verb_notification_message(notification: "Notification") -> str:
+    message = notification.verb
+
+    if notification.actor_name:
+        message = f"{bold_escape(notification.actor_name)} {message}"
+    if notification.thread_title:
+        message = f"{message} {bold_escape(notification.thread_title)}"
+
+    return message
 
 
 # TEST: used in tests only

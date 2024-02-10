@@ -1,5 +1,5 @@
 from django.db.models import F
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .exceptions import NotificationVerbError
@@ -10,7 +10,7 @@ from .registry import registry
 
 def notifications(request: HttpRequest) -> HttpResponse:
     allow_use_notifications(request.user)
-    return render(request, "misago/notifications/index.html")
+    return render(request, "misago/notifications.html")
 
 
 def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
@@ -50,12 +50,7 @@ def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
     try:
         return redirect(registry.get_redirect_url(request, notification))
     except NotificationVerbError as error:
-        return render(
-            request,
-            "misago/notifications/verb_error.html",
-            {"error": error},
-            status=404,
-        )
+        raise Http404() from error
 
 
 def disable_email_notifications(
