@@ -47,7 +47,7 @@ def test_notification_registry_get_message_produces_message_with_actor_name_for_
     message = notification_registry.get_message(
         Notification(id=1, verb="REMOVED", actor_name="ACTOR")
     )
-    assert message == "ACTOR REMOVED"
+    assert message == "<b>ACTOR</b> REMOVED"
 
 
 def test_notification_registry_get_message_produces_message_with_thread_title_for_unsupported_verb():
@@ -56,16 +56,21 @@ def test_notification_registry_get_message_produces_message_with_thread_title_fo
     message = notification_registry.get_message(
         Notification(id=1, verb="REMOVED", thread_title="THREAD")
     )
-    assert message == "REMOVED THREAD"
+    assert message == "REMOVED <b>THREAD</b>"
 
 
 def test_notification_registry_get_message_produces_message_with_actor_and_thread_for_unsupported_verb():
     notification_registry = NotificationRegistry()
 
     message = notification_registry.get_message(
-        Notification(id=1, verb="REMOVED", actor_name="ACTOR", thread_title="THREAD")
+        Notification(
+            id=1,
+            verb="REMOVED",
+            actor_name="ACTOR",
+            thread_title="THREAD",
+        )
     )
-    assert message == "ACTOR REMOVED THREAD"
+    assert message == "<b>ACTOR</b> REMOVED <b>THREAD</b>"
 
 
 def test_notification_registry_can_have_redirect_set_with_setter(request_mock):
