@@ -35,9 +35,9 @@ def create_login_url(request):
         querystring["code_challenge"] = get_code_challenge(
             code_verifier, request.settings.oauth2_pkce_code_challenge_method
         )
-        querystring[
-            "code_challenge_method"
-        ] = request.settings.oauth2_pkce_code_challenge_method
+        querystring["code_challenge_method"] = (
+            request.settings.oauth2_pkce_code_challenge_method
+        )
 
     return "%s?%s" % (request.settings.oauth2_login_url, urlencode(querystring))
 
