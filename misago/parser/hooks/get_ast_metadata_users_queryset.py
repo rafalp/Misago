@@ -38,8 +38,7 @@ class GetAstMetadataUsersQuerysetHookAction(Protocol):
         *,
         context: "ParserContext",
         usernames: list[str],
-    ) -> Iterable[User]:
-        ...
+    ) -> Iterable[User]: ...
 
 
 class GetAstMetadataUsersQuerysetHookFilter(Protocol):
@@ -76,8 +75,7 @@ class GetAstMetadataUsersQuerysetHookFilter(Protocol):
         action: GetAstMetadataUsersQuerysetHookAction,
         context: "ParserContext",
         usernames: list[str],
-    ) -> Iterable[User]:
-        ...
+    ) -> Iterable[User]: ...
 
 
 class GetAstMetadataUsersQuerysetHook(

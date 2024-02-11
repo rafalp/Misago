@@ -34,8 +34,7 @@ class UpdateAstMetadataFromNodeHookAction(Protocol):
         context: "ParserContext",
         ast_node: dict,
         metadata: dict,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class UpdateAstMetadataFromNodeHookFilter(Protocol):
@@ -72,8 +71,7 @@ class UpdateAstMetadataFromNodeHookFilter(Protocol):
         context: "ParserContext",
         ast_node: dict,
         metadata: dict,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class UpdateAstMetadataFromNodeHook(

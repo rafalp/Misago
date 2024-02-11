@@ -26,8 +26,7 @@ class DeleteGroupHookAction(Protocol):
         self,
         group: Group,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class DeleteGroupHookFilter(Protocol):
@@ -57,8 +56,7 @@ class DeleteGroupHookFilter(Protocol):
         action: DeleteGroupHookAction,
         group: Group,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class DeleteGroupHook(FilterHook[DeleteGroupHookAction, DeleteGroupHookFilter]):

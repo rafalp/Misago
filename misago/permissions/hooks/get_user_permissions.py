@@ -29,8 +29,7 @@ class GetUserPermissionsHookAction(Protocol):
     A Python `dict` with user permissions.
     """
 
-    def __call__(self, user: User | AnonymousUser, cache_versions: dict) -> dict:
-        ...
+    def __call__(self, user: User | AnonymousUser, cache_versions: dict) -> dict: ...
 
 
 class GetUserPermissionsHookFilter(Protocol):
@@ -64,8 +63,7 @@ class GetUserPermissionsHookFilter(Protocol):
         action: GetUserPermissionsHookAction,
         user: User | AnonymousUser,
         cache_versions: dict,
-    ) -> dict:
-        ...
+    ) -> dict: ...
 
 
 class GetUserPermissionsHook(

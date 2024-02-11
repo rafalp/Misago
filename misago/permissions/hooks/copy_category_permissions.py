@@ -31,8 +31,7 @@ class CopyCategoryPermissionsHookAction(Protocol):
         src: Category,
         dst: Category,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class CopyCategoryPermissionsHookFilter(Protocol):
@@ -67,8 +66,7 @@ class CopyCategoryPermissionsHookFilter(Protocol):
         src: Category,
         dst: Category,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class CopyCategoryPermissionsHook(

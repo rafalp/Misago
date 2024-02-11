@@ -300,12 +300,12 @@ def test_oauth2_complete_view_doesnt_send_welcome_mail_if_option_is_disabled(
 
 
 TEST_SETTINGS_EXTRA_TOKEN_HEADERS = TEST_SETTINGS.copy()
-TEST_SETTINGS_EXTRA_TOKEN_HEADERS[
-    "oauth2_token_extra_headers"
-] = """
+TEST_SETTINGS_EXTRA_TOKEN_HEADERS["oauth2_token_extra_headers"] = (
+    """
 Accept: application/json
 API-Version: 2.1.3.7
 """.strip()
+)
 
 
 @responses.activate
@@ -385,12 +385,12 @@ def test_oauth2_complete_view_includes_extra_headers_in_token_request(
 
 
 TEST_SETTINGS_EXTRA_USER_HEADERS = TEST_SETTINGS.copy()
-TEST_SETTINGS_EXTRA_USER_HEADERS[
-    "oauth2_user_extra_headers"
-] = """
+TEST_SETTINGS_EXTRA_USER_HEADERS["oauth2_user_extra_headers"] = (
+    """
 X-Header: its-a-test
 API-Version: 2.1.3.7
 """.strip()
+)
 
 
 @responses.activate

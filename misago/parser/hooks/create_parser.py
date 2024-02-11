@@ -51,8 +51,7 @@ class CreateParserHookAction(Protocol):
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-    ) -> Parser:
-        ...
+    ) -> Parser: ...
 
 
 class CreateParserHookFilter(Protocol):
@@ -106,8 +105,7 @@ class CreateParserHookFilter(Protocol):
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-    ) -> Parser:
-        ...
+    ) -> Parser: ...
 
 
 class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter]):

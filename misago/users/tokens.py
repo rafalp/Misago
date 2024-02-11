@@ -7,6 +7,7 @@ Token is base encoded string containing three values:
 - hash unique for current state of user model
 - token checksum for discovering manipulations
 """
+
 import base64
 from hashlib import sha256
 from time import time

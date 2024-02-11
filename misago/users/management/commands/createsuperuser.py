@@ -2,6 +2,7 @@
 Misago-native rehash of Django's createsuperuser command that
 works with double authentication fields on user model
 """
+
 import sys
 from getpass import getpass
 

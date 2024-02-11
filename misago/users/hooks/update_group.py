@@ -37,8 +37,7 @@ class UpdateGroupHookAction(Protocol):
     An updated `Group` instance.
     """
 
-    def __call__(self, group: Group, **kwargs) -> Group:
-        ...
+    def __call__(self, group: Group, **kwargs) -> Group: ...
 
 
 class UpdateGroupHookFilter(Protocol):
@@ -80,8 +79,9 @@ class UpdateGroupHookFilter(Protocol):
     An updated `Group` instance.
     """
 
-    def __call__(self, action: UpdateGroupHookAction, group: Group, **kwargs) -> Group:
-        ...
+    def __call__(
+        self, action: UpdateGroupHookAction, group: Group, **kwargs
+    ) -> Group: ...
 
 
 class UpdateGroupHook(FilterHook[UpdateGroupHookAction, UpdateGroupHookFilter]):

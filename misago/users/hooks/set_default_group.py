@@ -26,8 +26,7 @@ class SetDefaultGroupHookAction(Protocol):
         self,
         group: Group,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class SetDefaultGroupHookFilter(Protocol):
@@ -57,8 +56,7 @@ class SetDefaultGroupHookFilter(Protocol):
         action: SetDefaultGroupHookAction,
         group: Group,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class SetDefaultGroupHook(

@@ -39,8 +39,7 @@ class UpdateAstMetadataHookAction(Protocol):
         context: "ParserContext",
         ast: list[dict],
         metadata: dict,
-    ) -> dict:
-        ...
+    ) -> dict: ...
 
 
 class UpdateAstMetadataHookFilter(Protocol):
@@ -82,8 +81,7 @@ class UpdateAstMetadataHookFilter(Protocol):
         context: "ParserContext",
         ast: list[dict],
         metadata: dict,
-    ) -> dict:
-        ...
+    ) -> dict: ...
 
 
 class UpdateAstMetadataHook(

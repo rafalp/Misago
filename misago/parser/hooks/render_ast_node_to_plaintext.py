@@ -40,8 +40,7 @@ class RenderAstNodeToPlainTextHookAction(Protocol):
         ast_node: dict,
         metadata: dict,
         text_format: str | None = None,
-    ) -> str:
-        ...
+    ) -> str: ...
 
 
 class RenderAstNodeToPlainTextHookFilter(Protocol):
@@ -85,8 +84,7 @@ class RenderAstNodeToPlainTextHookFilter(Protocol):
         ast_node: dict,
         metadata: dict,
         text_format: str | None = None,
-    ) -> str:
-        ...
+    ) -> str: ...
 
 
 class RenderAstNodeToPlainTextHook(
