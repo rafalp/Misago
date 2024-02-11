@@ -15,6 +15,7 @@ def other_function():
 
 Will raise warning about 1st line in other_function calling deprecated function.
 """
+
 import warnings
 
 

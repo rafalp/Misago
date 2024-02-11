@@ -64,9 +64,11 @@ def get_watched_threads(
     )
 
     return {
-        thread_id: ThreadNotifications.SITE_AND_EMAIL
-        if send_emails
-        else ThreadNotifications.SITE_ONLY
+        thread_id: (
+            ThreadNotifications.SITE_AND_EMAIL
+            if send_emails
+            else ThreadNotifications.SITE_ONLY
+        )
         for thread_id, send_emails in queryset
     }
 

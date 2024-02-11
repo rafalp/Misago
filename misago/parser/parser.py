@@ -35,8 +35,9 @@ class Parser:
         self,
         block_patterns: list[Pattern] | None = None,
         inline_patterns: list[Pattern] | None = None,
-        post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
-        | None = None,
+        post_processors: (
+            list[Callable[["Parser", list[dict]], list[dict]]] | None
+        ) = None,
     ):
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []

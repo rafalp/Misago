@@ -26,8 +26,7 @@ class CompleteMarkupHtmlHookAction(Protocol):
     A `str` with completed HTML representation of parsed markup.
     """
 
-    def __call__(self, html: str, **kwargs) -> str:
-        ...
+    def __call__(self, html: str, **kwargs) -> str: ...
 
 
 class CompleteMarkupHtmlHookFilter(Protocol):
@@ -61,8 +60,7 @@ class CompleteMarkupHtmlHookFilter(Protocol):
         action: CompleteMarkupHtmlHookAction,
         html: str,
         **kwargs,
-    ) -> str:
-        ...
+    ) -> str: ...
 
 
 class CompleteMarkupHtmlHook(

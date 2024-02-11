@@ -39,8 +39,7 @@ class CreateGroupHookAction(Protocol):
     A newly created `Group` instance.
     """
 
-    def __call__(self, **kwargs) -> Group:
-        ...
+    def __call__(self, **kwargs) -> Group: ...
 
 
 class CreateGroupHookFilter(Protocol):
@@ -78,8 +77,7 @@ class CreateGroupHookFilter(Protocol):
     A newly created `Group` instance.
     """
 
-    def __call__(self, action: CreateGroupHookAction, **kwargs) -> Group:
-        ...
+    def __call__(self, action: CreateGroupHookAction, **kwargs) -> Group: ...
 
 
 class CreateGroupHook(FilterHook[CreateGroupHookAction, CreateGroupHookFilter]):

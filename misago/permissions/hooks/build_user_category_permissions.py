@@ -39,8 +39,7 @@ class BuildUserCategoryPermissionsHookAction(Protocol):
         categories: dict[int, Category],
         category_permissions: dict[int, list[str]],
         user_permissions: dict,
-    ) -> dict:
-        ...
+    ) -> dict: ...
 
 
 class BuildUserCategoryPermissionsHookFilter(Protocol):
@@ -85,8 +84,7 @@ class BuildUserCategoryPermissionsHookFilter(Protocol):
         categories: dict[int, Category],
         category_permissions: dict[int, list[str]],
         user_permissions: dict,
-    ) -> dict:
-        ...
+    ) -> dict: ...
 
 
 class BuildUserCategoryPermissionsHook(

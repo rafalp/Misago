@@ -35,8 +35,7 @@ class RenderAstNodeToHtmlHookAction(Protocol):
         context: "ParserContext",
         ast_node: dict,
         metadata: dict,
-    ) -> str:
-        ...
+    ) -> str: ...
 
 
 class RenderAstNodeToHtmlHookFilter(Protocol):
@@ -75,8 +74,7 @@ class RenderAstNodeToHtmlHookFilter(Protocol):
         context: "ParserContext",
         ast_node: dict,
         metadata: dict,
-    ) -> str:
-        ...
+    ) -> str: ...
 
 
 class RenderAstNodeToHtmlHook(

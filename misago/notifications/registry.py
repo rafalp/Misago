@@ -26,8 +26,7 @@ class NotificationRegistry:
         self._redirects = {}
 
     @overload
-    def message(self, verb: str) -> Callable[[MessageFactory], MessageFactory]:
-        ...
+    def message(self, verb: str) -> Callable[[MessageFactory], MessageFactory]: ...
 
     def message(self, verb: str, factory: MessageFactory | None = None) -> None:
         """Register `factory` function as message factory.
@@ -70,8 +69,7 @@ class NotificationRegistry:
             return get_unsupported_verb_notification_message(notification)
 
     @overload
-    def redirect(self, verb: str) -> Callable[[RedirectFactory], RedirectFactory]:
-        ...
+    def redirect(self, verb: str) -> Callable[[RedirectFactory], RedirectFactory]: ...
 
     def redirect(self, verb: str, factory: RedirectFactory | None = None) -> None:
         """Register `factory` function as redirect url factory.

@@ -28,8 +28,7 @@ class UpdateAstMetadataUsersHookAction(Protocol):
         *,
         context: "ParserContext",
         metadata: dict,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class UpdateAstMetadataUsersHookFilter(Protocol):
@@ -60,8 +59,7 @@ class UpdateAstMetadataUsersHookFilter(Protocol):
         action: UpdateAstMetadataUsersHookAction,
         context: "ParserContext",
         metadata: dict,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class UpdateAstMetadataUsersHook(

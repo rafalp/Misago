@@ -22,8 +22,7 @@ class SetupParserContextHookAction(Protocol):
     A `ParserContext` instance to use during parsing.
     """
 
-    def __call__(self, context: "ParserContext") -> "ParserContext":
-        ...
+    def __call__(self, context: "ParserContext") -> "ParserContext": ...
 
 
 class SetupParserContextHookFilter(Protocol):
@@ -52,8 +51,7 @@ class SetupParserContextHookFilter(Protocol):
         self,
         action: SetupParserContextHookAction,
         context: "ParserContext",
-    ) -> "ParserContext":
-        ...
+    ) -> "ParserContext": ...
 
 
 class SetupParserContextHook(

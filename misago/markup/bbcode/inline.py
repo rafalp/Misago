@@ -1,6 +1,7 @@
 """
 Supported inline BBCodes: b, u, i
 """
+
 import re
 from xml.etree.ElementTree import Element
 

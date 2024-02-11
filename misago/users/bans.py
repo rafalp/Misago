@@ -4,6 +4,7 @@ API for checking values for bans
 Calling this instead of Ban.objects.find_ban is preffered, if you don't want
 to use validate_X_banned validators
 """
+
 from datetime import timedelta
 
 from django.utils import timezone

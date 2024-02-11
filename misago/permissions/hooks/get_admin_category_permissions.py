@@ -21,8 +21,7 @@ class GetAdminCategoryPermissionsHookAction(Protocol):
     A list of Python `dict`s with permissions to include in Admin Category Permissions Form.
     """
 
-    def __call__(self, form: PermissionsFormView) -> list[dict]:
-        ...
+    def __call__(self, form: PermissionsFormView) -> list[dict]: ...
 
 
 class GetAdminCategoryPermissionsHook(

@@ -31,8 +31,7 @@ class CopyGroupPermissionsHookAction(Protocol):
         src: Group,
         dst: Group,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class CopyGroupPermissionsHookFilter(Protocol):
@@ -67,8 +66,7 @@ class CopyGroupPermissionsHookFilter(Protocol):
         src: Group,
         dst: Group,
         request: HttpRequest | None = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class CopyGroupPermissionsHook(

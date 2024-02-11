@@ -20,6 +20,7 @@ for injected content
 Because SHA256 is used for checksum generation, make sure you are storing them
 in char fields with max_length=64
 """
+
 from hashlib import sha256
 
 

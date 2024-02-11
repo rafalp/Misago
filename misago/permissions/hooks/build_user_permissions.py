@@ -19,8 +19,7 @@ class BuildUserPermissionsHookAction(Protocol):
     A Python `dict` with user permissions build from their groups.
     """
 
-    def __call__(self, groups: list[Group]) -> dict:
-        ...
+    def __call__(self, groups: list[Group]) -> dict: ...
 
 
 class BuildUserPermissionsHookFilter(Protocol):
@@ -47,8 +46,7 @@ class BuildUserPermissionsHookFilter(Protocol):
 
     def __call__(
         self, action: BuildUserPermissionsHookAction, groups: list[Group]
-    ) -> dict:
-        ...
+    ) -> dict: ...
 
 
 class BuildUserPermissionsHook(
