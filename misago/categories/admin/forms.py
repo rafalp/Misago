@@ -8,7 +8,7 @@ from django.utils.translation import pgettext_lazy
 from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
 from ...admin.forms import YesNoSwitch
-from ...core.validators import validate_sluggable
+from ...core.validators import validate_color_hex, validate_sluggable
 from ...threads.threadtypes import trees_map
 from .. import THREADS_ROOT_NAME
 from ..models import Category, CategoryRole
@@ -66,15 +66,7 @@ class CategoryFormBase(forms.ModelForm):
             "admin category form",
             "Optional but recommended, should be in hex format, eg. #F5A9B8.",
         ),
-        validators=[
-            RegexValidator(
-                r"^#[0-9a-f][0-9a-f][0-9a-f]([0-9a-f][0-9a-f][0-9a-f]?)$",
-                flags=re.MULTILINE | re.IGNORECASE,
-                message=pgettext_lazy(
-                    "admin category form", "Entered value is not a valid color."
-                ),
-            ),
-        ],
+        validators=[validate_color_hex],
     )
     description = forms.CharField(
         label=pgettext_lazy("admin category form", "Description"),

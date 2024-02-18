@@ -33,6 +33,16 @@ def validate_image_square(image):
         )
 
 
+validate_color_hex = RegexValidator(
+    re.compile(r"^#[0-9a-f][0-9a-f][0-9a-f]([0-9a-f][0-9a-f][0-9a-f]?)$", re.I),
+    pgettext_lazy(
+        "color hex validator",
+        "Entered value is not a valid color in the hex format (eg. #FA8072).",
+    ),
+    "invalid",
+)
+
+
 validate_css_name = RegexValidator(
     re.compile(r"^[a-zA-Z_-]+([a-zA-Z0-9-_]+)?$"),
     pgettext_lazy(

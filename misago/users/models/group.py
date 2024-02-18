@@ -9,9 +9,10 @@ class Group(PluginDataModel):
     name = models.CharField(max_length=150)
     slug = models.CharField(max_length=150, unique=True)
 
+    user_title = models.CharField(max_length=150, null=True, blank=True)
+    color = models.CharField(max_length=7, null=True, blank=True)
     icon = models.CharField(max_length=50, null=True, blank=True)
     css_suffix = models.CharField(max_length=50, null=True, blank=True)
-    user_title = models.CharField(max_length=150, null=True, blank=True)
 
     is_page = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
