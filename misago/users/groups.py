@@ -11,7 +11,7 @@ from .hooks import (
     set_default_group_hook,
     update_group_hook,
 )
-from .models import Group
+from .models import Group, GroupDescription
 from .tasks import remove_group_from_users_groups_ids
 
 __all__ = [
@@ -49,7 +49,10 @@ def _create_group_action(**kwargs) -> Group:
     if "form" in kwargs:
         kwargs.pop("form")
 
-    return Group.objects.create(**kwargs)
+    group = Group.objects.create(**kwargs)
+    group.description = GroupDescription.objects.create(group=group)
+
+    return group
 
 
 def update_group(group: Group, **kwargs) -> Group:
@@ -116,6 +119,7 @@ def delete_group(group: Group, request: HttpRequest | None = None):
 def _delete_group_action(group: Group, request: HttpRequest | None = None):
     delete_all(CategoryGroupPermission, group_id=group.id)
     delete_all(Moderator, group_id=group.id)
+    delete_all(GroupDescription, group_id=group.id)
     delete_one(group)
 
     remove_group_from_users_groups_ids.delay(group.id)

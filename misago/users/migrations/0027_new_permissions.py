@@ -86,4 +86,31 @@ class Migration(migrations.Migration):
                 name="misago_user_is_misago_root",
             ),
         ),
+        migrations.CreateModel(
+            name="GroupDescription",
+            fields=[
+                (
+                    "group",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        primary_key=True,
+                        related_name="description",
+                        serialize=False,
+                        to="misago_users.group",
+                    ),
+                ),
+                ("markdown", models.TextField(blank=True, null=True)),
+                ("html", models.TextField(blank=True, null=True)),
+                ("meta", models.TextField(blank=True, null=True)),
+                ("plugin_data", models.JSONField(default=dict)),
+            ],
+            options={
+                "abstract": False,
+                "indexes": [
+                    django.contrib.postgres.indexes.GinIndex(
+                        fields=["plugin_data"], name="misago_user_plugin__065d95_gin"
+                    )
+                ],
+            },
+        ),
     ]

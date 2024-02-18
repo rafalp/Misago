@@ -12,7 +12,7 @@ def pgettext(context: str, message: str):
 
 def create_default_groups(apps, schema_editor):
     Group = apps.get_model("misago_users", "Group")
-    Group.objects.bulk_create(
+    groups = Group.objects.bulk_create(
         [
             Group(
                 id=DefaultGroupId.ADMINS,
@@ -60,6 +60,11 @@ def create_default_groups(apps, schema_editor):
                 can_see_user_profiles=True,
             ),
         ]
+    )
+
+    GroupDescription = apps.get_model("misago_users", "GroupDescription")
+    GroupDescription.objects.bulk_create(
+        [GroupDescription(group=group) for group in groups]
     )
 
 
