@@ -44,9 +44,10 @@
   <fieldset>
     <legend>{% trans "Display and appearance" context "admin group form" %}</legend>
 
+    {% form_row form.user_title %}
+    {% form_row form.color %}
     {% form_row form.icon %}
     {% form_row form.css_suffix %}
-    {% form_row form.user_title %}
     {% form_row form.is_page %}
     {% form_row form.is_hidden %}
 

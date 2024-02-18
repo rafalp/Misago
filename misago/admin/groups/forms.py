@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
-from ...core.validators import validate_css_name, validate_sluggable
+from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
 from ...users.models import Group
 from ..forms import YesNoSwitch
 
@@ -43,6 +43,23 @@ class EditGroupForm(forms.ModelForm):
         required=False,
     )
 
+    user_title = forms.CharField(
+        label=pgettext_lazy("admin group form", "User title"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional user title displayed instead of the group's name next to group members in the interface.",
+        ),
+        required=False,
+    )
+    color = forms.CharField(
+        label=pgettext_lazy("admin group form", "Color"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Should be in hex format, eg. #F5A9B8.",
+        ),
+        required=False,
+        validators=[validate_color_hex],
+    )
     icon = forms.CharField(
         label=pgettext_lazy("admin group form", "Icon"),
         help_text=pgettext_lazy(
@@ -58,14 +75,6 @@ class EditGroupForm(forms.ModelForm):
             "Optional CSS suffix added to various interface elements, enabling customization of how content from group members is displayed.",
         ),
         validators=[validate_css_name],
-        required=False,
-    )
-    user_title = forms.CharField(
-        label=pgettext_lazy("admin group form", "User title"),
-        help_text=pgettext_lazy(
-            "admin group form",
-            "Optional user title displayed instead of the group's name next to group members in the interface.",
-        ),
         required=False,
     )
 
@@ -106,9 +115,10 @@ class EditGroupForm(forms.ModelForm):
         fields = [
             "name",
             "slug",
+            "user_title",
+            "color",
             "icon",
             "css_suffix",
-            "user_title",
             "is_page",
             "is_hidden",
             "can_see_user_profiles",

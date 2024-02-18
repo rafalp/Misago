@@ -16,9 +16,9 @@
 <th style="width: 1px;">&nbsp;</th>
 <th>{% trans "Group" context "admin groups list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
+<th>{% trans "User title" context "admin groups list" %}</th>
 <th>{% trans "Icon" context "admin groups list" %}</th>
 <th>{% trans "CSS suffix" context "admin groups list" %}</th>
-<th>{% trans "User title" context "admin groups list" %}</th>
 <th>{% trans "Members" context "admin groups list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
@@ -65,24 +65,24 @@
   {% endif %}
 </td>
 <td class="small">
+  {% if item.user_title %}
+    {% if item.color %}
+      <span style="color: {{ item.color }}">
+        {{ item.translated_user_title }}
+      </span>
+    {% else %}
+      {{ item.translated_user_title }}
+    {% endif %}
+  {% endif %}
+</td>
+<td class="small">
   {% if item.user_icon %}
     <pre class="m-0">{{ item.user_icon }}</pre>
-  {% else %}
-    <i class="text-muted">{% trans "Not set" context "admin group user icon" %}</i>
   {% endif %}
 </td>
 <td class="small">
   {% if item.css_suffix %}
     <pre class="m-0">{{ item.css_suffix }}</pre>
-  {% else %}
-    <i class="text-muted">{% trans "Not set" context "admin group css class" %}</i>
-  {% endif %}
-</td>
-<td class="small">
-  {% if item.user_title %}
-    {{ item.translated_user_title }}
-  {% else %}
-    <i class="text-muted">{% trans "Not set" context "admin group user title" %}</i>
   {% endif %}
 </td>
 <td class="small">

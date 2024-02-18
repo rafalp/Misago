@@ -18,9 +18,10 @@ def create_default_groups(apps, schema_editor):
                 id=DefaultGroupId.ADMINS,
                 name=pgettext("default user group", "Administrators"),
                 slug="administrators",
+                user_title=pgettext("default user group", "Admin"),
+                color="#6554C0",
                 icon="fas fa-shield",
                 css_suffix="admin",
-                user_title=pgettext("default user group", "Admin"),
                 is_page=True,
                 ordering=0,
                 # Permissions
@@ -30,9 +31,10 @@ def create_default_groups(apps, schema_editor):
                 id=DefaultGroupId.MODERATORS,
                 name=pgettext("default user group", "Moderators"),
                 slug="moderators",
+                user_title=pgettext("default user group", "Moderator"),
+                color="#00875A",
                 icon="fas fa-shield",
                 css_suffix="moderator",
-                user_title=pgettext("default user group", "Moderator"),
                 is_page=True,
                 ordering=1,
                 # Permissions
