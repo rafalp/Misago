@@ -3,7 +3,7 @@ from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
 from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
-from ...users.models import Group
+from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
 
@@ -130,3 +130,31 @@ class EditGroupForm(forms.ModelForm):
         self.fields["copy_permissions"].queryset = Group.objects.exclude(
             id=kwargs["instance"].id
         )
+
+
+class EditGroupDescriptionForm(forms.ModelForm):
+    markdown = forms.CharField(
+        label=pgettext_lazy("admin group form", "Markdown"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Should be in hex format, eg. #F5A9B8.",
+        ),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+    meta = forms.CharField(
+        label=pgettext_lazy("admin group form", "Meta"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Should be in hex format, eg. #F5A9B8.",
+        ),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 2}),
+    )
+
+    class Meta:
+        model = GroupDescription
+        fields = [
+            "markdown",
+            "meta",
+        ]

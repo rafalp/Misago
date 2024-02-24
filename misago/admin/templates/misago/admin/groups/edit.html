@@ -35,8 +35,17 @@
   <fieldset>
     <legend>{% trans "Basic settings" context "admin group form" %}</legend>
 
-    {% form_row form.name %}
-    {% form_row form.slug %}
+    {% form_row form.group.name %}
+    {% form_row form.group.slug %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Description" context "admin group form" %}</legend>
+
+    {% form_row form.description.markdown %}
+    {% form_row form.description.meta %}
 
   </fieldset>
 </div>
@@ -44,12 +53,12 @@
   <fieldset>
     <legend>{% trans "Display and appearance" context "admin group form" %}</legend>
 
-    {% form_row form.user_title %}
-    {% form_row form.color %}
-    {% form_row form.icon %}
-    {% form_row form.css_suffix %}
-    {% form_row form.is_page %}
-    {% form_row form.is_hidden %}
+    {% form_row form.group.user_title %}
+    {% form_row form.group.color %}
+    {% form_row form.group.icon %}
+    {% form_row form.group.css_suffix %}
+    {% form_row form.group.is_page %}
+    {% form_row form.group.is_hidden %}
 
   </fieldset>
 </div>
@@ -57,7 +66,7 @@
   <fieldset>
     <legend>{% trans "Permissions" context "admin group form" %}</legend>
 
-    {% form_row form.copy_permissions %}
+    {% form_row form.group.copy_permissions %}
 
   </fieldset>
 </div>
@@ -65,7 +74,7 @@
   <fieldset>
     <legend>{% trans "User profiles" context "admin group form" %}</legend>
 
-    {% form_row form.can_see_user_profiles %}
+    {% form_row form.group.can_see_user_profiles %}
 
   </fieldset>
 </div>
