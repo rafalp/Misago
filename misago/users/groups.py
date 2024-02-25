@@ -10,6 +10,7 @@ from .hooks import (
     delete_group_hook,
     set_default_group_hook,
     update_group_hook,
+    update_group_description_hook,
 )
 from .models import Group, GroupDescription
 from .tasks import remove_group_from_users_groups_ids
@@ -93,7 +94,15 @@ GROUP_DESCRIPTION_FIELDS = tuple(
 )
 
 
-def upgrade_group_description(group: Group, **kwargs) -> Group:
+def update_group_description(group: Group, **kwargs) -> Group:
+    kwargs.setdefault("request", None)
+    kwargs.setdefault("form", None)
+    return update_group_description_hook(
+        _update_group_description_action, group, **kwargs
+    )
+
+
+def _update_group_description_action(group: Group, **kwargs) -> Group:
     if "request" in kwargs:
         kwargs.pop("request")
     if "form" in kwargs:

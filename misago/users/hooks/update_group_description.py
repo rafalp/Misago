@@ -4,10 +4,10 @@ from ...plugins.hooks import FilterHook
 from ..models import Group
 
 
-class UpdateGroupHookAction(Protocol):
+class UpdateGroupDescriptionHookAction(Protocol):
     """
-    A standard Misago function used to update an existing user group or the next filter
-    function from another plugin.
+    A standard Misago function used to update an existing user group's description or
+    the next filter function from another plugin.
 
     # Arguments
 
@@ -17,7 +17,7 @@ class UpdateGroupHookAction(Protocol):
 
     ## `**kwargs`
 
-    A `dict` with group's attributes to update.
+    A `dict` with group description's attributes to update.
 
     # Additional arguments
 
@@ -30,7 +30,7 @@ class UpdateGroupHookAction(Protocol):
 
     ## `form: Optional[Form]`
 
-    Bound `Form` instance that was used to update this group.
+    Bound `Form` instance that was used to update this group's description.
 
     # Return value
 
@@ -40,16 +40,16 @@ class UpdateGroupHookAction(Protocol):
     def __call__(self, group: Group, **kwargs) -> Group: ...
 
 
-class UpdateGroupHookFilter(Protocol):
+class UpdateGroupDescriptionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: UpdateGroupHookAction`
+    ## `action: UpdateGroupDescriptionHookAction`
 
-    A standard Misago function used to update an existing user group or the next filter
-    function from another plugin.
+    A standard Misago function used to update an existing user group's description or
+    the next filter function from another plugin.
 
     See the [action](#action) section for details.
 
@@ -59,7 +59,7 @@ class UpdateGroupHookFilter(Protocol):
 
     ## `**kwargs`
 
-    A `dict` with group's attributes to update.
+    A `dict` with group description's attributes to update.
 
     # Additional arguments
 
@@ -72,7 +72,7 @@ class UpdateGroupHookFilter(Protocol):
 
     ## `form: Optional[Form]`
 
-    Bound `Form` instance that was used to update this group.
+    Bound `Form` instance that was used to update this group's description.
 
     # Return value
 
@@ -80,28 +80,31 @@ class UpdateGroupHookFilter(Protocol):
     """
 
     def __call__(
-        self, action: UpdateGroupHookAction, group: Group, **kwargs
+        self, action: UpdateGroupDescriptionHookAction, group: Group, **kwargs
     ) -> Group: ...
 
 
-class UpdateGroupHook(FilterHook[UpdateGroupHookAction, UpdateGroupHookFilter]):
+class UpdateGroupDescriptionHook(
+    FilterHook[UpdateGroupDescriptionHookAction, UpdateGroupDescriptionHookFilter]
+):
     """
-    This hook wraps the standard function that Misago uses to update user group.
+    This hook wraps the standard function that Misago uses to update
+    user group's description.
 
     # Example
 
     The code below implements a custom filter function that stores an ID of user who
-    last modified the group, if its available:
+    last modified the group description, if its available:
 
     ```python
     from django.http import HttpRequest
     from misago.users.models import Group
 
-    @update_group_hook.append_filter
-    def set_group_updated_by_id(action, **kwargs) -> Group:
+    @update_group_description_hook.append_filter
+    def set_group_description_updated_by_id(action, **kwargs) -> Group:
         # request key is guaranteed to be set in `kwargs`
         if kwargs["request"] and kwargs["request"].user.id:
-            group.plugin_data["updated_by"] = kwargs["request"].user.id
+            group.description.plugin_data["updated_by"] = kwargs["request"].user.id
 
         # Call the next function in chain
         return action(group, **kwargs)
@@ -110,8 +113,10 @@ class UpdateGroupHook(FilterHook[UpdateGroupHookAction, UpdateGroupHookFilter]):
 
     __slots__ = FilterHook.__slots__
 
-    def __call__(self, action: UpdateGroupHookAction, group: Group, **kwargs) -> Group:
+    def __call__(
+        self, action: UpdateGroupDescriptionHookAction, group: Group, **kwargs
+    ) -> Group:
         return super().__call__(action, group, **kwargs)
 
 
-update_group_hook = UpdateGroupHook()
+update_group_description_hook = UpdateGroupDescriptionHook()

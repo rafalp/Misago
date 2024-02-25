@@ -1,6 +1,6 @@
-# `update_group_hook`
+# `update_group_description_hook`
 
-This hook wraps the standard function that Misago uses to update user group.
+This hook wraps the standard function that Misago uses to update user group's description.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook wraps the standard function that Misago uses to update user group.
 This hook can be imported from `misago.users.hooks`:
 
 ```python
-from misago.users.hooks import update_group_hook
+from misago.users.hooks import update_group_description_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_update_group_filter(
-    action: UpdateGroupHookAction, group: Group, **kwargs
+def custom_update_group_description_filter(
+    action: UpdateGroupDescriptionHookAction, group: Group, **kwargs
 ) -> Group:
     ...
 ```
@@ -26,9 +26,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: UpdateGroupHookAction`
+#### `action: UpdateGroupDescriptionHookAction`
 
-A standard Misago function used to update an existing user group or the next filter function from another plugin.
+A standard Misago function used to update an existing user group's description or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -40,7 +40,7 @@ A group instance to update.
 
 #### `**kwargs`
 
-A `dict` with group's attributes to update.
+A `dict` with group description's attributes to update.
 
 
 ### Additional arguments
@@ -55,7 +55,7 @@ The request object or `None` if it was not provided.
 
 #### `form: Optional[Form]`
 
-Bound `Form` instance that was used to update this group.
+Bound `Form` instance that was used to update this group's description.
 
 
 ### Return value
@@ -66,11 +66,11 @@ An updated `Group` instance.
 ## Action
 
 ```python
-def update_group_action(group: Group, **kwargs) -> Group:
+def update_group_description_action(group: Group, **kwargs) -> Group:
     ...
 ```
 
-A standard Misago function used to update an existing user group or the next filter function from another plugin.
+A standard Misago function used to update an existing user group's description or the next filter function from another plugin.
 
 
 ### Arguments
@@ -82,7 +82,7 @@ A group instance to update.
 
 #### `**kwargs`
 
-A `dict` with group's attributes to update.
+A `dict` with group description's attributes to update.
 
 
 ### Additional arguments
@@ -97,7 +97,7 @@ The request object or `None` if it was not provided.
 
 #### `form: Optional[Form]`
 
-Bound `Form` instance that was used to update this group.
+Bound `Form` instance that was used to update this group's description.
 
 
 ### Return value
@@ -107,17 +107,17 @@ An updated `Group` instance.
 
 ## Example
 
-The code below implements a custom filter function that stores an ID of user who last modified the group, if its available:
+The code below implements a custom filter function that stores an ID of user who last modified the group description, if its available:
 
 ```python
 from django.http import HttpRequest
 from misago.users.models import Group
 
-@update_group_hook.append_filter
-def set_group_updated_by_id(action, **kwargs) -> Group:
+@update_group_description_hook.append_filter
+def set_group_description_updated_by_id(action, **kwargs) -> Group:
     # request key is guaranteed to be set in `kwargs`
     if kwargs["request"] and kwargs["request"].user.id:
-        group.plugin_data["updated_by"] = kwargs["request"].user.id
+        group.description.plugin_data["updated_by"] = kwargs["request"].user.id
 
     # Call the next function in chain
     return action(group, **kwargs)

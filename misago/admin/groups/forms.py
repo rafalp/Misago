@@ -140,19 +140,19 @@ class EditGroupForm(forms.ModelForm):
 
 class EditGroupDescriptionForm(forms.ModelForm):
     markdown = forms.CharField(
-        label=pgettext_lazy("admin group form", "Markdown"),
+        label=pgettext_lazy("admin group form", "Description"),
         help_text=pgettext_lazy(
             "admin group form",
-            "Optional. Should be in hex format, eg. #F5A9B8.",
+            "Optional. Group's description in Markdown that will be parsed into HTML displayed on the group's page.",
         ),
         required=False,
         widget=forms.Textarea(attrs={"rows": 4}),
     )
     meta = forms.CharField(
-        label=pgettext_lazy("admin group form", "Meta"),
+        label=pgettext_lazy("admin group form", "Meta description"),
         help_text=pgettext_lazy(
             "admin group form",
-            "Optional. Should be in hex format, eg. #F5A9B8.",
+            "Optional. Will be used verbatim for the group page's meta description. Leave empty to generate one from the group's description.",
         ),
         required=False,
         widget=forms.Textarea(attrs={"rows": 2}),
@@ -167,6 +167,11 @@ class EditGroupDescriptionForm(forms.ModelForm):
 
     def __init__(self, *args, request, **kwargs):
         self.request = request
+
+        self.context = None
+        self.ast = None
+        self.metadata = None
+
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -186,6 +191,10 @@ class EditGroupDescriptionForm(forms.ModelForm):
                 data["meta"] = render_ast_to_plaintext(
                     context, ast, metadata, PlainTextFormat.META_DESCRIPTION
                 )
+
+            self.context = context
+            self.ast = ast
+            self.metadata = metadata
         else:
             data.update({"markdown": None, "html": None})
 

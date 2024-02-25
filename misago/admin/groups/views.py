@@ -18,7 +18,7 @@ from ...users.groups import (
     delete_group,
     set_default_group,
     update_group,
-    upgrade_group_description,
+    update_group_description,
 )
 from ...users.models import Group
 from ..views import generic
@@ -147,7 +147,7 @@ class EditView(GroupAdmin, generic.ModelFormView):
         if copy_permissions:
             copy_group_permissions(copy_permissions, target, request)
 
-        upgrade_group_description(
+        update_group_description(
             target,
             request=request,
             form=description_form,
