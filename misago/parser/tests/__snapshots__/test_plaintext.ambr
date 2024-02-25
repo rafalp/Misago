@@ -120,7 +120,7 @@
   'Hello world!'
 # ---
 # name: test_render_ast_to_plaintext_soft_linebreak
-  "Hello world!How's going?"
+  "Hello world! How's going?"
 # ---
 # name: test_render_ast_to_plaintext_spoiler
   'Hello world!'
