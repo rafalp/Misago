@@ -1,3 +1,4 @@
+import re
 from enum import StrEnum
 
 from ..core.utils import slugify
@@ -28,7 +29,16 @@ def render_ast_to_plaintext(
         ).strip()
         if node_text:
             plain_text.append(node_text)
-    return (" ".join(plain_text)).strip()
+
+    text = (" ".join(plain_text)).strip()
+
+    if text_format in (
+        PlainTextFormat.META_DESCRIPTION,
+        PlainTextFormat.SEARCH_DOCUMENT,
+    ):
+        return re.sub("\s\s+", " ", text)
+
+    return text
 
 
 def render_inline_ast_to_plaintext(
@@ -147,9 +157,6 @@ def _render_ast_node_to_plaintext_action(
 
         return children
 
-    if ast_type in ("thematic-break", "thematic-break-bbcode"):
-        return ""
-
     if ast_type in ("image", "image-bbcode"):
         alt = ast_node["alt"] or ""
         if text_format == PlainTextFormat.META_DESCRIPTION:
@@ -192,7 +199,7 @@ def _render_ast_node_to_plaintext_action(
         return ast_node["character"]
 
     if ast_type in ("thematic-break", "thematic-break-bbcode", "line-break"):
-        return ""
+        return " "
 
     if ast_type == "text":
         return ast_node["text"]

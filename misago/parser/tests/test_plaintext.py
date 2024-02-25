@@ -550,3 +550,35 @@ def test_render_ast_to_plaintext_for_unsupported_ast_raises_error(parser_context
     with pytest.raises(ValueError):
         metadata = create_ast_metadata(parser_context, [])
         render_ast_to_plaintext(parser_context, [{"type": "unsupported"}], metadata)
+
+
+def test_render_ast_to_plaintext_meta_description_removes_new_lines(
+    parser_context, parse_markup
+):
+    ast = parse_markup(f"Lorem ipsum\nDolor met")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert (
+        render_ast_to_plaintext(
+            parser_context,
+            ast,
+            metadata,
+            PlainTextFormat.META_DESCRIPTION,
+        )
+        == "Lorem ipsum Dolor met"
+    )
+
+
+def test_render_ast_to_plaintext_search_document_removes_new_lines(
+    parser_context, parse_markup
+):
+    ast = parse_markup(f"Lorem ipsum\nDolor met")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert (
+        render_ast_to_plaintext(
+            parser_context,
+            ast,
+            metadata,
+            PlainTextFormat.SEARCH_DOCUMENT,
+        )
+        == "Lorem ipsum Dolor met"
+    )
