@@ -1,5 +1,5 @@
 from .rank import Rank
-from .group import Group
+from .group import Group, GroupDescription
 from .online import Online
 from .user import AnonymousUser, User, UsernameChange
 from .activityranking import ActivityRanking

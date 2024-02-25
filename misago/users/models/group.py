@@ -41,3 +41,15 @@ class Group(PluginDataModel):
         if self.user_title:
             return pgettext("default user group", self.user_title)
         return None
+
+
+class GroupDescription(PluginDataModel):
+    group = models.OneToOneField(
+        Group,
+        on_delete=models.PROTECT,
+        primary_key=True,
+        related_name="description",
+    )
+    markdown = models.TextField(null=True, blank=True)
+    html = models.TextField(null=True, blank=True)
+    meta = models.TextField(null=True, blank=True)

@@ -3,7 +3,13 @@ from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
 from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
-from ...users.models import Group
+from ...parser.context import create_parser_context
+from ...parser.enums import ContentType
+from ...parser.factory import create_parser
+from ...parser.html import render_ast_to_html
+from ...parser.metadata import create_ast_metadata
+from ...parser.plaintext import PlainTextFormat, render_ast_to_plaintext
+from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
 
@@ -130,3 +136,69 @@ class EditGroupForm(forms.ModelForm):
         self.fields["copy_permissions"].queryset = Group.objects.exclude(
             id=kwargs["instance"].id
         )
+
+
+class EditGroupDescriptionForm(forms.ModelForm):
+    markdown = forms.CharField(
+        label=pgettext_lazy("admin group form", "Description"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Group's description in Markdown that will be parsed into HTML displayed on the group's page.",
+        ),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+    meta = forms.CharField(
+        label=pgettext_lazy("admin group form", "Meta description"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Will be used verbatim for the group page's meta description. Leave empty to generate one from the group's description.",
+        ),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 2}),
+    )
+
+    class Meta:
+        model = GroupDescription
+        fields = [
+            "markdown",
+            "meta",
+        ]
+
+    def __init__(self, *args, request, **kwargs):
+        self.request = request
+
+        self.context = None
+        self.ast = None
+        self.metadata = None
+
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super().clean()
+
+        if data.get("markdown"):
+            context = create_parser_context(
+                self.request,
+                content_type=ContentType.GROUP_DESCRIPTION,
+            )
+            parse = create_parser(context)
+            ast = parse(data["markdown"])
+            metadata = create_ast_metadata(context, ast)
+            data["html"] = render_ast_to_html(context, ast, metadata)
+
+            if not data.get("meta"):
+                data["meta"] = render_ast_to_plaintext(
+                    context, ast, metadata, PlainTextFormat.META_DESCRIPTION
+                )
+
+            self.context = context
+            self.ast = ast
+            self.metadata = metadata
+        else:
+            data.update({"markdown": None, "html": None})
+
+        if not data.get("meta"):
+            data["meta"] = None
+
+        return data

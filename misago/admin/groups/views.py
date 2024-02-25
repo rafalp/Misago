@@ -7,6 +7,7 @@ from ...cache.enums import CacheName
 from ...cache.versions import invalidate_cache
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
+from ...forms.formset import BasicFormset
 from ...permissions.admin import get_admin_category_permissions
 from ...permissions.copy import copy_group_permissions
 from ...permissions.models import CategoryGroupPermission, Moderator
@@ -17,10 +18,11 @@ from ...users.groups import (
     delete_group,
     set_default_group,
     update_group,
+    update_group_description,
 )
 from ...users.models import Group
 from ..views import generic
-from .forms import EditGroupForm, NewGroupForm
+from .forms import EditGroupDescriptionForm, EditGroupForm, NewGroupForm
 
 INVALID_DEFAULT_GROUP_IDS = (
     DefaultGroupId.ADMINS,
@@ -97,21 +99,60 @@ class NewView(GroupAdmin, generic.ModelFormView):
 
 class EditView(GroupAdmin, generic.ModelFormView):
     template_name = "edit.html"
-    form_class = EditGroupForm
     message_submit = pgettext_lazy("admin groups", '"%(name)s" group has been updated.')
 
-    def handle_form(self, form, request, target):
-        copy_permissions = form.cleaned_data.pop("copy_permissions", None)
+    def get_form(self, form_class, request, target):
+        formset = BasicFormset()
+
+        if request.method == "POST":
+            group_form = EditGroupForm(
+                request.POST,
+                request.FILES,
+                instance=target,
+                prefix="group",
+            )
+            description_form = EditGroupDescriptionForm(
+                request.POST,
+                request.FILES,
+                instance=target.description,
+                prefix="description",
+                request=request,
+            )
+        else:
+            group_form = EditGroupForm(instance=target, prefix="group")
+            description_form = EditGroupDescriptionForm(
+                instance=target.description,
+                prefix="description",
+                request=request,
+            )
+
+        formset.add_form(group_form)
+        formset.add_form(description_form)
+
+        return formset
+
+    def handle_form(self, formset, request, target):
+        group_form = formset["group"]
+        description_form = formset["description"]
+
+        copy_permissions = group_form.cleaned_data.pop("copy_permissions", None)
 
         target = update_group(
             target,
             request=request,
-            form=form,
-            **form.cleaned_data,
+            form=group_form,
+            **group_form.cleaned_data,
         )
 
         if copy_permissions:
             copy_group_permissions(copy_permissions, target, request)
+
+        update_group_description(
+            target,
+            request=request,
+            form=description_form,
+            **description_form.cleaned_data,
+        )
 
         invalidate_cache(CacheName.GROUPS, CacheName.PERMISSIONS)
 

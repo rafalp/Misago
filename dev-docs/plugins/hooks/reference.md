@@ -52,4 +52,5 @@ Hooks instances are importable from the following Python modules:
 - [`create_group_hook`](./create-group-hook.md)
 - [`delete_group_hook`](./delete-group-hook.md)
 - [`set_default_group_hook`](./set-default-group-hook.md)
+- [`update_group_description_hook`](./update-group-description-hook.md)
 - [`update_group_hook`](./update-group-hook.md)

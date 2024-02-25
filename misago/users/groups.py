@@ -10,8 +10,9 @@ from .hooks import (
     delete_group_hook,
     set_default_group_hook,
     update_group_hook,
+    update_group_description_hook,
 )
-from .models import Group
+from .models import Group, GroupDescription
 from .tasks import remove_group_from_users_groups_ids
 
 __all__ = [
@@ -49,7 +50,10 @@ def _create_group_action(**kwargs) -> Group:
     if "form" in kwargs:
         kwargs.pop("form")
 
-    return Group.objects.create(**kwargs)
+    group = Group.objects.create(**kwargs)
+    group.description = GroupDescription.objects.create(group=group)
+
+    return group
 
 
 def update_group(group: Group, **kwargs) -> Group:
@@ -85,6 +89,35 @@ def _update_group_action(group: Group, **kwargs) -> Group:
     return group
 
 
+GROUP_DESCRIPTION_FIELDS = tuple(
+    field.name for field in GroupDescription._meta.get_fields()
+)
+
+
+def update_group_description(group: Group, **kwargs) -> Group:
+    kwargs.setdefault("request", None)
+    kwargs.setdefault("form", None)
+    return update_group_description_hook(
+        _update_group_description_action, group, **kwargs
+    )
+
+
+def _update_group_description_action(group: Group, **kwargs) -> Group:
+    if "request" in kwargs:
+        kwargs.pop("request")
+    if "form" in kwargs:
+        kwargs.pop("form")
+
+    for attr_name, value in kwargs.items():
+        if attr_name not in GROUP_DESCRIPTION_FIELDS:
+            raise TypeError(f"cannot set '{attr_name}' attribute on 'GroupDescription'")
+
+        setattr(group.description, attr_name, None if value == "" else value)
+
+    group.description.save()
+    return group
+
+
 def count_groups_members() -> list[tuple[int, int]]:
     """Returns a list of (group id, members count) tuples.
 
@@ -116,6 +149,7 @@ def delete_group(group: Group, request: HttpRequest | None = None):
 def _delete_group_action(group: Group, request: HttpRequest | None = None):
     delete_all(CategoryGroupPermission, group_id=group.id)
     delete_all(Moderator, group_id=group.id)
+    delete_all(GroupDescription, group_id=group.id)
     delete_one(group)
 
     remove_group_from_users_groups_ids.delay(group.id)
