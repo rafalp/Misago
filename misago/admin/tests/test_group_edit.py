@@ -159,6 +159,67 @@ def test_edit_group_form_copies_group_permissions(
     )
 
 
+def test_edit_group_form_sets_group_description_and_meta_description(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["description-markdown"] = "Hello **world**!"
+    form_data["description-meta"] = "Hello meta description!"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.description.refresh_from_db()
+    assert custom_group.description.markdown == "Hello **world**!"
+    assert custom_group.description.html == "<p>Hello <strong>world</strong>!</p>"
+    assert custom_group.description.meta == "Hello meta description!"
+
+
+def test_edit_group_form_sets_group_description_and_automatic_meta_description(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["description-markdown"] = "Hello **world**!"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.description.refresh_from_db()
+    assert custom_group.description.markdown == "Hello **world**!"
+    assert custom_group.description.html == "<p>Hello <strong>world</strong>!</p>"
+    assert custom_group.description.meta == "Hello world!"
+
+
+def test_edit_group_form_clears_group_description_and_meta_description(
+    admin_client, custom_group
+):
+    custom_group.description.markdown = "Hello **world**!"
+    custom_group.description.html = "<p>Hello <strong>world</strong>!</p>"
+    custom_group.description.meta = "Hello meta description!"
+    custom_group.description.save()
+
+    form_data = get_form_data(custom_group)
+    form_data["description-markdown"] = ""
+    form_data["description-meta"] = ""
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.description.refresh_from_db()
+    assert custom_group.description.markdown is None
+    assert custom_group.description.html is None
+    assert custom_group.description.meta is None
+
+
 def test_edit_group_form_invalidates_groups_cache(admin_client, custom_group):
     with assert_invalidates_cache(CacheName.GROUPS):
         admin_client.post(

@@ -116,12 +116,14 @@ class EditView(GroupAdmin, generic.ModelFormView):
                 request.FILES,
                 instance=target.description,
                 prefix="description",
+                request=request,
             )
         else:
             group_form = EditGroupForm(instance=target, prefix="group")
             description_form = EditGroupDescriptionForm(
                 instance=target.description,
                 prefix="description",
+                request=request,
             )
 
         formset.add_form(group_form)
