@@ -88,6 +88,27 @@ def _update_group_action(group: Group, **kwargs) -> Group:
     return group
 
 
+GROUP_DESCRIPTION_FIELDS = tuple(
+    field.name for field in GroupDescription._meta.get_fields()
+)
+
+
+def upgrade_group_description(group: Group, **kwargs) -> Group:
+    if "request" in kwargs:
+        kwargs.pop("request")
+    if "form" in kwargs:
+        kwargs.pop("form")
+
+    for attr_name, value in kwargs.items():
+        if attr_name not in GROUP_DESCRIPTION_FIELDS:
+            raise TypeError(f"cannot set '{attr_name}' attribute on 'GroupDescription'")
+
+        setattr(group.description, attr_name, None if value == "" else value)
+
+    group.description.save()
+    return group
+
+
 def count_groups_members() -> list[tuple[int, int]]:
     """Returns a list of (group id, members count) tuples.
 

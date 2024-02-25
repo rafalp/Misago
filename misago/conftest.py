@@ -17,7 +17,7 @@ from .threads.models import Thread
 from .threads.test import post_thread, reply_thread
 from .users import BANS_CACHE
 from .users.enums import DefaultGroupId
-from .users.models import AnonymousUser, Group
+from .users.models import AnonymousUser, Group, GroupDescription
 from .users.test import create_test_superuser, create_test_user
 
 
@@ -190,11 +190,13 @@ def guests_group(db):
 
 @pytest.fixture
 def custom_group(db):
-    return Group.objects.create(
+    group = Group.objects.create(
         name="Custom Group",
         slug="custom-group",
         ordering=4,
     )
+    group.description = GroupDescription.objects.create(group=group)
+    return group
 
 
 @pytest.fixture

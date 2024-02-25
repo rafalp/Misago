@@ -9,14 +9,15 @@ from ...users.models import Group
 
 def get_form_data(group: Group) -> dict:
     return {
-        "name": group.name,
-        "slug": group.slug,
-        "icon": group.icon or "",
-        "css_suffix": group.css_suffix or "",
-        "user_title": group.user_title or "",
-        "is_page": "1" if group.is_page else "",
-        "is_hidden": "1" if group.is_hidden else "",
-        "can_see_user_profiles": "1" if group.can_see_user_profiles else "",
+        "group-name": group.name,
+        "group-slug": group.slug,
+        "group-color": group.color or "",
+        "group-icon": group.icon or "",
+        "group-css_suffix": group.css_suffix or "",
+        "group-user_title": group.user_title or "",
+        "group-is_page": "1" if group.is_page else "",
+        "group-is_hidden": "1" if group.is_hidden else "",
+        "group-can_see_user_profiles": "1" if group.can_see_user_profiles else "",
     }
 
 
@@ -29,7 +30,7 @@ def test_edit_group_form_is_rendered(admin_client, custom_group):
 
 def test_edit_group_form_updates_name(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["name"] = "New Name"
+    form_data["group-name"] = "New Name"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -43,7 +44,7 @@ def test_edit_group_form_updates_name(admin_client, custom_group):
 
 def test_edit_group_form_sets_custom_slug(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["slug"] = "customized"
+    form_data["group-slug"] = "customized"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -57,7 +58,7 @@ def test_edit_group_form_sets_custom_slug(admin_client, custom_group):
 
 def test_edit_group_form_validates_slug(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["slug"] = "invalid!"
+    form_data["group-slug"] = "invalid!"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -74,8 +75,8 @@ def test_edit_group_form_validates_slug(admin_client, custom_group):
 
 def test_edit_group_form_sets_slug_from_name_if_its_empty(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["name"] = "New Name"
-    form_data["slug"] = ""
+    form_data["group-name"] = "New Name"
+    form_data["group-slug"] = ""
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -87,9 +88,23 @@ def test_edit_group_form_sets_slug_from_name_if_its_empty(admin_client, custom_g
     assert custom_group.slug == "new-name"
 
 
+def test_edit_group_form_validates_color(admin_client, custom_group):
+    form_data = get_form_data(custom_group)
+    form_data["group-color"] = "invalid"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert_contains(response, "Entered value is not a valid color")
+
+    custom_group.refresh_from_db()
+    assert custom_group.css_suffix is None
+
+
 def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["css_suffix"] = "invalid!"
+    form_data["group-css_suffix"] = "invalid!"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -103,9 +118,9 @@ def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
 
 def test_edit_group_form_updates_appearance_settings(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["icon"] = "fas fa-shield"
-    form_data["css_suffix"] = "lorem-ipsum"
-    form_data["user_title"] = "Customer"
+    form_data["group-icon"] = "fas fa-shield"
+    form_data["group-css_suffix"] = "lorem-ipsum"
+    form_data["group-user_title"] = "Customer"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -123,7 +138,7 @@ def test_edit_group_form_copies_group_permissions(
     admin_client, custom_group, members_group, other_category
 ):
     form_data = get_form_data(custom_group)
-    form_data["copy_permissions"] = str(members_group.id)
+    form_data["group-copy_permissions"] = str(members_group.id)
 
     CategoryGroupPermission.objects.create(
         group=members_group,

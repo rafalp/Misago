@@ -3,6 +3,7 @@ from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
 from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
+from ...parser.context import create_parser_context
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
@@ -158,3 +159,7 @@ class EditGroupDescriptionForm(forms.ModelForm):
             "markdown",
             "meta",
         ]
+
+    def clean(self):
+        data = super().clean()
+        return data
