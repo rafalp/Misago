@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "social_django",
     # Misago apps
     "misago.admin",
+    "misago.account",
     "misago.acl",
     "misago.analytics",
     "misago.cache",
