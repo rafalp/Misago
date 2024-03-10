@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Callable, Optional
 
 from django.http import HttpRequest
 
@@ -18,6 +19,7 @@ class PageNav:
         icon: str | None = None,
         after: str | None = None,
         before: str | None = None,
+        visible: Callable[[HttpRequest], bool] | None = None,
     ) -> "PageNavItem":
         if after and before:
             raise ValueError("'after' and 'before' can't be used together.")
@@ -27,6 +29,7 @@ class PageNav:
             url=url,
             label=label,
             icon=icon,
+            visible=visible,
         )
 
         if after or before:
@@ -51,19 +54,29 @@ class PageNav:
         return item
 
     def get_items(self, request: HttpRequest) -> list["BoundPageNavItem"]:
-        return [item.bind_to_request(request) for item in self.items]
+        final_items: list["BoundPageNavItem"] = []
+        for item in self.items:
+            if bound_item := item.bind_to_request(request):
+                final_items.append(bound_item)
+        return final_items
 
 
 @dataclass(frozen=True)
 class PageNavItem:
-    __slots__ = ("key", "url", "label", "icon")
+    __slots__ = ("key", "url", "label", "icon", "visible")
 
     key: str
     url: str
     label: str
     icon: str | None
+    visible: Callable[[HttpRequest], bool] | None
 
-    def bind_to_request(self, request: HttpRequest) -> "BoundPageNavItem":
+    def bind_to_request(
+        self, request: HttpRequest
+    ) -> Optional["BoundPageNavItem"] | None:
+        if self.visible and not self.visible(request):
+            return None
+
         return BoundPageNavItem(
             active=request.path_info.startswith(self.url),
             key=self.key,

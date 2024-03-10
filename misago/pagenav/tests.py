@@ -138,3 +138,31 @@ def test_get_items_returns_bound_items(pagenav):
     assert not items[0].active
     assert items[1].active
     assert not items[2].active
+
+
+def test_get_items_filters_items_visibility(pagenav):
+    pagenav.add_item(
+        key="test",
+        url="/test/",
+        label="Test",
+    )
+    pagenav.add_item(
+        key="test2",
+        url="/test-2/",
+        label="Test 2",
+        visible=lambda r: r.user is False,
+    )
+    pagenav.add_item(
+        key="test3",
+        url="/test-3/",
+        label="Test 3",
+        visible=lambda r: r.user,
+    )
+
+    items = pagenav.get_items(Mock(path_info="/test-2/", user=False))
+
+    assert len(items) == 2
+    assert items[0].key == "test"
+    assert items[1].key == "test2"
+    assert not items[0].active
+    assert items[1].active
