@@ -4,16 +4,16 @@ Menus
 `Menu` based menus
 ------------------
 
-Some menus in Misago are using the `Menu` class importable from `misago.menus.menu` module. Those menus are:
+Some menus in Misago are using the `Menu` class importable from the `misago.menus.menu` module. These menus include:
 
 - Account settings menu
 - Profile sections menu
 - Users lists menu
 
 
-### Creating custom menu with `Menu`
+### Creating custom menu with the `Menu`
 
-To create custom menu with `Menu`, instantiate it somewhere in your package:
+To create custom menu with the `Menu` class, instantiate it somewhere in your package:
 
 ```python
 # my_plugin/menu.py
@@ -43,7 +43,7 @@ plugin_menu.add_item(
 )
 ```
 
-To get list of menu items to display in template, call `get_items` method with Django's `HttpRequest` instance:
+To get list of menu items to display in template, call the `get_items` method with Django's `HttpRequest` instance:
 
 ```python
 # my_plugin.views.py
@@ -62,7 +62,7 @@ def my_view(request):
 
 `Menu.add_item` method adds new item to the menu. It requires following named arguments:
 
-- `key`: a `str` identifying this menu item. Must be unique in whole menu.
+- `key`: a `str` identifying this menu item. Must be unique in the whole menu.
 - `url_name`: a `str` with URL name to `reverse` into final URL.
 - `label`: a `str` or lazy string object with menu item's label.
 
@@ -92,7 +92,7 @@ plugin_menu.add_item(
 
 ### `Menu.get_items` method
 
-`Menu.get_items` requires single argument, an instance of Django's `HttpRequest` and returns a Python `list`` of all visible menu items with their URL names reversed to URLs and `label`s casted to `str`. Each list item is an instance of frozen dataclass with following attributes:
+`Menu.get_items` requires single argument, an instance of Django's `HttpRequest`, and returns a Python `list` of all visible menu items with their URL names reversed to URLs and `label`s casted to `str`. Each list item is an instance of frozen dataclass with following attributes:
 
 - `active`: a `bool` specifying if this item is currently active.
 - `key`: a `str` with item's key.
