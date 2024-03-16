@@ -5,13 +5,6 @@ This directory contains reference documents for Misago developers.
 > **Note:** This documentation is a temporary solution. In future I aim to generate Misago's dev documentation from it's codebase, and use Docusaurus to both version it and make it more attractive to browse.
 
 
-## Notifications
-
-Misago's notifications feature is implemented in the `misago.notifications` package.
-
-- [Notifications reference](./notifications.md)
-
-
 ## Markup parser
 
 Misago's markup syntax, parser and renderers that convert parsed markup into an HTML or other representations are implemented in the `misago.parser` package.
@@ -19,6 +12,19 @@ Misago's markup syntax, parser and renderers that convert parsed markup into an 
 - [Markup parser](./parser/index.md)
 - [Markup AST](./parser/ast.md)
 
+
+## Menus
+
+Some of Misago menus can be extended with additional items from code.
+
+- [Menus reference](./menus.md)
+
+
+## Notifications
+
+Misago's notifications feature is implemented in the `misago.notifications` package.
+
+- [Notifications reference](./notifications.md)
 
 ## Plugins
 
