@@ -15,7 +15,7 @@ def raise_if_not_authenticated(request):
         raise PermissionDenied(
             pgettext(
                 "account settings page error",
-                "You need to be signed in to change your account's settings.",
+                "You need to be signed in to change your account's settings."
             )
         )
 
@@ -23,8 +23,8 @@ def raise_if_not_authenticated(request):
 def index(request):
     raise_if_not_authenticated(request)
 
-    menu = account_settings_menu.get_items(request)
-    return redirect(menu[0].url)
+    menu = account_settings_menu.bind_to_request(request)
+    return redirect(menu.items[0].url)
 
 
 class AccountSettingsView(View):
@@ -35,11 +35,10 @@ class AccountSettingsView(View):
 
         return super().dispatch(request, *args, **kwargs)
 
-    def render(
-        self, request: HttpRequest, context: dict[str, Any] | None = None
-    ) -> HttpResponse:
+    def render(self, request: HttpRequest, context: dict[str, Any] | None = None) -> HttpResponse:
         context = context or {}
-        context["account_menu"] = account_settings_menu.get_items(request)
+        context["account_menu"] = account_settings_menu.bind_to_request(request)
+
         return render(request, self.template_name, context)
 
 
