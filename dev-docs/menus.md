@@ -43,7 +43,7 @@ plugin_menu.add_item(
 )
 ```
 
-To get list of menu items to display in template, call the `get_items` method with Django's `HttpRequest` instance:
+To get menu instance for displaying in a template, call the `get_items` method with Django's `HttpRequest` instance:
 
 ```python
 # my_plugin.views.py
@@ -53,7 +53,7 @@ from .menu import plugin_menu
 
 def my_view(request):
     render(request, "my_plugin/template.html", {
-        "menu": plugin_menu.get_items(request)
+        "menu": plugin_menu.bind_to_request(request)
     })
 ```
 
@@ -90,12 +90,22 @@ plugin_menu.add_item(
 ```
 
 
-### `Menu.get_items` method
+### `Menu.bind_to_request` method
 
-`Menu.get_items` requires single argument, an instance of Django's `HttpRequest`, and returns a Python `list` of all visible menu items with their URL names reversed to URLs and `label`s casted to `str`. Each list item is an instance of frozen dataclass with following attributes:
+`Menu.bind_to_request` requires single argument, an instance of Django's `HttpRequest`, and returns a `BoundMenu` instance.
+
+
+### `BoundMenu.items` attribute
+
+`BoundMenu.items` attribute contains all visible menu items with their URL names reversed to URLs and `label`s casted to `str`. Each list item is an instance of frozen dataclass with following attributes:
 
 - `active`: a `bool` specifying if this item is currently active.
 - `key`: a `str` with item's key.
 - `url`: a `str` with reversed URL.
 - `label`: a `str` with item's label.
 - `icon`: a `str` with item's icon or `None`.
+
+
+### `BoundMenu.active` attribute
+
+`BoundMenu.active` attribute contains the active menu item, or `None`.

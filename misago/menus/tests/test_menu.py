@@ -115,7 +115,7 @@ def test_add_item_invalid_before_raises_value_error(menu):
     assert "Item with key 'invalid' doesn't exist." == str(exc_info.value)
 
 
-def test_get_items_returns_bound_items(menu):
+def test_bind_to_request_returns_bound_menu(menu):
     menu.add_item(
         key="test",
         url_name="misago:usercp-edit-details",
@@ -132,21 +132,23 @@ def test_get_items_returns_bound_items(menu):
         label="Test 3",
     )
 
-    items = menu.get_items(Mock(path_info="/options/change-username/"))
+    bound_menu = menu.bind_to_request(Mock(path_info="/options/change-username/"))
 
-    assert len(items) == 3
+    assert bound_menu.active.url == "/options/change-username/"
 
-    assert not items[0].active
-    assert items[0].url == "/options/edit-details/"
+    assert len(bound_menu.items) == 3
 
-    assert items[1].active
-    assert items[1].url == "/options/change-username/"
+    assert not bound_menu.items[0].active
+    assert bound_menu.items[0].url == "/options/edit-details/"
 
-    assert not items[2].active
-    assert items[2].url == "/options/sign-in-credentials/"
+    assert bound_menu.items[1].active
+    assert bound_menu.items[1].url == "/options/change-username/"
+
+    assert not bound_menu.items[2].active
+    assert bound_menu.items[2].url == "/options/sign-in-credentials/"
 
 
-def test_get_items_filters_items_visibility(menu):
+def test_bind_to_request__filters_items_visibility(menu):
     menu.add_item(
         key="test",
         url_name="misago:usercp-edit-details",
@@ -165,14 +167,18 @@ def test_get_items_filters_items_visibility(menu):
         visible=lambda r: r.user,
     )
 
-    items = menu.get_items(Mock(path_info="/options/change-username/", user=False))
+    bound_menu = menu.bind_to_request(
+        Mock(path_info="/options/change-username/", user=False)
+    )
 
-    assert len(items) == 2
+    assert bound_menu.active.url == "/options/change-username/"
 
-    assert items[0].key == "test"
-    assert not items[0].active
-    assert items[0].url == "/options/edit-details/"
+    assert len(bound_menu.items) == 2
 
-    assert items[1].key == "test2"
-    assert items[1].active
-    assert items[1].url == "/options/change-username/"
+    assert bound_menu.items[0].key == "test"
+    assert not bound_menu.items[0].active
+    assert bound_menu.items[0].url == "/options/edit-details/"
+
+    assert bound_menu.items[1].key == "test2"
+    assert bound_menu.items[1].active
+    assert bound_menu.items[1].url == "/options/change-username/"
