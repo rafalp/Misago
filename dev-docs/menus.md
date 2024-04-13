@@ -58,7 +58,7 @@ def my_view(request):
 ```
 
 
-### `Menu.add_item` method
+#### `Menu.add_item` method
 
 `Menu.add_item` method adds new item to the menu. It requires following named arguments:
 
@@ -90,12 +90,12 @@ plugin_menu.add_item(
 ```
 
 
-### `Menu.bind_to_request` method
+#### `Menu.bind_to_request` method
 
 `Menu.bind_to_request` requires single argument, an instance of Django's `HttpRequest`, and returns a `BoundMenu` instance.
 
 
-### `BoundMenu.items` attribute
+#### `BoundMenu.items` attribute
 
 `BoundMenu.items` attribute contains all visible menu items with their URL names reversed to URLs and `label`s casted to `str`. Each list item is an instance of frozen dataclass with following attributes:
 
@@ -106,6 +106,33 @@ plugin_menu.add_item(
 - `icon`: a `str` with item's icon or `None`.
 
 
-### `BoundMenu.active` attribute
+#### `BoundMenu.active` attribute
 
 `BoundMenu.active` attribute contains the active menu item, or `None`.
+
+
+### Adding new items to existing menus
+
+To extend an existing menu with new items, import it in your plugin's `apps.py`, in the `ready` method of it's `AppConfig`:
+
+```python
+# misago_plugin/apps.py
+from django.apps import AppConfig
+from misago.account import account_settings_menu
+
+
+class MisagoPlugin(AppConfig):
+    name = "misago_plugin"
+
+    def ready(self):
+        account_settings_menu.add_item(...)
+```
+
+See the next section for list of available menus.
+
+
+#### Standard menus
+
+Below list contains all standard menus in Misago that plugins can extend with new items:
+
+- `misago.account.account_settings_menu`: the "Account settings" menu.
