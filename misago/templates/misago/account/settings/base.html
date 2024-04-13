@@ -12,20 +12,7 @@
   <div class="container page-container">
     <div class="row">
       <div class="col-md-3 hidden-xs hidden-sm">
-        <ul>
-          {% for item in menu %}
-            <li>
-              <a href="{{ item.url }}">
-                <span class="material-icon">{{ item.icon }}</span>
-                {% if item.active %}
-                  <strong>{{ item.label }}</strong>
-                {% else %}
-                  {{ item.label }}
-                {% endif %}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
+        {% include "misago/account/settings/menu.html" %}
       </div>
       <div class="col-md-9">
         {% block page %}{% endblock page %}

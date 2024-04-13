@@ -1,0 +1,8 @@
+<div class="list-group nav-side">
+  {% for item in account_menu.items %}
+    <a class="list-group-item{% if item.active %} active{% endif %}" href="{{ item.url }}">
+      {% if item.icon %}<span class="material-icon">{{ item.icon }}</span>{% endif %}
+      {{ item.label }}
+    </a>
+  {% endfor %}
+</div>
