@@ -1,14 +1,14 @@
 const indicator = document.getElementById("misago-ajax-indicator")
 
-let stack = 0
+let requests = 0
 let timeout = null
 
-function updateIndicator(show) {
+function updateIndicator(visible) {
   if (timeout) {
     window.clearTimeout(timeout)
   }
 
-  if (show) {
+  if (visible) {
     indicator.classList.add("busy")
     indicator.classList.remove("complete")
   } else {
@@ -22,11 +22,16 @@ function updateIndicator(show) {
 }
 
 document.addEventListener("htmx:beforeSend", () => {
-  stack += 1
-  updateIndicator(stack !== 0)
+  requests += 1
+  updateIndicator(requests !== 0)
 })
 
 document.addEventListener("htmx:afterOnLoad", () => {
-  stack -= 1
-  updateIndicator(stack !== 0)
+  requests -= 1
+  updateIndicator(requests !== 0)
+})
+
+document.addEventListener("htmx:sendError", () => {
+  requests -= 1
+  updateIndicator(requests !== 0)
 })
