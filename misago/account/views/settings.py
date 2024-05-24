@@ -37,7 +37,10 @@ class AccountSettingsView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def render(
-        self, request: HttpRequest, template_name: str, context: dict[str, Any] | None = None
+        self,
+        request: HttpRequest,
+        template_name: str,
+        context: dict[str, Any] | None = None,
     ) -> HttpResponse:
         context = context or {}
         context["account_menu"] = account_settings_menu.bind_to_request(request)
@@ -54,7 +57,7 @@ class AccountPreferencesView(AccountSettingsView):
 
     def get(self, request):
         form = AccountPreferencesForm(instance=request.user)
-        return self.render(request, self.template_name,  {"form": form})
+        return self.render(request, self.template_name, {"form": form})
 
     def post(self, request):
         form = AccountPreferencesForm(request.POST, instance=request.user)
@@ -64,7 +67,11 @@ class AccountPreferencesView(AccountSettingsView):
             messages.success(request, self.success_message)
 
             if is_request_htmx(request):
-                response = self.render(request, self.template_partial_name, {"form": form, "is_request_htmx": True})
+                response = self.render(
+                    request,
+                    self.template_partial_name,
+                    {"form": form, "is_request_htmx": True},
+                )
                 return response
 
             return redirect(reverse("misago:account-preferences"))
