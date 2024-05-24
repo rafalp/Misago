@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "misago.categories",
     "misago.core",
     "misago.conf",
+    "misago.forms",
     "misago.icons",
     "misago.legal",
     "misago.themes",

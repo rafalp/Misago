@@ -1,34 +1,10 @@
 {% extends "misago/account/settings/base.html" %}
-{% load i18n %}
+{% load i18n misagoforms %}
 
 
 {% block title %}{% trans "Preferences" context "account preferences page" %} | {{ block.super }}{% endblock %}
 
 
 {% block page %}
-<form action="{% url 'misago:account-preferences' %}" method="post">
-  {% csrf_token %}
-  <div class="panel panel-default panel-form">
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        {% trans "Change preferences" context "account preferences page" %}
-      </h3>
-    </div>
-    <div class="panel-body">
-      <fieldset>
-        <legend>
-          {% trans "Privacy preferences" context "account preferences page" %}
-        </legend>
-        <div class="form-group">
-          INPUT
-        </div>
-      </fieldset>
-    </div>
-    <div class="panel-footer">
-      <button class="btn btn-primary" type="submit">
-        {% trans "Save changes" context "account preferences submit btn" %}
-      </button>
-    </div>
-  </div>
-</form>
+{% include "misago/account/settings/preferences_partial.html" %}
 {% endblock page %}

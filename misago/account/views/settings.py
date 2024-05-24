@@ -1,9 +1,11 @@
 from typing import Any
 
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.utils.translation import pgettext
+from django.utils.translation import pgettext, pgettext_lazy
+from django.urls import reverse
 from django.views import View
 
 from ..forms import AccountPreferencesForm
@@ -15,7 +17,7 @@ def raise_if_not_authenticated(request):
         raise PermissionDenied(
             pgettext(
                 "account settings page error",
-                "You need to be signed in to change your account's settings."
+                "You need to be signed in to change your account's settings.",
             )
         )
 
@@ -35,7 +37,9 @@ class AccountSettingsView(View):
 
         return super().dispatch(request, *args, **kwargs)
 
-    def render(self, request: HttpRequest, context: dict[str, Any] | None = None) -> HttpResponse:
+    def render(
+        self, request: HttpRequest, context: dict[str, Any] | None = None
+    ) -> HttpResponse:
         context = context or {}
         context["account_menu"] = account_settings_menu.bind_to_request(request)
 
@@ -45,6 +49,10 @@ class AccountSettingsView(View):
 class AccountPreferencesView(AccountSettingsView):
     template_name = "misago/account/settings/preferences.html"
 
+    success_message = pgettext_lazy(
+        "account settings preferences updated", "Preferences updated."
+    )
+
     def get(self, request):
         form = AccountPreferencesForm(instance=request.user)
         return self.render(request, {"form": form})
@@ -52,8 +60,9 @@ class AccountPreferencesView(AccountSettingsView):
     def post(self, request):
         form = AccountPreferencesForm(request.POST, instance=request.user)
         if form.is_valid():
-            print(form.cleaned_data)
-        else:
-            print(form.errors)
+            form.save()
+
+            messages.success(request, self.success_message)
+            return redirect(reverse("misago:account-preferences"))
 
         return self.render(request, {"form": form})

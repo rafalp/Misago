@@ -78,6 +78,7 @@
     <div id="misago-container" {% if misago_agreement %}aria-hidden="true"{% endif %}>
       {% include "misago/jumbotron.html" %}
       {% include "misago/navbar.html" %}
+      {% include "misago/messages.html" %}
 
       <div id="page-mount">
         {% block content %}{% endblock content %}
