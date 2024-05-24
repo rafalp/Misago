@@ -1,5 +1,16 @@
 {% load i18n misagoforms %}
-<form action="{% url 'misago:account-preferences' %}" method="post">
+{% if is_request_htmx %}
+{% include "misago/snackbars.html" %}
+{% endif %}
+<form
+  id="misago-account-form"
+  action="{% url 'misago:account-preferences' %}"
+  method="post"
+  hx-post="{% url 'misago:account-preferences' %}"
+  hx-trigger="submit"
+  hx-target="#misago-account-form"
+  hx-swap="outerHTML"
+>
   {% csrf_token %}
   <div class="panel panel-default panel-form">
     <div class="panel-heading">

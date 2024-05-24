@@ -5,9 +5,12 @@ import "bootstrap/js/dropdown"
 import "at-js"
 import "cropit"
 import "jquery-caret"
+import "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
-import {startLiveTimestamps} from "./liveTimestamps"
+import "./ajaxIndicator"
+import { startLiveTimestamps } from "./liveTimestamps"
+import "./snackbars"
 
 export class Misago {
   constructor() {

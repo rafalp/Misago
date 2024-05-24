@@ -2,6 +2,36 @@
 // Alerts
 // --------------------------------------------------
 
+#misago-snackbars:empty {
+  display: none;
+}
+
+#misago-snackbars {
+  position: fixed;
+  top: 72px;
+  width: 100%;
+  z-index: 10000;
+
+  display: flex;
+  justify-content: center;
+}
+
+.snackbar {
+  padding: 8px 12px;
+
+  background-color: #111;
+  border-radius: @border-radius-base;
+  color: #fff;
+
+  opacity: 0;
+
+  &.in {
+    opacity: 1;
+    transition: 200ms ease;
+  }
+}
+
+// Legacy snackbar
 .alerts-snackbar {
   position: fixed;
   top: -100%;
