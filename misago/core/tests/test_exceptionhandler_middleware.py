@@ -18,6 +18,7 @@ def create_request():
     request.include_frontend_context = True
     request.frontend_context = {}
     request.socialauth = {}
+    request.is_htmx = False
     return request
 
 

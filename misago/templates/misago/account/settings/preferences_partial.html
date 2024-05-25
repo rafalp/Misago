@@ -74,7 +74,9 @@
         </legend>
         <table class="table-watching-preferences">
           <tr>
-            <th>&nbsp;</th>
+            <th>
+              {% trans "Content" context "account preferences page watch table" %}
+            </th>
             <th class="table-watching-option">
               <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_none</span>
@@ -157,7 +159,9 @@
         </legend>
         <table class="table-watching-preferences">
           <tr>
-            <th>&nbsp;</th>
+            <th>
+              {% trans "Event" context "account preferences page watch table" %}
+            </th>
             <th class="table-watching-option">
               <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_none</span>
@@ -178,7 +182,7 @@
           </tr>
           {% with form.notify_new_private_threads_by_followed as field %}
             <tr>
-              <td>{% trans "Notify about new private threads by users I follow" context "account preferences page notify table" %}</td>
+              <td>{% trans "Private threads invitations from users I follow" context "account preferences page notify table" %}</td>
               {% for choice in field.subwidgets %}
                 <td class="table-watching-option">
                   <label>
@@ -190,7 +194,7 @@
           {% endwith %}
           {% with form.notify_new_private_threads_by_other_users as field %}
             <tr>
-              <td>{% trans "Notify about new private threads by other users" context "account preferences page notify table" %}</td>
+              <td>{% trans "Private threads invitations from other users" context "account preferences page notify table" %}</td>
               {% for choice in field.subwidgets %}
                 <td class="table-watching-option">
                   <label>

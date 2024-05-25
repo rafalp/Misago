@@ -46,6 +46,7 @@ def create_request(user_ip="0.0.0.0", data=None):
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.user_ip = user_ip
+    request.is_htmx = False
     return request
 
 
