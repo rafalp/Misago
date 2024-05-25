@@ -1,7 +1,8 @@
-from typing import Any
+from typing import Any, Type
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.forms import Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
@@ -35,44 +36,62 @@ class AccountSettingsView(View):
 
         return super().dispatch(request, *args, **kwargs)
 
+    def get_template_context(self, request: HttpRequest) -> dict:
+        return {}
+
     def render(
         self,
         request: HttpRequest,
         template_name: str,
         context: dict[str, Any] | None = None,
     ) -> HttpResponse:
-        context = context or {}
-        context["account_menu"] = account_settings_menu.bind_to_request(request)
-        return render(request, template_name, context)
+        final_context = self.get_template_context(request)
+        if context:
+            final_context.update(context)
+        final_context["account_menu"] = account_settings_menu.bind_to_request(request)
+        return render(request, template_name, final_context)
 
 
-class AccountPreferencesView(AccountSettingsView):
+class AccountSettingsFormView(AccountSettingsView):
+    template_name: str
+    template_htmx_name: str | None = None
+    success_message: str
+
+    def get_form_instance(self, request: HttpRequest) -> Form:
+        raise NotImplementedError()
+
+    def save_form(self, request: HttpRequest, form: Form) -> None:
+        form.save()
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_instance(request)
+        return self.render(request, self.template_name, {"form": form})
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_instance(request)
+        if form.is_valid():
+            self.save_form(request, form)
+
+            messages.success(request, self.success_message)
+
+            if request.is_htmx and self.template_htmx_name:
+                return self.render(request, self.template_htmx_name, {"form": form})
+
+            return redirect(request.path_info)
+
+        return self.render(request, self.template_name, {"form": form})
+
+
+class AccountPreferencesView(AccountSettingsFormView):
     template_name = "misago/account/settings/preferences.html"
-    template_partial_name = "misago/account/settings/preferences_partial.html"
+    template_htmx_name = "misago/account/settings/preferences_partial.html"
 
     success_message = pgettext_lazy(
         "account settings preferences updated", "Preferences updated."
     )
 
-    def get(self, request):
-        form = AccountPreferencesForm(instance=request.user)
-        return self.render(request, self.template_name, {"form": form})
+    def get_form_instance(self, request: HttpRequest) -> AccountPreferencesForm:
+        if request.method == "POST":
+            return AccountPreferencesForm(request.POST, instance=request.user)
 
-    def post(self, request):
-        form = AccountPreferencesForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-
-            messages.success(request, self.success_message)
-
-            if request.is_htmx:
-                response = self.render(
-                    request,
-                    self.template_partial_name,
-                    {"form": form},
-                )
-                return response
-
-            return redirect(reverse("misago:account-preferences"))
-
-        return self.render(request, self.template_name, {"form": form})
+        return AccountPreferencesForm(instance=request.user)
