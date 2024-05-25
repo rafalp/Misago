@@ -1,4 +1,4 @@
-from typing import Any, Type
+from typing import Any
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -6,10 +6,13 @@ from django.forms import Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
-from django.urls import reverse
 from django.views import View
 
-from ..forms import AccountPreferencesForm
+from ..forms import (
+    AccountPreferencesForm,
+    notifications_preferences,
+    watching_preferences,
+)
 from ..menus import account_settings_menu
 
 
@@ -36,8 +39,12 @@ class AccountSettingsView(View):
 
         return super().dispatch(request, *args, **kwargs)
 
-    def get_template_context(self, request: HttpRequest) -> dict:
-        return {}
+    def get_template_context(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        return context
 
     def render(
         self,
@@ -45,9 +52,7 @@ class AccountSettingsView(View):
         template_name: str,
         context: dict[str, Any] | None = None,
     ) -> HttpResponse:
-        final_context = self.get_template_context(request)
-        if context:
-            final_context.update(context)
+        final_context = self.get_template_context(request, context)
         final_context["account_menu"] = account_settings_menu.bind_to_request(request)
         return render(request, template_name, final_context)
 
@@ -62,6 +67,21 @@ class AccountSettingsFormView(AccountSettingsView):
 
     def save_form(self, request: HttpRequest, form: Form) -> None:
         form.save()
+
+    def get_template_context(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        form = context["form"]
+        context.update(
+            {
+                "notifications_preferences": notifications_preferences.get_items(form),
+                "watching_preferences": watching_preferences.get_items(form),
+            }
+        )
+
+        return context
 
     def get(self, request: HttpRequest) -> HttpResponse:
         form = self.get_form_instance(request)

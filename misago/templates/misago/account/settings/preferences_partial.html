@@ -3,12 +3,12 @@
 {% include "misago/snackbars.html" %}
 {% endif %}
 <form
-  id="misago-account-form"
+  id="misago-account-preferences-form"
   action="{% url 'misago:account-preferences' %}"
   method="post"
   hx-post="{% url 'misago:account-preferences' %}"
   hx-trigger="submit"
-  hx-target="#misago-account-form"
+  hx-target="#misago-account-preferences-form"
   hx-swap="outerHTML"
 >
   {% csrf_token %}
@@ -72,139 +72,13 @@
         <legend>
           {% trans "Automatic watching" context "account preferences page fieldset" %}
         </legend>
-        <table class="table-watching-preferences">
-          <tr>
-            <th>
-              {% trans "Content" context "account preferences page watch table" %}
-            </th>
-            <th class="table-watching-option">
-              <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
-                <span class="material-icon">notifications_none</span>
-              </attr>
-            </th>
-            <th class="table-watching-option">
-              <attr title="{% trans 'Notify on site' context 'account preferences page watch table' %}">
-                <span class="material-icon">notifications_active</span>
-              </attr>
-            </th>
-            <th class="table-watching-option">
-              <attr title="{% trans 'Notify on site and with email' context 'account preferences page watch table' %}">
-                <span class="material-icon">notifications_active</span>
-                <span class="material-icon">add</span>
-                <span class="material-icon">mail</span>
-              </attr>
-            </th>
-          </tr>
-          {% with form.watch_started_threads as field %}
-            <tr>
-              <td class="table-watching-label">
-                {% trans "Threads I am starting" context "account preferences page watch table" %}
-              </td>
-              {% for choice in field.subwidgets %}
-                <td class="table-watching-option">
-                  <label>
-                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
-                  </label>
-                </td>
-              {% endfor %}
-            </tr>
-          {% endwith %}
-          {% with form.watch_replied_threads as field %}
-            <tr>
-              <td class="table-watching-label">
-                {% trans "Threads I am replying to" context "account preferences page watch table" %}
-              </td>
-              {% for choice in field.subwidgets %}
-                <td class="table-watching-option">
-                  <label>
-                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
-                  </label>
-                </td>
-              {% endfor %}
-            </tr>
-          {% endwith %}
-          {% with form.watch_new_private_threads_by_followed as field %}
-            <tr>
-              <td class="table-watching-label">
-                {% trans "Private threads I am invited to by users I follow" context "account preferences page watch table" %}
-              </td>
-              {% for choice in field.subwidgets %}
-                <td class="table-watching-option">
-                  <label>
-                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
-                  </label>
-                </td>
-              {% endfor %}
-            </tr>
-          {% endwith %}
-          {% with form.watch_new_private_threads_by_other_users as field %}
-            <tr>
-              <td class="table-watching-label">
-                {% trans "Private threads I am invited to by other users" context "account preferences page watch table" %}
-              </td>
-              {% for choice in field.subwidgets %}
-                <td class="table-watching-option">
-                  <label>
-                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
-                  </label>
-                </td>
-              {% endfor %}
-            </tr>
-          {% endwith %}
-        </table>
+        {% include "misago/account/settings/preferences_table.html" with table=watching_preferences %}
       </fieldset>
       <fieldset>
         <legend>
           {% trans "Notifications" context "account preferences page fieldset" %}
         </legend>
-        <table class="table-watching-preferences">
-          <tr>
-            <th>
-              {% trans "Event" context "account preferences page watch table" %}
-            </th>
-            <th class="table-watching-option">
-              <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
-                <span class="material-icon">notifications_none</span>
-              </attr>
-            </th>
-            <th class="table-watching-option">
-              <attr title="{% trans 'Notify on site' context 'account preferences page watch table' %}">
-                <span class="material-icon">notifications_active</span>
-              </attr>
-            </th>
-            <th class="table-watching-option">
-              <attr title="{% trans 'Notify on site and with email' context 'account preferences page watch table' %}">
-                <span class="material-icon">notifications_active</span>
-                <span class="material-icon">add</span>
-                <span class="material-icon">mail</span>
-              </attr>
-            </th>
-          </tr>
-          {% with form.notify_new_private_threads_by_followed as field %}
-            <tr>
-              <td>{% trans "Private threads invitations from users I follow" context "account preferences page notify table" %}</td>
-              {% for choice in field.subwidgets %}
-                <td class="table-watching-option">
-                  <label>
-                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
-                  </label>
-                </td>
-              {% endfor %}
-            </tr>
-          {% endwith %}
-          {% with form.notify_new_private_threads_by_other_users as field %}
-            <tr>
-              <td>{% trans "Private threads invitations from other users" context "account preferences page notify table" %}</td>
-              {% for choice in field.subwidgets %}
-                <td class="table-watching-option">
-                  <label>
-                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
-                  </label>
-                </td>
-              {% endfor %}
-            </tr>
-          {% endwith %}
-        </table>
+        {% include "misago/account/settings/preferences_table.html" with table=notifications_preferences %}
       </fieldset>
     </div>
     <div class="panel-footer">

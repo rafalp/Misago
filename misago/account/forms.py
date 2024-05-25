@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext_lazy
@@ -53,3 +55,95 @@ class AccountPreferencesForm(forms.ModelForm):
             "is_hiding_presence"
         )
         return super().save()
+
+
+class AccountNotifications:
+    header: str
+    items: dict[str, str]
+
+    def __init__(self, header: str):
+        self.header = header
+        self.items = {}
+
+    def add_item(self, field: str, label: str):
+        self.items[field] = label
+
+    def get_items(self, form: forms.Form) -> "AccountNotificationsItems":
+        items: list["AccountNotificationsItem"] = []
+        for field_name, label in self.items.items():
+            items.append(
+                AccountNotificationsItem(
+                    label=label,
+                    field=form[field_name],
+                )
+            )
+
+        return AccountNotificationsItems(
+            header=self.header,
+            items=items,
+        )
+
+
+@dataclass
+class AccountNotificationsItems:
+    header: str
+    items: list["AccountNotificationsItem"]
+
+
+@dataclass
+class AccountNotificationsItem:
+    label: str
+    field: forms.BoundField
+
+
+watching_preferences = AccountNotifications(
+    pgettext_lazy("account settings preferences watching", "Content")
+)
+
+watching_preferences.add_item(
+    "watch_started_threads",
+    pgettext_lazy(
+        "account settings preferences",
+        "Threads I am starting",
+    ),
+)
+watching_preferences.add_item(
+    "watch_replied_threads",
+    pgettext_lazy(
+        "account settings preferences",
+        "Threads I am replying to",
+    ),
+)
+watching_preferences.add_item(
+    "watch_new_private_threads_by_followed",
+    pgettext_lazy(
+        "account settings preferences",
+        "Private threads I am invited to by users I follow",
+    ),
+)
+watching_preferences.add_item(
+    "watch_new_private_threads_by_other_users",
+    pgettext_lazy(
+        "account settings preferences",
+        "Private threads I am invited to by other users",
+    ),
+)
+
+notifications_preferences = AccountNotifications(
+    pgettext_lazy("account settings preferences watching", "Event")
+)
+
+notifications_preferences.add_item(
+    "notify_new_private_threads_by_followed",
+    pgettext_lazy(
+        "account settings preferences",
+        "Private threads invitations from users I follow",
+    ),
+)
+notifications_preferences.add_item(
+    "notify_new_private_threads_by_other_users",
+    pgettext_lazy(
+        "account settings preferences",
+        "Private threads invitations from other users",
+    ),
+)
