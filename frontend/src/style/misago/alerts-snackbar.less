@@ -8,7 +8,8 @@
 
 #misago-snackbars {
   position: fixed;
-  top: 72px;
+  top: @snackbars-top-offset;
+  padding: 0 @snackbars-gutter;
   width: 100%;
   z-index: 10000;
 
@@ -17,17 +18,48 @@
 }
 
 .snackbar {
-  padding: 8px 12px;
+  padding: @snackbar-v2-padding;
 
-  background-color: #111;
-  border-radius: @border-radius-base;
-  color: #fff;
+  background-color: @snackbar-v2-bg;
+  border-radius: @snackbar-v2-border-radius;
 
+  position: relative;
+  top: -12px;
   opacity: 0;
 
+  color: @snackbar-v2-color;
+  font-size: @snackbar-v2-size;
+
+  @media screen and (min-width: @snackbar-v2-lg-breakpoint) {
+    padding: @snackbar-v2-lg-padding;
+    border-radius: @snackbar-v2-lg-border-radius;
+    font-size: @snackbar-v2-lg-size;
+  }
+
+  &.snackbar-success {
+    background-color: @snackbar-v2-success-bg;
+    color: @snackbar-v2-success-color;
+  }
+
+  &.snackbar-warning {
+    background-color: @snackbar-v2-warning-bg;
+    color: @snackbar-v2-warning-color;
+  }
+
+  &.snackbar-danger {
+    background-color: @snackbar-v2-danger-bg;
+    color: @snackbar-v2-danger-color;
+  }
+
   &.in {
+    top: 0;
     opacity: 1;
-    transition: 200ms ease;
+    transition: 300ms ease;
+  }
+
+  &.out {
+    opacity: 0;
+    transition: 300ms ease;
   }
 }
 

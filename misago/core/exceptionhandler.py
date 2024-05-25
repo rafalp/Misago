@@ -1,5 +1,10 @@
 from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponsePermanentRedirect,
+    JsonResponse,
+)
 from django.urls import reverse
 from rest_framework.views import exception_handler as rest_exception_handler
 from social_core.exceptions import SocialAuthBaseException
@@ -87,8 +92,19 @@ def get_exception_handler(exception):
 
 
 def handle_misago_exception(request, exception):
+    if request.is_htmx and isinstance(exception, (Http404, PermissionDenied)):
+        return handle_htmx_exception(exception)
+
     handler = get_exception_handler(exception)
     return handler(request, exception)
+
+
+def handle_htmx_exception(exception: Http404 | PermissionDenied) -> HttpResponse:
+    status = status = 404 if isinstance(exception, Http404) else 403
+    if not exception.args:
+        return HttpResponse(status=status)
+
+    return JsonResponse({"error": str(exception.args[0])}, status=status)
 
 
 def handle_api_exception(exception, context):

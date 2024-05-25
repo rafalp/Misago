@@ -87,7 +87,7 @@ class AccountPreferencesView(AccountSettingsFormView):
     template_htmx_name = "misago/account/settings/preferences_partial.html"
 
     success_message = pgettext_lazy(
-        "account settings preferences updated", "Preferences updated."
+        "account settings preferences updated", "Preferences updated"
     )
 
     def get_form_instance(self, request: HttpRequest) -> AccountPreferencesForm:

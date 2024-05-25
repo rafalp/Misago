@@ -1,4 +1,4 @@
-<div id="misago-snackbars"{% if not inert %} hx-swap-oob="true"{% endif %}>
+<div id="misago-snackbars"{% if not inert %} hx-swap-oob="innerHTML"{% endif %}>
   {% for message in messages %}
     {% if 'info' in message.tags %}
     <div class="snackbar snackbar-info" role="alert">

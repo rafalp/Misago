@@ -9,8 +9,9 @@ import "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import "./ajaxIndicator"
+import { setupHtmxErrors } from "./htmxErrors"
 import { startLiveTimestamps } from "./liveTimestamps"
-import "./snackbars"
+import * as snackbars from "./snackbars"
 
 export class Misago {
   constructor() {
@@ -60,6 +61,26 @@ export class Misago {
       return undefined
     }
   }
+
+  snackbar(type, message) {
+    snackbars.snackbar(type, message)
+  }
+
+  snackbarInfo(message) {
+    snackbars.info(message)
+  }
+
+  snackbarSuccess(message) {
+    snackbars.success(message)
+  }
+
+  snackbarWarning(message) {
+    snackbars.warning(message)
+  }
+
+  snackbarError(message) {
+    snackbars.error(message)
+  }
 }
 
 // create  singleton
@@ -72,3 +93,4 @@ window.misago = misago
 export default misago
 
 startLiveTimestamps()
+setupHtmxErrors()
