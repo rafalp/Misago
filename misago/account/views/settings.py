@@ -8,7 +8,6 @@ from django.utils.translation import pgettext, pgettext_lazy
 from django.urls import reverse
 from django.views import View
 
-from ...htmx.request import is_request_htmx
 from ..forms import AccountPreferencesForm
 from ..menus import account_settings_menu
 
@@ -66,11 +65,11 @@ class AccountPreferencesView(AccountSettingsView):
 
             messages.success(request, self.success_message)
 
-            if is_request_htmx(request):
+            if request.is_htmx:
                 response = self.render(
                     request,
                     self.template_partial_name,
-                    {"form": form, "is_request_htmx": True},
+                    {"form": form},
                 )
                 return response
 

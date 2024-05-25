@@ -75,6 +75,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.tz",
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
+    "misago.context_processors.htmx.is_request_htmx",
     "misago.acl.context_processors.user_acl",
     "misago.conf.context_processors.conf",
     "misago.conf.context_processors.og_image",
@@ -103,6 +104,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 MISAGO_MIDDLEWARE = [
     "misago.users.middleware.RealIPMiddleware",
+    "misago.middleware.htmx.htmx_middleware",
     "misago.core.middleware.FrontendContextMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
