@@ -40,7 +40,7 @@
             </div>
             <p class="help-block">
               {% blocktrans trimmed context "account preferences page form" %}
-                Hiding your online status will also remove the information about your last activity on the site from your profile. Members with permission to see hidden online statuses will still be able to see when you are online and when you've been last active.
+                Hiding your online status will also remove the information about your last activity on the site from your profile. Users with a special privilege to see hidden online statuses will still be able to see when you are online and when you've been last active.
               {% endblocktrans %}
             </p>
           {% endwith %}
@@ -62,7 +62,7 @@
             </div>
             <p class="help-block">
               {% blocktrans trimmed context "account preferences page form" %}
-                Some members may have a permission allowing them to bypass this preference.
+                Some users may have special privileges allowing them to bypass this preference.
               {% endblocktrans %}
             </p>
           {% endwith %}
@@ -72,20 +72,20 @@
         <legend>
           {% trans "Automatic watching" context "account preferences page fieldset" %}
         </legend>
-        <table class="table table-watching-preferences">
+        <table class="table-watching-preferences">
           <tr>
             <th>&nbsp;</th>
-            <th>
+            <th class="table-watching-option">
               <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_none</span>
               </attr>
             </th>
-            <th>
+            <th class="table-watching-option">
               <attr title="{% trans 'Notify on site' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_active</span>
               </attr>
             </th>
-            <th>
+            <th class="table-watching-option">
               <attr title="{% trans 'Notify on site and with email' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_active</span>
                 <span class="material-icon">add</span>
@@ -95,40 +95,56 @@
           </tr>
           {% with form.watch_started_threads as field %}
             <tr>
-              <td>{% trans "Threads I am starting" context "account preferences page watch table" %}</td>
+              <td class="table-watching-label">
+                {% trans "Threads I am starting" context "account preferences page watch table" %}
+              </td>
               {% for choice in field.subwidgets %}
-                <td>
-                  <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                <td class="table-watching-option">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                  </label>
                 </td>
               {% endfor %}
             </tr>
           {% endwith %}
           {% with form.watch_replied_threads as field %}
             <tr>
-              <td>{% trans "Threads I am replying to" context "account preferences page watch table" %}</td>
+              <td class="table-watching-label">
+                {% trans "Threads I am replying to" context "account preferences page watch table" %}
+              </td>
               {% for choice in field.subwidgets %}
-                <td>
-                  <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                <td class="table-watching-option">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                  </label>
                 </td>
               {% endfor %}
             </tr>
           {% endwith %}
           {% with form.watch_new_private_threads_by_followed as field %}
             <tr>
-              <td>{% trans "Private threads I am invited to by users I follow" context "account preferences page watch table" %}</td>
+              <td class="table-watching-label">
+                {% trans "Private threads I am invited to by users I follow" context "account preferences page watch table" %}
+              </td>
               {% for choice in field.subwidgets %}
-                <td>
-                  <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                <td class="table-watching-option">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                  </label>
                 </td>
               {% endfor %}
             </tr>
           {% endwith %}
           {% with form.watch_new_private_threads_by_other_users as field %}
             <tr>
-              <td>{% trans "Private threads I am invited to by other users" context "account preferences page watch table" %}</td>
+              <td class="table-watching-label">
+                {% trans "Private threads I am invited to by other users" context "account preferences page watch table" %}
+              </td>
               {% for choice in field.subwidgets %}
-                <td>
-                  <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                <td class="table-watching-option">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                  </label>
                 </td>
               {% endfor %}
             </tr>
@@ -139,20 +155,20 @@
         <legend>
           {% trans "Notifications" context "account preferences page fieldset" %}
         </legend>
-        <table class="table table-watching-preferences">
+        <table class="table-watching-preferences">
           <tr>
             <th>&nbsp;</th>
-            <th>
+            <th class="table-watching-option">
               <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_none</span>
               </attr>
             </th>
-            <th>
+            <th class="table-watching-option">
               <attr title="{% trans 'Notify on site' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_active</span>
               </attr>
             </th>
-            <th>
+            <th class="table-watching-option">
               <attr title="{% trans 'Notify on site and with email' context 'account preferences page watch table' %}">
                 <span class="material-icon">notifications_active</span>
                 <span class="material-icon">add</span>
@@ -162,20 +178,24 @@
           </tr>
           {% with form.notify_new_private_threads_by_followed as field %}
             <tr>
-              <td>Notify about new private threads by followed</td>
+              <td>{% trans "Notify about new private threads by users I follow" context "account preferences page notify table" %}</td>
               {% for choice in field.subwidgets %}
-                <td>
-                  <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                <td class="table-watching-option">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                  </label>
                 </td>
               {% endfor %}
             </tr>
           {% endwith %}
           {% with form.notify_new_private_threads_by_other_users as field %}
             <tr>
-              <td>Notify about new private threads by other users</td>
+              <td>{% trans "Notify about new private threads by other users" context "account preferences page notify table" %}</td>
               {% for choice in field.subwidgets %}
-                <td>
-                  <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                <td class="table-watching-option">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                  </label>
                 </td>
               {% endfor %}
             </tr>
