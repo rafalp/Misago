@@ -32,28 +32,26 @@ class AccountPreferencesForm(forms.ModelForm):
             coerce=int,
             choices=(
                 (
-                    1,
+                    0,
                     pgettext_lazy(
                         "account privacy choice",
                         "Show other users when I am online",
                     ),
                 ),
                 (
-                    0,
+                    1,
                     pgettext_lazy(
                         "account privacy choice",
                         "Don't show other users when I am online",
                     ),
                 ),
             ),
-            initial=0 if user.is_hiding_presence else 1,
+            initial=1 if user.is_hiding_presence else 0,
             widget=forms.RadioSelect(),
         )
 
     def save(self):
-        self.instance.is_hiding_presence = not self.cleaned_data.get(
-            "is_hiding_presence"
-        )
+        self.instance.is_hiding_presence = self.cleaned_data.get("is_hiding_presence")
         return super().save()
 
 
