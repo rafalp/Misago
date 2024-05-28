@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+from functools import cached_property
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ..users.namechanges import get_username_options
 from ..users.validators import validate_username
 
 User = get_user_model()
@@ -153,18 +155,26 @@ class AccountUsernameForm(forms.Form):
     username = forms.CharField(max_length=255)
 
     def __init__(self, *args, **kwargs):
+        request = kwargs.pop("request")
         self.instance = kwargs.pop("instance")
-        self.settings = kwargs.pop("settings")
+        self.acl = request.user_acl
+        self.settings = request.settings
         self.username_cache = None
 
         super().__init__(*args, **kwargs)
 
         self.fields["username"].max_length = self.settings.username_length_max
 
+    @cached_property
+    def options(self):
+        return get_username_options(self.settings, self.instance, self.acl)
+
     def clean_username(self):
         data = self.cleaned_data["username"]
         if data == self.instance.username:
             return data
+        
+        print(self.options)
 
         validate_username(self.settings, data, self.instance)
         return data

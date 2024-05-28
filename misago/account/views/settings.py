@@ -163,12 +163,12 @@ class AccountUsernameView(AccountSettingsFormView):
             return AccountUsernameForm(
                 request.POST,
                 instance=request.user,
-                settings=request.settings,
+                request=request,
             )
 
         return AccountUsernameForm(
             instance=request.user,
-            settings=request.settings,
+            request=request,
         )
 
     def get_username_history(self, request: HttpRequest):
