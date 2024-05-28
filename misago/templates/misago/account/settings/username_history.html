@@ -1,0 +1,117 @@
+{% load i18n misago_avatars %}
+<div id="misago-account-username-page-history">
+  <div class="username-history">
+    <ul class="list-group">
+      {% for change in username_history.items %}
+        <li class="list-group-item">
+          <div class="change-avatar">
+            {% if change.changed_by %}
+              <a href="{{ change.changed_by.get_absolute_url }}" class="user-avatar-wrapper">
+                <img src="{{ change.changed_by|avatar:32 }}" srcset="{{ change.changed_by|avatar:64 }}" class="user-avatar" width="100" height="100" alt="">
+              </a>
+            {% else %}
+              <span class="user-avatar-wrapper">
+                <img src="{{ BLANK_AVATAR_URL }}" class="user-avatar" width="100" height="100" alt="">
+              </span>
+            {% endif %}
+          </div>
+          <div class="change-author">
+            {% if change.changed_by %}
+              <a href="{{ change.changed_by.get_absolute_url }}" class="item-title">
+                {{ change.changed_by.username }}
+              </a>
+            {% else %}
+              <span class="item-title">
+                {{ change.changed_by_username }}
+              </span>
+            {% endif %}
+          </div>
+          <div class="change">
+            <span class="old-username">{{ change.old_username }}</span>
+            <span class="material-icon">arrow_forward</span>
+            <span class="new-username">{{ change.new_username }}</span>
+          </div>
+          <div class="change-date">
+            <abbr title="{{ change.changed_on|date:"DATETIME_FORMAT" }}">
+              {{ change.changed_on|date }}
+            </abbr>
+          </div>
+        </li>
+      {% empty %}
+        <li class="list-group-item empty-message">
+          {% blocktrans trimmed context "username history empty" %}
+            Your account has no history of name changes.
+          {% endblocktrans %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% if username_history.has_previous or username_history.has_next %}
+    <nav class="toolbar">
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          <div class="misago-pagination"
+            hx-push-url="true"
+            hx-target="#misago-account-username-page-history"
+            hx-swap="outerHTML"
+          >
+            {% if username_history.has_previous %}
+              <a
+                href="{% url 'misago:account-username' %}"
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to first page' context 'username history paginator' %}"
+                hx-get="{% url 'misago:account-username' %}"
+              >
+                <span class="material-icon">first_page</span>
+              </a>
+              <a
+                href="{% url 'misago:account-username' %}?before={{ username_history.first_cursor }}"
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to previous page' context 'username history paginator' %}"
+                hx-get="{% url 'misago:account-username' %}?before={{ username_history.first_cursor }}"
+              >
+                <span class="material-icon">chevron_left</span>
+              </a>
+            {% else %}
+              <button
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to first page' context 'username history paginator' %}"
+                type="button"
+                disabled
+              >
+                <span class="material-icon">first_page</span>
+              </button>
+              <button
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to previous page' context 'username history paginator' %}"
+                type="button"
+                disabled
+              >
+                <span class="material-icon">chevron_left</span>
+              </button>
+            {% endif %}
+            {% if username_history.has_next %}
+              <a
+                href="{% url 'misago:account-username' %}?after={{ username_history.last_cursor }}"
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to next page' context 'username history paginator' %}"
+                hx-get="{% url 'misago:account-username' %}?after={{ username_history.last_cursor }}"
+              >
+                <span class="material-icon">chevron_right</span>
+              </a>
+            {% else %}
+              <button
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to next page' context 'username history paginator' %}"
+                type="button"
+                disabled
+              >
+                <span class="material-icon">chevron_right</span>
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+  {% endif %}
+</div>

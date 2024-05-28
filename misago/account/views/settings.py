@@ -8,8 +8,10 @@ from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 from django.views import View
 
+from ...pagination.cursor import paginate_queryset
 from ..forms import (
     AccountPreferencesForm,
+    AccountUsernameForm,
     notifications_preferences,
     watching_preferences,
 )
@@ -73,14 +75,6 @@ class AccountSettingsFormView(AccountSettingsView):
         request: HttpRequest,
         context: dict[str, Any],
     ) -> dict[str, Any]:
-        form = context["form"]
-        context.update(
-            {
-                "notifications_preferences": notifications_preferences.get_items(form),
-                "watching_preferences": watching_preferences.get_items(form),
-            }
-        )
-
         return context
 
     def get(self, request: HttpRequest) -> HttpResponse:
@@ -99,12 +93,17 @@ class AccountSettingsFormView(AccountSettingsView):
 
             return redirect(request.path_info)
 
-        return self.render(request, self.template_name, {"form": form})
+        if request.is_htmx and self.template_htmx_name:
+            template_name = self.template_htmx_name
+        else:
+            template_name = self.template_name
+
+        return self.render(request, template_name, {"form": form})
 
 
 class AccountPreferencesView(AccountSettingsFormView):
     template_name = "misago/account/settings/preferences.html"
-    template_htmx_name = "misago/account/settings/preferences_partial.html"
+    template_htmx_name = "misago/account/settings/preferences_form.html"
 
     success_message = pgettext_lazy(
         "account settings preferences updated", "Preferences updated"
@@ -115,3 +114,64 @@ class AccountPreferencesView(AccountSettingsFormView):
             return AccountPreferencesForm(request.POST, instance=request.user)
 
         return AccountPreferencesForm(instance=request.user)
+
+    def get_template_context(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        form = context["form"]
+        context.update(
+            {
+                "notifications_preferences": notifications_preferences.get_items(form),
+                "watching_preferences": watching_preferences.get_items(form),
+            }
+        )
+
+        return context
+
+
+class AccountUsernameView(AccountSettingsFormView):
+    template_name = "misago/account/settings/username.html"
+    template_htmx_name = "misago/account/settings/username_form.html"
+    template_history_name = "misago/account/settings/username_history.html"
+
+    success_message = pgettext_lazy(
+        "account settings username changed", "Username changed"
+    )
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_instance(request)
+
+        if request.is_htmx:
+            template_name = self.template_history_name
+        else:
+            template_name = self.template_name
+
+        return self.render(request, template_name, {"form": form})
+
+    def get_template_context(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        context["username_history"] = self.get_username_history(request)
+        return context
+
+    def get_form_instance(self, request: HttpRequest) -> AccountUsernameForm:
+        if request.method == "POST":
+            return AccountUsernameForm(
+                request.POST,
+                instance=request.user,
+                settings=request.settings,
+            )
+
+        return AccountUsernameForm(
+            instance=request.user,
+            settings=request.settings,
+        )
+
+    def get_username_history(self, request: HttpRequest):
+        return paginate_queryset(
+            request, request.user.namechanges.select_related("changed_by"), 10, "-id"
+        )

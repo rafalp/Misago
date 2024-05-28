@@ -2,7 +2,9 @@ from dataclasses import dataclass
 
 from django import forms
 from django.contrib.auth import get_user_model
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
+
+from ..users.validators import validate_username
 
 User = get_user_model()
 
@@ -145,3 +147,36 @@ notifications_preferences.add_item(
         "Private threads invitations from other users",
     ),
 )
+
+
+class AccountUsernameForm(forms.Form):
+    username = forms.CharField(max_length=255)
+
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop("instance")
+        self.settings = kwargs.pop("settings")
+        self.username_cache = None
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["username"].max_length = self.settings.username_length_max
+
+    def clean_username(self):
+        data = self.cleaned_data["username"]
+        if data == self.instance.username:
+            return data
+
+        validate_username(self.settings, data, self.instance)
+        return data
+
+    def clean(self):
+        super().clean()
+        self["username"].value = ""
+
+    def save(self):
+        username = self.cleaned_data["username"]
+        if username != self.instance.username:
+            self.instance.set_username(username, changed_by=self.instance)
+            self.instance.save()
+
+        return self.instance

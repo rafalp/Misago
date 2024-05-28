@@ -1,0 +1,43 @@
+{% load i18n misagoforms %}
+{% if is_request_htmx %}
+{% include "misago/snackbars.html" %}
+{% endif %}
+<div id="misago-account-username-page">
+  <form
+    action="{% url 'misago:account-username' %}"
+    method="post"
+    hx-post="{% url 'misago:account-username' %}"
+    hx-trigger="submit"
+    hx-target="#misago-account-username-page"
+    hx-swap="outerHTML"
+  >
+    {% csrf_token %}
+    <div class="panel panel-default panel-form">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          {% trans "Change username" context "account username page" %}
+        </h3>
+      </div>
+      <div class="panel-body">
+        {% with form.username as field %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label" for="{{ field.id_for_label }}">
+              {% trans "New username:" context "account username page form" %}
+            </label>
+            <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endwith %}
+      </div>
+      <div class="panel-footer panel-footer-sticky">
+        <button class="btn btn-primary" type="submit">
+          {% trans "Change username" context "account username submit btn" %}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  {% include "misago/account/settings/username_history.html" %}
+</div>

@@ -11,3 +11,9 @@ account_settings_menu.add_item(
     label=pgettext_lazy("account settings page", "Preferences"),
     icon="tune",
 )
+account_settings_menu.add_item(
+    key="username",
+    url_name="misago:account-username",
+    label=pgettext_lazy("account settings page", "Username"),
+    icon="card_membership",
+)

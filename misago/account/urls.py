@@ -10,4 +10,9 @@ urlpatterns = [
         settings.AccountPreferencesView.as_view(),
         name="account-preferences",
     ),
+    path(
+        "username/",
+        settings.AccountUsernameView.as_view(),
+        name="account-username",
+    ),
 ]

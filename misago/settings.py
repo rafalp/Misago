@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "misago.middleware",
     "misago.notifications",
     "misago.oauth2",
+    "misago.pagination",
     "misago.parser",
     "misago.permissions",
     "misago.plugins",
