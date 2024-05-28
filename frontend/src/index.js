@@ -10,7 +10,7 @@ import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import "./ajaxIndicator"
 import { setupHtmxErrors } from "./htmxErrors"
-import { startLiveTimestamps } from "./liveTimestamps"
+import { startLiveTimestamps, updateLiveTimestamps } from "./liveTimestamps"
 import * as snackbars from "./snackbars"
 
 export class Misago {
@@ -92,5 +92,9 @@ window.misago = misago
 // and export it for tests and stuff
 export default misago
 
-startLiveTimestamps()
 setupHtmxErrors()
+startLiveTimestamps()
+
+document.addEventListener("htmx:afterSwap", ({ detail}) => {
+  updateLiveTimestamps(detail.elt)
+})

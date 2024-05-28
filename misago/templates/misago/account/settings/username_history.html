@@ -1,5 +1,6 @@
 {% load i18n misago_avatars %}
 <div id="misago-account-username-page-history">
+  <div id="misago-account-username-page-history-scroll-target" class="scroll-target"></div>
   <div class="username-history">
     <ul class="list-group">
       {% for change in username_history.items %}
@@ -32,8 +33,8 @@
             <span class="new-username">{{ change.new_username }}</span>
           </div>
           <div class="change-date">
-            <abbr title="{{ change.changed_on|date:"DATETIME_FORMAT" }}">
-              {{ change.changed_on|date }}
+            <abbr misago-timestamp="{{ change.changed_on.isoformat }}">
+              {{ change.changed_on|date:'DATETIME_FORMAT' }}
             </abbr>
           </div>
         </li>
@@ -53,7 +54,7 @@
           <div class="misago-pagination"
             hx-push-url="true"
             hx-target="#misago-account-username-page-history"
-            hx-swap="outerHTML"
+            hx-swap="outerHTML show:#misago-account-username-page-history-scroll-target:top"
           >
             {% if username_history.has_previous %}
               <a
