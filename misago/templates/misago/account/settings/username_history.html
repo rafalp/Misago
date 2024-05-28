@@ -3,6 +3,11 @@
   <div id="misago-account-username-page-history-scroll-target" class="scroll-target"></div>
   <div class="username-history">
     <ul class="list-group">
+      <li class="list-group-item">
+        <h3 class="panel-title">
+          {% trans "Changes history" context "account username page" %}
+        </h3>
+      </li>
       {% for change in username_history.items %}
         <li class="list-group-item">
           <div class="change-avatar">
