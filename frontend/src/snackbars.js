@@ -37,7 +37,7 @@ export function snackbar(type, message) {
   element.innerText = message
   element.role = "alert"
   container.appendChild(element)
-  
+
   timeout = window.setTimeout(renderSnackbars, 100)
 }
 

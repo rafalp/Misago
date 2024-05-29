@@ -20,16 +20,20 @@
       </div>
       <div class="panel-body">
         {% with form.username as field %}
-          <div class="form-group{% if field.errors %} has-error{% endif %}">
+          <div
+            class="form-group{% if field.errors %} has-error{% endif %}"
+            misago-validate="{% url 'misago:account-validate-username' %}"
+            misago-validate-user="{{ user.id }}"
+          >
             <label class="control-label" for="{{ field.id_for_label }}">
               {% trans "New username:" context "account username page form" %}
             </label>
             <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
             {% for error in field.errors %}
-              <p class="help-block">{{ error }}</p>
+              <p class="help-block" validation-message="true">{{ error }}</p>
             {% endfor %}
             <p class="help-block">
-
+              TODO: message about name changes
             </p>
           </div>
         {% endwith %}

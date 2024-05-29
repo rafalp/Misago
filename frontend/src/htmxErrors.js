@@ -6,7 +6,7 @@ function handleResponseError({ detail }) {
 }
 
 function getResponseErrorMessage(xhr) {
-  if (xhr.getResponseHeader('content-type') === "application/json") {
+  if (xhr.getResponseHeader("content-type") === "application/json") {
     const data = JSON.parse(xhr.response)
     if (data.error) {
       return data.error

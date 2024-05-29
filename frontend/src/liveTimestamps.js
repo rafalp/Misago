@@ -23,5 +23,7 @@ export function startLiveTimestamps() {
 }
 
 export function updateLiveTimestamps(target) {
-  (target || document).querySelectorAll("[misago-timestamp]").forEach(updateTimestamp)
+  ;(target || document)
+    .querySelectorAll("[misago-timestamp]")
+    .forEach(updateTimestamp)
 }

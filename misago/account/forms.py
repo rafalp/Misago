@@ -181,7 +181,9 @@ class AccountUsernameForm(forms.Form):
 
     def clean(self):
         super().clean()
-        self["username"].value = ""
+
+        if "username" not in self.errors:
+            self["username"].value = ""
 
     def save(self):
         username = self.cleaned_data["username"]
