@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest, JsonResponse
+from django.utils.translation import pgettext
 
 from ...users.validators import validate_email, validate_username
 
@@ -18,7 +19,7 @@ def validation_view(f):
             return JsonResponse({"errors": []})
         except ValidationError as e:
             return JsonResponse({"errors": e.messages})
-    
+
     return view_wrapper
 
 
@@ -26,26 +27,36 @@ def clean_value(request: HttpRequest, strip: bool = True) -> str:
     value = request.POST.get("value", "")
     if strip:
         value = value.strip()
-    if not value:
-        raise ValidationError("Val is missing")
+    if not value.strip():
+        raise ValidationError(
+            pgettext("account validation api", "'value' can't be empty."),
+        )
     return value
 
 
 def get_user_or_404(request: HttpRequest):
     user_id = request.POST.get("user")
-    
+
     if not user_id:
         return None
-    
+
     try:
         user_id_int = int(user_id)
+        if user_id_int < 1:
+            raise ValueError()
     except (ValueError, TypeError):
-        raise ValidationError("Val is missing")
+        raise ValidationError(
+            pgettext("account validation api", "'user' must be a positive integer."),
+        )
 
     try:
         return User.objects.get(id=user_id_int)
     except User.DoesNotExist:
-        raise ValidationError("Val is missing")
+        raise ValidationError(
+            pgettext(
+                "account validation api", "'user' doesn't match any user account."
+            ),
+        )
 
 
 @validation_view
@@ -65,5 +76,5 @@ def email(request: HttpRequest) -> JsonResponse:
 @validation_view
 def password(request: HttpRequest) -> JsonResponse:
     user = get_user_or_404(request)
-    value = clean_value(request)
+    value = clean_value(request, strip=False)
     validate_password(request.settings, value, user)
