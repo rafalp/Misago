@@ -173,7 +173,7 @@ class AccountUsernameForm(forms.Form):
         data = self.cleaned_data["username"]
         if data == self.instance.username:
             return data
-        
+
         print(self.options)
 
         validate_username(self.settings, data, self.instance)

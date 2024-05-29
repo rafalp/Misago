@@ -1,6 +1,6 @@
 import pytest
 
-from ....notifications.models import Notification
+from ...notifications.models import Notification
 
 
 @pytest.fixture
