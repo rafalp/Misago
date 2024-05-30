@@ -2,7 +2,7 @@ from functools import wraps
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from django.core.exceptions import BadRequest, ValidationError
 from django.http import HttpRequest, JsonResponse
 from django.utils.translation import pgettext
 
@@ -13,12 +13,15 @@ User = get_user_model()
 
 def validation_view(f):
     @wraps(f)
-    def view_wrapper(*args, **kwargs):
+    def view_wrapper(request: HttpRequest, *args, **kwargs):
         try:
-            f(*args, **kwargs)
+            if request.method != "POST":
+                raise BadRequest()
+
+            f(request, *args, **kwargs)
             return JsonResponse({"errors": []})
         except ValidationError as e:
-            return JsonResponse({"errors": e.messages})
+            return JsonResponse({"errors": e.messages}, status=400)
 
     return view_wrapper
 
@@ -34,7 +37,7 @@ def clean_value(request: HttpRequest, strip: bool = True) -> str:
     return value
 
 
-def get_user_or_404(request: HttpRequest):
+def get_user_from_data(request: HttpRequest):
     user_id = request.POST.get("user")
 
     if not user_id:
@@ -61,20 +64,20 @@ def get_user_or_404(request: HttpRequest):
 
 @validation_view
 def username(request: HttpRequest) -> JsonResponse:
-    user = get_user_or_404(request)
+    user = get_user_from_data(request)
     value = clean_value(request)
     validate_username(request.settings, value, user)
 
 
 @validation_view
 def email(request: HttpRequest) -> JsonResponse:
-    user = get_user_or_404(request)
+    user = get_user_from_data(request)
     value = clean_value(request)
-    validate_email(request.settings, value, user)
+    validate_email(value, user)
 
 
 @validation_view
 def password(request: HttpRequest) -> JsonResponse:
-    user = get_user_or_404(request)
+    user = get_user_from_data(request)
     value = clean_value(request, strip=False)
-    validate_password(request.settings, value, user)
+    validate_password(value, user)
