@@ -25,6 +25,7 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=0,
                 # Permissions
+                can_change_username=True,
                 can_see_user_profiles=True,
             ),
             Group(
@@ -38,6 +39,7 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=1,
                 # Permissions
+                can_change_username=True,
                 can_see_user_profiles=True,
             ),
             Group(
@@ -48,6 +50,10 @@ def create_default_groups(apps, schema_editor):
                 is_default=True,
                 ordering=2,
                 # Permissions
+                can_change_username=True,
+                username_changes_limit=5,
+                username_changes_expire=4,
+                username_changes_span=1,
                 can_see_user_profiles=True,
             ),
             Group(

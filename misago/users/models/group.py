@@ -20,6 +20,11 @@ class Group(PluginDataModel):
 
     ordering = models.PositiveIntegerField(default=0)
 
+    can_change_username = models.BooleanField(default=False)
+    username_changes_limit = models.PositiveIntegerField(default=0)
+    username_changes_expire = models.PositiveIntegerField(default=0)
+    username_changes_span = models.PositiveIntegerField(default=0)
+
     can_see_user_profiles = models.BooleanField(default=False)
 
     class Meta:

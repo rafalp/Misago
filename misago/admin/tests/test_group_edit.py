@@ -17,6 +17,10 @@ def get_form_data(group: Group) -> dict:
         "group-user_title": group.user_title or "",
         "group-is_page": "1" if group.is_page else "",
         "group-is_hidden": "1" if group.is_hidden else "",
+        "group-can_change_username": "1" if group.can_change_username else "",
+        "group-username_changes_limit": str(group.username_changes_limit),
+        "group-username_changes_expire": str(group.username_changes_expire),
+        "group-username_changes_span": str(group.username_changes_span),
         "group-can_see_user_profiles": "1" if group.can_see_user_profiles else "",
     }
 

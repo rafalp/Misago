@@ -14,6 +14,10 @@ from .hooks import (
     get_user_permissions_hook,
 )
 from .models import CategoryGroupPermission
+from .operations import (
+    if_true,
+    if_zero_or_greater,
+)
 
 User = get_user_model()
 
@@ -60,13 +64,26 @@ def build_user_permissions(user: User | AnonymousUser) -> dict:
 
 def _build_user_permissions_action(groups: list[Group]) -> dict:
     permissions = {
+        "change_username": False,
+        "username_changes_limit": 0,
+        "username_changes_expire": 0,
+        "username_changes_span": 0,
         "user_profiles": False,
         "categories": {},
     }
 
     for group in groups:
-        if group.can_see_user_profiles:
-            permissions["user_profiles"] = True
+        if_true(permissions, "change_username", group.can_change_username)
+        if_zero_or_greater(
+            permissions, "username_changes_limit", group.username_changes_limit
+        )
+        if_zero_or_greater(
+            permissions, "username_changes_expire", group.username_changes_expire
+        )
+        if_zero_or_greater(
+            permissions, "username_changes_span", group.username_changes_span
+        )
+        if_true(permissions, "user_profiles", group.can_see_user_profiles)
 
     return permissions
 
