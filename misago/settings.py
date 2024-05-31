@@ -77,6 +77,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
     "misago.context_processors.htmx.is_request_htmx",
+    "misago.context_processors.permissions.user_permissions",
     "misago.acl.context_processors.user_acl",
     "misago.conf.context_processors.conf",
     "misago.conf.context_processors.og_image",

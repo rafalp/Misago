@@ -14,6 +14,8 @@ class UserPermissionsProxy:
     cache_versions: dict
     accessed_permissions: bool
 
+    _wrapped = False
+
     def __init__(self, user: User | AnonymousUser, cache_versions: dict):
         self.user = user
         self.cache_versions = cache_versions

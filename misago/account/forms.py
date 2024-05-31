@@ -5,8 +5,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..users.namechanges import get_username_options
 from ..users.validators import validate_username
+from .namechanges import get_available_username_changes
 
 User = get_user_model()
 
@@ -157,7 +157,7 @@ class AccountUsernameForm(forms.Form):
     def __init__(self, *args, **kwargs):
         request = kwargs.pop("request")
         self.instance = kwargs.pop("instance")
-        self.acl = request.user_acl
+        self.permissions = request.user_permissions
         self.settings = request.settings
         self.username_cache = None
 
@@ -166,15 +166,29 @@ class AccountUsernameForm(forms.Form):
         self.fields["username"].max_length = self.settings.username_length_max
 
     @cached_property
-    def options(self):
-        return get_username_options(self.settings, self.instance, self.acl)
+    def available_changes(self):
+        return get_available_username_changes(self.instance, self.permissions)
 
     def clean_username(self):
         data = self.cleaned_data["username"]
         if data == self.instance.username:
             return data
 
-        print(self.options)
+        if not self.permissions.can_change_username:
+            raise forms.ValidationError(
+                pgettext_lazy(
+                    "account username help",
+                    "You can't change your username.",
+                ),
+            )
+
+        if not self.available_changes.can_change_username:
+            raise forms.ValidationError(
+                pgettext_lazy(
+                    "account username help",
+                    "You can't change your username at the moment.",
+                ),
+            )
 
         validate_username(self.settings, data, self.instance)
         return data
@@ -190,5 +204,6 @@ class AccountUsernameForm(forms.Form):
         if username != self.instance.username:
             self.instance.set_username(username, changed_by=self.instance)
             self.instance.save()
+            del self.available_changes
 
         return self.instance

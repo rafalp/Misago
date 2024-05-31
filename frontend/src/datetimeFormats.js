@@ -3,6 +3,7 @@ export const locale = window.misago_locale || "en-us"
 export const momentAgo = pgettext("time ago", "moment ago")
 export const momentAgoNarrow = pgettext("time ago", "now")
 export const dayAt = pgettext("day at time", "%(day)s at %(time)s")
+export const soonAt = pgettext("day at time", "at %(time)s")
 export const tomorrowAt = pgettext("day at time", "Tomorrow at %(time)s")
 export const yesterdayAt = pgettext("day at time", "Yesterday at %(time)s")
 
@@ -103,6 +104,10 @@ export function formatRelative(date) {
   }
 
   if (isSameDay(now, date)) {
+    if (diff > 0) {
+      return soonAt.replace("%(time)s", shortTime.format(date))
+    }
+
     return shortTime.format(date)
   }
 

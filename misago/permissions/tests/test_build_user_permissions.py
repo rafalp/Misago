@@ -4,7 +4,7 @@ from ..user import build_user_permissions
 
 def test_build_user_permissions_builds_user_permissions(user):
     permissions = build_user_permissions(user)
-    assert permissions["user_profiles"]
+    assert permissions["can_see_user_profiles"]
 
 
 def test_build_user_permissions_builds_user_permissions_from_multiple_groups(
@@ -20,12 +20,12 @@ def test_build_user_permissions_builds_user_permissions_from_multiple_groups(
     user.save()
 
     permissions = build_user_permissions(user)
-    assert permissions["user_profiles"]
+    assert permissions["can_see_user_profiles"]
 
 
 def test_build_user_permissions_builds_anonymous_user_permissions(db, anonymous_user):
     permissions = build_user_permissions(anonymous_user)
-    assert permissions["user_profiles"]
+    assert permissions["can_see_user_profiles"]
 
 
 def test_build_user_permissions_builds_user_category_permissions(
