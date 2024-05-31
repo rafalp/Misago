@@ -5,6 +5,7 @@ from django.urls import reverse
 from ...acl.useracl import get_user_acl
 from ...conf.dynamicsettings import DynamicSettings
 from ...conftest import get_cache_versions
+from ...permissions.user import get_user_permissions
 from ...users.models import AnonymousUser
 from ..middleware import ExceptionHandlerMiddleware
 
@@ -15,6 +16,9 @@ def create_request():
     request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
+    request.user_permissions = get_user_permissions(
+        request.user, request.cache_versions
+    )
     request.include_frontend_context = True
     request.frontend_context = {}
     request.socialauth = {}
