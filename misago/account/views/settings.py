@@ -1,15 +1,20 @@
 from typing import Any
 
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.forms import Form
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 from django.views import View
 
+
 from ...pagination.cursor import paginate_queryset
+from ...users.online.tracker import clear_tracking
+from ...users.tasks import delete_user
 from ..forms import (
+    AccountDeleteForm,
     AccountPreferencesForm,
     AccountUsernameForm,
     notifications_preferences,
@@ -175,3 +180,39 @@ class AccountUsernameView(AccountSettingsFormView):
         return paginate_queryset(
             request, request.user.namechanges.select_related("changed_by"), 10, "-id"
         )
+
+
+class AccountDeleteView(AccountSettingsFormView):
+    template_name = "misago/account/settings/delete.html"
+
+    def get_form_instance(self, request: HttpRequest) -> AccountDeleteForm:
+        if request.method == "POST":
+            return AccountDeleteForm(request.POST, instance=request.user)
+
+        return AccountDeleteForm(instance=request.user)
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_instance(request)
+        if form.is_valid():
+            logout(request)
+            clear_tracking(request)
+
+            form.instance.mark_for_delete()
+            delete_user.delay(form.instance.id, form.instance.id)
+
+            request.session["misago_deleted_account"] = form.instance.username
+            return redirect("misago:account-delete-completed")
+
+        return self.render(request, self.template_name, {"form": form})
+
+
+def account_delete_completed(request):
+    deleted_account = request.session.get("misago_deleted_account")
+    if not deleted_account:
+        raise Http404()
+
+    return render(
+        request,
+        "misago/account/settings/delete_completed.html",
+        {"deleted_account": deleted_account},
+    )

@@ -16,6 +16,16 @@ urlpatterns = [
         name="account-username",
     ),
     path(
+        "delete/",
+        settings.AccountDeleteView.as_view(),
+        name="account-delete",
+    ),
+    path(
+        "delete/completed/",
+        settings.account_delete_completed,
+        name="account-delete-completed",
+    ),
+    path(
         "validate/email/",
         validate.email,
         name="account-validate-email",

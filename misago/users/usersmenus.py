@@ -2,6 +2,7 @@ from typing import List
 
 from django.urls import reverse
 
+from ..account.menus import account_settings_menu
 from .models import Rank
 from .pages import usercp, users_list
 
@@ -19,11 +20,20 @@ def get_user_options_pages(request) -> List[dict]:
     if not request.user.is_authenticated:
         return links
 
+    for item in account_settings_menu.bind_to_request(request).items:
+        links.append(
+            {
+                "icon": item.icon,
+                "name": item.label,
+                "url": item.url,
+            }
+        )
+
     for section in usercp.get_sections(request):
         links.append(
             {
                 "icon": section["icon"],
-                "name": str(section["name"]),
+                "name": str(section["name"]) + " (deprecated)",
                 "url": reverse(section["link"]),
             }
         )

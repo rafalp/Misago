@@ -2,9 +2,11 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from django import forms
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ..permissions.accounts import allow_delete_own_account
 from ..users.validators import validate_username
 from .namechanges import get_available_username_changes
 
@@ -176,7 +178,7 @@ class AccountUsernameForm(forms.Form):
 
         if not self.permissions.can_change_username:
             raise forms.ValidationError(
-                pgettext_lazy(
+                pgettext(
                     "account username help",
                     "You can't change your username.",
                 ),
@@ -184,7 +186,7 @@ class AccountUsernameForm(forms.Form):
 
         if not self.available_changes.can_change_username:
             raise forms.ValidationError(
-                pgettext_lazy(
+                pgettext(
                     "account username help",
                     "You can't change your username at the moment.",
                 ),
@@ -207,3 +209,29 @@ class AccountUsernameForm(forms.Form):
             del self.available_changes
 
         return self.instance
+
+
+class AccountDeleteForm(forms.Form):
+    password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop("instance")
+
+        super().__init__(*args, **kwargs)
+
+    def clean_password(self):
+        data = self.cleaned_data["password"]
+        if not self.instance.check_password(data):
+            raise forms.ValidationError(
+                pgettext(
+                    "account delete form",
+                    "Entered password is incorrect.",
+                ),
+            )
+
+        try:
+            allow_delete_own_account(self.instance)
+        except PermissionDenied as e:
+            raise forms.ValidationError(str(e))
+
+        return data
