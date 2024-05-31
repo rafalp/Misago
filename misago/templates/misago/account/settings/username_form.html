@@ -67,6 +67,8 @@
         <div class="panel-body">
           {% if form.available_changes.changes_left == 0 %}
             {% trans "You have used up all available username changes." context "account username help" %}
+          {% else %}
+            {% trans "You can't change your username at the moment." context "account username help" %}
           {% endif %}
           {% if form.available_changes.next_change %}
             {% capture trimmed as next_change %}
@@ -77,8 +79,6 @@
             {% blocktrans trimmed with next_change=next_change|safe context "account username help" %}
               You will be able to change your username again {{ next_change }}.
             {% endblocktrans %}
-          {% else %}
-            {% trans "You can't change your username at the moment." context "account username help" %}
           {% endif %}
         </div>
       {% endif %}
