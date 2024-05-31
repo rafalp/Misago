@@ -212,7 +212,12 @@ class AccountUsernameForm(forms.Form):
 
 
 class AccountDeleteForm(forms.Form):
-    password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+    password = forms.CharField(
+        max_length=255,
+        widget=forms.PasswordInput,
+        required=True,
+        strip=False,
+    )
 
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop("instance")

@@ -185,6 +185,15 @@ class AccountUsernameView(AccountSettingsFormView):
 class AccountDeleteView(AccountSettingsFormView):
     template_name = "misago/account/settings/delete.html"
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if (
+            request.settings.enable_oauth2_client
+            or not request.settings.allow_delete_own_account
+        ):
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_instance(self, request: HttpRequest) -> AccountDeleteForm:
         if request.method == "POST":
             return AccountDeleteForm(request.POST, instance=request.user)
@@ -198,7 +207,7 @@ class AccountDeleteView(AccountSettingsFormView):
             clear_tracking(request)
 
             form.instance.mark_for_delete()
-            delete_user.delay(form.instance.id, form.instance.id)
+            delete_user.delay(form.instance.id)
 
             request.session["misago_deleted_account"] = form.instance.username
             return redirect("misago:account-delete-completed")

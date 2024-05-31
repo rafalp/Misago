@@ -3,7 +3,7 @@ from django.urls import reverse
 from ...test import assert_contains, assert_has_success_message, assert_not_contains
 
 
-def test_account_username_returns_error_for_guests(user, client):
+def test_account_username_returns_error_for_guests(db, client):
     response = client.get(reverse("misago:account-username"))
     assert_contains(response, "You need to be signed in", status_code=403)
 
