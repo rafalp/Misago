@@ -216,7 +216,7 @@ class AccountDeleteView(AccountSettingsFormView):
 
 
 def account_delete_completed(request):
-    deleted_account = request.session.get("misago_deleted_account")
+    deleted_account = request.session.pop("misago_deleted_account", None)
     if not deleted_account:
         raise Http404()
 
