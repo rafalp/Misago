@@ -11,6 +11,11 @@ from django.views import View
 
 
 from ...pagination.cursor import paginate_queryset
+from ...users.datadownloads import (
+    request_user_data_download,
+    user_has_data_download_request,
+)
+from ...users.models import DataDownload
 from ...users.online.tracker import clear_tracking
 from ...users.tasks import delete_user
 from ..forms import (
@@ -59,7 +64,7 @@ class AccountSettingsView(View):
         template_name: str,
         context: dict[str, Any] | None = None,
     ) -> HttpResponse:
-        final_context = self.get_template_context(request, context)
+        final_context = self.get_template_context(request, context or {})
         final_context["account_menu"] = account_settings_menu.bind_to_request(request)
         return render(request, template_name, final_context)
 
@@ -145,6 +150,12 @@ class AccountUsernameView(AccountSettingsFormView):
         "account settings username changed", "Username changed"
     )
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.settings.enable_oauth2_client:
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request: HttpRequest) -> HttpResponse:
         form = self.get_form_instance(request)
 
@@ -180,6 +191,68 @@ class AccountUsernameView(AccountSettingsFormView):
         return paginate_queryset(
             request, request.user.namechanges.select_related("changed_by"), 10, "-id"
         )
+
+
+class AccountDownloadDataView(AccountSettingsView):
+    template_name = "misago/account/settings/download_data.html"
+    template_htmx_name = "misago/account/settings/download_data_form.html"
+
+    success_message = pgettext_lazy(
+        "account settings data download requested", "Data download requested"
+    )
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not request.settings.allow_data_downloads:
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.is_htmx:
+            template_name = self.template_htmx_name
+        else:
+            template_name = self.template_name
+
+        return self.render(request, template_name)
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        if user_has_data_download_request(request.user):
+            messages.warning(
+                request,
+                pgettext(
+                    "account settings data download requested",
+                    "You can't request a new data download before the previous one completes.",
+                ),
+            )
+        else:
+            request_user_data_download(request.user, request.user)
+            messages.success(request, self.success_message)
+
+        if request.is_htmx:
+            return self.render(request, self.template_htmx_name)
+
+        return redirect("misago:account-download-data")
+
+    def get_template_context(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        context["data_downloads"] = self.get_data_downloads(request)
+        context["has_data_download_request"] = user_has_data_download_request(
+            request.user
+        )
+
+        if context["data_downloads"].items:
+            for item in context["data_downloads"].items:
+                if item.status < DataDownload.STATUS_READY:
+                    context["data_downloads_refresh"] = True
+                    break
+
+        return context
+
+    def get_data_downloads(self, request: HttpRequest):
+        return paginate_queryset(request, request.user.datadownload_set, 15, "-id")
 
 
 class AccountDeleteView(AccountSettingsFormView):

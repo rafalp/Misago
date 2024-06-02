@@ -62,6 +62,14 @@ class DataDownload(models.Model):
     class Meta:
         ordering = ["-pk"]
 
+    @property
+    def is_ready(self):
+        return self.status == DataDownload.STATUS_READY
+
+    @property
+    def is_expired(self):
+        return self.status == DataDownload.STATUS_EXPIRED
+
     def delete(self, *args, **kwargs):
         if self.file:
             self.file.delete(save=False)

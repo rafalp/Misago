@@ -1,6 +1,13 @@
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...test import assert_contains, assert_has_success_message, assert_not_contains
+
+
+@override_dynamic_settings(enable_oauth2_client=True)
+def test_account_username_returns_error_if_oauth_client_is_enabled(db, client):
+    response = client.get(reverse("misago:account-username"))
+    assert response.status_code == 404
 
 
 def test_account_username_returns_error_for_guests(db, client):

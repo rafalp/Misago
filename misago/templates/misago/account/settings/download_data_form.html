@@ -1,0 +1,175 @@
+{% load i18n misagoforms %}
+
+
+{% block page %}
+{% include "misago/snackbars.html" %}
+{% if has_data_download_request %}
+<div
+  id="misago-account-download-data"
+  {% if data_downloads_refresh %}
+    hx-get="{% url 'misago:account-download-data' %}"
+    hx-trigger="every 60s"
+    hx-swap="outerHTML"
+  {% endif %}
+>
+{% else %}
+<form
+  id="misago-account-download-data"
+  action="{% url 'misago:account-download-data' %}"
+  method="post"
+  hx-post="{% url 'misago:account-download-data' %}"
+  hx-trigger="submit"
+  hx-target="#misago-account-download-data"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+{% endif %}
+  <div class="panel panel-default panel-form">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {% trans "Download your data" context "account download data page" %}
+      </h3>
+    </div>
+    <div class="panel-body">
+      <p>
+        {% blocktrans trimmed context "account download data page" %}
+          To download your data from the site, click the "Request data download" button. Depending on the amount of data to be archived and the number of users wanting to download their data at the same time, it may take up to a few days for your download to be prepared. An email notification will be sent to you when your data is ready to be downloaded.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% blocktrans trimmed context "account download data page" %}
+          The download will only be available for a limited amount of time, after which it will be deleted from the site and marked as expired."
+        {% endblocktrans %}
+      </p>
+    </div>
+  </div>
+  <div id="misago-page-scroll-target" class="scroll-target"></div>
+  <div class="panel panel-default panel-form">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {% trans "Data downloads" context "account download data page" %}
+      </h3>
+    </div>
+    <table class="table">
+      <tr>
+        <th>
+          {% trans "Requested at" context "account download data page" %}
+        </th>
+        <th class="col-md-4">
+          {% trans "Download" context "account download data page" %}
+        </th>
+      </tr>
+      {% for item in data_downloads.items %}
+        <tr>
+          <td style="vertical-align: middle;">
+            <abbr misago-timestamp="{{ item.requested_on.isoformat }}">
+              {{ item.requested_on|date:'DATETIME_FORMAT' }}
+            </abbr>
+          </td>
+          <td>
+            {% if item.is_ready %}
+              <a class="btn btn-primary btn-sm btn-block" href="{{ item.file.url }}">
+                {% trans "Download data" context "account download data btn" %}
+              </a>
+            {% elif item.is_expired %}
+              <div class="btn btn-default btn-sm btn-block">
+                {% trans "Download expired" context "account download data btn" %}
+              </div>
+            {% else %}
+              <button class="btn btn-primary btn-sm btn-block" disabled>
+                {% trans "Preparing..." context "account download data btn" %}
+              </button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">
+            {% trans "You have no data downloads." context "account download data page" %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <nav class="toolbar">
+    {% if data_downloads.has_previous or data_downloads.has_next or 1 %}
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          <div class="misago-pagination"
+            hx-push-url="true"
+            hx-target="#misago-account-download-data"
+            hx-swap="outerHTML show:#misago-page-scroll-target:top"
+          >
+            {% if data_downloads.has_previous %}
+              <a
+                href="{% url 'misago:account-download-data' %}"
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to first page' context 'download data paginator' %}"
+                hx-get="{% url 'misago:account-download-data' %}"
+              >
+                <span class="material-icon">first_page</span>
+              </a>
+              <a
+                href="{% url 'misago:account-download-data' %}?before={{ data_downloads.first_cursor }}"
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to previous page' context 'download data paginator' %}"
+                hx-get="{% url 'misago:account-download-data' %}?before={{ data_downloads.first_cursor }}"
+              >
+                <span class="material-icon">chevron_left</span>
+              </a>
+            {% else %}
+              <button
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to first page' context 'download data paginator' %}"
+                type="button"
+                disabled
+              >
+                <span class="material-icon">first_page</span>
+              </button>
+              <button
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to previous page' context 'download data paginator' %}"
+                type="button"
+                disabled
+              >
+                <span class="material-icon">chevron_left</span>
+              </button>
+            {% endif %}
+            {% if data_downloads.has_next %}
+              <a
+                href="{% url 'misago:account-download-data' %}?after={{ data_downloads.last_cursor }}"
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to next page' context 'download data paginator' %}"
+                hx-get="{% url 'misago:account-download-data' %}?after={{ data_downloads.last_cursor }}"
+              >
+                <span class="material-icon">chevron_right</span>
+              </a>
+            {% else %}
+              <button
+                class="btn btn-default btn-outline btn-icon"
+                title="{% trans 'Go to next page' context 'download data paginator' %}"
+                type="button"
+                disabled
+              >
+                <span class="material-icon">chevron_right</span>
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="toolbar-spacer"></div>
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        <button class="btn btn-primary" type="submit"{% if has_data_download_request %} disabled{% endif %}>
+          {% trans "Prepare new download" context "account download data submit btn" %}
+        </button>
+      </div>
+    </div>
+  </nav>
+{% if has_data_download_request %}
+</div>
+{% else %}
+</form>
+{% endif %}
+{% endblock page %}

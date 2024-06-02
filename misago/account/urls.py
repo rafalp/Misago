@@ -16,6 +16,11 @@ urlpatterns = [
         name="account-username",
     ),
     path(
+        "download-data/",
+        settings.AccountDownloadDataView.as_view(),
+        name="account-download-data",
+    ),
+    path(
         "delete/",
         settings.AccountDeleteView.as_view(),
         name="account-delete",
