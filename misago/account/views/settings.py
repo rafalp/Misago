@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.forms import Form
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.utils.translation import pgettext, pgettext_lazy
+from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 
 
@@ -105,6 +105,8 @@ class AccountSettingsFormView(AccountSettingsView):
                 return self.render(request, self.template_htmx_name, {"form": form})
 
             return redirect(request.path_info)
+
+        messages.error(request, _("Form contains errors"))
 
         if request.is_htmx and self.template_htmx_name:
             template_name = self.template_htmx_name
