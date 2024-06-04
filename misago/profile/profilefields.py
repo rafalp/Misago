@@ -74,6 +74,9 @@ class ProfileFieldsLoader:
                     continue
 
                 form_field = profile_field.get_form_field(request, user)
+                if not form_field:
+                    continue
+
                 fieldset_fields[profile_field.fieldname] = form_field
                 form_data_profile_fields[profile_field.fieldname] = profile_field
 

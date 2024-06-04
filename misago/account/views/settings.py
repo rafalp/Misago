@@ -12,6 +12,7 @@ from django.views import View
 
 
 from ...pagination.cursor import paginate_queryset
+from ...profile.profilefields import profile_fields
 from ...users.datadownloads import (
     request_user_data_download,
     user_has_data_download_request,

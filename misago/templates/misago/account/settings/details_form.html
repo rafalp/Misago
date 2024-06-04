@@ -58,6 +58,8 @@
             {% endwith %}
           {% endfor %}
         </fieldset>
+      {% empty %}
+        {% trans "No profile details are available for editing at this time." context "account details page" %}
       {% endfor %}
     </div>
     <div class="panel-footer panel-footer-sticky">
