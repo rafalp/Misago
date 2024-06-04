@@ -11,6 +11,11 @@ urlpatterns = [
         name="account-preferences",
     ),
     path(
+        "details/",
+        settings.AccountDetailsView.as_view(),
+        name="account-details",
+    ),
+    path(
         "username/",
         settings.AccountUsernameView.as_view(),
         name="account-username",

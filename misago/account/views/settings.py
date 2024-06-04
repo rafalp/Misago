@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
@@ -20,6 +21,7 @@ from ...users.online.tracker import clear_tracking
 from ...users.tasks import delete_user
 from ..forms import (
     AccountDeleteForm,
+    AccountDetailsForm,
     AccountPreferencesForm,
     AccountUsernameForm,
     notifications_preferences,
@@ -139,6 +141,28 @@ class AccountPreferencesView(AccountSettingsFormView):
         )
 
         return context
+
+
+class AccountDetailsView(AccountSettingsFormView):
+    template_name = "misago/account/settings/details.html"
+    template_htmx_name = "misago/account/settings/details_form.html"
+
+    success_message = pgettext_lazy(
+        "account settings preferences updated", "Profile updated"
+    )
+
+    def get_form_instance(self, request: HttpRequest) -> AccountPreferencesForm:
+        if request.method == "POST":
+            return AccountDetailsForm(
+                request.POST,
+                request=request,
+                instance=request.user,
+            )
+
+        return AccountDetailsForm(
+            request=request,
+            instance=request.user,
+        )
 
 
 class AccountUsernameView(AccountSettingsFormView):

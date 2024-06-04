@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "misago.permissions",
     "misago.plugins",
     "misago.postgres",
+    "misago.profile",
     "misago.readtracker",
     "misago.search",
     "misago.socialauth",

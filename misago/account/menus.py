@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
@@ -11,6 +12,19 @@ account_settings_menu.add_item(
     url_name="misago:account-preferences",
     label=pgettext_lazy("account settings page", "Preferences"),
     icon="tune",
+)
+
+
+def show_profile_details(request: HttpRequest) -> bool:
+    return bool(settings.MISAGO_PROFILE_FIELDS)
+
+
+account_settings_menu.add_item(
+    key="details",
+    url_name="misago:account-details",
+    label=pgettext_lazy("account settings page", "Profile details"),
+    icon="person_outline",
+    visible=show_profile_details,
 )
 
 

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
+from typing import Any
 
 from django import forms
 from django.core.exceptions import PermissionDenied
@@ -7,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.accounts import allow_delete_own_account
+from ..profile.profilefields import profile_fields
 from ..users.validators import validate_username
 from .namechanges import get_available_username_changes
 
@@ -151,6 +153,49 @@ notifications_preferences.add_item(
         "Private threads invitations from other users",
     ),
 )
+
+
+class AccountDetailsForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.instance = kwargs.pop("instance")
+
+        super().__init__(*args, **kwargs)
+
+        self.form_data = profile_fields.get_form_data(self.request, self.instance)
+        self.fields.update(self.form_data.fields)
+
+    @property
+    def fieldsets(self):
+        for fieldset in self.form_data.fieldsets:
+            yield {
+                "name": fieldset["name"],
+                "fields": (self[field] for field in fieldset["fields"]),
+            }
+
+    def clean(self):
+        cleaned_data: dict[str, Any] = {}
+        for field, data in dict(super().clean()).items():
+            if field not in self.form_data.fields:
+                continue
+
+            try:
+                cleaned_data[field] = self.form_data.clean_data(
+                    field, data, self.request, self.instance
+                )
+            except forms.ValidationError as e:
+                self.add_error(field, e)
+
+        return cleaned_data
+
+    def save(self):
+        new_data: dict[str, Any] = {}
+        for field_name in self.form_data.fields:
+            if self.cleaned_data.get(field_name):
+                new_data[field_name] = self.cleaned_data[field_name]
+
+        self.instance.profile_fields = new_data
+        self.instance.save(update_fields=["profile_fields"])
 
 
 class AccountUsernameForm(forms.Form):
