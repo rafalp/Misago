@@ -5,7 +5,7 @@
 {% include "misago/snackbars.html" %}
 {% if has_data_download_request %}
 <div
-  id="misago-account-download-data"
+  id="misago-htmx-root"
   {% if data_downloads_refresh %}
     hx-get="{% url 'misago:account-download-data' %}"
     hx-trigger="every 60s"
@@ -14,12 +14,12 @@
 >
 {% else %}
 <form
-  id="misago-account-download-data"
+  id="misago-htmx-root"
   action="{% url 'misago:account-download-data' %}"
   method="post"
   hx-post="{% url 'misago:account-download-data' %}"
   hx-trigger="submit"
-  hx-target="#misago-account-download-data"
+  hx-target="#misago-htmx-root"
   hx-swap="outerHTML"
 >
   {% csrf_token %}
@@ -97,7 +97,7 @@
         <div class="toolbar-item">
           <div class="misago-pagination"
             hx-push-url="true"
-            hx-target="#misago-account-download-data"
+            hx-target="#misago-htmx-root"
             hx-swap="outerHTML show:#misago-page-scroll-target:top"
           >
             {% if data_downloads.has_previous %}

@@ -3,12 +3,12 @@
 {% include "misago/snackbars.html" %}
 {% endif %}
 <form
-  id="misago-account-preferences-form"
+  id="misago-htmx-root"
   action="{% url 'misago:account-preferences' %}"
   method="post"
   hx-post="{% url 'misago:account-preferences' %}"
   hx-trigger="submit"
-  hx-target="#misago-account-preferences-form"
+  hx-target="#misago-htmx-root"
   hx-swap="outerHTML"
 >
   {% csrf_token %}

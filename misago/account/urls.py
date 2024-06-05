@@ -21,6 +21,11 @@ urlpatterns = [
         name="account-username",
     ),
     path(
+        "password/",
+        settings.AccountPasswordView.as_view(),
+        name="account-password",
+    ),
+    path(
         "download-data/",
         settings.AccountDownloadDataView.as_view(),
         name="account-download-data",

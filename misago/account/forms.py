@@ -4,7 +4,8 @@ from typing import Any
 
 from django import forms
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.accounts import allow_delete_own_account
@@ -252,6 +253,58 @@ class AccountUsernameForm(forms.Form):
             self.instance.set_username(username, changed_by=self.instance)
             self.instance.save()
             del self.available_changes
+
+        return self.instance
+
+
+class AccountPasswordForm(forms.Form):
+    current_password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+    new_password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+    confirm_password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.instance = kwargs.pop("instance")
+
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self):
+        data = self.cleaned_data["current_password"]
+        if not self.instance.check_password(data):
+            raise forms.ValidationError(
+                pgettext(
+                    "account password form",
+                    "Password is incorrect.",
+                ),
+            )
+        return data
+
+    def clean_new_password(self):
+        data = self.cleaned_data["new_password"]
+        validate_password(data)
+        return data
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("new_password") and cleaned_data.get(
+            "confirm_password"
+        ) != cleaned_data.get("new_password"):
+            self.add_error(
+                "confirm_password",
+                pgettext(
+                    "account password form",
+                    "New passwords don't match.",
+                ),
+            )
+
+        return cleaned_data
+
+    def save(self):
+        self.instance.set_password(self.cleaned_data["new_password"])
+        self.instance.save()
+
+        update_session_auth_hash(self.request, self.instance)
 
         return self.instance
 

@@ -1,5 +1,5 @@
 {% load i18n misago_avatars %}
-<div id="misago-account-username-page-history">
+<div id="misago-htmx-history">
   <div id="misago-page-scroll-target" class="scroll-target"></div>
   <div class="username-history">
     <ul class="list-group">
@@ -58,7 +58,7 @@
         <div class="toolbar-item">
           <div class="misago-pagination"
             hx-push-url="true"
-            hx-target="#misago-account-username-page-history"
+            hx-target="#misago-htmx-history"
             hx-swap="outerHTML show:#misago-page-scroll-target:top"
           >
             {% if username_history.has_previous %}

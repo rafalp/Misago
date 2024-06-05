@@ -71,7 +71,7 @@ function setFormControlErrorValidationState(element, input, errors) {
   errors.forEach((error) => {
     const message = document.createElement("p")
     message.className = "help-block"
-    message.setAttribute("validation-message", "true")
+    message.setAttribute("misago-dynamic-message", "true")
     message.innerText = error
     input.after(message)
   })
@@ -92,7 +92,7 @@ function clearFormControlValidationState(element) {
 }
 
 function clearFormControlValidationMessages(element) {
-  element.querySelectorAll("[validation-message]").forEach((i) => i.remove())
+  element.querySelectorAll("[misago-dynamic-message]").forEach((i) => i.remove())
 }
 
 async function callValidationUrl(url, csrf, value, user) {

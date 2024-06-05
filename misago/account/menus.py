@@ -41,6 +41,15 @@ account_settings_menu.add_item(
 )
 
 
+account_settings_menu.add_item(
+    key="password",
+    url_name="misago:account-password",
+    label=pgettext_lazy("account settings page", "Password"),
+    icon="vpn_key",
+    visible=auth_is_not_delegated,
+)
+
+
 def show_download_data(request: HttpRequest) -> bool:
     return request.settings.allow_data_downloads
 

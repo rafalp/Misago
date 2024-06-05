@@ -2,13 +2,13 @@
 {% if is_request_htmx %}
 {% include "misago/snackbars.html" %}
 {% endif %}
-<div id="misago-account-username-page">
+<div id="misago-htmx-root">
   <form
     action="{% url 'misago:account-username' %}"
     method="post"
     hx-post="{% url 'misago:account-username' %}"
     hx-trigger="submit"
-    hx-target="#misago-account-username-page"
+    hx-target="#misago-htmx-root"
     hx-swap="outerHTML"
   >
     {% csrf_token %}
@@ -31,7 +31,7 @@
               </label>
               <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
               {% for error in field.errors %}
-                <p class="help-block" validation-message="true">{{ error }}</p>
+                <p class="help-block" misago-dynamic-message="true">{{ error }}</p>
               {% endfor %}
               <p class="help-block">
                 {% if form.available_changes.unlimited %}

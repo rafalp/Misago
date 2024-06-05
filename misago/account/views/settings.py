@@ -10,9 +10,8 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 
-
+from ...core.mail import build_mail
 from ...pagination.cursor import paginate_queryset
-from ...profile.profilefields import profile_fields
 from ...users.datadownloads import (
     request_user_data_download,
     user_has_data_download_request,
@@ -23,6 +22,7 @@ from ...users.tasks import delete_user
 from ..forms import (
     AccountDeleteForm,
     AccountDetailsForm,
+    AccountPasswordForm,
     AccountPreferencesForm,
     AccountUsernameForm,
     notifications_preferences,
@@ -158,13 +158,13 @@ class AccountDetailsView(AccountSettingsFormView):
         if request.method == "POST":
             return AccountDetailsForm(
                 request.POST,
-                request=request,
                 instance=request.user,
+                request=request,
             )
 
         return AccountDetailsForm(
-            request=request,
             instance=request.user,
+            request=request,
         )
 
 
@@ -218,6 +218,50 @@ class AccountUsernameView(AccountSettingsFormView):
         return paginate_queryset(
             request, request.user.namechanges.select_related("changed_by"), 10, "-id"
         )
+
+
+class AccountPasswordView(AccountSettingsFormView):
+    template_name = "misago/account/settings/password.html"
+    template_htmx_name = "misago/account/settings/password_form.html"
+    email_template_name = "misago/emails/password_changed"
+
+    success_message = pgettext_lazy(
+        "account settings password changed", "Password changed"
+    )
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.settings.enable_oauth2_client:
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_instance(self, request: HttpRequest) -> AccountPasswordForm:
+        if request.method == "POST":
+            return AccountPasswordForm(
+                request.POST,
+                instance=request.user,
+                request=request,
+            )
+
+        return AccountPasswordForm(
+            instance=request.user,
+            request=request,
+        )
+
+    def save_form(self, request: HttpRequest, form: Form) -> None:
+        form.save()
+
+        mail = build_mail(
+            request.user,
+            pgettext(
+                "password changed email subject",
+                "Your password on the %(forum_name)s forums has been changed",
+            )
+            % {"forum_name": request.settings.forum_name},
+            self.email_template_name,
+            context={"settings": request.settings},
+        )
+        mail.send(fail_silently=True)
 
 
 class AccountDownloadDataView(AccountSettingsView):
