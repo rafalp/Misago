@@ -22,11 +22,17 @@ from ...users.tasks import delete_user
 from ..forms import (
     AccountDeleteForm,
     AccountDetailsForm,
+    AccountEmailForm,
     AccountPasswordForm,
     AccountPreferencesForm,
     AccountUsernameForm,
     notifications_preferences,
     watching_preferences,
+)
+from ..emailchange import (
+    EmailChangeTokenError,
+    create_email_change_token,
+    read_email_change_token,
 )
 from ..menus import account_settings_menu
 
@@ -260,6 +266,58 @@ class AccountPasswordView(AccountSettingsFormView):
             % {"forum_name": request.settings.forum_name},
             self.email_template_name,
             context={"settings": request.settings},
+        )
+        mail.send(fail_silently=True)
+
+
+class AccountEmailView(AccountSettingsFormView):
+    template_name = "misago/account/settings/email.html"
+    template_htmx_name = "misago/account/settings/email_form.html"
+    email_template_name = "misago/emails/email_change_confirm"
+
+    success_message = pgettext_lazy(
+        "account settings email confirm", "Confirm email change"
+    )
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.settings.enable_oauth2_client:
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_instance(self, request: HttpRequest) -> AccountEmailForm:
+        if request.method == "POST":
+            return AccountEmailForm(
+                request.POST,
+                instance=request.user,
+                request=request,
+            )
+
+        return AccountEmailForm(
+            instance=request.user,
+            request=request,
+        )
+
+    def save_form(self, request: HttpRequest, form: Form) -> None:
+        new_email = form.cleaned_data["new_email"]
+        token = create_email_change_token(request.user, form.cleaned_data["new_email"])
+
+        # Swap e-mail on user instance so email is sent to a new address
+        request.user.email = new_email
+
+        mail = build_mail(
+            request.user,
+            pgettext(
+                "email change confirm email subject",
+                "Change your email on the %(forum_name)s forums",
+            )
+            % {"forum_name": request.settings.forum_name},
+            self.email_template_name,
+            context={
+                "settings": request.settings,
+                "token": token,
+                "expires_in": settings.MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES,
+            },
         )
         mail.send(fail_silently=True)
 

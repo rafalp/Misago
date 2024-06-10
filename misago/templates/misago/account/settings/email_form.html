@@ -1,12 +1,29 @@
-{% load i18n misago_forms %}
+{% load i18n misago_forms misago_capture %}
 {% if is_request_htmx %}
 {% include "misago/snackbars.html" %}
 {% endif %}
 <div id="misago-htmx-root">
+  {% if form.email_cache %}
+    <div class="panel panel-default panel-form">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          {% trans "Confirm email address change" context "account email page" %}
+        </h3>
+      </div>
+      <div class="panel-body">
+        {% capture trimmed as new_email %}
+          <strong>{{ form.email_cache }}</strong>
+        {% endcapture %}
+        {% blocktrans trimmed with email=new_email|safe context "account email page" %}
+          To confirm the change of your email address please click the confirmation link in a message that was sent to "{{ email }}".
+        {% endblocktrans %}
+      </div>
+    </div>
+  {% endif %}
   <form
-    action="{% url 'misago:account-password' %}"
+    action="{% url 'misago:account-email' %}"
     method="post"
-    hx-post="{% url 'misago:account-password' %}"
+    hx-post="{% url 'misago:account-email' %}"
     hx-trigger="submit"
     hx-target="#misago-htmx-root"
     hx-swap="outerHTML"
@@ -15,7 +32,7 @@
     <div class="panel panel-default panel-form">
       <div class="panel-heading">
         <h3 class="panel-title">
-          {% trans "Change password" context "account password page" %}
+          {% trans "Change email address" context "account email page" %}
         </h3>
       </div>
       <div class="panel-body">
@@ -30,27 +47,27 @@
             {% endfor %}
           </div>
         {% endwith %}
-        {% with form.new_password as field %}
+        {% with form.new_email as field %}
           <div
             class="form-group{% if field.errors %} has-error{% endif %}"
-            misago-validate="{% url 'misago:account-validate-password' %}"
+            misago-validate="{% url 'misago:account-validate-email' %}"
             misago-validate-user="{{ user.id }}"
           >
             <label class="control-label" for="{{ field.id_for_label }}">
-              {% trans "New password:" context "account password page form" %}
+              {% trans "New email address:" context "account email page form" %}
             </label>
-            <input type="password" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" {{ field|requiredhtml }}/>
+            <input type="email" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
             {% for error in field.errors %}
               <p class="help-block" misago-dynamic-message="true">{{ error }}</p>
             {% endfor %}
           </div>
         {% endwith %}
-        {% with form.confirm_password as field %}
+        {% with form.confirm_email as field %}
           <div class="form-group{% if field.errors %} has-error{% endif %}">
             <label class="control-label" for="{{ field.id_for_label }}">
-              {% trans "Confirm new password:" context "account password page form" %}
+              {% trans "Confirm new email address:" context "account email page form" %}
             </label>
-            <input type="password" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" {{ field|requiredhtml }}/>
+            <input type="email" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
             {% for error in field.errors %}
               <p class="help-block">{{ error }}</p>
             {% endfor %}
@@ -59,7 +76,7 @@
       </div>
       <div class="panel-footer panel-footer-sticky">
         <button class="btn btn-primary" type="submit">
-          {% trans "Change password" context "account password submit btn" %}
+          {% trans "Change email" context "account email submit btn" %}
         </button>
       </div>
     </div>

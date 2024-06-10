@@ -10,7 +10,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.accounts import allow_delete_own_account
 from ..profile.profilefields import profile_fields
-from ..users.validators import validate_username
+from ..users.validators import validate_email, validate_username
 from .namechanges import get_available_username_changes
 
 User = get_user_model()
@@ -220,7 +220,12 @@ class AccountUsernameForm(forms.Form):
     def clean_username(self):
         data = self.cleaned_data["username"]
         if data == self.instance.username:
-            return data
+            raise forms.ValidationError(
+                pgettext(
+                    "account username form",
+                    "This username is the same as the current one.",
+                ),
+            )
 
         if not self.permissions.can_change_username:
             raise forms.ValidationError(
@@ -273,7 +278,7 @@ class AccountPasswordForm(forms.Form):
         if not self.instance.check_password(data):
             raise forms.ValidationError(
                 pgettext(
-                    "account password form",
+                    "account settings form",
                     "Password is incorrect.",
                 ),
             )
@@ -307,6 +312,65 @@ class AccountPasswordForm(forms.Form):
         update_session_auth_hash(self.request, self.instance)
 
         return self.instance
+
+
+class AccountEmailForm(forms.Form):
+    current_password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+    new_email = forms.EmailField(max_length=255, widget=forms.PasswordInput)
+    confirm_email = forms.EmailField(max_length=255, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.instance = kwargs.pop("instance")
+        self.email_cache = None
+
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self):
+        data = self.cleaned_data["current_password"]
+        if not self.instance.check_password(data):
+            raise forms.ValidationError(
+                pgettext(
+                    "account settings form",
+                    "Password is incorrect.",
+                ),
+            )
+        return data
+
+    def clean_new_email(self):
+        data = self.cleaned_data["new_email"]
+        if data == self.instance.email:
+            raise forms.ValidationError(
+                pgettext(
+                    "account email form",
+                    "This email address is the same as the current one.",
+                ),
+            )
+
+        validate_email(data, self.instance)
+        return data
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("new_email") and cleaned_data.get(
+            "confirm_email"
+        ) != cleaned_data.get("new_email"):
+            self.add_error(
+                "confirm_email",
+                pgettext(
+                    "account email form",
+                    "New email addresses don't match.",
+                ),
+            )
+
+        self.email_cache = cleaned_data["new_email"]
+
+        if not self.errors:
+            self["new_email"].value = ""
+            self["confirm_email"].value = ""
+
+        return cleaned_data
 
 
 class AccountDeleteForm(forms.Form):

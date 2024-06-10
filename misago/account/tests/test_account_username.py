@@ -36,6 +36,18 @@ def test_account_username_form_changes_username(user_client, user):
     assert change.old_username == "User"
 
 
+def test_account_username_form_validates_username_is_new(user_client, user):
+    response = user_client.post(
+        reverse("misago:account-username"), {"username": user.username}
+    )
+
+    assert response.status_code == 200
+    assert_contains(response, "This username is the same as the current one.")
+
+    user.refresh_from_db()
+    assert user.username == "User"
+
+
 def test_account_username_form_validates_username(user_client, admin, user):
     response = user_client.post(
         reverse("misago:account-username"), {"username": admin.username}

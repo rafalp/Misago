@@ -1,0 +1,10 @@
+{% extends "misago/account/settings/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Email address" context "account email page" %} | {{ block.super }}{% endblock %}
+
+
+{% block page %}
+{% include "misago/account/settings/email_form.html" %}
+{% endblock page %}

@@ -1,0 +1,20 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n misago_absoluteurl %}
+
+
+{% block content %}
+{% blocktrans trimmed with user=user context "email change confirm email" %}
+{{ user }}, you are receiving this message because you are changing your e-mail address.
+{% endblocktrans %}
+<br>
+<br>
+<a href="{{ settings.forum_address }}{{ token }}">{% trans "Confirm change" context "email change confirm email cta" %}</a>
+<br>
+<br>
+{% blocktrans trimmed count expires_in=expires_in context "email change confirm email" %}
+This link will remain active for {{ expires_in }} hour from the time this message has been sent.
+{% plural %}
+This link will remain active for {{ expires_in }} hours from the time this message has been sent.
+{% endblocktrans %}
+<br>
+{% endblock content %}

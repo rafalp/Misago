@@ -1,8 +1,10 @@
 import { error } from "./snackbars"
 
-function handleResponseError({ detail }) {
-  const message = getResponseErrorMessage(detail.xhr)
-  error(message)
+function handleResponseError(event) {
+  if (isEventVisible(event)) {
+    const message = getResponseErrorMessage(event.detail.xhr)
+    error(message)
+  }
 }
 
 function getResponseErrorMessage(xhr) {
@@ -24,14 +26,31 @@ function getResponseErrorMessage(xhr) {
   return pgettext("htmx response error", "Unexpected error")
 }
 
-function handleSendError() {
-  const message = pgettext("htmx response error", "Site could not be reached")
-  error(message)
+function handleSendError(event) {
+  if (isEventVisible(event)) {
+    const message = pgettext("htmx response error", "Site could not be reached")
+    error(message)
+  }
 }
 
-function handleTimeoutError() {
-  const message = pgettext("htmx response error", "Site took too long to reply")
-  error(message)
+function handleTimeoutError(event) {
+  if (isEventVisible(event)) {
+    const message = pgettext("htmx response error", "Site took too long to reply")
+    error(message)
+  }
+}
+
+function isEventVisible({ detail }) {
+  const silent = getEventTargetSilentAttr(detail.target)
+  return !(silent === "true" && detail.requestConfig.verb === "get")
+}
+
+function getEventTargetSilentAttr(target) {
+  const element = target.closest("[hx-silent]")
+  if (element) {
+    return element.getAttribute("hx-silent")
+  }
+  return null
 }
 
 export function setupHtmxErrors() {
