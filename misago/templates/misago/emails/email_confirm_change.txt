@@ -3,16 +3,16 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user context "email change confirm email" %}
+{% blocktrans trimmed with user=user context "email confirm change email" %}
 {{ user }}, you are receiving this message because you are changing your e-mail address.
 {% endblocktrans %}
 
-{% blocktrans trimmed context "email change confirm email" %}
+{% blocktrans trimmed context "email confirm change email" %}
 To confirm the change, click the following link:
 {% endblocktrans %}
 {{ settings.forum_address }}{{ token }}
 
-{% blocktrans trimmed count expires_in=expires_in context "email change confirm email" %}
+{% blocktrans trimmed count expires_in=expires_in context "email confirm change email" %}
 This link will remain active for {{ expires_in }} hour from the time this message has been sent.
 {% plural %}
 This link will remain active for {{ expires_in }} hours from the time this message has been sent.

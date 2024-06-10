@@ -2,11 +2,11 @@ from typing import Any
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import get_user_model, logout
 from django.core.exceptions import PermissionDenied
 from django.forms import Form
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 
@@ -35,6 +35,8 @@ from ..emailchange import (
     read_email_change_token,
 )
 from ..menus import account_settings_menu
+
+User = get_user_model()
 
 
 def raise_if_not_authenticated(request):
@@ -103,15 +105,21 @@ class AccountSettingsFormView(AccountSettingsView):
     def post(self, request: HttpRequest) -> HttpResponse:
         form = self.get_form_instance(request)
         if form.is_valid():
-            self.save_form(request, form)
+            return self.handle_valid_form(request, form)
 
-            messages.success(request, self.success_message)
+        return self.handle_invalid_form(request, form)
 
-            if request.is_htmx and self.template_htmx_name:
-                return self.render(request, self.template_htmx_name, {"form": form})
+    def handle_valid_form(self, request: HttpRequest, form: Form) -> HttpResponse:
+        self.save_form(request, form)
 
-            return redirect(request.path_info)
+        messages.success(request, self.success_message)
 
+        if request.is_htmx and self.template_htmx_name:
+            return self.render(request, self.template_htmx_name, {"form": form})
+
+        return redirect(request.path_info)
+
+    def handle_invalid_form(self, request: HttpRequest, form: Form) -> HttpResponse:
         messages.error(request, _("Form contains errors"))
 
         if request.is_htmx and self.template_htmx_name:
@@ -273,10 +281,11 @@ class AccountPasswordView(AccountSettingsFormView):
 class AccountEmailView(AccountSettingsFormView):
     template_name = "misago/account/settings/email.html"
     template_htmx_name = "misago/account/settings/email_form.html"
-    email_template_name = "misago/emails/email_change_confirm"
+    template_htmx_success_name = "misago/account/settings/email_form_completed.html"
+    email_template_name = "misago/emails/email_confirm_change"
 
     success_message = pgettext_lazy(
-        "account settings email confirm", "Confirm email change"
+        "account settings email confirm", "Confirmation email sent"
     )
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
@@ -284,6 +293,16 @@ class AccountEmailView(AccountSettingsFormView):
             raise Http404()
 
         return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_instance(request)
+
+        if request.is_htmx:
+            template_name = self.template_htmx_name
+        else:
+            template_name = self.template_name
+
+        return self.render(request, template_name, {"form": form})
 
     def get_form_instance(self, request: HttpRequest) -> AccountEmailForm:
         if request.method == "POST":
@@ -298,6 +317,20 @@ class AccountEmailView(AccountSettingsFormView):
             request=request,
         )
 
+    def handle_valid_form(self, request: HttpRequest, form: Form) -> HttpResponse:
+        self.save_form(request, form)
+
+        if request.is_htmx and self.template_htmx_name:
+            messages.success(request, self.success_message)
+            return self.render(
+                request,
+                self.template_htmx_success_name,
+                {"new_email": form.cleaned_data["new_email"]},
+            )
+
+        request.session["misago_new_email"] = form.cleaned_data["new_email"]
+        return redirect(request.path_info)
+
     def save_form(self, request: HttpRequest, form: Form) -> None:
         new_email = form.cleaned_data["new_email"]
         token = create_email_change_token(request.user, form.cleaned_data["new_email"])
@@ -308,7 +341,7 @@ class AccountEmailView(AccountSettingsFormView):
         mail = build_mail(
             request.user,
             pgettext(
-                "email change confirm email subject",
+                "email confirm change email subject",
                 "Change your email on the %(forum_name)s forums",
             )
             % {"forum_name": request.settings.forum_name},
@@ -320,6 +353,42 @@ class AccountEmailView(AccountSettingsFormView):
             },
         )
         mail.send(fail_silently=True)
+
+
+def account_email_change_confirm_sent(request):
+    new_email = request.session.pop("misago_new_email", None)
+    if not new_email:
+        raise Http404()
+
+    return render(
+        request,
+        "misago/account/settings/email_confirm_sent.html",
+        {"new_email": new_email},
+    )
+
+
+def account_email_change_confirm(request, user_id, token):
+    user = get_object_or_404(User.objects, id=user_id, is_active=True)
+
+    try:
+        new_email = read_email_change_token(user, token)
+    except EmailChangeTokenError:
+        raise NotImplementedError("TODO")
+
+    # TODO: verify user is not banned
+    # TODO: verify new email is still valid
+
+    if new_email != user.email:
+        user.set_email(new_email)
+        user.save()
+
+    # TODO: write template
+    # TODO: write tests
+    return render(
+        request,
+        "misago/account/settings/email_changed.html",
+        {"username": user.username},
+    )
 
 
 class AccountDownloadDataView(AccountSettingsView):

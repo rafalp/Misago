@@ -364,12 +364,6 @@ class AccountEmailForm(forms.Form):
                 ),
             )
 
-        self.email_cache = cleaned_data["new_email"]
-
-        if not self.errors:
-            self["new_email"].value = ""
-            self["confirm_email"].value = ""
-
         return cleaned_data
 
 

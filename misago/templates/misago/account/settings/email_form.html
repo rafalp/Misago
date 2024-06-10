@@ -3,23 +3,6 @@
 {% include "misago/snackbars.html" %}
 {% endif %}
 <div id="misago-htmx-root">
-  {% if form.email_cache %}
-    <div class="panel panel-default panel-form">
-      <div class="panel-heading">
-        <h3 class="panel-title">
-          {% trans "Confirm email address change" context "account email page" %}
-        </h3>
-      </div>
-      <div class="panel-body">
-        {% capture trimmed as new_email %}
-          <strong>{{ form.email_cache }}</strong>
-        {% endcapture %}
-        {% blocktrans trimmed with email=new_email|safe context "account email page" %}
-          To confirm the change of your email address please click the confirmation link in a message that was sent to "{{ email }}".
-        {% endblocktrans %}
-      </div>
-    </div>
-  {% endif %}
   <form
     action="{% url 'misago:account-email' %}"
     method="post"
