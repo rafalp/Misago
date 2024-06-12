@@ -1,0 +1,33 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Confirm email change" context "account email change page" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-error page-error-email-change">
+  <div class="container page-container">
+    <div class="message-panel">
+
+      <div class="message-icon">
+        <span class="material-icon">error_outline</span>
+      </div>
+
+      <div class="message-body">
+        <p class="lead">
+          {% trans "Couldn't confirm email change" context "account email change error page" %}
+        </p>
+        <p>{{ message }}</p>
+        {% if error_code == "SIGNATURE_INVALID" %}
+          <p>
+            {% blocktrans trimmed context "account email change error page" %}
+              Link's signature will also become invalid when valid link is used for the first time.
+            {% endblocktrans %}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -31,6 +31,16 @@ urlpatterns = [
         name="account-email",
     ),
     path(
+        "email/confirm/",
+        settings.AccountEmailConfirm.as_view(),
+        name="account-email-confirm-sent",
+    ),
+    path(
+        "email/confirm/<int:user_id>/<token>/",
+        settings.account_email_confirm_change,
+        name="account-email-confirm-change",
+    ),
+    path(
         "download-data/",
         settings.AccountDownloadDataView.as_view(),
         name="account-download-data",

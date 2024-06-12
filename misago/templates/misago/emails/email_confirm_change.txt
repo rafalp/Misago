@@ -4,17 +4,17 @@
 
 {% block content %}
 {% blocktrans trimmed with user=user context "email confirm change email" %}
-{{ user }}, you are receiving this message because you are changing your e-mail address.
+    {{ user }}, you are receiving this message because you are changing your e-mail address.
 {% endblocktrans %}
 
 {% blocktrans trimmed context "email confirm change email" %}
-To confirm the change, click the following link:
+    To confirm the change, click the following link:
 {% endblocktrans %}
-{{ settings.forum_address }}{{ token }}
+{% absoluteurl 'misago:account-email-confirm-change' user_id=user.id token=token %}
 
 {% blocktrans trimmed count expires_in=expires_in context "email confirm change email" %}
-This link will remain active for {{ expires_in }} hour from the time this message has been sent.
+    This link will remain active for {{ expires_in }} hour from the time this message has been sent.
 {% plural %}
-This link will remain active for {{ expires_in }} hours from the time this message has been sent.
+    This link will remain active for {{ expires_in }} hours from the time this message has been sent.
 {% endblocktrans %}
 {% endblock content %}

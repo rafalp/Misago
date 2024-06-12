@@ -108,7 +108,7 @@ To work on admin's JavaScript or CSS, `cd` to `misago-admin` and install depende
 
 ### E-mails
 
-Misago uses [Mailpit](https://github.com/axllent/mailpit) to capture emails sent from development instance.
+Misago uses [Mailpit](https://github.com/axllent/mailpit) to capture emails sent from the development instance.
 
 To browse those emails, visit the <http://127.0.0.1:8025> in your browser for the web interface.
 

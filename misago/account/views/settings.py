@@ -4,9 +4,10 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, logout
 from django.core.exceptions import PermissionDenied
-from django.forms import Form
+from django.forms import Form, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 
@@ -19,6 +20,7 @@ from ...users.datadownloads import (
 from ...users.models import DataDownload
 from ...users.online.tracker import clear_tracking
 from ...users.tasks import delete_user
+from ...users.validators import validate_email
 from ..forms import (
     AccountDeleteForm,
     AccountDetailsForm,
@@ -329,7 +331,7 @@ class AccountEmailView(AccountSettingsFormView):
             )
 
         request.session["misago_new_email"] = form.cleaned_data["new_email"]
-        return redirect(request.path_info)
+        return redirect(reverse("misago:account-email-confirm-sent"))
 
     def save_form(self, request: HttpRequest, form: Form) -> None:
         new_email = form.cleaned_data["new_email"]
@@ -355,39 +357,57 @@ class AccountEmailView(AccountSettingsFormView):
         mail.send(fail_silently=True)
 
 
-def account_email_change_confirm_sent(request):
-    new_email = request.session.pop("misago_new_email", None)
-    if not new_email:
-        raise Http404()
+class AccountEmailConfirm(AccountSettingsView):
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.settings.enable_oauth2_client:
+            raise Http404()
 
-    return render(
-        request,
-        "misago/account/settings/email_confirm_sent.html",
-        {"new_email": new_email},
-    )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        new_email = request.session.pop("misago_new_email", None)
+        if not new_email:
+            return redirect(reverse("misago:account-email"))
+
+        return self.render(
+            request,
+            "misago/account/settings/email_confirm.html",
+            {"new_email": new_email},
+        )
 
 
-def account_email_change_confirm(request, user_id, token):
+def account_email_confirm_change(request, user_id, token):
     user = get_object_or_404(User.objects, id=user_id, is_active=True)
 
     try:
         new_email = read_email_change_token(user, token)
-    except EmailChangeTokenError:
-        raise NotImplementedError("TODO")
-
-    # TODO: verify user is not banned
-    # TODO: verify new email is still valid
+        validate_email(new_email, user)
+    except EmailChangeTokenError as e:
+        return render(
+            request,
+            "misago/account/settings/email_change_error.html",
+            {
+                "message": str(e),
+                "error_code": str(e.code),
+            },
+            status=400,
+        )
+    except ValidationError as e:
+        return render(
+            request,
+            "misago/account/settings/email_change_error.html",
+            {"message": e.error_list[0]},
+            status=400,
+        )
 
     if new_email != user.email:
         user.set_email(new_email)
         user.save()
 
-    # TODO: write template
-    # TODO: write tests
     return render(
         request,
         "misago/account/settings/email_changed.html",
-        {"username": user.username},
+        {"username": user.username, "new_email": new_email},
     )
 
 

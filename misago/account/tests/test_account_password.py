@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
-from ...test import assert_contains, assert_has_success_message, assert_not_contains
+from ...test import assert_contains, assert_has_success_message
 
 
 @override_dynamic_settings(enable_oauth2_client=True)

@@ -10,6 +10,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.accounts import allow_delete_own_account
 from ..profile.profilefields import profile_fields
+from ..users.utils import hash_email
 from ..users.validators import validate_email, validate_username
 from .namechanges import get_available_username_changes
 
@@ -339,7 +340,7 @@ class AccountEmailForm(forms.Form):
 
     def clean_new_email(self):
         data = self.cleaned_data["new_email"]
-        if data == self.instance.email:
+        if hash_email(data) == self.instance.email_hash:
             raise forms.ValidationError(
                 pgettext(
                     "account email form",
