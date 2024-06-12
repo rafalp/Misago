@@ -21,6 +21,9 @@ def get_user_options_pages(request) -> List[dict]:
         return links
 
     for item in account_settings_menu.bind_to_request(request).items:
+        if item.key == "delete":
+            continue
+
         links.append(
             {
                 "icon": item.icon,
