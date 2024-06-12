@@ -13,7 +13,7 @@ def menu():
 def test_add_item_adds_item(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
 
@@ -24,17 +24,17 @@ def test_add_item_adds_item(menu):
 def test_add_item_after_adds_item_in_right_position(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
     menu.add_item(
         key="test2",
-        url_name="misago:usercp-change-username",
+        url_name="misago:account-username",
         label="Test 2",
     )
     menu.add_item(
         key="test3",
-        url_name="misago:usercp-change-email-password",
+        url_name="misago:account-email",
         label="Test 3",
         after="test",
     )
@@ -48,17 +48,17 @@ def test_add_item_after_adds_item_in_right_position(menu):
 def test_add_item_before_adds_item_in_right_position(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
     menu.add_item(
         key="test2",
-        url_name="misago:usercp-change-username",
+        url_name="misago:account-username",
         label="Test 2",
     )
     menu.add_item(
         key="test3",
-        url_name="misago:usercp-change-email-password",
+        url_name="misago:account-email",
         label="Test 3",
         before="test2",
     )
@@ -72,19 +72,19 @@ def test_add_item_before_adds_item_in_right_position(menu):
 def test_add_item_invalid_after_raises_value_error(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
     menu.add_item(
         key="test2",
-        url_name="misago:usercp-change-username",
+        url_name="misago:account-username",
         label="Test 2",
     )
 
     with pytest.raises(ValueError) as exc_info:
         menu.add_item(
             key="test3",
-            url_name="misago:usercp-change-email-password",
+            url_name="misago:account-email",
             label="Test 3",
             after="invalid",
         )
@@ -95,19 +95,19 @@ def test_add_item_invalid_after_raises_value_error(menu):
 def test_add_item_invalid_before_raises_value_error(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
     menu.add_item(
         key="test2",
-        url_name="misago:usercp-change-username",
+        url_name="misago:account-username",
         label="Test 2",
     )
 
     with pytest.raises(ValueError) as exc_info:
         menu.add_item(
             key="test3",
-            url_name="misago:usercp-change-email-password",
+            url_name="misago:account-email",
             label="Test 3",
             before="invalid",
         )
@@ -118,67 +118,65 @@ def test_add_item_invalid_before_raises_value_error(menu):
 def test_bind_to_request_returns_bound_menu(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
     menu.add_item(
         key="test2",
-        url_name="misago:usercp-change-username",
+        url_name="misago:account-username",
         label="Test 2",
     )
     menu.add_item(
         key="test3",
-        url_name="misago:usercp-change-email-password",
+        url_name="misago:account-email",
         label="Test 3",
     )
 
-    bound_menu = menu.bind_to_request(Mock(path_info="/options/change-username/"))
+    bound_menu = menu.bind_to_request(Mock(path_info="/account/username/"))
 
-    assert bound_menu.active.url == "/options/change-username/"
+    assert bound_menu.active.url == "/account/username/"
 
     assert len(bound_menu.items) == 3
 
     assert not bound_menu.items[0].active
-    assert bound_menu.items[0].url == "/options/edit-details/"
+    assert bound_menu.items[0].url == "/account/details/"
 
     assert bound_menu.items[1].active
-    assert bound_menu.items[1].url == "/options/change-username/"
+    assert bound_menu.items[1].url == "/account/username/"
 
     assert not bound_menu.items[2].active
-    assert bound_menu.items[2].url == "/options/sign-in-credentials/"
+    assert bound_menu.items[2].url == "/account/email/"
 
 
 def test_bind_to_request__filters_items_visibility(menu):
     menu.add_item(
         key="test",
-        url_name="misago:usercp-edit-details",
+        url_name="misago:account-details",
         label="Test",
     )
     menu.add_item(
         key="test2",
-        url_name="misago:usercp-change-username",
+        url_name="misago:account-username",
         label="Test 2",
         visible=lambda r: r.user is False,
     )
     menu.add_item(
         key="test3",
-        url_name="misago:usercp-change-email-password",
+        url_name="misago:account-email",
         label="Test 3",
         visible=lambda r: r.user,
     )
 
-    bound_menu = menu.bind_to_request(
-        Mock(path_info="/options/change-username/", user=False)
-    )
+    bound_menu = menu.bind_to_request(Mock(path_info="/account/username/", user=False))
 
-    assert bound_menu.active.url == "/options/change-username/"
+    assert bound_menu.active.url == "/account/username/"
 
     assert len(bound_menu.items) == 2
 
     assert bound_menu.items[0].key == "test"
     assert not bound_menu.items[0].active
-    assert bound_menu.items[0].url == "/options/edit-details/"
+    assert bound_menu.items[0].url == "/account/details/"
 
     assert bound_menu.items[1].key == "test2"
     assert bound_menu.items[1].active
-    assert bound_menu.items[1].url == "/options/change-username/"
+    assert bound_menu.items[1].url == "/account/username/"

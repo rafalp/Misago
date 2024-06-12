@@ -29,22 +29,13 @@ from ..permissions import (
     allow_see_ban_details,
 )
 from ..profilefields import profilefields, serialize_profilefields_data
-from ..serializers import (
-    BanDetailsSerializer,
-    DataDownloadSerializer,
-    DeleteOwnAccountSerializer,
-    ForumOptionsSerializer,
-    UserSerializer,
-)
+from ..serializers import BanDetailsSerializer, UserSerializer
 from ..viewmodels import Followers, Follows, UserPosts, UserThreads
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
-from .userendpoints.changeemail import change_email_endpoint
-from .userendpoints.changepassword import change_password_endpoint
 from .userendpoints.create import create_endpoint
 from .userendpoints.editdetails import edit_details_endpoint
 from .userendpoints.list import list_endpoint
-from .userendpoints.signature import signature_endpoint
 from .userendpoints.username import moderate_username_endpoint, username_endpoint
 
 User = get_user_model()
@@ -126,113 +117,6 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return avatar_endpoint(request)
 
-    @action(
-        methods=["post"],
-        detail=True,
-        url_name="forum-options",
-        url_path="forum-options",
-    )
-    def forum_options(self, request, pk=None):
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't change other users options."),
-        )
-
-        serializer = ForumOptionsSerializer(request.user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {
-                    "detail": pgettext(
-                        "users api", "Your forum options have been changed."
-                    )
-                }
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(methods=["get", "post"], detail=True)
-    def username(self, request, pk=None):
-        if request.settings.enable_oauth2_client:
-            raise PermissionDenied(
-                pgettext(
-                    "users api",
-                    "This feature has been disabled. Please use %(provider)s to change your name.",
-                )
-                % {"provider": request.settings.oauth2_provider}
-            )
-
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't change other users names."),
-        )
-
-        return username_endpoint(request)
-
-    @action(methods=["get", "post"], detail=True)
-    def signature(self, request, pk=None):
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't change other users signatures."),
-        )
-
-        return signature_endpoint(request)
-
-    @action(
-        methods=["post"],
-        detail=True,
-        url_path="change-password",
-        url_name="change-password",
-    )
-    def change_password(self, request, pk=None):
-        if request.settings.enable_oauth2_client:
-            raise PermissionDenied(
-                pgettext(
-                    "users api",
-                    "This feature has been disabled. Please use %(provider)s to change your password.",
-                )
-                % {"provider": request.settings.oauth2_provider}
-            )
-
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't change other users passwords."),
-        )
-
-        return change_password_endpoint(request)
-
-    @action(
-        methods=["post"],
-        detail=True,
-        url_path="change-email",
-        url_name="change-email",
-    )
-    def change_email(self, request, pk=None):
-        if request.settings.enable_oauth2_client:
-            raise PermissionDenied(
-                pgettext(
-                    "users api",
-                    "This feature has been disabled. Please use %(provider)s to change your e-mail.",
-                )
-                % {"provider": request.settings.oauth2_provider}
-            )
-
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't change other users e-mail addresses."),
-        )
-
-        return change_email_endpoint(request)
-
     @action(methods=["get"], detail=True)
     def details(self, request, pk=None):
         profile = self.get_user(request, pk)
@@ -249,29 +133,6 @@ class UserViewSet(viewsets.GenericViewSet):
         profile = self.get_user(request, pk)
         allow_edit_profile_details(request.user_acl, profile)
         return edit_details_endpoint(request, profile)
-
-    @action(
-        methods=["post"],
-        detail=True,
-        url_path="delete-own-account",
-        url_name="delete-own-account",
-    )
-    def delete_own_account(self, request, pk=None):
-        if request.settings.enable_oauth2_client:
-            raise PermissionDenied(
-                pgettext(
-                    "users api",
-                    "This feature has been disabled. Please use %(provider)s to delete your account.",
-                )
-                % {"provider": request.settings.oauth2_provider}
-            )
-
-        serializer = DeleteOwnAccountSerializer(
-            data=request.data, context={"user": request.user}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.mark_account_for_deletion(request)
-        return Response({})
 
     @action(methods=["post"], detail=True)
     def follow(self, request, pk=None):
@@ -335,37 +196,6 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return moderate_username_endpoint(request, profile)
 
-    @action(
-        methods=["post"],
-        detail=True,
-        url_path="request-data-download",
-        url_name="request-data-download",
-    )
-    def request_data_download(self, request, pk=None):
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't request data downloads for other users."),
-        )
-
-        if not request.settings.allow_data_downloads:
-            raise PermissionDenied(
-                pgettext("users api", "You can't download your data.")
-            )
-
-        if user_has_data_download_request(request.user):
-            raise PermissionDenied(
-                pgettext(
-                    "users api",
-                    "You can't have more than one data download request at a single time.",
-                )
-            )
-
-        request_user_data_download(request.user)
-
-        return Response({"detail": "ok"})
-
     @action(methods=["get", "post"], detail=True)
     def delete(self, request, pk=None):
         profile = self.get_user(request, pk)
@@ -405,24 +235,6 @@ class UserViewSet(viewsets.GenericViewSet):
                 record_user_deleted_by_staff()
 
         return Response({})
-
-    @action(
-        methods=["get"],
-        detail=True,
-        url_path="data-downloads",
-        url_name="data-downloads",
-    )
-    def data_downloads(self, request, pk=None):
-        get_int_or_404(pk)
-        allow_self_only(
-            request.user,
-            pk,
-            pgettext("users api", "You can't see other users data downloads."),
-        )
-
-        queryset = request.user.datadownload_set.all()[:5]
-        serializer = DataDownloadSerializer(queryset, many=True)
-        return Response(serializer.data)
 
     @action(methods=["get"], detail=True)
     def followers(self, request, pk=None):

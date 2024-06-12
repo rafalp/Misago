@@ -101,7 +101,7 @@ class UserNavMenu extends React.Component {
         )}
         <DropdownDivider />
         <DropdownSubheader className="user-nav-options">
-          {pgettext("user nav section", "Change options")}
+          {pgettext("user nav section", "Account settings")}
         </DropdownSubheader>
         <DropdownMenuItem>
           <button

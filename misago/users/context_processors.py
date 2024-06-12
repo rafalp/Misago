@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from .pages import user_profile, usercp, users_list
+from .pages import user_profile, users_list
 from .serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
 from .usersmenus import get_users_menus
 
@@ -12,7 +12,6 @@ def user_links(request):
                 "REQUEST_ACTIVATION_URL": reverse("misago:request-activation"),
                 "FORGOTTEN_PASSWORD_URL": reverse("misago:forgotten-password"),
                 "BANNED_URL": reverse("misago:banned"),
-                "USERCP_URL": reverse("misago:options"),
                 "USERS_LIST_URL": reverse("misago:users"),
                 "AUTH_API": reverse("misago:api:auth"),
                 "AUTH_CRITERIA_API": reverse("misago:api:auth-criteria"),
@@ -24,7 +23,6 @@ def user_links(request):
         )
 
     return {
-        "USERCP_URL": usercp.get_default_link(),
         "USERS_LIST_URL": users_list.get_default_link(),
         "USER_PROFILE_URL": user_profile.get_default_link(),
     }

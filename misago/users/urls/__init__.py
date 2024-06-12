@@ -8,7 +8,6 @@ from ..views import (
     avatarserver,
     forgottenpassword,
     lists,
-    options,
     profile,
 )
 
@@ -36,31 +35,6 @@ urlpatterns = [
         forgottenpassword.reset_password_form,
         name="forgotten-password-change-form",
     ),
-]
-
-urlpatterns += [
-    path("options/", options.index, name="options"),
-    path("options/<slug:form_name>/", options.index, name="options-form"),
-    path("options/forum-options/", options.index, name="usercp-change-forum-options"),
-    path("options/edit-details/", options.index, name="usercp-edit-details"),
-    path("options/change-username/", options.index, name="usercp-change-username"),
-    path(
-        "options/sign-in-credentials/",
-        options.index,
-        name="usercp-change-email-password",
-    ),
-    path(
-        "options/change-email/<slug:token>/",
-        options.confirm_email_change,
-        name="options-confirm-email-change",
-    ),
-    path(
-        "options/change-password/<slug:token>/",
-        options.confirm_password_change,
-        name="options-confirm-password-change",
-    ),
-    path("options/download-data/", options.index, name="usercp-download-data"),
-    path("options/delete-account/", options.index, name="usercp-delete-account"),
 ]
 
 urlpatterns += [

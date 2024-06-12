@@ -26,23 +26,6 @@ def deny_authenticated(f):
     return decorator
 
 
-def deny_guests(f):
-    @wraps(f)
-    def decorator(request, *args, **kwargs):
-        if request.user.is_anonymous:
-            if request.GET.get("ref") == "login":
-                return redirect(settings.LOGIN_REDIRECT_URL)
-            raise PermissionDenied(
-                pgettext(
-                    "block guests decorator", "You have to sign in to access this page."
-                )
-            )
-        else:
-            return f(request, *args, **kwargs)
-
-    return decorator
-
-
 def deny_banned_ips(f):
     @wraps(f)
     def decorator(request, *args, **kwargs):
