@@ -1,5 +1,5 @@
 from django.contrib.messages.api import get_messages
-from django.contrib.messages.constants import ERROR, INFO, SUCCESS
+from django.contrib.messages.constants import ERROR, INFO, SUCCESS, WARNING
 from django.test import Client
 
 
@@ -13,6 +13,17 @@ def assert_not_contains(response, string, status_code=200):
     assert response.status_code == status_code
     fail_message = f'"{string}" was unexpectedly found in response.content'
     assert string not in response.content.decode("utf-8"), fail_message
+
+
+def assert_has_warning_message(response, message: str | None = None):
+    messages = get_messages(response.wsgi_request)
+    levels = [i.level for i in messages]
+
+    assert levels, "No messages were set during the request"
+    assert WARNING in levels, "No warning messages were set during the request"
+
+    if message:
+        _assert_message_exists(messages, WARNING, message)
 
 
 def assert_has_error_message(response, message: str | None = None):

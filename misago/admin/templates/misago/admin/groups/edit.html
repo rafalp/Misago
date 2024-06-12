@@ -72,7 +72,18 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "User profiles" context "admin group form" %}</legend>
+    <legend>{% trans "Usernames" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_change_username %}
+    {% form_row form.group.username_changes_limit %}
+    {% form_row form.group.username_changes_expire %}
+    {% form_row form.group.username_changes_span %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "User profiles" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_see_user_profiles %}
 

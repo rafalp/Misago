@@ -1,0 +1,15 @@
+<div id="misago-snackbars"{% if not inert %} hx-swap-oob="innerHTML"{% endif %}>
+  {% for message in messages %}
+    {% if 'info' in message.tags %}
+    <div class="snackbar snackbar-info" role="alert">
+    {% elif 'success' in message.tags %}
+    <div class="snackbar snackbar-success" role="alert">
+    {% elif 'warning' in message.tags %}
+    <div class="snackbar snackbar-warning" role="alert">
+    {% elif 'error' in message.tags %}
+    <div class="snackbar snackbar-danger" role="alert">
+    {% endif %}
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>

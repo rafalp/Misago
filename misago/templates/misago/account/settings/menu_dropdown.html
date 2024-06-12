@@ -1,0 +1,8 @@
+{% for item in account_menu.items %}
+  <li{% if item.active %} class="active"{% endif %}>
+    <a href="{{ item.url }}">
+      {% if item.icon %}<span class="material-icon">{{ item.icon }}</span>{% endif %}
+      {{ item.label }}
+    </a>
+  </li>
+{% endfor %}

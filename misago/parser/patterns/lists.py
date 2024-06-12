@@ -20,7 +20,6 @@ class ListMarkdown(Pattern):
     pattern: str = LIST_PATTERN
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> list[dict]:
-        print(match)
         items = self.parse_list_items(
             parser, match, parents + [self.pattern_type, "list-item"]
         )
@@ -32,7 +31,6 @@ class ListMarkdown(Pattern):
         items: list[ListItem] = []
         prev_level: int | None = None
         for item in LIST_CONTENTS.finditer(dedent(match).strip()):
-            print(item)
             raw_level = len(item.group("prefix") or "")
 
             if not items:

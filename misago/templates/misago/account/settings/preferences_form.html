@@ -1,0 +1,90 @@
+{% load i18n misago_forms %}
+{% if is_request_htmx %}
+{% include "misago/snackbars.html" %}
+{% endif %}
+<form
+  id="misago-htmx-root"
+  action="{% url 'misago:account-preferences' %}"
+  method="post"
+  hx-post="{% url 'misago:account-preferences' %}"
+  hx-trigger="submit"
+  hx-target="#misago-htmx-root"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+  <div class="panel panel-default panel-form">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {% trans "Change preferences" context "account preferences page" %}
+      </h3>
+    </div>
+    <div class="panel-body">
+      <fieldset>
+        <legend>
+          {% trans "Privacy" context "account preferences page fieldset" %}
+        </legend>
+        <div class="form-group">
+          {% with form.is_hiding_presence as field %}
+            <label class="control-label">
+              {% trans "Show my online status to other users:" context "account preferences page form" %}
+            </label>
+            <div class="form-control-choices">
+              {% for choice in field.subwidgets %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                    {{ choice.choice_label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+            <p class="help-block">
+              {% blocktrans trimmed context "account preferences page form" %}
+                Hiding your online status will also remove the information about your last activity on the site from your profile. Users with a special privilege to see hidden online statuses will still be able to see when you are online and when you've been last active.
+              {% endblocktrans %}
+            </p>
+          {% endwith %}
+        </div>
+        <div class="form-group">
+          {% with form.limits_private_thread_invites_to as field %}
+            <label class="control-label">
+              {% trans "Limit who can invite me to their private threads:" context "account preferences page form" %}
+            </label>
+            <div class="form-control-choices">
+              {% for choice in field.subwidgets %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                    {{ choice.choice_label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+            <p class="help-block">
+              {% blocktrans trimmed context "account preferences page form" %}
+                Some users may have special privileges allowing them to bypass this preference.
+              {% endblocktrans %}
+            </p>
+          {% endwith %}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>
+          {% trans "Automatic watching" context "account preferences page fieldset" %}
+        </legend>
+        {% include "misago/account/settings/preferences_table.html" with table=watching_preferences %}
+      </fieldset>
+      <fieldset>
+        <legend>
+          {% trans "Notifications" context "account preferences page fieldset" %}
+        </legend>
+        {% include "misago/account/settings/preferences_table.html" with table=notifications_preferences %}
+      </fieldset>
+    </div>
+    <div class="panel-footer panel-footer-sticky">
+      <button class="btn btn-primary" type="submit">
+        {% trans "Save changes" context "account preferences submit btn" %}
+      </button>
+    </div>
+  </div>
+</form>

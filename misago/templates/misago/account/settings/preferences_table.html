@@ -1,0 +1,39 @@
+{% load i18n misago_forms %}
+<table class="table-watching-preferences">
+  <tr>
+    <th>
+      {{ table.header }}
+    </th>
+    <th class="table-watching-option">
+      <attr title="{% trans 'Don\'t watch' context 'account preferences page watch table' %}">
+        <span class="material-icon">notifications_none</span>
+      </attr>
+    </th>
+    <th class="table-watching-option">
+      <attr title="{% trans 'Notify on site' context 'account preferences page watch table' %}">
+        <span class="material-icon">notifications_active</span>
+      </attr>
+    </th>
+    <th class="table-watching-option">
+      <attr title="{% trans 'Notify on site and with email' context 'account preferences page watch table' %}">
+        <span class="material-icon">notifications_active</span>
+        <span class="material-icon">add</span>
+        <span class="material-icon">mail</span>
+      </attr>
+    </th>
+  </tr>
+  {% for table_item in table.items %}
+    <tr>
+      <td class="table-watching-label">
+        {{ table_item.label }}
+      </td>
+      {% for choice in table_item.field.subwidgets %}
+        <td class="table-watching-option">
+          <label>
+            <input type="radio" name="{{ table_item.field.html_name }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+          </label>
+        </td>
+      {% endfor %}
+  </tr>
+  {% endfor %}
+</table>

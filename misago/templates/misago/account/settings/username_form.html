@@ -1,0 +1,89 @@
+{% load i18n misago_forms misago_capture %}
+{% if is_request_htmx %}
+{% include "misago/snackbars.html" %}
+{% endif %}
+<div id="misago-htmx-root">
+  <form
+    action="{% url 'misago:account-username' %}"
+    method="post"
+    hx-post="{% url 'misago:account-username' %}"
+    hx-trigger="submit"
+    hx-target="#misago-htmx-root"
+    hx-swap="outerHTML"
+  >
+    {% csrf_token %}
+    <div class="panel panel-default panel-form">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          {% trans "Change username" context "account username page" %}
+        </h3>
+      </div>
+      {% if user_permissions.can_change_username and form.available_changes.can_change_username %}
+        <div class="panel-body">
+          {% with form.username as field %}
+            <div
+              class="form-group{% if field.errors %} has-error{% endif %}"
+              misago-validate="{% url 'misago:account-validate-username' %}"
+              misago-validate-user="{{ user.id }}"
+            >
+              <label class="control-label" for="{{ field.id_for_label }}">
+                {% trans "New username:" context "account username page form" %}
+              </label>
+              <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+              {% for error in field.errors %}
+                <p class="help-block" misago-dynamic-message="true">{{ error }}</p>
+              {% endfor %}
+              <p class="help-block">
+                {% if form.available_changes.unlimited %}
+                  {% trans "You can change your username unlimited number of times." context "account username help" %}
+                {% elif form.available_changes.changes_left %}
+                  {% blocktrans trimmed count changes_left=form.available_changes.changes_left context "account username help" %}
+                    You can change your username {{ changes_left }} more time.
+                  {% plural %}
+                    You can change your username {{ changes_left }} more times.
+                  {% endblocktrans %}
+                {% endif %}
+                {% if user_permissions.username_changes_span %}
+                  {% blocktrans trimmed count span=user_permissions.username_changes_span context "account username help" %}
+                    You will have to wait {{ span }} hour after changing your name before you can change it again.
+                  {% plural %}
+                    You will have to wait {{ span }} hours after changing your name before you can change it again.
+                  {% endblocktrans %}
+                {% endif %}
+              </p>
+            </div>
+          {% endwith %}
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {% trans "Change username" context "account username submit btn" %}
+          </button>
+        </div>
+      {% elif not user_permissions.can_change_username %}
+        <div class="panel-body">
+          {% trans "You can't change your username." context "account username help" %}
+        </div>
+      {% else %}
+        <div class="panel-body">
+          {% if form.available_changes.changes_left == 0 %}
+            {% trans "You have used up all available username changes." context "account username help" %}
+          {% else %}
+            {% trans "You can't change your username at the moment." context "account username help" %}
+          {% endif %}
+          {% if form.available_changes.next_change %}
+            {% capture trimmed as next_change %}
+              <attr misago-timestamp="{{ form.available_changes.next_change.isoformat }}">
+                {{ form.available_changes.next_change|date:'DATETIME_FORMAT' }}
+              </attr>
+            {% endcapture %}
+            {% blocktrans trimmed with next_change=next_change|safe context "account username help" %}
+              You will be able to change your username again {{ next_change }}.
+            {% endblocktrans %}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </form>
+
+  {% include "misago/account/settings/username_history.html" %}
+</div>

@@ -1,0 +1,10 @@
+{% extends "misago/account/settings/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Username" context "account username page" %} | {{ block.super }}{% endblock %}
+
+
+{% block page %}
+{% include "misago/account/settings/username_form.html" %}
+{% endblock page %}

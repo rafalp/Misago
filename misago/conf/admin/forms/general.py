@@ -157,7 +157,7 @@ class GeneralSettingsForm(SettingsForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        address = self.request.build_absolute_uri("/")
+        address = self.request.build_absolute_uri("/").rstrip("/")
         self["forum_address"].help_text = pgettext_lazy(
             "admin general settings form",
             'Misago uses this setting to build links in e-mails sent to site users. Address under which site is running appears to be "%(address)s".',

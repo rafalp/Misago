@@ -1,0 +1,71 @@
+{% load i18n misago_forms misago_profile_fields %}
+{% if is_request_htmx %}
+{% include "misago/snackbars.html" %}
+{% endif %}
+<form
+  id="misago-account-details-form"
+  action="{% url 'misago:account-details' %}"
+  method="post"
+  hx-post="{% url 'misago:account-details' %}"
+  hx-trigger="submit"
+  hx-target="#misago-account-details-form"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+  <div class="panel panel-default panel-form">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {% trans "Update profile details" context "account details page" %}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {% for fieldset in form.fieldsets %}
+        <fieldset>
+          <legend>
+            {{ fieldset.name }}
+          </legend>
+          {% for field in fieldset.fields %}
+            {% with field|profilefieldwidget as field_widget %}
+              <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="control-label"{% if field_widget.type != "radiochoice" %} for="{{ field.id_for_label }}"{% endif %}>
+                  {{ field.label }}
+                </label>
+                {% if field_widget.input == "text" %}
+                  <input type="{{ field_widget.type }}" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+                {% elif field_widget.input == "textarea" %}
+                  <textarea class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" rows="{{ field_widget.rows }}" {{ field|requiredhtml }}>{{ field.value|default:'' }}</textarea>
+                {% elif field_widget.input == "radiochoice" %}
+                  <div class="form-control-choices">
+                    {% for choice in field.subwidgets %}
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|requiredhtml }}{{ choice|checkedhtml }}>
+                          {{ choice.choice_label }}
+                        </label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                {% for error in field.errors %}
+                  <p class="help-block">{{ error }}</p>
+                {% endfor %}
+                {% if field.help_text %}
+                  <p class="help-block">
+                    {{ field.help_text }}
+                  </p>
+                {% endif %}
+              </div>
+            {% endwith %}
+          {% endfor %}
+        </fieldset>
+      {% empty %}
+        {% trans "No profile details are available for editing at this time." context "account details page" %}
+      {% endfor %}
+    </div>
+    <div class="panel-footer panel-footer-sticky">
+      <button class="btn btn-primary" type="submit">
+        {% trans "Save changes" context "account details submit btn" %}
+      </button>
+    </div>
+  </div>
+</form>

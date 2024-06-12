@@ -1,0 +1,49 @@
+.table-watching-preferences {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: @line-height-computed;
+
+  th,
+  td {
+    border-bottom: 1px solid @table-border-color;
+    vertical-align: middle;
+  }
+}
+
+.table-watching-label {
+  padding: @table-cell-padding;
+  padding-left: 0;
+}
+
+.table-watching-option {
+  width: 100px;
+  padding: @table-cell-padding;
+
+  text-align: center;
+
+  label {
+    margin: 0;
+    padding: @table-condensed-cell-padding;
+    width: 100%;
+
+    &,
+    input {
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: @gray-lighter;
+      border-radius: @btn-border-radius-base;
+    }
+  }
+}
+
+.table-watching-option attr {
+  display: block;
+
+  cursor: help;
+}
+
+.table-watching-option .material-icon {
+  font-size: 18px;
+}

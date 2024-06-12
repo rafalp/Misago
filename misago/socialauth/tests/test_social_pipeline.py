@@ -14,6 +14,7 @@ from ...conf.test import override_dynamic_settings
 from ...conftest import get_cache_versions
 from ...core.exceptions import SocialAuthBanned, SocialAuthFailed
 from ...legal.models import Agreement
+from ...permissions.user import get_user_permissions
 from ...users.models import AnonymousUser, Ban, BanCache
 from ...users.test import UserTestCase
 from ..pipeline import (
@@ -45,7 +46,11 @@ def create_request(user_ip="0.0.0.0", data=None):
     request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
+    request.user_permissions = get_user_permissions(
+        request.user, request.cache_versions
+    )
     request.user_ip = user_ip
+    request.is_htmx = False
     return request
 
 

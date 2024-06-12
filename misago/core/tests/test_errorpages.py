@@ -7,6 +7,7 @@ from django.urls import reverse
 from ...acl.useracl import get_user_acl
 from ...conf.dynamicsettings import DynamicSettings
 from ...conftest import get_cache_versions
+from ...permissions.user import get_user_permissions
 from ...users.models import AnonymousUser
 from ..testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
 from ..utils import encode_json_html
@@ -96,9 +97,13 @@ def create_request(url):
     request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
+    request.user_permissions = get_user_permissions(
+        request.user, request.cache_versions
+    )
     request.include_frontend_context = True
     request.frontend_context = {}
     request.socialauth = {}
+    request.is_htmx = False
     return request
 
 

@@ -1,6 +1,7 @@
 # This compose setup is only meant for local development of Misago itself
 # This is not for running your Misago site in docker
 version: "3.0"
+
 services:
   postgres:
     image: postgres:15
@@ -10,9 +11,11 @@ services:
       - POSTGRES_PASSWORD=misago
     ports:
       - '127.0.0.1:5432:5432'
+
   redis:
     image: redis:6
     restart: unless-stopped
+
   misago:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -36,9 +39,10 @@ services:
       - redis
     tty: true
     volumes:
-      # Map in the entire project into the container
-      # This makes sure files in the container updates on the fly as we were working locally
+      # Map the entire project into the container
+      # This makes sure files in the container update on the fly as we were working locally
       - .:/app:Z
+
   celery-worker:
     build: .
     command: celery -A devproject worker --loglevel=info
@@ -54,6 +58,13 @@ services:
       - redis
     tty: true
     volumes:
-      # Map in the entire project into the container
-      # This makes sure files in the container updates on the fly as we were working locally
+      # Map the entire project into the container
+      # This makes sure files in the container update on the fly as we were working locally
       - .:/app:Z
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - 1025:1025
+      - 8025:8025
+    restart: unless-stopped

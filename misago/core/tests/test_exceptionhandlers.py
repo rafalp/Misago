@@ -1,3 +1,5 @@
+import json
+
 from django.core import exceptions as django_exceptions
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -85,3 +87,47 @@ class HandleAPIExceptionTests(TestCase):
         response = exceptionhandler.handle_api_exception(Http404(), None)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.data["detail"], "Not found.")
+
+
+def test_misago_handler_handles_htmx_404_exception_with_message(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_exception(
+        request, Http404("Thread not found")
+    )
+    assert response.status_code == 404
+    assert response["content-type"] == "application/json"
+    assert json.loads(response.content) == {"error": "Thread not found"}
+
+
+def test_misago_handler_handles_htmx_404_exception_without_message(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_exception(request, Http404())
+    assert response.status_code == 404
+    assert response["content-type"] == "text/html; charset=utf-8"
+    assert not response.content
+
+
+def test_misago_handler_handles_htmx_403_exception_with_message(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_exception(
+        request, PermissionDenied("Thread is closed")
+    )
+    assert response.status_code == 403
+    assert response["content-type"] == "application/json"
+    assert json.loads(response.content) == {"error": "Thread is closed"}
+
+
+def test_misago_handler_handles_htmx_403_exception_without_message(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_exception(request, PermissionDenied())
+    assert response.status_code == 403
+    assert response["content-type"] == "text/html; charset=utf-8"
+    assert not response.content

@@ -112,8 +112,44 @@ class EditGroupForm(forms.ModelForm):
         empty_label=pgettext_lazy("admin group form", "(Don't copy permissions)"),
     )
 
+    # Permissions
+
+    can_change_username = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can change username"),
+    )
+    username_changes_limit = forms.IntegerField(
+        label=pgettext_lazy("admin group permissions form", "Limit username changes"),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter zero to don't limit username changes.",
+        ),
+        min_value=0,
+    )
+    username_changes_expire = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Expire old username changes after"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of hours since the change after which it no longer counts towards the limit, or enter zero for old username changes to always count.",
+        ),
+        min_value=0,
+    )
+    username_changes_span = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Minimum time between changes"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the minimum time between changes in hours, or enter zero to not limit the time between changes.",
+        ),
+        min_value=0,
+    )
+
     can_see_user_profiles = YesNoSwitch(
-        label=pgettext_lazy("admin group form", "Can see other users profiles"),
+        label=pgettext_lazy(
+            "admin group permissions form", "Can see other users profiles"
+        ),
     )
 
     class Meta:
@@ -127,6 +163,10 @@ class EditGroupForm(forms.ModelForm):
             "css_suffix",
             "is_page",
             "is_hidden",
+            "can_change_username",
+            "username_changes_limit",
+            "username_changes_expire",
+            "username_changes_span",
             "can_see_user_profiles",
         ]
 

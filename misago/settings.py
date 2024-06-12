@@ -3,6 +3,7 @@
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
+    "MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES",
     "MISAGO_FORUM_ADDRESS_HISTORY",
     "MISAGO_MIDDLEWARE",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
@@ -34,12 +35,15 @@ INSTALLED_APPS = [
     "social_django",
     # Misago apps
     "misago.admin",
+    "misago.account",
     "misago.acl",
     "misago.analytics",
     "misago.cache",
     "misago.categories",
     "misago.core",
     "misago.conf",
+    "misago.forms",
+    "misago.htmx",
     "misago.icons",
     "misago.legal",
     "misago.themes",
@@ -48,10 +52,12 @@ INSTALLED_APPS = [
     "misago.middleware",
     "misago.notifications",
     "misago.oauth2",
+    "misago.pagination",
     "misago.parser",
     "misago.permissions",
     "misago.plugins",
     "misago.postgres",
+    "misago.profile",
     "misago.readtracker",
     "misago.search",
     "misago.socialauth",
@@ -72,6 +78,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.tz",
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
+    "misago.context_processors.htmx.is_request_htmx",
+    "misago.context_processors.permissions.user_permissions",
     "misago.acl.context_processors.user_acl",
     "misago.conf.context_processors.conf",
     "misago.conf.context_processors.og_image",
@@ -100,6 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 MISAGO_MIDDLEWARE = [
     "misago.users.middleware.RealIPMiddleware",
+    "misago.middleware.htmx.htmx_middleware",
     "misago.core.middleware.FrontendContextMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -127,3 +136,5 @@ MISAGO_PARSER_MAX_POSTS = 20
 MISAGO_PARSER_MAX_USERS = 25
 
 MISAGO_FORUM_ADDRESS_HISTORY = []
+
+MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES = 48  # Hours

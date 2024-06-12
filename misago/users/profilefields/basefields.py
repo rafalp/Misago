@@ -95,6 +95,7 @@ class ChoiceProfileField(ProfileField):
             help_text=self.get_help_text(user),
             initial=user.profile_fields.get(self.fieldname),
             choices=self.get_choices(user),
+            widget=forms.RadioSelect(),
             disabled=self.readonly,
             required=False,
         )

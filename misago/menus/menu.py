@@ -54,12 +54,29 @@ class Menu:
 
         return item
 
-    def get_items(self, request: HttpRequest) -> list["BoundMenuItem"]:
-        final_items: list["BoundMenuItem"] = []
+    def bind_to_request(self, request: HttpRequest) -> "BoundMenu":
+        bound_items: list["BoundMenuItem"] = []
         for item in self.items:
             if bound_item := item.bind_to_request(request):
-                final_items.append(bound_item)
-        return final_items
+                bound_items.append(bound_item)
+
+        return BoundMenu(bound_items)
+
+
+class BoundMenu:
+    __slots__ = ("active", "items")
+
+    active: Optional["BoundMenuItem"]
+    items: list["BoundMenuItem"]
+
+    def __init__(self, items: list["BoundMenuItem"]):
+        self.active: Optional["BoundMenuItem"] = None
+        self.items: list["BoundMenuItem"] = items
+
+        for item in items:
+            if item.active:
+                self.active = item
+                break
 
 
 @dataclass(frozen=True)

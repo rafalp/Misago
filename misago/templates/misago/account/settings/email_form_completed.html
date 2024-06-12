@@ -1,0 +1,34 @@
+{% load i18n misago_forms misago_capture %}
+{% if is_request_htmx %}
+{% include "misago/snackbars.html" %}
+{% endif %}
+<div id="misago-htmx-root">
+  <div class="panel panel-default panel-form">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {% trans "Confirm email address change" context "account email page" %}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {% capture trimmed as new_email %}
+        <strong>{{ new_email }}</strong>
+      {% endcapture %}
+      <p>
+        {% blocktrans trimmed with email=new_email|safe context "account email page" %}
+          To confirm the change of your email address please click the confirmation link in a message that was sent to "{{ email }}".
+        {% endblocktrans %}
+      </p>
+    </div>
+    <div class="panel-footer panel-footer-sticky">
+      <a
+        href="{% url 'misago:account-email' %}"
+        class="btn btn-default"
+        hx-get="{% url 'misago:account-email' %}"
+        hx-target="#misago-htmx-root"
+        hx-swap="outerHTML"
+      >
+        {% trans "Go back" context "account email go back btn" %}
+      </a>
+    </div>
+  </div>
+</div>

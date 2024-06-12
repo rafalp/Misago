@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="container page-header-container">
+  <div class="page-header page-header-account-settings">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-account-settings">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              <div class="flex-row">
+                <div class="flex-row-section flex-row-section-auto">
+                  <div class="flex-row-col">
+                    <h1>{% trans "Account settings" context "account settings page" %}</h1>
+                  </div>
+                  <div class="flex-row-col hidden-xs hidden-md hidden-lg flex-row-col-shrink">
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-default btn-outline btn-icon dropdown-toggle" title="{% trans 'Toggle menu' context 'account settings page' %}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="material-icon">menu</span>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        {% include "misago/account/settings/menu_dropdown.html" %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-row-section hidden-sm hidden-md hidden-lg">
+                  <div class="flex-row-col">
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-default btn-outline btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if account_menu.active.icon %}
+                          <span class="material-icon">{{ account_menu.active.icon }}</span>
+                        {% endif %}
+                        {{ account_menu.active.label }}
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        {% include "misago/account/settings/menu_dropdown.html" %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -76,8 +76,11 @@
     <div id="snackbar-mount"></div>
 
     <div id="misago-container" {% if misago_agreement %}aria-hidden="true"{% endif %}>
+      {% include "misago/ajax_indicator.html" %}
       {% include "misago/jumbotron.html" %}
       {% include "misago/navbar.html" %}
+      {% include "misago/messages.html" %}
+      {% include "misago/snackbars.html" with inert=True %}
 
       <div id="page-mount">
         {% block content %}{% endblock content %}

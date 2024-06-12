@@ -63,9 +63,9 @@ Preferred way to run Misago development instances on your machine is with [Docke
 
 To start, clone the repository and run `./dev init` command in your terminal. This will build necessary docker containers, install python dependencies and initialize the database. After command does its magic, you will be able to start development server using the `docker compose up` command.
 
-After development server starts, visit the `http://127.0.0.1:8000/` in your browser to see your Misago installation.
+After development server starts, visit the <http://127.0.0.1:8000/> in your browser to see your Misago installation.
 
-Admin Control Panel is available under the `http://127.0.0.1:8000/admincp/` address. To log in to it use `Admin` username and `password` password.
+Admin Control Panel is available under the <http://127.0.0.1:8000/admincp/> address. To log in to it use `Admin` username and `password` password.
 
 The `./dev` utility implements other features besides the `init`. Run it without any arguments to get the list of available actions.
 
@@ -104,6 +104,13 @@ To work on admin's JavaScript or CSS, `cd` to `misago-admin` and install depende
 
 * `npm run build`: does production build of assets, bundling and minifying JavaScript and CSS files.
 * `npm run dev`: does quick build for JavaScript and CSS assets, only bundling but not minifying. Also does a rebuild when one of the files changes.
+
+
+### E-mails
+
+Misago uses [Mailpit](https://github.com/axllent/mailpit) to capture emails sent from the development instance.
+
+To browse those emails, visit the <http://127.0.0.1:8025> in your browser for the web interface.
 
 
 Providing feedback and contributing
