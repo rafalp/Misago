@@ -377,6 +377,9 @@ class AccountEmailConfirm(AccountSettingsView):
 
 
 def account_email_confirm_change(request, user_id, token):
+    if request.settings.enable_oauth2_client:
+        raise Http404()
+
     user = get_object_or_404(User.objects, id=user_id, is_active=True)
 
     try:
@@ -390,14 +393,12 @@ def account_email_confirm_change(request, user_id, token):
                 "message": str(e),
                 "error_code": str(e.code),
             },
-            status=400,
         )
     except ValidationError as e:
         return render(
             request,
             "misago/account/settings/email_change_error.html",
-            {"message": e.error_list[0]},
-            status=400,
+            {"message": str(e.messages[0])},
         )
 
     if new_email != user.email:
