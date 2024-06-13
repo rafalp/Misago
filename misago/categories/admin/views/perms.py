@@ -7,13 +7,13 @@ from ....acl.admin.views import RoleAdmin, RolesList
 from ....acl.cache import clear_acl_cache
 from ....acl.models import Role
 from ....admin.views import generic
+from ....admin.categories.views import CategoriesList, CategoryAdmin
 from ...models import Category, CategoryRole, RoleCategoryACL
 from ..forms import (
     CategoryRoleForm,
     CategoryRolesACLFormFactory,
     RoleCategoryACLFormFactory,
 )
-from .categories import CategoriesList, CategoryAdmin
 
 
 class CategoryRoleAdmin(generic.AdminBaseMixin):

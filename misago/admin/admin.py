@@ -1,6 +1,7 @@
 from django.urls import path
 from django.utils.translation import pgettext_lazy
 
+from .categories import views as categories
 from .groups import views as groups
 from .moderators import views as moderators
 
@@ -13,6 +14,12 @@ class MisagoAdminExtension:
             icon="fas fa-adjust",
             after="users:index",
             namespace="groups",
+        )
+        site.add_node(
+            name=pgettext_lazy("admin node", "Categories"),
+            icon="fas fa-sitemap",
+            after="ranks:index",
+            namespace="categories",
         )
         site.add_node(
             name=pgettext_lazy("admin node", "Moderators"),
@@ -42,6 +49,28 @@ class MisagoAdminExtension:
                 name="members-main",
             ),
             path("delete/<int:pk>/", groups.DeleteView.as_view(), name="delete"),
+        )
+
+        urlpatterns.namespace("categories/", "categories")
+        urlpatterns.patterns(
+            "categories",
+            path("", categories.CategoriesList.as_view(), name="index"),
+            path("new/", categories.NewCategory.as_view(), name="new"),
+            path("edit/<int:pk>/", categories.EditCategory.as_view(), name="edit"),
+            path(
+                "permissions/<int:pk>/",
+                categories.CategoryPermissionsView.as_view(),
+                name="permissions",
+            ),
+            path(
+                "move/down/<int:pk>/",
+                categories.MoveDownCategory.as_view(),
+                name="down",
+            ),
+            path("move/up/<int:pk>/", categories.MoveUpCategory.as_view(), name="up"),
+            path(
+                "delete/<int:pk>/", categories.DeleteCategory.as_view(), name="delete"
+            ),
         )
 
         urlpatterns.namespace("moderators/", "moderators")

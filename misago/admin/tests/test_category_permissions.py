@@ -1,11 +1,11 @@
 import pytest
 from django.urls import reverse
 
-from ....cache.enums import CacheName
-from ....cache.test import assert_invalidates_cache
-from ....permissions.enums import CategoryPermission
-from ....permissions.models import CategoryGroupPermission
-from ....test import assert_contains, assert_has_error_message
+from ...cache.enums import CacheName
+from ...cache.test import assert_invalidates_cache
+from ...permissions.enums import CategoryPermission
+from ...permissions.models import CategoryGroupPermission
+from ...test import assert_contains, assert_has_error_message
 
 
 def test_category_permissions_form_is_rendered(

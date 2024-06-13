@@ -67,6 +67,9 @@
     <legend>{% trans "Behavior" context "admin category form" %}</legend>
 
     {% form_row form.copy_permissions %}
+    {% form_row form.allow_polls %}
+    {% form_row form.allow_list_access %}
+    {% form_row form.limit_threads_visibility %}
     {% form_row form.is_closed %}
 
   </fieldset>
