@@ -1,10 +1,18 @@
+from typing import TYPE_CHECKING, Union
+
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
 from django.shortcuts import render
 
+from ..permissions.enums import CategoryPermission
+from ..permissions.proxy import UserPermissionsProxy
 from ..readtracker.categories import get_categories_new_posts
 from ..users.models import User
 from .enums import CategoryTree
 from .models import Category
+
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
 def index(request):
@@ -18,102 +26,119 @@ def index(request):
 
 
 def get_categories_list(request: HttpRequest):
-    if not request.user_acl["visible_categories"]:
+    if not request.user_permissions.categories[CategoryPermission.SEE]:
         return []
 
-    categories_qs = Category.objects.filter(
-        id__in=request.user_acl["visible_categories"],
-        tree_id=CategoryTree.THREADS,
-        level__gt=0,
-    )
-
-    categories_map: dict[int, dict] = {}
-
-    for category in categories_qs:
-        category_permissions = request.user_acl["categories"][category.id]
-
-        if category.last_thread_id:
-            category_last_thread = {
-                "id": category.last_thread_id,
-                "title": category.last_thread_title,
-                "slug": category.last_thread_slug,
-                "last_post_on": category.last_post_on,
-                "last_poster": None,
-                "last_poster_name": category.last_poster_name,
-            }
-        else:
-            category_last_thread = None
-
-        categories_map[category.id] = {
-            "category": category,
-            "threads": category.threads,
-            "posts": category.posts,
-            "last_thread": category_last_thread,
-            "new_posts": False,
-            "is_protected": category.id
-            not in request.user_acl["browseable_categories"],
-            "is_private": not category_permissions["can_see_all_threads"],
-            "children": [],
-            "children_threads": category.threads,
-            "children_posts": category.posts,
-            "children_last_thread": category_last_thread,
-            "children_new_posts": False,
-        }
-
-    last_posters = prefetch_last_posters(request, categories_map.values())
+    categories_data = get_categories_data(request.user_permissions)
+    last_posters = prefetch_last_posters(request, categories_data.values())
     new_posts: dict[int, bool] = {}
 
     if request.user.is_authenticated:
         new_posts = get_categories_new_posts(
             request,
-            [item["category"] for item in categories_map.values()],
+            [item["category"] for item in categories_data.values()],
         )
 
     # Populate categories last posters and read states
     # Aggregate categories to their parents
-    for item in reversed(categories_map.values()):
-        category = item["category"]
+    for category_data in reversed(categories_data.values()):
+        category = category_data["category"]
 
-        if category.last_poster_id:
+        # Populate last poster objects
+        if category_data["last_thread"] and category.last_poster_id:
             last_poster = last_posters[category.last_poster_id]
-            item["last_thread"].update(
+            category_data["last_thread"].update(
                 {
                     "last_poster": last_poster,
                     "last_poster_name": last_poster.username,
                 }
             )
 
+        # Set read state
         if request.user.is_authenticated and new_posts[category.id]:
-            item["new_posts"] = True
-            item["children_new_posts"] = True
+            category_data["new_posts"] = True
+            category_data["children_new_posts"] = True
 
+        # Aggregate data from category to its parent
         if category.level > 1:
-            parent = categories_map[category.parent_id]
+            parent = categories_data[category.parent_id]
+            aggregate_category_to_its_parent(category_data, parent)
 
-            # Add item's aggregated stats to parent's
-            parent["children_threads"] += item["children_threads"]
-            parent["children_posts"] += item["children_posts"]
-
-            # Update parent's last thread if they don't have one or its older
-            item_last_thread = item["children_last_thread"]
-            parent_last_thread = parent["children_last_thread"]
-            if item_last_thread and (
-                not parent_last_thread
-                or item_last_thread["last_post_on"] > parent_last_thread["last_post_on"]
-            ):
-                parent["children_last_thread"] = item_last_thread
-
-            # Propagate to parent the new posts status
-            if item["children_new_posts"]:
-                parent["children_new_posts"] = True
-
-            parent["children"].insert(0, item)
-
+    # Return root categories
     return [
         category
-        for category in categories_map.values()
+        for category in categories_data.values()
         if category["category"].level == 1
     ]
+
+
+def get_categories_data(permissions: UserPermissionsProxy) -> dict:
+    categories_qs = Category.objects.filter(
+        id__in=permissions.categories[CategoryPermission.SEE],
+        tree_id=CategoryTree.THREADS,
+        level__gt=0,
+    )
+
+    categories_data: dict[int, dict] = {}
+
+    for category in categories_qs:
+        categories_data[category.id] = get_category_data(category, permissions)
+
+    return categories_data
+
+
+def get_category_data(category: Category, permissions: UserPermissionsProxy) -> dict:
+    if can_see_last_thread(category, permissions.user, permissions):
+        category_last_thread = {
+            "id": category.last_thread_id,
+            "title": category.last_thread_title,
+            "slug": category.last_thread_slug,
+            "last_post_on": category.last_post_on,
+            "last_poster": None,
+            "last_poster_name": category.last_poster_name,
+            "visible": (
+                category.id in permissions.categories[CategoryPermission.BROWSE]
+                or category.allow_list_access
+            ),
+        }
+    else:
+        category_last_thread = None
+
+    return {
+        "category": category,
+        "threads": category.threads,
+        "posts": category.posts,
+        "last_thread": category_last_thread,
+        "new_posts": False,
+        "can_browse": (
+            category.id in permissions.categories[CategoryPermission.BROWSE]
+            or category.allow_list_access
+        ),
+        "limit_threads_visibility": category.limit_threads_visibility,
+        "children": [],
+        "children_threads": category.threads,
+        "children_posts": category.posts,
+        "children_last_thread": category_last_thread,
+        "children_new_posts": False,
+    }
+
+
+def can_see_last_thread(
+    category: Category,
+    user: Union["User", AnonymousUser],
+    permissions: UserPermissionsProxy,
+) -> bool:
+    if not category.last_thread_id:
+        return False
+
+    if (
+        category.limit_threads_visibility
+        and category.id not in permissions.categories_moderator
+        and (user.is_anonymous or category.last_poster_id != user.id)
+    ):
+        return False
+
+    return True
 
 
 def prefetch_last_posters(
@@ -138,3 +163,22 @@ def prefetch_last_posters(
             last_posters[user.id] = user
 
     return last_posters
+
+
+def aggregate_category_to_its_parent(category: dict, parent: dict):
+    parent["children_threads"] += category["children_threads"]
+    parent["children_posts"] += category["children_posts"]
+
+    item_last_thread = category["children_last_thread"]
+    parent_last_thread = parent["children_last_thread"]
+    if item_last_thread and (
+        not parent_last_thread
+        or item_last_thread["last_post_on"] > parent_last_thread["last_post_on"]
+    ):
+        parent["children_last_thread"] = item_last_thread
+
+    # Propagate to parent the new posts status
+    if category["children_new_posts"]:
+        parent["children_new_posts"] = True
+
+    parent["children"].insert(0, category)

@@ -1,4 +1,5 @@
-from django.contrib.auth import get_user_model
+from typing import TYPE_CHECKING, Union
+
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
@@ -19,15 +20,18 @@ from .operations import (
     if_zero_or_greater,
 )
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
-def get_user_permissions(user: User | AnonymousUser, cache_versions: dict) -> dict:
+def get_user_permissions(
+    user: Union["User", AnonymousUser], cache_versions: dict
+) -> dict:
     return get_user_permissions_hook(_get_user_permissions_action, user, cache_versions)
 
 
 def _get_user_permissions_action(
-    user: User | AnonymousUser, cache_versions: dict
+    user: Union["User", AnonymousUser], cache_versions: dict
 ) -> dict:
     cache_key = get_user_permissions_cache_key(user, cache_versions)
     permissions = cache.get(cache_key)
@@ -40,7 +44,7 @@ def _get_user_permissions_action(
 
 
 def get_user_permissions_cache_key(
-    user: User | AnonymousUser, cache_versions: dict
+    user: Union["User", AnonymousUser], cache_versions: dict
 ) -> str:
     if user.is_anonymous:
         return f"anonymous:{cache_versions[CacheName.PERMISSIONS]}"
@@ -48,7 +52,7 @@ def get_user_permissions_cache_key(
     return f"{user.permissions_id}:{cache_versions[CacheName.PERMISSIONS]}"
 
 
-def build_user_permissions(user: User | AnonymousUser) -> dict:
+def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
     if user.is_anonymous:
         groups_ids = [DefaultGroupId.GUESTS]
     else:
