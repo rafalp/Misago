@@ -135,10 +135,7 @@ def _build_user_category_permissions_action(
 
     for category_id, category in categories.items():
         # Skip category if we can't see its parent
-        if (
-            category.level > 1
-            and category.parent_id not in permissions[CategoryPermission.BROWSE]
-        ):
+        if not can_see_category_parent(category, categories, permissions):
             continue
 
         # Skip category if we can't see it
@@ -161,3 +158,20 @@ def _build_user_category_permissions_action(
             permissions[CategoryPermission.ATTACHMENTS].append(category_id)
 
     return permissions
+
+
+def can_see_category_parent(
+    category: Category,
+    categories: dict[int, Category],
+    permissions: dict,
+) -> bool:
+    if category.level <= 1:
+        return True
+
+    if category.parent_id in permissions[CategoryPermission.BROWSE]:
+        return True
+
+    if category.parent_id in permissions[CategoryPermission.SEE]:
+        return categories[category.parent_id].allow_list_access
+
+    return False
