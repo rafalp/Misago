@@ -2,18 +2,18 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import pgettext_lazy
 
-from ... import THREADS_ROOT_NAME
-from ....acl.cache import clear_acl_cache
-from ....admin.views import generic
-from ....cache.enums import CacheName
-from ....cache.versions import invalidate_cache
-from ....permissions.admin import get_admin_category_permissions
-from ....permissions.copy import copy_category_permissions
-from ....permissions.models import CategoryGroupPermission
-from ....threads.threadtypes import trees_map
-from ....users.models import Group
-from ...models import Category, RoleCategoryACL
-from ..forms import CategoryFormFactory, DeleteFormFactory
+from ...acl.cache import clear_acl_cache
+from ...admin.views import generic
+from ...cache.enums import CacheName
+from ...cache.versions import invalidate_cache
+from ...categories import THREADS_ROOT_NAME
+from ...categories.models import Category, RoleCategoryACL
+from ...permissions.admin import get_admin_category_permissions
+from ...permissions.copy import copy_category_permissions
+from ...permissions.models import CategoryGroupPermission
+from ...threads.threadtypes import trees_map
+from ...users.models import Group
+from .forms import CategoryForm, DeleteCategoryForm
 
 
 class CategoryAdmin(generic.AdminBaseMixin):
@@ -61,8 +61,7 @@ class CategoriesList(CategoryAdmin, generic.ListView):
 
 
 class CategoryFormMixin:
-    def get_form_class(self, request, target):
-        return CategoryFormFactory(target)
+    form_class = CategoryForm
 
     def handle_form(self, form, request, target):
         if form.instance.pk:
@@ -162,13 +161,11 @@ class CategoryPermissionsView(CategoryAdmin, generic.PermissionsFormView):
 
 
 class DeleteCategory(CategoryAdmin, generic.ModelFormView):
+    form_class = DeleteCategoryForm
     message_submit = pgettext_lazy(
         "admin categories", 'Category "%(name)s" has been deleted.'
     )
     template_name = "delete.html"
-
-    def get_form_class(self, request, target):
-        return DeleteFormFactory(target)
 
     def handle_form(self, form, request, target):
         move_children_to = form.cleaned_data.get("move_children_to")

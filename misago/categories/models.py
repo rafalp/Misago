@@ -64,9 +64,15 @@ class Category(MPTTModel, PluginDataModel):
     short_name = models.CharField(max_length=255, null=True, blank=True)
     color = models.CharField(max_length=7, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    css_class = models.CharField(max_length=255, null=True, blank=True)
+    allow_polls = models.BooleanField(default=True)
+    allow_list_access = models.BooleanField(default=False)
+    limit_threads_visibility = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
+    unapproved_threads = models.PositiveIntegerField(default=0)
+    unapproved_posts = models.PositiveIntegerField(default=0)
     last_post_on = models.DateTimeField(null=True, blank=True)
     last_thread = models.ForeignKey(
         "misago_threads.Thread",
@@ -98,7 +104,6 @@ class Category(MPTTModel, PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
-    css_class = models.CharField(max_length=255, null=True, blank=True)
 
     objects = CategoryManager()
 
