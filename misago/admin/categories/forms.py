@@ -201,7 +201,7 @@ class CategoryForm(forms.ModelForm):
             initial=self.instance.parent,
             empty_label=None,
         )
-    
+
     def setup_copy_permissions_field(self):
         self.fields["copy_permissions"] = AdminCategoryChoiceField(
             label=pgettext_lazy("admin category form", "Copy permissions"),
@@ -210,12 +210,10 @@ class CategoryForm(forms.ModelForm):
                 "You can replace this category permissions with permissions copied from the category selected here.",
             ),
             queryset=Category.objects.all_categories(),
-            empty_label=pgettext_lazy(
-                "admin category form", "Don't copy permissions"
-            ),
+            empty_label=pgettext_lazy("admin category form", "Don't copy permissions"),
             required=False,
         )
-    
+
     def setup_archive_pruned_in_field(self):
         self.fields["archive_pruned_in"] = AdminCategoryChoiceField(
             label=pgettext_lazy("admin category form", "Archive"),
@@ -259,7 +257,7 @@ class DeleteCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = []
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setup_fields()
@@ -283,7 +281,9 @@ class DeleteCategoryForm(forms.ModelForm):
             self.fields["move_children_to"] = AdminCategoryChoiceField(
                 label=pgettext_lazy("admin category form", "Move child categories to"),
                 queryset=children_queryset,
-                empty_label=pgettext_lazy("admin category form", "Delete with category"),
+                empty_label=pgettext_lazy(
+                    "admin category form", "Delete with category"
+                ),
                 required=False,
             )
 
