@@ -4,31 +4,36 @@
 
 // Make category read status icon visually larger
 .category-main .media-left {
+  padding-right: 0;
+
   .read-status {
-    background: @category-read-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 36px;
+    width: 36px;
+    margin-top: 2px;
+
+    background: @category-read-bg;
     border-radius: @border-radius-base;
-    padding: @padding-small-vertical (@padding-large-vertical - 2px);
   }
 
   .material-icon {
-    height: 14px;
-    width: 14px;
+    height: 28px;
+    width: 28px;
 
-    color: @gray;
-    font-size: 14px;
-    line-height: 14px;
+    color: @category-read-color;
+    font-size: 28px;
+    line-height: 28px;
   }
 
   .read-status.item-new {
-    background-color: @category-new-color;
+    background: @category-new-bg;
 
     .material-icon {
-      color: #fff;
+      color: @category-new-color;
     }
-  }
-
-  @media screen and (min-width: @screen-sm-min) {
-    padding: @padding-small-vertical 0px;
   }
 }
 
@@ -80,10 +85,22 @@
   }
 }
 
+// Align last poster avatar with media content
+.category-last-thread .last-poster-avatar {
+  margin-top: 2px;
+}
+
 // Round last poster's up avatar
 .category-last-thread img {
   background-color: #fff;
   border-radius: @border-radius-base;
+}
+
+// Style last poster icon
+.category-last-thread .last-poster-icon {
+  color: @gray-lighter;
+  box-shadow: inset 0px 0px 0px 2px @gray-lighter;
+  border-radius: @border-radius-small;
 }
 
 // Last thread
@@ -129,10 +146,6 @@
 // Last thread message
 .category-thread-message {
   color: @gray-light;
-
-  .material-icon {
-    margin-right: @padding-base-vertical / 2;
-  }
 
   @media screen and (max-width: @screen-xs-max) {
     padding-top: @line-height-computed * 0.75;

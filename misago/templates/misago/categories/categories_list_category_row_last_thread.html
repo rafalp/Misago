@@ -5,11 +5,11 @@
       <div class="media-left hidden-xs">
         {% if last_thread.last_poster %}
           <a href="{{ last_thread.last_poster.get_absolute_url }}" class="last-poster-avatar" title="{{ last_thread.last_poster_name }}">
-            <img src="{{ last_thread.last_poster|avatar:40 }}" width="40" height="40" alt="">
+            <img src="{{ last_thread.last_poster|avatar:36 }}" width="36" height="36" alt="">
           </a>
         {% else %}
           <span class="last-poster-avatar" title="{{ last_thread.last_poster_name }}">
-            <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
+            <img src="{{ BLANK_AVATAR_URL }}" width="36" height="36" alt="">
           </span>
         {% endif %}
       </div>
@@ -52,9 +52,11 @@
   {% elif category_data.limit_threads_visibility %}
     <div class="media category-thread-message">
       <div class="media-left">
-        <span class="material-icon">
-          info_outline
-        </span>
+        <div class="last-poster-icon">
+          <span class="material-icon">
+            info_outline
+          </span>
+        </div>
       </div>
       <div class="media-body">
         <p>
@@ -65,9 +67,11 @@
   {% else %}
     <div class="media category-thread-message">
       <div class="media-left">
-        <span class="material-icon">
-          info_outline
-        </span>
+        <div class="last-poster-icon">
+          <span class="material-icon">
+            info_outline
+          </span>
+        </div>
       </div>
       <div class="media-body">
         <p>

@@ -36,6 +36,10 @@
   }
 }
 
+.category-last-thread .last-poster-avatar {
+  display: block;
+}
+
 .category-last-thread .thread-title-muted {
   color: @gray-light;
   font-style: italic;
@@ -51,6 +55,16 @@
   .media-left,
   .media-body {
     display: block;
+  }
+
+  // Make icon equal in sizing with avatar
+  .last-poster-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
   }
 
   .material-icon {
