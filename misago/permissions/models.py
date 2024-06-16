@@ -1,9 +1,11 @@
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from ..users.enums import DefaultGroupId
+from .moderatordata import ModeratorData
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -15,17 +17,29 @@ class CategoryGroupPermission(models.Model):
     permission = models.CharField(max_length=32)
 
 
+@dataclass(frozen=True)
+class ModeratorData:
+    is_global: bool
+    categories_ids: set[int]
+
+
 class ModeratorManager(models.Manager):
-    def moderated_categories_ids(self, user: "User") -> list[int]:
-        all_categories: list[int] = []
+    def get_moderator_data(self, user: "User") -> ModeratorData:
+        mod_is_global: bool = False
+        mod_categories: list[int] = []
+
         queryset = Moderator.objects.filter(
             models.Q(group__in=user.groups_ids) | models.Q(user=user)
-        ).values_list("categories", flat=True)
+        ).values_list("is_global", "categories")
 
-        for categories in queryset:
-            all_categories += categories
+        for is_global, categories in queryset:
+            mod_is_global = mod_is_global or is_global
+            mod_categories += categories
 
-        return list(set(all_categories))
+        return ModeratorData(
+            is_global=mod_is_global,
+            categories_ids=set(mod_categories),
+        )
 
 
 class Moderator(models.Model):

@@ -15,7 +15,7 @@
       </div>
       <div class="media-body">
         <div class="media-heading">
-          {% if last_thread.visible %}
+          {% if last_thread.is_visible %}
             <a class="item-title thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
               {{ last_thread.title }}
             </a>

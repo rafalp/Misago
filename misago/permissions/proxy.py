@@ -1,11 +1,12 @@
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any, Union, cast
 
 from django.contrib.auth.models import AnonymousUser
 
 from ..users.enums import DefaultGroupId
 from .enums import CategoryPermission
 from .models import Moderator
+from .moderatordata import ModeratorData
 from .user import get_user_permissions
 
 if TYPE_CHECKING:
@@ -24,19 +25,33 @@ class UserPermissionsProxy:
         self.cache_versions = cache_versions
         self.accessed_permissions = False
 
+    def __getattr__(self, name: str) -> Any:
+        return self.permissions[name]
+
     @cached_property
     def permissions(self) -> dict:
+        self.accessed_permissions = True
         return get_user_permissions(self.user, self.cache_versions)
+
+    @cached_property
+    def moderator_data(self) -> ModeratorData | None:
+        if self.user.is_anonymous:
+            return None
+
+        return Moderator.objects.get_moderator_data(self.user)
 
     @property
     def is_global_moderator(self) -> bool:
         if self.user.is_anonymous:
             return False
 
-        return bool(
+        if (
             DefaultGroupId.ADMINS in self.user.groups_ids
             or DefaultGroupId.MODERATORS in self.user.groups_ids
-        )
+        ):
+            return True
+
+        return self.moderator_data.is_global
 
     @cached_property
     def categories_moderator(self) -> list[int]:
@@ -52,11 +67,5 @@ class UserPermissionsProxy:
         browsed_categories = set(
             self.permissions["categories"][CategoryPermission.BROWSE]
         )
-        moderated_categories = set(
-            Moderator.objects.moderated_categories_ids(self.user)
-        )
 
-        return list(browsed_categories.intersection(moderated_categories))
-
-    def __getattr__(self, name: str) -> Any:
-        return self.permissions[name]
+        return list(browsed_categories.intersection(self.moderator_data.categories_ids))

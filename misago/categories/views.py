@@ -96,7 +96,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
             "last_post_on": category.last_post_on,
             "last_poster": None,
             "last_poster_name": category.last_poster_name,
-            "visible": (
+            "is_visible": (
                 category.id in permissions.categories[CategoryPermission.BROWSE]
                 or category.allow_list_access
             ),
@@ -171,9 +171,13 @@ def aggregate_category_to_its_parent(category: dict, parent: dict):
 
     item_last_thread = category["children_last_thread"]
     parent_last_thread = parent["children_last_thread"]
-    if item_last_thread and (
-        not parent_last_thread
-        or item_last_thread["last_post_on"] > parent_last_thread["last_post_on"]
+    if (
+        item_last_thread
+        and item_last_thread["is_visible"]
+        and (
+            not parent_last_thread
+            or item_last_thread["last_post_on"] > parent_last_thread["last_post_on"]
+        )
     ):
         parent["children_last_thread"] = item_last_thread
 
