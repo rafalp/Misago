@@ -1,4 +1,5 @@
-from ..models import Moderator
+from ..enums import CategoryPermission
+from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 
 
@@ -93,7 +94,7 @@ def test_user_permissions_proxy_returns_custom_moderators_secondary_member_globa
         assert proxy.is_global_moderator
 
 
-def test_user_permissions_proxy_returns_member_global_moderator_permission(
+def test_user_permissions_proxy_returns_true_for_member_global_moderator_permission(
     django_assert_num_queries, user, cache_versions
 ):
     Moderator.objects.create(is_global=True, user=user)
@@ -103,9 +104,87 @@ def test_user_permissions_proxy_returns_member_global_moderator_permission(
         assert proxy.is_global_moderator
 
 
-def test_user_permissions_proxy_returns_member_global_moderator_no_permission(
+def test_user_permissions_proxy_returns_false_for_member_without_global_moderator_permission(
     django_assert_num_queries, user, cache_versions
 ):
     with django_assert_num_queries(1):
         proxy = UserPermissionsProxy(user, cache_versions)
         assert not proxy.is_global_moderator
+
+
+def test_user_permissions_proxy_returns_false_for_member_without_global_moderator_permission(
+    django_assert_num_queries, user, cache_versions
+):
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert not proxy.is_global_moderator
+
+
+def test_user_permissions_proxy_returns_false_for_category_moderator(
+    django_assert_num_queries, user, cache_versions, other_category
+):
+    Moderator.objects.create(is_global=False, user=user, categories=[other_category.id])
+
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert not proxy.is_global_moderator
+
+
+def test_user_permissions_proxy_returns_list_of_moderated_categories_ids_for_local_moderator(
+    django_assert_num_queries, user, cache_versions, other_category
+):
+    CategoryGroupPermission.objects.create(
+        category=other_category,
+        group=user.group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=other_category,
+        group=user.group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    Moderator.objects.create(is_global=False, user=user, categories=[other_category.id])
+
+    proxy = UserPermissionsProxy(user, cache_versions)
+    proxy.permissions
+
+    with django_assert_num_queries(1):
+        assert proxy.categories_moderator == [other_category.id]
+
+
+def test_user_permissions_proxy_excludes_not_browseable_categories_from_moderated_categories(
+    django_assert_num_queries, user, cache_versions, other_category
+):
+    CategoryGroupPermission.objects.create(
+        category=other_category,
+        group=user.group,
+        permission=CategoryPermission.SEE,
+    )
+
+    Moderator.objects.create(is_global=False, user=user, categories=[other_category.id])
+
+    proxy = UserPermissionsProxy(user, cache_versions)
+    proxy.permissions
+
+    with django_assert_num_queries(1):
+        assert proxy.categories_moderator == []
+
+
+def test_user_permissions_proxy_returns_false_global_moderator_for_anonymous_user(
+    django_assert_num_queries, db, anonymous_user, cache_versions
+):
+    proxy = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with django_assert_num_queries(0):
+        assert not proxy.is_global_moderator
+
+
+def test_user_permissions_proxy_returns_no_moderated_categories_for_anonymous_user(
+    django_assert_num_queries, db, anonymous_user, cache_versions
+):
+    proxy = UserPermissionsProxy(anonymous_user, cache_versions)
+    proxy.permissions
+
+    with django_assert_num_queries(0):
+        assert not proxy.categories_moderator

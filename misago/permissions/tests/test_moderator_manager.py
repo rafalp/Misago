@@ -10,36 +10,36 @@ def test_moderator_manager_get_moderator_data_returns_empty_data_for_user_if_non
 
 
 def test_moderator_manager_get_moderator_data_returns_categories_ids_for_user(
-    root_category, child_category, user
+    sibling_category, child_category, user
 ):
     Moderator.objects.create(
         is_global=False,
         user=user,
-        categories=[root_category.id, child_category.id],
+        categories=[sibling_category.id, child_category.id],
     )
 
     data = Moderator.objects.get_moderator_data(user)
     assert not data.is_global
-    assert data.categories_ids == set([root_category.id, child_category.id])
+    assert data.categories_ids == set([sibling_category.id, child_category.id])
 
 
 def test_moderator_manager_get_moderator_data_sums_categories_ids_for_user(
-    root_category, child_category, user
+    sibling_category, child_category, user
 ):
     Moderator.objects.create(
         is_global=False,
         user=user,
-        categories=[root_category.id],
+        categories=[sibling_category.id],
     )
     Moderator.objects.create(
         is_global=False,
         user=user,
-        categories=[root_category.id, child_category.id],
+        categories=[sibling_category.id, child_category.id],
     )
 
     data = Moderator.objects.get_moderator_data(user)
     assert not data.is_global
-    assert data.categories_ids == set([root_category.id, child_category.id])
+    assert data.categories_ids == set([sibling_category.id, child_category.id])
 
 
 def test_moderator_manager_get_moderator_data_returns_global_flag_for_user(user):
@@ -51,7 +51,7 @@ def test_moderator_manager_get_moderator_data_returns_global_flag_for_user(user)
 
 
 def test_moderator_manager_get_moderator_data_returns_categories_ids_for_user_group(
-    root_category, child_category, user, members_group, custom_group
+    sibling_category, child_category, user, members_group, custom_group
 ):
     user.set_groups(members_group, [custom_group])
     user.save()
@@ -59,16 +59,16 @@ def test_moderator_manager_get_moderator_data_returns_categories_ids_for_user_gr
     Moderator.objects.create(
         is_global=False,
         group=custom_group,
-        categories=[root_category.id, child_category.id],
+        categories=[sibling_category.id, child_category.id],
     )
 
     data = Moderator.objects.get_moderator_data(user)
     assert not data.is_global
-    assert data.categories_ids == set([root_category.id, child_category.id])
+    assert data.categories_ids == set([sibling_category.id, child_category.id])
 
 
 def test_moderator_manager_get_moderator_data_sums_categories_ids_for_user_group(
-    root_category, child_category, user, members_group, custom_group
+    sibling_category, child_category, user, members_group, custom_group
 ):
     user.set_groups(members_group, [custom_group])
     user.save()
@@ -76,17 +76,17 @@ def test_moderator_manager_get_moderator_data_sums_categories_ids_for_user_group
     Moderator.objects.create(
         is_global=False,
         group=custom_group,
-        categories=[root_category.id],
+        categories=[sibling_category.id],
     )
     Moderator.objects.create(
         is_global=False,
         group=custom_group,
-        categories=[root_category.id, child_category.id],
+        categories=[sibling_category.id, child_category.id],
     )
 
     data = Moderator.objects.get_moderator_data(user)
     assert not data.is_global
-    assert data.categories_ids == set([root_category.id, child_category.id])
+    assert data.categories_ids == set([sibling_category.id, child_category.id])
 
 
 def test_moderator_manager_get_moderator_data_returns_global_flag_for_user_group(
