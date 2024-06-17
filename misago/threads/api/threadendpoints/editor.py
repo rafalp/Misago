@@ -3,10 +3,9 @@ from django.utils.translation import pgettext
 from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
-from ....categories import THREADS_ROOT_NAME
+from ....categories.enums import CategoryTree
 from ....categories.models import Category
 from ...permissions import can_start_thread
-from ...threadtypes import trees_map
 
 
 def thread_start_editor(request):
@@ -21,7 +20,7 @@ def thread_start_editor(request):
 
     queryset = Category.objects.filter(
         pk__in=request.user_acl["browseable_categories"],
-        tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME),
+        tree_id=CategoryTree.THREADS,
     ).order_by("-lft")
 
     for category in queryset:

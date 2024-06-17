@@ -78,6 +78,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.tz",
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
+    "misago.context_processors.categories.categories",
     "misago.context_processors.htmx.is_request_htmx",
     "misago.context_processors.permissions.user_permissions",
     "misago.acl.context_processors.user_acl",
@@ -99,7 +100,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.markup.context_processors.preload_api_url",
     "misago.threads.context_processors.preload_threads_urls",
     "misago.users.context_processors.preload_user_json",
-    "misago.categories.context_processors.preload_categories_json",
     "misago.socialauth.context_processors.preload_socialauth_json",
     # Note: keep frontend_context processor last for previous processors
     # to be able to expose data UI app via request.frontend_context
@@ -122,6 +122,7 @@ MISAGO_MIDDLEWARE = [
     "misago.socialauth.middleware.socialauth_providers_middleware",
     "misago.users.middleware.UserMiddleware",
     "misago.middleware.permissions.permissions_middleware",
+    "misago.middleware.categories.categories_middleware",
     "misago.acl.middleware.user_acl_middleware",
     "misago.core.middleware.ExceptionHandlerMiddleware",
     "misago.users.middleware.OnlineTrackerMiddleware",
