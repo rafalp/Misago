@@ -8,7 +8,7 @@ from ..conf import settings
 from ..core.utils import slugify
 from ..plugins.models import PluginDataModel
 from ..threads.threadtypes import trees_map
-from .enums import CategoryTree
+from .enums import CategoryTree, CategoryChildrenComponent
 
 
 class CategoryManager(TreeManager):
@@ -23,9 +23,6 @@ class CategoryManager(TreeManager):
         if not include_root:
             queryset = queryset.filter(level__gt=0)
         return queryset.order_by("lft")
-
-    def clear_cache(self):
-        raise NotImplementedError("REPLACE ME")
 
 
 class Category(MPTTModel, PluginDataModel):
@@ -43,6 +40,14 @@ class Category(MPTTModel, PluginDataModel):
     delay_browse_check = models.BooleanField(default=False)
     limit_threads_visibility = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+    is_vanilla = models.BooleanField(default=False)
+    list_children_threads = models.BooleanField(default=True)
+    children_categories_component = models.CharField(
+        max_length=12,
+        null=False,
+        blank=False,
+        default=CategoryChildrenComponent.FULL,
+    )
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     unapproved_threads = models.PositiveIntegerField(default=0)

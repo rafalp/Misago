@@ -20,11 +20,29 @@ class CategoriesProxy:
     def categories_list(self) -> list[dict]:
         return list(self.categories.values())
 
-    @cached_property
-    def top_categories_list(self) -> list[dict]:
-        return [
-            category for category in self.categories_list if not category["parent_id"]
-        ]
+    def get_categories_menu(self) -> list[dict]:
+        top_categories: dict[int, dict] = {}
+        for item in self.categories_list:
+            category = item.copy()
+            category["children"] = []
+
+            if category["parent_id"] is None:
+                top_categories[category["id"]] = category
+            elif category["parent_id"] in top_categories:
+                parent_category = top_categories[category["parent_id"]]
+                parent_category["children"].append(category)
+
+        # Flatten menu for React.js
+        menu_items: list[dict] = []
+        for category in top_categories.values():
+            if not category["is_vanilla"] or category["children"]:
+                children = category.pop("children")
+                menu_items.append(category)
+                menu_items += children
+                if children:
+                    menu_items[-1]["last_child"] = True
+
+        return menu_items
 
     def get_category_parents(
         self, category_id: int, include_self: bool = True

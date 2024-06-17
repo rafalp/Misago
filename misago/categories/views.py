@@ -66,9 +66,7 @@ def get_categories_list(request: HttpRequest):
 
     # Return root categories
     return [
-        category
-        for category in categories_data.values()
-        if category["category"].level == 1
+        category for category in categories_data.values() if show_top_category(category)
     ]
 
 
@@ -186,3 +184,13 @@ def aggregate_category_to_its_parent(category: dict, parent: dict):
         parent["children_new_posts"] = True
 
     parent["children"].insert(0, category)
+
+
+def show_top_category(category: dict) -> bool:
+    if category["category"].level != 1:
+        return False
+
+    if category["category"].is_vanilla and not category["children"]:
+        return False
+
+    return True

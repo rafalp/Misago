@@ -5,6 +5,25 @@
 // Category Block
 // --------------------------------------------------
 
+.list-group-category-vanilla {
+  background-color: @vanilla-category-bg;
+  color: @vanilla-category-color;
+
+  .item-title {
+    &, &:link, &:active, &:visited, &:hover, &:focus{
+      color: @vanilla-category-header;
+    }
+  }
+}
+
+.list-group-category-vanilla .list-group-item-heading:last-child {
+  margin: 0;
+}
+
+.list-group-category-vanilla .category-description *:last-child {
+  margin-bottom: 0;
+}
+
 // Thread unread state icon
 .category-main .read-status .material-icon {
   color: @category-read-color;
