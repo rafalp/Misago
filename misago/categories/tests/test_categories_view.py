@@ -76,10 +76,10 @@ def test_categories_view_displays_child_category_for_user_with_permission(
     assert_contains(response, child_category.description)
 
 
-def test_categories_view_displays_child_category_for_category_with_allow_list_access(
+def test_categories_view_displays_child_category_for_category_with_delay_browse_check(
     default_category, user, user_client
 ):
-    default_category.allow_list_access = True
+    default_category.delay_browse_check = True
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
     default_category.save()
 
@@ -155,7 +155,7 @@ def test_categories_view_displays_category_thread(
 def test_categories_view_displays_category_thread_if_category_allows_list_access(
     default_category, user, user_client, thread
 ):
-    default_category.allow_list_access = True
+    default_category.delay_browse_check = True
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
     default_category.synchronize()
     default_category.save()

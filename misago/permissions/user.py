@@ -139,7 +139,7 @@ def _build_user_category_permissions_action(
 
     for category_id, category in categories.items():
         # Skip category if we can't see its parent
-        if not can_see_category_parent(category, categories, permissions):
+        if not can_see_parent_category(category, categories, permissions):
             continue
 
         # Skip category if we can't see it
@@ -164,7 +164,7 @@ def _build_user_category_permissions_action(
     return permissions
 
 
-def can_see_category_parent(
+def can_see_parent_category(
     category: Category,
     categories: dict[int, Category],
     permissions: dict,
@@ -176,6 +176,6 @@ def can_see_category_parent(
         return True
 
     if category.parent_id in permissions[CategoryPermission.SEE]:
-        return categories[category.parent_id].allow_list_access
+        return categories[category.parent_id].delay_browse_check
 
     return False

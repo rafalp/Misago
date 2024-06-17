@@ -78,7 +78,7 @@ def test_build_user_category_permissions_requires_see_permission_for_browse_perm
     }
 
 
-def test_build_user_category_permissions_checks_allow_list_access_if_browse_is_missing(
+def test_build_user_category_permissions_uses_delay_browse_check_if_browse_is_missing(
     custom_group, sibling_category, child_category
 ):
     CategoryGroupPermission.objects.create(
@@ -92,7 +92,7 @@ def test_build_user_category_permissions_checks_allow_list_access_if_browse_is_m
         permission=CategoryPermission.SEE,
     )
 
-    sibling_category.allow_list_access = True
+    sibling_category.delay_browse_check = True
     sibling_category.save()
 
     permissions = build_user_category_permissions([custom_group], {})

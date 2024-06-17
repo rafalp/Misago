@@ -98,7 +98,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
             "last_poster_name": category.last_poster_name,
             "is_visible": (
                 category.id in permissions.categories[CategoryPermission.BROWSE]
-                or category.allow_list_access
+                or category.delay_browse_check
             ),
         }
     else:
@@ -112,7 +112,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
         "new_posts": False,
         "can_browse": (
             category.id in permissions.categories[CategoryPermission.BROWSE]
-            or category.allow_list_access
+            or category.delay_browse_check
         ),
         "limit_threads_visibility": category.limit_threads_visibility,
         "children": [],

@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from django.db import models
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
@@ -41,7 +40,7 @@ class Category(MPTTModel, PluginDataModel):
     description = models.TextField(null=True, blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
     allow_polls = models.BooleanField(default=True)
-    allow_list_access = models.BooleanField(default=False)
+    delay_browse_check = models.BooleanField(default=False)
     limit_threads_visibility = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
     threads = models.PositiveIntegerField(default=0)
@@ -93,7 +92,6 @@ class Category(MPTTModel, PluginDataModel):
         return trees_map.get_type_for_tree_id(self.tree_id)
 
     def delete(self, *args, **kwargs):
-        Category.objects.clear_cache()
         clear_acl_cache()
         return super().delete(*args, **kwargs)
 
