@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
 
 from ....acl.cache import clear_acl_cache
+from ....cache.enums import CacheName
+from ....cache.versions import invalidate_cache
 from ...models import Category
 
 
@@ -19,6 +21,11 @@ class Command(BaseCommand):
         Category.objects.partial_rebuild(root.tree_id)
         self.stdout.write("Categories tree has been rebuild.")
 
-        Category.objects.clear_cache()
+        invalidate_cache(
+            CacheName.CATEGORIES,
+            CacheName.MODERATORS,
+            CacheName.PERMISSIONS,
+        )
+
         clear_acl_cache()
         self.stdout.write("Caches have been cleared.")

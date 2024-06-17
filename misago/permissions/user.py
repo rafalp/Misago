@@ -1,4 +1,5 @@
-from django.contrib.auth import get_user_model
+from typing import TYPE_CHECKING, Union
+
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 
@@ -19,15 +20,18 @@ from .operations import (
     if_zero_or_greater,
 )
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
-def get_user_permissions(user: User | AnonymousUser, cache_versions: dict) -> dict:
+def get_user_permissions(
+    user: Union["User", AnonymousUser], cache_versions: dict
+) -> dict:
     return get_user_permissions_hook(_get_user_permissions_action, user, cache_versions)
 
 
 def _get_user_permissions_action(
-    user: User | AnonymousUser, cache_versions: dict
+    user: Union["User", AnonymousUser], cache_versions: dict
 ) -> dict:
     cache_key = get_user_permissions_cache_key(user, cache_versions)
     permissions = cache.get(cache_key)
@@ -40,7 +44,7 @@ def _get_user_permissions_action(
 
 
 def get_user_permissions_cache_key(
-    user: User | AnonymousUser, cache_versions: dict
+    user: Union["User", AnonymousUser], cache_versions: dict
 ) -> str:
     if user.is_anonymous:
         return f"anonymous:{cache_versions[CacheName.PERMISSIONS]}"
@@ -48,7 +52,7 @@ def get_user_permissions_cache_key(
     return f"{user.permissions_id}:{cache_versions[CacheName.PERMISSIONS]}"
 
 
-def build_user_permissions(user: User | AnonymousUser) -> dict:
+def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
     if user.is_anonymous:
         groups_ids = [DefaultGroupId.GUESTS]
     else:
@@ -135,10 +139,7 @@ def _build_user_category_permissions_action(
 
     for category_id, category in categories.items():
         # Skip category if we can't see its parent
-        if (
-            category.level > 1
-            and category.parent_id not in permissions[CategoryPermission.BROWSE]
-        ):
+        if not can_see_parent_category(category, categories, permissions):
             continue
 
         # Skip category if we can't see it
@@ -161,3 +162,20 @@ def _build_user_category_permissions_action(
             permissions[CategoryPermission.ATTACHMENTS].append(category_id)
 
     return permissions
+
+
+def can_see_parent_category(
+    category: Category,
+    categories: dict[int, Category],
+    permissions: dict,
+) -> bool:
+    if category.level <= 1:
+        return True
+
+    if category.parent_id in permissions[CategoryPermission.BROWSE]:
+        return True
+
+    if category.parent_id in permissions[CategoryPermission.SEE]:
+        return categories[category.parent_id].delay_browse_check
+
+    return False

@@ -72,12 +72,6 @@ def _assert_message_exists(messages, level, message: str) -> bool:
     )
 
 
-def print_groups(response):
-    """An utility"""
-    for message in get_messages(response.wsgi_request):
-        print(message.message)
-
-
 class MisagoClient(Client):
     def post(self, *args, **kwargs):
         if "json" in kwargs:

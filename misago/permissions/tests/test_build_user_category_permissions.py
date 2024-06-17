@@ -78,6 +78,33 @@ def test_build_user_category_permissions_requires_see_permission_for_browse_perm
     }
 
 
+def test_build_user_category_permissions_uses_delay_browse_check_if_browse_is_missing(
+    custom_group, sibling_category, child_category
+):
+    CategoryGroupPermission.objects.create(
+        group=custom_group,
+        category=sibling_category,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        group=custom_group,
+        category=child_category,
+        permission=CategoryPermission.SEE,
+    )
+
+    sibling_category.delay_browse_check = True
+    sibling_category.save()
+
+    permissions = build_user_category_permissions([custom_group], {})
+    assert permissions == {
+        CategoryPermission.SEE: [sibling_category.id, child_category.id],
+        CategoryPermission.BROWSE: [],
+        CategoryPermission.START: [],
+        CategoryPermission.REPLY: [],
+        CategoryPermission.ATTACHMENTS: [],
+    }
+
+
 def test_build_user_category_permissions_includes_all_permissions(
     custom_group, sibling_category, child_category
 ):

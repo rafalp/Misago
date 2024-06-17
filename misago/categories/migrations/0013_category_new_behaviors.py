@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="category",
-            name="allow_list_access",
+            name="delay_browse_check",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(

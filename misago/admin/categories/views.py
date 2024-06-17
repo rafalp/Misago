@@ -6,12 +6,11 @@ from ...acl.cache import clear_acl_cache
 from ...admin.views import generic
 from ...cache.enums import CacheName
 from ...cache.versions import invalidate_cache
-from ...categories import THREADS_ROOT_NAME
+from ...categories.enums import CategoryTree
 from ...categories.models import Category, RoleCategoryACL
 from ...permissions.admin import get_admin_category_permissions
 from ...permissions.copy import copy_category_permissions
 from ...permissions.models import CategoryGroupPermission
-from ...threads.threadtypes import trees_map
 from ...users.models import Group
 from .forms import CategoryForm, DeleteCategoryForm
 
@@ -27,10 +26,8 @@ class CategoryAdmin(generic.AdminBaseMixin):
     def get_target(self, request, kwargs):
         target = super().get_target(request, kwargs)
 
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-
         target_is_special = bool(target.special_role)
-        target_not_in_categories_tree = target.tree_id != threads_tree_id
+        target_not_in_categories_tree = target.tree_id != CategoryTree.THREADS
 
         if target.pk and (target_is_special or target_not_in_categories_tree):
             raise Category.DoesNotExist()
@@ -70,13 +67,10 @@ class CategoryFormMixin:
                     form.cleaned_data["new_parent"], position="last-child"
                 )
             form.instance.save()
-            if form.instance.parent_id != form.cleaned_data["new_parent"].pk:
-                Category.objects.clear_cache()
         else:
             form.instance.insert_at(
                 form.cleaned_data["new_parent"], position="last-child", save=True
             )
-            Category.objects.clear_cache()
 
         if form.cleaned_data.get("copy_permissions"):
             form.instance.category_role_set.all().delete()
@@ -100,7 +94,10 @@ class CategoryFormMixin:
             )
 
         clear_acl_cache()
-        invalidate_cache(CacheName.PERMISSIONS)
+        invalidate_cache(
+            CacheName.CATEGORIES,
+            CacheName.PERMISSIONS,
+        )
 
         messages.success(request, self.message_submit % {"name": target.name})
 
@@ -209,7 +206,7 @@ class MoveDownCategory(CategoryAdmin, generic.ButtonView):
 
         if other_target:
             Category.objects.move_node(target, other_target, "right")
-            Category.objects.clear_cache()
+            invalidate_cache(CacheName.CATEGORIES)
 
             message = pgettext_lazy(
                 "admin categories",
@@ -228,7 +225,7 @@ class MoveUpCategory(CategoryAdmin, generic.ButtonView):
 
         if other_target:
             Category.objects.move_node(target, other_target, "left")
-            Category.objects.clear_cache()
+            invalidate_cache(CacheName.CATEGORIES)
 
             message = pgettext_lazy(
                 "admin categories",

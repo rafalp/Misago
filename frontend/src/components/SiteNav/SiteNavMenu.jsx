@@ -121,7 +121,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
               )}
               style={{ "--label-color": category.color }}
             >
-              {category.shortName || category.name}
+              {category.short_name || category.name}
             </span>
           </a>
         </DropdownMenuItem>

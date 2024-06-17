@@ -23,6 +23,7 @@ from .users.test import create_test_superuser, create_test_user
 
 def get_cache_versions():
     return {
+        CacheName.CATEGORIES: "abcdefgh",
         CacheName.GROUPS: "abcdefgh",
         CacheName.MODERATORS: "abcdefgh",
         CacheName.PERMISSIONS: "abcdefgh",

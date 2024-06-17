@@ -42,7 +42,13 @@ def _copy_category_permissions_action(
         CategoryGroupPermission.objects.bulk_create(copied_permissions)
 
 
-COPY_GROUP_PERMISSIONS = ("can_see_user_profiles",)
+COPY_GROUP_PERMISSIONS = (
+    "can_change_username",
+    "username_changes_limit",
+    "username_changes_expire",
+    "username_changes_span",
+    "can_see_user_profiles",
+)
 
 
 def copy_group_permissions(

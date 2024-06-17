@@ -1,57 +1,31 @@
-from django.core.cache import cache
 from django.db import models
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 
-from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ..acl.cache import clear_acl_cache
 from ..acl.models import BaseRole
 from ..conf import settings
 from ..core.utils import slugify
 from ..plugins.models import PluginDataModel
 from ..threads.threadtypes import trees_map
-
-CACHE_NAME = "misago_categories_tree"
+from .enums import CategoryTree
 
 
 class CategoryManager(TreeManager):
     def private_threads(self):
-        return self.get_special(PRIVATE_THREADS_ROOT_NAME)
+        return self.get(level=0, tree_id=CategoryTree.PRIVATE_THREADS)
 
     def root_category(self):
-        return self.get_special(THREADS_ROOT_NAME)
-
-    def get_special(self, special_role):
-        cache_name = "%s_%s" % (CACHE_NAME, special_role)
-
-        special_category = cache.get(cache_name, "nada")
-        if special_category == "nada":
-            special_category = self.get(special_role=special_role)
-            cache.set(cache_name, special_category)
-        return special_category
+        return self.get(level=0, tree_id=CategoryTree.THREADS)
 
     def all_categories(self, include_root=False):
-        tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-        queryset = self.filter(tree_id=tree_id)
+        queryset = self.filter(tree_id=CategoryTree.THREADS)
         if not include_root:
             queryset = queryset.filter(level__gt=0)
         return queryset.order_by("lft")
 
-    def get_cached_categories_dict(self):
-        categories_dict = cache.get(CACHE_NAME, "nada")
-        if categories_dict == "nada":
-            categories_dict = self.get_categories_dict_from_db()
-            cache.set(CACHE_NAME, categories_dict)
-        return categories_dict
-
-    def get_categories_dict_from_db(self):
-        categories_dict = {}
-        for category in self.all_categories(include_root=True):
-            categories_dict[category.pk] = category
-        return categories_dict
-
     def clear_cache(self):
-        cache.delete(CACHE_NAME)
+        raise NotImplementedError("REPLACE ME")
 
 
 class Category(MPTTModel, PluginDataModel):
@@ -66,7 +40,7 @@ class Category(MPTTModel, PluginDataModel):
     description = models.TextField(null=True, blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
     allow_polls = models.BooleanField(default=True)
-    allow_list_access = models.BooleanField(default=False)
+    delay_browse_check = models.BooleanField(default=False)
     limit_threads_visibility = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
     threads = models.PositiveIntegerField(default=0)
@@ -118,7 +92,6 @@ class Category(MPTTModel, PluginDataModel):
         return trees_map.get_type_for_tree_id(self.tree_id)
 
     def delete(self, *args, **kwargs):
-        Category.objects.clear_cache()
         clear_acl_cache()
         return super().delete(*args, **kwargs)
 

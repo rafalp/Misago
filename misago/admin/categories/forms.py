@@ -91,7 +91,7 @@ class CategoryForm(forms.ModelForm):
             "Controls if users can start new polls in this category.",
         ),
     )
-    allow_list_access = YesNoSwitch(
+    delay_browse_check = YesNoSwitch(
         label=pgettext_lazy(
             "admin category form",
             'Allow users without the "browse contents" permission to access the threads list',
@@ -170,7 +170,7 @@ class CategoryForm(forms.ModelForm):
             "description",
             "css_class",
             "allow_polls",
-            "allow_list_access",
+            "delay_browse_check",
             "limit_threads_visibility",
             "is_closed",
             "require_threads_approval",
