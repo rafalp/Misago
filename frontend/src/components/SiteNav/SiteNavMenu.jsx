@@ -117,7 +117,10 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
           <a href={category.url}>{category.name}</a>
         </DropdownMenuItem>
         :
-        <DropdownMenuItem className="site-nav-category" key={category.id}>
+        <DropdownMenuItem
+          className={classnames("site-nav-category", {"site-nav-category-last": category.last})}
+          key={category.id}
+        >
           <a href={category.url}>
             <span>{category.name}</span>
             <span
