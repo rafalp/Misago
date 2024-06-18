@@ -3,7 +3,7 @@ from unittest.mock import ANY
 from ...permissions.enums import CategoryPermission
 from ...permissions.proxy import UserPermissionsProxy
 from ...testutils import grant_category_group_permissions
-from ..categories import get_categories
+from ..categories import get_categories, get_category_data
 
 
 def grant_categories_permissions(user, categories):
@@ -35,58 +35,10 @@ def test_get_categories_returns_all_categories_visible_by_user(
 
     categories = get_categories(user_permissions, cache_versions)
     assert categories == {
-        default_category.id: {
-            "id": default_category.id,
-            "parent_id": None,
-            "name": default_category.name,
-            "short_name": default_category.short_name,
-            "color": default_category.color,
-            "css_class": default_category.css_class,
-            "is_closed": default_category.is_closed,
-            "is_vanilla": default_category.is_vanilla,
-            "url": default_category.get_absolute_url(),
-            "lft": default_category.lft,
-            "rght": default_category.rght,
-        },
-        sibling_category.id: {
-            "id": sibling_category.id,
-            "parent_id": None,
-            "name": sibling_category.name,
-            "short_name": sibling_category.short_name,
-            "color": sibling_category.color,
-            "css_class": sibling_category.css_class,
-            "is_closed": sibling_category.is_closed,
-            "is_vanilla": sibling_category.is_vanilla,
-            "url": sibling_category.get_absolute_url(),
-            "lft": sibling_category.lft,
-            "rght": sibling_category.rght,
-        },
-        child_category.id: {
-            "id": child_category.id,
-            "parent_id": child_category.parent_id,
-            "name": child_category.name,
-            "short_name": child_category.short_name,
-            "color": child_category.color,
-            "css_class": child_category.css_class,
-            "is_closed": child_category.is_closed,
-            "is_vanilla": child_category.is_vanilla,
-            "url": child_category.get_absolute_url(),
-            "lft": child_category.lft,
-            "rght": child_category.rght,
-        },
-        other_category.id: {
-            "id": other_category.id,
-            "parent_id": None,
-            "name": other_category.name,
-            "short_name": other_category.short_name,
-            "color": other_category.color,
-            "css_class": other_category.css_class,
-            "is_closed": other_category.is_closed,
-            "is_vanilla": other_category.is_vanilla,
-            "url": other_category.get_absolute_url(),
-            "lft": other_category.lft,
-            "rght": other_category.rght,
-        },
+        default_category.id: get_category_data(default_category.__dict__),
+        sibling_category.id: get_category_data(sibling_category.__dict__),
+        child_category.id: get_category_data(child_category.__dict__),
+        other_category.id: get_category_data(other_category.__dict__),
     }
 
 
@@ -116,58 +68,10 @@ def test_get_categories_uses_delay_browse_check_for_child_category(
 
     categories = get_categories(user_permissions, cache_versions)
     assert categories == {
-        default_category.id: {
-            "id": default_category.id,
-            "parent_id": None,
-            "name": default_category.name,
-            "short_name": default_category.short_name,
-            "color": default_category.color,
-            "css_class": default_category.css_class,
-            "is_closed": default_category.is_closed,
-            "is_vanilla": default_category.is_vanilla,
-            "url": default_category.get_absolute_url(),
-            "lft": default_category.lft,
-            "rght": default_category.rght,
-        },
-        sibling_category.id: {
-            "id": sibling_category.id,
-            "parent_id": None,
-            "name": sibling_category.name,
-            "short_name": sibling_category.short_name,
-            "color": sibling_category.color,
-            "css_class": sibling_category.css_class,
-            "is_closed": sibling_category.is_closed,
-            "is_vanilla": sibling_category.is_vanilla,
-            "url": sibling_category.get_absolute_url(),
-            "lft": sibling_category.lft,
-            "rght": sibling_category.rght,
-        },
-        child_category.id: {
-            "id": child_category.id,
-            "parent_id": child_category.parent_id,
-            "name": child_category.name,
-            "short_name": child_category.short_name,
-            "color": child_category.color,
-            "css_class": child_category.css_class,
-            "is_closed": child_category.is_closed,
-            "is_vanilla": child_category.is_vanilla,
-            "url": child_category.get_absolute_url(),
-            "lft": child_category.lft,
-            "rght": child_category.rght,
-        },
-        other_category.id: {
-            "id": other_category.id,
-            "parent_id": None,
-            "name": other_category.name,
-            "short_name": other_category.short_name,
-            "color": other_category.color,
-            "css_class": other_category.css_class,
-            "is_closed": other_category.is_closed,
-            "is_vanilla": other_category.is_vanilla,
-            "url": other_category.get_absolute_url(),
-            "lft": other_category.lft,
-            "rght": other_category.rght,
-        },
+        default_category.id: get_category_data(default_category.__dict__),
+        sibling_category.id: get_category_data(sibling_category.__dict__),
+        child_category.id: get_category_data(child_category.__dict__),
+        other_category.id: get_category_data(other_category.__dict__),
     }
 
 
@@ -189,32 +93,8 @@ def test_get_categories_excludes_categories_invisible_to_user(
 
     categories = get_categories(user_permissions, cache_versions)
     assert categories == {
-        default_category.id: {
-            "id": default_category.id,
-            "parent_id": None,
-            "name": default_category.name,
-            "short_name": default_category.short_name,
-            "color": default_category.color,
-            "css_class": default_category.css_class,
-            "is_closed": default_category.is_closed,
-            "is_vanilla": default_category.is_vanilla,
-            "url": default_category.get_absolute_url(),
-            "lft": default_category.lft,
-            "rght": default_category.rght,
-        },
-        other_category.id: {
-            "id": other_category.id,
-            "parent_id": None,
-            "name": other_category.name,
-            "short_name": other_category.short_name,
-            "color": other_category.color,
-            "css_class": other_category.css_class,
-            "is_closed": other_category.is_closed,
-            "is_vanilla": other_category.is_vanilla,
-            "url": other_category.get_absolute_url(),
-            "lft": other_category.lft,
-            "rght": other_category.rght,
-        },
+        default_category.id: get_category_data(default_category.__dict__),
+        other_category.id: get_category_data(other_category.__dict__),
     }
 
 
@@ -238,32 +118,8 @@ def test_get_categories_excludes_special_categories(
 
     categories = get_categories(user_permissions, cache_versions)
     assert categories == {
-        default_category.id: {
-            "id": default_category.id,
-            "parent_id": None,
-            "name": default_category.name,
-            "short_name": default_category.short_name,
-            "color": default_category.color,
-            "css_class": default_category.css_class,
-            "is_closed": default_category.is_closed,
-            "is_vanilla": default_category.is_vanilla,
-            "url": default_category.get_absolute_url(),
-            "lft": default_category.lft,
-            "rght": default_category.rght,
-        },
-        other_category.id: {
-            "id": other_category.id,
-            "parent_id": None,
-            "name": other_category.name,
-            "short_name": other_category.short_name,
-            "color": other_category.color,
-            "css_class": other_category.css_class,
-            "is_closed": other_category.is_closed,
-            "is_vanilla": other_category.is_vanilla,
-            "url": other_category.get_absolute_url(),
-            "lft": other_category.lft,
-            "rght": other_category.rght,
-        },
+        default_category.id: get_category_data(default_category.__dict__),
+        other_category.id: get_category_data(other_category.__dict__),
     }
 
 
@@ -280,19 +136,7 @@ def test_get_categories_skips_database_read_if_there_is_cache(
     cache_get = mocker.patch(
         "django.core.cache.cache.get",
         return_value=[
-            {
-                "id": default_category.id,
-                "parent_id": None,
-                "name": default_category.name,
-                "short_name": default_category.short_name,
-                "color": default_category.color,
-                "css_class": default_category.css_class,
-                "is_closed": default_category.is_closed,
-                "is_vanilla": default_category.is_vanilla,
-                "url": default_category.get_absolute_url(),
-                "lft": default_category.lft,
-                "rght": default_category.rght,
-            },
+            get_category_data(default_category.__dict__),
         ],
     )
 
@@ -300,19 +144,7 @@ def test_get_categories_skips_database_read_if_there_is_cache(
         categories = get_categories(user_permissions, cache_versions)
 
     assert categories == {
-        default_category.id: {
-            "id": default_category.id,
-            "parent_id": None,
-            "name": default_category.name,
-            "short_name": default_category.short_name,
-            "color": default_category.color,
-            "css_class": default_category.css_class,
-            "is_closed": default_category.is_closed,
-            "is_vanilla": default_category.is_vanilla,
-            "url": default_category.get_absolute_url(),
-            "lft": default_category.lft,
-            "rght": default_category.rght,
-        },
+        default_category.id: get_category_data(default_category.__dict__),
     }
 
     cache_get.assert_called_once()
@@ -343,62 +175,30 @@ def test_get_categories_is_cached_when_database_is_used(
         categories = get_categories(user_permissions, cache_versions)
 
     assert categories == {
-        default_category.id: {
-            "id": default_category.id,
-            "parent_id": None,
-            "name": default_category.name,
-            "short_name": default_category.short_name,
-            "color": default_category.color,
-            "css_class": default_category.css_class,
-            "is_closed": default_category.is_closed,
-            "is_vanilla": default_category.is_vanilla,
-            "url": default_category.get_absolute_url(),
-            "lft": default_category.lft,
-            "rght": default_category.rght,
-        },
-        other_category.id: {
-            "id": other_category.id,
-            "parent_id": None,
-            "name": other_category.name,
-            "short_name": other_category.short_name,
-            "color": other_category.color,
-            "css_class": other_category.css_class,
-            "is_closed": other_category.is_closed,
-            "is_vanilla": other_category.is_vanilla,
-            "url": other_category.get_absolute_url(),
-            "lft": other_category.lft,
-            "rght": other_category.rght,
-        },
+        default_category.id: get_category_data(default_category.__dict__),
+        other_category.id: get_category_data(other_category.__dict__),
     }
 
     cache_set.assert_called_with(
         ANY,
         [
-            {
-                "id": default_category.id,
-                "parent_id": None,
-                "name": default_category.name,
-                "short_name": default_category.short_name,
-                "color": default_category.color,
-                "css_class": default_category.css_class,
-                "is_closed": default_category.is_closed,
-                "is_vanilla": default_category.is_vanilla,
-                "url": default_category.get_absolute_url(),
-                "lft": default_category.lft,
-                "rght": default_category.rght,
-            },
-            {
-                "id": other_category.id,
-                "parent_id": None,
-                "name": other_category.name,
-                "short_name": other_category.short_name,
-                "color": other_category.color,
-                "css_class": other_category.css_class,
-                "is_closed": other_category.is_closed,
-                "is_vanilla": other_category.is_vanilla,
-                "url": other_category.get_absolute_url(),
-                "lft": other_category.lft,
-                "rght": other_category.rght,
-            },
+            get_category_data(default_category.__dict__),
+            get_category_data(other_category.__dict__),
         ],
     )
+
+
+def test_get_category_data_returns_dict_with_category_data(default_category):
+    assert get_category_data(default_category.__dict__) == {
+        "id": default_category.id,
+        "parent_id": None,
+        "name": default_category.name,
+        "short_name": default_category.short_name,
+        "color": default_category.color,
+        "css_class": default_category.css_class,
+        "is_closed": default_category.is_closed,
+        "is_vanilla": default_category.is_vanilla,
+        "url": default_category.get_absolute_url(),
+        "lft": default_category.lft,
+        "rght": default_category.rght,
+    }
