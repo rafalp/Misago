@@ -123,7 +123,7 @@ class CategoryForm(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            'Vanilla categories behave like categories in "vanilla" forum software: Users can\'t post threads directly in them. They are also displayed differently in the UI. Vanilla categories must have at least one visible subcategory to show to site users.',
+            'Vanilla categories behave like categories in "vanilla" forum software: users can\'t post threads directly in them. They are also displayed differently in the UI. Vanilla categories must have at least one visible subcategory to be shown to users.',
         ),
     )
     list_children_threads = YesNoSwitch(
@@ -342,7 +342,7 @@ class DeleteCategoryForm(forms.ModelForm):
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
-                    "You are trying to move this category threads to a child category that will also be deleted.",
+                    "You are trying to move this category's threads to a child category that will also be deleted.",
                 )
                 raise forms.ValidationError(message)
 

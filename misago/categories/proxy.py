@@ -42,7 +42,8 @@ class CategoriesProxy:
                 if children:
                     menu_items[-1]["last"] = True
 
-        menu_items[-1].pop("last", None)
+        if menu_items:
+            menu_items[-1].pop("last", None)
 
         return menu_items
 
