@@ -1,14 +1,13 @@
 from django import forms
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
 from ...admin.forms import YesNoSwitch
-from ...categories import THREADS_ROOT_NAME
+from ...categories.enums import CategoryTree, CategoryChildrenComponent
 from ...categories.models import Category
 from ...core.validators import validate_color_hex, validate_sluggable
-from ...threads.threadtypes import trees_map
 
 
 class AdminCategoryFieldMixin:
@@ -16,8 +15,7 @@ class AdminCategoryFieldMixin:
         self.base_level = kwargs.pop("base_level", 1)
         kwargs["level_indicator"] = kwargs.get("level_indicator", "- - ")
 
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-        queryset = Category.objects.filter(tree_id=threads_tree_id)
+        queryset = Category.objects.filter(tree_id=CategoryTree.THREADS)
         if not kwargs.pop("include_root", False):
             queryset = queryset.exclude(special_role="root_category")
 
@@ -94,7 +92,7 @@ class CategoryForm(forms.ModelForm):
     delay_browse_check = YesNoSwitch(
         label=pgettext_lazy(
             "admin category form",
-            'Allow users without the "browse contents" permission to access the threads list',
+            'Allow users without the "browse contents" permission to access category\'s threads list',
         ),
         required=False,
         help_text=pgettext_lazy(
@@ -113,12 +111,39 @@ class CategoryForm(forms.ModelForm):
         ),
     )
     is_closed = YesNoSwitch(
-        label=pgettext_lazy("admin category form", "Closed category"),
+        label=pgettext_lazy("admin category form", "Close category"),
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
             "Only members with valid permissions can post in closed categories.",
         ),
+    )
+    is_vanilla = YesNoSwitch(
+        label=pgettext_lazy("admin category form", "Make category vanilla"),
+        required=False,
+        help_text=pgettext_lazy(
+            "admin category form",
+            'Vanilla categories behave like categories in "vanilla" forum software: users can\'t post threads directly in them. They are also displayed differently in the UI. Vanilla categories must have at least one visible subcategory to be shown to users.',
+        ),
+    )
+    list_children_threads = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin category form",
+            "Include threads from child categories on threads list",
+        ),
+        required=False,
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Enabling this option will make this category's threads list also include threads from child categories. For vanilla categories disabling this option will remove threads list from category page.",
+        ),
+    )
+    children_categories_component = forms.CharField(
+        label=pgettext_lazy("admin category form", "Children categories UI component"),
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Select UI component to use for displaying category's subcategories on its page.",
+        ),
+        widget=forms.RadioSelect(choices=CategoryChildrenComponent.get_choices()),
     )
     require_threads_approval = YesNoSwitch(
         label=pgettext_lazy("admin category form", "Threads"),
@@ -173,6 +198,9 @@ class CategoryForm(forms.ModelForm):
             "delay_browse_check",
             "limit_threads_visibility",
             "is_closed",
+            "is_vanilla",
+            "list_children_threads",
+            "children_categories_component",
             "require_threads_approval",
             "require_replies_approval",
             "require_edits_approval",
@@ -231,7 +259,7 @@ class CategoryForm(forms.ModelForm):
     def clean_copy_permissions(self):
         data = self.cleaned_data["copy_permissions"]
         if data and data.pk == self.instance.pk:
-            message = pgettext_lazy(
+            message = pgettext(
                 "admin category form",
                 "Permissions cannot be copied from category into itself.",
             )
@@ -241,7 +269,7 @@ class CategoryForm(forms.ModelForm):
     def clean_archive_pruned_in(self):
         data = self.cleaned_data["archive_pruned_in"]
         if data and data.pk == self.instance.pk:
-            message = pgettext_lazy(
+            message = pgettext(
                 "admin category form", "Category cannot act as archive for itself."
             )
             raise forms.ValidationError(message)
@@ -250,6 +278,19 @@ class CategoryForm(forms.ModelForm):
     def clean(self):
         data = super().clean()
         self.instance.set_name(data.get("name"))
+
+        new_parent = data.get("new_parent")
+        if new_parent and new_parent.level != 0 and data["is_vanilla"]:
+            self.add_error(
+                "is_vanilla",
+                forms.ValidationError(
+                    pgettext(
+                        "admin category form",
+                        "Only top-level categories can be set as vanilla.",
+                    )
+                ),
+            )
+
         return data
 
 
@@ -302,7 +343,7 @@ class DeleteCategoryForm(forms.ModelForm):
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
-                    "You are trying to move this category threads to a child category that will also be deleted.",
+                    "You are trying to move this category's threads to a child category that will also be deleted.",
                 )
                 raise forms.ValidationError(message)
 

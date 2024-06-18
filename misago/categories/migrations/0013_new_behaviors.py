@@ -27,6 +27,24 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="category",
+            name="children_categories_component",
+            field=models.CharField(
+                default="full",
+                max_length=12,
+            ),
+        ),
+        migrations.AddField(
+            model_name="category",
+            name="is_vanilla",
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name="category",
+            name="list_children_threads",
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AddField(
+            model_name="category",
             name="unapproved_posts",
             field=models.PositiveIntegerField(default=0),
         ),

@@ -96,6 +96,7 @@ class CategoryFormMixin:
         clear_acl_cache()
         invalidate_cache(
             CacheName.CATEGORIES,
+            CacheName.MODERATORS,
             CacheName.PERMISSIONS,
         )
 
@@ -192,6 +193,12 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
         # refresh instance
         instance = Category.objects.get(pk=form.instance.pk)
         instance.delete()
+
+        invalidate_cache(
+            CacheName.CATEGORIES,
+            CacheName.MODERATORS,
+            CacheName.PERMISSIONS,
+        )
 
         messages.success(request, self.message_submit % {"name": target.name})
         return redirect(self.root_link)

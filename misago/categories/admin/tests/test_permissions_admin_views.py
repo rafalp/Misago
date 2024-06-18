@@ -142,6 +142,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             data={
                 "name": "Category A",
                 "new_parent": root.pk,
+                "children_categories_component": "full",
                 "prune_started_after": 0,
                 "prune_replied_after": 0,
             },
@@ -251,11 +252,12 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         #   + Category D
 
         root = Category.objects.root_category()
-        self.client.post(
+        a = self.client.post(
             reverse("misago:admin:categories:new"),
             data={
                 "name": "Category A",
                 "new_parent": root.pk,
+                "children_categories_component": "full",
                 "prune_started_after": 0,
                 "prune_replied_after": 0,
             },
@@ -265,11 +267,11 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             data={
                 "name": "Category C",
                 "new_parent": root.pk,
+                "children_categories_component": "full",
                 "prune_started_after": 0,
                 "prune_replied_after": 0,
             },
         )
-
         category_a = Category.objects.get(slug="category-a")
         category_c = Category.objects.get(slug="category-c")
 
@@ -278,6 +280,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             data={
                 "name": "Category B",
                 "new_parent": category_a.pk,
+                "children_categories_component": "full",
                 "prune_started_after": 0,
                 "prune_replied_after": 0,
             },
@@ -289,6 +292,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             data={
                 "name": "Category D",
                 "new_parent": category_c.pk,
+                "children_categories_component": "full",
                 "prune_started_after": 0,
                 "prune_replied_after": 0,
             },

@@ -16,7 +16,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
   const settings = misago.get("SETTINGS")
   const extraItems = misago.get("extraMenuItems")
   const extraFooterItems = misago.get("extraFooterItems")
-  const categories = misago.get("categoriesMap")
+  const categories = misago.get("categories_menu")
   const users = misago.get("usersLists")
   const authDelegated = settings.enable_oauth2_client
 
@@ -111,7 +111,16 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
         {pgettext("site nav section", "Categories")}
       </DropdownSubheader>
       {categories.map((category) => (
-        <DropdownMenuItem className="site-nav-category" key={category.id}>
+        category.is_vanilla
+        ?
+        <DropdownMenuItem className="site-nav-category-header" key={category.id}>
+          <a href={category.url}>{category.name}</a>
+        </DropdownMenuItem>
+        :
+        <DropdownMenuItem
+          className={classnames("site-nav-category", {"site-nav-category-last": category.last})}
+          key={category.id}
+        >
           <a href={category.url}>
             <span>{category.name}</span>
             <span

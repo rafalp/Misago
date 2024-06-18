@@ -191,3 +191,23 @@ def test_categories_view_excludes_category_thread_if_user_has_no_browse_permissi
     response = user_client.get(reverse("misago:categories"))
     assert_contains(response, default_category.description)
     assert_not_contains(response, thread.title)
+
+
+def test_categories_view_displays_empty_list_for_guest(
+    default_category, guests_group, client
+):
+    remove_category_group_permissions(default_category, guests_group)
+    default_category.delete()
+
+    response = client.get(reverse("misago:categories"))
+    assert_contains(response, "No categories exist")
+
+
+def test_categories_view_displays_empty_list_for_user(
+    default_category, user, user_client
+):
+    remove_category_group_permissions(default_category, user.group)
+    default_category.delete()
+
+    response = user_client.get(reverse("misago:categories"))
+    assert_contains(response, "No categories exist")

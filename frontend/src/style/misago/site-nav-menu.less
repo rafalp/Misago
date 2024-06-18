@@ -5,8 +5,14 @@
   width: 320px;
 }
 
+// Style vanilla category header differently
+.site-nav-category-header a {
+  color: @gray-light;
+  font-weight: bold;
+}
+
 // Spread and align items in categories
-.site-nav-category a {
+.site-nav-category-header a, .site-nav-category a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,6 +23,18 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.site-nav-category + .site-nav-category-header {
+  margin-top: @line-height-computed / 2;
+}
+
+.site-nav-category-last {
+  margin-bottom: @line-height-computed / 2;
+}
+
+.site-nav-category-last + .site-nav-category-header {
+  margin-top: 0;
 }
 
 // Hide sign in menu on larger devices

@@ -107,6 +107,13 @@
   }
 }
 
+// Depth indicator
+.card-admin-table .item-level {
+  margin-right: $btn-padding-x-sm;
+
+  color: $gray-400;
+}
+
 // Badges column
 .card-admin-table .badges-list {
   @extend .text-right;

@@ -13,7 +13,6 @@
 
 
 {% block table-header %}
-<th style="width: 1px;">&nbsp;</th>
 <th>{% trans "Category" context "admin categories list" %}</th>
 <th>{% trans "Label" context "admin categories list" %}</th>
 <th>{% trans "CSS class" context "admin categories list" %}</th>
@@ -23,18 +22,14 @@
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
-<td class="pr-0">
-  <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-sm">
-    <span class="fas fa-external-link-alt fa-fw"></span>
-  </a>
-</td>
 <td>
   {% for i in item.level_range %}
-    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="item-level">&#8594;</span>
   {% endfor %}
   <a href="{% url 'misago:admin:categories:edit' pk=item.pk %}" class="item-name small">
     {{ item }}
@@ -61,18 +56,9 @@
   {{ item.posts }}
 </td>
 <td>
-  {% if not item.last %}
-    <form action="{% url 'misago:admin:categories:down' pk=item.pk %}" method="post">
-      {% csrf_token %}
-      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' context 'admin categories' %}">
-        <span class="fa fa-chevron-down fa-fw"></span>
-      </button>
-    </form>
-  {% else %}
-    <button class="btn btn-light btn-sm" disabled>
-      <span class="fa fa-chevron-down fa-fw"></span>
-    </button>
-  {% endif %}
+  <a href="{{ item.get_absolute_url }}" target="_blank" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to category' context 'admin categories' %}">
+    <span class="fas fa-external-link-alt fa-fw"></span>
+  </a>
 </td>
 <td>
   {% if not item.first %}
@@ -85,6 +71,20 @@
   {% else %}
     <button class="btn btn-light btn-sm" disabled>
       <span class="fa fa-chevron-up fa-fw"></span>
+    </button>
+  {% endif %}
+</td>
+<td>
+  {% if not item.last %}
+    <form action="{% url 'misago:admin:categories:down' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' context 'admin categories' %}">
+        <span class="fa fa-chevron-down fa-fw"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-down fa-fw"></span>
     </button>
   {% endif %}
 </td>
