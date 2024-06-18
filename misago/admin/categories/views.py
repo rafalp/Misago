@@ -96,6 +96,7 @@ class CategoryFormMixin:
         clear_acl_cache()
         invalidate_cache(
             CacheName.CATEGORIES,
+            CacheName.MODERATORS,
             CacheName.PERMISSIONS,
         )
 
@@ -194,7 +195,9 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
         instance.delete()
 
         invalidate_cache(
-            CacheName.CATEGORIES, CacheName.MODERATORS, CacheName.PERMISSIONS
+            CacheName.CATEGORIES,
+            CacheName.MODERATORS,
+            CacheName.PERMISSIONS,
         )
 
         messages.success(request, self.message_submit % {"name": target.name})

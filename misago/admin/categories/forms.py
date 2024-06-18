@@ -279,7 +279,8 @@ class CategoryForm(forms.ModelForm):
         data = super().clean()
         self.instance.set_name(data.get("name"))
 
-        if data["new_parent"].level != 0 and data["is_vanilla"]:
+        new_parent = data.get("new_parent")
+        if new_parent and new_parent.level != 0 and data["is_vanilla"]:
             self.add_error(
                 "is_vanilla",
                 forms.ValidationError(
