@@ -4,7 +4,7 @@ from django.urls import reverse
 from ...cache.enums import CacheName
 from ...cache.test import assert_invalidates_cache
 from ...categories.models import Category
-from ...test import assert_contains
+from ...test import assert_contains, assert_has_error_message
 from ...threads.models import Thread
 from .categories_tree import assert_valid_categories_tree
 
@@ -14,6 +14,28 @@ def test_category_delete_form_renders(default_category, admin_client):
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
     )
     assert_contains(response, "Delete category")
+
+
+def test_category_delete_form_shows_error_if_category_doesnt_exist(
+    default_category, admin_client
+):
+    response = admin_client.get(
+        reverse(
+            "misago:admin:categories:delete", kwargs={"pk": default_category.pk + 1}
+        ),
+    )
+    assert response.status_code == 302
+    assert_has_error_message(response, "Requested category does not exist.")
+
+
+def test_category_delete_form_shows_error_if_category_is_root(
+    root_category, admin_client
+):
+    response = admin_client.get(
+        reverse("misago:admin:categories:delete", kwargs={"pk": root_category.pk}),
+    )
+    assert response.status_code == 302
+    assert_has_error_message(response, "Requested category does not exist.")
 
 
 def test_only_leaf_category_is_deleted(root_category, default_category, admin_client):
