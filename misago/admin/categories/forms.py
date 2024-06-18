@@ -286,7 +286,7 @@ class CategoryForm(forms.ModelForm):
                 forms.ValidationError(
                     pgettext(
                         "admin category form",
-                        "Only top-level categories can be vanilla.",
+                        "Only top-level categories can be set as vanilla.",
                     )
                 ),
             )

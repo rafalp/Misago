@@ -260,7 +260,7 @@ def test_new_category_form_fails_if_vanilla_category_with_parent(
         category_new,
         form_data({"new_parent": str(default_category.id), "is_vanilla": True}),
     )
-    assert_contains(response, "Only top-level categories can be vanilla.")
+    assert_contains(response, "Only top-level categories can be set as vanilla.")
 
     assert_valid_categories_tree(
         [
