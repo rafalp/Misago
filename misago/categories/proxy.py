@@ -70,3 +70,17 @@ class CategoriesProxy:
     ) -> list[dict]:
         parents = self.get_category_parents(category_id, include_self)
         return list(reversed(parents))
+
+    def get_category_descendants(
+        self, category_id: int, include_self: bool = True
+    ) -> list[dict]:
+        parent = self.categories[category_id]
+        items: list[dict] = []
+
+        if include_self:
+            items.append(parent)
+        for item in self.categories_list:
+            if item["lft"] > parent["lft"] and item["rght"] < parent["rght"]:
+                items.append(item)
+
+        return items

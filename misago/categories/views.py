@@ -112,7 +112,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
             category.id in permissions.categories[CategoryPermission.BROWSE]
             or category.delay_browse_check
         ),
-        "limit_threads_visibility": category.limit_threads_visibility,
+        "show_started_only": category.show_started_only,
         "children": [],
         "children_threads": category.threads,
         "children_posts": category.posts,
@@ -130,7 +130,7 @@ def can_see_last_thread(
         return False
 
     if (
-        category.limit_threads_visibility
+        category.show_started_only
         and category.id not in permissions.categories_moderator
         and (user.is_anonymous or category.last_poster_id != user.id)
     ):

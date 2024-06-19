@@ -196,6 +196,8 @@ def test_get_category_data_returns_dict_with_category_data(default_category):
         "short_name": default_category.short_name,
         "color": default_category.color,
         "css_class": default_category.css_class,
+        "delay_browse_check": default_category.delay_browse_check,
+        "show_started_only": default_category.show_started_only,
         "is_closed": default_category.is_closed,
         "is_vanilla": default_category.is_vanilla,
         "url": default_category.get_absolute_url(),

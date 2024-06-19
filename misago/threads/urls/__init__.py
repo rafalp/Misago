@@ -17,6 +17,8 @@ from ..views.list import ForumThreadsList, CategoryThreadsList, PrivateThreadsLi
 from ..views.subscribed import redirect_subscribed_to_watched
 from ..views.thread import ThreadView, PrivateThreadView
 
+from ..views2.list import CategoryThreadsListView, ThreadsListView
+
 LISTS_TYPES = ("all", "my", "new", "unread", "watched", "unapproved")
 
 
@@ -40,8 +42,24 @@ def threads_list_patterns(prefix, view, patterns):
     return urls
 
 
+urlpatterns = [
+    path("v2/threads/", ThreadsListView.as_view(), name="threads-v2"),
+    path("v2/threads/<slug:filter>/", ThreadsListView.as_view(), name="threads-v2"),
+    path(
+        "v2/c/<slug:slug>/<int:id>/",
+        CategoryThreadsListView.as_view(),
+        name="category-v2",
+    ),
+    path(
+        "v2/c/<slug:slug>/<int:id>/<slug:filter>/",
+        CategoryThreadsListView.as_view(),
+        name="category-v2",
+    ),
+]
+
+
 if settings.MISAGO_THREADS_ON_INDEX:
-    urlpatterns = threads_list_patterns(
+    urlpatterns += threads_list_patterns(
         "threads",
         ForumThreadsList,
         (
@@ -54,7 +72,7 @@ if settings.MISAGO_THREADS_ON_INDEX:
         ),
     )
 else:
-    urlpatterns = threads_list_patterns(
+    urlpatterns += threads_list_patterns(
         "threads",
         ForumThreadsList,
         (

@@ -1,0 +1,56 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{{ category }} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-category">
+  {% include "misago/category/header.html" %}
+
+  <div class="container page-container">
+
+    {% if threads %}
+      <ul>
+        {% for thread in threads.items %}
+          <li>
+            <a href="{% url 'misago:thread' pk=thread.id slug=thread.slug %}" class="item-title">
+              {{ thread.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if threads.paginator.has_previous %}
+        <a href="{% url 'misago:category-v2' id=category.id slug=category.slug %}" class="btn btn-default">
+          Start
+        </a>
+      {% else %}
+        <button class="btn btn-default" disabled>
+          Start
+        </button>
+      {% endif %}
+      {% if threads.paginator.has_previous %}
+        <a href="{% url 'misago:category-v2' id=category.id slug=category.slug %}?before={{ threads.paginator.first_cursor }}" class="btn btn-default">
+          Previous
+        </a>
+      {% else %}
+        <button class="btn btn-default" disabled>
+          Previous
+        </button>
+      {% endif %}
+      {% if threads.paginator.has_next %}
+        <a href="{% url 'misago:category-v2' id=category.id slug=category.slug %}?after={{ threads.paginator.last_cursor }}" class="btn btn-default">
+          Next
+        </a>
+      {% else %}
+        <button class="btn btn-default" disabled>
+          Next
+        </button>
+      {% endif %}
+    {% endif %}
+
+  </div>
+</div>
+{% endblock content %}

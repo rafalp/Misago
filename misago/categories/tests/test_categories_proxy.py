@@ -187,6 +187,101 @@ def test_categories_proxy_returns_category_path_without_self(
     ]
 
 
+def test_categories_proxy_returns_category_descendants(
+    root_category, default_category, user, cache_versions
+):
+    sibling_category = Category(
+        name="Sibling Category", slug="sibling-category", is_vanilla=True
+    )
+    sibling_category.insert_at(root_category, position="first-child", save=True)
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    deep_category = Category(name="Deep Category", slug="deep-category")
+    deep_category.insert_at(child_category, position="last-child", save=True)
+
+    default_category.refresh_from_db()
+
+    grant_category_group_permissions(
+        sibling_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        deep_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_category_descendants(default_category.id) == [
+        get_category_data_dict(default_category),
+        get_category_data_dict(child_category),
+        get_category_data_dict(deep_category),
+    ]
+
+
+def test_categories_proxy_returns_category_descendants_without_self(
+    root_category, default_category, user, cache_versions
+):
+    sibling_category = Category(
+        name="Sibling Category", slug="sibling-category", is_vanilla=True
+    )
+    sibling_category.insert_at(root_category, position="first-child", save=True)
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    deep_category = Category(name="Deep Category", slug="deep-category")
+    deep_category.insert_at(child_category, position="last-child", save=True)
+
+    default_category.refresh_from_db()
+
+    grant_category_group_permissions(
+        sibling_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        deep_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_category_descendants(
+        default_category.id, include_self=False
+    ) == [
+        get_category_data_dict(child_category),
+        get_category_data_dict(deep_category),
+    ]
+
+
 def test_categories_proxy_returns_empty_categories_menu(
     default_category, user, cache_versions
 ):
