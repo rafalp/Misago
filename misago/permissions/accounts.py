@@ -6,7 +6,7 @@ def check_delete_own_account_permission(user):
     if user.is_misago_admin:
         raise PermissionDenied(
             pgettext(
-                "delete own account error",
+                "account permission error",
                 "You can't delete your account because you are an administrator.",
             )
         )
@@ -14,7 +14,7 @@ def check_delete_own_account_permission(user):
     if user.is_staff:
         raise PermissionDenied(
             pgettext(
-                "delete own account error",
+                "account permission error",
                 "You can't delete your account because you are a staff user.",
             )
         )

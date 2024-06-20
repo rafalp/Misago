@@ -1,4 +1,6 @@
+from typing import Any
 from django.http import HttpRequest
+from django.http.response import HttpResponse as HttpResponse
 from django.views import View
 from django.shortcuts import render
 
@@ -10,6 +12,7 @@ from ...permissions.categories import (
     check_browse_category_permission,
     filter_categories_threads_queryset,
 )
+from ...permissions.private_threads import check_private_threads_permission
 from ..models import Thread
 
 
@@ -138,4 +141,13 @@ class CategoryThreadsListView(ListView):
 
 
 class PrivateThreadsListView(ListView):
-    pass
+    template_name = "misago/private_threads/index.html"
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        check_private_threads_permission(request.user_permissions)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request: HttpRequest, **kwargs):
+        context = self.get_context(request, kwargs)
+        return render(request, self.template_name, context)

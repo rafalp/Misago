@@ -56,10 +56,12 @@ def test_child_category_threads_list_renders_empty_to_moderators(
 
 def test_private_threads_list_shows_permission_error_to_guests(db, client):
     response = client.get(reverse("misago:private-threads"))
-    assert response.status_code == 403
+    assert_contains(
+        response, "You must be signed in to use private threads.", status_code=403
+    )
 
 
-def test_child_category_threads_list_renders_empty_to_users(user_client):
+def test_private_threads_list_renders_empty_to_users(user_client):
     response = user_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Private threads")
 
@@ -67,12 +69,14 @@ def test_child_category_threads_list_renders_empty_to_users(user_client):
 def test_private_threads_list_shows_permission_error_to_users_without_permission(
     user_client, members_group
 ):
-    # TODO: set permissions for members_group
+    members_group.can_use_private_threads = False
+    members_group.save()
 
     response = user_client.get(reverse("misago:private-threads"))
-    assert response.status_code == 403
+    print(response.content)
+    assert_contains(response, "You can&#x27;t use private threads.", status_code=403)
 
 
-def test_child_category_threads_list_renders_empty_to_moderators(moderator_client):
+def test_private_threads_list_renders_empty_to_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Private threads")

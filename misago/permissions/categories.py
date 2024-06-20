@@ -1,12 +1,27 @@
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.http import Http404
+from django.utils.translation import pgettext
 
 from ..categories.models import Category
 from .enums import CategoryPermission
-from .exceptions import (
-    CategoryBrowseError,
-    CategoryNotFoundError,
-)
 from .proxy import UserPermissionsProxy
+
+
+class CategoryNotFoundError(Http404):
+    def __str__(self) -> str:
+        return pgettext(
+            "category permission error",
+            "This category doesn't exist or you don't have permission to see it.",
+        )
+
+
+class CategoryBrowseError(PermissionDenied):
+    def __str__(self) -> str:
+        return pgettext(
+            "category permission error",
+            "You can't browse the contents of this category.",
+        )
 
 
 def check_see_category_permission(

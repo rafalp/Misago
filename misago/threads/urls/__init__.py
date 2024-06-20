@@ -22,29 +22,6 @@ from ..views.subscribed import redirect_subscribed_to_watched
 from ..views.thread import ThreadView, PrivateThreadView
 
 
-LISTS_TYPES = ("all", "my", "new", "unread", "watched", "unapproved")
-
-
-def threads_list_patterns(prefix, view, patterns):
-    urls = []
-    for i, pattern in enumerate(patterns):
-        if i > 0:
-            url_name = "%s-%s" % (prefix, LISTS_TYPES[i])
-        else:
-            url_name = prefix
-
-        urls.append(
-            path(
-                pattern,
-                view.as_view(),
-                name=url_name,
-                kwargs={"list_type": LISTS_TYPES[i]},
-            )
-        )
-
-    return urls
-
-
 urlpatterns = [
     path(
         "threads/",
@@ -67,16 +44,38 @@ urlpatterns = [
         name="category",
     ),
     path(
-        "p/",
-        ThreadsListView.as_view(),
+        "private/",
+        PrivateThreadsListView.as_view(),
         name="private-threads",
     ),
     path(
-        "p/<slug:filter>/",
-        ThreadsListView.as_view(),
+        "private/<slug:filter>/",
+        PrivateThreadsListView.as_view(),
         name="private-threads",
     ),
 ]
+
+LISTS_TYPES = ("all", "my", "new", "unread", "watched", "unapproved")
+
+
+def threads_list_patterns(prefix, view, patterns):
+    urls = []
+    for i, pattern in enumerate(patterns):
+        if i > 0:
+            url_name = "%s-%s" % (prefix, LISTS_TYPES[i])
+        else:
+            url_name = prefix
+
+        urls.append(
+            path(
+                pattern,
+                view.as_view(),
+                name=url_name,
+                kwargs={"list_type": LISTS_TYPES[i]},
+            )
+        )
+
+    return urls
 
 
 # Redirect from subscribed to watched
