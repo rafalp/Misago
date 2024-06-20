@@ -1,10 +1,6 @@
-import pytest
 from django.urls import reverse
 
-from ...categories.models import Category
-from ...permissions.enums import CategoryPermission
 from ...test import assert_contains
-from ...testutils import grant_category_group_permissions
 
 
 def test_site_threads_list_renders_empty_to_guests(db, client):
@@ -37,22 +33,6 @@ def test_category_threads_list_renders_empty_to_moderators(
 ):
     response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
-
-
-@pytest.fixture
-def child_category(default_category, guests_group, members_group, moderators_group):
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(default_category, position="last-child", save=True)
-
-    for group in (guests_group, members_group, moderators_group):
-        grant_category_group_permissions(
-            child_category,
-            group,
-            CategoryPermission.SEE,
-            CategoryPermission.BROWSE,
-        )
-
-    return child_category
 
 
 def test_child_category_threads_list_renders_empty_to_guests(child_category, client):
