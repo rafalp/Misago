@@ -45,6 +45,20 @@
 
   </fieldset>
 </div>
+<div class="form-fieldset form-fieldset-dynamic{% if target.is_global %} d-none{% endif %}">
+  <fieldset>
+    <legend>{% trans "Private threads" context "admin moderator form" %}</legend>
+
+    <div class="alert alert-info">
+      {% blocktrans trimmed context "admin moderator form" %}
+        Moderators can only access private threads they've been invited to or those that contain reported content.
+      {% endblocktrans %}
+    </div>
+
+    {% form_row form.private_threads %}
+
+  </fieldset>
+</div>
 {% endblock form-body %}
 
 

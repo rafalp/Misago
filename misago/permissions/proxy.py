@@ -6,7 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from ..users.enums import DefaultGroupId
 from .enums import CategoryPermission
 from .models import Moderator
-from .moderatordata import ModeratorData
+from .moderator import ModeratorPermissions
 from .user import get_user_permissions
 
 if TYPE_CHECKING:
@@ -34,11 +34,11 @@ class UserPermissionsProxy:
         return get_user_permissions(self.user, self.cache_versions)
 
     @cached_property
-    def moderator_data(self) -> ModeratorData | None:
+    def moderator(self) -> ModeratorPermissions | None:
         if self.user.is_anonymous:
             return None
 
-        return Moderator.objects.get_moderator_data(self.user)
+        return Moderator.objects.get_moderator_permissions(self.user)
 
     @property
     def is_global_moderator(self) -> bool:
@@ -51,7 +51,7 @@ class UserPermissionsProxy:
         ):
             return True
 
-        return self.moderator_data.is_global
+        return self.moderator.is_global
 
     @cached_property
     def categories_moderator(self) -> list[int]:
@@ -68,4 +68,4 @@ class UserPermissionsProxy:
             self.permissions["categories"][CategoryPermission.BROWSE]
         )
 
-        return list(browsed_categories.intersection(self.moderator_data.categories_ids))
+        return list(browsed_categories.intersection(self.moderator.categories_ids))
