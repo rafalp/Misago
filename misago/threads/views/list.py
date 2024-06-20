@@ -1,5 +1,5 @@
 from typing import Any
-from django.http import HttpRequest
+from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.views import View
 from django.shortcuts import render
@@ -8,7 +8,6 @@ from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...pagination.cursor import paginate_queryset
 from ...permissions.categories import (
-    CategoryNotFoundError,
     check_browse_category_permission,
     filter_categories_threads_queryset,
 )
@@ -85,7 +84,7 @@ class CategoryThreadsListView(ListView):
                 level__gt=0,
             )
         except Category.DoesNotExist:
-            raise CategoryNotFoundError()
+            raise Http404()
 
         check_browse_category_permission(
             request.user_permissions,

@@ -1,10 +1,11 @@
 import pytest
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
 
 from ...categories.models import Category
 from ...testutils import grant_category_group_permissions
 from ..categories import (
-    CategoryBrowseError,
-    CategoryNotFoundError,
+    PermissionDenied,
     check_browse_category_permission,
     check_see_category_permission,
 )
@@ -32,7 +33,7 @@ def test_check_see_category_permission_fails_if_user_has_no_permission(
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_see_category_permission(permissions, category)
 
 
@@ -91,7 +92,7 @@ def test_check_see_category_permission_fails_if_user_cant_browse_parent_category
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_see_category_permission(permissions, child_category)
 
 
@@ -118,7 +119,7 @@ def test_check_browse_category_permission_fails_if_user_has_no_permissions(
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_browse_category_permission(permissions, category)
 
 
@@ -132,7 +133,7 @@ def test_check_browse_category_permission_fails_if_user_has_no_browse_permission
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryBrowseError):
+    with pytest.raises(PermissionDenied):
         check_browse_category_permission(permissions, category)
 
 
@@ -146,7 +147,7 @@ def test_check_browse_category_permission_fails_if_user_has_only_browse_permissi
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_browse_category_permission(permissions, category)
 
 
@@ -209,7 +210,7 @@ def test_check_browse_category_permission_fails_if_user_cant_see_parent(
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_see_category_permission(permissions, child_category)
 
 
@@ -228,7 +229,7 @@ def test_check_browse_category_permission_fails_if_user_cant_see_parent(
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_see_category_permission(permissions, child_category)
 
 
@@ -250,5 +251,5 @@ def test_check_browse_category_permission_fails_if_user_cant_browse_parent(
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
-    with pytest.raises(CategoryNotFoundError):
+    with pytest.raises(Http404):
         check_see_category_permission(permissions, child_category)

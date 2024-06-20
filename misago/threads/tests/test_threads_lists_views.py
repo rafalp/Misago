@@ -54,6 +54,18 @@ def test_child_category_threads_list_renders_empty_to_moderators(
     assert_contains(response, child_category.name)
 
 
+def test_hidden_category_threads_list_renders_error_to_guests(hidden_category, client):
+    response = client.get(hidden_category.get_absolute_url())
+    assert response.status_code == 404
+
+
+def test_hidden_category_threads_list_renders_error_to_users(
+    hidden_category, user_client
+):
+    response = user_client.get(hidden_category.get_absolute_url())
+    assert response.status_code == 404
+
+
 def test_private_threads_list_shows_permission_error_to_guests(db, client):
     response = client.get(reverse("misago:private-threads"))
     assert_contains(

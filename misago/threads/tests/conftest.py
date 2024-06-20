@@ -31,3 +31,10 @@ def child_category(default_category, guests_group, members_group, moderators_gro
         )
 
     return child_category
+
+
+@pytest.fixture
+def hidden_category(root_category):
+    hidden_category = Category(name="Hidden Category", slug="hidden-category")
+    hidden_category.insert_at(root_category, position="last-child", save=True)
+    return hidden_category

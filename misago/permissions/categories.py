@@ -8,28 +8,12 @@ from .enums import CategoryPermission
 from .proxy import UserPermissionsProxy
 
 
-class CategoryNotFoundError(Http404):
-    def __str__(self) -> str:
-        return pgettext(
-            "category permission error",
-            "This category doesn't exist or you don't have permission to see it.",
-        )
-
-
-class CategoryBrowseError(PermissionDenied):
-    def __str__(self) -> str:
-        return pgettext(
-            "category permission error",
-            "You can't browse the contents of this category.",
-        )
-
-
 def check_see_category_permission(
     permissions: UserPermissionsProxy,
     category: Category,
 ):
     if category.id not in permissions.categories[CategoryPermission.SEE]:
-        raise CategoryNotFoundError()
+        raise Http404()
 
 
 def check_browse_category_permission(
@@ -42,7 +26,12 @@ def check_browse_category_permission(
     if category.id not in permissions.categories[CategoryPermission.BROWSE] and not (
         delay_browse_check and category.delay_browse_check
     ):
-        raise CategoryBrowseError()
+        raise PermissionDenied(
+            pgettext(
+                "category permission error",
+                "You can't browse the contents of this category.",
+            )
+        )
 
 
 # TODO: MOVE THIS TO `permissions.threads`
