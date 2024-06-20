@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext_lazy
 
 
-def allow_delete_own_account(user):
+def check_delete_own_account_permission(user):
     if user.is_misago_admin:
         raise PermissionDenied(
             pgettext_lazy(

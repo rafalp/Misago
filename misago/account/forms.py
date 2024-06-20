@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..permissions.accounts import allow_delete_own_account
+from ..permissions.accounts import check_delete_own_account_permission
 from ..profile.profilefields import profile_fields
 from ..users.utils import hash_email
 from ..users.validators import validate_email, validate_username
@@ -392,7 +392,7 @@ class AccountDeleteForm(forms.Form):
             )
 
         try:
-            allow_delete_own_account(self.instance)
+            check_delete_own_account_permission(self.instance)
         except PermissionDenied as e:
             raise forms.ValidationError(str(e))
 
