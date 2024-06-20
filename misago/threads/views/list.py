@@ -1,91 +1,141 @@
-from django.http import Http404
-from django.shortcuts import render
-from django.urls import reverse
+from django.http import HttpRequest
 from django.views import View
+from django.shortcuts import render
 
-from ...core.shortcuts import get_int_or_404
-from ..viewmodels import (
-    ForumThreads,
-    PrivateThreads,
-    PrivateThreadsCategory,
-    ThreadsCategory,
-    ThreadsRootCategory,
+from ...categories.enums import CategoryTree
+from ...categories.models import Category
+from ...pagination.cursor import paginate_queryset
+from ...permissions.categories import (
+    CategoryNotFoundError,
+    check_browse_category_permission,
+    filter_categories_threads_queryset,
 )
+from ..models import Thread
 
 
-class ThreadsList(View):
-    category = None
-    threads = None
+class ListView(View):
+    template_name: str
 
-    template_name = None
+    def get(self, request: HttpRequest, **kwargs):
+        context = self.get_context(request, kwargs)
+        return render(request, self.template_name, context)
 
-    def get(self, request, list_type=None, **kwargs):
-        start = get_int_or_404(request.GET.get("start", 0))
+    def get_context(self, request: HttpRequest, kwargs: dict):
+        return {"request": request}
 
-        category = self.get_category(request, **kwargs)
-        threads = self.get_threads(request, category, list_type, start)
 
-        frontend_context = self.get_frontend_context(request, category, threads)
-        request.frontend_context.update(frontend_context)
+class ThreadsListView(ListView):
+    template_name = "misago/threads/index.html"
 
-        template_context = self.get_template_context(request, category, threads)
-        return render(request, self.template_name, template_context)
+    def get_context(self, request: HttpRequest, kwargs: dict):
+        threads = self.get_threads(request, kwargs)
 
-    def get_category(self, request, **kwargs):
-        return self.category(request, **kwargs)  # pylint: disable=not-callable
+        return {
+            "request": request,
+            "threads": threads,
+        }
 
-    def get_threads(self, request, category, list_type, start):
-        return self.threads(  # pylint: disable=not-callable
-            request, category, list_type, start
+    def get_threads(self, request: HttpRequest, kwargs: dict):
+        categories: list[int] = list(request.categories.categories)
+        queryset = filter_categories_threads_queryset(
+            request.user_permissions,
+            categories,
+            Thread.objects,
         )
 
-    def get_frontend_context(self, request, category, threads):
-        context = self.get_default_frontend_context()
+        paginator = paginate_queryset(
+            request,
+            queryset,
+            request.settings.threads_per_page,
+            order_by="-last_post_id",
+            raise_404=True,
+        )
 
-        context.update(category.get_frontend_context())
-        context.update(threads.get_frontend_context())
-
-        return context
-
-    def get_default_frontend_context(self):
-        return {}
-
-    def get_template_context(self, request, category, threads):
-        context = self.get_default_template_context()
-
-        context.update(category.get_template_context())
-        context.update(threads.get_template_context())
-
-        return context
-
-    def get_default_template_context(self):
-        return {}
+        return {
+            "items": paginator.items,
+            "paginator": paginator,
+        }
 
 
-class ForumThreadsList(ThreadsList):
-    category = ThreadsRootCategory
-    threads = ForumThreads
+class CategoryThreadsListView(ListView):
+    template_name = "misago/category/index.html"
 
-    template_name = "misago/threadslist/threads.html"
+    def get_context(self, request: HttpRequest, kwargs: dict):
+        category = self.get_category(request, kwargs)
 
-    def get_default_frontend_context(self):
-        return {"MERGE_THREADS_API": reverse("misago:api:thread-merge")}
+        if not (category.is_vanilla and category.list_children_threads):
+            threads = self.get_threads(request, category, kwargs)
+        else:
+            threads = None
 
+        return {
+            "request": request,
+            "category": category,
+            "threads": threads,
+        }
 
-class CategoryThreadsList(ForumThreadsList):
-    category = ThreadsCategory
+    def get_category(self, request: HttpRequest, kwargs: dict):
+        try:
+            category = Category.objects.get(
+                id=kwargs["id"],
+                tree_id=CategoryTree.THREADS,
+                level__gt=0,
+            )
+        except Category.DoesNotExist:
+            raise CategoryNotFoundError()
 
-    template_name = "misago/threadslist/category.html"
+        check_browse_category_permission(
+            request.user_permissions,
+            category,
+            delay_browse_check=True,
+        )
 
-    def get_category(self, request, **kwargs):
-        category = super().get_category(request, **kwargs)
-        if not category.level:
-            raise Http404()  # disallow root category access
         return category
 
+    def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
+        categories: list[int] = []
+        if category.list_children_threads:
+            categories += [
+                c["id"]
+                for c in request.categories.get_category_descendants(category.id)
+            ]
+        else:
+            categories.append(category.id)
 
-class PrivateThreadsList(ThreadsList):
-    category = PrivateThreadsCategory
-    threads = PrivateThreads
+        queryset = filter_categories_threads_queryset(
+            request.user_permissions,
+            categories,
+            Thread.objects,
+        )
 
-    template_name = "misago/threadslist/private_threads.html"
+        paginator = paginate_queryset(
+            request,
+            queryset,
+            request.settings.threads_per_page,
+            order_by="-last_post_id",
+            raise_404=True,
+        )
+
+        return {
+            "items": paginator.items,
+            "paginator": paginator,
+        }
+
+    def get_threads_queryset(
+        self, request: HttpRequest, category: Category, kwargs: dict
+    ):
+        pass
+
+    def get_pinned_threads_queryset(
+        self, request: HttpRequest, category: Category, kwargs: dict, queryset
+    ):
+        pass
+
+    def get_pinned_threads_queryset(
+        self, request: HttpRequest, category: Category, kwargs: dict, queryset
+    ):
+        pass
+
+
+class PrivateThreadsListView(ListView):
+    pass

@@ -30,6 +30,7 @@ def check_browse_category_permission(
         raise CategoryBrowseError()
 
 
+# TODO: MOVE THIS TO `permissions.threads`
 def filter_categories_threads_queryset(
     permissions: UserPermissionsProxy, categories: list[int], queryset
 ):
@@ -41,7 +42,7 @@ def filter_categories_threads_queryset(
 
             if permissions.user.is_authenticated:
                 queryset = queryset.filter(
-                    Q(is_unapproved=False) | Q(thread_starter=permissions.user)
+                    Q(is_unapproved=False) | Q(starter=permissions.user)
                 )
             else:
                 queryset = queryset.filter(is_unapproved=False)
