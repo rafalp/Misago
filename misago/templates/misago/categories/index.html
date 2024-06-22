@@ -74,7 +74,11 @@
 
 {% block content %}
 <div class="page page-categories{{ categories|iffalse:' page-message' }}">
-  {% include "misago/categories/header.html" %}
+  {% if is_index %}
+    {% include "misago/index_header.html" %}
+  {% else %}
+    {% include "misago/categories/header.html" %}
+  {% endif %}
   <div class="container page-container">
     {% pluginoutlet CATEGORIES_LIST_START %}
     {% if categories_list %}

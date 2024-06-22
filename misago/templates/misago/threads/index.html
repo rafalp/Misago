@@ -4,8 +4,11 @@
 
 {% block content %}
 <div class="page page-threads">
-  {% include "misago/threads/header.html" %}
-
+  {% if is_index %}
+    {% include "misago/index_header.html" %}
+  {% else %}
+    {% include "misago/threads/header.html" %}
+  {% endif %}
   <div class="container page-container">
 
     {% if threads %}

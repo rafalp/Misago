@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="container page-header-container">
+  <div class="page-header page-header-private-threads">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-private-threads">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              <h1>{% trans "Private threads" context "private threads page" %}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="page-header-details">
+          <div class="page-header-message">
+            <p>
+              {% blocktrans trimmed context "private threads page" %}
+                Private threads are threads that can be seen only by their starters and the users they have invited. Moderators can also see these threads if they contain reported posts.
+              {% endblocktrans %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

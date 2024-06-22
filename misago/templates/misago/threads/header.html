@@ -1,20 +1,13 @@
 {% load i18n %}
-
-
-{% block content %}
 <div class="container page-header-container">
-  <div class="page-header page-header-category">
+  <div class="page-header page-header-threads">
     <div class="page-header-bg-image">
       <div class="page-header-bg-overlay">
         <div class="page-header-image"></div>
-        <div class="page-header-banner page-header-banner-category">
+        <div class="page-header-banner page-header-banner-threads">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
-              {% if is_index %}
-                <h1>{{ settings.index_header|default:settings.forum_name }}</h1>
-              {% else %}
-                <h1>SITE THREADS</h1>
-              {% endif %}
+              <h1>{% trans "Threads" context "threads page" %}</h1>
             </div>
           </div>
         </div>
@@ -22,4 +15,3 @@
     </div>
   </div>
 </div>
-{% endblock content %}
