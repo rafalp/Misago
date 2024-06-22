@@ -37,7 +37,7 @@ class ThreadsListView(ListView):
         is_index: bool | None = None,
         **kwargs: Any
     ) -> HttpResponse:
-        if is_index is False and request.settings.index_view == "threads":
+        if not is_index and request.settings.index_view == "threads":
             return redirect(reverse("misago:index"))
 
         return super().dispatch(request, *args, is_index=is_index, **kwargs)

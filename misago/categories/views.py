@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 def index(request, *args, is_index: bool | None = None, **kwargs):
-    if is_index is False and request.settings.index_view == "categories":
+    if not is_index and request.settings.index_view == "categories":
         return redirect(reverse("misago:index"))
 
     categories_list = get_categories_list(request)

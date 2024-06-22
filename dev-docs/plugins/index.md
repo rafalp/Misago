@@ -64,3 +64,10 @@ If you are using the [local development setup](https://github.com/rafalp/misago)
 If you are interested in creating a custom plugin, please see the [plugin tutorial](./tutorial.md).
 
 Once you have your basic plugin up and running, the [extending Misago](./extending-misago.md) document contains a list of all available extension points.
+
+
+## Adding new choices to the "index page" setting
+
+Plugins can register custom views as new choices in the "index page" setting:
+
+[Custom index pages](./forum-index.md)
