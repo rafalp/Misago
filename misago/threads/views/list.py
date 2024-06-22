@@ -1,8 +1,9 @@
 from typing import Any
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse as HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
-from django.shortcuts import render
 
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
@@ -29,11 +30,24 @@ class ListView(View):
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
 
+    def dispatch(
+        self,
+        request: HttpRequest,
+        *args: Any,
+        is_index: bool | None = None,
+        **kwargs: Any
+    ) -> HttpResponse:
+        if is_index is False and request.settings.index_view == "threads":
+            return redirect(reverse("misago:index"))
+
+        return super().dispatch(request, *args, is_index=is_index, **kwargs)
+
     def get_context(self, request: HttpRequest, kwargs: dict):
         threads = self.get_threads(request, kwargs)
 
         return {
             "request": request,
+            "is_index": kwargs.get("is_index", False),
             "threads": threads,
         }
 
@@ -150,3 +164,8 @@ class PrivateThreadsListView(ListView):
     def get(self, request: HttpRequest, **kwargs):
         context = self.get_context(request, kwargs)
         return render(request, self.template_name, context)
+
+
+threads = ThreadsListView.as_view()
+category_threads = CategoryThreadsListView.as_view()
+private_threads = PrivateThreadsListView.as_view()

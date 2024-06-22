@@ -13,11 +13,7 @@ from ..views.goto import (
     PrivateThreadGotoLastView,
     PrivateThreadGotoNewView,
 )
-from ..views.list import (
-    CategoryThreadsListView,
-    ThreadsListView,
-    PrivateThreadsListView,
-)
+from ..views.list import category_threads, private_threads, threads
 from ..views.subscribed import redirect_subscribed_to_watched
 from ..views.thread import ThreadView, PrivateThreadView
 
@@ -25,57 +21,36 @@ from ..views.thread import ThreadView, PrivateThreadView
 urlpatterns = [
     path(
         "threads/",
-        ThreadsListView.as_view(),
+        threads,
         name="threads",
+        kwargs={"is_index": False},
     ),
     path(
         "threads/<slug:filter>/",
-        ThreadsListView.as_view(),
+        threads,
         name="threads",
     ),
     path(
         "c/<slug:slug>/<int:id>/",
-        CategoryThreadsListView.as_view(),
+        category_threads,
         name="category",
     ),
     path(
         "c/<slug:slug>/<int:id>/<slug:filter>/",
-        CategoryThreadsListView.as_view(),
+        category_threads,
         name="category",
     ),
     path(
         "private/",
-        PrivateThreadsListView.as_view(),
+        private_threads,
         name="private-threads",
     ),
     path(
         "private/<slug:filter>/",
-        PrivateThreadsListView.as_view(),
+        private_threads,
         name="private-threads",
     ),
 ]
-
-LISTS_TYPES = ("all", "my", "new", "unread", "watched", "unapproved")
-
-
-def threads_list_patterns(prefix, view, patterns):
-    urls = []
-    for i, pattern in enumerate(patterns):
-        if i > 0:
-            url_name = "%s-%s" % (prefix, LISTS_TYPES[i])
-        else:
-            url_name = prefix
-
-        urls.append(
-            path(
-                pattern,
-                view.as_view(),
-                name=url_name,
-                kwargs={"list_type": LISTS_TYPES[i]},
-            )
-        )
-
-    return urls
 
 
 # Redirect from subscribed to watched

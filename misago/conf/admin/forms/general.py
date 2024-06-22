@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
+from ....forumindex.views import index_views
 from .base import SettingsForm
 
 
@@ -10,6 +11,7 @@ class GeneralSettingsForm(SettingsForm):
         "forum_name",
         "forum_address",
         "index_header",
+        "index_view",
         "index_title",
         "index_message",
         "index_meta_description",
@@ -157,6 +159,18 @@ class GeneralSettingsForm(SettingsForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Add index_view choice field
+        self.fields["index_view"] = forms.CharField(
+            label=pgettext_lazy("admin general settings form", "Index page"),
+            help_text=pgettext_lazy(
+                "admin general settings form",
+                "Select the page to display on the forum index.",
+            ),
+            widget=forms.RadioSelect(choices=index_views.get_choices()),
+            required=True,
+        )
+
+        # Set help text with accurate forum address from request on forum_address field
         address = self.request.build_absolute_uri("/").rstrip("/")
         self["forum_address"].help_text = pgettext_lazy(
             "admin general settings form",

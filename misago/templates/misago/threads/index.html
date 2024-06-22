@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<div class="page page-category">
+<div class="page page-threads">
   {% include "misago/threads/header.html" %}
 
   <div class="container page-container">
@@ -20,7 +20,7 @@
       </ul>
 
       {% if threads.paginator.has_previous %}
-        <a href="{% url 'misago:threads-v2' %}" class="btn btn-default">
+        <a href="{% url 'misago:threads' %}" class="btn btn-default">
           Start
         </a>
       {% else %}
@@ -29,7 +29,7 @@
         </button>
       {% endif %}
       {% if threads.paginator.has_previous %}
-        <a href="{% url 'misago:threads-v2' %}?before={{ threads.paginator.first_cursor }}" class="btn btn-default">
+        <a href="{% url 'misago:threads' %}?before={{ threads.paginator.first_cursor }}" class="btn btn-default">
           Previous
         </a>
       {% else %}
@@ -38,7 +38,7 @@
         </button>
       {% endif %}
       {% if threads.paginator.has_next %}
-        <a href="{% url 'misago:threads-v2' %}?after={{ threads.paginator.last_cursor }}" class="btn btn-default">
+        <a href="{% url 'misago:threads' %}?after={{ threads.paginator.last_cursor }}" class="btn btn-default">
           Next
         </a>
       {% else %}

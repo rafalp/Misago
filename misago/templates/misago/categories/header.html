@@ -1,5 +1,5 @@
 {% load i18n %}
-{% if not THREADS_ON_INDEX and settings.index_header %}
+{% if is_index %}
   <div class="container page-header-container">
     <div class="page-header page-header-forum-index">
       <div class="page-header-bg-image">
@@ -8,7 +8,7 @@
           <div class="page-header-banner page-header-banner-forum-index">
             <div class="page-header-banner-bg-image">
               <div class="page-header-banner-bg-overlay">
-                <h1>{{ settings.index_header }}</h1>
+                <h1>{{ settings.index_header|default:settings.forum_name }}</h1>
               </div>
             </div>
           </div>
@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-{% elif THREADS_ON_INDEX %}
+{% else %}
   <div class="container page-header-container">
     <div class="page-header page-header-categories">
       <div class="page-header-bg-image">

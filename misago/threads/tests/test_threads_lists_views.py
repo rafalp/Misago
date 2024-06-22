@@ -1,18 +1,22 @@
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...test import assert_contains
 
 
+@override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_guests(db, client):
     response = client.get(reverse("misago:threads"))
     assert response.status_code == 200
 
 
+@override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_users(user_client):
     response = user_client.get(reverse("misago:threads"))
     assert response.status_code == 200
 
 
+@override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:threads"))
     assert response.status_code == 200

@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
@@ -15,13 +16,19 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-def index(request):
+def index(request, *args, is_index: bool | None = None, **kwargs):
+    if is_index is False and request.settings.index_view == "categories":
+        return redirect(reverse("misago:index"))
+
     categories_list = get_categories_list(request)
 
     return render(
         request,
         "misago/categories/index.html",
-        {"categories_list": categories_list},
+        {
+            "is_index": is_index,
+            "categories_list": categories_list,
+        },
     )
 
 

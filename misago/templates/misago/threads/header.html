@@ -10,7 +10,11 @@
         <div class="page-header-banner page-header-banner-category">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
-              <h1>SITE THREADS</h1>
+              {% if is_index %}
+                <h1>{{ settings.index_header|default:settings.forum_name }}</h1>
+              {% else %}
+                <h1>SITE THREADS</h1>
+              {% endif %}
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@
       </ul>
 
       {% if threads.paginator.has_previous %}
-        <a href="{% url 'misago:category-v2' id=category.id slug=category.slug %}" class="btn btn-default">
+        <a href="{% url 'misago:category' id=category.id slug=category.slug %}" class="btn btn-default">
           Start
         </a>
       {% else %}
@@ -32,7 +32,7 @@
         </button>
       {% endif %}
       {% if threads.paginator.has_previous %}
-        <a href="{% url 'misago:category-v2' id=category.id slug=category.slug %}?before={{ threads.paginator.first_cursor }}" class="btn btn-default">
+        <a href="{% url 'misago:category' id=category.id slug=category.slug %}?before={{ threads.paginator.first_cursor }}" class="btn btn-default">
           Previous
         </a>
       {% else %}
@@ -41,7 +41,7 @@
         </button>
       {% endif %}
       {% if threads.paginator.has_next %}
-        <a href="{% url 'misago:category-v2' id=category.id slug=category.slug %}?after={{ threads.paginator.last_cursor }}" class="btn btn-default">
+        <a href="{% url 'misago:category' id=category.id slug=category.slug %}?after={{ threads.paginator.last_cursor }}" class="btn btn-default">
           Next
         </a>
       {% else %}

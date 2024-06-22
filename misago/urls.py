@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 
 from . import hooks
 from .conf import settings
-from .core.views import forum_index
+from .forumindex.views import forum_index
 
 app_name = "misago"
 
