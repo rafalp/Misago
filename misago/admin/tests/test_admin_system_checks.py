@@ -111,7 +111,7 @@ def test_warning_about_unprocessed_data_downloads_is_displayed_on_checks_list(
 
 
 class RequestMock:
-    absolute_uri = "https://misago-project.org/somewhere/"
+    absolute_uri = "https://misago-project.org"
 
     def __init__(self, settings):
         self.settings = settings
