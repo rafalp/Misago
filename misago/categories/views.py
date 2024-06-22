@@ -58,9 +58,9 @@ def get_categories_list(request: HttpRequest):
             )
 
         # Set read state
-        if request.user.is_authenticated and new_posts[category.id]:
-            category_data["new_posts"] = True
-            category_data["children_new_posts"] = True
+        # if request.user.is_authenticated and new_posts[category.id]:
+        #     category_data["new_posts"] = True
+        #     category_data["children_new_posts"] = True
 
         # Aggregate data from category to its parent
         if category.level > 1:
