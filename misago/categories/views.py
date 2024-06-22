@@ -7,7 +7,6 @@ from django.urls import reverse
 
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
-from ..readtracker.categories import get_categories_new_posts
 from ..users.models import User
 from .enums import CategoryTree
 from .models import Category
@@ -41,10 +40,7 @@ def get_categories_list(request: HttpRequest):
     new_posts: dict[int, bool] = {}
 
     if request.user.is_authenticated:
-        new_posts = get_categories_new_posts(
-            request,
-            [item["category"] for item in categories_data.values()],
-        )
+        pass  # TODO: plug to new read tracker!
 
     # Populate categories last posters and read states
     # Aggregate categories to their parents
