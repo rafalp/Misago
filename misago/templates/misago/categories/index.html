@@ -79,7 +79,9 @@
   {% else %}
     {% include "misago/categories/header.html" %}
   {% endif %}
+
   <div class="container page-container">
+
     {% pluginoutlet CATEGORIES_LIST_START %}
     {% if categories_list %}
       {% include "misago/categories/categories_list_body.html" with items=categories_list %}
@@ -87,6 +89,9 @@
       {% include "misago/categories/empty_message.html" %}
     {% endif %}
     {% pluginoutlet CATEGORIES_LIST_END %}
+
+    {% include "misago/gototop_toolbar.html" %}
+
   </div>
 </div>
 {% endblock content %}

@@ -84,10 +84,13 @@ class CategoryThreadsListView(ListView):
         else:
             threads = None
 
+        path = request.categories.get_category_path(category.id, include_self=False)
+
         return {
             "request": request,
             "category": category,
             "threads": threads,
+            "breadcrumbs": path,
         }
 
     def get_category(self, request: HttpRequest, kwargs: dict):
