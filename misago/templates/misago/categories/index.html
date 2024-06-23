@@ -3,23 +3,23 @@
 
 
 {% block title %}
-  {% if THREADS_ON_INDEX %}
-    {% trans "Categories" context "categories page" %} | {{ block.super }}
-  {% else %}
+  {% if is_index %}
     {{ settings.index_title|default:settings.forum_name }}
+  {% else %}
+    {% trans "Categories" context "categories page" %} | {{ block.super }}
   {% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-  {% if not THREADS_ON_INDEX and settings.index_meta_description %}
-    {{ settings.index_meta_description }}
-  {% else %}
+  {% if is_index  %}
     {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
     {% endblocktrans %}
+  {% elif settings.index_meta_description %}
+    {{ settings.index_meta_description }}
   {% endif %}
 {% endblock meta-description %}
 
