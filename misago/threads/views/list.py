@@ -7,12 +7,18 @@ from django.views import View
 
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
+from ...metatags.metatags import get_forum_index_metatags
 from ...pagination.cursor import paginate_queryset
 from ...permissions.categories import (
     check_browse_category_permission,
     filter_categories_threads_queryset,
 )
 from ...permissions.private_threads import check_private_threads_permission
+from ..hooks import (
+    get_category_threads_page_metatags_hook,
+    get_private_threads_page_metatags_hook,
+    get_threads_page_metatags_hook,
+)
 from ..models import Thread
 
 
@@ -45,11 +51,26 @@ class ThreadsListView(ListView):
     def get_context(self, request: HttpRequest, kwargs: dict):
         threads = self.get_threads(request, kwargs)
 
-        return {
+        context = {
             "request": request,
             "is_index": kwargs.get("is_index", False),
             "threads": threads,
         }
+
+        context["metatags"] = self.get_metatags(request, context)
+
+        return context
+
+    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
+        return get_threads_page_metatags_hook(
+            self.get_metatags_action, request, context
+        )
+
+    def get_metatags_action(self, request: HttpRequest, context: dict) -> dict:
+        if context["is_index"]:
+            return get_forum_index_metatags(request)
+
+        return {}
 
     def get_threads(self, request: HttpRequest, kwargs: dict):
         categories: list[int] = list(request.categories.categories)

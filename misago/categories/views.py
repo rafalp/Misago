@@ -5,10 +5,12 @@ from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from ..metatags.metatags import get_forum_index_metatags
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..users.models import User
 from .enums import CategoryTree
+from .hooks import get_categories_page_metatags_hook
 from .models import Category
 
 if TYPE_CHECKING:
@@ -20,15 +22,14 @@ def index(request, *args, is_index: bool | None = None, **kwargs):
         return redirect(reverse("misago:index"))
 
     categories_list = get_categories_list(request)
+    context = {
+        "is_index": is_index,
+        "categories_list": categories_list,
+    }
 
-    return render(
-        request,
-        "misago/categories/index.html",
-        {
-            "is_index": is_index,
-            "categories_list": categories_list,
-        },
-    )
+    context["metatags"] = get_categories_page_metatags(request, context)
+
+    return render(request, "misago/categories/index.html", context)
 
 
 def get_categories_list(request: HttpRequest):
@@ -197,3 +198,16 @@ def show_top_category(category: dict) -> bool:
         return False
 
     return True
+
+
+def get_categories_page_metatags(request: HttpRequest, context: dict) -> dict:
+    return get_categories_page_metatags_hook(
+        _get_categories_page_metatags_action, request, context
+    )
+
+
+def _get_categories_page_metatags_action(request: HttpRequest, context: dict) -> dict:
+    if context["is_index"]:
+        return get_forum_index_metatags(request)
+
+    return {}

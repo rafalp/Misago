@@ -67,6 +67,7 @@ class GetDefaultMetatagsHook(
     ```python
     from django.http import HttpRequest
     from misago.metatags.hooks import get_default_metatags_hook
+    from misago.metatags.metatag import MetaTag
 
 
     @get_default_metatags_hook.append_filter
