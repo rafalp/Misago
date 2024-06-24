@@ -111,10 +111,10 @@
                 <span class="material-icon">first_page</span>
               </a>
               <a
-                href="{% url 'misago:account-download-data' %}?before={{ data_downloads.first_cursor }}"
+                href="{% url 'misago:account-download-data' %}{{ threads.paginator.previous_cursor_query }}"
                 class="btn btn-default btn-outline btn-icon"
                 title="{% trans 'Go to previous page' context 'download data paginator' %}"
-                hx-get="{% url 'misago:account-download-data' %}?before={{ data_downloads.first_cursor }}"
+                hx-get="{% url 'misago:account-download-data' %}{{ threads.paginator.previous_cursor_query }}"
               >
                 <span class="material-icon">chevron_left</span>
               </a>
@@ -138,10 +138,10 @@
             {% endif %}
             {% if data_downloads.has_next %}
               <a
-                href="{% url 'misago:account-download-data' %}?after={{ data_downloads.last_cursor }}"
+                href="{% url 'misago:account-download-data' %}{{ threads.paginator.next_cursor_query }}"
                 class="btn btn-default btn-outline btn-icon"
                 title="{% trans 'Go to next page' context 'download data paginator' %}"
-                hx-get="{% url 'misago:account-download-data' %}?after={{ data_downloads.last_cursor }}"
+                hx-get="{% url 'misago:account-download-data' %}{{ threads.paginator.next_cursor_query }}"
               >
                 <span class="material-icon">chevron_right</span>
               </a>

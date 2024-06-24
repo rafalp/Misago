@@ -71,10 +71,10 @@
                 <span class="material-icon">first_page</span>
               </a>
               <a
-                href="{% url 'misago:account-username' %}{% if username_history.previous_cursor %}?cursor={{ username_history.previous_cursor }}{% endif %}"
+                href="{% url 'misago:account-username' %}{{ username_history.previous_cursor_query }}"
                 class="btn btn-default btn-outline btn-icon"
                 title="{% trans 'Go to previous page' context 'username history paginator' %}"
-                hx-get="{% url 'misago:account-username' %}{% if username_history.previous_cursor %}?cursor={{ username_history.previous_cursor }}{% endif %}"
+                hx-get="{% url 'misago:account-username' %}{{ username_history.previous_cursor_query }}"
               >
                 <span class="material-icon">chevron_left</span>
               </a>
@@ -98,10 +98,10 @@
             {% endif %}
             {% if username_history.has_next %}
               <a
-                href="{% url 'misago:account-username' %}?cursor={{ username_history.next_cursor }}"
+                href="{% url 'misago:account-username' %}{{ username_history.next_cursor_query }}"
                 class="btn btn-default btn-outline btn-icon"
                 title="{% trans 'Go to next page' context 'username history paginator' %}"
-                hx-get="{% url 'misago:account-username' %}?cursor={{ username_history.next_cursor }}"
+                hx-get="{% url 'misago:account-username' %}{{ username_history.next_cursor_query }}"
               >
                 <span class="material-icon">chevron_right</span>
               </a>

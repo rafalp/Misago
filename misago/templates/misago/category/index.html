@@ -30,7 +30,7 @@
                 <a href="{% url 'misago:category' id=category.id slug=category.slug %}" class="btn btn-default">
                   Newest
                 </a>
-                <a href="{% url 'misago:category' id=category.id slug=category.slug %}{% if threads.paginator.previous_cursor %}?cursor={{ threads.paginator.previous_cursor }}{% endif %}" class="btn btn-default">
+                <a href="{% url 'misago:category' id=category.id slug=category.slug %}{{ threads.paginator.previous_cursor_query }}" class="btn btn-default">
                   Previous
                 </a>
               {% else %}
@@ -42,7 +42,7 @@
                 </button>
               {% endif %}
               {% if threads.paginator.has_next %}
-                <a href="{% url 'misago:category' id=category.id slug=category.slug %}?cursor={{ threads.paginator.next_cursor }}" class="btn btn-default">
+                <a href="{% url 'misago:category' id=category.id slug=category.slug %}{{ threads.paginator.next_cursor_query }}" class="btn btn-default">
                   Next
                 </a>
               {% else %}

@@ -16,6 +16,20 @@ class CursorPaginationResult:
     next_cursor: Any | None
     previous_cursor: Any | None
 
+    @property
+    def next_cursor_query(self) -> str:
+        if self.next_cursor:
+            return f"?cursor={self.next_cursor}"
+        
+        return ""
+
+    @property
+    def previous_cursor_query(self) -> str:
+        if self.previous_cursor:
+            return f"?cursor={self.previous_cursor}"
+        
+        return ""
+
 
 def paginate_queryset(
     request,
