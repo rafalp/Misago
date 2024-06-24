@@ -24,24 +24,21 @@
 
       {% if threads.paginator.has_previous %}
         <a href="{% url 'misago:threads' %}" class="btn btn-default">
-          Start
+          Newset
         </a>
-      {% else %}
-        <button class="btn btn-default" disabled>
-          Start
-        </button>
-      {% endif %}
-      {% if threads.paginator.has_previous %}
-        <a href="{% url 'misago:threads' %}?before={{ threads.paginator.first_cursor }}" class="btn btn-default">
+        <a href="{% url 'misago:threads' %}{% if threads.paginator.previous_cursor %}?cursor={{ threads.paginator.previous_cursor }}{% endif %}" class="btn btn-default">
           Previous
         </a>
       {% else %}
+        <button class="btn btn-default" disabled>
+          Newest
+        </button>
         <button class="btn btn-default" disabled>
           Previous
         </button>
       {% endif %}
       {% if threads.paginator.has_next %}
-        <a href="{% url 'misago:threads' %}?after={{ threads.paginator.last_cursor }}" class="btn btn-default">
+        <a href="{% url 'misago:threads' %}?cursor={{ threads.paginator.next_cursor }}" class="btn btn-default">
           Next
         </a>
       {% else %}

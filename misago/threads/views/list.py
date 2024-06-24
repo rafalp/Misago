@@ -21,9 +21,9 @@ from ...permissions.categories import (
 )
 from ...permissions.private_threads import check_private_threads_permission
 from ..hooks import (
-    get_category_threads_page_metatags_hook,
-    get_private_threads_page_metatags_hook,
-    get_threads_page_metatags_hook,
+    get_category_threads_page_context_hook,
+    get_private_threads_page_context_hook,
+    get_threads_page_context_hook,
 )
 from ..models import Thread
 
@@ -55,6 +55,9 @@ class ThreadsListView(ListView):
         return super().dispatch(request, *args, is_index=is_index, **kwargs)
 
     def get_context(self, request: HttpRequest, kwargs: dict):
+        return get_threads_page_context_hook(self.get_context_action, request, kwargs)
+
+    def get_context_action(self, request: HttpRequest, kwargs: dict):
         threads = self.get_threads(request, kwargs)
 
         context = {
@@ -89,11 +92,6 @@ class ThreadsListView(ListView):
         }
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        return get_threads_page_metatags_hook(
-            self.get_metatags_action, request, context
-        )
-
-    def get_metatags_action(self, request: HttpRequest, context: dict) -> dict:
         if context["is_index"]:
             return get_forum_index_metatags(request)
 
@@ -104,6 +102,11 @@ class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
 
     def get_context(self, request: HttpRequest, kwargs: dict):
+        return get_category_threads_page_context_hook(
+            self.get_context_action, request, kwargs
+        )
+
+    def get_context_action(self, request: HttpRequest, kwargs: dict):
         category = self.get_category(request, kwargs)
 
         if not (category.is_vanilla and category.list_children_threads):
@@ -187,11 +190,6 @@ class CategoryThreadsListView(ListView):
         pass
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        return get_category_threads_page_metatags_hook(
-            self.get_metatags_action, request, context
-        )
-
-    def get_metatags_action(self, request: HttpRequest, context: dict) -> dict:
         metatags = get_default_metatags(request)
 
         category = context["category"]
@@ -237,12 +235,21 @@ class PrivateThreadsListView(ListView):
         context = self.get_context(request, kwargs)
         return render(request, self.template_name, context)
 
-    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        return get_private_threads_page_metatags_hook(
-            self.get_metatags_action, request, context
+    def get_context(self, request: HttpRequest, kwargs: dict):
+        return get_private_threads_page_context_hook(
+            self.get_context_action, request, kwargs
         )
 
-    def get_metatags_action(self, request: HttpRequest, context: dict) -> dict:
+    def get_context_action(self, request: HttpRequest, kwargs: dict):
+        context = {
+            "request": request,
+        }
+
+        context["metatags"] = self.get_metatags(request, {})
+
+        return context
+
+    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         return get_default_metatags(request)
 
 
