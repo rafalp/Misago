@@ -15,7 +15,7 @@ def test_pagination_with_cursor_returns_items_up_to_limit(notifications):
     assert page.has_next
     assert page.has_previous
     assert page.next_cursor == notifications[8]
-    assert page.previous_cursor == notifications[4]
+    assert page.previous_cursor == notifications[0]
 
     items_verbs = [item.verb for item in page.items]
     assert items_verbs == ["test_5", "test_6", "test_7", "test_8"]

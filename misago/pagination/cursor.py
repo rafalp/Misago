@@ -20,14 +20,14 @@ class CursorPaginationResult:
     def next_cursor_query(self) -> str:
         if self.next_cursor:
             return f"?cursor={self.next_cursor}"
-        
+
         return ""
 
     @property
     def previous_cursor_query(self) -> str:
         if self.previous_cursor:
             return f"?cursor={self.previous_cursor}"
-        
+
         return ""
 
 
@@ -66,17 +66,17 @@ def paginate_queryset(
         items = items[:per_page]
         next_cursor = getattr(items[-1], col_name)
 
-    if items:
-        cursor = getattr(items[0], col_name)
+    if cursor and items:
+        first_cursor = getattr(items[0], col_name)
         if order_desc:
-            filter_kwarg = {f"{col_name}__gt": cursor}
+            filter_kwarg = {f"{col_name}__gt": first_cursor}
         else:
-            filter_kwarg = {f"{col_name}__lt": cursor}
+            filter_kwarg = {f"{col_name}__lt": first_cursor}
         previous_items = list(
             queryset.filter(**filter_kwarg)
             .select_related(None)
             .prefetch_related(None)
-            .order_by(col_name)
+            .order_by(col_name if order_desc else f"-{col_name}")
             .values_list(col_name, flat=True)[: per_page + 1]
         )
         has_previous = bool(previous_items)

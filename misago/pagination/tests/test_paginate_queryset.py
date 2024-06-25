@@ -67,7 +67,7 @@ def test_pagination_returns_firsts_and_previous_cursor_for_last_page(notificatio
 
     assert len(page.items) == 5
     assert page.next_cursor is None
-    assert page.previous_cursor == notifications[5]
+    assert page.previous_cursor == notifications[4]
 
 
 def test_pagination_returns_first_items_up_to_limit(notifications):
