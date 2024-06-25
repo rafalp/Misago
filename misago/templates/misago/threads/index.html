@@ -11,14 +11,25 @@
   {% endif %}
   <div class="container page-container">
 
-    {% if threads %}
+    {% if threads.items %}
       <ul>
-        {% for thread in threads.items %}
-          <li>
-            <a href="{% url 'misago:thread' pk=thread.id slug=thread.slug %}" class="item-title">
-              {{ thread.title }}
-            </a>
-          </li>
+        {% for item in threads.items %}
+          {% with item.thread as thread %}
+            <li>
+              <a href="{% url 'misago:thread' pk=thread.id slug=thread.slug %}" class="item-title">
+                {{ thread.title }}
+              </a>
+              <br />
+              {% for category in item.categories %}
+                <span>
+                  <a href="{{ category.url }}">
+                    {{ category.name }}
+                  </a>
+                </span>
+              {% endfor %}
+              {{ thread.last_post_id }}
+            </li>
+          {% endwith %}
         {% endfor %}
       </ul>
 

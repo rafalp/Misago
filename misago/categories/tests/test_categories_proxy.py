@@ -422,3 +422,125 @@ def test_categories_proxy_sets_last_flag_on_categories_menu_vanilla_category_las
         dict(**get_category_data_dict(child_category), last=True),
         get_category_data_dict(default_category),
     ]
+
+
+def test_categories_proxy_returns_default_category_thread_path(
+    default_category, user, cache_versions
+):
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_thread_categories(default_category.id) == [
+        get_category_data_dict(default_category),
+    ]
+
+
+def test_categories_proxy_returns_default_category_thread_path_from_default_category(
+    default_category, user, cache_versions
+):
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert (
+        categories.get_thread_categories(default_category.id, default_category.id) == []
+    )
+
+
+def test_categories_proxy_returns_child_category_thread_path(
+    default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    default_category.refresh_from_db()
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_thread_categories(child_category.id) == [
+        get_category_data_dict(default_category),
+        get_category_data_dict(child_category),
+    ]
+
+
+def test_categories_proxy_returns_child_category_thread_path_from_default_category(
+    default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    default_category.refresh_from_db()
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_thread_categories(child_category.id, default_category.id) == [
+        get_category_data_dict(child_category),
+    ]
+
+
+def test_categories_proxy_returns_child_category_thread_path_from_child_category(
+    default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    default_category.refresh_from_db()
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_thread_categories(child_category.id, child_category.id) == []
+
+
+def test_categories_proxy_returns_sibling_category_thread_path_from_child_category(
+    root_category, default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    sibling_category = Category(name="Sibling Category", slug="sibling-category")
+    sibling_category.insert_at(root_category, position="last-child", save=True)
+
+    default_category.refresh_from_db()
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+    grant_category_group_permissions(
+        sibling_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+
+    assert categories.get_thread_categories(sibling_category.id, child_category.id) == [
+        get_category_data_dict(sibling_category),
+    ]
