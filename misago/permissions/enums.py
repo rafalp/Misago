@@ -7,3 +7,9 @@ class CategoryPermission(StrEnum):
     START = "start"
     REPLY = "reply"
     ATTACHMENTS = "attachments"
+
+
+class CategoryAccess(StrEnum):
+    MODERATOR = "moderator"
+    STARTED_ONLY = "started_only"
+    DEFAULT = "default"
