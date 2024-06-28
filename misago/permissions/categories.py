@@ -1,5 +1,4 @@
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import pgettext
 
@@ -32,25 +31,3 @@ def check_browse_category_permission(
                 "You can't browse the contents of this category.",
             )
         )
-
-
-# TODO: MOVE THIS TO `permissions.threads`
-def filter_categories_threads_queryset(
-    permissions: UserPermissionsProxy, categories: list[int], queryset
-):
-    if len(categories) == 1:
-        category_id = categories[0]
-        queryset = queryset.filter(category_id=category_id)
-        if category_id not in permissions.categories_moderator:
-            queryset = queryset.filter(is_hidden=False)
-
-            if permissions.user.is_authenticated:
-                queryset = queryset.filter(
-                    Q(is_unapproved=False) | Q(starter=permissions.user)
-                )
-            else:
-                queryset = queryset.filter(is_unapproved=False)
-
-        return queryset
-
-    return queryset

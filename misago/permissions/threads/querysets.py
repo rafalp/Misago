@@ -1,8 +1,5 @@
-from typing import Callable
-
 from django.db.models import Q, QuerySet
 
-from ...categories.proxy import CategoriesProxy
 from ...threads.enums import ThreadWeight
 from ..enums import CategoryAccess, CategoryPermission
 from ..hooks import get_category_access_level_hook
@@ -13,7 +10,7 @@ class ThreadsQuerysetFilter:
     def __call__(
         self,
         permissions: UserPermissionsProxy,
-        categories: CategoriesProxy,
+        categories: list[dict],
         queryset: QuerySet,
     ) -> QuerySet:
         if permissions.is_global_moderator:
@@ -32,14 +29,14 @@ class ThreadsQuerysetFilter:
     def filter_queryset_for_global_moderator(
         self,
         permissions: UserPermissionsProxy,
-        categories: CategoriesProxy,
+        categories: list[dict],
         queryset: QuerySet,
     ) -> QuerySet:
         categories_ids: list[int] = []
 
-        for category_id, category in categories.categories.items():
+        for category in categories:
             if _can_see_category_threads(permissions, category):
-                categories_ids.append(category_id)
+                categories_ids.append(category["id"])
 
         if categories_ids:
             return queryset.filter(category_id__in=categories_ids)
@@ -70,20 +67,10 @@ class ThreadsQuerysetFilter:
 
 
 class SitePinnedThreadsQuerysetFilter(ThreadsQuerysetFilter):
-    def __call__(
-        self,
-        permissions: UserPermissionsProxy,
-        categories: CategoriesProxy,
-        queryset: QuerySet,
-    ) -> QuerySet:
-        return super().__call__(
-            permissions, categories, queryset.order_by("-last_post_id")
-        )
-
     def filter_queryset_for_global_moderator(
         self,
         permissions: UserPermissionsProxy,
-        categories: CategoriesProxy,
+        categories: list[dict],
         queryset: QuerySet,
     ) -> QuerySet:
         return super().filter_queryset_for_global_moderator(
@@ -124,7 +111,7 @@ class SiteThreadsQuerysetFilter(ThreadsQuerysetFilter):
     def filter_queryset_for_global_moderator(
         self,
         permissions: UserPermissionsProxy,
-        categories: CategoriesProxy,
+        categories: list[dict],
         queryset: QuerySet,
     ) -> QuerySet:
         return super().filter_queryset_for_global_moderator(
@@ -177,8 +164,109 @@ class SiteThreadsQuerysetFilter(ThreadsQuerysetFilter):
             )
 
 
+class CategoryPinnedThreadsQuerysetFilter(ThreadsQuerysetFilter):
+    def filter_queryset_for_global_moderator(
+        self,
+        permissions: UserPermissionsProxy,
+        categories: list[dict],
+        queryset: QuerySet,
+    ) -> QuerySet:
+        return super().filter_queryset_for_global_moderator(
+            permissions,
+            categories,
+            queryset.filter(weight__gt=ThreadWeight.NOT_PINNED),
+        )
+
+    def get_access_level_filter(
+        self,
+        permissions: UserPermissionsProxy,
+        access_level: str,
+        categories_ids: list[int],
+    ) -> Q | None:
+        if access_level == CategoryAccess.MODERATOR:
+            return Q(
+                category_id__in=categories_ids,
+                weight__gt=ThreadWeight.NOT_PINNED,
+            )
+
+        if permissions.user.is_anonymous:
+            return Q(
+                category_id__in=categories_ids,
+                weight__gt=ThreadWeight.NOT_PINNED,
+                is_hidden=False,
+                is_unapproved=False,
+            )
+
+        user_id = permissions.user.id
+        return Q(
+            category_id__in=categories_ids,
+            weight__gt=ThreadWeight.NOT_PINNED,
+            is_hidden=False,
+        ) & Q(Q(is_unapproved=False) | Q(starter_id=user_id))
+
+
+class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
+    def filter_queryset_for_global_moderator(
+        self,
+        permissions: UserPermissionsProxy,
+        categories: list[dict],
+        queryset: QuerySet,
+    ) -> QuerySet:
+        return super().filter_queryset_for_global_moderator(
+            permissions,
+            categories,
+            queryset.filter(weight=ThreadWeight.NOT_PINNED),
+        )
+
+    def get_access_level_filter(
+        self,
+        permissions: UserPermissionsProxy,
+        access_level: str,
+        categories_ids: list[int],
+    ) -> Q | None:
+        if access_level == CategoryAccess.MODERATOR:
+            return Q(
+                category_id__in=categories_ids,
+                weight=ThreadWeight.NOT_PINNED,
+            )
+
+        if permissions.user.is_anonymous:
+            return Q(
+                category_id__in=categories_ids,
+                weight=ThreadWeight.NOT_PINNED,
+                is_hidden=False,
+                is_unapproved=False,
+            )
+
+        user_id = permissions.user.id
+        if access_level == CategoryAccess.DEFAULT:
+            return Q(
+                category_id__in=categories_ids,
+                weight=ThreadWeight.NOT_PINNED,
+                is_hidden=False,
+            ) & Q(Q(is_unapproved=False) | Q(starter_id=user_id))
+
+        if access_level == CategoryAccess.STARTED_ONLY:
+            return Q(
+                category_id__in=categories_ids,
+                is_hidden=False,
+            ) & (
+                Q(
+                    weight=ThreadWeight.PINNED_IN_CATEGORY,
+                    is_unapproved=False,
+                )
+                | Q(
+                    weight__lt=ThreadWeight.PINNED_GLOBALLY,
+                    starter_id=user_id,
+                )
+            )
+
+
 filter_site_pinned_threads_queryset = SitePinnedThreadsQuerysetFilter()
 filter_site_threads_queryset = SiteThreadsQuerysetFilter()
+
+filter_category_pinned_threads_queryset = CategoryPinnedThreadsQuerysetFilter()
+filter_category_threads_queryset = CategoryThreadsQuerysetFilter()
 
 
 def get_categories_access(
@@ -186,7 +274,7 @@ def get_categories_access(
 ) -> dict[str, list[int]]:
     groups: dict[str, int] = {group: [] for group in CategoryAccess}
 
-    for category in categories.categories.values():
+    for category in categories:
         if not _can_see_category_threads(permissions, category):
             continue
 
