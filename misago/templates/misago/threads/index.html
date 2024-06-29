@@ -11,54 +11,13 @@
   {% endif %}
   <div class="container page-container">
 
-    {% if threads.items %}
-      <ul>
-        {% for item in threads.items %}
-          {% with item.thread as thread %}
-            <li>
-              <a href="{% url 'misago:thread' pk=thread.id slug=thread.slug %}" class="item-title">
-                {{ thread.title }}
-              </a>
-              <br />
-              {% for category in item.categories %}
-                <span>
-                  <a href="{{ category.url }}">
-                    {{ category.name }}
-                  </a>
-                </span>
-              {% endfor %}
-              {{ thread.last_post_id }}
-            </li>
-          {% endwith %}
-        {% endfor %}
-      </ul>
+    {% include "misago/threads_toolbar.html" %}
 
-      {% if threads.paginator.has_previous %}
-        <a href="{% url 'misago:threads' %}" class="btn btn-default">
-          Newset
-        </a>
-        <a href="{% url 'misago:threads' %}{{ threads.paginator.previous_cursor_query }}" class="btn btn-default">
-          Previous
-        </a>
-      {% else %}
-        <button class="btn btn-default" disabled>
-          Newest
-        </button>
-        <button class="btn btn-default" disabled>
-          Previous
-        </button>
-      {% endif %}
-      {% if threads.paginator.has_next %}
-        <a href="{% url 'misago:threads' %}{{ threads.paginator.next_cursor_query }}" class="btn btn-default">
-          Next
-        </a>
-      {% else %}
-        <button class="btn btn-default" disabled>
-          Next
-        </button>
-      {% endif %}
+    {% if threads.items %}
+      {% include threads.template_name %}
     {% endif %}
 
+    {% include "misago/threads_toolbar.html" with bottom=True %}
     {% include "misago/gototop_toolbar.html" %}
 
   </div>

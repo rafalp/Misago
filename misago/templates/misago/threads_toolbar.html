@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="toolbar">
+  <div class="toolbar-section">
+    <div class="toolbar-item">
+      {% include "misago/threads_paginator.html" %}
+    </div>
+  </div>
+  <div class="toolbar-spacer"></div>
+  {% if bottom and user.is_authenticated %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        <button class="btn btn-default btn-block" disabled>
+          {% trans "Mark all as read" context 'threads list' %}
+        </button>
+      </div>
+    </div>
+  {% endif %}
+  <div class="toolbar-section">
+    <div class="toolbar-item">
+      <button class="btn btn-primary btn-block" disabled>
+        {% trans "Start new thread" context 'threads list' %}
+      </button>
+    </div>
+  </div>
+</div>

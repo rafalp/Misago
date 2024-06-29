@@ -63,7 +63,10 @@ class GetThreadsPageContextHookFilter(Protocol):
 
 
 class GetThreadsPageContextHook(
-    FilterHook[GetThreadsPageContextHookAction, GetThreadsPageContextHookFilter]
+    FilterHook[
+        GetThreadsPageContextHookAction,
+        GetThreadsPageContextHookFilter,
+    ]
 ):
     """
     This hook wraps the standard function that Misago uses to get

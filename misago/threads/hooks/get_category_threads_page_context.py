@@ -64,7 +64,8 @@ class GetCategoryThreadsPageContextHookFilter(Protocol):
 
 class GetCategoryThreadsPageContextHook(
     FilterHook[
-        GetCategoryThreadsPageContextHookAction, GetCategoryThreadsPageContextHookFilter
+        GetCategoryThreadsPageContextHookAction,
+        GetCategoryThreadsPageContextHookFilter,
     ]
 ):
     """

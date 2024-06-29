@@ -17,7 +17,10 @@ from ...metatags.metatags import (
 )
 from ...pagination.cursor import paginate_queryset
 from ...permissions.categories import check_browse_category_permission
-from ...permissions.private_threads import check_private_threads_permission
+from ...permissions.private_threads import (
+    check_private_threads_permission,
+    filter_private_threads_queryset,
+)
 from ...permissions.threads import (
     filter_category_pinned_threads_queryset,
     filter_category_threads_queryset,
@@ -26,9 +29,14 @@ from ...permissions.threads import (
 )
 from ..hooks import (
     get_category_threads_page_context_hook,
+    get_category_threads_page_queryset_hook,
+    get_category_threads_page_threads_hook,
     get_private_threads_page_context_hook,
+    get_private_threads_page_queryset_hook,
+    get_private_threads_page_threads_hook,
     get_threads_page_context_hook,
     get_threads_page_queryset_hook,
+    get_threads_page_threads_hook,
 )
 from ..models import Thread
 
@@ -37,6 +45,7 @@ User = get_user_model()
 
 class ListView(View):
     template_name: str
+    threads_component_template_name = "misago/threads_list/index.html"
 
     def get(self, request: HttpRequest, **kwargs):
         context = self.get_context(request, kwargs)
@@ -84,16 +93,28 @@ class ThreadsListView(ListView):
             "threads": threads,
         }
 
+        if context["is_index"]:
+            context["pagination_url"] = reverse("misago:index")
+        elif kwargs.get("filter"):
+            context["pagination_url"] = reverse(
+                "misago:threads", kwargs={"filter": kwargs["filter"]}
+            )
+        else:
+            context["pagination_url"] = reverse("misago:threads")
+
         context["metatags"] = self.get_metatags(request, context)
 
         return context
 
     def get_threads(self, request: HttpRequest, kwargs: dict):
+        return get_threads_page_threads_hook(self.get_threads_action, request, kwargs)
+
+    def get_threads_action(self, request: HttpRequest, kwargs: dict):
         queryset = self.get_threads_queryset(request)
         paginator = self.get_threads_paginator(request, queryset)
 
         threads_list: list[Thread] = []
-        if not paginator.previous_cursor:
+        if not paginator.has_previous:
             threads_list = self.get_pinned_threads(request, queryset)
 
         threads_list += paginator.items
@@ -116,7 +137,7 @@ class ThreadsListView(ListView):
             )
 
         return {
-            "template_name": "...",
+            "template_name": self.threads_component_template_name,
             "items": items,
             "paginator": paginator,
         }
@@ -169,7 +190,7 @@ class CategoryThreadsListView(ListView):
     def get_context_action(self, request: HttpRequest, kwargs: dict):
         category = self.get_category(request, kwargs)
 
-        if not (category.is_vanilla and category.list_children_threads):
+        if not category.is_vanilla or category.list_children_threads:
             threads = self.get_threads(request, category, kwargs)
         else:
             threads = None
@@ -182,6 +203,18 @@ class CategoryThreadsListView(ListView):
             "threads": threads,
             "breadcrumbs": path,
         }
+
+        if kwargs.get("filter"):
+            context["pagination_url"] = reverse(
+                "misago:category",
+                kwargs={
+                    "id": category.id,
+                    "slug": category.slug,
+                    "filter": kwargs["filter"],
+                },
+            )
+        else:
+            context["pagination_url"] = category.get_absolute_url()
 
         context["metatags"] = self.get_metatags(request, context)
 
@@ -206,13 +239,21 @@ class CategoryThreadsListView(ListView):
         return category
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
-        categories = self.get_threads_categories(request, category)
+        return get_category_threads_page_threads_hook(
+            self.get_threads_action, request, category, kwargs
+        )
+
+    def get_threads_action(
+        self, request: HttpRequest, category: Category, kwargs: dict
+    ):
+        categories = self.get_threads_categories_for_filter(request, category)
         queryset = self.get_threads_queryset(request)
+
         paginator = self.get_threads_paginator(request, categories, queryset)
 
         threads_list: list[Thread] = []
-        if not paginator.previous_cursor:
-            threads_list = self.get_pinned_threads(request, categories, queryset)
+        if not paginator.has_previous:
+            threads_list = self.get_pinned_threads(request, categories[0], queryset)
 
         threads_list += paginator.items
 
@@ -228,18 +269,18 @@ class CategoryThreadsListView(ListView):
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "categories": request.categories.get_thread_categories(
-                        thread.category_id,
+                        thread.category_id, category.id
                     ),
                 }
             )
 
         return {
-            "template_name": "...",
+            "template_name": self.threads_component_template_name,
             "items": items,
             "paginator": paginator,
         }
 
-    def get_threads_categories(
+    def get_threads_categories_for_filter(
         self, request: HttpRequest, category: Category
     ) -> list[dict]:
         if category.list_children_threads:
@@ -248,7 +289,9 @@ class CategoryThreadsListView(ListView):
         return [request.categories.categories[category.id]]
 
     def get_threads_queryset(self, request: HttpRequest):
-        return get_threads_page_queryset_hook(self.get_threads_queryset_action, request)
+        return get_category_threads_page_queryset_hook(
+            self.get_threads_queryset_action, request
+        )
 
     def get_threads_queryset_action(self, request: HttpRequest):
         return Thread.objects
@@ -258,8 +301,10 @@ class CategoryThreadsListView(ListView):
     ):
         threads_queryset = filter_category_threads_queryset(
             request.user_permissions,
-            categories,
+            request.categories.categories_list,
             queryset,
+            current_category=categories[0],
+            child_categories=categories[1:],
         )
 
         return paginate_queryset(
@@ -271,13 +316,14 @@ class CategoryThreadsListView(ListView):
         )
 
     def get_pinned_threads(
-        self, request: HttpRequest, categories: list[dict], queryset
+        self, request: HttpRequest, category: dict, queryset
     ) -> list[Thread]:
         return list(
             filter_category_pinned_threads_queryset(
                 request.user_permissions,
-                categories,
+                request.categories.categories_list,
                 queryset,
+                current_category=category,
             ).order_by("-last_post_id")
         )
 
@@ -333,13 +379,78 @@ class PrivateThreadsListView(ListView):
         )
 
     def get_context_action(self, request: HttpRequest, kwargs: dict):
+        category = Category.objects.private_threads()
+
         context = {
             "request": request,
+            "threads": self.get_threads(request, category, kwargs),
         }
+
+        if kwargs.get("filter"):
+            context["pagination_url"] = reverse(
+                "misago:private-threads",
+                kwargs={"filter": kwargs["filter"]},
+            )
+        else:
+            context["pagination_url"] = reverse("misago:private-threads")
 
         context["metatags"] = self.get_metatags(request, {})
 
         return context
+
+    def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
+        return get_private_threads_page_threads_hook(
+            self.get_threads_action, request, category, kwargs
+        )
+
+    def get_threads_action(
+        self, request: HttpRequest, category: Category, kwargs: dict
+    ):
+        queryset = self.get_threads_queryset(request, category)
+        paginator = self.get_threads_paginator(request, queryset)
+        threads_list: list[Thread] = paginator.items
+
+        new_threads = {}
+        users = self.get_threads_users(request, threads_list)
+
+        items: list[dict] = []
+        for thread in threads_list:
+            items.append(
+                {
+                    "thread": thread,
+                    "is_new": new_threads.get(thread.id),
+                    "starter": users.get(thread.starter_id),
+                    "last_poster": users.get(thread.last_poster_id),
+                    "categories": None,
+                }
+            )
+
+        return {
+            "template_name": self.threads_component_template_name,
+            "items": items,
+            "paginator": paginator,
+        }
+
+    def get_threads_queryset(self, request: HttpRequest, category: Category):
+        return get_private_threads_page_queryset_hook(
+            self.get_threads_queryset_action, request, category
+        )
+
+    def get_threads_queryset_action(self, request: HttpRequest, category: Category):
+        return Thread.objects.filter(category=category)
+
+    def get_threads_paginator(self, request: HttpRequest, queryset):
+        threads_queryset = filter_private_threads_queryset(
+            request.user_permissions, queryset
+        )
+
+        return paginate_queryset(
+            request,
+            threads_queryset,
+            request.settings.threads_per_page,
+            order_by="-last_post_id",
+            raise_404=True,
+        )
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         return get_default_metatags(request)

@@ -64,7 +64,8 @@ class GetPrivateThreadsPageContextHookFilter(Protocol):
 
 class GetPrivateThreadsPageContextHook(
     FilterHook[
-        GetPrivateThreadsPageContextHookAction, GetPrivateThreadsPageContextHookFilter
+        GetPrivateThreadsPageContextHookAction,
+        GetPrivateThreadsPageContextHookFilter,
     ]
 ):
     """
@@ -99,7 +100,7 @@ class GetPrivateThreadsPageContextHook(
         request: HttpRequest,
         kwargs: dict,
     ) -> dict:
-        return super().__call__(action, request)
+        return super().__call__(action, request, kwargs)
 
 
 get_private_threads_page_context_hook = GetPrivateThreadsPageContextHook()

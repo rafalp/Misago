@@ -69,3 +69,13 @@ class UserPermissionsProxy:
         )
 
         return list(browsed_categories.intersection(self.moderator.categories_ids))
+
+    @property
+    def private_threads_moderator(self) -> bool:
+        if self.user.is_anonymous:
+            return False
+
+        if self.is_global_moderator:
+            return True
+
+        return self.moderator.private_threads

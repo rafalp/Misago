@@ -6,10 +6,10 @@ from django.db.models import QuerySet
 from ...plugins.hooks import FilterHook
 
 
-class GetThreadsPageQuerysetHookAction(Protocol):
+class GetCategoryThreadsPageQuerysetHookAction(Protocol):
     """
     A standard Misago function used to get the base threads queryset
-    for the threads page.
+    for the category threads page.
 
     # Arguments
 
@@ -25,16 +25,16 @@ class GetThreadsPageQuerysetHookAction(Protocol):
     def __call__(self, request: HttpRequest) -> QuerySet: ...
 
 
-class GetThreadsPageQuerysetHookFilter(Protocol):
+class GetCategoryThreadsPageQuerysetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetThreadsPageQuerysetHookAction`
+    ## `action: GetCategoryThreadsPageQuerysetHookAction`
 
     A standard Misago function used to get the base threads queryset
-    for the threads page.
+    for the category threads page.
 
     See the [action](#action) section for details.
 
@@ -49,20 +49,20 @@ class GetThreadsPageQuerysetHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetThreadsPageQuerysetHookAction,
+        action: GetCategoryThreadsPageQuerysetHookAction,
         request: HttpRequest,
     ) -> QuerySet: ...
 
 
-class GetThreadsPageQuerysetHook(
+class GetCategoryThreadsPageQuerysetHook(
     FilterHook[
-        GetThreadsPageQuerysetHookAction,
-        GetThreadsPageQuerysetHookFilter,
+        GetCategoryThreadsPageQuerysetHookAction,
+        GetCategoryThreadsPageQuerysetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get
-    base threads queryset for the threads page.
+    base threads queryset for the category threads page.
 
     # Example
 
@@ -72,10 +72,10 @@ class GetThreadsPageQuerysetHook(
     ```python
     from django.db.models import QuerySet
     from django.http import HttpRequest
-    from misago.threads.hooks import get_threads_page_queryset_hook
+    from misago.threads.hooks import get_category_threads_page_queryset_hook
 
 
-    @get_threads_page_queryset_hook.append_filter
+    @get_category_threads_page_queryset_hook.append_filter
     def select_first_post(action, request: HttpRequest) -> QuerySet:
         queryset = action(request)
         return queryset.select_related("first_post")
@@ -86,10 +86,10 @@ class GetThreadsPageQuerysetHook(
 
     def __call__(
         self,
-        action: GetThreadsPageQuerysetHookAction,
+        action: GetCategoryThreadsPageQuerysetHookAction,
         request: HttpRequest,
     ) -> QuerySet:
         return super().__call__(action, request)
 
 
-get_threads_page_queryset_hook = GetThreadsPageQuerysetHook()
+get_category_threads_page_queryset_hook = GetCategoryThreadsPageQuerysetHook()

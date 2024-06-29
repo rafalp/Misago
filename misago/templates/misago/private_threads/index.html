@@ -8,6 +8,13 @@
 
   <div class="container page-container">
 
+    {% include "misago/threads_toolbar.html" %}
+
+    {% if threads.items %}
+      {% include threads.template_name %}
+    {% endif %}
+
+    {% include "misago/threads_toolbar.html" with bottom=True %}
     {% include "misago/gototop_toolbar.html" %}
 
   </div>

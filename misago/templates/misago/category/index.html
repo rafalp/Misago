@@ -11,51 +11,13 @@
 
   <div class="container page-container">
 
-    {% if threads %}
-      <ul>
-        {% for thread in threads.items %}
-          <li>
-            <a href="{% url 'misago:thread' pk=thread.id slug=thread.slug %}" class="item-title">
-              {{ thread.title }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
+    {% include "misago/threads_toolbar.html" %}
 
-      <div class="toolbar">
-        <div class="toolbar-section">
-          <div class="toolbar-item">
-            <div class="misago-pagination">
-              {% if threads.paginator.has_previous %}
-                <a href="{% url 'misago:category' id=category.id slug=category.slug %}" class="btn btn-default">
-                  Newest
-                </a>
-                <a href="{% url 'misago:category' id=category.id slug=category.slug %}{{ threads.paginator.previous_cursor_query }}" class="btn btn-default">
-                  Previous
-                </a>
-              {% else %}
-                <button class="btn btn-default" disabled>
-                  Newest
-                </button>
-                <button class="btn btn-default" disabled>
-                  Previous
-                </button>
-              {% endif %}
-              {% if threads.paginator.has_next %}
-                <a href="{% url 'misago:category' id=category.id slug=category.slug %}{{ threads.paginator.next_cursor_query }}" class="btn btn-default">
-                  Next
-                </a>
-              {% else %}
-                <button class="btn btn-default" disabled>
-                  Next
-                </button>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-        <div class="toolbar-spacer"></div>
-      </div>
+    {% if threads.items %}
+      {% include threads.template_name %}
     {% endif %}
+
+    {% include "misago/threads_toolbar.html" with bottom=True %}
 
     <div class="toolbar toolbar-over-footer">
       <div class="toolbar-section hidden-xs">

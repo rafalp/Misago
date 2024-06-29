@@ -75,7 +75,8 @@ class GetThreadsUsersHook(
 
     # Example
 
-    The code below implements a custom filter function that excludes users with plugin status from the users list:
+    The code below implements a custom filter function that excludes users with
+    plugin status from the users list:
 
     ```python
     from django.http import HttpRequest
