@@ -11,6 +11,11 @@
   margin-bottom: @line-height-computed * -2.5;
 }
 
+.toolbar-xs-reverse {
+  display: flex;
+  flex: 1;
+}
+
 .toolbar-section {
   justify-items: center;
   display: flex;
@@ -42,6 +47,7 @@
     display: flex;
   }
 
+  .toolbar-xs-reverse,
   .toolbar-section,
   .toolbar-item {
     flex: 0;
@@ -77,5 +83,9 @@
   // Used for pagination messages
   .toolbar-item p {
     text-align: center;
+  }
+
+  .toolbar-xs-reverse {
+    flex-direction: column-reverse;
   }
 }
