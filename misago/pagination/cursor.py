@@ -11,6 +11,7 @@ class PaginationError(Http404):
 @dataclass
 class CursorPaginationResult:
     items: List[Any]
+    cursor: int | None
     has_next: bool
     has_previous: bool
     next_cursor: Any | None
@@ -85,6 +86,7 @@ def paginate_queryset(
 
     return CursorPaginationResult(
         items=items,
+        cursor=cursor,
         has_next=has_next,
         has_previous=has_previous,
         next_cursor=next_cursor,

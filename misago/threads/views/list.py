@@ -169,7 +169,7 @@ class ThreadsListView(ListView):
                 request.user_permissions,
                 request.categories.categories_list,
                 queryset,
-            ).order_by("-last_post_id")
+            ).order_by("-weight", "-last_post_id")
         )
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
@@ -249,11 +249,16 @@ class CategoryThreadsListView(ListView):
         categories = self.get_threads_categories_for_filter(request, category)
         queryset = self.get_threads_queryset(request)
 
-        paginator = self.get_threads_paginator(request, categories, queryset)
+        paginator = self.get_threads_paginator(
+            request,
+            category,
+            categories,
+            queryset,
+        )
 
         threads_list: list[Thread] = []
         if not paginator.has_previous:
-            threads_list = self.get_pinned_threads(request, categories[0], queryset)
+            threads_list = self.get_pinned_threads(request, categories, queryset)
 
         threads_list += paginator.items
 
@@ -283,10 +288,7 @@ class CategoryThreadsListView(ListView):
     def get_threads_categories_for_filter(
         self, request: HttpRequest, category: Category
     ) -> list[dict]:
-        if category.list_children_threads:
-            return request.categories.get_category_descendants(category.id)
-
-        return [request.categories.categories[category.id]]
+        return request.categories.get_category_descendants(category.id)
 
     def get_threads_queryset(self, request: HttpRequest):
         return get_category_threads_page_queryset_hook(
@@ -297,7 +299,11 @@ class CategoryThreadsListView(ListView):
         return Thread.objects
 
     def get_threads_paginator(
-        self, request: HttpRequest, categories: list[dict], queryset
+        self,
+        request: HttpRequest,
+        category: Category,
+        categories: list[dict],
+        queryset,
     ):
         threads_queryset = filter_category_threads_queryset(
             request.user_permissions,
@@ -305,6 +311,7 @@ class CategoryThreadsListView(ListView):
             queryset,
             current_category=categories[0],
             child_categories=categories[1:],
+            include_children=category.list_children_threads,
         )
 
         return paginate_queryset(
@@ -316,15 +323,20 @@ class CategoryThreadsListView(ListView):
         )
 
     def get_pinned_threads(
-        self, request: HttpRequest, category: dict, queryset
+        self,
+        request: HttpRequest,
+        categories: list[dict],
+        queryset,
     ) -> list[Thread]:
         return list(
             filter_category_pinned_threads_queryset(
                 request.user_permissions,
                 request.categories.categories_list,
                 queryset,
-                current_category=category,
-            ).order_by("-last_post_id")
+                current_category=categories[0],
+                child_categories=categories[1:],
+                include_children=True,  # Always include children global pins
+            ).order_by("-weight", "-last_post_id")
         )
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
