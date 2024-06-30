@@ -150,7 +150,7 @@ def test_user_permissions_proxy_returns_list_of_moderated_categories_ids_for_loc
     proxy.permissions
 
     with django_assert_num_queries(1):
-        assert proxy.categories_moderator == [other_category.id]
+        assert proxy.categories_moderator == {other_category.id}
 
 
 def test_user_permissions_proxy_excludes_not_browseable_categories_from_moderated_categories(
@@ -168,7 +168,7 @@ def test_user_permissions_proxy_excludes_not_browseable_categories_from_moderate
     proxy.permissions
 
     with django_assert_num_queries(1):
-        assert proxy.categories_moderator == []
+        assert proxy.categories_moderator == set()
 
 
 def test_user_permissions_proxy_returns_false_global_moderator_for_anonymous_user(
