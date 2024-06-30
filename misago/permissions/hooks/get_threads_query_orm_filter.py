@@ -93,9 +93,9 @@ class GetThreadsQueryORMFilterHook(
 
     ```python
     from django.db.models import Q
-    from misago.permissions.hooks import get_orm_filter_for_threads_query_hook
+    from misago.permissions.hooks import get_threads_query_orm_filter_hook
 
-    @get_orm_filter_for_threads_query_hook.append_filter
+    @get_threads_query_orm_filter_hook.append_filter
     def get_category_access_level(
         action,
         query: str,

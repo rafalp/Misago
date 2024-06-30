@@ -3,8 +3,18 @@ from typing import Iterable
 from django.db.models import Q, QuerySet
 
 from ...threads.enums import ThreadWeight
-from ..enums import CategoryPermission, CategoryQueryContext, CategoryThreadsQuery
-from ..hooks import get_category_access_level_hook, get_threads_query_orm_filter_hook
+from ..enums import (
+    CategoryPermission,
+    CategoryQueryContext,
+    CategoryThreadsQuery,
+)
+from ..hooks import (
+    get_category_threads_category_query_hook,
+    get_category_threads_pinned_category_query_hook,
+    get_threads_category_query_hook,
+    get_threads_pinned_category_query_hook,
+    get_threads_query_orm_filter_hook,
+)
 from ..proxy import UserPermissionsProxy
 
 
@@ -161,7 +171,9 @@ class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
 def get_threads_category_query(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
-    return _get_threads_category_query_action(permissions, category)
+    return get_threads_category_query_hook(
+        _get_threads_category_query_action, permissions, category
+    )
 
 
 def _get_threads_category_query_action(
@@ -191,7 +203,9 @@ def _get_threads_category_query_action(
 def get_threads_pinned_category_query(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
-    return _get_threads_pinned_category_query_action(permissions, category)
+    return get_threads_pinned_category_query_hook(
+        _get_threads_pinned_category_query_action, permissions, category
+    )
 
 
 def _get_threads_pinned_category_query_action(
@@ -212,7 +226,12 @@ def _get_threads_pinned_category_query_action(
 def get_category_threads_category_query(
     permissions: UserPermissionsProxy, category: dict, context: str
 ) -> str | list[str] | None:
-    return _get_category_threads_category_query_action(permissions, category, context)
+    return get_category_threads_category_query_hook(
+        _get_category_threads_category_query_action,
+        permissions,
+        category,
+        context,
+    )
 
 
 def _get_category_threads_category_query_action(
@@ -260,8 +279,11 @@ def _get_category_threads_category_query_action(
 def get_category_threads_pinned_category_query(
     permissions: UserPermissionsProxy, category: dict, context: str
 ) -> str | list[str] | None:
-    return _get_category_threads_pinned_category_query_action(
-        permissions, category, context
+    return get_category_threads_pinned_category_query_hook(
+        _get_category_threads_pinned_category_query_action,
+        permissions,
+        category,
+        context,
     )
 
 
