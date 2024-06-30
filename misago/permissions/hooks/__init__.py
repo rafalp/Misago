@@ -4,6 +4,7 @@ from .copy_category_permissions import copy_category_permissions_hook
 from .copy_group_permissions import copy_group_permissions_hook
 from .get_admin_category_permissions import get_admin_category_permissions_hook
 from .get_category_access_level import get_category_access_level_hook
+from .get_threads_query_orm_filter import get_threads_query_orm_filter_hook
 from .get_user_permissions import get_user_permissions_hook
 
 __all__ = [
@@ -13,5 +14,6 @@ __all__ = [
     "copy_group_permissions_hook",
     "get_admin_category_permissions_hook",
     "get_category_access_level_hook",
+    "get_threads_query_orm_filter_hook",
     "get_user_permissions_hook",
 ]

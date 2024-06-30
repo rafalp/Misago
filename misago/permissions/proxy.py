@@ -54,21 +54,21 @@ class UserPermissionsProxy:
         return self.moderator.is_global
 
     @cached_property
-    def categories_moderator(self) -> list[int]:
+    def categories_moderator(self) -> set[int]:
         if self.user.is_anonymous:
-            return []
+            return set()
 
         if self.is_global_moderator:
-            return self.permissions["categories"][CategoryPermission.BROWSE]
+            return set(self.permissions["categories"][CategoryPermission.BROWSE])
 
         if not self.permissions["categories"][CategoryPermission.BROWSE]:
-            return []
+            return set()
 
         browsed_categories = set(
             self.permissions["categories"][CategoryPermission.BROWSE]
         )
 
-        return list(browsed_categories.intersection(self.moderator.categories_ids))
+        return browsed_categories.intersection(self.moderator.categories_ids)
 
     @property
     def private_threads_moderator(self) -> bool:

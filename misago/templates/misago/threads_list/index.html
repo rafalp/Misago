@@ -19,6 +19,15 @@
             </a>
           </span>
         {% endfor %}
+        
+        {% if item.starter %}
+          <a href="{{ item.starter.get_absolute_url }}">
+            {{ thread.starter_name }}#{{ thread.starter_id }}
+          </a>
+        {% else %}
+          {{ thread.starter_name }}#{{ thread.starter_id }}
+        {% endif %}
+
         {{ thread.last_post_id }}
       </li>
     {% endwith %}
