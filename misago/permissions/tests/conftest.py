@@ -27,7 +27,7 @@ def category_threads_filter_factory(cache_versions):
         categories = CategoriesProxy(permissions, cache_versions)
         categories_data = categories.get_category_descendants(category.id)
 
-        return ThreadsQuerysetFilter(
+        return CategoryThreadsQuerysetFilter(
             permissions,
             categories.categories_list,
             current_category=categories_data[0],
