@@ -25,34 +25,81 @@ def filter_factory(cache_versions):
     return filter_factory_function
 
 
+def test_category_threads_queryset_includes_category_with_see_and_browse_permission(
+    filter_factory,
+    category,
+    category_thread,
+    category_members_see_permission,
+    category_members_browse_permission,
+    user,
+):
+    threads_filter = filter_factory(user, category)
+    queryset = threads_filter.filter(Thread.objects)
+    assert category_thread in queryset
+
+
 def test_category_threads_queryset_excludes_category_without_any_permissions(
     filter_factory,
+    category,
     category_thread,
     user,
 ):
-    threads_filter = filter_factory(user)
+    threads_filter = filter_factory(user, category)
     queryset = threads_filter.filter(Thread.objects)
     assert not queryset.exists()
 
 
 def test_category_threads_queryset_excludes_category_with_only_see_permission(
     filter_factory,
+    category,
     category_thread,
     category_members_see_permission,
     user,
 ):
-    threads_filter = filter_factory(user)
+    threads_filter = filter_factory(user, category)
     queryset = threads_filter.filter(Thread.objects)
     assert not queryset.exists()
 
 
-def test_category_threads_queryset_includes_category_with_see_and_browse_permission(
+def test_category_threads_queryset_includes_category_with_see_permission_and_delay_browse(
     filter_factory,
+    category,
     category_thread,
     category_members_see_permission,
     category_members_browse_permission,
     user,
 ):
-    threads_filter = filter_factory(user)
+    category.list_children_threads = False
+    category.save()
+
+    threads_filter = filter_factory(user, category)
     queryset = threads_filter.filter(Thread.objects)
     assert category_thread in queryset
+
+
+def test_category_threads_queryset_tests_matrix(
+    filter_factory,
+    category,
+    category_thread,
+    category_members_see_permission,
+    category_members_browse_permission,
+    user,
+):
+    threads_filter = filter_factory(user, category)
+    queryset = threads_filter.filter(Thread.objects)
+    assert category_thread in queryset
+
+
+def test_category_threads_queryset_includes_child_category_with_see_and_browse_permission(
+    filter_factory,
+    category,
+    child_category_thread,
+    category_members_see_permission,
+    category_members_browse_permission,
+    child_category_members_see_permission,
+    child_category_members_browse_permission,
+    user,
+):
+    threads_filter = filter_factory(user, category)
+    queryset = threads_filter.filter(Thread.objects)
+    assert child_category_thread in queryset
