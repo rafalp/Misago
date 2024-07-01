@@ -136,15 +136,25 @@ def assert_queryset_contains(user, category, thread):
             "a hidden thread"
         )
 
-    if user.is_anonymous and category.show_started_only and not thread.weight:
-        raise AssertionError(
-            "queryset result for an anonymous user and category with "
-            "show_started_only=true contains a thread that's not pinned"
-        )
-
     if user.is_anonymous and thread.is_unapproved:
         raise AssertionError(
             "queryset result for an anonymous user contains an unapproved thread"
+        )
+
+    if (
+        user.is_anonymous
+        and category.show_started_only
+        and thread.weight != ThreadWeight.PINNED_IN_CATEGORY
+    ):
+        raise AssertionError(
+            "queryset result for an anonymous user and category with "
+            "show_started_only=true contains a thread that's not pinned in category"
+        )
+
+    if user.is_authenticated and thread.is_unapproved and thread.starter_id != user.id:
+        raise AssertionError(
+            "queryset result for a user without moderator permissions contains "
+            "an unapproved thread started by a different user"
         )
 
     if (
@@ -158,12 +168,6 @@ def assert_queryset_contains(user, category, thread):
             "contains not pinned thread that's not started by the user"
         )
 
-    if user.is_authenticated and thread.is_unapproved and thread.starter_id != user.id:
-        raise AssertionError(
-            "queryset result for a user without moderator permissions contains "
-            "an unapproved thread started by a different user"
-        )
-
 
 def assert_queryset_not_contains(user, category, thread):
     if thread.weight == ThreadWeight.PINNED_GLOBALLY:
@@ -173,3 +177,24 @@ def assert_queryset_not_contains(user, category, thread):
         user.slug == "moderator" or user.slug == "categorymoderator"
     ):
         raise AssertionError("queryset result for a moderator is missing a thread")
+
+    if thread.is_hidden:
+        return
+
+    if user.is_anonymous and thread.is_unapproved:
+        return
+
+    if user.is_authenticated and thread.is_unapproved and thread.starter_id == user.id:
+        raise AssertionError(
+            "queryset result for a user without moderator permissions is missing "
+            "an unapproved thread started by them"
+        )
+
+    if (
+        user.is_authenticated
+        and category.show_started_only
+        and thread.starter_id == user.id
+    ):
+        raise AssertionError(
+            "queryset result for a user is missing a thread started by them"
+        )
