@@ -1,7 +1,12 @@
 from django.urls import reverse
 
+from ...categories.models import Category
 from ...conf.test import override_dynamic_settings
-from ...test import assert_contains
+from ...permissions.enums import CategoryPermission
+from ...permissions.models import CategoryGroupPermission
+from ...test import assert_contains, assert_not_contains
+from ..models import ThreadParticipant
+from ..test import post_thread
 
 
 @override_dynamic_settings(index_view="categories")
@@ -96,3 +101,123 @@ def test_private_threads_list_shows_permission_error_to_users_without_permission
 def test_private_threads_list_renders_empty_to_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Private threads")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_thread_to_user(default_category, user, user_client):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(reverse("misago:threads"))
+    assert_contains(response, "Test Thread")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_thread_to_anonymous_user(default_category, client):
+    post_thread(default_category, title="Test Thread")
+    response = client.get(reverse("misago:threads"))
+    assert_contains(response, "Test Thread")
+
+
+def test_category_threads_list_displays_thread_to_user(
+    default_category, user, user_client
+):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, "Test Thread")
+
+
+def test_category_threads_list_displays_thread_to_anonymous_user(
+    default_category, client
+):
+    post_thread(default_category, title="Test Thread")
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, "Test Thread")
+
+
+def test_category_threads_list_displays_user_thread_to_user(
+    default_category, user_client, other_user
+):
+    post_thread(default_category, title="Test Thread", poster=other_user)
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, "Test Thread")
+
+
+def test_category_threads_list_displays_user_thread_to_anonymous_user(
+    default_category, client, other_user
+):
+    post_thread(default_category, title="Test Thread", poster=other_user)
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, "Test Thread")
+
+
+def test_category_threads_list_includes_child_category_thread(
+    default_category, user, user_client, other_user
+):
+    default_category.list_children_threads = True
+    default_category.save()
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    post_thread(child_category, title="Test Thread", poster=other_user)
+
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, "Test Thread")
+
+
+def test_category_threads_list_excludes_child_category_thread(
+    default_category, user, user_client, other_user
+):
+    default_category.list_children_threads = False
+    default_category.save()
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    post_thread(child_category, title="Test Thread", poster=other_user)
+
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_not_contains(response, "Test Thread")
+
+
+def test_private_threads_list_displays_private_thread(
+    private_threads_category, user, user_client
+):
+    thread = post_thread(private_threads_category, title="Test Private Thread")
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-threads"))
+    assert_contains(response, "Test Private Thread")
+
+
+def test_private_threads_list_displays_user_private_thread(
+    private_threads_category, user, user_client, other_user
+):
+    thread = post_thread(
+        private_threads_category, title="Test Private Thread", poster=other_user
+    )
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-threads"))
+    assert_contains(response, "Test Private Thread")
