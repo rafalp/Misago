@@ -223,8 +223,18 @@ def category_thread(category):
 
 
 @pytest.fixture
+def category_pinned_globally_thread(category):
+    return post_thread(category, title="Category Global Thread", is_global=True)
+
+
+@pytest.fixture
 def child_category_thread(child_category):
     return post_thread(child_category, title="Child Thread")
+
+
+@pytest.fixture
+def child_category_pinned_globally_thread(child_category):
+    return post_thread(child_category, title="Child Global Thread", is_global=True)
 
 
 @pytest.fixture
