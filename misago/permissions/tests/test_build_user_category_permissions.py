@@ -19,7 +19,7 @@ def test_build_user_category_permissions_returns_no_permissions_for_user_without
 def test_build_user_category_permissions_includes_group_see_permission(
     custom_group,
     category,
-    category_custom_group_see_permission,
+    category_custom_see_permission,
 ):
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
@@ -34,8 +34,8 @@ def test_build_user_category_permissions_includes_group_see_permission(
 def test_build_user_category_permissions_includes_group_see_and_browse_permissions(
     custom_group,
     category,
-    category_custom_group_see_permission,
-    category_custom_group_browse_permission,
+    category_custom_see_permission,
+    category_custom_browse_permission,
 ):
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
@@ -50,7 +50,7 @@ def test_build_user_category_permissions_includes_group_see_and_browse_permissio
 def test_build_user_category_permissions_requires_see_permission_for_browse_permissions(
     custom_group,
     category,
-    category_custom_group_browse_permission,
+    category_custom_browse_permission,
 ):
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
@@ -66,8 +66,8 @@ def test_build_user_category_permissions_uses_delay_browse_check_if_browse_is_mi
     custom_group,
     category,
     child_category,
-    category_custom_group_see_permission,
-    child_category_custom_group_see_permission,
+    category_custom_see_permission,
+    child_category_custom_see_permission,
 ):
     category.delay_browse_check = True
     category.save()
@@ -154,8 +154,8 @@ def test_build_user_category_permissions_requires_parent_category_browse(
     custom_group,
     category,
     child_category,
-    child_category_custom_group_see_permission,
-    child_category_custom_group_browse_permission,
+    child_category_custom_see_permission,
+    child_category_custom_browse_permission,
 ):
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
@@ -171,10 +171,10 @@ def test_build_user_category_permissions_child_category_is_visible_under_visible
     custom_group,
     category,
     child_category,
-    category_custom_group_see_permission,
-    category_custom_group_browse_permission,
-    child_category_custom_group_see_permission,
-    child_category_custom_group_browse_permission,
+    category_custom_see_permission,
+    category_custom_browse_permission,
+    child_category_custom_see_permission,
+    child_category_custom_browse_permission,
 ):
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
@@ -192,10 +192,10 @@ def test_build_user_category_permissions_combines_multiple_groups_permissions(
     default_category,
     category,
     child_category,
-    category_custom_group_see_permission,
-    category_custom_group_browse_permission,
-    child_category_custom_group_see_permission,
-    child_category_custom_group_browse_permission,
+    category_custom_see_permission,
+    category_custom_browse_permission,
+    child_category_custom_see_permission,
+    child_category_custom_browse_permission,
 ):
     permissions = build_user_category_permissions([members_group, custom_group], {})
     assert permissions == {

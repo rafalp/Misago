@@ -114,6 +114,24 @@ def category_moderators_browse_permission(category, moderators_group):
 
 
 @pytest.fixture
+def category_custom_see_permission(category, custom_group):
+    return CategoryGroupPermission.objects.create(
+        category=category,
+        group=custom_group,
+        permission=CategoryPermission.SEE,
+    )
+
+
+@pytest.fixture
+def category_custom_browse_permission(category, custom_group):
+    return CategoryGroupPermission.objects.create(
+        category=category,
+        group=custom_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+
+@pytest.fixture
 def child_category_guests_see_permission(child_category, guests_group):
     return CategoryGroupPermission.objects.create(
         category=child_category,
@@ -163,6 +181,24 @@ def child_category_moderators_browse_permission(child_category, moderators_group
     return CategoryGroupPermission.objects.create(
         category=child_category,
         group=moderators_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+
+@pytest.fixture
+def child_category_custom_see_permission(child_category, custom_group):
+    return CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=custom_group,
+        permission=CategoryPermission.SEE,
+    )
+
+
+@pytest.fixture
+def child_category_custom_browse_permission(child_category, custom_group):
+    return CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=custom_group,
         permission=CategoryPermission.BROWSE,
     )
 
