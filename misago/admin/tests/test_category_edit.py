@@ -49,7 +49,7 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
         "copy_permissions": "",
         "allow_polls": category.allow_polls,
         "delay_browse_check": category.delay_browse_check,
-        "limit_threads_visibility": category.limit_threads_visibility,
+        "show_started_only": category.show_started_only,
         "is_closed": category.is_closed,
         "is_vanilla": category.is_vanilla,
         "list_children_threads": category.list_children_threads,

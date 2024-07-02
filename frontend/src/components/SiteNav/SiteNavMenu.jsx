@@ -14,6 +14,7 @@ import SignInButton from "../SignInButton"
 function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
   const baseUrl = misago.get("MISAGO_PATH")
   const settings = misago.get("SETTINGS")
+  const mainItems = misago.get("main_menu")
   const extraItems = misago.get("extraMenuItems")
   const extraFooterItems = misago.get("extraFooterItems")
   const categories = misago.get("categories_menu")
@@ -21,19 +22,9 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
   const authDelegated = settings.enable_oauth2_client
 
   const topNav = []
-  if (misago.get("THREADS_ON_INDEX")) {
-    topNav.push({ title: pgettext("site nav", "Threads"), url: baseUrl })
-    topNav.push({
-      title: pgettext("site nav", "Categories"),
-      url: baseUrl + "categories/",
-    })
-  } else {
-    topNav.push({ title: pgettext("site nav", "Categories"), url: baseUrl })
-    topNav.push({
-      title: pgettext("site nav", "Threads"),
-      url: baseUrl + "threads/",
-    })
-  }
+  mainItems.forEach((item) => {
+    topNav.push({ title: item.label, url: item.url })
+  })
 
   topNav.push({
     title: pgettext("site nav", "Search"),

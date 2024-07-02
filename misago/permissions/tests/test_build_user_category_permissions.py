@@ -4,7 +4,7 @@ from ..user import build_user_category_permissions
 
 
 def test_build_user_category_permissions_returns_no_permissions_for_user_without_perms(
-    custom_group, default_category
+    custom_group, category
 ):
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
@@ -17,17 +17,13 @@ def test_build_user_category_permissions_returns_no_permissions_for_user_without
 
 
 def test_build_user_category_permissions_includes_group_see_permission(
-    custom_group, default_category, sibling_category, child_category
+    custom_group,
+    category,
+    category_custom_see_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.SEE,
-    )
-
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
-        CategoryPermission.SEE: [sibling_category.id],
+        CategoryPermission.SEE: [category.id],
         CategoryPermission.BROWSE: [],
         CategoryPermission.START: [],
         CategoryPermission.REPLY: [],
@@ -36,23 +32,15 @@ def test_build_user_category_permissions_includes_group_see_permission(
 
 
 def test_build_user_category_permissions_includes_group_see_and_browse_permissions(
-    custom_group, default_category, sibling_category, child_category
+    custom_group,
+    category,
+    category_custom_see_permission,
+    category_custom_browse_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.BROWSE,
-    )
-
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
-        CategoryPermission.SEE: [sibling_category.id],
-        CategoryPermission.BROWSE: [sibling_category.id],
+        CategoryPermission.SEE: [category.id],
+        CategoryPermission.BROWSE: [category.id],
         CategoryPermission.START: [],
         CategoryPermission.REPLY: [],
         CategoryPermission.ATTACHMENTS: [],
@@ -60,14 +48,10 @@ def test_build_user_category_permissions_includes_group_see_and_browse_permissio
 
 
 def test_build_user_category_permissions_requires_see_permission_for_browse_permissions(
-    custom_group, sibling_category, child_category
+    custom_group,
+    category,
+    category_custom_browse_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.BROWSE,
-    )
-
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
         CategoryPermission.SEE: [],
@@ -79,25 +63,18 @@ def test_build_user_category_permissions_requires_see_permission_for_browse_perm
 
 
 def test_build_user_category_permissions_uses_delay_browse_check_if_browse_is_missing(
-    custom_group, sibling_category, child_category
+    custom_group,
+    category,
+    child_category,
+    category_custom_see_permission,
+    child_category_custom_see_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=child_category,
-        permission=CategoryPermission.SEE,
-    )
-
-    sibling_category.delay_browse_check = True
-    sibling_category.save()
+    category.delay_browse_check = True
+    category.save()
 
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
-        CategoryPermission.SEE: [sibling_category.id, child_category.id],
+        CategoryPermission.SEE: [category.id, child_category.id],
         CategoryPermission.BROWSE: [],
         CategoryPermission.START: [],
         CategoryPermission.REPLY: [],
@@ -106,60 +83,60 @@ def test_build_user_category_permissions_uses_delay_browse_check_if_browse_is_mi
 
 
 def test_build_user_category_permissions_includes_all_permissions(
-    custom_group, sibling_category, child_category
+    custom_group, category, child_category
 ):
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.SEE,
     )
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.BROWSE,
     )
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.START,
     )
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.REPLY,
     )
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.ATTACHMENTS,
     )
 
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
-        CategoryPermission.SEE: [sibling_category.id],
-        CategoryPermission.BROWSE: [sibling_category.id],
-        CategoryPermission.START: [sibling_category.id],
-        CategoryPermission.REPLY: [sibling_category.id],
-        CategoryPermission.ATTACHMENTS: [sibling_category.id],
+        CategoryPermission.SEE: [category.id],
+        CategoryPermission.BROWSE: [category.id],
+        CategoryPermission.START: [category.id],
+        CategoryPermission.REPLY: [category.id],
+        CategoryPermission.ATTACHMENTS: [category.id],
     }
 
 
 def test_build_user_category_permissions_requires_browse_permissions_for_other_permissions(
-    custom_group, sibling_category, child_category
+    custom_group, category, child_category
 ):
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.START,
     )
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.REPLY,
     )
     CategoryGroupPermission.objects.create(
         group=custom_group,
-        category=sibling_category,
+        category=category,
         permission=CategoryPermission.ATTACHMENTS,
     )
 
@@ -174,19 +151,12 @@ def test_build_user_category_permissions_requires_browse_permissions_for_other_p
 
 
 def test_build_user_category_permissions_requires_parent_category_browse(
-    custom_group, sibling_category, child_category
+    custom_group,
+    category,
+    child_category,
+    child_category_custom_see_permission,
+    child_category_custom_browse_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=child_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=child_category,
-        permission=CategoryPermission.BROWSE,
-    )
-
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
         CategoryPermission.SEE: [],
@@ -198,33 +168,18 @@ def test_build_user_category_permissions_requires_parent_category_browse(
 
 
 def test_build_user_category_permissions_child_category_is_visible_under_visible_parent(
-    custom_group, sibling_category, child_category
+    custom_group,
+    category,
+    child_category,
+    category_custom_see_permission,
+    category_custom_browse_permission,
+    child_category_custom_see_permission,
+    child_category_custom_browse_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.BROWSE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=child_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=child_category,
-        permission=CategoryPermission.BROWSE,
-    )
-
     permissions = build_user_category_permissions([custom_group], {})
     assert permissions == {
-        CategoryPermission.SEE: [sibling_category.id, child_category.id],
-        CategoryPermission.BROWSE: [sibling_category.id, child_category.id],
+        CategoryPermission.SEE: [category.id, child_category.id],
+        CategoryPermission.BROWSE: [category.id, child_category.id],
         CategoryPermission.START: [],
         CategoryPermission.REPLY: [],
         CategoryPermission.ATTACHMENTS: [],
@@ -232,39 +187,26 @@ def test_build_user_category_permissions_child_category_is_visible_under_visible
 
 
 def test_build_user_category_permissions_combines_multiple_groups_permissions(
-    members_group, custom_group, default_category, sibling_category, child_category
+    members_group,
+    custom_group,
+    default_category,
+    category,
+    child_category,
+    category_custom_see_permission,
+    category_custom_browse_permission,
+    child_category_custom_see_permission,
+    child_category_custom_browse_permission,
 ):
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=sibling_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=members_group,
-        category=sibling_category,
-        permission=CategoryPermission.BROWSE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=custom_group,
-        category=child_category,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        group=members_group,
-        category=child_category,
-        permission=CategoryPermission.BROWSE,
-    )
-
     permissions = build_user_category_permissions([members_group, custom_group], {})
     assert permissions == {
         CategoryPermission.SEE: [
             default_category.id,
-            sibling_category.id,
+            category.id,
             child_category.id,
         ],
         CategoryPermission.BROWSE: [
             default_category.id,
-            sibling_category.id,
+            category.id,
             child_category.id,
         ],
         CategoryPermission.START: [default_category.id],

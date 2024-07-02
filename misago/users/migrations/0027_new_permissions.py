@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                 ("is_hidden", models.BooleanField(default=False)),
                 ("is_default", models.BooleanField(default=False)),
                 ("ordering", models.PositiveIntegerField(default=0)),
+                ("can_use_private_threads", models.BooleanField(default=False)),
                 ("can_change_username", models.BooleanField(default=False)),
                 ("username_changes_limit", models.PositiveIntegerField(default=0)),
                 ("username_changes_expire", models.PositiveIntegerField(default=0)),

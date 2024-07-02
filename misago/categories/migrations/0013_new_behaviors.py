@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="category",
-            name="limit_threads_visibility",
+            name="show_started_only",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(

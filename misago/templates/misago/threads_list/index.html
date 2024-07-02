@@ -1,0 +1,35 @@
+<ul class="list-group">
+  {% for item in threads.items %}
+    {% with item.thread as thread %}
+      <li class="list-group-item">
+        <a href="{% url 'misago:thread' pk=thread.id slug=thread.slug %}" class="item-title">
+          {{ thread.title }}
+        </a>
+        <br />
+        {% if thread.weight == 2 %}
+          Pinned globally
+        {% elif thread.weight %}
+          Pinned
+        {% endif %}
+
+        {% for category in item.categories %}
+          <span>
+            <a href="{{ category.url }}">
+              {{ category.name }}
+            </a>
+          </span>
+        {% endfor %}
+        
+        {% if item.starter %}
+          <a href="{{ item.starter.get_absolute_url }}">
+            {{ thread.starter_name }}#{{ thread.starter_id }}
+          </a>
+        {% else %}
+          {{ thread.starter_name }}#{{ thread.starter_id }}
+        {% endif %}
+
+        {{ thread.last_post_id }}
+      </li>
+    {% endwith %}
+  {% endfor %}
+</ul>

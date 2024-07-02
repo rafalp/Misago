@@ -72,6 +72,14 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% trans "Private threads" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_use_private_threads %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% trans "Usernames" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_change_username %}

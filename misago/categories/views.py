@@ -2,27 +2,34 @@ from typing import TYPE_CHECKING, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
+from ..metatags.metatags import get_forum_index_metatags
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
-from ..readtracker.categories import get_categories_new_posts
 from ..users.models import User
 from .enums import CategoryTree
+from .hooks import get_categories_page_metatags_hook
 from .models import Category
 
 if TYPE_CHECKING:
     from ..users.models import User
 
 
-def index(request):
-    categories_list = get_categories_list(request)
+def index(request, *args, is_index: bool | None = None, **kwargs):
+    if not is_index and request.settings.index_view == "categories":
+        return redirect(reverse("misago:index"))
 
-    return render(
-        request,
-        "misago/categories/index.html",
-        {"categories_list": categories_list},
-    )
+    categories_list = get_categories_list(request)
+    context = {
+        "is_index": is_index,
+        "categories_list": categories_list,
+    }
+
+    context["metatags"] = get_categories_page_metatags(request, context)
+
+    return render(request, "misago/categories/index.html", context)
 
 
 def get_categories_list(request: HttpRequest):
@@ -34,10 +41,7 @@ def get_categories_list(request: HttpRequest):
     new_posts: dict[int, bool] = {}
 
     if request.user.is_authenticated:
-        new_posts = get_categories_new_posts(
-            request,
-            [item["category"] for item in categories_data.values()],
-        )
+        pass  # TODO: plug to new read tracker!
 
     # Populate categories last posters and read states
     # Aggregate categories to their parents
@@ -55,9 +59,9 @@ def get_categories_list(request: HttpRequest):
             )
 
         # Set read state
-        if request.user.is_authenticated and new_posts[category.id]:
-            category_data["new_posts"] = True
-            category_data["children_new_posts"] = True
+        # if request.user.is_authenticated and new_posts[category.id]:
+        #     category_data["new_posts"] = True
+        #     category_data["children_new_posts"] = True
 
         # Aggregate data from category to its parent
         if category.level > 1:
@@ -112,7 +116,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
             category.id in permissions.categories[CategoryPermission.BROWSE]
             or category.delay_browse_check
         ),
-        "limit_threads_visibility": category.limit_threads_visibility,
+        "show_started_only": category.show_started_only,
         "children": [],
         "children_threads": category.threads,
         "children_posts": category.posts,
@@ -130,7 +134,7 @@ def can_see_last_thread(
         return False
 
     if (
-        category.limit_threads_visibility
+        category.show_started_only
         and category.id not in permissions.categories_moderator
         and (user.is_anonymous or category.last_poster_id != user.id)
     ):
@@ -194,3 +198,16 @@ def show_top_category(category: dict) -> bool:
         return False
 
     return True
+
+
+def get_categories_page_metatags(request: HttpRequest, context: dict) -> dict:
+    return get_categories_page_metatags_hook(
+        _get_categories_page_metatags_action, request, context
+    )
+
+
+def _get_categories_page_metatags_action(request: HttpRequest, context: dict) -> dict:
+    if context["is_index"]:
+        return get_forum_index_metatags(request)
+
+    return {}

@@ -38,7 +38,7 @@ class Category(MPTTModel, PluginDataModel):
     css_class = models.CharField(max_length=255, null=True, blank=True)
     allow_polls = models.BooleanField(default=True)
     delay_browse_check = models.BooleanField(default=False)
-    limit_threads_visibility = models.BooleanField(default=False)
+    show_started_only = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
     is_vanilla = models.BooleanField(default=False)
     list_children_threads = models.BooleanField(default=True)

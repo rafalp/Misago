@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CategoryPermission
 from ...test import assert_contains, assert_not_contains
 from ...testutils import (
@@ -9,6 +10,7 @@ from ...testutils import (
 from ..models import Category
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_default_category_for_guest(default_category, client):
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
     default_category.save()
@@ -17,6 +19,7 @@ def test_categories_view_displays_default_category_for_guest(default_category, c
     assert_contains(response, default_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_default_category_for_user(
     default_category, user_client
 ):
@@ -27,6 +30,7 @@ def test_categories_view_displays_default_category_for_user(
     assert_contains(response, default_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_excludes_default_category_for_guest_without_permission(
     default_category, guests_group, client
 ):
@@ -39,6 +43,7 @@ def test_categories_view_excludes_default_category_for_guest_without_permission(
     assert_not_contains(response, default_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_excludes_default_category_for_user_without_permission(
     default_category, user, user_client
 ):
@@ -51,6 +56,7 @@ def test_categories_view_excludes_default_category_for_user_without_permission(
     assert_not_contains(response, default_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_child_category_for_user_with_permission(
     default_category, user, user_client
 ):
@@ -76,6 +82,7 @@ def test_categories_view_displays_child_category_for_user_with_permission(
     assert_contains(response, child_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_child_category_for_category_with_delay_browse_check(
     default_category, user, user_client
 ):
@@ -109,6 +116,7 @@ def test_categories_view_displays_child_category_for_category_with_delay_browse_
     assert_contains(response, child_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_excludes_child_category_for_user_without_permission(
     default_category, user, user_client
 ):
@@ -128,6 +136,7 @@ def test_categories_view_excludes_child_category_for_user_without_permission(
     assert_not_contains(response, child_category.description)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_category_user_thread(
     default_category, user_client, user_thread
 ):
@@ -140,6 +149,7 @@ def test_categories_view_displays_category_user_thread(
     assert_contains(response, user_thread.title)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_category_thread(
     default_category, user_client, thread
 ):
@@ -152,6 +162,7 @@ def test_categories_view_displays_category_thread(
     assert_contains(response, thread.title)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_category_thread_if_category_allows_list_access(
     default_category, user, user_client, thread
 ):
@@ -173,6 +184,7 @@ def test_categories_view_displays_category_thread_if_category_allows_list_access
     assert_contains(response, thread.title)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_excludes_category_thread_if_user_has_no_browse_permission(
     default_category, user, user_client, thread
 ):
@@ -193,6 +205,7 @@ def test_categories_view_excludes_category_thread_if_user_has_no_browse_permissi
     assert_not_contains(response, thread.title)
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_empty_list_for_guest(
     default_category, guests_group, client
 ):
@@ -203,6 +216,7 @@ def test_categories_view_displays_empty_list_for_guest(
     assert_contains(response, "No categories exist")
 
 
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_displays_empty_list_for_user(
     default_category, user, user_client
 ):

@@ -87,6 +87,14 @@ def other_user_acl(other_user, cache_versions):
 
 
 @pytest.fixture
+def moderator(db, user_password, moderators_group):
+    user = create_test_user("Moderator", "moderator@example.com", user_password)
+    user.set_groups(moderators_group)
+    user.save()
+    return user
+
+
+@pytest.fixture
 def staffuser(db, user_password):
     return create_test_user(
         "Staff_User", "staffuser@example.com", user_password, is_staff=True
@@ -208,6 +216,14 @@ def client():
 @pytest.fixture
 def user_client(client, user):
     client.force_login(user)
+    session = client.session
+    session.save()
+    return client
+
+
+@pytest.fixture
+def moderator_client(client, moderator):
+    client.force_login(moderator)
     session = client.session
     session.save()
     return client

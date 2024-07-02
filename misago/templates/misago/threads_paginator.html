@@ -1,0 +1,39 @@
+{% load i18n %}
+<div class="misago-pagination">
+  {% if threads.paginator.has_previous %}
+    <a
+      href="{{ pagination_url }}"
+      class="btn btn-default btn-icon"
+      title="{% trans 'Go to first page' context 'threads paginator' %}"
+    >
+      <span class="material-icon">first_page</span>
+    </a>
+    <a
+      href="{{ pagination_url }}{{ threads.paginator.previous_cursor_query }}"
+      class="btn btn-default btn-icon"
+      title="{% trans 'Go to previous page' context 'threads paginator' %}"
+    >
+      <span class="material-icon">chevron_left</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-icon" disabled>
+      <span class="material-icon">first_page</span>
+    </button>
+    <button class="btn btn-default btn-icon" disabled>
+      <span class="material-icon">chevron_left</span>
+    </button>
+  {% endif %}
+  {% if threads.paginator.has_next %}
+    <a
+      href="{{ pagination_url }}{{ threads.paginator.next_cursor_query }}"
+      class="btn btn-default btn-icon"
+      title="{% trans 'Go to next page' context 'threads paginator' %}"
+    >
+      <span class="material-icon">chevron_right</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-icon" disabled>
+      <span class="material-icon">chevron_right</span>
+    </button>
+  {% endif %}
+</div>

@@ -1,0 +1,22 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+<div class="page page-private-threads">
+  {% include "misago/private_threads/header.html" %}
+
+  <div class="container page-container">
+
+    {% include "misago/threads_toolbar.html" %}
+
+    {% if threads.items %}
+      {% include threads.template_name %}
+    {% endif %}
+
+    {% include "misago/threads_toolbar.html" with bottom=True %}
+    {% include "misago/gototop_toolbar.html" %}
+
+  </div>
+</div>
+{% endblock content %}

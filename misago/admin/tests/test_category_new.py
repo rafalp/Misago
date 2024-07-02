@@ -25,7 +25,7 @@ def form_data(new_data: dict) -> dict:
         "copy_permissions": "",
         "allow_polls": True,
         "delay_browse_check": False,
-        "limit_threads_visibility": False,
+        "show_started_only": False,
         "is_closed": False,
         "is_vanilla": False,
         "list_children_threads": True,

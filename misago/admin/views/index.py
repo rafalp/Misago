@@ -47,7 +47,7 @@ def check_https(request):
 
 def check_forum_address(request):
     set_address = request.settings.forum_address
-    correct_address = request.build_absolute_uri("/")
+    correct_address = request.build_absolute_uri("/").rstrip("/")
 
     return {
         "is_ok": set_address == correct_address,

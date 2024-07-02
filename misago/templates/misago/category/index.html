@@ -1,0 +1,41 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{{ category }} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-category">
+  {% include "misago/category/header.html" %}
+
+  <div class="container page-container">
+
+    {% include "misago/threads_toolbar.html" %}
+
+    {% if threads.items %}
+      {% include threads.template_name %}
+    {% endif %}
+
+    {% include "misago/threads_toolbar.html" with bottom=True %}
+
+    <div class="toolbar toolbar-over-footer">
+      <div class="toolbar-section hidden-xs">
+        <div class="toolbar-item">
+          {% include "misago/category/breadcrumbs.html" %}
+        </div>
+      </div>
+      <div class="toolbar-spacer"></div>
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          <a href="#" class="btn btn-muted btn-block">
+            <span class="material-icon">arrow_upward</span>
+            {% trans "Go to top" context "go up button" %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

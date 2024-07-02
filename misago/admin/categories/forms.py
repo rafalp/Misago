@@ -100,7 +100,7 @@ class CategoryForm(forms.ModelForm):
             'Enabling this option will allow users with permission to "see" this category to access it\'s threads list page. They will receive an error if they try to see threads replies.',
         ),
     )
-    limit_threads_visibility = YesNoSwitch(
+    show_started_only = YesNoSwitch(
         label=pgettext_lazy(
             "admin category form", "Show users only threads that they started"
         ),
@@ -196,7 +196,7 @@ class CategoryForm(forms.ModelForm):
             "css_class",
             "allow_polls",
             "delay_browse_check",
-            "limit_threads_visibility",
+            "show_started_only",
             "is_closed",
             "is_vanilla",
             "list_children_threads",

@@ -114,6 +114,10 @@ class EditGroupForm(forms.ModelForm):
 
     # Permissions
 
+    can_use_private_threads = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can use private threads"),
+    )
+
     can_change_username = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
@@ -163,6 +167,7 @@ class EditGroupForm(forms.ModelForm):
             "css_suffix",
             "is_page",
             "is_hidden",
+            "can_use_private_threads",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

@@ -51,10 +51,13 @@ class ModeratorForm(forms.ModelForm):
         coerce=int,
         required=False,
     )
+    private_threads = YesNoSwitch(
+        label=pgettext_lazy("admin moderators form", "Is private threads moderator"),
+    )
 
     class Meta:
         model = Moderator
-        fields = ["is_global", "categories"]
+        fields = ["is_global", "categories", "private_threads"]
 
     def __init__(self, *args, **kwarg):
         super().__init__(*args, **kwarg)

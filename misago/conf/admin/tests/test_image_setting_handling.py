@@ -25,7 +25,12 @@ def test_image_setting_can_be_set(admin_client, setting):
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "index_view": "threads",
+                "logo": image,
+            },
         )
 
     setting.refresh_from_db()
@@ -36,7 +41,12 @@ def test_setting_image_also_sets_its_dimensions(admin_client, setting):
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "index_view": "threads",
+                "logo": image,
+            },
         )
 
     setting.refresh_from_db()
@@ -48,7 +58,12 @@ def test_setting_image_filename_is_prefixed_with_setting_name(admin_client, sett
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "index_view": "threads",
+                "logo": image,
+            },
         )
 
     setting.refresh_from_db()
@@ -59,7 +74,12 @@ def test_setting_image_filename_is_hashed(admin_client, setting):
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "index_view": "threads",
+                "logo": image,
+            },
         )
 
     setting.refresh_from_db()
@@ -73,6 +93,7 @@ def test_image_setting_rejects_non_image_file(admin_client, setting):
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -89,6 +110,7 @@ def setting_with_value(admin_client, setting):
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -109,6 +131,7 @@ def test_invalid_file_is_not_set_as_value(admin_client, setting):
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -126,6 +149,7 @@ def test_uploading_invalid_file_doesnt_remove_already_set_image(
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -143,6 +167,7 @@ def test_set_image_is_still_rendered_when_invalid_file_was_uploaded(
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -159,6 +184,7 @@ def test_uploading_new_image_replaces_already_set_image(
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -174,6 +200,7 @@ def test_uploading_new_image_deletes_image_file(admin_client, setting_with_value
             {
                 "forum_name": "Misago",
                 "forum_address": "http://test.com",
+                "index_view": "threads",
                 "logo": not_image,
             },
         )
@@ -196,7 +223,12 @@ def test_omitting_setting_value_doesnt_remove_already_set_image(
 def test_set_image_can_be_deleted_by_extra_option(admin_client, setting_with_value):
     admin_client.post(
         reverse("misago:admin:settings:general:index"),
-        {"forum_name": "Misago", "forum_address": "http://test.com", "logo_delete": 1},
+        {
+            "forum_name": "Misago",
+            "forum_address": "http://test.com",
+            "index_view": "threads",
+            "logo_delete": 1,
+        },
     )
 
     setting_with_value.refresh_from_db()
@@ -208,7 +240,12 @@ def test_using_image_deletion_option_deletes_image_file(
 ):
     admin_client.post(
         reverse("misago:admin:settings:general:index"),
-        {"forum_name": "Misago", "forum_address": "http://test.com", "logo_delete": 1},
+        {
+            "forum_name": "Misago",
+            "forum_address": "http://test.com",
+            "index_view": "threads",
+            "logo_delete": 1,
+        },
     )
 
     assert not os.path.exists(setting_with_value.image.path)
