@@ -175,7 +175,7 @@ def test_category_threads_list_includes_child_category_thread(
     assert_contains(response, "Test Thread")
 
 
-def test_category_threads_list_excludes_child_category_thread(
+def test_category_threads_list_excludes_child_category_thread_if_list_children_threads_is_false(
     default_category, user, user_client, other_user
 ):
     default_category.list_children_threads = False

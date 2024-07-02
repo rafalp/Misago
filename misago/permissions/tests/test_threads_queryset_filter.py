@@ -22,10 +22,9 @@ def test_threads_queryset_includes_category_with_see_permission_and_delay_browse
     category,
     category_thread,
     category_members_see_permission,
-    category_members_browse_permission,
     user,
 ):
-    category.delay_browse_check
+    category.delay_browse_check = True
     category.save()
 
     threads_filter = threads_filter_factory(user)
@@ -102,8 +101,8 @@ def test_threads_queryset_filter(
         (False, True),
     )
 
-    for u, c, s, p, w, h, m in product(*MATRIX):
-        check_thread_visibility(threads_filter_factory, u, c, s, p, w, h, m)
+    for args in product(*MATRIX):
+        check_thread_visibility(threads_filter_factory, *args)
 
 
 def check_thread_visibility(
@@ -233,10 +232,9 @@ def test_threads_pinned_queryset_includes_category_with_see_permission_and_delay
     category,
     category_pinned_globally_thread,
     category_members_see_permission,
-    category_members_browse_permission,
     user,
 ):
-    category.delay_browse_check
+    category.delay_browse_check = True
     category.save()
 
     threads_filter = threads_filter_factory(user)
@@ -313,8 +311,8 @@ def test_threads_queryset_filter_pinned(
         (False, True),
     )
 
-    for u, c, s, p, w, h, m in product(*MATRIX):
-        check_pinned_thread_visibility(threads_filter_factory, u, c, s, p, w, h, m)
+    for args in product(*MATRIX):
+        check_pinned_thread_visibility(threads_filter_factory, *args)
 
 
 def check_pinned_thread_visibility(
@@ -353,7 +351,7 @@ def check_pinned_thread_visibility(
 def assert_pinned_queryset_contains(user, category, thread):
     if thread.weight != ThreadWeight.PINNED_GLOBALLY:
         raise AssertionError(
-            f"pinned queryset result contains a thread that's not pinned globally"
+            "pinned queryset result contains a thread that's not pinned globally"
         )
 
     if user.id and (user.slug == "moderator" or user.slug == "categorymoderator"):

@@ -47,7 +47,7 @@ def category(root_category):
 
 @pytest.fixture
 def child_category(category):
-    child_category = Category(name="Parent's Child", slug="parents-child")
+    child_category = Category(name="Child", slug="child")
     child_category.insert_at(category, position="last-child", save=True)
     return child_category
 
@@ -204,6 +204,24 @@ def child_category_custom_browse_permission(child_category, custom_group):
 
 
 @pytest.fixture
+def sibling_category_guests_see_permission(sibling_category, guests_group):
+    return CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+
+
+@pytest.fixture
+def sibling_category_guests_browse_permission(sibling_category, guests_group):
+    return CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+
+@pytest.fixture
 def sibling_category_members_see_permission(sibling_category, members_group):
     return CategoryGroupPermission.objects.create(
         category=sibling_category,
@@ -217,6 +235,24 @@ def sibling_category_members_browse_permission(sibling_category, members_group):
     return CategoryGroupPermission.objects.create(
         category=sibling_category,
         group=members_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+
+@pytest.fixture
+def sibling_category_moderators_see_permission(sibling_category, moderators_group):
+    return CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=moderators_group,
+        permission=CategoryPermission.SEE,
+    )
+
+
+@pytest.fixture
+def sibling_category_moderators_browse_permission(sibling_category, moderators_group):
+    return CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=moderators_group,
         permission=CategoryPermission.BROWSE,
     )
 
@@ -259,6 +295,11 @@ def category_thread(category):
 
 
 @pytest.fixture
+def category_pinned_thread(category):
+    return post_thread(category, title="Category Pinned Thread", is_pinned=True)
+
+
+@pytest.fixture
 def category_pinned_globally_thread(category):
     return post_thread(category, title="Category Global Thread", is_global=True)
 
@@ -269,6 +310,11 @@ def child_category_thread(child_category):
 
 
 @pytest.fixture
+def child_category_pinned_thread(child_category):
+    return post_thread(child_category, title="Child Pinned Thread", is_pinned=True)
+
+
+@pytest.fixture
 def child_category_pinned_globally_thread(child_category):
     return post_thread(child_category, title="Child Global Thread", is_global=True)
 
@@ -276,6 +322,16 @@ def child_category_pinned_globally_thread(child_category):
 @pytest.fixture
 def sibling_category_thread(sibling_category):
     return post_thread(sibling_category, title="Sibling Thread")
+
+
+@pytest.fixture
+def sibling_category_pinned_thread(sibling_category):
+    return post_thread(sibling_category, title="Sibling Pinned Thread", is_pinned=True)
+
+
+@pytest.fixture
+def sibling_category_pinned_globally_thread(sibling_category):
+    return post_thread(sibling_category, title="Sibling Global Thread", is_global=True)
 
 
 @pytest.fixture
