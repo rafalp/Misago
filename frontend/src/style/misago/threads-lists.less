@@ -245,6 +245,15 @@
 .threads-list-item-col-posters {
   padding-left: @grid-gutter-width / 2;
   width: 76px;
+
+  a {
+    display: inline-block;
+
+    line-height: 0;
+  }
+  a:hover, a:focus {
+    text-decoration: none;
+  }
 }
 
 .threads-list-item-starter + .threads-list-item-last-poster {
