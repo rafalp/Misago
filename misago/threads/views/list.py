@@ -1,4 +1,5 @@
 import re
+from math import ceil
 from typing import Any
 
 from django.contrib.auth import get_user_model
@@ -63,6 +64,10 @@ class ListView(View):
             return {}
 
         return {user.id: user for user in User.objects.filter(id__in=user_ids)}
+
+    def get_thread_pages_count(self, request: HttpRequest, thread: Thread) -> int:
+        posts = max(1, thread.replies + 1 - request.settings.posts_per_page_orphans)
+        return ceil(posts / request.settings.posts_per_page)
 
 
 class ThreadsListView(ListView):
@@ -134,6 +139,7 @@ class ThreadsListView(ListView):
                     "is_new": new_threads.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
+                    "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
                 }
             )
@@ -289,6 +295,7 @@ class CategoryThreadsListView(ListView):
                     "is_new": new_threads.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
+                    "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
                 }
             )
@@ -444,6 +451,7 @@ class PrivateThreadsListView(ListView):
                     "is_new": new_threads.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
+                    "pages": self.get_thread_pages_count(request, thread),
                     "categories": None,
                 }
             )

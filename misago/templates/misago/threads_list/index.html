@@ -47,15 +47,36 @@
             >
               {{ thread.title }}
             </a>
-            <a href="/t/misago-django-app-merge/82/2/" class="threads-list-item-goto-page" title="Go to page: 2">2</a>
+            {% if thread_data.pages > 1 %}
+              <a
+                href="{% url url_names.THREAD pk=thread.pk slug=thread.slug page=thread_data.pages %}"
+                class="threads-list-item-goto-page"
+                title="{% trans 'Go to last page' context 'threads list' %}"
+              >
+                {{ thread_data.pages }}
+              </a>
+            {% endif %}
           </div>
           {% if thread_data.categories and categories_component == "breadcrumbs" %}
-            <div class="threads-list-item-row-categories">
+            <div class="threads-list-item-row-categories hidden-xs hidden-sm">
               {% for category in thread_data.categories %}
                 <a
                   href="{{ category.url }}"
                   class="threads-list-category-link{% if category.color %} threads-list-category-link-color{% endif %}"
                   {% if category.color %}style="--color: {{ category.color }}"{% endif %}
+                >
+                  <span class="material-icon">label</span>
+                  {{ category.name }}
+                </a>
+              {% endfor %}
+            </div>
+            <div class="threads-list-item-row-categories hidden-md hidden-lg">
+              {% for category in thread_data.categories %}
+                <a
+                  href="{{ category.url }}"
+                  class="threads-list-category-link{% if category.color %} threads-list-category-link-color{% endif %}"
+                  {% if category.color %}style="--color: {{ category.color }}"{% endif %}
+                  {% if category.short_name %}title="{{ category.name }}"{% endif %}
                 >
                   <span class="material-icon">label</span>
                   {{ category.short_name|default:category.name }}
