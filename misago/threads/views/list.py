@@ -287,7 +287,9 @@ class CategoryThreadsListView(ListView):
 
         items: list[dict] = []
         for thread in threads_list:
-            categories = request.categories.get_thread_categories(thread.category_id, category.id)
+            categories = request.categories.get_thread_categories(
+                thread.category_id, category.id
+            )
 
             items.append(
                 {

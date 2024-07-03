@@ -3,28 +3,6 @@
 {% for thread_data in threads %}
   {% with thread_data.thread as thread %}
     <li id="threads-item-{{ thread.id }}" class="list-group-item threads-list-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-      <div class="threads-list-item-col-starter">
-        {% if thread_data.starter %}
-          <a
-            href="{% url 'misago:user' slug=thread_data.starter.slug pk=thread_data.starter.id  %}"
-            class="threads-list-item-starter"
-            title="{% blocktrans trimmed with starter=thread_data.starter.username context 'threads list' %}
-            {{ starter }} - original poster
-            {% endblocktrans %}"
-          >
-            <img class="user-avatar" src="{{ thread_data.starter|avatar:30 }}" width="30" height="30" alt="">
-          </a>
-        {% else %}
-          <span
-            class="threads-list-item-starter"
-            title="{% blocktrans trimmed with starter=thread.starter_name context 'threads list' %}
-            {{ starter }} - original poster
-            {% endblocktrans %}"
-          >
-            <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="30" height="30" alt="">
-          </span>
-        {% endif %}
-      </div>
       {% if user.is_authenticated %}
         <div class="threads-list-item-col-read-status">
           {% if thread_data.is_new %}
@@ -132,28 +110,50 @@
             {% endif %}
           </div>
           <div class="threads-list-item-bottom-right">
-            <div class="threads-list-item-col-replies{% if thread.replies == 0 %} threads-list-item-col-replies-zero{% endif %}">
-              {% include "misago/thread_replies.html" %}
-            </div>
-            <div class="threads-list-item-col-last-poster">
-              {% if thread_data.last_poster %}
+            <div class="threads-list-item-col-posters">
+              {% if thread_data.starter %}
                 <a
-                  href="{% url 'misago:user' slug=thread_data.last_poster.slug pk=thread_data.last_poster.id %}"
-                  class="threads-list-item-last-poster"
-                  title="{% blocktrans trimmed with last_poster=thread_data.last_poster.username context 'threads list' %}
-                  {{ last_poster }} - latest poster
+                  href="{% url 'misago:user' slug=thread_data.starter.slug pk=thread_data.starter.id  %}"
+                  class="threads-list-item-starter"
+                  title="{% blocktrans trimmed with starter=thread_data.starter.username context 'threads list' %}
+                  {{ starter }} - original poster
                   {% endblocktrans %}"
                 >
-                  <img src="{{ thread_data.last_poster|avatar:30 }}" width="30" height="30" alt="">
+                  <img class="user-avatar" src="{{ thread_data.starter|avatar:24 }}" width="24" height="24" alt="">
                 </a>
               {% else %}
-                <span class="threads-list-item-last-poster" title="{% blocktrans trimmed with last_poster=thread.last_poster_name context 'threads list' %}
-                  {{ last_poster }} - latest poster
+                <span
+                  class="threads-list-item-starter"
+                  title="{% blocktrans trimmed with starter=thread.starter_name context 'threads list' %}
+                  {{ starter }} - original poster
                   {% endblocktrans %}"
                 >
-                  <img src="{{ BLANK_AVATAR_URL }}" width="30" height="30" alt="">
+                  <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="24" height="24" alt="">
                 </span>
               {% endif %}
+              {% if thread.starter_name != thread.last_poster_name %}
+                {% if thread_data.last_poster %}
+                  <a
+                    href="{% url 'misago:user' slug=thread_data.last_poster.slug pk=thread_data.last_poster.id %}"
+                    class="threads-list-item-last-poster"
+                    title="{% blocktrans trimmed with last_poster=thread_data.last_poster.username context 'threads list' %}
+                    {{ last_poster }} - latest poster
+                    {% endblocktrans %}"
+                  >
+                    <img src="{{ thread_data.last_poster|avatar:24 }}" width="24" height="24" alt="">
+                  </a>
+                {% else %}
+                  <span class="threads-list-item-last-poster" title="{% blocktrans trimmed with last_poster=thread.last_poster_name context 'threads list' %}
+                    {{ last_poster }} - latest poster
+                    {% endblocktrans %}"
+                  >
+                    <img src="{{ BLANK_AVATAR_URL }}" width="24" height="24" alt="">
+                  </span>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="threads-list-item-col-replies{% if thread.replies == 0 %} threads-list-item-col-replies-zero{% endif %}">
+              {% include "misago/thread_replies.html" %}
             </div>
             <div class="threads-list-item-col-last-activity">
               <a

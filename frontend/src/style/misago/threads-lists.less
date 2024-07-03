@@ -13,8 +13,6 @@
 
   img {
     border-radius: @border-radius-small;
-    width: @thread-avatar-image-size;
-    height: @thread-avatar-image-size;
   }
 }
 
@@ -38,11 +36,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-// Original poster
-.threads-list-item-col-starter {
-  padding-right: @grid-gutter-width / 2;
 }
 
 // Thread icon
@@ -248,9 +241,14 @@
   padding-left: @grid-gutter-width / 2;
 }
 
-// Last poster
-.threads-list-item-col-last-poster {
+// Original poster and last poster
+.threads-list-item-col-posters {
   padding-left: @grid-gutter-width / 2;
+  width: 76px;
+}
+
+.threads-list-item-starter + .threads-list-item-last-poster {
+  margin-left: @grid-gutter-width / 4;
 }
 
 // Small first and last posters, hidden by default
@@ -287,8 +285,7 @@
 }
 
 // Subscription and checkbox
-.threads-list-item-col-checkbox,
-.threads-list-item-col-notifications {
+.threads-list-item-col-checkbox {
   padding-left: @grid-gutter-width / 2;
 
   .btn-icon {
@@ -341,11 +338,9 @@
     margin-top: @grid-gutter-width / 4;
   }
 
-  // Hide some cols used on large displays
-  .threads-list-item-col-starter,
-  .threads-list-item-col-notifications,
+  // Hide some cols used on large displays,
+  .threads-list-item-col-posters,
   .threads-list-item-col-replies-zero,
-  .threads-list-item-col-last-poster,
   .threads-list-item-col-checkbox {
     display: none;
   }
