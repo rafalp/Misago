@@ -101,31 +101,36 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
       <DropdownSubheader className="site-nav-categories">
         {pgettext("site nav section", "Categories")}
       </DropdownSubheader>
-      {categories.map((category) => (
-        category.is_vanilla
-        ?
-        <DropdownMenuItem className="site-nav-category-header" key={category.id}>
-          <a href={category.url}>{category.name}</a>
-        </DropdownMenuItem>
-        :
-        <DropdownMenuItem
-          className={classnames("site-nav-category", {"site-nav-category-last": category.last})}
-          key={category.id}
-        >
-          <a href={category.url}>
-            <span>{category.name}</span>
-            <span
-              className={classnames(
-                "threads-list-item-category threads-list-category-label",
-                { "threads-list-category-label-color": !!category.color }
-              )}
-              style={{ "--label-color": category.color }}
-            >
-              {category.short_name || category.name}
-            </span>
-          </a>
-        </DropdownMenuItem>
-      ))}
+      {categories.map((category) =>
+        category.is_vanilla ? (
+          <DropdownMenuItem
+            className="site-nav-category-header"
+            key={category.id}
+          >
+            <a href={category.url}>{category.name}</a>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            className={classnames("site-nav-category", {
+              "site-nav-category-last": category.last,
+            })}
+            key={category.id}
+          >
+            <a href={category.url}>
+              <span>{category.name}</span>
+              <span
+                className={classnames(
+                  "threads-list-item-category threads-list-category-label",
+                  { "threads-list-category-label-color": !!category.color }
+                )}
+                style={{ "--label-color": category.color }}
+              >
+                {category.short_name || category.name}
+              </span>
+            </a>
+          </DropdownMenuItem>
+        )
+      )}
       {(!!footerNav.length || !!extraFooterItems.length) && (
         <DropdownDivider className="site-nav-footer-divider" />
       )}

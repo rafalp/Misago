@@ -1,4 +1,4 @@
-import { formatRelative, fullDateTime } from "./datetimeFormats"
+import { formatRelative, formatShort, fullDateTime } from "./datetimeFormats"
 
 const cache = {}
 
@@ -12,7 +12,13 @@ export function updateTimestamp(element) {
     element.setAttribute("title", fullDateTime.format(cache[timestamp]))
   }
 
-  element.textContent = formatRelative(cache[timestamp])
+  const format = element.getAttribute("misago-timestamp-format")
+
+  if (format == "short") {
+    element.textContent = formatShort(cache[timestamp])
+  } else {
+    element.textContent = formatRelative(cache[timestamp])
+  }
 }
 
 export function startLiveTimestamps() {

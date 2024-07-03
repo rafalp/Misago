@@ -159,9 +159,8 @@
               <a
                 href="{% url url_names.LAST_POST pk=thread.pk slug=thread.slug %}"
                 class="threads-list-item-last-activity"
-                title="{% blocktrans trimmed with last_activity=thread.last_post_on|date:'DATETIME_FORMAT' context 'threads list' %}
-                {{ last_activity }} - latest activity
-                {% endblocktrans %}"
+                misago-timestamp="{{ thread.last_post_on.isoformat }}"
+                misago-timestamp-format="short"
               >
                 {{ thread.last_post_on|date }}
               </a>

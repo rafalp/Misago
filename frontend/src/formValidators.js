@@ -92,7 +92,9 @@ function clearFormControlValidationState(element) {
 }
 
 function clearFormControlValidationMessages(element) {
-  element.querySelectorAll("[misago-dynamic-message]").forEach((i) => i.remove())
+  element
+    .querySelectorAll("[misago-dynamic-message]")
+    .forEach((i) => i.remove())
 }
 
 async function callValidationUrl(url, csrf, value, user) {
