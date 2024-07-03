@@ -25,6 +25,7 @@ from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
 )
+from ..enums import PrivateThreadUrl, ThreadUrl
 from ..hooks import (
     get_category_threads_page_context_hook,
     get_category_threads_page_queryset_hook,
@@ -125,15 +126,15 @@ class ThreadsListView(ListView):
 
         items: list[dict] = []
         for thread in threads_list:
+            categories = request.categories.get_thread_categories(thread.category_id)
+
             items.append(
                 {
                     "thread": thread,
                     "is_new": new_threads.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
-                    "categories": request.categories.get_thread_categories(
-                        thread.category_id,
-                    ),
+                    "categories": categories,
                 }
             )
 
@@ -141,6 +142,10 @@ class ThreadsListView(ListView):
             "template_name": self.threads_component_template_name,
             "items": items,
             "paginator": paginator,
+            "url_names": ThreadUrl.__members__,
+            "categories_component": (
+                request.settings.threads_list_item_categories_component
+            ),
         }
 
     def get_threads_queryset(self, request: HttpRequest):
@@ -276,15 +281,15 @@ class CategoryThreadsListView(ListView):
 
         items: list[dict] = []
         for thread in threads_list:
+            categories = request.categories.get_thread_categories(thread.category_id)
+
             items.append(
                 {
                     "thread": thread,
                     "is_new": new_threads.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
-                    "categories": request.categories.get_thread_categories(
-                        thread.category_id, category.id
-                    ),
+                    "categories": categories,
                 }
             )
 
@@ -292,6 +297,10 @@ class CategoryThreadsListView(ListView):
             "template_name": self.threads_component_template_name,
             "items": items,
             "paginator": paginator,
+            "url_names": ThreadUrl.__members__,
+            "categories_component": (
+                request.settings.threads_list_item_categories_component
+            ),
         }
 
     def get_threads_permissions_queryset_filter(
@@ -443,6 +452,7 @@ class PrivateThreadsListView(ListView):
             "template_name": self.threads_component_template_name,
             "items": items,
             "paginator": paginator,
+            "url_names": PrivateThreadUrl.__members__,
         }
 
     def get_threads_queryset(self, request: HttpRequest, category: Category):

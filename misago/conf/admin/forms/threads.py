@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
+from ....categories.enums import CategoryChildrenComponent
 from .base import SettingsForm
 
 
@@ -18,6 +19,8 @@ class ThreadsSettingsForm(SettingsForm):
         "thread_title_length_min",
         "unused_attachments_lifetime",
         "threads_per_page",
+        "threads_list_item_categories_component",
+        "threads_list_categories_component",
         "posts_per_page",
         "posts_per_page_orphans",
         "events_per_page",
@@ -99,6 +102,38 @@ class ThreadsSettingsForm(SettingsForm):
             "Number of threads displayed on a single page",
         ),
         min_value=10,
+    )
+    threads_list_item_categories_component = forms.CharField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Thread's categories appearance"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Select UI for displaying threads categories on threads lists.",
+        ),
+        widget=forms.RadioSelect(
+            choices=(
+                (
+                    "breadcrumbs",
+                    pgettext_lazy(
+                        "admin threads item categories choice", "Breadcrumbs"
+                    ),
+                ),
+                (
+                    "labels",
+                    pgettext_lazy("admin threads item categories choice", "Labels"),
+                ),
+            )
+        ),
+    )
+
+    threads_list_categories_component = forms.CharField(
+        label=pgettext_lazy("admin threads settings form", "Categories UI component"),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Select UI component to use for displaying list of categories on the threads page.",
+        ),
+        widget=forms.RadioSelect(choices=CategoryChildrenComponent.get_choices()),
     )
 
     posts_per_page = forms.IntegerField(

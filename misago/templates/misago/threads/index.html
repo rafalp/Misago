@@ -14,7 +14,10 @@
     {% include "misago/threads_toolbar.html" %}
 
     {% if threads.items %}
-      {% include threads.template_name %}
+      <ul class="list-group" itemscope itemtype="http://schema.org/ItemList">
+        <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
+        {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component %}
+      </ul>
     {% endif %}
 
     {% include "misago/threads_toolbar.html" with bottom=True %}
