@@ -61,3 +61,5 @@ export function setupHtmxErrors() {
   document.addEventListener("htmx:sendError", handleSendError)
   document.addEventListener("htmx:timeout", handleTimeoutError)
 }
+
+setupHtmxErrors()

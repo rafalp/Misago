@@ -1,3 +1,5 @@
+import htmx from "htmx.org"
+
 const DEBOUNCE = 1000
 
 const cache = {}
@@ -115,7 +117,8 @@ async function callValidationUrl(url, csrf, value, user) {
 }
 
 export function registerValidators(element) {
-  ;(element || document)
-    .querySelectorAll("[misago-validate]")
-    .forEach(registerElementValidator)
+  const target = element || document
+  target.querySelectorAll("[misago-validate]").forEach(registerElementValidator)
 }
+
+htmx.onLoad(registerValidators)

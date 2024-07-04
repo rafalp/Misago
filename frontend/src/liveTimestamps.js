@@ -1,3 +1,5 @@
+import htmx from "htmx.org"
+
 import { formatRelative, formatShort, fullDateTime } from "./datetimeFormats"
 
 const cache = {}
@@ -28,8 +30,10 @@ export function startLiveTimestamps() {
   window.setInterval(updateLiveTimestamps, 1000 * 55)
 }
 
-export function updateLiveTimestamps(target) {
-  ;(target || document)
-    .querySelectorAll("[misago-timestamp]")
-    .forEach(updateTimestamp)
+export function updateLiveTimestamps(element) {
+  const target = element || document
+  target.querySelectorAll("[misago-timestamp]").forEach(updateTimestamp)
 }
+
+startLiveTimestamps()
+htmx.onLoad(updateLiveTimestamps)

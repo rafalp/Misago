@@ -1,3 +1,5 @@
+import htmx from "htmx.org"
+
 const SNACKBAR_TTL = 6
 
 const container = document.getElementById("misago-snackbars")
@@ -57,4 +59,4 @@ export function error(message) {
   snackbar("danger", message)
 }
 
-document.addEventListener("htmx:afterSettle", renderSnackbars)
+htmx.onLoad(renderSnackbars)

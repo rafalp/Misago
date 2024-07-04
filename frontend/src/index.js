@@ -9,9 +9,9 @@ import "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import "./ajaxIndicator"
-import { registerValidators } from "./formValidators"
-import { setupHtmxErrors } from "./htmxErrors"
-import { startLiveTimestamps, updateLiveTimestamps } from "./liveTimestamps"
+import "./formValidators"
+import "./htmxErrors"
+import "./liveTimestamps"
 import * as snackbars from "./snackbars"
 
 export class Misago {
@@ -92,12 +92,3 @@ window.misago = misago
 
 // and export it for tests and stuff
 export default misago
-
-setupHtmxErrors()
-startLiveTimestamps()
-registerValidators()
-
-document.addEventListener("htmx:afterSwap", ({ detail }) => {
-  registerValidators(detail.elt)
-  updateLiveTimestamps(detail.elt)
-})
