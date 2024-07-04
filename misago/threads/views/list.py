@@ -45,11 +45,18 @@ User = get_user_model()
 
 class ListView(View):
     template_name: str
+    template_name_htmx: str
     threads_component_template_name = "misago/threads_list/index.html"
 
     def get(self, request: HttpRequest, **kwargs):
         context = self.get_context(request, kwargs)
-        return render(request, self.template_name, context)
+
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return {"request": request}
@@ -72,6 +79,7 @@ class ListView(View):
 
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
+    template_name_htmx = "misago/threads/partial.html"
 
     def dispatch(
         self,
@@ -92,6 +100,7 @@ class ThreadsListView(ListView):
         threads = self.get_threads(request, kwargs)
 
         context = {
+            "template_name_htmx": self.template_name_htmx,
             "request": request,
             "is_index": kwargs.get("is_index", False),
             "threads": threads,
@@ -202,6 +211,7 @@ class ThreadsListView(ListView):
 
 class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
+    template_name_htmx = "misago/category/partial.html"
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_category_threads_page_context_hook(
@@ -219,6 +229,7 @@ class CategoryThreadsListView(ListView):
         path = request.categories.get_category_path(category.id, include_self=False)
 
         context = {
+            "template_name_htmx": self.template_name_htmx,
             "request": request,
             "category": category,
             "threads": threads,
@@ -395,15 +406,12 @@ class CategoryThreadsListView(ListView):
 
 class PrivateThreadsListView(ListView):
     template_name = "misago/private_threads/index.html"
+    template_name_htmx = "misago/private_threads/partial.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         check_private_threads_permission(request.user_permissions)
 
         return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request: HttpRequest, **kwargs):
-        context = self.get_context(request, kwargs)
-        return render(request, self.template_name, context)
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_private_threads_page_context_hook(
@@ -414,6 +422,7 @@ class PrivateThreadsListView(ListView):
         category = Category.objects.private_threads()
 
         context = {
+            "template_name_htmx": self.template_name_htmx,
             "request": request,
             "threads": self.get_threads(request, category, kwargs),
         }

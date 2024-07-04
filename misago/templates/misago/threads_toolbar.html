@@ -2,7 +2,7 @@
 <div class="toolbar{% if not bottom %} toolbar-xs-reverse{% endif %}">
   <div class="toolbar-section">
     <div class="toolbar-item">
-      {% include "misago/threads_paginator.html" %}
+      {% include "misago/threads_paginator.html" with bottom=bottom %}
     </div>
   </div>
   <div class="toolbar-spacer"></div>

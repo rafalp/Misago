@@ -84,7 +84,7 @@ class AccountSettingsView(View):
 
 class AccountSettingsFormView(AccountSettingsView):
     template_name: str
-    template_htmx_name: str | None = None
+    template_name_htmx: str | None = None
     success_message: str
 
     def get_form_instance(self, request: HttpRequest) -> Form:
@@ -116,16 +116,16 @@ class AccountSettingsFormView(AccountSettingsView):
 
         messages.success(request, self.success_message)
 
-        if request.is_htmx and self.template_htmx_name:
-            return self.render(request, self.template_htmx_name, {"form": form})
+        if request.is_htmx and self.template_name_htmx:
+            return self.render(request, self.template_name_htmx, {"form": form})
 
         return redirect(request.path_info)
 
     def handle_invalid_form(self, request: HttpRequest, form: Form) -> HttpResponse:
         messages.error(request, _("Form contains errors"))
 
-        if request.is_htmx and self.template_htmx_name:
-            template_name = self.template_htmx_name
+        if request.is_htmx and self.template_name_htmx:
+            template_name = self.template_name_htmx
         else:
             template_name = self.template_name
 
@@ -134,7 +134,7 @@ class AccountSettingsFormView(AccountSettingsView):
 
 class AccountPreferencesView(AccountSettingsFormView):
     template_name = "misago/account/settings/preferences.html"
-    template_htmx_name = "misago/account/settings/preferences_form.html"
+    template_name_htmx = "misago/account/settings/preferences_form.html"
 
     success_message = pgettext_lazy(
         "account settings preferences updated", "Preferences updated"
@@ -164,7 +164,7 @@ class AccountPreferencesView(AccountSettingsFormView):
 
 class AccountDetailsView(AccountSettingsFormView):
     template_name = "misago/account/settings/details.html"
-    template_htmx_name = "misago/account/settings/details_form.html"
+    template_name_htmx = "misago/account/settings/details_form.html"
 
     success_message = pgettext_lazy(
         "account settings preferences updated", "Profile updated"
@@ -186,7 +186,7 @@ class AccountDetailsView(AccountSettingsFormView):
 
 class AccountUsernameView(AccountSettingsFormView):
     template_name = "misago/account/settings/username.html"
-    template_htmx_name = "misago/account/settings/username_form.html"
+    template_name_htmx = "misago/account/settings/username_form.html"
     template_history_name = "misago/account/settings/username_history.html"
 
     success_message = pgettext_lazy(
@@ -238,7 +238,7 @@ class AccountUsernameView(AccountSettingsFormView):
 
 class AccountPasswordView(AccountSettingsFormView):
     template_name = "misago/account/settings/password.html"
-    template_htmx_name = "misago/account/settings/password_form.html"
+    template_name_htmx = "misago/account/settings/password_form.html"
     email_template_name = "misago/emails/password_changed"
 
     success_message = pgettext_lazy(
@@ -282,7 +282,7 @@ class AccountPasswordView(AccountSettingsFormView):
 
 class AccountEmailView(AccountSettingsFormView):
     template_name = "misago/account/settings/email.html"
-    template_htmx_name = "misago/account/settings/email_form.html"
+    template_name_htmx = "misago/account/settings/email_form.html"
     template_htmx_success_name = "misago/account/settings/email_form_completed.html"
     email_template_name = "misago/emails/email_confirm_change"
 
@@ -300,7 +300,7 @@ class AccountEmailView(AccountSettingsFormView):
         form = self.get_form_instance(request)
 
         if request.is_htmx:
-            template_name = self.template_htmx_name
+            template_name = self.template_name_htmx
         else:
             template_name = self.template_name
 
@@ -322,7 +322,7 @@ class AccountEmailView(AccountSettingsFormView):
     def handle_valid_form(self, request: HttpRequest, form: Form) -> HttpResponse:
         self.save_form(request, form)
 
-        if request.is_htmx and self.template_htmx_name:
+        if request.is_htmx and self.template_name_htmx:
             messages.success(request, self.success_message)
             return self.render(
                 request,
@@ -414,7 +414,7 @@ def account_email_confirm_change(request, user_id, token):
 
 class AccountDownloadDataView(AccountSettingsView):
     template_name = "misago/account/settings/download_data.html"
-    template_htmx_name = "misago/account/settings/download_data_form.html"
+    template_name_htmx = "misago/account/settings/download_data_form.html"
 
     success_message = pgettext_lazy(
         "account settings data download requested", "Data download requested"
@@ -428,7 +428,7 @@ class AccountDownloadDataView(AccountSettingsView):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.is_htmx:
-            template_name = self.template_htmx_name
+            template_name = self.template_name_htmx
         else:
             template_name = self.template_name
 
@@ -448,7 +448,7 @@ class AccountDownloadDataView(AccountSettingsView):
             messages.success(request, self.success_message)
 
         if request.is_htmx:
-            return self.render(request, self.template_htmx_name)
+            return self.render(request, self.template_name_htmx)
 
         return redirect("misago:account-download-data")
 
