@@ -11,7 +11,7 @@
     {% include "misago/threads_toolbar.html" %}
 
     {% if threads.items %}
-      <ul class="list-group threads-list" itemscope itemtype="http://schema.org/ItemList">
+      <ul class="threads-list" itemscope itemtype="http://schema.org/ItemList">
         <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
         {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names %}
       </ul>

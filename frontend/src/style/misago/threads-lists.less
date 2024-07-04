@@ -3,7 +3,12 @@
 // --------------------------------------------------
 
 .threads-list {
+  padding: 0;
   margin-bottom: @line-height-computed;
+  
+  background-color: @list-group-bg;
+  border: 1px solid @list-group-border;
+  border-radius: @list-group-border-radius;
 }
 
 // Make list row flexbox row
@@ -11,8 +16,16 @@
   display: flex;
   align-items: center;
 
+  padding: 10px 15px;
+
+  border-bottom: 1px solid @list-group-border;
+
   img {
     border-radius: @border-radius-small;
+  }
+
+  &:last-child {
+    border-bottom: none;
   }
 }
 
