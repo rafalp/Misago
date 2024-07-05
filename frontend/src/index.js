@@ -5,19 +5,23 @@ import "bootstrap/js/dropdown"
 import "at-js"
 import "cropit"
 import "jquery-caret"
-import "htmx.org"
+import htmx from "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
-import "./ajaxIndicator"
+import AjaxLoader, { useLoader} from "./AjaxLoader"
 import "./formValidators"
 import "./htmxErrors"
 import "./liveTimestamps"
 import * as snackbars from "./snackbars"
 
+const loader = new AjaxLoader()
+
 export class Misago {
   constructor() {
     this._initializers = []
     this._context = {}
+
+    this.loader = loader
   }
 
   addInitializer(initializer) {
@@ -84,11 +88,24 @@ export class Misago {
   }
 }
 
-// create  singleton
-var misago = new Misago()
+// create the singleton
+const misago = new Misago()
 
 // expose it globally
 window.misago = misago
 
 // and export it for tests and stuff
 export default misago
+
+// Register ajax loader events
+document.addEventListener("htmx:beforeRequest", ({ target }) => {
+  if (useLoader(target)) {
+    loader.show()
+  }
+})
+
+document.addEventListener("htmx:afterRequest", ({ target }) => {
+  if (useLoader(target)) {
+    loader.hide()
+  }
+})

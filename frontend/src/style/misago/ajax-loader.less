@@ -1,4 +1,4 @@
-@keyframes misago-ajax-indicator {
+@keyframes misago-ajax-loader {
   0% {
     width: 0;
   }
@@ -13,25 +13,25 @@
   }
 }
 
-#misago-ajax-indicator {
+#misago-ajax-loader {
   position: fixed;
   width: 100%;
-  z-index: @zindex-ajax-indicator;
+  z-index: @zindex-ajax-loader;
 
   div {
-    background-color: @ajax-indicator-color;
+    background-color: @ajax-loader-color;
   }
 
   &.busy div {
     width: 0;
-    height: @ajax-indicator-size;
-    animation-name: misago-ajax-indicator;
+    height: @ajax-loader-size;
+    animation-name: misago-ajax-loader;
     animation-duration: 600s;
   }
 
   &.complete div {
     width: 100;
-    height: @ajax-indicator-size;
+    height: @ajax-loader-size;
     opacity: 0;
     transition: width 1s;
     transition: opacity 1s;

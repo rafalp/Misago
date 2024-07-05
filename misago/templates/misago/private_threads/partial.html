@@ -3,14 +3,17 @@
 {% endif %}
 
 <div id="misago-htmx-root">
-  {% include "misago/threads_toolbar.html" %}
+  {% include "misago/threads/toolbar.html" %}
 
   {% if threads.items %}
     <ul class="threads-list" itemscope itemtype="http://schema.org/ItemList">
       <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
+      {% if not threads.paginator.has_previous and threads.latest_post %}
+        {% include "misago/threads/poll_new.html" with latest_post=threads.latest_post %}
+      {% endif %}
       {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component %}
     </ul>
   {% endif %}
 
-  {% include "misago/threads_toolbar.html" with bottom=True %}
+  {% include "misago/threads/toolbar.html" with bottom=True %}
 </div>

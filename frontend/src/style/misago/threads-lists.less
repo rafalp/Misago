@@ -9,6 +9,7 @@
   background-color: @list-group-bg;
   border: 1px solid @list-group-border;
   border-radius: @list-group-border-radius;
+  overflow: hidden;
 }
 
 // Make list row flexbox row
@@ -523,4 +524,23 @@
 .threads-list-update-prompt-btn:active {
   background: @update-threads-prompt-active-bg;
   color: @update-threads-prompt-active-color;
+}
+
+// New threads poll message
+.threads-list-poll-new {
+  padding: 0;
+  list-style: none;
+}
+
+.btn-threads-list-poll {
+  display: block;
+  padding: 10px 15px;
+  width: 100%;
+
+  color: @btn-threads-list-poll-color;
+  font-weight: bold;
+  background-color: @btn-threads-list-poll-bg;
+  border: none;
+  border-bottom: 1px solid @btn-threads-list-poll-border;
+  border-radius: 0;
 }
