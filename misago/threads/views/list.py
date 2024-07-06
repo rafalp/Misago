@@ -1,6 +1,7 @@
 import re
 from math import ceil
 from typing import Any
+from urllib.parse import urlencode
 
 from django.contrib.auth import get_user_model
 from django.http import Http404, HttpRequest
@@ -11,6 +12,7 @@ from django.views import View
 
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
+from ...core.exceptions import OutdatedSlug
 from ...metatags.metatag import MetaTag
 from ...metatags.metatags import (
     get_default_metatags,
@@ -296,6 +298,16 @@ class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
     template_name_htmx = "misago/category/partial.html"
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except OutdatedSlug as exc:
+            query_str = "?" + urlencode(request.GET) if request.GET else ""
+            return redirect(
+                self.get_pagination_url(exc.model, kwargs) + query_str,
+                permanent=True,
+            )
+
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_category_threads_page_context_hook(
             self.get_context_action, request, kwargs
@@ -351,6 +363,9 @@ class CategoryThreadsListView(ListView):
             category,
             delay_browse_check=True,
         )
+
+        if category.slug != kwargs["slug"]:
+            raise OutdatedSlug(category)
 
         return category
 

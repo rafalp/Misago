@@ -1,5 +1,6 @@
 # pylint: disable=super-init-not-called
 from django.core.exceptions import PermissionDenied
+from django.db.models import Model
 from social_core.exceptions import AuthException
 
 
@@ -39,3 +40,8 @@ class ExplicitFirstPage(Exception):
 
 class OutdatedSlug(Exception):
     """The url that was used to reach view contained outdated slug"""
+
+    model: Model
+
+    def __init__(self, model: Model):
+        self.model = model
