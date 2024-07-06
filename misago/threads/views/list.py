@@ -26,7 +26,7 @@ from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
 )
-from ..enums import PrivateThreadUrl, ThreadUrl
+from ..enums import PrivateThreadUrl, ThreadsListsPolling, ThreadUrl
 from ..hooks import (
     get_category_threads_page_context_hook,
     get_category_threads_page_queryset_hook,
@@ -53,7 +53,11 @@ class ListView(View):
     new_threads_template_name = "misago/threads/poll_new.html"
 
     def get(self, request: HttpRequest, **kwargs):
-        if request.is_htmx and POLL_NEW_THREADS in request.GET:
+        if (
+            request.is_htmx
+            and self.is_threads_polling_enabled(request)
+            and POLL_NEW_THREADS in request.GET
+        ):
             return self.poll_new_threads(request, kwargs)
 
         context = self.get_context(request, kwargs)
@@ -94,11 +98,24 @@ class ListView(View):
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
-    def get_threads_latest_post_id(self, threads: list[Thread]) -> int | None:
+    def get_threads_latest_post_id(self, threads: list[Thread]) -> int:
         if threads:
             return max(t.last_post_id for t in threads)
 
-        return None
+        return 0
+
+    def is_threads_polling_enabled(self, request: HttpRequest) -> bool:
+        if request.settings.threads_lists_polling == ThreadsListsPolling.DISABLED:
+            return False
+
+        if (
+            request.settings.threads_lists_polling
+            == ThreadsListsPolling.ENABLED_FOR_USERS
+            and request.user.is_anonymous
+        ):
+            return False
+
+        return True
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict):
         raise NotImplementedError()
@@ -106,7 +123,7 @@ class ListView(View):
     def get_poll_new_threads_cursor(self, request: HttpRequest):
         try:
             latest_post = int(request.GET.get(POLL_NEW_THREADS, 0))
-            if latest_post < 1:
+            if latest_post < 0:
                 raise Http404()
             return latest_post
         except (ValueError, TypeError):
@@ -196,6 +213,7 @@ class ThreadsListView(ListView):
             "categories_component": (
                 request.settings.threads_list_item_categories_component
             ),
+            "enable_polling": self.is_threads_polling_enabled(request),
         }
 
     def get_threads_queryset(self, request: HttpRequest):
@@ -299,6 +317,7 @@ class CategoryThreadsListView(ListView):
             "category": category,
             "threads": threads,
             "breadcrumbs": path,
+            "pagination_url": self.get_pagination_url(category, kwargs),
         }
 
         if kwargs.get("filter"):
@@ -389,6 +408,7 @@ class CategoryThreadsListView(ListView):
             "categories_component": (
                 request.settings.threads_list_item_categories_component
             ),
+            "enable_polling": self.is_threads_polling_enabled(request),
         }
 
     def get_threads_permissions_queryset_filter(
@@ -438,32 +458,6 @@ class CategoryThreadsListView(ListView):
             )
         )
 
-    def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
-        category = self.get_category(request, kwargs)
-        cursor = self.get_poll_new_threads_cursor(request)
-        new_threads = self.count_new_threads(request, category, cursor)
-        return render(
-            request,
-            self.new_threads_template_name,
-            {
-                "latest_post": cursor,
-                "new_threads": new_threads,
-                "pagination_url": self.get_pagination_url(kwargs),
-            },
-        )
-
-    def count_new_threads(
-        self, request: HttpRequest, category: Category, after: int
-    ) -> int:
-        permissions_filter = self.get_threads_permissions_queryset_filter(
-            request, category
-        )
-        queryset = self.get_threads_queryset(request).filter(last_post_id__gt=after)
-
-        new_threads = permissions_filter.filter_pinned(queryset).count()
-        new_threads += permissions_filter.filter(queryset).count()
-        return new_threads
-
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         metatags = get_default_metatags(request)
 
@@ -497,6 +491,35 @@ class CategoryThreadsListView(ListView):
 
         return metatags
 
+    def get_pagination_url(self, category: Category, kwargs: dict) -> str:
+        return category.get_absolute_url()
+
+    def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+        category = self.get_category(request, kwargs)
+        cursor = self.get_poll_new_threads_cursor(request)
+        new_threads = self.count_new_threads(request, category, cursor)
+        return render(
+            request,
+            self.new_threads_template_name,
+            {
+                "latest_post": cursor,
+                "new_threads": new_threads,
+                "pagination_url": self.get_pagination_url(category, kwargs),
+            },
+        )
+
+    def count_new_threads(
+        self, request: HttpRequest, category: Category, after: int
+    ) -> int:
+        permissions_filter = self.get_threads_permissions_queryset_filter(
+            request, category
+        )
+        queryset = self.get_threads_queryset(request).filter(last_post_id__gt=after)
+
+        new_threads = permissions_filter.filter_pinned(queryset).count()
+        new_threads += permissions_filter.filter(queryset).count()
+        return new_threads
+
 
 class PrivateThreadsListView(ListView):
     template_name = "misago/private_threads/index.html"
@@ -519,15 +542,8 @@ class PrivateThreadsListView(ListView):
             "template_name_htmx": self.template_name_htmx,
             "request": request,
             "threads": self.get_threads(request, category, kwargs),
+            "pagination_url": self.get_pagination_url(kwargs),
         }
-
-        if kwargs.get("filter"):
-            context["pagination_url"] = reverse(
-                "misago:private-threads",
-                kwargs={"filter": kwargs["filter"]},
-            )
-        else:
-            context["pagination_url"] = reverse("misago:private-threads")
 
         context["metatags"] = self.get_metatags(request, {})
 
@@ -572,6 +588,7 @@ class PrivateThreadsListView(ListView):
             "items": items,
             "paginator": paginator,
             "url_names": PrivateThreadUrl.__members__,
+            "enable_polling": self.is_threads_polling_enabled(request),
         }
 
     def get_threads_queryset(self, request: HttpRequest, category: Category):
@@ -595,6 +612,18 @@ class PrivateThreadsListView(ListView):
             raise_404=True,
         )
 
+    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
+        return get_default_metatags(request)
+
+    def get_pagination_url(self, kwargs: dict) -> str:
+        if kwargs.get("filter"):
+            return reverse(
+                "misago:private-threads",
+                kwargs={"filter": kwargs["filter"]},
+            )
+
+        return reverse("misago:private-threads")
+
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)
         cursor = self.get_poll_new_threads_cursor(request)
@@ -612,13 +641,12 @@ class PrivateThreadsListView(ListView):
     def count_new_threads(
         self, request: HttpRequest, category: Category, after: int
     ) -> int:
-        queryset = self.get_threads_queryset(request).filter(last_post_id__gt=after)
+        queryset = self.get_threads_queryset(request, category).filter(
+            last_post_id__gt=after
+        )
         return filter_private_threads_queryset(
             request.user_permissions, queryset
         ).count()
-
-    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        return get_default_metatags(request)
 
 
 threads = ThreadsListView.as_view()
