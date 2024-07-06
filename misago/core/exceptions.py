@@ -40,8 +40,3 @@ class ExplicitFirstPage(Exception):
 
 class OutdatedSlug(Exception):
     """The url that was used to reach view contained outdated slug"""
-
-    model: Model
-
-    def __init__(self, model: Model):
-        self.model = model

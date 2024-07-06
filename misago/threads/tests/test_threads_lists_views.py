@@ -407,27 +407,3 @@ def test_private_threads_list_displays_thread_without_animation_without_htmx(
     assert_contains(response, "<h1>")
     assert_contains(response, "Test Thread")
     assert_not_contains(response, "threads-list-item-animate")
-
-
-def test_category_threads_list_redirects_if_slug_is_invalid(default_category, client):
-    response = client.get(
-        reverse(
-            "misago:category", kwargs={"id": default_category.id, "slug": "invalid"}
-        )
-    )
-    assert response.status_code == 301
-    assert response["location"] == default_category.get_absolute_url()
-
-
-def test_category_threads_list_redirects_with_queryset_if_slug_is_invalid(
-    default_category, client
-):
-    querystring = "?some=200&custom=true&data=yes"
-    response = client.get(
-        reverse(
-            "misago:category", kwargs={"id": default_category.id, "slug": "invalid"}
-        )
-        + querystring
-    )
-    assert response.status_code == 301
-    assert response["location"] == default_category.get_absolute_url() + querystring
