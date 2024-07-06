@@ -91,7 +91,7 @@ class ListView(View):
 
         try:
             animate_threads = int(request.GET.get(ANIMATE_NEW_THREADS))
-            if animate_threads < 1:
+            if animate_threads < 0:
                 raise Http404()
         except (ValueError, TypeError):
             raise Http404()

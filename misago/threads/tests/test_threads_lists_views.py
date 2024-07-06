@@ -242,7 +242,6 @@ def test_threads_list_displays_thread_in_htmx_request(default_category, user_cli
     assert_contains(response, "Test Thread")
 
 
-@override_dynamic_settings(index_view="categories")
 def test_category_threads_list_displays_empty_in_htmx_request(
     default_category, user_client
 ):
@@ -253,7 +252,6 @@ def test_category_threads_list_displays_empty_in_htmx_request(
     assert_not_contains(response, "<h1>")
 
 
-@override_dynamic_settings(index_view="categories")
 def test_category_threads_list_displays_thread_in_htmx_request(
     default_category, user_client
 ):
@@ -266,7 +264,6 @@ def test_category_threads_list_displays_thread_in_htmx_request(
     assert_contains(response, "Test Thread")
 
 
-@override_dynamic_settings(index_view="categories")
 def test_private__threads_list_displays_empty_in_htmx_request(db, user_client):
     response = user_client.get(
         reverse("misago:private-threads"),
@@ -275,7 +272,6 @@ def test_private__threads_list_displays_empty_in_htmx_request(db, user_client):
     assert_not_contains(response, "<h1>")
 
 
-@override_dynamic_settings(index_view="categories")
 def test_private_threads_list_displays_thread_in_htmx_request(
     user, private_threads_category, user_client
 ):
@@ -288,3 +284,126 @@ def test_private_threads_list_displays_thread_in_htmx_request(
     )
     assert_not_contains(response, "<h1>")
     assert_contains(response, "Test Thread")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_thread_with_animation_in_htmx_request(
+    default_category, user_client
+):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        reverse("misago:threads") + "?animate_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_contains(response, "threads-list-item-animate")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_thread_without_animation_in_htmx_request(
+    default_category, user_client
+):
+    thread = post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        reverse("misago:threads") + f"?animate_new={thread.last_post_id + 1}",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_thread_without_animation_without_htmx(
+    default_category, user_client
+):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        reverse("misago:threads") + "?animate_new=0",
+    )
+    assert_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_category_threads_list_displays_thread_with_animation_in_htmx_request(
+    default_category, user_client
+):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        default_category.get_absolute_url() + "?animate_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_contains(response, "threads-list-item-animate")
+
+
+def test_category_threads_list_displays_thread_without_animation_in_htmx_request(
+    default_category, user_client
+):
+    thread = post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        default_category.get_absolute_url() + f"?animate_new={thread.last_post_id + 1}",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_category_threads_list_displays_thread_without_animation_without_htmx(
+    default_category, user_client
+):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        default_category.get_absolute_url() + "?animate_new=0",
+    )
+    assert_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_private_threads_list_displays_thread_with_animation_in_htmx_request(
+    private_threads_category, user_client, user
+):
+    thread = post_thread(private_threads_category, title="Test Thread")
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads") + "?animate_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_contains(response, "threads-list-item-animate")
+
+
+def test_private_threads_list_displays_thread_without_animation_in_htmx_request(
+    private_threads_category, user_client, user
+):
+    thread = post_thread(private_threads_category, title="Test Thread")
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads") + f"?animate_new={thread.last_post_id + 1}",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_private_threads_list_displays_thread_without_animation_without_htmx(
+    private_threads_category, user_client, user
+):
+    thread = post_thread(private_threads_category, title="Test Thread")
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads") + "?animate_new=0",
+    )
+    assert_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+    assert_not_contains(response, "threads-list-item-animate")
