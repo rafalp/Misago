@@ -2,7 +2,7 @@
 
 {% for thread_data in threads %}
   {% with thread_data.thread as thread %}
-    <li id="threads-item-{{ thread.id }}" class="threads-list-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+    <li id="threads-item-{{ thread.id }}" class="threads-list-item{% if thread_data.animate %} threads-list-item-animate{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
       {% if user.is_authenticated %}
         <div class="threads-list-item-col-read-status">
           {% if thread_data.is_new %}

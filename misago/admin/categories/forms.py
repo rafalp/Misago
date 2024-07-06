@@ -143,7 +143,9 @@ class CategoryForm(forms.ModelForm):
             "admin category form",
             "Select UI component to use for displaying category's subcategories on its page.",
         ),
-        widget=forms.RadioSelect(choices=CategoryChildrenComponent.get_choices()),
+        widget=forms.RadioSelect(
+            choices=CategoryChildrenComponent.get_category_choices(),
+        ),
     )
     require_threads_approval = YesNoSwitch(
         label=pgettext_lazy("admin category form", "Threads"),

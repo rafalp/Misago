@@ -17,9 +17,10 @@ class CategoryChildrenComponent(StrEnum):
     FULL = "full"
     PILLS = "pills"
     DROPDOWN = "dropdown"
+    DISABLED = "disabled"
 
     @classmethod
-    def get_choices(cls):
+    def get_category_choices(cls):
         return (
             (
                 cls.FULL,
@@ -34,3 +35,12 @@ class CategoryChildrenComponent(StrEnum):
                 pgettext_lazy("category children component choice", "Dropdown"),
             ),
         )
+
+    @classmethod
+    def get_threads_choices(cls):
+        return (
+            (
+                cls.DISABLED,
+                pgettext_lazy("category children component choice", "Disabled"),
+            ),
+        ) + cls.get_category_choices()

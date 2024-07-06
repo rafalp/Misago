@@ -43,6 +43,7 @@ from ..models import Thread
 User = get_user_model()
 
 POLL_NEW_THREADS = "poll_new"
+ANIMATE_NEW_THREADS = "animate_new"
 
 
 class ListView(View):
@@ -77,6 +78,21 @@ class ListView(View):
             return {}
 
         return {user.id: user for user in User.objects.filter(id__in=user_ids)}
+
+    def get_threads_to_animate(
+        self, request: HttpRequest, threads: list[Thread]
+    ) -> dict[int, bool]:
+        if not request.is_htmx or ANIMATE_NEW_THREADS not in request.GET:
+            return {}
+
+        try:
+            animate_threads = int(request.GET.get(ANIMATE_NEW_THREADS))
+            if animate_threads < 1:
+                raise Http404()
+        except (ValueError, TypeError):
+            raise Http404()
+
+        return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
     def get_threads_latest_post_id(self, threads: list[Thread]) -> int | None:
         if threads:
@@ -153,6 +169,7 @@ class ThreadsListView(ListView):
 
         new_threads = {}
         users = self.get_threads_users(request, threads_list)
+        animate = self.get_threads_to_animate(request, threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -166,6 +183,7 @@ class ThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
+                    "animate": animate.get(thread.id, False),
                 }
             )
 
@@ -342,6 +360,7 @@ class CategoryThreadsListView(ListView):
 
         new_threads = {}
         users = self.get_threads_users(request, threads_list)
+        animate = self.get_threads_to_animate(request, threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -357,6 +376,7 @@ class CategoryThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
+                    "animate": animate.get(thread.id, False),
                 }
             )
 
@@ -530,6 +550,7 @@ class PrivateThreadsListView(ListView):
 
         new_threads = {}
         users = self.get_threads_users(request, threads_list)
+        animate = self.get_threads_to_animate(request, threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -541,6 +562,7 @@ class PrivateThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": None,
+                    "animate": animate.get(thread.id, False),
                 }
             )
 

@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import pgettext_lazy
 
 from ....categories.enums import CategoryChildrenComponent
+from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
 
 
@@ -21,6 +22,7 @@ class ThreadsSettingsForm(SettingsForm):
         "threads_per_page",
         "threads_list_item_categories_component",
         "threads_list_categories_component",
+        "threads_lists_polling",
         "posts_per_page",
         "posts_per_page_orphans",
         "events_per_page",
@@ -126,6 +128,19 @@ class ThreadsSettingsForm(SettingsForm):
             )
         ),
     )
+    threads_lists_polling = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form",
+            "Enable polling for new or updated threads",
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Enabling polling will make threads lists call the server every minute for the number of new or updated threads. If there are new threads, a button will be displayed for the user that will let them refresh the list without having to refresh the entire page.",
+        ),
+        widget=forms.RadioSelect(
+            choices=ThreadsListsPolling.get_choices(),
+        ),
+    )
 
     threads_list_categories_component = forms.CharField(
         label=pgettext_lazy("admin threads settings form", "Categories UI component"),
@@ -133,7 +148,9 @@ class ThreadsSettingsForm(SettingsForm):
             "admin threads settings form",
             "Select UI component to use for displaying list of categories on the threads page.",
         ),
-        widget=forms.RadioSelect(choices=CategoryChildrenComponent.get_choices()),
+        widget=forms.RadioSelect(
+            choices=CategoryChildrenComponent.get_threads_choices(),
+        ),
     )
 
     posts_per_page = forms.IntegerField(

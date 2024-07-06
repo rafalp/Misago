@@ -52,6 +52,22 @@
   justify-content: center;
 }
 
+// Animate in new or updated threads
+@keyframes misago-threads-list-item-animate {
+  0% {
+    background-color: @threads-list-item-animation-color;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.threads-list-item-animate {
+  animation-name: misago-threads-list-item-animate;
+  animation-duration: .5s;
+  animation-iteration-count: 1;
+}
+
 // Thread icon
 .threads-list-item-col-read-status {
   padding-right: floor(@grid-gutter-width / 2);
@@ -538,7 +554,6 @@
   width: 100%;
 
   color: @btn-threads-list-poll-color;
-  font-weight: bold;
   background-color: @btn-threads-list-poll-bg;
   border: none;
   border-bottom: 1px solid @btn-threads-list-poll-border;

@@ -1,7 +1,7 @@
 {% load i18n %}
 <li
   hx-get="{{ pagination_url }}?poll_new={{ latest_post }}"
-  hx-trigger="every 60s"
+  hx-trigger="every 6s"
   hx-swap="outerHTML"
   hx-silent="true"
   class="{% if new_threads %}threads-list-poll-new{% else %}d-none{% endif %}"
@@ -10,15 +10,15 @@
     <button
       class="btn btn-threads-list-poll"
       type="button"
-      hx-get="{{ pagination_url }}"
+      hx-get="{{ pagination_url }}?animate_new={{ latest_post }}"
       hx-target="#misago-htmx-root"
       hx-swap="outerHTML"
       hx-silent="false"
     >
       {% blocktrans trimmed count new_threads=new_threads context "threads list" %}
-        There is {{ new_threads }} new or updated thread.
+        Show {{ new_threads }} new or updated thread
       {% plural %}
-        There are {{ new_threads }} new or updated threads.
+        Show {{ new_threads }} new or updated threads
       {% endblocktrans %}
     </button>
   {% endif %}
