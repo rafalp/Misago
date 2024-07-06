@@ -170,7 +170,7 @@
 
 // Link to page
 .threads-list-item-goto-page {
-  margin-left: @thread-goto-page-link-gutter;
+  margin-left: @thread-goto-page-link-margin;
   padding: @thread-goto-page-link-padding;
 
   border-radius: @border-radius-small;
@@ -192,10 +192,6 @@
     background-color: @thread-goto-page-link-active-bg;
     border: 1px solid @thread-goto-page-link-active-border;
   }
-}
-
-.threads-list-item-title + .threads-list-item-goto-page {
-  margin-left: @thread-goto-page-link-margin;
 }
 
 // Thread status flags
@@ -323,36 +319,6 @@
   }
 }
 
-// Subscription and checkbox
-.threads-list-item-col-checkbox {
-  padding-left: @grid-gutter-width / 2;
-
-  .btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-    height: @thread-avatar-image-size;
-    width: @thread-avatar-image-size;
-
-    .material-icon {
-      position: static;
-      margin: 0;
-      height: auto;
-      width: auto;
-
-      font-size: 24px;
-      line-height: 24px;
-    }
-  }
-}
-
-// Make list responsive
-.threads-list-item-col-checkbox-sm {
-  display: none;
-}
-
 @media screen and (max-width: @screen-sm-max) {
   // Remove vertical center align
   .threads-list-item {
@@ -379,8 +345,7 @@
 
   // Hide some cols used on large displays,
   .threads-list-item-col-posters,
-  .threads-list-item-col-replies-zero,
-  .threads-list-item-col-checkbox {
+  .threads-list-item-col-replies-zero {
     display: none;
   }
 
@@ -406,20 +371,6 @@
 
     padding-left: @grid-gutter-width / 2;
   }
-
-  // Reveal checkbox in top row, make it smol
-  .threads-list-item-col-checkbox-sm {
-    display: block;
-    padding-left: @grid-gutter-width / 2;
-
-    .btn-icon {
-      padding: 2px 6px;
-
-      .material-icon {
-        font-size: 12px;
-      }
-    }
-  }
 }
 
 @media screen and (max-width: @screen-xs-max) {
@@ -427,13 +378,6 @@
   .threads-list {
     margin-left: @grid-gutter-width * -0.5;
     margin-right: @grid-gutter-width * -0.5;
-
-    .list-group,
-    .list-group-item {
-      border-radius: 0;
-      border-left: 0;
-      border-right: 0;
-    }
   }
 
   // Remove top margin from bottom row itself
@@ -498,48 +442,6 @@
       font-size: @thread-last-activity-size-xs;
     }
   }
-}
-
-// Make thread buttons flash when thread is busy
-.threads-list-item-is-busy .btn-icon {
-  opacity: 0.8;
-  animation: busy 0.75s linear infinite;
-}
-
-@keyframes busy {
-  50% {
-    opacity: 0.5;
-  }
-}
-
-// Make threads list ui preview line height 1
-.threads-list-item .ui-preview-text {
-  line-height: 1;
-}
-
-// Threads list update prompt
-.threads-list-update-prompt {
-  padding: 0;
-}
-
-.threads-list-update-prompt-btn {
-  padding: @padding-large-vertical @padding-large-horizontal;
-
-  background: @update-threads-prompt-bg;
-  color: @update-threads-prompt-color;
-  border: none;
-  border-radius: @list-group-border-radius @list-group-border-radius 0 0;
-}
-
-.threads-list-update-prompt-btn:hover,
-.threads-list-update-prompt-btn:focus {
-  background: @update-threads-prompt-hover-bg;
-  color: @update-threads-prompt-hover-color;
-}
-
-.threads-list-update-prompt-btn:active {
-  background: @update-threads-prompt-active-bg;
-  color: @update-threads-prompt-active-color;
 }
 
 // New threads poll message
