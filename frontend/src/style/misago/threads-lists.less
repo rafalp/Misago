@@ -128,7 +128,8 @@
 }
 
 // Thread categories list under title
-.threads-list-item-row-categories {
+.threads-list-item-row-categories,
+.threads-list-item-col-categories {
   display: flex;
   width: 100%;
 }
@@ -166,6 +167,11 @@
   .material-icon {
     color: var(--color);
   }
+}
+
+// Hide categories col by default
+.threads-list-item-col-categories {
+  display: none;
 }
 
 // Link to page
@@ -287,8 +293,7 @@
 }
 
 // Small first and last posters, hidden by default
-.threads-list-item-col-starter-sm,
-.threads-list-item-col-last-poster-sm {
+.threads-list-item-col-posters-sm {
   display: none;
 
   font-size: @thread-flag-block-size;
@@ -343,7 +348,8 @@
     margin-top: @grid-gutter-width / 4;
   }
 
-  // Hide some cols used on large displays,
+  // Hide some items used on large displays
+  .threads-list-item-row-categories,
   .threads-list-item-col-posters,
   .threads-list-item-col-replies-zero {
     display: none;
@@ -354,9 +360,22 @@
     padding-top: @thread-read-icon-offset-top;
   }
 
-  // Reveal starter small avatar
-  .threads-list-item-col-starter-sm {
-    display: block;
+  // Remove left padding from flags and category labels
+  .threads-list-item-col-flags,
+  .threads-list-item-col-category-labels {
+    padding-left: 0;
+  }
+
+  // Reveal categories breadcrumbs col
+  .threads-list-item-col-categories {
+    display: flex;
+    align-items: center;
+  }
+
+  // Add spacing between flags and categories or labels
+  .threads-list-item-col-flags + .threads-list-item-col-categories,
+  .threads-list-item-col-flags + .threads-list-item-col-category-labels {
+    margin-left: @grid-gutter-width / 2;
   }
 
   // Make width of replies and last activity auto
@@ -365,11 +384,10 @@
     width: auto;
   }
 
-  // Reveal right-most last poster
-  .threads-list-item-col-last-poster-sm {
+  // Reveal small posters
+  .threads-list-item-col-posters-sm {
     display: block;
-
-    padding-left: @grid-gutter-width / 2;
+    margin-left: @grid-gutter-width / 2;
   }
 }
 
@@ -419,14 +437,8 @@
   }
 
   // Hide starter's avatar
-  .threads-list-item-col-starter-sm {
+  .threads-list-item-starter {
     display: none;
-  }
-
-  // Remove left padding from first item
-  .threads-list-item-col-starter-sm + .threads-list-item-col-flags,
-  .threads-list-item-col-starter-sm + .threads-list-item-col-category-labels {
-    padding-left: 0;
   }
 
   // Make last activity small but add spacing to make it easier to click
