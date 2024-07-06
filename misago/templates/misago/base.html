@@ -43,6 +43,9 @@
       {% else %}
         <link rel="shortcut icon" href="{% static 'misago/favicon.ico' %}" />
       {% endif %}
+      {% if canonical_link %}
+        <link rel="canonical" href="{{ settings.forum_address }}{{ canonical_link }}" />
+      {% endif %}
     {% endspaceless %}
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ settings.forum_address }}"}</script>
     <script type="text/javascript">
