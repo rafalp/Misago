@@ -504,6 +504,19 @@ def test_private_threads_list_poll_doesnt_return_button_if_request_is_not_htmx(
     assert_not_contains(response, "new or updated thread")
 
 
+def test_private_threads_list_poll_shows_error_to_users_without_permission(
+    user_client, private_threads_category, members_group
+):
+    members_group.can_use_private_threads = False
+    members_group.save()
+
+    response = user_client.get(
+        private_threads_category.get_absolute_url() + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "You can't use private threads.", status_code=403)
+
+
 def test_private_threads_list_poll_doesnt_return_button_if_new_threads_are_not_visible(
     user_client, private_threads_category, other_user
 ):

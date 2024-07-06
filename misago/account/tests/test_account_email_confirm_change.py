@@ -80,5 +80,4 @@ def test_account_email_confirm_change_returns_error_if_token_email_is_invalid(
             kwargs={"user_id": user.id, "token": token},
         )
     )
-    print(response.content)
     assert_contains(response, "This e-mail address is not available.")

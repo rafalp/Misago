@@ -94,7 +94,6 @@ def test_private_threads_list_shows_permission_error_to_users_without_permission
     members_group.save()
 
     response = user_client.get(reverse("misago:private-threads"))
-    print(response.content)
     assert_contains(response, "You can&#x27;t use private threads.", status_code=403)
 
 
@@ -221,3 +220,71 @@ def test_private_threads_list_displays_user_private_thread(
 
     response = user_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Test Private Thread")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_empty_in_htmx_request(db, user_client):
+    response = user_client.get(
+        reverse("misago:threads"),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_displays_thread_in_htmx_request(default_category, user_client):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        reverse("misago:threads"),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_category_threads_list_displays_empty_in_htmx_request(
+    default_category, user_client
+):
+    response = user_client.get(
+        default_category.get_absolute_url(),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_category_threads_list_displays_thread_in_htmx_request(
+    default_category, user_client
+):
+    post_thread(default_category, title="Test Thread")
+    response = user_client.get(
+        default_category.get_absolute_url(),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_private__threads_list_displays_empty_in_htmx_request(db, user_client):
+    response = user_client.get(
+        reverse("misago:private-threads"),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_private_threads_list_displays_thread_in_htmx_request(
+    user, private_threads_category, user_client
+):
+    thread = post_thread(private_threads_category, title="Test Thread")
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads"),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, "Test Thread")
