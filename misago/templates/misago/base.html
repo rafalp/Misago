@@ -43,7 +43,7 @@
       {% else %}
         <link rel="shortcut icon" href="{% static 'misago/favicon.ico' %}" />
       {% endif %}
-      {% if canonical_link %}
+      {% if settings.forum_address and canonical_link %}
         <link rel="canonical" href="{{ settings.forum_address }}{{ canonical_link }}" />
       {% endif %}
     {% endspaceless %}
