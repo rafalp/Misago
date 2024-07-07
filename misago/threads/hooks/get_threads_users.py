@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Thread
+from ..models import Thread
 
 if TYPE_CHECKING:
     from ...users.models import User

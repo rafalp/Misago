@@ -2,6 +2,11 @@
 {% load i18n %}
 
 
+{% block title %}
+  {% if threads.active_filter %}{{ threads.active_filter.name }} | {% endif %}{% trans "Private threads" context "private threads page" %} | {{ block.super }}
+{% endblock title %}
+
+
 {% block content %}
 <div class="page page-private-threads">
   {% include "misago/private_threads/header.html" %}

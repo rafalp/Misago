@@ -1,0 +1,32 @@
+{% load i18n %}
+<div class="dropdown threads-filter-picker">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle btn-block"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    {% if active_filter %}
+      {{ active_filter.name }}
+    {% else %}
+      {% trans "Filter threads" context "threads list filter" %}
+    {% endif %}
+  </button>
+  <ul class="dropdown-menu stick-to-bottom">
+    {% if active_filter %}
+      <li>
+        <a href="{{ remove_filters_url }}">
+          {% trans "Remove filters" context "threads list filter" %}
+        </a>
+      </li>
+    {% endif %}
+    {% for filter in filters %}
+      <li>
+        <a href="{{ filter.url }}">
+          {{ filter.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

@@ -5,6 +5,13 @@
       {% include "misago/threads/paginator.html" with bottom=bottom %}
     </div>
   </div>
+  {% if threads.filters and not bottom %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
+      </div>
+    </div>
+  {% endif %}
   <div class="toolbar-spacer"></div>
   <div{% if bottom %} class="toolbar-xs-reverse"{% endif %}>
     {% if bottom and user.is_authenticated %}

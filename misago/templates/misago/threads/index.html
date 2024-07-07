@@ -2,9 +2,20 @@
 {% load i18n %}
 
 
+{% block title %}
+  {% if threads.active_filter %}
+    {{ threads.active_filter.name }} | {{ block.super }}
+  {% elif is_index %}
+    {{ settings.index_title|default:settings.forum_name }}
+  {% else %}
+    {% trans "Threads" context "categories page" %} | {{ block.super }}
+  {% endif %}
+{% endblock title %}
+
+
 {% block content %}
 <div class="page page-threads">
-  {% if is_index %}
+  {% if is_index and not threads.active_filter %}
     {% include "misago/index_header.html" %}
   {% else %}
     {% include "misago/threads/header.html" %}

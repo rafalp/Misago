@@ -2,7 +2,9 @@
 {% load i18n %}
 
 
-{% block title %}{{ category }} | {{ block.super }}{% endblock %}
+{% block title %}
+  {% if threads.active_filter %}{{ threads.active_filter.name }} | {% endif %}{{ category }} | {{ block.super }}
+{% endblock title %}
 
 
 {% block content %}
