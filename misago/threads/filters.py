@@ -34,7 +34,7 @@ class MyThreadsFilter(ThreadsFilter):
         if self.request.user.is_authenticated:
             return queryset.filter(starter=self.request.user)
 
-        return queryset.empty()
+        return queryset.none()
 
 
 @dataclass(frozen=True)
