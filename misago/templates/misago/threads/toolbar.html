@@ -6,7 +6,7 @@
     </div>
   </div>
   {% if threads.filters and not bottom %}
-    <div class="toolbar-section d-js-flex">
+    <div class="toolbar-section">
       <div class="toolbar-item">
         {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
       </div>

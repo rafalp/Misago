@@ -1,0 +1,20 @@
+.noscript-collapsible > input {
+  display: none;
+}
+
+.noscript-collapsible .btn {
+  display: block;
+  width: 100%;
+}
+
+.noscript-collapsible-items {
+  display: none;
+}
+
+input:checked + .noscript-collapsible-items {
+  display: block;
+}
+
+.noscript-collapsible-items .btn {
+  margin-top: @line-height-computed / 2;
+}
