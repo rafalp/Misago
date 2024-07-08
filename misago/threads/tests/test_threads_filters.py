@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from ..filters import MyThreadsFilter
+from ..filters import MyThreadsFilter, UnapprovedThreadsFilter
 from ..models import Thread
 from ..test import post_thread
 
@@ -67,6 +67,50 @@ def test_my_threads_filter_returns_empty_queryset_if_user_is_anonymous(
     post_thread(default_category, poster=user)
 
     filter = MyThreadsFilter(Mock(user=anonymous_user))
+    choice = filter.as_choice("/base/url/", False)
+
+    filtered_queryset = choice.filter(queryset)
+    assert list(filtered_queryset) == []
+
+
+def test_unapproved_threads_filter_returns_unapproved_thread(default_category):
+    queryset = Thread.objects.all()
+    thread = post_thread(default_category, is_unapproved=True)
+
+    filter = UnapprovedThreadsFilter(Mock())
+    choice = filter.as_choice("/base/url/", False)
+
+    filtered_queryset = choice.filter(queryset)
+    assert list(filtered_queryset) == [thread]
+
+
+def test_unapproved_threads_filter_returns_thread_with_unapproved_posts(
+    default_category,
+):
+    queryset = Thread.objects.all()
+
+    thread = post_thread(default_category)
+    thread.has_unapproved_posts = True
+    thread.save()
+
+    filter = UnapprovedThreadsFilter(Mock())
+    choice = filter.as_choice("/base/url/", False)
+
+    filtered_queryset = choice.filter(queryset)
+    assert list(filtered_queryset) == [thread]
+
+
+def test_unapproved_threads_filter_excludes_threads_without_unapproved_status(
+    default_category,
+):
+    queryset = Thread.objects.all()
+
+    thread = post_thread(default_category)
+    thread.is_unapproved = False
+    thread.has_unapproved_posts = False
+    thread.save()
+
+    filter = UnapprovedThreadsFilter(Mock())
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)

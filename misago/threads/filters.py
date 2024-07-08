@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from django.http import HttpRequest
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.utils.translation import pgettext_lazy
 
 
@@ -35,6 +35,14 @@ class MyThreadsFilter(ThreadsFilter):
             return queryset.filter(starter=self.request.user)
 
         return queryset.none()
+
+
+class UnapprovedThreadsFilter(ThreadsFilter):
+    slug: str = "my"
+    name: str = pgettext_lazy("threads filter", "Unapproved threads")
+
+    def __call__(self, queryset: QuerySet) -> QuerySet:
+        return queryset.filter(Q(is_unapproved=True) | Q(has_unapproved_posts=True))
 
 
 @dataclass(frozen=True)

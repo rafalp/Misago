@@ -28,7 +28,12 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
 )
 from ..enums import PrivateThreadUrl, ThreadsListsPolling, ThreadUrl
-from ..filters import MyThreadsFilter, ThreadsFilter, ThreadsFilterChoice
+from ..filters import (
+    MyThreadsFilter,
+    ThreadsFilter,
+    ThreadsFilterChoice,
+    UnapprovedThreadsFilter,
+)
 from ..hooks import (
     get_category_threads_filters_hook,
     get_category_threads_page_context_hook,
@@ -273,7 +278,15 @@ class ThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        return [MyThreadsFilter(request)]
+        filters = [MyThreadsFilter(request)]
+
+        if (
+            request.user_permissions.is_global_moderator
+            or request.user_permissions.categories_moderator
+        ):
+            filters.append(UnapprovedThreadsFilter(request))
+
+        return filters
 
     def get_threads_queryset(self, request: HttpRequest):
         return get_threads_page_queryset_hook(self.get_threads_queryset_action, request)
@@ -539,7 +552,15 @@ class CategoryThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        return [MyThreadsFilter(request)]
+        filters = [MyThreadsFilter(request)]
+
+        if (
+            request.user_permissions.is_global_moderator
+            or category.id in request.user_permissions.categories_moderator
+        ):
+            filters.append(UnapprovedThreadsFilter(request))
+
+        return filters
 
     def get_threads_queryset(self, request: HttpRequest):
         return get_category_threads_page_queryset_hook(
