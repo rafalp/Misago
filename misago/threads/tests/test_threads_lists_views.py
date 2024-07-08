@@ -466,7 +466,9 @@ def test_category_threads_list_filters_threads(default_category, user, user_clie
 def test_private_threads_list_raises_404_error_if_filter_is_invalid(
     private_threads_category, user, user_client
 ):
-    post_thread(private_threads_category, title="User Thread", poster=user)
+    thread = post_thread(private_threads_category, title="User Thread", poster=user)
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
     response = user_client.get(
         reverse("misago:private-threads", kwargs={"filter": "invalid"})
     )

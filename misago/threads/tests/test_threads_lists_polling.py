@@ -209,6 +209,30 @@ def test_threads_list_poll_uses_category_permissions(
     assert_contains(response, "Show 1 new or updated thread")
 
 
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_poll_raises_404_error_if_filter_is_invalid(
+    default_category, user, user_client
+):
+    post_thread(default_category, title="User Thread", poster=user)
+    response = user_client.get(
+        reverse("misago:threads", kwargs={"filter": "invalid"}) + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 404
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_poll_filters_threads(default_category, user, user_client):
+    post_thread(default_category, title="User Thread", poster=user)
+    post_thread(default_category, title="Updated Thread")
+
+    response = user_client.get(
+        reverse("misago:threads", kwargs={"filter": "my"}) + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Show 1 new or updated thread")
+
+
 def test_category_threads_list_includes_polling_if_its_not_empty(
     client, default_category
 ):
@@ -391,6 +415,46 @@ def test_category_threads_list_poll_uses_category_permissions(client, default_ca
     assert_contains(response, "Show 1 new or updated thread")
 
 
+def test_category_threads_list_poll_raises_404_error_if_filter_is_invalid(
+    default_category, user, user_client
+):
+    post_thread(default_category, title="User Thread", poster=user)
+    response = user_client.get(
+        reverse(
+            "misago:category",
+            kwargs={
+                "id": default_category.id,
+                "slug": default_category.slug,
+                "filter": "invalid",
+            },
+        )
+        + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 404
+
+
+def test_category_threads_list_poll_filters_threads(
+    default_category, user, user_client
+):
+    post_thread(default_category, title="User Thread", poster=user)
+    post_thread(default_category, title="Other Thread")
+
+    response = user_client.get(
+        reverse(
+            "misago:category",
+            kwargs={
+                "id": default_category.id,
+                "slug": default_category.slug,
+                "filter": "my",
+            },
+        )
+        + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Show 1 new or updated thread")
+
+
 def test_private_threads_list_includes_polling_if_its_not_empty(
     user, user_client, private_threads_category
 ):
@@ -528,3 +592,34 @@ def test_private_threads_list_poll_doesnt_return_button_if_new_threads_are_not_v
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "new or updated thread")
+
+
+def test_private_threads_list_poll_raises_404_error_if_filter_is_invalid(
+    private_threads_category, user, user_client
+):
+    thread = post_thread(private_threads_category, title="User Thread", poster=user)
+    ThreadParticipant.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads", kwargs={"filter": "invalid"}) + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 404
+
+
+def test_private_threads_list_poll_filters_threads(
+    private_threads_category, user, user_client
+):
+    visible_thread = post_thread(
+        private_threads_category, title="User Thread", poster=user
+    )
+    hidden_thread = post_thread(private_threads_category, title="Other Thread")
+
+    ThreadParticipant.objects.create(thread=visible_thread, user=user)
+    ThreadParticipant.objects.create(thread=hidden_thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads", kwargs={"filter": "my"}) + "?poll_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Show 1 new or updated thread")
