@@ -407,3 +407,85 @@ def test_private_threads_list_displays_thread_without_animation_without_htmx(
     assert_contains(response, "<h1>")
     assert_contains(response, "Test Thread")
     assert_not_contains(response, "threads-list-item-animate")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_raises_404_error_if_filter_is_invalid(
+    default_category, user, user_client
+):
+    post_thread(default_category, title="User Thread", poster=user)
+    response = user_client.get(reverse("misago:threads", kwargs={"filter": "invalid"}))
+    assert response.status_code == 404
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_filters_threads(default_category, user, user_client):
+    visible_thread = post_thread(default_category, title="User Thread", poster=user)
+    hidden_thread = post_thread(default_category, title="Other Thread")
+
+    response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
+
+
+def test_category_threads_list_raises_404_error_if_filter_is_invalid(
+    default_category, user, user_client
+):
+    post_thread(default_category, title="User Thread", poster=user)
+    response = user_client.get(
+        reverse(
+            "misago:category",
+            kwargs={
+                "id": default_category.id,
+                "slug": default_category.slug,
+                "filter": "invalid",
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_category_threads_list_filters_threads(default_category, user, user_client):
+    visible_thread = post_thread(default_category, title="User Thread", poster=user)
+    hidden_thread = post_thread(default_category, title="Other Thread")
+
+    response = user_client.get(
+        reverse(
+            "misago:category",
+            kwargs={
+                "id": default_category.id,
+                "slug": default_category.slug,
+                "filter": "my",
+            },
+        )
+    )
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
+
+
+def test_private_threads_list_raises_404_error_if_filter_is_invalid(
+    private_threads_category, user, user_client
+):
+    post_thread(private_threads_category, title="User Thread", poster=user)
+    response = user_client.get(
+        reverse("misago:private-threads", kwargs={"filter": "invalid"})
+    )
+    assert response.status_code == 404
+
+
+def test_private_threads_list_filters_threads(
+    private_threads_category, user, user_client
+):
+    visible_thread = post_thread(
+        private_threads_category, title="User Thread", poster=user
+    )
+    hidden_thread = post_thread(private_threads_category, title="Other Thread")
+
+    ThreadParticipant.objects.create(thread=visible_thread, user=user)
+    ThreadParticipant.objects.create(thread=hidden_thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-threads", kwargs={"filter": "my"})
+    )
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
