@@ -38,7 +38,7 @@ class MyThreadsFilter(ThreadsFilter):
 
 
 class UnapprovedThreadsFilter(ThreadsFilter):
-    slug: str = "my"
+    slug: str = "unapproved"
     name: str = pgettext_lazy("threads filter", "Unapproved threads")
 
     def __call__(self, queryset: QuerySet) -> QuerySet:
