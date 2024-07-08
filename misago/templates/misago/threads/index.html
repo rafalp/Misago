@@ -15,7 +15,7 @@
 
 {% block content %}
 <div class="page page-threads">
-  {% if is_index and not threads.active_filter %}
+  {% if is_index %}
     {% include "misago/index_header.html" %}
   {% else %}
     {% include "misago/threads/header.html" %}

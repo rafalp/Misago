@@ -7,13 +7,7 @@
         <div class="page-header-banner page-header-banner-threads">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
-              <h1>
-                {% if threads.active_filter %}
-                  {{ threads.active_filter.name }}
-                {% else %}
-                  {% trans "Threads" context "threads page" %}
-                {% endif %}
-              </h1>
+              <h1>{% trans "Threads" context "threads page" %}</h1>
             </div>
           </div>
         </div>
