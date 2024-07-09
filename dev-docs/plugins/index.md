@@ -66,6 +66,13 @@ If you are interested in creating a custom plugin, please see the [plugin tutori
 Once you have your basic plugin up and running, the [extending Misago](./extending-misago.md) document contains a list of all available extension points.
 
 
+## Creating custom threads filters
+
+Plugins can add custom filtering options to threads lists:
+
+[Custom threads filters](./threads-filters.md)
+
+
 ## Adding new choices to the "index page" setting
 
 Plugins can register custom views as new choices in the "index page" setting:

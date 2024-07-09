@@ -7,6 +7,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
+- [`misago.threads.hooks`](#misago-threads-hooks)
 - [`misago.users.hooks`](#misago-users-hooks)
 
 
@@ -42,7 +43,30 @@ Hooks instances are importable from the following Python modules:
 - [`copy_category_permissions_hook`](./copy-category-permissions-hook.md)
 - [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
 - [`get_admin_category_permissions_hook`](./get-admin-category-permissions-hook.md)
+- [`get_category_threads_category_query_hook`](./get-category-threads-category-query-hook.md)
+- [`get_category_threads_pinned_category_query_hook`](./get-category-threads-pinned-category-query-hook.md)
+- [`get_threads_category_query_hook`](./get-threads-category-query-hook.md)
+- [`get_threads_pinned_category_query_hook`](./get-threads-pinned-category-query-hook.md)
+- [`get_threads_query_orm_filter_hook`](./get-threads-query-orm-filter-hook.md)
 - [`get_user_permissions_hook`](./get-user-permissions-hook.md)
+
+
+## `misago.threads.hooks`
+
+`misago.threads.hooks` defines the following hooks:
+
+- [`get_category_threads_filters_hook`](./get-category-threads-filters-hook.md)
+- [`get_category_threads_page_context_hook`](./get-category-threads-page-context-hook.md)
+- [`get_category_threads_page_queryset_hook`](./get-category-threads-page-queryset-hook.md)
+- [`get_category_threads_page_threads_hook`](./get-category-threads-page-threads-hook.md)
+- [`get_private_threads_filters_hook`](./get-private-threads-filters-hook.md)
+- [`get_private_threads_page_context_hook`](./get-private-threads-page-context-hook.md)
+- [`get_private_threads_page_queryset_hook`](./get-private-threads-page-queryset-hook.md)
+- [`get_private_threads_page_threads_hook`](./get-private-threads-page-threads-hook.md)
+- [`get_threads_filters_hook`](./get-threads-filters-hook.md)
+- [`get_threads_page_context_hook`](./get-threads-page-context-hook.md)
+- [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
+- [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
 
 
 ## `misago.users.hooks`

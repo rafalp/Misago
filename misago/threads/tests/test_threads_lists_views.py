@@ -12,29 +12,31 @@ from ..test import post_thread
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_guests(db, client):
     response = client.get(reverse("misago:threads"))
-    assert response.status_code == 200
+    assert_contains(response, "No threads have been started yet")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_users(user_client):
     response = user_client.get(reverse("misago:threads"))
-    assert response.status_code == 200
+    assert_contains(response, "No threads have been started yet")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:threads"))
-    assert response.status_code == 200
+    assert_contains(response, "No threads have been started yet")
 
 
 def test_category_threads_list_renders_empty_to_guests(default_category, client):
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_category_threads_list_renders_empty_to_users(default_category, user_client):
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_category_threads_list_renders_empty_to_moderators(
@@ -42,11 +44,13 @@ def test_category_threads_list_renders_empty_to_moderators(
 ):
     response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_child_category_threads_list_renders_empty_to_guests(child_category, client):
     response = client.get(child_category.get_absolute_url())
     assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_child_category_threads_list_renders_empty_to_users(
@@ -54,6 +58,7 @@ def test_child_category_threads_list_renders_empty_to_users(
 ):
     response = user_client.get(child_category.get_absolute_url())
     assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_child_category_threads_list_renders_empty_to_moderators(
@@ -61,6 +66,7 @@ def test_child_category_threads_list_renders_empty_to_moderators(
 ):
     response = moderator_client.get(child_category.get_absolute_url())
     assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_hidden_category_threads_list_renders_error_to_guests(hidden_category, client):
@@ -85,6 +91,7 @@ def test_private_threads_list_shows_permission_error_to_guests(db, client):
 def test_private_threads_list_renders_empty_to_users(user_client):
     response = user_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Private threads")
+    assert_contains(response, "You aren't participating in any private threads")
 
 
 def test_private_threads_list_shows_permission_error_to_users_without_permission(
@@ -100,6 +107,7 @@ def test_private_threads_list_shows_permission_error_to_users_without_permission
 def test_private_threads_list_renders_empty_to_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Private threads")
+    assert_contains(response, "You aren't participating in any private threads")
 
 
 @override_dynamic_settings(index_view="categories")

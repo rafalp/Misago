@@ -473,3 +473,31 @@
   border-bottom: 1px solid @btn-threads-list-poll-border;
   border-radius: 0;
 }
+
+// Blankslate
+.threads-list-blankslate {
+  padding: 20px 30px;
+}
+
+.threads-list-blankslate-message {
+  margin: 0;
+
+  font-size: @font-size-large;
+  text-align: center;
+}
+
+.threads-list-blankslate-links {
+  margin-top: @line-height-computed;
+
+  text-align: center;
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .threads-list-blankslate {
+    padding: 10px 15px;
+  }
+
+  .threads-list-blankslate-message {
+    font-size: @font-size-base;
+  }
+}

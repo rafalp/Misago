@@ -16,8 +16,8 @@
   <ul class="dropdown-menu stick-to-bottom">
     {% if active_filter %}
       <li>
-        <a href="{{ remove_filters_url }}">
-          {% trans "Remove filter" context "threads list filter" %}
+        <a href="{{ threads.clear_filters_url }}">
+          {% trans "Clear filters" context "threads list filter" %}
         </a>
       </li>
     {% endif %}
@@ -45,8 +45,8 @@
     <input id="threads-filters-collapsible" type="checkbox" />
     <div class="noscript-collapsible-items">
       {% if threads.active_filter %}
-        <a class="btn btn-default" href="{{ threads.remove_filters_url }}">
-          {% trans "Remove filter" context "threads list filter" %}
+        <a class="btn btn-default" href="{{ threads.clear_filters_url }}">
+          {% trans "Clear filters" context "threads list filter" %}
         </a>
       {% endif %}
       {% for filter in threads.filters %}

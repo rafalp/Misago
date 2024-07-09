@@ -8,8 +8,8 @@
       <ul class="nav nav-pills" role="menu" itemscope="" itemtype="http://schema.org/SiteNavigationElement">
         {% if threads.active_filter %}
           <li>
-            <a href="{{ threads.remove_filters_url }}">
-              {% trans "Remove filter" context "threads list filter" %}
+            <a href="{{ threads.clear_filters_url }}">
+              {% trans "Clear filters" context "threads list filter" %}
             </a>
           </li>
         {% endif %}

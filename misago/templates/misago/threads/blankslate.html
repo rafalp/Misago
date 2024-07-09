@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<li class="threads-list-blankslate">
+  {% if threads.active_filter %}
+    <p class="threads-list-blankslate-message">
+      {% blocktrans trimmed with filter=threads.active_filter.name context "threads list blankslate" %}
+        No threads matching the "{{ filter }}" filter exist, or you can't see them.
+      {% endblocktrans %}
+    </p>
+    <div class="threads-list-blankslate-links">
+      <a class="btn btn-default" href="{{ threads.clear_filters_url }}">
+        {% trans "Clear filters" context "threads list filter" %}
+      </a>
+    </div>
+  {% else %}
+    <p class="threads-list-blankslate-message">
+      {% blocktrans trimmed context "threads list blankslate" %}
+        No threads have been started yet, or you can't see them.
+      {% endblocktrans %}
+    </p>
+    <div class="threads-list-blankslate-links">
+      <button class="btn btn-primary" disabled>
+        {% trans "Start new thread" context "threads list" %}
+      </button>
+    </div>
+  {% endif %}
+</li>

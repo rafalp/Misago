@@ -6,13 +6,8 @@ from django.utils.translation import pgettext_lazy
 
 
 class ThreadsFilter:
-    slug: str
     name: str
-
-    request: HttpRequest
-
-    def __init__(self, request: HttpRequest):
-        self.request = request
+    slug: str
 
     def __call__(self, queryset: QuerySet) -> QuerySet:
         return queryset
@@ -27,8 +22,13 @@ class ThreadsFilter:
 
 
 class MyThreadsFilter(ThreadsFilter):
-    slug: str = "my"
     name: str = pgettext_lazy("threads filter", "My threads")
+    slug: str = "my"
+
+    request: HttpRequest
+
+    def __init__(self, request: HttpRequest):
+        self.request = request
 
     def __call__(self, queryset: QuerySet) -> QuerySet:
         if self.request.user.is_authenticated:
@@ -38,8 +38,13 @@ class MyThreadsFilter(ThreadsFilter):
 
 
 class UnapprovedThreadsFilter(ThreadsFilter):
-    slug: str = "unapproved"
     name: str = pgettext_lazy("threads filter", "Unapproved threads")
+    slug: str = "unapproved"
+
+    request: HttpRequest
+
+    def __init__(self, request: HttpRequest):
+        self.request = request
 
     def __call__(self, queryset: QuerySet) -> QuerySet:
         return queryset.filter(Q(is_unapproved=True) | Q(has_unapproved_posts=True))
