@@ -12,10 +12,16 @@
   {% include "misago/category/header.html" %}
 
   <div class="container page-container">
-    <div id="misago-page-scroll-target" class="scroll-target"></div>
 
-    {% include "misago/threads/filters_noscript.html" %}
-    {% include template_name_htmx %}
+    {% if subcategories %}
+      {% include subcategories.template_name with categories=subcategories.categories %}
+    {% endif %}
+
+    {% if threads %}
+      <div id="misago-page-scroll-target" class="scroll-target"></div>
+      {% include "misago/threads/filters_noscript.html" %}
+      {% include template_name_htmx %}
+    {% endif %}
 
     <div class="toolbar toolbar-over-footer">
       <div class="toolbar-section hidden-xs">

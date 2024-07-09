@@ -1,0 +1,11 @@
+{% load i18n %}
+<ul class="list-group list-group-category list-group-vanilla-category {% if category.css_class %}list-group-category-has-flavor list-group-category-{{ category.css_class }}{% endif %}">
+  <li class="list-group-item list-group-category-vanilla">
+    <h4 class="list-group-item-heading">
+      {% trans "Subcategories" context "category threads list subcategories" %}
+    </h4>
+  </li>
+  {% for category_data in categories %}
+    {% include "misago/categories_list/category_row.html" with category=category_data.category category_data=category_data %}
+  {% endfor %}
+</ul>

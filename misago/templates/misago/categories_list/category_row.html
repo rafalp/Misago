@@ -4,7 +4,7 @@
     <div class="col-xs-12 col-sm-6 col-md-6 category-main">
       <div class="media">
         <div class="media-left">
-          {% include "misago/categories/categories_list_category_row_icon.html" %}
+          {% include "misago/categories_list/category_row_icon.html" %}
         </div>
         <div class="media-body">
           <h4 class="media-heading">
@@ -20,11 +20,11 @@
         </div>
       </div>
     </div>
-    {% include "misago/categories/categories_list_category_row_stats.html" %}
+    {% include "misago/categories_list/category_row_stats.html" %}
     {% if category.level == 1 %}
-      {% include "misago/categories/categories_list_category_row_last_thread.html" with last_thread=category_data.last_thread %}
+      {% include "misago/categories_list/category_row_last_thread.html" with last_thread=category_data.last_thread %}
     {% else %}
-      {% include "misago/categories/categories_list_category_row_last_thread.html" with last_thread=category_data.children_last_thread %}
+      {% include "misago/categories_list/category_row_last_thread.html" with last_thread=category_data.children_last_thread %}
     {% endif %}
   </div>
   {% if category_data.children and category.level > 1 %}

@@ -10,6 +10,6 @@
     {% endif %}
   </li>
   {% for child in category_data.children %}
-    {% include "misago/categories/categories_list_category_row.html" with category=child.category category_data=child %}
+    {% include "misago/categories_list/category_row.html" with category=child.category category_data=child %}
   {% endfor %}
 </ul>

@@ -1,0 +1,6 @@
+{% load i18n %}
+<ul class="list-group list-group-category">
+  {% for category_data in categories %}
+    {% include "misago/categories_list/category_row.html" with category=category_data.category category_data=category_data %}
+  {% endfor %}
+</ul>

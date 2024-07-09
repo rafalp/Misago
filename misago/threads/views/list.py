@@ -9,7 +9,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 
-from ...categories.enums import CategoryTree
+from ...categories.enums import CategoryChildrenComponent, CategoryTree
+from ...categories.lists import get_categories_data, get_subcategories_data
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...metatags.metatag import MetaTag
@@ -173,12 +174,14 @@ class ThreadsListView(ListView):
         return get_threads_page_context_hook(self.get_context_action, request, kwargs)
 
     def get_context_action(self, request: HttpRequest, kwargs: dict):
+        subcategories = self.get_subcategories(request)
         threads = self.get_threads(request, kwargs)
 
         context = {
             "template_name_htmx": self.template_name_htmx,
             "request": request,
             "is_index": kwargs.get("is_index", False),
+            "subcategories": subcategories,
             "threads": threads,
             "pagination_url": self.get_pagination_url(kwargs),
         }
@@ -187,6 +190,18 @@ class ThreadsListView(ListView):
         context["canonical_link"] = self.get_canonical_link(request, context)
 
         return context
+
+    def get_subcategories(self, request: HttpRequest) -> dict | None:
+        component = request.settings.threads_list_categories_component
+
+        if component == CategoryChildrenComponent.DISABLED:
+            return None
+        
+        if component == CategoryChildrenComponent.FULL:
+            return {
+                "categories": get_categories_data(request),
+                "template_name": "misago/threads/subcategories_full.html",
+            }
 
     def get_threads(self, request: HttpRequest, kwargs: dict):
         return get_threads_page_threads_hook(self.get_threads_action, request, kwargs)
@@ -403,6 +418,7 @@ class CategoryThreadsListView(ListView):
             "template_name_htmx": self.template_name_htmx,
             "request": request,
             "category": category,
+            "subcategories": self.get_subcategories(request, category),
             "threads": threads,
             "breadcrumbs": path,
             "pagination_url": self.get_pagination_url(category, kwargs),
@@ -445,6 +461,17 @@ class CategoryThreadsListView(ListView):
             raise OutdatedSlug(category)
 
         return category
+
+    def get_subcategories(self, request: HttpRequest, category: Category) -> dict | None:
+        component = category.children_categories_component
+        if category.is_leaf_node():
+            return None
+
+        if component == CategoryChildrenComponent.FULL:
+            return {
+                "categories": get_subcategories_data(request, category),
+                "template_name": "misago/category/subcategories_full.html",
+            }
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
         return get_category_threads_page_threads_hook(

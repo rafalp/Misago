@@ -83,10 +83,10 @@
   <div class="container page-container">
 
     {% pluginoutlet CATEGORIES_LIST_START %}
-    {% if categories_list %}
-      {% include "misago/categories/categories_list_body.html" with items=categories_list %}
+    {% if categories_list.categories %}
+      {% include categories_list.template_name with categories=categories_list.categories %}
     {% else %}
-      {% include "misago/categories/empty_message.html" %}
+      {% include "misago/categories/blankslate.html" %}
     {% endif %}
     {% pluginoutlet CATEGORIES_LIST_END %}
 
