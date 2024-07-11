@@ -39,6 +39,7 @@ from ..hooks import (
     get_category_threads_filters_hook,
     get_category_threads_page_context_hook,
     get_category_threads_page_queryset_hook,
+    get_category_threads_page_subcategories_hook,
     get_category_threads_page_threads_hook,
     get_private_threads_filters_hook,
     get_private_threads_page_context_hook,
@@ -47,6 +48,7 @@ from ..hooks import (
     get_threads_filters_hook,
     get_threads_page_context_hook,
     get_threads_page_queryset_hook,
+    get_threads_page_subcategories_hook,
     get_threads_page_threads_hook,
 )
 from ..models import Thread
@@ -192,16 +194,20 @@ class ThreadsListView(ListView):
         return context
 
     def get_subcategories(self, request: HttpRequest) -> dict | None:
-        component = request.settings.threads_list_categories_component
+        return get_threads_page_subcategories_hook(
+            self.get_subcategories_action, request
+        )
 
-        if component == CategoryChildrenComponent.DISABLED:
-            return None
+    def get_subcategories_action(self, request: HttpRequest) -> dict | None:
+        component = request.settings.threads_list_categories_component
 
         if component == CategoryChildrenComponent.FULL:
             return {
                 "categories": get_categories_data(request),
                 "template_name": "misago/threads/subcategories_full.html",
             }
+
+        return None
 
     def get_threads(self, request: HttpRequest, kwargs: dict):
         return get_threads_page_threads_hook(self.get_threads_action, request, kwargs)
@@ -465,15 +471,25 @@ class CategoryThreadsListView(ListView):
     def get_subcategories(
         self, request: HttpRequest, category: Category
     ) -> dict | None:
-        component = category.children_categories_component
         if category.is_leaf_node():
             return None
+
+        return get_category_threads_page_subcategories_hook(
+            self.get_subcategories_action, request, category
+        )
+
+    def get_subcategories_action(
+        self, request: HttpRequest, category: Category
+    ) -> dict | None:
+        component = category.children_categories_component
 
         if component == CategoryChildrenComponent.FULL:
             return {
                 "categories": get_subcategories_data(request, category),
                 "template_name": "misago/category/subcategories_full.html",
             }
+
+        return None
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
         return get_category_threads_page_threads_hook(

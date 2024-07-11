@@ -205,7 +205,7 @@ def test_category_threads_list_excludes_child_category_thread_if_list_children_t
     )
 
     response = user_client.get(default_category.get_absolute_url())
-    assert_not_contains(response, "Test Thread")
+    assert_contains(response, "No threads have been started in this category yet")
 
 
 def test_private_threads_list_displays_private_thread(

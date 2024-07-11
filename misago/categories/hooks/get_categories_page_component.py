@@ -1,11 +1,11 @@
-from typing import Any, Protocol
+from typing import Protocol
 
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
 
 
-class GetCategoriesComponentHookAction(Protocol):
+class GetCategoriesPageComponentHookAction(Protocol):
     """
     A standard Misago function used to build a `dict` with data for
     the categories list component, used to display the list of categories on
@@ -29,20 +29,18 @@ class GetCategoriesComponentHookAction(Protocol):
         "template_name": "misago/categories/list.html"
     }
     ```
-
-    Component will then be rendered with
     """
 
     def __call__(self, request: HttpRequest) -> dict: ...
 
 
-class GetCategoriesComponentHookFilter(Protocol):
+class GetCategoriesPageComponentHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetCategoriesComponentHookAction`
+    ## `action: GetCategoriesPageComponentHookAction`
 
     A standard Misago function used to build a `dict` with data for
     the categories list component, used to display the list of categories on
@@ -60,12 +58,14 @@ class GetCategoriesComponentHookFilter(Protocol):
     """
 
     def __call__(
-        self, action: GetCategoriesComponentHookAction, request: HttpRequest
+        self, action: GetCategoriesPageComponentHookAction, request: HttpRequest
     ) -> dict: ...
 
 
-class GetCategoriesComponentHook(
-    FilterHook[GetCategoriesComponentHookAction, GetCategoriesComponentHookFilter]
+class GetCategoriesPageComponentHook(
+    FilterHook[
+        GetCategoriesPageComponentHookAction, GetCategoriesPageComponentHookFilter
+    ]
 ):
     """
     This hook wraps the standard function that Misago uses to build a `dict`
@@ -94,9 +94,9 @@ class GetCategoriesComponentHook(
     __slots__ = FilterHook.__slots__
 
     def __call__(
-        self, action: GetCategoriesComponentHookAction, request: HttpRequest
+        self, action: GetCategoriesPageComponentHookAction, request: HttpRequest
     ) -> dict:
         return super().__call__(action, request)
 
 
-get_categories_component_hook = GetCategoriesComponentHook()
+get_categories_page_component_hook = GetCategoriesPageComponentHook()

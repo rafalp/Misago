@@ -8,11 +8,7 @@ from ...testutils import (
     grant_category_group_permissions,
     remove_category_group_permissions,
 )
-from ..components import (
-    get_categories_component,
-    get_categories_data,
-    get_subcategories_data,
-)
+from ..components import get_categories_data, get_subcategories_data
 from ..models import Category
 
 
@@ -20,17 +16,6 @@ from ..models import Category
 def mock_request(user, cache_versions):
     user_permissions = UserPermissionsProxy(user, cache_versions)
     return Mock(user=user, user_permissions=user_permissions)
-
-
-def test_categories_component_returns_template_name(mock_request):
-    data = get_categories_component(mock_request)
-    assert data["template_name"]
-
-
-def test_categories_component_returns_category_data(default_category, mock_request):
-    data = get_categories_component(mock_request)
-    assert len(data["categories"]) == 1
-    assert data["categories"] == get_categories_data(mock_request)
 
 
 def test_categories_component_data_returns_empty_categories_list(

@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from .enums import CategoryTree
-from .hooks import get_categories_component_hook
+from .hooks import get_categories_page_component_hook
 from .models import Category
 
 if TYPE_CHECKING:
@@ -15,20 +15,9 @@ if TYPE_CHECKING:
 
 __all__ = [
     "get_categories_data",
-    "get_categories_list",
+    "get_categories_page_component",
     "get_subcategories_data",
 ]
-
-
-def get_categories_component(request: HttpRequest) -> dict:
-    return get_categories_component_hook(_get_categories_component_action, request)
-
-
-def _get_categories_component_action(request: HttpRequest) -> dict:
-    return {
-        "categories": get_categories_data(request),
-        "template_name": "misago/categories/component.html",
-    }
 
 
 def get_categories_data(request: HttpRequest) -> list[dict]:
