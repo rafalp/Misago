@@ -207,6 +207,14 @@ class ThreadsListView(ListView):
                 "template_name": "misago/threads/subcategories_full.html",
             }
 
+        if component == CategoryChildrenComponent.DROPDOWN:
+            return {
+                "categories": [
+                    c for c in request.categories.categories_list if c["level"] < 2
+                ],
+                "template_name": None,
+            }
+
         return None
 
     def get_threads(self, request: HttpRequest, kwargs: dict):
@@ -491,7 +499,28 @@ class CategoryThreadsListView(ListView):
                 "template_name": "misago/category/subcategories_full.html",
             }
 
+        if component == CategoryChildrenComponent.DROPDOWN:
+            return {
+                "categories": list(
+                    self.get_subcategories_dropdown_items(request, category)
+                ),
+                "template_name": None,
+            }
+
         return None
+
+    def get_subcategories_dropdown_items(
+        self, request: HttpRequest, category: Category
+    ) -> list[dict]:
+        for c in request.categories.categories_list:
+            if (
+                c["lft"] > category.lft
+                and c["rght"] < category.rght
+                and c["level"] - category.level < 3
+            ):
+                category_data = c.copy()
+                category_data["level"] -= category.level
+                yield category_data
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
         return get_category_threads_page_threads_hook(

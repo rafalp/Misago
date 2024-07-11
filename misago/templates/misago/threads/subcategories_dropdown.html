@@ -1,0 +1,57 @@
+{% load i18n %}
+<div class="dropdown threads-subcategories-picker d-js-block">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle btn-block"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    {% if category %}
+      {% trans "Go to subcategory" context "threads list subcategories" %}
+    {% else %}
+      {% trans "Go to category" context "threads list subcategories" %}
+    {% endif %}
+  </button>
+  <ul class="dropdown-menu stick-to-bottom">
+    {% for subcategory in subcategories %}
+      <li>
+        <a href="{{ subcategory.url }}">
+          {% if subcategory.level %}
+            &nbsp;
+          {% endif %}
+          <span class="material-icon">label</span>
+          {{ subcategory.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<noscript>
+  <div class="noscript-collapsible threads-subcategories-collapsible hidden-sm hidden-md hidden-lg">
+    <label
+      class="btn btn-default dropdown-toggle"
+      for="threads-filters-collapsible"
+    >
+      {% if category %}
+        {% trans "See subcategories" context "threads list subcategories" %}
+      {% else %}
+        {% trans "See categories" context "threads list subcategories" %}
+      {% endif %}
+    </label>
+    <input id="threads-filters-collapsible" type="checkbox" />
+    <div class="noscript-collapsible-items">
+      {% for subcategory in subcategories %}
+        <li>
+          <a href="{{ subcategory.url }}">
+            {% if subcategory.level %}
+              &nbsp;
+            {% endif %}
+            <span class="material-icon">label</span>
+            {{ subcategory.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </div>
+  </div>
+</noscript>

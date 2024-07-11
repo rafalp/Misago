@@ -103,6 +103,7 @@ def _get_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
         "show_started_only": result["show_started_only"],
         "is_closed": result["is_closed"],
         "is_vanilla": result["is_vanilla"],
+        "level": result["level"] - 1,
         "lft": result["lft"],
         "rght": result["rght"],
         "url": category_url,

@@ -13,7 +13,7 @@
 
   <div class="container page-container">
 
-    {% if subcategories %}
+    {% if subcategories and subcategories.template_name %}
       {% component subcategories %}
     {% endif %}
 

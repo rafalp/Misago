@@ -5,6 +5,13 @@
       {% include "misago/threads/paginator.html" with bottom=bottom %}
     </div>
   </div>
+  {% if subcategories and not subcategories.template_name and not bottom %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        {% include "misago/threads/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
+      </div>
+    </div>
+  {% endif %}
   {% if threads.filters and not bottom %}
     <div class="toolbar-section">
       <div class="toolbar-item">
