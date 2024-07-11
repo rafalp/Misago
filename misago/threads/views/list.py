@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views import View
 
 from ...categories.enums import CategoryChildrenComponent, CategoryTree
-from ...categories.lists import get_categories_data, get_subcategories_data
+from ...categories.components import get_categories_data, get_subcategories_data
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...metatags.metatag import MetaTag
@@ -196,7 +196,7 @@ class ThreadsListView(ListView):
 
         if component == CategoryChildrenComponent.DISABLED:
             return None
-        
+
         if component == CategoryChildrenComponent.FULL:
             return {
                 "categories": get_categories_data(request),
@@ -462,7 +462,9 @@ class CategoryThreadsListView(ListView):
 
         return category
 
-    def get_subcategories(self, request: HttpRequest, category: Category) -> dict | None:
+    def get_subcategories(
+        self, request: HttpRequest, category: Category
+    ) -> dict | None:
         component = category.children_categories_component
         if category.is_leaf_node():
             return None

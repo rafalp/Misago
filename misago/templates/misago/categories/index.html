@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_absoluteurl misago_plugins misago_shorthands %}
+{% load i18n misago_absoluteurl misago_component misago_plugins misago_shorthands %}
 
 
 {% block title %}
@@ -84,7 +84,7 @@
 
     {% pluginoutlet CATEGORIES_LIST_START %}
     {% if categories_list.categories %}
-      {% include categories_list.template_name with categories=categories_list.categories %}
+      {% component categories_list %}
     {% else %}
       {% include "misago/categories/blankslate.html" %}
     {% endif %}

@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from ..metatags.metatags import get_forum_index_metatags
 from .hooks import get_categories_page_metatags_hook
-from .lists import get_categories_data
+from .components import get_categories_component
 
 
 def index(request, *args, is_index: bool | None = None, **kwargs):
@@ -13,10 +13,7 @@ def index(request, *args, is_index: bool | None = None, **kwargs):
 
     context = {
         "is_index": is_index,
-        "categories_list": {
-            "categories": get_categories_data(request),
-            "template_name": "misago/categories/list.html",
-        },
+        "categories_list": get_categories_component(request),
     }
 
     context["metatags"] = get_categories_page_metatags(request, context)

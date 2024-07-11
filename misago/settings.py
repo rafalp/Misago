@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "misago.cache",
     "misago.categories",
     "misago.core",
+    "misago.components",
     "misago.conf",
     "misago.forms",
     "misago.forumindex",

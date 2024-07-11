@@ -19,6 +19,7 @@ services:
   misago:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
     environment:
       # Postgres
       - POSTGRES_HOST=postgres
@@ -46,6 +47,7 @@ services:
   celery-worker:
     build: .
     command: celery -A devproject worker --loglevel=info
+    restart: unless-stopped
     environment:
       # Postgres
       - POSTGRES_HOST=postgres
