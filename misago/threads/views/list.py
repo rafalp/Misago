@@ -118,12 +118,12 @@ class ListView(View):
         return 0
 
     def is_threads_polling_enabled(self, request: HttpRequest) -> bool:
-        if request.settings.threads_lists_polling == ThreadsListsPolling.DISABLED:
+        polling = request.settings.threads_lists_polling
+        if polling == ThreadsListsPolling.DISABLED:
             return False
 
         if (
-            request.settings.threads_lists_polling
-            == ThreadsListsPolling.ENABLED_FOR_USERS
+            polling == ThreadsListsPolling.ENABLED_FOR_USERS
             and request.user.is_anonymous
         ):
             return False
