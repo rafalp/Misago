@@ -2,15 +2,13 @@ from typing import Protocol
 
 from django.http import HttpRequest
 
-from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 from ..filters import ThreadsFilter
 
 
-class GetCategoryThreadsFiltersHookAction(Protocol):
+class GetThreadsPageFiltersHookAction(Protocol):
     """
-    A standard Misago function used to get available filters for
-    a category's threads list.
+    A standard Misago function used to get available filters for the threads list.
 
     # Arguments
 
@@ -18,32 +16,23 @@ class GetCategoryThreadsFiltersHookAction(Protocol):
 
     The request object.
 
-    ## `category: Category`
-
-    A category instance.
-
     # Return value
 
     A Python `list` with `ThreadsFilter` instances.
     """
 
-    def __call__(
-        self,
-        request: HttpRequest,
-        category: Category,
-    ) -> list[ThreadsFilter]: ...
+    def __call__(self, request: HttpRequest) -> list[ThreadsFilter]: ...
 
 
-class GetCategoryThreadsFiltersHookFilter(Protocol):
+class GetThreadsPageFiltersHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetCategoryThreadsFiltersHookAction`
+    ## `action: GetThreadsPageFiltersHookAction`
 
-    A standard Misago function used to get available filters for
-    a category's threads list.
+    A standard Misago function used to get available filters for the threads list.
 
     See the [action](#action) section for details.
 
@@ -51,10 +40,6 @@ class GetCategoryThreadsFiltersHookFilter(Protocol):
 
     The request object.
 
-    ## `category: Category`
-
-    A category instance.
-
     # Return value
 
     A Python `list` with `ThreadsFilter` instances.
@@ -62,18 +47,17 @@ class GetCategoryThreadsFiltersHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetCategoryThreadsFiltersHookAction,
+        action: GetThreadsPageFiltersHookAction,
         request: HttpRequest,
-        category: Category,
     ) -> list[ThreadsFilter]: ...
 
 
-class GetCategoryThreadsFiltersHook(
-    FilterHook[GetCategoryThreadsFiltersHookAction, GetCategoryThreadsFiltersHookFilter]
+class GetThreadsPageFiltersHook(
+    FilterHook[GetThreadsPageFiltersHookAction, GetThreadsPageFiltersHookFilter]
 ):
     """
     This hook wraps the standard function that Misago uses to get available
-    filters for a category's threads list.
+    filters for the threads list.
 
     # Example
 
@@ -82,9 +66,8 @@ class GetCategoryThreadsFiltersHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.categories.models import Category
     from misago.threads.filters import ThreadsFilter
-    from misago.threads.hooks import get_category_threads_filters_hook
+    from misago.threads.hooks import get_threads_page_filters_hook
 
 
     class CustomFilter(ThreadsFilter):
@@ -98,11 +81,9 @@ class GetCategoryThreadsFiltersHook(
             return queryset.filter(plugin_data__custom=True)
 
 
-    @get_category_threads_filters_hook.append_filter
-    def include_custom_filter(
-        action, request: HttpRequest, category: Category
-    ) -> list[ThreadsFilter]:
-        filters = action(request, category)
+    @get_threads_page_filters_hook.append_filter
+    def include_custom_filter(action, request: HttpRequest) -> list[ThreadsFilter]:
+        filters = action(request)
         filters.append(CustomFilter(request))
         return filters
     ```
@@ -112,11 +93,10 @@ class GetCategoryThreadsFiltersHook(
 
     def __call__(
         self,
-        action: GetCategoryThreadsFiltersHookAction,
+        action: GetThreadsPageFiltersHookAction,
         request: HttpRequest,
-        category: Category,
     ) -> list[ThreadsFilter]:
-        return super().__call__(action, request, category)
+        return super().__call__(action, request)
 
 
-get_category_threads_filters_hook = GetCategoryThreadsFiltersHook()
+get_threads_page_filters_hook = GetThreadsPageFiltersHook()

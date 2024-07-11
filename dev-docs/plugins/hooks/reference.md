@@ -4,11 +4,18 @@ This document contains a list of all standard plugin hooks existing in Misago.
 
 Hooks instances are importable from the following Python modules:
 
+- [`misago.categories.hooks`](#misago-categories-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
 - [`misago.users.hooks`](#misago-users-hooks)
+
+
+## `misago.categories.hooks`
+
+`misago.categories.hooks` defines the following hooks:
+
 
 
 ## `misago.oauth2.hooks`
@@ -55,17 +62,19 @@ Hooks instances are importable from the following Python modules:
 
 `misago.threads.hooks` defines the following hooks:
 
-- [`get_category_threads_filters_hook`](./get-category-threads-filters-hook.md)
 - [`get_category_threads_page_context_hook`](./get-category-threads-page-context-hook.md)
+- [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_queryset_hook`](./get-category-threads-page-queryset-hook.md)
+- [`get_category_threads_page_subcategories_hook`](./get-category-threads-page-subcategories-hook.md)
 - [`get_category_threads_page_threads_hook`](./get-category-threads-page-threads-hook.md)
-- [`get_private_threads_filters_hook`](./get-private-threads-filters-hook.md)
 - [`get_private_threads_page_context_hook`](./get-private-threads-page-context-hook.md)
+- [`get_private_threads_page_filters_hook`](./get-private-threads-page-filters-hook.md)
 - [`get_private_threads_page_queryset_hook`](./get-private-threads-page-queryset-hook.md)
 - [`get_private_threads_page_threads_hook`](./get-private-threads-page-threads-hook.md)
-- [`get_threads_filters_hook`](./get-threads-filters-hook.md)
 - [`get_threads_page_context_hook`](./get-threads-page-context-hook.md)
+- [`get_threads_page_filters_hook`](./get-threads-page-filters-hook.md)
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
+- [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
 
 

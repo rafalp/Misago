@@ -36,17 +36,17 @@ from ..filters import (
     UnapprovedThreadsFilter,
 )
 from ..hooks import (
-    get_category_threads_filters_hook,
     get_category_threads_page_context_hook,
+    get_category_threads_page_filters_hook,
     get_category_threads_page_queryset_hook,
     get_category_threads_page_subcategories_hook,
     get_category_threads_page_threads_hook,
-    get_private_threads_filters_hook,
     get_private_threads_page_context_hook,
+    get_private_threads_page_filters_hook,
     get_private_threads_page_queryset_hook,
     get_private_threads_page_threads_hook,
-    get_threads_filters_hook,
     get_threads_page_context_hook,
+    get_threads_page_filters_hook,
     get_threads_page_queryset_hook,
     get_threads_page_subcategories_hook,
     get_threads_page_threads_hook,
@@ -282,7 +282,9 @@ class ThreadsListView(ListView):
         active: ThreadsFilterChoice | None = None
         choices: list[ThreadsFilterChoice] = []
 
-        filters = get_threads_filters_hook(self.get_threads_filters_action, request)
+        filters = get_threads_page_filters_hook(
+            self.get_threads_filters_action, request
+        )
 
         for obj in filters:
             choice = obj.as_choice(base_url, obj.slug == filter)
@@ -576,7 +578,7 @@ class CategoryThreadsListView(ListView):
         active: ThreadsFilterChoice | None = None
         choices: list[ThreadsFilterChoice] = []
 
-        filters = get_category_threads_filters_hook(
+        filters = get_category_threads_page_filters_hook(
             self.get_threads_filters_action, request, category
         )
 
@@ -823,7 +825,7 @@ class PrivateThreadsListView(ListView):
         active: ThreadsFilterChoice | None = None
         choices: list[ThreadsFilterChoice] = []
 
-        filters = get_private_threads_filters_hook(
+        filters = get_private_threads_page_filters_hook(
             self.get_threads_filters_action, request
         )
 

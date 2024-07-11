@@ -2,13 +2,15 @@ from typing import Protocol
 
 from django.http import HttpRequest
 
+from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 from ..filters import ThreadsFilter
 
 
-class GetThreadsFiltersHookAction(Protocol):
+class GetCategoryThreadsPageFiltersHookAction(Protocol):
     """
-    A standard Misago function used to get available filters for the threads list.
+    A standard Misago function used to get available filters for
+    a category's threads list.
 
     # Arguments
 
@@ -16,29 +18,9 @@ class GetThreadsFiltersHookAction(Protocol):
 
     The request object.
 
-    # Return value
+    ## `category: Category`
 
-    A Python `list` with `ThreadsFilter` instances.
-    """
-
-    def __call__(self, request: HttpRequest) -> list[ThreadsFilter]: ...
-
-
-class GetThreadsFiltersHookFilter(Protocol):
-    """
-    A function implemented by a plugin that can be registered in this hook.
-
-    # Arguments
-
-    ## `action: GetThreadsFiltersHookAction`
-
-    A standard Misago function used to get available filters for the threads list.
-
-    See the [action](#action) section for details.
-
-    ## `request: HttpRequest`
-
-    The request object.
+    A category instance.
 
     # Return value
 
@@ -47,17 +29,54 @@ class GetThreadsFiltersHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetThreadsFiltersHookAction,
         request: HttpRequest,
+        category: Category,
     ) -> list[ThreadsFilter]: ...
 
 
-class GetThreadsFiltersHook(
-    FilterHook[GetThreadsFiltersHookAction, GetThreadsFiltersHookFilter]
+class GetCategoryThreadsPageFiltersHookFilter(Protocol):
+    """
+    A function implemented by a plugin that can be registered in this hook.
+
+    # Arguments
+
+    ## `action: GetCategoryThreadsPageFiltersHookAction`
+
+    A standard Misago function used to get available filters for
+    a category's threads list.
+
+    See the [action](#action) section for details.
+
+    ## `request: HttpRequest`
+
+    The request object.
+
+    ## `category: Category`
+
+    A category instance.
+
+    # Return value
+
+    A Python `list` with `ThreadsFilter` instances.
+    """
+
+    def __call__(
+        self,
+        action: GetCategoryThreadsPageFiltersHookAction,
+        request: HttpRequest,
+        category: Category,
+    ) -> list[ThreadsFilter]: ...
+
+
+class GetCategoryThreadsPageFiltersHook(
+    FilterHook[
+        GetCategoryThreadsPageFiltersHookAction,
+        GetCategoryThreadsPageFiltersHookFilter,
+    ]
 ):
     """
     This hook wraps the standard function that Misago uses to get available
-    filters for the threads list.
+    filters for a category's threads list.
 
     # Example
 
@@ -66,8 +85,9 @@ class GetThreadsFiltersHook(
 
     ```python
     from django.http import HttpRequest
+    from misago.categories.models import Category
     from misago.threads.filters import ThreadsFilter
-    from misago.threads.hooks import get_threads_filters_hook
+    from misago.threads.hooks import get_category_threads_page_filters_hook
 
 
     class CustomFilter(ThreadsFilter):
@@ -81,9 +101,11 @@ class GetThreadsFiltersHook(
             return queryset.filter(plugin_data__custom=True)
 
 
-    @get_threads_filters_hook.append_filter
-    def include_custom_filter(action, request: HttpRequest) -> list[ThreadsFilter]:
-        filters = action(request)
+    @get_category_threads_page_filters_hook.append_filter
+    def include_custom_filter(
+        action, request: HttpRequest, category: Category
+    ) -> list[ThreadsFilter]:
+        filters = action(request, category)
         filters.append(CustomFilter(request))
         return filters
     ```
@@ -93,10 +115,11 @@ class GetThreadsFiltersHook(
 
     def __call__(
         self,
-        action: GetThreadsFiltersHookAction,
+        action: GetCategoryThreadsPageFiltersHookAction,
         request: HttpRequest,
+        category: Category,
     ) -> list[ThreadsFilter]:
-        return super().__call__(action, request)
+        return super().__call__(action, request, category)
 
 
-get_threads_filters_hook = GetThreadsFiltersHook()
+get_category_threads_page_filters_hook = GetCategoryThreadsPageFiltersHook()

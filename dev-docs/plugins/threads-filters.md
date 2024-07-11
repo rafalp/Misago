@@ -41,8 +41,8 @@ class CustomFilter(ThreadsFilter):
 
 ## Using the filter
 
-Each threads list has dedicated plugin hook that lets adding custom filters to it:
+Each threads list page has a dedicated plugin hook that enables developers to add custom filters to it:
 
-- [`get_threads_filters_hook`](./hooks/get-threads-filters-hook.md)
-- [`get_category_threads_filters_hook`](./hooks/get-category-threads-filters-hook.md)
-- [`get_private_threads_filters_hook`](./hooks/get-private-threads-filters-hook.md)
+- [`get_threads_page_filters_hook`](./hooks/get-threads-filters-page-hook.md)
+- [`get_category_threads_page_filters_hook`](./hooks/get-category-threads-page-filters-hook.md)
+- [`get_private_threads_page_filters_hook`](./hooks/get-private-threads-page_filters-hook.md)
