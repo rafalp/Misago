@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}
@@ -23,7 +23,7 @@
   <div class="container page-container">
 
     {% if subcategories %}
-      {% include subcategories.template_name with categories=subcategories.categories %}
+      {% component subcategories %}
     {% endif %}
 
     <div id="misago-page-scroll-target" class="scroll-target"></div>
