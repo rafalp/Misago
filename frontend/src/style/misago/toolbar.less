@@ -11,7 +11,8 @@
   margin-bottom: @line-height-computed * -2.5;
 }
 
-.toolbar-xs-reverse {
+.toolbar-column-reverse-xs,
+.toolbar-column-xs {
   display: flex;
   flex: 1;
 }
@@ -47,7 +48,8 @@
     display: flex;
   }
 
-  .toolbar-xs-reverse,
+  .toolbar-column-reverse-xs,
+  .toolbar-column-xs,
   .toolbar-section,
   .toolbar-item {
     flex: 0;
@@ -85,7 +87,11 @@
     text-align: center;
   }
 
-  .toolbar-xs-reverse {
+  .toolbar-column-xs {
+    flex-direction: column;
+  }
+
+  .toolbar-column-reverse-xs {
     flex-direction: column-reverse;
   }
 }

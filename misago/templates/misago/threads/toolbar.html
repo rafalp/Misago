@@ -1,26 +1,28 @@
 {% load i18n %}
-<div class="toolbar{% if not bottom %} toolbar-xs-reverse{% endif %}">
+<div class="toolbar{% if not bottom %} toolbar-column-reverse-xs{% endif %}">
   <div class="toolbar-section">
     <div class="toolbar-item">
       {% include "misago/threads/paginator.html" with bottom=bottom %}
     </div>
   </div>
-  {% if subcategories and not subcategories.template_name and not bottom %}
-    <div class="toolbar-section">
-      <div class="toolbar-item">
-        {% include "misago/threads/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
+  <div class="toolbar-column-xs">
+    {% if subcategories and not subcategories.template_name and not bottom %}
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          {% include "misago/threads/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
+        </div>
       </div>
-    </div>
-  {% endif %}
-  {% if threads.filters and not bottom %}
-    <div class="toolbar-section">
-      <div class="toolbar-item">
-        {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
+    {% endif %}
+    {% if threads.filters and not bottom %}
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
+        </div>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
   <div class="toolbar-spacer"></div>
-  <div{% if bottom %} class="toolbar-xs-reverse"{% endif %}>
+  <div{% if bottom %} class="toolbar-column-reverse-xs"{% endif %}>
     {% if bottom and user.is_authenticated %}
       <div class="toolbar-section hidden-xs">
         <div class="toolbar-item">

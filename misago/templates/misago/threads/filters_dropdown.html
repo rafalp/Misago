@@ -31,7 +31,7 @@
   </ul>
 </div>
 <noscript>
-  <div class="noscript-collapsible threads-filter-collapsible hidden-sm hidden-md hidden-lg">
+  <div class="dropdown noscript-collapsible threads-filter-collapsible hidden-sm hidden-md hidden-lg">
     <label
       class="btn btn-default dropdown-toggle"
       for="threads-filters-collapsible"
@@ -43,17 +43,21 @@
       {% endif %}
     </label>
     <input id="threads-filters-collapsible" type="checkbox" />
-    <div class="noscript-collapsible-items">
-      {% if threads.active_filter %}
-        <a class="btn btn-default" href="{{ threads.clear_filters_url }}">
-          {% trans "Clear filters" context "threads list filter" %}
-        </a>
+    <ul class="dropdown-menu w-100-xs noscript-collapsible-items">
+      {% if active_filter %}
+        <li>
+          <a href="{{ threads.clear_filters_url }}">
+            {% trans "Clear filters" context "threads list filter" %}
+          </a>
+        </li>
       {% endif %}
-      {% for filter in threads.filters %}
-        <a class="btn btn-default" href="{{ filter.url }}">
-          {{ filter.name }}
-        </a>
+      {% for filter in filters %}
+        <li>
+          <a href="{{ filter.url }}">
+            {{ filter.name }}
+          </a>
+        </li>
       {% endfor %}
-    </div>
+    </ul>
   </div>
 </noscript>

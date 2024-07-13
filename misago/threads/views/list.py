@@ -511,7 +511,7 @@ class CategoryThreadsListView(ListView):
 
     def get_subcategories_dropdown_items(
         self, request: HttpRequest, category: Category
-    ) -> list[dict]:
+    ):
         for c in request.categories.categories_list:
             if (
                 c["lft"] > category.lft
