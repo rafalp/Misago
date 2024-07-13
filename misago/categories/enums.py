@@ -15,7 +15,6 @@ class CategoryTreeDeprecated(IntEnum):
 
 class CategoryChildrenComponent(StrEnum):
     FULL = "full"
-    PILLS = "pills"
     DROPDOWN = "dropdown"
     DISABLED = "disabled"
 
@@ -25,10 +24,6 @@ class CategoryChildrenComponent(StrEnum):
             (
                 cls.FULL,
                 pgettext_lazy("category children component choice", "Full panel"),
-            ),
-            (
-                cls.PILLS,
-                pgettext_lazy("category children component choice", "Pills"),
             ),
             (
                 cls.DROPDOWN,
