@@ -83,11 +83,13 @@
   <div class="container page-container">
 
     {% pluginoutlet CATEGORIES_LIST_START %}
+
     {% if categories_list.categories %}
       {% component categories_list %}
     {% else %}
       {% include "misago/categories/blankslate.html" %}
     {% endif %}
+
     {% pluginoutlet CATEGORIES_LIST_END %}
 
     {% include "misago/gototop_toolbar.html" %}

@@ -192,6 +192,7 @@ def test_get_category_data_returns_dict_with_category_data(default_category):
     assert get_category_data(default_category.__dict__) == {
         "id": default_category.id,
         "parent_id": None,
+        "level": default_category.level - 1,
         "name": default_category.name,
         "short_name": default_category.short_name,
         "color": default_category.color,

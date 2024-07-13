@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_plugins %}
 
 
 {% block title %}
@@ -12,10 +12,15 @@
   {% include "misago/private_threads/header.html" %}
 
   <div class="container page-container">
-    <div id="misago-page-scroll-target" class="scroll-target"></div>
 
+    {% pluginoutlet PRIVATE_THREADS_LIST_START %}
+
+    <div id="misago-page-scroll-target" class="scroll-target"></div>
     {% include "misago/threads/filters_noscript.html" %}
     {% include template_name_htmx %}
+    
+    {% pluginoutlet PRIVATE_THREADS_LIST_END %}
+    
     {% include "misago/gototop_toolbar.html" %}
 
   </div>

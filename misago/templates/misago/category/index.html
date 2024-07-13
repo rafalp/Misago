@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_component %}
+{% load i18n misago_component misago_plugins %}
 
 
 {% block title %}
@@ -13,15 +13,19 @@
 
   <div class="container page-container">
 
+    {% pluginoutlet CATEGORY_THREADS_LIST_START %}
+
     {% if subcategories and subcategories.template_name %}
       {% component subcategories %}
     {% endif %}
 
-    {% if threads %}
-      <div id="misago-page-scroll-target" class="scroll-target"></div>
-      {% include "misago/threads/filters_noscript.html" %}
-      {% include template_name_htmx %}
-    {% endif %}
+    {% pluginoutlet CATEGORY_THREADS_LIST_MIDDLE %}
+
+    <div id="misago-page-scroll-target" class="scroll-target"></div>
+    {% include "misago/threads/filters_noscript.html" %}
+    {% include template_name_htmx %}
+
+    {% pluginoutlet CATEGORY_THREADS_LIST_END %}
 
     <div class="toolbar toolbar-over-footer">
       <div class="toolbar-section hidden-xs">
