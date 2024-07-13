@@ -15,12 +15,21 @@
   {% endfor %}
 </ul>
 <ul class="breadcrumbs breadcrumbs-compact">
-  {% for item in breadcrumbs %}
+  {% if breadcrumbs %}
+    {% with breadcrumbs|last as item %}
+      <li class="breadcrumbs-item">
+        <a href="{{ item.url }}">
+          <span class="material-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>label</span>
+          <span class="breadcrumbs-item-name">{{ item.name }}</span>
+        </a>
+      </li>
+    {% endwith %}
+  {% else %}
     <li class="breadcrumbs-item">
-      <a href="{{ item.url }}">
-        <span class="material-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>label</span>
-        <span class="breadcrumbs-item-name">{{ item.short_name|default:item.name }}</span>
+      <a href="/">
+        <span class="material-icon">chevron_right</span>
+        <span class="breadcrumbs-item-name">{{ main_menu_index.label }}</span>
       </a>
     </li>
-  {% endfor %}
+  {% endif %}
 </ul>
