@@ -378,6 +378,12 @@
     margin-left: @grid-gutter-width / 2;
   }
 
+  // Don't break lines in categories or labels
+  .threads-list-item-col-categories .threads-list-category-link,
+  .threads-list-item-col-category-labels .threads-list-category-label {
+    white-space: nowrap;
+  }
+
   // Make width of replies and last activity auto
   .threads-list-item-col-replies,
   .threads-list-item-col-last-activity {

@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <ul class="thread-flags">
-  {% if thread.weight == 2 and show_weight %}
+  {% if thread.weight == 2 %}
     <li
       class="thread-flag-pinned-globally"
       title="{% trans 'Pinned globally' context 'thread flag' %}"
@@ -9,10 +9,17 @@
       <span class="material-icon">bookmark</span>
     </li>
   {% endif %}
-  {% if thread.weight == 1 and show_weight %}
+  {% if thread.weight == 1 and category and thread.category_id == category.id %}
     <li
       class="thread-flag-pinned-locally"
       title="{% trans 'Pinned in category' context 'thread flag' %}"
+    >
+      <span class="material-icon">bookmark_outline</span>
+    </li>
+  {% elif thread.weight == 1 and for_moderator %}
+    <li
+      class="thread-flag-pinned-locally-elsewhere"
+      title="{% trans 'Pinned in category, but not on this list' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
@@ -32,12 +39,12 @@
     >
       <span class="material-icon">visibility</span>
     </li>
-  {% elif thread.has_unapproved_posts and show_unapproved_posts %}
+  {% elif thread.has_unapproved_posts and for_moderator %}
     <li
       class="thread-flag-unapproved"
-      title="{% trans 'Has posts requiring moderator approval' context 'thread flag' %}"
+      title="{% trans 'Replies require moderator approval' context 'thread flag' %}"
     >
-      <span class="material-icon">chat</span>
+      <span class="material-icon">view_list</span>
     </li>
   {% endif %}
   {% if thread.has_poll %}

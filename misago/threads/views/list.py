@@ -92,6 +92,27 @@ class ListView(View):
     def get_context(self, request: HttpRequest, kwargs: dict):
         return {"request": request}
 
+    def show_thread_flags(
+        self, request, moderator: bool, thread: Thread, category: Category | None = None
+    ) -> bool:
+        if (
+            thread.weight == ThreadWeight.PINNED_GLOBALLY
+            or thread.is_closed
+            or thread.has_best_answer
+            or thread.has_poll
+        ):
+            return True
+
+        if thread.weight == ThreadWeight.PINNED_IN_CATEGORY and (
+            (category and category.id == thread.category_id) or moderator
+        ):
+            return True
+
+        if moderator and thread.has_unapproved_posts:
+            return True
+
+        return False
+
     def get_threads_users(self, request: HttpRequest, threads: list[Thread]) -> dict:
         user_ids: set[int] = set()
         for thread in threads:
@@ -181,7 +202,7 @@ class ThreadsListView(ListView):
         request: HttpRequest,
         *args: Any,
         is_index: bool | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> HttpResponse:
         if not is_index and request.settings.index_view == "threads":
             return redirect(reverse("misago:index"))
@@ -192,7 +213,7 @@ class ThreadsListView(ListView):
         if "moderation" in request.POST:
             return self.moderate_threads(request, kwargs)
 
-        return HttpResponse(status=405)
+        return self.get(request, **kwargs)
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> HttpResponse:
         threads = self.get_threads(request, kwargs)
@@ -201,7 +222,7 @@ class ThreadsListView(ListView):
         if not action:
             messages.error(
                 request,
-                pgettext( "threads moderation error", "Invalid moderation action"),
+                pgettext("threads moderation error", "Invalid moderation action"),
             )
             return self.get(request, **kwargs)
 
@@ -222,14 +243,16 @@ class ThreadsListView(ListView):
         }
 
         return redirect(self.get_canonical_link(request, context))
-    
-    def get_moderation_action(self, request: HttpRequest, threads: dict) -> ThreadsBulkModerationAction | None:
+
+    def get_moderation_action(
+        self, request: HttpRequest, threads: dict
+    ) -> ThreadsBulkModerationAction | None:
         action_id = request.POST["moderation"]
         for action in threads["moderation_actions"]:
             if action.id == action_id:
                 return action()
-            
-        return 
+
+        return
 
     def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
         threads_ids = self.get_selected_threads_ids(request)
@@ -338,7 +361,7 @@ class ThreadsListView(ListView):
                     "moderate": moderator,
                     "animate": animate.get(thread.id, False),
                     "selected": thread.id in selected,
-                    "show_weight": thread.weight == ThreadWeight.PINNED_GLOBALLY,
+                    "show_flags": self.show_thread_flags(request, moderator, thread),
                 }
             )
 
@@ -657,10 +680,17 @@ class CategoryThreadsListView(ListView):
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, threads_list)
 
+        selected = self.get_selected_threads_ids(request)
+
         items: list[dict] = []
         for thread in threads_list:
             categories = request.categories.get_thread_categories(
                 thread.category_id, category.id
+            )
+
+            moderate = (
+                request.user_permissions.is_global_moderator
+                or thread.category_id in request.user_permissions.categories_moderator
             )
 
             items.append(
@@ -671,14 +701,10 @@ class CategoryThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
+                    "moderate": moderate,
                     "animate": animate.get(thread.id, False),
-                    "show_weight": (
-                        thread.weight == ThreadWeight.PINNED_GLOBALLY
-                        or (
-                            thread.weight == ThreadWeight.PINNED_IN_CATEGORY
-                            and thread.category_id == category.id
-                        )
-                    ),
+                    "selected": thread.id in selected,
+                    "show_flags": self.show_thread_flags(request, moderate, thread),
                 }
             )
 
@@ -688,6 +714,7 @@ class CategoryThreadsListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "clear_filters_url": filters_base_url,
+            "moderation_actions": self.get_moderation_actions(request, items, category),
             "items": items,
             "paginator": paginator,
             "url_names": ThreadUrl.__members__,
@@ -922,6 +949,8 @@ class PrivateThreadsListView(ListView):
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, threads_list)
 
+        moderator = request.user_permissions.private_threads_moderator
+
         items: list[dict] = []
         for thread in threads_list:
             items.append(
@@ -933,6 +962,7 @@ class PrivateThreadsListView(ListView):
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": None,
                     "animate": animate.get(thread.id, False),
+                    "show_flags": self.show_thread_flags(request, moderator, thread),
                 }
             )
 
