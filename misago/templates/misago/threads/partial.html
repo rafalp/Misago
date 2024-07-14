@@ -18,4 +18,8 @@
   </ul>
 
   {% include "misago/threads/toolbar.html" with bottom=True %}
+
+  {% if threads.moderation_actions %}
+    {% include "misago/threads/moderation_noscript.html" with moderation_actions=threads.moderation_actions %}
+  {% endif %}
 </div>

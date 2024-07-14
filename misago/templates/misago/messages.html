@@ -1,17 +1,19 @@
 {% if messages %}
-<div id="misago-messages">
-  {% for message in messages %}
-    {% if 'info' in message.tags %}
-    <div class="alert alert-info" role="alert">
-    {% elif 'success' in message.tags %}
-    <div class="alert alert-success" role="alert">
-    {% elif 'warning' in message.tags %}
-    <div class="alert alert-warning" role="alert">
-    {% elif 'error' in message.tags %}
-    <div class="alert alert-danger" role="alert">
-    {% endif %}
-      <div class="alert-container">{{ message }}</div>
-    </div>
-  {% endfor %}
-</div>
+<noscript>
+  <div id="misago-messages">
+    {% for message in messages %}
+      {% if 'info' in message.tags %}
+      <div class="alert alert-info" role="alert">
+      {% elif 'success' in message.tags %}
+      <div class="alert alert-success" role="alert">
+      {% elif 'warning' in message.tags %}
+      <div class="alert alert-warning" role="alert">
+      {% elif 'error' in message.tags %}
+      <div class="alert alert-danger" role="alert">
+      {% endif %}
+        <div class="alert-container">{{ message }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</noscript>
 {% endif %}

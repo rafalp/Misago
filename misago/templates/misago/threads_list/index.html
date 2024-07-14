@@ -52,9 +52,9 @@
         </div>
         <div class="threads-list-item-bottom-row">
           <div class="threads-list-item-bottom-left">
-            {% if thread.is_closed or thread.is_hidden or thread.is_unapproved or thread.weight > 0 or thread.best_answer or thread.has_poll %}
+            {% if thread.is_closed or thread.is_hidden or thread.is_unapproved or thread.weight > 0 or thread.best_answer or thread.has_poll or thread_data.moderate %}
               <div class="threads-list-item-col-flags">
-                {% include "misago/thread_flags.html" %}
+                {% include "misago/thread_flags.html" with show_weight=thread_data.show_weight show_unapproved_posts=thread_data.moderate %}
               </div>
             {% endif %}
             {% if thread_data.categories and categories_component == "labels" %}
@@ -183,6 +183,11 @@
                 </span>
               {% endif %}
             </div>
+            {% if thread_data.moderate %}
+              <div class="threads-list-item-col-checkbox">
+                <input type="checkbox" name="thread" form="threads-moderation" value="{{ thread.id }}" {% if thread_data.selected %}checked{% endif %}/>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>

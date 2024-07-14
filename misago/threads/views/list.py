@@ -1,12 +1,14 @@
 import re
 from math import ceil
-from typing import Any
+from typing import Any, Type
 
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.enums import CategoryChildrenComponent, CategoryTree
@@ -18,6 +20,11 @@ from ...metatags.metatags import (
     get_default_metatags,
     get_forum_index_metatags,
 )
+from ...moderation.threads import (
+    CloseThreadsBulkModerationAction,
+    OpenThreadsBulkModerationAction,
+    ThreadsBulkModerationAction,
+)
 from ...pagination.cursor import CursorPaginationResult, paginate_queryset
 from ...permissions.categories import check_browse_category_permission
 from ...permissions.private_threads import (
@@ -28,7 +35,7 @@ from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
 )
-from ..enums import PrivateThreadUrl, ThreadsListsPolling, ThreadUrl
+from ..enums import PrivateThreadUrl, ThreadsListsPolling, ThreadWeight, ThreadUrl
 from ..filters import (
     MyThreadsFilter,
     ThreadsFilter,
@@ -111,6 +118,15 @@ class ListView(View):
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
+    def get_selected_threads_ids(self, request: HttpRequest) -> set[int]:
+        threads_ids: set[int] = set()
+        for thread_id in request.POST.getlist("thread"):
+            try:
+                threads_ids.add(int(thread_id))
+            except (TypeError, ValueError):
+                pass
+        return threads_ids
+
     def get_threads_latest_post_id(self, threads: list[Thread]) -> int:
         if threads:
             return max(t.last_post_id for t in threads)
@@ -171,6 +187,60 @@ class ThreadsListView(ListView):
             return redirect(reverse("misago:index"))
 
         return super().dispatch(request, *args, is_index=is_index, **kwargs)
+
+    def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "moderation" in request.POST:
+            return self.moderate_threads(request, kwargs)
+
+        return HttpResponse(status=405)
+
+    def moderate_threads(self, request: HttpRequest, kwargs) -> HttpResponse:
+        threads = self.get_threads(request, kwargs)
+        action = self.get_moderation_action(request, threads)
+
+        if not action:
+            messages.error(
+                request,
+                pgettext( "threads moderation error", "Invalid moderation action"),
+            )
+            return self.get(request, **kwargs)
+
+        selection = self.get_selected_threads(request, threads)
+        if not selection:
+            messages.error(
+                request,
+                pgettext("threads moderation error", "No threads selected."),
+            )
+            return self.get(request, **kwargs)
+
+        if action_response := action(request, selection):
+            return action_response
+
+        context = {
+            "pagination_url": self.get_pagination_url(kwargs),
+            "threads": threads,
+        }
+
+        return redirect(self.get_canonical_link(request, context))
+    
+    def get_moderation_action(self, request: HttpRequest, threads: dict) -> ThreadsBulkModerationAction | None:
+        action_id = request.POST["moderation"]
+        for action in threads["moderation_actions"]:
+            if action.id == action_id:
+                return action()
+            
+        return 
+
+    def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
+        threads_ids = self.get_selected_threads_ids(request)
+
+        selection: list[Thread] = []
+        for thread_data in threads["items"]:
+            thread = thread_data["thread"]
+            if thread.id in threads_ids:
+                selection.append(thread)
+
+        return selection
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_threads_page_context_hook(self.get_context_action, request, kwargs)
@@ -250,6 +320,9 @@ class ThreadsListView(ListView):
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, threads_list)
 
+        moderator = request.user_permissions.is_global_moderator
+        selected = self.get_selected_threads_ids(request)
+
         items: list[dict] = []
         for thread in threads_list:
             categories = request.categories.get_thread_categories(thread.category_id)
@@ -262,7 +335,10 @@ class ThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
+                    "moderate": moderator,
                     "animate": animate.get(thread.id, False),
+                    "selected": thread.id in selected,
+                    "show_weight": thread.weight == ThreadWeight.PINNED_GLOBALLY,
                 }
             )
 
@@ -272,6 +348,7 @@ class ThreadsListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "clear_filters_url": filters_base_url,
+            "moderation_actions": self.get_moderation_actions(request, items),
             "items": items,
             "paginator": paginator,
             "url_names": ThreadUrl.__members__,
@@ -366,6 +443,25 @@ class ThreadsListView(ListView):
             return reverse("misago:threads", kwargs={"filter": kwargs["filter"]})
 
         return reverse("misago:threads")
+
+    def get_moderation_actions(
+        self, request: HttpRequest, threads: list[dict]
+    ) -> list[Type[ThreadsBulkModerationAction]]:
+        return self.get_moderation_actions_action(request, threads)
+
+    def get_moderation_actions_action(
+        self, request: HttpRequest, threads: list[dict]
+    ) -> list[Type[ThreadsBulkModerationAction]]:
+        actions: list = []
+        if not request.user_permissions.is_global_moderator:
+            return actions
+
+        actions += [
+            OpenThreadsBulkModerationAction,
+            CloseThreadsBulkModerationAction,
+        ]
+
+        return actions
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         filters_base_url = self.get_filters_base_url(kwargs)
@@ -576,6 +672,13 @@ class CategoryThreadsListView(ListView):
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
                     "animate": animate.get(thread.id, False),
+                    "show_weight": (
+                        thread.weight == ThreadWeight.PINNED_GLOBALLY
+                        or (
+                            thread.weight == ThreadWeight.PINNED_IN_CATEGORY
+                            and thread.category_id == category.id
+                        )
+                    ),
                 }
             )
 

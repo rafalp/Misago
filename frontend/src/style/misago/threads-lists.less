@@ -389,6 +389,14 @@
     display: block;
     margin-left: @grid-gutter-width / 2;
   }
+
+  // Make checkbox separate
+  .threads-list-item-col-checkbox {
+    width: 40px;
+    margin-right: -10px;
+
+    text-align: center;
+  }
 }
 
 @media screen and (max-width: @screen-xs-max) {
@@ -396,6 +404,8 @@
   .threads-list {
     margin-left: @grid-gutter-width * -0.5;
     margin-right: @grid-gutter-width * -0.5;
+    border-radius: 0;
+    border-width: 1px 0;
   }
 
   // Remove top margin from bottom row itself
@@ -452,6 +462,16 @@
     a:visited,
     a:focus {
       font-size: @thread-last-activity-size-xs;
+    }
+  }
+
+  // Fix checkbox right negative margin
+  .threads-list-item-col-checkbox {
+    margin-right: 0px;
+
+    input {
+      position: relative;
+      left: 10px;
     }
   }
 }
