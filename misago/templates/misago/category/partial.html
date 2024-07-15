@@ -11,11 +11,15 @@
       {% include "misago/threads/poll_new.html" with latest_post=threads.latest_post %}
     {% endif %}
     {% if threads.items %}
-      {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component %}
+      {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component moderation=threads.moderation_actions %}
     {% else %}
       {% include "misago/category/blankslate.html" %}
     {% endif %}
   </ul>
 
   {% include "misago/threads/toolbar.html" with bottom=True %}
+
+  {% if threads.moderation_actions %}
+    {% include "misago/threads/moderation_noscript.html" with moderation_actions=threads.moderation_actions %}
+  {% endif %}
 </div>

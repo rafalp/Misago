@@ -1,9 +1,11 @@
 import re
 from math import ceil
 from typing import Any, Type
+from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
@@ -22,6 +24,7 @@ from ...metatags.metatags import (
 )
 from ...moderation.threads import (
     CloseThreadsBulkModerationAction,
+    MergeThreadsBulkModerationAction,
     OpenThreadsBulkModerationAction,
     ThreadsBulkModerationAction,
 )
@@ -69,6 +72,7 @@ ANIMATE_NEW_THREADS = "animate_new"
 class ListView(View):
     template_name: str
     template_name_htmx: str
+    moderation_template_name: str
     threads_component_template_name = "misago/threads_list/index.html"
     new_threads_template_name = "misago/threads/poll_new.html"
 
@@ -139,6 +143,59 @@ class ListView(View):
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
+    def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+        try:
+            page_url = request.path_info
+            if request.GET:
+                page_url += "?" + urlencode(request.GET)
+
+            result = self.moderate_threads(request, kwargs)
+            if request.is_htmx:
+                if result:
+                    return render(request, result["template_name"], result)
+
+                return self.get(request, **kwargs)
+            
+            if result:
+                result["cancel_url"] = page_url
+                return render(request, self.moderation_template_name, result)
+
+            return redirect(page_url)
+        except ValidationError as e:
+            messages.error(request, e.message)
+            return self.get(request, **kwargs)
+
+    def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
+        raise NotImplementedError()
+
+    def get_moderation_action(
+        self, request: HttpRequest, threads: dict
+    ) -> ThreadsBulkModerationAction | None:
+        action_id = request.POST["moderation"]
+        for action in threads["moderation_actions"]:
+            if action.id == action_id:
+                return action()
+
+        raise ValidationError(
+            pgettext("threads moderation error", "Invalid moderation action"),
+        )
+
+    def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
+        threads_ids = self.get_selected_threads_ids(request)
+
+        selection: list[Thread] = []
+        for thread_data in threads["items"]:
+            thread = thread_data["thread"]
+            if thread.id in threads_ids and thread_data["moderate"]:
+                selection.append(thread)
+
+        if not selection:
+            raise ValidationError(
+                pgettext("threads moderation error", "No threads selected."),
+            )
+
+        return selection
+
     def get_selected_threads_ids(self, request: HttpRequest) -> set[int]:
         threads_ids: set[int] = set()
         for thread_id in request.POST.getlist("thread"):
@@ -196,6 +253,7 @@ class ListView(View):
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
     template_name_htmx = "misago/threads/partial.html"
+    moderation_template_name = "misago/threads/moderation.html"
 
     def dispatch(
         self,
@@ -211,59 +269,26 @@ class ThreadsListView(ListView):
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "moderation" in request.POST:
-            return self.moderate_threads(request, kwargs)
+            return self.dispatch_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
 
-    def moderate_threads(self, request: HttpRequest, kwargs) -> HttpResponse:
+    def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
         threads = self.get_threads(request, kwargs)
         action = self.get_moderation_action(request, threads)
-
-        if not action:
-            messages.error(
-                request,
-                pgettext("threads moderation error", "Invalid moderation action"),
-            )
-            return self.get(request, **kwargs)
-
         selection = self.get_selected_threads(request, threads)
-        if not selection:
-            messages.error(
-                request,
-                pgettext("threads moderation error", "No threads selected."),
-            )
-            return self.get(request, **kwargs)
-
-        if action_response := action(request, selection):
-            return action_response
 
         context = {
-            "pagination_url": self.get_pagination_url(kwargs),
+            "request": request,
+            "is_index": kwargs.get("is_index", False),
+            "moderation_action": action.get_context(),
             "threads": threads,
+            "selection": selection,
         }
 
-        return redirect(self.get_canonical_link(request, context))
-
-    def get_moderation_action(
-        self, request: HttpRequest, threads: dict
-    ) -> ThreadsBulkModerationAction | None:
-        action_id = request.POST["moderation"]
-        for action in threads["moderation_actions"]:
-            if action.id == action_id:
-                return action()
-
-        return
-
-    def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
-        threads_ids = self.get_selected_threads_ids(request)
-
-        selection: list[Thread] = []
-        for thread_data in threads["items"]:
-            thread = thread_data["thread"]
-            if thread.id in threads_ids:
-                selection.append(thread)
-
-        return selection
+        if action_result := action(request, selection):
+            context.update(action_result)
+            return context
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_threads_page_context_hook(self.get_context_action, request, kwargs)
@@ -482,6 +507,7 @@ class ThreadsListView(ListView):
         actions += [
             OpenThreadsBulkModerationAction,
             CloseThreadsBulkModerationAction,
+            MergeThreadsBulkModerationAction,
         ]
 
         return actions
@@ -533,6 +559,34 @@ class ThreadsListView(ListView):
 class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
     template_name_htmx = "misago/category/partial.html"
+    moderation_template_name = "misago/category/moderation.html"
+
+    def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "moderation" in request.POST:
+            return self.dispatch_moderation(request, kwargs)
+
+        return self.get(request, **kwargs)
+
+    def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
+        category = self.get_category(request, kwargs)
+        threads = self.get_threads(request, category, kwargs)
+        action = self.get_moderation_action(request, threads)
+        selection = self.get_selected_threads(request, threads)
+
+        path = request.categories.get_category_path(category.id, include_self=False)
+
+        context = {
+            "request": request,
+            "category": category,
+            "moderation_action": action.get_context(),
+            "threads": threads,
+            "selection": selection,
+            "breadcrumbs": path,
+        }
+
+        if action_result := action(request, selection):
+            context.update(action_result)
+            return context
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_category_threads_page_context_hook(
@@ -714,7 +768,7 @@ class CategoryThreadsListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "clear_filters_url": filters_base_url,
-            "moderation_actions": self.get_moderation_actions(request, items, category),
+            "moderation_actions": self.get_moderation_actions(request, category, items),
             "items": items,
             "paginator": paginator,
             "url_names": ThreadUrl.__members__,
@@ -817,6 +871,26 @@ class CategoryThreadsListView(ListView):
 
     def get_pagination_url(self, category: Category, kwargs: dict) -> str:
         return category.get_absolute_url()
+
+    def get_moderation_actions(
+        self, request: HttpRequest, category: Category, threads: list[dict]
+    ) -> list[Type[ThreadsBulkModerationAction]]:
+        return self.get_moderation_actions_action(request, category, threads)
+
+    def get_moderation_actions_action(
+        self, request: HttpRequest, category: Category, threads: list[dict]
+    ) -> list[Type[ThreadsBulkModerationAction]]:
+        actions: list = []
+        if not request.user_permissions.is_global_moderator:
+            return actions
+
+        actions += [
+            OpenThreadsBulkModerationAction,
+            CloseThreadsBulkModerationAction,
+            MergeThreadsBulkModerationAction,
+        ]
+
+        return actions
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)

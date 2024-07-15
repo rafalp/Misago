@@ -11,7 +11,7 @@
       {% include "misago/threads/poll_new.html" with latest_post=threads.latest_post %}
     {% endif %}
     {% if threads.items %}
-      {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component %}
+      {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component moderation=threads.moderation_actions %}
     {% else %}
       {% include "misago/threads/blankslate.html" %}
     {% endif %}

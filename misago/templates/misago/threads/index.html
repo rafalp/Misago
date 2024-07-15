@@ -8,7 +8,7 @@
   {% elif is_index %}
     {{ settings.index_title|default:settings.forum_name }}
   {% else %}
-    {% trans "Threads" context "categories page" %} | {{ block.super }}
+    {% trans "Threads" context "threads page" %} | {{ block.super }}
   {% endif %}
 {% endblock title %}
 
