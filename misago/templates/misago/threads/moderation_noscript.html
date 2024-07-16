@@ -1,12 +1,6 @@
 {% load i18n %}
 
-<form
-  id="threads-moderation"
-  method="post"
-  hx-post="{{ canonical_link }}"
-  hx-target="#misago-htmx-root"
-  hx-swap="outerHTML"
->
+<form id="threads-moderation" method="post">
   {% csrf_token %}
   <noscript>
     <div class="toolbar">
