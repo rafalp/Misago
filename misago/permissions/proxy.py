@@ -26,7 +26,14 @@ class UserPermissionsProxy:
         self.accessed_permissions = False
 
     def __getattr__(self, name: str) -> Any:
-        return self.permissions[name]
+        try:
+            return self.permissions[name]
+        except KeyError as exc:
+            valid_permissions = "', '".join(self.permissions)
+            raise AttributeError(
+                f"{exc} is not an 'UserPermissionsProxy' attribute or "
+                f"one of valid permissions: '{valid_permissions}'"
+            ) from exc
 
     @cached_property
     def permissions(self) -> dict:

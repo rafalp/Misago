@@ -24,7 +24,7 @@ from ...metatags.metatags import (
 )
 from ...moderation.threads import (
     CloseThreadsBulkModerationAction,
-    MergeThreadsBulkModerationAction,
+    MoveThreadsBulkModerationAction,
     OpenThreadsBulkModerationAction,
     ThreadsBulkModerationAction,
 )
@@ -155,7 +155,7 @@ class ListView(View):
                     return render(request, result["template_name"], result)
 
                 return self.get(request, **kwargs)
-            
+
             if result:
                 result["cancel_url"] = page_url
                 return render(request, self.moderation_template_name, result)
@@ -507,7 +507,7 @@ class ThreadsListView(ListView):
         actions += [
             OpenThreadsBulkModerationAction,
             CloseThreadsBulkModerationAction,
-            MergeThreadsBulkModerationAction,
+            MoveThreadsBulkModerationAction,
         ]
 
         return actions
@@ -887,7 +887,7 @@ class CategoryThreadsListView(ListView):
         actions += [
             OpenThreadsBulkModerationAction,
             CloseThreadsBulkModerationAction,
-            MergeThreadsBulkModerationAction,
+            MoveThreadsBulkModerationAction,
         ]
 
         return actions
