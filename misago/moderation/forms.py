@@ -62,7 +62,7 @@ class MoveThreads(forms.Form):
         threads: list[Thread],
         request: HttpRequest,
     ):
-        super().__init__(data)
+        super().__init__(data, prefix="moderation")
 
         self.fields["category"].choices = get_category_choices(request.categories)
         self.disabled_choices = get_disabled_category_choices(

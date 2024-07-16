@@ -93,7 +93,7 @@
     {% if misago_agreement %}
       {% include "misago/required_agreement.html" %}
     {% endif %}
-
+  
     <script src="{% url 'django-i18n' %}?l={{ LANGUAGE_CODE }}&v={{ I18N_VERSION_SIGNATURE }}"></script>
     <script src="{% static 'misago/js/vendor.js' %}"></script>
     <script src="{% static 'misago/js/misago.js' %}"></script>
@@ -101,6 +101,8 @@
     <script type="text/javascript">
       misago.init({{ frontend_context|as_json }});
     </script>
+    {% block modals %}{% endblock modals %}
+    {% block javascript %}{% endblock javascript %}
 
   </body>
 </html>

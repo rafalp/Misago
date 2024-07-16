@@ -1,12 +1,11 @@
 {% load i18n misago_forms %}
 
-<input type="hidden" name="confirm" value="{{ moderation_action.id }}">
 <div class="form-group">
   {% with form.category as field %}
-    <label class="control-label" for="">
-      {{ field.label }}
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {{ field.label }}:
     </label>
-    <select class="form-control" name="{{ field.name }}" required>
+    <select class="form-control" name="{{ field.html_name }}" id="{{ field.id_for_label }}" required>
       {% for choice in field.subwidgets %}
         <option value="{{ choice.data.value }}"{% if choice.data.value in form.disabled_choices %} disabled{% else %}{{ choice|selectedhtml }}{% endif %}>
           {{ choice.choice_label }}
@@ -17,4 +16,5 @@
       <p class="help-block">{{ error }}</p>
     {% endfor %}
   {% endwith %}
+  <input type="hidden" name="confirm" value="{{ moderation_action.id }}">
 </div>

@@ -73,6 +73,7 @@ class ListView(View):
     template_name: str
     template_name_htmx: str
     moderation_template_name: str
+    moderation_modal_template_name: str
     threads_component_template_name = "misago/threads_list/index.html"
     new_threads_template_name = "misago/threads/poll_new.html"
 
@@ -150,15 +151,22 @@ class ListView(View):
                 page_url += "?" + urlencode(request.GET)
 
             result = self.moderate_threads(request, kwargs)
-            if request.is_htmx:
-                if result:
-                    return render(request, result["template_name"], result)
-
-                return self.get(request, **kwargs)
-
             if result:
                 result["cancel_url"] = page_url
+                if request.is_htmx:
+                    result["is_modal"] = True
+                    return render(request, self.moderation_modal_template_name, result)
+
                 return render(request, self.moderation_template_name, result)
+
+            if request.is_htmx:
+                response = self.get(request, **kwargs)
+                response.headers["HX-Trigger"] = "misago:closeModals"
+                if request.POST.get("success-hx-target"):
+                    response.headers["hx-retarget"] = request.POST["success-hx-target"]
+                if request.POST.get("success-hx-swap"):
+                    response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+                return response
 
             return redirect(page_url)
         except ValidationError as e:
@@ -254,6 +262,7 @@ class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
     template_name_htmx = "misago/threads/partial.html"
     moderation_template_name = "misago/threads/moderation.html"
+    moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
     def dispatch(
         self,

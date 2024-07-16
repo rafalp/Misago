@@ -13,6 +13,7 @@ class ThreadsBulkModerationAction:
     name: str
     full_name: str | None
     submit_btn: str | None
+    two_step: bool = False
 
     def __call__(self, request: HttpRequest, threads: list[Thread]) -> dict | None:
         raise NotImplementedError()
@@ -30,9 +31,10 @@ class MoveThreadsBulkModerationAction(ThreadsBulkModerationAction):
     id: str = "move"
     name: str = pgettext_lazy("threads bulk moderation action", "Move")
     full_name: str = pgettext_lazy("threads bulk moderation action", "Move threads")
+    two_step: bool = True
 
     def __call__(self, request: HttpRequest, threads: list[Thread]) -> dict | None:
-        if request.POST.get("confirm") == "move":
+        if request.POST.get("confirm") == self.id:
             form = MoveThreads(
                 request.POST,
                 threads=threads,

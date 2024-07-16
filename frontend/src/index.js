@@ -9,6 +9,7 @@ import htmx from "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import AjaxLoader, { useLoader} from "./AjaxLoader"
+import BulkModeration from "./BulkModeration"
 import "./formValidators"
 import "./htmxErrors"
 import "./liveTimestamps"
@@ -86,6 +87,10 @@ export class Misago {
   snackbarError(message) {
     snackbars.error(message)
   }
+
+  bulkModeration(options) {
+    return new BulkModeration(options)
+  }
 }
 
 // create the singleton
@@ -108,4 +113,8 @@ document.addEventListener("htmx:afterRequest", ({ target }) => {
   if (useLoader(target)) {
     loader.hide()
   }
+})
+
+document.addEventListener("misago:closeModals", () => {
+  $(".modal").modal("hide")
 })

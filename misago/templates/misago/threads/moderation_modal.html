@@ -1,0 +1,33 @@
+{% load i18n misago_component misago_plugins %}
+
+<div class="modal-dialog" role="document">
+  <form
+    method="post"
+    hx-post="/threads/"
+    hx-target="#threads-moderation-modal"
+    hx-swap="innerHTML"
+  >
+    {% csrf_token %}
+    <input type="hidden" name="moderation" value="{{ moderation_action.id }}" />
+    <input type="hidden" name="success-hx-target" value="#misago-htmx-root">
+    <input type="hidden" name="success-hx-swap" value="outerHTML">
+    {% for thread in selection %}
+      <input type="hidden" name="thread" value="{{ thread.id }}" />
+    {% endfor %}
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{ moderation_action.full_name }}</h4>
+      </div>
+      <div class="modal-body">
+        {% include template_name %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          {% trans "Cancel" context "threads list moderation" %}
+        </button>
+        <button class="btn btn-primary">{{ moderation_action.name }}</button>
+      </div>
+    </div>
+  </form>
+</div>
