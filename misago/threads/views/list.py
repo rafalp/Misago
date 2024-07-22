@@ -74,13 +74,6 @@ POLL_NEW_THREADS = "poll_new"
 ANIMATE_NEW_THREADS = "animate_new"
 
 
-def get_page_url(request: HttpRequest, include_querystring: bool = True) -> str:
-    page_url = request.path_info
-    if include_querystring and request.GET:
-        page_url += "?" + urlencode(request.GET)
-    return page_url
-
-
 class ListView(View):
     template_name: str
     template_name_htmx: str
@@ -161,13 +154,13 @@ class ListView(View):
 
     def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
-            page_url = get_page_url(request)
+            current_url = self.get_current_url(request)
             result = self.moderate_threads(request, kwargs)
 
             if isinstance(result, ModerationTemplateResult):
                 result.update_context({
                     "template_name":  result.template_name,
-                    "cancel_url": page_url,
+                    "cancel_url": current_url,
                 })
 
                 if request.is_htmx:
@@ -185,7 +178,7 @@ class ListView(View):
                 self.set_moderation_response_headers(request, response)
                 return response
 
-            return redirect(page_url)
+            return redirect(current_url)
         except ValidationError as e:
             messages.error(request, e.message)
             return self.get(request, **kwargs)
@@ -282,6 +275,12 @@ class ListView(View):
             link += "?cursor" + request.GET["cursor"]
         return link
 
+    def get_current_url(self, request: HttpRequest) -> str:
+        current_url = request.path_info
+        if request.GET:
+            current_url += "?" + urlencode(request.GET)
+        return current_url
+
 
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
@@ -321,7 +320,7 @@ class ThreadsListView(ListView):
                 "moderation_action": action.get_context(),
                 "threads": threads,
                 "selection": selection,
-                "form_action": get_page_url(request),
+                "form_action": self.get_current_url(request),
             })
 
         return result
@@ -622,7 +621,7 @@ class CategoryThreadsListView(ListView):
                 "breadcrumbs": request.categories.get_category_path(
                     category.id, include_self=False
                 ),
-                "form_action": get_page_url(request),
+                "form_action": self.get_current_url(request),
             })
         
         return result
