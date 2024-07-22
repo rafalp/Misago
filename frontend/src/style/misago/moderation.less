@@ -1,0 +1,25 @@
+@keyframes fixed-moderation-fade-in {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.fixed-moderation {
+  display: none;
+  width: 100%;
+
+  position: fixed;
+  bottom: @line-height-computed;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  &.visible {
+    display: block;
+
+    opacity: 1;
+
+    animation-name: fixed-moderation-fade-in;
+    animation-duration: 300ms;
+  }
+}

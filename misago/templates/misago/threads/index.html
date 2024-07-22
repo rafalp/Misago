@@ -44,57 +44,5 @@
 
 
 {% block modals %}
-{% if threads.moderation_actions %}
-  <div class="static-moderation" style="position: fixed; bottom: 16px; width: 100%; pointer-events: none;">
-    <div class="container" style="display: flex; flex-direction: row; justify-content: end;">
-      <div class="dropup" style="pointer-events: auto;">
-        <button
-          class="btn btn-default dropdown-toggle"
-          type="button"
-          id="threads-moderation-menu"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="threads-moderation-menu">
-          {% for action in threads.moderation_actions %}
-            <li>
-              <button
-                class="btn btn-link"
-                type="button"
-                moderation-action="{{ action.id }}"
-                moderation-two-step="{% if action.two_step %}true{% else %}false{% endif %}"
-              >
-                {{ action.name }}
-              </button>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div
-    id="threads-moderation-modal"
-    class="modal fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex="-1"
-  >
-    <div class="modal-dialog" role="document"></div>
-  </div>
-  <script type="text/javascript">
-    const moderation = misago.bulkModeration({
-      formId: "threads-moderation",
-      modal: "#threads-moderation-modal",
-      actions: document.querySelectorAll(".static-moderation ul button"),
-      selection: ".threads-list input:checked",
-      button: {
-        element: document.getElementById("threads-moderation-menu"),
-        default: pgettext("misago threads moderation", "Select threads"),
-        selected: pgettext("misago threads moderation", "Moderate threads (%(number)s)"),
-      }
-    })
-  </script>
-{% endif %}
+{% include "misago/threads/moderation.html" %}
 {% endblock modals %}

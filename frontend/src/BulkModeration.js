@@ -2,11 +2,13 @@ import htmx from "htmx.org"
 
 class BulkModeration {
   constructor(options) {
-    this.formId = options.formId
+    this.menu = options.menu ? document.querySelector(options.menu) : null
+    this.form = options.form
     this.modal = options.modal
-    this.actions = options.actions
+    this.actions = document.querySelectorAll(options.actions)
     this.selection = options.selection
-    this.button = options.button
+    this.control = document.querySelector(options.button.selector)
+    this.text = options.button.text
 
     this.update()
     this.registerEvents()
@@ -20,7 +22,7 @@ class BulkModeration {
   }
 
   onAction = (event) => {
-    const form = document.getElementById(this.formId)
+    const form = document.querySelector(this.form)
     const data = {};
 
     (new FormData(form)).forEach((value, key) => {
@@ -32,8 +34,8 @@ class BulkModeration {
 
     const target = event.target
     data.moderation = target.getAttribute("moderation-action")
-    
-    if (target.getAttribute("moderation-two-step") === "true") {
+
+    if (target.getAttribute("moderation-multistage") === "true") {
       htmx.ajax(
         "POST",
         document.location.href,
@@ -71,13 +73,16 @@ class BulkModeration {
   update = () => {
     const selection = document.querySelectorAll(this.selection).length
 
-    if (selection) {
-      this.button.element.innerText = this.button.selected.replace("%(number)s", selection)
-    } else {
-      this.button.element.innerText = this.button.default
-    }
+    this.control.innerText = this.text.replace("%(number)s", selection)
+    this.control.disabled = !selection
 
-    this.button.element.disabled = !selection
+    if (this.menu) {
+      if (selection) {
+        this.menu.classList.add("visible")
+      } else {
+        this.menu.classList.remove("visible")
+      }
+    }
   }
 }
 

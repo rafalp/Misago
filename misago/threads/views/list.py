@@ -22,6 +22,11 @@ from ...metatags.metatags import (
     get_default_metatags,
     get_forum_index_metatags,
 )
+from ...moderation.results import (
+    ModerationBulkResult,
+    ModerationResult,
+    ModerationTemplateResult,
+)
 from ...moderation.threads import (
     CloseThreadsBulkModerationAction,
     MoveThreadsBulkModerationAction,
@@ -69,10 +74,17 @@ POLL_NEW_THREADS = "poll_new"
 ANIMATE_NEW_THREADS = "animate_new"
 
 
+def get_page_url(request: HttpRequest, include_querystring: bool = True) -> str:
+    page_url = request.path_info
+    if include_querystring and request.GET:
+        page_url += "?" + urlencode(request.GET)
+    return page_url
+
+
 class ListView(View):
     template_name: str
     template_name_htmx: str
-    moderation_template_name: str
+    moderation_page_template_name: str
     moderation_modal_template_name: str
     threads_component_template_name = "misago/threads_list/index.html"
     new_threads_template_name = "misago/threads/poll_new.html"
@@ -130,8 +142,11 @@ class ListView(View):
         return {user.id: user for user in User.objects.filter(id__in=user_ids)}
 
     def get_threads_to_animate(
-        self, request: HttpRequest, threads: list[Thread]
+        self, request: HttpRequest, kwargs: dict, threads: list[Thread]
     ) -> dict[int, bool]:
+        if "animate" in kwargs:
+            return {thread.id: thread.id in kwargs["animate"] for thread in threads}
+
         if not request.is_htmx or ANIMATE_NEW_THREADS not in request.GET:
             return {}
 
@@ -146,32 +161,42 @@ class ListView(View):
 
     def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
-            page_url = request.path_info
-            if request.GET:
-                page_url += "?" + urlencode(request.GET)
-
+            page_url = get_page_url(request)
             result = self.moderate_threads(request, kwargs)
-            if result:
-                result["cancel_url"] = page_url
-                if request.is_htmx:
-                    result["is_modal"] = True
-                    return render(request, self.moderation_modal_template_name, result)
 
-                return render(request, self.moderation_template_name, result)
+            if isinstance(result, ModerationTemplateResult):
+                result.update_context({
+                    "template_name":  result.template_name,
+                    "cancel_url": page_url,
+                })
+
+                if request.is_htmx:
+                    template_name = self.moderation_modal_template_name
+                else:
+                    template_name = self.moderation_page_template_name
+
+                return render(request, template_name, result.context)
 
             if request.is_htmx:
+                if isinstance(result, ModerationBulkResult) and result.updated:
+                    kwargs.update({"animate": result.updated})
+
                 response = self.get(request, **kwargs)
-                response.headers["HX-Trigger"] = "misago:closeModals"
-                if request.POST.get("success-hx-target"):
-                    response.headers["hx-retarget"] = request.POST["success-hx-target"]
-                if request.POST.get("success-hx-swap"):
-                    response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+                self.set_moderation_response_headers(request, response)
                 return response
 
             return redirect(page_url)
         except ValidationError as e:
             messages.error(request, e.message)
             return self.get(request, **kwargs)
+    
+    def set_moderation_response_headers(self, request: HttpRequest, response: HttpResponse):
+        response.headers["HX-Trigger"] = "misago:afterModeration"
+        if request.POST.get("success-hx-target"):
+            response.headers["hx-retarget"] = request.POST["success-hx-target"]
+        if request.POST.get("success-hx-swap"):
+            response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+        
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
         raise NotImplementedError()
@@ -261,7 +286,7 @@ class ListView(View):
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
     template_name_htmx = "misago/threads/partial.html"
-    moderation_template_name = "misago/threads/moderation.html"
+    moderation_page_template_name = "misago/threads/moderation_page.html"
     moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
     def dispatch(
@@ -282,22 +307,24 @@ class ThreadsListView(ListView):
 
         return self.get(request, **kwargs)
 
-    def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
+    def moderate_threads(self, request: HttpRequest, kwargs) -> ModerationResult | None:
         threads = self.get_threads(request, kwargs)
         action = self.get_moderation_action(request, threads)
         selection = self.get_selected_threads(request, threads)
 
-        context = {
-            "request": request,
-            "is_index": kwargs.get("is_index", False),
-            "moderation_action": action.get_context(),
-            "threads": threads,
-            "selection": selection,
-        }
+        result = action(request, selection)
 
-        if action_result := action(request, selection):
-            context.update(action_result)
-            return context
+        if isinstance(result, ModerationTemplateResult):
+            result.update_context({
+                "request": request,
+                "is_index": kwargs.get("is_index", False),
+                "moderation_action": action.get_context(),
+                "threads": threads,
+                "selection": selection,
+                "form_action": get_page_url(request),
+            })
+
+        return result
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_threads_page_context_hook(self.get_context_action, request, kwargs)
@@ -375,7 +402,7 @@ class ThreadsListView(ListView):
 
         new_threads = {}
         users = self.get_threads_users(request, threads_list)
-        animate = self.get_threads_to_animate(request, threads_list)
+        animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         moderator = request.user_permissions.is_global_moderator
         selected = self.get_selected_threads_ids(request)
@@ -568,7 +595,8 @@ class ThreadsListView(ListView):
 class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
     template_name_htmx = "misago/category/partial.html"
-    moderation_template_name = "misago/category/moderation.html"
+    moderation_page_template_name = "misago/category/moderation_page.html"
+    moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "moderation" in request.POST:
@@ -576,26 +604,28 @@ class CategoryThreadsListView(ListView):
 
         return self.get(request, **kwargs)
 
-    def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
+    def moderate_threads(self, request: HttpRequest, kwargs) -> ModerationResult | None:
         category = self.get_category(request, kwargs)
         threads = self.get_threads(request, category, kwargs)
         action = self.get_moderation_action(request, threads)
         selection = self.get_selected_threads(request, threads)
 
-        path = request.categories.get_category_path(category.id, include_self=False)
+        result = action(request, selection)
 
-        context = {
-            "request": request,
-            "category": category,
-            "moderation_action": action.get_context(),
-            "threads": threads,
-            "selection": selection,
-            "breadcrumbs": path,
-        }
-
-        if action_result := action(request, selection):
-            context.update(action_result)
-            return context
+        if isinstance(result, ModerationTemplateResult):
+            result.update_context({
+                "request": request,
+                "category": category,
+                "moderation_action": action.get_context(),
+                "threads": threads,
+                "selection": selection,
+                "breadcrumbs": request.categories.get_category_path(
+                    category.id, include_self=False
+                ),
+                "form_action": get_page_url(request),
+            })
+        
+        return result
 
     def get_context(self, request: HttpRequest, kwargs: dict):
         return get_category_threads_page_context_hook(
@@ -741,7 +771,7 @@ class CategoryThreadsListView(ListView):
 
         new_threads = {}
         users = self.get_threads_users(request, threads_list)
-        animate = self.get_threads_to_animate(request, threads_list)
+        animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         selected = self.get_selected_threads_ids(request)
 
@@ -1030,7 +1060,7 @@ class PrivateThreadsListView(ListView):
 
         new_threads = {}
         users = self.get_threads_users(request, threads_list)
-        animate = self.get_threads_to_animate(request, threads_list)
+        animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         moderator = request.user_permissions.private_threads_moderator
 

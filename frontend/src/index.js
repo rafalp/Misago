@@ -115,6 +115,7 @@ document.addEventListener("htmx:afterRequest", ({ target }) => {
   }
 })
 
-document.addEventListener("misago:closeModals", () => {
-  $(".modal").modal("hide")
+// Hide moderation modal after moderation action completes
+document.addEventListener("misago:afterModeration", () => {
+  $("#threads-moderation-modal").modal("hide")
 })
