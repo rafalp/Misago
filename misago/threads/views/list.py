@@ -269,7 +269,7 @@ class ListView(View):
         posts = max(1, thread.replies + 1 - request.settings.posts_per_page_orphans)
         return ceil(posts / request.settings.posts_per_page)
 
-    def get_thread_moderate(self, request: HttpRequest, thread: Thread) -> bool:
+    def get_thread_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return (
             request.user_permissions.is_global_moderator
             or thread.category_id in request.user_permissions.categories_moderator
@@ -539,12 +539,12 @@ class ThreadsListView(ListView):
         return reverse("misago:threads")
 
     def get_moderation_actions(
-        self, request: HttpRequest, threads: list[dict]
+        self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
         return self.get_moderation_actions_action(request, threads)
 
     def get_moderation_actions_action(
-        self, request: HttpRequest, threads: list[dict]
+        self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
         if (
@@ -819,7 +819,7 @@ class CategoryThreadsListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "clear_filters_url": filters_base_url,
-            "moderation_actions": self.get_moderation_actions(request, category, items),
+            "moderation_actions": self.get_moderation_actions(request, category),
             "items": items,
             "paginator": paginator,
             "url_names": ThreadUrl.__members__,
@@ -924,12 +924,12 @@ class CategoryThreadsListView(ListView):
         return category.get_absolute_url()
 
     def get_moderation_actions(
-        self, request: HttpRequest, category: Category, threads: list[dict]
+        self, request: HttpRequest, category: Category
     ) -> list[Type[ThreadsBulkModerationAction]]:
-        return self.get_moderation_actions_action(request, category, threads)
+        return self.get_moderation_actions_action(request, category)
 
     def get_moderation_actions_action(
-        self, request: HttpRequest, category: Category, threads: list[dict]
+        self, request: HttpRequest, category: Category
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
         if (
