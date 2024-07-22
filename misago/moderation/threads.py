@@ -16,7 +16,9 @@ class ThreadsBulkModerationAction:
     submit_btn: str | None
     multistage: bool = False
 
-    def __call__(self, request: HttpRequest, threads: list[Thread]) -> ModerationResult | None:
+    def __call__(
+        self, request: HttpRequest, threads: list[Thread]
+    ) -> ModerationResult | None:
         raise NotImplementedError()
 
     def get_context(self):
@@ -26,7 +28,7 @@ class ThreadsBulkModerationAction:
             "full_name": str(getattr(self, "full_name", self.name)),
             "submit_btn": str(getattr(self, "submit_btn", self.name)),
         }
-    
+
     def create_bulk_result(self, threads: list[Thread]) -> ModerationBulkResult:
         return ModerationBulkResult(set(thread.id for thread in threads))
 
@@ -80,7 +82,9 @@ class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
     id: str = "open"
     name: str = pgettext_lazy("threads bulk moderation action", "Open")
 
-    def __call__(self, request: HttpRequest, threads: list[Thread]) -> ModerationBulkResult:
+    def __call__(
+        self, request: HttpRequest, threads: list[Thread]
+    ) -> ModerationBulkResult:
         closed_threads = [thread for thread in threads if thread.is_closed]
         updated = Thread.objects.filter(
             id__in=[thread.id for thread in closed_threads]
@@ -99,7 +103,9 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
     id: str = "close"
     name: str = pgettext_lazy("threads bulk moderation action", "Close")
 
-    def __call__(self, request: HttpRequest, threads: list[Thread]) -> ModerationBulkResult:
+    def __call__(
+        self, request: HttpRequest, threads: list[Thread]
+    ) -> ModerationBulkResult:
         open_threads = [thread for thread in threads if not thread.is_closed]
         updated = Thread.objects.filter(
             id__in=[thread.id for thread in open_threads]

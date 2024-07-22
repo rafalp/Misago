@@ -158,10 +158,12 @@ class ListView(View):
             result = self.moderate_threads(request, kwargs)
 
             if isinstance(result, ModerationTemplateResult):
-                result.update_context({
-                    "template_name":  result.template_name,
-                    "cancel_url": current_url,
-                })
+                result.update_context(
+                    {
+                        "template_name": result.template_name,
+                        "cancel_url": current_url,
+                    }
+                )
 
                 if request.is_htmx:
                     template_name = self.moderation_modal_template_name
@@ -182,14 +184,15 @@ class ListView(View):
         except ValidationError as e:
             messages.error(request, e.message)
             return self.get(request, **kwargs)
-    
-    def set_moderation_response_headers(self, request: HttpRequest, response: HttpResponse):
+
+    def set_moderation_response_headers(
+        self, request: HttpRequest, response: HttpResponse
+    ):
         response.headers["HX-Trigger"] = "misago:afterModeration"
         if request.POST.get("success-hx-target"):
             response.headers["hx-retarget"] = request.POST["success-hx-target"]
         if request.POST.get("success-hx-swap"):
             response.headers["hx-reswap"] = request.POST["success-hx-swap"]
-        
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> dict | None:
         raise NotImplementedError()
@@ -266,6 +269,12 @@ class ListView(View):
         posts = max(1, thread.replies + 1 - request.settings.posts_per_page_orphans)
         return ceil(posts / request.settings.posts_per_page)
 
+    def get_thread_moderate(self, request: HttpRequest, thread: Thread) -> bool:
+        return (
+            request.user_permissions.is_global_moderator
+            or thread.category_id in request.user_permissions.categories_moderator
+        )
+
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         return get_default_metatags(request)
 
@@ -314,14 +323,16 @@ class ThreadsListView(ListView):
         result = action(request, selection)
 
         if isinstance(result, ModerationTemplateResult):
-            result.update_context({
-                "request": request,
-                "is_index": kwargs.get("is_index", False),
-                "moderation_action": action.get_context(),
-                "threads": threads,
-                "selection": selection,
-                "form_action": self.get_current_url(request),
-            })
+            result.update_context(
+                {
+                    "request": request,
+                    "is_index": kwargs.get("is_index", False),
+                    "moderation_action": action.get_context(),
+                    "threads": threads,
+                    "selection": selection,
+                    "form_action": self.get_current_url(request),
+                }
+            )
 
         return result
 
@@ -403,12 +414,12 @@ class ThreadsListView(ListView):
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
-        moderator = request.user_permissions.is_global_moderator
         selected = self.get_selected_threads_ids(request)
 
         items: list[dict] = []
         for thread in threads_list:
             categories = request.categories.get_thread_categories(thread.category_id)
+            moderate = self.get_thread_moderator_status(request, thread)
 
             items.append(
                 {
@@ -418,10 +429,10 @@ class ThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
-                    "moderate": moderator,
+                    "moderate": moderate,
                     "animate": animate.get(thread.id, False),
                     "selected": thread.id in selected,
-                    "show_flags": self.show_thread_flags(request, moderator, thread),
+                    "show_flags": self.show_thread_flags(request, moderate, thread),
                 }
             )
 
@@ -536,7 +547,10 @@ class ThreadsListView(ListView):
         self, request: HttpRequest, threads: list[dict]
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
-        if not request.user_permissions.is_global_moderator:
+        if (
+            request.user_permissions.is_global_moderator
+            or request.user_permissions.categories_moderator
+        ):
             return actions
 
         actions += [
@@ -612,18 +626,20 @@ class CategoryThreadsListView(ListView):
         result = action(request, selection)
 
         if isinstance(result, ModerationTemplateResult):
-            result.update_context({
-                "request": request,
-                "category": category,
-                "moderation_action": action.get_context(),
-                "threads": threads,
-                "selection": selection,
-                "breadcrumbs": request.categories.get_category_path(
-                    category.id, include_self=False
-                ),
-                "form_action": self.get_current_url(request),
-            })
-        
+            result.update_context(
+                {
+                    "request": request,
+                    "category": category,
+                    "moderation_action": action.get_context(),
+                    "threads": threads,
+                    "selection": selection,
+                    "breadcrumbs": request.categories.get_category_path(
+                        category.id, include_self=False
+                    ),
+                    "form_action": self.get_current_url(request),
+                }
+            )
+
         return result
 
     def get_context(self, request: HttpRequest, kwargs: dict):
@@ -780,10 +796,7 @@ class CategoryThreadsListView(ListView):
                 thread.category_id, category.id
             )
 
-            moderate = (
-                request.user_permissions.is_global_moderator
-                or thread.category_id in request.user_permissions.categories_moderator
-            )
+            moderate = self.get_thread_moderator_status(request, thread)
 
             items.append(
                 {
@@ -919,7 +932,10 @@ class CategoryThreadsListView(ListView):
         self, request: HttpRequest, category: Category, threads: list[dict]
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
-        if not request.user_permissions.is_global_moderator:
+        if (
+            request.user_permissions.is_global_moderator
+            or request.user_permissions.categories_moderator
+        ):
             return actions
 
         actions += [
