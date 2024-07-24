@@ -183,7 +183,7 @@
                 </span>
               {% endif %}
             </div>
-            {% if thread_data.moderate %}
+            {% if thread_data.moderation %}
               <div class="threads-list-item-col-checkbox">
                 <input type="checkbox" name="thread" form="threads-moderation" value="{{ thread.id }}" {% if thread_data.selected %}checked {% endif %}/>
               </div>

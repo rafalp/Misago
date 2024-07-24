@@ -103,7 +103,11 @@ class ListView(View):
         return {"request": request}
 
     def show_thread_flags(
-        self, request, moderator: bool, thread: Thread, category: Category | None = None
+        self,
+        request,
+        moderation: bool,
+        thread: Thread,
+        category: Category | None = None,
     ) -> bool:
         if (
             thread.weight == ThreadWeight.PINNED_GLOBALLY
@@ -114,11 +118,11 @@ class ListView(View):
             return True
 
         if thread.weight == ThreadWeight.PINNED_IN_CATEGORY and (
-            (category and category.id == thread.category_id) or moderator
+            (category and category.id == thread.category_id) or moderation
         ):
             return True
 
-        if moderator and thread.has_unapproved_posts:
+        if moderation and thread.has_unapproved_posts:
             return True
 
         return False
@@ -215,7 +219,7 @@ class ListView(View):
         selection: list[Thread] = []
         for thread_data in threads["items"]:
             thread = thread_data["thread"]
-            if thread.id in threads_ids and thread_data["moderate"]:
+            if thread.id in threads_ids and thread_data["moderation"]:
                 selection.append(thread)
 
         if not selection:
@@ -269,7 +273,7 @@ class ListView(View):
         posts = max(1, thread.replies + 1 - request.settings.posts_per_page_orphans)
         return ceil(posts / request.settings.posts_per_page)
 
-    def get_thread_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
+    def allow_thread_moderation(self, request: HttpRequest, thread: Thread) -> bool:
         return (
             request.user_permissions.is_global_moderator
             or thread.category_id in request.user_permissions.categories_moderator
@@ -419,7 +423,7 @@ class ThreadsListView(ListView):
         items: list[dict] = []
         for thread in threads_list:
             categories = request.categories.get_thread_categories(thread.category_id)
-            moderate = self.get_thread_moderator_status(request, thread)
+            moderation = self.allow_thread_moderation(request, thread)
 
             items.append(
                 {
@@ -429,10 +433,10 @@ class ThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
-                    "moderate": moderate,
+                    "moderation": moderation,
                     "animate": animate.get(thread.id, False),
                     "selected": thread.id in selected,
-                    "show_flags": self.show_thread_flags(request, moderate, thread),
+                    "show_flags": self.show_thread_flags(moderation, thread),
                 }
             )
 
@@ -796,7 +800,7 @@ class CategoryThreadsListView(ListView):
                 thread.category_id, category.id
             )
 
-            moderate = self.get_thread_moderator_status(request, thread)
+            moderation = self.allow_thread_moderation(request, thread)
 
             items.append(
                 {
@@ -806,10 +810,10 @@ class CategoryThreadsListView(ListView):
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": categories,
-                    "moderate": moderate,
+                    "moderation": moderation,
                     "animate": animate.get(thread.id, False),
                     "selected": thread.id in selected,
-                    "show_flags": self.show_thread_flags(request, moderate, thread),
+                    "show_flags": self.show_thread_flags(moderation, thread),
                 }
             )
 
@@ -1090,7 +1094,7 @@ class PrivateThreadsListView(ListView):
                     "pages": self.get_thread_pages_count(request, thread),
                     "categories": None,
                     "animate": animate.get(thread.id, False),
-                    "show_flags": self.show_thread_flags(request, moderator, thread),
+                    "show_flags": self.show_thread_flags(moderator, thread),
                 }
             )
 
