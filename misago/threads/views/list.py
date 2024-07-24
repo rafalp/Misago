@@ -99,8 +99,8 @@ class ListView(View):
 
         return render(request, template_name, context)
 
-    def get_context(self, request: HttpRequest, kwargs: dict):
-        return {"request": request}
+    def get_context(self, request: HttpRequest, kwargs: dict) -> dict:
+        return {}
 
     def show_thread_flags(
         self,
@@ -328,7 +328,6 @@ class ThreadsListView(ListView):
         if isinstance(result, ModerationTemplateResult):
             result.update_context(
                 {
-                    "request": request,
                     "is_index": kwargs.get("is_index", False),
                     "moderation_action": action.get_context(),
                     "threads": threads,
@@ -348,7 +347,6 @@ class ThreadsListView(ListView):
 
         context = {
             "template_name_htmx": self.template_name_htmx,
-            "request": request,
             "is_index": kwargs.get("is_index", False),
             "subcategories": subcategories,
             "threads": threads,
@@ -634,7 +632,6 @@ class CategoryThreadsListView(ListView):
         if isinstance(result, ModerationTemplateResult):
             result.update_context(
                 {
-                    "request": request,
                     "category": category,
                     "moderation_action": action.get_context(),
                     "threads": threads,
@@ -665,7 +662,6 @@ class CategoryThreadsListView(ListView):
 
         context = {
             "template_name_htmx": self.template_name_htmx,
-            "request": request,
             "category": category,
             "subcategories": self.get_subcategories(request, category),
             "threads": threads,
@@ -1049,7 +1045,6 @@ class PrivateThreadsListView(ListView):
 
         context = {
             "template_name_htmx": self.template_name_htmx,
-            "request": request,
             "threads": self.get_threads(request, category, kwargs),
             "pagination_url": self.get_pagination_url(kwargs),
         }
