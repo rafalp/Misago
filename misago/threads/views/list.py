@@ -104,7 +104,6 @@ class ListView(View):
 
     def show_thread_flags(
         self,
-        request,
         moderation: bool,
         thread: Thread,
         category: Category | None = None,
@@ -370,6 +369,9 @@ class ThreadsListView(ListView):
         component = request.settings.threads_list_categories_component
 
         if component == CategoryChildrenComponent.FULL:
+            if request.is_htmx:
+                return None
+
             return {
                 "categories": get_categories_data(request),
                 "template_name": "misago/threads/subcategories_full.html",
@@ -446,7 +448,7 @@ class ThreadsListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "clear_filters_url": filters_base_url,
-            "moderation_actions": self.get_moderation_actions(request, items),
+            "moderation_actions": self.get_moderation_actions(request),
             "items": items,
             "paginator": paginator,
             "url_names": ThreadUrl.__members__,
@@ -545,13 +547,13 @@ class ThreadsListView(ListView):
     def get_moderation_actions(
         self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
-        return self.get_moderation_actions_action(request, threads)
+        return self.get_moderation_actions_action(request)
 
     def get_moderation_actions_action(
         self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
-        if (
+        if not (
             request.user_permissions.is_global_moderator
             or request.user_permissions.categories_moderator
         ):
@@ -725,6 +727,9 @@ class CategoryThreadsListView(ListView):
         component = category.children_categories_component
 
         if component == CategoryChildrenComponent.FULL:
+            if request.is_htmx:
+                return None
+
             return {
                 "categories": get_subcategories_data(request, category),
                 "template_name": "misago/category/subcategories_full.html",
@@ -936,7 +941,7 @@ class CategoryThreadsListView(ListView):
         self, request: HttpRequest, category: Category
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
-        if (
+        if not (
             request.user_permissions.is_global_moderator
             or request.user_permissions.categories_moderator
         ):
