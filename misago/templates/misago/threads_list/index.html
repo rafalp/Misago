@@ -20,14 +20,14 @@
         <div class="threads-list-item-top-row">
           <div class="threads-list-item-row-title">
             <a
-              href="{% if thread_data.is_new %}{% url url_names.NEW_POST pk=thread.pk slug=thread.slug %}{% else %}{% url url_names.THREAD pk=thread.pk slug=thread.slug %}{% endif %}"
+              href="{% if thread_data.is_new %}{% url threads_urls.new_post pk=thread.pk slug=thread.slug %}{% else %}{% url threads_urls.thread pk=thread.pk slug=thread.slug %}{% endif %}"
               class="threads-list-item-title{% if thread_data.new %} threads-list-item-title-new{% endif %}"
             >
               {{ thread.title }}
             </a>
             {% if thread_data.pages > 1 %}
               <a
-                href="{% url url_names.THREAD pk=thread.pk slug=thread.slug page=thread_data.pages %}"
+                href="{% url threads_urls.thread pk=thread.pk slug=thread.slug page=thread_data.pages %}"
                 class="threads-list-item-goto-page"
                 title="{% trans 'Go to last page' context 'threads list' %}"
               >
@@ -137,7 +137,7 @@
             </div>
             <div class="threads-list-item-col-last-activity">
               <a
-                href="{% url url_names.LAST_POST pk=thread.pk slug=thread.slug %}"
+                href="{% url threads_urls.last_post pk=thread.pk slug=thread.slug %}"
                 class="threads-list-item-last-activity"
                 misago-timestamp="{{ thread.last_post_on.isoformat }}"
                 misago-timestamp-format="short"
@@ -196,7 +196,7 @@
         </div>
       </div>
       <meta itemprop="position" content="{{ cursor|default:0|add:forloop.counter }}">
-      <meta itemprop="url" content="{{ settings.forum_address }}{% url url_names.THREAD pk=thread.pk slug=thread.slug %}">
+      <meta itemprop="url" content="{{ settings.forum_address }}{% url threads_urls.thread pk=thread.pk slug=thread.slug %}">
       <meta itemprop="name" content="{{ thread.title }}">
     </li>
   {% endwith %}

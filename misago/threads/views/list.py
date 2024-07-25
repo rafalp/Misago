@@ -43,7 +43,12 @@ from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
 )
-from ..enums import PrivateThreadUrl, ThreadsListsPolling, ThreadWeight, ThreadUrl
+from ..enums import (
+    PrivateThreadsUrls,
+    ThreadsListsPolling,
+    ThreadsUrls,
+    ThreadWeight,
+)
 from ..filters import (
     MyThreadsFilter,
     ThreadsFilter,
@@ -352,6 +357,7 @@ class ThreadsListView(ListView):
             "is_index": kwargs.get("is_index", False),
             "subcategories": subcategories,
             "threads": threads,
+            "threads_urls": ThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
         }
 
@@ -451,7 +457,6 @@ class ThreadsListView(ListView):
             "moderation_actions": self.get_moderation_actions(request),
             "items": items,
             "paginator": paginator,
-            "url_names": ThreadUrl.__members__,
             "categories_component": (
                 request.settings.threads_list_item_categories_component
             ),
@@ -669,6 +674,7 @@ class CategoryThreadsListView(ListView):
             "category": category,
             "subcategories": self.get_subcategories(request, category),
             "threads": threads,
+            "threads_urls": ThreadsUrls.__members__,
             "breadcrumbs": path,
             "pagination_url": self.get_pagination_url(category, kwargs),
         }
@@ -831,7 +837,6 @@ class CategoryThreadsListView(ListView):
             "moderation_actions": self.get_moderation_actions(request, category),
             "items": items,
             "paginator": paginator,
-            "url_names": ThreadUrl.__members__,
             "categories_component": (
                 request.settings.threads_list_item_categories_component
             ),
@@ -1063,6 +1068,7 @@ class PrivateThreadsListView(ListView):
         context = {
             "template_name_htmx": self.template_name_htmx,
             "threads": self.get_threads(request, category, kwargs),
+            "threads_urls": PrivateThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
         }
 
@@ -1123,7 +1129,6 @@ class PrivateThreadsListView(ListView):
             "clear_filters_url": filters_base_url,
             "items": items,
             "paginator": paginator,
-            "url_names": PrivateThreadUrl.__members__,
             "enable_polling": self.is_threads_polling_enabled(request),
         }
 
