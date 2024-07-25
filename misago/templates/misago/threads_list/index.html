@@ -185,7 +185,7 @@
             </div>
             {% if thread_data.moderation %}
               <div class="threads-list-item-col-checkbox">
-                <input type="checkbox" name="thread" form="threads-moderation" value="{{ thread.id }}" {% if thread_data.selected %}checked {% endif %}/>
+                <input type="checkbox" name="threads" form="threads-moderation" value="{{ thread.id }}" {% if thread_data.selected %}checked {% endif %}/>
               </div>
             {% elif moderation %}
               <div class="threads-list-item-col-checkbox">

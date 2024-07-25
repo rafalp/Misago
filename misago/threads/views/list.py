@@ -230,14 +230,14 @@ class ListView(View):
 
         if not selection:
             raise ValidationError(
-                pgettext("threads moderation error", "No threads selected."),
+                pgettext("threads moderation error", "No threads selected"),
             )
 
         return selection
 
     def get_selected_threads_ids(self, request: HttpRequest) -> set[int]:
         threads_ids: set[int] = set()
-        for thread_id in request.POST.getlist("thread"):
+        for thread_id in request.POST.getlist("threads"):
             try:
                 threads_ids.add(int(thread_id))
             except (TypeError, ValueError):

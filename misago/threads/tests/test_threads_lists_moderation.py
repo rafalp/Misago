@@ -171,3 +171,189 @@ def test_category_threads_shows_disabled_threads_checkboxes_to_other_category_mo
     assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-col-checkbox")
     assert_contains(response, DISABLED_CHECKBOX_HTML)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_site_threads_executes_single_stage_moderation_action(
+    default_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        reverse("misago:threads"),
+        {"moderation": "close", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:threads")
+
+    thread.refresh_from_db()
+    assert thread.is_closed
+
+
+@override_dynamic_settings(index_view="categories")
+def test_category_threads_executes_single_stage_moderation_action(
+    default_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "close", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.is_closed
+
+
+@override_dynamic_settings(index_view="categories")
+def test_site_threads_executes_single_stage_moderation_action_in_htmx(
+    default_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        reverse("misago:threads"),
+        {"moderation": "close", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-closed")
+
+    thread.refresh_from_db()
+    assert thread.is_closed
+
+
+@override_dynamic_settings(index_view="categories")
+def test_category_threads_executes_single_stage_moderation_action_in_htmx(
+    default_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "close", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-closed")
+
+    thread.refresh_from_db()
+    assert thread.is_closed
+
+
+@override_dynamic_settings(index_view="categories")
+def test_site_threads_executes_multi_stage_moderation_action(
+    default_category, child_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        reverse("misago:threads"),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        reverse("misago:threads"),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": child_category.id,
+            "confirm": "move",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:threads")
+
+    thread.refresh_from_db()
+    assert thread.category == child_category
+
+
+@override_dynamic_settings(index_view="categories")
+def test_category_threads_executes_multi_stage_moderation_action(
+    default_category, child_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": child_category.id,
+            "confirm": "move",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.category == child_category
+
+
+@override_dynamic_settings(index_view="categories")
+def test_site_threads_executes_multi_stage_moderation_action_in_htmx(
+    default_category, child_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        reverse("misago:threads"),
+        {"moderation": "move", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        reverse("misago:threads"),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": child_category.id,
+            "confirm": "move",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+
+    thread.refresh_from_db()
+    assert thread.category == child_category
+
+
+@override_dynamic_settings(index_view="categories")
+def test_category_threads_executes_multi_stage_moderation_action_in_htmx(
+    default_category, child_category, moderator_client
+):
+    thread = post_thread(default_category, "Moderate Thread")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": child_category.id,
+            "confirm": "move",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+
+    thread.refresh_from_db()
+    assert thread.category == child_category
