@@ -53,6 +53,7 @@ from ..filters import (
 from ..hooks import (
     get_category_threads_page_context_hook,
     get_category_threads_page_filters_hook,
+    get_category_threads_page_moderation_actions_hook,
     get_category_threads_page_queryset_hook,
     get_category_threads_page_subcategories_hook,
     get_category_threads_page_threads_hook,
@@ -62,6 +63,7 @@ from ..hooks import (
     get_private_threads_page_threads_hook,
     get_threads_page_context_hook,
     get_threads_page_filters_hook,
+    get_threads_page_moderation_actions_hook,
     get_threads_page_queryset_hook,
     get_threads_page_subcategories_hook,
     get_threads_page_threads_hook,
@@ -545,7 +547,9 @@ class ThreadsListView(ListView):
     def get_moderation_actions(
         self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
-        return self.get_moderation_actions_action(request)
+        return get_threads_page_moderation_actions_hook(
+            self.get_moderation_actions_action, request
+        )
 
     def get_moderation_actions_action(
         self, request: HttpRequest
@@ -931,7 +935,9 @@ class CategoryThreadsListView(ListView):
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
     ) -> list[Type[ThreadsBulkModerationAction]]:
-        return self.get_moderation_actions_action(request, category)
+        return get_category_threads_page_moderation_actions_hook(
+            self.get_moderation_actions_action, request, category
+        )
 
     def get_moderation_actions_action(
         self, request: HttpRequest, category: Category

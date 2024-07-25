@@ -64,6 +64,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`get_category_threads_page_context_hook`](./get-category-threads-page-context-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
+- [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)
 - [`get_category_threads_page_queryset_hook`](./get-category-threads-page-queryset-hook.md)
 - [`get_category_threads_page_subcategories_hook`](./get-category-threads-page-subcategories-hook.md)
 - [`get_category_threads_page_threads_hook`](./get-category-threads-page-threads-hook.md)
@@ -73,6 +74,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_private_threads_page_threads_hook`](./get-private-threads-page-threads-hook.md)
 - [`get_threads_page_context_hook`](./get-threads-page-context-hook.md)
 - [`get_threads_page_filters_hook`](./get-threads-page-filters-hook.md)
+- [`get_threads_page_moderation_actions_hook`](./get-threads-page-moderation-actions-hook.md)
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)

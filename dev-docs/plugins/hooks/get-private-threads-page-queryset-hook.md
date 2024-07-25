@@ -42,7 +42,7 @@ The request object.
 
 #### `category: Category`
 
-A private threads category instance.
+The private threads category instance.
 
 
 ### Return value
@@ -69,7 +69,7 @@ The request object.
 
 #### `category: Category`
 
-A private threads category instance.
+The private threads category instance.
 
 
 ### Return value

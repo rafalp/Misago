@@ -20,7 +20,7 @@ class GetPrivateThreadsPageThreadsHookAction(Protocol):
 
     ## `category: Category`
 
-    A private threads category instance.
+    The private threads category instance.
 
     ## `kwargs: dict`
 
@@ -59,7 +59,7 @@ class GetPrivateThreadsPageThreadsHookFilter(Protocol):
 
     ## `category: Category`
 
-    A private threads category instance.
+    The private threads category instance.
 
     ## `kwargs: dict`
 

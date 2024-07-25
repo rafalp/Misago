@@ -20,7 +20,7 @@ class GetPrivateThreadsPageQuerysetHookAction(Protocol):
 
     ## `category: Category`
 
-    A private threads category instance.
+    The private threads category instance.
 
     # Return value
 
@@ -49,7 +49,7 @@ class GetPrivateThreadsPageQuerysetHookFilter(Protocol):
 
     ## `category: Category`
 
-    A private threads category instance.
+    The private threads category instance.
 
     # Return value
 
