@@ -943,10 +943,7 @@ class CategoryThreadsListView(ListView):
         self, request: HttpRequest, category: Category
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
-        if not (
-            request.user_permissions.is_global_moderator
-            or request.user_permissions.categories_moderator
-        ):
+        if not self.show_moderation_actions_in_category(request, category):
             return actions
 
         actions += [
@@ -956,6 +953,20 @@ class CategoryThreadsListView(ListView):
         ]
 
         return actions
+
+    def show_moderation_actions_in_category(
+        self, request: HttpRequest, category: Category
+    ) -> bool:
+        if request.user_permissions.is_global_moderator:
+            return True
+
+        categories_ids = set(
+            c["id"] for c in request.categories.get_category_descendants(category.id)
+        )
+
+        return bool(
+            request.user_permissions.categories_moderator.intersection(categories_ids)
+        )
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)
