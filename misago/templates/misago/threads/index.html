@@ -25,7 +25,7 @@
     {% pluginoutlet THREADS_LIST_START %}
 
     {% if subcategories and subcategories.template_name %}
-      {% component subcategories %}
+      {% includecomponent subcategories %}
     {% endif %}
     
     {% pluginoutlet THREADS_LIST_MIDDLE %}

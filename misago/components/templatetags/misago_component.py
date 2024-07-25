@@ -6,7 +6,7 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def component(context, data):
+def includecomponent(context, data):
     component_context = context.flatten()
     component_context.update(data)
     template = get_template(data["template_name"])

@@ -85,7 +85,7 @@
     {% pluginoutlet CATEGORIES_LIST_START %}
 
     {% if categories_list.categories %}
-      {% component categories_list %}
+      {% includecomponent categories_list %}
     {% else %}
       {% include "misago/categories/blankslate.html" %}
     {% endif %}
