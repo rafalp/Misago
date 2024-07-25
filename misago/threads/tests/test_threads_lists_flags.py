@@ -50,7 +50,7 @@ def test_category_threads_list_doesnt_show_users_ghost_thread_ghost_pinned_flag(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_shows_moderator_thread_ghost_pinned_flag(
+def test_site_threads_list_shows_moderators_thread_ghost_pinned_flag(
     default_category, moderator_client
 ):
     thread = post_thread(default_category, title="Pinned Thread", is_pinned=True)
@@ -61,7 +61,7 @@ def test_site_threads_list_shows_moderator_thread_ghost_pinned_flag(
     assert_contains(response, "thread-flag-pinned-locally-elsewhere")
 
 
-def test_category_threads_list_shows_moderator_thread_ghost_pinned_flag(
+def test_category_threads_list_shows_moderators_thread_ghost_pinned_flag(
     default_category, child_category, moderator_client
 ):
     thread = post_thread(child_category, title="Pinned Thread", is_pinned=True)
@@ -107,7 +107,7 @@ def test_category_threads_list_shows_thread_globally_pinned_flag(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
+def test_site_threads_list_shows_moderators_thread_has_unapproved_posts_flag(
     default_category, moderator_client
 ):
     thread = post_thread(default_category, title="Thread With Unapproved Posts")
@@ -120,7 +120,7 @@ def test_site_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
     assert_contains(response, "thread-flag-unapproved")
 
 
-def test_category_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
+def test_category_threads_list_shows_moderators_thread_has_unapproved_posts_flag(
     default_category, moderator_client
 ):
     thread = post_thread(default_category, title="Thread With Unapproved Posts")
@@ -134,7 +134,7 @@ def test_category_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_shows_moderator_thread_is_unapproved_flag(
+def test_site_threads_list_shows_moderators_thread_is_unapproved_flag(
     default_category, moderator_client
 ):
     thread = post_thread(
@@ -147,7 +147,7 @@ def test_site_threads_list_shows_moderator_thread_is_unapproved_flag(
     assert_contains(response, "thread-flag-unapproved")
 
 
-def test_category_threads_list_shows_moderator_thread_is_unapproved_flag(
+def test_category_threads_list_shows_moderators_thread_is_unapproved_flag(
     default_category, moderator_client
 ):
     thread = post_thread(
@@ -161,7 +161,7 @@ def test_category_threads_list_shows_moderator_thread_is_unapproved_flag(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
+def test_site_threads_list_shows_moderators_thread_has_unapproved_posts_flag(
     default_category, moderator_client
 ):
     thread = post_thread(default_category, title="Thread With Unapproved Posts")
@@ -174,7 +174,7 @@ def test_site_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
     assert_contains(response, "thread-flag-unapproved")
 
 
-def test_category_threads_list_shows_moderator_thread_has_unapproved_posts_flag(
+def test_category_threads_list_shows_moderators_thread_has_unapproved_posts_flag(
     default_category, moderator_client
 ):
     thread = post_thread(default_category, title="Thread With Unapproved Posts")
