@@ -8,6 +8,13 @@ class PaginationError(Http404):
     pass
 
 
+class EmptyPageError(PaginationError):
+    last_cursor: int | None
+
+    def __init__(self, last_cursor: int | None):
+        self.last_cursor = last_cursor
+
+
 @dataclass
 class CursorPaginationResult:
     items: List[Any]
@@ -37,7 +44,6 @@ def paginate_queryset(
     queryset,
     per_page: int,
     order_by: str,
-    raise_404: bool = False,
 ) -> CursorPaginationResult:
     cursor = get_query_value(request, "cursor")
     queryset = queryset.order_by(order_by)
@@ -59,8 +65,9 @@ def paginate_queryset(
     next_cursor = None
     previous_cursor = None
 
-    if cursor and not items and raise_404:
-        raise Http404()
+    if cursor and not items:
+        last_cursor = get_last_cursor(queryset, per_page, order_by)
+        raise EmptyPageError(last_cursor)
 
     if len(items) > per_page:
         has_next = True
@@ -107,3 +114,23 @@ def get_query_value(request, name: str, default: int | None = None) -> int | Non
         raise PaginationError({name: "must be a positive integer"})
 
     return value
+
+
+def get_last_cursor(queryset, per_page: int, order_by: str) -> int | None:
+    if order_by[0] == "-":
+        col_name = reversed_order_by = order_by[1:]
+    else:
+        reversed_order_by = f"-{order_by}"
+        col_name = order_by
+
+    last_items = list(
+        queryset.select_related(None)
+        .prefetch_related(None)
+        .order_by(reversed_order_by)
+        .values_list(col_name, flat=True)[: per_page + 1]
+    )
+
+    if len(last_items) > per_page:
+        return last_items[-1]
+
+    return None

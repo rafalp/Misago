@@ -33,7 +33,12 @@ from ...moderation.threads import (
     OpenThreadsBulkModerationAction,
     ThreadsBulkModerationAction,
 )
-from ...pagination.cursor import CursorPaginationResult, paginate_queryset
+from ...pagination.cursor import (
+    CursorPaginationResult,
+    EmptyPageError,
+    paginate_queryset,
+)
+from ...pagination.redirect import redirect_to_last_page
 from ...permissions.categories import check_browse_category_permission
 from ...permissions.private_threads import (
     check_private_threads_permission,
@@ -88,6 +93,17 @@ class ListView(View):
     moderation_modal_template_name: str
     threads_component_template_name = "misago/threads_list/index.html"
     new_threads_template_name = "misago/threads/poll_new.html"
+
+    def dispatch(
+        self,
+        request: HttpRequest,
+        *args: Any,
+        **kwargs: Any,
+    ) -> HttpResponse:
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except EmptyPageError as exc:
+            return redirect_to_last_page(request, exc)
 
     def get(self, request: HttpRequest, **kwargs):
         if (
@@ -534,7 +550,6 @@ class ThreadsListView(ListView):
             permissions_filter.filter(queryset),
             request.settings.threads_per_page,
             order_by="-last_post_id",
-            raise_404=True,
         )
 
     def get_pinned_threads(
@@ -928,7 +943,6 @@ class CategoryThreadsListView(ListView):
             permissions_filter.filter(queryset),
             request.settings.threads_per_page,
             order_by="-last_post_id",
-            raise_404=True,
         )
 
     def get_pinned_threads(
@@ -1189,7 +1203,6 @@ class PrivateThreadsListView(ListView):
             threads_queryset,
             request.settings.threads_per_page,
             order_by="-last_post_id",
-            raise_404=True,
         )
 
     def get_pagination_url(self, kwargs: dict) -> str:
