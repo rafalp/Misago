@@ -12,14 +12,14 @@
   {% if thread.weight == 1 and category and thread.category_id == category.id %}
     <li
       class="thread-flag-pinned-locally"
-      title="{% trans 'Pinned in category' context 'thread flag' %}"
+      title="{% trans 'Pinned in a category' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
   {% elif thread.weight == 1 and for_moderator %}
     <li
       class="thread-flag-pinned-locally-elsewhere"
-      title="{% trans 'Pinned in category, but not on this list' context 'thread flag' %}"
+      title="{% trans 'Pinned in a category, but not on this list' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>

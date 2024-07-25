@@ -106,7 +106,7 @@ class ListView(View):
 
     def show_thread_flags(
         self,
-        moderation: bool,
+        for_moderator: bool,
         thread: Thread,
         category: Category | None = None,
     ) -> bool:
@@ -119,11 +119,11 @@ class ListView(View):
             return True
 
         if thread.weight == ThreadWeight.PINNED_IN_CATEGORY and (
-            (category and category.id == thread.category_id) or moderation
+            (category and category.id == thread.category_id) or for_moderator
         ):
             return True
 
-        if moderation and thread.has_unapproved_posts:
+        if for_moderator and thread.has_unapproved_posts:
             return True
 
         return False

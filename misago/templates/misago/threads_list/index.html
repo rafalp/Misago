@@ -54,7 +54,7 @@
           <div class="threads-list-item-bottom-left">
             {% if thread_data.show_flags %}
               <div class="threads-list-item-col-flags">
-                {% include "misago/thread_flags.html" with for_moderator=thread_data.moderate %}
+                {% include "misago/thread_flags.html" with for_moderator=thread_data.moderation %}
               </div>
             {% endif %}
             {% if thread_data.categories and categories_component == "labels" %}
