@@ -225,12 +225,21 @@ class ListView(View):
         selection: list[Thread] = []
         for thread_data in threads["items"]:
             thread = thread_data["thread"]
-            if thread.id in threads_ids and thread_data["moderation"]:
+            if thread.id in threads_ids:
+                if not thread_data["moderation"]:
+                    raise ValidationError(
+                        pgettext(
+                            "threads moderation error",
+                            'Can\'t moderate the "%(thread)s" thread',
+                        )
+                        % {"thread": thread.title},
+                    )
+
                 selection.append(thread)
 
         if not selection:
             raise ValidationError(
-                pgettext("threads moderation error", "No threads selected"),
+                pgettext("threads moderation error", "No valid threads selected"),
             )
 
         return selection
