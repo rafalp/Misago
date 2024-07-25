@@ -13,6 +13,7 @@ def test_site_threads_list_renders_thread_globally_pinned_flag(
 
     response = client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-globally")
 
 
@@ -23,6 +24,7 @@ def test_category_threads_list_renders_thread_globally_pinned_flag(
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-globally")
 
 
@@ -34,6 +36,7 @@ def test_site_threads_list_hides_thread_ghost_pinned_flag_from_users(
 
     response = user_client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned-locally")
 
 
@@ -44,6 +47,7 @@ def test_category_threads_list_hides_ghost_thread_ghost_pinned_flag_from_users(
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned-locally")
 
 
@@ -55,6 +59,7 @@ def test_site_threads_list_renders_moderator_thread_ghost_pinned_flag(
 
     response = moderator_client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally-elsewhere")
 
 
@@ -65,6 +70,7 @@ def test_category_threads_list_renders_moderator_thread_ghost_pinned_flag(
 
     response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally-elsewhere")
 
 
@@ -75,6 +81,7 @@ def test_category_threads_list_renders_thread_pinned_flag(
 
     response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally")
 
 
@@ -86,6 +93,7 @@ def test_site_threads_list_doesnt_render_thread_pinned_flag_for_unpinned_thread(
 
     response = client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned")
 
 
@@ -96,4 +104,5 @@ def test_category_threads_list_renders_thread_globally_pinned_flag(
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned")
