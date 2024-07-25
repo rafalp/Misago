@@ -1,6 +1,6 @@
 class AjaxLoader {
   constructor() {
-    this.element = document.getElementById("misago-ajax-loader");
+    this.element = document.getElementById("misago-ajax-loader")
     this.requests = 0
     this.timeout = null
   }
@@ -28,7 +28,7 @@ class AjaxLoader {
     } else {
       this.element.classList.remove("busy")
       this.element.classList.add("complete")
-  
+
       this.timeout = setTimeout(() => {
         this.element.classList.remove("complete")
       }, 1500)

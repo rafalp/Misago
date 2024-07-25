@@ -1,8 +1,8 @@
 {% load i18n %}
 {% if threads.moderation_actions %}
   <div class="fixed-moderation">
-    <div class="container" style="display: flex; flex-direction: row; justify-content: end;">
-      <div class="dropup" style="pointer-events: auto;">
+    <div class="container">
+      <div class="dropup">
         <button
           class="btn btn-moderation dropdown-toggle"
           type="button"
@@ -13,6 +13,16 @@
         >
         </button>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="threads-moderation-menu">
+          <li>
+            <button
+              class="btn btn-link"
+              type="button"
+              moderation-action="remove-selection"
+            >
+              {% trans "Remove selection" context "moderation menu" %}
+            </button>
+          </li>
+          <li role="separator" class="divider"></li>
           {% for action in threads.moderation_actions %}
             <li>
               <button

@@ -16,16 +16,20 @@ class BulkModeration {
   }
 
   registerActions = () => {
-    this.actions.forEach(element => {
-      element.addEventListener("click", this.onAction)
-    });
+    this.actions.forEach((element) => {
+      if (element.getAttribute("moderation-action") === "remove-selection") {
+        element.addEventListener("click", this.onRemoveSelection)
+      } else {
+        element.addEventListener("click", this.onAction)
+      }
+    })
   }
 
   onAction = (event) => {
     const form = document.querySelector(this.form)
-    const data = {};
+    const data = {}
 
-    (new FormData(form)).forEach((value, key) => {
+    new FormData(form).forEach((value, key) => {
       if (typeof data[key] === "undefined") {
         data[key] = []
       }
@@ -36,33 +40,34 @@ class BulkModeration {
     data.moderation = target.getAttribute("moderation-action")
 
     if (target.getAttribute("moderation-multistage") === "true") {
-      htmx.ajax(
-        "POST",
-        document.location.href,
-        {
+      htmx
+        .ajax("POST", document.location.href, {
           target: this.modal,
           swap: "innerHTML",
           values: data,
-        }
-      ).then(() => {
-        $(this.modal).modal("show")
-      })
+        })
+        .then(() => {
+          $(this.modal).modal("show")
+        })
     } else {
-      htmx.ajax(
-        "POST",
-        document.location.href,
-        {
-          target: "#misago-htmx-root",
-          swap: "outerHTML",
-          values: data,
-        }
-      )
+      htmx.ajax("POST", document.location.href, {
+        target: "#misago-htmx-root",
+        swap: "outerHTML",
+        values: data,
+      })
     }
+  }
+
+  onRemoveSelection = (event) => {
+    document.querySelectorAll(this.selection).forEach((element) => {
+      element.checked = false
+    })
+    this.update()
   }
 
   registerEvents = () => {
     document.body.addEventListener("click", ({ target }) => {
-      if(target.tagName === "INPUT" && target.type === "checkbox") {
+      if (target.tagName === "INPUT" && target.type === "checkbox") {
         this.update()
       }
     })
