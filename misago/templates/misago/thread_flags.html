@@ -9,10 +9,17 @@
       <span class="material-icon">bookmark</span>
     </li>
   {% endif %}
-  {% if thread.weight == 1 %}
+  {% if thread.weight == 1 and category and thread.category_id == category.id %}
     <li
       class="thread-flag-pinned-locally"
-      title="{% trans 'Pinned in category' context 'thread flag' %}"
+      title="{% trans 'Pinned in a category' context 'thread flag' %}"
+    >
+      <span class="material-icon">bookmark_outline</span>
+    </li>
+  {% elif thread.weight == 1 and for_moderator %}
+    <li
+      class="thread-flag-pinned-locally-elsewhere"
+      title="{% trans 'Pinned in a category, but not on this list' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
@@ -23,6 +30,21 @@
       title="{% trans 'Answered' context 'thread flag' %}"
     >
       <span class="material-icon">check_circle</span>
+    </li>
+  {% endif %}
+  {% if thread.is_unapproved %}
+    <li
+      class="thread-flag-unapproved"
+      title="{% trans 'Requires moderator approval' context 'thread flag' %}"
+    >
+      <span class="material-icon">visibility</span>
+    </li>
+  {% elif thread.has_unapproved_posts and for_moderator %}
+    <li
+      class="thread-flag-unapproved"
+      title="{% trans 'Replies require moderator approval' context 'thread flag' %}"
+    >
+      <span class="material-icon">view_list</span>
     </li>
   {% endif %}
   {% if thread.has_poll %}

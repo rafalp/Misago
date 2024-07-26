@@ -25,7 +25,17 @@
   <fieldset>
     <legend>{% trans "Threads lists" context "admin threads settings form" %}</legend>
     
+    {% form_row form.threads_list_item_categories_component %}
     {% form_row form.threads_per_page %}
+    {% form_row form.threads_lists_polling %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Main threads page" context "admin threads settings form" %}</legend>
+
+    {% form_row form.threads_list_categories_component %}
 
   </fieldset>
 </div>

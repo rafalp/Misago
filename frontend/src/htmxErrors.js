@@ -35,7 +35,10 @@ function handleSendError(event) {
 
 function handleTimeoutError(event) {
   if (isEventVisible(event)) {
-    const message = pgettext("htmx response error", "Site took too long to reply")
+    const message = pgettext(
+      "htmx response error",
+      "Site took too long to reply"
+    )
     error(message)
   }
 }
@@ -58,3 +61,5 @@ export function setupHtmxErrors() {
   document.addEventListener("htmx:sendError", handleSendError)
   document.addEventListener("htmx:timeout", handleTimeoutError)
 }
+
+setupHtmxErrors()

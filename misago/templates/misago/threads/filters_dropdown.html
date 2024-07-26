@@ -1,0 +1,63 @@
+{% load i18n %}
+<div class="dropdown threads-filter-picker d-js-block">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle btn-block"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    {% if active_filter %}
+      {{ active_filter.name }}
+    {% else %}
+      {% trans "Filter threads" context "threads list filter" %}
+    {% endif %}
+  </button>
+  <ul class="dropdown-menu stick-to-bottom">
+    {% if active_filter %}
+      <li>
+        <a href="{{ threads.clear_filters_url }}">
+          {% trans "Clear filters" context "threads list filter" %}
+        </a>
+      </li>
+    {% endif %}
+    {% for filter in filters %}
+      <li>
+        <a href="{{ filter.url }}">
+          {{ filter.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<noscript>
+  <div class="dropdown noscript-collapsible threads-filter-collapsible hidden-sm hidden-md hidden-lg">
+    <label
+      class="btn btn-default dropdown-toggle"
+      for="threads-filters-collapsible"
+    >
+      {% if threads.active_filter %}
+        {{ threads.active_filter.name }}
+      {% else %}
+        {% trans "Filter threads" context "threads list filter" %}
+      {% endif %}
+    </label>
+    <input id="threads-filters-collapsible" type="checkbox" />
+    <ul class="dropdown-menu w-100-xs noscript-collapsible-items">
+      {% if active_filter %}
+        <li>
+          <a href="{{ threads.clear_filters_url }}">
+            {% trans "Clear filters" context "threads list filter" %}
+          </a>
+        </li>
+      {% endif %}
+      {% for filter in filters %}
+        <li>
+          <a href="{{ filter.url }}">
+            {{ filter.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</noscript>

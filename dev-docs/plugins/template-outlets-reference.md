@@ -33,6 +33,66 @@ On the categories page, under the list.
 On the categories page, above the list.
 
 
+## `CATEGORY_THREADS_LIST_END`
+
+On the category threads page, under the list.
+
+
+## `CATEGORY_THREADS_LIST_MIDDLE`
+
+On the category threads page, between the subcategories and the list.
+
+
+## `CATEGORY_THREADS_LIST_START`
+
+On the category threads page, above the list.
+
+
+## `PRIVATE_THREADS_LIST_END`
+
+On the private threads page, under the list.
+
+
+## `PRIVATE_THREADS_LIST_START`
+
+On the private threads page, above the list.
+
+
 ## `TEST`
 
 Used in some tests.
+
+
+## `THREADS_LIST_END`
+
+On the threads page, under the list.
+
+
+## `THREADS_LIST_MIDDLE`
+
+On the threads page, between the subcategories and the list.
+
+
+## `THREADS_LIST_START`
+
+On the threads page, above the list.
+
+
+## `THREADS_LIST_TOOLBAR_AFTER_SPACER`
+
+On threads lists pages, after the toolbar's spacer.
+
+
+## `THREADS_LIST_TOOLBAR_BEFORE_SPACER`
+
+On threads lists pages, before the toolbar's spacer.
+
+
+## `THREADS_LIST_TOOLBAR_END`
+
+On threads lists pages, at the end of the toolbar.
+
+
+## `THREADS_LIST_TOOLBAR_START`
+
+On threads lists pages, at the start of the toolbar.

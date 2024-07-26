@@ -40,3 +40,11 @@
 .card-admin-form .form-fieldset .form-group:last-child {
   @extend .mb-0;
 }
+
+// Sticky footer
+.card-footer.sticky {
+  position: sticky;
+  bottom: 0;
+
+  background: $card-bg;
+}

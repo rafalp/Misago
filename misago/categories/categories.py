@@ -64,6 +64,8 @@ CATEGORY_FIELDS = (
     "short_name",
     "color",
     "css_class",
+    "delay_browse_check",
+    "show_started_only",
     "is_closed",
     "is_vanilla",
     "level",
@@ -87,7 +89,7 @@ def get_category_data(result: dict[str, Any]) -> dict[str, Any]:
 def _get_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
     category_url = reverse(
         "misago:category",
-        kwargs={"pk": result["id"], "slug": result["slug"]},
+        kwargs={"id": result["id"], "slug": result["slug"]},
     )
 
     return {
@@ -97,8 +99,11 @@ def _get_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
         "short_name": result["short_name"],
         "color": result["color"],
         "css_class": result["css_class"],
+        "delay_browse_check": result["delay_browse_check"],
+        "show_started_only": result["show_started_only"],
         "is_closed": result["is_closed"],
         "is_vanilla": result["is_vanilla"],
+        "level": result["level"] - 1,
         "lft": result["lft"],
         "rght": result["rght"],
         "url": category_url,

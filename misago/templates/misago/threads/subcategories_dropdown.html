@@ -1,0 +1,59 @@
+{% load i18n %}
+<div class="dropdown threads-subcategories-picker d-js-block">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle btn-block"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    {% if category %}
+      {% trans "Go to subcategory" context "threads list subcategories" %}
+    {% else %}
+      {% trans "Go to category" context "threads list subcategories" %}
+    {% endif %}
+  </button>
+  <ul class="dropdown-menu stick-to-bottom">
+    {% for subcategory in subcategories %}
+      <li>
+        <a
+          href="{{ subcategory.url }}"
+          class="dropdown-category{% if subcategory.color %} dropdown-category-color{% endif %}{% if subcategory.level %} dropdown-subcategory{% endif %}"
+          {% if subcategory.color %}style="--color: {{ subcategory.color }}"{% endif %}
+        >
+          <span class="material-icon">label</span>
+          {{ subcategory.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<noscript>
+  <div class="dropdown noscript-collapsible threads-subcategories-collapsible">
+    <label
+      class="btn btn-default dropdown-toggle"
+      for="threads-subcategories-collapsible"
+    >
+      {% if category %}
+        {% trans "Go to subcategory" context "threads list subcategories" %}
+      {% else %}
+        {% trans "Go to category" context "threads list subcategories" %}
+      {% endif %}
+    </label>
+    <input id="threads-subcategories-collapsible" type="checkbox" />
+    <ul class="dropdown-menu w-100-xs noscript-collapsible-items">
+      {% for subcategory in subcategories %}
+        <li>
+          <a
+            href="{{ subcategory.url }}"
+            class="dropdown-category{% if subcategory.color %} dropdown-category-color{% endif %}{% if subcategory.level %} dropdown-subcategory{% endif %}"
+            {% if subcategory.color %}style="--color: {{ subcategory.color }}"{% endif %}
+          >
+            <span class="material-icon">label</span>
+            {{ subcategory.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</noscript>

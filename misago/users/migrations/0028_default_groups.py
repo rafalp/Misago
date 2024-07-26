@@ -25,6 +25,7 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=0,
                 # Permissions
+                can_use_private_threads=True,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -39,6 +40,7 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=1,
                 # Permissions
+                can_use_private_threads=True,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -50,6 +52,7 @@ def create_default_groups(apps, schema_editor):
                 is_default=True,
                 ordering=2,
                 # Permissions
+                can_use_private_threads=True,
                 can_change_username=True,
                 username_changes_limit=5,
                 username_changes_expire=4,

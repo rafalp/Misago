@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, List
 
 from django.http import Http404
 
@@ -8,13 +8,35 @@ class PaginationError(Http404):
     pass
 
 
+class EmptyPageError(PaginationError):
+    last_cursor: int | None
+
+    def __init__(self, last_cursor: int | None):
+        self.last_cursor = last_cursor
+
+
 @dataclass
 class CursorPaginationResult:
     items: List[Any]
+    cursor: int | None
     has_next: bool
     has_previous: bool
-    first_cursor: Optional[Any]
-    last_cursor: Optional[Any]
+    next_cursor: Any | None
+    previous_cursor: Any | None
+
+    @property
+    def next_cursor_query(self) -> str:
+        if self.next_cursor:
+            return f"?cursor={self.next_cursor}"
+
+        return ""
+
+    @property
+    def previous_cursor_query(self) -> str:
+        if self.previous_cursor:
+            return f"?cursor={self.previous_cursor}"
+
+        return ""
 
 
 def paginate_queryset(
@@ -22,22 +44,61 @@ def paginate_queryset(
     queryset,
     per_page: int,
     order_by: str,
-    raise_404: bool = False,
 ) -> CursorPaginationResult:
-    after = get_query_value(request, "after")
-    before = get_query_value(request, "before")
-
-    if after and before:
-        raise PaginationError(
-            {"after": "'after' and 'before' can't be used at same time"}
-        )
-
+    cursor = get_query_value(request, "cursor")
     queryset = queryset.order_by(order_by)
+    order_desc = order_by[0] == "-"
+    col_name = order_by.lstrip("-")
 
-    if before:
-        return paginate_with_before(queryset, before, per_page, order_by, raise_404)
+    if cursor:
+        if order_desc:
+            filter_kwarg = {f"{col_name}__lt": cursor}
+        else:
+            filter_kwarg = {f"{col_name}__gt": cursor}
+        items_queryset = queryset.filter(**filter_kwarg)
+    else:
+        items_queryset = queryset
 
-    return paginate_with_after(queryset, after or 0, per_page, order_by, raise_404)
+    items = list(items_queryset[: per_page + 1])
+    has_next = False
+    has_previous = False
+    next_cursor = None
+    previous_cursor = None
+
+    if cursor and not items:
+        last_cursor = get_last_cursor(queryset, per_page, order_by)
+        raise EmptyPageError(last_cursor)
+
+    if len(items) > per_page:
+        has_next = True
+        items = items[:per_page]
+        next_cursor = getattr(items[-1], col_name)
+
+    if cursor and items:
+        first_cursor = getattr(items[0], col_name)
+        if order_desc:
+            filter_kwarg = {f"{col_name}__gt": first_cursor}
+        else:
+            filter_kwarg = {f"{col_name}__lt": first_cursor}
+        previous_items = list(
+            queryset.filter(**filter_kwarg)
+            .select_related(None)
+            .prefetch_related(None)
+            .order_by(col_name if order_desc else f"-{col_name}")
+            .values_list(col_name, flat=True)[: per_page + 1]
+        )
+        has_previous = bool(previous_items)
+        if len(previous_items) > per_page:
+            previous_cursor = previous_items[-1]
+
+    return CursorPaginationResult(
+        items=items,
+        cursor=cursor,
+        has_next=has_next,
+        has_previous=has_previous,
+        next_cursor=next_cursor,
+        previous_cursor=previous_cursor,
+    )
 
 
 def get_query_value(request, name: str, default: int | None = None) -> int | None:
@@ -55,114 +116,21 @@ def get_query_value(request, name: str, default: int | None = None) -> int | Non
     return value
 
 
-def paginate_with_after(
-    queryset,
-    after: int,
-    per_page: int,
-    order_by: str,
-    raise_404: bool,
-) -> CursorPaginationResult:
-    order_desc = order_by[0] == "-"
-    col_name = order_by.lstrip("-")
-
-    if after:
-        if order_desc:
-            filter_kwarg = {f"{col_name}__lt": after}
-        else:
-            filter_kwarg = {f"{col_name}__gt": after}
-        items_queryset = queryset.filter(**filter_kwarg)
+def get_last_cursor(queryset, per_page: int, order_by: str) -> int | None:
+    if order_by[0] == "-":
+        col_name = reversed_order_by = order_by[1:]
     else:
-        items_queryset = queryset
+        reversed_order_by = f"-{order_by}"
+        col_name = order_by
 
-    items = list(items_queryset[: per_page + 1])
-    has_next = False
-    has_previous = False
-
-    if after and not items and raise_404:
-        raise Http404()
-
-    if len(items) > per_page:
-        has_next = True
-        items = items[:per_page]
-
-    if items:
-        cursor = getattr(items[0], col_name)
-        if order_desc:
-            filter_kwarg = {f"{col_name}__gt": cursor}
-        else:
-            filter_kwarg = {f"{col_name}__lt": cursor}
-        has_previous = queryset.filter(**filter_kwarg).order_by(col_name).exists()
-
-    return create_pagination_result(
-        col_name,
-        items,
-        has_next,
-        has_previous,
+    last_items = list(
+        queryset.select_related(None)
+        .prefetch_related(None)
+        .order_by(reversed_order_by)
+        .values_list(col_name, flat=True)[: per_page + 1]
     )
 
+    if len(last_items) > per_page:
+        return last_items[-1]
 
-def paginate_with_before(
-    queryset,
-    before: int,
-    per_page: int,
-    order_by: str,
-    raise_404: bool,
-) -> CursorPaginationResult:
-    order_desc = order_by[0] == "-"
-    col_name = order_by.lstrip("-")
-
-    if order_desc:
-        filter_kwarg = {f"{col_name}__gt": before}
-    else:
-        filter_kwarg = {f"{col_name}__lt": before}
-    items_queryset = queryset.filter(**filter_kwarg).order_by(
-        col_name if order_desc else f"-{col_name}"
-    )
-
-    items = list(reversed(items_queryset[: per_page + 1]))
-    has_next = False
-    has_previous = False
-
-    if not items and raise_404:
-        raise Http404()
-
-    if len(items) > per_page:
-        items = items[1:]
-        has_previous = True
-
-    if items:
-        cursor = getattr(items[-1], col_name)
-        if order_desc:
-            filter_kwarg = {f"{col_name}__lt": cursor}
-        else:
-            filter_kwarg = {f"{col_name}__gt": cursor}
-        has_next = queryset.filter(**filter_kwarg).order_by(col_name).exists()
-
-    return create_pagination_result(
-        col_name,
-        items,
-        has_next,
-        has_previous,
-    )
-
-
-def create_pagination_result(
-    col_name: str,
-    items: List[Any],
-    has_next: bool,
-    has_previous: bool,
-) -> CursorPaginationResult:
-    if items:
-        first_cursor = getattr(items[0], col_name)
-        last_cursor = getattr(items[-1], col_name)
-    else:
-        first_cursor = None
-        last_cursor = None
-
-    return CursorPaginationResult(
-        items=items,
-        has_next=has_next,
-        has_previous=has_previous,
-        first_cursor=first_cursor,
-        last_cursor=last_cursor,
-    )
+    return None

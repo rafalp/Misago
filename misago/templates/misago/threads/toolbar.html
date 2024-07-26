@@ -1,0 +1,44 @@
+{% load i18n misago_plugins %}
+
+<div class="toolbar">
+  {% pluginoutlet THREADS_LIST_TOOLBAR_START %}
+  <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
+    <div class="toolbar-item">
+      {% include "misago/threads/paginator.html" with bottom=bottom %}
+    </div>
+  </div>
+  {% if subcategories and not subcategories.template_name and not bottom %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        {% include "misago/threads/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
+      </div>
+    </div>
+  {% endif %}
+  {% if threads.filters and not bottom %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
+      </div>
+    </div>
+  {% endif %}
+  {% pluginoutlet THREADS_LIST_TOOLBAR_BEFORE_SPACER %}
+  <div class="toolbar-spacer"></div>
+  {% pluginoutlet THREADS_LIST_TOOLBAR_AFTER_SPACER %}
+  {% if bottom and user.is_authenticated %}
+    <div class="toolbar-section flex-order-last-xs">
+      <div class="toolbar-item">
+        <button class="btn btn-default btn-block" disabled>
+          {% trans "Mark all as read" context "threads list" %}
+        </button>
+      </div>
+    </div>
+  {% endif %}
+  <div class="toolbar-section{% if not bottom %} flex-order-first-xs{% endif %}">
+    <div class="toolbar-item">
+      <button class="btn btn-primary btn-block" disabled>
+        {% trans "Start new thread" context "threads list" %}
+      </button>
+    </div>
+  </div>
+  {% pluginoutlet THREADS_LIST_TOOLBAR_END %}
+</div>

@@ -15,22 +15,27 @@ class CategoryTreeDeprecated(IntEnum):
 
 class CategoryChildrenComponent(StrEnum):
     FULL = "full"
-    PILLS = "pills"
     DROPDOWN = "dropdown"
+    DISABLED = "disabled"
 
     @classmethod
-    def get_choices(cls):
+    def get_category_choices(cls):
         return (
             (
                 cls.FULL,
                 pgettext_lazy("category children component choice", "Full panel"),
             ),
             (
-                cls.PILLS,
-                pgettext_lazy("category children component choice", "Pills"),
-            ),
-            (
                 cls.DROPDOWN,
                 pgettext_lazy("category children component choice", "Dropdown"),
             ),
         )
+
+    @classmethod
+    def get_threads_choices(cls):
+        return (
+            (
+                cls.DISABLED,
+                pgettext_lazy("category children component choice", "Disabled"),
+            ),
+        ) + cls.get_category_choices()

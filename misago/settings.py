@@ -3,6 +3,9 @@
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
+    "MISAGO_DEFAULT_OG_IMAGE",
+    "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
+    "MISAGO_DEFAULT_OG_IMAGE_HEIGHT",
     "MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES",
     "MISAGO_FORUM_ADDRESS_HISTORY",
     "MISAGO_MIDDLEWARE",
@@ -41,14 +44,17 @@ INSTALLED_APPS = [
     "misago.cache",
     "misago.categories",
     "misago.core",
+    "misago.components",
     "misago.conf",
     "misago.forms",
+    "misago.forumindex",
     "misago.htmx",
     "misago.icons",
     "misago.legal",
     "misago.themes",
     "misago.markup",
     "misago.menus",
+    "misago.metatags",
     "misago.middleware",
     "misago.notifications",
     "misago.oauth2",
@@ -79,7 +85,9 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
     "misago.context_processors.categories.categories",
+    "misago.context_processors.forumindex.main_menu",
     "misago.context_processors.htmx.is_request_htmx",
+    "misago.context_processors.metatags.default_metatags",
     "misago.context_processors.permissions.user_permissions",
     "misago.acl.context_processors.user_acl",
     "misago.conf.context_processors.conf",
@@ -130,12 +138,16 @@ MISAGO_MIDDLEWARE = [
     "misago.threads.middleware.UnreadThreadsCountMiddleware",
 ]
 
+MISAGO_DEFAULT_OG_IMAGE = "misago/img/og-image.jpg"
+MISAGO_DEFAULT_OG_IMAGE_WIDTH = 1200
+MISAGO_DEFAULT_OG_IMAGE_HEIGHT = 630
+
+MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES = 48  # Hours
+
+MISAGO_FORUM_ADDRESS_HISTORY = []
+
 MISAGO_NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
 
 MISAGO_PARSER_MAX_ATTACHMENTS = 30
 MISAGO_PARSER_MAX_POSTS = 20
 MISAGO_PARSER_MAX_USERS = 25
-
-MISAGO_FORUM_ADDRESS_HISTORY = []
-
-MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES = 48  # Hours

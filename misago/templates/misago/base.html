@@ -8,32 +8,15 @@
     <title>{% spaceless %}{% block title %}{{ settings.forum_name }}{% endblock %}{% endspaceless %}</title>
     <meta name="description" content="{% spaceless %}{% block meta-description %}{% endblock %}{% endspaceless %}">
     {% spaceless %}
-      {% block meta-extra %}{% endblock meta-extra %}
-      {% block og-tags %}
-        <meta property="og:site_name" content="{% spaceless %}{% block og-site-name %}{{ settings.forum_name }}{% endblock og-site-name %}{% endspaceless %}" />
-        <meta name="twitter:card" content="summary" />
-        <meta property="og:title" content="{% spaceless %}{% block og-title %}{% endblock og-title %}{% endspaceless %}" />
-        <meta name="twitter:title" content="{% spaceless %}{% block twitter-title %}{% endblock twitter-title %}{% endspaceless %}" />
-        <meta property="og:description" content="{% spaceless %}{% block og-description %}{{ settings.forum_index_meta_description|default:'' }}{% endblock og-description %}{% endspaceless %}" />
-        <meta name="twitter:description" content="{% spaceless %}{% block twitter-description %}{{ settings.forum_index_meta_description|default:'' }}{% endblock twitter-description %}{% endspaceless %}" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="{% spaceless %}{% block og-url %}{{ settings.forum_address }}{% endblock og-url %}{% endspaceless %}" />
-        <meta name="twitter:url" content="{% spaceless %}{% block twitter-url %}{{ settings.forum_address }}{% endblock twitter-url %}{% endspaceless %}" />
-        {% block og-image %}
-          {% if og_image %}
-            <meta name="twitter:image" content="{% absoluteurl og_image.url %}" />
-            <meta property="og:image" content="{% absoluteurl og_image.url %}" />
-            <meta property="og:image:width" content="{{ og_image.width }}" />
-            <meta property="og:image:height" content="{{ og_image.height }}" />
-          {% else %}
-            {% static "misago/img/og-image.jpg" as og_image_url %}
-            <meta name="twitter:image" content="{% absoluteurl og_image_url %}" />
-            <meta property="og:image" content="{% absoluteurl og_image_url %}" />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
-          {% endif %}
-        {% endblock og-image %}
-      {% endblock og-tags %}
+      {% if metatags %}
+        {% for metatag in metatags.values %}
+          {{ metatag.as_html|safe }}
+        {% endfor %}
+      {% elif default_metatags %}
+        {% for metatag in default_metatags.values %}
+          {{ metatag.as_html|safe }}
+        {% endfor %}
+      {% endif %}
       {% if theme.include_defaults %}
         <link href="{% static 'misago/css/misago.css' %}" rel="stylesheet">
       {% endif %}
@@ -60,6 +43,9 @@
       {% else %}
         <link rel="shortcut icon" href="{% static 'misago/favicon.ico' %}" />
       {% endif %}
+      {% if settings.forum_address and canonical_link %}
+        <link rel="canonical" href="{{ settings.forum_address }}{{ canonical_link }}" />
+      {% endif %}
     {% endspaceless %}
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ settings.forum_address }}"}</script>
     <script type="text/javascript">
@@ -68,6 +54,9 @@
     </script>
   </head>
   <body class="misago-{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}{% if misago_agreement %} agreement-overlay-visible{% endif %}">
+    <script type="text/javascript">
+      document.body.classList.add("misago-javascript")
+    </script>
     {% if settings.google_tracking_id %}
       {% include "misago/analytics.html" %}
     {% endif %}
@@ -76,7 +65,7 @@
     <div id="snackbar-mount"></div>
 
     <div id="misago-container" {% if misago_agreement %}aria-hidden="true"{% endif %}>
-      {% include "misago/ajax_indicator.html" %}
+      {% include "misago/ajax_loader.html" %}
       {% include "misago/jumbotron.html" %}
       {% include "misago/navbar.html" %}
       {% include "misago/messages.html" %}
@@ -104,7 +93,7 @@
     {% if misago_agreement %}
       {% include "misago/required_agreement.html" %}
     {% endif %}
-
+  
     <script src="{% url 'django-i18n' %}?l={{ LANGUAGE_CODE }}&v={{ I18N_VERSION_SIGNATURE }}"></script>
     <script src="{% static 'misago/js/vendor.js' %}"></script>
     <script src="{% static 'misago/js/misago.js' %}"></script>
@@ -112,6 +101,8 @@
     <script type="text/javascript">
       misago.init({{ frontend_context|as_json }});
     </script>
+    {% block modals %}{% endblock modals %}
+    {% block javascript %}{% endblock javascript %}
 
   </body>
 </html>

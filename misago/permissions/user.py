@@ -68,6 +68,7 @@ def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
 
 def _build_user_permissions_action(groups: list[Group]) -> dict:
     permissions = {
+        "can_use_private_threads": False,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -77,6 +78,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
     }
 
     for group in groups:
+        if_true(permissions, "can_use_private_threads", group.can_use_private_threads)
         if_true(permissions, "can_change_username", group.can_change_username)
         if_zero_or_greater(
             permissions, "username_changes_limit", group.username_changes_limit

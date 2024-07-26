@@ -5,19 +5,24 @@ import "bootstrap/js/dropdown"
 import "at-js"
 import "cropit"
 import "jquery-caret"
-import "htmx.org"
+import htmx from "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
-import "./ajaxIndicator"
-import { registerValidators } from "./formValidators"
-import { setupHtmxErrors } from "./htmxErrors"
-import { startLiveTimestamps, updateLiveTimestamps } from "./liveTimestamps"
+import AjaxLoader, { useLoader } from "./AjaxLoader"
+import BulkModeration from "./BulkModeration"
+import "./formValidators"
+import "./htmxErrors"
+import "./liveTimestamps"
 import * as snackbars from "./snackbars"
+
+const loader = new AjaxLoader()
 
 export class Misago {
   constructor() {
     this._initializers = []
     this._context = {}
+
+    this.loader = loader
   }
 
   addInitializer(initializer) {
@@ -82,10 +87,14 @@ export class Misago {
   snackbarError(message) {
     snackbars.error(message)
   }
+
+  bulkModeration(options) {
+    return new BulkModeration(options)
+  }
 }
 
-// create  singleton
-var misago = new Misago()
+// create the singleton
+const misago = new Misago()
 
 // expose it globally
 window.misago = misago
@@ -93,11 +102,20 @@ window.misago = misago
 // and export it for tests and stuff
 export default misago
 
-setupHtmxErrors()
-startLiveTimestamps()
-registerValidators()
+// Register ajax loader events
+document.addEventListener("htmx:beforeRequest", ({ target }) => {
+  if (useLoader(target)) {
+    loader.show()
+  }
+})
 
-document.addEventListener("htmx:afterSwap", ({ detail }) => {
-  registerValidators(detail.elt)
-  updateLiveTimestamps(detail.elt)
+document.addEventListener("htmx:afterRequest", ({ target }) => {
+  if (useLoader(target)) {
+    loader.hide()
+  }
+})
+
+// Hide moderation modal after moderation action completes
+document.addEventListener("misago:afterModeration", () => {
+  $("#threads-moderation-modal").modal("hide")
 })

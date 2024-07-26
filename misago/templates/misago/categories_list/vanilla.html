@@ -1,0 +1,15 @@
+<ul class="list-group list-group-category list-group-vanilla-category {% if category.css_class %}list-group-category-has-flavor list-group-category-{{ category.css_class }}{% endif %}">
+  <li class="list-group-item list-group-category-vanilla">
+    <h4 class="list-group-item-heading">
+      <a href="{{ category.get_absolute_url }}" class="item-title">{{ category.name }}</a>
+    </h4>
+    {% if category.description %}
+      <div class="category-description">
+        {{ category.description|force_escape|urlize|linebreaks }}
+      </div>
+    {% endif %}
+  </li>
+  {% for child in category_data.children %}
+    {% include "misago/categories_list/category_row.html" with category=child.category category_data=child %}
+  {% endfor %}
+</ul>

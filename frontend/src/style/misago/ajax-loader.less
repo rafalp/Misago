@@ -1,0 +1,39 @@
+@keyframes misago-ajax-loader {
+  0% {
+    width: 0;
+  }
+  3% {
+    width: 50%;
+  }
+  50% {
+    width: 75%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+#misago-ajax-loader {
+  position: fixed;
+  width: 100%;
+  z-index: @zindex-ajax-loader;
+
+  div {
+    background-color: @ajax-loader-color;
+  }
+
+  &.busy div {
+    width: 0;
+    height: @ajax-loader-size;
+    animation-name: misago-ajax-loader;
+    animation-duration: 600s;
+  }
+
+  &.complete div {
+    width: 100;
+    height: @ajax-loader-size;
+    opacity: 0;
+    transition: width 1s;
+    transition: opacity 1s;
+  }
+}

@@ -6,9 +6,11 @@ from pathlib import Path
 from textwrap import dedent, indent
 
 HOOKS_MODULES = (
+    "misago.categories.hooks",
     "misago.oauth2.hooks",
     "misago.parser.hooks",
     "misago.permissions.hooks",
+    "misago.threads.hooks",
     "misago.users.hooks",
 )
 PLUGIN_MANIFEST = "misago.plugins.manifest.MisagoPlugin"

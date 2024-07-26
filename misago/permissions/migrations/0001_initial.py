@@ -66,6 +66,7 @@ class Migration(migrations.Migration):
                         size=None,
                     ),
                 ),
+                ("private_threads", models.BooleanField(default=False)),
                 (
                     "group",
                     models.ForeignKey(

@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from ..users.enums import DefaultGroupId
-from .moderatordata import ModeratorData
+from .moderator import ModeratorPermissions
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -17,28 +17,25 @@ class CategoryGroupPermission(models.Model):
     permission = models.CharField(max_length=32)
 
 
-@dataclass(frozen=True)
-class ModeratorData:
-    is_global: bool
-    categories_ids: set[int]
-
-
 class ModeratorManager(models.Manager):
-    def get_moderator_data(self, user: "User") -> ModeratorData:
-        mod_is_global: bool = False
-        mod_categories: list[int] = []
+    def get_moderator_permissions(self, user: "User") -> ModeratorPermissions:
+        fin_is_global: bool = False
+        fin_categories: list[int] = []
+        fin_private_threads: bool = False
 
         queryset = Moderator.objects.filter(
             models.Q(group__in=user.groups_ids) | models.Q(user=user)
-        ).values_list("is_global", "categories")
+        ).values_list("is_global", "categories", "private_threads")
 
-        for is_global, categories in queryset:
-            mod_is_global = mod_is_global or is_global
-            mod_categories += categories
+        for is_global, categories, private_threads in queryset:
+            fin_is_global = fin_is_global or is_global
+            fin_categories += categories
+            fin_private_threads = fin_private_threads or private_threads
 
-        return ModeratorData(
-            is_global=mod_is_global,
-            categories_ids=set(mod_categories),
+        return ModeratorPermissions(
+            is_global=fin_is_global,
+            categories_ids=set(fin_categories),
+            private_threads=fin_private_threads,
         )
 
 
@@ -49,8 +46,8 @@ class Moderator(models.Model):
     )
 
     is_global = models.BooleanField(default=True)
-
     categories = ArrayField(models.PositiveIntegerField(), default=list)
+    private_threads = models.BooleanField(default=False)
 
     objects = ModeratorManager()
 

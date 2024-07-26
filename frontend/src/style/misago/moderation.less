@@ -1,0 +1,55 @@
+@keyframes fixed-moderation-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fixed-moderation {
+  display: none;
+  width: 100%;
+
+  position: fixed;
+  bottom: @line-height-computed;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  &.visible {
+    display: block;
+
+    opacity: 1;
+
+    animation-name: fixed-moderation-fade-in;
+    animation-duration: 300ms;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    pointer-events: none;
+  }
+
+  .dropup {
+    pointer-events: all;
+  }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .fixed-moderation .container {
+    display: block;
+  }
+
+  .fixed-moderation .dropdown-menu {
+    width: 100%;
+  }
+
+  .btn-moderation {
+    display: block;
+    width: 100%;
+  }
+}

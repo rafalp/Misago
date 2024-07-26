@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 from django.core.exceptions import PermissionDenied
 from django.http import (
     Http404,
@@ -61,6 +63,9 @@ def handle_outdated_slug_exception(request, exception):
     url_kwargs["slug"] = model.slug
 
     new_url = reverse(view_name, kwargs=url_kwargs)
+    if request.GET:
+        new_url += "?" + urlencode(request.GET)
+
     return HttpResponsePermanentRedirect(new_url)
 
 

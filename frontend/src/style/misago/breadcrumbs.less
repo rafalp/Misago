@@ -13,10 +13,12 @@
   margin-bottom: @line-height-computed / 2;
   padding: 0;
   list-style: none;
+  white-space: nowrap;
 }
 
 .breadcrumbs-item a {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   text-decoration: none;
 
@@ -41,4 +43,30 @@
 
 .breadcrumbs-item .material-icon {
   margin-right: 4px;
+}
+
+// Fix breadcrumbs displayed in toolbar
+.toolbar-item .breadcrumbs {
+  width: 100%;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.toolbar-item .breadcrumbs-item {
+  margin-bottom: 0;
+}
+
+// Make breadcrumbs responsive
+.breadcrumbs-compact {
+  display: none;
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .breadcrumbs {
+    display: none;
+  }
+
+  .breadcrumbs-compact {
+    display: block;
+  }
 }

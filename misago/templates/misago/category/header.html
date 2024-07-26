@@ -1,0 +1,29 @@
+{% load i18n %}
+
+
+{% block content %}
+<div class="container page-header-container">
+  <div class="page-header page-header-category">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-category">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              {% include "misago/category/breadcrumbs.html" %}
+              <h1>{{ category.name }}</h1>
+            </div>
+          </div>
+        </div>
+        {% if category.description %}
+          <div class="page-header-details">
+            <div class="page-header-message">
+              {{ category.description|force_escape|urlize|linebreaks|safe }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

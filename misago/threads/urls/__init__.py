@@ -13,84 +13,44 @@ from ..views.goto import (
     PrivateThreadGotoLastView,
     PrivateThreadGotoNewView,
 )
-from ..views.list import ForumThreadsList, CategoryThreadsList, PrivateThreadsList
+from ..views.list import category_threads, private_threads, threads
 from ..views.subscribed import redirect_subscribed_to_watched
 from ..views.thread import ThreadView, PrivateThreadView
 
-LISTS_TYPES = ("all", "my", "new", "unread", "watched", "unapproved")
 
-
-def threads_list_patterns(prefix, view, patterns):
-    urls = []
-    for i, pattern in enumerate(patterns):
-        if i > 0:
-            url_name = "%s-%s" % (prefix, LISTS_TYPES[i])
-        else:
-            url_name = prefix
-
-        urls.append(
-            path(
-                pattern,
-                view.as_view(),
-                name=url_name,
-                kwargs={"list_type": LISTS_TYPES[i]},
-            )
-        )
-
-    return urls
-
-
-if settings.MISAGO_THREADS_ON_INDEX:
-    urlpatterns = threads_list_patterns(
-        "threads",
-        ForumThreadsList,
-        (
-            "",
-            "my/",
-            "new/",
-            "unread/",
-            "watched/",
-            "unapproved/",
-        ),
-    )
-else:
-    urlpatterns = threads_list_patterns(
-        "threads",
-        ForumThreadsList,
-        (
-            "threads/",
-            "threads/my/",
-            "threads/new/",
-            "threads/unread/",
-            "threads/watched/",
-            "threads/unapproved/",
-        ),
-    )
-
-urlpatterns += threads_list_patterns(
-    "category",
-    CategoryThreadsList,
-    (
-        "c/<slug:slug>/<int:pk>/",
-        "c/<slug:slug>/<int:pk>/my/",
-        "c/<slug:slug>/<int:pk>/new/",
-        "c/<slug:slug>/<int:pk>/unread/",
-        "c/<slug:slug>/<int:pk>/watched/",
-        "c/<slug:slug>/<int:pk>/unapproved/",
+urlpatterns = [
+    path(
+        "threads/",
+        threads,
+        name="threads",
+        kwargs={"is_index": False},
     ),
-)
-
-urlpatterns += threads_list_patterns(
-    "private-threads",
-    PrivateThreadsList,
-    (
-        "private-threads/",
-        "private-threads/my/",
-        "private-threads/new/",
-        "private-threads/unread/",
-        "private-threads/watched/",
+    path(
+        "threads/<slug:filter>/",
+        threads,
+        name="threads",
     ),
-)
+    path(
+        "c/<slug:slug>/<int:id>/",
+        category_threads,
+        name="category",
+    ),
+    path(
+        "c/<slug:slug>/<int:id>/<slug:filter>/",
+        category_threads,
+        name="category",
+    ),
+    path(
+        "private/",
+        private_threads,
+        name="private-threads",
+    ),
+    path(
+        "private/<slug:filter>/",
+        private_threads,
+        name="private-threads",
+    ),
+]
 
 
 # Redirect from subscribed to watched

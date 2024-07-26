@@ -1,0 +1,9 @@
+{% for category_data in categories %}
+  {% if category_data.category.is_vanilla %}
+    {% if category_data.children %}
+      {% include "misago/categories_list/vanilla.html" with category=category_data.category category_data=category_data %}
+    {% endif %}
+  {% else %}
+    {% include "misago/categories_list/category.html" with category=category_data.category category_data=category_data %}
+  {% endif %}
+{% endfor %}

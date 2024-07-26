@@ -1,25 +1,25 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_absoluteurl misago_plugins misago_shorthands %}
+{% load i18n misago_absoluteurl misago_component misago_plugins misago_shorthands %}
 
 
 {% block title %}
-  {% if THREADS_ON_INDEX %}
-    {% trans "Categories" context "categories page" %} | {{ block.super }}
-  {% else %}
+  {% if is_index %}
     {{ settings.index_title|default:settings.forum_name }}
+  {% else %}
+    {% trans "Categories" context "categories page" %} | {{ block.super }}
   {% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-  {% if not THREADS_ON_INDEX and settings.index_meta_description %}
-    {{ settings.index_meta_description }}
-  {% else %}
+  {% if is_index  %}
     {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
     {% endblocktrans %}
+  {% elif settings.index_meta_description %}
+    {{ settings.index_meta_description }}
   {% endif %}
 {% endblock meta-description %}
 
@@ -74,15 +74,26 @@
 
 {% block content %}
 <div class="page page-categories{{ categories|iffalse:' page-message' }}">
-  {% include "misago/categories/header.html" %}
+  {% if is_index %}
+    {% include "misago/index_header.html" %}
+  {% else %}
+    {% include "misago/categories/header.html" %}
+  {% endif %}
+
   <div class="container page-container">
+
     {% pluginoutlet CATEGORIES_LIST_START %}
-    {% if categories_list %}
-      {% include "misago/categories/categories_list_body.html" with items=categories_list %}
+
+    {% if categories_list.categories %}
+      {% includecomponent categories_list %}
     {% else %}
-      {% include "misago/categories/empty_message.html" %}
+      {% include "misago/categories/blankslate.html" %}
     {% endif %}
+
     {% pluginoutlet CATEGORIES_LIST_END %}
+
+    {% include "misago/gototop_toolbar.html" %}
+
   </div>
 </div>
 {% endblock content %}

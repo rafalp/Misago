@@ -1,0 +1,7 @@
+{% load i18n misago_shorthands %}
+<ul class="list-group list-group-category {% if category.css_class %}list-group-category-has-flavor list-group-category-{{ category.css_class }}{% endif %}">
+  {% include "misago/categories_list/category_row.html" %}
+  {% for child in category_data.children %}
+    {% include "misago/categories_list/category_row.html" with category=child.category category_data=child %}
+  {% endfor %}
+</ul>

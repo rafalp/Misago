@@ -1,0 +1,28 @@
+{% load i18n %}
+
+{% if threads.filters %}
+<noscript>
+  <div class="threads-filters-noscript">
+
+    <div class="nav-container hidden-xs">
+      <ul class="nav nav-pills" role="menu" itemscope="" itemtype="http://schema.org/SiteNavigationElement">
+        {% if threads.active_filter %}
+          <li>
+            <a href="{{ threads.clear_filters_url }}">
+              {% trans "Clear filters" context "threads list filter" %}
+            </a>
+          </li>
+        {% endif %}
+        {% for filter in threads.filters %}
+          <li{% if filter.active %} class="active"{% endif %}>
+            <a href="{{ filter.url }}">
+              {{ filter.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</noscript>
+{% endif %}

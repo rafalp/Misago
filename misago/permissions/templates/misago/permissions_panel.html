@@ -72,3 +72,30 @@
     {% endfor %}
   </tbody>
 </table>
+<h4>
+  {% trans "Moderator Permissions" context "debug toolbar user permissions" %}
+</h4>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 180px;">{% trans "Permission" context "debug toolbar user permissions" %}</th>
+      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>is_global_moderator</td>
+      <td>{{ misago_permissions.is_global_moderator }}</td>
+    </tr>
+    <tr>
+      <td>categories</td>
+      <td>{{ misago_permissions.categories_moderator }}</td>
+    </tr>
+    {% with misago_permissions.moderator as moderator %}
+      <tr>
+        <td>private_threads</td>
+        <td>{{ moderator.private_threads }}</td>
+      </tr>
+    {% endwith %}
+  </tbody>
+</table>

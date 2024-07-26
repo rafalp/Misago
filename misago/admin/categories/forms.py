@@ -100,7 +100,7 @@ class CategoryForm(forms.ModelForm):
             'Enabling this option will allow users with permission to "see" this category to access it\'s threads list page. They will receive an error if they try to see threads replies.',
         ),
     )
-    limit_threads_visibility = YesNoSwitch(
+    show_started_only = YesNoSwitch(
         label=pgettext_lazy(
             "admin category form", "Show users only threads that they started"
         ),
@@ -143,7 +143,9 @@ class CategoryForm(forms.ModelForm):
             "admin category form",
             "Select UI component to use for displaying category's subcategories on its page.",
         ),
-        widget=forms.RadioSelect(choices=CategoryChildrenComponent.get_choices()),
+        widget=forms.RadioSelect(
+            choices=CategoryChildrenComponent.get_category_choices(),
+        ),
     )
     require_threads_approval = YesNoSwitch(
         label=pgettext_lazy("admin category form", "Threads"),
@@ -196,7 +198,7 @@ class CategoryForm(forms.ModelForm):
             "css_class",
             "allow_polls",
             "delay_browse_check",
-            "limit_threads_visibility",
+            "show_started_only",
             "is_closed",
             "is_vanilla",
             "list_children_threads",
