@@ -28,6 +28,7 @@
             {% for error in field.errors %}
               <p class="help-block">{{ error }}</p>
             {% endfor %}
+            {% include "misago/account/settings/forgotten_password_help_block.html" %}
           </div>
         {% endwith %}
         {% with form.new_email as field %}
