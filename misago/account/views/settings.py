@@ -12,7 +12,8 @@ from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 
 from ...core.mail import build_mail
-from ...pagination.cursor import paginate_queryset
+from ...pagination.cursor import EmptyPageError, paginate_queryset
+from ...pagination.redirect import redirect_to_last_page
 from ...users.datadownloads import (
     request_user_data_download,
     user_has_data_download_request,
@@ -62,7 +63,10 @@ class AccountSettingsView(View):
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         raise_if_not_authenticated(request)
 
-        return super().dispatch(request, *args, **kwargs)
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except EmptyPageError as exception:
+            return redirect_to_last_page(request, exception)
 
     def get_template_context(
         self,

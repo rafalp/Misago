@@ -1,7 +1,10 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 
 from ...categories.models import Category
 from ...conf.test import override_dynamic_settings
+from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
@@ -499,3 +502,40 @@ def test_private_threads_list_filters_threads(
     )
     assert_contains(response, visible_thread.title)
     assert_not_contains(response, hidden_thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+@patch("misago.threads.views.list.paginate_queryset", side_effect=EmptyPageError(10))
+def test_site_threads_list_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, db, client
+):
+    response = client.get(reverse("misago:threads"))
+
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:threads") + "?cursor=10"
+
+    mock_pagination.assert_called_once()
+
+
+@patch("misago.threads.views.list.paginate_queryset", side_effect=EmptyPageError(10))
+def test_category_threads_list_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, default_category, client
+):
+    response = client.get(default_category.get_absolute_url())
+
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url() + "?cursor=10"
+
+    mock_pagination.assert_called_once()
+
+
+@patch("misago.threads.views.list.paginate_queryset", side_effect=EmptyPageError(10))
+def test_private_threads_list_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, user_client
+):
+    response = user_client.get(reverse("misago:private-threads"))
+
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:private-threads") + "?cursor=10"
+
+    mock_pagination.assert_called_once()

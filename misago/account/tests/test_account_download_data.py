@@ -1,6 +1,9 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
+from ...pagination.cursor import EmptyPageError
 from ...test import (
     assert_contains,
     assert_has_success_message,
@@ -126,3 +129,19 @@ def test_account_download_data_renders_expired_download_request(user, user_clien
     assert_contains(response, "Download your data")
     assert_contains(response, "Download expired")
     assert_not_contains(response, "You have no data downloads.")
+
+
+@patch(
+    "misago.account.views.settings.paginate_queryset", side_effect=EmptyPageError(10)
+)
+def test_account_download_data_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, user_client, user
+):
+    response = user_client.get(reverse("misago:account-download-data"))
+
+    assert response.status_code == 302
+    assert (
+        response["location"] == reverse("misago:account-download-data") + "?cursor=10"
+    )
+
+    mock_pagination.assert_called_once()

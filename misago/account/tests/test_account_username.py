@@ -1,6 +1,9 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
+from ...pagination.cursor import EmptyPageError
 from ...test import assert_contains, assert_has_success_message, assert_not_contains
 
 
@@ -156,3 +159,17 @@ def test_account_username_renders_history_item(user_client, user):
     assert_contains(response, orginal_username)
     assert_contains(response, "John")
     assert_not_contains(response, "Your account has no history of name changes.")
+
+
+@patch(
+    "misago.account.views.settings.paginate_queryset", side_effect=EmptyPageError(10)
+)
+def test_account_username_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, user_client, user
+):
+    response = user_client.get(reverse("misago:account-username"))
+
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:account-username") + "?cursor=10"
+
+    mock_pagination.assert_called_once()

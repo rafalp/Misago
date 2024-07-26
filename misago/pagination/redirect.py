@@ -11,11 +11,12 @@ def redirect_to_last_page(
 ) -> HttpResponseRedirect:
     last_page_url = request.path_info
 
-    if request.GET:
-        new_querystring = request.GET.dict()
+    new_querystring = request.GET.dict()
+    if empty_page_error.last_cursor:
+        new_querystring["cursor"] = empty_page_error.last_cursor
+    else:
         new_querystring.pop("cursor", None)
-        if empty_page_error.last_cursor:
-            new_querystring["cursor"] = empty_page_error.last_cursor
+    if new_querystring:
         last_page_url += "?" + urlencode(new_querystring)
 
     return redirect(last_page_url)
