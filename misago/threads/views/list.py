@@ -703,6 +703,9 @@ class CategoryThreadsListView(ListView):
             "pagination_url": self.get_pagination_url(category, kwargs),
         }
 
+        if category.is_vanilla and category.level == 1 and not context["subcategories"]:
+            raise Http404()
+
         if kwargs.get("filter"):
             context["pagination_url"] = reverse(
                 "misago:category",
@@ -760,16 +763,22 @@ class CategoryThreadsListView(ListView):
             if request.is_htmx:
                 return None
 
+            categories = get_subcategories_data(request, category)
+            if not categories:
+                return None
+
             return {
-                "categories": get_subcategories_data(request, category),
+                "categories": categories,
                 "template_name": "misago/category/subcategories_full.html",
             }
 
         if component == CategoryChildrenComponent.DROPDOWN:
+            categories = list(self.get_subcategories_dropdown_items(request, category))
+            if not categories:
+                return None
+
             return {
-                "categories": list(
-                    self.get_subcategories_dropdown_items(request, category)
-                ),
+                "categories": categories,
                 "template_name": None,
             }
 

@@ -539,3 +539,45 @@ def test_private_threads_list_redirects_to_last_page_for_invalid_cursor(
     assert response["location"] == reverse("misago:private-threads") + "?cursor=10"
 
     mock_pagination.assert_called_once()
+
+
+def test_category_threads_list_returns_404_for_top_level_vanilla_category_without_children(
+    default_category, client
+):
+    default_category.is_vanilla = True
+    default_category.save()
+
+    response = client.get(default_category.get_absolute_url())
+    assert response.status_code == 404
+
+
+def test_category_threads_list_returns_404_for_top_level_vanilla_category_with_invisible_children(
+    default_category, child_category, client
+):
+    default_category.is_vanilla = True
+    default_category.save()
+
+    CategoryGroupPermission.objects.filter(category=child_category).delete()
+
+    response = client.get(default_category.get_absolute_url())
+    assert response.status_code == 404
+
+
+def test_category_threads_list_renders_for_top_level_vanilla_category_with_children(
+    default_category, child_category, client
+):
+    default_category.is_vanilla = True
+    default_category.save()
+
+    response = client.get(default_category.get_absolute_url())
+    assert response.status_code == 200
+
+
+def test_category_threads_list_renders_for_nested_vanilla_category_without_children(
+    child_category, client
+):
+    child_category.is_vanilla = True
+    child_category.save()
+
+    response = client.get(child_category.get_absolute_url())
+    assert response.status_code == 200
