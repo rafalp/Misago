@@ -1,6 +1,6 @@
 import htmx from "htmx.org"
 
-import { formatRelative, formatRelativeShort, fullDateTime } from "./formats"
+import { dateRelative, dateRelativeShort, fullDateTime } from "./formats"
 
 const cache = {}
 
@@ -18,9 +18,9 @@ export function updateTimestamp(element) {
   const format = element.getAttribute("misago-timestamp-format")
 
   if (format == "short") {
-    element.textContent = formatRelativeShort(cache[timestamp])
+    element.textContent = dateRelativeShort(cache[timestamp])
   } else {
-    element.textContent = formatRelative(cache[timestamp])
+    element.textContent = dateRelative(cache[timestamp])
   }
 }
 
