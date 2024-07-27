@@ -9,6 +9,7 @@ django-debug-toolbar
 django-mptt
 django-simple-sso
 Faker
+freezegun
 html5lib
 markdown
 social-auth-app-django

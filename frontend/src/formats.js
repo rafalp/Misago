@@ -1,15 +1,15 @@
 export const locale = window.misago_locale || "en-us"
 
 export const momentAgo = pgettext("time ago", "moment ago")
-export const momentAgoNarrow = pgettext("time ago", "now")
+export const momentAgoShort = pgettext("time ago", "now")
 export const dayAt = pgettext("day at time", "%(day)s at %(time)s")
-export const soonAt = pgettext("day at time", "at %(time)s")
+export const soonAt = pgettext("day at time", "Today at %(time)s")
 export const tomorrowAt = pgettext("day at time", "Tomorrow at %(time)s")
 export const yesterdayAt = pgettext("day at time", "Yesterday at %(time)s")
 
-export const minuteShort = pgettext("short minutes", "%(time)sm")
-export const hourShort = pgettext("short hours", "%(time)sh")
-export const dayShort = pgettext("short days", "%(time)sd")
+export const minutesShort = pgettext("short minutes", "%(time)sm")
+export const hoursShort = pgettext("short hours", "%(time)sh")
+export const daysShort = pgettext("short days", "%(time)sd")
 export const thisYearShort = pgettext("short month", "%(day)s %(month)s")
 export const otherYearShort = pgettext("short month", "%(month)s %(year)s")
 
@@ -57,12 +57,12 @@ export function dateRelative(date) {
   }
 
   if (absDiff < 60 * 47) {
-    const minutes = Math.ceil(absDiff / 60) * sign
+    const minutes = Math.round(absDiff / 60) * sign
     return relativeNumeric.format(minutes, "minute")
   }
 
   if (absDiff < 3600 * 3) {
-    const hours = Math.ceil(absDiff / 3600) * sign
+    const hours = Math.round(absDiff / 3600) * sign
     return relativeNumeric.format(hours, "hour")
   }
 
@@ -125,22 +125,22 @@ export function dateRelativeShort(date) {
   const absDiff = Math.abs(Math.round((date - now) / 1000))
 
   if (absDiff < 60) {
-    return momentAgoNarrow
+    return momentAgoShort
   }
 
   if (absDiff < 60 * 55) {
-    const minutes = Math.ceil(absDiff / 60)
-    return minuteShort.replace("%(time)s", minutes)
+    const minutes = Math.round(absDiff / 60)
+    return minutesShort.replace("%(time)s", minutes)
   }
 
   if (absDiff < 3600 * 24) {
-    const hours = Math.ceil(absDiff / 3600)
-    return hourShort.replace("%(time)s", hours)
+    const hours = Math.round(absDiff / 3600)
+    return hoursShort.replace("%(time)s", hours)
   }
 
   if (absDiff < 86400 * 7) {
-    const days = Math.ceil(absDiff / 86400)
-    return dayShort.replace("%(time)s", days)
+    const days = Math.round(absDiff / 86400)
+    return daysShort.replace("%(time)s", days)
   }
 
   const parts = {}

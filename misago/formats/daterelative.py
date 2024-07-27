@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta
-from math import ceil
 
 from django.utils import timezone
-from django.utils.formats import date_format, time_format
+from django.utils.formats import date_format
 from django.utils.translation import npgettext, pgettext
 
 
@@ -15,7 +14,7 @@ def date_relative(value: datetime) -> str:
         return pgettext("time ago", "moment ago")
 
     if delta < 60 * 47:
-        minutes = ceil(delta / 60)
+        minutes = round(delta / 60)
         if past:
             return npgettext(
                 "minutes ago",
@@ -32,7 +31,7 @@ def date_relative(value: datetime) -> str:
         ) % {"time": minutes}
 
     if delta < 3600 * 3:
-        hours = ceil(delta / 3600)
+        hours = round(delta / 3600)
         if past:
             return npgettext(
                 "hours ago",
@@ -50,24 +49,26 @@ def date_relative(value: datetime) -> str:
 
     if is_same_day(now, value):
         if past:
-            return time_format(value)
+            return time_short(value)
 
-        return pgettext("day at time", "at %(time)s") % {"time": time_format(value)}
+        return pgettext("day at time", "Today at %(time)s") % {
+            "time": time_short(value)
+        }
 
     if is_yesterday(now, value):
         return pgettext("day at time", "Yesterday at %(time)s") % {
-            "time": time_format(value)
+            "time": time_short(value)
         }
 
     if is_tomorrow(now, value):
         return pgettext("day at time", "Tomorrow at %(time)s") % {
-            "time": time_format(value)
+            "time": time_short(value)
         }
 
     if past and delta < 3600 * 24 * 6:
         return pgettext("day at time", "%(day)s at %(time)s") % {
             "day": date_format(value, "l"),
-            "time": time_format(value),
+            "time": time_short(value),
         }
 
     if is_same_year(now, value):
@@ -102,18 +103,26 @@ def date_relative_short(value: datetime) -> str:
         return pgettext("time ago", "now")
 
     if delta < 60 * 55:
-        minutes = ceil(delta / 60)
+        minutes = round(delta / 60)
         return pgettext("short minutes", "%(time)sm") % {"time": minutes}
 
     if delta < 3600 * 24:
-        hours = ceil(delta / 3600)
+        hours = round(delta / 3600)
         return pgettext("short hours", "%(time)sh") % {"time": hours}
 
     if delta < 86400 * 7:
-        days = ceil(delta / 86400)
+        days = round(delta / 86400)
         return pgettext("short days", "%(time)sd") % {"time": days}
 
     if now.year == value.year:
         return date_format(value, pgettext("short this year", "j M"))
 
     return date_format(value, pgettext("short other year", "M y"))
+
+
+def time_short(value: datetime) -> str:
+    return date_format(
+        value,
+        pgettext("time short", "g:i A"),
+        use_l10n=False,
+    )
