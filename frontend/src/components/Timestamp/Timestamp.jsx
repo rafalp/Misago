@@ -1,9 +1,9 @@
 import React from "react"
 import {
-  formatNarrow,
-  formatRelative,
+  dateRelative,
+  dateRelativeShort,
   fullDateTime,
-} from "../../datetimeFormats"
+} from "../../formats"
 
 class Timestamp extends React.Component {
   constructor(props) {
@@ -48,8 +48,8 @@ class Timestamp extends React.Component {
 
   render() {
     const displayed = this.props.narrow
-      ? formatNarrow(this.date)
-      : formatRelative(this.date)
+      ? dateRelativeShort(this.date)
+      : dateRelative(this.date)
 
     return (
       <attr

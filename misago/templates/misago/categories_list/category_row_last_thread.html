@@ -1,4 +1,4 @@
-{% load i18n misago_avatars misago_capture %}
+{% load i18n misago_avatars misago_capture misago_formats %}
 <div class="col-xs-12 col-sm-6 col-md-4 category-last-thread">
   {% if last_thread %}
     <div class="media">
@@ -42,8 +42,12 @@
             &#8212;
           </li>
           <li class="category-last-thread-date">
-            <a href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}" misago-timestamp="{{ last_thread.last_post_on.isoformat }}">
-              {{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}
+            <a
+              href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
+              title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
+              misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
+            >
+              {{ last_thread.last_post_on|date_relative }}
             </a>
           </li>
         </ul>

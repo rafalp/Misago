@@ -1,4 +1,4 @@
-{% load i18n misago_forms misago_capture %}
+{% load i18n misago_capture misago_formats misago_forms %}
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
 {% endif %}
@@ -72,8 +72,11 @@
           {% endif %}
           {% if form.available_changes.next_change %}
             {% capture trimmed as next_change %}
-              <attr misago-timestamp="{{ form.available_changes.next_change.isoformat }}">
-                {{ form.available_changes.next_change|date:'DATETIME_FORMAT' }}
+              <attr
+                title="{{ form.available_changes.next_change|date:'DATETIME_FORMAT' }}"
+                misago-timestamp="{{ form.available_changes.next_change.isoformat }}"
+              >
+                {{ form.available_changes.next_change|date_relative }}
               </attr>
             {% endcapture %}
             {% blocktrans trimmed with next_change=next_change|safe context "account username help" %}

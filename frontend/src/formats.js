@@ -46,46 +46,7 @@ export const weekday = new Intl.DateTimeFormat(locale, {
 
 export const shortTime = new Intl.DateTimeFormat(locale, { timeStyle: "short" })
 
-export function formatShort(date) {
-  const now = new Date()
-  const absDiff = Math.abs(Math.round((date - now) / 1000))
-
-  if (absDiff < 60) {
-    return momentAgoNarrow
-  }
-
-  if (absDiff < 60 * 55) {
-    const minutes = Math.ceil(absDiff / 60)
-    return minuteShort.replace("%(time)s", minutes)
-  }
-
-  if (absDiff < 3600 * 24) {
-    const hours = Math.ceil(absDiff / 3600)
-    return hourShort.replace("%(time)s", hours)
-  }
-
-  if (absDiff < 86400 * 7) {
-    const days = Math.ceil(absDiff / 86400)
-    return dayShort.replace("%(time)s", days)
-  }
-
-  const parts = {}
-  short.formatToParts(date).forEach(function ({ type, value }) {
-    parts[type] = value
-  })
-
-  if (date.getFullYear() === now.getFullYear()) {
-    return thisYearShort
-      .replace("%(day)s", parts.day)
-      .replace("%(month)s", parts.month)
-  }
-
-  return otherYearShort
-    .replace("%(year)s", parts.year)
-    .replace("%(month)s", parts.month)
-}
-
-export function formatRelative(date) {
+export function dateRelative(date) {
   const now = new Date()
   const diff = Math.round((date - now) / 1000)
   const absDiff = Math.abs(diff)
@@ -157,4 +118,43 @@ export function formatDayAtTime(day, date) {
   return dayAt
     .replace("%(day)s", day)
     .replace("%(time)s", shortTime.format(date))
+}
+
+export function dateRelativeShort(date) {
+  const now = new Date()
+  const absDiff = Math.abs(Math.round((date - now) / 1000))
+
+  if (absDiff < 60) {
+    return momentAgoNarrow
+  }
+
+  if (absDiff < 60 * 55) {
+    const minutes = Math.ceil(absDiff / 60)
+    return minuteShort.replace("%(time)s", minutes)
+  }
+
+  if (absDiff < 3600 * 24) {
+    const hours = Math.ceil(absDiff / 3600)
+    return hourShort.replace("%(time)s", hours)
+  }
+
+  if (absDiff < 86400 * 7) {
+    const days = Math.ceil(absDiff / 86400)
+    return dayShort.replace("%(time)s", days)
+  }
+
+  const parts = {}
+  short.formatToParts(date).forEach(function ({ type, value }) {
+    parts[type] = value
+  })
+
+  if (date.getFullYear() === now.getFullYear()) {
+    return thisYearShort
+      .replace("%(day)s", parts.day)
+      .replace("%(month)s", parts.month)
+  }
+
+  return otherYearShort
+    .replace("%(year)s", parts.year)
+    .replace("%(month)s", parts.month)
 }

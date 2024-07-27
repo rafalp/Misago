@@ -1,6 +1,6 @@
 import htmx from "htmx.org"
 
-import { formatRelative, formatShort, fullDateTime } from "./datetimeFormats"
+import { formatRelative, formatRelativeShort, fullDateTime } from "./formats"
 
 const cache = {}
 
@@ -10,14 +10,15 @@ export function updateTimestamp(element) {
     cache[timestamp] = new Date(timestamp)
   }
 
-  if (!element.hasAttribute("title")) {
+  if (!element.hasAttribute("misago-timestamp-title")) {
+    element.setAttribute("misago-timestamp-title", "true")
     element.setAttribute("title", fullDateTime.format(cache[timestamp]))
   }
 
   const format = element.getAttribute("misago-timestamp-format")
 
   if (format == "short") {
-    element.textContent = formatShort(cache[timestamp])
+    element.textContent = formatRelativeShort(cache[timestamp])
   } else {
     element.textContent = formatRelative(cache[timestamp])
   }
