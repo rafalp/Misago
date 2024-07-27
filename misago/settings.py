@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "misago.core",
     "misago.components",
     "misago.conf",
+    "misago.formats",
     "misago.forms",
     "misago.forumindex",
     "misago.htmx",

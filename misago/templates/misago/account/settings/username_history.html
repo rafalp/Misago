@@ -1,4 +1,4 @@
-{% load i18n misago_avatars %}
+{% load i18n misago_avatars misago_formats %}
 <div id="misago-htmx-history">
   <div id="misago-page-scroll-target" class="scroll-target"></div>
   <div class="username-history">
@@ -38,8 +38,11 @@
             <span class="new-username">{{ change.new_username }}</span>
           </div>
           <div class="change-date">
-            <abbr misago-timestamp="{{ change.changed_on.isoformat }}">
-              {{ change.changed_on|date:'DATETIME_FORMAT' }}
+            <abbr
+              title="{{ change.changed_on|date:'DATETIME_FORMAT' }}"
+              misago-timestamp="{{ change.changed_on.isoformat }}"
+            >
+              {{ change.changed_on|date_relative }}
             </abbr>
           </div>
         </li>

@@ -1,4 +1,4 @@
-{% load i18n misago_absoluteurl misago_avatars %}
+{% load i18n misago_absoluteurl misago_avatars misago_formats %}
 
 {% for thread_data in threads %}
   {% with thread_data.thread as thread %}
@@ -139,10 +139,11 @@
               <a
                 href="{% url threads_urls.last_post pk=thread.pk slug=thread.slug %}"
                 class="threads-list-item-last-activity"
+                title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}"
                 misago-timestamp="{{ thread.last_post_on.isoformat }}"
                 misago-timestamp-format="short"
               >
-                {{ thread.last_post_on|date }}
+                {{ thread.last_post_on|date_relative_short }}
               </a>
             </div>
             <div class="threads-list-item-col-posters-sm">
