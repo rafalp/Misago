@@ -111,7 +111,6 @@ A `CategoryThreadsQuery` member or a `str` with a custom clause name. If `None`,
 The code below implements a custom filter function that specifies a custom `WHERE` clause supported by the `get_threads_query_orm_filter_hook`.
 
 ```python
-from django.db.models import Q
 from misago.permissions.enums import CategoryQueryContext
 from misago.permissions.hooks import get_category_threads_pinned_category_query_hook
 from misago.permissions.proxy import UserPermissionsProxy
@@ -122,11 +121,11 @@ def get_category_threads_pinned_category_query(
     permissions: UserPermissionsProxy,
     category: dict,
     context: CategoryQueryContext,
-) ->  -> str | list[str] | None:
+) -> str | list[str] | None:
     if (
         category.get("plugin_flag") and context == CategoryQueryContext.CURRENT
     ):
         return "plugin-where"
 
-    return action(query, permissions, category, context)
+    return action(permissions, category, context)
 ```

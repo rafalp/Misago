@@ -112,7 +112,7 @@ class GetThreadsCategoryPinnedQueryHook(
         if category.get("plugin_flag"):
             return "plugin-where"
 
-        return action(query, permissions, category)
+        return action(permissions, category)
     ```
     """
 

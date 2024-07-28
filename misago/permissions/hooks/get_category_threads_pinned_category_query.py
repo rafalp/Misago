@@ -143,7 +143,7 @@ class GetCategoryThreadsPinnedCategoryQueryHook(
         ):
             return "plugin-where"
 
-        return action(query, permissions, category, context)
+        return action(permissions, category, context)
     ```
     """
 

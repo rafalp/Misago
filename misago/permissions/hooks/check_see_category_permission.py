@@ -75,7 +75,6 @@ class CheckSeeCategoryPermissionHook(
     The code below implements a custom filter function that blocks a user from seeing
     a specified category if there is a custom flag set on their account.
 
-
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
@@ -90,7 +89,7 @@ class CheckSeeCategoryPermissionHook(
         category: Category,
     ) -> None:
         # Run standard permission checks
-        action(query, permissions, category)
+        action(permissions, category)
 
         if category.id in permissions.user.plugin_data.get("banned_categories", []):
             raise PermissionDenied(

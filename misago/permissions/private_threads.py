@@ -2,12 +2,15 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 
 from ..threads.models import ThreadParticipant
-from .hooks import check_private_threads_permission_hook
+from .hooks import (
+    check_private_threads_permission_hook,
+    filter_private_threads_queryset_hook,
+)
 from .proxy import UserPermissionsProxy
 
 
 def check_private_threads_permission(permissions: UserPermissionsProxy):
-    return check_private_threads_permission_hook(
+    check_private_threads_permission_hook(
         _check_private_threads_permission_action, permissions
     )
 
@@ -30,12 +33,20 @@ def _check_private_threads_permission_action(permissions: UserPermissionsProxy):
         )
 
 
-def filter_private_threads_queryset(user_permissions: UserPermissionsProxy, queryset):
-    if user_permissions.user.is_anonymous:
+def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):
+    return filter_private_threads_queryset_hook(
+        _filter_private_threads_queryset_action, permissions, queryset
+    )
+
+
+def _filter_private_threads_queryset_action(
+    permissions: UserPermissionsProxy, queryset
+):
+    if permissions.user.is_anonymous:
         return queryset.none()
 
     return queryset.filter(
-        id__in=ThreadParticipant.objects.filter(user=user_permissions.user).values(
+        id__in=ThreadParticipant.objects.filter(user=permissions.user).values(
             "thread_id"
         )
     )

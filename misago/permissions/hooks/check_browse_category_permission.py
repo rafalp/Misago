@@ -111,7 +111,7 @@ class CheckBrowseCategoryPermissionHook(
         category: Category,
     ) -> None:
         # Run standard permission checks
-        action(query, permissions, category)
+        action(permissions, category)
 
         if category.id in permissions.user.plugin_data.get("banned_categories", []):
             raise PermissionDenied(

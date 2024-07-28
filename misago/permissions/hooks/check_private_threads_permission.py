@@ -79,7 +79,7 @@ class CheckPrivateThreadsPermissionHook(
         permissions: UserPermissionsProxy,
     ) -> None:
         # Run standard permission checks
-        action(query, permissions)
+        action(permissions)
 
         if permissions.user.plugin_data.get("ban_private_threads"):
             raise PermissionDenied(
