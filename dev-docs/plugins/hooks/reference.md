@@ -47,8 +47,12 @@ Hooks instances are importable from the following Python modules:
 
 - [`build_user_category_permissions_hook`](./build-user-category-permissions-hook.md)
 - [`build_user_permissions_hook`](./build-user-permissions-hook.md)
+- [`check_browse_category_permission_hook`](./check-browse-category-permission-hook.md)
+- [`check_private_threads_permission_hook`](./check-private-threads-permission-hook.md)
+- [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
 - [`copy_category_permissions_hook`](./copy-category-permissions-hook.md)
 - [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
+- [`filter_private_threads_queryset_hook`](./filter-private-threads-queryset-hook.md)
 - [`get_admin_category_permissions_hook`](./get-admin-category-permissions-hook.md)
 - [`get_category_threads_category_query_hook`](./get-category-threads-category-query-hook.md)
 - [`get_category_threads_pinned_category_query_hook`](./get-category-threads-pinned-category-query-hook.md)

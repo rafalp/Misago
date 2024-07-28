@@ -100,7 +100,6 @@ class GetThreadsCategoryQueryHook(
     `WHERE` clause supported by the `get_threads_query_orm_filter_hook`.
 
     ```python
-    from django.db.models import Q
     from misago.permissions.hooks import get_threads_category_query_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
@@ -109,11 +108,11 @@ class GetThreadsCategoryQueryHook(
         action,
         permissions: UserPermissionsProxy,
         category: dict,
-    ) ->  -> str | list[str] | None:
+    ) -> str | list[str] | None:
         if category.get("plugin_flag"):
             return "plugin-where"
 
-        return action(query, permissions, category)
+        return action(permissions, category)
     ```
     """
 
