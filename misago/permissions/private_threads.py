@@ -1,12 +1,18 @@
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.utils.translation import pgettext
 
 from ..threads.models import ThreadParticipant
+from .hooks import check_private_threads_permission_hook
 from .proxy import UserPermissionsProxy
 
 
 def check_private_threads_permission(permissions: UserPermissionsProxy):
+    return check_private_threads_permission_hook(
+        _check_private_threads_permission_action, permissions
+    )
+
+
+def _check_private_threads_permission_action(permissions: UserPermissionsProxy):
     if permissions.user.is_anonymous:
         raise PermissionDenied(
             pgettext(
