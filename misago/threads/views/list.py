@@ -734,9 +734,7 @@ class CategoryThreadsListView(ListView):
             raise Http404()
 
         check_browse_category_permission(
-            request.user_permissions,
-            category,
-            delay_browse_check=True,
+            request.user_permissions, category, can_delay=True
         )
 
         if category.slug != kwargs["slug"]:
