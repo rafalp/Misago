@@ -703,7 +703,12 @@ class CategoryThreadsListView(ListView):
             "pagination_url": self.get_pagination_url(category, kwargs),
         }
 
-        if category.is_vanilla and category.level == 1 and not context["subcategories"]:
+        if (
+            category.is_vanilla
+            and category.level == 1
+            and not context["subcategories"]
+            and not context["threads"]
+        ):
             raise Http404()
 
         if kwargs.get("filter"):
