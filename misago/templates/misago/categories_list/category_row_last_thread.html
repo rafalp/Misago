@@ -1,87 +1,78 @@
 {% load i18n misago_avatars misago_capture misago_formats %}
-<div class="col-xs-12 col-sm-6 col-md-4 category-last-thread">
+<div class="list-group-category-item-last-thread-col">
   {% if last_thread %}
-    <div class="media">
-      <div class="media-left hidden-xs">
-        {% if last_thread.last_poster %}
-          <a href="{{ last_thread.last_poster.get_absolute_url }}" class="last-poster-avatar" title="{{ last_thread.last_poster_name }}">
-            <img src="{{ last_thread.last_poster|avatar:36 }}" width="36" height="36" alt="">
-          </a>
-        {% else %}
-          <span class="last-poster-avatar" title="{{ last_thread.last_poster_name }}">
-            <img src="{{ BLANK_AVATAR_URL }}" width="36" height="36" alt="">
-          </span>
-        {% endif %}
-      </div>
-      <div class="media-body">
-        <div class="media-heading">
-          {% if last_thread.is_visible %}
-            <a class="item-title thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
-              {{ last_thread.title }}
-            </a>
-          {% else %}
-            <span
-              class="item-title thread-title thread-title-muted"
-              title="{% trans 'You don\'t have permission to see this thread.' context 'category last reply' %}"
-            >
-              {% trans "Hidden thread" context "category last reply" %}
-            </span>
-          {% endif %}
-        </div>
-        <ul class="list-inline">
-          <li class="category-last-thread-poster">
-            {% if last_thread.last_poster %}
-              <a href="{{ last_thread.last_poster.get_absolute_url }}" class="item-title">
-                {{ last_thread.last_poster_name }}
-              </a>
-            {% else %}
-              <span class="item-title">{{ last_thread.last_poster_name }}</span>
-            {% endif %}
-          </li>
-          <li class="divider">
-            &#8212;
-          </li>
-          <li class="category-last-thread-date">
-            <a
-              href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
-              title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
-              misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
-            >
-              {{ last_thread.last_post_on|date_relative }}
-            </a>
-          </li>
-        </ul>
-      </div>
+    <div class="list-group-category-item-last-poster-avatar-col">
+      {% if last_thread.last_poster %}
+        <a href="{{ last_thread.last_poster.get_absolute_url }}" class="list-group-category-item-last-poster-avatar" title="{{ last_thread.last_poster_name }}">
+          <img src="{{ last_thread.last_poster|avatar:32 }}" srcset="{{ last_thread.last_poster|avatar:64 }}" width="32" height="32" alt="">
+        </a>
+      {% else %}
+        <span class="list-group-category-item-last-poster-avatar" title="{{ last_thread.last_poster_name }}">
+          <img src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="">
+        </span>
+      {% endif %}
+    </div>
+    <div class="list-group-category-item-last-thread-details-col">
+      {% if last_thread.is_visible %}
+        <a class="list-group-category-item-last-thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
+          {{ last_thread.title }}
+        </a>
+      {% else %}
+        <span
+          class="list-group-category-item-last-thread-title-muted"
+          title="{% trans 'You don\'t have permission to see this thread.' context 'category last reply' %}"
+        >
+          {% trans "Hidden thread" context "category last reply" %}
+        </span>
+      {% endif %}
+      {% if last_thread.last_poster %}
+        <a
+          href="{{ last_thread.last_poster.get_absolute_url }}"
+          class="list-group-category-item-last-poster"
+        >
+          {{ last_thread.last_poster_name }}
+        </a>
+      {% else %}
+        <span class="list-group-category-item-last-poster">{{ last_thread.last_poster_name }}</span>
+      {% endif %}
+      <span class="list-group-category-item-last-separator">
+        -
+      </span>
+      <a
+        href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
+        class="list-group-category-item-last-posted-on"
+        title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
+        misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
+      >
+        {{ last_thread.last_post_on|date_relative }}
+      </a>
+      <a
+        href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
+        class="list-group-category-item-last-posted-on-short"
+        title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
+        misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
+        misago-timestamp-format="short"
+      >
+        {{ last_thread.last_post_on|date_relative_short }}
+      </a>
     </div>
   {% elif category_data.show_started_only %}
-    <div class="media category-thread-message">
-      <div class="media-left">
-        <div class="last-poster-icon">
-          <span class="material-icon">
-            info_outline
-          </span>
-        </div>
-      </div>
-      <div class="media-body">
-        <p>
-          {% trans "Private category" context "category last reply" %}
-        </p>
-      </div>
+    <div class="list-group-category-item-last-thread-text">
+      <span class="list-group-category-item-last-thread-text-icon">
+        <span class="material-icon">
+          info_outline
+        </span>
+      </span>
+      {% trans "Private category" context "category last reply" %}
     </div>
   {% else %}
-    <div class="media category-thread-message">
-      <div class="media-left">
-        <div class="last-poster-icon">
-          <span class="material-icon">
-            info_outline
-          </span>
-        </div>
-      </div>
-      <div class="media-body">
-        <p>
-          {% trans "Empty category" context "category last reply" %}
-        </p>
-      </div>
+    <div class="list-group-category-item-last-thread-text">
+      <span class="list-group-category-item-last-thread-text-icon">
+        <span class="material-icon">
+          info_outline
+        </span>
+      </span>
+      {% trans "Empty category" context "category last reply" %}
     </div>
   {% endif %}
 </div>

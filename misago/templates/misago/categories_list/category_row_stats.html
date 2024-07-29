@@ -1,19 +1,27 @@
-{% load i18n %}
-<div class="col-md-2 hidden-xs hidden-sm">
-  <ul class="list-unstyled category-stats">
-    <li class="category-stat-threads">
-      {% blocktrans trimmed count threads=category_data.children_threads context "category stats" %}
-        {{ threads }} thread
-      {% plural %}
-        {{ threads }} threads
-      {% endblocktrans %}
-    </li>
-    <li class="category-stat-posts">
-      {% blocktrans trimmed count posts=category_data.children_posts context "category stats" %}
-        {{ posts }} post
-      {% plural %}
-        {{ posts }} posts
-      {% endblocktrans %}
-    </li>
-  </ul>
+{% load i18n misago_capture %}
+<div class="list-group-category-item-stats-col">
+  <div class="category-stat-threads">
+    {% capture trimmed as category_threads %}
+      <span class="category-stat-value">
+        {{ category_data.children_threads }}
+      </span>
+    {% endcapture %}
+    {% blocktrans trimmed with threads=category_threads|safe count counter=category_data.children_threads context "category stats" %}
+      {{ threads }} Thread
+    {% plural %}
+      {{ threads }} Threads
+    {% endblocktrans %}
+  </div>
+  <div class="category-stat-posts">
+    {% capture trimmed as category_posts %}
+      <span class="category-stat-value">
+        {{ category_data.children_posts }}
+      </span>
+    {% endcapture %}
+    {% blocktrans trimmed with posts=category_posts|safe count counter=category_data.children_posts context "category stats" %}
+      {{ posts }} Post
+    {% plural %}
+      {{ posts }} Posts
+    {% endblocktrans %}
+  </div>
 </div>

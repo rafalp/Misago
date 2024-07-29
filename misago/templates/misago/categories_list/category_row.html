@@ -1,24 +1,37 @@
 {% load misago_shorthands %}
-<li class="list-group-item list-group-category-{{ category.description|yesno:'has,no' }}-description {{ first|iftrue:'list-group-item-first' }} {% if category.css_class %}list-group-category-has-flavor list-group-item-category-{{ category.css_class }}{% endif %}">
-  <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6 category-main">
-      <div class="media">
-        <div class="media-left">
-          {% include "misago/categories_list/category_row_icon.html" %}
+<li class="list-group-item list-group-category-item list-group-category-{{ category.description|yesno:'has,no' }}-description {{ first|iftrue:'list-group-item-first' }} {% if category.css_class %}list-group-category-has-flavor list-group-item-category-{{ category.css_class }}{% endif %}">
+  <div class="list-group-category-item-read-status-col">
+    {% include "misago/categories_list/category_row_icon.html" %}
+  </div>
+  <div class="list-group-category-item-rest-col">
+    <div class="list-group-category-item-main-col">
+      <a href="{{ category.get_absolute_url }}" class="list-group-category-item-name">
+        {{ category }}
+      </a>
+      {% if category.description %}
+        <div class="list-group-category-item-description">
+          {{ category.description|force_escape|urlize|linebreaks }}
         </div>
-        <div class="media-body">
-          <h4 class="media-heading">
-            <a href="{{ category.get_absolute_url }}">
-              {{ category }}
-            </a>
-          </h4>
-          {% if category.description %}
-            <div class="category-description">
-              {{ category.description|force_escape|urlize|linebreaks }}
-            </div>
-          {% endif %}
-        </div>
-      </div>
+      {% endif %}
+      {% if category_data.children and category.level > 1 %}
+        <ul class="list-group-category-item-children">
+          {% for child_data in category_data.children %}
+            <li class="list-group-category-item-children-item">
+              <a
+                href="{{ child_data.category.get_absolute_url }}"
+                class="list-group-category-child-children-item-name"
+              >
+                {% if child_data.children_new_posts %}
+                  <span class="list-group-category-child-children-item-status-new"></span>
+                {% else %}
+                  <span class="list-group-category-child-children-item-status-read"></span>
+                {% endif %}
+                {{ child_data.category }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </div>
     {% include "misago/categories_list/category_row_stats.html" %}
     {% if category.level == 1 %}
@@ -27,32 +40,4 @@
       {% include "misago/categories_list/category_row_last_thread.html" with last_thread=category_data.children_last_thread %}
     {% endif %}
   </div>
-  {% if category_data.children and category.level > 1 %}
-    <div class="row subcategories-list">
-      {% for child_data in category_data.children %}
-        <div class="col-xs-12 col-sm-4 col-md-3">
-          <a class="btn btn-default btn-block btn-sm btn-subcategory {{ child_data.new_posts|iftrue:'btn-subcategory-new' }}" href="{{ child_data.category.get_absolute_url }}">
-            <span class="material-icon">
-              {% if child_data.category.is_closed %}
-                {% if child_data.new_posts %}
-                  lock
-                {% else %}
-                  lock_outline
-                {% endif %}
-              {% else %}
-                {% if child_data.new_posts %}
-                  chat_bubble
-                {% else %}
-                  chat_bubble_outline
-                {% endif %}
-              {% endif %}
-            </span>
-            <span class="icon-text">
-              {{ child_data.category }}
-            </span>
-          </a>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
 </li>
