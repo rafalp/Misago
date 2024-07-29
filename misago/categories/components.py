@@ -168,6 +168,7 @@ def aggregate_category_to_its_parent(category: dict, parent: dict):
 
     item_last_thread = category["children_last_thread"]
     parent_last_thread = parent["children_last_thread"]
+
     if (
         item_last_thread
         and item_last_thread["is_visible"]
