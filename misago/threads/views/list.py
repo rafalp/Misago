@@ -703,13 +703,7 @@ class CategoryThreadsListView(ListView):
             "pagination_url": self.get_pagination_url(category, kwargs),
         }
 
-        if (
-            category.is_vanilla
-            and category.level == 1
-            and not context["subcategories"]
-            and not context["threads"]
-        ):
-            raise Http404()
+        self.raise_404_for_vanilla_category(category, context)
 
         if kwargs.get("filter"):
             context["pagination_url"] = reverse(
@@ -1007,6 +1001,20 @@ class CategoryThreadsListView(ListView):
         return bool(
             request.user_permissions.categories_moderator.intersection(categories_ids)
         )
+
+    def raise_404_for_vanilla_category(self, category: Category, context: dict):
+        """Raise 404 for empty top-level vanilla category
+
+        Ignore nested vanilla categories because using them is mistake on admin part.
+        Ignore categories that display either subcategories or threads from subcategories.
+        """
+        if (
+            category.is_vanilla
+            and category.level == 1
+            and not context["subcategories"]
+            and not context["threads"]
+        ):
+            raise Http404()
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)

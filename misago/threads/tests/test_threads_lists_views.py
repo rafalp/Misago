@@ -545,6 +545,7 @@ def test_category_threads_list_returns_404_for_top_level_vanilla_category_withou
     default_category, client
 ):
     default_category.is_vanilla = True
+    default_category.list_children_threads = False
     default_category.save()
 
     response = client.get(default_category.get_absolute_url())
@@ -555,6 +556,7 @@ def test_category_threads_list_returns_404_for_top_level_vanilla_category_with_i
     default_category, child_category, client
 ):
     default_category.is_vanilla = True
+    default_category.list_children_threads = False
     default_category.save()
 
     CategoryGroupPermission.objects.filter(category=child_category).delete()
@@ -567,6 +569,7 @@ def test_category_threads_list_renders_for_top_level_vanilla_category_with_child
     default_category, child_category, client
 ):
     default_category.is_vanilla = True
+    default_category.list_children_threads = False
     default_category.save()
 
     response = client.get(default_category.get_absolute_url())
@@ -577,6 +580,7 @@ def test_category_threads_list_renders_for_nested_vanilla_category_without_child
     child_category, client
 ):
     child_category.is_vanilla = True
+    child_category.list_children_threads = False
     child_category.save()
 
     response = client.get(child_category.get_absolute_url())
