@@ -281,8 +281,15 @@ class CategoryForm(forms.ModelForm):
         data = super().clean()
         self.instance.set_name(data.get("name"))
 
+        if not self.errors and data["is_vanilla"]:
+            self.validate_vanilla_invalid_values(data)
+
+        return data
+
+    def validate_vanilla_invalid_values(self, data: dict):
         new_parent = data.get("new_parent")
-        if new_parent and new_parent.level != 0 and data.get("is_vanilla"):
+
+        if new_parent and new_parent.level != 0:
             self.add_error(
                 "is_vanilla",
                 forms.ValidationError(
@@ -293,10 +300,9 @@ class CategoryForm(forms.ModelForm):
                 ),
             )
 
-        if (
-            data.get("is_vanilla")
-            and not data.get("list_children_threads")
-            and data.get("children_categories_component")
+        elif (
+            not data["list_children_threads"]
+            and data["children_categories_component"]
             == CategoryChildrenComponent.DROPDOWN
         ):
             self.add_error(
@@ -308,8 +314,6 @@ class CategoryForm(forms.ModelForm):
                     )
                 ),
             )
-
-        return data
 
 
 class DeleteCategoryForm(forms.ModelForm):
