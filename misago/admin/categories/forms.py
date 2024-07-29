@@ -282,13 +282,29 @@ class CategoryForm(forms.ModelForm):
         self.instance.set_name(data.get("name"))
 
         new_parent = data.get("new_parent")
-        if new_parent and new_parent.level != 0 and data["is_vanilla"]:
+        if new_parent and new_parent.level != 0 and data.get("is_vanilla"):
             self.add_error(
                 "is_vanilla",
                 forms.ValidationError(
                     pgettext(
                         "admin category form",
                         "Only top-level categories can be set as vanilla.",
+                    )
+                ),
+            )
+
+        if (
+            data.get("is_vanilla")
+            and not data.get("list_children_threads")
+            and data.get("children_categories_component")
+            == CategoryChildrenComponent.DROPDOWN
+        ):
+            self.add_error(
+                "children_categories_component",
+                forms.ValidationError(
+                    pgettext(
+                        "admin category form",
+                        "This choice is not available for vanilla categories with disabled listing of child category threads.",
                     )
                 ),
             )

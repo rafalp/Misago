@@ -1011,8 +1011,8 @@ class CategoryThreadsListView(ListView):
         if (
             category.is_vanilla
             and category.level == 1
-            and not context["subcategories"]
             and not context["threads"]
+            and not context["subcategories"]
         ):
             raise Http404()
 

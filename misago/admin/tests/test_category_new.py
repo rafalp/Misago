@@ -270,6 +270,33 @@ def test_new_category_form_fails_if_vanilla_category_with_parent(
     )
 
 
+def test_new_category_form_fails_if_vanilla_category_without_threads_and_categories_dropdown(
+    admin_client, root_category, default_category
+):
+    response = admin_client.post(
+        category_new,
+        form_data(
+            {
+                "new_parent": str(root_category.id),
+                "is_vanilla": True,
+                "list_children_threads": False,
+                "children_categories_component": "dropdown",
+            }
+        ),
+    )
+    assert_contains(
+        response,
+        "This choice is not available for vanilla categories with disabled listing",
+    )
+
+    assert_valid_categories_tree(
+        [
+            (root_category, 0, 1, 4),
+            (default_category, 1, 2, 3),
+        ]
+    )
+
+
 def test_new_category_form_fails_if_copy_permissions_doesnt_exist(
     admin_client, root_category, default_category
 ):

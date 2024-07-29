@@ -237,3 +237,31 @@ def test_edit_category_form_shows_error_if_child_category_is_changed_to_vanilla(
             (child_category, 2, 3, 4),
         ]
     )
+
+
+def test_edit_category_form_fails_if_vanilla_category_without_threads_and_categories_dropdown(
+    admin_client, root_category, default_category
+):
+    response = admin_client.post(
+        reverse("misago:admin:categories:edit", kwargs={"pk": default_category.pk}),
+        form_data(
+            default_category,
+            {
+                "new_parent": str(root_category.id),
+                "is_vanilla": True,
+                "list_children_threads": False,
+                "children_categories_component": "dropdown",
+            },
+        ),
+    )
+    assert_contains(
+        response,
+        "This choice is not available for vanilla categories with disabled listing",
+    )
+
+    assert_valid_categories_tree(
+        [
+            (root_category, 0, 1, 4),
+            (default_category, 1, 2, 3),
+        ]
+    )
