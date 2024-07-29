@@ -193,9 +193,25 @@
 .list-group-category-item-last-thread-title-muted {
   display: block;
 
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.list-group-category-item-last-thread-title {
+  &,
+  &:link,
+  &:active,
+  &:visited,
+  &:hover,
+  &:focus {
+    color: @text-color;
+  }
+}
+
+.list-group-category-item-last-thread-title-muted {
+  color: @category-last-thread-muted-color;
 }
 
 // Last thread's poster and date
@@ -287,8 +303,11 @@
     width: auto;
   }
 
-  .list-group-category-item-last-thread-title {
+  .list-group-category-item-last-thread-title,
+  .list-group-category-item-last-thread-title-muted {
     display: block;
+
+    font-weight: normal;
   }
 
   .list-group-category-item-last-posted-on-short {

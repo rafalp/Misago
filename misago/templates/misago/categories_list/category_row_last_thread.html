@@ -14,19 +14,22 @@
     </div>
     <div class="list-group-category-item-last-thread-details-col">
       {% if last_thread.is_visible %}
-        <a class="item-title list-group-category-item-last-thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
+        <a class="list-group-category-item-last-thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
           {{ last_thread.title }}
         </a>
       {% else %}
         <span
-          class="item-title list-group-category-item-last-thread-title-muted"
+          class="list-group-category-item-last-thread-title-muted"
           title="{% trans 'You don\'t have permission to see this thread.' context 'category last reply' %}"
         >
           {% trans "Hidden thread" context "category last reply" %}
         </span>
       {% endif %}
       {% if last_thread.last_poster %}
-        <a href="{{ last_thread.last_poster.get_absolute_url }}" class="list-group-category-item-last-poster">
+        <a
+          href="{{ last_thread.last_poster.get_absolute_url }}"
+          class="list-group-category-item-last-poster"
+        >
           {{ last_thread.last_poster_name }}
         </a>
       {% else %}
