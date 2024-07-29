@@ -1,0 +1,95 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+  {% trans "Start new thread" context "start thread page" %} | {{ category }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-category">
+  <div class="container page-container">
+
+    {% if preview %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% trans "Message preview" context "start thread page" %}
+          </h3>
+        </div>
+        <div class="panel-body">
+          <article class="misago-markup">
+            {{ preview|safe }}
+          </article>
+        </div>
+      </div>
+    {% endif %}
+    {% if search_document %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% trans "Search document preview" context "start thread page" %}
+          </h3>
+        </div>
+        <div class="panel-body">
+          <pre>{{ search_document }}</pre>
+        </div>
+      </div>
+    {% endif %}
+
+    <form 
+      action="{% url 'misago:start-thread' id=category.id slug=category.slug %}"
+      method="post"
+    >
+      {% csrf_token %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% trans "Start new thread" context "start thread page" %}
+          </h3>
+        </div>
+        <div class="panel-body">
+        {% with form.title as field %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label" for="{{ field.id_for_label }}">
+              {% trans "Title:" context "account settings form" %}
+            </label>
+            <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endwith %}
+        {% with form.post as field %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label" for="{{ field.id_for_label }}">
+              {% trans "Post:" context "account settings form" %}
+            </label>
+            <textarea
+              id="{{ field.id_for_label }}"
+              name="{{ field.html_name }}"
+              class="form-control"
+              maxlength="{{ field.field.max_length }}"
+              rows="15"
+              {{ field|requiredhtml }}
+            >{{ field.value|default:"" }}</textarea>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endwith %}
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {% trans "Start thread" context "start thread submit btn" %}
+          </button>
+          <button class="btn btn-secondary" type="submit" name="preview" value="true">
+            {% trans "Preview" context "start thread submit btn" %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

@@ -8,7 +8,7 @@ export default function (props) {
       <div className="post-border">
         <div className="post-body">
           <div className="panel panel-default panel-post">
-            <PostBody content={props.post.content} />
+            <PostBody content={props.post.headline || props.post.content} />
             <PostFooter
               category={props.post.category}
               post={props.post}
