@@ -16,7 +16,7 @@ function getResponseErrorMessage(xhr) {
   }
 
   if (xhr.status === 404) {
-    return pgettext("htmx response error", "Not found")
+    return pgettext("htmx response error", "Page not found")
   }
 
   if (xhr.status === 403) {
@@ -28,7 +28,7 @@ function getResponseErrorMessage(xhr) {
 
 function handleSendError(event) {
   if (isEventVisible(event)) {
-    const message = pgettext("htmx response error", "Site could not be reached")
+    const message = pgettext("htmx response error", "Site could not be reached.")
     error(message)
   }
 }

@@ -369,7 +369,7 @@ def test_site_threads_list_moderation_returns_error_for_user(
         reverse("misago:threads"),
         {"moderation": "close", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -384,7 +384,7 @@ def test_category_threads_list_moderation_returns_error_for_user(
         default_category.get_absolute_url(),
         {"moderation": "close", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -401,7 +401,7 @@ def test_site_threads_list_moderation_returns_error_for_user_in_htmx(
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -417,7 +417,7 @@ def test_category_threads_list_moderation_returns_error_for_user_in_htmx(
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -431,7 +431,7 @@ def test_site_threads_list_moderation_returns_error_for_guest(default_category, 
         reverse("misago:threads"),
         {"moderation": "close", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -446,7 +446,7 @@ def test_category_threads_list_moderation_returns_error_for_guest(
         default_category.get_absolute_url(),
         {"moderation": "close", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -463,7 +463,7 @@ def test_site_threads_list_moderation_returns_error_for_guest_in_htmx(
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -479,7 +479,7 @@ def test_category_threads_list_moderation_returns_error_for_guest_in_htmx(
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
     assert not thread.is_closed
@@ -495,7 +495,7 @@ def test_site_threads_list_returns_error_for_invalid_moderation_action(
         reverse("misago:threads"),
         {"moderation": "invalid", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 def test_category_threads_returns_error_for_invalid_moderation_action(
@@ -507,7 +507,7 @@ def test_category_threads_returns_error_for_invalid_moderation_action(
         default_category.get_absolute_url(),
         {"moderation": "invalid", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -521,7 +521,7 @@ def test_site_threads_list_returns_error_for_invalid_moderation_action_in_htmx(
         {"moderation": "invalid", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 def test_category_threads_returns_error_for_invalid_moderation_action_in_htmx(
@@ -534,7 +534,7 @@ def test_category_threads_returns_error_for_invalid_moderation_action_in_htmx(
         {"moderation": "invalid", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -547,7 +547,7 @@ def test_site_threads_list_returns_error_for_empty_moderation_action(
         reverse("misago:threads"),
         {"moderation": "", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 def test_category_threads_returns_error_for_empty_moderation_action(
@@ -559,7 +559,7 @@ def test_category_threads_returns_error_for_empty_moderation_action(
         default_category.get_absolute_url(),
         {"moderation": "", "threads": [thread.id]},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -573,7 +573,7 @@ def test_site_threads_list_returns_error_for_empty_moderation_action_in_htmx(
         {"moderation": "", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 def test_category_threads_returns_error_for_empty_moderation_action_in_htmx(
@@ -586,7 +586,7 @@ def test_category_threads_returns_error_for_empty_moderation_action_in_htmx(
         {"moderation": "", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action")
+    assert_contains(response, "Invalid moderation action.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -597,7 +597,7 @@ def test_site_threads_list_returns_error_for_empty_threads_selection(
         reverse("misago:threads"),
         {"moderation": "close", "threads": []},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_empty_threads_selection(
@@ -607,7 +607,7 @@ def test_category_threads_returns_error_for_empty_threads_selection(
         default_category.get_absolute_url(),
         {"moderation": "close", "threads": []},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -619,7 +619,7 @@ def test_site_threads_list_returns_error_for_empty_threads_selection_in_htmx(
         {"moderation": "close", "threads": []},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_empty_threads_selection_in_htmx(
@@ -630,7 +630,7 @@ def test_category_threads_returns_error_for_empty_threads_selection_in_htmx(
         {"moderation": "close", "threads": []},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -641,7 +641,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_selection(
         reverse("misago:threads"),
         {"moderation": "close", "threads": "invalid"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_invalid_threads_selection(
@@ -651,7 +651,7 @@ def test_category_threads_returns_error_for_invalid_threads_selection(
         default_category.get_absolute_url(),
         {"moderation": "close", "threads": "invalid"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -663,7 +663,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_selection_in_htmx(
         {"moderation": "close", "threads": "invalid"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_invalid_threads_selection_in_htmx(
@@ -674,7 +674,7 @@ def test_category_threads_returns_error_for_invalid_threads_selection_in_htmx(
         {"moderation": "close", "threads": "invalid"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -685,7 +685,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_ids_in_selection(
         reverse("misago:threads"),
         {"moderation": "close", "threads": ["invalid"]},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_invalid_threads_ids_in_selection(
@@ -695,7 +695,7 @@ def test_category_threads_returns_error_for_invalid_threads_ids_in_selection(
         default_category.get_absolute_url(),
         {"moderation": "close", "threads": ["invalid"]},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -707,7 +707,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_ids_in_selection_in
         {"moderation": "close", "threads": ["invalid"]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_invalid_threads_ids_in_selection_in_htmx(
@@ -718,7 +718,7 @@ def test_category_threads_returns_error_for_invalid_threads_ids_in_selection_in_
         {"moderation": "close", "threads": ["invalid"]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -729,7 +729,7 @@ def test_site_threads_list_returns_error_for_not_existing_threads_ids_in_selecti
         reverse("misago:threads"),
         {"moderation": "close", "threads": [42]},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_not_existing_threads_ids_in_selection(
@@ -739,7 +739,7 @@ def test_category_threads_returns_error_for_not_existing_threads_ids_in_selectio
         default_category.get_absolute_url(),
         {"moderation": "close", "threads": [42]},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -751,7 +751,7 @@ def test_site_threads_list_returns_error_for_not_existing_threads_ids_in_selecti
         {"moderation": "close", "threads": [42]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 def test_category_threads_returns_error_for_not_existing_threads_ids_in_selection_in_htmx(
@@ -762,7 +762,7 @@ def test_category_threads_returns_error_for_not_existing_threads_ids_in_selectio
         {"moderation": "close", "threads": [42]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected")
+    assert_contains(response, "No valid threads selected.")
 
 
 @override_dynamic_settings(index_view="categories")

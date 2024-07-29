@@ -232,7 +232,7 @@ class ListView(View):
                 return action()
 
         raise ValidationError(
-            pgettext("threads moderation error", "Invalid moderation action"),
+            pgettext("threads moderation error", "Invalid moderation action."),
         )
 
     def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
@@ -246,7 +246,7 @@ class ListView(View):
                     raise ValidationError(
                         pgettext(
                             "threads moderation error",
-                            'Can\'t moderate the "%(thread)s" thread',
+                            'Can\'t moderate the "%(thread)s" thread.',
                         )
                         % {"thread": thread.title},
                     )
@@ -255,7 +255,7 @@ class ListView(View):
 
         if not selection:
             raise ValidationError(
-                pgettext("threads moderation error", "No valid threads selected"),
+                pgettext("threads moderation error", "No valid threads selected."),
             )
 
         return selection
