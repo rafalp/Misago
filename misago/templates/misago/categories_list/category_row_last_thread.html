@@ -43,6 +43,15 @@
       >
         {{ last_thread.last_post_on|date_relative }}
       </a>
+      <a
+        href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
+        class="list-group-category-item-last-posted-on-short"
+        title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
+        misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
+        misago-timestamp-format="short"
+      >
+        {{ last_thread.last_post_on|date_relative_short }}
+      </a>
     </div>
   {% elif category_data.show_started_only %}
     <div class="list-group-category-item-last-thread-text">

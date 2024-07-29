@@ -220,7 +220,8 @@
   margin: 0 2px;
 }
 
-.list-group-category-item-last-posted-on {
+.list-group-category-item-last-posted-on,
+.list-group-category-item-last-posted-on-short {
   &,
   &:link,
   &:active,
@@ -231,26 +232,73 @@
   }
 }
 
+.list-group-category-item-last-posted-on-short {
+  display: none;
+}
+
 // Last thread text
 .list-group-category-item-last-thread-text {
   display: flex;
   align-items: center;
 
   color: @category-text-color;
+}
 
-  .list-group-category-item-last-thread-text-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    width: 32px;
-    margin-right: floor(@grid-gutter-width / 2);
+.list-group-category-item-last-thread-text-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  margin-right: floor(@grid-gutter-width / 2);
 
-    color: @category-text-icon;
-  }
+  color: @category-text-icon;
 
   .material-icon {
     font-size: 24px;
     line-height: 24px;
+  }
+}
+
+// Responsiveness
+@media screen and (max-width: @screen-sm-max) {
+  .list-group-category-item-rest-col {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .list-group-category-item-stats-col,
+  .list-group-category-item-last-poster-avatar-col,
+  .list-group-category-item-last-poster,
+  .list-group-category-item-last-separator,
+  .list-group-category-item-last-posted-on {
+    display: none;
+  }
+
+  .list-group-category-item-last-thread-col {
+    display: flex;
+    margin-top: floor(@line-height-computed / 2);
+    padding-right: floor(@grid-gutter-width / 2);
+  }
+
+  .list-group-category-item-last-thread-details-col {
+    display: flex;
+    align-items: center;
+    width: auto;
+  }
+
+  .list-group-category-item-last-thread-title {
+    display: block;
+  }
+
+  .list-group-category-item-last-posted-on-short {
+    flex-shrink: 1;
+    display: block;
+    white-space: nowrap;
+    padding-left: floor(@grid-gutter-width / 4);
+  }
+  
+  .list-group-category-item-last-thread-text-icon {
+    display: none;
   }
 }
