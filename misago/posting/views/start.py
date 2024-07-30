@@ -15,6 +15,7 @@ from ...parser.factory import create_parser
 from ...parser.html import render_ast_to_html
 from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import render_ast_to_plaintext
+from ...permissions.enums import CategoryPermission
 from ...permissions.categories import check_browse_category_permission
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post, Thread
@@ -170,5 +171,57 @@ class PrivateThreadStartView(StartView):
     pass
 
 
-def select_category(request: HttpRequest) -> HttpResponse:
-    pass
+class ThreadStartSelectCategoryView(View):
+    template_name = "misago/posting/select_category_page.html"
+    template_name_htmx = "misago/posting/select_category_modal.html"
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        context = self.get_context(request)
+
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
+
+    def get_context(self, request: HttpRequest) -> dict:
+        permissions = request.user_permissions.categories[CategoryPermission.START]
+
+        choices: list[dict] = []
+        for category in request.categories.categories_list:
+            choice = {
+                "id": category["id"],
+                "name": category["name"],
+                "slug": category["slug"],
+                "color": category["color"],
+                "level": "",
+                "is_vanilla": category["is_vanilla"],
+                "disabled": (
+                    category["is_vanilla"] or category["id"] not in permissions
+                ),
+            }
+
+            if not category["level"]:
+                choice["children"] = []
+                choices.append(choice)
+            else:
+                parent = choices[-1]
+                choice["level"] = "1" * (category["level"] - 1)
+                parent["children"].append(choice)
+
+        # Remove branches where entire branch is disabled
+        clean_choices: list[dict] = []
+        for category in choices:
+            clean_children: list[dict] = []
+            for child in reversed(category["children"]):
+                if not child["disabled"] or (
+                    clean_children and clean_children[-1]["level"] > child["level"]
+                ):
+                    clean_children.append(child)
+
+            if not category["disabled"] or clean_children:
+                category["children"] = reversed(clean_children)
+                clean_choices.append(category)
+
+        return {"start_thread_choices": clean_choices}

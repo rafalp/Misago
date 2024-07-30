@@ -40,6 +40,7 @@ from ...pagination.cursor import (
 )
 from ...pagination.redirect import redirect_to_last_page
 from ...permissions.categories import check_browse_category_permission
+from ...permissions.enums import CategoryPermission
 from ...permissions.private_threads import (
     check_private_threads_permission,
     filter_private_threads_queryset,
@@ -47,6 +48,7 @@ from ...permissions.private_threads import (
 from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
+    check_can_start_thread_in_category,
 )
 from ..enums import (
     PrivateThreadsUrls,
@@ -386,6 +388,7 @@ class ThreadsListView(ListView):
             "threads": threads,
             "threads_urls": ThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
+            "start_thread_url": self.get_start_thread_url(request),
         }
 
         context["metatags"] = self.get_metatags(request, context)
@@ -575,6 +578,10 @@ class ThreadsListView(ListView):
 
         return reverse("misago:threads")
 
+    def get_start_thread_url(self, request: HttpRequest) -> str | None:
+        if request.user_permissions.categories[CategoryPermission.START]:
+            return reverse("misago:start-thread")
+
     def get_moderation_actions(
         self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
@@ -703,6 +710,7 @@ class CategoryThreadsListView(ListView):
             "threads_urls": ThreadsUrls.__members__,
             "breadcrumbs": path,
             "pagination_url": self.get_pagination_url(category, kwargs),
+            "start_thread_url": self.get_start_thread_url(request, category),
         }
 
         self.raise_404_for_vanilla_category(category, context)
@@ -967,6 +975,19 @@ class CategoryThreadsListView(ListView):
 
     def get_pagination_url(self, category: Category, kwargs: dict) -> str:
         return category.get_absolute_url()
+
+    def get_start_thread_url(
+        self, request: HttpRequest, category: Category
+    ) -> str | None:
+        try:
+            check_can_start_thread_in_category(request.user_permissions, category)
+        except:
+            return None
+        else:
+            return reverse(
+                "misago:start-thread",
+                kwargs={"id": category.id, "slug": category.slug},
+            )
 
     def get_moderation_actions(
         self, request: HttpRequest, category: Category

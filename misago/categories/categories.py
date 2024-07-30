@@ -96,6 +96,7 @@ def _get_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
         "id": result["id"],
         "parent_id": result["parent_id"] if result["level"] > 1 else None,
         "name": result["name"],
+        "slug": result["slug"],
         "short_name": result["short_name"],
         "color": result["color"],
         "css_class": result["css_class"],

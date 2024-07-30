@@ -1,0 +1,32 @@
+<ul class="select-category-list">
+  {% for choice in start_thread_choices %}
+    <li class="select-category-list-header">
+      <div class="select-category-list-item-image{% if child.color %} select-category-list-item-color{% endif %}"{% if child.color %} style="--color: {{ child.color }}"{% endif %}></div>
+      {% if choice.disabled %}
+        <span>{{ choice.name }}</span>
+      {% else %}
+        <a href="{% url 'misago:start-thread' id=choice.id slug=choice.slug %}">
+          {{ choice.name }}
+        </a>
+      {% endif %}
+    </li>
+    {% for child in choice.children %}
+      <li class="select-category-list-item">
+        {% for _ in child.level %}
+          <div class="select-category-list-item-level"></div>
+        {% endfor %}
+        <div class="select-category-list-item-image{% if child.color %} select-category-list-item-color{% endif %}"{% if child.color %} style="--color: {{ child.color }}"{% endif %}></div>
+        {% if child.disabled %}
+          <span>
+            {{ child.name }}
+          </span>
+        {% else %}
+          <a href="{% url 'misago:start-thread' id=child.id slug=child.slug %}">
+            {{ child.name }}
+          </a>
+        {% endif %}
+      </li>
+    {% endfor %}
+    <li class="select-category-list-separator"></li>
+  {% endfor %}
+</ul>
