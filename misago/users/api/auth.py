@@ -58,7 +58,7 @@ def login(request):
     POST /auth/ with CSRF, username and password
     will attempt to authenticate new user
     """
-    form = AuthenticationForm(request, data=request.data)
+    form = AuthenticationForm(request.data, request=request)
     if form.is_valid():
         auth.login(request, form.user_cache)
         return Response(AuthenticatedUserSerializer(form.user_cache).data)

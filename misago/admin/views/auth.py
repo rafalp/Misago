@@ -20,10 +20,10 @@ def login(request):
     else:
         target = "unknown"
 
-    form = AdminAuthenticationForm(request)
+    form = AdminAuthenticationForm(request=request)
 
     if request.method == "POST":
-        form = AdminAuthenticationForm(request, data=request.POST)
+        form = AdminAuthenticationForm(request.POST, request=request)
         if form.is_valid():
             auth.login(request, form.user_cache)
             return redirect("%s:index" % request.admin_namespace)

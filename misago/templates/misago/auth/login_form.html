@@ -1,0 +1,37 @@
+{% load i18n misago_forms %}
+<form method="POST">
+  {% csrf_token %}
+
+  {% if next_page_url %}
+    <input name="next" type="hidden" value="{{ next_page_url }}" />
+  {% endif %}
+
+  {% with form.username as field %}
+    <input
+      class="form-control"
+      id="{{ field.id_for_label }}"
+      name="{{ field.html_name }}"
+      type="text"
+      maxlength="{{ field.field.max_length }}"
+      placeholder="{{ field.label }}"
+      value="{{ field.value|default:'' }}"
+      {{ field|requiredhtml }}
+    />
+  {% endwith %}
+  {% with form.password as field %}
+    <input
+      class="form-control"
+      id="{{ field.id_for_label }}"
+      name="{{ field.html_name }}"
+      type="password"
+      maxlength="{{ field.field.max_length }}"
+      placeholder="{{ field.label }}"
+      {{ field|requiredhtml }}
+    />
+  {% endwith %}
+
+  <button class="btn btn-primary btn-block" type="submit">
+    {% trans "Sign in" context "login form" %}
+  </button>
+
+</form>
