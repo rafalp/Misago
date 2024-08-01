@@ -52,7 +52,7 @@ export default class extends Form {
     // Misago to redirect user back to right page, and will trigger browser's
     // key ring feature
     form.find('input[type="hidden"]').val(ajax.getCsrfToken())
-    form.find('input[name="redirect_to"]').val(window.location.pathname)
+    form.find('input[name="next"]').val(window.location.pathname)
     form.find('input[name="username"]').val(this.state.username)
     form.find('input[name="password"]').val(this.state.password)
     form.submit()

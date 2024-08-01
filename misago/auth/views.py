@@ -26,6 +26,9 @@ class LoginView(View):
         return super().dispatch(request, **kwargs)
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if request.user.is_authenticated:
+            return self.get_next_page_redirect(request, kwargs)
+
         form = self.form_type(request=request)
         return self.render(request, form, kwargs)
 
@@ -43,9 +46,12 @@ class LoginView(View):
         self, request: HttpRequest, form: AuthenticationForm, kwargs: dict
     ) -> HttpResponse:
         user = form.user_cache
-
         auth.login(request, user)
+        return self.get_next_page_redirect(request, kwargs)
 
+    def get_next_page_redirect(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse:
         if kwargs.get("next"):
             if next_page_url := clean_next_page_url(request, kwargs["next"]):
                 return redirect(next_page_url)

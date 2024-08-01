@@ -5,63 +5,6 @@ from ...conf.test import override_dynamic_settings
 
 
 class AuthViewsTests(TestCase):
-    def test_auth_views_return_302(self):
-        """auth views should always return redirect"""
-        response = self.client.get(reverse("misago:login"))
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.post(reverse("misago:login"))
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.get(reverse("misago:logout"))
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.post(reverse("misago:logout"))
-        self.assertEqual(response.status_code, 302)
-
-    def test_login_view_redirect_to(self):
-        """login view respects redirect_to POST"""
-        # valid redirect
-        response = self.client.post(
-            reverse("misago:login"), data={"redirect_to": "/redirect/"}
-        )
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/redirect/?ref=login")
-
-        # invalid redirect (redirects to other site)
-        response = self.client.post(
-            reverse("misago:login"),
-            data={"redirect_to": "http://somewhereelse.com/page.html"},
-        )
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/")
-
-        # invalid redirect (link name)
-        response = self.client.post(
-            reverse("misago:login"), data={"redirect_to": "misago:users"}
-        )
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/")
-
-        # invalid redirect (non url)
-        response = self.client.post(
-            reverse("misago:login"), data={"redirect_to": "canada goose not url!"}
-        )
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/")
-
-        # invalid redirect (unicode)
-        response = self.client.post(
-            reverse("misago:login"), data={"redirect_to": "łelcome!"}
-        )
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/")
-
     def test_logout_view(self):
         """logout view logs user out on post"""
         response = self.client.post(
@@ -86,6 +29,14 @@ class AuthViewsTests(TestCase):
 
         user_json = response.json()
         self.assertIsNone(user_json["id"])
+
+    def test_logout_view_return_302(self):
+        """logout view should always return redirect"""
+        response = self.client.get(reverse("misago:logout"))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.post(reverse("misago:logout"))
+        self.assertEqual(response.status_code, 302)
 
 
 @override_dynamic_settings(
