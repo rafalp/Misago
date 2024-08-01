@@ -1,6 +1,10 @@
+.page-login-container {
+  padding: @line-height-computed * 4 0;
+}
+
 .panel-login-form {
   max-width: @auth-form-width;
-  margin: @line-height-computed auto;
+  margin: 0 auto;
   padding: @auth-form-padding;
 
   border: 1px solid @auth-form-border;
@@ -9,10 +13,19 @@
 
 .panel-login-form-header {
   margin: 0;
-  margin-bottom: @line-height-computed;
+  margin-bottom: @grid-gutter-width;
 
-  font-size: @font-size-base * 2;
+  font-size: ceil(@font-size-base * 1.5);
   font-weight: normal;
+  text-align: center;
+}
+
+.panel-login-form-error {
+  margin-top: floor(@line-height-computed * -.5);
+  margin-bottom: @line-height-computed;
+  
+  color: @brand-danger;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -20,10 +33,32 @@
   margin-bottom: @line-height-computed;
 }
 
-.panel-login-form-error {
-  margin-bottom: @line-height-computed;
+.panel-login-form .btn-primary {
+  margin-bottom: floor(@line-height-computed / 2);
+}
 
-  color: @brand-danger;
-  font-weight: bold;
-  text-align: center;
+.panel-login-form .btn-link {
+  &:link,
+  &:visited,
+  &:hover,
+  &:focus,
+  &:active {
+    color: @gray-dark;
+    font-weight: bold;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: lighten(@gray-lighter, 3%);
+    border-radius: @border-radius-base;
+    color: @text-color;
+    text-decoration: none;
+  }
+}
+
+@media screen and (max-width: @screen-sm-max) {
+  .page-login-container {
+    padding: @line-height-computed * 2 floor(@grid-gutter-width / 2);
+  }
 }

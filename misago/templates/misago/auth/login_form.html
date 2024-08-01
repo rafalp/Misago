@@ -31,7 +31,11 @@
   {% endwith %}
 
   <button class="btn btn-primary btn-block" type="submit">
-    {% trans "Sign in" context "login form" %}
+    {% trans "Sign in" context "login form btn" %}
   </button>
+
+  <a href="{% url 'misago:forgotten-password' %}" class="btn btn-link btn-block">
+    {% trans "Forgot your password?" context "login form btn" %}
+  </a>
 
 </form>
