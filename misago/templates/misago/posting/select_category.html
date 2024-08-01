@@ -1,11 +1,17 @@
 <ul class="select-category-list">
   {% for choice in start_thread_choices %}
     <li class="select-category-list-header">
-      <div class="select-category-list-item-image{% if child.color %} select-category-list-item-color{% endif %}"{% if child.color %} style="--color: {{ child.color }}"{% endif %}></div>
       {% if choice.disabled %}
-        <span>{{ choice.name }}</span>
+        <span class="select-category-list-item-name">
+          <span class="select-category-list-item-bullet"{% if choice.color %} style="--color: {{ choice.color }}"{% endif %}></span>
+          {{ choice.name }}
+        </span>
       {% else %}
-        <a href="{% url 'misago:start-thread' id=choice.id slug=choice.slug %}">
+        <a
+          href="{% url 'misago:start-thread' id=choice.id slug=choice.slug %}"
+          class="select-category-list-item-name"
+        >
+          <span class="select-category-list-item-bullet"{% if choice.color %} style="--color: {{ choice.color }}"{% endif %}></span>
           {{ choice.name }}
         </a>
       {% endif %}
@@ -15,13 +21,17 @@
         {% for _ in child.level %}
           <div class="select-category-list-item-level"></div>
         {% endfor %}
-        <div class="select-category-list-item-image{% if child.color %} select-category-list-item-color{% endif %}"{% if child.color %} style="--color: {{ child.color }}"{% endif %}></div>
         {% if child.disabled %}
-          <span>
+          <span class="select-category-list-item-name">
+            <span class="select-category-list-item-bullet"{% if choice.color %} style="--color: {{ choice.color }}"{% endif %}></span>
             {{ child.name }}
           </span>
         {% else %}
-          <a href="{% url 'misago:start-thread' id=child.id slug=child.slug %}">
+          <a
+            href="{% url 'misago:start-thread' id=child.id slug=child.slug %}"
+            class="select-category-list-item-name"
+          >
+            <span class="select-category-list-item-bullet"{% if child.color %} style="--color: {{ child.color }}"{% endif %}></span>
             {{ child.name }}
           </a>
         {% endif %}
