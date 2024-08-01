@@ -6,10 +6,8 @@ NEXT_PAGE = "next"
 
 
 def get_next_page_url(request: HttpRequest) -> str | None:
-    redirect_to = request.POST.get(
-        NEXT_PAGE, request.GET.get(NEXT_PAGE)
-    )
-    
+    redirect_to = request.POST.get(NEXT_PAGE, request.GET.get(NEXT_PAGE))
+
     return clean_next_page_url(request, redirect_to)
 
 

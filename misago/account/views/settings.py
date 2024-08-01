@@ -8,9 +8,11 @@ from django.forms import Form, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 
+from ...auth.decorators import login_required
 from ...core.mail import build_mail
 from ...pagination.cursor import EmptyPageError, paginate_queryset
 from ...pagination.redirect import redirect_to_last_page
@@ -42,33 +44,30 @@ from ..menus import account_settings_menu
 User = get_user_model()
 
 
-def raise_if_not_authenticated(request):
-    if not request.user.is_authenticated:
-        raise PermissionDenied(
-            pgettext(
-                "account settings page error",
-                "You need to be signed in to change your account's settings.",
-            )
+def account_settings_login_required():
+    return login_required(
+        pgettext(
+            "account settings login page",
+            "Sign in to change your settings",
         )
+    )
 
 
+@account_settings_login_required()
 def index(request):
-    raise_if_not_authenticated(request)
-
     menu = account_settings_menu.bind_to_request(request)
     return redirect(menu.items[0].url)
 
 
 class AccountSettingsView(View):
+    @method_decorator(account_settings_login_required())
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        raise_if_not_authenticated(request)
-
         try:
             return super().dispatch(request, *args, **kwargs)
         except EmptyPageError as exception:
             return redirect_to_last_page(request, exception)
 
-    def get_template_context(
+    def get_context_data(
         self,
         request: HttpRequest,
         context: dict[str, Any],
@@ -81,7 +80,7 @@ class AccountSettingsView(View):
         template_name: str,
         context: dict[str, Any] | None = None,
     ) -> HttpResponse:
-        final_context = self.get_template_context(request, context or {})
+        final_context = self.get_context_data(request, context or {})
         final_context["account_menu"] = account_settings_menu.bind_to_request(request)
         return render(request, template_name, final_context)
 
@@ -97,7 +96,7 @@ class AccountSettingsFormView(AccountSettingsView):
     def save_form(self, request: HttpRequest, form: Form) -> None:
         form.save()
 
-    def get_template_context(
+    def get_context_data(
         self,
         request: HttpRequest,
         context: dict[str, Any],
@@ -150,7 +149,7 @@ class AccountPreferencesView(AccountSettingsFormView):
 
         return AccountPreferencesForm(instance=request.user)
 
-    def get_template_context(
+    def get_context_data(
         self,
         request: HttpRequest,
         context: dict[str, Any],
@@ -213,7 +212,7 @@ class AccountUsernameView(AccountSettingsFormView):
 
         return self.render(request, template_name, {"form": form})
 
-    def get_template_context(
+    def get_context_data(
         self,
         request: HttpRequest,
         context: dict[str, Any],
@@ -456,7 +455,7 @@ class AccountDownloadDataView(AccountSettingsView):
 
         return redirect("misago:account-download-data")
 
-    def get_template_context(
+    def get_context_data(
         self,
         request: HttpRequest,
         context: dict[str, Any],

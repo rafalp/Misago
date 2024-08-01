@@ -81,7 +81,7 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
 
         if not username or not password:
             raise ValidationError(self.error_messages["empty_data"], code="empty_data")
-        
+
         self.user_cache = authenticate(username=username, password=password)
 
         if self.user_cache is None or not self.user_cache.is_active:

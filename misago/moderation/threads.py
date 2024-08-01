@@ -21,7 +21,7 @@ class ThreadsBulkModerationAction:
     ) -> ModerationResult | None:
         raise NotImplementedError()
 
-    def get_context(self):
+    def get_context_data(self):
         return {
             "id": self.id,
             "name": str(self.name),

@@ -21,9 +21,9 @@ def test_account_download_data_returns_error_if_data_downloads_are_disabled(db, 
 
 
 @override_dynamic_settings(allow_data_downloads=True)
-def test_account_download_data_returns_error_for_guests(db, client):
+def test_account_download_data_displays_login_page_for_guests(db, client):
     response = client.get(reverse("misago:account-download-data"))
-    assert_contains(response, "You need to be signed in", status_code=403)
+    assert_contains(response, "Sign in to change your settings")
 
 
 @override_dynamic_settings(allow_data_downloads=True)

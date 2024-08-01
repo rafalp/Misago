@@ -38,14 +38,16 @@ class LoginView(View):
             pass
 
         return self.render(request, form, kwargs)
-    
-    def handle_valid_form(self, request: HttpRequest, form: AuthenticationForm, kwargs: dict) -> HttpResponse:
+
+    def handle_valid_form(
+        self, request: HttpRequest, form: AuthenticationForm, kwargs: dict
+    ) -> HttpResponse:
         user = form.user_cache
 
         auth.login(request, user)
 
         if kwargs.get("next"):
-            if next_page_url := clean_next_page_url(kwargs["next"]):
+            if next_page_url := clean_next_page_url(request, kwargs["next"]):
                 return redirect(next_page_url)
 
         if next_page_url := get_next_page_url(request):
@@ -53,17 +55,20 @@ class LoginView(View):
 
         return redirect(settings.LOGIN_REDIRECT_URL)
 
-    def render(self, request: HttpRequest, form: AuthenticationForm, kwargs: dict) -> HttpResponse:
+    def render(
+        self, request: HttpRequest, form: AuthenticationForm, kwargs: dict
+    ) -> HttpResponse:
         context = {"form": form}
-        if kwargs.get("header"):
-            context["form_header"] = kwargs["form_header"]
+
+        if kwargs.get("message"):
+            context["form_header"] = kwargs["message"]
+
         if kwargs.get("next"):
-            context["next_page_url"] = clean_next_page_url(kwargs["next"])
+            context["next_page_url"] = clean_next_page_url(request, kwargs["next"])
         else:
             context["next_page_url"] = get_next_page_url(request)
 
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, context)
 
 
 login_view = sensitive_post_parameters()(never_cache(LoginView.as_view()))
-    

@@ -3,9 +3,9 @@ from django.urls import reverse
 from ...test import assert_contains, assert_has_success_message
 
 
-def test_account_details_returns_error_for_guests(db, client):
+def test_account_details_displays_login_page_for_guests(db, client):
     response = client.get(reverse("misago:account-details"))
-    assert_contains(response, "You need to be signed in", status_code=403)
+    assert_contains(response, "Sign in to change your settings")
 
 
 def test_account_details_renders_form(user_client):
