@@ -4,7 +4,7 @@ from typing import Callable
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 
-from .views import login_view
+from .views import login
 
 
 def login_required(f_or_message: Callable | str):
@@ -29,7 +29,7 @@ def _create_login_required_decorator(f: Callable, message: str | None = None):
             if request.is_htmx:
                 raise PermissionDenied(login_message)
 
-            return login_view(
+            return login(
                 request,
                 message=login_message,
                 next=request.get_full_path_info(),

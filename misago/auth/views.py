@@ -77,4 +77,4 @@ class LoginView(View):
         return render(request, self.template_name, context)
 
 
-login_view = sensitive_post_parameters()(never_cache(LoginView.as_view()))
+login = sensitive_post_parameters()(never_cache(LoginView.as_view()))
