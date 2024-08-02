@@ -58,7 +58,7 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     """
 
     username = forms.CharField(
-        label=pgettext_lazy("login form", "Username or e-mail"),
+        label=pgettext_lazy("login form", "Username or email"),
         required=False,
         max_length=254,
     )

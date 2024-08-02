@@ -12,23 +12,24 @@
   <div class="container page-container page-login-container">
 
     <div class="panel-login-form">
-      <h1 class="panel-login-form-header">
-        {% if form_header %}
-          {{ form_header }}
-        {% else %}
-          {% trans "Sign in" context "login page" %}
+      <div class="panel-login-form-body">
+        <h1 class="panel-login-form-header">
+          {% if form_header %}
+            {{ form_header }}
+          {% else %}
+            {% trans "Sign in" context "login page" %}
+          {% endif %}
+        </h1>
+
+        {% if form.non_field_errors %}
+          <p class="panel-login-form-error">
+            {{ form.non_field_errors|first }}
+          </p>
         {% endif %}
-      </h1>
-
-      {% if form.non_field_errors %}
-        <p class="panel-login-form-error">
-          {{ form.non_field_errors|first }}
-        </p>
-      {% endif %}
-  
-      {% include "misago/auth/login_form.html" %}
+    
+        {% include "misago/auth/login_form.html" %}
+      </div>
     </div>
-
   </div>
 </div>
 {% endblock content %}

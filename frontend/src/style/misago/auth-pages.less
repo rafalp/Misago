@@ -5,10 +5,13 @@
 .panel-login-form {
   max-width: @auth-form-width;
   margin: 0 auto;
-  padding: @auth-form-padding;
 
   border: 1px solid @auth-form-border;
   border-radius: @border-radius-base;
+}
+
+.panel-login-form-body {
+  padding: @auth-form-padding;
 }
 
 .panel-login-form-header {
@@ -35,32 +38,19 @@
   font-size: 16px;
 }
 
-.panel-login-form .btn-primary {
-  margin-bottom: floor(@line-height-computed / 2);
-}
-
-.panel-login-form .btn-link {
-  &:link,
-  &:visited,
-  &:hover,
-  &:focus,
-  &:active {
-    color: @gray-dark;
-    font-weight: bold;
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: lighten(@gray-lighter, 3%);
-    border-radius: @border-radius-base;
-    color: @text-color;
-    text-decoration: none;
-  }
-}
-
 @media screen and (max-width: @screen-sm-max) {
   .page-login-container {
     padding: @line-height-computed * 2 floor(@grid-gutter-width / 2);
+  }
+}
+
+@media screen and (max-width: calc(@auth-form-width + @grid-gutter-width)) {
+  .page-login-container {
+    padding: @line-height-computed 0;
+  }
+
+  .panel-login-form {
+    border-radius: 0;
+    border-width: 1px 0;
   }
 }

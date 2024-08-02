@@ -64,7 +64,10 @@ class LoginView(View):
     def render(
         self, request: HttpRequest, form: AuthenticationForm, kwargs: dict
     ) -> HttpResponse:
-        context = {"form": form}
+        context = {
+            "form": form,
+            "social_login": list(request.socialauth.values()),
+        }
 
         if kwargs.get("message"):
             context["form_header"] = kwargs["message"]

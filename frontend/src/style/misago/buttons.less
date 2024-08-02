@@ -141,3 +141,21 @@
 .btn-moderation {
   .button-variant(@btn-moderation-color; @btn-moderation-bg; @btn-moderation-border);
 }
+
+// Social sign in button
+.btn-social {
+  background-color: #fff;
+  border-color: var(--color, @gray-lighter);
+  color: var(--color, @text-color);
+
+  &:hover,
+  &:focus {
+    background-color: lighten(@gray-lighter, 4%);
+    color: var(--color, @text-color);
+  }
+
+  &:active {
+    border-color: var(--color, @gray-light);
+    box-shadow: none;
+  }
+}

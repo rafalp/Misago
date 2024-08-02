@@ -18,6 +18,7 @@ def get_providers_from_db():
     for provider in SocialAuthProvider.objects.filter(is_active=True):
         data[provider.pk] = {
             "pk": provider.pk,
+            "provider": provider.provider,
             "name": providers.get_name(provider.pk),
             "settings": get_provider_settings(provider),
             "auth_backend": None,
