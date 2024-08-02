@@ -2,50 +2,76 @@
   font-size: @font-size-small;
 }
 
-.text-color,
-.text-color:link,
-.text-color:visited { color: @text-color; }
+.text-color { color: @text-color; }
+.text-gray-darker { color: @gray-darker; }
+.text-gray-dark { color: @gray-dark; }
+.text-gray { color: @gray; }
+.text-gray-light { color: @gray-light; }
+.text-gray-lighter { color: @gray-lighter; }
 
-.text-gray-darker,
-.text-gray-darker:link,
-.text-gray-darker:visited { color: @gray-darker; }
+.link-text-color {
+  &,
+  &:active
+  &:focus,
+  &:hover,
+  &:link,
+  &:visited {
+    color: @text-color;
+  }
+}
 
-.text-gray-dark,
-.text-gray-dark:link,
-.text-gray-dark:visited { color: @gray-dark; }
+.link-gray-darker {
+  &,
+  &:link,
+  &:visited {
+    color: @gray-darker;
+  }
 
-.text-gray,
-.text-gray:link,
-.text-gray:visited { color: @gray; }
+  &:active
+  &:focus,
+  &:hover {
+    color: @text-color;
+  }
+}
 
-.text-gray-light,
-.text-gray-light:link,
-.text-gray-light:visited { color: @gray-light; }
+.link-gray-dark {
+  &,
+  &:link,
+  &:visited {
+    color: @gray-dark;
+  }
 
-.text-gray-lighter,
-.text-gray-lighter:link,
-.text-gray-lighter:visited { color: @gray-lighter; }
+  &:active
+  &:focus,
+  &:hover {
+    color: @text-color;
+  }
+}
 
-.hover\:text-color:active,
-.hover\:text-color:focus,
-.hover\:text-color:hover { color: @text-color; }
+.link-gray {
+  &,
+  &:link,
+  &:visited {
+    color: @gray;
+  }
 
-.hover\:text-gray-darker:active,
-.hover\:text-gray-darker:focus,
-.hover\:text-gray-darker:hover { color: @gray-darker; }
+  &:active
+  &:focus,
+  &:hover {
+    color: @text-color;
+  }
+}
 
-.hover\:text-gray-dark:active,
-.hover\:text-gray-dark:focus,
-.hover\:text-gray-dark:hover { color: @gray-dark; }
+.link-gray-light {
+  &,
+  &:link,
+  &:visited {
+    color: @gray-light;
+  }
 
-.hover\:text-gray:active,
-.hover\:text-gray:focus,
-.hover\:text-gray:hover { color: @gray; }
-
-.hover\:text-gray-light:active,
-.hover\:text-gray-light:focus,
-.hover\:text-gray-light:hover { color: @gray-light; }
-
-.hover\:text-gray-lighter:active,
-.hover\:text-gray-lighter:focus,
-.hover\:text-gray-lighter:hover { color: @gray-lighter; }
+  &:active
+  &:focus,
+  &:hover {
+    color: @text-color;
+  }
+}

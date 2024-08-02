@@ -145,17 +145,19 @@
 // Social sign in button
 .btn-social {
   background-color: #fff;
-  border-color: var(--color, @gray-lighter);
+  border: 2px solid var(--color, @gray-lighter);
   color: var(--color, @text-color);
 
   &:hover,
   &:focus {
-    background-color: lighten(@gray-lighter, 4%);
+    background-color: #fff;
+    border-color: var(--color, darken(@gray-lighter, 15%));
     color: var(--color, @text-color);
   }
 
   &:active {
-    border-color: var(--color, @gray-light);
+    background-color: lighten(@gray-lighter, 5%);
+    border-color: var(--color, lighten(@brand-primary, 15%));
     box-shadow: none;
   }
 }
