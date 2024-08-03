@@ -28,9 +28,6 @@ def clean_next_page_url(request: HttpRequest, redirect_to: str) -> str | None:
     if not path:
         return None
 
-    if path == request.path_info:
-        return None
-
     try:
         resolve(path)
         return build_redirect_url(path, query)

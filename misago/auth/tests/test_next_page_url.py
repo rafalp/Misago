@@ -67,15 +67,3 @@ def test_clean_next_page_url_returns_none_for_absolute_url_with_invalid_path(rf)
     request = rf.get(reverse("misago:login"))
     next_page_url = clean_next_page_url(request, "http://testserver/wp-admin.php")
     assert next_page_url is None
-
-
-def test_clean_next_page_url_returns_none_for_relative_url_pointing_to_current_page(rf):
-    request = rf.get(reverse("misago:login"))
-    next_page_url = clean_next_page_url(request, reverse("misago:login"))
-    assert next_page_url is None
-
-
-def test_clean_next_page_url_returns_none_for_absolute_url_pointing_to_current_page(rf):
-    request = rf.get(reverse("misago:login"))
-    next_page_url = clean_next_page_url(request, "http://testserver/login/")
-    assert next_page_url is None
