@@ -25,7 +25,7 @@ class LoginView(View):
             return self.get_next_page_redirect(request, kwargs)
 
         if request.settings.enable_oauth2_client:
-            return delegated_login(request)
+            return delegated_login(request, message=kwargs.get("message"))
 
         return super().dispatch(request, **kwargs)
 
@@ -85,8 +85,8 @@ class LoginView(View):
 login = sensitive_post_parameters()(never_cache(LoginView.as_view()))
 
 
-def delegated_login(request: HttpRequest):
-    return render(request, "misago/auth/delegated_page.html")
+def delegated_login(request: HttpRequest, *, message: str | None = None):
+    return render(request, "misago/auth/delegated_page.html", {"form_header": message})
 
 
 def is_misago_login_page_disabled() -> bool:

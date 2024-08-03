@@ -3,6 +3,7 @@ from urllib.parse import quote_plus
 from django.test import override_settings
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...test import assert_contains, assert_not_contains
 
 
@@ -115,3 +116,14 @@ def test_login_view_displays_social_auth_buttons(
 def test_login_view_is_not_available_if_custom_login_url_is_set(db, client):
     response = client.get(reverse("misago:login"))
     assert response.status_code == 404
+
+
+@override_dynamic_settings(
+    enable_oauth2_client=True,
+    oauth2_provider="OAuth2",
+)
+def test_login_view_displays_delegated_page_if_auth_is_delegated(db, client):
+    response = client.get(reverse("misago:login"))
+    assert_contains(response, "page-login")
+    assert_contains(response, "Sign in")
+    assert_contains(response, "Sign in with OAuth2")

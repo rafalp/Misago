@@ -13,9 +13,7 @@ export default function SignInButton({ block, className, onClick }) {
           "btn-block": block,
         })}
         href={settings.LOGIN_URL}
-        onClick={(event) => {
-          event.preventDefault()
-  
+        onClick={() => {
           if (onClick) {
             onClick()
           }
