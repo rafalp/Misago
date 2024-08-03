@@ -56,7 +56,7 @@ class LoginView(View):
             if next_page_url := clean_next_page_url(request, kwargs["next"]):
                 return redirect(next_page_url)
 
-        if next_page_url := get_next_page_url(request):
+        elif next_page_url := get_next_page_url(request):
             return redirect(next_page_url)
 
         return redirect(settings.LOGIN_REDIRECT_URL)

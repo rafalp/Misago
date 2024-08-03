@@ -68,3 +68,32 @@ def test_login_view_redirects_authenticated_user_by_query_parameter(
 
     response = client.get(reverse("misago:index"))
     assert_contains(response, user.username)
+
+
+def test_login_view_redirects_already_authenticated_user(user_client):
+    response = user_client.post(reverse("misago:login"))
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:index")
+
+
+def test_login_view_redirects_already_authenticated_user_by_post_value(user_client):
+    response = user_client.post(
+        reverse("misago:login"),
+        {
+            "next": reverse("misago:account-preferences"),
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:account-preferences")
+
+
+def test_login_view_redirects_already_authenticated_user_by_query_parameter(
+    user_client,
+):
+    response = user_client.get(
+        reverse("misago:login")
+        + "?next="
+        + quote_plus(reverse("misago:account-preferences"))
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:account-preferences")
