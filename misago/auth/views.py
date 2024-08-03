@@ -18,7 +18,7 @@ class LoginView(View):
     form_type = AuthenticationForm
 
     def dispatch(self, request: HttpRequest, **kwargs) -> HttpResponse:
-        if is_misago_login_page_disabled():
+        if self.is_view_disabled():
             raise Http404()
 
         if request.user.is_authenticated:
@@ -77,6 +77,9 @@ class LoginView(View):
             context["next_page_url"] = get_next_page_url(request)
 
         return render(request, self.template_name, context)
+
+    def is_view_disabled(self) -> bool:
+        return is_misago_login_page_disabled()
 
 
 login = sensitive_post_parameters()(never_cache(LoginView.as_view()))
