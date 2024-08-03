@@ -26,11 +26,8 @@ def _create_login_required_decorator(f: Callable, message: str | None = None):
         )
 
         if not request.user.is_authenticated:
-            if request.is_htmx:
+            if request.is_htmx or is_misago_login_page_disabled():
                 raise PermissionDenied(login_message)
-
-            if is_misago_login_page_disabled():
-                pass
 
             return login(
                 request,
