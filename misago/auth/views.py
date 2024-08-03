@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import auth
-from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import pgettext
 from django.views import View
 from django.views.decorators.cache import never_cache
@@ -10,6 +10,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from ..users.forms.auth import AuthenticationForm
 from .nextpage import clean_next_page_url, get_next_page_url
+from .loginurl import get_login_url
 
 
 class LoginView(View):
@@ -17,14 +18,14 @@ class LoginView(View):
     form_type = AuthenticationForm
 
     def dispatch(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if is_misago_login_page_disabled():
+            raise Http404()
+
         if request.user.is_authenticated:
             return self.get_next_page_redirect(request, kwargs)
 
         if request.settings.enable_oauth2_client:
-            raise PermissionDenied(
-                pgettext("login", "Please use %(provider)s to sign in.")
-                % {"provider": request.settings.oauth2_provider}
-            )
+            return delegated_login(request)
 
         return super().dispatch(request, **kwargs)
 
@@ -79,3 +80,11 @@ class LoginView(View):
 
 
 login = sensitive_post_parameters()(never_cache(LoginView.as_view()))
+
+
+def delegated_login(request: HttpRequest):
+    return render(request, "misago/auth/delegated_page.html")
+
+
+def is_misago_login_page_disabled() -> bool:
+    return get_login_url() != reverse("misago:login")

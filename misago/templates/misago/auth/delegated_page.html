@@ -1,0 +1,33 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+  {% trans "Sign in" context "login page" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-login">
+  <div class="container page-container page-login-container">
+
+    <div class="panel-login-form">
+      <div class="panel-login-form-body">
+        <h1 class="panel-login-form-header">
+          {% if form_header %}
+            {{ form_header }}
+          {% else %}
+            {% trans "Sign in" context "login page" %}
+          {% endif %}
+        </h1>
+    
+        <a href="{% url 'misago:oauth2-login' %}" class="btn btn-primary btn-block">
+          {% blocktrans trimmed with provider=settings.oauth2_provider context "login form oauth btn" %}
+            Sign in with {{ provider }}
+          {% endblocktrans %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

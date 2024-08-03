@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import override_settings
 
-from ..urls import get_login_url
+from ..loginurl import get_login_url
 
 
 @override_settings(LOGIN_URL="misago:login")

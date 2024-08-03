@@ -1,5 +1,6 @@
 from urllib.parse import quote_plus
 
+from django.test import override_settings
 from django.urls import reverse
 
 from ...test import assert_contains, assert_not_contains
@@ -108,3 +109,9 @@ def test_login_view_displays_social_auth_buttons(
     assert_contains(response, "Sign in with GitHub")
     assert_contains(response, "Sign in with Facebook")
     assert_not_contains(response, "Sign in with X")
+
+
+@override_settings(LOGIN_URL="/other/login/")
+def test_login_view_is_not_available_if_custom_login_url_is_set(db, client):
+    response = client.get(reverse("misago:login"))
+    assert response.status_code == 404

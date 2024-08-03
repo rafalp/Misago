@@ -4,7 +4,7 @@ from typing import Callable
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 
-from .views import login
+from .views import is_misago_login_page_disabled, login
 
 
 def login_required(f_or_message: Callable | str):
@@ -28,6 +28,9 @@ def _create_login_required_decorator(f: Callable, message: str | None = None):
         if not request.user.is_authenticated:
             if request.is_htmx:
                 raise PermissionDenied(login_message)
+
+            if is_misago_login_page_disabled():
+                pass
 
             return login(
                 request,

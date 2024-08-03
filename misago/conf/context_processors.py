@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.translation import get_language
 
 import misago
+from ..auth.loginurl import get_login_url
 from . import settings
 
 
@@ -58,7 +59,7 @@ def preload_settings_json(request):
     if request.settings.enable_oauth2_client:
         login_url = reverse("misago:oauth2-login")
     else:
-        login_url = reverse(settings.LOGIN_URL)
+        login_url = get_login_url()
 
     preloaded_settings.update(
         {
