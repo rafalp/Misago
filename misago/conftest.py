@@ -11,6 +11,7 @@ from .conf.staticsettings import StaticSettings
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .socialauth import SOCIALAUTH_CACHE
+from .socialauth.models import SocialAuthProvider
 from .test import MisagoClient
 from .themes import THEME_CACHE
 from .threads.models import Thread
@@ -413,3 +414,21 @@ def watched_thread_factory():
         )
 
     return create_watched_thread
+
+
+@pytest.fixture
+def social_auth_github(db):
+    return SocialAuthProvider.objects.create(
+        provider="github",
+        is_active=True,
+        order=SocialAuthProvider.objects.filter(is_active=True).count(),
+    )
+
+
+@pytest.fixture
+def social_auth_facebook(db):
+    return SocialAuthProvider.objects.create(
+        provider="facebook",
+        is_active=True,
+        order=SocialAuthProvider.objects.filter(is_active=True).count(),
+    )

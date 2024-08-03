@@ -2,7 +2,7 @@ from urllib.parse import quote_plus
 
 from django.urls import reverse
 
-from ...test import assert_contains
+from ...test import assert_contains, assert_not_contains
 
 
 def test_login_view_displays_login_form_to_guests(db, client):
@@ -97,3 +97,14 @@ def test_login_view_redirects_already_authenticated_user_by_query_parameter(
     )
     assert response.status_code == 302
     assert response["location"] == reverse("misago:account-preferences")
+
+
+def test_login_view_displays_social_auth_buttons(
+    social_auth_github, social_auth_facebook, client
+):
+    response = client.get(reverse("misago:login"))
+    assert_contains(response, "page-login")
+    assert_contains(response, "Sign in")
+    assert_contains(response, "Sign in with GitHub")
+    assert_contains(response, "Sign in with Facebook")
+    assert_not_contains(response, "Sign in with X")
