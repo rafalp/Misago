@@ -8,6 +8,7 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
+from ..core.exceptions import Banned
 from ..users.forms.auth import AuthenticationForm
 from .nextpage import clean_next_page_url, get_next_page_url
 from .loginurl import get_login_url
@@ -39,7 +40,7 @@ class LoginView(View):
             return self.handle_valid_form(request, form, kwargs)
 
         if form.user_ban:
-            pass
+            raise Banned(form.user_ban)
 
         return self.render(request, form, kwargs)
 

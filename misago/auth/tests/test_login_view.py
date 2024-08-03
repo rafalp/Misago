@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...test import assert_contains, assert_not_contains
+from ...users.models import Ban
 
 
 def test_login_view_displays_login_form_to_guests(db, client):
@@ -127,3 +128,20 @@ def test_login_view_displays_delegated_page_if_auth_is_delegated(db, client):
     assert_contains(response, "page-login")
     assert_contains(response, "Sign in")
     assert_contains(response, "Sign in with OAuth2")
+
+
+def test_login_view_displays_banned_page_to_banned_users(client, user, user_password):
+    ban = Ban.objects.create(
+        banned_value=user.username,
+        check_type=Ban.USERNAME,
+        user_message="This is a test ban.",
+    )
+
+    response = client.post(
+        reverse("misago:login"),
+        {
+            "username": user.email,
+            "password": user_password,
+        },
+    )
+    assert_contains(response, ban.user_message, status_code=403)
