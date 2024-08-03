@@ -130,6 +130,37 @@ def test_login_view_displays_delegated_page_if_auth_is_delegated(db, client):
     assert_contains(response, "Sign in with OAuth2")
 
 
+def test_login_view_displays_error_if_username_is_missing(db, client):
+    response = client.post(reverse("misago:login"), {"password": "password"})
+    assert_contains(response, "Fill out both fields.")
+
+
+def test_login_view_displays_error_if_password_is_missing(db, client):
+    response = client.post(reverse("misago:login"), {"username": "username"})
+    assert_contains(response, "Fill out both fields.")
+
+
+def test_login_view_displays_error_if_username_and_password_is_missing(db, client):
+    response = client.post(reverse("misago:login"))
+    assert_contains(response, "Fill out both fields.")
+
+
+def test_login_view_displays_error_if_username_is_invalid(db, client):
+    response = client.post(
+        reverse("misago:login"),
+        {"username": "invalid", "password": "invalid"},
+    )
+    assert_contains(response, "Login or password is incorrect.")
+
+
+def test_login_view_displays_error_if_password_is_invalid(client, user):
+    response = client.post(
+        reverse("misago:login"),
+        {"username": user.username, "password": "invalid"},
+    )
+    assert_contains(response, "Login or password is incorrect.")
+
+
 def test_login_view_displays_banned_page_to_banned_users(client, user, user_password):
     ban = Ban.objects.create(
         banned_value=user.username,
