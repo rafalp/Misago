@@ -161,6 +161,19 @@ def test_login_view_displays_error_if_password_is_invalid(client, user):
     assert_contains(response, "Login or password is incorrect.")
 
 
+def test_login_view_displays_error_if_user_account_is_deactivated(
+    client, user, user_password
+):
+    user.is_active = False
+    user.save()
+
+    response = client.post(
+        reverse("misago:login"),
+        {"username": user.username, "password": user_password},
+    )
+    assert_contains(response, "Login or password is incorrect.")
+
+
 def test_login_view_displays_banned_page_to_banned_users(client, user, user_password):
     ban = Ban.objects.create(
         banned_value=user.username,
