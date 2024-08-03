@@ -10,5 +10,5 @@
 {% blocktrans trimmed context "account activated email" %}
 You can now sign in to it using the form below:
 {% endblocktrans %}
-{% absoluteurl LOGIN_URL %}?modal=login
+{% absoluteurl LOGIN_URL %}
 {% endblock content %}

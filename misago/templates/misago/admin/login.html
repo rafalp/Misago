@@ -45,19 +45,30 @@
 
         <div class="form-group">
           <div class="control-input">
-            <input type="text" name="username" class="form-control input-lg" placeholder="{% trans "Username or e-mail" context "admin login form" %}" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+            <input
+              type="text"
+              name="username"
+              class="form-control input-lg"
+              placeholder="{% trans 'Username or email' context 'admin login form' %}"
+              value="{{ form.username.value|default:'' }}"
+            >
           </div>
         </div>
         <div class="form-group">
           <div class="control-input">
-            <input type="password" name="password" class="form-control input-lg" placeholder="{% trans "Password" context "admin login form" %}">
+            <input
+              type="password"
+              name="password"
+              class="form-control input-lg"
+              placeholder="{% trans 'Password' context 'admin login form' %}"
+            >
           </div>
         </div>
         <button class="btn btn-primary btn-block">
-          {% trans "Sign in" context "admin login form" %}
+          {% trans "Sign in" context "admin login form btn" %}
         </button>
         <a href="{% url 'misago:index' %}" class="btn btn-light btn-block">
-          {% trans "Return to site" context "admin login form" %}
+          {% trans "Return to site" context "admin login form btn" %}
         </a>
       </div>
     </div>

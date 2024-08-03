@@ -10,6 +10,7 @@ app_name = "misago"
 # Register Misago Apps
 urlpatterns = [
     path("", include("misago.analytics.urls")),
+    path("", include("misago.auth.urls")),
     path("", include("misago.legal.urls")),
     path("", include("misago.users.urls")),
     path("account/", include("misago.account.urls")),

@@ -19,9 +19,9 @@ def test_account_delete_returns_error_if_own_account_deletion_is_disabled(db, cl
 
 
 @override_dynamic_settings(enable_oauth2_client=False, allow_delete_own_account=True)
-def test_account_delete_returns_error_for_guests(db, client):
+def test_account_delete_displays_login_page_for_guests(db, client):
     response = client.get(reverse("misago:account-delete"))
-    assert_contains(response, "You need to be signed in", status_code=403)
+    assert_contains(response, "Sign in to change your settings")
 
 
 @override_dynamic_settings(enable_oauth2_client=False, allow_delete_own_account=True)

@@ -12,15 +12,15 @@ User = get_user_model()
 
 class MisagoAuthMixin:
     error_messages = {
-        "empty_data": pgettext_lazy("auth form", "Fill out both fields."),
+        "empty_data": pgettext_lazy("auth form", "Fill out all fields."),
         "invalid_login": pgettext_lazy("auth form", "Login or password is incorrect."),
         "inactive_user": pgettext_lazy(
             "auth form",
-            "You have to activate your account before you will be able to sign in.",
+            "You have to activate your account before you can sign in.",
         ),
         "inactive_admin": pgettext_lazy(
             "auth form",
-            "Your account has to be activated by site administrator before you will be able to sign in.",
+            "A site administrator has to activate your account before you will be able to sign in.",
         ),
     }
 
@@ -58,7 +58,7 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     """
 
     username = forms.CharField(
-        label=pgettext_lazy("login form", "Username or e-mail"),
+        label=pgettext_lazy("login form", "Username or email"),
         required=False,
         max_length=254,
     )
@@ -70,24 +70,26 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     )
 
     def __init__(self, *args, request=None, **kwargs):
+        self.user_ban = None
         self.request = request
-        super().__init__(*args, **kwargs)
+
+        super().__init__(request, *args, **kwargs)
 
     def clean(self):
         username = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
 
-        if username and password:
-            self.user_cache = authenticate(username=username, password=password)
-
-            if self.user_cache is None or not self.user_cache.is_active:
-                raise ValidationError(
-                    self.error_messages["invalid_login"], code="invalid_login"
-                )
-            else:
-                self.confirm_login_allowed(self.user_cache)
-        else:
+        if not username or not password:
             raise ValidationError(self.error_messages["empty_data"], code="empty_data")
+
+        self.user_cache = authenticate(username=username, password=password)
+
+        if self.user_cache is None or not self.user_cache.is_active:
+            raise ValidationError(
+                self.error_messages["invalid_login"], code="invalid_login"
+            )
+
+        self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
 

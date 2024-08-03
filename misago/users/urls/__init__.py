@@ -13,7 +13,6 @@ from ..views import (
 
 urlpatterns = [
     path("banned/", home_redirect, name="banned"),
-    path("login/", auth.login, name="login"),
     path("logout/", auth.logout, name="logout"),
     path(
         "request-activation/",

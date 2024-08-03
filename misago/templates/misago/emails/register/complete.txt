@@ -14,5 +14,5 @@ You may now join discussion on our site. Why not spend a minute or two to have a
 {% blocktrans trimmed context "welcome email" %}
 You can always sign in to your account using the form below:
 {% endblocktrans %}
-{% absoluteurl LOGIN_URL %}?modal=login
+{% absoluteurl LOGIN_URL %}
 {% endblock content %}

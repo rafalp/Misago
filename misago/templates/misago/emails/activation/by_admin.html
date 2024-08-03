@@ -9,7 +9,7 @@
 <br>
 <br>
 {% capture trimmed as login_link %}
-<a href="{% absoluteurl LOGIN_URL %}?modal=login">{% trans "this form" context "account activated email from admin sign in cta link" %}</a>
+<a href="{% absoluteurl LOGIN_URL %}">{% trans "this form" context "account activated email from admin sign in cta link" %}</a>
 {% endcapture %}
 {% blocktrans trimmed with login_form=login_link|safe context "account activated email from admin sign in cta" %}
 You can now sign in to it using {{ login_form }}.

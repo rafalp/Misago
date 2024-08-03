@@ -13,7 +13,11 @@ export default function SignInButton({ block, className, onClick }) {
           "btn-block": block,
         })}
         href={settings.LOGIN_URL}
-        onClick={onClick}
+        onClick={() => {
+          if (onClick) {
+            onClick()
+          }
+        }}
       >
         {pgettext("cta", "Sign in")}
       </a>
@@ -21,12 +25,14 @@ export default function SignInButton({ block, className, onClick }) {
   }
 
   return (
-    <button
+    <a
       className={classnames("btn btn-sign-in", className, {
         "btn-block": block,
       })}
-      type="button"
-      onClick={() => {
+      href={settings.LOGIN_URL}
+      onClick={(event) => {
+        event.preventDefault()
+
         if (onClick) {
           onClick()
         }
@@ -35,6 +41,6 @@ export default function SignInButton({ block, className, onClick }) {
       }}
     >
       {pgettext("cta", "Sign in")}
-    </button>
+    </a>
   )
 }

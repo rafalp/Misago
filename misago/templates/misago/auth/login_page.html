@@ -1,0 +1,49 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_plugins %}
+
+
+{% block title %}
+  {% trans "Sign in" context "login page" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-login">
+  <div class="container page-container page-login-container">
+
+    {% pluginoutlet LOGIN_PAGE_START %}
+
+    <div class="panel-login-form">
+      <div class="panel-login-form-body">
+        <h1 class="panel-login-form-header">
+          {% if form_header %}
+            {{ form_header }}
+          {% else %}
+            {% trans "Sign in" context "login page" %}
+          {% endif %}
+        </h1>
+
+        {% if form.non_field_errors %}
+          {% with form.non_field_errors.as_data|first as form_error %}
+            <p class="panel-login-form-error">
+              {{ form_error.message }}
+
+              {% if form_error.code == "inactive_user" %}
+                <br />
+                <a href="{% url 'misago:request-activation' %}" class="inline-block mt-2 link-text-color">
+                  {% trans "Request new activation link?" context "login form" %}
+                </a>
+              {% endif %}
+            </p>
+          {% endwith %}
+        {% endif %}
+    
+        {% include "misago/auth/login_form.html" %}
+      </div>
+    </div>
+
+    {% pluginoutlet LOGIN_PAGE_END %}
+
+  </div>
+</div>
+{% endblock content %}

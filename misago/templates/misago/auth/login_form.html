@@ -1,0 +1,76 @@
+{% load i18n misago_forms %}
+<form method="POST">
+  {% csrf_token %}
+
+  {% if next_page_url %}
+    <input name="next" type="hidden" value="{{ next_page_url }}" />
+  {% endif %}
+
+  {% with form.username as field %}
+    <div class="form-group">
+      <label class="control-label"  for="{{ field.id_for_label }}">
+        {{ field.label }}
+      </label>
+      <input
+        class="form-control"
+        id="{{ field.id_for_label }}"
+        name="{{ field.html_name }}"
+        type="text"
+        maxlength="{{ field.field.max_length }}"
+        value="{{ field.value|default:'' }}"
+        {{ field|requiredhtml }}
+      />
+    </div>
+  {% endwith %}
+  {% with form.password as field %}
+    <div class="form-group">
+      <div class="flex content-center justify-between">
+        <label class="control-label"  for="{{ field.id_for_label }}">
+          {{ field.label }}
+        </label>
+        <a href="{% url 'misago:forgotten-password' %}" class="link-gray">
+          {% trans "Forgot your password?" context "login form" %}
+        </a>
+      </div>
+      <input
+        class="form-control"
+        id="{{ field.id_for_label }}"
+        name="{{ field.html_name }}"
+        type="password"
+        maxlength="{{ field.field.max_length }}"
+        {{ field|requiredhtml }}
+      />
+    </div>
+  {% endwith %}
+
+  <button class="btn btn-primary btn-block" type="submit">
+    {% trans "Sign in" context "login form btn" %}
+  </button>
+
+  {% if social_login %}
+    <div class="section-divider mx-2">
+      <hr />
+      <strong>{% trans "Or" context "login form social auth" %}</strong>
+      <hr />
+    </div>
+
+    {% for social_site in social_login %}
+      <a
+        href="{% url 'misago:social-login' backend=social_site.provider %}"
+        class="btn btn-social-{{ social_site.provider }} btn-block"
+        {% if social_site.button_color %}
+          style="--color: {{ social_site.button_color }}"
+        {% endif %}
+      >
+        {% if social_site.button_text %}
+          {{ social_site.button_text }}
+        {% else %}
+          {% blocktrans trimmed with site_name=social_site.name context "login form social auth btn" %}
+            Sign in with {{ site_name }}
+          {% endblocktrans %}
+        {% endif %}
+      </a>
+    {% endfor %}
+  {% endif %}
+
+</form>

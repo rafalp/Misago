@@ -1,0 +1,23 @@
+.section-divider {
+  display: flex;
+  align-items: center;
+
+  hr {
+    width: 100%;
+
+    border-width: 3px;
+    border-radius: @border-radius-small;
+  }
+
+  strong {
+    padding: 0 16px;
+  }
+}
+
+.section-divider-primary {
+  color: @brand-primary;
+
+  hr {
+    border-color: lighten(@brand-primary, 50%);
+  }
+}

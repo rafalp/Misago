@@ -61,17 +61,17 @@ from ..filters import (
     UnapprovedThreadsFilter,
 )
 from ..hooks import (
-    get_category_threads_page_context_hook,
+    get_category_threads_page_context_data_hook,
     get_category_threads_page_filters_hook,
     get_category_threads_page_moderation_actions_hook,
     get_category_threads_page_queryset_hook,
     get_category_threads_page_subcategories_hook,
     get_category_threads_page_threads_hook,
-    get_private_threads_page_context_hook,
+    get_private_threads_page_context_data_hook,
     get_private_threads_page_filters_hook,
     get_private_threads_page_queryset_hook,
     get_private_threads_page_threads_hook,
-    get_threads_page_context_hook,
+    get_threads_page_context_data_hook,
     get_threads_page_filters_hook,
     get_threads_page_moderation_actions_hook,
     get_threads_page_queryset_hook,
@@ -113,7 +113,7 @@ class ListView(View):
         ):
             return self.poll_new_threads(request, kwargs)
 
-        context = self.get_context(request, kwargs)
+        context = self.get_context_data(request, kwargs)
 
         if request.is_htmx:
             template_name = self.template_name_htmx
@@ -122,7 +122,7 @@ class ListView(View):
 
         return render(request, template_name, context)
 
-    def get_context(self, request: HttpRequest, kwargs: dict) -> dict:
+    def get_context_data(self, request: HttpRequest, kwargs: dict) -> dict:
         return {}
 
     def show_thread_flags(
@@ -361,7 +361,7 @@ class ThreadsListView(ListView):
             result.update_context(
                 {
                     "is_index": kwargs.get("is_index", False),
-                    "moderation_action": action.get_context(),
+                    "moderation_action": action.get_context_data(),
                     "threads": threads,
                     "selection": selection,
                     "form_action": self.get_current_url(request),
@@ -370,10 +370,12 @@ class ThreadsListView(ListView):
 
         return result
 
-    def get_context(self, request: HttpRequest, kwargs: dict):
-        return get_threads_page_context_hook(self.get_context_action, request, kwargs)
+    def get_context_data(self, request: HttpRequest, kwargs: dict):
+        return get_threads_page_context_data_hook(
+            self.get_context_data_action, request, kwargs
+        )
 
-    def get_context_action(self, request: HttpRequest, kwargs: dict):
+    def get_context_data_action(self, request: HttpRequest, kwargs: dict):
         subcategories = self.get_subcategories(request)
         threads = self.get_threads(request, kwargs)
 
@@ -666,7 +668,7 @@ class CategoryThreadsListView(ListView):
             result.update_context(
                 {
                     "category": category,
-                    "moderation_action": action.get_context(),
+                    "moderation_action": action.get_context_data(),
                     "threads": threads,
                     "selection": selection,
                     "breadcrumbs": request.categories.get_category_path(
@@ -678,12 +680,12 @@ class CategoryThreadsListView(ListView):
 
         return result
 
-    def get_context(self, request: HttpRequest, kwargs: dict):
-        return get_category_threads_page_context_hook(
-            self.get_context_action, request, kwargs
+    def get_context_data(self, request: HttpRequest, kwargs: dict):
+        return get_category_threads_page_context_data_hook(
+            self.get_context_data_action, request, kwargs
         )
 
-    def get_context_action(self, request: HttpRequest, kwargs: dict):
+    def get_context_data_action(self, request: HttpRequest, kwargs: dict):
         category = self.get_category(request, kwargs)
 
         if not category.is_vanilla or category.list_children_threads:
@@ -1100,12 +1102,12 @@ class PrivateThreadsListView(ListView):
 
         return super().dispatch(request, *args, **kwargs)
 
-    def get_context(self, request: HttpRequest, kwargs: dict):
-        return get_private_threads_page_context_hook(
-            self.get_context_action, request, kwargs
+    def get_context_data(self, request: HttpRequest, kwargs: dict):
+        return get_private_threads_page_context_data_hook(
+            self.get_context_data_action, request, kwargs
         )
 
-    def get_context_action(self, request: HttpRequest, kwargs: dict):
+    def get_context_data_action(self, request: HttpRequest, kwargs: dict):
         category = Category.objects.private_threads()
 
         context = {

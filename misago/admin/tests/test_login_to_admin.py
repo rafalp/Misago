@@ -11,7 +11,7 @@ def test_login_form_is_displayed(db, client):
     assert response.status_code == 200
     assert_contains(response, "Administration")
     assert_contains(response, "Sign in")
-    assert_contains(response, "Username or e-mail")
+    assert_contains(response, "Username or email")
     assert_contains(response, "Password")
 
 
