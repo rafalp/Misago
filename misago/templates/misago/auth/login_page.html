@@ -11,6 +11,8 @@
 <div class="page page-login">
   <div class="container page-container page-login-container">
 
+    {% pluginoutlet LOGIN_PAGE_START %}
+
     <div class="panel-login-form">
       <div class="panel-login-form-body">
         <h1 class="panel-login-form-header">
@@ -30,6 +32,9 @@
         {% include "misago/auth/login_form.html" %}
       </div>
     </div>
+
+    {% pluginoutlet LOGIN_PAGE_END %}
+
   </div>
 </div>
 {% endblock content %}
