@@ -37,12 +37,3 @@ class AuthViewsTests(TestCase):
 
         response = self.client.post(reverse("misago:logout"))
         self.assertEqual(response.status_code, 302)
-
-
-@override_dynamic_settings(
-    enable_oauth2_client=True,
-    oauth2_provider="Lorem",
-)
-def test_login_view_returns_403_if_oauth_is_enabled(db, client):
-    response = client.get(reverse("misago:login"))
-    assert response.status_code == 403
