@@ -176,3 +176,45 @@ def test_login_view_displays_banned_page_to_banned_users(client, user, user_pass
         },
     )
     assert_contains(response, ban.user_message, status_code=403)
+
+
+def test_login_view_excludes_root_misago_admins_from_ban_check(
+    client, root_admin, user_password
+):
+    Ban.objects.create(
+        banned_value=root_admin.username,
+        check_type=Ban.USERNAME,
+        user_message="This is a test ban.",
+    )
+
+    response = client.post(
+        reverse("misago:login"),
+        {
+            "username": root_admin.email,
+            "password": user_password,
+        },
+    )
+
+    response = client.get(reverse("misago:index"))
+    assert_contains(response, root_admin.username)
+
+
+def test_login_view_excludes_misago_admins_from_ban_check(
+    client, secondary_admin, user_password
+):
+    Ban.objects.create(
+        banned_value=secondary_admin.username,
+        check_type=Ban.USERNAME,
+        user_message="This is a test ban.",
+    )
+
+    response = client.post(
+        reverse("misago:login"),
+        {
+            "username": secondary_admin.email,
+            "password": user_password,
+        },
+    )
+
+    response = client.get(reverse("misago:index"))
+    assert_contains(response, secondary_admin.username)
