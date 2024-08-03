@@ -12,15 +12,15 @@ User = get_user_model()
 
 class MisagoAuthMixin:
     error_messages = {
-        "empty_data": pgettext_lazy("auth form", "Fill out both fields."),
+        "empty_data": pgettext_lazy("auth form", "Fill out all fields."),
         "invalid_login": pgettext_lazy("auth form", "Login or password is incorrect."),
         "inactive_user": pgettext_lazy(
             "auth form",
-            "You have to activate your account before you will be able to sign in.",
+            "You have to activate your account before you can sign in.",
         ),
         "inactive_admin": pgettext_lazy(
             "auth form",
-            "Your account has to be activated by site administrator before you will be able to sign in.",
+            "A site administrator has to activate your account before you will be able to sign in.",
         ),
     }
 

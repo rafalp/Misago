@@ -1,10 +1,11 @@
 .page-login-container {
-  padding: @line-height-computed * 4 0;
+  padding: @line-height-computed * 2 floor(@grid-gutter-width / 2);
+  margin-bottom: @line-height-computed * -2;
 }
 
 .panel-login-form {
   max-width: @auth-form-width;
-  margin: 0 auto;
+  margin: @line-height-computed auto;
 
   border: 1px solid @auth-form-border;
   border-radius: @border-radius-base;
@@ -16,7 +17,7 @@
 
 .panel-login-form-header {
   margin: 0;
-  margin-bottom: @grid-gutter-width;
+  margin-bottom: @auth-form-padding;
 
   font-size: ceil(@font-size-base * 1.5);
   font-weight: normal;
@@ -40,17 +41,19 @@
 
 @media screen and (max-width: @screen-sm-max) {
   .page-login-container {
-    padding: @line-height-computed * 2 floor(@grid-gutter-width / 2);
-  }
-}
-
-@media screen and (max-width: calc(@auth-form-width + @grid-gutter-width)) {
-  .page-login-container {
-    padding: @line-height-computed 0;
+    padding: @line-height-computed floor(@grid-gutter-width / 2);
   }
 
-  .panel-login-form {
-    border-radius: 0;
-    border-width: 1px 0;
+  .panel-login-form-body {
+    padding: @auth-form-padding-sm;
+  }
+  
+  .panel-login-form-header {
+    margin-bottom: @auth-form-padding-sm;
+  }
+
+  .panel-login-form-error {
+    margin-top: 0;
+    margin-bottom: floor(@line-height-computed / 2);
   }
 }

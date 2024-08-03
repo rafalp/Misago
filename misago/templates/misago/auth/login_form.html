@@ -29,7 +29,7 @@
           {{ field.label }}
         </label>
         <a href="{% url 'misago:forgotten-password' %}" class="link-gray">
-          {% trans "Forgot your password?" context "login form btn" %}
+          {% trans "Forgot your password?" context "login form" %}
         </a>
       </div>
       <input
@@ -57,7 +57,7 @@
     {% for social_site in social_login %}
       <a
         href="{% url 'misago:social-login' backend=social_site.provider %}"
-        class="btn btn-social btn-block"
+        class="btn btn-social-{{ social_site.provider }} btn-block"
         {% if social_site.button_color %}
           style="--color: {{ social_site.button_color }}"
         {% endif %}

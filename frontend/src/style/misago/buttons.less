@@ -142,22 +142,23 @@
   .button-variant(@btn-moderation-color; @btn-moderation-bg; @btn-moderation-border);
 }
 
-// Social sign in button
-.btn-social {
-  background-color: #fff;
-  border: 2px solid var(--color, @gray-lighter);
-  color: var(--color, @text-color);
+// Social sign in buttons
+.btn-social-github {
+  .button-variant(#fff; #333; #333);
+}
 
-  &:hover,
-  &:focus {
-    background-color: #fff;
-    border-color: var(--color, darken(@gray-lighter, 15%));
-    color: var(--color, @text-color);
-  }
+.btn-social-facebook {
+  .button-variant(#fff; #4267b2; #4267b2);
+}
 
-  &:active {
-    background-color: lighten(@gray-lighter, 5%);
-    border-color: var(--color, lighten(@brand-primary, 15%));
-    box-shadow: none;
-  }
+.btn-social-google-oauth2 {
+  .button-variant(#fff; #db4437; #db4437);
+}
+
+.btn-social-discord {
+  .button-variant(#fff; #5865f2; #5865f2);
+}
+
+.btn-social-twitter {
+  .button-variant(#fff; #000000; #000000);
 }

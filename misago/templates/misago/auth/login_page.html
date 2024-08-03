@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_plugins %}
 
 
 {% block title %}
@@ -24,9 +24,18 @@
         </h1>
 
         {% if form.non_field_errors %}
-          <p class="panel-login-form-error">
-            {{ form.non_field_errors|first }}
-          </p>
+          {% with form.non_field_errors.as_data|first as form_error %}
+            <p class="panel-login-form-error">
+              {{ form_error.message }}
+
+              {% if form_error.code == "inactive_user" %}
+                <br />
+                <a href="{% url 'misago:request-activation' %}" class="inline-block mt-2 link-text-color">
+                  {% trans "Request new activation link?" context "login form" %}
+                </a>
+              {% endif %}
+            </p>
+          {% endwith %}
         {% endif %}
     
         {% include "misago/auth/login_form.html" %}

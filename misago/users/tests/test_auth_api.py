@@ -69,7 +69,7 @@ class GatewayTests(TestCase):
         response = self.client.post("/api/auth/")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"code": "empty_data", "detail": "Fill out both fields."}
+            response.json(), {"code": "empty_data", "detail": "Fill out all fields."}
         )
 
     def test_submit_invalid(self):
