@@ -16,6 +16,17 @@ def test_require_login_decorator_displays_view_to_authenticated(user_client):
     assert_not_contains(response, "page-login")
 
 
+def test_require_login_decorator_authenticates_user_by_username(
+    client, user, user_password
+):
+    response = client.post(
+        reverse("misago:account-preferences"),
+        {"username": user.username, "password": user_password},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:account-preferences")
+
+
 @override_settings(LOGIN_URL="/other/login/")
 def test_require_login_decorator_displays_permisison_denied_if_custom_login_page_is_enabled(
     db, client
