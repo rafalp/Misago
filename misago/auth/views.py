@@ -17,6 +17,9 @@ class LoginView(View):
     form_type = AuthenticationForm
 
     def dispatch(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if request.user.is_authenticated:
+            return self.get_next_page_redirect(request, kwargs)
+
         if request.settings.enable_oauth2_client:
             raise PermissionDenied(
                 pgettext("login", "Please use %(provider)s to sign in.")
@@ -26,9 +29,6 @@ class LoginView(View):
         return super().dispatch(request, **kwargs)
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
-        if request.user.is_authenticated:
-            return self.get_next_page_redirect(request, kwargs)
-
         form = self.form_type(request=request)
         return self.render(request, form, kwargs)
 
@@ -72,9 +72,7 @@ class LoginView(View):
         if kwargs.get("message"):
             context["form_header"] = kwargs["message"]
 
-        if kwargs.get("next"):
-            context["next_page_url"] = clean_next_page_url(request, kwargs["next"])
-        else:
+        if "next" not in kwargs:
             context["next_page_url"] = get_next_page_url(request)
 
         return render(request, self.template_name, context)
