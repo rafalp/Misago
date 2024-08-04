@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.forms import Form
 from django.http import Http404, HttpRequest, HttpResponse
 from django.views import View
@@ -20,7 +21,7 @@ def start_thread_login_required():
     return login_required(
         pgettext(
             "start thread page",
-            "Sign in to start a new thread",
+            "Sign in to start new thread",
         )
     )
 
@@ -128,6 +129,14 @@ class ThreadStartSelectCategoryView(View):
         else:
             template_name = self.template_name
 
+        if not context["start_thread_choices"] and not request.is_htmx:
+            raise PermissionDenied(
+                pgettext(
+                    "start thread page",
+                    "You can't start new threads.",
+                )
+            )
+
         return render(request, template_name, context)
 
     def get_context_data(self, request: HttpRequest) -> dict:
@@ -138,7 +147,7 @@ class ThreadStartSelectCategoryView(View):
             choice = {
                 "id": category["id"],
                 "name": category["name"],
-                "slug": category["slug"],
+                "short_name": category["short_name"],
                 "color": category["color"],
                 "level": "",
                 "is_vanilla": category["is_vanilla"],
@@ -155,6 +164,8 @@ class ThreadStartSelectCategoryView(View):
                 choice["level"] = "1" * (category["level"] - 1)
                 parent["children"].append(choice)
 
+        choices_dict: dict[int, dict] = {}
+
         # Remove branches where entire branch is disabled
         clean_choices: list[dict] = []
         for category in choices:
@@ -163,10 +174,21 @@ class ThreadStartSelectCategoryView(View):
                 if not child["disabled"] or (
                     clean_children and clean_children[-1]["level"] > child["level"]
                 ):
+                    choices_dict[child["id"]] = child
                     clean_children.append(child)
 
             if not category["disabled"] or clean_children:
+                choices_dict[category["id"]] = category
                 category["children"] = reversed(clean_children)
                 clean_choices.append(category)
+
+        # Populate choices with full category instances
+        for category in Category.objects.filter(id__in=choices_dict):
+            choices_dict[category.id]["url"] = reverse(
+                "misago:start-thread",
+                kwargs={"id": category.id, "slug": category.slug},
+            )
+            choices_dict[category.id]["category"] = category
+            choices_dict[category.id]["description"] = category.description
 
         return {"start_thread_choices": clean_choices}

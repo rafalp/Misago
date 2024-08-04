@@ -2,60 +2,29 @@
   margin: -4px 0;
   padding: 0;
   list-style: none;
-
-
-  a:link,
-  a:active,
-  a:visited,
-  a:hover,
-  a:focus {
-    color: @text-color;
-  }
-}
-
-.select-category-list-header,
-.select-category-list-item {
-  display: flex;
-  align-items: center;
-}
-
-.select-category-list-header {
-  font-weight: bold;
-
-  span {
-    color: @gray;
-  }
+  min-width: 0;
 }
 
 .select-category-list-item {
-  font-weight: 500;
-
-  span {
-    color: @gray-light;
-  }
+  min-width: 0;
 }
 
 .select-category-list-item-level {
+  flex-shrink: 0;
   width: 18px;
 }
 
-.select-category-list-item-name {
-  display: flex;
-  align-items: center;
+.select-category-list-item-btn {
   padding: 4px 8px;
   margin: 0 -8px;
 }
 
-a.select-category-list-item-name {
-  &:link,
-  &:active,
-  &:visited,
-  &:hover,
-  &:focus {
-    color: @text-color;
-    text-decoration: none;
-  }
+.select-category-list-item-btn-lg {
+  padding: 8px 12px;
+}
 
+a.select-category-list-item-btn,
+a.select-category-list-item-btn-lg {
   &:hover,
   &:focus {
     background-color: @gray-lighter;
@@ -63,18 +32,54 @@ a.select-category-list-item-name {
   }
 }
 
-.select-category-list-item-bullet {
-  display: inline-block;
-  margin-right: 8px;
-  width: 8px;
-  height: 8px;
-  
-  background-color: var(--color, darken(@gray-lighter, 12%));
-  border-radius: @border-radius-small;
+.select-category-list-item-header {
+  color: @gray;
 }
 
-.select-category-list-item-color {
-  background-color: var(--color);
+a.select-category-list-item-header {
+  &:active,
+  &:focus,
+  &:hover,
+  &:link,
+  &:visited {
+    color: @text-color;
+    text-decoration: none;
+  }
+}
+
+.select-category-list-item-name {
+  color: @gray-light;
+}
+
+a.select-category-list-item-name {
+  &:active,
+  &:focus,
+  &:hover,
+  &:link,
+  &:visited {
+    color: @text-color;
+    text-decoration: none;
+  }
+}
+
+.select-category-list-item small {
+  display: inline-block;
+  margin-left: 8px;
+
+  color: @gray-light;
+  font-weight: normal;
+}
+
+.select-category-list-item-description {
+  margin-top: 4px;
+  margin-left: 16px;
+
+  color: @gray;
+  font-weight: normal;
+
+  p:last-child {
+    margin: 0;
+  }
 }
 
 .select-category-list-separator {

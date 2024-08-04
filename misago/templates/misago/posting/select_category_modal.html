@@ -4,10 +4,16 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
-      <h4 classds="modal-title">{% trans "Select category" context "posting select category modal" %}</h4>
+      <h4 classds="modal-title">{% trans "Start new thread in" context "posting select category modal" %}</h4>
     </div>
     <div class="modal-body">
-      {% include "misago/posting/select_category.html" %}
+      {% if start_thread_choices and 0 %}
+        {% include "misago/posting/select_category_list.html" %}
+      {% else %}
+        <p class="mx-3 text-lg text-center">
+          {% trans "You can't start new threads." context "posting select category modal" %}
+        </p>
+      {% endif %}
     </div>
   </div>
 </div>

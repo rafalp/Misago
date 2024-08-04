@@ -8,11 +8,28 @@
 
 
 {% block content %}
-<div class="page page-threads">
+<div class="page page-select-category">
+  <div class="container page-header-container">
+    <div class="page-header page-header-select-category">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-select-category">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <h1>{% trans "Start new thread" context "start thread page" %}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="container page-container">
-
-    {% include "misago/posting/select_category.html" %}
-
+    <p class="text-lg mb-3">
+      {% trans "Select the category where you want to start a new thread:" context "start thread page" %}
+    </p>
+    {% include "misago/posting/select_category_list_full.html" %}
   </div>
 </div>
 {% endblock content %}
