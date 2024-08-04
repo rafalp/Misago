@@ -5,8 +5,22 @@
   min-width: 0;
 }
 
+.card-select-category-list {
+  margin: 0;
+  padding: floor(@line-height-computed / 2) 0;
+
+  background-color: @list-group-bg;
+  border: 1px solid @list-group-border;
+  border-radius: @list-group-border-radius;
+  overflow: hidden;
+}
+
 .select-category-list-item {
   min-width: 0;
+}
+
+.card-select-category-list .select-category-list-item {
+  padding: 0 floor(@line-height-computed / 2);
 }
 
 .select-category-list-item-level {
@@ -16,7 +30,7 @@
 
 .select-category-list-item-btn {
   padding: 4px 8px;
-  margin: 0 -8px;
+  margin: -8px;
 }
 
 .select-category-list-item-btn-lg {
