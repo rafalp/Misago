@@ -140,6 +140,10 @@ class ThreadStartSelectCategoryView(View):
         return render(request, template_name, context)
 
     def get_context_data(self, request: HttpRequest) -> dict:
+        # TODO:
+        # - replace this with get_category_choices
+        # - use models instead of category proxy
+        # - user permission checks for category availability
         permissions = request.user_permissions.categories[CategoryPermission.START]
 
         choices: list[dict] = []
