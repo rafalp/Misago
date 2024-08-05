@@ -48,7 +48,7 @@ from ...permissions.private_threads import (
 from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
-    check_can_start_thread_in_category,
+    check_start_thread_in_category_permission,
 )
 from ..enums import (
     PrivateThreadsUrls,
@@ -980,7 +980,9 @@ class CategoryThreadsListView(ListView):
         self, request: HttpRequest, category: Category
     ) -> str | None:
         try:
-            check_can_start_thread_in_category(request.user_permissions, category)
+            check_start_thread_in_category_permission(
+                request.user_permissions, category
+            )
         except:
             return None
         else:

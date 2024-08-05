@@ -7,13 +7,28 @@
 
 .card-select-category-list {
   margin: 0 auto;
-  padding: floor(@line-height-computed / 2) 0;
+  padding: 0;
+  padding-bottom: floor(@line-height-computed / 2);
   max-width: 520px;
 
   background-color: @list-group-bg;
   border: 1px solid @list-group-border;
   border-radius: @list-group-border-radius;
   overflow: hidden;
+}
+
+.card-select-category-list-heading {
+  margin-bottom: floor(@line-height-computed / 2);
+  padding: @panel-heading-padding;
+
+  border-bottom: 1px solid @list-group-border;
+}
+
+.card-select-category-list-heading h3 {
+  margin: 0;
+
+  color: @gray-light;
+  font-size: ceil((@font-size-base * 1.125));
 }
 
 .select-category-list-item {

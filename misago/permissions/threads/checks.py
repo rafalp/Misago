@@ -6,7 +6,7 @@ from ..enums import CategoryPermission
 from ..proxy import UserPermissionsProxy
 
 
-def check_can_post_in_closed_category(
+def check_post_in_closed_category_permission(
     permissions: UserPermissionsProxy, category: Category
 ):
     if category.is_closed and not (
@@ -21,7 +21,7 @@ def check_can_post_in_closed_category(
         )
 
 
-def check_can_start_thread_in_category(
+def check_start_thread_in_category_permission(
     permissions: UserPermissionsProxy, category: Category
 ):
     if category.id not in permissions.categories[CategoryPermission.START]:
@@ -32,4 +32,4 @@ def check_can_start_thread_in_category(
             )
         )
 
-    check_can_post_in_closed_category(permissions, category)
+    check_post_in_closed_category_permission(permissions, category)
