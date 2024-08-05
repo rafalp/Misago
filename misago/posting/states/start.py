@@ -15,12 +15,13 @@ from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import render_ast_to_plaintext
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post, Thread
+from .base import State
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class StartState:
+class StartThreadState(State):
     request: HttpRequest
     timestamp: datetime
     category: Category
@@ -32,15 +33,13 @@ class StartState:
     message_metadata: dict | None
 
     def __init__(self, request: HttpRequest, category: Category):
-        self.request = request
-        self.timestamp = timezone.now()
-        self.category = category
-        self.user = request.user
+        super().__init__(request)
 
+        self.category = category
         self.thread = self.initialize_thread()
         self.post = self.initialize_post()
 
-        self.parser_context = self.initialize_parser_context()
+        self.store_model_state(category)
 
     def initialize_thread(self) -> Thread:
         return Thread(
@@ -65,46 +64,26 @@ class StartState:
             updated_on=self.timestamp,
         )
 
-    def initialize_parser_context(self) -> ParserContext:
-        return create_parser_context(self.request, content_type=ContentType.POST)
-
     def set_thread_title(self, title: str):
         self.thread.title = title
         self.thread.slug = slugify(title)
-
-    def set_post_message(self, message: str):
-        parser = create_parser(self.parser_context)
-        ast = parser(message)
-        metadata = create_ast_metadata(self.parser_context, ast)
-
-        self.post.original = message
-        self.post.parsed = render_ast_to_html(self.parser_context, ast, metadata)
-        self.post.search_document = render_ast_to_plaintext(
-            self.parser_context,
-            ast,
-            metadata,
-            text_format=PlainTextFormat.SEARCH_DOCUMENT,
-        )
-
-        self.message_ast = ast
-        self.message_metadata = metadata
 
     @transaction.atomic()
     def save(self):
         self.thread.save()
         self.post.save()
 
-        self.save_final_thread()
-        self.save_final_post()
+        self.save_thread()
+        self.save_post()
 
         self.save_category()
         self.save_user()
 
-    def save_final_thread(self):
+    def save_thread(self):
         self.thread.first_post = self.thread.last_post = self.post
         self.thread.save()
 
-    def save_final_post(self):
+    def save_post(self):
         update_post_checksum(self.post)
         self.post.update_search_vector()
         self.post.save()
@@ -113,13 +92,15 @@ class StartState:
         self.category.threads = models.F("threads") + 1
         self.category.posts = models.F("posts") + 1
         self.category.set_last_thread(self.thread)
-        self.category.save()
+
+        self.save_model_changes(self.category)
 
     def save_user(self):
         self.user.threads = models.F("threads") + 1
         self.user.posts = models.F("posts") + 1
-        self.user.save()
+
+        self.save_model_changes(self.user)
 
 
-class StartThreadState(StartState):
+class StartPrivateThreadState(StartThreadState):
     pass

@@ -14,7 +14,7 @@ from ...permissions.categories import check_browse_category_permission
 from ...permissions.threads import check_start_thread_in_category_permission
 from ...threads.models import Thread
 from ..forms.start import ThreadStartForm
-from ..states.start import StartState, StartThreadState
+from ..states.start import StartPrivateThreadState, StartThreadState
 
 
 def start_thread_login_required():
@@ -26,8 +26,8 @@ def start_thread_login_required():
     )
 
 
-class StartView(View):
-    template_name: str
+class ThreadStartView(View):
+    template_name: str = "misago/posting/start.html"
     form_class = ThreadStartForm
     state_class = StartThreadState
 
@@ -69,27 +69,6 @@ class StartView(View):
         thread_url = self.get_thread_url(request, state.thread)
         return redirect(thread_url)
 
-    def get_form(self, request: HttpRequest, category: Category) -> Form:
-        if request.method == "POST":
-            return self.form_class(request.POST, request.FILES)
-
-        return self.form_class()
-
-    def get_state(self, request: HttpRequest, category: Category) -> StartState:
-        return self.state_class(request, category)
-
-    def get_context_data(
-        self, request: HttpRequest, category: Category, form: Form
-    ) -> dict:
-        return {"category": category, "form": form}
-
-    def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
-        raise NotImplementedError()
-
-
-class ThreadStartView(StartView):
-    template_name: str = "misago/posting/start.html"
-
     def get_category(self, request: HttpRequest, category_id: int) -> Category:
         try:
             category = Category.objects.get(
@@ -106,6 +85,20 @@ class ThreadStartView(StartView):
 
         return category
 
+    def get_form(self, request: HttpRequest, category: Category) -> Form:
+        if request.method == "POST":
+            return self.form_class(request.POST, request.FILES)
+
+        return self.form_class()
+
+    def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
+        return self.state_class(request, category)
+
+    def get_context_data(
+        self, request: HttpRequest, category: Category, form: Form
+    ) -> dict:
+        return {"category": category, "form": form}
+
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
             "misago:thread",
@@ -113,8 +106,8 @@ class ThreadStartView(StartView):
         )
 
 
-class PrivateThreadStartView(StartView):
-    pass
+class PrivateThreadStartView(ThreadStartView):
+    state_class = StartPrivateThreadState
 
 
 class ThreadStartSelectCategoryView(View):
