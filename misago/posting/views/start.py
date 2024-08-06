@@ -143,7 +143,7 @@ class ThreadStartSelectCategoryView(View):
                 check_start_thread_in_category_permission(
                     request.user_permissions, category
                 )
-            except (Http404, PermissionDenied) as exc:
+            except (Http404, PermissionDenied):
                 has_permission = False
             else:
                 has_permission = True

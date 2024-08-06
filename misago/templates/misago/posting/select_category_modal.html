@@ -7,7 +7,7 @@
       <h4 classds="modal-title">{% trans "Start new thread in" context "posting select category modal" %}</h4>
     </div>
     <div class="modal-body">
-      {% if start_thread_choices and 0 %}
+      {% if start_thread_choices %}
         {% include "misago/posting/select_category_list.html" %}
       {% else %}
         <p class="mx-y text-lg text-center">

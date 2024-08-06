@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 
 from ...threads.models import ThreadParticipant
 from ...threads.test import post_thread
-from ..private_threads import (
+from ..privatethreads import (
     check_private_threads_permission,
     filter_private_threads_queryset,
 )

@@ -41,7 +41,7 @@ from ...pagination.cursor import (
 from ...pagination.redirect import redirect_to_last_page
 from ...permissions.categories import check_browse_category_permission
 from ...permissions.enums import CategoryPermission
-from ...permissions.private_threads import (
+from ...permissions.privatethreads import (
     check_private_threads_permission,
     filter_private_threads_queryset,
 )
