@@ -64,12 +64,12 @@ class StartThreadState(State):
 
     @transaction.atomic()
     def save(self):
-        self.save_action()
-
-    def save_action(self):
         self.thread.save()
         self.post.save()
 
+        self.save_action()
+
+    def save_action(self):
         self.save_thread()
         self.save_post()
 

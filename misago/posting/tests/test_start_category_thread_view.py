@@ -104,6 +104,24 @@ def test_start_thread_view_displays_form_page_to_users(user_client, default_cate
     assert_contains(response, "Start new thread")
 
 
+def test_start_thread_view_displays_form_page_to_users_with_permission_to_post_in_closed_category(
+    user, user_client, default_category, members_group, moderators_group
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    user.set_groups(members_group, [moderators_group])
+    user.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        )
+    )
+    assert_contains(response, "Start new thread")
+
+
 def test_start_thread_view_posts_new_thread(user_client, default_category):
     response = user_client.post(
         reverse(

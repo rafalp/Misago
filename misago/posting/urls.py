@@ -1,16 +1,13 @@
 from django.urls import path
 
-from .views.start import (
-    StartPrivateThreadView,
-    StartThreadView,
-    StartThreadSelectCategoryView,
-)
+from .views.selectcategory import SelectCategoryView
+from .views.start import StartPrivateThreadView, StartThreadView
 
 
 urlpatterns = [
     path(
         "start-thread/",
-        StartThreadSelectCategoryView.as_view(),
+        SelectCategoryView.as_view(),
         name="start-thread",
     ),
     path(
