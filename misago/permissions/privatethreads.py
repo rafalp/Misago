@@ -34,6 +34,22 @@ def _check_private_threads_permission_action(permissions: UserPermissionsProxy):
         )
 
 
+def check_start_private_threads_permission(permissions: UserPermissionsProxy):
+    check_start_private_threads_permission_hook(
+        _check_start_private_threads_permission_action, permissions
+    )
+
+
+def _check_start_private_threads_permission_action(permissions: UserPermissionsProxy):
+    if not permissions.can_start_private_threads:
+        raise PermissionDenied(
+            pgettext(
+                "private threads permission error",
+                "You can't start new private threads.",
+            )
+        )
+
+
 def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):
     return filter_private_threads_queryset_hook(
         _filter_private_threads_queryset_action, permissions, queryset
@@ -51,19 +67,3 @@ def _filter_private_threads_queryset_action(
             "thread_id"
         )
     )
-
-
-def check_start_private_threads_permission(permissions: UserPermissionsProxy):
-    check_start_private_threads_permission_hook(
-        _check_start_private_threads_permission_action, permissions
-    )
-
-
-def _check_start_private_threads_permission_action(permissions: UserPermissionsProxy):
-    if not permissions.can_start_private_threads:
-        raise PermissionDenied(
-            pgettext(
-                "private threads permission error",
-                "You can't start new private threads.",
-            )
-        )
