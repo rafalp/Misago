@@ -33,7 +33,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 A standard Misago function used to check if the user has permission to browse a category. It also checks if the user can see the category. It raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't browse it.
 
-Browse the [action](#action) section for details.
+See the [action](#action) section for details.
 
 
 #### `user_permissions: UserPermissionsProxy`
