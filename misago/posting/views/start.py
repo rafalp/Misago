@@ -11,9 +11,17 @@ from ...auth.decorators import login_required
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...permissions.categories import check_browse_category_permission
+from ...permissions.privatethreads import (
+    check_private_threads_permission,
+    check_start_private_threads_permission,
+)
 from ...permissions.threads import check_start_thread_in_category_permission
 from ...threads.models import Thread
-from ..forms.start import ThreadStartForm
+from ..forms.start import (
+    StartPrivateThreadForm,
+    StartThreadForm,
+    StartThreadFormset,
+)
 from ..states.start import StartPrivateThreadState, StartThreadState
 
 
@@ -26,9 +34,8 @@ def start_thread_login_required():
     )
 
 
-class ThreadStartView(View):
-    template_name: str = "misago/posting/start.html"
-    form_class = ThreadStartForm
+class StartThreadView(View):
+    template_name: str = "misago/posting/start_thread.html"
     state_class = StartThreadState
 
     @method_decorator(start_thread_login_required())
@@ -36,32 +43,32 @@ class ThreadStartView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
-        category = self.get_category(request, kwargs["id"])
-        form = self.get_form(request, category)
+        category = self.get_category(request, kwargs)
+        formset = self.get_formset(request, category)
 
         return render(
             request,
             self.template_name,
-            self.get_context_data(request, category, form),
+            self.get_context_data(request, category, formset),
         )
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
-        category = self.get_category(request, kwargs["id"])
+        category = self.get_category(request, kwargs)
         state = self.get_state(request, category)
-        form = self.get_form(request, category)
+        formset = self.get_formset(request, category)
 
-        if not form.is_valid():
+        if not formset.is_valid():
             return render(
                 request,
                 self.template_name,
-                self.get_context_data(request, category, form),
+                self.get_context_data(request, category, formset),
             )
 
-        form.update_state(state)
+        formset.update_state(state)
 
         if request.POST.get("preview"):
-            context = self.get_context_data(request, category, form)
-            context["preview"] = state.post.html
+            context = self.get_context_data(request, category, formset)
+            context["preview"] = state.post.parsed
 
             return render(request, self.template_name, context)
 
@@ -69,10 +76,10 @@ class ThreadStartView(View):
         thread_url = self.get_thread_url(request, state.thread)
         return redirect(thread_url)
 
-    def get_category(self, request: HttpRequest, category_id: int) -> Category:
+    def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         try:
             category = Category.objects.get(
-                id=category_id,
+                id=kwargs["id"],
                 tree_id=CategoryTree.THREADS,
                 level__gt=0,
             )
@@ -82,22 +89,33 @@ class ThreadStartView(View):
         check_browse_category_permission(
             request.user_permissions, category, can_delay=True
         )
+        check_start_thread_in_category_permission(request.user_permissions, category)
 
         return category
 
-    def get_form(self, request: HttpRequest, category: Category) -> Form:
-        if request.method == "POST":
-            return self.form_class(request.POST, request.FILES)
+    def get_formset(
+        self, request: HttpRequest, category: Category
+    ) -> StartThreadFormset:
+        formset = StartThreadFormset()
+        formset.add_form(self.get_start_thread_form(request, category))
+        return formset
 
-        return self.form_class()
+    def get_start_thread_form(
+        self, request: HttpRequest, category: Category
+    ) -> StartThreadForm:
+        prefix = "thread"
+        if request.method == "POST":
+            return StartThreadForm(request.POST, request.FILES, prefix=prefix)
+
+        return StartThreadForm(prefix=prefix)
 
     def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
         return self.state_class(request, category)
 
     def get_context_data(
-        self, request: HttpRequest, category: Category, form: Form
+        self, request: HttpRequest, category: Category, formset: StartThreadFormset
     ) -> dict:
-        return {"category": category, "form": form}
+        return {"category": category, "formset": formset}
 
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
@@ -106,11 +124,41 @@ class ThreadStartView(View):
         )
 
 
-class PrivateThreadStartView(ThreadStartView):
+class StartPrivateThreadView(StartThreadView):
+    template_name: str = "misago/posting/start_private_thread.html"
     state_class = StartPrivateThreadState
 
+    def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
+        check_private_threads_permission(request.user_permissions)
+        check_start_private_threads_permission(request.user_permissions)
+        return Category.objects.private_threads()
 
-class ThreadStartSelectCategoryView(View):
+    def get_formset(
+        self, request: HttpRequest, category: Category
+    ) -> StartThreadFormset:
+        formset = super().get_formset(request, category)
+        formset.add_form(
+            self.get_start_private_thread_form(request, category), append=False
+        )
+        return formset
+
+    def get_start_private_thread_form(
+        self, request: HttpRequest, category: Category
+    ) -> StartThreadForm:
+        prefix = "users"
+        if request.method == "POST":
+            return StartPrivateThreadForm(request.POST, prefix=prefix, request=request)
+
+        return StartPrivateThreadForm(prefix=prefix, request=request)
+
+    def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
+        return reverse(
+            "misago:private-thread",
+            kwargs={"pk": thread.id, "slug": thread.slug},
+        )
+
+
+class StartThreadSelectCategoryView(View):
     template_name = "misago/posting/select_category_page.html"
     template_name_htmx = "misago/posting/select_category_modal.html"
 
@@ -182,7 +230,7 @@ class ThreadStartSelectCategoryView(View):
                     clean_children.append(child)
 
             if not category["disabled"] or clean_children:
-                category["children"] = reversed(clean_children)
+                category["children"] = list(reversed(clean_children))
                 clean_choices.append(category)
 
         return clean_choices

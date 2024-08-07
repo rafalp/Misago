@@ -1,0 +1,46 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+  {% trans "Start new private thread" context "start thread page" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-category">
+  <div class="container page-container">
+
+    {% if preview %}
+      {% include "misago/posting/preview.html" %}
+    {% endif %}
+
+    <form 
+      action="{% url 'misago:start-private-thread' %}"
+      method="post"
+    >
+      {% csrf_token %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% trans "Start new private thread" context "start thread page" %}
+          </h3>
+        </div>
+        <div class="panel-body">
+          {% for form in formset.get_forms %}
+            {% include form.template_name with form=form %}
+          {% endfor %}
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {% trans "Start thread" context "start thread submit btn" %}
+          </button>
+          <button class="btn btn-secondary" type="submit" name="preview" value="true">
+            {% trans "Preview" context "start thread submit btn" %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

@@ -15,13 +15,15 @@
   {% else %}
     <p class="threads-list-blankslate-message">
       {% blocktrans trimmed context "private threads list blankslate" %}
-        You aren't participating in any private threads at this time.
+        You aren't participating in any private threads.
       {% endblocktrans %}
     </p>
-    <div class="threads-list-blankslate-links">
-      <button class="btn btn-primary" disabled>
-        {% trans "Start new thread" context "threads list" %}
-      </button>
-    </div>
+    {% if start_thread_url %}
+      <div class="threads-list-blankslate-links">
+        <a href="{{ start_thread_url }}" class="btn btn-primary">
+          {% trans "Start new thread" context "threads list" %}
+        </a>
+      </div>
+    {% endif %}
   {% endif %}
 </li>

@@ -37,6 +37,8 @@
         {% endif %}
       </li>
     {% endfor %}
-    <li class="select-category-list-separator"></li>
+    {% if category.children %}
+      <li class="select-category-list-separator"></li>
+    {% endif %}
   {% endfor %}
 </ul>

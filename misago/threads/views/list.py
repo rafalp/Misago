@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
@@ -43,6 +43,7 @@ from ...permissions.categories import check_browse_category_permission
 from ...permissions.enums import CategoryPermission
 from ...permissions.privatethreads import (
     check_private_threads_permission,
+    check_start_private_threads_permission,
     filter_private_threads_queryset,
 )
 from ...permissions.threads import (
@@ -388,6 +389,7 @@ class ThreadsListView(ListView):
             "threads": threads,
             "threads_urls": ThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
+            "start_thread_modal": True,
             "start_thread_url": self.get_start_thread_url(request),
         }
 
@@ -1138,6 +1140,7 @@ class PrivateThreadsListView(ListView):
             "threads": self.get_threads(request, category, kwargs),
             "threads_urls": PrivateThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
+            "start_thread_url": self.get_start_thread_url(request),
         }
 
         context["metatags"] = self.get_metatags(request, {})
@@ -1258,6 +1261,14 @@ class PrivateThreadsListView(ListView):
             )
 
         return reverse("misago:private-threads")
+
+    def get_start_thread_url(self, request: HttpRequest) -> str | None:
+        try:
+            check_start_private_threads_permission(request.user_permissions)
+        except (Http404, PermissionDenied):
+            return None
+        else:
+            return reverse("misago:start-private-thread")
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)

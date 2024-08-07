@@ -3,18 +3,12 @@ from typing import TYPE_CHECKING
 
 from django.db import models, transaction
 from django.http import HttpRequest
-from django.utils import timezone
 
 from ...categories.models import Category
 from ...core.utils import slugify
-from ...parser.context import ParserContext, create_parser_context
-from ...parser.enums import ContentType, PlainTextFormat
-from ...parser.factory import create_parser
-from ...parser.html import render_ast_to_html
-from ...parser.metadata import create_ast_metadata
-from ...parser.plaintext import render_ast_to_plaintext
+from ...parser.context import ParserContext
 from ...threads.checksums import update_post_checksum
-from ...threads.models import Post, Thread
+from ...threads.models import Post, Thread, ThreadParticipant
 from .base import State
 
 if TYPE_CHECKING:
@@ -70,6 +64,9 @@ class StartThreadState(State):
 
     @transaction.atomic()
     def save(self):
+        self.save_action()
+
+    def save_action(self):
         self.thread.save()
         self.post.save()
 
@@ -103,4 +100,28 @@ class StartThreadState(State):
 
 
 class StartPrivateThreadState(StartThreadState):
-    pass
+    invite_users: list["User"]
+
+    def __init__(self, request: HttpRequest, category: Category):
+        super().__init__(request, category)
+        self.invite_users: list["User"] = []
+
+    def set_invite_users(self, users: list["User"]):
+        self.invite_users = users
+
+    def save_action(self):
+        super().save_action()
+
+        self.save_users()
+
+    def save_users(self):
+        users: list[ThreadParticipant] = [
+            ThreadParticipant(thread=self.thread, user=self.user, is_owner=True),
+        ]
+
+        for invite_user in self.invite_users:
+            users.append(
+                ThreadParticipant(thread=self.thread, user=invite_user),
+            )
+
+        ThreadParticipant.objects.bulk_create(users)

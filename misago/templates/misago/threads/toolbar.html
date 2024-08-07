@@ -36,15 +36,7 @@
   {% if start_thread_url %}
     <div class="toolbar-section{% if not bottom %} flex-order-first-xs{% endif %}">
       <div class="toolbar-item">
-        {% if category and category.is_closed %}
-          <a href="{{ start_thread_url }}" class="btn btn-danger btn-block">
-            {% trans "Closed" context "threads list toolbar" %}
-          </a>
-        {% elif category %}
-          <a href="{{ start_thread_url }}" class="btn btn-primary btn-block">
-            {% trans "Start new thread" context "threads list toolbar" %}
-          </a>
-        {% else %}
+        {% if start_thread_modal %}
           <a
             href="{{ start_thread_url }}"
             class="btn btn-primary btn-block"
@@ -55,6 +47,14 @@
             data-toggle="modal"
             data-target="#start-thread-modal"
           >
+            {% trans "Start new thread" context "threads list toolbar" %}
+          </a>
+        {% elif category and category.is_closed %}
+          <a href="{{ start_thread_url }}" class="btn btn-danger btn-block">
+            {% trans "Closed" context "threads list toolbar" %}
+          </a>
+        {% else %}
+          <a href="{{ start_thread_url }}" class="btn btn-primary btn-block">
             {% trans "Start new thread" context "threads list toolbar" %}
           </a>
         {% endif %}

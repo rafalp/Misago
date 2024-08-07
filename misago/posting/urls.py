@@ -1,26 +1,26 @@
 from django.urls import path
 
 from .views.start import (
-    PrivateThreadStartView,
-    ThreadStartSelectCategoryView,
-    ThreadStartView,
+    StartPrivateThreadView,
+    StartThreadView,
+    StartThreadSelectCategoryView,
 )
 
 
 urlpatterns = [
     path(
         "start-thread/",
-        ThreadStartSelectCategoryView.as_view(),
+        StartThreadSelectCategoryView.as_view(),
         name="start-thread",
     ),
     path(
         "c/<slug:slug>/<int:id>/start-thread/",
-        ThreadStartView.as_view(),
+        StartThreadView.as_view(),
         name="start-thread",
     ),
     path(
         "private/start-thread/",
-        PrivateThreadStartView.as_view(),
+        StartPrivateThreadView.as_view(),
         name="start-private-thread",
     ),
 ]

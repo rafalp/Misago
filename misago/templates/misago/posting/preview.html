@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<div class="panel panel-default panel-form">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "Message preview" context "start thread page" %}
+    </h3>
+  </div>
+  <div class="panel-body">
+    <article class="misago-markup">
+      {{ preview|safe }}
+    </article>
+  </div>
+</div>
