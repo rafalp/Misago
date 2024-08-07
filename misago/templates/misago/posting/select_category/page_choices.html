@@ -79,6 +79,8 @@
         {% endif %}
       </li>
     {% endfor %}
-    <li class="select-category-list-separator"></li>
+    {% if not forloop.last %}
+      <li class="select-category-list-separator"></li>
+    {% endif %}
   {% endfor %}
 </ul>

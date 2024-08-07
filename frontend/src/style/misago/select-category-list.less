@@ -1,5 +1,5 @@
 .select-category-list {
-  margin: -4px 0;
+  margin: 0;
   padding: 0;
   list-style: none;
   min-width: 0;
@@ -46,7 +46,6 @@
 
 .select-category-list-item-btn {
   padding: 4px 8px;
-  margin: -8px;
 }
 
 .select-category-list-item-btn-lg {
@@ -113,10 +112,10 @@ a.select-category-list-item-name {
 }
 
 .select-category-list-separator {
-  margin: floor(@line-height-computed / 2) 0;
-  border-top: 1px solid @gray-lighter;
+  margin-top: 6px;
 }
 
-.select-category-list-separator:last-child {
-  display: none;
+.card-select-category-list .select-category-list-separator {
+  margin: floor(@line-height-computed / 2) 0;
+  border-top: 1px solid @gray-lighter;
 }

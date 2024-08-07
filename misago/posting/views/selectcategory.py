@@ -10,8 +10,8 @@ from ...permissions.threads import check_start_thread_in_category_permission
 
 
 class SelectCategoryView(View):
-    template_name = "misago/posting/select_category_page.html"
-    template_name_htmx = "misago/posting/select_category_modal.html"
+    template_name = "misago/posting/select_category/page.html"
+    template_name_htmx = "misago/posting/select_category/modal.html"
 
     def get(self, request: HttpRequest) -> HttpResponse:
         choices = self.get_category_choices(request)

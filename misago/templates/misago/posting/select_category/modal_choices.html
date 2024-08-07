@@ -1,4 +1,4 @@
-<ul class="select-category-list px-1 py-2">
+<ul class="select-category-list">
   {% for category in start_thread_choices %}
     <li class="flex select-category-list-item">
       {% if category.disabled %}
@@ -37,7 +37,7 @@
         {% endif %}
       </li>
     {% endfor %}
-    {% if category.children %}
+    {% if not forloop.last %}
       <li class="select-category-list-separator"></li>
     {% endif %}
   {% endfor %}
