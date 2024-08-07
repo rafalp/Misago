@@ -10,7 +10,7 @@ export default function SearchResultPost({ post }) {
           <div className="search-result-name">{post.thread.title}</div>
           <div
             className="search-result-summary"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: post.headline || post.content }}
           />
           <ul className="search-result-details">
             <li>

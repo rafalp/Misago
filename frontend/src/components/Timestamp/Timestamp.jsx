@@ -1,9 +1,5 @@
 import React from "react"
-import {
-  dateRelative,
-  dateRelativeShort,
-  fullDateTime,
-} from "../../formats"
+import { dateRelative, dateRelativeShort, fullDateTime } from "../../formats"
 
 class Timestamp extends React.Component {
   constructor(props) {

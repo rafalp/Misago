@@ -7,7 +7,7 @@ from ...cache.enums import CacheName
 from ...cache.versions import invalidate_cache
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
-from ...forms.formset import BasicFormset
+from ...forms.formset import Formset
 from ...permissions.admin import get_admin_category_permissions
 from ...permissions.copy import copy_group_permissions
 from ...permissions.models import CategoryGroupPermission, Moderator
@@ -102,7 +102,7 @@ class EditView(GroupAdmin, generic.ModelFormView):
     message_submit = pgettext_lazy("admin groups", '"%(name)s" group has been updated.')
 
     def get_form(self, form_class, request, target):
-        formset = BasicFormset()
+        formset = Formset()
 
         if request.method == "POST":
             group_form = EditGroupForm(

@@ -28,17 +28,38 @@
     <div class="toolbar-section flex-order-last-xs">
       <div class="toolbar-item">
         <button class="btn btn-default btn-block" disabled>
-          {% trans "Mark all as read" context "threads list" %}
+          {% trans "Mark all as read" context "threads list toolbar" %}
         </button>
       </div>
     </div>
   {% endif %}
-  <div class="toolbar-section{% if not bottom %} flex-order-first-xs{% endif %}">
-    <div class="toolbar-item">
-      <button class="btn btn-primary btn-block" disabled>
-        {% trans "Start new thread" context "threads list" %}
-      </button>
+  {% if start_thread_url %}
+    <div class="toolbar-section{% if not bottom %} flex-order-first-xs{% endif %}">
+      <div class="toolbar-item">
+        {% if start_thread_modal %}
+          <a
+            href="{{ start_thread_url }}"
+            class="btn btn-primary btn-block"
+            hx-get="{{ start_thread_url }}"
+            hx-trigger="click once"
+            hx-target="#start-thread-modal"
+            hx-swap="innerHTML"
+            data-toggle="modal"
+            data-target="#start-thread-modal"
+          >
+            {% trans "Start new thread" context "threads list toolbar" %}
+          </a>
+        {% elif category and category.is_closed %}
+          <a href="{{ start_thread_url }}" class="btn btn-danger btn-block">
+            {% trans "Closed" context "threads list toolbar" %}
+          </a>
+        {% else %}
+          <a href="{{ start_thread_url }}" class="btn btn-primary btn-block">
+            {% trans "Start new thread" context "threads list toolbar" %}
+          </a>
+        {% endif %}
+      </div>
     </div>
-  </div>
+  {% endif %}
   {% pluginoutlet THREADS_LIST_TOOLBAR_END %}
 </div>

@@ -1,4 +1,9 @@
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.contrib.postgres.search import (
+    SearchHeadline,
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
 from django.utils.translation import pgettext_lazy
 
 from ..conf import settings
@@ -94,6 +99,15 @@ def search_threads(request, query, visible_threads):
 
     return (
         Post.objects.filter(id__in=queryset.values("id"))
-        .annotate(rank=SearchRank(search_vector, search_query))
+        .annotate(
+            headline=SearchHeadline(
+                "search_document",
+                query,
+                max_words=20,
+                min_words=10,
+                max_fragments=5,
+            ),
+            rank=SearchRank(search_vector, search_query),
+        )
         .order_by("-rank", "-id")
     )

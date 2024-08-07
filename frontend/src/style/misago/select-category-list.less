@@ -1,0 +1,121 @@
+.select-category-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.card-select-category-list {
+  margin: 0 auto;
+  padding: 0;
+  padding-bottom: floor(@line-height-computed / 2);
+  max-width: 520px;
+
+  background-color: @list-group-bg;
+  border: 1px solid @list-group-border;
+  border-radius: @list-group-border-radius;
+  overflow: hidden;
+}
+
+.card-select-category-list-heading {
+  margin-bottom: floor(@line-height-computed / 2);
+  padding: @panel-heading-padding;
+
+  border-bottom: 1px solid @list-group-border;
+}
+
+.card-select-category-list-heading h3 {
+  margin: 0;
+
+  color: @gray-light;
+  font-size: ceil((@font-size-base * 1.125));
+}
+
+.select-category-list-item {
+  min-width: 0;
+}
+
+.card-select-category-list .select-category-list-item {
+  padding: 0 floor(@line-height-computed / 2);
+}
+
+.select-category-list-item-level {
+  flex-shrink: 0;
+  width: 18px;
+}
+
+.select-category-list-item-btn {
+  padding: 4px 8px;
+}
+
+.select-category-list-item-btn-lg {
+  padding: 8px 12px;
+}
+
+a.select-category-list-item-btn,
+a.select-category-list-item-btn-lg {
+  &:hover,
+  &:focus {
+    background-color: @gray-lighter;
+    border-radius: @border-radius-base;
+  }
+}
+
+.select-category-list-item-header {
+  color: @gray;
+}
+
+a.select-category-list-item-header {
+  &:active,
+  &:focus,
+  &:hover,
+  &:link,
+  &:visited {
+    color: @text-color;
+    text-decoration: none;
+  }
+}
+
+.select-category-list-item-name {
+  color: @gray-light;
+}
+
+a.select-category-list-item-name {
+  &:active,
+  &:focus,
+  &:hover,
+  &:link,
+  &:visited {
+    color: @text-color;
+    text-decoration: none;
+  }
+}
+
+.select-category-list-item small {
+  display: inline-block;
+  margin-left: 8px;
+
+  color: @gray-light;
+  font-weight: normal;
+}
+
+.select-category-list-item-description {
+  margin-top: 4px;
+  margin-left: 16px;
+
+  color: @gray;
+  font-weight: normal;
+
+  p:last-child {
+    margin: 0;
+  }
+}
+
+.select-category-list-separator {
+  margin-top: 6px;
+}
+
+.card-select-category-list .select-category-list-separator {
+  margin: floor(@line-height-computed / 2) 0;
+  border-top: 1px solid @gray-lighter;
+}

@@ -16,6 +16,7 @@ from .hooks import (
 )
 from .models import CategoryGroupPermission
 from .operations import (
+    if_greater,
     if_true,
     if_zero_or_greater,
 )
@@ -69,6 +70,8 @@ def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
 def _build_user_permissions_action(groups: list[Group]) -> dict:
     permissions = {
         "can_use_private_threads": False,
+        "can_start_private_threads": False,
+        "private_thread_users_limit": 1,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -78,18 +81,46 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
     }
 
     for group in groups:
-        if_true(permissions, "can_use_private_threads", group.can_use_private_threads)
-        if_true(permissions, "can_change_username", group.can_change_username)
-        if_zero_or_greater(
-            permissions, "username_changes_limit", group.username_changes_limit
+        if_true(
+            permissions,
+            "can_use_private_threads",
+            group.can_use_private_threads,
+        )
+        if_true(
+            permissions,
+            "can_start_private_threads",
+            group.can_start_private_threads,
+        )
+        if_greater(
+            permissions,
+            "private_thread_users_limit",
+            group.private_thread_users_limit,
+        )
+        if_true(
+            permissions,
+            "can_change_username",
+            group.can_change_username,
         )
         if_zero_or_greater(
-            permissions, "username_changes_expire", group.username_changes_expire
+            permissions,
+            "username_changes_limit",
+            group.username_changes_limit,
         )
         if_zero_or_greater(
-            permissions, "username_changes_span", group.username_changes_span
+            permissions,
+            "username_changes_expire",
+            group.username_changes_expire,
         )
-        if_true(permissions, "can_see_user_profiles", group.can_see_user_profiles)
+        if_zero_or_greater(
+            permissions,
+            "username_changes_span",
+            group.username_changes_span,
+        )
+        if_true(
+            permissions,
+            "can_see_user_profiles",
+            group.can_see_user_profiles,
+        )
 
     return permissions
 

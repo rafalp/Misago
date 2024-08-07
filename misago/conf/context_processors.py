@@ -29,7 +29,7 @@ def conf(request):
         "I18N_VERSION_SIGNATURE": I18N_VERSION_SIGNATURE,
         "LANGUAGE_CODE_SHORT": get_language()[:2],
         "LOGIN_REDIRECT_URL": settings.LOGIN_REDIRECT_URL,
-        "LOGIN_URL": settings.LOGIN_URL,
+        "LOGIN_URL": get_login_url(),
         "LOGOUT_URL": settings.LOGOUT_URL,
         "THREADS_ON_INDEX": settings.MISAGO_THREADS_ON_INDEX,
         "CSRF_COOKIE_NAME": json.dumps(settings.CSRF_COOKIE_NAME),

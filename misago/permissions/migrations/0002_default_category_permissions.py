@@ -6,7 +6,7 @@ from ...users.enums import DefaultGroupId
 from ..enums import CategoryPermission
 
 
-FULL_CATEGORY_PERMISSIONS = (
+CATEGORY_PERMISSIONS = (
     CategoryPermission.SEE,
     CategoryPermission.BROWSE,
     CategoryPermission.START,
@@ -14,17 +14,11 @@ FULL_CATEGORY_PERMISSIONS = (
     CategoryPermission.ATTACHMENTS,
 )
 
-GUEST_CATEGORY_PERMISSIONS = (
-    CategoryPermission.SEE,
-    CategoryPermission.BROWSE,
-    CategoryPermission.ATTACHMENTS,
-)
-
 GROUPS_PERMISSIONS = {
-    DefaultGroupId.ADMINS: FULL_CATEGORY_PERMISSIONS,
-    DefaultGroupId.MODERATORS: FULL_CATEGORY_PERMISSIONS,
-    DefaultGroupId.MEMBERS: FULL_CATEGORY_PERMISSIONS,
-    DefaultGroupId.GUESTS: GUEST_CATEGORY_PERMISSIONS,
+    DefaultGroupId.ADMINS: CATEGORY_PERMISSIONS,
+    DefaultGroupId.MODERATORS: CATEGORY_PERMISSIONS,
+    DefaultGroupId.MEMBERS: CATEGORY_PERMISSIONS,
+    DefaultGroupId.GUESTS: CATEGORY_PERMISSIONS,
 }
 
 

@@ -3,7 +3,7 @@ from functools import cached_property
 from django.forms import Form
 
 
-class BasicFormset:
+class Formset:
     """Formset that combines forms of any type.
 
     Used by views and templates that display multiple forms that should be validated
@@ -16,15 +16,25 @@ class BasicFormset:
     def __getitem__(self, form_id: str):
         return self.forms[form_id]
 
-    def add_form(self, form: Form):
+    def get_forms(self) -> list[Form]:
+        return list(self.forms.values())
+
+    def add_form(self, form: Form, *, append: bool = True):
         if not form.prefix:
-            raise ValueError("Forms added to 'BasicFormset' must define a prefix.")
+            raise ValueError("Forms added to 'Formset' must define a prefix.")
         if form.prefix in self.forms:
             raise ValueError(
                 f"Form with prefix '{form.prefix}' is already a part of this formset."
             )
 
-        self.forms[form.prefix] = form
+        if append:
+            self.forms[form.prefix] = form
+
+        else:
+            forms: dict[str, Form] = {}
+            forms[form.prefix] = form
+            forms.update(self.forms)
+            self.forms = forms
 
     @cached_property
     def is_bound(self) -> bool:

@@ -48,7 +48,7 @@ def test_build_user_permissions_builds_anonymous_user_category_permissions(
     assert permissions["categories"] == {
         CategoryPermission.SEE: [default_category.id],
         CategoryPermission.BROWSE: [default_category.id],
-        CategoryPermission.START: [],
-        CategoryPermission.REPLY: [],
+        CategoryPermission.START: [default_category.id],
+        CategoryPermission.REPLY: [default_category.id],
         CategoryPermission.ATTACHMENTS: [default_category.id],
     }

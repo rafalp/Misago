@@ -4,6 +4,7 @@ from django.utils.translation import pgettext
 from ..threads.models import ThreadParticipant
 from .hooks import (
     check_private_threads_permission_hook,
+    check_start_private_threads_permission_hook,
     filter_private_threads_queryset_hook,
 )
 from .proxy import UserPermissionsProxy
@@ -29,6 +30,22 @@ def _check_private_threads_permission_action(permissions: UserPermissionsProxy):
             pgettext(
                 "private threads permission error",
                 "You can't use private threads.",
+            )
+        )
+
+
+def check_start_private_threads_permission(permissions: UserPermissionsProxy):
+    check_start_private_threads_permission_hook(
+        _check_start_private_threads_permission_action, permissions
+    )
+
+
+def _check_start_private_threads_permission_action(permissions: UserPermissionsProxy):
+    if not permissions.can_start_private_threads:
+        raise PermissionDenied(
+            pgettext(
+                "private threads permission error",
+                "You can't start new private threads.",
             )
         )
 

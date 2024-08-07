@@ -28,5 +28,10 @@ class FeedSerializer(PostSerializer, MutableFields):
     def get_thread(self, obj):
         return {"title": obj.thread.title, "url": obj.thread.get_absolute_url()}
 
+    def to_representation(self, obj):
+        data = super().to_representation(obj)
+        data["headline"] = getattr(obj, "headline", None)
+        return data
+
 
 FeedSerializer = FeedSerializer.exclude_fields("is_liked", "is_new", "is_read")

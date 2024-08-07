@@ -1,16 +1,11 @@
 import re
-from enum import StrEnum
 
 from ..core.utils import slugify
 from .context import ParserContext
+from .enums import PlainTextFormat
 from .exceptions import AstError
 from .hooks import render_ast_node_to_plaintext_hook
 from .urls import clean_href
-
-
-class PlainTextFormat(StrEnum):
-    META_DESCRIPTION = "meta_description"
-    SEARCH_DOCUMENT = "search_document"
 
 
 def render_ast_to_plaintext(

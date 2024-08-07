@@ -12,7 +12,7 @@ export default function (props) {
 export function Default(props) {
   return (
     <div className="post-body">
-      <MisagoMarkup markup={props.post.content} />
+      <MisagoMarkup markup={props.post.headline || props.post.content} />
     </div>
   )
 }

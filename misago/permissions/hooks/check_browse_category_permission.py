@@ -53,7 +53,7 @@ class CheckBrowseCategoryPermissionHookFilter(Protocol):
     It raises Django's `Http404` if they can't see it or `PermissionDenied`
     with an error message if they can't browse it.
 
-    Browse the [action](#action) section for details.
+    See the [action](#action) section for details.
 
     ## `user_permissions: UserPermissionsProxy`
 

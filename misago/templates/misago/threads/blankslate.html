@@ -18,10 +18,21 @@
         No threads have been started yet, or you can't see them.
       {% endblocktrans %}
     </p>
-    <div class="threads-list-blankslate-links">
-      <button class="btn btn-primary" disabled>
-        {% trans "Start new thread" context "threads list" %}
-      </button>
-    </div>
+    {% if start_thread_url %}
+      <div class="threads-list-blankslate-links">
+        <a
+          href="{{ start_thread_url }}"
+          class="btn btn-primary"
+          hx-get="{{ start_thread_url }}"
+          hx-trigger="click once"
+          hx-target="#start-thread-modal"
+          hx-swap="innerHTML"
+          data-toggle="modal"
+          data-target="#start-thread-modal"
+        >
+          {% trans "Start new thread" context "threads list" %}
+        </a>
+      </div>
+    {% endif %}
   {% endif %}
 </li>

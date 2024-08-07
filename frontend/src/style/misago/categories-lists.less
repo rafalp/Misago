@@ -88,7 +88,9 @@
 
 // Category name
 .list-group-category-item-name {
-  &, &:link, &:visited {
+  &,
+  &:link,
+  &:visited {
     color: @text-color;
     font-size: @font-size-large;
     font-weight: 500;
@@ -138,22 +140,14 @@
   }
 }
 
-.list-group-category-child-children-item-status-new,
-.list-group-category-child-children-item-status-read {
-  display: inline-block;
+.list-group-category-item-children-item .bullet {
   margin-right: 6px;
 
-  border-radius: 2px;
-  height: 8px;
-  width: 8px;
-}
-
-.list-group-category-child-children-item-status-new {
-  background-color: @category-new-color;
-}
-
-.list-group-category-child-children-item-status-read {
   background-color: @category-read-color;
+}
+
+.list-group-category-item-children-item .bullet-new {
+  background-color: @category-new-color;
 }
 
 // Category stats
@@ -317,7 +311,7 @@
     white-space: nowrap;
     padding-left: floor(@grid-gutter-width / 4);
   }
-  
+
   .list-group-category-item-last-thread-text-icon {
     display: none;
   }
