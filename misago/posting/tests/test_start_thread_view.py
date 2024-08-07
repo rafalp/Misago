@@ -3,6 +3,7 @@ from django.urls import reverse
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains
+from ...threads.models import Thread
 
 
 def test_start_thread_view_displays_login_page_to_guests(client, default_category):
@@ -74,6 +75,25 @@ def test_start_thread_view_displays_error_page_to_users_without_start_threads_pe
     )
 
 
+def test_start_thread_view_displays_error_page_to_users_without_post_in_closed_category_permission(
+    user_client, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        )
+    )
+    assert_contains(
+        response,
+        "This category is closed.",
+        status_code=403,
+    )
+
+
 def test_start_thread_view_displays_form_page_to_users(user_client, default_category):
     response = user_client.get(
         reverse(
@@ -82,3 +102,38 @@ def test_start_thread_view_displays_form_page_to_users(user_client, default_cate
         )
     )
     assert_contains(response, "Start new thread")
+
+
+def test_start_thread_view_posts_new_thread(user_client, default_category):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "thread-title": "Hello world",
+            "thread-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"pk": thread.pk, "slug": thread.slug}
+    )
+
+
+def test_start_thread_view_previews_message(user_client, default_category):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "thread-title": "Hello world",
+            "thread-post": "How's going?",
+            "preview": "true",
+        },
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(response, "Message preview")

@@ -56,14 +56,6 @@ class StartThreadView(View):
         category = self.get_category(request, kwargs)
         state = self.get_state(request, category)
         formset = self.get_formset(request, category)
-
-        if not formset.is_valid():
-            return render(
-                request,
-                self.template_name,
-                self.get_context_data(request, category, formset),
-            )
-
         formset.update_state(state)
 
         if request.POST.get("preview"):
@@ -71,6 +63,13 @@ class StartThreadView(View):
             context["preview"] = state.post.parsed
 
             return render(request, self.template_name, context)
+
+        if not formset.is_valid():
+            return render(
+                request,
+                self.template_name,
+                self.get_context_data(request, category, formset),
+            )
 
         state.save()
         thread_url = self.get_thread_url(request, state.thread)
