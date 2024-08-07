@@ -57,6 +57,10 @@ def child_category(default_category, guests_group, members_group):
 def test_select_category_view_displays_error_page_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
+    CategoryGroupPermission.objects.filter(
+        category=default_category, permission=CategoryPermission.START
+    ).delete()
+
     response = client.get(reverse("misago:start-thread"))
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
@@ -75,6 +79,10 @@ def test_select_category_view_displays_error_page_if_user_cant_start_thread_in_a
 def test_select_category_view_displays_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
+    CategoryGroupPermission.objects.filter(
+        category=default_category, permission=CategoryPermission.START
+    ).delete()
+
     response = client.get(
         reverse("misago:start-thread"),
         headers={"hx-request": "true"},
@@ -99,14 +107,8 @@ def test_select_category_view_displays_error_message_in_htmx_if_user_cant_start_
 
 
 def test_select_category_view_displays_category_if_guest_can_start_thread_in_it(
-    client, guests_group, default_category
+    client, default_category
 ):
-    CategoryGroupPermission.objects.create(
-        category=default_category,
-        group=guests_group,
-        permission=CategoryPermission.START,
-    )
-
     response = client.get(reverse("misago:start-thread"))
     assert_contains(response, "Start new thread in")
     assert_contains(
@@ -135,12 +137,6 @@ def test_select_category_view_displays_category_if_user_can_start_thread_in_it(
 def test_select_category_view_displays_category_in_htmx_if_guest_can_start_thread_in_it(
     client, guests_group, default_category
 ):
-    CategoryGroupPermission.objects.create(
-        category=default_category,
-        group=guests_group,
-        permission=CategoryPermission.START,
-    )
-
     response = client.get(
         reverse("misago:start-thread"),
         headers={"hx-request": "true"},
@@ -173,8 +169,12 @@ def test_select_category_view_displays_category_in_htmx_if_user_can_start_thread
 
 
 def test_select_category_view_excludes_category_if_guest_cant_start_thread_in_it(
-    client, guests_group, default_category, sibling_category
+    client, default_category, sibling_category
 ):
+    CategoryGroupPermission.objects.filter(
+        category=default_category, permission=CategoryPermission.START
+    ).delete()
+
     response = client.get(reverse("misago:start-thread"))
     assert_contains(response, "Start new thread in")
     assert_contains(
@@ -194,8 +194,12 @@ def test_select_category_view_excludes_category_if_guest_cant_start_thread_in_it
 
 
 def test_select_category_view_excludes_category_in_htmx_if_guest_cant_start_thread_in_it(
-    client, guests_group, default_category, sibling_category
+    client, default_category, sibling_category
 ):
+    CategoryGroupPermission.objects.filter(
+        category=default_category, permission=CategoryPermission.START
+    ).delete()
+
     response = client.get(
         reverse("misago:start-thread"),
         headers={"hx-request": "true"},
