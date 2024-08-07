@@ -342,7 +342,11 @@ class ThreadsListView(ListView):
         is_index: bool | None = None,
         **kwargs: Any,
     ) -> HttpResponse:
-        if not is_index and request.settings.index_view == "threads":
+        if (
+            not is_index
+            and not kwargs.get("filter")
+            and request.settings.index_view == "threads"
+        ):
             return redirect(reverse("misago:index"))
 
         return super().dispatch(request, *args, is_index=is_index, **kwargs)
@@ -432,7 +436,7 @@ class ThreadsListView(ListView):
         permissions_filter = self.get_threads_permissions_queryset_filter(request)
         queryset = self.get_threads_queryset(request)
 
-        filters_base_url = self.get_filters_base_url(kwargs)
+        filters_base_url = self.get_filters_base_url()
         active_filter, filters = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
@@ -480,12 +484,17 @@ class ThreadsListView(ListView):
                 }
             )
 
+        if request.settings.index_view == "threads":
+            clear_filters_url = reverse("misago:index")
+        else:
+            clear_filters_url = filters_base_url
+
         return {
             "template_name": self.threads_component_template_name,
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,
-            "clear_filters_url": filters_base_url,
+            "clear_filters_url": clear_filters_url,
             "moderation_actions": self.get_moderation_actions(request),
             "items": items,
             "paginator": paginator,
@@ -495,8 +504,8 @@ class ThreadsListView(ListView):
             "enable_polling": self.is_threads_polling_enabled(request),
         }
 
-    def get_filters_base_url(self, kwargs: dict) -> str:
-        return reverse("misago:index" if kwargs.get("is_index") else "misago:threads")
+    def get_filters_base_url(self) -> str:
+        return reverse("misago:threads")
 
     def get_threads_filters(
         self, request: HttpRequest, base_url: str, filter: str | None
@@ -610,7 +619,7 @@ class ThreadsListView(ListView):
         return actions
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
-        filters_base_url = self.get_filters_base_url(kwargs)
+        filters_base_url = self.get_filters_base_url()
         active_filter, _ = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
@@ -819,7 +828,7 @@ class CategoryThreadsListView(ListView):
         )
         queryset = self.get_threads_queryset(request)
 
-        filters_base_url = self.get_filters_base_url(category, kwargs)
+        filters_base_url = self.get_filters_base_url(category)
         active_filter, filters = self.get_threads_filters(
             request, category, filters_base_url, kwargs.get("filter")
         )
@@ -885,7 +894,7 @@ class CategoryThreadsListView(ListView):
             "enable_polling": self.is_threads_polling_enabled(request),
         }
 
-    def get_filters_base_url(self, category: Category, kwargs: dict) -> str:
+    def get_filters_base_url(self, category: Category) -> str:
         return category.get_absolute_url()
 
     def get_threads_filters(
@@ -1046,7 +1055,7 @@ class CategoryThreadsListView(ListView):
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)
 
-        filters_base_url = self.get_filters_base_url(category, kwargs)
+        filters_base_url = self.get_filters_base_url(category)
         active_filter, _ = self.get_threads_filters(
             request, category, filters_base_url, kwargs.get("filter")
         )
@@ -1160,7 +1169,7 @@ class PrivateThreadsListView(ListView):
     ):
         queryset = self.get_threads_queryset(request, category)
 
-        filters_base_url = self.get_filters_base_url(kwargs)
+        filters_base_url = self.get_filters_base_url()
         active_filter, filters = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
@@ -1203,7 +1212,7 @@ class PrivateThreadsListView(ListView):
             "enable_polling": self.is_threads_polling_enabled(request),
         }
 
-    def get_filters_base_url(self, kwargs: dict) -> str:
+    def get_filters_base_url(self) -> str:
         return reverse("misago:private-threads")
 
     def get_threads_filters(
@@ -1273,7 +1282,7 @@ class PrivateThreadsListView(ListView):
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)
 
-        filters_base_url = self.get_filters_base_url(kwargs)
+        filters_base_url = self.get_filters_base_url()
         active_filter, _ = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
