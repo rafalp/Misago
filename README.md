@@ -106,11 +106,28 @@ To work on admin's JavaScript or CSS, `cd` to `misago-admin` and install depende
 * `npm run dev`: does quick build for JavaScript and CSS assets, only bundling but not minifying. Also does a rebuild when one of the files changes.
 
 
-### E-mails
+### Emails
 
 Misago uses [Mailpit](https://github.com/axllent/mailpit) to capture emails sent from the development instance.
 
 To browse those emails, visit the <http://127.0.0.1:8025> in your browser for the web interface.
+
+
+### Note for Windows users
+
+If you are using Windows, you may see the following error during installation:
+
+
+```
+ => ERROR [misago 8/8] RUN ./dev bootstrap_plugins
+------
+ > [misago 8/8] RUN ./dev bootstrap_plugins:
+0.385 /bin/sh: 1: ./dev: not found
+------
+failed to solve: process "/bin/sh -c ./dev bootstrap_plugins" did not complete successfully: exit code: 127
+```
+
+This error is caused by the `dev` file having its line endings converted from Unix format (`LF`) to Windows (`CRLF`) by git when you cloned the repository. To fix this, disable the automatic conversion of line endings in your git configuration and then clone the repository again.
 
 
 Providing feedback and contributing
