@@ -43,6 +43,9 @@ def _copy_category_permissions_action(
 
 
 COPY_GROUP_PERMISSIONS = (
+    "can_use_private_threads",
+    "can_start_private_threads",
+    "private_thread_users_limit",
     "can_change_username",
     "username_changes_limit",
     "username_changes_expire",
