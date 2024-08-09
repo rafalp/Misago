@@ -16,7 +16,7 @@
   <ul class="dropdown-menu stick-to-bottom">
     {% if active_filter %}
       <li>
-        <a href="{{ threads.clear_filters_url }}">
+        <a href="{{ threads.filters_clear_url }}">
           {% trans "Clear filters" context "threads list filter" %}
         </a>
       </li>
@@ -46,7 +46,7 @@
     <ul class="dropdown-menu w-100-xs noscript-collapsible-items">
       {% if active_filter %}
         <li>
-          <a href="{{ threads.clear_filters_url }}">
+          <a href="{{ threads.filters_clear_url }}">
             {% trans "Clear filters" context "threads list filter" %}
           </a>
         </li>
