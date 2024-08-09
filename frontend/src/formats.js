@@ -42,6 +42,8 @@ export const weekday = new Intl.DateTimeFormat(locale, {
   weekday: "long",
 })
 
+export const shortTime = new Intl.DateTimeFormat(locale, { timeStyle: "short" })
+
 export const thisYearShort = new Intl.DateTimeFormat(locale, {
   month: "short",
   day: "numeric",
@@ -51,8 +53,6 @@ export const otherYearShort = new Intl.DateTimeFormat(locale, {
   month: "short",
   year: "numeric",
 })
-
-export const shortTime = new Intl.DateTimeFormat(locale, { timeStyle: "short" })
 
 export function dateRelative(date) {
   const now = new Date()
