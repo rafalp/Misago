@@ -7,3 +7,4 @@ class CacheName(StrEnum):
     GROUPS = "groups"
     MODERATORS = "moderators"
     PERMISSIONS = "permissions"
+    SETTINGS = "settings"

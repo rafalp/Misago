@@ -8,6 +8,7 @@ from misago.cache.enums import CacheName
 from misago.cache.versions import get_cache_versions, invalidate_cache
 from misago.categories.models import Category
 from misago.conf.dynamicsettings import DynamicSettings
+from misago.conf.models import Setting
 from misago.permissions.enums import CategoryPermission
 from misago.permissions.models import CategoryGroupPermission
 from misago.threads.checksums import update_post_checksum
@@ -23,6 +24,10 @@ class Command(BaseCommand):
     help = "Populates the database with test data."
 
     def handle(self, *args, **options):
+        Setting.objects.change_setting("forum_address", "http://localhost:8000")
+
+        invalidate_cache(CacheName.SETTINGS)
+
         root = Category.objects.root_category()
 
         Category.objects.filter(slug="first-category").update(color="#0ea5e9")
