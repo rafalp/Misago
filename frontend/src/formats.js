@@ -10,8 +10,6 @@ export const yesterdayAt = pgettext("day at time", "Yesterday at %(time)s")
 export const minutesShort = pgettext("short minutes", "%(time)sm")
 export const hoursShort = pgettext("short hours", "%(time)sh")
 export const daysShort = pgettext("short days", "%(time)sd")
-export const thisYearShort = pgettext("short month", "%(day)s %(month)s")
-export const otherYearShort = pgettext("short month", "%(month)s %(year)s")
 
 export const relativeNumeric = new Intl.RelativeTimeFormat(locale, {
   numeric: "always",
@@ -42,6 +40,16 @@ export const short = new Intl.DateTimeFormat(locale, {
 
 export const weekday = new Intl.DateTimeFormat(locale, {
   weekday: "long",
+})
+
+export const thisYearShort = new Intl.DateTimeFormat(locale, {
+  month: "short",
+  day: "numeric",
+})
+
+export const otherYearShort = new Intl.DateTimeFormat(locale, {
+  month: "short",
+  year: "numeric",
 })
 
 export const shortTime = new Intl.DateTimeFormat(locale, { timeStyle: "short" })
@@ -143,18 +151,9 @@ export function dateRelativeShort(date) {
     return daysShort.replace("%(time)s", days)
   }
 
-  const parts = {}
-  short.formatToParts(date).forEach(function ({ type, value }) {
-    parts[type] = value
-  })
-
   if (date.getFullYear() === now.getFullYear()) {
-    return thisYearShort
-      .replace("%(day)s", parts.day)
-      .replace("%(month)s", parts.month)
+    return thisYearShort.format(date)
   }
 
-  return otherYearShort
-    .replace("%(year)s", parts.year)
-    .replace("%(month)s", parts.month)
+  return otherYearShort.format(date)
 }

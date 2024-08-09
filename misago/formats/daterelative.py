@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from math import floor
 
 from django.utils import timezone
 from django.utils.formats import date_format
@@ -115,9 +116,9 @@ def date_relative_short(value: datetime) -> str:
         return pgettext("short days", "%(time)sd") % {"time": days}
 
     if now.year == value.year:
-        return date_format(value, pgettext("short this year", "j M"))
+        return date_format(value, pgettext("short this year", "M j"))
 
-    return date_format(value, pgettext("short other year", "M y"))
+    return date_format(value, pgettext("short other year", "M Y"))
 
 
 def time_short(value: datetime) -> str:

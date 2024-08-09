@@ -7,6 +7,7 @@ import {
   getStatusDescription,
 } from "misago/components/user-status"
 import PostChangelog from "misago/components/post-changelog"
+import Timestamp from "misago/components/Timestamp"
 import modal from "misago/services/modal"
 
 export default function (props) {
@@ -46,21 +47,12 @@ export function UnreadCompact(props) {
 }
 
 export function PostedOn(props) {
-  const tooltip = interpolate(
-    pgettext("post timestamp", "posted %(posted_on)s"),
-    {
-      posted_on: props.post.posted_on.format("LL, LT"),
-    },
-    true
-  )
-
   return (
     <a
       href={props.post.url.index}
       className="btn btn-link posted-on hidden-xs"
-      title={tooltip}
     >
-      {props.post.posted_on.fromNow()}
+      <Timestamp datetime={props.post.posted_on.toISOString()} />
     </a>
   )
 }

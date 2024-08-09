@@ -1,4 +1,4 @@
-{% load i18n misago_avatars %}
+{% load i18n misago_avatars misago_formats %}
 <div class="post-heading">
   {% if not post.is_read %}
     <span class="label label-unread hidden-xs">
@@ -11,11 +11,11 @@
 
   <a href="{{ post.get_absolute_url }}" class="btn btn-link posted-on hidden-xs">
     <time itemprop="datePublished" datetime="{{ post.posted_on|date:'c' }}">
-      {{ post.posted_on|date:'DATETIME_FORMAT' }}
+      {{ post.posted_on|date_relative }}
     </time>
   </a>
   <a href="{{ post.get_absolute_url }}" class="btn btn-link posted-on visible-xs-inline-block">
-    {{ post.posted_on|date:'DATETIME_FORMAT' }}
+    {{ post.posted_on|date_relative }}
   </a>
 
   <div class="pull-right">
