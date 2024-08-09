@@ -1,8 +1,9 @@
+from datetime import timedelta
+from random import randint
 from textwrap import dedent
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from django.db import models
 from django.utils import timezone
 from misago.cache.enums import CacheName
 from misago.cache.versions import get_cache_versions, invalidate_cache
@@ -170,6 +171,197 @@ class Command(BaseCommand):
             .first()
         )
 
+        previous_year_timestamp = timestamp.replace(
+            year=timestamp.year - 1,
+            month=randint(1, 10),
+            day=randint(1, 28),
+            hour=randint(0, 23),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        )
+
+        previous_year_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from previous year",
+            slug="thread-with-last-activity-from-previous-year",
+            started_on=previous_year_timestamp,
+            last_post_on=previous_year_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        previous_year_post = Post.objects.create(
+            category=first_category,
+            thread=previous_year_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_on=previous_year_timestamp,
+            updated_on=previous_year_timestamp,
+        )
+
+        previous_year_thread.first_post = previous_year_thread.last_post = (
+            previous_year_post
+        )
+        previous_year_thread.save()
+
+        previous_year_post.original = (
+            "This thread shows timestamps for content from another year."
+        )
+
+        previous_year_post.parsed = (
+            "<p>This thread shows timestamps for content from another year.</p>"
+        )
+
+        previous_year_post.search_document = previous_year_post.original
+
+        update_post_checksum(previous_year_post)
+        previous_year_post.update_search_vector()
+        previous_year_post.save()
+
+        current_year_timestamp = timestamp.replace(
+            month=randint(1, timestamp.month),
+            day=randint(1, 28),
+            hour=randint(0, 23),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        )
+
+        current_year_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from current year",
+            slug="thread-with-last-activity-from-current-year",
+            started_on=current_year_timestamp,
+            last_post_on=current_year_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        current_year_post = Post.objects.create(
+            category=first_category,
+            thread=current_year_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_on=current_year_timestamp,
+            updated_on=current_year_timestamp,
+        )
+
+        current_year_thread.first_post = current_year_thread.last_post = (
+            current_year_post
+        )
+        current_year_thread.save()
+
+        current_year_post.original = (
+            "This thread shows timestamps for content from current year."
+        )
+
+        current_year_post.parsed = (
+            "<p>This thread shows timestamps for content from current year.</p>"
+        )
+
+        current_year_post.search_document = current_year_post.original
+
+        update_post_checksum(current_year_post)
+        current_year_post.update_search_vector()
+        current_year_post.save()
+
+        current_week_timestamp = timestamp.replace(
+            hour=randint(0, 23),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        ) - timedelta(days=3)
+
+        current_week_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from current week",
+            slug="thread-with-last-activity-from-current-week",
+            started_on=current_week_timestamp,
+            last_post_on=current_week_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        current_week_post = Post.objects.create(
+            category=first_category,
+            thread=current_week_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_on=current_week_timestamp,
+            updated_on=current_week_timestamp,
+        )
+
+        current_week_thread.first_post = current_week_thread.last_post = (
+            current_week_post
+        )
+        current_week_thread.save()
+
+        current_week_post.original = (
+            "This thread shows timestamps for content from current week."
+        )
+
+        current_week_post.parsed = (
+            "<p>This thread shows timestamps for content from current week.</p>"
+        )
+
+        current_week_post.search_document = current_week_post.original
+
+        update_post_checksum(current_week_post)
+        current_week_post.update_search_vector()
+        current_week_post.save()
+
+        yesterday_timestamp = timestamp.replace(
+            hour=randint(0, 15),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        ) - timedelta(days=1)
+
+        yesterday_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from yesterday",
+            slug="thread-with-last-activity-from-yesterday-week",
+            started_on=yesterday_timestamp,
+            last_post_on=yesterday_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        yesterday_post = Post.objects.create(
+            category=first_category,
+            thread=yesterday_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_on=yesterday_timestamp,
+            updated_on=yesterday_timestamp,
+        )
+
+        yesterday_thread.first_post = yesterday_thread.last_post = yesterday_post
+        yesterday_thread.save()
+
+        yesterday_post.original = (
+            "This thread shows timestamps for content from yesterday."
+        )
+
+        yesterday_post.parsed = (
+            "<p>This thread shows timestamps for content from yesterday.</p>"
+        )
+
+        yesterday_post.search_document = yesterday_post.original
+
+        update_post_checksum(yesterday_post)
+        yesterday_post.update_search_vector()
+        yesterday_post.save()
+
         readme_thread = Thread.objects.create(
             category=first_category,
             title="Welcome to the Misago Dev Fixture! Read me first!",
@@ -200,6 +392,7 @@ class Command(BaseCommand):
             This Misago site was pre-populated with some initial data to make starting development easier:
 
             - Example categories hierarchy
+            - Threads with activity from different dates
             - Moderator account
             - Two regular user accounts
             - Banned user account
@@ -246,6 +439,7 @@ class Command(BaseCommand):
             "<p>This Misago site was pre-populated with some initial data to make starting development easier:</p>"
             "<ul>"
             "<li>Example categories hierarchy</li>"
+            "<li>Threads with activity from different dates</li>"
             "<li>Moderator account</li>"
             "<li>Two regular user accounts</li>"
             "<li>Banned user account</li>"
@@ -285,6 +479,7 @@ class Command(BaseCommand):
         readme_post.search_document = (
             "This Misago site was pre-populated with some initial data to make starting development easier: "
             "- Example categories hierarchy "
+            "- Threads with activity from different dates "
             "- Moderator account "
             "- Two regular user accounts "
             "- Banned user account "
@@ -316,9 +511,7 @@ class Command(BaseCommand):
         readme_post.update_search_vector()
         readme_post.save()
 
-        first_category.threads = models.F("threads") + 1
-        first_category.posts = models.F("posts") + 1
-        first_category.set_last_thread(readme_thread)
+        first_category.synchronize()
         first_category.save()
 
         self.stdout.write(
