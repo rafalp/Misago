@@ -202,7 +202,9 @@ class Command(BaseCommand):
             updated_on=previous_year_timestamp,
         )
 
-        previous_year_thread.first_post = previous_year_thread.last_post = previous_year_post
+        previous_year_thread.first_post = previous_year_thread.last_post = (
+            previous_year_post
+        )
         previous_year_thread.save()
 
         previous_year_post.original = (
@@ -249,7 +251,9 @@ class Command(BaseCommand):
             updated_on=current_year_timestamp,
         )
 
-        current_year_thread.first_post = current_year_thread.last_post = current_year_post
+        current_year_thread.first_post = current_year_thread.last_post = (
+            current_year_post
+        )
         current_year_thread.save()
 
         current_year_post.original = (
@@ -294,7 +298,9 @@ class Command(BaseCommand):
             updated_on=current_week_timestamp,
         )
 
-        current_week_thread.first_post = current_week_thread.last_post = current_week_post
+        current_week_thread.first_post = current_week_thread.last_post = (
+            current_week_post
+        )
         current_week_thread.save()
 
         current_week_post.original = (
