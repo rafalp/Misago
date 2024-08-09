@@ -103,8 +103,9 @@ intro() {
     echo "    ${BOLD}run${NORMAL}               runs \"docker compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
     echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
-    echo "    ${BOLD}fakedata${NORMAL}          populates database with testing data."
-    echo "    ${BOLD}fakebigdata${NORMAL}       populates database with LARGE amount of testing data."
+    echo "    ${BOLD}loaddevfixture${NORMAL}      populates database with pre-made data for dev."
+    echo "    ${BOLD}fakedata${NORMAL}          populates database with generated testing data."
+    echo "    ${BOLD}fakebigdata${NORMAL}       populates database with LARGE amount of geerated testing data."
     echo "    ${BOLD}pipcompile${NORMAL}        run pip-compile to update requirements.txt"
     echo
 }
@@ -168,7 +169,11 @@ after_init_message() {
     echo "Username:    $username"
     echo "Password:    $password"
     echo
-    echo "To connect to development database use following credentials:"
+    echo "You can populate the database with additional data using the following command:"
+    echo
+    echo "./dev loaddevfixture"
+    echo
+    echo "To connect to the database use following credentials:"
     echo
     echo "User:         misago"
     echo "Password:     misago"
@@ -469,6 +474,8 @@ if [[ $1 ]]; then
     elif [[ $1 = "pyfmt" ]]; then
         isort -rc misago
         black devproject misago
+    elif [[ $1 = "loaddevfixture" ]]; then
+        docker compose run --rm misago python manage.py loaddevfixture
     elif [[ $1 = "fakedata" ]]; then
         create_fake_data
     elif [[ $1 = "fakebigdata" ]]; then

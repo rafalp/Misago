@@ -117,7 +117,6 @@ To browse those emails, visit the <http://127.0.0.1:8025> in your browser for th
 
 If you are using Windows, you may see the following error during installation:
 
-
 ```
  => ERROR [misago 8/8] RUN ./dev bootstrap_plugins
 ------

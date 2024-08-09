@@ -35,8 +35,8 @@ def create_default_categories_tree(apps, schema_editor):
         parent=root,
         lft=4,
         rght=5,
-        tree_id=1,
-        level=CategoryTreeDeprecated.THREADS,
+        tree_id=CategoryTreeDeprecated.THREADS,
+        level=1,
         name=category_name,
         slug=slugify(category_name),
     )

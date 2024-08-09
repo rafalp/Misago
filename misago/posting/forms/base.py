@@ -1,8 +1,8 @@
 from django import forms
 
-from ..states.base import State
+from ..state.base import PostingState
 
 
 class PostingForm(forms.Form):
-    def update_state(self, state: State):
+    def update_state(self, state: PostingState):
         pass

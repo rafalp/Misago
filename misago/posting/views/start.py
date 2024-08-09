@@ -20,7 +20,7 @@ from ..forms.start import (
     StartThreadForm,
     StartThreadFormset,
 )
-from ..states.start import StartPrivateThreadState, StartThreadState
+from ..state.start import StartPrivateThreadState, StartThreadState
 
 
 def start_thread_login_required():
