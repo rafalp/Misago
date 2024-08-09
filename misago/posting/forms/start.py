@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from django.utils.translation import npgettext, pgettext
 
 from ...core.utils import slugify
-from ..states.start import StartThreadState
+from ..state.start import StartThreadState
 from .base import PostingForm
 from .formset import PostingFormset
 

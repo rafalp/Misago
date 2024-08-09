@@ -9,13 +9,13 @@ from ...core.utils import slugify
 from ...parser.context import ParserContext
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post, Thread, ThreadParticipant
-from .base import State
+from .base import PostingState
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class StartThreadState(State):
+class StartThreadState(PostingState):
     request: HttpRequest
     timestamp: datetime
     category: Category
