@@ -484,17 +484,12 @@ class ThreadsListView(ListView):
                 }
             )
 
-        if request.settings.index_view == "threads":
-            clear_filters_url = reverse("misago:index")
-        else:
-            clear_filters_url = filters_base_url
-
         return {
             "template_name": self.threads_component_template_name,
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,
-            "clear_filters_url": clear_filters_url,
+            "filters_clear_url": self.get_filters_clear_url(request),
             "moderation_actions": self.get_moderation_actions(request),
             "items": items,
             "paginator": paginator,
@@ -506,6 +501,12 @@ class ThreadsListView(ListView):
 
     def get_filters_base_url(self) -> str:
         return reverse("misago:threads")
+
+    def get_filters_clear_url(self, request: HttpRequest) -> str:
+        if request.settings.index_view == "threads":
+            return reverse("misago:index")
+
+        return self.get_filters_base_url()
 
     def get_threads_filters(
         self, request: HttpRequest, base_url: str, filter: str | None
@@ -884,7 +885,7 @@ class CategoryThreadsListView(ListView):
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,
-            "clear_filters_url": filters_base_url,
+            "filters_clear_url": filters_base_url,
             "moderation_actions": self.get_moderation_actions(request, category),
             "items": items,
             "paginator": paginator,
@@ -1206,7 +1207,7 @@ class PrivateThreadsListView(ListView):
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,
-            "clear_filters_url": filters_base_url,
+            "filters_clear_url": filters_base_url,
             "items": items,
             "paginator": paginator,
             "enable_polling": self.is_threads_polling_enabled(request),
