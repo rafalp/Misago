@@ -432,11 +432,33 @@ def test_threads_list_raises_404_error_if_filter_is_invalid(
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_filters_threads(default_category, user, user_client):
     visible_thread = post_thread(default_category, title="User Thread", poster=user)
-    hidden_thread = post_thread(default_category, title="Other Thread")
+    hidden_thread = post_thread(default_category, title="Hidden Thread")
 
     response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
     assert_contains(response, visible_thread.title)
     assert_not_contains(response, hidden_thread.title)
+
+
+@override_dynamic_settings(index_view="threads")
+def test_index_threads_list_filters_threads(default_category, user, user_client):
+    visible_thread = post_thread(default_category, title="User Thread", poster=user)
+    hidden_thread = post_thread(default_category, title="Hidden Thread")
+
+    response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_threads_list_builds_valid_filters_urls(user_client):
+    response = user_client.get(reverse("misago:threads"))
+    assert_contains(response, reverse("misago:threads", kwargs={"filter": "my"}))
+
+
+@override_dynamic_settings(index_view="threads")
+def test_index_threads_list_builds_valid_filters_urls(user_client):
+    response = user_client.get(reverse("misago:index"))
+    assert_contains(response, reverse("misago:threads", kwargs={"filter": "my"}))
 
 
 def test_category_threads_list_raises_404_error_if_filter_is_invalid(
