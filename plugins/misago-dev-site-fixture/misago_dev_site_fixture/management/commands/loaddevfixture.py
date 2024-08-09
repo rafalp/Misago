@@ -4,7 +4,6 @@ from textwrap import dedent
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from django.db import models
 from django.utils import timezone
 from misago.cache.enums import CacheName
 from misago.cache.versions import get_cache_versions, invalidate_cache
@@ -506,9 +505,7 @@ class Command(BaseCommand):
         readme_post.update_search_vector()
         readme_post.save()
 
-        first_category.threads = models.F("threads") + 4
-        first_category.posts = models.F("posts") + 4
-        first_category.set_last_thread(readme_thread)
+        first_category.synchronize()
         first_category.save()
 
         self.stdout.write(
