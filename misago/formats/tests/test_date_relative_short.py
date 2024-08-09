@@ -28,10 +28,10 @@ def test_date_relative_short_formats_date_few_days_ago():
 @freeze_time("2024-07-27 15:12")
 def test_date_relative_short_formats_date_from_this_year():
     timestamp = timezone.now() - timedelta(days=100)
-    assert date_relative_short(timestamp) == "18 Apr"
+    assert date_relative_short(timestamp) == "Apr 18"
 
 
 @freeze_time("2024-07-27 15:12")
 def test_date_relative_short_formats_date_from_other_year():
     timestamp = timezone.now() - timedelta(days=400)
-    assert date_relative_short(timestamp) == "Jun 23"
+    assert date_relative_short(timestamp) == "Jun 2023"
