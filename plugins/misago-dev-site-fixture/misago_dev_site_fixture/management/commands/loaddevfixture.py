@@ -387,7 +387,7 @@ class Command(BaseCommand):
             This Misago site was pre-populated with some initial data to make starting development easier:
 
             - Example categories hierarchy
-            - Threads with activity from different times
+            - Threads with activity from different dates
             - Moderator account
             - Two regular user accounts
             - Banned user account
@@ -434,7 +434,7 @@ class Command(BaseCommand):
             "<p>This Misago site was pre-populated with some initial data to make starting development easier:</p>"
             "<ul>"
             "<li>Example categories hierarchy</li>"
-            "<li>Threads with activity from different times</li>"
+            "<li>Threads with activity from different dates</li>"
             "<li>Moderator account</li>"
             "<li>Two regular user accounts</li>"
             "<li>Banned user account</li>"
@@ -474,7 +474,7 @@ class Command(BaseCommand):
         readme_post.search_document = (
             "This Misago site was pre-populated with some initial data to make starting development easier: "
             "- Example categories hierarchy "
-            "- Threads with activity from different times "
+            "- Threads with activity from different dates "
             "- Moderator account "
             "- Two regular user accounts "
             "- Banned user account "
