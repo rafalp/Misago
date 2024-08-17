@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
 from django.utils.translation import pgettext, pgettext_lazy
+from django.views.decorators.debug import sensitive_post_parameters
 
 from ....acl.useracl import get_user_acl
 from ....admin.auth import authorize_admin
@@ -288,6 +290,10 @@ class NewUser(UserAdmin, generic.ModelFormView):
         "admin users", 'New user "%(user)s" has been registered.'
     )
 
+    @method_decorator(sensitive_post_parameters("new_password"))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form(self, form_class, request, target):
         if request.method == "POST":
             return form_class(
@@ -321,6 +327,10 @@ class EditUser(UserAdmin, generic.ModelFormView):
     form_class = EditUserForm
     template_name = "edit.html"
     message_submit = pgettext_lazy("admin users", 'User "%(user)s" has been edited.')
+
+    @method_decorator(sensitive_post_parameters("new_password"))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def real_dispatch(self, request, target):
         target.old_username = target.username
