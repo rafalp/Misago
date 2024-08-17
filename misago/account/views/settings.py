@@ -3,7 +3,6 @@ from typing import Any
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, logout
-from django.core.exceptions import PermissionDenied
 from django.forms import Form, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,6 +10,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
+from django.views.decorators.debug import sensitive_post_parameters
 
 from ...auth.decorators import login_required
 from ...core.mail import build_mail
@@ -248,6 +248,7 @@ class AccountPasswordView(AccountSettingsFormView):
         "account settings password changed", "Password changed"
     )
 
+    @method_decorator(sensitive_post_parameters())
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.settings.enable_oauth2_client:
             raise Http404()
@@ -293,6 +294,7 @@ class AccountEmailView(AccountSettingsFormView):
         "account settings email confirm", "Confirmation email sent"
     )
 
+    @method_decorator(sensitive_post_parameters("current_password"))
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.settings.enable_oauth2_client:
             raise Http404()

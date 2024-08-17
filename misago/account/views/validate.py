@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import BadRequest, ValidationError
 from django.http import HttpRequest, JsonResponse
 from django.utils.translation import pgettext
+from django.views.decorators.debug import sensitive_post_parameters
 
 from ...users.validators import validate_email, validate_username
 
@@ -76,6 +77,7 @@ def email(request: HttpRequest) -> JsonResponse:
     validate_email(value, user)
 
 
+@sensitive_post_parameters()
 @validation_view
 def password(request: HttpRequest) -> JsonResponse:
     user = get_user_from_data(request)

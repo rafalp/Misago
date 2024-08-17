@@ -3,7 +3,7 @@ from django.contrib import auth
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.translation import pgettext
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
@@ -18,6 +18,8 @@ class LoginView(View):
     template_name: str = "misago/auth/login_page.html"
     form_type = AuthenticationForm
 
+    @method_decorator(sensitive_post_parameters())
+    @method_decorator(never_cache)
     def dispatch(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if self.is_view_disabled():
             raise Http404()
@@ -83,7 +85,7 @@ class LoginView(View):
         return is_misago_login_page_disabled()
 
 
-login = sensitive_post_parameters()(never_cache(LoginView.as_view()))
+login = LoginView.as_view()
 
 
 def delegated_login(request: HttpRequest, *, message: str | None = None):
