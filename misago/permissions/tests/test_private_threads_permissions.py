@@ -1,10 +1,12 @@
 import pytest
 from django.core.exceptions import PermissionDenied
+from django.http import Http404
 
 from ...threads.models import ThreadParticipant
 from ...threads.test import post_thread
 from ..privatethreads import (
     check_private_threads_permission,
+    check_see_private_thread_permission,
     check_start_private_threads_permission,
     filter_private_threads_queryset,
 )
@@ -94,3 +96,35 @@ def test_filter_private_threads_queryset_excludes_thread_user_is_not_participati
         permissions, private_threads_category.thread_set
     )
     assert not queryset.exists()
+
+
+def test_check_see_private_threads_permission_passes_if_user_has_permission(
+    user, cache_versions, thread
+):
+    thread.participants.add(user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_threads_permission_fails_if_user_cant_use_private_threads(
+    user, cache_versions, thread
+):
+    user.group.can_use_private_threads = False
+    user.group.save()
+
+    thread.participants.add(user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_threads_permission_fails_if_user_is_not_thread_participant(
+    user, cache_versions, thread
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_private_thread_permission(permissions, thread)

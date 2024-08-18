@@ -137,6 +137,25 @@
   }
 }
 
+// Button link
+.btn-link {
+  color: @gray;
+
+  &:hover,
+  &:focus {
+    color: @text-color;
+    text-decoration: none;
+  }
+
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus {
+      color: @gray-lighter;
+    }
+  }
+}
+
 // Moderation button
 .btn-moderation {
   .button-variant(@btn-moderation-color; @btn-moderation-bg; @btn-moderation-border);

@@ -407,3 +407,13 @@ class ThreadModelTests(TestCase):
         other_user.delete(anonymous_username="Deleted")
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(id=self.thread.id)
+
+
+def test_thread_participants_ids_property_returns_list_of_participants_users_ids(
+    thread, user, other_user
+):
+    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
+    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
+
+    participants_ids = list(thread.participants_ids)
+    assert participants_ids == [other_user.id, user.id]

@@ -7,6 +7,7 @@ from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 
+from ...permissions.privatethreads import check_see_private_thread_permission
 from ...permissions.threads import check_see_thread_permission
 from ..models import Post, Thread, ThreadParticipant
 
@@ -55,11 +56,19 @@ class ThreadView(GenericView):
         check_see_thread_permission(request.user_permissions, thread.category, thread)
         return thread
 
+    def get_thread_posts_queryset(
+        self, request: HttpRequest, thread: Thread
+    ) -> QuerySet:
+        return thread.post_set.order_by("id")
+
 
 class PrivateThreadView(GenericView):
-    def get_thread_participants(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-    ) -> dict[int, ThreadParticipant]:
-        pass
+    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        thread = super().get_thread(request, thread_id)
+        check_see_private_thread_permission(request.user_permissions, thread)
+        return thread
+
+    def get_thread_posts_queryset(
+        self, request: HttpRequest, thread: Thread
+    ) -> QuerySet:
+        return thread.post_set.order_by("id")
