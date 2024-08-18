@@ -142,19 +142,19 @@
           class="thread-feed-item-post-bit-top-timestamp"
           href="#todo"
           title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ thread.last_post_on.isoformat }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
         >
-          {{ thread.last_post_on|date_relative }}
+          {{ post.posted_on|date_relative }}
         </a>
 
         <a
           class="thread-feed-item-post-bit-top-timestamp-compact"
           href="#todo"
           title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ thread.last_post_on.isoformat }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
           misago-timestamp-format="short"
         >
-          {{ thread.last_post_on|date_relative_short }}
+          {{ post.posted_on|date_relative_short }}
         </a>
 
 
