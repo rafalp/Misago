@@ -1,0 +1,18 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_component misago_plugins %}
+
+
+{% block title %}
+  {{ thread }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-thread">
+  {% include "misago/thread/header.html" %}
+
+  <div class="container page-container">
+    TODO
+  </div>
+</div>
+{% endblock content %}

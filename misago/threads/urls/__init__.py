@@ -14,8 +14,8 @@ from ..views.goto import (
     PrivateThreadGotoNewView,
 )
 from ..views.list import category_threads, private_threads, threads
+from ..views.replies import private_thread_replies, thread_replies
 from ..views.subscribed import redirect_subscribed_to_watched
-from ..views.thread import ThreadView, PrivateThreadView
 
 
 urlpatterns = [
@@ -50,6 +50,26 @@ urlpatterns = [
         private_threads,
         name="private-threads",
     ),
+    path(
+        "t/<slug:slug>/<int:id>/",
+        thread_replies,
+        name="thread",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/<int:page>/",
+        thread_replies,
+        name="thread",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/",
+        private_thread_replies,
+        name="private-thread",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/<int:page>/",
+        private_thread_replies,
+        name="private-thread",
+    ),
 ]
 
 
@@ -64,26 +84,6 @@ urlpatterns += [
     path("c/<slug:slug>/<int:pk>/subscribed/", redirect_subscribed_to_watched),
     path("private-threads/subscribed/", redirect_subscribed_to_watched),
 ]
-
-
-def thread_view_patterns(prefix, view):
-    urls = [
-        path(
-            "%s/<slug:slug>/<int:pk>/" % prefix[0],
-            view.as_view(),
-            name=prefix,
-        ),
-        path(
-            "%s/<slug:slug>/<int:pk>/<int:page>/" % prefix[0],
-            view.as_view(),
-            name=prefix,
-        ),
-    ]
-    return urls
-
-
-urlpatterns += thread_view_patterns("thread", ThreadView)
-urlpatterns += thread_view_patterns("private-thread", PrivateThreadView)
 
 
 def goto_patterns(prefix, **views):
