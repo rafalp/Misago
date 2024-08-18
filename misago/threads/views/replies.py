@@ -33,7 +33,13 @@ class RepliesView(View):
     ) -> dict:
         return {
             "thread": thread,
+            "posts": self.get_thread_posts_data(request, thread, page),
         }
+
+    def get_thread_posts_data(
+        self, request: HttpRequest, thread: Thread, page: int | None = None
+    ) -> dict:
+        return {}
 
 
 class ThreadRepliesView(RepliesView, ThreadView):
