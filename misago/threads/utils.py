@@ -32,7 +32,7 @@ def add_likes_to_posts(user, posts):
 
 
 SUPPORTED_THREAD_ROUTES = {
-    "misago:thread": "pk",
+    "misago:thread": "id",
     "misago:thread-post": "pk",
     "misago:thread-last": "pk",
     "misago:thread-new": "pk",

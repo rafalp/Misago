@@ -55,7 +55,7 @@ def test_start_private_thread_view_posts_new_thread(user_client, other_user):
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"pk": thread.pk, "slug": thread.slug}
+        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
 
