@@ -44,6 +44,7 @@ class RepliesView(View):
     ) -> dict:
         return {
             "thread": thread,
+            "thread_url": self.get_thread_url(thread),
             "feed": self.get_thread_feed_data(request, thread, page),
         }
 
@@ -102,7 +103,7 @@ class RepliesView(View):
 
 class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
-    template_partial_name: str = "misago/thread/replies.html"
+    template_partial_name: str = "misago/thread/partial.html"
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
@@ -120,7 +121,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     template_name: str = "misago/private_thread/index.html"
-    template_partial_name: str = "misago/private_thread/replies.html"
+    template_partial_name: str = "misago/private_thread/partial.html"
 
 
 thread_replies = ThreadRepliesView.as_view()

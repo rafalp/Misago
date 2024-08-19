@@ -5,6 +5,7 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views import View
 
 from ...permissions.privatethreads import (
@@ -21,6 +22,7 @@ from ..models import Post, Thread, ThreadParticipant
 class GenericView(View):
     thread_select_related: Iterable[str] | True | None = None
     post_select_related: Iterable[str] | None = None
+    thread_url_name: str
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         queryset = Thread.objects
@@ -53,9 +55,22 @@ class GenericView(View):
             request.settings.posts_per_page_orphans,
         )
 
+    def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
+        if page:
+            return reverse(
+                self.thread_url_name,
+                kwargs={"id": thread.id, "slug": thread.slug, "page": page},
+            )
+
+        return reverse(
+            self.thread_url_name,
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        
 
 class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)
+    thread_url_name: str = "misago:thread"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -70,6 +85,8 @@ class ThreadView(GenericView):
 
 
 class PrivateThreadView(GenericView):
+    thread_url_name: str = "misago:private-thread"
+
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
         check_see_private_thread_permission(request.user_permissions, thread)

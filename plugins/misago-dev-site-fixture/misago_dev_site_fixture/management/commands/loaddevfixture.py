@@ -521,6 +521,126 @@ class Command(BaseCommand):
         thread_with_states.synchronize()
         thread_with_states.save()
 
+        thread_length = settings.posts_per_page + settings.posts_per_page_orphans
+        timestamp = timezone.now() - timedelta(minutes=50)
+
+        thread_one_page = Thread.objects.create(
+            category=first_category,
+            title="Thread with max-length single page",
+            slug="thread-with-max-length-single-page",
+            started_on=timestamp,
+            last_post_on=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+
+        for i in range(thread_length):
+            timestamp += timedelta(minutes=randint(0, 3))
+
+            post = Post.objects.create(
+                category=first_category,
+                thread=thread_one_page,
+                poster=None,
+                poster_name="Poster",
+                posted_on=timestamp,
+                updated_on=timestamp,
+            )
+
+            post.original = f"Post no. {i + 1}"
+            post.parsed = f"<p>Post no. {i + 1}</p>"
+            post.search_document = post.original
+
+            update_post_checksum(post)
+            post.update_search_vector()
+            post.save()
+
+        thread_one_page.synchronize()
+        thread_one_page.save()
+
+        thread_length = settings.posts_per_page + settings.posts_per_page_orphans + 1
+        timestamp = timezone.now() - timedelta(minutes=40)
+
+        thread_two_pages = Thread.objects.create(
+            category=first_category,
+            title="Thread with two pages",
+            slug="thread-with-two-pages",
+            started_on=timestamp,
+            last_post_on=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+
+        for i in range(thread_length):
+            timestamp += timedelta(minutes=randint(0, 3))
+
+            post = Post.objects.create(
+                category=first_category,
+                thread=thread_two_pages,
+                poster=None,
+                poster_name="Poster",
+                posted_on=timestamp,
+                updated_on=timestamp,
+            )
+
+            post.original = f"Post no. {i + 1}"
+            post.parsed = f"<p>Post no. {i + 1}</p>"
+            post.search_document = post.original
+
+            update_post_checksum(post)
+            post.update_search_vector()
+            post.save()
+
+        thread_two_pages.synchronize()
+        thread_two_pages.save()
+
+        thread_length = (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1
+        timestamp = timezone.now() - timedelta(minutes=30)
+
+        thread_three_pages = Thread.objects.create(
+            category=first_category,
+            title="Thread with three pages",
+            slug="thread-with-three-pages",
+            started_on=timestamp,
+            last_post_on=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+
+        for i in range(thread_length):
+            timestamp += timedelta(minutes=randint(0, 3))
+
+            post = Post.objects.create(
+                category=first_category,
+                thread=thread_three_pages,
+                poster=None,
+                poster_name="Poster",
+                posted_on=timestamp,
+                updated_on=timestamp,
+            )
+
+            post.original = f"Post no. {i + 1}"
+            post.parsed = f"<p>Post no. {i + 1}</p>"
+            post.search_document = post.original
+
+            update_post_checksum(post)
+            post.update_search_vector()
+            post.save()
+
+        thread_three_pages.synchronize()
+        thread_three_pages.save()
+
         timestamp = timezone.now()
 
         readme_thread = Thread.objects.create(

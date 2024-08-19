@@ -1,8 +1,8 @@
 {% load i18n misago_avatars misago_formats %}
 
-<div class="thread-feed-item">
-  <div class="thread-feed-item-post">
-
+<div id="thread-feed-item-post-{{ post.id }}" class="thread-feed-item">
+  <a id="post-{{ post.id }}" class="scroll-target"></a>
+  <div id=""class="thread-feed-item-post">
     <div class="thread-feed-item-post-bit-side">
       <div class="thread-feed-item-post-bit-side-avatar">
         {% if poster %}

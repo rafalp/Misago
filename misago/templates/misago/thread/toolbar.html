@@ -1,15 +1,15 @@
 {% load i18n misago_plugins %}
 
 <div class="toolbar">
-  {% if paginator.paginator.num_pages > 1 %}
+  {% if feed.paginator.has_other_pages %}
     <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
       <div class="toolbar-item">
-        {% include "misago/thread/paginator.html" with bottom=bottom %}
+        {% include "misago/thread/paginator.html" with page=feed.paginator paginator=feed.paginator.paginator bottom=bottom %}
       </div>
     </div>
   {% endif %}
   <div class="toolbar-spacer"></div>
-  <div class="toolbar-section flex-order-last-xs">
+  <div class="toolbar-section">
     <div class="toolbar-item">
       <button class="btn btn-primary btn-block" disabled>
         {% trans "Post reply" context "thread replies toolbar" %}
