@@ -299,17 +299,89 @@ def post(thread):
 
 @pytest.fixture
 def reply(thread):
-    return reply_thread(thread, poster="Ghost", posted_on=timezone.now())
+    return reply_thread(
+        thread,
+        poster="Ghost",
+        posted_on=timezone.now(),
+    )
+
+
+@pytest.fixture
+def hidden_reply(thread):
+    return reply_thread(
+        thread,
+        poster="Ghost",
+        posted_on=timezone.now(),
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def unapproved_reply(thread):
+    return reply_thread(
+        thread,
+        poster="Ghost",
+        posted_on=timezone.now(),
+        is_unapproved=True,
+    )
 
 
 @pytest.fixture
 def user_reply(thread, user):
-    return reply_thread(thread, poster=user, posted_on=timezone.now())
+    return reply_thread(
+        thread,
+        poster=user,
+        posted_on=timezone.now(),
+    )
+
+
+@pytest.fixture
+def user_hidden_reply(thread, user):
+    return reply_thread(
+        thread,
+        poster=user,
+        posted_on=timezone.now(),
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def user_unapproved_reply(thread, user):
+    return reply_thread(
+        thread,
+        poster=user,
+        posted_on=timezone.now(),
+        is_unapproved=True,
+    )
 
 
 @pytest.fixture
 def other_user_reply(thread, other_user):
-    return reply_thread(thread, poster=other_user, posted_on=timezone.now())
+    return reply_thread(
+        thread,
+        poster=other_user,
+        posted_on=timezone.now(),
+    )
+
+
+@pytest.fixture
+def other_user_hidden_reply(thread, other_user):
+    return reply_thread(
+        thread,
+        poster=other_user,
+        posted_on=timezone.now(),
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def other_user_unapproved_reply(thread, other_user):
+    return reply_thread(
+        thread,
+        poster=other_user,
+        posted_on=timezone.now(),
+        is_unapproved=True,
+    )
 
 
 @pytest.fixture

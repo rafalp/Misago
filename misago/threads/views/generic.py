@@ -7,8 +7,14 @@ from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 
-from ...permissions.privatethreads import check_see_private_thread_permission
-from ...permissions.threads import check_see_thread_permission
+from ...permissions.privatethreads import (
+    check_see_private_thread_permission,
+    filter_private_thread_posts_queryset,
+)
+from ...permissions.threads import (
+    check_see_thread_permission,
+    filter_thread_posts_queryset,
+)
 from ..models import Post, Thread, ThreadParticipant
 
 
@@ -28,7 +34,7 @@ class GenericView(View):
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        raise NotImplementedError()
+        return thread.post_set.order_by("id")
 
     def get_thread_post(
         self, request: HttpRequest, thread: Thread, post_id: int
@@ -59,7 +65,8 @@ class ThreadView(GenericView):
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        return thread.post_set.order_by("id")
+        queryset = super().get_thread_posts_queryset(request, thread)
+        return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
 
 
 class PrivateThreadView(GenericView):
@@ -71,4 +78,7 @@ class PrivateThreadView(GenericView):
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        return thread.post_set.order_by("id")
+        queryset = super().get_thread_posts_queryset(request, thread)
+        return filter_private_thread_posts_queryset(
+            request.user_permissions, thread, queryset
+        )

@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.db.models import QuerySet
 from django.http import Http404
 from django.utils.translation import pgettext
 
@@ -7,6 +8,7 @@ from .hooks import (
     check_private_threads_permission_hook,
     check_see_private_thread_permission_hook,
     check_start_private_threads_permission_hook,
+    filter_private_thread_posts_queryset_hook,
     filter_private_threads_queryset_hook,
 )
 from .proxy import UserPermissionsProxy
@@ -86,3 +88,21 @@ def _filter_private_threads_queryset_action(
             "thread_id"
         )
     )
+
+
+def filter_private_thread_posts_queryset(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    return filter_private_thread_posts_queryset_hook(
+        _filter_private_thread_posts_queryset_action, permissions, thread, queryset
+    )
+
+
+def _filter_private_thread_posts_queryset_action(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    return queryset
