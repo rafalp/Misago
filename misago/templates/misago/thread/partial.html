@@ -1,2 +1,5 @@
 {% load misago_component %}
+
+{% include "misago/thread/toolbar.html" with bottom=False %}
 {% includecomponent feed %}
+{% include "misago/thread/toolbar.html" with bottom=True %}

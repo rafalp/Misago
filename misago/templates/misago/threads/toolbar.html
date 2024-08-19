@@ -2,11 +2,13 @@
 
 <div class="toolbar">
   {% pluginoutlet THREADS_LIST_TOOLBAR_START %}
-  <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
-    <div class="toolbar-item">
-      {% include "misago/threads/paginator.html" with bottom=bottom %}
+  {% if threads.paginator.has_previous or threads.paginator.has_next %}
+    <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
+      <div class="toolbar-item">
+        {% include "misago/threads/paginator.html" with bottom=bottom %}
+      </div>
     </div>
-  </div>
+  {% endif %}
   {% if subcategories and not subcategories.template_name and not bottom %}
     <div class="toolbar-section">
       <div class="toolbar-item">
