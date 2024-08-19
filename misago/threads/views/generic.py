@@ -16,7 +16,8 @@ from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
 )
-from ..models import Post, Thread, ThreadParticipant
+from ..models import Post, Thread
+from ..paginator import ThreadRepliesPaginator
 
 
 class GenericView(View):
@@ -49,14 +50,14 @@ class GenericView(View):
         request: HttpRequest,
         queryset: QuerySet,
     ) -> Paginator:
-        return Paginator(
+        return ThreadRepliesPaginator(
             queryset.order_by("id"),
             request.settings.posts_per_page,
             request.settings.posts_per_page_orphans,
         )
 
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
-        if page:
+        if page and page > 1:
             return reverse(
                 self.thread_url_name,
                 kwargs={"id": thread.id, "slug": thread.slug, "page": page},
@@ -66,7 +67,7 @@ class GenericView(View):
             self.thread_url_name,
             kwargs={"id": thread.id, "slug": thread.slug},
         )
-        
+
 
 class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)

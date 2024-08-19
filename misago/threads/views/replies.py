@@ -1,9 +1,9 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from django.contrib.auth import get_user_model
 from django.db.models import prefetch_related_objects
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 
 from ...core.exceptions import OutdatedSlug
@@ -16,18 +16,31 @@ else:
     User = get_user_model()
 
 
+class PageOutOfRangeError(Exception):
+    redirect_to: str
+
+    def __init__(self, redirect_to: str):
+        self.redirect_to = redirect_to
+
+
 class RepliesView(View):
     template_name: str
     template_partial_name: str
     feed_template_name: str = "misago/thread_feed/index.html"
     feed_post_template_name: str = "misago/thread_feed/post.html"
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except PageOutOfRangeError as exc:
+            return redirect(exc.redirect_to)
+
     def get(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         thread = self.get_thread(request, id)
 
-        if thread.slug != slug:
+        if not request.is_htmx and thread.slug != slug:
             raise OutdatedSlug(thread)
 
         context = self.get_context_data(request, thread, page)
@@ -53,10 +66,19 @@ class RepliesView(View):
     ) -> dict:
         queryset = self.get_thread_posts_queryset(request, thread)
         paginator = self.get_thread_posts_paginator(request, queryset)
-        page = paginator.get_page(page or 1)
+
+        if page and page > paginator.num_pages:
+            if not request.is_htmx:
+                raise PageOutOfRangeError(
+                    self.get_thread_url(thread, paginator.num_pages)
+                )
+
+            page = paginator.num_pages
+
+        page_obj = paginator.get_page(page)
 
         items: list[dict] = []
-        for post in page.object_list:
+        for post in page_obj.object_list:
             items.append(
                 {
                     "template_name": self.feed_post_template_name,
@@ -71,7 +93,7 @@ class RepliesView(View):
         return {
             "template_name": self.feed_template_name,
             "items": items,
-            "paginator": page,
+            "paginator": page_obj,
         }
 
     def populate_feed_items_users(

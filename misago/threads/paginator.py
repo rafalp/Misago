@@ -20,3 +20,7 @@ class PostsPaginator(Paginator):
         if top < self.count:
             top += 1
         return self._get_page(self.object_list[bottom:top], number, self)
+
+
+class ThreadRepliesPaginator(Paginator):
+    pass

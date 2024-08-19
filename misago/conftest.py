@@ -303,6 +303,7 @@ def reply(thread):
         thread,
         poster="Ghost",
         posted_on=timezone.now(),
+        message="I am reply",
     )
 
 
@@ -312,6 +313,7 @@ def hidden_reply(thread):
         thread,
         poster="Ghost",
         posted_on=timezone.now(),
+        message="I am hidden reply",
         is_hidden=True,
     )
 
@@ -322,6 +324,7 @@ def unapproved_reply(thread):
         thread,
         poster="Ghost",
         posted_on=timezone.now(),
+        message="I am unapproved reply",
         is_unapproved=True,
     )
 
@@ -332,6 +335,7 @@ def user_reply(thread, user):
         thread,
         poster=user,
         posted_on=timezone.now(),
+        message="I am user reply",
     )
 
 
@@ -341,6 +345,7 @@ def user_hidden_reply(thread, user):
         thread,
         poster=user,
         posted_on=timezone.now(),
+        message="I am user hidden reply",
         is_hidden=True,
     )
 
@@ -351,6 +356,7 @@ def user_unapproved_reply(thread, user):
         thread,
         poster=user,
         posted_on=timezone.now(),
+        message="I am user unapproved reply",
         is_unapproved=True,
     )
 
@@ -361,6 +367,7 @@ def other_user_reply(thread, other_user):
         thread,
         poster=other_user,
         posted_on=timezone.now(),
+        message="I am other user reply",
     )
 
 
@@ -370,6 +377,7 @@ def other_user_hidden_reply(thread, other_user):
         thread,
         poster=other_user,
         posted_on=timezone.now(),
+        message="I am user hidden reply",
         is_hidden=True,
     )
 
@@ -380,6 +388,7 @@ def other_user_unapproved_reply(thread, other_user):
         thread,
         poster=other_user,
         posted_on=timezone.now(),
+        message="I am other user unapproved reply",
         is_unapproved=True,
     )
 
