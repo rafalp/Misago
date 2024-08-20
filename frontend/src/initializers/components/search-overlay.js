@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
-import { SearchOverlay } from "../../components/Search"
+import { SearchOverlay } from "../../components/search"
 import store from "../../services/store"
 
 export default function initializer(context) {
