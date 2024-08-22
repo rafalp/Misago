@@ -2,7 +2,6 @@ from typing import Protocol
 
 from django.http import HttpRequest
 
-from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 

@@ -4,7 +4,6 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Thread
 
 
 class GetPrivateThreadRepliesPageThreadQuerysetHookAction(Protocol):
@@ -78,7 +77,7 @@ class GetPrivateThreadRepliesPageThreadQuerysetHook(
     @get_private_thread_replies_page_thread_queryset_hook.append_filter
     def select_related_plugin_data(action, request: HttpRequest):
         queryset = action(request)
-        return queryset.select_relate("plugin")
+        return queryset.select_related("plugin")
     ```
     """
 

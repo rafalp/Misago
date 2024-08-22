@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Any
 
 from django.contrib.auth import get_user_model
-from django.db.models import prefetch_related_objects
+from django.db.models import QuerySet, prefetch_related_objects
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
@@ -9,9 +9,13 @@ from django.views import View
 from ...core.exceptions import OutdatedSlug
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
+    get_private_thread_replies_page_posts_queryset_hook,
     get_private_thread_replies_page_thread_queryset_hook,
+    get_thread_posts_feed_item_user_ids_hook,
     get_thread_replies_page_context_data_hook,
+    get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
+    set_thread_posts_feed_item_users_hook,
 )
 from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
@@ -32,8 +36,8 @@ class PageOutOfRangeError(Exception):
 class RepliesView(View):
     template_name: str
     template_partial_name: str
-    feed_template_name: str = "misago/thread_feed/index.html"
-    feed_post_template_name: str = "misago/thread_feed/post.html"
+    feed_template_name: str = "misago/posts_feed/index.html"
+    feed_post_template_name: str = "misago/posts_feed/post.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -69,10 +73,10 @@ class RepliesView(View):
         return {
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
-            "feed": self.get_thread_feed_data(request, thread, page),
+            "feed": self.get_posts_feed_data(request, thread, page),
         }
 
-    def get_thread_feed_data(
+    def get_posts_feed_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
         queryset = self.get_thread_posts_queryset(request, thread)
@@ -99,7 +103,7 @@ class RepliesView(View):
                 }
             )
 
-        self.populate_feed_items_users(request, items)
+        self.set_posts_feed_users(request, items)
 
         return {
             "template_name": self.feed_template_name,
@@ -107,31 +111,38 @@ class RepliesView(View):
             "paginator": page_obj,
         }
 
-    def populate_feed_items_users(
-        self, request: HttpRequest, items: list[dict]
-    ) -> None:
-        users_ids: set[int] = set()
+    def set_posts_feed_users(self, request: HttpRequest, feed: list[dict]) -> None:
+        user_ids: set[int] = set()
+        for item in feed:
+            self.get_posts_feed_item_user_ids(item, user_ids)
+            get_thread_posts_feed_item_user_ids_hook(item, user_ids)
 
-        # first pass: populate users ids
-        for item in items:
-            if item["type"] == "post":
-                users_ids.add(item["post"].poster_id)
-
-        # fetch users
-        users: dict[int, "User"] = {}
-        if not users_ids:
+        if not user_ids:
             return
 
-        for user in User.objects.filter(id__in=users_ids):
+        users = self.get_posts_feed_users(request, user_ids)
+
+        for item in feed:
+            set_thread_posts_feed_item_users_hook(
+                self.set_post_feed_item_users, users, item
+            )
+
+    def get_posts_feed_item_user_ids(self, item: dict, user_ids: set[int]):
+        if item["type"] == "post":
+            user_ids.add(item["post"].poster_id)
+
+    def get_posts_feed_users(
+        self, request: HttpRequest, user_ids: set[int]
+    ) -> dict[int, "User"]:
+        users: dict[int, "User"] = {}
+        for user in User.objects.filter(id__in=user_ids):
             users[user.id] = user
+        prefetch_related_objects(list(users.values()), "group")
+        return users
 
-        if users:
-            prefetch_related_objects(list(users.values()), "group")
-
-        # second pass: set users on feed items
-        for item in items:
-            if item["type"] == "post":
-                item["poster"] = users.get(item["post"].poster_id)
+    def set_post_feed_item_users(self, users: dict[int, "User"], item: dict):
+        if item["type"] == "post":
+            item["poster"] = users.get(item["post"].poster_id)
 
 
 class ThreadRepliesView(RepliesView, ThreadView):
@@ -163,6 +174,13 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
         return context
 
+    def get_thread_posts_queryset(
+        self, request: HttpRequest, thread: Thread
+    ) -> QuerySet:
+        return get_thread_replies_page_posts_queryset_hook(
+            super().get_thread_posts_queryset, request, thread
+        )
+
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     template_name: str = "misago/private_thread/index.html"
@@ -192,6 +210,13 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         )
 
         return context
+
+    def get_thread_posts_queryset(
+        self, request: HttpRequest, thread: Thread
+    ) -> QuerySet:
+        return get_private_thread_replies_page_posts_queryset_hook(
+            super().get_thread_posts_queryset, request, thread
+        )
 
 
 thread_replies = ThreadRepliesView.as_view()
