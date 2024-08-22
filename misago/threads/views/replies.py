@@ -7,6 +7,12 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from ...core.exceptions import OutdatedSlug
+from ..hooks import (
+    get_private_thread_replies_page_context_data_hook,
+    get_private_thread_replies_page_thread_queryset_hook,
+    get_thread_replies_page_context_data_hook,
+    get_thread_replies_page_thread_queryset_hook,
+)
 from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
 
@@ -53,6 +59,11 @@ class RepliesView(View):
         return render(request, template_name, context)
 
     def get_context_data(
+        self, request: HttpRequest, thread: Thread, page: int | None = None
+    ) -> dict:
+        return self.get_context_data_action(request, thread, page)
+
+    def get_context_data_action(
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
         return {
@@ -127,10 +138,22 @@ class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
 
+    def get_thread_queryset(self, request: HttpRequest) -> Thread:
+        return get_thread_replies_page_thread_queryset_hook(
+            super().get_thread_queryset, request
+        )
+
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
-        context = super().get_context_data(request, thread, page)
+        return get_thread_replies_page_context_data_hook(
+            self.get_context_data_action, request, thread, page
+        )
+
+    def get_context_data_action(
+        self, request: HttpRequest, thread: Thread, page: int | None = None
+    ) -> dict:
+        context = super().get_context_data_action(request, thread, page)
 
         context.update(
             {
@@ -144,6 +167,31 @@ class ThreadRepliesView(RepliesView, ThreadView):
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
+
+    def get_thread_queryset(self, request: HttpRequest) -> Thread:
+        return get_private_thread_replies_page_thread_queryset_hook(
+            super().get_thread_queryset, request
+        )
+
+    def get_context_data(
+        self, request: HttpRequest, thread: Thread, page: int | None = None
+    ) -> dict:
+        return get_private_thread_replies_page_context_data_hook(
+            self.get_context_data_action, request, thread, page
+        )
+
+    def get_context_data_action(
+        self, request: HttpRequest, thread: Thread, page: int | None = None
+    ) -> dict:
+        context = super().get_context_data_action(request, thread, page)
+
+        context.update(
+            {
+                "participants": None,
+            }
+        )
+
+        return context
 
 
 thread_replies = ThreadRepliesView.as_view()

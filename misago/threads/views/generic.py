@@ -26,13 +26,16 @@ class GenericView(View):
     thread_url_name: str
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        queryset = self.get_thread_queryset(request)
+        return get_object_or_404(queryset, id=thread_id)
+
+    def get_thread_queryset(self, request: HttpRequest) -> Thread:
         queryset = Thread.objects
         if self.thread_select_related is True:
-            queryset = queryset.select_related()
+            return queryset.select_related()
         elif self.thread_select_related:
-            queryset = queryset.select_related(*self.thread_select_related)
-
-        return get_object_or_404(queryset, id=thread_id)
+            return queryset.select_related(*self.thread_select_related)
+        return queryset
 
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
