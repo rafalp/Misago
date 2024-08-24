@@ -1,42 +1,56 @@
+from datetime import datetime
 from typing import Iterable
 
 from django.http import HttpRequest
+from django.db.models import OuterRef
 
 from ..categories.models import Category
-from ..threads.models import Post, Thread
-from ..threads.permissions import exclude_invisible_posts, exclude_invisible_threads
 from .cutoffdate import get_cutoff_date
+from .models import ReadCategory
+
+
+def annotate_categories_read_time(user, queryset):
+    if user.is_anonymous:
+        return queryset
+
+    return queryset.annotate(
+        read_time=ReadCategory.objects.filter(
+            user=user,
+            category=OuterRef("id"),
+        ).values("read_time"),
+    )
 
 
 def get_categories_new_posts(
     request: HttpRequest,
     categories: Iterable[Category],
 ) -> dict[int, bool]:
-    """Returns a dict with category ID as a key and bool if it has new posts."""
     if not categories:
         return {}
 
-    categories_new_posts = {category.id: False for category in categories}
-
     if request.user.is_anonymous:
-        return categories_new_posts
+        return {category.id: False for category in categories}
 
-    threads = Thread.objects.filter(category__in=categories)
-    threads = exclude_invisible_threads(request.user_acl, categories, threads)
-    queryset = (
-        Post.objects.filter(
-            category__in=categories,
-            thread__in=threads,
-            posted_on__gt=get_cutoff_date(request.settings, request.user),
-        )
-        .values_list("category", flat=True)
-        .distinct()
-    )
+    cutoff = get_cutoff_date(request.settings, request.user)
 
-    queryset = queryset.exclude(id__in=request.user.postread_set.values("post"))
-    queryset = exclude_invisible_posts(request.user_acl, categories, queryset)
+    read_data = {}
+    for category in categories:
+        read_data[category.id] = get_category_new_posts_status(category, cutoff)
 
-    for category_id in queryset:
-        categories_new_posts[category_id] = True
+    return read_data
 
-    return categories_new_posts
+
+def get_category_new_posts_status(
+    category: Category,
+    cutoff: datetime,
+) -> bool:
+    if not category.last_post_on:
+        return False
+
+    if category.last_post_on < cutoff:
+        return False
+
+    if not category.read_time:
+        return True
+
+    return category.last_post_on > category.read_time

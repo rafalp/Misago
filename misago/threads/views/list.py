@@ -51,6 +51,7 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
     check_start_thread_in_category_permission,
 )
+from ...readtracker.threads import annotate_threads_read_time, get_threads_new_posts
 from ..enums import (
     PrivateThreadsUrls,
     ThreadsListsPolling,
@@ -458,8 +459,8 @@ class ThreadsListView(ListView):
 
         threads_list += paginator.items
 
-        new_threads = {}
         users = self.get_threads_users(request, threads_list)
+        new_posts = get_threads_new_posts(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         selected = self.get_selected_threads_ids(request)
@@ -472,7 +473,7 @@ class ThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "is_new": new_threads.get(thread.id),
+                    "is_new": new_posts.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -547,7 +548,7 @@ class ThreadsListView(ListView):
         return get_threads_page_queryset_hook(self.get_threads_queryset_action, request)
 
     def get_threads_queryset_action(self, request: HttpRequest):
-        return Thread.objects
+        return annotate_threads_read_time(request.user, Thread.objects)
 
     def get_threads_permissions_queryset_filter(
         self, request: HttpRequest
@@ -851,8 +852,8 @@ class CategoryThreadsListView(ListView):
 
         threads_list += paginator.items
 
-        new_threads = {}
         users = self.get_threads_users(request, threads_list)
+        new_posts = get_threads_new_posts(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         selected = self.get_selected_threads_ids(request)
@@ -868,7 +869,7 @@ class CategoryThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "is_new": new_threads.get(thread.id),
+                    "is_new": new_posts.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -945,7 +946,7 @@ class CategoryThreadsListView(ListView):
         )
 
     def get_threads_queryset_action(self, request: HttpRequest):
-        return Thread.objects
+        return annotate_threads_read_time(request.user, Thread.objects)
 
     def get_threads_permissions_queryset_filter(
         self, request: HttpRequest, category: Category
@@ -1181,8 +1182,8 @@ class PrivateThreadsListView(ListView):
         paginator = self.get_threads_paginator(request, queryset)
         threads_list: list[Thread] = paginator.items
 
-        new_threads = {}
         users = self.get_threads_users(request, threads_list)
+        new_posts = get_threads_new_posts(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         moderator = request.user_permissions.private_threads_moderator
@@ -1192,7 +1193,7 @@ class PrivateThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "is_new": new_threads.get(thread.id),
+                    "is_new": new_posts.get(thread.id),
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -1249,7 +1250,9 @@ class PrivateThreadsListView(ListView):
         )
 
     def get_threads_queryset_action(self, request: HttpRequest, category: Category):
-        return Thread.objects.filter(category=category)
+        return annotate_threads_read_time(
+            request.user, Thread.objects.filter(category=category)
+        )
 
     def get_threads_paginator(self, request: HttpRequest, queryset):
         threads_queryset = filter_private_threads_queryset(
