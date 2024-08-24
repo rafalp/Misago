@@ -21,7 +21,7 @@
           </a>
         {% else %}
           <span class="thread-feed-item-post-bit-side-avatar-link">
-            <img src="{{ BLANK_AVATAR_URL }}" width="100" height="100" alt="{{ post.poster_name }}">
+            <img src="{{ BLANK_AVATAR_URL }}" width="100" height="100" alt="{{ poster_name }}">
           </span>
         {% endif %}
       </div>
@@ -42,7 +42,7 @@
           </a>
         {% else %}
           <span class="thread-feed-item-post-bit-side-avatar-link">
-            <img src="{{ BLANK_AVATAR_URL }}" width="50" height="50" alt="{{ post.poster_name }}">
+            <img src="{{ BLANK_AVATAR_URL }}" width="50" height="50" alt="{{ poster_name }}">
           </span>
         {% endif %}
       </div>
@@ -79,7 +79,7 @@
         {% else %}
           <div>
             <span class="thread-feed-item-post-bit-side-poster-link">
-              {{ post.poster_name }}
+              {{ poster_name }}
             </span>
           </div>
         {% endif %}
@@ -106,7 +106,7 @@
           </a>
         {% else %}
           <span class="thread-feed-item-post-bit-top-avatar">
-            <img src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="{{ post.poster_name }}">
+            <img src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="{{ poster_name }}">
           </span>
         {% endif %}
 
@@ -134,7 +134,7 @@
           {% endif %}
         {% else %}
           <span class="thread-feed-item-post-bit-top-poster-link">
-            {{ post.poster_name }}
+            {{ poster_name }}
           </span>
         {% endif %}
 

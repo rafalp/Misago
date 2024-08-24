@@ -28,7 +28,7 @@ class GetThreadPostsFeedItemUserIDsHookAction(Protocol):
         request: HttpRequest,
         thread: Thread,
         page: int | None = None,
-    ) -> dict: ...
+    ): ...
 
 
 class GetThreadPostsFeedItemUserIDsHook(
@@ -66,7 +66,7 @@ class GetThreadPostsFeedItemUserIDsHook(
         self,
         item: dict,
         user_ids: set[int],
-    ) -> dict:
+    ):
         super().__call__(item, user_ids)
 
 

@@ -15,7 +15,7 @@ class SetThreadPostFeedItemUsersHookAction(Protocol):
 
     ## `users: dict[int, "User"]`
 
-    A `dict` of `User` instances, indexed by their Ids.
+    A `dict` of `User` instances, indexed by their IDs.
 
     ## `item: dict`
 
@@ -23,7 +23,7 @@ class SetThreadPostFeedItemUsersHookAction(Protocol):
     instances from the `users`.
     """
 
-    def __call__(self, users: dict[int, "User"], item: dict) -> dict[int, "User"]: ...
+    def __call__(self, users: dict[int, "User"], item: dict): ...
 
 
 class SetThreadPostFeedItemUsersHookFilter(Protocol):
@@ -41,7 +41,7 @@ class SetThreadPostFeedItemUsersHookFilter(Protocol):
 
     ## `users: dict[int, "User"]`
 
-    A `dict` of `User` instances, indexed by their Ids.
+    A `dict` of `User` instances, indexed by their IDs.
 
     ## `item: dict`
 
@@ -54,7 +54,7 @@ class SetThreadPostFeedItemUsersHookFilter(Protocol):
         action: SetThreadPostFeedItemUsersHookAction,
         users: dict[int, "User"],
         item: dict,
-    ) -> dict[int, "User"]: ...
+    ): ...
 
 
 class SetThreadPostFeedItemUsersHook(
@@ -74,7 +74,6 @@ class SetThreadPostFeedItemUsersHook(
     ```python
     from typing import TYPE_CHECKING
 
-    from django.http import HttpRequest
     from misago.threads.hooks import set_thread_posts_feed_item_users_hook
 
     if TYPE_CHECKING:
@@ -84,7 +83,7 @@ class SetThreadPostFeedItemUsersHook(
     @set_thread_posts_feed_item_users_hook.append_filter
     def replace_post_poster(
         action, users: dict[int, "User"], item: dict
-    ) -> dict:
+    ):
         action(users, item)
 
         if item["type"] == "post":
@@ -100,7 +99,7 @@ class SetThreadPostFeedItemUsersHook(
         action: SetThreadPostFeedItemUsersHookAction,
         users: dict[int, "User"],
         item: dict,
-    ) -> dict:
+    ):
         return super().__call__(action, users, item)
 
 

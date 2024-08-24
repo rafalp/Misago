@@ -12,6 +12,7 @@ from ..hooks import (
     get_private_thread_replies_page_posts_queryset_hook,
     get_private_thread_replies_page_thread_queryset_hook,
     get_thread_posts_feed_item_user_ids_hook,
+    get_thread_posts_feed_users_hook,
     get_thread_replies_page_context_data_hook,
     get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
@@ -100,6 +101,7 @@ class RepliesView(View):
                     "type": "post",
                     "post": post,
                     "poster": None,
+                    "posert_name": post.poster_name,
                 }
             )
 
@@ -120,7 +122,9 @@ class RepliesView(View):
         if not user_ids:
             return
 
-        users = self.get_posts_feed_users(request, user_ids)
+        users = get_thread_posts_feed_users_hook(
+            self.get_posts_feed_users, request, user_ids
+        )
 
         for item in feed:
             set_thread_posts_feed_item_users_hook(
@@ -136,7 +140,11 @@ class RepliesView(View):
     ) -> dict[int, "User"]:
         users: dict[int, "User"] = {}
         for user in User.objects.filter(id__in=user_ids):
-            users[user.id] = user
+            if user.is_active or (
+                request.user.is_authenticated and request.user.is_misago_admin
+            ):
+                users[user.id] = user
+
         prefetch_related_objects(list(users.values()), "group")
         return users
 
