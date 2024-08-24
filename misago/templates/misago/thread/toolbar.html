@@ -1,6 +1,7 @@
 {% load i18n misago_plugins %}
 
 <div class="toolbar">
+  {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_START %}
   {% if feed.paginator.has_other_pages %}
     <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
       <div class="toolbar-item">
@@ -8,7 +9,9 @@
       </div>
     </div>
   {% endif %}
+  {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
+  {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
   <div class="toolbar-section">
     <div class="toolbar-item">
       <button class="btn btn-primary btn-block" disabled>
@@ -16,4 +19,5 @@
       </button>
     </div>
   </div>
+  {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_END %}
 </div>

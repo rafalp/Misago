@@ -11,9 +11,13 @@
 <div class="page page-thread">
   {% include "misago/private_thread/header.html" %}
   <div class="container page-container">
-    
+
+    {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_START %}
+
     <a id="misago-page-scroll-target" class="scroll-target"></a>
     {% include "misago/private_thread/partial.html" %}
+
+    {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_END %}
 
   </div>
 </div>
