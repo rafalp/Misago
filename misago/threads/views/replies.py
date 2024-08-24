@@ -101,7 +101,7 @@ class RepliesView(View):
                     "type": "post",
                     "post": post,
                     "poster": None,
-                    "posert_name": post.poster_name,
+                    "poster_name": post.poster_name,
                 }
             )
 
