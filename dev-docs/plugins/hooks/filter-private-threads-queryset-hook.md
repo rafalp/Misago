@@ -18,8 +18,8 @@ from misago.permissions.hooks import filter_private_threads_queryset_hook
 def custom_private_threads_queryset_filter(
     action: FilterPrivateThreadsQuerysetHookAction,
     permissions: 'UserPermissionsProxy',
-    queryset,
-) -> None:
+    queryset: QuerySet,
+) -> QuerySet:
     ...
 ```
 
@@ -53,7 +53,9 @@ A `queryset` filtered to show only private threads that the user has access to.
 ## Action
 
 ```python
-def filter_private_threads_queryset_action(permissions: 'UserPermissionsProxy', queryset):
+def filter_private_threads_queryset_action(
+    permissions: 'UserPermissionsProxy', queryset: QuerySet
+) -> QuerySet:
     ...
 ```
 
