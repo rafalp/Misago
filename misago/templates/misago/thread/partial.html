@@ -1,0 +1,10 @@
+{% load i18n misago_component %}
+
+{% if is_request_htmx %}
+<title>{{ thread }}{% if feed.paginator.number > 1 %} | {% blocktrans with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktrans %}{% endif %} | {{ settings.forum_name }}</title>
+{% endif %}
+<div id="misago-htmx-root">
+  {% include "misago/thread/toolbar.html" with bottom=False %}
+  {% includecomponent feed %}
+  {% include "misago/thread/toolbar.html" with bottom=True %}
+</div>

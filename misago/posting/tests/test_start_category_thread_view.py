@@ -137,7 +137,7 @@ def test_start_thread_view_posts_new_thread(user_client, default_category):
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"pk": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
     )
 
 

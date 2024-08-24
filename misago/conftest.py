@@ -14,7 +14,7 @@ from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
 from .test import MisagoClient
 from .themes import THEME_CACHE
-from .threads.models import Thread
+from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread
 from .users import BANS_CACHE
 from .users.enums import DefaultGroupId
@@ -299,17 +299,98 @@ def post(thread):
 
 @pytest.fixture
 def reply(thread):
-    return reply_thread(thread, poster="Ghost", posted_on=timezone.now())
+    return reply_thread(
+        thread,
+        poster="Ghost",
+        posted_on=timezone.now(),
+        message="I am reply",
+    )
+
+
+@pytest.fixture
+def hidden_reply(thread):
+    return reply_thread(
+        thread,
+        poster="Ghost",
+        posted_on=timezone.now(),
+        message="I am hidden reply",
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def unapproved_reply(thread):
+    return reply_thread(
+        thread,
+        poster="Ghost",
+        posted_on=timezone.now(),
+        message="I am unapproved reply",
+        is_unapproved=True,
+    )
 
 
 @pytest.fixture
 def user_reply(thread, user):
-    return reply_thread(thread, poster=user, posted_on=timezone.now())
+    return reply_thread(
+        thread,
+        poster=user,
+        posted_on=timezone.now(),
+        message="I am user reply",
+    )
+
+
+@pytest.fixture
+def user_hidden_reply(thread, user):
+    return reply_thread(
+        thread,
+        poster=user,
+        posted_on=timezone.now(),
+        message="I am user hidden reply",
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def user_unapproved_reply(thread, user):
+    return reply_thread(
+        thread,
+        poster=user,
+        posted_on=timezone.now(),
+        message="I am user unapproved reply",
+        is_unapproved=True,
+    )
 
 
 @pytest.fixture
 def other_user_reply(thread, other_user):
-    return reply_thread(thread, poster=other_user, posted_on=timezone.now())
+    return reply_thread(
+        thread,
+        poster=other_user,
+        posted_on=timezone.now(),
+        message="I am other user reply",
+    )
+
+
+@pytest.fixture
+def other_user_hidden_reply(thread, other_user):
+    return reply_thread(
+        thread,
+        poster=other_user,
+        posted_on=timezone.now(),
+        message="I am user hidden reply",
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def other_user_unapproved_reply(thread, other_user):
+    return reply_thread(
+        thread,
+        poster=other_user,
+        posted_on=timezone.now(),
+        message="I am other user unapproved reply",
+        is_unapproved=True,
+    )
 
 
 @pytest.fixture
@@ -358,8 +439,31 @@ def private_thread_user_reply(private_thread, user):
 
 
 @pytest.fixture
-def user_private_thread(user, private_threads_category):
-    return post_thread(private_threads_category, poster=user)
+def user_private_thread(private_threads_category, user, other_user):
+    thread = post_thread(
+        private_threads_category,
+        "User Private Thread",
+        poster=user,
+    )
+
+    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=True)
+    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=False)
+
+    return thread
+
+
+@pytest.fixture
+def other_user_private_thread(private_threads_category, user, other_user):
+    thread = post_thread(
+        private_threads_category,
+        "Other User Private Thread",
+        poster=other_user,
+    )
+
+    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
+    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
+
+    return thread
 
 
 @pytest.fixture

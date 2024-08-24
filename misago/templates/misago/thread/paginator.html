@@ -1,17 +1,30 @@
-{% load i18n misago_capture %}
-<nav class="thread-paginator" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
-  {% if paginator.first %}
-    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to first page' context 'thread paginator' %}" href="{% url url_name slug=thread.slug pk=thread.pk %}">
+{% load i18n %}
+
+<nav
+  class="thread-paginator"
+  role="nav"
+  itemscope
+  itemtype="http://schema.org/SiteNavigationElement"
+  hx-push-url="true"
+  hx-target="#misago-htmx-root"
+  hx-swap="outerHTML{% if bottom %} show:#misago-page-scroll-target:top{% endif %}"
+>
+  {% if page.has_previous %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% trans 'Go to first page' context 'thread paginator' %}"
+      href="{{ thread_url }}"
+      hx-get="{{ thread_url }}"
+    >
       <span class="material-icon">first_page</span>
     </a>
-    {% capture trimmed as previous_url %}
-      {% if paginator.previous > 1%}
-        {% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}
-      {% else %}
-        {% url url_name slug=thread.slug pk=thread.pk %}
-      {% endif %}
-    {% endcapture %}
-    <a class="btn btn-default btn-outline btn-icon" rel="prev" title="{% trans 'Go to previous page' context 'thread paginator' %}" href="{{ previous_url }}">
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      rel="prev"
+      title="{% trans 'Go to previous page' context 'thread paginator' %}"
+      href="{{ thread_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
+      hx-get="{{ thread_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
+    >
       <span class="material-icon">chevron_left</span>
     </a>
   {% else %}
@@ -23,17 +36,49 @@
     </button>
   {% endif %}
   <div class="dropdown">
-    <button aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-block btn-outline" type="button" disabled>
-      {% blocktrans trimmed with page=paginator.page pages=paginator.pages context 'thread paginator' %}
+    <button
+      aria-haspopup="true"
+      aria-expanded="false"
+      class="btn btn-default btn-block btn-outline"
+      type="button"
+      data-toggle="dropdown"
+    >
+      {% blocktrans trimmed with page=page.number pages=paginator.num_pages context "thread paginator" %}
         Page {{ page }} of {{ pages }}
       {% endblocktrans %}
     </button>
+    <div class="dropdown-menu" role="menu">
+      <form class="thread-paginator-form" misago-page="{{ page.number }}" misago-page-url="{{ thread_url }}" misago-page-form>
+        <input
+          type="number"
+          min="1"
+          max="{{ paginator.num_pages }}"
+          class="form-control"
+          placeholder="{% trans 'Page' context 'thread paginator' %}"
+          required
+        >
+        <button class="btn btn-primary" type="submit">
+          {% trans "Go" context "thread paginator" %}
+        </button>
+      </form>
+    </div>
   </div>
-  {% if paginator.last %}
-    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to next page' context 'thread paginator' %}" rel="next" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}">
+  {% if page.has_next %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% trans 'Go to next page' context 'thread paginator' %}"
+      rel="next"
+      href="{{ thread_url }}{{ page.next_page_number }}/"
+      hx-get="{{ thread_url }}{{ page.next_page_number }}/"
+    >
       <span class="material-icon">chevron_right</span>
     </a>
-    <a class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to last page' context 'thread paginator' %}" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.last %}">
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% trans 'Go to last page' context 'thread paginator' %}"
+      href="{{ thread_url }}{{ paginator.num_pages }}/"
+      hx-get="{{ thread_url }}{{ paginator.num_pages }}/"
+    >
       <span class="material-icon">last_page</span>
     </a>
   {% else %}

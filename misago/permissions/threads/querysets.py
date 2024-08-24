@@ -3,12 +3,14 @@ from typing import Iterable
 from django.db.models import Q, QuerySet
 
 from ...threads.enums import ThreadWeight
+from ...threads.models import Thread
 from ..enums import (
     CategoryPermission,
     CategoryQueryContext,
     CategoryThreadsQuery,
 )
 from ..hooks import (
+    filter_thread_posts_queryset_hook,
     get_category_threads_category_query_hook,
     get_category_threads_pinned_category_query_hook,
     get_threads_category_query_hook,
@@ -493,3 +495,32 @@ def _get_threads_query_orm_filter_action(
         )
 
     return None
+
+
+def filter_thread_posts_queryset(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    return filter_thread_posts_queryset_hook(
+        _filter_thread_posts_queryset_action, permissions, thread, queryset
+    )
+
+
+def _filter_thread_posts_queryset_action(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    if (
+        permissions.is_global_moderator
+        or thread.category_id in permissions.categories_moderator
+    ):
+        return queryset
+
+    if permissions.user.is_authenticated:
+        return queryset.filter(
+            Q(is_unapproved=False) | Q(poster_id=permissions.user.id)
+        )
+
+    return queryset.filter(is_unapproved=False)

@@ -13,6 +13,7 @@ import BulkModeration from "./BulkModeration"
 import "./formValidators"
 import "./htmxErrors"
 import "./liveTimestamps"
+import "./pagination"
 import * as snackbars from "./snackbars"
 
 const loader = new AjaxLoader()

@@ -117,7 +117,7 @@ class StartThreadView(View):
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
             "misago:thread",
-            kwargs={"pk": thread.id, "slug": thread.slug},
+            kwargs={"id": thread.id, "slug": thread.slug},
         )
 
 
@@ -151,5 +151,5 @@ class StartPrivateThreadView(StartThreadView):
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
             "misago:private-thread",
-            kwargs={"pk": thread.id, "slug": thread.slug},
+            kwargs={"id": thread.id, "slug": thread.slug},
         )

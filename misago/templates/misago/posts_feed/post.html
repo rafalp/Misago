@@ -1,0 +1,188 @@
+{% load i18n misago_avatars misago_formats %}
+
+<div id="thread-feed-item-post-{{ post.id }}" class="thread-feed-item">
+  <a id="post-{{ post.id }}" class="scroll-target"></a>
+  <div id=""class="thread-feed-item-post">
+    <div class="thread-feed-item-post-bit-side">
+      <div class="thread-feed-item-post-bit-side-avatar">
+        {% if poster %}
+          <a
+            class="thread-feed-item-post-bit-side-avatar-link"
+            href="{{ poster.get_absolute_url }}"
+          >
+            <img
+              class="user-avatar"
+              srcset="{{ poster|avatar:200 }}"
+              src="{{ poster|avatar:100 }}"
+              width="100"
+              height="100"
+              alt="{{ poster }}"
+            >
+          </a>
+        {% else %}
+          <span class="thread-feed-item-post-bit-side-avatar-link">
+            <img src="{{ BLANK_AVATAR_URL }}" width="100" height="100" alt="{{ poster_name }}">
+          </span>
+        {% endif %}
+      </div>
+      <div class="thread-feed-item-post-bit-side-avatar-sm">
+        {% if poster %}
+          <a
+            class="thread-feed-item-post-bit-side-avatar-link"
+            href="{{ poster.get_absolute_url }}"
+          >
+            <img
+              class="user-avatar"
+              srcset="{{ poster|avatar:100 }}"
+              src="{{ poster|avatar:50 }}"
+              width="50"
+              height="50"
+              alt="{{ poster }}"
+            >
+          </a>
+        {% else %}
+          <span class="thread-feed-item-post-bit-side-avatar-link">
+            <img src="{{ BLANK_AVATAR_URL }}" width="50" height="50" alt="{{ poster_name }}">
+          </span>
+        {% endif %}
+      </div>
+      <div class="thread-feed-item-post-bit-side-poster">
+
+        {% if poster %}
+          <div>
+            <a
+              href="{{ poster.get_absolute_url }}"
+              class="thread-feed-item-post-bit-side-poster-link"
+              {% if poster.group.color %}
+              style="--color: {{ poster.group.color }}"
+              {% endif %}
+            >
+              {{ poster.username }}
+            </a>
+          </div>
+          {% if not poster.group.is_hidden %}
+            <div>
+              <a
+                class="thread-feed-item-post-bit-side-poster-title"
+                href="#todo"
+              >
+                {{ poster.title|default:poster.group.user_title|default:poster.group.name }}
+              </a>
+            </div>
+          {% elif poster.title or poster.group.user_title %}
+            <div>
+              <span class="thread-feed-item-post-bit-side-poster-title">
+                {{ poster.title|default:poster.group.user_title }}
+              </span>
+            </div>
+          {% endif %}
+        {% else %}
+          <div>
+            <span class="thread-feed-item-post-bit-side-poster-link">
+              {{ poster_name }}
+            </span>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="thread-feed-item-post-main">
+      <div class="thread-feed-item-post-bit-top">
+
+        {% if poster %}
+          <a
+            class="thread-feed-item-post-bit-top-avatar"
+            href="{{ poster.get_absolute_url }}"
+          >
+            <img
+              class="user-avatar"
+              srcset="{{ poster|avatar:64 }}"
+              src="{{ poster|avatar:32 }}"
+              width="32"
+              height="32"
+              alt="{{ poster }}"
+            >
+          </a>
+        {% else %}
+          <span class="thread-feed-item-post-bit-top-avatar">
+            <img src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="{{ poster_name }}">
+          </span>
+        {% endif %}
+
+        {% if poster %}
+          <a
+            href="{{ poster.get_absolute_url }}"
+            class="thread-feed-item-post-bit-top-poster-link"
+            {% if poster.group.color %}
+            style="--color: {{ poster.group.color }}"
+            {% endif %}
+          >
+            {{ poster.username }}
+          </a>
+          {% if not poster.group.is_hidden %}
+            <a
+              class="thread-feed-item-post-bit-top-poster-title"
+              href="#todo"
+            >
+              {{ poster.title|default:poster.group.user_title|default:poster.group.name }}
+            </a>
+          {% elif poster.title or poster.group.user_title %}
+            <span class="thread-feed-item-post-bit-top-poster-title">
+              {{ poster.title|default:poster.group.user_title }}
+            </span>
+          {% endif %}
+        {% else %}
+          <span class="thread-feed-item-post-bit-top-poster-link">
+            {{ poster_name }}
+          </span>
+        {% endif %}
+
+        <a
+          class="thread-feed-item-post-bit-top-timestamp"
+          href="#todo"
+          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
+        >
+          {{ post.posted_on|date_relative }}
+        </a>
+
+        <a
+          class="thread-feed-item-post-bit-top-timestamp-compact"
+          href="#todo"
+          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
+          misago-timestamp-format="short"
+        >
+          {{ post.posted_on|date_relative_short }}
+        </a>
+
+
+        <a
+          class="thread-feed-item-post-bit-top-post-counter"
+          href="#todo"
+        >
+          #{{ paginator.start_index|add:forloop.counter0 }}
+        </a>
+
+        <button class="btn btn-link btn-icon" type="button">
+          <span class="material-icon">more_horiz</span>
+        </button>
+
+      </div>
+      <div class="thread-feed-item-post-body">
+        
+        <div class="thread-feed-item-post-body-message">
+          <article class="misago-richtext">
+            {{ post.parsed|safe }}
+          </article>
+        </div>
+
+        <div class="thread-feed-item-post-body-footer">
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

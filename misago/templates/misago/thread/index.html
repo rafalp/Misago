@@ -1,0 +1,24 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_component misago_plugins %}
+
+
+{% block title %}
+  {{ thread }}{% if feed.paginator.number > 1 %} | {% blocktrans with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktrans %}{% endif %} | {{ settings.forum_name }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-thread">
+  {% include "misago/thread/header.html" %}
+  <div class="container page-container">
+
+    {% pluginoutlet THREAD_REPLIES_PAGE_START %}
+
+    <a id="misago-page-scroll-target" class="scroll-target"></a>
+    {% include "misago/thread/partial.html" %}
+
+    {% pluginoutlet THREAD_REPLIES_PAGE_END %}
+
+  </div>
+</div>
+{% endblock content %}

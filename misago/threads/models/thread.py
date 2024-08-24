@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
@@ -225,6 +227,16 @@ class Thread(PluginDataModel):
     @property
     def replies_in_ks(self):
         return "%sK" % round(self.replies / 1000, 0)
+
+    @cached_property
+    def participants_ids(self) -> list[int]:
+        """Returns lists of private thread participating users ids.
+
+        Cached property. Thread owner is guaranteed to be first item of the list.
+        """
+        return self.participants.through.objects.order_by(
+            "-is_owner", "id"
+        ).values_list("user_id", flat=True)
 
     @property
     def thread_type(self):

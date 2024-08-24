@@ -1,0 +1,9 @@
+{% load misago_component %}
+
+<div class="thread-feed">
+  <div class="thread-feed-inner">
+    {% for item in feed.items %}
+      {% includecomponent item %}
+    {% endfor %}
+  </div>
+</div>

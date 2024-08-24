@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING, Protocol
 
+from django.db.models import QuerySet
+
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
@@ -29,8 +31,8 @@ class FilterPrivateThreadsQuerysetHookAction(Protocol):
     def __call__(
         self,
         permissions: "UserPermissionsProxy",
-        queryset,
-    ): ...
+        queryset: QuerySet,
+    ) -> QuerySet: ...
 
 
 class FilterPrivateThreadsQuerysetHookFilter(Protocol):
@@ -63,8 +65,8 @@ class FilterPrivateThreadsQuerysetHookFilter(Protocol):
         self,
         action: FilterPrivateThreadsQuerysetHookAction,
         permissions: "UserPermissionsProxy",
-        queryset,
-    ) -> None: ...
+        queryset: QuerySet,
+    ) -> QuerySet: ...
 
 
 class FilterPrivateThreadsQuerysetHook(
@@ -112,8 +114,8 @@ class FilterPrivateThreadsQuerysetHook(
         self,
         action: FilterPrivateThreadsQuerysetHookAction,
         permissions: "UserPermissionsProxy",
-        queryset,
-    ) -> None:
+        queryset: QuerySet,
+    ) -> QuerySet:
         return super().__call__(action, permissions, queryset)
 
 
