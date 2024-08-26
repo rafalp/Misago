@@ -8,7 +8,6 @@ from ...core.shortcuts import validate_slug
 from ...core.viewmodel import ViewModel as BaseViewModel
 from ...notifications.models import WatchedThread
 from ...notifications.threads import get_watched_thread
-from ...readtracker.threadstracker import make_read_aware
 from ..models import Poll, Thread
 from ..participants import make_participants_aware
 from ..permissions import (

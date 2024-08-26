@@ -1,8 +1,6 @@
 from rest_framework.response import Response
 
 from ....notifications.models import Notification, WatchedThread
-from ....readtracker import poststracker, threadstracker
-from ....readtracker.signals import thread_read
 from ....users.models import User
 from ...models import Post
 

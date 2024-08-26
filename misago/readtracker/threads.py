@@ -4,8 +4,8 @@ from typing import Iterable
 from django.http import HttpRequest
 from django.db.models import OuterRef
 
-from ..threads.models import Thread
-from .cutoffdate import get_cutoff_date
+from ..threads.models import Post, Thread
+from .readtime import get_default_read_time
 from .models import ReadThread
 
 
@@ -35,23 +35,23 @@ def get_threads_new_posts(
     if request.user.is_anonymous:
         return {thread.id: False for thread in threads}
 
-    cutoff = get_cutoff_date(request.settings, request.user)
+    default_read_time = get_default_read_time(request.settings, request.user)
 
     read_data = {}
     for thread in threads:
-        read_data[thread.id] = get_thread_new_posts_status(thread, cutoff)
+        read_data[thread.id] = get_thread_new_posts_status(thread, default_read_time)
 
     return read_data
 
 
 def get_thread_new_posts_status(
     thread: Thread,
-    cutoff: datetime,
+    default_read_time: datetime,
 ) -> bool:
     if not thread.last_post_on:
         return False
 
-    if thread.last_post_on < cutoff:
+    if thread.last_post_on < default_read_time:
         return False
 
     if thread.category_read_time and thread.last_post_on < thread.category_read_time:
@@ -61,3 +61,38 @@ def get_thread_new_posts_status(
         return True
 
     return thread.last_post_on > thread.read_time
+
+
+def get_thread_posts_new_status(
+    request: HttpRequest,
+    thread: Thread,
+    posts: Iterable[Post],
+) -> dict[int, bool]:
+    if not posts:
+        return {}
+
+    if request.user.is_anonymous:
+        return {post.id: False for post in posts}
+
+    read_time = get_thread_posts_read_time(request, thread)
+
+    read_data = {}
+    for post in posts:
+        read_data[post.id] = post.posted_on > read_time
+
+    return read_data
+
+
+def get_thread_posts_read_time(request: HttpRequest, thread: Thread) -> datetime:
+    default_read_time = get_default_read_time(request.settings, request.user)
+
+    if thread.read_time and thread.category_read_time:
+        read_time = max(thread.read_time, thread.category_read_time)
+    elif thread.read_time:
+        read_time = thread.read_time
+    elif thread.category_read_time:
+        read_time = thread.category_read_time
+    else:
+        read_time = default_read_time
+
+    return max(read_time, default_read_time)

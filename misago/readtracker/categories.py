@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from django.db.models import OuterRef
 
 from ..categories.models import Category
-from .cutoffdate import get_cutoff_date
+from .readtime import get_default_read_time
 from .models import ReadCategory
 
 
@@ -31,23 +31,25 @@ def get_categories_new_posts(
     if request.user.is_anonymous:
         return {category.id: False for category in categories}
 
-    cutoff = get_cutoff_date(request.settings, request.user)
+    default_read_time = get_default_read_time(request.settings, request.user)
 
     read_data = {}
     for category in categories:
-        read_data[category.id] = get_category_new_posts_status(category, cutoff)
+        read_data[category.id] = get_category_new_posts_status(
+            category, default_read_time
+        )
 
     return read_data
 
 
 def get_category_new_posts_status(
     category: Category,
-    cutoff: datetime,
+    default_read_time: datetime,
 ) -> bool:
     if not category.last_post_on:
         return False
 
-    if category.last_post_on < cutoff:
+    if category.last_post_on < default_read_time:
         return False
 
     if not category.read_time:

@@ -1,6 +1,5 @@
 from ...acl.objectacl import add_acl_to_obj
 from ...core.shortcuts import paginate, pagination_dict
-from ...readtracker.poststracker import make_read_aware
 from ...users.online.utils import make_users_status_aware
 from ..paginator import PostsPaginator
 from ..permissions import exclude_invisible_posts

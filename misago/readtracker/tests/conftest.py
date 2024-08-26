@@ -2,8 +2,6 @@ from unittest.mock import Mock
 
 import pytest
 
-from ..poststracker import save_read
-
 
 @pytest.fixture
 def read_thread(user, thread):
