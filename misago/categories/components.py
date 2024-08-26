@@ -33,7 +33,6 @@ def get_categories_data(request: HttpRequest) -> list[dict]:
     )
 
     queryset = annotate_categories_read_time(request.user, queryset)
-
     new_posts = get_categories_new_posts(request, queryset)
 
     categories_data: dict[int, dict] = {
@@ -73,8 +72,14 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
         rght__lt=category.rght,
     )
 
+    queryset = annotate_categories_read_time(request.user, queryset)
+    new_posts = get_categories_new_posts(request, queryset)
+
     categories_data: dict[int, dict] = {
-        category.id: get_category_data(category, permissions) for category in queryset
+        category.id: get_category_data(
+            category, new_posts.get(category.id, False), permissions
+        )
+        for category in queryset
     }
 
     aggregate_categories_data(request, categories_data)
