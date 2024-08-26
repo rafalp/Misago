@@ -6,7 +6,7 @@ from django.db.models import OuterRef
 
 from ..threads.models import Post, Thread
 from .readtime import get_default_read_time
-from .models import ReadThread
+from .models import ReadCategory, ReadThread
 
 
 def annotate_threads_read_time(user, queryset):
@@ -18,7 +18,7 @@ def annotate_threads_read_time(user, queryset):
             user=user,
             thread=OuterRef("id"),
         ).values("read_time"),
-        category_read_time=ReadThread.objects.filter(
+        category_read_time=ReadCategory.objects.filter(
             user=user,
             category=OuterRef("category_id"),
         ).values("read_time"),
