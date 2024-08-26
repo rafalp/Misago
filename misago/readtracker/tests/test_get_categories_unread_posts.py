@@ -4,11 +4,11 @@ from unittest.mock import Mock
 from django.utils import timezone
 
 from ...categories.models import Category
-from ..categories import annotate_categories_read_time, get_categories_new_posts
+from ..categories import annotate_categories_read_time, get_categories_unread_posts
 from ..models import ReadCategory
 
 
-def test_get_categories_new_posts_returns_false_anonymous_user(
+def test_get_categories_unread_posts_returns_false_anonymous_user(
     dynamic_settings, default_category, anonymous_user
 ):
     default_category.last_post_on = timezone.now()
@@ -16,22 +16,22 @@ def test_get_categories_new_posts_returns_false_anonymous_user(
 
     request = Mock(settings=dynamic_settings, user=anonymous_user)
     queryset = annotate_categories_read_time(anonymous_user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert not new_posts[default_category.id]
+    assert not unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_false_for_unread_empty_category(
+def test_get_categories_unread_posts_returns_false_for_unread_empty_category(
     dynamic_settings, default_category, user
 ):
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert not new_posts[default_category.id]
+    assert not unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_true_for_unread_category_with_last_post(
+def test_get_categories_unread_posts_returns_true_for_unread_category_with_last_post(
     dynamic_settings, default_category, user
 ):
     default_category.last_post_on = timezone.now()
@@ -39,12 +39,12 @@ def test_get_categories_new_posts_returns_true_for_unread_category_with_last_pos
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert new_posts[default_category.id]
+    assert unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_false_for_read_empty_category(
+def test_get_categories_unread_posts_returns_false_for_read_empty_category(
     dynamic_settings, default_category, user
 ):
     ReadCategory.objects.create(
@@ -55,12 +55,12 @@ def test_get_categories_new_posts_returns_false_for_read_empty_category(
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert not new_posts[default_category.id]
+    assert not unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_true_for_read_category_with_new_last_post(
+def test_get_categories_unread_posts_returns_true_for_read_category_with_new_last_post(
     dynamic_settings, default_category, user
 ):
     user.joined_on -= timedelta(days=2)
@@ -77,12 +77,12 @@ def test_get_categories_new_posts_returns_true_for_read_category_with_new_last_p
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert new_posts[default_category.id]
+    assert unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_false_for_unread_category_with_last_post_older_than_user(
+def test_get_categories_unread_posts_returns_false_for_unread_category_with_last_post_older_than_user(
     dynamic_settings, default_category, user
 ):
     user.joined_on -= timedelta(days=2)
@@ -93,12 +93,12 @@ def test_get_categories_new_posts_returns_false_for_unread_category_with_last_po
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert not new_posts[default_category.id]
+    assert not unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_false_for_unread_category_with_last_post_older_than_cutoff(
+def test_get_categories_unread_posts_returns_false_for_unread_category_with_last_post_older_than_cutoff(
     dynamic_settings, default_category, user
 ):
     user.joined_on = user.joined_on.replace(year=2010)
@@ -109,12 +109,12 @@ def test_get_categories_new_posts_returns_false_for_unread_category_with_last_po
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert not new_posts[default_category.id]
+    assert not unread_posts[default_category.id]
 
 
-def test_get_categories_new_posts_returns_false_for_read_category_with_last_post_older_than_cutoff(
+def test_get_categories_unread_posts_returns_false_for_read_category_with_last_post_older_than_cutoff(
     dynamic_settings, default_category, user
 ):
     user.joined_on = user.joined_on.replace(year=2010)
@@ -131,6 +131,6 @@ def test_get_categories_new_posts_returns_false_for_read_category_with_last_post
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_categories_read_time(user, Category.objects.all())
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
-    assert not new_posts[default_category.id]
+    assert not unread_posts[default_category.id]

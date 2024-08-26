@@ -21,7 +21,7 @@
                 href="{{ child_data.category.get_absolute_url }}"
                 class="list-group-category-child-children-item-name"
               >
-                <span class="bullet{% if child_data.children_new_posts %} bullet-new{% endif %}"></span>
+                <span class="bullet{% if child_data.children_unread %} bullet-new{% endif %}"></span>
                 {{ child_data.category }}
               </a>
             </li>

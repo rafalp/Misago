@@ -43,7 +43,7 @@ def test_categories_component_data_includes_category(default_category, mock_requ
     assert category_data["children_threads"] == default_category.threads
     assert category_data["children_posts"] == default_category.posts
     assert category_data["children"] == []
-    assert not category_data["new_posts"]
+    assert not category_data["children_unread"]
 
 
 def test_categories_component_data_excludes_invisible_category(
@@ -83,7 +83,7 @@ def test_categories_component_data_includes_visible_category(
     assert data[0]["children_threads"] == default_category.threads
     assert data[0]["children_posts"] == default_category.posts
     assert data[0]["children"] == []
-    assert not data[0]["new_posts"]
+    assert not data[0]["children_unread"]
 
     assert data[1]["category"] == sibling_category
     assert data[1]["threads"] == sibling_category.threads
@@ -91,7 +91,7 @@ def test_categories_component_data_includes_visible_category(
     assert data[1]["children_threads"] == sibling_category.threads
     assert data[1]["children_posts"] == sibling_category.posts
     assert data[1]["children"] == []
-    assert not data[1]["new_posts"]
+    assert not data[1]["children_unread"]
 
 
 def test_categories_component_data_excludes_invisible_child_category(
@@ -113,7 +113,7 @@ def test_categories_component_data_excludes_invisible_child_category(
     assert category_data["children_threads"] == default_category.threads
     assert category_data["children_posts"] == default_category.posts
     assert category_data["children"] == []
-    assert not category_data["new_posts"]
+    assert not category_data["children_unread"]
 
 
 def test_categories_component_data_includes_visible_child_category(
@@ -149,7 +149,7 @@ def test_categories_component_data_includes_visible_child_category(
     assert (
         category_data["children_posts"] == default_category.posts + child_category.posts
     )
-    assert not category_data["new_posts"]
+    assert not category_data["children_unread"]
     assert len(category_data["children"]) == 1
 
     child_data = category_data["children"][0]
@@ -159,7 +159,7 @@ def test_categories_component_data_includes_visible_child_category(
     assert child_data["children_threads"] == child_category.threads
     assert child_data["children_posts"] == child_category.posts
     assert child_data["children"] == []
-    assert not child_data["new_posts"]
+    assert not child_data["children_unread"]
 
 
 def test_categories_component_data_includes_unread_category(
@@ -181,7 +181,7 @@ def test_categories_component_data_includes_unread_category(
     assert category_data["children_threads"] == default_category.threads
     assert category_data["children_posts"] == default_category.posts
     assert category_data["children"] == []
-    assert category_data["new_posts"]
+    assert category_data["children_unread"]
 
 
 def test_get_subcategories_data_returns_empty_categories_list(
@@ -249,7 +249,7 @@ def test_get_subcategories_data_includes_visible_child_category(
     assert child_data["children_threads"] == child_category.threads
     assert child_data["children_posts"] == child_category.posts
     assert child_data["children"] == []
-    assert not child_data["new_posts"]
+    assert not child_data["children_unread"]
 
 
 def test_get_subcategories_data_includes_unread_child_category(
@@ -287,4 +287,4 @@ def test_get_subcategories_data_includes_unread_child_category(
     assert child_data["children_threads"] == child_category.threads
     assert child_data["children_posts"] == child_category.posts
     assert child_data["children"] == []
-    assert child_data["new_posts"]
+    assert child_data["children_unread"]

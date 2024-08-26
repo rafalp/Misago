@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
@@ -118,7 +120,7 @@ def test_categories_view_displays_child_category_for_category_with_delay_browse_
 
 @override_dynamic_settings(index_view="threads")
 def test_categories_view_excludes_child_category_for_user_without_permission(
-    default_category, user, user_client
+    default_category, user_client
 ):
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
     default_category.save()
@@ -160,6 +162,23 @@ def test_categories_view_displays_category_thread(
     response = user_client.get(reverse("misago:categories"))
     assert_contains(response, default_category.description)
     assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="threads")
+def test_categories_view_displays_unread_category(
+    default_category, user_client, user, user_thread
+):
+    user.joined_on -= timedelta(days=2)
+    user.save()
+
+    default_category.description = "FIRST-CATEGORY-DESCRIPTION"
+    default_category.synchronize()
+    default_category.save()
+
+    response = user_client.get(reverse("misago:categories"))
+    assert_contains(response, default_category.description)
+    assert_contains(response, user_thread.title)
+    assert_contains(response, "Category has unread posts")
 
 
 @override_dynamic_settings(index_view="threads")

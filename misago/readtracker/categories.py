@@ -21,7 +21,7 @@ def annotate_categories_read_time(user, queryset):
     )
 
 
-def get_categories_new_posts(
+def get_categories_unread_posts(
     request: HttpRequest,
     categories: Iterable[Category],
 ) -> dict[int, bool]:
@@ -35,14 +35,12 @@ def get_categories_new_posts(
 
     read_data = {}
     for category in categories:
-        read_data[category.id] = get_category_new_posts_status(
-            category, default_read_time
-        )
+        read_data[category.id] = get_category_unread_status(category, default_read_time)
 
     return read_data
 
 
-def get_category_new_posts_status(
+def get_category_unread_status(
     category: Category,
     default_read_time: datetime,
 ) -> bool:

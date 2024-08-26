@@ -8,7 +8,7 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..readtracker.categories import (
     annotate_categories_read_time,
-    get_categories_new_posts,
+    get_categories_unread_posts,
 )
 from .enums import CategoryTree
 from .models import Category
@@ -33,11 +33,11 @@ def get_categories_data(request: HttpRequest) -> list[dict]:
     )
 
     queryset = annotate_categories_read_time(request.user, queryset)
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
     categories_data: dict[int, dict] = {
         category.id: get_category_data(
-            category, new_posts.get(category.id, False), permissions
+            category, unread_posts.get(category.id, False), permissions
         )
         for category in queryset
     }
@@ -73,11 +73,11 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
     )
 
     queryset = annotate_categories_read_time(request.user, queryset)
-    new_posts = get_categories_new_posts(request, queryset)
+    unread_posts = get_categories_unread_posts(request, queryset)
 
     categories_data: dict[int, dict] = {
         category.id: get_category_data(
-            category, new_posts.get(category.id, False), permissions
+            category, unread_posts.get(category.id, False), permissions
         )
         for category in queryset
     }
@@ -92,7 +92,7 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
 
 
 def get_category_data(
-    category: Category, new_posts: bool, permissions: UserPermissionsProxy
+    category: Category, unread: bool, permissions: UserPermissionsProxy
 ) -> dict:
     if can_see_last_thread(category, permissions.user, permissions):
         category_last_thread = {
@@ -115,7 +115,7 @@ def get_category_data(
         "threads": category.threads,
         "posts": category.posts,
         "last_thread": category_last_thread,
-        "new_posts": new_posts,
+        "unread": unread,
         "can_browse": (
             category.id in permissions.categories[CategoryPermission.BROWSE]
             or category.delay_browse_check
@@ -125,7 +125,7 @@ def get_category_data(
         "children_threads": category.threads,
         "children_posts": category.posts,
         "children_last_thread": category_last_thread,
-        "children_new_posts": new_posts,
+        "children_unread": unread,
     }
 
 
@@ -168,11 +168,6 @@ def aggregate_categories_data(
                 }
             )
 
-        # Set read state
-        # if request.user.is_authenticated and new_posts[category.id]:
-        #     category_data["new_posts"] = True
-        #     category_data["children_new_posts"] = True
-
         # Aggregate data from category to its parent
         if category.parent_id in categories_data:
             parent = categories_data[category.parent_id]
@@ -197,8 +192,8 @@ def aggregate_category_to_its_parent(category: dict, parent: dict):
         parent["children_last_thread"] = item_last_thread
 
     # Propagate to parent the new posts status
-    if category["children_new_posts"]:
-        parent["children_new_posts"] = True
+    if category["children_unread"]:
+        parent["children_unread"] = True
 
     parent["children"].insert(0, category)
 
