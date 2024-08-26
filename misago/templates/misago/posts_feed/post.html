@@ -164,7 +164,7 @@
           #{{ paginator.start_index|add:forloop.counter0 }}
         </a>
 
-        {% if new %}
+        {% if unread %}
           <span
             class="posts-feed-item-post-bit-top-post-new"
             title="{% trans 'This post is new' context 'posts feed new post' %}"

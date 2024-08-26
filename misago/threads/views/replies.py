@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from ...core.exceptions import OutdatedSlug
-from ...readtracker.threads import get_thread_posts_new_status
+from ...readtracker.threads import get_thread_posts_unread_status
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
     get_private_thread_replies_page_posts_queryset_hook,
@@ -20,7 +20,7 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
     set_thread_posts_feed_item_users_hook,
 )
-from ..models import Post, Thread
+from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
 
 if TYPE_CHECKING:
@@ -96,7 +96,7 @@ class RepliesView(View):
 
         page_obj = paginator.get_page(page)
 
-        posts_new = get_thread_posts_new_status(request, thread, page_obj.object_list)
+        unread = get_thread_posts_unread_status(request, thread, page_obj.object_list)
 
         items: list[dict] = []
         for post in page_obj.object_list:
@@ -107,7 +107,7 @@ class RepliesView(View):
                     "post": post,
                     "poster": None,
                     "poster_name": post.poster_name,
-                    "new": posts_new.get(post.id, False),
+                    "unread": unread.get(post.id, False),
                 }
             )
 

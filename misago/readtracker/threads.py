@@ -25,7 +25,7 @@ def annotate_threads_read_time(user, queryset):
     )
 
 
-def get_threads_new_posts(
+def get_threads_unread_posts(
     request: HttpRequest,
     threads: Iterable[Thread],
 ) -> dict[int, bool]:
@@ -39,12 +39,12 @@ def get_threads_new_posts(
 
     read_data = {}
     for thread in threads:
-        read_data[thread.id] = get_thread_new_posts_status(thread, default_read_time)
+        read_data[thread.id] = get_thread_unread_status(thread, default_read_time)
 
     return read_data
 
 
-def get_thread_new_posts_status(
+def get_thread_unread_status(
     thread: Thread,
     default_read_time: datetime,
 ) -> bool:
@@ -63,7 +63,7 @@ def get_thread_new_posts_status(
     return thread.last_post_on > thread.read_time
 
 
-def get_thread_posts_new_status(
+def get_thread_posts_unread_status(
     request: HttpRequest,
     thread: Thread,
     posts: Iterable[Post],
