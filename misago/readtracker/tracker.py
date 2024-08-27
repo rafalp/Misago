@@ -22,26 +22,26 @@ def annotate_categories_read_time(user, queryset):
     )
 
 
-def get_categories_unread_posts(
-    request: HttpRequest,
-    categories: Iterable[Category],
-) -> dict[int, bool]:
+def get_unread_categories(
+    request: HttpRequest, categories: Iterable[Category]
+) -> set[int]:
     if not categories:
-        return {}
+        return set()
 
     if request.user.is_anonymous:
         return {category.id: False for category in categories}
 
     default_read_time = get_default_read_time(request.settings, request.user)
 
-    read_data = {}
+    unread_categories: set[int] = set()
     for category in categories:
-        read_data[category.id] = get_category_unread_status(category, default_read_time)
+        if is_category_unread(category, default_read_time):
+            unread_categories.add(category.id)
 
-    return read_data
+    return unread_categories
 
 
-def get_category_unread_status(
+def is_category_unread(
     category: Category,
     default_read_time: datetime,
 ) -> bool:
@@ -73,26 +73,24 @@ def annotate_threads_read_time(user, queryset):
     )
 
 
-def get_threads_unread_posts(
-    request: HttpRequest,
-    threads: Iterable[Thread],
-) -> dict[int, bool]:
+def get_unread_threads(request: HttpRequest, threads: Iterable[Thread]) -> set[int]:
     if not threads:
-        return {}
+        return set()
 
     if request.user.is_anonymous:
         return {thread.id: False for thread in threads}
 
     default_read_time = get_default_read_time(request.settings, request.user)
 
-    read_data = {}
+    unread_threads: set[int] = set()
     for thread in threads:
-        read_data[thread.id] = get_thread_unread_status(thread, default_read_time)
+        if is_thread_unread(thread, default_read_time):
+            unread_threads.add(thread.id)
 
-    return read_data
+    return unread_threads
 
 
-def get_thread_unread_status(
+def is_thread_unread(
     thread: Thread,
     default_read_time: datetime,
 ) -> bool:

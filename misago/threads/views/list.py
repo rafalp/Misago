@@ -53,7 +53,7 @@ from ...permissions.threads import (
 )
 from ...readtracker.tracker import (
     annotate_threads_read_time,
-    get_threads_unread_posts,
+    get_unread_threads,
 )
 from ..enums import (
     PrivateThreadsUrls,
@@ -463,7 +463,7 @@ class ThreadsListView(ListView):
         threads_list += paginator.items
 
         users = self.get_threads_users(request, threads_list)
-        unread = get_threads_unread_posts(request, threads_list)
+        unread = get_unread_threads(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         selected = self.get_selected_threads_ids(request)
@@ -476,7 +476,7 @@ class ThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "unread": unread.get(thread.id),
+                    "unread": thread.id in unread,
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -856,7 +856,7 @@ class CategoryThreadsListView(ListView):
         threads_list += paginator.items
 
         users = self.get_threads_users(request, threads_list)
-        unread = get_threads_unread_posts(request, threads_list)
+        unread = get_unread_threads(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         selected = self.get_selected_threads_ids(request)
@@ -872,7 +872,7 @@ class CategoryThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "unread": unread.get(thread.id),
+                    "unread": thread.id in unread,
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -1186,7 +1186,7 @@ class PrivateThreadsListView(ListView):
         threads_list: list[Thread] = paginator.items
 
         users = self.get_threads_users(request, threads_list)
-        unread = get_threads_unread_posts(request, threads_list)
+        unread = get_unread_threads(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
         moderator = request.user_permissions.private_threads_moderator
@@ -1196,7 +1196,7 @@ class PrivateThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "unread": unread.get(thread.id),
+                    "unread": thread.id in unread,
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),

@@ -4,20 +4,20 @@ from unittest.mock import Mock
 from django.utils import timezone
 
 from ..models import ReadCategory, ReadThread
-from ..tracker import annotate_threads_read_time, get_threads_unread_posts
+from ..tracker import annotate_threads_read_time, get_unread_threads
 
 
-def test_get_threads_unread_posts_returns_false_for_anonymous_user(
+def test_get_unread_threads_returns_empty_set_for_anonymous_user(
     dynamic_settings, default_category, thread, anonymous_user
 ):
     request = Mock(settings=dynamic_settings, user=anonymous_user)
     queryset = annotate_threads_read_time(anonymous_user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert not unread_posts[thread.id]
+    assert not unread_threads
 
 
-def test_get_threads_unread_posts_returns_true_for_unread_thread(
+def test_get_unread_threads_includes_unread_thread(
     dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
@@ -25,12 +25,12 @@ def test_get_threads_unread_posts_returns_true_for_unread_thread(
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert unread_posts[thread.id]
+    assert thread.id in unread_threads
 
 
-def test_get_threads_unread_posts_returns_false_for_unread_thread_older_than_user(
+def test_get_unread_threads_excludes_unread_thread_older_than_user(
     dynamic_settings, default_category, thread, user
 ):
     thread.last_post_on -= timedelta(minutes=30)
@@ -38,12 +38,12 @@ def test_get_threads_unread_posts_returns_false_for_unread_thread_older_than_use
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert not unread_posts[thread.id]
+    assert not unread_threads
 
 
-def test_get_threads_unread_posts_returns_false_for_old_unread_thread(
+def test_get_unread_threads_excludes_old_unread_thread(
     dynamic_settings, default_category, thread, user
 ):
     user.joined_on = user.joined_on.replace(year=2010)
@@ -54,12 +54,12 @@ def test_get_threads_unread_posts_returns_false_for_old_unread_thread(
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert not unread_posts[thread.id]
+    assert not unread_threads
 
 
-def test_get_threads_unread_posts_returns_false_for_read_thread(
+def test_get_unread_threads_excludes_read_thread(
     dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
@@ -74,12 +74,12 @@ def test_get_threads_unread_posts_returns_false_for_read_thread(
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert not unread_posts[thread.id]
+    assert not unread_threads
 
 
-def test_get_threads_unread_posts_returns_false_for_unread_thread_in_read_category(
+def test_get_unread_threads_excludes_unread_thread_in_read_category(
     dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
@@ -93,12 +93,12 @@ def test_get_threads_unread_posts_returns_false_for_unread_thread_in_read_catego
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert not unread_posts[thread.id]
+    assert not unread_threads
 
 
-def test_get_threads_unread_posts_returns_true_for_read_thread_with_unread_reply(
+def test_get_unread_threads_includes_read_thread_with_unread_reply(
     dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
@@ -113,12 +113,12 @@ def test_get_threads_unread_posts_returns_true_for_read_thread_with_unread_reply
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert unread_posts[thread.id]
+    assert thread.id in unread_threads
 
 
-def test_get_threads_unread_posts_returns_true_for_read_thread_in_read_category_with_unread_reply(
+def test_get_unread_threads_includes_read_thread_in_read_category_with_unread_reply(
     dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
@@ -132,6 +132,6 @@ def test_get_threads_unread_posts_returns_true_for_read_thread_in_read_category_
 
     request = Mock(settings=dynamic_settings, user=user)
     queryset = annotate_threads_read_time(user, default_category.thread_set)
-    unread_posts = get_threads_unread_posts(request, queryset.all())
+    unread_threads = get_unread_threads(request, queryset.all())
 
-    assert unread_posts[thread.id]
+    assert thread.id in unread_threads

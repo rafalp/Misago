@@ -8,7 +8,7 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..readtracker.tracker import (
     annotate_categories_read_time,
-    get_categories_unread_posts,
+    get_unread_categories,
 )
 from .enums import CategoryTree
 from .models import Category
@@ -33,11 +33,11 @@ def get_categories_data(request: HttpRequest) -> list[dict]:
     )
 
     queryset = annotate_categories_read_time(request.user, queryset)
-    unread_posts = get_categories_unread_posts(request, queryset)
+    unread_categories = get_unread_categories(request, queryset)
 
     categories_data: dict[int, dict] = {
         category.id: get_category_data(
-            category, unread_posts.get(category.id, False), permissions
+            category, category.id in unread_categories, permissions
         )
         for category in queryset
     }
@@ -73,11 +73,11 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
     )
 
     queryset = annotate_categories_read_time(request.user, queryset)
-    unread_posts = get_categories_unread_posts(request, queryset)
+    unread_categories = get_unread_categories(request, queryset)
 
     categories_data: dict[int, dict] = {
         category.id: get_category_data(
-            category, unread_posts.get(category.id, False), permissions
+            category, category.id in unread_categories, permissions
         )
         for category in queryset
     }
