@@ -9,8 +9,10 @@ class ReadCategory(models.Model):
     read_time = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        indexes = [
-            models.Index(fields=["user", "category"]),
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "category"], name="uniq_user_category"
+            ),
         ]
 
 
@@ -21,6 +23,6 @@ class ReadThread(models.Model):
     read_time = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        indexes = [
-            models.Index(fields=["user", "thread"]),
+        constraints = [
+            models.UniqueConstraint(fields=["user", "thread"], name="uniq_user_thread"),
         ]

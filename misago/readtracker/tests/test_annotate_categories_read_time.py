@@ -1,8 +1,8 @@
 from django.utils import timezone
 
 from ...categories.models import Category
-from ..categories import annotate_categories_read_time
 from ..models import ReadCategory
+from ..tracker import annotate_categories_read_time
 
 
 def test_annotate_categories_read_time_is_noop_for_anonymous_user(db, anonymous_user):

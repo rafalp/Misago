@@ -4,11 +4,11 @@ from unittest.mock import Mock
 from django.utils import timezone
 
 from ...categories.models import Category
-from ..categories import annotate_categories_read_time, get_categories_unread_posts
 from ..models import ReadCategory
+from ..tracker import annotate_categories_read_time, get_categories_unread_posts
 
 
-def test_get_categories_unread_posts_returns_false_anonymous_user(
+def test_get_categories_unread_posts_returns_false_for_anonymous_user(
     dynamic_settings, default_category, anonymous_user
 ):
     default_category.last_post_on = timezone.now()

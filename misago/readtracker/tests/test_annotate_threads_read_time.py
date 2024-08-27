@@ -1,8 +1,8 @@
 from django.utils import timezone
 
 from ...threads.models import Thread
-from ..threads import annotate_threads_read_time
 from ..models import ReadCategory, ReadThread
+from ..tracker import annotate_threads_read_time
 
 
 def test_annotate_threads_read_time_is_noop_for_anonymous_user(anonymous_user, thread):

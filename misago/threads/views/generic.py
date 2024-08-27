@@ -16,7 +16,7 @@ from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
 )
-from ...readtracker.threads import annotate_threads_read_time
+from ...readtracker.tracker import annotate_threads_read_time
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPaginator
 

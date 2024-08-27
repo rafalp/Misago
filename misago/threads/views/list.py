@@ -51,7 +51,7 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
     check_start_thread_in_category_permission,
 )
-from ...readtracker.threads import (
+from ...readtracker.tracker import (
     annotate_threads_read_time,
     get_threads_unread_posts,
 )

@@ -6,7 +6,7 @@ from django.http import HttpRequest
 
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
-from ..readtracker.categories import (
+from ..readtracker.tracker import (
     annotate_categories_read_time,
     get_categories_unread_posts,
 )

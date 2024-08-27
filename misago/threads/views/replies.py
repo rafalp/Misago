@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from ...core.exceptions import OutdatedSlug
-from ...readtracker.threads import get_thread_posts_unread_status
+from ...readtracker.tracker import get_thread_posts_unread_status
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
     get_private_thread_replies_page_posts_queryset_hook,
