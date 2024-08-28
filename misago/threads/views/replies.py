@@ -7,8 +7,14 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
+from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
-from ...readtracker.tracker import get_thread_posts_unread_status
+from ...readtracker.tracker import (
+    get_unread_posts,
+    mark_category_read,
+    mark_thread_read,
+)
+from ...readtracker.threads import is_category_read
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
     get_private_thread_replies_page_posts_queryset_hook,
@@ -20,7 +26,7 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
     set_thread_posts_feed_item_users_hook,
 )
-from ..models import Thread
+from ..models import Post, Thread
 from .generic import PrivateThreadView, ThreadView
 
 if TYPE_CHECKING:
@@ -95,11 +101,12 @@ class RepliesView(View):
             page = paginator.num_pages
 
         page_obj = paginator.get_page(page)
+        posts = list(page_obj.object_list)
 
-        unread = get_thread_posts_unread_status(request, thread, page_obj.object_list)
+        unread = get_unread_posts(request, thread, posts)
 
         items: list[dict] = []
-        for post in page_obj.object_list:
+        for post in posts:
             items.append(
                 {
                     "template_name": self.feed_post_template_name,
@@ -107,11 +114,17 @@ class RepliesView(View):
                     "post": post,
                     "poster": None,
                     "poster_name": post.poster_name,
-                    "unread": unread.get(post.id, False),
+                    "unread": post.id in unread,
                 }
             )
 
         self.set_posts_feed_users(request, items)
+
+        if unread:
+            self.update_thread_read_time(request, thread, posts[-1].posted_on)
+
+        if request.user.is_authenticated and request.user.unread_notifications:
+            self.read_user_notifications(request.user, posts)
 
         return {
             "template_name": self.feed_template_name,
@@ -158,6 +171,43 @@ class RepliesView(View):
         if item["type"] == "post":
             item["poster"] = users.get(item["post"].poster_id)
 
+    def update_thread_read_time(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        read_time: datetime,
+    ):
+        mark_thread_read(request, thread, read_time)
+
+        if self.is_category_read(request, thread.category, thread.category_read_time):
+            mark_category_read(
+                request,
+                thread.category,
+                force_update=bool(thread.category_read_time),
+            )
+
+    def is_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        category_read_time: datetime | None,
+    ) -> bool:
+        raise NotImplementedError()
+
+    def read_user_notifications(self, user: "User", posts: list[Post]):
+        updated_notifications = user.notification_set.filter(
+            post__in=posts, is_read=False
+        ).update(is_read=True)
+
+        if updated_notifications:
+            new_unread_notifications = max(
+                [0, user.unread_notifications - updated_notifications]
+            )
+
+            if user.unread_notifications != new_unread_notifications:
+                user.unread_notifications = new_unread_notifications
+                user.save(update_fields=["unread_notifications"])
+
 
 class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
@@ -194,6 +244,14 @@ class ThreadRepliesView(RepliesView, ThreadView):
         return get_thread_replies_page_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
+
+    def is_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        category_read_time: datetime | None,
+    ) -> bool:
+        return is_category_read(request, category, category_read_time)
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):

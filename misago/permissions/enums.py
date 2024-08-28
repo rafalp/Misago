@@ -23,12 +23,14 @@ class CategoryThreadsQuery(StrEnum):
     ALL_NOT_PINNED = "all_not_pinned"
     ALL_NOT_PINNED_GLOBALLY = "all_not_pinned_globally"
 
+    ANON = "anon"
     ANON_PINNED = "anon_pinned"
     ANON_PINNED_GLOBALLY = "anon_pinned_globally"
     ANON_PINNED_IN_CATEGORY = "anon_pinned_in_category"
     ANON_NOT_PINNED = "anon_not_pinned"
     ANON_NOT_PINNED_GLOBALLY = "anon_not_pinned_globally"
 
+    USER = "user"
     USER_PINNED = "user_pinned"
     USER_PINNED_GLOBALLY = "user_pinned_globally"
     USER_PINNED_IN_CATEGORY = "user_pinned_in_category"

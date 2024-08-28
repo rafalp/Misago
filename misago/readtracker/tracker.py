@@ -54,20 +54,26 @@ def is_category_unread(
     return category.last_post_on > category.read_time
 
 
-def annotate_threads_read_time(user, queryset):
+def annotate_threads_read_time(user, queryset, *, with_category: bool = True):
     if user.is_anonymous:
         return queryset
 
-    return queryset.annotate(
+    queryset = queryset.annotate(
         read_time=ReadThread.objects.filter(
             user=user,
             thread=OuterRef("id"),
         ).values("read_time"),
-        category_read_time=ReadCategory.objects.filter(
-            user=user,
-            category=OuterRef("category_id"),
-        ).values("read_time"),
     )
+
+    if with_category:
+        queryset = queryset.annotate(
+            category_read_time=ReadCategory.objects.filter(
+                user=user,
+                category=OuterRef("category_id"),
+            ).values("read_time"),
+        )
+
+    return queryset
 
 
 def get_unread_threads(request: HttpRequest, threads: Iterable[Thread]) -> set[int]:
@@ -134,3 +140,34 @@ def get_thread_read_time(request: HttpRequest, thread: Thread) -> datetime:
         read_time = default_read_time
 
     return max(read_time, default_read_time)
+
+
+def mark_thread_read(request: HttpRequest, thread: Thread, read_time: datetime):
+    if thread.read_time:
+        ReadThread.objects.filter(user=request.user, thread=thread).update(
+            read_time=read_time
+        )
+    else:
+        ReadThread.objects.create(
+            user=request.user,
+            thread=thread,
+            category=thread.category,
+            read_time=read_time,
+        )
+
+
+def mark_category_read(
+    request: HttpRequest, category: Category, *, force_update: bool = False
+):
+    if force_update or getattr(category, "read_time", None):
+        ReadCategory.objects.filter(user=request.user, category=category).update(
+            read_time=category.last_post_on
+        )
+    else:
+        ReadCategory.objects.create(
+            user=request.user,
+            category=category,
+            read_time=category.last_post_on,
+        )
+
+    ReadThread.objects.filter(user=request.user, category=category).delete()
