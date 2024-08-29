@@ -14,6 +14,7 @@ from ...readtracker.tracker import (
     mark_category_read,
     mark_thread_read,
 )
+from ...readtracker.privatethreads import are_private_threads_read
 from ...readtracker.threads import is_category_read
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
@@ -180,7 +181,7 @@ class RepliesView(View):
         mark_thread_read(request.user, thread, read_time)
 
         if self.is_category_read(request, thread.category, thread.category_read_time):
-            mark_category_read(
+            self.mark_category_read(
                 request,
                 thread.category,
                 force_update=bool(thread.category_read_time),
@@ -193,6 +194,19 @@ class RepliesView(View):
         category_read_time: datetime | None,
     ) -> bool:
         raise NotImplementedError()
+
+    def mark_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        *,
+        force_update: bool,
+    ):
+        mark_category_read(
+            request,
+            category,
+            force_update=force_update,
+        )
 
     def read_user_notifications(self, user: "User", posts: list[Post]):
         updated_notifications = user.notification_set.filter(
@@ -289,6 +303,44 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         return get_private_thread_replies_page_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
+
+    def update_thread_read_time(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        read_time: datetime,
+    ):
+        unread_private_threads = request.user.unread_private_threads
+        if read_time > thread.last_post_on and request.user.unread_private_threads:
+            request.user.unread_private_threads -= 1
+
+        super().update_thread_read_time(request, thread, read_time)
+
+        if request.user.unread_private_threads != unread_private_threads:
+            request.user.save(update_fields=["unread_private_threads"])
+
+    def is_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        category_read_time: datetime | None,
+    ) -> bool:
+        return are_private_threads_read(request, category, category_read_time)
+
+    def mark_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        *,
+        force_update: bool,
+    ):
+        super().mark_category_read(
+            request,
+            category,
+            force_update=force_update,
+        )
+
+        request.user.unread_private_threads = 0
 
 
 thread_replies = ThreadRepliesView.as_view()
