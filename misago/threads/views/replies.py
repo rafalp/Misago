@@ -177,7 +177,7 @@ class RepliesView(View):
         thread: Thread,
         read_time: datetime,
     ):
-        mark_thread_read(request, thread, read_time)
+        mark_thread_read(request.user, thread, read_time)
 
         if self.is_category_read(request, thread.category, thread.category_read_time):
             mark_category_read(

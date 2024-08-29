@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable
 
 from django.http import HttpRequest
 from django.db.models import OuterRef
@@ -8,6 +8,9 @@ from ..categories.models import Category
 from ..threads.models import Post, Thread
 from .readtime import get_default_read_time
 from .models import ReadCategory, ReadThread
+
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
 def annotate_categories_read_time(user, queryset):
@@ -142,14 +145,16 @@ def get_thread_read_time(request: HttpRequest, thread: Thread) -> datetime:
     return max(read_time, default_read_time)
 
 
-def mark_thread_read(request: HttpRequest, thread: Thread, read_time: datetime):
+def mark_thread_read(user: "User", thread: Thread, read_time: datetime):
+    updated = False
     if thread.read_time:
-        ReadThread.objects.filter(user=request.user, thread=thread).update(
+        updated = ReadThread.objects.filter(user=user, thread=thread).update(
             read_time=read_time
         )
-    else:
+
+    if not updated:
         ReadThread.objects.create(
-            user=request.user,
+            user=user,
             thread=thread,
             category=thread.category,
             read_time=read_time,
