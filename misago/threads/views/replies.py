@@ -182,7 +182,7 @@ class RepliesView(View):
 
         if self.is_category_read(request, thread.category, thread.category_read_time):
             self.mark_category_read(
-                request,
+                request.user,
                 thread.category,
                 force_update=bool(thread.category_read_time),
             )
@@ -197,16 +197,12 @@ class RepliesView(View):
 
     def mark_category_read(
         self,
-        request: HttpRequest,
+        user: "User",
         category: Category,
         *,
         force_update: bool,
     ):
-        mark_category_read(
-            request,
-            category,
-            force_update=force_update,
-        )
+        mark_category_read(user, category, force_update=force_update)
 
     def read_user_notifications(self, user: "User", posts: list[Post]):
         updated_notifications = user.notification_set.filter(
@@ -311,7 +307,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         read_time: datetime,
     ):
         unread_private_threads = request.user.unread_private_threads
-        if read_time > thread.last_post_on and request.user.unread_private_threads:
+        if read_time >= thread.last_post_on and request.user.unread_private_threads:
             request.user.unread_private_threads -= 1
 
         super().update_thread_read_time(request, thread, read_time)
@@ -329,18 +325,14 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def mark_category_read(
         self,
-        request: HttpRequest,
+        user: "User",
         category: Category,
         *,
         force_update: bool,
     ):
-        super().mark_category_read(
-            request,
-            category,
-            force_update=force_update,
-        )
+        super().mark_category_read(user, category, force_update=force_update)
 
-        request.user.unread_private_threads = 0
+        user.unread_private_threads = 0
 
 
 thread_replies = ThreadRepliesView.as_view()
