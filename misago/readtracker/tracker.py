@@ -146,13 +146,15 @@ def get_thread_read_time(request: HttpRequest, thread: Thread) -> datetime:
 
 
 def mark_thread_read(user: "User", thread: Thread, read_time: datetime):
-    updated = False
-    if thread.read_time:
-        updated = ReadThread.objects.filter(user=user, thread=thread).update(
-            read_time=read_time
-        )
+    create_row = True
 
-    if not updated:
+    if thread.read_time:
+        create_row = not ReadThread.objects.filter(
+            user=user,
+            thread=thread,
+        ).update(read_time=read_time)
+
+    if create_row:
         ReadThread.objects.create(
             user=user,
             thread=thread,
@@ -161,18 +163,20 @@ def mark_thread_read(user: "User", thread: Thread, read_time: datetime):
         )
 
 
-def mark_category_read(
-    request: HttpRequest, category: Category, *, force_update: bool = False
-):
+def mark_category_read(user: "User", category: Category, *, force_update: bool = False):
+    create_row = True
+
     if force_update or getattr(category, "read_time", None):
-        ReadCategory.objects.filter(user=request.user, category=category).update(
-            read_time=category.last_post_on
-        )
-    else:
+        create_row = not ReadCategory.objects.filter(
+            user=user,
+            category=category,
+        ).update(read_time=category.last_post_on)
+
+    if create_row:
         ReadCategory.objects.create(
-            user=request.user,
+            user=user,
             category=category,
             read_time=category.last_post_on,
         )
 
-    ReadThread.objects.filter(user=request.user, category=category).delete()
+    ReadThread.objects.filter(user=user, category=category).delete()
