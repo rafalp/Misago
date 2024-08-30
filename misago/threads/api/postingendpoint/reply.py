@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from . import PostingEndpoint, PostingMiddleware
 from ....markup import common_flavour
-from ....readtracker.poststracker import save_read
 from ....users.audittrail import create_audit_trail
 from ...checksums import update_post_checksum
 from ...validators import validate_post, validate_post_length, validate_thread_title

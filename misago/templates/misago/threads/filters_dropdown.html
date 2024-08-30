@@ -23,7 +23,7 @@
     {% endif %}
     {% for filter in filters %}
       <li>
-        <a href="{{ filter.url }}">
+        <a href="{{ filter.absolute_url }}">
           {{ filter.name }}
         </a>
       </li>
@@ -53,7 +53,7 @@
       {% endif %}
       {% for filter in filters %}
         <li>
-          <a href="{{ filter.url }}">
+          <a href="{{ filter.absolute_url }}">
             {{ filter.name }}
           </a>
         </li>

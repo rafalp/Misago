@@ -5,7 +5,6 @@ from django.utils import timezone
 
 from .. import test
 from ...categories.models import Category
-from ...readtracker import poststracker
 from ..models import Thread
 from ..test import patch_category_acl, patch_other_category_acl
 from .test_threads_api import ThreadsApiTestCase

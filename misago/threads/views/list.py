@@ -66,6 +66,7 @@ from ..filters import (
     ThreadsFilter,
     ThreadsFilterChoice,
     UnapprovedThreadsFilter,
+    UnreadThreadsFilter,
 )
 from ..hooks import (
     get_category_threads_page_context_data_hook,
@@ -437,13 +438,16 @@ class ThreadsListView(ListView):
         return get_threads_page_threads_hook(self.get_threads_action, request, kwargs)
 
     def get_threads_action(self, request: HttpRequest, kwargs: dict):
-        permissions_filter = self.get_threads_permissions_queryset_filter(request)
-        queryset = self.get_threads_queryset(request)
-
         filters_base_url = self.get_filters_base_url()
         active_filter, filters = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
+
+        permissions_filter = self.get_threads_permissions_queryset_filter(request)
+        queryset = self.get_threads_queryset(request)
+
+        if not active_filter or active_filter.url != "unread":
+            queryset = annotate_threads_read_time(request.user, queryset)
 
         if active_filter:
             threads_queryset = active_filter.filter(queryset)
@@ -463,10 +467,13 @@ class ThreadsListView(ListView):
         threads_list += paginator.items
 
         users = self.get_threads_users(request, threads_list)
-        unread = get_unread_threads(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
-
         selected = self.get_selected_threads_ids(request)
+
+        if active_filter and active_filter.url == "unread":
+            unread = set(thread.id for thread in threads_list)
+        else:
+            unread = get_unread_threads(request, threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -523,7 +530,7 @@ class ThreadsListView(ListView):
         )
 
         for obj in filters:
-            choice = obj.as_choice(base_url, obj.slug == filter)
+            choice = obj.as_choice(base_url, obj.url == filter)
             if choice.active:
                 active = choice
             choices.append(choice)
@@ -537,7 +544,10 @@ class ThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        filters = [MyThreadsFilter(request)]
+        filters = [
+            UnreadThreadsFilter(request),
+            MyThreadsFilter(request),
+        ]
 
         if (
             request.user_permissions.is_global_moderator
@@ -551,7 +561,7 @@ class ThreadsListView(ListView):
         return get_threads_page_queryset_hook(self.get_threads_queryset_action, request)
 
     def get_threads_queryset_action(self, request: HttpRequest):
-        return annotate_threads_read_time(request.user, Thread.objects)
+        return Thread.objects
 
     def get_threads_permissions_queryset_filter(
         self, request: HttpRequest
@@ -828,15 +838,18 @@ class CategoryThreadsListView(ListView):
     def get_threads_action(
         self, request: HttpRequest, category: Category, kwargs: dict
     ):
+        filters_base_url = self.get_filters_base_url(category)
+        active_filter, filters = self.get_threads_filters(
+            request, category, filters_base_url, kwargs.get("filter")
+        )
+
         permissions_filter = self.get_threads_permissions_queryset_filter(
             request, category
         )
         queryset = self.get_threads_queryset(request)
 
-        filters_base_url = self.get_filters_base_url(category)
-        active_filter, filters = self.get_threads_filters(
-            request, category, filters_base_url, kwargs.get("filter")
-        )
+        if not active_filter or active_filter.url != "unread":
+            queryset = annotate_threads_read_time(request.user, queryset)
 
         if active_filter:
             threads_queryset = active_filter.filter(queryset)
@@ -856,10 +869,13 @@ class CategoryThreadsListView(ListView):
         threads_list += paginator.items
 
         users = self.get_threads_users(request, threads_list)
-        unread = get_unread_threads(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
-
         selected = self.get_selected_threads_ids(request)
+
+        if active_filter and active_filter.url == "unread":
+            unread = set(thread.id for thread in threads_list)
+        else:
+            unread = get_unread_threads(request, threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -917,7 +933,7 @@ class CategoryThreadsListView(ListView):
         )
 
         for obj in filters:
-            choice = obj.as_choice(base_url, obj.slug == filter)
+            choice = obj.as_choice(base_url, obj.url == filter)
             if choice.active:
                 active = choice
             choices.append(choice)
@@ -933,7 +949,10 @@ class CategoryThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        filters = [MyThreadsFilter(request)]
+        filters = [
+            UnreadThreadsFilter(request),
+            MyThreadsFilter(request),
+        ]
 
         if (
             request.user_permissions.is_global_moderator
@@ -949,7 +968,7 @@ class CategoryThreadsListView(ListView):
         )
 
     def get_threads_queryset_action(self, request: HttpRequest):
-        return annotate_threads_read_time(request.user, Thread.objects)
+        return Thread.objects
 
     def get_threads_permissions_queryset_filter(
         self, request: HttpRequest, category: Category
@@ -1172,12 +1191,15 @@ class PrivateThreadsListView(ListView):
     def get_threads_action(
         self, request: HttpRequest, category: Category, kwargs: dict
     ):
-        queryset = self.get_threads_queryset(request, category)
-
         filters_base_url = self.get_filters_base_url()
         active_filter, filters = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
+
+        queryset = self.get_threads_queryset(request, category)
+
+        if not active_filter or active_filter.url != "unread":
+            queryset = annotate_threads_read_time(request.user, queryset)
 
         if active_filter:
             queryset = active_filter.filter(queryset)
@@ -1186,8 +1208,12 @@ class PrivateThreadsListView(ListView):
         threads_list: list[Thread] = paginator.items
 
         users = self.get_threads_users(request, threads_list)
-        unread = get_unread_threads(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
+
+        if active_filter and active_filter.url == "unread":
+            unread = set(thread.id for thread in threads_list)
+        else:
+            unread = get_unread_threads(request, threads_list)
 
         moderator = request.user_permissions.private_threads_moderator
 
@@ -1231,7 +1257,7 @@ class PrivateThreadsListView(ListView):
         )
 
         for obj in filters:
-            choice = obj.as_choice(base_url, obj.slug == filter)
+            choice = obj.as_choice(base_url, obj.url == filter)
             if choice.active:
                 active = choice
             choices.append(choice)
@@ -1245,7 +1271,10 @@ class PrivateThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        return [MyThreadsFilter(request)]
+        return [
+            UnreadThreadsFilter(request),
+            MyThreadsFilter(request),
+        ]
 
     def get_threads_queryset(self, request: HttpRequest, category: Category):
         return get_private_threads_page_queryset_hook(
@@ -1253,9 +1282,7 @@ class PrivateThreadsListView(ListView):
         )
 
     def get_threads_queryset_action(self, request: HttpRequest, category: Category):
-        return annotate_threads_read_time(
-            request.user, Thread.objects.filter(category=category)
-        )
+        return Thread.objects.filter(category=category)
 
     def get_threads_paginator(self, request: HttpRequest, queryset):
         threads_queryset = filter_private_threads_queryset(
