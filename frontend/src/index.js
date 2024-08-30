@@ -116,7 +116,12 @@ document.addEventListener("htmx:afterRequest", ({ target }) => {
   }
 })
 
-// Hide moderation modal after moderation action completes
+// Hide moderation modal
 document.addEventListener("misago:afterModeration", () => {
   $("#threads-moderation-modal").modal("hide")
+})
+
+// Hide mark as read modal
+document.addEventListener("misago:afterMarkAsRead", () => {
+  $("#mark-as-read").modal("hide")
 })

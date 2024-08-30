@@ -1,15 +1,16 @@
 import re
 from math import ceil
-from typing import Any, Type
-from urllib.parse import urlencode
+from typing import Any, TYPE_CHECKING, Type
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import transaction
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
@@ -55,6 +56,7 @@ from ...readtracker.tracker import (
     annotate_threads_read_time,
     get_unread_threads,
 )
+from ...readtracker.models import ReadCategory, ReadThread
 from ..enums import (
     PrivateThreadsUrls,
     ThreadsListsPolling,
@@ -88,7 +90,10 @@ from ..hooks import (
 )
 from ..models import Thread
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ...users.models import User
+else:
+    User = get_user_model()
 
 POLL_NEW_THREADS = "poll_new"
 ANIMATE_NEW_THREADS = "animate_new"
@@ -186,9 +191,43 @@ class ListView(View):
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
-    def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+    def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+        current_url = request.get_full_path_info()
+        if request.user.is_authenticated:
+            if response := self.mark_threads_as_read(request, kwargs):
+                return response
+
+        if request.is_htmx:
+            response = self.get(request, **kwargs)
+            response.headers["hx-trigger"] = "misago:afterMarkAsRead"
+            return response
+
+        return redirect(current_url)
+
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
+        raise NotImplementedError()
+
+    @transaction.atomic
+    def read_categories(self, user: "User", categories_ids: list[str]):
+        if not categories_ids:
+            return
+
+        read_time = timezone.now()
+
+        # Clear read tracker for categories
+        ReadThread.objects.filter(user=user, category_id__in=categories_ids).delete()
+        ReadCategory.objects.filter(user=user, category_id__in=categories_ids).delete()
+
+        ReadCategory.objects.bulk_create(
+            ReadCategory(user=user, read_time=read_time, category_id=category_id)
+            for category_id in categories_ids
+        )
+
+    def post_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
-            current_url = self.get_current_url(request)
+            current_url = request.get_full_path_info()
             result = self.moderate_threads(request, kwargs)
 
             if isinstance(result, ModerationTemplateResult):
@@ -222,7 +261,7 @@ class ListView(View):
     def set_moderation_response_headers(
         self, request: HttpRequest, response: HttpResponse
     ):
-        response.headers["HX-Trigger"] = "misago:afterModeration"
+        response.headers["hx-trigger"] = "misago:afterModeration"
         if request.POST.get("success-hx-target"):
             response.headers["hx-retarget"] = request.POST["success-hx-target"]
         if request.POST.get("success-hx-swap"):
@@ -327,16 +366,11 @@ class ListView(View):
             link += "?cursor" + request.GET["cursor"]
         return link
 
-    def get_current_url(self, request: HttpRequest) -> str:
-        current_url = request.path_info
-        if request.GET:
-            current_url += "?" + urlencode(request.GET)
-        return current_url
-
 
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
     template_name_htmx = "misago/threads/partial.html"
+    mark_as_read_template_name = "misago/threads/mark_as_read_page.html"
     moderation_page_template_name = "misago/threads/moderation_page.html"
     moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
@@ -357,10 +391,25 @@ class ThreadsListView(ListView):
         return super().dispatch(request, *args, is_index=is_index, **kwargs)
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "mark_as_read" in request.POST:
+            return self.post_mark_as_read(request, kwargs)
+
         if "moderation" in request.POST:
-            return self.dispatch_moderation(request, kwargs)
+            return self.post_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
+
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
+        if not request.POST.get("confirm"):
+            return render(request, self.mark_as_read_template_name)
+
+        categories_ids = list(request.categories.categories)
+        self.read_categories(request.user, categories_ids)
+        messages.success(
+            request, pgettext("mark threads as read", "Threads marked as read")
+        )
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> ModerationResult | None:
         threads = self.get_threads(request, kwargs)
@@ -376,7 +425,6 @@ class ThreadsListView(ListView):
                     "moderation_action": action.get_context_data(),
                     "threads": threads,
                     "selection": selection,
-                    "form_action": self.get_current_url(request),
                 }
             )
 
@@ -680,14 +728,49 @@ class ThreadsListView(ListView):
 class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
     template_name_htmx = "misago/category/partial.html"
+    mark_as_read_template_name = "misago/category/mark_as_read_page.html"
     moderation_page_template_name = "misago/category/moderation_page.html"
     moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "mark_as_read" in request.POST:
+            return self.post_mark_as_read(request, kwargs)
+
         if "moderation" in request.POST:
-            return self.dispatch_moderation(request, kwargs)
+            return self.post_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
+
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
+        category = self.get_category(request, kwargs)
+
+        if not request.POST.get("confirm"):
+            return render(
+                request,
+                self.mark_as_read_template_name,
+                {
+                    "category": category,
+                    "breadcrumbs": request.categories.get_category_path(
+                        category.id, include_self=False
+                    ),
+                },
+            )
+
+        if category.list_children_threads:
+            categories_ids = [
+                c["id"]
+                for c in request.categories.get_category_descendants(category.id)
+            ]
+        else:
+            categories_ids = [category.id]
+
+        self.read_categories(request.user, categories_ids)
+
+        messages.success(
+            request, pgettext("mark threads as read", "Category marked as read")
+        )
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> ModerationResult | None:
         category = self.get_category(request, kwargs)
@@ -707,7 +790,6 @@ class CategoryThreadsListView(ListView):
                     "breadcrumbs": request.categories.get_category_path(
                         category.id, include_self=False
                     ),
-                    "form_action": self.get_current_url(request),
                 }
             )
 
@@ -1154,11 +1236,38 @@ class CategoryThreadsListView(ListView):
 class PrivateThreadsListView(ListView):
     template_name = "misago/private_threads/index.html"
     template_name_htmx = "misago/private_threads/partial.html"
+    mark_as_read_template_name = "misago/private_threads/mark_as_read_page.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         check_private_threads_permission(request.user_permissions)
 
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "mark_as_read" in request.POST:
+            return self.post_mark_as_read(request, kwargs)
+
+        return self.get(request, **kwargs)
+
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
+        if not request.POST.get("confirm"):
+            return render(
+                request,
+                self.mark_as_read_template_name,
+                {},
+            )
+
+        category = self.get_category(request, kwargs)
+        self.read_categories(request.user, [category.id])
+
+        request.user.unread_private_threads = 0
+        request.user.save(update_fields=["unread_private_threads"])
+
+        messages.success(
+            request, pgettext("mark threads as read", "Private threads marked as read")
+        )
 
     def get_context_data(self, request: HttpRequest, kwargs: dict):
         return get_private_threads_page_context_data_hook(

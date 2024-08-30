@@ -29,7 +29,18 @@
   {% if bottom and user.is_authenticated %}
     <div class="toolbar-section flex-order-last-xs">
       <div class="toolbar-item">
-        <button class="btn btn-default btn-block" disabled>
+          <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-default btn-block" name="mark_as_read">
+              {% trans "Mark all as read" context "threads list toolbar" %}
+            </button>
+          </form>
+        <button
+          class="btn btn-default d-js-block"
+          type="button"
+          data-toggle="modal"
+          data-target="#mark-as-read"
+        >
           {% trans "Mark all as read" context "threads list toolbar" %}
         </button>
       </div>

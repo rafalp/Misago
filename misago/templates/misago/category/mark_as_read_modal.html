@@ -1,0 +1,8 @@
+{% extends "misago/threads/mark_as_read_modal.html" %}
+{% load i18n %}
+
+{% block modal-body %}
+  {% blocktrans trimmed context "mark threads as read" %}
+    Are you sure you want to mark all threads in this category as read?
+  {% endblocktrans %}
+{% endblock modal-body %}
