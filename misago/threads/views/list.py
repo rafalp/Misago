@@ -194,7 +194,7 @@ class ListView(View):
     def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         current_url = request.get_full_path_info()
         if request.user.is_authenticated:
-            if response := self.mark_threads_as_read(request, kwargs):
+            if response := self.mark_as_read(request, kwargs):
                 return response
 
         if request.is_htmx:
@@ -204,9 +204,7 @@ class ListView(View):
 
         return redirect(current_url)
 
-    def mark_threads_as_read(
-        self, request: HttpRequest, kwargs: dict
-    ) -> HttpResponse | None:
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
         raise NotImplementedError()
 
     @transaction.atomic
@@ -399,9 +397,7 @@ class ThreadsListView(ListView):
 
         return self.get(request, **kwargs)
 
-    def mark_threads_as_read(
-        self, request: HttpRequest, kwargs: dict
-    ) -> HttpResponse | None:
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
         if not request.POST.get("confirm"):
             return render(request, self.mark_as_read_template_name)
 
@@ -741,9 +737,7 @@ class CategoryThreadsListView(ListView):
 
         return self.get(request, **kwargs)
 
-    def mark_threads_as_read(
-        self, request: HttpRequest, kwargs: dict
-    ) -> HttpResponse | None:
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
         category = self.get_category(request, kwargs)
 
         if not request.POST.get("confirm"):
@@ -1249,9 +1243,7 @@ class PrivateThreadsListView(ListView):
 
         return self.get(request, **kwargs)
 
-    def mark_threads_as_read(
-        self, request: HttpRequest, kwargs: dict
-    ) -> HttpResponse | None:
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
         if not request.POST.get("confirm"):
             return render(
                 request,

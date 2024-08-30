@@ -1,45 +1,18 @@
-{% extends "misago/base.html" %}
-{% load i18n misago_component %}
-
+{% extends "misago/threads/mark_as_read_page.html" %}
+{% load i18n %}
 
 {% block title %}
-  {% trans "Mark all as read" context "mark threads as read title" %} | {{ category }} | {{ block.super }}
+  {% trans "Mark as read" context "mark threads as read" %} |{% trans "Private threads" context "private threads page" %} | {{ settings.forum_name }}
 {% endblock title %}
 
+{% block page-class %}page-private-threads{% endblock page-class %}
 
-{% block content %}
-<div class="page page-private-threads">
+{% block header %}
   {% include "misago/private_threads/header.html" %}
+{% endblock header %}
 
-  <div class="container page-container">
-
-    <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="confirm" value="true" />
-      <div class="panel panel-default panel-form">
-        <div class="panel-heading">
-          <h3 class="panel-title">
-            {% trans "Mark all as read" context "mark threads as read title" %}
-          </h3>
-        </div>
-        <div class="panel-body">
-          {% blocktrans trimmed context "mark threads as read" %}
-            Are you sure you want to mark all private threads as read?
-          {% endblocktrans %}
-        </div>
-        <div class="panel-footer panel-footer-sticky">
-          <a href="{{ full_path }}" class="btn btn-default"">
-            {% trans "Cancel" context "mark threads as read btn" %}
-          </a>
-          <button class="btn btn-primary" name="mark_as_read">
-            {% trans "Mark as read" context "mark threads as read btn" %}
-          </button>
-        </div>
-      </div>
-    </form>
-
-    {% include "misago/gototop_toolbar.html" %}
-
-  </div>
-</div>
-{% endblock content %}
+{% block panel-body %}
+  {% blocktrans trimmed context "mark threads as read" %}
+    Are you sure you want to mark all private threads as read?
+  {% endblocktrans %}
+{% endblock panel-body %}
