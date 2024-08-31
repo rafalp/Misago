@@ -33,6 +33,30 @@ def test_categories_view_displays_default_category_for_user(
 
 
 @override_dynamic_settings(index_view="threads")
+def test_categories_view_displays_for_guest_in_htmx(default_category, client):
+    default_category.description = "FIRST-CATEGORY-DESCRIPTION"
+    default_category.save()
+
+    response = client.get(
+        reverse("misago:categories"),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, default_category.description)
+
+
+@override_dynamic_settings(index_view="threads")
+def test_categories_view_displays_for_user_in_htmx(default_category, user_client):
+    default_category.description = "FIRST-CATEGORY-DESCRIPTION"
+    default_category.save()
+
+    response = user_client.get(
+        reverse("misago:categories"),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, default_category.description)
+
+
+@override_dynamic_settings(index_view="threads")
 def test_categories_view_excludes_default_category_for_guest_without_permission(
     default_category, guests_group, client
 ):

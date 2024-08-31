@@ -198,9 +198,7 @@ class ListView(View):
                 return response
 
         if request.is_htmx:
-            response = self.get(request, **kwargs)
-            response.headers["hx-trigger"] = "misago:afterMarkAsRead"
-            return response
+            return self.get(request, **kwargs)
 
         return redirect(current_url)
 

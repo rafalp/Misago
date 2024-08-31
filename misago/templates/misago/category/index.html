@@ -35,6 +35,8 @@
 
 
 {% block modals %}
-{% include "misago/category/mark_as_read_modal.html" %}
-{% include "misago/threads/moderation.html" %}
+{% if user.is_authenticated %}
+  {% include "misago/category/mark_as_read_modal.html" %}
+  {% include "misago/threads/moderation.html" %}
+{% endif %}
 {% endblock modals %}

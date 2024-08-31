@@ -12,6 +12,7 @@
     hx-post="{{ full_path }}"
     hx-target="#misago-htmx-root"
     hx-swap="outerHTML show:#misago-page-scroll-target:top"
+    hx-on::after-request="misago.hideMarkAsReadModal()"
   >
     {% csrf_token %}
     <input type="hidden" name="confirm" value="true" />

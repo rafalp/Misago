@@ -1,0 +1,27 @@
+{% load i18n %}
+
+{% if user.is_authenticated %}
+<div class="toolbar">
+  <div class="toolbar-spacer"></div>
+  <div class="toolbar-section">
+    <div class="toolbar-item">
+      <noscript>
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-default btn-block" name="mark_as_read">
+            {% trans "Mark as read" context "categories list toolbar" %}
+          </button>
+        </form>
+      </noscript>
+      <button
+        class="btn btn-default d-js-block"
+        type="button"
+        data-toggle="modal"
+        data-target="#mark-as-read"
+      >
+        {% trans "Mark as read" context "categories list toolbar" %}
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
