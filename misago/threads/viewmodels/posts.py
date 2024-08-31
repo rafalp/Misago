@@ -57,9 +57,8 @@ class ViewModel:
             # sort both by pk
             posts.sort(key=lambda p: p.pk)
 
-        # make posts and events ACL and reads aware
+        # make posts and events ACL aware
         add_acl_to_obj(request.user_acl, posts)
-        make_read_aware(request, posts)
 
         self._user = request.user
 

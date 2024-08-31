@@ -1,15 +1,19 @@
-{% extends "misago/threads/mark_as_read_page.html" %}
+{% extends "misago/mark_as_read/page.html" %}
 {% load i18n %}
 
+
 {% block title %}
-  {% trans "Mark as read" context "mark categories as read" %} | {% trans "Categories" context "categories page" %} | {{ settings.forum_name }}
+  {% trans "Mark as read" context "mark as read" %} | {% trans "Categories" context "categories page" %} | {{ block.super }}
 {% endblock title %}
 
+
 {% block page-class %}page-categories{% endblock page-class %}
+
 
 {% block header %}
   {% include "misago/categories/header.html" %}
 {% endblock header %}
+
 
 {% block panel-body %}
   {% blocktrans trimmed context "mark categories as read" %}

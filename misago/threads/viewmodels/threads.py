@@ -100,7 +100,9 @@ class ViewModel:
                 thread.is_read = False
                 thread.is_new = True
         else:
-            threadstracker.make_read_aware(request, threads)
+            for thread in threads:
+                thread.is_read = True
+                thread.is_new = False
 
         self.filter_threads(request, threads)
 

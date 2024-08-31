@@ -1,45 +1,9 @@
+{% extends "misago/mark_as_read/modal.html" %}
 {% load i18n %}
 
-<div
-  class="modal fade"
-  id="mark-as-read"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="mark-as-read-title"
->
-  <form
-    method="post"
-    hx-post="{{ full_path }}"
-    hx-target="#misago-htmx-root"
-    hx-swap="outerHTML show:#misago-page-scroll-target:top"
-    hx-on::after-request="misago.hideMarkAsReadModal()"
-  >
-    {% csrf_token %}
-    <input type="hidden" name="confirm" value="true" />
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="mark-as-read-title">
-            {% trans "Mark as read" context "mark threads as read"%}
-          </h4>
-        </div>
-        <div class="modal-body">
-          {% block modal-body %}
-            {% blocktrans trimmed context "mark threads as read" %}
-              Are you sure you want to mark all threads and categories as read?
-            {% endblocktrans %}
-          {% endblock modal-body %}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">
-            {% trans "Cancel" context "mark threads as read btn" %}
-          </button>
-          <button class="btn btn-primary" name="mark_as_read">
-            {% trans "Mark as read" context "mark threads as read btn" %}
-          </button>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
+
+{% block modal-body %}
+  {% blocktrans trimmed context "mark threads as read" %}
+    Are you sure you want to mark all threads and categories as read?
+  {% endblocktrans %}
+{% endblock modal-body %}
