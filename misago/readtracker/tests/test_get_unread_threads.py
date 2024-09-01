@@ -88,7 +88,7 @@ def test_get_unread_threads_excludes_unread_thread_in_read_category(
     ReadCategory.objects.create(
         user=user,
         category=default_category,
-        read_time=timezone.now(),
+        read_time=thread.last_post_on,
     )
 
     request = Mock(settings=dynamic_settings, user=user)

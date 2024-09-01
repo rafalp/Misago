@@ -80,6 +80,28 @@ def test_get_unread_categories_includes_read_category_with_new_last_post(
     assert default_category.id in unread_categories
 
 
+def test_get_unread_categories_excludes_read_category(
+    dynamic_settings, default_category, user
+):
+    user.joined_on -= timedelta(days=2)
+    user.save()
+
+    default_category.last_post_on = timezone.now()
+    default_category.save()
+
+    ReadCategory.objects.create(
+        user=user,
+        category=default_category,
+        read_time=default_category.last_post_on,
+    )
+
+    request = Mock(settings=dynamic_settings, user=user)
+    queryset = annotate_categories_read_time(user, Category.objects.all())
+    unread_categories = get_unread_categories(request, queryset)
+
+    assert default_category.id not in unread_categories
+
+
 def test_get_unread_categories_excludes_unread_category_with_last_post_older_than_user(
     dynamic_settings, default_category, user
 ):

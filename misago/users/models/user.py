@@ -616,6 +616,14 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
 
         return str(self.unread_notifications)
 
+    def clear_unread_private_threads(self):
+        if self.unread_private_threads or self.sync_unread_private_threads:
+            self.unread_private_threads = 0
+            self.sync_unread_private_threads = False
+            self.save(
+                update_fields=["unread_private_threads", "sync_unread_private_threads"]
+            )
+
 
 class UsernameChange(models.Model):
     user = models.ForeignKey(

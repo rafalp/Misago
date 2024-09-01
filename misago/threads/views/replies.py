@@ -332,7 +332,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     ):
         super().mark_category_read(user, category, force_update=force_update)
 
-        user.unread_private_threads = 0
+        user.clear_unread_private_threads()
 
 
 thread_replies = ThreadRepliesView.as_view()

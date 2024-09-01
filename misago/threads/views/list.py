@@ -52,9 +52,13 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
     check_start_thread_in_category_permission,
 )
+from ...readtracker.privatethreads import are_private_threads_read
+from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
+    annotate_categories_read_time,
     annotate_threads_read_time,
     get_unread_threads,
+    mark_category_read,
 )
 from ...readtracker.models import ReadCategory, ReadThread
 from ..enums import (
@@ -352,6 +356,15 @@ class ListView(View):
             request.user_permissions.is_global_moderator
             or thread.category_id in request.user_permissions.categories_moderator
         )
+
+    def is_category_unread(self, user: "User", category: Category) -> bool:
+        if user.is_anonymous:
+            return False
+        if not category.last_post_on:
+            return False
+        if not category.read_time:
+            return True
+        return category.last_post_on > category.read_time
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         return get_default_metatags(request)
@@ -834,7 +847,8 @@ class CategoryThreadsListView(ListView):
 
     def get_category(self, request: HttpRequest, kwargs: dict):
         try:
-            category = Category.objects.get(
+            queryset = annotate_categories_read_time(request.user, Category.objects)
+            category = queryset.get(
                 id=kwargs["id"],
                 tree_id=CategoryTree.THREADS,
                 level__gt=0,
@@ -951,6 +965,8 @@ class CategoryThreadsListView(ListView):
         else:
             unread = get_unread_threads(request, threads_list)
 
+        mark_read = True
+
         items: list[dict] = []
         for thread in threads_list:
             categories = request.categories.get_thread_categories(
@@ -958,6 +974,9 @@ class CategoryThreadsListView(ListView):
             )
 
             moderation = self.allow_thread_moderation(request, thread)
+
+            if thread.category_id == category and thread.id in unread:
+                mark_read = False
 
             items.append(
                 {
@@ -973,6 +992,13 @@ class CategoryThreadsListView(ListView):
                     "show_flags": self.show_thread_flags(moderation, thread),
                 }
             )
+
+        if (
+            mark_read
+            and self.is_category_unread(request.user, category)
+            and is_category_read(request, category, category.read_time)
+        ):
+            mark_category_read(request.user, category)
 
         return {
             "template_name": self.threads_component_template_name,
@@ -1252,8 +1278,7 @@ class PrivateThreadsListView(ListView):
         category = self.get_category(request, kwargs)
         self.read_categories(request.user, [category.id])
 
-        request.user.unread_private_threads = 0
-        request.user.save(update_fields=["unread_private_threads"])
+        request.user.clear_unread_private_threads()
 
         messages.success(
             request, pgettext("mark threads as read", "Private threads marked as read")
@@ -1265,7 +1290,7 @@ class PrivateThreadsListView(ListView):
         )
 
     def get_context_data_action(self, request: HttpRequest, kwargs: dict):
-        category = Category.objects.private_threads()
+        category = self.get_category(request, kwargs)
 
         context = {
             "template_name_htmx": self.template_name_htmx,
@@ -1280,7 +1305,10 @@ class PrivateThreadsListView(ListView):
         return context
 
     def get_category(self, request: HttpRequest, kwargs: dict):
-        return Category.objects.private_threads()
+        queryset = annotate_categories_read_time(
+            request.user, Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS)
+        )
+        return queryset.first()
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
         return get_private_threads_page_threads_hook(
@@ -1314,10 +1342,15 @@ class PrivateThreadsListView(ListView):
         else:
             unread = get_unread_threads(request, threads_list)
 
+        mark_read = True
+
         moderator = request.user_permissions.private_threads_moderator
 
         items: list[dict] = []
         for thread in threads_list:
+            if thread.category_id == category and thread.id in unread:
+                mark_read = False
+
             items.append(
                 {
                     "thread": thread,
@@ -1330,6 +1363,14 @@ class PrivateThreadsListView(ListView):
                     "show_flags": self.show_thread_flags(moderator, thread),
                 }
             )
+
+        if (
+            mark_read
+            and self.is_category_unread(request.user, category)
+            and are_private_threads_read(request, category, category.read_time)
+        ):
+            mark_category_read(request.user, category)
+            request.user.clear_unread_private_threads_number()
 
         return {
             "template_name": self.threads_component_template_name,

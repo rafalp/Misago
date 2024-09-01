@@ -103,7 +103,7 @@ def is_thread_unread(
     if thread.last_post_on < default_read_time:
         return False
 
-    if thread.category_read_time and thread.last_post_on < thread.category_read_time:
+    if thread.category_read_time and thread.last_post_on <= thread.category_read_time:
         return False
 
     if not thread.read_time:
