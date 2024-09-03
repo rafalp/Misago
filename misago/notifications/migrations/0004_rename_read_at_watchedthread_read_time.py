@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RenameField(
             model_name="watchedthread",
-            old_name="read_time",
+            old_name="read_at",
             new_name="read_time",
         ),
     ]
