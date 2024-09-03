@@ -1,3 +1,5 @@
+from math import ceil
+
 from django.core.paginator import Paginator
 
 
@@ -23,4 +25,6 @@ class PostsPaginator(Paginator):
 
 
 class ThreadRepliesPaginator(Paginator):
-    pass
+    def get_item_page(self, offset: int) -> int:
+        item_page = ceil((offset + 1) / self.per_page)
+        return min(item_page, self.num_pages)
