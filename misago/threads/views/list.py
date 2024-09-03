@@ -956,7 +956,7 @@ class CategoryThreadsListView(ListView):
         else:
             unread = get_unread_threads(request, threads_list)
 
-        mark_read = True
+        mark_read = bool(threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -1342,7 +1342,7 @@ class PrivateThreadsListView(ListView):
         else:
             unread = get_unread_threads(request, threads_list)
 
-        mark_read = True
+        mark_read = bool(threads_list)
 
         moderator = request.user_permissions.private_threads_moderator
 

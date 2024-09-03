@@ -20,7 +20,6 @@ from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
 from .postendpoints.patch_post import bulk_patch_endpoint, post_patch_endpoint
-from .postendpoints.read import post_read_endpoint
 from .postendpoints.split import posts_split_endpoint
 from .postingendpoint import PostingEndpoint
 
@@ -169,13 +168,6 @@ class ViewSet(viewsets.ViewSet):
             return delete_post(request, thread.unwrap(), post)
 
         return delete_bulk(request, thread.unwrap())
-
-    @action(detail=True, methods=["post"])
-    def read(self, request, thread_pk, pk=None):
-        view_model = self.get_thread(request, thread_pk, watch_aware=True)
-        thread = view_model.unwrap()
-        post = self.get_post(request, thread, pk).unwrap()
-        return post_read_endpoint(request, thread, view_model.watched_thread, post)
 
     @action(detail=True, methods=["get"], url_name="editor")
     def post_editor(self, request, thread_pk, pk=None):

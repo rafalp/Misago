@@ -327,8 +327,8 @@ class Command(BaseCommand):
 
         queryset = WatchedThread.objects.select_related("thread")
         for watched_thread in queryset.iterator(chunk_size=50):
-            watched_thread.read_at = watched_thread.thread.last_post_on
-            watched_thread.save(update_fields=["read_at"])
+            watched_thread.read_time = watched_thread.thread.last_post_on
+            watched_thread.save(update_fields=["read_time"])
 
         total_time = time.time() - start_time
         total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))

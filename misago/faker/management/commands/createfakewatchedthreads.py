@@ -38,7 +38,7 @@ class Command(BaseCommand):
                     category_id=thread.category_id,
                     thread=thread,
                     send_emails=random.choice((True, False)),
-                    read_at=thread.last_post_on,
+                    read_time=thread.last_post_on,
                 )
 
                 processed_count += 1
