@@ -135,7 +135,7 @@ def test_private_threads_list_read_entry_without_unread_threads_is_marked_read(
     assert new_read_category.read_time > read_category.read_time
 
 
-def _test_private_threads_list_with_unread_thread_is_not_marked_read(
+def test_private_threads_list_with_unread_thread_is_not_marked_read(
     private_threads_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)

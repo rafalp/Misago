@@ -85,6 +85,33 @@ def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_f
     )
 
 
+def test_private_thread_replies_view_updates_user_watched_thread_read_time(
+    user_client,
+    user,
+    private_threads_category,
+    user_private_thread,
+    other_user_private_thread,
+    watched_thread_factory,
+):
+    watched_thread = watched_thread_factory(user, user_private_thread, False)
+    watched_thread.read_time = watched_thread.read_time.replace(year=2010)
+    watched_thread.save()
+
+    private_threads_category.last_post_on = other_user_private_thread.last_post_on
+    private_threads_category.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+    )
+    assert_contains(response, user_private_thread.title)
+
+    watched_thread.refresh_from_db()
+    assert watched_thread.read_time == user_private_thread.last_post_on
+
+
 def test_private_thread_replies_view_marks_displayed_posts_notifications_as_read(
     user_client,
     user,

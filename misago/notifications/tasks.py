@@ -109,7 +109,7 @@ def delete_duplicate_watched_threads(thread_id: int):
         WatchedThread.objects.filter(
             thread_id=thread_id,
         )
-        .order_by("user_id", "-read_at")
+        .order_by("user_id", "-read_time")
         .distinct("user_id")
         .values("id")
     )

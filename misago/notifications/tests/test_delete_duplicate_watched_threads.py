@@ -7,20 +7,20 @@ from ..models import WatchedThread
 from ..tasks import delete_duplicate_watched_threads
 
 
-def test_delete_duplicate_watched_threads_deletes_duplicates_ordered_by_read_at_desc(
+def test_delete_duplicate_watched_threads_deletes_duplicates_ordered_by_read_time_desc(
     user, thread
 ):
     kept_watched_thread = WatchedThread.objects.create(
         user=user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
     deleted_watched_thread = WatchedThread.objects.create(
         user=user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now() - timedelta(seconds=30),
+        read_time=timezone.now() - timedelta(seconds=30),
     )
 
     delete_duplicate_watched_threads(thread.id)
@@ -39,14 +39,14 @@ def test_delete_duplicate_watched_threads_keeps_email_notifications(user, thread
         category=thread.category,
         thread=thread,
         send_emails=False,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
     deleted_watched_thread = WatchedThread.objects.create(
         user=user,
         category=thread.category,
         thread=thread,
         send_emails=True,
-        read_at=timezone.now() - timedelta(seconds=30),
+        read_time=timezone.now() - timedelta(seconds=30),
     )
 
     delete_duplicate_watched_threads(thread.id)
@@ -67,20 +67,20 @@ def test_delete_duplicate_watched_threads_skips_non_duplicated_watched_threads(
         user=user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
     deleted_watched_thread = WatchedThread.objects.create(
         user=user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now() - timedelta(seconds=30),
+        read_time=timezone.now() - timedelta(seconds=30),
     )
 
     other_kept_watched_thread = WatchedThread.objects.create(
         user=other_user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
 
     delete_duplicate_watched_threads(thread.id)
@@ -101,33 +101,33 @@ def test_delete_duplicate_watched_threads_skips_other_threads_watched_threads(
         user=user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
     deleted_watched_thread = WatchedThread.objects.create(
         user=user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now() - timedelta(seconds=30),
+        read_time=timezone.now() - timedelta(seconds=30),
     )
 
     other_kept_watched_thread = WatchedThread.objects.create(
         user=other_user,
         category=thread.category,
         thread=thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
 
     other_thread_watched_thread = WatchedThread.objects.create(
         user=other_user,
         category=other_thread.category,
         thread=other_thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
     other_thread_watched_thread_duplicate = WatchedThread.objects.create(
         user=other_user,
         category=other_thread.category,
         thread=other_thread,
-        read_at=timezone.now(),
+        read_time=timezone.now(),
     )
 
     delete_duplicate_watched_threads(thread.id)

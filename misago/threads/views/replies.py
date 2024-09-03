@@ -9,6 +9,7 @@ from django.views import View
 
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
+from ...notifications.threads import update_watched_thread_read_time
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -179,6 +180,7 @@ class RepliesView(View):
         read_time: datetime,
     ):
         mark_thread_read(request.user, thread, read_time)
+        update_watched_thread_read_time(request.user, thread, read_time)
 
         if self.is_category_read(request, thread.category, thread.category_read_time):
             self.mark_category_read(

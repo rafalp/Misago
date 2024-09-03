@@ -12,7 +12,7 @@ def test_private_thread_is_watched_with_email_notifications(user, private_thread
     assert watched_thread.category == private_thread.category
     assert watched_thread.thread == private_thread
     assert watched_thread.send_emails
-    assert watched_thread.read_at < private_thread.started_on
+    assert watched_thread.read_time < private_thread.started_on
 
     WatchedThread.objects.get(
         user=user,
@@ -31,7 +31,7 @@ def test_private_thread_is_watched_without_email_notifications(user, private_thr
     assert watched_thread.category == private_thread.category
     assert watched_thread.thread == private_thread
     assert not watched_thread.send_emails
-    assert watched_thread.read_at < private_thread.started_on
+    assert watched_thread.read_time < private_thread.started_on
 
     WatchedThread.objects.get(
         user=user,
@@ -62,7 +62,7 @@ def test_private_thread_from_followed_is_watched_with_email_notifications(
     assert watched_thread.category == private_thread.category
     assert watched_thread.thread == private_thread
     assert watched_thread.send_emails
-    assert watched_thread.read_at < private_thread.started_on
+    assert watched_thread.read_time < private_thread.started_on
 
     WatchedThread.objects.get(
         user=user,
@@ -83,7 +83,7 @@ def test_private_thread_from_followed_is_watched_without_email_notifications(
     assert watched_thread.category == private_thread.category
     assert watched_thread.thread == private_thread
     assert not watched_thread.send_emails
-    assert watched_thread.read_at < private_thread.started_on
+    assert watched_thread.read_time < private_thread.started_on
 
     WatchedThread.objects.get(
         user=user,
