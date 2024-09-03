@@ -106,6 +106,9 @@ class PostRedirectView(View):
         return self.get_post_redirect_url(request, post)
 
     def get_post_redirect_url(self, request: HttpRequest, post: Post) -> HttpResponse:
+        return self.get_post_redirect_url_action(request, post)
+
+    def get_post_redirect_url_action(self, request: HttpRequest, post: Post) -> HttpResponse:
         if post.category.tree_id == CategoryTree.THREADS:
             return thread_post_redirect(request, post.thread_id, "", post=post.id)
 
