@@ -357,15 +357,6 @@ class ListView(View):
             or thread.category_id in request.user_permissions.categories_moderator
         )
 
-    def is_category_unread(self, user: "User", category: Category) -> bool:
-        if user.is_anonymous:
-            return False
-        if not category.last_post_on:
-            return False
-        if not category.read_time:
-            return True
-        return category.last_post_on > category.read_time
-
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         return get_default_metatags(request)
 
@@ -1126,6 +1117,15 @@ class CategoryThreadsListView(ListView):
                 kwargs={"id": category.id, "slug": category.slug},
             )
 
+    def is_category_unread(self, user: "User", category: Category) -> bool:
+        if user.is_anonymous:
+            return False
+        if not category.last_post_on:
+            return False
+        if not category.read_time:
+            return True
+        return category.last_post_on > category.read_time
+
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
     ) -> list[Type[ThreadsBulkModerationAction]]:
@@ -1364,13 +1364,11 @@ class PrivateThreadsListView(ListView):
                 }
             )
 
-        if (
-            mark_read
-            and self.is_category_unread(request.user, category)
-            and are_private_threads_read(request, category, category.read_time)
+        if mark_read and are_private_threads_read(
+            request, category, category.read_time
         ):
             mark_category_read(request.user, category)
-            request.user.clear_unread_private_threads_number()
+            request.user.clear_unread_private_threads()
 
         return {
             "template_name": self.threads_component_template_name,
