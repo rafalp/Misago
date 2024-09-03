@@ -9,24 +9,6 @@ class ThreadWeight(IntEnum):
     PINNED_GLOBALLY = 2
 
 
-class ThreadsUrls(StrEnum):
-    thread = "misago:thread"
-    post = "misago:thread-post"
-    new_post = "misago:thread-new"
-    last_post = "misago:thread-last"
-    unapproved_post = "misago:thread-unapproved"
-    best_answer = "misago:thread-best-answer"
-
-
-class PrivateThreadsUrls(StrEnum):
-    thread = "misago:private-thread"
-    post = "misago:private-thread-post"
-    new_post = "misago:private-thread-new"
-    last_post = "misago:private-thread-last"
-    unapproved_post = "misago:private-thread-unapproved"
-    best_answer = "misago:private-thread-best-answer"
-
-
 class ThreadsListsPolling(IntEnum):
     DISABLED = 0
     ENABLED_FOR_USERS = 1

@@ -62,9 +62,7 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.models import ReadCategory, ReadThread
 from ..enums import (
-    PrivateThreadsUrls,
     ThreadsListsPolling,
-    ThreadsUrls,
     ThreadWeight,
 )
 from ..filters import (
@@ -194,6 +192,18 @@ class ListView(View):
             raise Http404()
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
+
+    def get_thread_urls(self, thread: Thread) -> dict[str, str]:
+        kwargs = {"id": thread.id, "slug": thread.slug}
+
+        return {
+            "absolute_url": reverse("misago:thread", kwargs=kwargs),
+            "last_post_url": reverse("misago:thread-last-post", kwargs=kwargs),
+            "unapproved_post_url": reverse(
+                "misago:thread-unapproved-post", kwargs=kwargs
+            ),
+            "unread_post_url": reverse("misago:thread-unread-post", kwargs=kwargs),
+        }
 
     def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         current_url = request.get_full_path_info()
@@ -442,7 +452,6 @@ class ThreadsListView(ListView):
             "is_index": kwargs.get("is_index", False),
             "subcategories": subcategories,
             "threads": threads,
-            "threads_urls": ThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
             "start_thread_modal": True,
             "start_thread_url": self.get_start_thread_url(request),
@@ -526,20 +535,21 @@ class ThreadsListView(ListView):
             categories = request.categories.get_thread_categories(thread.category_id)
             moderation = self.allow_thread_moderation(request, thread)
 
-            items.append(
-                {
-                    "thread": thread,
-                    "unread": thread.id in unread,
-                    "starter": users.get(thread.starter_id),
-                    "last_poster": users.get(thread.last_poster_id),
-                    "pages": self.get_thread_pages_count(request, thread),
-                    "categories": categories,
-                    "moderation": moderation,
-                    "animate": animate.get(thread.id, False),
-                    "selected": thread.id in selected,
-                    "show_flags": self.show_thread_flags(moderation, thread),
-                }
-            )
+            thread_data = {
+                "thread": thread,
+                "unread": thread.id in unread,
+                "starter": users.get(thread.starter_id),
+                "last_poster": users.get(thread.last_poster_id),
+                "pages": self.get_thread_pages_count(request, thread),
+                "categories": categories,
+                "moderation": moderation,
+                "animate": animate.get(thread.id, False),
+                "selected": thread.id in selected,
+                "show_flags": self.show_thread_flags(moderation, thread),
+            }
+
+            thread_data.update(self.get_thread_urls(thread))
+            items.append(thread_data)
 
         return {
             "template_name": self.threads_component_template_name,
@@ -811,7 +821,6 @@ class CategoryThreadsListView(ListView):
             "category": category,
             "subcategories": self.get_subcategories(request, category),
             "threads": threads,
-            "threads_urls": ThreadsUrls.__members__,
             "breadcrumbs": path,
             "pagination_url": self.get_pagination_url(category, kwargs),
             "start_thread_url": self.get_start_thread_url(request, category),
@@ -969,20 +978,21 @@ class CategoryThreadsListView(ListView):
             if thread.category_id == category and thread.id in unread:
                 mark_read = False
 
-            items.append(
-                {
-                    "thread": thread,
-                    "unread": thread.id in unread,
-                    "starter": users.get(thread.starter_id),
-                    "last_poster": users.get(thread.last_poster_id),
-                    "pages": self.get_thread_pages_count(request, thread),
-                    "categories": categories,
-                    "moderation": moderation,
-                    "animate": animate.get(thread.id, False),
-                    "selected": thread.id in selected,
-                    "show_flags": self.show_thread_flags(moderation, thread),
-                }
-            )
+            thread_data = {
+                "thread": thread,
+                "unread": thread.id in unread,
+                "starter": users.get(thread.starter_id),
+                "last_poster": users.get(thread.last_poster_id),
+                "pages": self.get_thread_pages_count(request, thread),
+                "categories": categories,
+                "moderation": moderation,
+                "animate": animate.get(thread.id, False),
+                "selected": thread.id in selected,
+                "show_flags": self.show_thread_flags(moderation, thread),
+            }
+
+            thread_data.update(self.get_thread_urls(thread))
+            items.append(thread_data)
 
         if (
             mark_read
@@ -1295,7 +1305,6 @@ class PrivateThreadsListView(ListView):
         context = {
             "template_name_htmx": self.template_name_htmx,
             "threads": self.get_threads(request, category, kwargs),
-            "threads_urls": PrivateThreadsUrls.__members__,
             "pagination_url": self.get_pagination_url(kwargs),
             "start_thread_url": self.get_start_thread_url(request),
         }
@@ -1351,18 +1360,19 @@ class PrivateThreadsListView(ListView):
             if thread.category_id == category and thread.id in unread:
                 mark_read = False
 
-            items.append(
-                {
-                    "thread": thread,
-                    "unread": thread.id in unread,
-                    "starter": users.get(thread.starter_id),
-                    "last_poster": users.get(thread.last_poster_id),
-                    "pages": self.get_thread_pages_count(request, thread),
-                    "categories": None,
-                    "animate": animate.get(thread.id, False),
-                    "show_flags": self.show_thread_flags(moderator, thread),
-                }
-            )
+            thread_data = {
+                "thread": thread,
+                "unread": thread.id in unread,
+                "starter": users.get(thread.starter_id),
+                "last_poster": users.get(thread.last_poster_id),
+                "pages": self.get_thread_pages_count(request, thread),
+                "categories": None,
+                "animate": animate.get(thread.id, False),
+                "show_flags": self.show_thread_flags(moderator, thread),
+            }
+
+            thread_data.update(self.get_thread_urls(thread))
+            items.append(thread_data)
 
         if mark_read and are_private_threads_read(
             request, category, category.read_time
@@ -1433,6 +1443,20 @@ class PrivateThreadsListView(ListView):
             request.settings.threads_per_page,
             order_by="-last_post_id",
         )
+
+    def get_thread_urls(self, thread: Thread) -> dict[str, str]:
+        kwargs = {"id": thread.id, "slug": thread.slug}
+
+        return {
+            "absolute_url": reverse("misago:private-thread", kwargs=kwargs),
+            "last_post_url": reverse("misago:private-thread-last-post", kwargs=kwargs),
+            "unapproved_post_url": reverse(
+                "misago:private-thread-unapproved-post", kwargs=kwargs
+            ),
+            "unread_post_url": reverse(
+                "misago:private-thread-unread-post", kwargs=kwargs
+            ),
+        }
 
     def get_pagination_url(self, kwargs: dict) -> str:
         if kwargs.get("filter"):

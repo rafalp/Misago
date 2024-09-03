@@ -14,6 +14,14 @@ from ..views.goto import (
     PrivateThreadGotoNewView,
 )
 from ..views.list import category_threads, private_threads, threads
+from ..views.redirect import (
+    PrivateThreadLastPostRedirectView,
+    PrivateThreadUnapprovedPostRedirectView,
+    PrivateThreadUnreadPostRedirectView,
+    ThreadLastPostRedirectView,
+    ThreadUnapprovedPostRedirectView,
+    ThreadUnreadPostRedirectView,
+)
 from ..views.replies import private_thread_replies, thread_replies
 from ..views.subscribed import redirect_subscribed_to_watched
 
@@ -69,6 +77,36 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/<int:page>/",
         private_thread_replies,
         name="private-thread",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/last/",
+        ThreadLastPostRedirectView.as_view(),
+        name="thread-last-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unread/",
+        ThreadUnreadPostRedirectView.as_view(),
+        name="thread-unread-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unapproved/",
+        ThreadUnapprovedPostRedirectView.as_view(),
+        name="thread-unapproved-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/last/",
+        PrivateThreadLastPostRedirectView.as_view(),
+        name="private-thread-last-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unread/",
+        PrivateThreadUnreadPostRedirectView.as_view(),
+        name="private-thread-unread-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unapproved/",
+        PrivateThreadUnapprovedPostRedirectView.as_view(),
+        name="private-thread-unapproved-post",
     ),
 ]
 
