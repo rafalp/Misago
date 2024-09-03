@@ -1,8 +1,9 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import QuerySet
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 
+from ...categories.enums import CategoryTree
 from ...readtracker.readtime import get_default_read_time
 from ..models import Post, Thread
 from .generic import PrivateThreadView, ThreadView
@@ -96,3 +97,40 @@ class PrivateThreadUnapprovedPostRedirectView(RedirectView, PrivateThreadView):
             return None
 
         return queryset.filter(is_unapproved=True).first()
+
+
+class PostRedirectView(View):
+    def get(self, request: HttpRequest, id: int) -> HttpResponse:
+        queryset = Post.objects.select_related("category")
+        post = get_object_or_404(queryset, id=id)
+        return self.get_post_redirect_url(request, post)
+
+    def get_post_redirect_url(self, request: HttpRequest, post: Post) -> HttpResponse:
+        if post.category.tree_id == CategoryTree.THREADS:
+            return thread_post_redirect(request, post.thread_id, "", post=post.id)
+
+        if post.category.tree_id == CategoryTree.PRIVATE_THREADS:
+            return private_thread_post_redirect(
+                request, post.thread_id, "", post=post.id
+            )
+
+        raise Http404()
+
+
+class GetPostRedirectView(RedirectView):
+    def get_post(
+        self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
+    ) -> Post | None:
+        return get_object_or_404(queryset, id=kwargs["post"])
+
+
+class ThreadPostRedirectView(GetPostRedirectView, ThreadView):
+    pass
+
+
+class PrivateThreadPostRedirectView(GetPostRedirectView, PrivateThreadView):
+    pass
+
+
+thread_post_redirect = ThreadPostRedirectView.as_view()
+private_thread_post_redirect = PrivateThreadPostRedirectView.as_view()

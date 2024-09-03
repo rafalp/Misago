@@ -4,6 +4,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 from django.db.models import Q
+from django.urls import reverse
 from django.utils import timezone
 
 from ...conf import settings
@@ -182,6 +183,9 @@ class Post(PluginDataModel):
     def thread_type(self):
         return self.category.thread_type
 
+    def get_absolute_url(self):
+        return reverse("misago:post", kwargs={"id": self.id})
+
     def get_api_url(self):
         return self.thread_type.get_post_api_url(self)
 
@@ -193,9 +197,6 @@ class Post(PluginDataModel):
 
     def get_edits_api_url(self):
         return self.thread_type.get_post_edits_api_url(self)
-
-    def get_absolute_url(self):
-        return self.thread_type.get_post_absolute_url(self)
 
     def set_search_document(self, thread_title=None):
         if thread_title:

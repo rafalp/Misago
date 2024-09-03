@@ -15,6 +15,7 @@ from ..views.goto import (
 )
 from ..views.list import category_threads, private_threads, threads
 from ..views.redirect import (
+    PostRedirectView,
     PrivateThreadLastPostRedirectView,
     PrivateThreadUnapprovedPostRedirectView,
     PrivateThreadUnreadPostRedirectView,
@@ -107,6 +108,11 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/unapproved/",
         PrivateThreadUnapprovedPostRedirectView.as_view(),
         name="private-thread-unapproved-post",
+    ),
+    path(
+        "post/<int:id>/",
+        PostRedirectView.as_view(),
+        name="post",
     ),
 ]
 

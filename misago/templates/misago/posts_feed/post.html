@@ -140,7 +140,7 @@
 
         <a
           class="posts-feed-item-post-bit-top-timestamp"
-          href="#todo"
+          href="{{ post.get_absolute_url }}"
           title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ post.posted_on.isoformat }}"
         >
@@ -149,7 +149,7 @@
 
         <a
           class="posts-feed-item-post-bit-top-timestamp-compact"
-          href="#todo"
+          href="{{ post.get_absolute_url }}"
           title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ post.posted_on.isoformat }}"
           misago-timestamp-format="short"
@@ -159,7 +159,7 @@
 
         <a
           class="posts-feed-item-post-bit-top-post-counter"
-          href="#todo"
+          href="{{ post.get_absolute_url }}"
         >
           #{{ paginator.start_index|add:forloop.counter0 }}
         </a>
