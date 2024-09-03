@@ -1,15 +1,16 @@
 import re
 from math import ceil
-from typing import Any, Type
-from urllib.parse import urlencode
+from typing import Any, TYPE_CHECKING, Type
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import transaction
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
@@ -51,6 +52,15 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
     check_start_thread_in_category_permission,
 )
+from ...readtracker.privatethreads import are_private_threads_read
+from ...readtracker.threads import is_category_read
+from ...readtracker.tracker import (
+    annotate_categories_read_time,
+    annotate_threads_read_time,
+    get_unread_threads,
+    mark_category_read,
+)
+from ...readtracker.models import ReadCategory, ReadThread
 from ..enums import (
     PrivateThreadsUrls,
     ThreadsListsPolling,
@@ -62,6 +72,7 @@ from ..filters import (
     ThreadsFilter,
     ThreadsFilterChoice,
     UnapprovedThreadsFilter,
+    UnreadThreadsFilter,
 )
 from ..hooks import (
     get_category_threads_page_context_data_hook,
@@ -83,7 +94,10 @@ from ..hooks import (
 )
 from ..models import Thread
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from ...users.models import User
+else:
+    User = get_user_model()
 
 POLL_NEW_THREADS = "poll_new"
 ANIMATE_NEW_THREADS = "animate_new"
@@ -181,9 +195,39 @@ class ListView(View):
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
-    def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+    def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+        current_url = request.get_full_path_info()
+        if request.user.is_authenticated:
+            if response := self.mark_as_read(request, kwargs):
+                return response
+
+        if request.is_htmx:
+            return self.get(request, **kwargs)
+
+        return redirect(current_url)
+
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+        raise NotImplementedError()
+
+    @transaction.atomic
+    def read_categories(self, user: "User", categories_ids: list[str]):
+        if not categories_ids:
+            return
+
+        read_time = timezone.now()
+
+        # Clear read tracker for categories
+        ReadThread.objects.filter(user=user, category_id__in=categories_ids).delete()
+        ReadCategory.objects.filter(user=user, category_id__in=categories_ids).delete()
+
+        ReadCategory.objects.bulk_create(
+            ReadCategory(user=user, read_time=read_time, category_id=category_id)
+            for category_id in categories_ids
+        )
+
+    def post_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
-            current_url = self.get_current_url(request)
+            current_url = request.get_full_path_info()
             result = self.moderate_threads(request, kwargs)
 
             if isinstance(result, ModerationTemplateResult):
@@ -217,7 +261,7 @@ class ListView(View):
     def set_moderation_response_headers(
         self, request: HttpRequest, response: HttpResponse
     ):
-        response.headers["HX-Trigger"] = "misago:afterModeration"
+        response.headers["hx-trigger"] = "misago:afterModeration"
         if request.POST.get("success-hx-target"):
             response.headers["hx-retarget"] = request.POST["success-hx-target"]
         if request.POST.get("success-hx-swap"):
@@ -322,16 +366,11 @@ class ListView(View):
             link += "?cursor" + request.GET["cursor"]
         return link
 
-    def get_current_url(self, request: HttpRequest) -> str:
-        current_url = request.path_info
-        if request.GET:
-            current_url += "?" + urlencode(request.GET)
-        return current_url
-
 
 class ThreadsListView(ListView):
     template_name = "misago/threads/index.html"
     template_name_htmx = "misago/threads/partial.html"
+    mark_as_read_template_name = "misago/threads/mark_as_read_page.html"
     moderation_page_template_name = "misago/threads/moderation_page.html"
     moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
@@ -352,10 +391,23 @@ class ThreadsListView(ListView):
         return super().dispatch(request, *args, is_index=is_index, **kwargs)
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "mark_as_read" in request.POST:
+            return self.post_mark_as_read(request, kwargs)
+
         if "moderation" in request.POST:
-            return self.dispatch_moderation(request, kwargs)
+            return self.post_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
+
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+        if not request.POST.get("confirm"):
+            return render(request, self.mark_as_read_template_name)
+
+        categories_ids = list(request.categories.categories)
+        self.read_categories(request.user, categories_ids)
+        messages.success(
+            request, pgettext("mark threads as read", "Threads marked as read")
+        )
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> ModerationResult | None:
         threads = self.get_threads(request, kwargs)
@@ -371,7 +423,6 @@ class ThreadsListView(ListView):
                     "moderation_action": action.get_context_data(),
                     "threads": threads,
                     "selection": selection,
-                    "form_action": self.get_current_url(request),
                 }
             )
 
@@ -433,13 +484,16 @@ class ThreadsListView(ListView):
         return get_threads_page_threads_hook(self.get_threads_action, request, kwargs)
 
     def get_threads_action(self, request: HttpRequest, kwargs: dict):
-        permissions_filter = self.get_threads_permissions_queryset_filter(request)
-        queryset = self.get_threads_queryset(request)
-
         filters_base_url = self.get_filters_base_url()
         active_filter, filters = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
+
+        permissions_filter = self.get_threads_permissions_queryset_filter(request)
+        queryset = self.get_threads_queryset(request)
+
+        if not active_filter or active_filter.url != "unread":
+            queryset = annotate_threads_read_time(request.user, queryset)
 
         if active_filter:
             threads_queryset = active_filter.filter(queryset)
@@ -458,11 +512,14 @@ class ThreadsListView(ListView):
 
         threads_list += paginator.items
 
-        new_threads = {}
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
-
         selected = self.get_selected_threads_ids(request)
+
+        if active_filter and active_filter.url == "unread":
+            unread = set(thread.id for thread in threads_list)
+        else:
+            unread = get_unread_threads(request, threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -472,7 +529,7 @@ class ThreadsListView(ListView):
             items.append(
                 {
                     "thread": thread,
-                    "is_new": new_threads.get(thread.id),
+                    "unread": thread.id in unread,
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -519,7 +576,7 @@ class ThreadsListView(ListView):
         )
 
         for obj in filters:
-            choice = obj.as_choice(base_url, obj.slug == filter)
+            choice = obj.as_choice(base_url, obj.url == filter)
             if choice.active:
                 active = choice
             choices.append(choice)
@@ -533,7 +590,10 @@ class ThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        filters = [MyThreadsFilter(request)]
+        filters = [
+            UnreadThreadsFilter(request),
+            MyThreadsFilter(request),
+        ]
 
         if (
             request.user_permissions.is_global_moderator
@@ -666,14 +726,47 @@ class ThreadsListView(ListView):
 class CategoryThreadsListView(ListView):
     template_name = "misago/category/index.html"
     template_name_htmx = "misago/category/partial.html"
+    mark_as_read_template_name = "misago/category/mark_as_read_page.html"
     moderation_page_template_name = "misago/category/moderation_page.html"
     moderation_modal_template_name = "misago/threads/moderation_modal.html"
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "mark_as_read" in request.POST:
+            return self.post_mark_as_read(request, kwargs)
+
         if "moderation" in request.POST:
-            return self.dispatch_moderation(request, kwargs)
+            return self.post_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
+
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+        category = self.get_category(request, kwargs)
+
+        if not request.POST.get("confirm"):
+            return render(
+                request,
+                self.mark_as_read_template_name,
+                {
+                    "category": category,
+                    "breadcrumbs": request.categories.get_category_path(
+                        category.id, include_self=False
+                    ),
+                },
+            )
+
+        if category.list_children_threads:
+            categories_ids = [
+                c["id"]
+                for c in request.categories.get_category_descendants(category.id)
+            ]
+        else:
+            categories_ids = [category.id]
+
+        self.read_categories(request.user, categories_ids)
+
+        messages.success(
+            request, pgettext("mark threads as read", "Category marked as read")
+        )
 
     def moderate_threads(self, request: HttpRequest, kwargs) -> ModerationResult | None:
         category = self.get_category(request, kwargs)
@@ -693,7 +786,6 @@ class CategoryThreadsListView(ListView):
                     "breadcrumbs": request.categories.get_category_path(
                         category.id, include_self=False
                     ),
-                    "form_action": self.get_current_url(request),
                 }
             )
 
@@ -746,7 +838,8 @@ class CategoryThreadsListView(ListView):
 
     def get_category(self, request: HttpRequest, kwargs: dict):
         try:
-            category = Category.objects.get(
+            queryset = annotate_categories_read_time(request.user, Category.objects)
+            category = queryset.get(
                 id=kwargs["id"],
                 tree_id=CategoryTree.THREADS,
                 level__gt=0,
@@ -824,15 +917,18 @@ class CategoryThreadsListView(ListView):
     def get_threads_action(
         self, request: HttpRequest, category: Category, kwargs: dict
     ):
+        filters_base_url = self.get_filters_base_url(category)
+        active_filter, filters = self.get_threads_filters(
+            request, category, filters_base_url, kwargs.get("filter")
+        )
+
         permissions_filter = self.get_threads_permissions_queryset_filter(
             request, category
         )
         queryset = self.get_threads_queryset(request)
 
-        filters_base_url = self.get_filters_base_url(category)
-        active_filter, filters = self.get_threads_filters(
-            request, category, filters_base_url, kwargs.get("filter")
-        )
+        if not active_filter or active_filter.url != "unread":
+            queryset = annotate_threads_read_time(request.user, queryset)
 
         if active_filter:
             threads_queryset = active_filter.filter(queryset)
@@ -851,11 +947,16 @@ class CategoryThreadsListView(ListView):
 
         threads_list += paginator.items
 
-        new_threads = {}
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
-
         selected = self.get_selected_threads_ids(request)
+
+        if active_filter and active_filter.url == "unread":
+            unread = set(thread.id for thread in threads_list)
+        else:
+            unread = get_unread_threads(request, threads_list)
+
+        mark_read = bool(threads_list)
 
         items: list[dict] = []
         for thread in threads_list:
@@ -865,10 +966,13 @@ class CategoryThreadsListView(ListView):
 
             moderation = self.allow_thread_moderation(request, thread)
 
+            if thread.category_id == category and thread.id in unread:
+                mark_read = False
+
             items.append(
                 {
                     "thread": thread,
-                    "is_new": new_threads.get(thread.id),
+                    "unread": thread.id in unread,
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -879,6 +983,13 @@ class CategoryThreadsListView(ListView):
                     "show_flags": self.show_thread_flags(moderation, thread),
                 }
             )
+
+        if (
+            mark_read
+            and self.is_category_unread(request.user, category)
+            and is_category_read(request, category, category.read_time)
+        ):
+            mark_category_read(request.user, category)
 
         return {
             "template_name": self.threads_component_template_name,
@@ -913,7 +1024,7 @@ class CategoryThreadsListView(ListView):
         )
 
         for obj in filters:
-            choice = obj.as_choice(base_url, obj.slug == filter)
+            choice = obj.as_choice(base_url, obj.url == filter)
             if choice.active:
                 active = choice
             choices.append(choice)
@@ -929,7 +1040,10 @@ class CategoryThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        filters = [MyThreadsFilter(request)]
+        filters = [
+            UnreadThreadsFilter(request),
+            MyThreadsFilter(request),
+        ]
 
         if (
             request.user_permissions.is_global_moderator
@@ -1002,6 +1116,15 @@ class CategoryThreadsListView(ListView):
                 "misago:start-thread",
                 kwargs={"id": category.id, "slug": category.slug},
             )
+
+    def is_category_unread(self, user: "User", category: Category) -> bool:
+        if user.is_anonymous:
+            return False
+        if not category.last_post_on:
+            return False
+        if not category.read_time:
+            return True
+        return category.last_post_on > category.read_time
 
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
@@ -1131,11 +1254,35 @@ class CategoryThreadsListView(ListView):
 class PrivateThreadsListView(ListView):
     template_name = "misago/private_threads/index.html"
     template_name_htmx = "misago/private_threads/partial.html"
+    mark_as_read_template_name = "misago/private_threads/mark_as_read_page.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         check_private_threads_permission(request.user_permissions)
 
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        if "mark_as_read" in request.POST:
+            return self.post_mark_as_read(request, kwargs)
+
+        return self.get(request, **kwargs)
+
+    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+        if not request.POST.get("confirm"):
+            return render(
+                request,
+                self.mark_as_read_template_name,
+                {},
+            )
+
+        category = self.get_category(request, kwargs)
+        self.read_categories(request.user, [category.id])
+
+        request.user.clear_unread_private_threads()
+
+        messages.success(
+            request, pgettext("mark threads as read", "Private threads marked as read")
+        )
 
     def get_context_data(self, request: HttpRequest, kwargs: dict):
         return get_private_threads_page_context_data_hook(
@@ -1143,7 +1290,7 @@ class PrivateThreadsListView(ListView):
         )
 
     def get_context_data_action(self, request: HttpRequest, kwargs: dict):
-        category = Category.objects.private_threads()
+        category = self.get_category(request, kwargs)
 
         context = {
             "template_name_htmx": self.template_name_htmx,
@@ -1158,7 +1305,10 @@ class PrivateThreadsListView(ListView):
         return context
 
     def get_category(self, request: HttpRequest, kwargs: dict):
-        return Category.objects.private_threads()
+        queryset = annotate_categories_read_time(
+            request.user, Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS)
+        )
+        return queryset.first()
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
         return get_private_threads_page_threads_hook(
@@ -1168,12 +1318,15 @@ class PrivateThreadsListView(ListView):
     def get_threads_action(
         self, request: HttpRequest, category: Category, kwargs: dict
     ):
-        queryset = self.get_threads_queryset(request, category)
-
         filters_base_url = self.get_filters_base_url()
         active_filter, filters = self.get_threads_filters(
             request, filters_base_url, kwargs.get("filter")
         )
+
+        queryset = self.get_threads_queryset(request, category)
+
+        if not active_filter or active_filter.url != "unread":
+            queryset = annotate_threads_read_time(request.user, queryset)
 
         if active_filter:
             queryset = active_filter.filter(queryset)
@@ -1181,18 +1334,27 @@ class PrivateThreadsListView(ListView):
         paginator = self.get_threads_paginator(request, queryset)
         threads_list: list[Thread] = paginator.items
 
-        new_threads = {}
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
+
+        if active_filter and active_filter.url == "unread":
+            unread = set(thread.id for thread in threads_list)
+        else:
+            unread = get_unread_threads(request, threads_list)
+
+        mark_read = bool(threads_list)
 
         moderator = request.user_permissions.private_threads_moderator
 
         items: list[dict] = []
         for thread in threads_list:
+            if thread.category_id == category and thread.id in unread:
+                mark_read = False
+
             items.append(
                 {
                     "thread": thread,
-                    "is_new": new_threads.get(thread.id),
+                    "unread": thread.id in unread,
                     "starter": users.get(thread.starter_id),
                     "last_poster": users.get(thread.last_poster_id),
                     "pages": self.get_thread_pages_count(request, thread),
@@ -1201,6 +1363,12 @@ class PrivateThreadsListView(ListView):
                     "show_flags": self.show_thread_flags(moderator, thread),
                 }
             )
+
+        if mark_read and are_private_threads_read(
+            request, category, category.read_time
+        ):
+            mark_category_read(request.user, category)
+            request.user.clear_unread_private_threads()
 
         return {
             "template_name": self.threads_component_template_name,
@@ -1227,7 +1395,7 @@ class PrivateThreadsListView(ListView):
         )
 
         for obj in filters:
-            choice = obj.as_choice(base_url, obj.slug == filter)
+            choice = obj.as_choice(base_url, obj.url == filter)
             if choice.active:
                 active = choice
             choices.append(choice)
@@ -1241,7 +1409,10 @@ class PrivateThreadsListView(ListView):
         if request.user.is_anonymous:
             return []
 
-        return [MyThreadsFilter(request)]
+        return [
+            UnreadThreadsFilter(request),
+            MyThreadsFilter(request),
+        ]
 
     def get_threads_queryset(self, request: HttpRequest, category: Category):
         return get_private_threads_page_queryset_hook(

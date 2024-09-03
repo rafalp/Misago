@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import pgettext
 from django.views import View
 
-from ...readtracker.cutoffdate import get_cutoff_date
 from ..permissions import exclude_invisible_posts
 from ..viewmodels import ForumThread, PrivateThread
 
@@ -89,7 +88,7 @@ class ThreadGotoLastView(GotoView):
 class GetFirstUnreadPostMixin:
     def get_first_unread_post(self, user, posts_queryset):
         if user.is_authenticated:
-            cutoff_date = get_cutoff_date(self.request.settings, user)
+            cutoff_date = get_min_read_time(self.request.settings, user)
             expired_posts = Q(posted_on__lt=cutoff_date)
             read_posts = Q(id__in=user.postread_set.values("post"))
 

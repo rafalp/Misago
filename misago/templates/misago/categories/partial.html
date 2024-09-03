@@ -1,0 +1,14 @@
+{% load misago_component %}
+
+{% if is_request_htmx %}
+  {% include "misago/snackbars.html" %}
+{% endif %}
+
+<div id="misago-htmx-root">
+  {% if categories_list.categories %}
+  {% includecomponent categories_list %}
+  {% include "misago/categories/toolbar.html" %}
+  {% else %}
+  {% include "misago/categories/blankslate.html" %}
+  {% endif %}
+</div>

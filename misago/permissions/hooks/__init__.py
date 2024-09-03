@@ -30,6 +30,7 @@ from .get_category_threads_category_query import (
 from .get_category_threads_pinned_category_query import (
     get_category_threads_pinned_category_query_hook,
 )
+from .get_category_threads_query import get_category_threads_query_hook
 from .get_threads_category_query import get_threads_category_query_hook
 from .get_threads_pinned_category_query import get_threads_pinned_category_query_hook
 from .get_threads_query_orm_filter import get_threads_query_orm_filter_hook
@@ -54,6 +55,7 @@ __all__ = [
     "get_admin_category_permissions_hook",
     "get_category_threads_category_query_hook",
     "get_category_threads_pinned_category_query_hook",
+    "get_category_threads_query_hook",
     "get_threads_category_query_hook",
     "get_threads_pinned_category_query_hook",
     "get_threads_query_orm_filter_hook",

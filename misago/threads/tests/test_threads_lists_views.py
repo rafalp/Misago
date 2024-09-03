@@ -607,3 +607,43 @@ def test_category_threads_list_renders_for_nested_vanilla_category_without_child
 
     response = client.get(child_category.get_absolute_url())
     assert response.status_code == 200
+
+
+@override_dynamic_settings(index_view="categories")
+def test_site_threads_list_renders_unread_thread(user, user_client, default_category):
+    user.joined_on = user.joined_on.replace(year=2012)
+    user.save()
+
+    unread_thread = post_thread(default_category, title="Unread Thread")
+
+    response = user_client.get(reverse("misago:threads"))
+    assert_contains(response, "Has unread posts")
+    assert_contains(response, unread_thread.title)
+
+
+def test_category_threads_list_renders_unread_thread(
+    user, user_client, default_category
+):
+    user.joined_on = user.joined_on.replace(year=2012)
+    user.save()
+
+    unread_thread = post_thread(default_category, title="Unread Thread")
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, "Has unread posts")
+    assert_contains(response, unread_thread.title)
+
+
+def test_private_threads_list_renders_unread_thread(
+    user, user_client, private_threads_category
+):
+    user.joined_on = user.joined_on.replace(year=2012)
+    user.save()
+
+    unread_thread = post_thread(private_threads_category, title="Unread Thread")
+
+    ThreadParticipant.objects.create(thread=unread_thread, user=user)
+
+    response = user_client.get(reverse("misago:private-threads"))
+    assert_contains(response, "Has unread posts")
+    assert_contains(response, unread_thread.title)

@@ -8,7 +8,6 @@ from ...core.shortcuts import validate_slug
 from ...core.viewmodel import ViewModel as BaseViewModel
 from ...notifications.models import WatchedThread
 from ...notifications.threads import get_watched_thread
-from ...readtracker.threadstracker import make_read_aware
 from ..models import Poll, Thread
 from ..participants import make_participants_aware
 from ..permissions import (
@@ -51,9 +50,6 @@ class ViewModel(BaseViewModel):
 
         add_acl_to_obj(request.user_acl, model.category)
         add_acl_to_obj(request.user_acl, model)
-
-        if read_aware:
-            make_read_aware(request, model)
 
         if watch_aware and request.user.is_authenticated:
             self._watched_thread = get_watched_thread(request.user, model)

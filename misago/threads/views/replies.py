@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from django.contrib.auth import get_user_model
@@ -6,7 +7,16 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
+from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
+from ...notifications.threads import update_watched_thread_read_time
+from ...readtracker.tracker import (
+    get_unread_posts,
+    mark_category_read,
+    mark_thread_read,
+)
+from ...readtracker.privatethreads import are_private_threads_read
+from ...readtracker.threads import is_category_read
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
     get_private_thread_replies_page_posts_queryset_hook,
@@ -18,7 +28,7 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
     set_thread_posts_feed_item_users_hook,
 )
-from ..models import Thread
+from ..models import Post, Thread
 from .generic import PrivateThreadView, ThreadView
 
 if TYPE_CHECKING:
@@ -35,6 +45,7 @@ class PageOutOfRangeError(Exception):
 
 
 class RepliesView(View):
+    thread_annotate_read_time: bool = True
     template_name: str
     template_partial_name: str
     feed_template_name: str = "misago/posts_feed/index.html"
@@ -92,9 +103,12 @@ class RepliesView(View):
             page = paginator.num_pages
 
         page_obj = paginator.get_page(page)
+        posts = list(page_obj.object_list)
+
+        unread = get_unread_posts(request, thread, posts)
 
         items: list[dict] = []
-        for post in page_obj.object_list:
+        for post in posts:
             items.append(
                 {
                     "template_name": self.feed_post_template_name,
@@ -102,10 +116,17 @@ class RepliesView(View):
                     "post": post,
                     "poster": None,
                     "poster_name": post.poster_name,
+                    "unread": post.id in unread,
                 }
             )
 
         self.set_posts_feed_users(request, items)
+
+        if unread:
+            self.update_thread_read_time(request, thread, posts[-1].posted_on)
+
+        if request.user.is_authenticated and request.user.unread_notifications:
+            self.read_user_notifications(request.user, posts)
 
         return {
             "template_name": self.feed_template_name,
@@ -152,6 +173,53 @@ class RepliesView(View):
         if item["type"] == "post":
             item["poster"] = users.get(item["post"].poster_id)
 
+    def update_thread_read_time(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        read_time: datetime,
+    ):
+        mark_thread_read(request.user, thread, read_time)
+        update_watched_thread_read_time(request.user, thread, read_time)
+
+        if self.is_category_read(request, thread.category, thread.category_read_time):
+            self.mark_category_read(
+                request.user,
+                thread.category,
+                force_update=bool(thread.category_read_time),
+            )
+
+    def is_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        category_read_time: datetime | None,
+    ) -> bool:
+        raise NotImplementedError()
+
+    def mark_category_read(
+        self,
+        user: "User",
+        category: Category,
+        *,
+        force_update: bool,
+    ):
+        mark_category_read(user, category, force_update=force_update)
+
+    def read_user_notifications(self, user: "User", posts: list[Post]):
+        updated_notifications = user.notification_set.filter(
+            post__in=posts, is_read=False
+        ).update(is_read=True)
+
+        if updated_notifications:
+            new_unread_notifications = max(
+                [0, user.unread_notifications - updated_notifications]
+            )
+
+            if user.unread_notifications != new_unread_notifications:
+                user.unread_notifications = new_unread_notifications
+                user.save(update_fields=["unread_notifications"])
+
 
 class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
@@ -189,6 +257,14 @@ class ThreadRepliesView(RepliesView, ThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
+    def is_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        category_read_time: datetime | None,
+    ) -> bool:
+        return is_category_read(request, category, category_read_time)
+
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     template_name: str = "misago/private_thread/index.html"
@@ -225,6 +301,40 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         return get_private_thread_replies_page_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
+
+    def update_thread_read_time(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        read_time: datetime,
+    ):
+        unread_private_threads = request.user.unread_private_threads
+        if read_time >= thread.last_post_on and request.user.unread_private_threads:
+            request.user.unread_private_threads -= 1
+
+        super().update_thread_read_time(request, thread, read_time)
+
+        if request.user.unread_private_threads != unread_private_threads:
+            request.user.save(update_fields=["unread_private_threads"])
+
+    def is_category_read(
+        self,
+        request: HttpRequest,
+        category: Category,
+        category_read_time: datetime | None,
+    ) -> bool:
+        return are_private_threads_read(request, category, category_read_time)
+
+    def mark_category_read(
+        self,
+        user: "User",
+        category: Category,
+        *,
+        force_update: bool,
+    ):
+        super().mark_category_read(user, category, force_update=force_update)
+
+        user.clear_unread_private_threads()
 
 
 thread_replies = ThreadRepliesView.as_view()

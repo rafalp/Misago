@@ -63,6 +63,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_admin_category_permissions_hook`](./get-admin-category-permissions-hook.md)
 - [`get_category_threads_category_query_hook`](./get-category-threads-category-query-hook.md)
 - [`get_category_threads_pinned_category_query_hook`](./get-category-threads-pinned-category-query-hook.md)
+- [`get_category_threads_query_hook`](./get-category-threads-query-hook.md)
 - [`get_threads_category_query_hook`](./get-threads-category-query-hook.md)
 - [`get_threads_pinned_category_query_hook`](./get-threads-pinned-category-query-hook.md)
 - [`get_threads_query_orm_filter_hook`](./get-threads-query-orm-filter-hook.md)

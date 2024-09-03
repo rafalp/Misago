@@ -562,7 +562,6 @@ class Command(BaseCommand):
         thread_one_page.save()
 
         thread_length = settings.posts_per_page + settings.posts_per_page_orphans + 1
-        timestamp = timezone.now() - timedelta(minutes=40)
 
         thread_two_pages = Thread.objects.create(
             category=first_category,
@@ -601,8 +600,9 @@ class Command(BaseCommand):
         thread_two_pages.synchronize()
         thread_two_pages.save()
 
-        thread_length = (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1
-        timestamp = timezone.now() - timedelta(minutes=30)
+        thread_length = (
+            (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1
+        )
 
         thread_three_pages = Thread.objects.create(
             category=first_category,
@@ -640,6 +640,24 @@ class Command(BaseCommand):
 
         thread_three_pages.synchronize()
         thread_three_pages.save()
+
+        timestamp = timezone.now()
+        posts_to_update = Post.objects.filter(id__gt=yesterday_post.id).order_by("-id")
+        for post in posts_to_update.iterator():
+            if post.updated_on == post.posted_on:
+                post.posted_on = timestamp
+                post.updated_on = post.posted_on
+            else:
+                post.posted_on = timestamp
+                post.updated_on = timestamp + timedelta(minutes=randint(1, 10))
+
+            post.save()
+
+            timestamp -= timedelta(minutes=randint(1, 10))
+
+        for thread in Thread.objects.iterator():
+            thread.synchronize()
+            thread.save()
 
         timestamp = timezone.now()
 

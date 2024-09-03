@@ -286,6 +286,8 @@ def test_notify_on_new_private_thread_skips_user_not_participating(
     )
     other_user.save()
 
+    ThreadParticipant.objects.filter(user=other_user).delete()
+
     notify_on_new_private_thread(user.id, user_private_thread.id, [other_user.id])
 
     other_user.refresh_from_db()

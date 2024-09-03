@@ -6,7 +6,6 @@ from django.urls import reverse
 from ...notifications.models import Notification
 from .. import test
 from ...categories.models import Category
-from ...readtracker import poststracker
 from ..models import Poll, PollVote, Thread
 from ..test import patch_category_acl, patch_other_category_acl
 from .test_threads_api import ThreadsApiTestCase

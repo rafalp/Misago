@@ -90,6 +90,31 @@ def test_real_name_getter_returns_none_if_profile_field_has_no_value(user):
     assert user.get_real_name() is None
 
 
+def test_clear_unread_private_threads_does_nothing_if_user_has_zero_unread_threads(
+    user, django_assert_num_queries
+):
+    with django_assert_num_queries(0):
+        user.clear_unread_private_threads()
+
+
+def test_clear_unread_private_threads_zeros_user_unread_threads(
+    user, django_assert_num_queries
+):
+    user.unread_private_threads = 5
+    user.sync_unread_private_threads = True
+    user.save()
+
+    with django_assert_num_queries(1):
+        user.clear_unread_private_threads()
+
+    assert user.unread_private_threads == 0
+    assert not user.sync_unread_private_threads
+
+    user.refresh_from_db()
+    assert user.unread_private_threads == 0
+    assert not user.sync_unread_private_threads
+
+
 def test_marking_user_for_deletion_deactivates_their_account_in_db(user):
     user.mark_for_delete()
     assert not user.is_active

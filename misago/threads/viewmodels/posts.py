@@ -1,6 +1,5 @@
 from ...acl.objectacl import add_acl_to_obj
 from ...core.shortcuts import paginate, pagination_dict
-from ...readtracker.poststracker import make_read_aware
 from ...users.online.utils import make_users_status_aware
 from ..paginator import PostsPaginator
 from ..permissions import exclude_invisible_posts
@@ -58,9 +57,8 @@ class ViewModel:
             # sort both by pk
             posts.sort(key=lambda p: p.pk)
 
-        # make posts and events ACL and reads aware
+        # make posts and events ACL aware
         add_acl_to_obj(request.user_acl, posts)
-        make_read_aware(request, posts)
 
         self._user = request.user
 

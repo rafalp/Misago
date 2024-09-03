@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
 from django.db.models import IntegerChoices
@@ -101,6 +101,10 @@ def watch_replied_thread(user: "User", thread: Thread) -> WatchedThread | None:
     )
 
 
+def update_watched_thread_read_time(user: "User", thread: Thread, read_time: datetime):
+    WatchedThread.objects.filter(user=user, thread=thread).update(read_time=read_time)
+
+
 def notify_watcher_on_new_thread_reply(
     watched_thread: WatchedThread,
     post: Post,
@@ -166,7 +170,7 @@ def user_has_other_unread_posts(
     posts_queryset = Post.objects.filter(
         id__lt=post.id,
         thread=post.thread,
-        posted_on__gt=watched_thread.read_at,
+        posted_on__gt=watched_thread.read_time,
     ).exclude(poster=watched_thread.user)
 
     if not is_private:
@@ -295,11 +299,11 @@ def watch_new_private_thread(
 
     # Set thread read date in past to prevent first reply to thread
     # From triggering extra notification
-    read_at = thread.started_on - timedelta(seconds=5)
+    read_time = thread.started_on - timedelta(seconds=5)
 
     if watched_thread := get_watched_thread(user, thread):
-        watched_thread.read_at = read_at
-        watched_thread.save(update_fields=["read_at"])
+        watched_thread.read_time = read_time
+        watched_thread.save(update_fields=["read_time"])
         return watched_thread
 
     return WatchedThread.objects.create(
@@ -307,7 +311,7 @@ def watch_new_private_thread(
         category=thread.category,
         thread=thread,
         send_emails=send_emails,
-        read_at=read_at,
+        read_time=read_time,
     )
 
 

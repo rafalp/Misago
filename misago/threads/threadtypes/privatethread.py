@@ -101,12 +101,6 @@ class PrivateThread(ThreadType):
             kwargs={"thread_pk": post.thread_id, "pk": post.pk},
         )
 
-    def get_post_read_api_url(self, post):
-        return reverse(
-            "misago:api:private-thread-post-read",
-            kwargs={"thread_pk": post.thread_id, "pk": post.pk},
-        )
-
     def get_thread_watch_api_url(self, thread):
         return reverse(
             "misago:apiv2:private-thread-watch", kwargs={"thread_id": thread.id}

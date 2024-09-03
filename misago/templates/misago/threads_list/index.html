@@ -5,8 +5,8 @@
     <li id="threads-item-{{ thread.id }}" class="threads-list-item{% if thread_data.animate %} threads-list-item-animate{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
       {% if user.is_authenticated %}
         <div class="threads-list-item-col-read-status">
-          {% if thread_data.is_new %}
-            <div class="threads-list-item-read-status" title="{% trans 'Contains unread posts' context 'threads list' %}">
+          {% if thread_data.unread %}
+            <div class="threads-list-item-read-status" title="{% trans 'Has unread posts' context 'threads list' %}">
               <span class="threads-list-unread-icon"></span>
             </div>
           {% else %}
@@ -20,7 +20,7 @@
         <div class="threads-list-item-top-row">
           <div class="threads-list-item-row-title">
             <a
-              href="{% if thread_data.is_new %}{% url threads_urls.new_post pk=thread.pk slug=thread.slug %}{% else %}{% url threads_urls.thread id=thread.id slug=thread.slug %}{% endif %}"
+              href="{% if thread_data.unread %}{% url threads_urls.new_post pk=thread.pk slug=thread.slug %}{% else %}{% url threads_urls.thread id=thread.id slug=thread.slug %}{% endif %}"
               class="threads-list-item-title{% if thread_data.new %} threads-list-item-title-new{% endif %}"
             >
               {{ thread.title }}

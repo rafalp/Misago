@@ -6,8 +6,11 @@ from django.http import HttpRequest
 
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
+from ..readtracker.tracker import (
+    annotate_categories_read_time,
+    get_unread_categories,
+)
 from .enums import CategoryTree
-from .hooks import get_categories_page_component_hook
 from .models import Category
 
 if TYPE_CHECKING:
@@ -29,8 +32,14 @@ def get_categories_data(request: HttpRequest) -> list[dict]:
         level__gt=0,
     )
 
+    queryset = annotate_categories_read_time(request.user, queryset)
+    unread_categories = get_unread_categories(request, queryset)
+
     categories_data: dict[int, dict] = {
-        category.id: get_category_data(category, permissions) for category in queryset
+        category.id: get_category_data(
+            category, category.id in unread_categories, permissions
+        )
+        for category in queryset
     }
 
     aggregate_categories_data(request, categories_data)
@@ -63,8 +72,14 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
         rght__lt=category.rght,
     )
 
+    queryset = annotate_categories_read_time(request.user, queryset)
+    unread_categories = get_unread_categories(request, queryset)
+
     categories_data: dict[int, dict] = {
-        category.id: get_category_data(category, permissions) for category in queryset
+        category.id: get_category_data(
+            category, category.id in unread_categories, permissions
+        )
+        for category in queryset
     }
 
     aggregate_categories_data(request, categories_data)
@@ -76,7 +91,9 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
     ]
 
 
-def get_category_data(category: Category, permissions: UserPermissionsProxy) -> dict:
+def get_category_data(
+    category: Category, unread: bool, permissions: UserPermissionsProxy
+) -> dict:
     if can_see_last_thread(category, permissions.user, permissions):
         category_last_thread = {
             "id": category.last_thread_id,
@@ -98,7 +115,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
         "threads": category.threads,
         "posts": category.posts,
         "last_thread": category_last_thread,
-        "new_posts": False,
+        "unread": unread,
         "can_browse": (
             category.id in permissions.categories[CategoryPermission.BROWSE]
             or category.delay_browse_check
@@ -108,7 +125,7 @@ def get_category_data(category: Category, permissions: UserPermissionsProxy) -> 
         "children_threads": category.threads,
         "children_posts": category.posts,
         "children_last_thread": category_last_thread,
-        "children_new_posts": False,
+        "children_unread": unread,
     }
 
 
@@ -151,11 +168,6 @@ def aggregate_categories_data(
                 }
             )
 
-        # Set read state
-        # if request.user.is_authenticated and new_posts[category.id]:
-        #     category_data["new_posts"] = True
-        #     category_data["children_new_posts"] = True
-
         # Aggregate data from category to its parent
         if category.parent_id in categories_data:
             parent = categories_data[category.parent_id]
@@ -180,8 +192,8 @@ def aggregate_category_to_its_parent(category: dict, parent: dict):
         parent["children_last_thread"] = item_last_thread
 
     # Propagate to parent the new posts status
-    if category["children_new_posts"]:
-        parent["children_new_posts"] = True
+    if category["children_unread"]:
+        parent["children_unread"] = True
 
     parent["children"].insert(0, category)
 

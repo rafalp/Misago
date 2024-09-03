@@ -92,6 +92,10 @@ export class Misago {
   bulkModeration(options) {
     return new BulkModeration(options)
   }
+
+  hideMarkAsReadModal = () => {
+    $("#mark-as-read").modal("hide")
+  }
 }
 
 // create the singleton
@@ -116,7 +120,7 @@ document.addEventListener("htmx:afterRequest", ({ target }) => {
   }
 })
 
-// Hide moderation modal after moderation action completes
+// Hide moderation modal
 document.addEventListener("misago:afterModeration", () => {
   $("#threads-moderation-modal").modal("hide")
 })

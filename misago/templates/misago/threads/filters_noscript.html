@@ -15,7 +15,7 @@
         {% endif %}
         {% for filter in threads.filters %}
           <li{% if filter.active %} class="active"{% endif %}>
-            <a href="{{ filter.url }}">
+            <a href="{{ filter.absolute_url }}">
               {{ filter.name }}
             </a>
           </li>

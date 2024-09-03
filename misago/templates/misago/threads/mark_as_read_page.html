@@ -1,0 +1,22 @@
+{% extends "misago/mark_as_read/page.html" %}
+{% load i18n %}
+
+
+{% block title %}
+  {% trans "Mark as read" context "mark as read" %} | {% trans "Threads" context "threads page" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-class %}page-threads{% endblock page-class %}">
+
+
+{% block header %}
+  {% include "misago/threads/header.html" %}
+{% endblock header %}
+
+
+{% block panel-body %}
+  {% blocktrans trimmed context "mark threads as read" %}
+    Are you sure you want to mark all threads and categories as read?
+  {% endblocktrans %}
+{% endblock panel-body %}

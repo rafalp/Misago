@@ -8,8 +8,6 @@ from ...acl.objectacl import add_acl_to_obj
 from ...core.cursorpagination import get_page
 from ...notifications.models import WatchedThread
 from ...notifications.threads import get_watched_threads
-from ...readtracker import threadstracker
-from ...readtracker.cutoffdate import get_cutoff_date
 from ..models import Post, Thread
 from ..participants import make_participants_aware
 from ..permissions import exclude_invisible_posts, exclude_invisible_threads
@@ -102,7 +100,9 @@ class ViewModel:
                 thread.is_read = False
                 thread.is_new = True
         else:
-            threadstracker.make_read_aware(request, threads)
+            for thread in threads:
+                thread.is_read = True
+                thread.is_new = False
 
         self.filter_threads(request, threads)
 

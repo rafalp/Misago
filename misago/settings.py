@@ -87,6 +87,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.tz",
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
+    "misago.context_processors.path.full_path",
     "misago.context_processors.categories.categories",
     "misago.context_processors.forumindex.main_menu",
     "misago.context_processors.htmx.is_request_htmx",

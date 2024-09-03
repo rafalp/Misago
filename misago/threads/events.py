@@ -1,6 +1,5 @@
 from django.utils import timezone
 
-from ..readtracker import poststracker
 from .models import Post
 
 
@@ -30,7 +29,5 @@ def record_event(request, thread, event_type, context=None, commit=True):
         thread.category.set_last_thread(thread)
         if commit:
             thread.category.save()
-
-    poststracker.save_read(request.user, event)
 
     return event

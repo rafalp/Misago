@@ -3,7 +3,6 @@ from django.utils import timezone
 from .. import test
 from ...categories.models import Category
 from ...conf.test import override_dynamic_settings
-from ...readtracker.poststracker import save_read
 from ...users.test import AuthenticatedUserTestCase
 from ..test import patch_category_acl
 

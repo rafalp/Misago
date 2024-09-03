@@ -15,6 +15,7 @@ from ..hooks import (
     get_category_threads_pinned_category_query_hook,
     get_threads_category_query_hook,
     get_threads_pinned_category_query_hook,
+    get_category_threads_query_hook,
     get_threads_query_orm_filter_hook,
 )
 from ..proxy import UserPermissionsProxy
@@ -168,6 +169,57 @@ class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
                 self.add_query_to_queries(queries, query, category)
 
         return queries
+
+
+def filter_category_threads_queryset(
+    permissions: UserPermissionsProxy, category: dict, queryset: QuerySet
+):
+    if permissions.user.is_authenticated:
+        user_id = permissions.user.id
+    else:
+        user_id = None
+
+    query = get_category_threads_query(permissions, category)
+    if isinstance(query, list):
+        expression = _or_q(
+            [get_threads_query_orm_filter(q, [category["id"]], user_id) for q in query]
+        )
+    else:
+        expression = get_threads_query_orm_filter(query, [category["id"]], user_id)
+
+    return queryset.filter(expression)
+
+
+def get_category_threads_query(
+    permissions: UserPermissionsProxy, category: dict
+) -> str | list[str] | None:
+    return get_category_threads_query_hook(
+        _get_category_threads_query_action, permissions, category
+    )
+
+
+def _get_category_threads_query_action(
+    permissions: UserPermissionsProxy, category: dict
+) -> str | list[str] | None:
+    if (
+        permissions.is_global_moderator
+        or category["id"] in permissions.categories_moderator
+    ):
+        return CategoryThreadsQuery.ALL
+
+    if category["show_started_only"]:
+        if permissions.user.is_authenticated:
+            return [
+                CategoryThreadsQuery.USER_PINNED,
+                CategoryThreadsQuery.USER_STARTED_NOT_PINNED,
+            ]
+
+        return CategoryThreadsQuery.ANON_PINNED
+
+    if permissions.user.is_authenticated:
+        return CategoryThreadsQuery.USER
+
+    return CategoryThreadsQuery.ANON
 
 
 def get_threads_category_query(
@@ -377,6 +429,13 @@ def _get_threads_query_orm_filter_action(
             weight__lt=ThreadWeight.PINNED_GLOBALLY,
         )
 
+    if query == CategoryThreadsQuery.ANON:
+        return Q(
+            category_id__in=categories,
+            is_hidden=False,
+            is_unapproved=False,
+        )
+
     if query == CategoryThreadsQuery.ANON_PINNED:
         return Q(
             category_id__in=categories,
@@ -415,6 +474,14 @@ def _get_threads_query_orm_filter_action(
             weight__lt=ThreadWeight.PINNED_GLOBALLY,
             is_hidden=False,
             is_unapproved=False,
+        )
+
+    if query == CategoryThreadsQuery.USER:
+        return Q(
+            category_id__in=categories,
+            is_hidden=False,
+        ) & Q(
+            Q(is_unapproved=False) | Q(starter_id=user_id),
         )
 
     if query == CategoryThreadsQuery.USER_PINNED:

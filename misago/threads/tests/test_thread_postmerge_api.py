@@ -5,7 +5,6 @@ from django.urls import reverse
 from .. import test
 from ...categories.models import Category
 from ...conf.test import override_dynamic_settings
-from ...readtracker import poststracker
 from ...users.test import AuthenticatedUserTestCase
 from ..models import Post
 from ..test import patch_category_acl

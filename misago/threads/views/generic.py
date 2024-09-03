@@ -1,4 +1,4 @@
-from typing import Any, Iterable
+from typing import Iterable
 
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
@@ -16,12 +16,14 @@ from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
 )
+from ...readtracker.tracker import annotate_threads_read_time
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPaginator
 
 
 class GenericView(View):
     thread_select_related: Iterable[str] | True | None = None
+    thread_annotate_read_time: bool = False
     post_select_related: Iterable[str] | None = None
     thread_url_name: str
 
@@ -31,6 +33,8 @@ class GenericView(View):
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         queryset = Thread.objects
+        if self.thread_annotate_read_time:
+            queryset = annotate_threads_read_time(request.user, queryset)
         if self.thread_select_related is True:
             return queryset.select_related()
         elif self.thread_select_related:

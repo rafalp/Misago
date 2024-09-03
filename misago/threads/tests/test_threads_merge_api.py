@@ -12,7 +12,6 @@ from ...conf.dynamicsettings import DynamicSettings
 from ...conf.test import override_dynamic_settings
 from ...conftest import get_cache_versions
 from ...notifications.models import Notification
-from ...readtracker import poststracker
 from ..models import Poll, PollVote, Post, Thread
 from ..serializers import ThreadsListSerializer
 from ..test import patch_category_acl, patch_other_category_acl

@@ -80,6 +80,3 @@ class ThreadType:
 
     def get_post_edits_api_url(self, post):
         return None
-
-    def get_post_read_api_url(self, post):
-        return None
