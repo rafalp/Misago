@@ -203,6 +203,7 @@ class ListView(View):
                 "misago:thread-unapproved-post", kwargs=kwargs
             ),
             "unread_post_url": reverse("misago:thread-unread-post", kwargs=kwargs),
+            "solution_post_url": reverse("misago:thread-solution-post", kwargs=kwargs),
         }
 
     def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:

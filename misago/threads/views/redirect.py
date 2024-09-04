@@ -73,6 +73,22 @@ class PrivateThreadUnreadPostRedirectView(UnreadPostRedirectView, PrivateThreadV
     pass
 
 
+class SolutionRedirectView(RedirectView):
+    thread_annotate_read_time = True
+
+    def get_post(
+        self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
+    ) -> Post | None:
+        if not thread.best_answer_id:
+            return None
+
+        return queryset.filter(id=thread.best_answer_id).first()
+
+
+class ThreadSolutionRedirectView(SolutionRedirectView, ThreadView):
+    pass
+
+
 class ThreadUnapprovedPostRedirectView(RedirectView, ThreadView):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict

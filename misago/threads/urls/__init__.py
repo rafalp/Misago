@@ -20,6 +20,7 @@ from ..views.redirect import (
     PrivateThreadUnapprovedPostRedirectView,
     PrivateThreadUnreadPostRedirectView,
     ThreadLastPostRedirectView,
+    ThreadSolutionRedirectView,
     ThreadUnapprovedPostRedirectView,
     ThreadUnreadPostRedirectView,
 )
@@ -93,6 +94,11 @@ urlpatterns = [
         "t/<slug:slug>/<int:id>/unapproved/",
         ThreadUnapprovedPostRedirectView.as_view(),
         name="thread-unapproved-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/solution/",
+        ThreadSolutionRedirectView.as_view(),
+        name="thread-solution-post",
     ),
     path(
         "p/<slug:slug>/<int:id>/last/",

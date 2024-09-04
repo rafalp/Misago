@@ -251,3 +251,54 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
         )
         + f"#post-{reply.id}"
     )
+
+
+def test_thread_solution_redirect_view_returns_redirect_to_solution_post(
+    client, thread
+):
+    solution = reply_thread(thread)
+    reply_thread(thread)
+
+    thread.best_answer = solution
+    thread.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread-solution-post",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        + f"#post-{solution.id}"
+    )
+
+
+def test_thread_solution_redirect_view_returns_redirect_to_last_post_in_unsolved_thread(
+    client, thread
+):
+    reply_thread(thread)
+    reply = reply_thread(thread)
+
+    response = client.get(
+        reverse(
+            "misago:thread-solution-post",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
