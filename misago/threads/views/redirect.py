@@ -1,6 +1,8 @@
+from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.enums import CategoryTree
@@ -89,28 +91,37 @@ class ThreadSolutionRedirectView(SolutionRedirectView, ThreadView):
     pass
 
 
-class ThreadUnapprovedPostRedirectView(RedirectView, ThreadView):
+class UnapprovedPostRedirectView(RedirectView):
+    def raise_permission_denied_error(self):
+        raise PermissionDenied(
+            pgettext(
+                "unaproved post redirect",
+                "You must be a moderator to view unapproved posts.",
+            )
+        )
+
+
+class ThreadUnapprovedPostRedirectView(UnapprovedPostRedirectView, ThreadView):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
-        if request.user.is_anonymous:
-            return None
-
         if not (
             request.user_permissions.is_global_moderator
-            or thread.category in request.categories_moderator
+            or thread.category in request.user_permissions.categories_moderator
         ):
-            return None
+            self.raise_permission_denied_error()
 
         return queryset.filter(is_unapproved=True).first()
 
 
-class PrivateThreadUnapprovedPostRedirectView(RedirectView, PrivateThreadView):
+class PrivateThreadUnapprovedPostRedirectView(
+    UnapprovedPostRedirectView, PrivateThreadView
+):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
         if not request.user_permissions.private_threads_moderator:
-            return None
+            self.raise_permission_denied_error()
 
         return queryset.filter(is_unapproved=True).first()
 
