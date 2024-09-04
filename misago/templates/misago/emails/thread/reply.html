@@ -4,7 +4,7 @@
 
 {% block content %}
 {% capture trimmed as thread_link %}
-  <a href="{% absoluteurl thread.get_absolute_url %}">{{ thread }}</a>
+  <a href="{% absoluteurl thread_url %}">{{ thread }}</a>
 {% endcapture %}
 {% blocktrans trimmed with sender=sender thread=thread_link|safe context "new thread reply email" %}
 {{ sender }} has posted a new reply to the {{ thread }} thread that you are watching.

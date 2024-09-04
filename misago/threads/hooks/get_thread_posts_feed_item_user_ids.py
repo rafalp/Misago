@@ -3,7 +3,6 @@ from typing import Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import ActionHook
-from ..models import Thread
 
 
 class GetThreadPostsFeedItemUserIDsHookAction(Protocol):
@@ -26,8 +25,8 @@ class GetThreadPostsFeedItemUserIDsHookAction(Protocol):
     def __call__(
         self,
         request: HttpRequest,
-        thread: Thread,
-        page: int | None = None,
+        item: dict,
+        user_ids: set[int],
     ): ...
 
 

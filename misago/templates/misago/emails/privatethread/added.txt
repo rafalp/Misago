@@ -10,5 +10,5 @@
 {% blocktrans trimmed context "new private thread email" %}
 To read this thread click the link below:
 {% endblocktrans %}
-{% absoluteurl thread.get_absolute_url %}
+{% absoluteurl thread_url %}
 {% endblock content %}

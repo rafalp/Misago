@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
 from django.db.models import IntegerChoices
+from django.urls import reverse
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..acl.useracl import get_user_acl
@@ -18,6 +19,7 @@ from ..threads.permissions.threads import (
     can_see_thread,
     exclude_invisible_posts,
 )
+from ..threads.threadurl import get_thread_url
 from .verbs import NotificationVerb
 from .models import Notification, WatchedThread
 from .users import notify_user
@@ -154,6 +156,7 @@ def email_watcher_on_new_thread_reply(
             "settings": settings,
             "watched_thread": watched_thread,
             "thread": post.thread,
+            "thread_url": get_thread_url(post.thread),
             "post": post,
         },
     )
@@ -278,6 +281,10 @@ def email_participant_on_new_private_thread(
             "settings": settings,
             "watched_thread": watched_thread,
             "thread": thread,
+            "thread_url": reverse(
+                "misago:private-thread",
+                kwargs={"id": thread.id, "slug": thread.slug},
+            ),
         },
     )
 

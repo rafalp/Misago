@@ -41,6 +41,7 @@ from .get_thread_replies_page_posts_queryset import (
 from .get_thread_replies_page_thread_queryset import (
     get_thread_replies_page_thread_queryset_hook,
 )
+from .get_thread_url import get_thread_url_hook
 from .get_threads_page_context_data import get_threads_page_context_data_hook
 from .get_threads_page_filters import get_threads_page_filters_hook
 from .get_threads_page_moderation_actions import (
@@ -71,6 +72,7 @@ __all__ = [
     "get_thread_replies_page_context_data_hook",
     "get_thread_replies_page_posts_queryset_hook",
     "get_thread_replies_page_thread_queryset_hook",
+    "get_thread_url_hook",
     "get_threads_page_context_data_hook",
     "get_threads_page_filters_hook",
     "get_threads_page_moderation_actions_hook",
