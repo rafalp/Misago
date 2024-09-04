@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.utils import timezone
 
+from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ..test import reply_thread
 
@@ -126,6 +127,36 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read
     )
 
 
+def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read_category(
+    user, user_client, thread
+):
+    reply_thread(thread, posted_on=timezone.now())
+    reply = reply_thread(thread, posted_on=timezone.now())
+
+    ReadCategory.objects.create(
+        user=user,
+        category=thread.category,
+        read_time=timezone.now(),
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-unread-post",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
+
+
 def test_private_thread_unread_post_redirect_view_returns_error_404_for_anonymous_client(
     client, user_private_thread
 ):
@@ -175,6 +206,36 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
 
     read_on = timezone.now()
     mark_thread_read(user, user_private_thread, read_on)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-unread-post",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
+
+
+def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read_category(
+    user, user_client, user_private_thread
+):
+    reply_thread(user_private_thread, posted_on=timezone.now())
+    reply = reply_thread(user_private_thread, posted_on=timezone.now())
+
+    ReadCategory.objects.create(
+        user=user,
+        category=user_private_thread.category,
+        read_time=timezone.now(),
+    )
 
     response = user_client.get(
         reverse(
