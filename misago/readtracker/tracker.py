@@ -148,7 +148,7 @@ def get_thread_read_time(request: HttpRequest, thread: Thread) -> datetime:
 def mark_thread_read(user: "User", thread: Thread, read_time: datetime):
     create_row = True
 
-    if thread.read_time:
+    if getattr(thread, "read_time", None):
         create_row = not ReadThread.objects.filter(
             user=user,
             thread=thread,
