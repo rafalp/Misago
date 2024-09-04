@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, prefetch_related_objects
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.views import View
 
 from ...categories.models import Category
@@ -202,9 +203,15 @@ class RepliesView(View):
         user: "User",
         category: Category,
         *,
-        force_update: bool,
+        force_update: bool = False,
+        read_time: datetime | None = None,
     ):
-        mark_category_read(user, category, force_update=force_update)
+        mark_category_read(
+            user,
+            category,
+            force_update=force_update,
+            read_time=read_time,
+        )
 
     def read_user_notifications(self, user: "User", posts: list[Post]):
         updated_notifications = user.notification_set.filter(
@@ -330,9 +337,15 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         user: "User",
         category: Category,
         *,
-        force_update: bool,
+        force_update: bool = False,
+        read_time: datetime | None = None,
     ):
-        super().mark_category_read(user, category, force_update=force_update)
+        super().mark_category_read(
+            user,
+            category,
+            force_update=force_update,
+            read_time=timezone.now(),
+        )
 
         user.clear_unread_private_threads()
 

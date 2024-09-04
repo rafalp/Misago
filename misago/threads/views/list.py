@@ -1375,10 +1375,13 @@ class PrivateThreadsListView(ListView):
             thread_data.update(self.get_thread_urls(thread))
             items.append(thread_data)
 
-        if mark_read and are_private_threads_read(
-            request, category, category.read_time
+        if (
+            mark_read
+            and request.user.is_authenticated
+            and request.user.unread_private_threads
+            and are_private_threads_read(request, category, category.read_time)
         ):
-            mark_category_read(request.user, category)
+            mark_category_read(request.user, category, read_time=timezone.now())
             request.user.clear_unread_private_threads()
 
         return {

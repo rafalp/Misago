@@ -163,20 +163,27 @@ def mark_thread_read(user: "User", thread: Thread, read_time: datetime):
         )
 
 
-def mark_category_read(user: "User", category: Category, *, force_update: bool = False):
+def mark_category_read(
+    user: "User",
+    category: Category,
+    *,
+    force_update: bool = False,
+    read_time: datetime | None = None
+):
     create_row = True
+    read_time = read_time or category.last_post_on
 
     if force_update or getattr(category, "read_time", None):
         create_row = not ReadCategory.objects.filter(
             user=user,
             category=category,
-        ).update(read_time=category.last_post_on)
+        ).update(read_time=read_time)
 
     if create_row:
         ReadCategory.objects.create(
             user=user,
             category=category,
-            read_time=category.last_post_on,
+            read_time=read_time,
         )
 
     ReadThread.objects.filter(user=user, category=category).delete()
