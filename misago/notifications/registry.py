@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ..categories.enums import CategoryTree
-from ..threads.views.goto import PrivateThreadGotoPostView, ThreadGotoPostView
+from ..threads.views.redirect import get_redirect_to_post_response
 from .verbs import NotificationVerb
 from .exceptions import NotificationVerbError
 
@@ -158,27 +158,16 @@ def get_replied_notification_message(notification: "Notification") -> str:
     }
 
 
-go_to_thread_post = ThreadGotoPostView.as_view()
-go_to_private_thread_post = PrivateThreadGotoPostView.as_view()
-
-
 @registry.redirect(NotificationVerb.REPLIED)
 def get_replied_notification_url(
     request: HttpRequest, notification: "Notification"
 ) -> str:
-    if notification.category.tree_id == CategoryTree.PRIVATE_THREADS:
-        view = go_to_private_thread_post
-    else:
-        view = go_to_thread_post
+    post = notification.post
+    post.category = notification.category
 
-    redirect = view(
-        request,
-        notification.thread_id,
-        notification.thread.slug,
-        post=notification.post_id,
-    )
+    response = get_redirect_to_post_response(request, post)
 
-    return redirect.headers["location"]
+    return response.headers["location"]
 
 
 # INVITED: invited to private thread

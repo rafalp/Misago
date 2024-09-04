@@ -20,14 +20,14 @@
         <div class="threads-list-item-top-row">
           <div class="threads-list-item-row-title">
             <a
-              href="{% if thread_data.unread %}{% url threads_urls.new_post pk=thread.pk slug=thread.slug %}{% else %}{% url threads_urls.thread id=thread.id slug=thread.slug %}{% endif %}"
+              href="{% if thread_data.unread %}{{ thread_data.unread_post_url }}{% else %}{{ thread_data.absolute_url }}{% endif %}"
               class="threads-list-item-title{% if thread_data.new %} threads-list-item-title-new{% endif %}"
             >
               {{ thread.title }}
             </a>
             {% if thread_data.pages > 1 %}
               <a
-                href="{% url threads_urls.thread id=thread.id slug=thread.slug page=thread_data.pages %}"
+                href="{{ thread_data.absolute_url }}{{ thread_data.pages }}/"
                 class="threads-list-item-goto-page"
                 title="{% trans 'Go to last page' context 'threads list' %}"
               >
@@ -137,7 +137,7 @@
             </div>
             <div class="threads-list-item-col-last-activity">
               <a
-                href="{% url threads_urls.last_post pk=thread.pk slug=thread.slug %}"
+                href="{{ thread_data.last_post_url }}"
                 class="threads-list-item-last-activity"
                 title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}"
                 misago-timestamp="{{ thread.last_post_on.isoformat }}"
@@ -197,7 +197,7 @@
         </div>
       </div>
       <meta itemprop="position" content="{{ cursor|default:0|add:forloop.counter }}">
-      <meta itemprop="url" content="{{ settings.forum_address }}{% url threads_urls.thread id=thread.id slug=thread.slug %}">
+      <meta itemprop="url" content="{{ settings.forum_address }}{{ thread_data.absolute_url }}">
       <meta itemprop="name" content="{{ thread.title }}">
     </li>
   {% endwith %}

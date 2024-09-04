@@ -439,7 +439,7 @@ def private_thread_user_reply(private_thread, user):
 
 
 @pytest.fixture
-def user_private_thread(private_threads_category, user, other_user):
+def user_private_thread(private_threads_category, user, other_user, moderator):
     thread = post_thread(
         private_threads_category,
         "User Private Thread",
@@ -448,12 +448,13 @@ def user_private_thread(private_threads_category, user, other_user):
 
     ThreadParticipant.objects.create(thread=thread, user=user, is_owner=True)
     ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=False)
+    ThreadParticipant.objects.create(thread=thread, user=moderator, is_owner=False)
 
     return thread
 
 
 @pytest.fixture
-def other_user_private_thread(private_threads_category, user, other_user):
+def other_user_private_thread(private_threads_category, user, other_user, moderator):
     thread = post_thread(
         private_threads_category,
         "Other User Private Thread",
@@ -462,6 +463,7 @@ def other_user_private_thread(private_threads_category, user, other_user):
 
     ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
     ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
+    ThreadParticipant.objects.create(thread=thread, user=moderator, is_owner=False)
 
     return thread
 

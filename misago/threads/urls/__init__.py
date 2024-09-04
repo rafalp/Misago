@@ -3,17 +3,17 @@ from django.urls import path
 from ...conf import settings
 
 from ..views.attachment import attachment_server
-from ..views.goto import (
-    ThreadGotoPostView,
-    ThreadGotoLastView,
-    ThreadGotoNewView,
-    ThreadGotoBestAnswerView,
-    ThreadGotoUnapprovedView,
-    PrivateThreadGotoPostView,
-    PrivateThreadGotoLastView,
-    PrivateThreadGotoNewView,
-)
 from ..views.list import category_threads, private_threads, threads
+from ..views.redirect import (
+    PostRedirectView,
+    PrivateThreadLastPostRedirectView,
+    PrivateThreadUnapprovedPostRedirectView,
+    PrivateThreadUnreadPostRedirectView,
+    ThreadLastPostRedirectView,
+    ThreadSolutionRedirectView,
+    ThreadUnapprovedPostRedirectView,
+    ThreadUnreadPostRedirectView,
+)
 from ..views.replies import private_thread_replies, thread_replies
 from ..views.subscribed import redirect_subscribed_to_watched
 
@@ -70,6 +70,46 @@ urlpatterns = [
         private_thread_replies,
         name="private-thread",
     ),
+    path(
+        "t/<slug:slug>/<int:id>/last/",
+        ThreadLastPostRedirectView.as_view(),
+        name="thread-last-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unread/",
+        ThreadUnreadPostRedirectView.as_view(),
+        name="thread-unread-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unapproved/",
+        ThreadUnapprovedPostRedirectView.as_view(),
+        name="thread-unapproved-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/solution/",
+        ThreadSolutionRedirectView.as_view(),
+        name="thread-solution-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/last/",
+        PrivateThreadLastPostRedirectView.as_view(),
+        name="private-thread-last-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unread/",
+        PrivateThreadUnreadPostRedirectView.as_view(),
+        name="private-thread-unread-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unapproved/",
+        PrivateThreadUnapprovedPostRedirectView.as_view(),
+        name="private-thread-unapproved-post",
+    ),
+    path(
+        "post/<int:id>/",
+        PostRedirectView.as_view(),
+        name="post",
+    ),
 ]
 
 
@@ -84,44 +124,6 @@ urlpatterns += [
     path("c/<slug:slug>/<int:pk>/subscribed/", redirect_subscribed_to_watched),
     path("private-threads/subscribed/", redirect_subscribed_to_watched),
 ]
-
-
-def goto_patterns(prefix, **views):
-    urls = []
-
-    post_view = views.pop("post", None)
-    if post_view:
-        url_pattern = "%s/<slug:slug>/<int:pk>/post/<int:post>/" % prefix[0]
-        url_name = "%s-post" % prefix
-        urls.append(path(url_pattern, post_view.as_view(), name=url_name))
-
-    for name, view in views.items():
-        name = name.replace("_", "-")
-        url_pattern = "%s/<slug:slug>/<int:pk>/%s/" % (
-            prefix[0],
-            name,
-        )
-        url_name = "%s-%s" % (prefix, name)
-        urls.append(path(url_pattern, view.as_view(), name=url_name))
-
-    return urls
-
-
-urlpatterns += goto_patterns(
-    "thread",
-    post=ThreadGotoPostView,
-    last=ThreadGotoLastView,
-    new=ThreadGotoNewView,
-    best_answer=ThreadGotoBestAnswerView,
-    unapproved=ThreadGotoUnapprovedView,
-)
-
-urlpatterns += goto_patterns(
-    "private-thread",
-    post=PrivateThreadGotoPostView,
-    last=PrivateThreadGotoLastView,
-    new=PrivateThreadGotoNewView,
-)
 
 urlpatterns += [
     path(

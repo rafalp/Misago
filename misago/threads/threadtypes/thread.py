@@ -31,14 +31,14 @@ class Thread(ThreadType):
 
     def get_category_last_thread_new_url(self, category):
         return reverse(
-            "misago:thread-new",
-            kwargs={"slug": category.last_thread_slug, "pk": category.last_thread_id},
+            "misago:thread-unread-post",
+            kwargs={"slug": category.last_thread_slug, "id": category.last_thread_id},
         )
 
     def get_category_last_post_url(self, category):
         return reverse(
-            "misago:thread-last",
-            kwargs={"slug": category.last_thread_slug, "pk": category.last_thread_id},
+            "misago:thread-last-post",
+            kwargs={"slug": category.last_thread_slug, "id": category.last_thread_id},
         )
 
     def get_thread_absolute_url(self, thread, page=1):
@@ -52,22 +52,23 @@ class Thread(ThreadType):
 
     def get_thread_last_post_url(self, thread):
         return reverse(
-            "misago:thread-last", kwargs={"slug": thread.slug, "pk": thread.pk}
+            "misago:thread-last-post", kwargs={"slug": thread.slug, "id": thread.pk}
         )
 
     def get_thread_new_post_url(self, thread):
         return reverse(
-            "misago:thread-new", kwargs={"slug": thread.slug, "pk": thread.pk}
+            "misago:thread-unread-post", kwargs={"slug": thread.slug, "id": thread.pk}
         )
 
     def get_thread_best_answer_url(self, thread):
         return reverse(
-            "misago:thread-best-answer", kwargs={"slug": thread.slug, "pk": thread.pk}
+            "misago:thread-solution-post", kwargs={"slug": thread.slug, "id": thread.pk}
         )
 
     def get_thread_unapproved_post_url(self, thread):
         return reverse(
-            "misago:thread-unapproved", kwargs={"slug": thread.slug, "pk": thread.pk}
+            "misago:thread-unapproved-post",
+            kwargs={"slug": thread.slug, "id": thread.pk},
         )
 
     def get_thread_api_url(self, thread):

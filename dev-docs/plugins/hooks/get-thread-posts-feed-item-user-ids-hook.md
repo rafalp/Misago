@@ -16,7 +16,7 @@ from misago.threads.hooks import get_thread_posts_feed_item_user_ids_hook
 
 ```python
 def custom_get_thread_posts_feed_item_user_ids_filter(
-    request: HttpRequest, thread: Thread, page: int | None=None
+    request: HttpRequest, item: dict, user_ids: set[int]
 ):
     ...
 ```
