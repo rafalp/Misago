@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.http import HttpRequest
 from django.db.models import F, Q
 
@@ -9,13 +7,8 @@ from .readtime import get_default_read_time
 from .tracker import annotate_threads_read_time
 
 
-def are_private_threads_read(
-    request: HttpRequest, category: Category, category_read_time: datetime | None
-) -> bool:
+def are_private_threads_read(request: HttpRequest, category: Category) -> bool:
     read_time = get_default_read_time(request.settings, request.user)
-
-    if category_read_time:
-        read_time = max(read_time, category_read_time)
 
     queryset = (
         filter_private_threads_queryset(

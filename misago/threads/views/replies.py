@@ -328,7 +328,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         category: Category,
         category_read_time: datetime | None,
     ) -> bool:
-        return are_private_threads_read(request, category, category_read_time)
+        return are_private_threads_read(request, category)
 
     def mark_category_read(
         self,

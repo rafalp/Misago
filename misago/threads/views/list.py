@@ -1379,7 +1379,7 @@ class PrivateThreadsListView(ListView):
             mark_read
             and request.user.is_authenticated
             and request.user.unread_private_threads
-            and are_private_threads_read(request, category, category.read_time)
+            and are_private_threads_read(request, category)
         ):
             request.user.clear_unread_private_threads()
 
