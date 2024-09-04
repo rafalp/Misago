@@ -106,8 +106,7 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read
     reply_thread(thread, posted_on=timezone.now())
     reply = reply_thread(thread, posted_on=timezone.now())
 
-    read_on = timezone.now()
-    mark_thread_read(user, thread, read_on)
+    mark_thread_read(user, thread, timezone.now())
 
     response = user_client.get(
         reverse(
@@ -204,8 +203,7 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
     reply_thread(user_private_thread, posted_on=timezone.now())
     reply = reply_thread(user_private_thread, posted_on=timezone.now())
 
-    read_on = timezone.now()
-    mark_thread_read(user, user_private_thread, read_on)
+    mark_thread_read(user, user_private_thread, timezone.now())
 
     response = user_client.get(
         reverse(

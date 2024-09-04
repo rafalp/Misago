@@ -17,7 +17,6 @@ class RedirectView(View):
         paginator = self.get_thread_posts_paginator(request, queryset)
 
         if post:
-            print(post.id, post.posted_on)
             post_id = post.id
             offset = queryset.filter(id__lt=post_id).count()
             page = paginator.get_item_page(offset)
@@ -63,7 +62,6 @@ class UnreadPostRedirectView(RedirectView):
             read_times.append(thread.category_read_time)
 
         read_time = max(read_times)
-        print(read_time)
         return queryset.filter(posted_on__gt=read_time).first()
 
 
