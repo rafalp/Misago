@@ -7,6 +7,7 @@ from django.views import View
 
 from ...categories.enums import CategoryTree
 from ...readtracker.readtime import get_default_read_time
+from ..hooks import get_redirect_to_post_response_hook
 from ..models import Post, Thread
 from .generic import PrivateThreadView, ThreadView
 
@@ -130,23 +131,28 @@ class PostRedirectView(View):
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
         queryset = Post.objects.select_related("category")
         post = get_object_or_404(queryset, id=id)
-        return self.get_post_redirect_url(request, post)
+        return get_redirect_to_post_response(request, post)
 
-    def get_post_redirect_url(self, request: HttpRequest, post: Post) -> HttpResponse:
-        return self.get_post_redirect_url_action(request, post)
 
-    def get_post_redirect_url_action(
-        self, request: HttpRequest, post: Post
-    ) -> HttpResponse:
-        if post.category.tree_id == CategoryTree.THREADS:
-            return thread_post_redirect(request, post.thread_id, "", post=post.id)
-
-        if post.category.tree_id == CategoryTree.PRIVATE_THREADS:
-            return private_thread_post_redirect(
-                request, post.thread_id, "", post=post.id
-            )
-
+def get_redirect_to_post_response(request: HttpRequest, post: Post) -> HttpResponse:
+    try:
+        return get_redirect_to_post_response_hook(
+            _get_redirect_to_post_response_action, request, post
+        )
+    except PermissionDenied:
         raise Http404()
+
+
+def _get_redirect_to_post_response_action(
+    request: HttpRequest, post: Post
+) -> HttpResponse:
+    if post.category.tree_id == CategoryTree.THREADS:
+        return thread_post_redirect(request, post.thread_id, "", post=post.id)
+
+    if post.category.tree_id == CategoryTree.PRIVATE_THREADS:
+        return private_thread_post_redirect(request, post.thread_id, "", post=post.id)
+
+    raise Http404()
 
 
 class GetPostRedirectView(RedirectView):
