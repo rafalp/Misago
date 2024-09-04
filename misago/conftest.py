@@ -454,7 +454,7 @@ def user_private_thread(private_threads_category, user, other_user, moderator):
 
 
 @pytest.fixture
-def other_user_private_thread(private_threads_category, user, other_user):
+def other_user_private_thread(private_threads_category, user, other_user, moderator):
     thread = post_thread(
         private_threads_category,
         "Other User Private Thread",
