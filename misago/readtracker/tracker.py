@@ -168,22 +168,20 @@ def mark_category_read(
     category: Category,
     *,
     force_update: bool = False,
-    read_time: datetime | None = None
 ):
     create_row = True
-    read_time = read_time or category.last_post_on
 
     if force_update or getattr(category, "read_time", None):
         create_row = not ReadCategory.objects.filter(
             user=user,
             category=category,
-        ).update(read_time=read_time)
+        ).update(read_time=category.last_post_on)
 
     if create_row:
         ReadCategory.objects.create(
             user=user,
             category=category,
-            read_time=read_time,
+            read_time=category.last_post_on,
         )
 
     ReadThread.objects.filter(user=user, category=category).delete()

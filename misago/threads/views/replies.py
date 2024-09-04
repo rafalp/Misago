@@ -204,13 +204,11 @@ class RepliesView(View):
         category: Category,
         *,
         force_update: bool = False,
-        read_time: datetime | None = None,
     ):
         mark_category_read(
             user,
             category,
             force_update=force_update,
-            read_time=read_time,
         )
 
     def read_user_notifications(self, user: "User", posts: list[Post]):
@@ -338,15 +336,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         category: Category,
         *,
         force_update: bool = False,
-        read_time: datetime | None = None,
     ):
-        super().mark_category_read(
-            user,
-            category,
-            force_update=force_update,
-            read_time=timezone.now(),
-        )
-
         user.clear_unread_private_threads()
 
 

@@ -1381,7 +1381,6 @@ class PrivateThreadsListView(ListView):
             and request.user.unread_private_threads
             and are_private_threads_read(request, category, category.read_time)
         ):
-            mark_category_read(request.user, category, read_time=timezone.now())
             request.user.clear_unread_private_threads()
 
         return {
