@@ -23,8 +23,8 @@ def create_default_categories_tree(apps, schema_editor):
         special_role="root_category",
         name="Root",
         slug="root",
-        lft=3,
-        rght=6,
+        lft=1,
+        rght=4,
         tree_id=CategoryTreeDeprecated.THREADS,
         level=0,
     )
@@ -33,8 +33,8 @@ def create_default_categories_tree(apps, schema_editor):
 
     Category.objects.create(
         parent=root,
-        lft=4,
-        rght=5,
+        lft=2,
+        rght=3,
         tree_id=CategoryTreeDeprecated.THREADS,
         level=1,
         name=category_name,
