@@ -1,6 +1,6 @@
 import React from "react"
 import { Dropdown } from "../Dropdown"
-import { SearchDropdown } from "../Search"
+import { SearchDropdown } from "../search"
 import NavbarSearchToggle from "./NavbarSearchToggle"
 
 export default function NavbarSearchDropdown({ id, className, url }) {
