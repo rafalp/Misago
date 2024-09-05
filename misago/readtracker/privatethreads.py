@@ -9,15 +9,26 @@ from .readtime import get_default_read_time
 from .tracker import annotate_threads_read_time
 
 
-def are_private_threads_read(
-    request: HttpRequest, category: Category, category_read_time: datetime | None
+def unread_private_threads_exist(
+    request: HttpRequest,
+    category: Category,
+    category_read_time: datetime | None,
 ) -> bool:
+    queryset = get_unread_private_threads(request, category, category_read_time)
+    return queryset.exists()
+
+
+def get_unread_private_threads(
+    request: HttpRequest,
+    category: Category,
+    category_read_time: datetime | None,
+):
     read_time = get_default_read_time(request.settings, request.user)
 
     if category_read_time:
         read_time = max(read_time, category_read_time)
 
-    queryset = (
+    return (
         filter_private_threads_queryset(
             request.user_permissions,
             annotate_threads_read_time(
@@ -27,5 +38,3 @@ def are_private_threads_read(
         .filter(last_post_on__gt=read_time)
         .filter(Q(last_post_on__gt=F("read_time")) | Q(read_time__isnull=True))
     )
-
-    return not queryset.exists()

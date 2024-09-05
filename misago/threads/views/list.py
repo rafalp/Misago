@@ -52,7 +52,7 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
     check_start_thread_in_category_permission,
 )
-from ...readtracker.privatethreads import are_private_threads_read
+from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
     annotate_categories_read_time,
@@ -1375,7 +1375,7 @@ class PrivateThreadsListView(ListView):
             thread_data.update(self.get_thread_urls(thread))
             items.append(thread_data)
 
-        if mark_read and are_private_threads_read(
+        if mark_read and not unread_private_threads_exist(
             request, category, category.read_time
         ):
             mark_category_read(request.user, category)

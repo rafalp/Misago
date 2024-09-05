@@ -15,7 +15,7 @@ from ...readtracker.tracker import (
     mark_category_read,
     mark_thread_read,
 )
-from ...readtracker.privatethreads import are_private_threads_read
+from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
@@ -323,7 +323,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         category: Category,
         category_read_time: datetime | None,
     ) -> bool:
-        return are_private_threads_read(request, category, category_read_time)
+        return not unread_private_threads_exist(request, category, category_read_time)
 
     def mark_category_read(
         self,
