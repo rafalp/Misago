@@ -139,7 +139,7 @@ MISAGO_MIDDLEWARE = [
     "misago.core.middleware.ExceptionHandlerMiddleware",
     "misago.users.middleware.OnlineTrackerMiddleware",
     "misago.admin.middleware.AdminAuthMiddleware",
-    "misago.middleware.private_threads.sync_user_unread_private_threads",
+    "misago.middleware.privatethreads.sync_user_unread_private_threads",
 ]
 
 MISAGO_DEFAULT_OG_IMAGE = "misago/img/og-image.jpg"
