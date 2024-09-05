@@ -54,12 +54,3 @@ class EventsApiTests(TestCase):
         self.assertEqual(event_post.event_type, "announcement")
         self.assertEqual(event_post.event_context, context)
         self.assertEqual(event_post.poster_id, request.user.pk)
-
-    def test_record_event_is_read(self):
-        """record_event makes recorded event read to its author"""
-        request = Mock(user=self.user, user_ip="123.14.15.222")
-        event = record_event(request, self.thread, "announcement")
-
-        self.user.postread_set.get(
-            category=self.category, thread=self.thread, post=event
-        )

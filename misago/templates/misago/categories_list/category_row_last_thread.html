@@ -3,7 +3,11 @@
   {% if last_thread %}
     <div class="list-group-category-item-last-poster-avatar-col">
       {% if last_thread.last_poster %}
-        <a href="{{ last_thread.last_poster.get_absolute_url }}" class="list-group-category-item-last-poster-avatar" title="{{ last_thread.last_poster_name }}">
+        <a
+          href="{{ last_thread.last_poster.get_absolute_url }}"
+          class="list-group-category-item-last-poster-avatar"
+          title="{{ last_thread.last_poster_name }}"
+        >
           <img src="{{ last_thread.last_poster|avatar:32 }}" srcset="{{ last_thread.last_poster|avatar:64 }}" width="32" height="32" alt="">
         </a>
       {% else %}
@@ -14,7 +18,11 @@
     </div>
     <div class="list-group-category-item-last-thread-details-col">
       {% if last_thread.is_visible %}
-        <a class="list-group-category-item-last-thread-title" href="{% url 'misago:thread-new' pk=last_thread.id slug=last_thread.slug %}" title="{{ last_thread.title }}">
+        <a
+          class="list-group-category-item-last-thread-title"
+          href="{% url 'misago:thread-unread-post' id=last_thread.id slug=last_thread.slug %}"
+          title="{{ last_thread.title }}"
+        >
           {{ last_thread.title }}
         </a>
       {% else %}
@@ -39,7 +47,7 @@
         -
       </span>
       <a
-        href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
+        href="{% url 'misago:thread-last-post' id=last_thread.id slug=last_thread.slug %}"
         class="list-group-category-item-last-posted-on"
         title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
         misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
@@ -47,7 +55,7 @@
         {{ last_thread.last_post_on|date_relative }}
       </a>
       <a
-        href="{% url 'misago:thread-last' pk=last_thread.id slug=last_thread.slug %}"
+        href="{% url 'misago:thread-last-post' id=last_thread.id slug=last_thread.slug %}"
         class="list-group-category-item-last-posted-on-short"
         title="{{ last_thread.last_post_on|date:'DATETIME_FORMAT' }}"
         misago-timestamp="{{ last_thread.last_post_on.isoformat }}"
