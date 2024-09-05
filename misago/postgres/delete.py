@@ -16,19 +16,19 @@ def delete_one(obj: Model) -> int:
     return execute_rowcount(f'DELETE FROM "{table}" WHERE "{pkey}" = %s;', [obj.pk])
 
 
-def delete_all(model: Type[Model], **where):
+def delete_many(model: Type[Model], **where):
     """Deletes multiple rows from the database, bypassing all Django ORM logic.
 
     Requires at least ONE kwarg with a name of model field to use in the delete:
 
-    `delete_all(User, group_id=9)` executes the
+    `delete_many(User, group_id=9)` executes the
     `DELETE FROM "misago_users_user" WHERE "group_id" = 9;` query.
-    `delete_all(User, pk=[1, 3, 4])` executes the
+    `delete_many(User, pk=[1, 3, 4])` executes the
     `DELETE FROM "misago_users_user" WHERE "id" IN (1, 3, 4);` query.
 
     Multiple kwargs are joined with the "AND" keyword:
 
-    `delete_all(User, group_id=9, is_misago_admin=False)` will execute the
+    `delete_many(User, group_id=9, is_misago_admin=False)` will execute the
     `DELETE FROM "misago_users_user" WHERE "group_id" = 9 AND "is_misago_admin" = FALSE;`
     query.
 

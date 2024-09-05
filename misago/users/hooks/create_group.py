@@ -98,7 +98,6 @@ class CreateGroupHook(FilterHook[CreateGroupHookAction, CreateGroupHookFilter]):
 
     ```python
     from django.http import HttpRequest
-    from misago.postgres.delete import delete_all
     from misago.users.models import Group
 
     @create_group_hook.append_filter
