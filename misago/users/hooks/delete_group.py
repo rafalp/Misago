@@ -77,7 +77,7 @@ class DeleteGroupHook(FilterHook[DeleteGroupHookAction, DeleteGroupHookFilter]):
 
     ```python
     from django.http import HttpRequest
-    from misago.postgres.delete import delete_all
+    from misago.postgres.delete import delete_many
     from misago.users.models import Group
 
     from .models import GroupPromotionRule
@@ -87,7 +87,7 @@ class DeleteGroupHook(FilterHook[DeleteGroupHookAction, DeleteGroupHookFilter]):
         action, group: Group, request: HttpRequest | None = None
     ) -> None:
         # Delete promotion rules related with this group bypassing the Django ORM
-        delete_all(GroupPromotionRule, group_id=group.id)
+        delete_many(GroupPromotionRule, group_id=group.id)
 
         # Call the next function in chain
         return action(group, request)

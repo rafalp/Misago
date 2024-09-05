@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 
 from ..categories.models import Category
-from ..postgres.delete import delete_all
+from ..postgres.delete import delete_many
 from ..users.models import Group
 from .hooks import copy_category_permissions_hook, copy_group_permissions_hook
 from .models import CategoryGroupPermission
@@ -22,7 +22,7 @@ def _copy_category_permissions_action(
     dst: Category,
     request: HttpRequest | None = None,
 ) -> None:
-    delete_all(CategoryGroupPermission, category_id=dst.id)
+    delete_many(CategoryGroupPermission, category_id=dst.id)
 
     queryset = CategoryGroupPermission.objects.filter(category=src).values_list(
         "group_id", "permission"
@@ -76,7 +76,7 @@ def _copy_group_permissions_action(
 
 
 def _copy_group_category_permissions(src: Group, dst: Group) -> None:
-    delete_all(CategoryGroupPermission, group_id=dst.id)
+    delete_many(CategoryGroupPermission, group_id=dst.id)
 
     queryset = CategoryGroupPermission.objects.filter(group=src).values_list(
         "category_id", "permission"
