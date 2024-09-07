@@ -76,14 +76,6 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("secret", models.CharField(max_length=64)),
-                (
-                    "filetype",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="misago_attachments.attachmenttype",
-                    ),
-                ),
                 (
                     "post",
                     models.ForeignKey(
@@ -92,12 +84,6 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="+",
                         to="misago_threads.post",
-                    ),
-                ),
-                (
-                    "uploaded_on",
-                    models.DateTimeField(
-                        db_index=True, default=django.utils.timezone.now
                     ),
                 ),
                 (
@@ -112,6 +98,20 @@ class Migration(migrations.Migration):
                 ),
                 ("uploader_name", models.CharField(max_length=255)),
                 ("uploader_slug", models.CharField(max_length=255)),
+                (
+                    "uploaded_at",
+                    models.DateTimeField(
+                        db_index=True, default=django.utils.timezone.now
+                    ),
+                ),
+                ("secret", models.CharField(max_length=64)),
+                (
+                    "filetype",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="misago_attachments.attachmenttype",
+                    ),
+                ),
                 ("filename", models.CharField(db_index=True, max_length=255)),
                 ("size", models.PositiveIntegerField(db_index=True, default=0)),
                 (
