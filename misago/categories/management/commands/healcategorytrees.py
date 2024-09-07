@@ -9,7 +9,7 @@ from ...mptt import heal_category_trees
 class Command(BaseCommand):
     """
     This command rebuilds the category trees in the database.
-    
+
     It's useful when the MPTT data of one or more categories becomes invalid,
     either due to a bug or manual database manipulation.
     """
