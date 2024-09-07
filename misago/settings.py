@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "misago.account",
     "misago.acl",
     "misago.analytics",
+    "misago.attachments",
     "misago.auth",
     "misago.cache",
     "misago.categories",
