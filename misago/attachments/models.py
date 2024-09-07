@@ -36,9 +36,6 @@ def upload_to(instance, filename):
 
 
 class Attachment(PluginDataModel):
-    secret = models.CharField(max_length=64)
-    filetype = models.ForeignKey("AttachmentType", on_delete=models.CASCADE)
-
     post = models.ForeignKey(
         "misago_threads.Post",
         blank=True,
@@ -46,8 +43,6 @@ class Attachment(PluginDataModel):
         related_name="+",
         on_delete=models.SET_NULL,
     )
-
-    uploaded_on = models.DateTimeField(default=timezone.now, db_index=True)
 
     uploader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -59,6 +54,11 @@ class Attachment(PluginDataModel):
     uploader_name = models.CharField(max_length=255)
     uploader_slug = models.CharField(max_length=255)
 
+    uploaded_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+    secret = models.CharField(max_length=64)
+
+    filetype = models.ForeignKey("AttachmentType", on_delete=models.CASCADE)
     filename = models.CharField(max_length=255, db_index=True)
     size = models.PositiveIntegerField(default=0, db_index=True)
 
