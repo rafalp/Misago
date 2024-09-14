@@ -13,10 +13,26 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             """
             INSERT INTO misago_attachments_attachmenttype (
-                id, name, extensions, mimetypes, size_limit, status, plugin_data
+                id,
+                name,
+                extensions,
+                mimetypes,
+                size_limit,
+                status,
+                limit_uploads_to,
+                limit_downloads_to,
+                plugin_data
             )
             SELECT
-                id, name, extensions, mimetypes, size_limit, status, plugin_data::jsonb
+                id,
+                name,
+                extensions,
+                mimetypes,
+                size_limit,
+                status,
+                array[]::int4[],
+                array[]::int4[],
+                plugin_data::jsonb
             FROM misago_threads_attachmenttype;
             """,
             migrations.RunSQL.noop,

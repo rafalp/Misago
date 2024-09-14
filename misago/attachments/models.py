@@ -3,6 +3,7 @@ from hashlib import md5
 from io import BytesIO
 
 from PIL import Image
+from django.contrib.postgres.fields import ArrayField
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db import models
@@ -36,6 +37,20 @@ def upload_to(instance, filename):
 
 
 class Attachment(PluginDataModel):
+    category = models.ForeignKey(
+        "misago_categories.Category",
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.SET_NULL,
+    )
+    thread = models.ForeignKey(
+        "misago_threads.Thread",
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.SET_NULL,
+    )
     post = models.ForeignKey(
         "misago_threads.Post",
         blank=True,
@@ -80,6 +95,8 @@ class Attachment(PluginDataModel):
         null=True,
         upload_to=upload_to,
     )
+
+    is_deleted = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
         return self.filename
@@ -186,12 +203,8 @@ class AttachmentType(PluginDataModel):
         ],
     )
 
-    limit_uploads_to = models.ManyToManyField(
-        "misago_acl.Role", related_name="+", blank=True
-    )
-    limit_downloads_to = models.ManyToManyField(
-        "misago_acl.Role", related_name="+", blank=True
-    )
+    limit_uploads_to = ArrayField(models.PositiveIntegerField(), default=list)
+    limit_downloads_to = ArrayField(models.PositiveIntegerField(), default=list)
 
     def __str__(self):
         return self.name
