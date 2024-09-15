@@ -71,14 +71,15 @@ class StartThreadState(PostingState):
         self.thread.save()
         self.post.save()
 
-        save_start_thread_state_hook(self.save_action, self.request, self)
+        save_start_thread_state_hook(StartThreadState.save_action, self.request, self)
 
-    def save_action(self, request: HttpRequest, _state: "StartThreadState"):
-        self.save_thread()
-        self.save_post()
+    @staticmethod
+    def save_action(request: HttpRequest, state: "StartThreadState"):
+        state.save_thread()
+        state.save_post()
 
-        self.save_category()
-        self.save_user()
+        state.save_category()
+        state.save_user()
 
     def save_thread(self):
         self.thread.first_post = self.thread.last_post = self.post

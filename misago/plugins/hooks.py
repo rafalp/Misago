@@ -41,15 +41,21 @@ class ActionHook(Generic[Action]):
 
 
 class FilterHook(Generic[Action, Filter]):
-    __slots__ = ("_filters_first", "_filters_last", "_cache")
+    __slots__ = ("cache", "_filters_first", "_filters_last", "_use_filters", "_cache")
+
+    cache: bool
 
     _filters_first: List[Filter]
     _filters_last: List[Filter]
+    _use_filters: bool
     _cache: Action | None
 
-    def __init__(self):
+    def __init__(self, cache: bool = True):
+        self.cache = cache
+
         self._filters_first = []
         self._filters_last = []
+        self._use_filters = False
         self._cache = None
 
     def __bool__(self) -> bool:
@@ -57,10 +63,12 @@ class FilterHook(Generic[Action, Filter]):
 
     def append_filter(self, filter_: Filter):
         self._filters_last.append(filter_)
+        self._use_filters = True
         self.invalidate_cache()
 
     def prepend_filter(self, filter_: Filter):
         self._filters_first.insert(0, filter_)
+        self._use_filters = True
         self.invalidate_cache()
 
     def invalidate_cache(self):
@@ -77,6 +85,13 @@ class FilterHook(Generic[Action, Filter]):
         return reduce(reduce_filter, filters, action)
 
     def __call__(self, action: Action, *args, **kwargs):
+        if not self._use_filters:
+            return action(*args, **kwargs)
+
+        if not self.cache:
+            reduced_action = self.get_reduced_action(action)
+            return reduced_action(*args, **kwargs)
+
         if self._cache is None:
             self._cache = self.get_reduced_action(action)
 

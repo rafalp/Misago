@@ -99,4 +99,4 @@ class SaveStartThreadStateHook(
         return super().__call__(action, request, state)
 
 
-save_start_thread_state_hook = SaveStartThreadStateHook()
+save_start_thread_state_hook = SaveStartThreadStateHook(cache=False)

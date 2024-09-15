@@ -101,4 +101,4 @@ class SaveStartPrivateThreadStateHook(
         return super().__call__(action, request, state)
 
 
-save_start_private_thread_state_hook = SaveStartPrivateThreadStateHook()
+save_start_private_thread_state_hook = SaveStartPrivateThreadStateHook(cache=False)
