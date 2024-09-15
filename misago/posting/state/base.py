@@ -33,7 +33,7 @@ class PostingState:
     message_ast: list[dict] | None
     message_metadata: dict | None
 
-    models_states: dict
+    state: dict
 
     def __init__(self, request: HttpRequest):
         self.request = request
@@ -44,43 +44,43 @@ class PostingState:
         self.message_ast = None
         self.message_metadata = None
 
-        self.models_states = {}
-        self.store_model_state(self.user)
+        self.state = {}
+        self.store_object_state(self.user)
 
-    def store_model_state(self, model: models.Model):
-        state_key = self.get_model_state_key(model)
-        self.models_states[state_key] = self.get_model_state(model)
+    def store_object_state(self, obj: models.Model):
+        state_key = self.get_object_state_key(obj)
+        self.state[state_key] = self.get_object_state(obj)
 
-    def get_model_state_key(self, model: models.Model) -> str:
-        return f"{model.__class__.__name__}:{model.pk}"
+    def get_object_state_key(self, obj: models.Model) -> str:
+        return f"{obj.__class__.__name__}:{obj.pk}"
 
-    def get_model_state(self, model: models.Model) -> dict[str, Any]:
+    def get_object_state(self, obj: models.Model) -> dict[str, Any]:
         state = {}
 
-        for field in model._meta.get_fields():
+        for field in obj._meta.get_fields():
             if not isinstance(
                 field,
                 (models.ManyToManyRel, models.ManyToOneRel, models.ManyToManyField),
             ):
-                state[field.name] = deepcopy(getattr(model, field.attname))
+                state[field.name] = deepcopy(getattr(obj, field.attname))
 
         return state
 
-    def get_model_changed_fields(self, model: models.Model) -> set[str]:
-        state_key = self.get_model_state_key(model)
-        old_state = self.models_states[state_key]
+    def get_object_changed_fields(self, obj: models.Model) -> set[str]:
+        state_key = self.get_object_state_key(obj)
+        old_state = self.state[state_key]
 
         changed_fields: set[str] = set()
-        for field, value in self.get_model_state(model).items():
+        for field, value in self.get_object_state(obj).items():
             if old_state[field] != value:
                 changed_fields.add(field)
 
         return changed_fields
 
-    def save_model_changes(self, model: models.Model) -> set[str]:
-        update_fields = self.get_model_changed_fields(model)
+    def update_object(self, obj: models.Model) -> set[str]:
+        update_fields = self.get_object_changed_fields(obj)
         if update_fields:
-            model.save(update_fields=update_fields)
+            obj.save(update_fields=update_fields)
         return update_fields
 
     def initialize_parser_context(self) -> ParserContext:

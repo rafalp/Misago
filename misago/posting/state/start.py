@@ -9,6 +9,10 @@ from ...core.utils import slugify
 from ...parser.context import ParserContext
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post, Thread, ThreadParticipant
+from ..hooks import (
+    save_start_private_thread_state_hook,
+    save_start_thread_state_hook,
+)
 from .base import PostingState
 
 if TYPE_CHECKING:
@@ -33,7 +37,7 @@ class StartThreadState(PostingState):
         self.thread = self.initialize_thread()
         self.post = self.initialize_post()
 
-        self.store_model_state(category)
+        self.store_object_state(category)
 
     def initialize_thread(self) -> Thread:
         return Thread(
@@ -67,9 +71,9 @@ class StartThreadState(PostingState):
         self.thread.save()
         self.post.save()
 
-        self.save_action()
+        save_start_thread_state_hook(self.save_action, self.request, self)
 
-    def save_action(self):
+    def save_action(self, request: HttpRequest, _state: "StartThreadState"):
         self.save_thread()
         self.save_post()
 
@@ -90,13 +94,13 @@ class StartThreadState(PostingState):
         self.category.posts = models.F("posts") + 1
         self.category.set_last_thread(self.thread)
 
-        self.save_model_changes(self.category)
+        self.update_object(self.category)
 
     def save_user(self):
         self.user.threads = models.F("threads") + 1
         self.user.posts = models.F("posts") + 1
 
-        self.save_model_changes(self.user)
+        self.update_object(self.user)
 
 
 class StartPrivateThreadState(StartThreadState):
@@ -109,8 +113,15 @@ class StartPrivateThreadState(StartThreadState):
     def set_invite_users(self, users: list["User"]):
         self.invite_users = users
 
-    def save_action(self):
-        super().save_action()
+    @transaction.atomic()
+    def save(self):
+        self.thread.save()
+        self.post.save()
+
+        save_start_private_thread_state_hook(self.save_action, self.request, self)
+
+    def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
+        super().save_action(request, state)
 
         self.save_users()
 
