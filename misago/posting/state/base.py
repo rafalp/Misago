@@ -34,6 +34,7 @@ class PostingState:
     message_metadata: dict | None
 
     state: dict
+    plugin_state: dict
 
     def __init__(self, request: HttpRequest):
         self.request = request
@@ -45,6 +46,8 @@ class PostingState:
         self.message_metadata = None
 
         self.state = {}
+        self.plugin_state = {}
+
         self.store_object_state(self.user)
 
     def store_object_state(self, obj: models.Model):

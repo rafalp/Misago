@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class SaveStartThreadStateHookAction(Protocol):
     """
-    A  standard function that Misago uses to save a new thread to the database.
+    A standard function that Misago uses to save a new thread to the database.
 
     # Arguments
 
@@ -38,7 +38,7 @@ class SaveStartThreadStateHookFilter(Protocol):
 
     ## `action: SaveStartThreadStateHookAction`
 
-    A  standard function that Misago uses to save a new thread to the database.
+    A standard function that Misago uses to save a new thread to the database.
 
     See the [action](#action) section for details.
 
@@ -80,7 +80,7 @@ class SaveStartThreadStateHook(
     @save_start_thread_state_hook.append_filter
     def save_poster_ip_on_started_thread(
         action, request: HttpRequest, state: StartThreadState
-    ) -> dict:
+    ):
         state.thread.plugin_data["starter_ip"] = request.user_ip
         state.post.plugin_data["poster_id"] = request.user_ip
 

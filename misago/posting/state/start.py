@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
 from django.db import models, transaction
@@ -6,7 +5,6 @@ from django.http import HttpRequest
 
 from ...categories.models import Category
 from ...core.utils import slugify
-from ...parser.context import ParserContext
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post, Thread, ThreadParticipant
 from ..hooks import (
@@ -20,16 +18,6 @@ if TYPE_CHECKING:
 
 
 class StartThreadState(PostingState):
-    request: HttpRequest
-    timestamp: datetime
-    category: Category
-    thread: Thread
-    post: Post
-    user: "User"
-    parser_context: ParserContext | None
-    message_ast: list[dict] | None
-    message_metadata: dict | None
-
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request)
 
