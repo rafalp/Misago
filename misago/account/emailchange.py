@@ -1,7 +1,8 @@
-import hmac
+import datetime
 import hashlib
+import hmac
 from base64 import urlsafe_b64decode, urlsafe_b64encode
-from datetime import datetime, timedelta
+from datetime import timedelta
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
@@ -82,8 +83,8 @@ def read_email_change_token(user: "User", token: str) -> str:
 
     timestamp, email = urlsafe_b64decode(payload).decode("utf-8").split(":", 1)
 
-    created = datetime.strptime(timestamp, TIMESTAMP_FORMAT).replace(
-        tzinfo=timezone.utc
+    created = datetime.datetime.strptime(timestamp, TIMESTAMP_FORMAT).replace(
+        tzinfo=datetime.timezone.utc
     )
     expires = created + timedelta(hours=settings.MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES)
 
