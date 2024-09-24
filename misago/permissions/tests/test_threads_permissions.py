@@ -8,6 +8,7 @@ from ..proxy import UserPermissionsProxy
 from ..threads import (
     check_post_in_closed_category_permission,
     check_post_in_closed_thread_permission,
+    check_reply_thread_permission,
     check_see_thread_permission,
     check_start_thread_in_category_permission,
 )
@@ -127,60 +128,60 @@ def test_check_post_in_closed_thread_permission_fails_if_user_is_anonymous(
         check_post_in_closed_thread_permission(permissions, thread)
 
 
-def test_check_start_thread_in_category_permission_passes_if_user_has_permission(
-    user, cache_versions, default_category
+def test_check_reply_thread_permission_passes_if_user_has_permission(
+    user, cache_versions, default_category, thread
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_start_thread_in_category_permission(permissions, default_category)
+    check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_passes_if_anonymous_has_permission(
-    user, cache_versions, default_category
+def test_check_reply_thread_permission_passes_if_anonymous_user_has_permission(
+    anonymous_user, cache_versions, default_category, thread
 ):
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_start_thread_in_category_permission(permissions, default_category)
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_fails_if_user_has_no_permission(
-    user, cache_versions, default_category
+def test_check_reply_thread_permission_fails_if_user_has_no_permission(
+    user, cache_versions, default_category, thread
 ):
     CategoryGroupPermission.objects.filter(
         group=user.group,
-        permission=CategoryPermission.START,
+        permission=CategoryPermission.REPLY,
     ).delete()
 
     permissions = UserPermissionsProxy(user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_start_thread_in_category_permission(permissions, default_category)
+        check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_fails_if_anonymous_has_no_permission(
-    anonymous_user, guests_group, cache_versions, default_category
+def test_check_reply_thread_permission_fails_if_anonymous_has_no_permission(
+    anonymous_user, guests_group, cache_versions, default_category, thread
 ):
     CategoryGroupPermission.objects.filter(
         group=guests_group,
-        permission=CategoryPermission.START,
+        permission=CategoryPermission.REPLY,
     ).delete()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_start_thread_in_category_permission(permissions, default_category)
+        check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_passes_if_user_is_global_moderator(
-    moderator, cache_versions, default_category
+def test_check_reply_thread_permission_in_closed_category_passes_if_user_is_global_moderator(
+    moderator, cache_versions, default_category, thread
 ):
     default_category.is_closed = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_start_thread_in_category_permission(permissions, default_category)
+    check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_passes_if_user_is_category_moderator(
-    user, cache_versions, default_category
+def test_check_reply_thread_permission_in_closed_category_passes_if_user_is_category_moderator(
+    user, cache_versions, default_category, thread
 ):
     default_category.is_closed = True
     default_category.save()
@@ -192,11 +193,11 @@ def test_check_start_thread_in_category_permission_passes_if_user_is_category_mo
     )
 
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_start_thread_in_category_permission(permissions, default_category)
+    check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_fails_for_user_if_category_is_closed(
-    user, cache_versions, default_category
+def test_check_reply_thread_permission_fails_for_user_if_category_is_closed(
+    user, cache_versions, default_category, thread
 ):
     default_category.is_closed = True
     default_category.save()
@@ -204,11 +205,11 @@ def test_check_start_thread_in_category_permission_fails_for_user_if_category_is
     permissions = UserPermissionsProxy(user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_start_thread_in_category_permission(permissions, default_category)
+        check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_start_thread_in_category_permission_fails_for_anonymous_if_category_is_closed(
-    anonymous_user, cache_versions, default_category
+def test_check_reply_thread_permission_fails_for_anonymous_if_category_is_closed(
+    anonymous_user, cache_versions, default_category, thread
 ):
     default_category.is_closed = True
     default_category.save()
@@ -216,7 +217,57 @@ def test_check_start_thread_in_category_permission_fails_for_anonymous_if_catego
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_start_thread_in_category_permission(permissions, default_category)
+        check_reply_thread_permission(permissions, default_category, thread)
+
+
+def test_check_reply_thread_permission_in_closed_thread_passes_if_user_is_global_moderator(
+    moderator, cache_versions, default_category, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_reply_thread_permission(permissions, default_category, thread)
+
+
+def test_check_reply_thread_permission_in_closed_thread_passes_if_user_is_category_moderator(
+    user, cache_versions, default_category, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_reply_thread_permission(permissions, default_category, thread)
+
+
+def test_check_reply_thread_permission_fails_for_user_if_thread_is_closed(
+    user, cache_versions, default_category, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_reply_thread_permission(permissions, default_category, thread)
+
+
+def test_check_reply_thread_permission_fails_for_anonymous_if_thread_is_closed(
+    anonymous_user, cache_versions, default_category, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_reply_thread_permission(permissions, default_category, thread)
 
 
 def test_check_see_thread_permission_passes_for_user_with_permission(
@@ -611,3 +662,95 @@ def test_check_see_thread_permission_fails_for_anonymous_user_without_browse_per
 
     with pytest.raises(PermissionDenied):
         check_see_thread_permission(permissions, default_category, thread)
+
+
+def test_check_start_thread_in_category_permission_passes_if_user_has_permission(
+    user, cache_versions, default_category
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_passes_if_anonymous_has_permission(
+    anonymous_user, cache_versions, default_category
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_fails_if_user_has_no_permission(
+    user, cache_versions, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        group=user.group,
+        permission=CategoryPermission.START,
+    ).delete()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_fails_if_anonymous_has_no_permission(
+    anonymous_user, guests_group, cache_versions, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        group=guests_group,
+        permission=CategoryPermission.START,
+    ).delete()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_passes_if_user_is_global_moderator(
+    moderator, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_passes_if_user_is_category_moderator(
+    user, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_fails_for_user_if_category_is_closed(
+    user, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_in_category_permission(permissions, default_category)
+
+
+def test_check_start_thread_in_category_permission_fails_for_anonymous_if_category_is_closed(
+    anonymous_user, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_in_category_permission(permissions, default_category)

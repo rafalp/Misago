@@ -8,6 +8,7 @@ from .check_post_in_closed_thread_permission import (
     check_post_in_closed_thread_permission_hook,
 )
 from .check_private_threads_permission import check_private_threads_permission_hook
+from .check_reply_thread_permission import check_reply_thread_permission_hook
 from .check_see_category_permission import check_see_category_permission_hook
 from .check_see_private_thread_permission import (
     check_see_private_thread_permission_hook,
@@ -46,6 +47,7 @@ __all__ = [
     "check_post_in_closed_category_permission_hook",
     "check_post_in_closed_thread_permission_hook",
     "check_private_threads_permission_hook",
+    "check_reply_thread_permission_hook",
     "check_see_category_permission_hook",
     "check_see_private_thread_permission_hook",
     "check_see_thread_permission_hook",

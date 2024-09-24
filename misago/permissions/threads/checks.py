@@ -9,6 +9,7 @@ from ..enums import CategoryPermission
 from ..hooks import (
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
+    check_reply_thread_permission_hook,
     check_see_thread_permission_hook,
     check_start_thread_in_category_permission_hook,
 )
@@ -140,6 +141,14 @@ def _check_see_thread_permission_action(
 
 
 def check_reply_thread_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread
+):
+    check_reply_thread_permission_hook(
+        _check_reply_thread_permission_action, permissions, category, thread
+    )
+
+
+def _check_reply_thread_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread
 ):
     if category.id not in permissions.categories[CategoryPermission.REPLY]:

@@ -6,7 +6,6 @@ from ...threads.models import Thread
 from .base import PostingState
 
 
-
 class ReplyThreadState(PostingState):
     def __init__(self, request: HttpRequest, thread: Thread):
         super().__init__(request)
