@@ -6,6 +6,7 @@ from django.utils.translation import pgettext
 from ..threads.models import Thread, ThreadParticipant
 from .hooks import (
     check_private_threads_permission_hook,
+    check_reply_private_thread_permission_hook,
     check_see_private_thread_permission_hook,
     check_start_private_threads_permission_hook,
     filter_private_thread_posts_queryset_hook,
@@ -69,6 +70,20 @@ def _check_see_private_thread_permission_action(
 
     if permissions.user.id not in thread.participants_ids:
         raise Http404()
+
+
+def check_reply_private_thread_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    check_reply_private_thread_permission_hook(
+        _check_see_private_thread_permission_action, permissions, thread
+    )
+
+
+def _check_reply_private_thread_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    pass  # NOOP
 
 
 def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):

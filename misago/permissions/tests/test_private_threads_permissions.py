@@ -6,6 +6,7 @@ from ...threads.models import ThreadParticipant
 from ...threads.test import post_thread
 from ..privatethreads import (
     check_private_threads_permission,
+    check_reply_private_thread_permission,
     check_see_private_thread_permission,
     check_start_private_threads_permission,
     filter_private_thread_posts_queryset,
@@ -59,6 +60,13 @@ def test_check_start_private_threads_permission_fails_if_user_has_no_permission(
 
     with pytest.raises(PermissionDenied):
         check_start_private_threads_permission(permissions)
+
+
+def test_check_reply_private_thread_permission_passes(user, cache_versions, thread):
+    thread.participants.add(user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_reply_private_thread_permission(permissions, thread)
 
 
 def test_check_see_private_thread_permission_passes_if_user_has_permission(

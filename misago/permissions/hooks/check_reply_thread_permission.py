@@ -87,7 +87,7 @@ class CheckReplyThreadPermissionHook(
     # Example
 
     The code below implements a custom filter function that prevents a user from
-    replying to a thread if they are thread's starter, but only in categories
+    replying to a thread if they are a thread starter, but only in categories
     with a plugin flag.
 
     ```python
@@ -98,7 +98,7 @@ class CheckReplyThreadPermissionHook(
     from misago.threads.models import Thread
 
     @check_reply_thread_permission_hook.append_filter
-    def check_user_can_post_in_closed_thread(
+    def check_user_can_reply_in_thread(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
