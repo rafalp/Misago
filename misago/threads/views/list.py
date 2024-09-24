@@ -50,7 +50,7 @@ from ...permissions.privatethreads import (
 from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
-    check_start_thread_in_category_permission,
+    check_start_thread_permission,
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
@@ -1117,9 +1117,7 @@ class CategoryThreadsListView(ListView):
         self, request: HttpRequest, category: Category
     ) -> str | None:
         try:
-            check_start_thread_in_category_permission(
-                request.user_permissions, category
-            )
+            check_start_thread_permission(request.user_permissions, category)
         except:
             return None
         else:

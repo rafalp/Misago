@@ -84,10 +84,10 @@ class CheckStartThreadInCategoryPermissionHook(
     from django.core.exceptions import PermissionDenied
     from django.utils import timezone
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_start_thread_in_category_permission_hook
+    from misago.permissions.hooks import check_start_thread_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @check_start_thread_in_category_permission_hook.append_filter
+    @check_start_thread_permission_hook.append_filter
     def check_user_can_start_thread(
         action,
         permissions: UserPermissionsProxy,
@@ -118,6 +118,4 @@ class CheckStartThreadInCategoryPermissionHook(
         return super().__call__(action, permissions, category)
 
 
-check_start_thread_in_category_permission_hook = (
-    CheckStartThreadInCategoryPermissionHook()
-)
+check_start_thread_permission_hook = CheckStartThreadInCategoryPermissionHook()

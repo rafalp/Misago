@@ -17,8 +17,8 @@ from .check_see_thread_permission import check_see_thread_permission_hook
 from .check_start_private_threads_permission import (
     check_start_private_threads_permission_hook,
 )
-from .check_start_thread_in_category_permission import (
-    check_start_thread_in_category_permission_hook,
+from .check_start_thread_permission import (
+    check_start_thread_permission_hook,
 )
 from .copy_category_permissions import copy_category_permissions_hook
 from .copy_group_permissions import copy_group_permissions_hook
@@ -52,7 +52,7 @@ __all__ = [
     "check_see_private_thread_permission_hook",
     "check_see_thread_permission_hook",
     "check_start_private_threads_permission_hook",
-    "check_start_thread_in_category_permission_hook",
+    "check_start_thread_permission_hook",
     "copy_category_permissions_hook",
     "copy_group_permissions_hook",
     "filter_private_thread_posts_queryset_hook",

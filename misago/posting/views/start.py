@@ -13,7 +13,7 @@ from ...permissions.privatethreads import (
     check_private_threads_permission,
     check_start_private_threads_permission,
 )
-from ...permissions.threads import check_start_thread_in_category_permission
+from ...permissions.threads import check_start_thread_permission
 from ...threads.models import Thread
 from ..forms.start import (
     StartPrivateThreadForm,
@@ -94,7 +94,7 @@ class StartThreadView(View):
         check_browse_category_permission(
             request.user_permissions, category, can_delay=True
         )
-        check_start_thread_in_category_permission(request.user_permissions, category)
+        check_start_thread_permission(request.user_permissions, category)
 
         return category
 
