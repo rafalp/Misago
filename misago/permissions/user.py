@@ -72,6 +72,10 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_use_private_threads": False,
         "can_start_private_threads": False,
         "private_thread_users_limit": 1,
+        "can_edit_own_threads": False,
+        "own_threads_edit_time_limit": 0,
+        "can_edit_own_posts": False,
+        "own_posts_edit_time_limit": 0,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -95,6 +99,26 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "private_thread_users_limit",
             group.private_thread_users_limit,
+        )
+        if_true(
+            permissions,
+            "can_edit_own_threads",
+            group.can_edit_own_threads,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_threads_edit_time_limit",
+            group.own_threads_edit_time_limit,
+        )
+        if_true(
+            permissions,
+            "can_edit_own_posts",
+            group.can_edit_own_threads,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_posts_edit_time_limit",
+            group.own_posts_edit_time_limit,
         )
         if_true(
             permissions,
