@@ -20,15 +20,15 @@ class Group(PluginDataModel):
 
     ordering = models.PositiveIntegerField(default=0)
 
-    can_use_private_threads = models.BooleanField(default=False)
-    can_start_private_threads = models.BooleanField(default=False)
-    private_thread_users_limit = models.PositiveIntegerField(default=1)
-
     can_edit_own_threads = models.BooleanField(default=False)
     own_threads_edit_time_limit = models.PositiveIntegerField(default=0)
 
     can_edit_own_posts = models.BooleanField(default=False)
     own_posts_edit_time_limit = models.PositiveIntegerField(default=0)
+
+    can_use_private_threads = models.BooleanField(default=False)
+    can_start_private_threads = models.BooleanField(default=False)
+    private_thread_users_limit = models.PositiveIntegerField(default=1)
 
     can_change_username = models.BooleanField(default=False)
     username_changes_limit = models.PositiveIntegerField(default=0)

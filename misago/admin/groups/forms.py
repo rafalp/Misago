@@ -114,6 +114,34 @@ class EditGroupForm(forms.ModelForm):
 
     # Permissions
 
+    can_edit_own_threads = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can edit own threads"),
+    )
+    own_threads_edit_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for editing own threads"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user starts a thread during which they can still edit it. Enter zero to remove this time limit.",
+        ),
+        min_value=0,
+    )
+
+    can_edit_own_posts = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can edit own posts"),
+    )
+    own_posts_edit_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for editing own posts"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user posts a message during which they can still edit it. Enter zero to remove this time limit.",
+        ),
+        min_value=0,
+    )
+
     can_use_private_threads = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can use private threads"),
     )
@@ -123,10 +151,10 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
     private_thread_users_limit = forms.IntegerField(
-        label=pgettext_lazy("admin group permissions form", "Limit of invited users"),
+        label=pgettext_lazy("admin group permissions form", "Invited users limit"),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter zero to don't limit username changes.",
+            "Enter the maximum number of users that can be invited to private threads started by members of this group.",
         ),
         min_value=1,
     )
@@ -180,13 +208,13 @@ class EditGroupForm(forms.ModelForm):
             "css_suffix",
             "is_page",
             "is_hidden",
-            "can_use_private_threads",
-            "can_start_private_threads",
-            "private_thread_users_limit",
             "can_edit_own_threads",
             "own_threads_edit_time_limit",
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
+            "can_use_private_threads",
+            "can_start_private_threads",
+            "private_thread_users_limit",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",
