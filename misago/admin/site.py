@@ -92,12 +92,18 @@ class Node:
         return False
 
 
+class AdminSiteInvalidNodeError(Exception):
+    pass
+
+
 class AdminSite:
     def __init__(self):
         self.nodes_record = []
         self.nodes_dict = {}
 
     def build_nodes_dict(self):
+        self.validate_nodes()
+
         nodes_dict = {"misago:admin": Node(link="misago:admin:index")}
 
         iterations = 0
@@ -108,7 +114,7 @@ class AdminSite:
                     "Misago Admin hierarchy is invalid or too complex to resolve. "
                     "Nodes left: %s"
                 )
-                raise ValueError(message % self.nodes_record)
+                raise AdminSiteInvalidNodeError(message % self.nodes_record)
 
             for index, node in enumerate(self.nodes_record):
                 if node["parent"] in nodes_dict:
@@ -207,6 +213,53 @@ class AdminSite:
                     node["is_active"] = False
 
         return branches
+
+    def validate_nodes(self):
+        self.validate_nodes_parents()
+        self.validate_nodes_after()
+        self.validate_nodes_before()
+
+    def validate_nodes_parents(self):
+        parents: set[str] = {"misago:admin"}
+
+        for node in self.nodes_record:
+            parents.add(node["namespace"])
+
+        for node in self.nodes_record:
+            if node["parent"] not in parents:
+                raise AdminSiteInvalidNodeError(
+                    f"Misago Admin node '{node['link']}' has an invalid parent "
+                    f"'{node["parent"]}'."
+                )
+
+    def validate_nodes_after(self):
+        self.validate_nodes_ordering("after")
+
+    def validate_nodes_before(self):
+        self.validate_nodes_ordering("before")
+
+    def validate_nodes_ordering(self, node_attr: str):
+        for node in self.nodes_record:
+            self.validate_node_ordering(node, node_attr)
+
+    def validate_node_ordering(self, node: dict, node_attr: str):
+        if node[node_attr] is None:
+            return
+
+        node_siblings: set[str] = set()
+
+        for other_node in self.nodes_record:
+            if other_node == node:
+                continue
+
+            if other_node["parent"] == node["parent"]:
+                node_siblings.add(other_node["link"])
+
+        if node[node_attr] not in node_siblings:
+            raise AdminSiteInvalidNodeError(
+                f"Misago Admin node '{node['link']}' has an invalid {node_attr} "
+                f"node '{node[node_attr]}'."
+            )
 
 
 def join_namespace(*args):
