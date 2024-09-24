@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.utils.translation import pgettext
+from django.utils import timezone
+from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
 from ...threads.models import Post, Thread
@@ -167,22 +168,47 @@ def check_edit_thread_permission(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
-    post: Post,
 ):
     check_post_in_closed_category_permission(permissions, category)
     check_post_in_closed_thread_permission(permissions, thread)
 
-    user_id = permissions.user.id
-    is_poster = user_id and post.poster_id and post.poster_id == user_id
-
-    if not is_poster and not (
+    if (
         permissions.is_global_moderator
         or thread.category_id in permissions.categories_moderator
     ):
+        return
+
+    user_id = permissions.user.id
+    is_starter = user_id and thread.starter_id and thread.starter_id == user_id
+
+    if not is_starter:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
                 "You can't edit other users threads.",
+            )
+        )
+
+    if not permissions.can_edit_own_threads:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit this thread.",
+            )
+        )
+
+    time_limit = permissions.own_threads_edit_time_limit * 60
+
+    if (
+        permissions.own_threads_edit_time_limit
+        and (timezone.now() - thread.started_on).seconds > time_limit
+    ):
+        raise PermissionDenied(
+            npgettext(
+                "threads permission error",
+                "You can't edit threads older than %(minutes)s minute.",
+                "You can't edit threads older than %(minutes)s minutes.",
+                permissions.own_threads_edit_time_limit,
             )
         )
 
