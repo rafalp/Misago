@@ -27,29 +27,6 @@ class StartThreadState(PostingState):
 
         self.store_object_state(category)
 
-    def initialize_thread(self) -> Thread:
-        return Thread(
-            category=self.category,
-            started_on=self.timestamp,
-            last_post_on=self.timestamp,
-            starter=self.user,
-            starter_name=self.user.username,
-            starter_slug=self.user.slug,
-            last_poster=self.user,
-            last_poster_name=self.user.username,
-            last_poster_slug=self.user.slug,
-        )
-
-    def initialize_post(self) -> Post:
-        return Post(
-            category=self.category,
-            thread=self.thread,
-            poster=self.user,
-            poster_name=self.user.username,
-            posted_on=self.timestamp,
-            updated_on=self.timestamp,
-        )
-
     def set_thread_title(self, title: str):
         self.thread.title = title
         self.thread.slug = slugify(title)
@@ -59,15 +36,14 @@ class StartThreadState(PostingState):
         self.thread.save()
         self.post.save()
 
-        save_start_thread_state_hook(StartThreadState.save_action, self.request, self)
+        save_start_thread_state_hook(self.save_action, self.request, self)
 
-    @staticmethod
-    def save_action(request: HttpRequest, state: "StartThreadState"):
-        state.save_thread()
-        state.save_post()
+    def save_action(self, request: HttpRequest, state: "StartThreadState"):
+        self.save_thread()
+        self.save_post()
 
-        state.save_category()
-        state.save_user()
+        self.save_category()
+        self.save_user()
 
     def save_thread(self):
         self.thread.first_post = self.thread.last_post = self.post

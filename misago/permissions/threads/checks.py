@@ -3,11 +3,12 @@ from django.http import Http404
 from django.utils.translation import pgettext
 
 from ...categories.models import Category
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (
     check_post_in_closed_category_permission_hook,
+    check_post_in_closed_thread_permission_hook,
     check_see_thread_permission_hook,
     check_start_thread_in_category_permission_hook,
 )
@@ -35,6 +36,31 @@ def _check_post_in_closed_category_permission_action(
             pgettext(
                 "threads permission error",
                 "This category is closed.",
+            )
+        )
+
+
+def check_post_in_closed_thread_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    check_post_in_closed_thread_permission_hook(
+        _check_post_in_closed_thread_permission_action,
+        permissions,
+        thread,
+    )
+
+
+def _check_post_in_closed_thread_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    if thread.is_closed and not (
+        permissions.is_global_moderator
+        or thread.category_id in permissions.categories_moderator
+    ):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "This thread is closed.",
             )
         )
 
@@ -111,3 +137,74 @@ def _check_see_thread_permission_action(
             )
 
         raise Http404()
+
+
+def check_reply_thread_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread
+):
+    if category.id not in permissions.categories[CategoryPermission.REPLY]:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't reply to threads in this category.",
+            )
+        )
+
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+
+def check_edit_thread_permission(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+):
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+    user_id = permissions.user.id
+    is_poster = user_id and post.poster_id and post.poster_id == user_id
+
+    if not is_poster and not (
+        permissions.is_global_moderator
+        or thread.category_id in permissions.categories_moderator
+    ):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit other users threads.",
+            )
+        )
+
+
+def check_edit_thread_post_permission(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+):
+    if category.id not in permissions.categories[CategoryPermission.REPLY]:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit replies in this category.",
+            )
+        )
+
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+    user_id = permissions.user.id
+    is_poster = user_id and post.poster_id and post.poster_id == user_id
+
+    if not is_poster and not (
+        permissions.is_global_moderator
+        or thread.category_id in permissions.categories_moderator
+    ):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit other users posts.",
+            )
+        )

@@ -7,6 +7,7 @@ from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 from ..threads import (
     check_post_in_closed_category_permission,
+    check_post_in_closed_thread_permission,
     check_see_thread_permission,
     check_start_thread_in_category_permission,
 )
@@ -67,6 +68,63 @@ def test_check_post_in_closed_category_permission_fails_if_user_is_anonymous(
 
     with pytest.raises(PermissionDenied):
         check_post_in_closed_category_permission(permissions, default_category)
+
+
+def test_check_post_in_closed_thread_permission_passes_if_thread_is_open(
+    user, cache_versions, thread
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+
+def test_check_post_in_closed_thread_permission_passes_if_user_is_global_moderator(
+    moderator, cache_versions, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+
+def test_check_post_in_closed_thread_permission_passes_if_user_is_category_moderator(
+    user, cache_versions, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+
+def test_check_post_in_closed_thread_permission_fails_if_user_is_not_moderator(
+    user, cache_versions, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_post_in_closed_thread_permission(permissions, thread)
+
+
+def test_check_post_in_closed_thread_permission_fails_if_user_is_anonymous(
+    anonymous_user, cache_versions, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_post_in_closed_thread_permission(permissions, thread)
 
 
 def test_check_start_thread_in_category_permission_passes_if_user_has_permission(

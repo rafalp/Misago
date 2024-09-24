@@ -50,6 +50,29 @@ class PostingState:
 
         self.store_object_state(self.user)
 
+    def initialize_thread(self) -> Thread:
+        return Thread(
+            category=self.category,
+            started_on=self.timestamp,
+            last_post_on=self.timestamp,
+            starter=self.user,
+            starter_name=self.user.username,
+            starter_slug=self.user.slug,
+            last_poster=self.user,
+            last_poster_name=self.user.username,
+            last_poster_slug=self.user.slug,
+        )
+
+    def initialize_post(self) -> Post:
+        return Post(
+            category=self.category,
+            thread=self.thread,
+            poster=self.user,
+            poster_name=self.user.username,
+            posted_on=self.timestamp,
+            updated_on=self.timestamp,
+        )
+
     def store_object_state(self, obj: models.Model):
         state_key = self.get_object_state_key(obj)
         self.state[state_key] = self.get_object_state(obj)
