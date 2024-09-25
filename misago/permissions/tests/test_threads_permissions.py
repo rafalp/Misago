@@ -117,6 +117,142 @@ def test_check_edit_post_permission_fails_if_post_is_hidden(
         check_edit_post_permission(permissions, default_category, thread, user_reply)
 
 
+def test_check_edit_post_permission_passes_for_global_moderator_if_category_is_closed(
+    moderator, thread, user_reply, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_passes_for_category_moderator_if_category_is_closed(
+    user, thread, reply, cache_versions, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, reply)
+
+
+def test_check_edit_post_permission_passes_for_global_moderator_if_thread_is_closed(
+    moderator, thread, user_reply, cache_versions, default_category
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_passes_for_category_moderator_if_thread_is_closed(
+    user, thread, reply, cache_versions, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, reply)
+
+
+def test_check_edit_post_permission_passes_for_global_moderator_if_post_is_protected(
+    moderator, thread, user_reply, cache_versions, default_category
+):
+    user_reply.is_protected = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_passes_for_category_moderator_if_post_is_protected(
+    user, thread, reply, cache_versions, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    reply.is_protected = True
+    reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, reply)
+
+
+def test_check_edit_post_permission_passes_for_global_moderator_if_post_is_hidden(
+    moderator, thread, user_reply, cache_versions, default_category
+):
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_passes_for_category_moderator_if_post_is_hidden(
+    user, thread, reply, cache_versions, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    reply.is_hidden = True
+    reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, reply)
+
+
+def test_check_edit_post_permission_passes_for_global_moderator_if_out_of_time(
+    moderator, thread, user_reply, cache_versions, default_category
+):
+    moderator.group.own_posts_edit_time_limit = 1
+    moderator.group.save()
+
+    user_reply.posted_on = user_reply.posted_on.replace(year=2015)
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_passes_for_category_moderator_if_out_of_time(
+    user, thread, reply, cache_versions, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    user.group.own_posts_edit_time_limit = 1
+    user.group.save()
+
+    reply.posted_on = reply.posted_on.replace(year=2015)
+    reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, reply)
+
+
 def test_check_edit_thread_permission_passes_if_user_is_starter(
     user, user_thread, cache_versions, default_category
 ):
@@ -194,7 +330,7 @@ def test_check_edit_thread_permission_fails_if_thread_is_closed(
         check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_in_closed_category_permission_passes_if_user_is_global_moderator(
+def test_check_edit_thread_permission_passes_for_global_moderator_if_category_is_closed(
     moderator, user_thread, cache_versions, default_category
 ):
     default_category.is_closed = True
@@ -204,7 +340,7 @@ def test_check_edit_thread_in_closed_category_permission_passes_if_user_is_globa
     check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_in_closed_category_permission_passes_if_user_is_category_moderator(
+def test_check_edit_thread_permission_passes_for_category_moderator_if_category_is_closed(
     user, thread, cache_versions, default_category
 ):
     Moderator.objects.create(
@@ -220,7 +356,7 @@ def test_check_edit_thread_in_closed_category_permission_passes_if_user_is_categ
     check_edit_thread_permission(permissions, default_category, thread)
 
 
-def test_check_edit_thread_closed_permission_passes_if_user_is_global_moderator(
+def test_check_edit_thread_permission_passes_for_global_moderator_if_thread_is_closed(
     moderator, user_thread, cache_versions, default_category
 ):
     user_thread.is_closed = True
@@ -230,7 +366,7 @@ def test_check_edit_thread_closed_permission_passes_if_user_is_global_moderator(
     check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_closed_permission_passes_if_user_is_category_moderator(
+def test_check_edit_thread_permission_passes_for_category_moderator_if_thread_is_closed(
     user, thread, cache_versions, default_category
 ):
     Moderator.objects.create(
@@ -246,9 +382,12 @@ def test_check_edit_thread_closed_permission_passes_if_user_is_category_moderato
     check_edit_thread_permission(permissions, default_category, thread)
 
 
-def test_check_edit_thread_out_of_time_permission_passes_if_user_is_global_moderator(
+def test_check_edit_thread_permission_passes_for_global_moderator_if_out_of_time(
     moderator, thread, cache_versions, default_category
 ):
+    moderator.group.own_threads_edit_time_limit = 1
+    moderator.group.save()
+
     thread.started_on = thread.started_on.replace(year=2015)
     thread.save()
 
@@ -256,7 +395,7 @@ def test_check_edit_thread_out_of_time_permission_passes_if_user_is_global_moder
     check_edit_thread_permission(permissions, default_category, thread)
 
 
-def test_check_edit_thread_out_of_time_permission_passes_if_user_is_category_moderator(
+def test_check_edit_thread_permission_passes_for_category_moderator_if_out_of_time(
     user, thread, cache_versions, default_category
 ):
     Moderator.objects.create(
@@ -264,6 +403,9 @@ def test_check_edit_thread_out_of_time_permission_passes_if_user_is_category_mod
         is_global=False,
         categories=[default_category.id],
     )
+
+    user.group.own_threads_edit_time_limit = 1
+    user.group.save()
 
     thread.started_on = thread.started_on.replace(year=2015)
     thread.save()
