@@ -113,7 +113,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         if_true(
             permissions,
             "can_edit_own_posts",
-            group.can_edit_own_threads,
+            group.can_edit_own_posts,
         )
         if_zero_or_greater(
             permissions,

@@ -205,7 +205,7 @@ def _check_edit_thread_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit this thread.",
+                "You can't edit threads.",
             )
         )
 
@@ -260,13 +260,18 @@ def _check_edit_post_permission_action(
     is_poster = user_id and post.poster_id and post.poster_id == user_id
 
     if not is_poster:
-        if post.is_unapproved:
-            raise Http404()
-
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
                 "You can't edit other users posts.",
+            )
+        )
+
+    if not permissions.can_edit_own_posts:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit posts.",
             )
         )
 
@@ -278,11 +283,11 @@ def _check_edit_post_permission_action(
             )
         )
 
-    if not permissions.can_edit_own_posts:
+    if post.is_protected:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit this post.",
+                "You can't edit protected posts.",
             )
         )
 

@@ -6,6 +6,7 @@ from ..enums import CategoryPermission
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 from ..threads import (
+    check_edit_post_permission,
     check_edit_thread_permission,
     check_post_in_closed_category_permission,
     check_post_in_closed_thread_permission,
@@ -13,6 +14,107 @@ from ..threads import (
     check_see_thread_permission,
     check_start_thread_permission,
 )
+
+
+def test_check_edit_post_permission_passes_if_user_is_poster(
+    user, thread, user_reply, cache_versions, default_category
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_passes_if_user_is_poster_in_time_limit(
+    user, thread, user_reply, cache_versions, default_category
+):
+    user.group.own_posts_edit_time_limit = 5
+    user.group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_user_has_no_permission(
+    user, thread, user_reply, cache_versions, default_category
+):
+    user.group.can_edit_own_posts = False
+    user.group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_user_is_not_poster(
+    user, thread, reply, cache_versions, default_category
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, reply)
+
+
+def test_check_edit_post_permission_fails_if_user_is_poster_out_of_time_limit(
+    user, thread, user_reply, cache_versions, default_category
+):
+    user.group.own_posts_edit_time_limit = 1
+    user.group.save()
+
+    user_reply.posted_on = user_reply.posted_on.replace(year=2015)
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_category_is_closed(
+    user, thread, user_reply, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_thread_is_closed(
+    user, thread, user_reply, cache_versions, default_category
+):
+    thread.is_closed = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_post_is_protected(
+    user, thread, user_reply, cache_versions, default_category
+):
+    user_reply.is_protected = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_post_is_hidden(
+    user, thread, user_reply, cache_versions, default_category
+):
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
 
 
 def test_check_edit_thread_permission_passes_if_user_is_starter(
@@ -30,6 +132,18 @@ def test_check_edit_thread_permission_passes_if_user_is_starter_in_time_limit(
 
     permissions = UserPermissionsProxy(user, cache_versions)
     check_edit_thread_permission(permissions, default_category, user_thread)
+
+
+def test_check_edit_thread_permission_fails_if_user_has_no_permission(
+    user, user_thread, cache_versions, default_category
+):
+    user.group.can_edit_own_threads = False
+    user.group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_permission(permissions, default_category, user_thread)
 
 
 def test_check_edit_thread_permission_fails_if_user_is_not_starter(
