@@ -8,6 +8,7 @@ from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (
+    check_edit_post_permission_hook,
     check_edit_thread_permission_hook,
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
@@ -221,7 +222,18 @@ def _check_edit_thread_permission_action(
         )
 
 
-def check_edit_thread_post_permission(
+def check_edit_post_permission(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+):
+    check_edit_post_permission_hook(
+        _check_edit_post_permission_action, permissions, category, thread, post
+    )
+
+
+def _check_edit_post_permission_action(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
@@ -238,16 +250,50 @@ def check_edit_thread_post_permission(
     check_post_in_closed_category_permission(permissions, category)
     check_post_in_closed_thread_permission(permissions, thread)
 
-    user_id = permissions.user.id
-    is_poster = user_id and post.poster_id and post.poster_id == user_id
-
-    if not is_poster and not (
+    if (
         permissions.is_global_moderator
         or thread.category_id in permissions.categories_moderator
     ):
+        return
+
+    user_id = permissions.user.id
+    is_poster = user_id and post.poster_id and post.poster_id == user_id
+
+    if not is_poster:
+        if post.is_unapproved:
+            raise Http404()
+
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
                 "You can't edit other users posts.",
+            )
+        )
+
+    if post.is_hidden:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit hidden posts.",
+            )
+        )
+
+    if not permissions.can_edit_own_posts:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit this post.",
+            )
+        )
+
+    time_limit = permissions.own_posts_edit_time_limit * 60
+
+    if time_limit and (timezone.now() - post.posted_on).total_seconds() > time_limit:
+        raise PermissionDenied(
+            npgettext(
+                "threads permission error",
+                "You can't edit posts older than %(minutes)s minute.",
+                "You can't edit posts older than %(minutes)s minutes.",
+                permissions.own_posts_edit_time_limit,
             )
         )

@@ -1,6 +1,7 @@
 from .build_user_category_permissions import build_user_category_permissions_hook
 from .build_user_permissions import build_user_permissions_hook
 from .check_browse_category_permission import check_browse_category_permission_hook
+from .check_edit_post_permission import check_edit_post_permission_hook
 from .check_edit_thread_permission import check_edit_thread_permission_hook
 from .check_post_in_closed_category_permission import (
     check_post_in_closed_category_permission_hook,
@@ -48,6 +49,7 @@ __all__ = [
     "build_user_category_permissions_hook",
     "build_user_permissions_hook",
     "check_browse_category_permission_hook",
+    "check_edit_post_permission_hook",
     "check_edit_thread_permission_hook",
     "check_post_in_closed_category_permission_hook",
     "check_post_in_closed_thread_permission_hook",
