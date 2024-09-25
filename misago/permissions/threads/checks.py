@@ -210,10 +210,7 @@ def _check_edit_thread_permission_action(
 
     time_limit = permissions.own_threads_edit_time_limit * 60
 
-    if (
-        permissions.own_threads_edit_time_limit
-        and (timezone.now() - thread.started_on).seconds > time_limit
-    ):
+    if time_limit and (timezone.now() - thread.started_on).total_seconds() > time_limit:
         raise PermissionDenied(
             npgettext(
                 "threads permission error",
