@@ -120,7 +120,7 @@ class CheckEditPostPermissionHook(
             "[PROTECT]" in post.original
             and not (
                 permissions.is_global_moderator
-                or thread.category_id in permissions.categories_moderator
+                or permissions.is_category_moderator(thread.category_id)
             )
         ):
             raise PermissionError("Only a moderator can edit this post.")

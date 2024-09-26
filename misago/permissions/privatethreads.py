@@ -1,10 +1,15 @@
+from datetime import timedelta
+
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import Http404
-from django.utils.translation import pgettext
+from django.utils import timezone
+from django.utils.translation import npgettext, pgettext
 
 from ..threads.models import Post, Thread, ThreadParticipant
 from .hooks import (
+    check_edit_private_thread_permission_hook,
+    check_edit_private_thread_post_permission_hook,
     check_private_threads_permission_hook,
     check_reply_private_thread_permission_hook,
     check_see_private_thread_permission_hook,
@@ -89,13 +94,106 @@ def _check_reply_private_thread_permission_action(
 def check_edit_private_thread_permission(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    pass
+    check_edit_private_thread_permission_hook(
+        _check_edit_private_thread_permission_action, permissions, thread
+    )
+
+
+def _check_edit_private_thread_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    if permissions.is_private_threads_moderator:
+        return
+
+    if thread.participants_ids[0] != permissions.user.id:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit other users threads.",
+            )
+        )
+
+    if not permissions.can_edit_own_threads:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit threads.",
+            )
+        )
+
+    time_limit = permissions.own_threads_edit_time_limit * 60
+
+    if time_limit and (timezone.now() - thread.started_on).total_seconds() > time_limit:
+        raise PermissionDenied(
+            npgettext(
+                "threads permission error",
+                "You can't edit threads older than %(minutes)s minute.",
+                "You can't edit threads older than %(minutes)s minutes.",
+                permissions.own_threads_edit_time_limit,
+            )
+        )
 
 
 def check_edit_private_thread_post_permission(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    pass
+    check_edit_private_thread_post_permission_hook(
+        _check_edit_private_thread_post_permission_action, permissions, thread, post
+    )
+
+
+def _check_edit_private_thread_post_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread, post: Post
+):
+    if permissions.is_private_threads_moderator:
+        return
+
+    user_id = permissions.user.id
+    is_poster = user_id and post.poster_id and post.poster_id == user_id
+
+    if not is_poster:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit other users posts.",
+            )
+        )
+
+    if not permissions.can_edit_own_posts:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit posts.",
+            )
+        )
+
+    if post.is_hidden:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit hidden posts.",
+            )
+        )
+
+    if post.is_protected:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit protected posts.",
+            )
+        )
+
+    time_limit = permissions.own_posts_edit_time_limit * 60
+
+    if time_limit and (timezone.now() - post.posted_on).total_seconds() > time_limit:
+        raise PermissionDenied(
+            npgettext(
+                "threads permission error",
+                "You can't edit posts older than %(minutes)s minute.",
+                "You can't edit posts older than %(minutes)s minutes.",
+                permissions.own_posts_edit_time_limit,
+            )
+        )
 
 
 def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):

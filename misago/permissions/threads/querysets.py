@@ -201,10 +201,7 @@ def get_category_threads_query(
 def _get_category_threads_query_action(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
-    if (
-        permissions.is_global_moderator
-        or category["id"] in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(category["id"]):
         return CategoryThreadsQuery.ALL
 
     if category["show_started_only"]:
@@ -233,10 +230,7 @@ def get_threads_category_query(
 def _get_threads_category_query_action(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
-    if (
-        permissions.is_global_moderator
-        or category["id"] in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(category["id"]):
         return CategoryThreadsQuery.ALL_NOT_PINNED_GLOBALLY
 
     if category["show_started_only"]:
@@ -265,10 +259,7 @@ def get_threads_pinned_category_query(
 def _get_threads_pinned_category_query_action(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
-    if (
-        permissions.is_global_moderator
-        or category["id"] in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(category["id"]):
         return CategoryThreadsQuery.ALL_PINNED_GLOBALLY
 
     if permissions.user.is_authenticated:
@@ -294,10 +285,7 @@ def _get_category_threads_category_query_action(
     if context == CategoryQueryContext.OTHER:
         return None  # We don't display non-category items on category pages
 
-    if (
-        permissions.is_global_moderator
-        or category["id"] in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(category["id"]):
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.ALL_NOT_PINNED
 
@@ -344,10 +332,7 @@ def get_category_threads_pinned_category_query(
 def _get_category_threads_pinned_category_query_action(
     permissions: UserPermissionsProxy, category: dict, context: str
 ) -> str | list[str] | None:
-    if (
-        permissions.is_global_moderator
-        or category["id"] in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(category["id"]):
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.ALL_PINNED
 
@@ -579,10 +564,7 @@ def _filter_thread_posts_queryset_action(
     thread: Thread,
     queryset: QuerySet,
 ) -> QuerySet:
-    if (
-        permissions.is_global_moderator
-        or thread.category_id in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(thread.category_id):
         return queryset
 
     if permissions.user.is_authenticated:

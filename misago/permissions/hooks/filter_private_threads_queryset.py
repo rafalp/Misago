@@ -99,7 +99,7 @@ class FilterPrivateThreadsQuerysetHook(
     ) -> None:
        queryset = action(permissions, queryset)
 
-        if permissions.private_threads_moderator:
+        if permissions.is_private_threads_moderator:
            return queryset
 
         return queryset.filter(

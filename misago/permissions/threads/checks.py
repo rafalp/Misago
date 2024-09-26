@@ -32,10 +32,7 @@ def check_post_in_closed_category_permission(
 def _check_post_in_closed_category_permission_action(
     permissions: UserPermissionsProxy, category: Category
 ):
-    if category.is_closed and not (
-        permissions.is_global_moderator
-        or category.id in permissions.categories_moderator
-    ):
+    if category.is_closed and not permissions.is_category_moderator(category.id):
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -57,10 +54,7 @@ def check_post_in_closed_thread_permission(
 def _check_post_in_closed_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    if thread.is_closed and not (
-        permissions.is_global_moderator
-        or thread.category_id in permissions.categories_moderator
-    ):
+    if thread.is_closed and not permissions.is_category_moderator(thread.category_id):
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -104,10 +98,7 @@ def check_see_thread_permission(
 def _check_see_thread_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread
 ):
-    if not (
-        permissions.is_global_moderator
-        or category.id in permissions.categories_moderator
-    ):
+    if not permissions.is_category_moderator(category.id):
         if thread.is_hidden:
             raise Http404()
 
@@ -192,10 +183,7 @@ def _check_edit_thread_permission_action(
     check_post_in_closed_category_permission(permissions, category)
     check_post_in_closed_thread_permission(permissions, thread)
 
-    if (
-        permissions.is_global_moderator
-        or thread.category_id in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(thread.category_id):
         return
 
     user_id = permissions.user.id
@@ -258,10 +246,7 @@ def _check_edit_post_permission_action(
     check_post_in_closed_category_permission(permissions, category)
     check_post_in_closed_thread_permission(permissions, thread)
 
-    if (
-        permissions.is_global_moderator
-        or thread.category_id in permissions.categories_moderator
-    ):
+    if permissions.is_category_moderator(thread.category_id):
         return
 
     user_id = permissions.user.id
