@@ -120,6 +120,102 @@ def test_user_permissions_proxy_returns_false_for_member_without_global_moderato
         assert not proxy.is_global_moderator
 
 
+def test_user_permissions_proxy_returns_admins_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, admins_group, cache_versions
+):
+    user.set_groups(admins_group)
+    user.save()
+
+    with django_assert_num_queries(0):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_moderators_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, moderators_group, cache_versions
+):
+    user.set_groups(moderators_group)
+    user.save()
+
+    with django_assert_num_queries(0):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_secondary_admins_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, members_group, admins_group, cache_versions
+):
+    user.set_groups(members_group, [admins_group])
+    user.save()
+
+    with django_assert_num_queries(0):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_secondary_moderators_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, members_group, moderators_group, cache_versions
+):
+    user.set_groups(members_group, [moderators_group])
+    user.save()
+
+    with django_assert_num_queries(0):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_custom_moderators_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, custom_group, cache_versions
+):
+    Moderator.objects.create(is_global=False, private_threads=True, group=custom_group)
+
+    user.set_groups(custom_group)
+    user.save()
+
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_custom_moderators_secondary_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, members_group, custom_group, cache_versions
+):
+    Moderator.objects.create(is_global=False, private_threads=True, group=custom_group)
+
+    user.set_groups(members_group, [custom_group])
+    user.save()
+
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_true_for_member_private_threads_moderator_permission(
+    django_assert_num_queries, user, cache_versions
+):
+    Moderator.objects.create(is_global=False, private_threads=True, user=user)
+
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_false_for_member_without_private_threads_moderator_permission(
+    django_assert_num_queries, user, cache_versions
+):
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert not proxy.is_private_threads_moderator
+
+
+def test_user_permissions_proxy_returns_false_for_member_without_private_threads_moderator_permission(
+    django_assert_num_queries, user, cache_versions
+):
+    with django_assert_num_queries(1):
+        proxy = UserPermissionsProxy(user, cache_versions)
+        assert not proxy.is_private_threads_moderator
+
+
 def test_user_permissions_proxy_returns_false_for_category_moderator(
     django_assert_num_queries, user, cache_versions, other_category
 ):
