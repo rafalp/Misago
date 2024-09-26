@@ -234,9 +234,11 @@ class Thread(PluginDataModel):
 
         Cached property. Thread owner is guaranteed to be first item of the list.
         """
-        return self.participants.through.objects.order_by(
-            "-is_owner", "id"
-        ).values_list("user_id", flat=True)
+        return list(
+            self.participants.through.objects.order_by("-is_owner", "id").values_list(
+                "user_id", flat=True
+            )
+        )
 
     @property
     def thread_type(self):
