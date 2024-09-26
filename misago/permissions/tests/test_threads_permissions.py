@@ -33,7 +33,22 @@ def test_check_edit_post_permission_passes_if_user_is_poster_in_time_limit(
     check_edit_post_permission(permissions, default_category, thread, user_reply)
 
 
-def test_check_edit_post_permission_fails_if_user_has_no_permission(
+def test_check_edit_post_permission_fails_if_user_has_no_reply_permission(
+    user, thread, user_reply, cache_versions, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        group=user.group,
+        category=default_category,
+        permission=CategoryPermission.REPLY,
+    ).delete()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_edit_post_permission_fails_if_user_has_no_edit_permission(
     user, thread, user_reply, cache_versions, default_category
 ):
     user.group.can_edit_own_posts = False
@@ -270,7 +285,22 @@ def test_check_edit_thread_permission_passes_if_user_is_starter_in_time_limit(
     check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_permission_fails_if_user_has_no_permission(
+def test_check_edit_thread_permission_fails_if_user_has_no_start_permission(
+    user, user_thread, cache_versions, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        group=user.group,
+        category=default_category,
+        permission=CategoryPermission.START,
+    ).delete()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_permission(permissions, default_category, user_thread)
+
+
+def test_check_edit_thread_permission_fails_if_user_has_no_edit_permission(
     user, user_thread, cache_versions, default_category
 ):
     user.group.can_edit_own_threads = False

@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from django.http import Http404
 from django.utils.translation import pgettext
 
-from ..threads.models import Thread, ThreadParticipant
+from ..threads.models import Post, Thread, ThreadParticipant
 from .hooks import (
     check_private_threads_permission_hook,
     check_reply_private_thread_permission_hook,
@@ -84,6 +84,18 @@ def _check_reply_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
     pass  # NOOP
+
+
+def check_edit_private_thread_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    pass
+
+
+def check_edit_private_thread_post_permission(
+    permissions: UserPermissionsProxy, thread: Thread, post: Post
+):
+    pass
 
 
 def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):

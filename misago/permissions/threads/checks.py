@@ -181,6 +181,14 @@ def _check_edit_thread_permission_action(
     category: Category,
     thread: Thread,
 ):
+    if category.id not in permissions.categories[CategoryPermission.START]:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit threads in this category.",
+            )
+        )
+
     check_post_in_closed_category_permission(permissions, category)
     check_post_in_closed_thread_permission(permissions, thread)
 
@@ -243,7 +251,7 @@ def _check_edit_post_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit replies in this category.",
+                "You can't edit posts in this category.",
             )
         )
 
