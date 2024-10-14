@@ -25,6 +25,10 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=0,
                 # Permissions
+                can_edit_own_threads=True,
+                own_threads_edit_time_limit=0,
+                can_edit_own_posts=True,
+                own_posts_edit_time_limit=0,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=20,
@@ -42,6 +46,10 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=1,
                 # Permissions
+                can_edit_own_threads=True,
+                own_threads_edit_time_limit=0,
+                can_edit_own_posts=True,
+                own_posts_edit_time_limit=0,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=20,
@@ -56,6 +64,10 @@ def create_default_groups(apps, schema_editor):
                 is_default=True,
                 ordering=2,
                 # Permissions
+                can_edit_own_threads=True,
+                own_threads_edit_time_limit=0,
+                can_edit_own_posts=True,
+                own_posts_edit_time_limit=0,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=5,

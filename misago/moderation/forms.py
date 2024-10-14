@@ -31,14 +31,14 @@ def get_disabled_category_choices(
 
     categories_browse = user_permissions.categories[CategoryPermission.BROWSE]
     categories_start = user_permissions.categories[CategoryPermission.START]
-    categories_moderator = user_permissions.categories_moderator
+    moderated_categories = user_permissions.moderated_categories
 
     for category in categories.categories_list:
         if (
             category["is_vanilla"]
             or category["id"] not in categories_browse
             or category["id"] not in categories_start
-            or (category["is_closed"] and category["id"] not in categories_moderator)
+            or (category["is_closed"] and category["id"] not in moderated_categories)
         ):
             choices.add(category["id"])
 

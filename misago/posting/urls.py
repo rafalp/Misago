@@ -3,7 +3,6 @@ from django.urls import path
 from .views.selectcategory import SelectCategoryView
 from .views.start import StartPrivateThreadView, StartThreadView
 
-
 urlpatterns = [
     path(
         "start-thread/",

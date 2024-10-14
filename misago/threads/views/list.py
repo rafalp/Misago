@@ -50,7 +50,7 @@ from ...permissions.privatethreads import (
 from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
-    check_start_thread_in_category_permission,
+    check_start_thread_permission,
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
@@ -363,10 +363,7 @@ class ListView(View):
         return ceil(posts / request.settings.posts_per_page)
 
     def allow_thread_moderation(self, request: HttpRequest, thread: Thread) -> bool:
-        return (
-            request.user_permissions.is_global_moderator
-            or thread.category_id in request.user_permissions.categories_moderator
-        )
+        return request.user_permissions.is_category_moderator(thread.category_id)
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
         return get_default_metatags(request)
@@ -606,10 +603,7 @@ class ThreadsListView(ListView):
             MyThreadsFilter(request),
         ]
 
-        if (
-            request.user_permissions.is_global_moderator
-            or request.user_permissions.categories_moderator
-        ):
+        if request.user_permissions.moderated_categories:
             filters.append(UnapprovedThreadsFilter(request))
 
         return filters
@@ -676,10 +670,7 @@ class ThreadsListView(ListView):
         self, request: HttpRequest
     ) -> list[Type[ThreadsBulkModerationAction]]:
         actions: list = []
-        if not (
-            request.user_permissions.is_global_moderator
-            or request.user_permissions.categories_moderator
-        ):
+        if not request.user_permissions.moderated_categories:
             return actions
 
         actions += [
@@ -1056,10 +1047,7 @@ class CategoryThreadsListView(ListView):
             MyThreadsFilter(request),
         ]
 
-        if (
-            request.user_permissions.is_global_moderator
-            or category.id in request.user_permissions.categories_moderator
-        ):
+        if request.user_permissions.is_category_moderator(category.id):
             filters.append(UnapprovedThreadsFilter(request))
 
         return filters
@@ -1117,9 +1105,7 @@ class CategoryThreadsListView(ListView):
         self, request: HttpRequest, category: Category
     ) -> str | None:
         try:
-            check_start_thread_in_category_permission(
-                request.user_permissions, category
-            )
+            check_start_thread_permission(request.user_permissions, category)
         except:
             return None
         else:
@@ -1170,7 +1156,7 @@ class CategoryThreadsListView(ListView):
         )
 
         return bool(
-            request.user_permissions.categories_moderator.intersection(categories_ids)
+            request.user_permissions.moderated_categories.intersection(categories_ids)
         )
 
     def raise_404_for_vanilla_category(self, category: Category, context: dict):
@@ -1354,7 +1340,7 @@ class PrivateThreadsListView(ListView):
 
         mark_read = bool(threads_list)
 
-        moderator = request.user_permissions.private_threads_moderator
+        moderator = request.user_permissions.is_private_threads_moderator
 
         items: list[dict] = []
         for thread in threads_list:

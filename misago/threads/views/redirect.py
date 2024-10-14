@@ -106,10 +106,7 @@ class ThreadUnapprovedPostRedirectView(UnapprovedPostRedirectView, ThreadView):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
-        if not (
-            request.user_permissions.is_global_moderator
-            or thread.category in request.user_permissions.categories_moderator
-        ):
+        if not request.user_permissions.is_category_moderator(thread.category_id):
             self.raise_permission_denied_error()
 
         return queryset.filter(is_unapproved=True).first()
@@ -121,7 +118,7 @@ class PrivateThreadUnapprovedPostRedirectView(
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
-        if not request.user_permissions.private_threads_moderator:
+        if not request.user_permissions.is_private_threads_moderator:
             self.raise_permission_denied_error()
 
         return queryset.filter(is_unapproved=True).first()

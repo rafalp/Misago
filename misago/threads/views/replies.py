@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, prefetch_related_objects
 from django.http import HttpRequest, HttpResponse
@@ -10,6 +11,9 @@ from django.views import View
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
+from ...permissions.privatethreads import check_reply_private_thread_permission
+from ...permissions.threads import check_reply_thread_permission
+from ...posting.forms.reply import get_reply_thread_formset
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -50,6 +54,8 @@ class RepliesView(View):
     template_partial_name: str
     feed_template_name: str = "misago/posts_feed/index.html"
     feed_post_template_name: str = "misago/posts_feed/post.html"
+    reply_error_template_name: str = "misago/thread/reply_error.html"
+    reply_form_template_name: str = "misago/thread/reply_form.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -86,6 +92,7 @@ class RepliesView(View):
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
             "feed": self.get_posts_feed_data(request, thread, page),
+            "reply_form": self.get_reply_form_context_data(request, thread),
         }
 
     def get_posts_feed_data(
@@ -220,6 +227,23 @@ class RepliesView(View):
                 user.unread_notifications = new_unread_notifications
                 user.save(update_fields=["unread_notifications"])
 
+    def get_reply_form_context_data(self, request: HttpRequest, thread: Thread) -> dict:
+        try:
+            self.check_reply_thread_permission(request, thread)
+        except PermissionDenied as exc:
+            return {
+                "template_name": self.reply_error_template_name,
+                "error": exc,
+            }
+
+        return {
+            "template_name": self.reply_form_template_name,
+            "formset": get_reply_thread_formset(request),
+        }
+
+    def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
+        raise NotImplementedError()
+
 
 class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
@@ -264,6 +288,9 @@ class ThreadRepliesView(RepliesView, ThreadView):
         category_read_time: datetime | None,
     ) -> bool:
         return is_category_read(request, category, category_read_time)
+
+    def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
+        check_reply_thread_permission(request.user_permissions, thread.category, thread)
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
@@ -335,6 +362,9 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         super().mark_category_read(user, category, force_update=force_update)
 
         user.clear_unread_private_threads()
+
+    def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
+        check_reply_private_thread_permission(request.user_permissions, thread)
 
 
 thread_replies = ThreadRepliesView.as_view()
