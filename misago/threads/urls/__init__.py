@@ -16,10 +16,16 @@ from ..views.redirect import (
 )
 from ..views.replies import private_thread_replies, thread_replies
 from ..views.reply import private_thread_reply, thread_reply
+from ..views.selectcategory import SelectCategoryView
 from ..views.subscribed import redirect_subscribed_to_watched
 
 
 urlpatterns = [
+    path(
+        "start-thread/",
+        SelectCategoryView.as_view(),
+        name="start-thread",
+    ),
     path(
         "threads/",
         threads,
