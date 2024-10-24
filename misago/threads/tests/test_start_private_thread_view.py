@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from ...test import assert_contains
-from ...threads.models import Thread
+from ..models import Thread
 
 
 def test_start_private_thread_view_displays_login_page_to_guests(db, client):

@@ -14,13 +14,12 @@ from ...permissions.privatethreads import (
     check_start_private_threads_permission,
 )
 from ...permissions.threads import check_start_thread_permission
-from ...threads.models import Thread
-from ..forms.start import (
+from ...posting.forms.start import (
     StartPrivateThreadForm,
     StartThreadForm,
     StartThreadFormset,
 )
-from ..hooks import (
+from ...posting.hooks import (
     get_start_private_thread_page_context_data_hook,
     get_start_private_thread_page_formset_hook,
     get_start_private_thread_page_state_hook,
@@ -28,7 +27,8 @@ from ..hooks import (
     get_start_thread_page_formset_hook,
     get_start_thread_page_state_hook,
 )
-from ..state.start import StartPrivateThreadState, StartThreadState
+from ...posting.state.start import StartPrivateThreadState, StartThreadState
+from ..models import Thread
 
 
 def start_thread_login_required():
@@ -41,7 +41,7 @@ def start_thread_login_required():
 
 
 class StartThreadView(View):
-    template_name: str = "misago/posting/start_thread.html"
+    template_name: str = "misago/start_thread/index.html"
     state_class = StartThreadState
 
     @method_decorator(start_thread_login_required())
@@ -151,7 +151,7 @@ class StartThreadView(View):
 
 
 class StartPrivateThreadView(StartThreadView):
-    template_name: str = "misago/posting/start_private_thread.html"
+    template_name: str = "misago/start_private_thread/index.html"
     state_class = StartPrivateThreadState
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
