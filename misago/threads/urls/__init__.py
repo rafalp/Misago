@@ -15,10 +15,28 @@ from ..views.redirect import (
     ThreadUnreadPostRedirectView,
 )
 from ..views.replies import private_thread_replies, thread_replies
+from ..views.reply import private_thread_reply, thread_reply
+from ..views.selectcategory import SelectCategoryView
+from ..views.start import StartPrivateThreadView, StartThreadView
 from ..views.subscribed import redirect_subscribed_to_watched
 
 
 urlpatterns = [
+    path(
+        "start-thread/",
+        SelectCategoryView.as_view(),
+        name="start-thread",
+    ),
+    path(
+        "c/<slug:slug>/<int:id>/start-thread/",
+        StartThreadView.as_view(),
+        name="start-thread",
+    ),
+    path(
+        "private/start-thread/",
+        StartPrivateThreadView.as_view(),
+        name="start-private-thread",
+    ),
     path(
         "threads/",
         threads,
@@ -104,6 +122,16 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/unapproved/",
         PrivateThreadUnapprovedPostRedirectView.as_view(),
         name="private-thread-unapproved-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/reply/",
+        thread_reply,
+        name="thread-reply",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/reply/",
+        private_thread_reply,
+        name="private-thread-reply",
     ),
     path(
         "post/<int:id>/",

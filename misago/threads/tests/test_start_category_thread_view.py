@@ -3,7 +3,7 @@ from django.urls import reverse
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains
-from ...threads.models import Thread
+from ..models import Thread
 
 
 def test_start_thread_view_displays_login_page_to_guests(client, default_category):

@@ -6,12 +6,12 @@ from django.urls import reverse
 from django.utils.translation import pgettext
 
 from ...categories.models import Category
-from ...permissions.threads import check_start_thread_in_category_permission
+from ...permissions.threads import check_start_thread_permission
 
 
 class SelectCategoryView(View):
-    template_name = "misago/posting/select_category/page.html"
-    template_name_htmx = "misago/posting/select_category/modal.html"
+    template_name = "misago/select_category/page.html"
+    template_name_htmx = "misago/select_category/modal.html"
 
     def get(self, request: HttpRequest) -> HttpResponse:
         choices = self.get_category_choices(request)
@@ -39,9 +39,7 @@ class SelectCategoryView(View):
         choices: list[dict] = []
         for category in queryset:
             try:
-                check_start_thread_in_category_permission(
-                    request.user_permissions, category
-                )
+                check_start_thread_permission(request.user_permissions, category)
             except (Http404, PermissionDenied):
                 has_permission = False
             else:
