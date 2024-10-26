@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from ..state.start import StartThreadState
 
 
-class GetStartThreadPageStateHookAction(Protocol):
+class GetStartThreadStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new
-    `StartThreadState` instance for the start a new thread page.
+    A standard function that Misago uses to create a new `StartThreadState`
+    instance for starting a new thread.
 
     # Arguments
 
@@ -26,7 +26,7 @@ class GetStartThreadPageStateHookAction(Protocol):
 
     # Return value
 
-    A `StartThreadState` instance to use to save new thread to the database.
+    A `StartThreadState` instance to use to create a new thread in the database.
     """
 
     def __call__(
@@ -36,16 +36,16 @@ class GetStartThreadPageStateHookAction(Protocol):
     ) -> "StartThreadState": ...
 
 
-class GetStartThreadPageStateHookFilter(Protocol):
+class GetStartThreadStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartThreadPageStateHookAction`
+    ## `action: GetStartThreadStateHookAction`
 
-    A standard function that Misago uses to create a new
-    `StartThreadState` instance for the start a new thread page.
+    A standard function that Misago uses to create a new `StartThreadState`
+    instance for starting a new thread.
 
     See the [action](#action) section for details.
 
@@ -59,23 +59,23 @@ class GetStartThreadPageStateHookFilter(Protocol):
 
     # Return value
 
-    A `StartThreadState` instance to use to save new thread to the database.
+    A `StartThreadState` instance to use to create a new thread in the database.
     """
 
     def __call__(
         self,
-        action: GetStartThreadPageStateHookAction,
+        action: GetStartThreadStateHookAction,
         request: HttpRequest,
         category: Category,
     ) -> "StartThreadState": ...
 
 
-class GetStartThreadPageStateHook(
-    FilterHook[GetStartThreadPageStateHookAction, GetStartThreadPageStateHookFilter]
+class GetStartThreadStateHook(
+    FilterHook[GetStartThreadStateHookAction, GetStartThreadStateHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `StartThreadState` instance for the start a new thread page.
+    This hook wraps the standard function Misago uses to create a new
+    `StartThreadState` instance for starting a new thread.
 
     # Example
 
@@ -85,11 +85,11 @@ class GetStartThreadPageStateHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.hooks import get_start_thread_page_state_hook
-    from misago.posting.state.start import StartThreadState
+    from misago.posting.hooks import get_start_thread_state_hook
+    from misago.posting.state import StartThreadState
 
 
-    @get_start_thread_page_state_hook.append_filter
+    @get_start_thread_state_hook.append_filter
     def set_poster_ip_on_start_thread_state(
         action, request: HttpRequest, category: Category
     ) -> StartThreadState:
@@ -103,11 +103,11 @@ class GetStartThreadPageStateHook(
 
     def __call__(
         self,
-        action: GetStartThreadPageStateHookAction,
+        action: GetStartThreadStateHookAction,
         request: HttpRequest,
         category: Category,
     ) -> "StartThreadState":
         return super().__call__(action, request, category)
 
 
-get_start_thread_page_state_hook = GetStartThreadPageStateHook(cache=False)
+get_start_thread_state_hook = GetStartThreadStateHook()

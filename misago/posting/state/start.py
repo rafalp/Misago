@@ -6,8 +6,10 @@ from django.http import HttpRequest
 from ...categories.models import Category
 from ...core.utils import slugify
 from ...threads.checksums import update_post_checksum
-from ...threads.models import Post, Thread, ThreadParticipant
+from ...threads.models import ThreadParticipant
 from ..hooks import (
+    get_start_private_thread_state_hook,
+    get_start_thread_state_hook,
     save_start_private_thread_state_hook,
     save_start_thread_state_hook,
 )
@@ -101,3 +103,31 @@ class StartPrivateThreadState(StartThreadState):
             )
 
         ThreadParticipant.objects.bulk_create(users)
+
+
+def get_start_thread_state(
+    request: HttpRequest, category: Category
+) -> StartThreadState:
+    return get_start_thread_state_hook(
+        _get_start_thread_state_action, request, category
+    )
+
+
+def _get_start_thread_state_action(
+    request: HttpRequest, category: Category
+) -> StartThreadState:
+    return StartThreadState(request, category)
+
+
+def get_start_private_thread_state(
+    request: HttpRequest, category: Category
+) -> StartPrivateThreadState:
+    return get_start_private_thread_state_hook(
+        _get_start_private_thread_state_action, request, category
+    )
+
+
+def _get_start_private_thread_state_action(
+    request: HttpRequest, category: Category
+) -> StartPrivateThreadState:
+    return StartPrivateThreadState(request, category)

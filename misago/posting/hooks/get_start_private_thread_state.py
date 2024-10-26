@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from ..state.start import StartPrivateThreadState
 
 
-class GetStartPrivateThreadPageStateHookAction(Protocol):
+class GetStartPrivateThreadStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new
-    `StartPrivateThreadState` instance for the start a new private thread page.
+    A standard function that Misago uses to create a new `StartPrivateThreadState`
+    instance for starting a new private thread.
 
     # Arguments
 
@@ -26,8 +26,8 @@ class GetStartPrivateThreadPageStateHookAction(Protocol):
 
     # Return value
 
-    A `StartPrivateThreadState` instance to use to save new private thread
-    to the database.
+    A `StartPrivateThreadState` instance to use to create a new private thread
+    in the database.
     """
 
     def __call__(
@@ -37,16 +37,16 @@ class GetStartPrivateThreadPageStateHookAction(Protocol):
     ) -> "StartPrivateThreadState": ...
 
 
-class GetStartPrivateThreadPageStateHookFilter(Protocol):
+class GetStartPrivateThreadStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartPrivateThreadPageStateHookAction`
+    ## `action: GetStartPrivateThreadStateHookAction`
 
-    A standard function that Misago uses to create a new
-    `StartPrivateThreadState` instance for the start a new private thread page.
+    A standard function that Misago uses to create a new `StartPrivateThreadState`
+    instance for starting a new private thread.
 
     See the [action](#action) section for details.
 
@@ -60,27 +60,27 @@ class GetStartPrivateThreadPageStateHookFilter(Protocol):
 
     # Return value
 
-    A `StartPrivateThreadState` instance to use to save new private thread
-    to the database.
+    A `StartPrivateThreadState` instance to use to create a new private thread
+    in the database.
     """
 
     def __call__(
         self,
-        action: GetStartPrivateThreadPageStateHookAction,
+        action: GetStartPrivateThreadStateHookAction,
         request: HttpRequest,
         category: Category,
     ) -> "StartPrivateThreadState": ...
 
 
-class GetStartPrivateThreadPageStateHook(
+class GetStartPrivateThreadStateHook(
     FilterHook[
-        GetStartPrivateThreadPageStateHookAction,
-        GetStartPrivateThreadPageStateHookFilter,
+        GetStartPrivateThreadStateHookAction, GetStartPrivateThreadStateHookFilter
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `StartPrivateThreadState` instance for the start a new private thread page.
+    This hook wraps the standard function Misago uses to create a new
+    `StartPrivateThreadState` instance for starting a new private thread.
+
     # Example
 
     The code below implements a custom filter function that stores the user's IP
@@ -89,12 +89,12 @@ class GetStartPrivateThreadPageStateHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.hooks import get_start_private_thread_page_state_hook
-    from misago.posting.state.start import StartPrivateThreadState
+    from misago.posting.hooks import get_start_private_thread_state_hook
+    from misago.posting.state import StartPrivateThreadState
 
 
-    @get_start_private_thread_page_state_hook.append_filter
-    def set_poster_ip_on_start_private_thread_page_state(
+    @get_start_private_thread_state_hook.append_filter
+    def set_poster_ip_on_start_private_thread_state(
         action, request: HttpRequest, category: Category
     ) -> StartPrivateThreadState:
         state = action(request, category)
@@ -107,13 +107,11 @@ class GetStartPrivateThreadPageStateHook(
 
     def __call__(
         self,
-        action: GetStartPrivateThreadPageStateHookAction,
+        action: GetStartPrivateThreadStateHookAction,
         request: HttpRequest,
         category: Category,
     ) -> "StartPrivateThreadState":
         return super().__call__(action, request, category)
 
 
-get_start_private_thread_page_state_hook = GetStartPrivateThreadPageStateHook(
-    cache=False
-)
+get_start_private_thread_state_hook = GetStartPrivateThreadStateHook()

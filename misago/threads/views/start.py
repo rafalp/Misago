@@ -22,12 +22,15 @@ from ...posting.forms.start import (
 from ...posting.hooks import (
     get_start_private_thread_page_context_data_hook,
     get_start_private_thread_page_formset_hook,
-    get_start_private_thread_page_state_hook,
     get_start_thread_page_context_data_hook,
     get_start_thread_page_formset_hook,
-    get_start_thread_page_state_hook,
 )
-from ...posting.state.start import StartPrivateThreadState, StartThreadState
+from ...posting.state.start import (
+    StartPrivateThreadState,
+    StartThreadState,
+    get_start_private_thread_state,
+    get_start_thread_state,
+)
 from ..models import Thread
 
 
@@ -122,14 +125,7 @@ class StartThreadView(View):
         return StartThreadForm(prefix=prefix)
 
     def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
-        return get_start_thread_page_state_hook(
-            self.get_state_action, request, category
-        )
-
-    def get_state_action(
-        self, request: HttpRequest, category: Category
-    ) -> StartThreadState:
-        return self.state_class(request, category)
+        return get_start_thread_state(request, category)
 
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: StartThreadFormset
@@ -185,9 +181,7 @@ class StartPrivateThreadView(StartThreadView):
         return StartPrivateThreadForm(prefix=prefix, request=request)
 
     def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
-        return get_start_private_thread_page_state_hook(
-            self.get_state_action, request, category
-        )
+        return get_start_private_thread_state(request, category)
 
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: StartThreadFormset
