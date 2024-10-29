@@ -2,15 +2,13 @@
 
 {% with form.post as field %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
-    <label class="control-label" for="{{ field.id_for_label }}">
-      {% trans "Post:" context "account settings form" %}
-    </label>
     <textarea
       id="{{ field.id_for_label }}"
       name="{{ field.html_name }}"
       class="form-control"
       maxlength="{{ field.field.max_length }}"
       rows="15"
+      aria-label="{% trans 'Post message' context 'posting form' %}"
       {{ field|requiredhtml }}
     >{{ field.value|default:"" }}</textarea>
     {% for error in field.errors %}
