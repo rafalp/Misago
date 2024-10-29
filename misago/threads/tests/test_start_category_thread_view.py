@@ -129,8 +129,8 @@ def test_start_thread_view_posts_new_thread(user_client, default_category):
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
-            "thread-title": "Hello world",
-            "thread-post": "How's going?",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
         },
     )
     assert response.status_code == 302
@@ -148,8 +148,8 @@ def test_start_thread_view_previews_message(user_client, default_category):
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
-            "thread-title": "Hello world",
-            "thread-post": "How's going?",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
             "preview": "true",
         },
     )

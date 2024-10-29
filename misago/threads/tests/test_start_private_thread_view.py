@@ -46,9 +46,9 @@ def test_start_private_thread_view_posts_new_thread(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "users-users": other_user.username,
-            "thread-title": "Hello world",
-            "thread-post": "How's going?",
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
         },
     )
     assert response.status_code == 302
@@ -63,8 +63,8 @@ def test_start_private_thread_view_previews_message(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "thread-title": "Hello world",
-            "thread-post": "How's going?",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
             "preview": "true",
         },
     )

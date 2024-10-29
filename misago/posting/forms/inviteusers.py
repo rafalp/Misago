@@ -100,5 +100,5 @@ def create_invite_users_form(request: HttpRequest) -> InviteUsersForm:
             request=request,
             prefix=PREFIX,
         )
-    
+
     return InviteUsersForm(request=request, prefix=PREFIX)

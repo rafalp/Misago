@@ -29,5 +29,5 @@ def create_title_form(request: HttpRequest) -> TitleForm:
             request=request,
             prefix=PREFIX,
         )
-    
+
     return TitleForm(request=request, prefix=PREFIX)

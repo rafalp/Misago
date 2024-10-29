@@ -30,5 +30,5 @@ def create_post_form(request: HttpRequest) -> PostForm:
             request=request,
             prefix=PREFIX,
         )
-    
+
     return PostForm(request=request, prefix=PREFIX)
