@@ -6,13 +6,13 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..forms.start import StartThreadFormset
+    from ..formsets.start import StartThreadFormset
 
 
-class GetStartThreadPageFormsetHookAction(Protocol):
+class GetStartThreadFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new
-    `StartThreadFormset` instance for the start a new thread page.
+    A standard function that Misago uses to create a new `StartThreadFormset`
+    instance with forms for posting a new thread.
 
     # Arguments
 
@@ -26,8 +26,7 @@ class GetStartThreadPageFormsetHookAction(Protocol):
 
     # Return value
 
-    A `StartThreadFormset` instance with forms to display
-    on the start a new thread page.
+    A `StartThreadFormset` instance with forms for posting a new thread.
     """
 
     def __call__(
@@ -37,16 +36,16 @@ class GetStartThreadPageFormsetHookAction(Protocol):
     ) -> "StartThreadFormset": ...
 
 
-class GetStartThreadPageFormsetHookFilter(Protocol):
+class GetStartThreadFormsetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartThreadPageFormsetHookAction`
+    ## `action: GetStartThreadFormsetHookAction`
 
-    A standard function that Misago uses to create a new
-    `StartThreadFormset` instance for the start a new thread page.
+    A standard function that Misago uses to create a new `StartThreadFormset`
+    instance with forms for posting a new thread.
 
     See the [action](#action) section for details.
 
@@ -60,40 +59,42 @@ class GetStartThreadPageFormsetHookFilter(Protocol):
 
     # Return value
 
-    A `StartThreadFormset` instance with forms to display
-    on the start a new thread page.
+    A `StartThreadFormset` instance with forms for posting a new thread.
     """
 
     def __call__(
         self,
-        action: GetStartThreadPageFormsetHookAction,
+        action: GetStartThreadFormsetHookAction,
         request: HttpRequest,
         category: Category,
     ) -> "StartThreadFormset": ...
 
 
-class GetStartThreadPageFormsetHook(
-    FilterHook[GetStartThreadPageFormsetHookAction, GetStartThreadPageFormsetHookFilter]
+class GetStartThreadFormsetHook(
+    FilterHook[
+        GetStartThreadFormsetHookAction,
+        GetStartThreadFormsetHookFilter,
+    ]
 ):
     """
     This hook wraps the standard function that Misago uses to create a new
-    `StartThreadFormset` instance for the start a new thread page.
+    `StartThreadFormset` instance with forms for posting a new thread.
 
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the start a new thread page:
+    the start a new thread formset:
 
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.hooks import get_start_thread_page_formset_hook
-    from misago.posting.forms.start import StartThreadFormset
+    from misago.posting.formsets import StartThreadFormset
+    from misago.posting.hooks import get_start_thread_formset_hook
 
     from .forms import SelectUserForm
 
 
-    @get_start_thread_page_formset_hook.append_filter
+    @get_start_thread_formset_hook.append_filter
     def add_select_user_form(
         action, request: HttpRequest, category: Category
     ) -> StartThreadFormset:
@@ -104,7 +105,7 @@ class GetStartThreadPageFormsetHook(
         else:
             form = SelectUserForm(prefix="select-user")
 
-        formset.add_form(form)
+        formset.add_form(form, before="title")
         return formset
     ```
     """
@@ -113,11 +114,11 @@ class GetStartThreadPageFormsetHook(
 
     def __call__(
         self,
-        action: GetStartThreadPageFormsetHookAction,
+        action: GetStartThreadFormsetHookAction,
         request: HttpRequest,
         category: Category,
     ) -> "StartThreadFormset":
         return super().__call__(action, request, category)
 
 
-get_start_thread_page_formset_hook = GetStartThreadPageFormsetHook(cache=False)
+get_start_thread_formset_hook = GetStartThreadFormsetHook()

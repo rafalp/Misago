@@ -14,16 +14,15 @@ from ...permissions.privatethreads import (
     check_start_private_threads_permission,
 )
 from ...permissions.threads import check_start_thread_permission
-from ...posting.forms.start import (
-    StartPrivateThreadForm,
-    StartThreadForm,
+from ...posting.formsets import (
+    StartPrivateThreadFormset,
     StartThreadFormset,
+    get_start_private_thread_formset,
+    get_start_thread_formset,
 )
 from ...posting.hooks import (
     get_start_private_thread_page_context_data_hook,
-    get_start_private_thread_page_formset_hook,
     get_start_thread_page_context_data_hook,
-    get_start_thread_page_formset_hook,
 )
 from ...posting.state.start import (
     StartPrivateThreadState,
@@ -104,25 +103,7 @@ class StartThreadView(View):
     def get_formset(
         self, request: HttpRequest, category: Category
     ) -> StartThreadFormset:
-        return get_start_thread_page_formset_hook(
-            self.get_formset_action, request, category
-        )
-
-    def get_formset_action(
-        self, request: HttpRequest, category: Category
-    ) -> StartThreadFormset:
-        formset = StartThreadFormset()
-        formset.add_form(self.get_start_thread_form(request, category))
-        return formset
-
-    def get_start_thread_form(
-        self, request: HttpRequest, category: Category
-    ) -> StartThreadForm:
-        prefix = "thread"
-        if request.method == "POST":
-            return StartThreadForm(request.POST, request.FILES, prefix=prefix)
-
-        return StartThreadForm(prefix=prefix)
+        return get_start_thread_formset(request, category)
 
     def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
         return get_start_thread_state(request, category)
@@ -157,28 +138,8 @@ class StartPrivateThreadView(StartThreadView):
 
     def get_formset(
         self, request: HttpRequest, category: Category
-    ) -> StartThreadFormset:
-        return get_start_private_thread_page_formset_hook(
-            self.get_formset_action, request, category
-        )
-
-    def get_formset_action(
-        self, request: HttpRequest, category: Category
-    ) -> StartThreadFormset:
-        formset = super().get_formset_action(request, category)
-        formset.add_form(
-            self.get_start_private_thread_form(request, category), append=False
-        )
-        return formset
-
-    def get_start_private_thread_form(
-        self, request: HttpRequest, category: Category
-    ) -> StartThreadForm:
-        prefix = "users"
-        if request.method == "POST":
-            return StartPrivateThreadForm(request.POST, prefix=prefix, request=request)
-
-        return StartPrivateThreadForm(prefix=prefix, request=request)
+    ) -> StartPrivateThreadFormset:
+        return get_start_private_thread_formset(request, category)
 
     def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
         return get_start_private_thread_state(request, category)

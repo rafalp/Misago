@@ -6,13 +6,13 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..forms.start import StartThreadFormset
+    from ..formsets.start import StartPrivateThreadFormset
 
 
-class GetStartPrivateThreadPageFormsetHookAction(Protocol):
+class GetStartPrivateThreadFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new
-    `StartThreadFormset` instance for the start a new private thread page.
+    A standard function that Misago uses to create a new `StartPrivateThreadFormset`
+    instance with forms for posting a new private thread.
 
     # Arguments
 
@@ -26,27 +26,26 @@ class GetStartPrivateThreadPageFormsetHookAction(Protocol):
 
     # Return value
 
-    A `StartThreadFormset` instance with forms to display
-    on the start a new private thread page.
+    A `StartPrivateThreadFormset` instance with forms for posting a new private thread.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         category: Category,
-    ) -> "StartThreadFormset": ...
+    ) -> "StartPrivateThreadFormset": ...
 
 
-class GetStartPrivateThreadPageFormsetHookFilter(Protocol):
+class GetStartPrivateThreadFormsetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartPrivateThreadPageFormsetHookAction`
+    ## `action: GetStartPrivateThreadFormsetHookAction`
 
-    A standard function that Misago uses to create a new
-    `StartThreadFormset` instance for the start a new private thread page.
+    A standard function that Misago uses to create a new `StartPrivateThreadFormset`
+    instance with forms for posting a new private thread.
 
     See the [action](#action) section for details.
 
@@ -60,46 +59,45 @@ class GetStartPrivateThreadPageFormsetHookFilter(Protocol):
 
     # Return value
 
-    A `StartThreadFormset` instance with forms to display
-    on the start a new private thread page.
+    A `StartPrivateThreadFormset` instance with forms for posting a new private thread.
     """
 
     def __call__(
         self,
-        action: GetStartPrivateThreadPageFormsetHookAction,
+        action: GetStartPrivateThreadFormsetHookAction,
         request: HttpRequest,
         category: Category,
-    ) -> "StartThreadFormset": ...
+    ) -> "StartPrivateThreadFormset": ...
 
 
-class GetStartPrivateThreadPageFormsetHook(
+class GetStartPrivateThreadFormsetHook(
     FilterHook[
-        GetStartPrivateThreadPageFormsetHookAction,
-        GetStartPrivateThreadPageFormsetHookFilter,
+        GetStartPrivateThreadFormsetHookAction,
+        GetStartPrivateThreadFormsetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to create a new
-    `StartThreadFormset` instance for the start a new private thread page.
+    `StartPrivateThreadFormset` instance with forms for posting a new private thread.
 
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the start a new private thread page:
+    the start a new private thread formset:
 
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.hooks import get_start_private_thread_page_formset_hook
-    from misago.posting.forms.start import StartThreadFormset
+    from misago.posting.formsets import StartPrivateThreadFormset
+    from misago.posting.hooks import get_start_private_thread_formset_hook
 
     from .forms import SelectUserForm
 
 
-    @get_start_private_thread_page_formset_hook.append_filter
+    @get_start_private_thread_formset_hook.append_filter
     def add_select_user_form(
         action, request: HttpRequest, category: Category
-    ) -> StartThreadFormset:
+    ) -> StartPrivateThreadFormset:
         formset = action(request, category)
 
         if request.method == "POST":
@@ -107,7 +105,7 @@ class GetStartPrivateThreadPageFormsetHook(
         else:
             form = SelectUserForm(prefix="select-user")
 
-        formset.add_form(form)
+        formset.add_form(form, before="title")
         return formset
     ```
     """
@@ -116,13 +114,11 @@ class GetStartPrivateThreadPageFormsetHook(
 
     def __call__(
         self,
-        action: GetStartPrivateThreadPageFormsetHookAction,
+        action: GetStartPrivateThreadFormsetHookAction,
         request: HttpRequest,
         category: Category,
-    ) -> "StartThreadFormset":
+    ) -> "StartPrivateThreadFormset":
         return super().__call__(action, request, category)
 
 
-get_start_private_thread_page_formset_hook = GetStartPrivateThreadPageFormsetHook(
-    cache=False
-)
+get_start_private_thread_formset_hook = GetStartPrivateThreadFormsetHook()
