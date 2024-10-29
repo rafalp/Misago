@@ -1,3 +1,4 @@
+from .formset import PostingFormset
 from .start import (
     StartPrivateThreadFormset,
     StartThreadFormset,
@@ -6,6 +7,7 @@ from .start import (
 )
 
 __all__ = [
+    "PostingFormset",
     "StartPrivateThreadFormset",
     "StartThreadFormset",
     "get_start_private_thread_formset",

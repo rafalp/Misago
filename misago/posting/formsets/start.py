@@ -1,6 +1,7 @@
 from django.http import HttpRequest
 
 from ...categories.models import Category
+from ..forms import create_invite_users_form, create_post_form, create_title_form
 from ..hooks import get_start_private_thread_formset_hook, get_start_thread_formset_hook
 from .formset import PostingFormset
 
@@ -20,7 +21,12 @@ def get_start_thread_formset(
 def _get_start_thread_formset_action(
     request: HttpRequest, category: Category
 ) -> StartThreadFormset:
-    pass
+    formset = StartThreadFormset()
+
+    formset.add_form(create_title_form(request))
+    formset.add_form(create_post_form(request))
+
+    return formset
 
 
 class StartPrivateThreadFormset(PostingFormset):
@@ -38,4 +44,10 @@ def get_start_private_thread_formset(
 def _get_start_private_thread_formset_action(
     request: HttpRequest, category: Category
 ) -> StartPrivateThreadFormset:
-    pass
+    formset = StartPrivateThreadFormset()
+
+    formset.add_form(create_invite_users_form(request))
+    formset.add_form(create_title_form(request))
+    formset.add_form(create_post_form(request))
+
+    return formset

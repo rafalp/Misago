@@ -2,8 +2,8 @@ from django import forms
 from django.http import HttpRequest
 
 from ..state.reply import ReplyThreadState
+from ..formsets import PostingFormset
 from .base import PostingForm
-from .formset import PostingFormset
 
 
 class ReplyThreadFormset(PostingFormset):

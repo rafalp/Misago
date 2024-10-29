@@ -6,36 +6,22 @@ from django.http import HttpRequest
 from django.utils.translation import npgettext, pgettext
 
 from ...core.utils import slugify
-from ..state.start import StartThreadState
+from ..state import StartPrivateThreadState
 from .base import PostingForm
-from .formset import PostingFormset
 
 if TYPE_CHECKING:
     from ...users.models import User
 else:
     User = get_user_model()
 
-
-class StartThreadFormset(PostingFormset):
-    pass
+PREFIX = "posting-invite-users"
 
 
-class StartThreadForm(PostingForm):
-    template_name = "misago/posting/start_thread_form.html"
-
-    title = forms.CharField(max_length=200)
-    post = forms.CharField(max_length=2000, widget=forms.Textarea)
-
-    def update_state(self, state: StartThreadState):
-        state.set_thread_title(self.cleaned_data["title"])
-        state.set_post_message(self.cleaned_data["post"])
-
-
-class StartPrivateThreadForm(PostingForm):
+class InviteUsersForm(PostingForm):
     request: HttpRequest
     invite_users: list["User"]
 
-    template_name = "misago/posting/start_private_thread_form.html"
+    template_name = "misago/posting/invite_users_form.html"
 
     users = forms.CharField(max_length=200)
 
@@ -103,5 +89,16 @@ class StartPrivateThreadForm(PostingForm):
         self.invite_users = users
         return " ".join([u.username for u in users])
 
-    def update_state(self, state: StartThreadState):
+    def update_state(self, state: StartPrivateThreadState):
         state.set_invite_users(self.invite_users)
+
+
+def create_invite_users_form(request: HttpRequest) -> InviteUsersForm:
+    if request.method == "POST":
+        return InviteUsersForm(
+            request.POST,
+            request=request,
+            prefix=PREFIX,
+        )
+    
+    return InviteUsersForm(request=request, prefix=PREFIX)

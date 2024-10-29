@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.views import View
 
-from ...posting.forms import PostingFormset
+from ...posting.formsets import PostingFormset
 from ...posting.state import ReplyPrivateThreadState, ReplyThreadState
 from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
