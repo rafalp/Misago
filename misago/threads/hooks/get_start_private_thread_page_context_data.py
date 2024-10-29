@@ -6,13 +6,13 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..forms.start import StartThreadFormset
+    from ...posting.formsets import StartPrivateThreadFormset
 
 
-class GetStartThreadPageContextDataHookAction(Protocol):
+class GetStartPrivateThreadPageContextDataHookAction(Protocol):
     """
     A standard Misago function used to get the template context data
-    for the start thread page.
+    for the start private thread page.
 
     # Arguments
 
@@ -24,33 +24,33 @@ class GetStartThreadPageContextDataHookAction(Protocol):
 
     The `Category` instance.
 
-    ## `formset: StartThreadFormset`
+    ## `formset: StartPrivateThreadFormset`
 
-    The `StartThreadFormset` instance.
+    The `StartPrivateThreadFormset` instance.
 
     # Return value
 
-    A Python `dict` with context data to use to `render` the start thread page.
+    A Python `dict` with context data to use to `render` the start private thread page.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         category: Category,
-        formset: "StartThreadFormset",
+        formset: "StartPrivateThreadFormset",
     ) -> dict: ...
 
 
-class GetStartThreadPageContextDataHookFilter(Protocol):
+class GetStartPrivateThreadPageContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartThreadPageContextDataHookAction`
+    ## `action: GetStartPrivateThreadPageContextDataHookAction`
 
     A standard Misago function used to get the template context data
-    for the start thread page.
+    for the start private thread page.
 
     See the [action](#action) section for details.
 
@@ -62,32 +62,33 @@ class GetStartThreadPageContextDataHookFilter(Protocol):
 
     The `Category` instance.
 
-    ## `formset: StartThreadFormset`
+    ## `formset: StartPrivateThreadFormset`
 
-    The `StartThreadFormset` instance.
+    The `StartPrivateThreadFormset` instance.
 
     # Return value
 
-    A Python `dict` with context data to use to `render` the start thread page.
+    A Python `dict` with context data to use to `render` the start private thread page.
     """
 
     def __call__(
         self,
-        action: GetStartThreadPageContextDataHookAction,
+        action: GetStartPrivateThreadPageContextDataHookAction,
         request: HttpRequest,
         category: Category,
-        formset: "StartThreadFormset",
+        formset: "StartPrivateThreadFormset",
     ) -> dict: ...
 
 
-class GetStartThreadPageContextDataHook(
+class GetStartPrivateThreadPageContextDataHook(
     FilterHook[
-        GetStartThreadPageContextDataHookAction, GetStartThreadPageContextDataHookFilter
+        GetStartPrivateThreadPageContextDataHookAction,
+        GetStartPrivateThreadPageContextDataHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get the template
-    context data for the start thread page.
+    context data for the start private thread page.
 
     # Example
 
@@ -97,16 +98,16 @@ class GetStartThreadPageContextDataHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.forms.start import StartThreadFormset
-    from misago.posting.hooks import get_start_thread_page_context_data_hook
+    from misago.posting.formsets import StartPrivateThreadFormset
+    from misago.threads.hooks import get_start_private_thread_page_context_data_hook
 
 
-    @get_start_thread_page_context_data_hook.append_filter
+    @get_start_private_thread_page_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
         request: HttpRequest,
         category: Category,
-        formset: StartThreadFormset,
+        formset: StartPrivateThreadFormset,
     ) -> dict:
         context = action(request, category, formset)
         context["show_first_post_warning"] = not requser.user.posts
@@ -118,12 +119,14 @@ class GetStartThreadPageContextDataHook(
 
     def __call__(
         self,
-        action: GetStartThreadPageContextDataHookAction,
+        action: GetStartPrivateThreadPageContextDataHookAction,
         request: HttpRequest,
         category: Category,
-        formset: "StartThreadFormset",
+        formset: "StartPrivateThreadFormset",
     ) -> dict:
         return super().__call__(action, request, category, formset)
 
 
-get_start_thread_page_context_data_hook = GetStartThreadPageContextDataHook(cache=False)
+get_start_private_thread_page_context_data_hook = (
+    GetStartPrivateThreadPageContextDataHook(cache=False)
+)

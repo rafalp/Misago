@@ -6,13 +6,13 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..forms.start import StartThreadFormset
+    from ...posting.formsets import StartThreadFormset
 
 
-class GetStartPrivateThreadPageContextDataHookAction(Protocol):
+class GetStartThreadPageContextDataHookAction(Protocol):
     """
     A standard Misago function used to get the template context data
-    for the start private thread page.
+    for the start thread page.
 
     # Arguments
 
@@ -30,7 +30,7 @@ class GetStartPrivateThreadPageContextDataHookAction(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render` the start private thread page.
+    A Python `dict` with context data to use to `render` the start thread page.
     """
 
     def __call__(
@@ -41,16 +41,16 @@ class GetStartPrivateThreadPageContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetStartPrivateThreadPageContextDataHookFilter(Protocol):
+class GetStartThreadPageContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartPrivateThreadPageContextDataHookAction`
+    ## `action: GetStartThreadPageContextDataHookAction`
 
     A standard Misago function used to get the template context data
-    for the start private thread page.
+    for the start thread page.
 
     See the [action](#action) section for details.
 
@@ -68,27 +68,26 @@ class GetStartPrivateThreadPageContextDataHookFilter(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render` the start private thread page.
+    A Python `dict` with context data to use to `render` the start thread page.
     """
 
     def __call__(
         self,
-        action: GetStartPrivateThreadPageContextDataHookAction,
+        action: GetStartThreadPageContextDataHookAction,
         request: HttpRequest,
         category: Category,
         formset: "StartThreadFormset",
     ) -> dict: ...
 
 
-class GetStartPrivateThreadPageContextDataHook(
+class GetStartThreadPageContextDataHook(
     FilterHook[
-        GetStartPrivateThreadPageContextDataHookAction,
-        GetStartPrivateThreadPageContextDataHookFilter,
+        GetStartThreadPageContextDataHookAction, GetStartThreadPageContextDataHookFilter
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get the template
-    context data for the start private thread page.
+    context data for the start thread page.
 
     # Example
 
@@ -98,11 +97,11 @@ class GetStartPrivateThreadPageContextDataHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.forms.start import StartThreadFormset
-    from misago.posting.hooks import get_start_private_thread_page_context_data_hook
+    from misago.posting.formsets import StartThreadFormset
+    from misago.threads.hooks import get_start_thread_page_context_data_hook
 
 
-    @get_start_private_thread_page_context_data_hook.append_filter
+    @get_start_thread_page_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
         request: HttpRequest,
@@ -119,7 +118,7 @@ class GetStartPrivateThreadPageContextDataHook(
 
     def __call__(
         self,
-        action: GetStartPrivateThreadPageContextDataHookAction,
+        action: GetStartThreadPageContextDataHookAction,
         request: HttpRequest,
         category: Category,
         formset: "StartThreadFormset",
@@ -127,6 +126,4 @@ class GetStartPrivateThreadPageContextDataHook(
         return super().__call__(action, request, category, formset)
 
 
-get_start_private_thread_page_context_data_hook = (
-    GetStartPrivateThreadPageContextDataHook(cache=False)
-)
+get_start_thread_page_context_data_hook = GetStartThreadPageContextDataHook(cache=False)

@@ -20,15 +20,15 @@ from ...posting.formsets import (
     get_start_private_thread_formset,
     get_start_thread_formset,
 )
-from ...posting.hooks import (
-    get_start_private_thread_page_context_data_hook,
-    get_start_thread_page_context_data_hook,
-)
 from ...posting.state.start import (
     StartPrivateThreadState,
     StartThreadState,
     get_start_private_thread_state,
     get_start_thread_state,
+)
+from ..hooks import (
+    get_start_private_thread_page_context_data_hook,
+    get_start_thread_page_context_data_hook,
 )
 from ..models import Thread
 
@@ -44,7 +44,6 @@ def start_thread_login_required():
 
 class StartThreadView(View):
     template_name: str = "misago/start_thread/index.html"
-    state_class = StartThreadState
 
     @method_decorator(start_thread_login_required())
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -129,7 +128,6 @@ class StartThreadView(View):
 
 class StartPrivateThreadView(StartThreadView):
     template_name: str = "misago/start_private_thread/index.html"
-    state_class = StartPrivateThreadState
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         check_private_threads_permission(request.user_permissions)
@@ -141,15 +139,28 @@ class StartPrivateThreadView(StartThreadView):
     ) -> StartPrivateThreadFormset:
         return get_start_private_thread_formset(request, category)
 
-    def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
+    def get_state(
+        self, request: HttpRequest, category: Category
+    ) -> StartPrivateThreadState:
         return get_start_private_thread_state(request, category)
 
     def get_context_data(
-        self, request: HttpRequest, category: Category, formset: StartThreadFormset
+        self,
+        request: HttpRequest,
+        category: Category,
+        formset: StartPrivateThreadFormset,
     ) -> dict:
         return get_start_private_thread_page_context_data_hook(
             self.get_context_data_action, request, category, formset
         )
+
+    def get_context_data_action(
+        self,
+        request: HttpRequest,
+        category: Category,
+        formset: StartPrivateThreadFormset,
+    ) -> dict:
+        return {"category": category, "formset": formset}
 
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
