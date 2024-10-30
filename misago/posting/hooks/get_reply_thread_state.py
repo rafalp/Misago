@@ -86,13 +86,13 @@ class GetReplyThreadStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.categories.models import Category
     from misago.posting.hooks import get_reply_thread_state_hook
     from misago.posting.state import ReplyThreadState
+    from misago.threads.models import Thread
 
 
     @get_reply_thread_state_hook.append_filter
-    def set_poster_ip_on_reply_private_thread_state(
+    def set_poster_ip_on_reply_thread_state(
         action, request: HttpRequest, thread: Thread
     ) -> ReplyThreadState:
         state = action(request, thread)

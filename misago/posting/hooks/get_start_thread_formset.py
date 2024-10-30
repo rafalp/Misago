@@ -105,7 +105,7 @@ class GetStartThreadFormsetHook(
         else:
             form = SelectUserForm(prefix="select-user")
 
-        formset.add_form(form, before="title")
+        formset.add_form(form, before="posting-title")
         return formset
     ```
     """

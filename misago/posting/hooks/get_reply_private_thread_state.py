@@ -88,9 +88,9 @@ class GetReplyPrivateThreadStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.categories.models import Category
     from misago.posting.hooks import get_reply_private_thread_state_hook
     from misago.posting.state import ReplyPrivateThreadState
+    from misago.threads.models import Thread
 
 
     @get_reply_private_thread_state_hook.append_filter
