@@ -3,6 +3,7 @@ from django.http import HttpRequest
 
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Thread
+from ..hooks import get_reply_private_thread_state_hook, get_reply_thread_state_hook
 from .base import PostingState
 
 
@@ -55,3 +56,27 @@ class ReplyThreadState(PostingState):
 
 class ReplyPrivateThreadState(ReplyThreadState):
     pass
+
+
+def get_reply_thread_state(request: HttpRequest, thread: Thread) -> ReplyThreadState:
+    return get_reply_thread_state_hook(_get_reply_thread_state_action, request, thread)
+
+
+def _get_reply_thread_state_action(
+    request: HttpRequest, thread: Thread
+) -> ReplyThreadState:
+    return ReplyThreadState(request, thread)
+
+
+def get_reply_private_thread_state(
+    request: HttpRequest, thread: Thread
+) -> ReplyPrivateThreadState:
+    return get_reply_private_thread_state_hook(
+        _get_reply_private_thread_state_action, request, thread
+    )
+
+
+def _get_reply_private_thread_state_action(
+    request: HttpRequest, thread: Thread
+) -> ReplyPrivateThreadState:
+    return ReplyPrivateThreadState(request, thread)
