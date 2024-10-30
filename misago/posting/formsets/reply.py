@@ -22,9 +22,7 @@ def _get_reply_thread_formset_action(
     request: HttpRequest, thread: Thread
 ) -> ReplyThreadFormset:
     formset = ReplyThreadFormset()
-
     formset.add_form(create_post_form(request))
-
     return formset
 
 
@@ -44,7 +42,5 @@ def _get_reply_private_thread_formset_action(
     request: HttpRequest, thread: Thread
 ) -> ReplyPrivateThreadFormset:
     formset = ReplyPrivateThreadFormset()
-
     formset.add_form(create_post_form(request))
-
     return formset

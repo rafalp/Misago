@@ -83,7 +83,7 @@ class GetStartPrivateThreadFormsetHook(
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the start a new private thread formset:
+    the start new private thread formset:
 
     ```python
     from django.http import HttpRequest

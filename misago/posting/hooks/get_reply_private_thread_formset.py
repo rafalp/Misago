@@ -86,7 +86,7 @@ class GetReplyPrivateThreadFormsetHook(
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the a new private thread reply formset:
+    the new private thread reply formset:
 
     ```python
     from django.http import HttpRequest
