@@ -2,10 +2,18 @@ from django.http import HttpRequest
 
 from ...threads.models import Post
 from ..forms import create_post_form
+from ..hooks import (
+    get_edit_private_thread_reply_formset_hook,
+    get_edit_thread_reply_formset_hook,
+)
 from .formset import PostingFormset
 
 
 class EditThreadReplyFormset(PostingFormset):
+    pass
+
+
+class EditPrivateThreadReplyFormset(PostingFormset):
     pass
 
 
@@ -23,10 +31,6 @@ def _get_edit_thread_reply_formset_action(
     formset = EditThreadReplyFormset()
     formset.add_form(create_post_form(request))
     return formset
-
-
-class EditPrivateThreadReplyFormset(PostingFormset):
-    pass
 
 
 def get_edit_private_thread_reply_formset(

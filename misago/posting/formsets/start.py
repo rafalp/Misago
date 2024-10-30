@@ -10,6 +10,10 @@ class StartThreadFormset(PostingFormset):
     pass
 
 
+class StartPrivateThreadFormset(PostingFormset):
+    pass
+
+
 def get_start_thread_formset(
     request: HttpRequest, category: Category
 ) -> StartThreadFormset:
@@ -27,10 +31,6 @@ def _get_start_thread_formset_action(
     formset.add_form(create_post_form(request))
 
     return formset
-
-
-class StartPrivateThreadFormset(PostingFormset):
-    pass
 
 
 def get_start_private_thread_formset(

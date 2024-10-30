@@ -3,7 +3,10 @@ from django.http import HttpRequest
 
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Thread
-from ..hooks import get_reply_private_thread_state_hook, get_reply_thread_state_hook
+from ..hooks import (
+    get_reply_private_thread_state_hook,
+    get_reply_thread_state_hook,
+)
 from .base import PostingState
 
 
@@ -15,8 +18,8 @@ class ReplyThreadState(PostingState):
         self.thread = thread
         self.post = self.initialize_post()
 
-        self.store_object_state(thread.category)
-        self.store_object_state(thread)
+        self.store_object_state(self.category)
+        self.store_object_state(self.thread)
 
     @transaction.atomic()
     def save(self):

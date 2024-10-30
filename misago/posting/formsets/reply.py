@@ -10,6 +10,10 @@ class ReplyThreadFormset(PostingFormset):
     pass
 
 
+class ReplyPrivateThreadFormset(PostingFormset):
+    pass
+
+
 def get_reply_thread_formset(
     request: HttpRequest, thread: Thread
 ) -> ReplyThreadFormset:
@@ -24,10 +28,6 @@ def _get_reply_thread_formset_action(
     formset = ReplyThreadFormset()
     formset.add_form(create_post_form(request))
     return formset
-
-
-class ReplyPrivateThreadFormset(PostingFormset):
-    pass
 
 
 def get_reply_private_thread_formset(
