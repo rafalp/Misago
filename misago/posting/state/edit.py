@@ -4,8 +4,8 @@ from django.http import HttpRequest
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post
 from ..hooks import (
-    get_reply_private_thread_state_hook,
-    get_reply_thread_state_hook,
+    get_edit_private_thread_reply_state_hook,
+    get_edit_thread_reply_state_hook,
 )
 from .base import PostingState
 
@@ -45,25 +45,29 @@ class EditPrivateThreadReplyState(EditThreadReplyState):
     pass
 
 
-def get_reply_thread_state(request: HttpRequest, post: Post) -> EditThreadReplyState:
-    return get_reply_thread_state_hook(_get_reply_thread_state_action, request, post)
+def get_edit_thread_reply_state(
+    request: HttpRequest, post: Post
+) -> EditThreadReplyState:
+    return get_edit_thread_reply_state_hook(
+        _get_edit_thread_reply_state_action, request, post
+    )
 
 
-def _get_reply_thread_state_action(
+def _get_edit_thread_reply_state_action(
     request: HttpRequest, post: Post
 ) -> EditThreadReplyState:
     return EditThreadReplyState(request, post)
 
 
-def get_reply_private_thread_state(
+def get_edit_private_thread_reply_state(
     request: HttpRequest, post: Post
 ) -> EditPrivateThreadReplyState:
-    return get_reply_private_thread_state_hook(
-        _get_reply_private_thread_state_action, request, post
+    return get_edit_private_thread_reply_state_hook(
+        _get_edit_private_thread_reply_state_action, request, post
     )
 
 
-def _get_reply_private_thread_state_action(
+def _get_edit_private_thread_reply_state_action(
     request: HttpRequest, post: Post
 ) -> EditPrivateThreadReplyState:
     return EditPrivateThreadReplyState(request, post)
