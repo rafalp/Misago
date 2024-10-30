@@ -30,6 +30,9 @@ class RedirectView(View):
         thread_url = self.get_thread_url(thread, page) + f"#post-{post_id}"
         return redirect(thread_url)
 
+    def post(self, request: HttpRequest, id: int, slug: str, **kwargs) -> HttpResponse:
+        return self.get(request, id, slug, **kwargs)
+
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:

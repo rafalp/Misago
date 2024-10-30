@@ -91,7 +91,7 @@ class GetEditPrivateThreadReplyStateHook(
     from django.http import HttpRequest
     from misago.posting.hooks import get_edit_private_thread_reply_state_hook
     from misago.posting.state import EditPrivateThreadReplyState
-    from misago.threads.models import Thread
+    from misago.threads.models import Post
 
 
     @get_edit_private_thread_reply_state_hook.append_filter

@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, prefetch_related_objects
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
 
 from ...categories.models import Category
@@ -13,7 +14,12 @@ from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
 from ...permissions.privatethreads import check_reply_private_thread_permission
 from ...permissions.threads import check_reply_thread_permission
-from ...posting.forms.reply import get_reply_thread_formset
+from ...posting.formsets import (
+    ReplyPrivateThreadFormset,
+    ReplyThreadFormset,
+    get_reply_private_thread_formset,
+    get_reply_thread_formset,
+)
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -238,11 +244,20 @@ class RepliesView(View):
 
         return {
             "template_name": self.reply_form_template_name,
-            "formset": get_reply_thread_formset(request),
+            "form_url": self.get_reply_form_url(request, thread),
+            "formset": self.get_reply_form_formset(request, thread),
         }
 
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
         raise NotImplementedError()
+
+    def get_reply_form_url(self, request: HttpRequest, thread: Thread) -> str:
+        raise NotImplementedError()
+
+    def get_reply_form_formset(
+        self, request: HttpRequest, thread: Thread
+    ) -> ReplyThreadFormset:
+        raise NotImplementedError
 
 
 class ThreadRepliesView(RepliesView, ThreadView):
@@ -291,6 +306,16 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
         check_reply_thread_permission(request.user_permissions, thread.category, thread)
+
+    def get_reply_form_url(self, request: HttpRequest, thread: Thread) -> str:
+        return reverse(
+            "misago:thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+        )
+
+    def get_reply_form_formset(
+        self, request: HttpRequest, thread: Thread
+    ) -> ReplyThreadFormset:
+        return get_reply_thread_formset(request, thread)
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
@@ -365,6 +390,16 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
         check_reply_private_thread_permission(request.user_permissions, thread)
+
+    def get_reply_form_url(self, request: HttpRequest, thread: Thread) -> str:
+        return reverse(
+            "misago:private-thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+        )
+
+    def get_reply_form_formset(
+        self, request: HttpRequest, thread: Thread
+    ) -> ReplyPrivateThreadFormset:
+        return get_reply_private_thread_formset(request, thread)
 
 
 thread_replies = ThreadRepliesView.as_view()

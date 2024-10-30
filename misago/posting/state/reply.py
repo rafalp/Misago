@@ -33,7 +33,7 @@ class ReplyThreadState(PostingState):
         self.save_user()
 
     def save_thread(self):
-        self.thread.replies = models.F("posts") + 1
+        self.thread.replies = models.F("replies") + 1
         self.thread.set_last_post(self.post)
 
         self.update_object(self.thread)

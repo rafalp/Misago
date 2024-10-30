@@ -495,3 +495,39 @@ def test_post_redirect_view_returns_redirect_to_private_thread_post(
         )
         + f"#post-{reply.id}"
     )
+
+
+def test_post_redirect_view_returns_redirect_to_thread_post_for_post_request(
+    client, thread
+):
+    reply = reply_thread(thread)
+
+    response = client.post(reverse("misago:post", kwargs={"id": reply.id}))
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
+
+
+def test_post_redirect_view_returns_redirect_to_private_thread_post_for_post_request(
+    user_client, user_private_thread
+):
+    reply = reply_thread(user_private_thread)
+
+    response = user_client.post(reverse("misago:post", kwargs={"id": reply.id}))
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
