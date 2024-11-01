@@ -83,7 +83,7 @@ class SaveReplyThreadStateHook(
     def save_poster_ip_on_thread_reply(
         action, request: HttpRequest, state: ReplyThreadState
     ):
-        state.post.plugin_data["poster_id"] = request.user_ip
+        state.post.plugin_data["poster_ip"] = request.user_ip
 
         action(request, state)
     ```

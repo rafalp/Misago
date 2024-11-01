@@ -82,7 +82,7 @@ class SaveStartThreadStateHook(
         action, request: HttpRequest, state: StartThreadState
     ):
         state.thread.plugin_data["starter_ip"] = request.user_ip
-        state.post.plugin_data["poster_id"] = request.user_ip
+        state.post.plugin_data["poster_ip"] = request.user_ip
 
         action(request, state)
     ```

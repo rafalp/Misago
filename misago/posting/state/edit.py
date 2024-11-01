@@ -6,6 +6,8 @@ from ...threads.models import Post
 from ..hooks import (
     get_edit_private_thread_reply_state_hook,
     get_edit_thread_reply_state_hook,
+    save_edit_private_thread_reply_state_hook,
+    save_edit_thread_reply_state_hook,
 )
 from .base import PostingState
 
@@ -24,7 +26,7 @@ class EditThreadReplyState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        self.save_action(self.request, self)
+        save_edit_thread_reply_state_hook(self.save_action, self.request, self)
 
     def save_action(self, request: HttpRequest, state: "EditThreadReplyState"):
         self.save_post()
@@ -42,7 +44,9 @@ class EditThreadReplyState(PostingState):
 
 
 class EditPrivateThreadReplyState(EditThreadReplyState):
-    pass
+    @transaction.atomic()
+    def save(self):
+        save_edit_private_thread_reply_state_hook(self.save_action, self.request, self)
 
 
 def get_edit_thread_reply_state(
