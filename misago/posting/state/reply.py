@@ -6,6 +6,8 @@ from ...threads.models import Thread
 from ..hooks import (
     get_reply_private_thread_state_hook,
     get_reply_thread_state_hook,
+    save_start_private_thread_state_hook,
+    save_start_thread_state_hook,
 )
 from .base import PostingState
 
@@ -23,7 +25,7 @@ class ReplyThreadState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        self.save_action(self.request, self)
+        save_start_thread_state_hook(self.save_action, self.request, self)
 
     def save_action(self, request: HttpRequest, state: "ReplyThreadState"):
         self.save_post()
@@ -58,7 +60,9 @@ class ReplyThreadState(PostingState):
 
 
 class ReplyPrivateThreadState(ReplyThreadState):
-    pass
+    @transaction.atomic()
+    def save(self):
+        save_start_private_thread_state_hook(self.save_action, self.request, self)
 
 
 def get_reply_thread_state(request: HttpRequest, thread: Thread) -> ReplyThreadState:

@@ -95,7 +95,7 @@ class GetEditPrivateThreadReplyStateHook(
 
 
     @get_edit_private_thread_reply_state_hook.append_filter
-    def set_poster_ip_on_reply_private_thread_state(
+    def set_poster_ip_on_edit_private_thread_reply_state(
         action, request: HttpRequest, post: Post
     ) -> EditPrivateThreadReplyState:
         state = action(request, post)
