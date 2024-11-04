@@ -1,7 +1,7 @@
 {% load i18n %}
 <form action="{{ form_url }}" method="post">
   {% csrf_token %}
-  <div class="panel panel-default panel-thread-reply">
+  <div class="panel panel-reply-thread">
     <div class="panel-body">
       {% for form in formset.get_forms %}
         {% include form.template_name with form=form %}

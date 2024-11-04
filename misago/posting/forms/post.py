@@ -23,12 +23,12 @@ class PostForm(PostingForm):
 
 
 def create_post_form(request: HttpRequest) -> PostForm:
-    if request.method == "POST":
-        return PostForm(
-            request.POST,
-            request.FILES,
-            request=request,
-            prefix=PREFIX,
-        )
+    kwargs = {
+        "request": request,
+        "prefix": PREFIX,
+    }
 
-    return PostForm(request=request, prefix=PREFIX)
+    if request.method == "POST":
+        return PostForm(request.POST, request.FILES, **kwargs)
+
+    return PostForm(**kwargs)

@@ -5,9 +5,8 @@
     <textarea
       id="{{ field.id_for_label }}"
       name="{{ field.html_name }}"
-      class="form-control"
+      class="form-control form-control-post{% if post_control_large %} form-control-post-lg{% endif %}"
       maxlength="{{ field.field.max_length }}"
-      rows="15"
       aria-label="{% trans 'Post message' context 'posting form' %}"
       {{ field|requiredhtml }}
     >{{ field.value|default:"" }}</textarea>

@@ -71,3 +71,32 @@ input.hidden-file-upload {
     pointer-events: none;
   }
 }
+
+// Reply thread field
+.form-control-post {
+  resize: none;
+  min-height: 200px;
+
+  &.form-control-post-lg {
+    min-height: 300px;
+  }
+}
+
+@media screen and (min-height: 600px) {
+  .form-control-post {
+    field-sizing: content;
+    resize: vertical;
+  
+    &.form-control-post-lg {
+      min-height: 340px;
+    }
+  }
+}
+
+@media screen and (min-height: 760px) {
+  .form-control-post {
+    &.form-control-post-lg {
+      min-height: 500px;
+    }
+  }
+}
