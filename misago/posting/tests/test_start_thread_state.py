@@ -1,4 +1,4 @@
-from ..state.start import StartThreadState
+from ..state import StartThreadState
 
 
 def test_start_thread_state_initializes_thread_and_post(user_request, default_category):
@@ -47,7 +47,7 @@ def test_start_thread_state_save_saves_thread_and_post(user_request, default_cat
     assert state.post.thread == state.thread
 
 
-def test_start_thread_state_updates_category_stats(user_request, default_category):
+def test_start_thread_state_updates_category(user_request, default_category):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message("Hello world")
@@ -63,7 +63,7 @@ def test_start_thread_state_updates_category_stats(user_request, default_categor
     assert default_category.last_poster_slug == state.thread.last_poster_slug
 
 
-def test_start_thread_state_updates_user_stats(user_request, default_category, user):
+def test_start_thread_state_updates_user(user_request, default_category, user):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message("Hello world")

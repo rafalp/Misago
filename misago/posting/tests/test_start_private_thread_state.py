@@ -1,5 +1,5 @@
 from ...threads.models import ThreadParticipant
-from ..state.start import StartPrivateThreadState
+from ..state import StartPrivateThreadState
 
 
 def test_start_private_thread_state_save_sets_request_user_as_thread_owner(
