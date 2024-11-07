@@ -3,12 +3,14 @@
 
 
 {% block title %}
-  {% trans "Start new private thread" context "start thread page" %} | {{ block.super }}
+  {% trans "Reply to thread" context "reply thread page" %} | {{ thread }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block content %}
-<div class="page page-start-private-thread">
+<div class="page page-reply-thread">
+  {% include "misago/thread/header.html" %}
+
   <div class="container page-container">
 
     {% if preview %}
@@ -16,14 +18,14 @@
     {% endif %}
 
     <form 
-      action="{% url 'misago:start-private-thread' %}"
+      action="{% url 'misago:thread-reply' id=thread.id slug=thread.slug %}"
       method="post"
     >
       {% csrf_token %}
       <div class="panel panel-default panel-form">
         <div class="panel-heading">
           <h3 class="panel-title">
-            {% trans "Start new private thread" context "start thread page" %}
+            {% trans "Reply to thread" context "reply thread page" %}
           </h3>
         </div>
         <div class="panel-body">
@@ -33,10 +35,10 @@
         </div>
         <div class="panel-footer panel-footer-sticky">
           <button class="btn btn-primary" type="submit">
-            {% trans "Start thread" context "start thread submit btn" %}
+            {% trans "Post reply" context "reply thread submit btn" %}
           </button>
           <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
-            {% trans "Preview" context "start thread submit btn" %}
+            {% trans "Preview" context "reply thread submit btn" %}
           </button>
         </div>
       </div>

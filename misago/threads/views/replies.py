@@ -61,7 +61,7 @@ class RepliesView(View):
     feed_template_name: str = "misago/posts_feed/index.html"
     feed_post_template_name: str = "misago/posts_feed/post.html"
     reply_error_template_name: str = "misago/thread/reply_error.html"
-    reply_form_template_name: str = "misago/thread/reply_form.html"
+    reply_template_name: str = "misago/thread/reply_form.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -98,7 +98,7 @@ class RepliesView(View):
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
             "feed": self.get_posts_feed_data(request, thread, page),
-            "reply_form": self.get_reply_form_context_data(request, thread),
+            "reply": self.get_reply_context_data(request, thread),
         }
 
     def get_posts_feed_data(
@@ -233,28 +233,30 @@ class RepliesView(View):
                 user.unread_notifications = new_unread_notifications
                 user.save(update_fields=["unread_notifications"])
 
-    def get_reply_form_context_data(self, request: HttpRequest, thread: Thread) -> dict:
+    def get_reply_context_data(self, request: HttpRequest, thread: Thread) -> dict:
         try:
             self.check_reply_thread_permission(request, thread)
         except PermissionDenied as exc:
             return {
+                "permission": False,
                 "template_name": self.reply_error_template_name,
                 "error": exc,
             }
 
         return {
-            "template_name": self.reply_form_template_name,
-            "form_url": self.get_reply_form_url(request, thread),
-            "formset": self.get_reply_form_formset(request, thread),
+            "permission": True,
+            "template_name": self.reply_template_name,
+            "formset": self.get_reply_formset(request, thread),
+            "url": self.get_reply_url(request, thread),
         }
 
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
         raise NotImplementedError()
 
-    def get_reply_form_url(self, request: HttpRequest, thread: Thread) -> str:
+    def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         raise NotImplementedError()
 
-    def get_reply_form_formset(
+    def get_reply_formset(
         self, request: HttpRequest, thread: Thread
     ) -> ReplyThreadFormset:
         raise NotImplementedError
@@ -307,12 +309,12 @@ class ThreadRepliesView(RepliesView, ThreadView):
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
         check_reply_thread_permission(request.user_permissions, thread.category, thread)
 
-    def get_reply_form_url(self, request: HttpRequest, thread: Thread) -> str:
+    def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
             "misago:thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
-    def get_reply_form_formset(
+    def get_reply_formset(
         self, request: HttpRequest, thread: Thread
     ) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
@@ -391,12 +393,12 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
         check_reply_private_thread_permission(request.user_permissions, thread)
 
-    def get_reply_form_url(self, request: HttpRequest, thread: Thread) -> str:
+    def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
             "misago:private-thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
-    def get_reply_form_formset(
+    def get_reply_formset(
         self, request: HttpRequest, thread: Thread
     ) -> ReplyPrivateThreadFormset:
         return get_reply_private_thread_formset(request, thread)

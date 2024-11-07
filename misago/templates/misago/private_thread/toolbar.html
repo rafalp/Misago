@@ -14,9 +14,15 @@
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
   <div class="toolbar-section">
     <div class="toolbar-item">
-      <button class="btn btn-primary btn-block" disabled>
-        {% trans "Post reply" context "thread replies toolbar" %}
-      </button>
+      {% if reply.url %}
+        <a href="{{ reply.url }}" class="btn btn-primary btn-block">
+          {% trans "Post reply" context "thread replies toolbar" %}
+        </a>
+      {% else %}
+        <button class="btn btn-primary btn-block" disabled>
+          {% trans "Post reply" context "thread replies toolbar" %}
+        </button>
+      {% endif %}
     </div>
   </div>
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_END %}
