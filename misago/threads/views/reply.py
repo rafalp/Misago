@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import render
@@ -5,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import pgettext
 
 from ...auth.decorators import login_required
+from ...htmx.response import htmx_redirect
 from ...permissions.privatethreads import check_reply_private_thread_permission
 from ...permissions.threads import check_reply_thread_permission
 from ...posting.formsets import (
@@ -39,6 +41,7 @@ def reply_thread_login_required():
 
 class ReplyView(View):
     template_name: str
+    template_name_htmx: str
 
     @method_decorator(reply_thread_login_required())
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -56,15 +59,20 @@ class ReplyView(View):
         formset.update_state(state)
 
         if request.POST.get("preview"):
-            context = self.get_context_data(request, thread, formset)
-            context["preview"] = state.post.parsed
-            return render(request, self.template_name, context)
+            return self.render(request, thread, formset, state.post.parsed)
 
         if not formset.is_valid():
             return self.render(request, thread, formset)
 
         state.save()
-        return get_redirect_to_post_response(request, state.post)
+
+        messages.success(request, pgettext("thread reply posted", "Reply posted"))
+
+        redirect = get_redirect_to_post_response(request, state.post)
+        if request.is_htmx:
+            return htmx_redirect(redirect.headers["location"])
+
+        return redirect
 
     def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
         raise NotImplementedError()
@@ -72,10 +80,22 @@ class ReplyView(View):
     def get_formset(self, request: HttpRequest, thread: Thread) -> ReplyThreadFormset:
         raise NotImplementedError()
 
-    def render(self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset):
-        return render(
-            request, self.template_name, self.get_context_data(request, thread, formset)
-        )
+    def render(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        formset: ReplyThreadFormset,
+        preview: str | None = None,
+    ):
+        context = self.get_context_data(request, thread, formset)
+        context["preview"] = preview
+
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
@@ -85,6 +105,7 @@ class ReplyView(View):
 
 class ThreadReplyView(ReplyView, ThreadView):
     template_name: str = "misago/reply_thread/index.html"
+    template_name_htmx: str = "misago/reply_thread/form.html"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -107,11 +128,16 @@ class ThreadReplyView(ReplyView, ThreadView):
     def get_context_data_action(
         self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
     ) -> dict:
-        return {"thread": thread, "formset": formset}
+        return {
+            "thread": thread,
+            "formset": formset,
+            "template_name_htmx": self.template_name_htmx,
+        }
 
 
 class PrivateThreadReplyView(ReplyView, PrivateThreadView):
     template_name: str = "misago/reply_thread/index.html"
+    template_name_htmx: str = "misago/reply_thread/form.html"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -138,7 +164,11 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
     def get_context_data_action(
         self, request: HttpRequest, thread: Thread, formset: ReplyPrivateThreadFormset
     ) -> dict:
-        return {"thread": thread, "formset": formset}
+        return {
+            "thread": thread,
+            "formset": formset,
+            "template_name_htmx": self.template_name_htmx,
+        }
 
 
 thread_reply = ThreadReplyView.as_view()

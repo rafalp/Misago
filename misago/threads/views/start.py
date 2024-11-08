@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import Http404, HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import redirect, render
@@ -79,6 +80,9 @@ class StartThreadView(View):
             )
 
         state.save()
+
+        messages.success(request, pgettext("thread started", "Thread started"))
+
         thread_url = self.get_thread_url(request, state.thread)
         return redirect(thread_url)
 

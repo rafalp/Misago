@@ -110,7 +110,7 @@ class GetStartPrivateThreadPageContextDataHook(
         formset: StartPrivateThreadFormset,
     ) -> dict:
         context = action(request, category, formset)
-        context["show_first_post_warning"] = not requser.user.posts
+        context["show_first_post_warning"] = not request.user.posts
         return context
     ```
     """
