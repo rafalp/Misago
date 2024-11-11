@@ -148,6 +148,37 @@
   padding: floor(@line-height-computed / 2) 0;
 }
 
+.posts-feed-item-post-body-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.posts-feed-item-post-body-footer-btn {
+  font-weight: 400;
+  color: @gray-dark;
+
+  &,
+  &:active,
+  &.active,
+  &[disabled],
+  fieldset[disabled] & {
+    background-color: transparent;
+    .box-shadow(none);
+  }
+  &:hover,
+  &:focus {
+    color: @gray-darker;
+    text-decoration: none;
+    background-color: @gray-lighter;
+  }
+  &:active {
+    border-color: transparent;
+    color: @text-color;
+    background-color: darken(@gray-lighter, 10%);
+  }
+}
+
 @media screen and (min-width: 500px) {
   .posts-feed {
     margin-left: 0;

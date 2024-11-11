@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, prefetch_related_objects
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
@@ -12,8 +12,14 @@ from django.views import View
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
-from ...permissions.privatethreads import check_reply_private_thread_permission
-from ...permissions.threads import check_reply_thread_permission
+from ...permissions.privatethreads import (
+    check_edit_private_thread_post_permission,
+    check_reply_private_thread_permission,
+)
+from ...permissions.threads import (
+    check_edit_post_permission,
+    check_reply_thread_permission,
+)
 from ...posting.formsets import (
     ReplyPrivateThreadFormset,
     ReplyThreadFormset,
@@ -130,6 +136,9 @@ class RepliesView(View):
                     "poster": None,
                     "poster_name": post.poster_name,
                     "unread": post.id in unread,
+                    "edit": self.allow_post_edit(request, thread, post),
+                    "edit_url": self.get_post_edit_url(thread, post),
+                    "moderation": False,
                 }
             )
 
@@ -146,6 +155,12 @@ class RepliesView(View):
             "items": items,
             "paginator": page_obj,
         }
+
+    def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
+        return False
+
+    def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
+        return None
 
     def set_posts_feed_users(self, request: HttpRequest, feed: list[dict]) -> None:
         user_ids: set[int] = set()
@@ -298,6 +313,21 @@ class ThreadRepliesView(RepliesView, ThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
+    def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
+        if request.user.is_anonymous:
+            return False
+
+        try:
+            check_edit_private_thread_post_permission(
+                request.user_permissions, thread, post
+            )
+            return True
+        except (Http404, PermissionDenied):
+            return False
+
+    def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
+        return None
+
     def is_category_read(
         self,
         request: HttpRequest,
@@ -355,6 +385,21 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         return get_private_thread_replies_page_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
+
+    def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
+        if request.user.is_anonymous:
+            return False
+
+        try:
+            check_edit_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+            return True
+        except (Http404, PermissionDenied):
+            return False
+
+    def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
+        return None
 
     def update_thread_read_time(
         self,
