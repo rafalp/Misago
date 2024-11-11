@@ -25,8 +25,8 @@ from ..hooks import (
     get_reply_private_thread_page_context_data_hook,
     get_reply_thread_page_context_data_hook,
 )
-from ..models import Thread
-from .redirect import get_redirect_to_post_response
+from ..models import Post, Thread
+from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
 
@@ -68,7 +68,7 @@ class ReplyView(View):
 
         messages.success(request, pgettext("thread reply posted", "Reply posted"))
 
-        redirect = get_redirect_to_post_response(request, state.post)
+        redirect = self.get_redirect_response(request, state.thread, state.post)
         if request.is_htmx:
             return htmx_redirect(redirect.headers["location"])
 
@@ -100,6 +100,11 @@ class ReplyView(View):
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
     ) -> dict:
+        raise NotImplementedError()
+
+    def get_redirect_response(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ) -> HttpResponse:
         raise NotImplementedError()
 
 
@@ -134,10 +139,17 @@ class ThreadReplyView(ReplyView, ThreadView):
             "template_name_htmx": self.template_name_htmx,
         }
 
+    def get_redirect_response(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ) -> HttpResponse:
+        return thread_post_redirect(
+            request, id=thread.id, slug=thread.slug, post=post.id
+        )
+
 
 class PrivateThreadReplyView(ReplyView, PrivateThreadView):
-    template_name: str = "misago/reply_thread/index.html"
-    template_name_htmx: str = "misago/reply_thread/form.html"
+    template_name: str = "misago/reply_private_thread/index.html"
+    template_name_htmx: str = "misago/reply_private_thread/form.html"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -169,6 +181,13 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
             "formset": formset,
             "template_name_htmx": self.template_name_htmx,
         }
+
+    def get_redirect_response(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ) -> HttpResponse:
+        return private_thread_post_redirect(
+            request, id=thread.id, slug=thread.slug, post=post.id
+        )
 
 
 thread_reply = ThreadReplyView.as_view()
