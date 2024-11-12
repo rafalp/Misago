@@ -24,7 +24,6 @@ from ..paginator import ThreadRepliesPaginator
 class GenericView(View):
     thread_select_related: Iterable[str] | True | None = None
     thread_annotate_read_time: bool = False
-    post_select_related: Iterable[str] | None = None
     thread_url_name: str
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
@@ -50,7 +49,17 @@ class GenericView(View):
         self, request: HttpRequest, thread: Thread, post_id: int
     ) -> Post:
         queryset = self.get_thread_posts_queryset(request, thread)
-        return queryset.get(id=post_id)
+        post = get_object_or_404(queryset, id=post_id)
+
+        if self.thread_select_related and (
+            self.thread_select_related is True
+            or "category" in self.thread_select_related
+        ):
+            post.category = thread.category
+
+        post.thread = thread
+
+        return post
 
     def get_thread_posts_paginator(
         self,

@@ -3,47 +3,47 @@ from django.http import HttpRequest
 from ...threads.models import Post
 from ..forms import create_post_form
 from ..hooks import (
-    get_edit_private_thread_reply_formset_hook,
-    get_edit_thread_reply_formset_hook,
+    get_edit_private_thread_post_formset_hook,
+    get_edit_thread_post_formset_hook,
 )
 from .formset import PostingFormset
 
 
-class EditThreadReplyFormset(PostingFormset):
+class EditThreadPostFormset(PostingFormset):
     pass
 
 
-class EditPrivateThreadReplyFormset(PostingFormset):
+class EditPrivateThreadPostFormset(PostingFormset):
     pass
 
 
-def get_edit_thread_reply_formset(
+def get_edit_thread_post_formset(
     request: HttpRequest, post: Post
-) -> EditThreadReplyFormset:
-    return get_edit_thread_reply_formset_hook(
-        _get_edit_thread_reply_formset_action, request, post
+) -> EditThreadPostFormset:
+    return get_edit_thread_post_formset_hook(
+        _get_edit_thread_post_formset_action, request, post
     )
 
 
-def _get_edit_thread_reply_formset_action(
+def _get_edit_thread_post_formset_action(
     request: HttpRequest, post: Post
-) -> EditThreadReplyFormset:
-    formset = EditThreadReplyFormset()
-    formset.add_form(create_post_form(request))
+) -> EditThreadPostFormset:
+    formset = EditThreadPostFormset()
+    formset.add_form(create_post_form(request, {"post": post.original}))
     return formset
 
 
-def get_edit_private_thread_reply_formset(
+def get_edit_private_thread_post_formset(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadReplyFormset:
-    return get_edit_private_thread_reply_formset_hook(
-        _get_edit_private_thread_reply_formset_action, request, post
+) -> EditPrivateThreadPostFormset:
+    return get_edit_private_thread_post_formset_hook(
+        _get_edit_private_thread_post_formset_action, request, post
     )
 
 
-def _get_edit_private_thread_reply_formset_action(
+def _get_edit_private_thread_post_formset_action(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadReplyFormset:
-    formset = EditPrivateThreadReplyFormset()
-    formset.add_form(create_post_form(request))
+) -> EditPrivateThreadPostFormset:
+    formset = EditPrivateThreadPostFormset()
+    formset.add_form(create_post_form(request, {"post": post.original}))
     return formset

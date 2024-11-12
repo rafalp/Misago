@@ -128,6 +128,13 @@ class RepliesView(View):
 
         items: list[dict] = []
         for post in posts:
+            edit_url: str | None = None
+            if self.allow_post_edit(request, thread, post):
+                if post.id == thread.first_post_id:
+                    edit_url = self.get_post_edit_url(thread, post)
+                else:
+                    edit_url = self.get_post_edit_url(thread, post)
+
             items.append(
                 {
                     "template_name": self.feed_post_template_name,
@@ -136,8 +143,7 @@ class RepliesView(View):
                     "poster": None,
                     "poster_name": post.poster_name,
                     "unread": post.id in unread,
-                    "edit": self.allow_post_edit(request, thread, post),
-                    "edit_url": self.get_post_edit_url(thread, post),
+                    "edit_url": edit_url,
                     "moderation": False,
                 }
             )
@@ -326,7 +332,10 @@ class ThreadRepliesView(RepliesView, ThreadView):
             return False
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
-        return None
+        return reverse(
+            "misago:thread-edit-post",
+            kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
+        )
 
     def is_category_read(
         self,
@@ -399,7 +408,10 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
             return False
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
-        return None
+        return reverse(
+            "misago:private-thread-edit-post",
+            kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
+        )
 
     def update_thread_read_time(
         self,

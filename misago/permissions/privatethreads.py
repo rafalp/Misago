@@ -134,6 +134,23 @@ def _check_edit_private_thread_permission_action(
         )
 
 
+def check_see_private_thread_post_permission(
+    permissions: UserPermissionsProxy, thread: Thread, post: Post
+):
+    check_edit_private_thread_post_permission_hook(
+        _check_see_private_thread_post_permission_action, permissions, thread, post
+    )
+
+
+def _check_see_private_thread_post_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread, post: Post
+):
+    check_private_threads_permission(permissions)
+
+    if permissions.user.id not in thread.participants_ids:
+        raise Http404()
+
+
 def check_edit_private_thread_post_permission(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):

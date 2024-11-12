@@ -1,9 +1,9 @@
 from .base import PostingState
 from .edit import (
-    EditPrivateThreadReplyState,
-    EditThreadReplyState,
-    get_edit_private_thread_reply_state,
-    get_edit_thread_reply_state,
+    EditPrivateThreadPostState,
+    EditThreadPostState,
+    get_edit_private_thread_post_state,
+    get_edit_thread_post_state,
 )
 from .reply import (
     ReplyPrivateThreadState,
@@ -19,15 +19,15 @@ from .start import (
 )
 
 __all__ = [
-    "EditPrivateThreadReplyState",
-    "EditThreadReplyState",
+    "EditPrivateThreadPostState",
+    "EditThreadPostState",
     "PostingState",
     "ReplyPrivateThreadState",
     "ReplyThreadState",
     "StartPrivateThreadState",
     "StartThreadState",
-    "get_edit_private_thread_reply_state",
-    "get_edit_thread_reply_state",
+    "get_edit_private_thread_post_state",
+    "get_edit_thread_post_state",
     "get_reply_private_thread_state",
     "get_reply_thread_state",
     "get_start_private_thread_state",

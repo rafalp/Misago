@@ -1,0 +1,15 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+  {% trans "Edit post" context "edit thread post page" %} | {{ thread }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-reply-private-thread">
+  {% include "misago/private_thread/header.html" %}
+  {% include template_name_htmx %}
+</div>
+{% endblock content %}

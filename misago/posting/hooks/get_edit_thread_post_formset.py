@@ -6,13 +6,13 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Post
 
 if TYPE_CHECKING:
-    from ..formsets.edit import EditPrivateThreadReplyFormset
+    from ..formsets.edit import EditThreadPostFormset
 
 
-class GetEditPrivateThreadReplyFormsetHookAction(Protocol):
+class GetEditThreadPostFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `EditPrivateThreadReplyFormset`
-    instance with forms for editing a private thread reply.
+    A standard function that Misago uses to create a new `EditThreadPostFormset`
+    instance with forms for editing a thread post.
 
     # Arguments
 
@@ -26,27 +26,26 @@ class GetEditPrivateThreadReplyFormsetHookAction(Protocol):
 
     # Return value
 
-    A `EditPrivateThreadReplyFormset` instance with forms for editing
-    a private thread reply.
+    A `EditThreadPostFormset` instance with forms for editing a thread post.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         post: Post,
-    ) -> "EditPrivateThreadReplyFormset": ...
+    ) -> "EditThreadPostFormset": ...
 
 
-class GetEditPrivateThreadReplyFormsetHookFilter(Protocol):
+class GetEditThreadPostFormsetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetEditPrivateThreadReplyFormsetHookAction`
+    ## `action: GetEditThreadPostFormsetHookAction`
 
-    A standard function that Misago uses to create a new `EditPrivateThreadReplyFormset`
-    instance with forms for editing a private thread reply.
+    A standard function that Misago uses to create a new `EditThreadPostFormset`
+    instance with forms for editing a thread post.
 
     See the [action](#action) section for details.
 
@@ -60,47 +59,45 @@ class GetEditPrivateThreadReplyFormsetHookFilter(Protocol):
 
     # Return value
 
-    A `EditPrivateThreadReplyFormset` instance with forms for editing
-    a private thread reply.
+    A `EditThreadPostFormset` instance with forms for editing a thread post.
     """
 
     def __call__(
         self,
-        action: GetEditPrivateThreadReplyFormsetHookAction,
+        action: GetEditThreadPostFormsetHookAction,
         request: HttpRequest,
         post: Post,
-    ) -> "EditPrivateThreadReplyFormset": ...
+    ) -> "EditThreadPostFormset": ...
 
 
-class GetEditPrivateThreadReplyFormsetHook(
+class GetEditThreadPostFormsetHook(
     FilterHook[
-        GetEditPrivateThreadReplyFormsetHookAction,
-        GetEditPrivateThreadReplyFormsetHookFilter,
+        GetEditThreadPostFormsetHookAction,
+        GetEditThreadPostFormsetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to create a new
-    `EditPrivateThreadReplyFormset` instance with forms for editing
-    a private thread reply.
+    `EditThreadPostFormset` instance with forms for editing a thread post.
 
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the edit private thread reply formset:
+    the edit thread post formset:
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.formsets import EditPrivateThreadReplyFormset
-    from misago.posting.hooks import get_edit_private_thread_reply_formset_hook
+    from misago.posting.formsets import EditThreadPostFormset
+    from misago.posting.hooks import get_edit_thread_post_formset_hook
     from misago.threads.models import Post
 
     from .forms import SelectUserForm
 
 
-    @get_edit_private_thread_reply_formset_hook.append_filter
+    @get_edit_thread_post_formset_hook.append_filter
     def add_select_user_form(
         action, request: HttpRequest, post: Post
-    ) -> EditPrivateThreadReplyFormset:
+    ) -> EditThreadPostFormset:
         formset = action(request, post)
 
         if request.method == "POST":
@@ -117,11 +114,11 @@ class GetEditPrivateThreadReplyFormsetHook(
 
     def __call__(
         self,
-        action: GetEditPrivateThreadReplyFormsetHookAction,
+        action: GetEditThreadPostFormsetHookAction,
         request: HttpRequest,
         post: Post,
-    ) -> "EditPrivateThreadReplyFormset":
+    ) -> "EditThreadPostFormset":
         return super().__call__(action, request, post)
 
 
-get_edit_private_thread_reply_formset_hook = GetEditPrivateThreadReplyFormsetHook()
+get_edit_thread_post_formset_hook = GetEditThreadPostFormsetHook()

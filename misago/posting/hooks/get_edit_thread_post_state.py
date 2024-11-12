@@ -6,13 +6,13 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Post
 
 if TYPE_CHECKING:
-    from ..state.edit import EditThreadReplyState
+    from ..state.edit import EditThreadPostState
 
 
-class GetEditThreadReplyStateHookAction(Protocol):
+class GetEditThreadPostStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `EditThreadReplyState`
-    instance for editing a thread reply.
+    A standard function that Misago uses to create a new `EditThreadPostState`
+    instance for editing a thread post.
 
     # Arguments
 
@@ -26,7 +26,7 @@ class GetEditThreadReplyStateHookAction(Protocol):
 
     # Return value
 
-    A `EditThreadReplyState` instance to use to edit a reply in a thread
+    A `EditThreadPostState` instance to use to edit a post in a thread
     in the database.
     """
 
@@ -34,19 +34,19 @@ class GetEditThreadReplyStateHookAction(Protocol):
         self,
         request: HttpRequest,
         post: Post,
-    ) -> "EditThreadReplyState": ...
+    ) -> "EditThreadPostState": ...
 
 
-class GetEditThreadReplyStateHookFilter(Protocol):
+class GetEditThreadPostStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetEditThreadReplyStateHookAction`
+    ## `action: GetEditThreadPostStateHookAction`
 
-    A standard function that Misago uses to create a new `EditThreadReplyState`
-    instance for editing a thread reply.
+    A standard function that Misago uses to create a new `EditThreadPostState`
+    instance for editing a thread post.
 
     See the [action](#action) section for details.
 
@@ -60,24 +60,24 @@ class GetEditThreadReplyStateHookFilter(Protocol):
 
     # Return value
 
-    A `EditThreadReplyState` instance to use to edit a reply in a thread
+    A `EditThreadPostState` instance to use to edit a post in a thread
     in the database.
     """
 
     def __call__(
         self,
-        action: GetEditThreadReplyStateHookAction,
+        action: GetEditThreadPostStateHookAction,
         request: HttpRequest,
         post: Post,
-    ) -> "EditThreadReplyState": ...
+    ) -> "EditThreadPostState": ...
 
 
-class GetEditThreadReplyStateHook(
-    FilterHook[GetEditThreadReplyStateHookAction, GetEditThreadReplyStateHookFilter]
+class GetEditThreadPostStateHook(
+    FilterHook[GetEditThreadPostStateHookAction, GetEditThreadPostStateHookFilter]
 ):
     """
     This hook wraps the standard function Misago uses to create a new
-    `EditThreadReplyState` instance for editing a thread reply.
+    `EditThreadPostState` instance for editing a thread post.
 
     # Example
 
@@ -86,15 +86,15 @@ class GetEditThreadReplyStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import get_edit_thread_reply_state_hook
-    from misago.posting.state import EditThreadReplyState
+    from misago.posting.hooks import get_edit_thread_post_state_hook
+    from misago.posting.state import EditThreadPostState
     from misago.threads.models import Post
 
 
-    @get_edit_thread_reply_state_hook.append_filter
-    def set_poster_ip_on_edit_thread_reply_state(
+    @get_edit_thread_post_state_hook.append_filter
+    def set_poster_ip_on_edit_thread_post_state(
         action, request: HttpRequest, post: Post
-    ) -> EditThreadReplyState:
+    ) -> EditThreadPostState:
         state = action(request, post)
         state.plugin_state["user_id"] = request.user_ip
         return state
@@ -105,11 +105,11 @@ class GetEditThreadReplyStateHook(
 
     def __call__(
         self,
-        action: GetEditThreadReplyStateHookAction,
+        action: GetEditThreadPostStateHookAction,
         request: HttpRequest,
         post: Post,
-    ) -> "EditThreadReplyState":
+    ) -> "EditThreadPostState":
         return super().__call__(action, request, post)
 
 
-get_edit_thread_reply_state_hook = GetEditThreadReplyStateHook()
+get_edit_thread_post_state_hook = GetEditThreadPostStateHook()

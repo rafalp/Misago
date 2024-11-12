@@ -22,11 +22,14 @@ class PostForm(PostingForm):
         state.set_post_message(self.cleaned_data["post"])
 
 
-def create_post_form(request: HttpRequest) -> PostForm:
+def create_post_form(request: HttpRequest, initial: dict | None = None) -> PostForm:
     kwargs = {
         "request": request,
         "prefix": PREFIX,
     }
+
+    if initial:
+        kwargs["initial"] = initial
 
     if request.method == "POST":
         return PostForm(request.POST, request.FILES, **kwargs)

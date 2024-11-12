@@ -10,6 +10,12 @@ from .get_category_threads_page_subcategories import (
     get_category_threads_page_subcategories_hook,
 )
 from .get_category_threads_page_threads import get_category_threads_page_threads_hook
+from .get_edit_private_thread_post_page_context_data import (
+    get_edit_private_thread_post_page_context_data_hook,
+)
+from .get_edit_thread_post_page_context_data import (
+    get_edit_thread_post_page_context_data_hook,
+)
 from .get_private_thread_replies_page_context_data import (
     get_private_thread_replies_page_context_data_hook,
 )
@@ -67,6 +73,8 @@ __all__ = [
     "get_category_threads_page_queryset_hook",
     "get_category_threads_page_subcategories_hook",
     "get_category_threads_page_threads_hook",
+    "get_edit_private_thread_post_page_context_data_hook",
+    "get_edit_thread_post_page_context_data_hook",
     "get_private_thread_replies_page_context_data_hook",
     "get_private_thread_replies_page_posts_queryset_hook",
     "get_private_thread_replies_page_thread_queryset_hook",

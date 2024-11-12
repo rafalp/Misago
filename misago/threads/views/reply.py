@@ -167,7 +167,7 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
         return get_reply_private_thread_formset(request, thread)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
+        self, request: HttpRequest, thread: Thread, formset: ReplyPrivateThreadFormset
     ) -> dict:
         return get_reply_private_thread_page_context_data_hook(
             self.get_context_data_action, request, thread, formset

@@ -4,21 +4,21 @@ from django.http import HttpRequest
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post
 from ..hooks import (
-    get_edit_private_thread_reply_state_hook,
-    get_edit_thread_reply_state_hook,
-    save_edit_private_thread_reply_state_hook,
-    save_edit_thread_reply_state_hook,
+    get_edit_private_thread_post_state_hook,
+    get_edit_thread_post_state_hook,
+    save_edit_private_thread_post_state_hook,
+    save_edit_thread_post_state_hook,
 )
 from .base import PostingState
 
 
-class EditThreadReplyState(PostingState):
+class EditThreadPostState(PostingState):
     def __init__(self, request: HttpRequest, post: Post):
         super().__init__(request)
 
         self.category = post.category
         self.thread = post.thread
-        self.post = self.initialize_post()
+        self.post = post
 
         self.store_object_state(self.category)
         self.store_object_state(self.thread)
@@ -26,9 +26,9 @@ class EditThreadReplyState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        save_edit_thread_reply_state_hook(self.save_action, self.request, self)
+        save_edit_thread_post_state_hook(self.save_action, self.request, self)
 
-    def save_action(self, request: HttpRequest, state: "EditThreadReplyState"):
+    def save_action(self, request: HttpRequest, state: "EditThreadPostState"):
         self.save_post()
 
     def save_post(self):
@@ -43,35 +43,33 @@ class EditThreadReplyState(PostingState):
         self.post.save()
 
 
-class EditPrivateThreadReplyState(EditThreadReplyState):
+class EditPrivateThreadPostState(EditThreadPostState):
     @transaction.atomic()
     def save(self):
-        save_edit_private_thread_reply_state_hook(self.save_action, self.request, self)
+        save_edit_private_thread_post_state_hook(self.save_action, self.request, self)
 
 
-def get_edit_thread_reply_state(
-    request: HttpRequest, post: Post
-) -> EditThreadReplyState:
-    return get_edit_thread_reply_state_hook(
-        _get_edit_thread_reply_state_action, request, post
+def get_edit_thread_post_state(request: HttpRequest, post: Post) -> EditThreadPostState:
+    return get_edit_thread_post_state_hook(
+        _get_edit_thread_post_state_action, request, post
     )
 
 
-def _get_edit_thread_reply_state_action(
+def _get_edit_thread_post_state_action(
     request: HttpRequest, post: Post
-) -> EditThreadReplyState:
-    return EditThreadReplyState(request, post)
+) -> EditThreadPostState:
+    return EditThreadPostState(request, post)
 
 
-def get_edit_private_thread_reply_state(
+def get_edit_private_thread_post_state(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadReplyState:
-    return get_edit_private_thread_reply_state_hook(
-        _get_edit_private_thread_reply_state_action, request, post
+) -> EditPrivateThreadPostState:
+    return get_edit_private_thread_post_state_hook(
+        _get_edit_private_thread_post_state_action, request, post
     )
 
 
-def _get_edit_private_thread_reply_state_action(
+def _get_edit_private_thread_post_state_action(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadReplyState:
-    return EditPrivateThreadReplyState(request, post)
+) -> EditPrivateThreadPostState:
+    return EditPrivateThreadPostState(request, post)

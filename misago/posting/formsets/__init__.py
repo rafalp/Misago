@@ -1,3 +1,9 @@
+from .edit import (
+    EditPrivateThreadPostFormset,
+    EditThreadPostFormset,
+    get_edit_private_thread_post_formset,
+    get_edit_thread_post_formset,
+)
 from .formset import PostingFormset
 from .reply import (
     ReplyPrivateThreadFormset,
@@ -13,11 +19,15 @@ from .start import (
 )
 
 __all__ = [
+    "EditPrivateThreadPostFormset",
+    "EditThreadPostFormset",
     "PostingFormset",
     "ReplyPrivateThreadFormset",
     "ReplyThreadFormset",
     "StartPrivateThreadFormset",
     "StartThreadFormset",
+    "get_edit_private_thread_post_formset",
+    "get_edit_thread_post_formset",
     "get_reply_private_thread_formset",
     "get_reply_thread_formset",
     "get_start_private_thread_formset",
