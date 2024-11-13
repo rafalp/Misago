@@ -113,6 +113,10 @@ class PostingState:
     def initialize_parser_context(self) -> ParserContext:
         return create_parser_context(self.request, content_type=ContentType.POST)
 
+    def set_thread_title(self, title: str):
+        self.thread.title = title
+        self.thread.slug = slugify(title)
+
     def set_post_message(self, message: str):
         parser = create_parser(self.parser_context)
         ast = parser(message)

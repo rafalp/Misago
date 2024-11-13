@@ -13,11 +13,13 @@ from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
 from ...permissions.privatethreads import (
+    check_edit_private_thread_permission,
     check_edit_private_thread_post_permission,
     check_reply_private_thread_permission,
 )
 from ...permissions.threads import (
     check_edit_post_permission,
+    check_edit_thread_permission,
     check_reply_thread_permission,
 )
 from ...posting.formsets import (
@@ -126,12 +128,14 @@ class RepliesView(View):
 
         unread = get_unread_posts(request, thread, posts)
 
+        allow_thread_edit = self.allow_thread_edit(request, thread)
+
         items: list[dict] = []
         for post in posts:
             edit_url: str | None = None
             if self.allow_post_edit(request, thread, post):
-                if post.id == thread.first_post_id:
-                    edit_url = self.get_post_edit_url(thread, post)
+                if post.id == thread.first_post_id and allow_thread_edit:
+                    edit_url = self.get_thread_post_edit_url(thread)
                 else:
                     edit_url = self.get_post_edit_url(thread, post)
 
@@ -162,8 +166,14 @@ class RepliesView(View):
             "paginator": page_obj,
         }
 
+    def allow_thread_edit(self, request: HttpRequest, thread: Thread) -> bool:
+        return False
+
     def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
         return False
+
+    def get_thread_post_edit_url(self, thread: Thread) -> str | None:
+        return None
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
         return None
@@ -319,17 +329,35 @@ class ThreadRepliesView(RepliesView, ThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
+    def allow_thread_edit(self, request: HttpRequest, thread: Thread) -> bool:
+        if request.user.is_anonymous:
+            return False
+
+        try:
+            check_edit_thread_permission(
+                request.user_permissions, thread.category, thread
+            )
+            return True
+        except (Http404, PermissionDenied):
+            return False
+
     def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
         if request.user.is_anonymous:
             return False
 
         try:
-            check_edit_private_thread_post_permission(
-                request.user_permissions, thread, post
+            check_edit_post_permission(
+                request.user_permissions, thread.category, thread, post
             )
             return True
         except (Http404, PermissionDenied):
             return False
+
+    def get_thread_post_edit_url(self, thread: Thread) -> str | None:
+        return reverse(
+            "misago:thread-edit",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
         return reverse(
@@ -395,6 +423,16 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
+    def allow_thread_edit(self, request: HttpRequest, thread: Thread) -> bool:
+        if request.user.is_anonymous:
+            return False
+
+        try:
+            check_edit_private_thread_permission(request.user_permissions, thread)
+            return True
+        except (Http404, PermissionDenied):
+            return False
+
     def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
         try:
             check_edit_private_thread_post_permission(
@@ -403,6 +441,12 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
             return True
         except (Http404, PermissionDenied):
             return False
+
+    def get_thread_post_edit_url(self, thread: Thread) -> str | None:
+        return reverse(
+            "misago:private-thread-edit",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
         return reverse(

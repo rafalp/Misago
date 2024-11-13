@@ -27,15 +27,6 @@ def test_start_thread_state_stores_category_state(user_request, default_category
     assert state.get_object_state(default_category)
 
 
-def test_start_thread_state_set_thread_title_updates_thread_title_and_slug(
-    user_request, default_category
-):
-    state = StartThreadState(user_request, default_category)
-    state.set_thread_title("Test thread")
-    assert state.thread.title == "Test thread"
-    assert state.thread.slug == "test-thread"
-
-
 def test_start_thread_state_save_saves_thread_and_post(user_request, default_category):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")

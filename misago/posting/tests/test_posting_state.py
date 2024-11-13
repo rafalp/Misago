@@ -66,6 +66,17 @@ def test_posting_state_updates_only_changed_obj_attributes(
         mock_save.assert_called_once_with(update_fields={"name", "last_poster"})
 
 
+def test_posting_state_set_thread_title_updates_thread_title_and_slug(
+    user_request, thread
+):
+    state = PostingState(user_request)
+    state.thread = thread
+    state.set_thread_title("Test thread")
+
+    assert state.thread.title == "Test thread"
+    assert state.thread.slug == "test-thread"
+
+
 def test_posting_state_set_post_message_updates_post_contents(user_request, post):
     state = PostingState(user_request)
     state.post = post

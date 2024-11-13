@@ -13,6 +13,10 @@ from .base import PostingState
 
 
 class EditThreadPostState(PostingState):
+    # This state can actually edit both post and its thread's title
+    thread_title: str
+    post_original: str
+
     def __init__(self, request: HttpRequest, post: Post):
         super().__init__(request)
 
@@ -24,12 +28,22 @@ class EditThreadPostState(PostingState):
         self.store_object_state(self.thread)
         self.store_object_state(post)
 
+        self.thread_title = self.thread.title
+        self.post_original = post.original
+
     @transaction.atomic()
     def save(self):
         save_edit_thread_post_state_hook(self.save_action, self.request, self)
 
     def save_action(self, request: HttpRequest, state: "EditThreadPostState"):
-        self.save_post()
+        if self.post_original != self.post.original:
+            self.save_post()
+
+        if self.thread_title != self.thread.title:
+            self.save_thread()
+
+            if self.category.last_thread_id == self.thread.id:
+                self.save_category()
 
     def save_post(self):
         self.post.updated_on = self.timestamp
@@ -42,6 +56,14 @@ class EditThreadPostState(PostingState):
         update_post_checksum(self.post)
         self.post.update_search_vector()
         self.update_object(self.post)
+
+    def save_thread(self):
+        self.update_object(self.thread)
+
+    def save_category(self):
+        self.category.last_thread_title = self.thread.title
+        self.category.last_thread_slug = self.thread.slug
+        self.update_object(self.category)
 
 
 class EditPrivateThreadPostState(EditThreadPostState):

@@ -29,10 +29,6 @@ class StartThreadState(PostingState):
 
         self.store_object_state(category)
 
-    def set_thread_title(self, title: str):
-        self.thread.title = title
-        self.thread.slug = slugify(title)
-
     @transaction.atomic()
     def save(self):
         self.thread.save()

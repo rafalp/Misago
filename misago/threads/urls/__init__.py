@@ -3,7 +3,12 @@ from django.urls import path
 from ...conf import settings
 
 from ..views.attachment import attachment_server
-from ..views.edit import private_thread_edit_post, thread_edit_post
+from ..views.edit import (
+    private_thread_edit,
+    private_thread_edit_post,
+    thread_edit,
+    thread_edit_post,
+)
 from ..views.list import category_threads, private_threads, threads
 from ..views.redirect import (
     PostRedirectView,
@@ -133,6 +138,16 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/reply/",
         private_thread_reply,
         name="private-thread-reply",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/edit/",
+        thread_edit,
+        name="thread-edit",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/edit/",
+        private_thread_edit,
+        name="private-thread-edit",
     ),
     path(
         "t/<slug:slug>/<int:id>/edit/<int:post>/",
