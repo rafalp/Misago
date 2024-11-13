@@ -22,7 +22,7 @@ class TitleForm(PostingForm):
         state.set_thread_title(self.cleaned_data["title"])
 
 
-def create_title_form(request: HttpRequest) -> TitleForm:
+def create_title_form(request: HttpRequest, initial: str | None = None) -> TitleForm:
     if request.method == "POST":
         return TitleForm(
             request.POST,
@@ -30,4 +30,9 @@ def create_title_form(request: HttpRequest) -> TitleForm:
             prefix=PREFIX,
         )
 
-    return TitleForm(request=request, prefix=PREFIX)
+    if initial:
+        initial_data = {"title": initial}
+    else:
+        initial_data = None
+
+    return TitleForm(request=request, prefix=PREFIX, initial=initial_data)

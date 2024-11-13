@@ -137,12 +137,12 @@ urlpatterns = [
     path(
         "t/<slug:slug>/<int:id>/edit/<int:post>/",
         thread_edit_post,
-        name="thread-edit-post",
+        name="thread-edit",
     ),
     path(
         "p/<slug:slug>/<int:id>/edit/<int:post>/",
         private_thread_edit_post,
-        name="private-thread-edit-post",
+        name="private-thread-edit",
     ),
     path(
         "post/<int:id>/",

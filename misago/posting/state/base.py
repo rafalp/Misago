@@ -107,6 +107,7 @@ class PostingState:
         update_fields = self.get_object_changed_fields(obj)
         if update_fields:
             obj.save(update_fields=update_fields)
+        self.store_object_state(obj)
         return update_fields
 
     def initialize_parser_context(self) -> ParserContext:

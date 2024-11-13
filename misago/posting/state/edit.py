@@ -32,15 +32,16 @@ class EditThreadPostState(PostingState):
         self.save_post()
 
     def save_post(self):
+        self.post.updated_on = self.timestamp
         self.post.edits = models.F("edits") + 1
         self.post.last_editor = self.user
         self.post.last_editor_name = self.user.username
         self.post.last_editor_slug = self.user.slug
-        self.post.save()
+        self.update_object(self.post)
 
         update_post_checksum(self.post)
         self.post.update_search_vector()
-        self.post.save()
+        self.update_object(self.post)
 
 
 class EditPrivateThreadPostState(EditThreadPostState):

@@ -333,7 +333,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
         return reverse(
-            "misago:thread-edit-post",
+            "misago:thread-edit",
             kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
         )
 
@@ -396,12 +396,9 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         )
 
     def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
-        if request.user.is_anonymous:
-            return False
-
         try:
-            check_edit_post_permission(
-                request.user_permissions, thread.category, thread, post
+            check_edit_private_thread_post_permission(
+                request.user_permissions, thread, post
             )
             return True
         except (Http404, PermissionDenied):
@@ -409,7 +406,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
         return reverse(
-            "misago:private-thread-edit-post",
+            "misago:private-thread-edit",
             kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
         )
 

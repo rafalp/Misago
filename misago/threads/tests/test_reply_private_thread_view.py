@@ -145,9 +145,6 @@ def test_reply_private_thread_view_shows_error_if_thread_is_accessed(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
     )
+
+    assert_not_contains(response, "Reply to thread", status_code=404)
     assert_not_contains(response, thread.title, status_code=404)
-    assert_not_contains(
-        response,
-        thread.first_post.parsed,
-        status_code=404,
-    )

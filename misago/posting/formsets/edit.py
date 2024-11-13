@@ -29,7 +29,7 @@ def _get_edit_thread_post_formset_action(
     request: HttpRequest, post: Post
 ) -> EditThreadPostFormset:
     formset = EditThreadPostFormset()
-    formset.add_form(create_post_form(request, {"post": post.original}))
+    formset.add_form(create_post_form(request, initial=post.original))
     return formset
 
 
@@ -45,5 +45,5 @@ def _get_edit_private_thread_post_formset_action(
     request: HttpRequest, post: Post
 ) -> EditPrivateThreadPostFormset:
     formset = EditPrivateThreadPostFormset()
-    formset.add_form(create_post_form(request, {"post": post.original}))
+    formset.add_form(create_post_form(request, initial=post.original))
     return formset
