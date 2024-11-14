@@ -362,7 +362,7 @@ class AccountEmailView(AccountSettingsFormView):
         mail.send(fail_silently=True)
 
 
-class AccountEmailConfirm(AccountSettingsView):
+class AccountEmailConfirmView(AccountSettingsView):
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.settings.enable_oauth2_client:
             raise Http404()
