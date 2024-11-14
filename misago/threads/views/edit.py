@@ -230,7 +230,7 @@ class EditPrivateThreadView(EditPrivateThreadPostView):
 def edit_thread_login_required(f):
     return login_required(
         pgettext(
-            "post thread page",
+            "edit thread page",
             "Sign in to edit posts",
         )
     )(f)
