@@ -1,0 +1,270 @@
+from django.urls import reverse
+
+from ...test import assert_contains, assert_not_contains
+
+
+def test_edit_private_thread_view_displays_login_page_to_guests(
+    client, user_private_thread
+):
+    response = client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Sign in to edit posts")
+
+
+def test_edit_private_thread_view_displays_error_page_to_users_without_private_threads_permission(
+    user, user_client, user_private_thread
+):
+    user.group.can_use_private_threads = False
+    user.group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        "You can&#x27;t use private threads.",
+        status_code=403,
+    )
+
+
+def test_edit_private_thread_view_displays_error_page_to_user_who_cant_see_private_thread(
+    user_client, private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": private_thread.id,
+                "slug": private_thread.slug,
+                "post": private_thread.first_post_id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_edit_private_thread_view_displays_error_page_to_user_who_cant_edit_own_threads(
+    user, user_client, user_private_thread
+):
+    user.group.can_edit_own_threads = False
+    user.group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t edit threads.",
+        status_code=403,
+    )
+
+
+def test_edit_private_thread_view_displays_error_page_to_user_who_cant_edit_own_posts(
+    user, user_client, user_private_thread
+):
+    user.group.can_edit_own_posts = False
+    user.group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t edit posts.",
+        status_code=403,
+    )
+
+
+def test_edit_private_thread_view_displays_error_page_to_user_trying_to_edit_other_user_thread(
+    user_client, other_user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t edit other users threads.",
+        status_code=403,
+    )
+
+
+def test_edit_private_thread_view_displays_edit_form(user_client, user_private_thread):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, user_private_thread.first_post.original)
+
+
+def test_edit_private_thread_view_displays_edit_form_for_other_user_thread_to_moderator(
+    user, user_client, other_user_private_thread, members_group, moderators_group
+):
+    user.set_groups(members_group, [moderators_group])
+    user.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Edit thread")
+    assert_contains(response, other_user_private_thread.first_post.original)
+
+
+def test_edit_private_thread_view_updates_thread_and_post(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert response.status_code == 302
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.title == "Edited title"
+
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+    )
+
+    post = user_private_thread.first_post
+    post.refresh_from_db()
+
+    assert post.original == "Edited post"
+    assert post.edits == 1
+
+
+def test_edit_private_thread_view_updates_thread_and_post_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.title == "Edited title"
+
+    assert response["hx-redirect"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+    )
+
+    post = user_private_thread.first_post
+    post.refresh_from_db()
+
+    assert post.original == "Edited post"
+    assert post.edits == 1
+
+
+def test_edit_private_thread_view_previews_message(user_client, user_private_thread):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posting-post-post": "How's going?", "preview": "true"},
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "Message preview")
+
+
+def test_edit_private_thread_view_previews_message_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posting-post-post": "How's going?", "preview": "true"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "Message preview")
+
+
+def test_edit_private_thread_view_shows_error_if_thread_post_is_accessed(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={"id": thread.id, "slug": thread.slug, "post": thread.first_post_id},
+        ),
+    )
+
+    assert_not_contains(response, "Edit thread", status_code=404)
+    assert_not_contains(response, thread.title, status_code=404)

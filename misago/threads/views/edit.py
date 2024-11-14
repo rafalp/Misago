@@ -3,7 +3,7 @@ from typing import Iterable
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import pgettext
 
@@ -82,13 +82,22 @@ class EditView(View):
 
         state.save()
 
-        messages.success(request, pgettext("thread post posted", "Post posted"))
+        if post:
+            success_message = pgettext("thread post edited", "Post edited")
+        else:
+            success_message = pgettext("thread edited", "Thread edited")
 
-        redirect = self.get_redirect_response(request, state.thread, state.post)
+        messages.success(request, success_message)
+
+        if post:
+            redirect_url = self.get_redirect_url(request, state.thread, state.post)
+        else:
+            redirect_url = self.get_thread_url(thread)
+
         if request.is_htmx:
-            return htmx_redirect(redirect.headers["location"])
+            return htmx_redirect(redirect_url)
 
-        return redirect
+        return redirect(redirect_url)
 
     def get_state(self, request: HttpRequest, post: Post) -> EditThreadPostState:
         raise NotImplementedError()
@@ -118,9 +127,7 @@ class EditView(View):
     ) -> dict:
         raise NotImplementedError()
 
-    def get_redirect_response(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> HttpResponse:
+    def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         raise NotImplementedError()
 
 
@@ -160,12 +167,10 @@ class ThreadEditPostView(EditView, ThreadView):
             "template_name_htmx": self.template_name_htmx,
         }
 
-    def get_redirect_response(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> HttpResponse:
+    def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         return thread_post_redirect(
             request, id=thread.id, slug=thread.slug, post=post.id
-        )
+        )["location"]
 
 
 class PrivateThreadEditPostView(EditView, PrivateThreadView):
@@ -204,12 +209,10 @@ class PrivateThreadEditPostView(EditView, PrivateThreadView):
             "template_name_htmx": self.template_name_htmx,
         }
 
-    def get_redirect_response(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> HttpResponse:
+    def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         return private_thread_post_redirect(
             request, id=thread.id, slug=thread.slug, post=post.id
-        )
+        )["location"]
 
 
 class ThreadEditView(ThreadEditPostView):
