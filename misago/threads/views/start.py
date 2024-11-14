@@ -15,6 +15,7 @@ from ...permissions.privatethreads import (
 )
 from ...permissions.threads import check_start_thread_permission
 from ...posting.formsets import (
+    PostingFormset,
     StartPrivateThreadFormset,
     StartThreadFormset,
     get_start_private_thread_formset,
@@ -108,7 +109,7 @@ class StartThreadView(View):
         )
 
     def get_context_data_action(
-        self, request: HttpRequest, category: Category, formset: StartThreadFormset
+        self, request: HttpRequest, category: Category, formset: PostingFormset
     ) -> dict:
         return {"category": category, "formset": formset}
 
@@ -146,14 +147,6 @@ class StartPrivateThreadView(StartThreadView):
         return get_start_private_thread_page_context_data_hook(
             self.get_context_data_action, request, category, formset
         )
-
-    def get_context_data_action(
-        self,
-        request: HttpRequest,
-        category: Category,
-        formset: StartPrivateThreadFormset,
-    ) -> dict:
-        return {"category": category, "formset": formset}
 
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(

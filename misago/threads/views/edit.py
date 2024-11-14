@@ -115,6 +115,16 @@ class EditView(View):
     ) -> dict:
         raise NotImplementedError()
 
+    def get_context_data_action(
+        self, request: HttpRequest, post: Post, formset: PostingFormset
+    ) -> dict:
+        return {
+            "template_name_htmx": self.template_name_htmx,
+            "thread": post.thread,
+            "post": post,
+            "formset": formset,
+        }
+
     def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         raise NotImplementedError()
 

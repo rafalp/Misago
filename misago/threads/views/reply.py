@@ -9,6 +9,7 @@ from ...htmx.response import htmx_redirect
 from ...permissions.privatethreads import check_reply_private_thread_permission
 from ...permissions.threads import check_reply_thread_permission
 from ...posting.formsets import (
+    PostingFormset,
     ReplyPrivateThreadFormset,
     ReplyThreadFormset,
     get_reply_private_thread_formset,
@@ -63,14 +64,14 @@ class ReplyView(View):
     def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
         raise NotImplementedError()
 
-    def get_formset(self, request: HttpRequest, thread: Thread) -> ReplyThreadFormset:
+    def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
         raise NotImplementedError()
 
     def render(
         self,
         request: HttpRequest,
         thread: Thread,
-        formset: ReplyThreadFormset,
+        formset: PostingFormset,
         preview: str | None = None,
     ):
         context = self.get_context_data(request, thread, formset)
@@ -84,9 +85,18 @@ class ReplyView(View):
         return render(request, template_name, context)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
+        self, request: HttpRequest, thread: Thread, formset: PostingFormset
     ) -> dict:
         raise NotImplementedError()
+
+    def get_context_data_action(
+        self, request: HttpRequest, thread: Thread, formset: PostingFormset
+    ) -> dict:
+        return {
+            "thread": thread,
+            "formset": formset,
+            "template_name_htmx": self.template_name_htmx,
+        }
 
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
@@ -115,15 +125,6 @@ class ReplyThreadView(ReplyView, ThreadView):
         return get_reply_thread_page_context_data_hook(
             self.get_context_data_action, request, thread, formset
         )
-
-    def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
-    ) -> dict:
-        return {
-            "thread": thread,
-            "formset": formset,
-            "template_name_htmx": self.template_name_htmx,
-        }
 
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
@@ -158,15 +159,6 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
         return get_reply_private_thread_page_context_data_hook(
             self.get_context_data_action, request, thread, formset
         )
-
-    def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, formset: ReplyPrivateThreadFormset
-    ) -> dict:
-        return {
-            "thread": thread,
-            "formset": formset,
-            "template_name_htmx": self.template_name_htmx,
-        }
 
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
