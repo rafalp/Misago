@@ -30,7 +30,9 @@ from ...posting.state import (
     get_edit_thread_post_state,
 )
 from ..hooks import (
+    get_edit_private_thread_page_context_data_hook,
     get_edit_private_thread_post_page_context_data_hook,
+    get_edit_thread_page_context_data_hook,
     get_edit_thread_post_page_context_data_hook,
 )
 from ..models import Post, Thread
@@ -143,16 +145,6 @@ class EditThreadPostView(EditView, ThreadView):
             self.get_context_data_action, request, post, formset
         )
 
-    def get_context_data_action(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
-    ) -> dict:
-        return {
-            "thread": post.thread,
-            "post": post,
-            "formset": formset,
-            "template_name_htmx": self.template_name_htmx,
-        }
-
     def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         return thread_post_redirect(
             request, id=thread.id, slug=thread.slug, post=post.id
@@ -185,16 +177,6 @@ class EditPrivateThreadPostView(EditView, PrivateThreadView):
             self.get_context_data_action, request, post, formset
         )
 
-    def get_context_data_action(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
-    ) -> dict:
-        return {
-            "thread": post.thread,
-            "post": post,
-            "formset": formset,
-            "template_name_htmx": self.template_name_htmx,
-        }
-
     def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         return private_thread_post_redirect(
             request, id=thread.id, slug=thread.slug, post=post.id
@@ -211,7 +193,14 @@ class EditThreadView(EditThreadPostView):
         return thread
 
     def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
-        return get_edit_thread_formset(request, post.thread, post)
+        return get_edit_thread_formset(request, post)
+
+    def get_context_data(
+        self, request: HttpRequest, post: Post, formset: PostingFormset
+    ) -> dict:
+        return get_edit_thread_page_context_data_hook(
+            self.get_context_data_action, request, post, formset
+        )
 
 
 class EditPrivateThreadView(EditPrivateThreadPostView):
@@ -224,7 +213,14 @@ class EditPrivateThreadView(EditPrivateThreadPostView):
         return thread
 
     def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
-        return get_edit_private_thread_formset(request, post.thread, post)
+        return get_edit_private_thread_formset(request, post)
+
+    def get_context_data(
+        self, request: HttpRequest, post: Post, formset: PostingFormset
+    ) -> dict:
+        return get_edit_private_thread_page_context_data_hook(
+            self.get_context_data_action, request, post, formset
+        )
 
 
 def edit_thread_login_required(f):
