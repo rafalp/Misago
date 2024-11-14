@@ -10,9 +10,9 @@
   {% endif %}
 
   <form 
-    action="{% url 'misago:thread-edit' id=thread.id slug=thread.slug post=post.id %}"
+    action="{% url 'misago:edit-thread' id=thread.id slug=thread.slug post=post.id %}"
     method="post"
-    hx-post="{% url 'misago:thread-edit' id=thread.id slug=thread.slug post=post.id %}"
+    hx-post="{% url 'misago:edit-thread' id=thread.id slug=thread.slug post=post.id %}"
     hx-trigger="submit"
     hx-target="#misago-htmx-root"
     hx-swap="outerHTML"

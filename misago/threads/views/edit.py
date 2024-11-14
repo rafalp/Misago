@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import redirect, render
-from django.utils.decorators import method_decorator
 from django.utils.translation import pgettext
 
 from ...auth.decorators import login_required
@@ -39,23 +38,10 @@ from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
 
-def edit_thread_post_login_required():
-    return login_required(
-        pgettext(
-            "post thread page",
-            "Sign in to edit posts",
-        )
-    )
-
-
 class EditView(View):
     template_name: str
     template_name_htmx: str
     post_select_related: Iterable[str] = ("thread", "category", "poster")
-
-    @method_decorator(edit_thread_post_login_required())
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        return super().dispatch(request, *args, **kwargs)
 
     def get(
         self, request: HttpRequest, id: int, slug: str, post: int | None = None
@@ -131,7 +117,7 @@ class EditView(View):
         raise NotImplementedError()
 
 
-class ThreadEditPostView(EditView, ThreadView):
+class EditThreadPostView(EditView, ThreadView):
     template_name: str = "misago/edit_thread_post/index.html"
     template_name_htmx: str = "misago/edit_thread_post/form.html"
 
@@ -173,7 +159,7 @@ class ThreadEditPostView(EditView, ThreadView):
         )["location"]
 
 
-class PrivateThreadEditPostView(EditView, PrivateThreadView):
+class EditPrivateThreadPostView(EditView, PrivateThreadView):
     template_name: str = "misago/edit_private_thread_post/index.html"
     template_name_htmx: str = "misago/edit_private_thread_post/form.html"
 
@@ -215,7 +201,7 @@ class PrivateThreadEditPostView(EditView, PrivateThreadView):
         )["location"]
 
 
-class ThreadEditView(ThreadEditPostView):
+class EditThreadView(EditThreadPostView):
     template_name: str = "misago/edit_thread/index.html"
     template_name_htmx: str = "misago/edit_thread/form.html"
 
@@ -228,7 +214,7 @@ class ThreadEditView(ThreadEditPostView):
         return get_edit_thread_formset(request, post.thread, post)
 
 
-class PrivateThreadEditView(PrivateThreadEditPostView):
+class EditPrivateThreadView(EditPrivateThreadPostView):
     template_name: str = "misago/edit_private_thread/index.html"
     template_name_htmx: str = "misago/edit_private_thread/form.html"
 
@@ -241,7 +227,18 @@ class PrivateThreadEditView(PrivateThreadEditPostView):
         return get_edit_private_thread_formset(request, post.thread, post)
 
 
-thread_edit = ThreadEditView.as_view()
-private_thread_edit = PrivateThreadEditView.as_view()
-thread_edit_post = ThreadEditPostView.as_view()
-private_thread_edit_post = PrivateThreadEditPostView.as_view()
+def edit_thread_login_required(f):
+    return login_required(
+        pgettext(
+            "post thread page",
+            "Sign in to edit posts",
+        )
+    )(f)
+
+
+edit_thread = edit_thread_login_required(EditThreadView.as_view())
+edit_private_thread = edit_thread_login_required(EditPrivateThreadView.as_view())
+edit_thread_post = edit_thread_login_required(EditThreadPostView.as_view())
+edit_private_thread_post = edit_thread_login_required(
+    EditPrivateThreadPostView.as_view()
+)

@@ -128,16 +128,16 @@ class RepliesView(View):
 
         unread = get_unread_posts(request, thread, posts)
 
-        allow_thread_edit = self.allow_thread_edit(request, thread)
+        allow_edit_thread = self.allow_edit_thread(request, thread)
 
         items: list[dict] = []
         for post in posts:
             edit_url: str | None = None
-            if self.allow_post_edit(request, thread, post):
-                if post.id == thread.first_post_id and allow_thread_edit:
-                    edit_url = self.get_thread_post_edit_url(thread)
+            if self.allow_edit_post(request, thread, post):
+                if post.id == thread.first_post_id and allow_edit_thread:
+                    edit_url = self.get_edit_thread_post_url(thread)
                 else:
-                    edit_url = self.get_post_edit_url(thread, post)
+                    edit_url = self.get_edit_post(thread, post)
 
             items.append(
                 {
@@ -166,16 +166,16 @@ class RepliesView(View):
             "paginator": page_obj,
         }
 
-    def allow_thread_edit(self, request: HttpRequest, thread: Thread) -> bool:
+    def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         return False
 
-    def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
+    def allow_edit_post(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
         return False
 
-    def get_thread_post_edit_url(self, thread: Thread) -> str | None:
+    def get_edit_thread_post_url(self, thread: Thread) -> str | None:
         return None
 
-    def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
+    def get_edit_post(self, thread: Thread, post: Post) -> str | None:
         return None
 
     def set_posts_feed_users(self, request: HttpRequest, feed: list[dict]) -> None:
@@ -329,7 +329,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
-    def allow_thread_edit(self, request: HttpRequest, thread: Thread) -> bool:
+    def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         if request.user.is_anonymous:
             return False
 
@@ -341,7 +341,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
         except (Http404, PermissionDenied):
             return False
 
-    def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
+    def allow_edit_post(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
         if request.user.is_anonymous:
             return False
 
@@ -353,15 +353,15 @@ class ThreadRepliesView(RepliesView, ThreadView):
         except (Http404, PermissionDenied):
             return False
 
-    def get_thread_post_edit_url(self, thread: Thread) -> str | None:
+    def get_edit_thread_post_url(self, thread: Thread) -> str | None:
         return reverse(
-            "misago:thread-edit",
+            "misago:edit-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
-    def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
+    def get_edit_post(self, thread: Thread, post: Post) -> str | None:
         return reverse(
-            "misago:thread-edit",
+            "misago:edit-thread",
             kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
         )
 
@@ -378,7 +378,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:reply-thread", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
     def get_reply_formset(
@@ -423,7 +423,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
-    def allow_thread_edit(self, request: HttpRequest, thread: Thread) -> bool:
+    def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         if request.user.is_anonymous:
             return False
 
@@ -433,7 +433,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         except (Http404, PermissionDenied):
             return False
 
-    def allow_post_edit(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
+    def allow_edit_post(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
         try:
             check_edit_private_thread_post_permission(
                 request.user_permissions, thread, post
@@ -442,15 +442,15 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         except (Http404, PermissionDenied):
             return False
 
-    def get_thread_post_edit_url(self, thread: Thread) -> str | None:
+    def get_edit_thread_post_url(self, thread: Thread) -> str | None:
         return reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
-    def get_post_edit_url(self, thread: Thread, post: Post) -> str | None:
+    def get_edit_post(self, thread: Thread, post: Post) -> str | None:
         return reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
         )
 
@@ -493,7 +493,7 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:private-thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:reply-private-thread", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
     def get_reply_formset(

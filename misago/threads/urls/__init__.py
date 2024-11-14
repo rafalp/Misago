@@ -4,10 +4,10 @@ from ...conf import settings
 
 from ..views.attachment import attachment_server
 from ..views.edit import (
-    private_thread_edit,
-    private_thread_edit_post,
-    thread_edit,
-    thread_edit_post,
+    edit_private_thread,
+    edit_private_thread_post,
+    edit_thread,
+    edit_thread_post,
 )
 from ..views.list import category_threads, private_threads, threads
 from ..views.redirect import (
@@ -21,9 +21,9 @@ from ..views.redirect import (
     ThreadUnreadPostRedirectView,
 )
 from ..views.replies import private_thread_replies, thread_replies
-from ..views.reply import private_thread_reply, thread_reply
+from ..views.reply import reply_private_thread, reply_thread
 from ..views.selectcategory import SelectCategoryView
-from ..views.start import StartPrivateThreadView, StartThreadView
+from ..views.start import start_private_thread, start_thread
 from ..views.subscribed import redirect_subscribed_to_watched
 
 
@@ -35,12 +35,12 @@ urlpatterns = [
     ),
     path(
         "c/<slug:slug>/<int:id>/start-thread/",
-        StartThreadView.as_view(),
+        start_thread,
         name="start-thread",
     ),
     path(
         "private/start-thread/",
-        StartPrivateThreadView.as_view(),
+        start_private_thread,
         name="start-private-thread",
     ),
     path(
@@ -131,33 +131,33 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:id>/reply/",
-        thread_reply,
-        name="thread-reply",
+        reply_thread,
+        name="reply-thread",
     ),
     path(
         "p/<slug:slug>/<int:id>/reply/",
-        private_thread_reply,
-        name="private-thread-reply",
+        reply_private_thread,
+        name="reply-private-thread",
     ),
     path(
         "t/<slug:slug>/<int:id>/edit/",
-        thread_edit,
-        name="thread-edit",
+        edit_thread,
+        name="edit-thread",
     ),
     path(
         "p/<slug:slug>/<int:id>/edit/",
-        private_thread_edit,
-        name="private-thread-edit",
+        edit_private_thread,
+        name="edit-private-thread",
     ),
     path(
         "t/<slug:slug>/<int:id>/edit/<int:post>/",
-        thread_edit_post,
-        name="thread-edit",
+        edit_thread_post,
+        name="edit-thread",
     ),
     path(
         "p/<slug:slug>/<int:id>/edit/<int:post>/",
-        private_thread_edit_post,
-        name="private-thread-edit",
+        edit_private_thread_post,
+        name="edit-private-thread",
     ),
     path(
         "post/<int:id>/",

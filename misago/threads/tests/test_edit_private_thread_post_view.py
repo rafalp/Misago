@@ -9,7 +9,7 @@ def test_edit_private_thread_post_view_displays_login_page_to_guests(
 ):
     response = client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -28,7 +28,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_users_without_priv
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -48,7 +48,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_who_cant_see_
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": private_thread.id,
                 "slug": private_thread.slug,
@@ -67,7 +67,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_who_cant_edit
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -90,7 +90,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_trying_to_edi
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -111,7 +111,7 @@ def test_edit_private_thread_post_view_displays_edit_post_form(
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -133,7 +133,7 @@ def test_edit_private_thread_post_view_displays_edit_post_form_for_other_user_po
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -151,7 +151,7 @@ def test_edit_private_thread_post_view_updates_thread_post(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -185,7 +185,7 @@ def test_edit_private_thread_post_view_updates_thread_post_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -221,7 +221,7 @@ def test_edit_private_thread_post_view_previews_message(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -239,7 +239,7 @@ def test_edit_private_thread_post_view_previews_message_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -258,7 +258,7 @@ def test_edit_private_thread_post_view_shows_error_if_thread_post_is_accessed(
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={"id": thread.id, "slug": thread.slug, "post": thread.first_post_id},
         ),
     )

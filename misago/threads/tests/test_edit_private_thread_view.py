@@ -8,7 +8,7 @@ def test_edit_private_thread_view_displays_login_page_to_guests(
 ):
     response = client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -26,7 +26,7 @@ def test_edit_private_thread_view_displays_error_page_to_users_without_private_t
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -45,7 +45,7 @@ def test_edit_private_thread_view_displays_error_page_to_user_who_cant_see_priva
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": private_thread.id,
                 "slug": private_thread.slug,
@@ -64,7 +64,7 @@ def test_edit_private_thread_view_displays_error_page_to_user_who_cant_edit_own_
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -87,7 +87,7 @@ def test_edit_private_thread_view_displays_error_page_to_user_who_cant_edit_own_
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -107,7 +107,7 @@ def test_edit_private_thread_view_displays_error_page_to_user_trying_to_edit_oth
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -125,7 +125,7 @@ def test_edit_private_thread_view_displays_error_page_to_user_trying_to_edit_oth
 def test_edit_private_thread_view_displays_edit_form(user_client, user_private_thread):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -144,7 +144,7 @@ def test_edit_private_thread_view_displays_edit_form_for_other_user_thread_to_mo
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -161,7 +161,7 @@ def test_edit_private_thread_view_updates_thread_and_post(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -194,7 +194,7 @@ def test_edit_private_thread_view_updates_thread_and_post_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -226,7 +226,7 @@ def test_edit_private_thread_view_updates_thread_and_post_in_htmx(
 def test_edit_private_thread_view_previews_message(user_client, user_private_thread):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -243,7 +243,7 @@ def test_edit_private_thread_view_previews_message_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -261,7 +261,7 @@ def test_edit_private_thread_view_shows_error_if_thread_post_is_accessed(
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-edit",
+            "misago:edit-private-thread",
             kwargs={"id": thread.id, "slug": thread.slug, "post": thread.first_post_id},
         ),
     )

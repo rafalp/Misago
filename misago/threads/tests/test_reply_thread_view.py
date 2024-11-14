@@ -8,7 +8,7 @@ from ...test import assert_contains, assert_not_contains
 def test_reply_thread_view_displays_login_page_to_guests(client, thread):
     response = client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -25,7 +25,7 @@ def test_reply_thread_view_displays_error_page_to_users_without_see_category_per
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -42,7 +42,7 @@ def test_reply_thread_view_displays_error_page_to_users_without_browse_category_
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -59,7 +59,7 @@ def test_reply_thread_view_displays_error_page_to_users_without_reply_threads_pe
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -76,7 +76,7 @@ def test_reply_thread_view_displays_error_page_to_users_without_post_in_closed_c
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -95,7 +95,7 @@ def test_reply_thread_view_displays_error_page_to_users_without_post_in_closed_t
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -109,7 +109,7 @@ def test_reply_thread_view_displays_error_page_to_users_without_post_in_closed_t
 def test_reply_thread_view_displays_reply_thread_form(user_client, thread):
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -127,7 +127,7 @@ def test_reply_thread_view_displays_reply_thread_form_to_users_with_permission_t
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -145,7 +145,7 @@ def test_reply_thread_view_displays_reply_thread_form_to_users_with_permission_t
 
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -155,7 +155,7 @@ def test_reply_thread_view_displays_reply_thread_form_to_users_with_permission_t
 def test_reply_thread_view_posts_new_thread_reply(user_client, thread):
     response = user_client.post(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
@@ -178,7 +178,7 @@ def test_reply_thread_view_posts_new_thread_reply(user_client, thread):
 def test_reply_thread_view_posts_new_thread_reply_in_htmx(user_client, thread):
     response = user_client.post(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
@@ -202,7 +202,7 @@ def test_reply_thread_view_posts_new_thread_reply_in_htmx(user_client, thread):
 def test_reply_thread_view_previews_message(user_client, thread):
     response = user_client.post(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"posting-post-post": "How's going?", "preview": "true"},
@@ -214,7 +214,7 @@ def test_reply_thread_view_previews_message(user_client, thread):
 def test_reply_thread_view_previews_message_in_htmx(user_client, thread):
     response = user_client.post(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"posting-post-post": "How's going?", "preview": "true"},
@@ -229,7 +229,7 @@ def test_reply_thread_view_shows_error_if_private_thread_is_accessed(
 ):
     response = user_client.get(
         reverse(
-            "misago:thread-reply",
+            "misago:reply-thread",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         ),
     )

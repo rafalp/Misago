@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import render
-from django.utils.decorators import method_decorator
 from django.utils.translation import pgettext
 
 from ...auth.decorators import login_required
@@ -30,22 +29,9 @@ from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
 
-def reply_thread_login_required():
-    return login_required(
-        pgettext(
-            "reply thread page",
-            "Sign in to reply to threads",
-        )
-    )
-
-
 class ReplyView(View):
     template_name: str
     template_name_htmx: str
-
-    @method_decorator(reply_thread_login_required())
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -108,7 +94,7 @@ class ReplyView(View):
         raise NotImplementedError()
 
 
-class ThreadReplyView(ReplyView, ThreadView):
+class ReplyThreadView(ReplyView, ThreadView):
     template_name: str = "misago/reply_thread/index.html"
     template_name_htmx: str = "misago/reply_thread/form.html"
 
@@ -147,7 +133,7 @@ class ThreadReplyView(ReplyView, ThreadView):
         )
 
 
-class PrivateThreadReplyView(ReplyView, PrivateThreadView):
+class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
     template_name: str = "misago/reply_private_thread/index.html"
     template_name_htmx: str = "misago/reply_private_thread/form.html"
 
@@ -190,5 +176,14 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
         )
 
 
-thread_reply = ThreadReplyView.as_view()
-private_thread_reply = PrivateThreadReplyView.as_view()
+def reply_thread_login_required(f):
+    return login_required(
+        pgettext(
+            "reply thread page",
+            "Sign in to reply to threads",
+        )
+    )(f)
+
+
+reply_thread = reply_thread_login_required(ReplyThreadView.as_view())
+reply_private_thread = reply_thread_login_required(ReplyPrivateThreadView.as_view())

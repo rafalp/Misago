@@ -3,7 +3,6 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.utils.translation import pgettext
 
 from ...auth.decorators import login_required
@@ -34,19 +33,9 @@ from ..hooks import (
 from ..models import Thread
 
 
-def start_thread_login_required():
-    return login_required(
-        pgettext(
-            "start thread page",
-            "Sign in to start new thread",
-        )
-    )
-
-
 class StartThreadView(View):
     template_name: str = "misago/start_thread/index.html"
 
-    @method_decorator(start_thread_login_required())
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         return super().dispatch(request, *args, **kwargs)
 
@@ -171,3 +160,16 @@ class StartPrivateThreadView(StartThreadView):
             "misago:private-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
+
+
+def start_thread_login_required(f):
+    return login_required(
+        pgettext(
+            "start thread page",
+            "Sign in to start new thread",
+        )
+    )(f)
+
+
+start_thread = start_thread_login_required(StartThreadView.as_view())
+start_private_thread = start_thread_login_required(StartPrivateThreadView.as_view())
