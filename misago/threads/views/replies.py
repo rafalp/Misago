@@ -139,43 +139,6 @@ class RepliesView(View):
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         return False
 
-    def set_posts_feed_users(self, request: HttpRequest, feed: list[dict]) -> None:
-        user_ids: set[int] = set()
-        for item in feed:
-            self.get_posts_feed_item_user_ids(item, user_ids)
-            get_posts_feed_item_user_ids_hook(item, user_ids)
-
-        if not user_ids:
-            return
-
-        users = get_posts_feed_users_hook(self.get_posts_feed_users, request, user_ids)
-
-        for item in feed:
-            set_thread_posts_feed_item_users_hook(
-                self.set_post_feed_item_users, users, item
-            )
-
-    def get_posts_feed_item_user_ids(self, item: dict, user_ids: set[int]):
-        if item["type"] == "post":
-            user_ids.add(item["post"].poster_id)
-
-    def get_posts_feed_users(
-        self, request: HttpRequest, user_ids: set[int]
-    ) -> dict[int, "User"]:
-        users: dict[int, "User"] = {}
-        for user in User.objects.filter(id__in=user_ids):
-            if user.is_active or (
-                request.user.is_authenticated and request.user.is_misago_admin
-            ):
-                users[user.id] = user
-
-        prefetch_related_objects(list(users.values()), "group")
-        return users
-
-    def set_post_feed_item_users(self, users: dict[int, "User"], item: dict):
-        if item["type"] == "post":
-            item["poster"] = users.get(item["post"].poster_id)
-
     def update_thread_read_time(
         self,
         request: HttpRequest,
