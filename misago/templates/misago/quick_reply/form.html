@@ -1,0 +1,30 @@
+{% load i18n %}
+<div class="panel panel-quick-reply" id="misago-htmx-quick-reply">
+  <form
+    action="{{ url }}"
+    method="post"
+    hx-post="{{ url }}"
+    hx-trigger="submit"
+    hx-target="#misago-htmx-quick-reply"
+    hx-swap="outerHTML"
+  >
+    {% csrf_token %}
+    <input type="hidden" name="quick_reply" value="true" />
+    <div class="panel-body">
+      {% if preview %}
+        {% include "misago/posting/preview.html" %}
+      {% endif %}
+      {% for form in formset.get_forms %}
+        {% include form.template_name with form=form %}
+      {% endfor %}
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-primary" type="submit">
+        {% trans "Reply" context "quick reply thread submit btn" %}
+      </button>
+      <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+        {% trans "Preview" context "quick reply thread submit btn" %}
+      </button>
+    </div>
+  </form>
+</div>

@@ -14,11 +14,9 @@ from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
-    check_edit_private_thread_post_permission,
     check_reply_private_thread_permission,
 )
 from ...permissions.threads import (
-    check_edit_post_permission,
     check_edit_thread_permission,
     check_reply_thread_permission,
 )
@@ -39,12 +37,9 @@ from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
     get_private_thread_replies_page_posts_queryset_hook,
     get_private_thread_replies_page_thread_queryset_hook,
-    get_thread_posts_feed_item_user_ids_hook,
-    get_thread_posts_feed_users_hook,
     get_thread_replies_page_context_data_hook,
     get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
-    set_thread_posts_feed_item_users_hook,
 )
 from ..models import Post, Thread
 from .generic import PrivateThreadView, ThreadView
@@ -69,7 +64,7 @@ class RepliesView(View):
     feed_template_name: str = "misago/posts_feed/index.html"
     feed_post_template_name: str = "misago/posts_feed/post.html"
     reply_error_template_name: str = "misago/thread/reply_error.html"
-    reply_template_name: str = "misago/thread/reply_form.html"
+    reply_template_name: str = "misago/quick_reply/form.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -125,34 +120,13 @@ class RepliesView(View):
 
         page_obj = paginator.get_page(page)
         posts = list(page_obj.object_list)
+        feed = self.get_posts_feed(request, thread, posts)
 
         unread = get_unread_posts(request, thread, posts)
+        feed.set_unread_posts(unread)
 
         allow_edit_thread = self.allow_edit_thread(request, thread)
-
-        items: list[dict] = []
-        for post in posts:
-            edit_url: str | None = None
-            if self.allow_edit_post(request, thread, post):
-                if post.id == thread.first_post_id and allow_edit_thread:
-                    edit_url = self.get_edit_thread_post_url(thread)
-                else:
-                    edit_url = self.get_edit_post(thread, post)
-
-            items.append(
-                {
-                    "template_name": self.feed_post_template_name,
-                    "type": "post",
-                    "post": post,
-                    "poster": None,
-                    "poster_name": post.poster_name,
-                    "unread": post.id in unread,
-                    "edit_url": edit_url,
-                    "moderation": False,
-                }
-            )
-
-        self.set_posts_feed_users(request, items)
+        feed.set_allow_edit_thread(allow_edit_thread)
 
         if unread:
             self.update_thread_read_time(request, thread, posts[-1].posted_on)
@@ -160,36 +134,21 @@ class RepliesView(View):
         if request.user.is_authenticated and request.user.unread_notifications:
             self.read_user_notifications(request.user, posts)
 
-        return {
-            "template_name": self.feed_template_name,
-            "items": items,
-            "paginator": page_obj,
-        }
+        return feed.get_context_data({"paginator": page_obj})
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         return False
-
-    def allow_edit_post(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
-        return False
-
-    def get_edit_thread_post_url(self, thread: Thread) -> str | None:
-        return None
-
-    def get_edit_post(self, thread: Thread, post: Post) -> str | None:
-        return None
 
     def set_posts_feed_users(self, request: HttpRequest, feed: list[dict]) -> None:
         user_ids: set[int] = set()
         for item in feed:
             self.get_posts_feed_item_user_ids(item, user_ids)
-            get_thread_posts_feed_item_user_ids_hook(item, user_ids)
+            get_posts_feed_item_user_ids_hook(item, user_ids)
 
         if not user_ids:
             return
 
-        users = get_thread_posts_feed_users_hook(
-            self.get_posts_feed_users, request, user_ids
-        )
+        users = get_posts_feed_users_hook(self.get_posts_feed_users, request, user_ids)
 
         for item in feed:
             set_thread_posts_feed_item_users_hook(
@@ -341,30 +300,6 @@ class ThreadRepliesView(RepliesView, ThreadView):
         except (Http404, PermissionDenied):
             return False
 
-    def allow_edit_post(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
-        if request.user.is_anonymous:
-            return False
-
-        try:
-            check_edit_post_permission(
-                request.user_permissions, thread.category, thread, post
-            )
-            return True
-        except (Http404, PermissionDenied):
-            return False
-
-    def get_edit_thread_post_url(self, thread: Thread) -> str | None:
-        return reverse(
-            "misago:edit-thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
-        )
-
-    def get_edit_post(self, thread: Thread, post: Post) -> str | None:
-        return reverse(
-            "misago:edit-thread",
-            kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
-        )
-
     def is_category_read(
         self,
         request: HttpRequest,
@@ -432,27 +367,6 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
             return True
         except (Http404, PermissionDenied):
             return False
-
-    def allow_edit_post(self, request: HttpRequest, thread: Thread, post: Post) -> bool:
-        try:
-            check_edit_private_thread_post_permission(
-                request.user_permissions, thread, post
-            )
-            return True
-        except (Http404, PermissionDenied):
-            return False
-
-    def get_edit_thread_post_url(self, thread: Thread) -> str | None:
-        return reverse(
-            "misago:edit-private-thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
-        )
-
-    def get_edit_post(self, thread: Thread, post: Post) -> str | None:
-        return reverse(
-            "misago:edit-private-thread",
-            kwargs={"id": thread.id, "slug": thread.slug, "post": post.id},
-        )
 
     def update_thread_read_time(
         self,

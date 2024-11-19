@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from ...plugins.hooks import ActionHook
 
 
-class GetThreadPostsFeedItemUserIDsHookAction(Protocol):
+class GetPostsFeedItemUserIDsHookAction(Protocol):
     """
     A function that finds user ids in the `item` and updates `user_ids` set with
     them.
@@ -30,9 +30,7 @@ class GetThreadPostsFeedItemUserIDsHookAction(Protocol):
     ): ...
 
 
-class GetThreadPostsFeedItemUserIDsHook(
-    ActionHook[GetThreadPostsFeedItemUserIDsHookAction]
-):
+class GetPostsFeedItemUserIDsHook(ActionHook[GetPostsFeedItemUserIDsHookAction]):
     """
     This hook enables plugins to include extra user IDs stored on posts in the
     query that Misago uses to retrieve `User`s to display on thread and private
@@ -43,10 +41,10 @@ class GetThreadPostsFeedItemUserIDsHook(
     The code below implements a custom function that adds
 
     ```python
-    from misago.threads.hooks import get_thread_posts_feed_item_user_ids_hook
+    from misago.threads.hooks import get_posts_feed_item_user_ids_hook
 
 
-    @get_thread_posts_feed_item_user_ids_hook.append_action
+    @get_posts_feed_item_user_ids_hook.append_action
     def include_plugin_users(
         item: dict,
         user_ids: set[int],
@@ -69,4 +67,4 @@ class GetThreadPostsFeedItemUserIDsHook(
         super().__call__(item, user_ids)
 
 
-get_thread_posts_feed_item_user_ids_hook = GetThreadPostsFeedItemUserIDsHook()
+get_posts_feed_item_user_ids_hook = GetPostsFeedItemUserIDsHook()

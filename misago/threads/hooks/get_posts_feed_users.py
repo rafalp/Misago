@@ -35,7 +35,7 @@ class GetThreadPostsFeedUsersHookAction(Protocol):
     ) -> dict[int, "User"]: ...
 
 
-class FetThreadPostFeedUsersHookFilter(Protocol):
+class GetPostsFeedUsersHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
@@ -69,8 +69,8 @@ class FetThreadPostFeedUsersHookFilter(Protocol):
     ) -> dict[int, "User"]: ...
 
 
-class FetThreadPostFeedUsersHook(
-    FilterHook[GetThreadPostsFeedUsersHookAction, FetThreadPostFeedUsersHookFilter]
+class GetPostsFeedUsersHook(
+    FilterHook[GetThreadPostsFeedUsersHookAction, GetPostsFeedUsersHookFilter]
 ):
     """
     This hook wraps the standard function that Misago uses to get a `dict` of
@@ -86,13 +86,13 @@ class FetThreadPostFeedUsersHook(
     from typing import TYPE_CHECKING
 
     from django.http import HttpRequest
-    from misago.threads.hooks import get_thread_posts_feed_users_hook
+    from misago.threads.hooks import get_posts_feed_users_hook
 
     if TYPE_CHECKING:
         from misago.users.models import User
 
 
-    @get_thread_posts_feed_users_hook.append_filter
+    @get_posts_feed_users_hook.append_filter
     def replace_post_poster(
         action, request: HttpRequest, user_ids: set[int]
     ) -> dict[int, "User"]:
@@ -117,4 +117,4 @@ class FetThreadPostFeedUsersHook(
         return super().__call__(action, request, user_ids)
 
 
-get_thread_posts_feed_users_hook = FetThreadPostFeedUsersHook()
+get_posts_feed_users_hook = GetPostsFeedUsersHook(cache=False)

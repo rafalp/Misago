@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
-from django.views import View
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import pgettext
+from django.views import View
 
 from ...auth.decorators import login_required
 from ...htmx.response import htmx_redirect
@@ -33,6 +34,7 @@ from .generic import PrivateThreadView, ThreadView
 class ReplyView(View):
     template_name: str
     template_name_htmx: str
+    template_name_quick_reply: str = "misago/quick_reply/index.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -55,6 +57,20 @@ class ReplyView(View):
 
         messages.success(request, pgettext("thread reply posted", "Reply posted"))
 
+        if self.is_quick_reply(request):
+            request.user.refresh_from_db()
+            request.method = "GET"
+            formset = self.get_formset(request, thread)
+            request.method = "POST"
+
+            feed = self.get_posts_feed(request, thread, [state.post])
+            feed.set_animate_posts([state.post.id])
+            feed.set_unread_posts([state.post.id])
+
+            response = self.render(request, thread, formset, feed=feed.get_feed_data())
+
+            return response
+
         redirect = self.get_redirect_response(request, state.thread, state.post)
         if request.is_htmx:
             return htmx_redirect(redirect.headers["location"])
@@ -73,11 +89,15 @@ class ReplyView(View):
         thread: Thread,
         formset: PostingFormset,
         preview: str | None = None,
+        feed: list[dict] | None = None,
     ):
         context = self.get_context_data(request, thread, formset)
         context["preview"] = preview
+        context["new_feed"] = feed
 
-        if request.is_htmx:
+        if self.is_quick_reply(request):
+            template_name = self.template_name_quick_reply
+        elif request.is_htmx:
             template_name = self.template_name_htmx
         else:
             template_name = self.template_name
@@ -95,13 +115,20 @@ class ReplyView(View):
         return {
             "thread": thread,
             "formset": formset,
+            "url": self.get_form_url(request, thread),
             "template_name_htmx": self.template_name_htmx,
         }
+
+    def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
+        raise NotImplementedError
 
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
     ) -> HttpResponse:
         raise NotImplementedError()
+
+    def is_quick_reply(self, request: HttpRequest) -> bool:
+        return request.is_htmx and request.POST.get("quick_reply")
 
 
 class ReplyThreadView(ReplyView, ThreadView):
@@ -124,6 +151,11 @@ class ReplyThreadView(ReplyView, ThreadView):
     ) -> dict:
         return get_reply_thread_page_context_data_hook(
             self.get_context_data_action, request, thread, formset
+        )
+
+    def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
+        return reverse(
+            "misago:reply-thread", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
     def get_redirect_response(
@@ -158,6 +190,11 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
     ) -> dict:
         return get_reply_private_thread_page_context_data_hook(
             self.get_context_data_action, request, thread, formset
+        )
+
+    def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
+        return reverse(
+            "misago:reply-private-thread", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
     def get_redirect_response(

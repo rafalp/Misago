@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class SetThreadPostFeedItemUsersHookAction(Protocol):
+class SetPostFeedItemUsersHookAction(Protocol):
     """
     A standard Misago function used to set `User` instances on a `dict` with
     thread posts feed item's data.
@@ -26,13 +26,13 @@ class SetThreadPostFeedItemUsersHookAction(Protocol):
     def __call__(self, users: dict[int, "User"], item: dict): ...
 
 
-class SetThreadPostFeedItemUsersHookFilter(Protocol):
+class SetPostFeedItemUsersHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: SetThreadPostFeedItemUsersHookAction`
+    ## `action: SetPostFeedItemUsersHookAction`
 
     A standard Misago function used to set `User` instances on a `dict` with
     thread posts feed item's data.
@@ -51,16 +51,14 @@ class SetThreadPostFeedItemUsersHookFilter(Protocol):
 
     def __call__(
         self,
-        action: SetThreadPostFeedItemUsersHookAction,
+        action: SetPostFeedItemUsersHookAction,
         users: dict[int, "User"],
         item: dict,
     ): ...
 
 
-class SetThreadPostFeedItemUsersHook(
-    FilterHook[
-        SetThreadPostFeedItemUsersHookAction, SetThreadPostFeedItemUsersHookFilter
-    ]
+class SetPostFeedItemUsersHook(
+    FilterHook[SetPostFeedItemUsersHookAction, SetPostFeedItemUsersHookFilter]
 ):
     """
     This hook wraps the standard function that Misago uses to set `User` instances
@@ -74,13 +72,13 @@ class SetThreadPostFeedItemUsersHook(
     ```python
     from typing import TYPE_CHECKING
 
-    from misago.threads.hooks import set_thread_posts_feed_item_users_hook
+    from misago.threads.hooks import set_posts_feed_item_users_hook
 
     if TYPE_CHECKING:
         from misago.users.models import User
 
 
-    @set_thread_posts_feed_item_users_hook.append_filter
+    @set_posts_feed_item_users_hook.append_filter
     def replace_post_poster(
         action, users: dict[int, "User"], item: dict
     ):
@@ -96,11 +94,11 @@ class SetThreadPostFeedItemUsersHook(
 
     def __call__(
         self,
-        action: SetThreadPostFeedItemUsersHookAction,
+        action: SetPostFeedItemUsersHookAction,
         users: dict[int, "User"],
         item: dict,
     ):
         return super().__call__(action, users, item)
 
 
-set_thread_posts_feed_item_users_hook = SetThreadPostFeedItemUsersHook()
+set_posts_feed_item_users_hook = SetPostFeedItemUsersHook(cache=False)

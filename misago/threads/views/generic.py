@@ -19,6 +19,7 @@ from ...permissions.threads import (
 from ...readtracker.tracker import annotate_threads_read_time
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPaginator
+from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
 
 
 class GenericView(View):
@@ -72,6 +73,11 @@ class GenericView(View):
             request.settings.posts_per_page_orphans,
         )
 
+    def get_posts_feed(
+        self, request: HttpRequest, thread: Thread, posts: list[Post]
+    ) -> PostsFeed:
+        raise NotImplementedError()
+
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
         if page and page > 1:
             return reverse(
@@ -100,6 +106,11 @@ class ThreadView(GenericView):
         queryset = super().get_thread_posts_queryset(request, thread)
         return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
 
+    def get_posts_feed(
+        self, request: HttpRequest, thread: Thread, posts: list[Post]
+    ) -> PostsFeed:
+        return ThreadPostsFeed(request, thread, posts)
+
 
 class PrivateThreadView(GenericView):
     thread_url_name: str = "misago:private-thread"
@@ -116,3 +127,8 @@ class PrivateThreadView(GenericView):
         return filter_private_thread_posts_queryset(
             request.user_permissions, thread, queryset
         )
+
+    def get_posts_feed(
+        self, request: HttpRequest, thread: Thread, posts: list[Post]
+    ) -> PostsFeed:
+        return PrivateThreadPostsFeed(request, thread, posts)
