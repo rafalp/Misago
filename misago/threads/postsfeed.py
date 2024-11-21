@@ -52,7 +52,7 @@ class PostsFeed:
         self.allow_edit_thread = False
         self.is_moderator = False
 
-    def set_animate_posts(self, ids: Iterable[int]):
+    def set_animated_posts(self, ids: Iterable[int]):
         self.animate = set(ids)
 
     def set_unread_posts(self, ids: Iterable[int]):
@@ -61,10 +61,7 @@ class PostsFeed:
     def set_allow_edit_thread(self, allow_edit_thread: bool):
         self.allow_edit_thread = allow_edit_thread
 
-    def set_moderation(self, is_moderator: bool):
-        self.is_moderator = is_moderator
-
-    def get_context_data(self, context) -> dict:
+    def get_context_data(self, context: dict | None = None) -> dict:
         context_data = {
             "template_name": self.template_name,
             "items": self.get_feed_data(),

@@ -17,6 +17,23 @@
   border-bottom: 0;
 }
 
+// Animate in new or updated threads
+@keyframes misago-posts-feed-item-animate {
+  0% {
+    background-color: @posts-feed-item-animation-color;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.posts-feed-item-animate {
+  animation-name: misago-posts-feed-item-animate;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+}
+
+// Post
 .posts-feed-item-post {
   display: flex;
 }

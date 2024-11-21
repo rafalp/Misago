@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -6,6 +8,7 @@ from django.utils.translation import pgettext
 from django.views import View
 
 from ...auth.decorators import login_required
+from ...categories.models import Category
 from ...htmx.response import htmx_redirect
 from ...permissions.privatethreads import check_reply_private_thread_permission
 from ...permissions.threads import check_reply_thread_permission
@@ -22,6 +25,13 @@ from ...posting.state import (
     get_reply_private_thread_state,
     get_reply_thread_state,
 )
+from ...readtracker.tracker import (
+    get_thread_read_time,
+    mark_thread_read,
+    mark_category_read,
+)
+from ...readtracker.privatethreads import unread_private_threads_exist
+from ...readtracker.threads import is_category_read
 from ..hooks import (
     get_reply_private_thread_page_context_data_hook,
     get_reply_thread_page_context_data_hook,
@@ -32,6 +42,8 @@ from .generic import PrivateThreadView, ThreadView
 
 
 class ReplyView(View):
+    thread_annotate_read_time: bool = True
+
     template_name: str
     template_name_htmx: str
     template_name_quick_reply: str = "misago/quick_reply/index.html"
@@ -58,24 +70,48 @@ class ReplyView(View):
         messages.success(request, pgettext("thread reply posted", "Reply posted"))
 
         if self.is_quick_reply(request):
-            request.user.refresh_from_db()
-            request.method = "GET"
-            formset = self.get_formset(request, thread)
-            request.method = "POST"
-
-            feed = self.get_posts_feed(request, thread, [state.post])
-            feed.set_animate_posts([state.post.id])
-            feed.set_unread_posts([state.post.id])
-
-            response = self.render(request, thread, formset, feed=feed.get_feed_data())
-
-            return response
+            return self.quick_reply_valid(request, thread, state)
 
         redirect = self.get_redirect_response(request, state.thread, state.post)
         if request.is_htmx:
             return htmx_redirect(redirect.headers["location"])
 
         return redirect
+
+    def quick_reply_valid(
+        self, request: HttpRequest, thread: Thread, state: ReplyThreadState
+    ) -> HttpResponse:
+        # TODO: remove once we no longer serialize user object to preload JSON data
+        request.user.refresh_from_db()
+
+        request.method = "GET"
+        formset = self.get_formset(request, thread)
+        request.method = "POST"
+
+        feed = self.get_posts_feed(request, thread, [state.post])
+        feed.set_animated_posts([state.post.id])
+        feed.set_unread_posts([state.post.id])
+
+        response = self.render(request, thread, formset, feed=feed.get_feed_data())
+
+        # Is thread (excluding last reply) read?
+        read_time = get_thread_read_time(request, thread)
+        thread_is_read = not (
+            self.get_thread_posts_queryset(request, thread)
+            .exclude(id=state.post.id)
+            .filter(posted_on__gt=read_time)
+            .exists()
+        )
+
+        # Mark posted quick reply as read
+        if thread_is_read:
+            mark_thread_read(request.user, thread, state.timestamp)
+            if self.is_category_read(
+                request, state.category, thread.category_read_time
+            ):
+                mark_category_read(request.user, state.category, force_update=True)
+
+        return response
 
     def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
         raise NotImplementedError()
@@ -130,6 +166,11 @@ class ReplyView(View):
     def is_quick_reply(self, request: HttpRequest) -> bool:
         return request.is_htmx and request.POST.get("quick_reply")
 
+    def is_category_read(
+        self, request: HttpRequest, category: Category, read_time: datetime | None
+    ) -> bool:
+        raise NotImplementedError()
+
 
 class ReplyThreadView(ReplyView, ThreadView):
     template_name: str = "misago/reply_thread/index.html"
@@ -164,6 +205,11 @@ class ReplyThreadView(ReplyView, ThreadView):
         return thread_post_redirect(
             request, id=thread.id, slug=thread.slug, post=post.id
         )
+
+    def is_category_read(
+        self, request: HttpRequest, category: Category, read_time: datetime | None
+    ) -> bool:
+        return is_category_read(request, category, read_time)
 
 
 class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
@@ -203,6 +249,11 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
         return private_thread_post_redirect(
             request, id=thread.id, slug=thread.slug, post=post.id
         )
+
+    def is_category_read(
+        self, request: HttpRequest, category: Category, read_time: datetime | None
+    ) -> bool:
+        return not unread_private_threads_exist(request, category, read_time)
 
 
 def reply_thread_login_required(f):
