@@ -70,7 +70,7 @@ class ReplyView(View):
         messages.success(request, pgettext("thread reply posted", "Reply posted"))
 
         if self.is_quick_reply(request):
-            return self.quick_reply_valid(request, thread, state)
+            return self.post_quick_reply(request, thread, state)
 
         redirect = self.get_redirect_response(request, state.thread, state.post)
         if request.is_htmx:
@@ -78,7 +78,7 @@ class ReplyView(View):
 
         return redirect
 
-    def quick_reply_valid(
+    def post_quick_reply(
         self, request: HttpRequest, thread: Thread, state: ReplyThreadState
     ) -> HttpResponse:
         # TODO: remove once we no longer serialize user object to preload JSON data

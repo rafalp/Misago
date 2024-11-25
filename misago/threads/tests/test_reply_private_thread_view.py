@@ -109,6 +109,53 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_htmx(
     )
 
 
+def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {
+            "posting-post-post": "How's going?",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    user_private_thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+        )
+        + f"#post-{user_private_thread.last_post_id}"
+    )
+
+
+def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply_with_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {
+            "posting-post-post": "How's going?",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    user_private_thread.refresh_from_db()
+    assert_contains(response, f"post-{user_private_thread.last_post_id}")
+    assert_contains(response, f"<p>How&#x27;s going?</p>")
+
+
 def test_reply_private_thread_view_previews_message(user_client, user_private_thread):
     response = user_client.post(
         reverse(
@@ -129,10 +176,50 @@ def test_reply_private_thread_view_previews_message_in_htmx(
             "misago:reply-private-thread",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         ),
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            "posting-post-post": "How's going?",
+            "preview": "true",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, "Message preview")
+
+
+def test_reply_private_thread_view_previews_message_in_quick_reply(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {
+            "posting-post-post": "How's going?",
+            "quick_reply": "true",
+            "preview": "true",
+        },
+    )
+    assert_contains(response, "Post reply")
+    assert_contains(response, "Message preview")
+
+
+def test_reply_private_thread_view_previews_message_in_quick_reply_with_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {
+            "posting-post-post": "How's going?",
+            "quick_reply": "true",
+            "preview": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post reply")
     assert_contains(response, "Message preview")
 
 
