@@ -90,7 +90,7 @@ class ListView(AdminView):
                 response = self.handle_mass_action(request, context)
                 if response:
                     return response
-                return redirect(request.path)
+                return redirect(request.path_info)
             except MassActionError as e:
                 messages.error(request, e.args[0])
 
@@ -151,7 +151,7 @@ class ListView(AdminView):
                 )
 
         if refresh_querystring and "redirected" not in request.GET:
-            return redirect("%s%s" % (request.path, context["querystring"]))
+            return redirect("%s%s" % (request.path_info, context["querystring"]))
 
         return self.render(request, context)
 

@@ -1,0 +1,33 @@
+{% load i18n %}
+
+<div class="posts-feed-item-post-edit-form">
+  <form
+    action="{{ request_path }}"
+    method="post"
+    hx-post="{{ request_path }}?inline=true"
+    hx-trigger="submit"
+    hx-target="#posts-feed-item-post-{{ post.id }} .posts-feed-item-post-body"
+    hx-swap="innerHTML"
+  >
+    {% csrf_token %}
+    <div class="posts-feed-item-post-edit-form-body">
+      {% if preview %}
+        {% include "misago/posting/preview.html" %}
+      {% endif %}
+      {% for form in formset.get_forms %}
+        {% include form.template_name with form=form %}
+      {% endfor %}
+    </div>
+    <div class="posts-feed-item-post-edit-form-footer">
+      <button class="btn btn-primary" type="submit">
+        {% trans "Save" context "inline edit submit btn" %}
+      </button>
+      <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+        {% trans "Preview" context "inline edit submit btn" %}
+      </button>
+      <button class="btn btn-secondary" type="submit" name="cancel" value="true" formnovalidate>
+        {% trans "Cancel" context "inline edit submit btn" %}
+      </button>
+    </div>
+  </form>
+</div>

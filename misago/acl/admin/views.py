@@ -45,7 +45,7 @@ class RoleFormMixin:
                 messages.success(request, self.message_submit % {"name": target.name})
 
                 if "stay" in request.POST:
-                    return redirect(request.path)
+                    return redirect(request.path_info)
                 return redirect(self.root_link)
             if form.is_valid() and len(perms_forms) != valid_forms:
                 form.add_error(

@@ -3,11 +3,11 @@
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
   {% if new_feed %}
-  <div hx-swap-oob="beforeend:.posts-feed-inner">
-    {% for item in new_feed %}
-      {% includecomponent item %}
-    {% endfor %}
-  </div>
+    <div hx-swap-oob="beforeend:.posts-feed-inner">
+      {% for item in new_feed %}
+        {% includecomponent item %}
+      {% endfor %}
+    </div>
   {% endif %}
 {% endif %}
 

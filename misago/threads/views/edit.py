@@ -43,6 +43,8 @@ from .generic import PrivateThreadView, ThreadView
 class EditView(View):
     template_name: str
     template_name_htmx: str
+    template_name_inline: str = "misago/inline_edit/index.html"
+    template_name_inline_form: str = "misago/inline_edit/form.html"
     post_select_related: Iterable[str] = ("thread", "category", "poster")
 
     def get(
@@ -59,6 +61,11 @@ class EditView(View):
         thread = self.get_thread(request, id)
         post_obj = self.get_thread_post(request, thread, post or thread.first_post_id)
         state = self.get_state(request, post_obj)
+
+        # Short-circuit post handler if "cancel" button was pressed
+        if self.is_inline(request) and request.POST.get("cancel"):
+            return self.post_inline_edit(request, state, animate=False)
+
         formset = self.get_formset(request, post_obj)
         formset.update_state(state)
 
@@ -77,6 +84,9 @@ class EditView(View):
 
         messages.success(request, success_message)
 
+        if post and self.is_inline(request):
+            return self.post_inline_edit(request, state)
+
         if post:
             redirect_url = self.get_redirect_url(request, state.thread, state.post)
         else:
@@ -86,6 +96,24 @@ class EditView(View):
             return htmx_redirect(redirect_url)
 
         return redirect(redirect_url)
+
+    def post_inline_edit(
+        self, request: HttpRequest, state: EditThreadPostState, animate: bool = True
+    ) -> HttpResponse:
+        feed = self.get_posts_feed(request, state.thread, [state.post])
+
+        if animate:
+            feed.set_animated_posts([state.post.id])
+
+        counter_start = (
+            self.get_thread_posts_queryset(request, state.thread)
+            .filter(id__lt=state.post.id)
+            .count()
+        )
+        feed.set_counter_start(counter_start)
+
+        post_context = feed.get_feed_data()[0]
+        return render(request, self.template_name_inline, context=post_context)
 
     def get_state(self, request: HttpRequest, post: Post) -> EditThreadPostState:
         raise NotImplementedError()
@@ -103,7 +131,9 @@ class EditView(View):
         context = self.get_context_data(request, post, formset)
         context["preview"] = preview
 
-        if request.is_htmx:
+        if self.is_inline(request):
+            template_name = self.template_name_inline_form
+        elif request.is_htmx:
             template_name = self.template_name_htmx
         else:
             template_name = self.template_name
@@ -124,6 +154,9 @@ class EditView(View):
             "post": post,
             "formset": formset,
         }
+
+    def is_inline(self, request: HttpRequest) -> bool:
+        return request.is_htmx and request.GET.get("inline")
 
     def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
         raise NotImplementedError()

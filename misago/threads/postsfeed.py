@@ -38,6 +38,7 @@ class PostsFeed:
 
     allow_edit_thread: bool
     is_moderator: bool
+    counter_start: int
 
     def __init__(
         self, request: HttpRequest, thread: Thread, posts: list[Post] | None = None
@@ -51,12 +52,16 @@ class PostsFeed:
 
         self.allow_edit_thread = False
         self.is_moderator = False
+        self.counter_start = 0
 
     def set_animated_posts(self, ids: Iterable[int]):
         self.animate = set(ids)
 
     def set_unread_posts(self, ids: Iterable[int]):
         self.unread = set(ids)
+
+    def set_counter_start(self, counter_start: int):
+        self.counter_start = counter_start
 
     def set_allow_edit_thread(self, allow_edit_thread: bool):
         self.allow_edit_thread = allow_edit_thread
@@ -74,14 +79,14 @@ class PostsFeed:
 
     def get_feed_data(self) -> list[dict]:
         feed: list[dict] = []
-        for post in self.posts:
-            feed.append(self.get_post_data(post))
+        for i, post in enumerate(self.posts):
+            feed.append(self.get_post_data(post, i + self.counter_start + 1))
 
         self.populate_feed_users(feed)
 
         return feed
 
-    def get_post_data(self, post: Post) -> dict:
+    def get_post_data(self, post: Post, counter: int = 1) -> dict:
         edit_url: str | None = None
 
         if self.allow_edit_post(post):
@@ -95,6 +100,7 @@ class PostsFeed:
             "animate": post.id in self.animate,
             "type": "post",
             "post": post,
+            "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
             "unread": post.id in self.unread,

@@ -10,7 +10,7 @@ def misago_version(request):
 
 
 def request_path(request):
-    return {"request_path": request.path}
+    return {"request_path": request.path_info}
 
 
 def current_link(request):
