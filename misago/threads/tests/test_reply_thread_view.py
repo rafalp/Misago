@@ -2,6 +2,8 @@ from django.urls import reverse
 
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...readtracker.models import ReadCategory
+from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_not_contains
 
 
@@ -242,6 +244,35 @@ def test_reply_thread_view_posts_new_thread_reply_in_quick_reply_with_htmx(
     thread.refresh_from_db()
     assert_contains(response, f"post-{thread.last_post_id}")
     assert_contains(response, f"<p>How&#x27;s going?</p>")
+
+
+def test_reply_thread_view_posted_reply_in_quick_reply_with_htmx_is_read(
+    user, user_client, thread
+):
+    mark_thread_read(user, thread, thread.last_post.posted_on)
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "How's going?",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    thread.refresh_from_db()
+    assert_contains(response, f"post-{thread.last_post_id}")
+    assert_contains(response, f"<p>How&#x27;s going?</p>")
+
+    ReadCategory.objects.get(
+        user=user,
+        category=thread.category,
+        read_time=thread.last_post_on,
+    )
 
 
 def test_reply_thread_view_previews_message(user_client, thread):

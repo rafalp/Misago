@@ -34,18 +34,18 @@ class ReplyThreadState(PostingState):
         self.save_category()
         self.save_user()
 
-    def save_thread(self):
-        self.thread.replies = models.F("replies") + 1
-        self.thread.set_last_post(self.post)
-
-        self.update_object(self.thread)
-
     def save_post(self):
         self.post.save()
 
         update_post_checksum(self.post)
         self.post.update_search_vector()
         self.post.save()
+
+    def save_thread(self):
+        self.thread.replies = models.F("replies") + 1
+        self.thread.set_last_post(self.post)
+
+        self.update_object(self.thread)
 
     def save_category(self):
         self.category.posts = models.F("posts") + 1
