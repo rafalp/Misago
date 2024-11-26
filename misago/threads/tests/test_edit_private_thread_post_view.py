@@ -123,6 +123,25 @@ def test_edit_private_thread_post_view_displays_edit_post_form(
     assert_contains(response, user_private_thread.first_post.original)
 
 
+def test_edit_private_thread_post_view_displays_inline_edit_post_form_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        )
+        + "?inline=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, user_private_thread.first_post.original)
+    assert_contains(response, "?inline=true")
+
+
 def test_edit_private_thread_post_view_displays_edit_post_form_for_other_user_post_to_moderator(
     user, user_client, user_private_thread, other_user, members_group, moderators_group
 ):

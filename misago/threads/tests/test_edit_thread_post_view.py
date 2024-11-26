@@ -193,6 +193,25 @@ def test_edit_thread_post_view_displays_edit_post_form(user_client, user_thread)
     assert_contains(response, user_thread.first_post.original)
 
 
+def test_edit_thread_post_view_displays_inline_edit_post_form_in_htmx(
+    user_client, user_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        )
+        + "?inline=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, user_thread.first_post.original)
+    assert_contains(response, "?inline=true")
+
+
 def test_edit_thread_post_view_displays_edit_post_form_in_closed_category_to_moderator(
     user, user_client, user_thread, members_group, moderators_group
 ):
