@@ -1,4 +1,4 @@
-# `check_start_thread_in_category_permission_hook`
+# `check_start_thread_permission_hook`
 
 This hook wraps the standard Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
 
@@ -8,14 +8,14 @@ This hook wraps the standard Misago function used to check if the user has permi
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import check_start_thread_in_category_permission_hook
+from misago.permissions.hooks import check_start_thread_permission_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_check_start_thread_in_category_permission_filter(
+def custom_check_start_thread_permission_filter(
     action: CheckStartThreadInCategoryPermissionHookAction,
     permissions: 'UserPermissionsProxy',
     category: Category,
@@ -48,7 +48,7 @@ A category to check permissions for.
 ## Action
 
 ```python
-def check_start_thread_in_category_permission_action(
+def check_start_thread_permission_action(
     permissions: 'UserPermissionsProxy', category: Category
 ) -> None:
     ...
@@ -79,10 +79,10 @@ from datetime import timedelta
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from misago.categories.models import Category
-from misago.permissions.hooks import check_start_thread_in_category_permission_hook
+from misago.permissions.hooks import check_start_thread_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 
-@check_start_thread_in_category_permission_hook.append_filter
+@check_start_thread_permission_hook.append_filter
 def check_user_can_start_thread(
     action,
     permissions: UserPermissionsProxy,

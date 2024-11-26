@@ -98,7 +98,7 @@ def exclude_old_private_threads_queryset_hook(
 ) -> None:
    queryset = action(permissions, queryset)
 
-    if permissions.private_threads_moderator:
+    if permissions.is_private_threads_moderator:
        return queryset
 
     return queryset.filter(

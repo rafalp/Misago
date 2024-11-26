@@ -1,4 +1,4 @@
-# `get_thread_posts_feed_item_user_ids_hook`
+# `get_posts_feed_item_user_ids_hook`
 
 This hook enables plugins to include extra user IDs stored on posts in the query that Misago uses to retrieve `User`s to display on thread and private thread replies pages.
 
@@ -8,14 +8,14 @@ This hook enables plugins to include extra user IDs stored on posts in the query
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import get_thread_posts_feed_item_user_ids_hook
+from misago.threads.hooks import get_posts_feed_item_user_ids_hook
 ```
 
 
 ## Action
 
 ```python
-def custom_get_thread_posts_feed_item_user_ids_filter(
+def custom_get_posts_feed_item_user_ids_filter(
     request: HttpRequest, item: dict, user_ids: set[int]
 ):
     ...
@@ -41,10 +41,10 @@ A `set` of `int`s being user ids to retrieve from the database that action shoul
 The code below implements a custom function that adds
 
 ```python
-from misago.threads.hooks import get_thread_posts_feed_item_user_ids_hook
+from misago.threads.hooks import get_posts_feed_item_user_ids_hook
 
 
-@get_thread_posts_feed_item_user_ids_hook.append_action
+@get_posts_feed_item_user_ids_hook.append_action
 def include_plugin_users(
     item: dict,
     user_ids: set[int],

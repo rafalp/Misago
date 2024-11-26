@@ -1,4 +1,4 @@
-# `get_thread_posts_feed_users_hook`
+# `get_posts_feed_users_hook`
 
 This hook wraps the standard function that Misago uses to get a `dict` of `User` instances used to display thread posts feed. Users have their `group` field already populated.
 
@@ -8,14 +8,14 @@ This hook wraps the standard function that Misago uses to get a `dict` of `User`
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import get_thread_posts_feed_users_hook
+from misago.threads.hooks import get_posts_feed_users_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_thread_posts_feed_users_filter(
+def custom_get_posts_feed_users_filter(
     action: GetThreadPostsFeedUsersHookAction,
     request: HttpRequest,
     user_ids: set[int],
@@ -53,7 +53,7 @@ A `dict` of `User` instances, indexed by their IDs.
 ## Action
 
 ```python
-def get_thread_posts_feed_users_action(request: HttpRequest, user_ids: set[int]) -> dict[int, 'User']:
+def get_posts_feed_users_action(request: HttpRequest, user_ids: set[int]) -> dict[int, 'User']:
     ...
 ```
 
@@ -85,13 +85,13 @@ The code below implements a custom filter function that removes some users from 
 from typing import TYPE_CHECKING
 
 from django.http import HttpRequest
-from misago.threads.hooks import get_thread_posts_feed_users_hook
+from misago.threads.hooks import get_posts_feed_users_hook
 
 if TYPE_CHECKING:
     from misago.users.models import User
 
 
-@get_thread_posts_feed_users_hook.append_filter
+@get_posts_feed_users_hook.append_filter
 def replace_post_poster(
     action, request: HttpRequest, user_ids: set[int]
 ) -> dict[int, "User"]:

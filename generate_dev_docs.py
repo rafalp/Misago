@@ -1,6 +1,8 @@
 # Script for generating some of documents in `dev-docs` from Misago's code
 import ast
+import os
 from dataclasses import dataclass
+from glob import glob
 from importlib import import_module
 from pathlib import Path
 from textwrap import dedent, indent
@@ -20,6 +22,12 @@ BASE_PATH = Path(__file__).parent
 DOCS_PATH = BASE_PATH / "dev-docs"
 PLUGINS_PATH = DOCS_PATH / "plugins"
 PLUGINS_HOOKS_PATH = PLUGINS_PATH / "hooks"
+
+KEEP_PLUGINS_HOOKS_PATHS = (
+    "index.md",
+    "action-hook.md",
+    "filter-hook.md",
+)
 
 
 def main():
@@ -52,6 +60,12 @@ def generate_hooks_reference():
 
 
 def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]]):
+    # Delete old references
+    for path in glob(f"{PLUGINS_HOOKS_PATH}/*.md"):
+        filename = str(path).split("/")[-1].lower()
+        if filename not in KEEP_PLUGINS_HOOKS_PATHS:
+            os.unlink(path)
+
     with open(PLUGINS_HOOKS_PATH / "reference.md", "w") as fp:
         fp.write("# Built-in hooks reference")
         fp.write("\n\n")
