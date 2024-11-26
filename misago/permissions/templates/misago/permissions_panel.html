@@ -89,12 +89,12 @@
     </tr>
     <tr>
       <td>categories</td>
-      <td>{{ misago_permissions.categories_moderator }}</td>
+      <td>{{ misago_permissions.moderated_categories }}</td>
     </tr>
     {% with misago_permissions.moderator as moderator %}
       <tr>
-        <td>private_threads</td>
-        <td>{{ moderator.private_threads }}</td>
+        <td>is_private_threads_moderator</td>
+        <td>{{ misago_permissions.is_private_threads_moderator }}</td>
       </tr>
     {% endwith %}
   </tbody>

@@ -58,7 +58,7 @@ class RoleFormMixin:
                     )
 
                     if "stay" in request.POST:
-                        return redirect(request.path)
+                        return redirect(request.path_info)
                     return redirect(self.root_link)
 
                 form.add_error(
@@ -150,7 +150,7 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
             )
             messages.success(request, message % {"name": target.name})
             if "stay" in request.POST:
-                return redirect(request.path)
+                return redirect(request.path_info)
             return redirect(self.root_link)
 
         template_name = self.get_template_name(request, target)
@@ -219,7 +219,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
             )
             messages.success(request, message % {"name": target.name})
             if "stay" in request.POST:
-                return redirect(request.path)
+                return redirect(request.path_info)
             return redirect(self.root_link)
 
         template_name = self.get_template_name(request, target)

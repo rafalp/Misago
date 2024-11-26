@@ -65,8 +65,8 @@
             {% trans "Start new thread" context "threads list toolbar" %}
           </a>
         {% elif category and category.is_closed %}
-          <a href="{{ start_thread_url }}" class="btn btn-danger btn-block">
-            {% trans "Closed" context "threads list toolbar" %}
+          <a href="{{ start_thread_url }}" class="btn btn-default btn-block">
+            <span class="text-danger">{% trans "Locked" context "threads list toolbar" %}</span>
           </a>
         {% else %}
           <a href="{{ start_thread_url }}" class="btn btn-primary btn-block">

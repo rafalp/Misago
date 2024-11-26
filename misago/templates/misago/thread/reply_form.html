@@ -1,0 +1,19 @@
+{% load i18n %}
+<form action="{{ form_url }}" method="post">
+  {% csrf_token %}
+  <div class="panel panel-reply-thread">
+    <div class="panel-body">
+      {% for form in formset.get_forms %}
+        {% include form.template_name with form=form %}
+      {% endfor %}
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-primary" type="submit">
+        {% trans "Reply" context "start thread submit btn" %}
+      </button>
+      <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+        {% trans "Preview" context "start thread submit btn" %}
+      </button>
+    </div>
+  </div>
+</form>

@@ -115,7 +115,7 @@ def is_request_to_misago(request):
 def _is_request_path_under_misago(request):
     # We are assuming that forum_index link is root of all Misago links
     forum_index = reverse("misago:index")
-    path = request.path
+    path = request.path_info
 
     if len(forum_index) > len(path):
         return False

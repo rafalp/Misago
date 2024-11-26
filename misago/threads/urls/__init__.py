@@ -3,6 +3,12 @@ from django.urls import path
 from ...conf import settings
 
 from ..views.attachment import attachment_server
+from ..views.edit import (
+    edit_private_thread,
+    edit_private_thread_post,
+    edit_thread,
+    edit_thread_post,
+)
 from ..views.list import category_threads, private_threads, threads
 from ..views.redirect import (
     PostRedirectView,
@@ -15,10 +21,28 @@ from ..views.redirect import (
     ThreadUnreadPostRedirectView,
 )
 from ..views.replies import private_thread_replies, thread_replies
+from ..views.reply import reply_private_thread, reply_thread
+from ..views.selectcategory import SelectCategoryView
+from ..views.start import start_private_thread, start_thread
 from ..views.subscribed import redirect_subscribed_to_watched
 
 
 urlpatterns = [
+    path(
+        "start-thread/",
+        SelectCategoryView.as_view(),
+        name="start-thread",
+    ),
+    path(
+        "c/<slug:slug>/<int:id>/start-thread/",
+        start_thread,
+        name="start-thread",
+    ),
+    path(
+        "private/start-thread/",
+        start_private_thread,
+        name="start-private-thread",
+    ),
     path(
         "threads/",
         threads,
@@ -104,6 +128,36 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/unapproved/",
         PrivateThreadUnapprovedPostRedirectView.as_view(),
         name="private-thread-unapproved-post",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/reply/",
+        reply_thread,
+        name="reply-thread",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/reply/",
+        reply_private_thread,
+        name="reply-private-thread",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/edit/",
+        edit_thread,
+        name="edit-thread",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/edit/",
+        edit_private_thread,
+        name="edit-private-thread",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/edit/<int:post>/",
+        edit_thread_post,
+        name="edit-thread",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/edit/<int:post>/",
+        edit_private_thread_post,
+        name="edit-private-thread",
     ),
     path(
         "post/<int:id>/",

@@ -17,6 +17,11 @@
     <a id="misago-page-scroll-target" class="scroll-target"></a>
     {% include "misago/thread/partial.html" %}
 
+    {% if user.is_authenticated %}
+      <div id="misago-quick-reply-scroll-target" class="scroll-target"></div>
+      {% includecomponent reply %}
+    {% endif %}
+
     {% pluginoutlet THREAD_REPLIES_PAGE_END %}
 
   </div>

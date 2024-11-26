@@ -85,7 +85,7 @@ class FormView(TargetedView):
             if response:
                 return response
             if "stay" in request.POST:
-                return redirect(request.path)
+                return redirect(request.path_info)
             return redirect(self.root_link)
 
         return self.render(request, {"form": form})
@@ -118,7 +118,7 @@ class ModelFormView(FormView):
             if response:
                 return response
             if "stay" in request.POST:
-                return redirect(request.path)
+                return redirect(request.path_info)
             return redirect(self.root_link)
 
         template_name = self.get_template_name(request, target)
@@ -185,7 +185,7 @@ class PermissionsFormView(TargetedView):
             if response:
                 return response
             if "stay" in request.POST:
-                return redirect(request.path)
+                return redirect(request.path_info)
             return redirect(self.root_link)
 
         initial_data = {}

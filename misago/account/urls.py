@@ -32,7 +32,7 @@ urlpatterns = [
     ),
     path(
         "email/confirm/",
-        settings.AccountEmailConfirm.as_view(),
+        settings.AccountEmailConfirmView.as_view(),
         name="account-email-confirm-sent",
     ),
     path(

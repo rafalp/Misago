@@ -43,3 +43,14 @@
 .panel-message-body .message-icon {
   color: @message-icon-color;
 }
+
+// Reply thread panel
+.panel-quick-reply {
+  border: 1px solid @gray-lighter;
+  border-radius: @border-radius-base;
+
+  .panel-body > .form-group {
+    &:first-child { margin-top: 0; }
+    &:last-child { margin-bottom: 0; }
+  }
+}

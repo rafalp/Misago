@@ -17,7 +17,15 @@ def get_form_data(group: Group) -> dict:
         "group-user_title": group.user_title or "",
         "group-is_page": "1" if group.is_page else "",
         "group-is_hidden": "1" if group.is_hidden else "",
+        "group-can_edit_own_threads": "1" if group.can_edit_own_threads else "",
+        "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
+        "group-can_edit_own_posts": "1" if group.can_edit_own_posts else "",
+        "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
         "group-can_use_private_threads": "1" if group.can_use_private_threads else "",
+        "group-can_start_private_threads": (
+            "1" if group.can_start_private_threads else ""
+        ),
+        "group-private_thread_users_limit": str(group.private_thread_users_limit),
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),

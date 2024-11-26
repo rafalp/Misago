@@ -10,11 +10,13 @@ import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import AjaxLoader, { useLoader } from "./AjaxLoader"
 import BulkModeration from "./BulkModeration"
+import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
 import "./liveTimestamps"
 import "./pagination"
 import * as snackbars from "./snackbars"
+import "./scrollTo"
 
 const loader = new AjaxLoader()
 

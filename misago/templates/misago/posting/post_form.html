@@ -1,0 +1,17 @@
+{% load i18n misago_forms %}
+
+{% with form.post as field %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <textarea
+      id="{{ field.id_for_label }}"
+      name="{{ field.html_name }}"
+      class="form-control form-control-post{% if post_control_large %} form-control-post-lg{% endif %}"
+      maxlength="{{ field.field.max_length }}"
+      aria-label="{% trans 'Post message' context 'posting form' %}"
+      {{ field|requiredhtml }}
+    >{{ field.value|default:"" }}</textarea>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}

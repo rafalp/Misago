@@ -1,6 +1,6 @@
 {% load i18n misago_plugins %}
 
-<div class="toolbar">
+<div class="toolbar{% if top_toolbar %} toolbar-min-height{% endif %}">
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_START %}
   {% if feed.paginator.has_other_pages %}
     <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
@@ -12,12 +12,27 @@
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
-  <div class="toolbar-section">
-    <div class="toolbar-item">
-      <button class="btn btn-primary btn-block" disabled>
-        {% trans "Post reply" context "thread replies toolbar" %}
-      </button>
+  {% if reply.url and top_toolbar%}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        <a
+          href="{{ reply.url }}"
+          {% if thread.is_closed or category.is_closed %}
+            class="btn btn-default btn-block"
+          {% else %}
+            class="btn btn-primary btn-block"
+          {% endif %}
+          misago-scroll-to="#misago-quick-reply-scroll-target"
+          misago-focus-on="#misago-htmx-quick-reply textarea"
+        >
+          {% if thread.is_closed or category.is_closed %}
+            <span class="text-danger">{% trans "Reply in locked" context "thread replies toolbar" %}</span>
+          {% else %}
+            {% trans "Post reply" context "thread replies toolbar" %}
+          {% endif %}
+        </a>
+      </div>
     </div>
-  </div>
+  {% endif %}
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_END %}
 </div>
