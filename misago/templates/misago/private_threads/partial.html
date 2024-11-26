@@ -3,7 +3,7 @@
 {% endif %}
 
 <div id="misago-htmx-root">
-  {% include "misago/threads/toolbar.html" %}
+  {% include "misago/threads/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
 
   <ul class="threads-list" itemscope itemtype="http://schema.org/ItemList">
     {% if threads.enable_polling and not threads.paginator.has_previous %}
@@ -17,5 +17,5 @@
     {% endif %}
   </ul>
 
-  {% include "misago/threads/toolbar.html" with bottom=True %}
+  {% include "misago/threads/toolbar.html" with top_toolbar=False bottom_toolbar=True %}
 </div>

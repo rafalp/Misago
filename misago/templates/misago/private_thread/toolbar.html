@@ -1,6 +1,6 @@
 {% load i18n misago_plugins %}
 
-<div class="toolbar">
+<div class="toolbar{% if top_toolbar %} toolbar-min-height{% endif %}">
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_START %}
   {% if feed.paginator.has_other_pages %}
     <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
@@ -12,18 +12,14 @@
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
-  <div class="toolbar-section">
-    <div class="toolbar-item">
-      {% if reply.url %}
+  {% if reply.url and top_toolbar %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
         <a href="{{ reply.url }}" class="btn btn-primary btn-block">
           {% trans "Post reply" context "thread replies toolbar" %}
         </a>
-      {% else %}
-        <button class="btn btn-primary btn-block" disabled>
-          {% trans "Post reply" context "thread replies toolbar" %}
-        </button>
-      {% endif %}
+      </div>
     </div>
-  </div>
+  {% endif %}
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_END %}
 </div>
