@@ -235,7 +235,7 @@ def test_edit_private_thread_post_view_updates_thread_post_in_htmx(
     assert post.edits == 1
 
 
-def test_edit_private_thread_post_view_inline_updates_thread_post_in_htmx(
+def test_edit_private_thread_post_view_updates_thread_post_inline_in_htmx(
     user_client, user_private_thread
 ):
     response = user_client.post(
@@ -297,6 +297,26 @@ def test_edit_private_thread_post_view_previews_message_in_htmx(
     )
     assert_contains(response, "Edit post")
     assert_contains(response, "Message preview")
+
+
+def test_edit_private_thread_post_view_previews_message_inline_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        )
+        + "?inline=true",
+        {"posting-post-post": "How's going?", "preview": "true"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Message preview")
+    assert_contains(response, "?inline=true")
 
 
 def test_edit_private_thread_post_view_shows_error_if_thread_post_is_accessed(
