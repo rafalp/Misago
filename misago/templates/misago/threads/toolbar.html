@@ -3,20 +3,20 @@
 <div class="toolbar">
   {% pluginoutlet THREADS_LIST_TOOLBAR_START %}
   {% if threads.paginator.has_previous or threads.paginator.has_next %}
-    <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
+    <div class="toolbar-section{% if top_toolbar %} flex-order-last-xs{% endif %}">
       <div class="toolbar-item">
-        {% include "misago/threads/paginator.html" with bottom=bottom %}
+        {% include "misago/threads/paginator.html" with bottom=bottom_toolbar %}
       </div>
     </div>
   {% endif %}
-  {% if subcategories and not subcategories.template_name and not bottom %}
+  {% if subcategories and not subcategories.template_name and top_toolbar %}
     <div class="toolbar-section">
       <div class="toolbar-item">
         {% include "misago/threads/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
       </div>
     </div>
   {% endif %}
-  {% if threads.filters and not bottom %}
+  {% if threads.filters and top_toolbar %}
     <div class="toolbar-section">
       <div class="toolbar-item">
         {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
@@ -26,7 +26,7 @@
   {% pluginoutlet THREADS_LIST_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet THREADS_LIST_TOOLBAR_AFTER_SPACER %}
-  {% if bottom and user.is_authenticated and threads.items %}
+  {% if bottom_toolbar and user.is_authenticated and threads.items %}
     <div class="toolbar-section flex-order-last-xs">
       <div class="toolbar-item">
         <noscript>
@@ -49,7 +49,7 @@
     </div>
   {% endif %}
   {% if start_thread_url %}
-    <div class="toolbar-section{% if not bottom %} flex-order-first-xs{% endif %}">
+    <div class="toolbar-section{% if top_toolbar %} flex-order-first-xs{% endif %}">
       <div class="toolbar-item">
         {% if start_thread_modal %}
           <a

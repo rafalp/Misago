@@ -4,7 +4,7 @@
 <title>{{ thread }}{% if feed.paginator.number > 1 %} | {% blocktrans with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktrans %}{% endif %} | {% trans "Private threads" context "private threads page" %} | {{ settings.forum_name }}</title>
 {% endif %}
 <div id="misago-htmx-root">
-  {% include "misago/thread/toolbar.html" with bottom=False %}
+  {% include "misago/thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
   {% includecomponent feed %}
-  {% include "misago/thread/toolbar.html" with bottom=True %}
+  {% include "misago/thread/toolbar.html" with top_toolbar=False bottom_toolbar=True %}
 </div>
