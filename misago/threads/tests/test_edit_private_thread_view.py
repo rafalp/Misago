@@ -241,6 +241,41 @@ def test_edit_private_thread_view_updates_thread_and_post_in_htmx(
     assert post.edits == 1
 
 
+def test_edit_private_thread_view_inline_updates_thread_and_post_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + "?inline=true",
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.title == "Edited title"
+
+    assert response["hx-redirect"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+    )
+
+    post = user_private_thread.first_post
+    post.refresh_from_db()
+
+    assert post.original == "Edited post"
+    assert post.edits == 1
+
+
 def test_edit_private_thread_view_previews_message(user_client, user_private_thread):
     response = user_client.post(
         reverse(

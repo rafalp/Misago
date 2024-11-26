@@ -370,6 +370,33 @@ def test_edit_thread_post_view_updates_thread_post_in_htmx(user_client, user_thr
     assert post.edits == 1
 
 
+def test_edit_thread_post_view_inline_updates_thread_post_in_htmx(
+    user_client, user_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        )
+        + "?inline=true",
+        {
+            "posting-post-post": "Edited",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "<p>Edited</p>")
+
+    post = user_thread.first_post
+    post.refresh_from_db()
+
+    assert post.original == "Edited"
+    assert post.edits == 1
+
+
 def test_edit_thread_post_view_previews_message(user_client, user_thread):
     response = user_client.post(
         reverse(
