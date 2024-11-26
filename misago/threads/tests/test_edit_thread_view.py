@@ -327,7 +327,7 @@ def test_edit_thread_view_updates_thread_and_post_in_htmx(user_client, user_thre
     assert post.edits == 1
 
 
-def test_edit_thread_view_updates_thread_and_post_in_inline_htmx(
+def test_edit_thread_view_updates_thread_and_post_inline_in_htmx(
     user_client, user_thread
 ):
     response = user_client.post(
@@ -357,6 +357,36 @@ def test_edit_thread_view_updates_thread_and_post_in_inline_htmx(
 
     assert post.original == "Edited post"
     assert post.edits == 1
+
+
+def test_edit_thread_view_cancels_thread_and_post_edits_inline_in_htmx(
+    user_client, user_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        )
+        + "?inline=true",
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+            "cancel": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+
+    post_original = user_thread.first_post.original
+    assert_contains(response, post_original)
+
+    user_thread.refresh_from_db()
+    assert user_thread.title == "Test thread"
+
+    post = user_thread.first_post
+    post.refresh_from_db()
+
+    assert post.original == post_original
+    assert post.edits == 0
 
 
 def test_edit_thread_view_previews_message(user_client, user_thread):
