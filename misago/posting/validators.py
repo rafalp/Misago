@@ -7,6 +7,8 @@ from .hooks import (
     validate_thread_title_hook,
 )
 
+__all__ = ["validate_thread_title"]
+
 
 def validate_thread_title(
     value: str,
@@ -34,10 +36,8 @@ def _validate_thread_title_action(
     length = len(value)
     if not length:
         raise ValidationError(
-            message=pgettext_lazy(
-                "thread title validator", "You have to enter a thread title."
-            ),
-            code="thread_title_required",
+            message=pgettext_lazy("thread title validator", "Enter a thread title."),
+            code="required",
         )
 
     slug = slugify(value)
@@ -48,7 +48,7 @@ def _validate_thread_title_action(
                 "thread title validator",
                 "Thread title must include alphanumeric characters.",
             ),
-            code="thread_title_missing_alphanumerics",
+            code="invalid",
         )
 
     if length < min_length:
@@ -59,7 +59,7 @@ def _validate_thread_title_action(
                 "Thread title should be at least %(limit_value)s characters long (it has %(show_value)s).",
                 min_length,
             ),
-            code="thread_title_too_short",
+            code="min_length",
             params={
                 "limit_value": min_length,
                 "show_value": length,
@@ -74,9 +74,9 @@ def _validate_thread_title_action(
                 "Thread title cannot exceed %(limit_value)s characters (it currently has %(show_value)s).",
                 max_length,
             ),
-            code="thread_title_too_short",
+            code="max_length",
             params={
-                "limit_value": min_length,
+                "limit_value": max_length,
                 "show_value": length,
             },
         )
