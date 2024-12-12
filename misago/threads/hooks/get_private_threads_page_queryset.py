@@ -104,4 +104,4 @@ class GetPrivateThreadsPageQuerysetHook(
         return super().__call__(action, request, category)
 
 
-get_private_threads_page_queryset_hook = GetPrivateThreadsPageQuerysetHook()
+get_private_threads_page_queryset_hook = GetPrivateThreadsPageQuerysetHook(cache=False)

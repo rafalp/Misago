@@ -124,5 +124,5 @@ class GetCategoryThreadsPageModerationActionsHook(
 
 
 get_category_threads_page_moderation_actions_hook = (
-    GetCategoryThreadsPageModerationActionsHook()
+    GetCategoryThreadsPageModerationActionsHook(cache=False)
 )

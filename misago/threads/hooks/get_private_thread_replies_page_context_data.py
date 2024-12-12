@@ -128,5 +128,5 @@ class GetPrivateThreadRepliesPageContextDataHook(
 
 
 get_private_thread_replies_page_context_data_hook = (
-    GetPrivateThreadRepliesPageContextDataHook()
+    GetPrivateThreadRepliesPageContextDataHook(cache=False)
 )

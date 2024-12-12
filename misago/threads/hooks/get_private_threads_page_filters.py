@@ -103,4 +103,4 @@ class GetPrivateThreadsPageFiltersHook(
         return super().__call__(action, request)
 
 
-get_private_threads_page_filters_hook = GetPrivateThreadsPageFiltersHook()
+get_private_threads_page_filters_hook = GetPrivateThreadsPageFiltersHook(cache=False)

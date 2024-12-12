@@ -103,4 +103,4 @@ class GetThreadsPageContextDataHook(
         return super().__call__(action, request, kwargs)
 
 
-get_threads_page_context_data_hook = GetThreadsPageContextDataHook()
+get_threads_page_context_data_hook = GetThreadsPageContextDataHook(cache=False)

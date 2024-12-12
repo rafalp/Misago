@@ -99,4 +99,4 @@ class GetThreadsPageFiltersHook(
         return super().__call__(action, request)
 
 
-get_threads_page_filters_hook = GetThreadsPageFiltersHook()
+get_threads_page_filters_hook = GetThreadsPageFiltersHook(cache=False)

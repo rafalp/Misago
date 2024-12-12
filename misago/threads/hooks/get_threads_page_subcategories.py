@@ -117,4 +117,4 @@ class GetThreadsPageSubcategoriesHook(
         return super().__call__(action, request)
 
 
-get_threads_page_subcategories_hook = GetThreadsPageSubcategoriesHook()
+get_threads_page_subcategories_hook = GetThreadsPageSubcategoriesHook(cache=False)

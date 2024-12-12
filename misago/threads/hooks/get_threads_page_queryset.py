@@ -92,4 +92,4 @@ class GetThreadsPageQuerysetHook(
         return super().__call__(action, request)
 
 
-get_threads_page_queryset_hook = GetThreadsPageQuerysetHook()
+get_threads_page_queryset_hook = GetThreadsPageQuerysetHook(cache=False)
