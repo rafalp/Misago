@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, Callable, Dict, overload
 from django.http import HttpRequest
 from django.utils.translation import pgettext
 
-from ..categories.enums import CategoryTree
 from ..threads.views.redirect import get_redirect_to_post_response
 from .verbs import NotificationVerb
 from .exceptions import NotificationVerbError
