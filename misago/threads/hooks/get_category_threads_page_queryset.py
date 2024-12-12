@@ -92,4 +92,6 @@ class GetCategoryThreadsPageQuerysetHook(
         return super().__call__(action, request)
 
 
-get_category_threads_page_queryset_hook = GetCategoryThreadsPageQuerysetHook()
+get_category_threads_page_queryset_hook = GetCategoryThreadsPageQuerysetHook(
+    cache=False
+)

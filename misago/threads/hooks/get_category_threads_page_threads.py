@@ -122,4 +122,4 @@ class GetCategoryThreadsPageThreadsHook(
         return super().__call__(action, request, category, kwargs)
 
 
-get_category_threads_page_threads_hook = GetCategoryThreadsPageThreadsHook()
+get_category_threads_page_threads_hook = GetCategoryThreadsPageThreadsHook(cache=False)

@@ -103,4 +103,4 @@ class GetThreadsPageThreadsHook(
         return super().__call__(action, request, kwargs)
 
 
-get_threads_page_threads_hook = GetThreadsPageThreadsHook()
+get_threads_page_threads_hook = GetThreadsPageThreadsHook(cache=False)

@@ -280,3 +280,14 @@ def parse_user_message_action(request: HttpRequest, message: str) -> str:
 With this change the rest of the codebase that used the `parse_user_message` function will now call its new version that includes plugins, without needing further changes.
 
 The original `parse_user_message_action` is still easily discernable, separate from the hook implementation.
+
+
+## Disabling cache
+
+`FilterHook` instances cache final reduced function on the first call. This works for regular functions and singleton methods, but will cause problems with filter hook's action is regular object's method as it will be cached and used in all future calls.
+
+To disable this feature, for filter hooks that will be used with regular objects methods, pass `cache=False` option to your hook:
+
+```python
+parse_user_message_hook = ParseUserMessageHook(cache=False)
+```

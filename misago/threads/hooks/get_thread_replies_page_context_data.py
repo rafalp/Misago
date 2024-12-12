@@ -125,4 +125,6 @@ class GetThreadRepliesPageContextDataHook(
         return super().__call__(action, request, thread, page)
 
 
-get_thread_replies_page_context_data_hook = GetThreadRepliesPageContextDataHook()
+get_thread_replies_page_context_data_hook = GetThreadRepliesPageContextDataHook(
+    cache=False
+)

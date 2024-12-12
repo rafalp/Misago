@@ -109,4 +109,6 @@ class GetThreadsPageModerationActionsHook(
         return super().__call__(action, request)
 
 
-get_threads_page_moderation_actions_hook = GetThreadsPageModerationActionsHook()
+get_threads_page_moderation_actions_hook = GetThreadsPageModerationActionsHook(
+    cache=False
+)

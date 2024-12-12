@@ -122,4 +122,4 @@ class GetCategoryThreadsPageFiltersHook(
         return super().__call__(action, request, category)
 
 
-get_category_threads_page_filters_hook = GetCategoryThreadsPageFiltersHook()
+get_category_threads_page_filters_hook = GetCategoryThreadsPageFiltersHook(cache=False)

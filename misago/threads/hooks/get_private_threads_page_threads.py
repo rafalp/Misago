@@ -122,4 +122,4 @@ class GetPrivateThreadsPageThreadsHook(
         return super().__call__(action, request, category, kwargs)
 
 
-get_private_threads_page_threads_hook = GetPrivateThreadsPageThreadsHook()
+get_private_threads_page_threads_hook = GetPrivateThreadsPageThreadsHook(cache=False)

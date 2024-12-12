@@ -103,4 +103,6 @@ class GetPrivateThreadsPageContextDataHook(
         return super().__call__(action, request, kwargs)
 
 
-get_private_threads_page_context_data_hook = GetPrivateThreadsPageContextDataHook()
+get_private_threads_page_context_data_hook = GetPrivateThreadsPageContextDataHook(
+    cache=False
+)
