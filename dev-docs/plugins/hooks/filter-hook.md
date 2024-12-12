@@ -284,9 +284,20 @@ The original `parse_user_message_action` is still easily discernable, separate f
 
 ## Disabling cache
 
-`FilterHook` instances cache final reduced function on the first call. This works for regular functions and singleton methods, but will cause problems with filter hook's action is regular object's method as it will be cached and used in all future calls.
+`FilterHook` instances cache final reduced function on the first call. This works for regular functions and singleton methods, but will cause problems with filter hook's action is regular object's method as it will be cached and used in all future calls:
 
-To disable this feature, for filter hooks that will be used with regular objects methods, pass `cache=False` option to your hook:
+```python
+class MyClass:
+    def do_something(self):
+        my_hook(self.do_something_action)
+
+    def do_something_action(self):
+        ...
+```
+
+For the above code, every future instance of the `MyClass` class will call the `do_something_action` method of the first `MyClass` instance to be created.
+
+To avoid this issue, pass the `cache=False` option to your hook:
 
 ```python
 parse_user_message_hook = ParseUserMessageHook(cache=False)
