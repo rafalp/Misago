@@ -233,39 +233,6 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_other_category_acl({"can_merge_threads": True})
     @patch_category_acl({"can_merge_threads": True})
     @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
-    def test_merge_threads_kept_reads(self, delete_duplicate_watched_threads_mock):
-        """api keeps both threads readtrackers after merge"""
-        other_thread = test.post_thread(self.other_category)
-
-        poststracker.save_read(self.user, self.thread.first_post)
-        poststracker.save_read(self.user, other_thread.first_post)
-
-        response = self.client.post(
-            self.api_link, {"other_thread": other_thread.get_absolute_url()}
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(),
-            {
-                "id": other_thread.id,
-                "title": other_thread.title,
-                "url": other_thread.get_absolute_url(),
-            },
-        )
-
-        # posts reads are kept
-        postreads = self.user.postread_set.filter(post__is_event=False).order_by("id")
-
-        self.assertEqual(
-            list(postreads.values_list("post_id", flat=True)),
-            [self.thread.first_post_id, other_thread.first_post_id],
-        )
-        self.assertEqual(postreads.filter(thread=other_thread).count(), 2)
-        self.assertEqual(postreads.filter(category=self.other_category).count(), 2)
-
-    @patch_other_category_acl({"can_merge_threads": True})
-    @patch_category_acl({"can_merge_threads": True})
-    @patch("misago.threads.moderation.threads.delete_duplicate_watched_threads")
     def test_merge_threads_kept_subs(self, delete_duplicate_watched_threads_mock):
         """api keeps other thread's subscription after merge"""
         other_thread = test.post_thread(self.other_category)

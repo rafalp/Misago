@@ -45,9 +45,6 @@ class ReplyMiddleware(PostingMiddleware):
             self.thread.set_first_post(self.post)
             self.thread.set_last_post(self.post)
 
-        if self.mode in (PostingEndpoint.START, PostingEndpoint.REPLY):
-            save_read(self.user, self.post)
-
         self.thread.save()
 
         create_audit_trail(self.request, self.post)

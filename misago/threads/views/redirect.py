@@ -129,6 +129,12 @@ class PrivateThreadUnapprovedPostRedirectView(
 
 class PostRedirectView(View):
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
+        return self.real_dispatch(request, id)
+
+    def post(self, request: HttpRequest, id: int) -> HttpResponse:
+        return self.real_dispatch(request, id)
+
+    def real_dispatch(self, request: HttpRequest, id: int) -> HttpResponse:
         queryset = Post.objects.select_related("category")
         post = get_object_or_404(queryset, id=id)
         return get_redirect_to_post_response(request, post)

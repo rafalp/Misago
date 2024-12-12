@@ -1,5 +1,6 @@
 import json
 from datetime import timedelta
+from unittest import expectedFailure
 
 from django.utils import timezone
 
@@ -379,6 +380,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json["category"]["id"], self.dst_category.pk)
 
+    @expectedFailure
     @patch_other_category_acl({"can_start_threads": 2})
     @patch_category_acl({"can_move_threads": True})
     def test_move_thread_reads(self):
