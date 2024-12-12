@@ -229,7 +229,7 @@ class AdminSite:
             if node["parent"] not in parents:
                 raise AdminSiteInvalidNodeError(
                     f"Misago Admin node '{node['link']}' has an invalid parent "
-                    f"'{node["parent"]}'."
+                    f"'{node['parent']}'."
                 )
 
     def validate_nodes_after(self):
