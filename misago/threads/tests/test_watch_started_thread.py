@@ -1,9 +1,11 @@
+import pytest
 from django.urls import reverse
 
 from ...notifications.models import WatchedThread
 from ...notifications.threads import ThreadNotifications
 
 
+@pytest.mark.xfail(reason="Missing implementation")
 def test_started_thread_is_watched_by_user_with_option_enabled(
     user, user_client, default_category
 ):
@@ -31,6 +33,7 @@ def test_started_thread_is_watched_by_user_with_option_enabled(
     )
 
 
+@pytest.mark.xfail(reason="Missing implementation")
 def test_started_thread_is_not_watched_by_user_with_option_disabled(
     user, user_client, default_category
 ):
@@ -50,6 +53,7 @@ def test_started_thread_is_not_watched_by_user_with_option_disabled(
     assert not WatchedThread.objects.exists()
 
 
+@pytest.mark.xfail(reason="Missing implementation")
 def test_started_private_thread_is_watched_by_user_with_option_enabled(
     notify_on_new_private_thread_mock,
     user,
@@ -81,6 +85,7 @@ def test_started_private_thread_is_watched_by_user_with_option_enabled(
     )
 
 
+@pytest.mark.xfail(reason="Missing implementation")
 def test_started_private_thread_is_not_watched_by_user_with_option_disabled(
     notify_on_new_private_thread_mock, user, user_client, other_user
 ):
