@@ -335,6 +335,22 @@ def test_reply_thread_view_previews_message_in_quick_reply_with_htmx(
     assert_contains(response, "Message preview")
 
 
+def test_reply_thread_view_validates_post(user_client, thread):
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "?",
+        },
+    )
+    assert_contains(response, "Post reply")
+    assert_contains(
+        response, "Posted message must be at least 5 characters long (it has 1)."
+    )
+
+
 def test_reply_thread_view_shows_error_if_private_thread_is_accessed(
     user_client, user_private_thread
 ):

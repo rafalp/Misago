@@ -77,9 +77,24 @@ def test_start_private_thread_view_validates_thread_title(user_client, other_use
         reverse("misago:start-private-thread"),
         {
             "posting-invite-users-users": other_user.username,
-            "posting-title-title": "Hello world",
+            "posting-title-title": "????",
             "posting-post-post": "How's going?",
         },
     )
     assert_contains(response, "Start new private thread")
     assert_contains(response, "Thread title must include alphanumeric characters.")
+
+
+def test_start_private_thread_view_validates_post(user_client, other_user):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "?",
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(
+        response, "Posted message must be at least 5 characters long (it has 1)."
+    )

@@ -373,12 +373,32 @@ def test_edit_private_thread_view_validates_thread_title(
             },
         ),
         {
-            "posting-title-title": "????",
+            "posting-title-title": "???",
             "posting-post-post": "Edited post",
         },
     )
     assert_contains(response, "Edit thread")
     assert_contains(response, "Thread title must include alphanumeric characters.")
+
+
+def test_edit_private_thread_view_validates_post(user_client, user_private_thread):
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "?",
+        },
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(
+        response, "Posted message must be at least 5 characters long (it has 1)."
+    )
 
 
 def test_edit_private_thread_view_shows_error_if_thread_post_is_accessed(

@@ -4,10 +4,72 @@ from django.utils.translation import npgettext_lazy, pgettext_lazy
 
 from ..core.utils import slugify
 from .hooks import (
+    validate_post_hook,
     validate_thread_title_hook,
 )
 
-__all__ = ["validate_thread_title"]
+__all__ = ["validate_post", "validate_thread_title"]
+
+
+def validate_post(
+    value: str,
+    min_length: int,
+    max_length: int,
+    *,
+    request: HttpRequest | None = None,
+):
+    validate_post_hook(
+        _validate_post_action,
+        value,
+        min_length,
+        max_length,
+        request=request,
+    )
+
+
+def _validate_post_action(
+    value: str,
+    min_length: int,
+    max_length: int,
+    *,
+    request: HttpRequest | None = None,
+):
+    length = len(value)
+    if not length:
+        raise ValidationError(
+            message=pgettext_lazy("post validator", "Enter post's content."),
+            code="required",
+        )
+
+    if length < min_length:
+        raise ValidationError(
+            message=npgettext_lazy(
+                "post validator",
+                "Posted message must be at least %(limit_value)s character long (it has %(show_value)s).",
+                "Posted message must be at least %(limit_value)s characters long (it has %(show_value)s).",
+                min_length,
+            ),
+            code="min_length",
+            params={
+                "limit_value": min_length,
+                "show_value": length,
+            },
+        )
+
+    if max_length and length > max_length:
+        raise ValidationError(
+            message=npgettext_lazy(
+                "post validator",
+                "Posted message cannot be longer than %(limit_value)s character (it currently has %(show_value)s).",
+                "Posted message cannot be longer than %(limit_value)s characters (it currently has %(show_value)s).",
+                max_length,
+            ),
+            code="max_length",
+            params={
+                "limit_value": max_length,
+                "show_value": length,
+            },
+        )
 
 
 def validate_thread_title(
