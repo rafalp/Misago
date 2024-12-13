@@ -8,6 +8,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
+- [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
 - [`misago.users.hooks`](#misago-users-hooks)
 
@@ -75,6 +76,34 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_pinned_category_query_hook`](./get-threads-pinned-category-query-hook.md)
 - [`get_threads_query_orm_filter_hook`](./get-threads-query-orm-filter-hook.md)
 - [`get_user_permissions_hook`](./get-user-permissions-hook.md)
+
+
+## `misago.posting.hooks`
+
+`misago.posting.hooks` defines the following hooks:
+
+- [`get_edit_private_thread_formset_hook`](./get-edit-private-thread-formset-hook.md)
+- [`get_edit_private_thread_post_formset_hook`](./get-edit-private-thread-post-formset-hook.md)
+- [`get_edit_private_thread_post_state_hook`](./get-edit-private-thread-post-state-hook.md)
+- [`get_edit_thread_formset_hook`](./get-edit-thread-formset-hook.md)
+- [`get_edit_thread_post_formset_hook`](./get-edit-thread-post-formset-hook.md)
+- [`get_edit_thread_post_state_hook`](./get-edit-thread-post-state-hook.md)
+- [`get_reply_private_thread_formset_hook`](./get-reply-private-thread-formset-hook.md)
+- [`get_reply_private_thread_state_hook`](./get-reply-private-thread-state-hook.md)
+- [`get_reply_thread_formset_hook`](./get-reply-thread-formset-hook.md)
+- [`get_reply_thread_state_hook`](./get-reply-thread-state-hook.md)
+- [`get_start_private_thread_formset_hook`](./get-start-private-thread-formset-hook.md)
+- [`get_start_private_thread_state_hook`](./get-start-private-thread-state-hook.md)
+- [`get_start_thread_formset_hook`](./get-start-thread-formset-hook.md)
+- [`get_start_thread_state_hook`](./get-start-thread-state-hook.md)
+- [`save_edit_private_thread_post_state_hook`](./save-edit-private-thread-post-state-hook.md)
+- [`save_edit_thread_post_state_hook`](./save-edit-thread-post-state-hook.md)
+- [`save_reply_private_thread_state_hook`](./save-reply-private-thread-state-hook.md)
+- [`save_reply_thread_state_hook`](./save-reply-thread-state-hook.md)
+- [`save_start_private_thread_state_hook`](./save-start-private-thread-state-hook.md)
+- [`save_start_thread_state_hook`](./save-start-thread-state-hook.md)
+- [`validate_post_hook`](./validate-post-hook.md)
+- [`validate_thread_title_hook`](./validate-thread-title-hook.md)
 
 
 ## `misago.threads.hooks`
