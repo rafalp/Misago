@@ -1,5 +1,6 @@
 import hashlib
 from datetime import datetime, timedelta
+from typing import Callable, cast
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -12,7 +13,7 @@ from django.utils.module_loading import import_string
 
 MISAGO_SLUGIFY = getattr(settings, "MISAGO_SLUGIFY", "misago.core.slugify.default")
 
-slugify = import_string(MISAGO_SLUGIFY)
+slugify = cast(Callable[[str], str], import_string(MISAGO_SLUGIFY))
 
 
 def format_plaintext_for_html(string):

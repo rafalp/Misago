@@ -40,6 +40,8 @@ from .save_reply_private_thread_state import save_reply_private_thread_state_hoo
 from .save_reply_thread_state import save_reply_thread_state_hook
 from .save_start_private_thread_state import save_start_private_thread_state_hook
 from .save_start_thread_state import save_start_thread_state_hook
+from .validate_post import validate_post_hook
+from .validate_thread_title import validate_thread_title_hook
 
 
 __all__ = [
@@ -63,4 +65,6 @@ __all__ = [
     "save_reply_thread_state_hook",
     "save_start_private_thread_state_hook",
     "save_start_thread_state_hook",
+    "validate_post_hook",
+    "validate_thread_title_hook",
 ]

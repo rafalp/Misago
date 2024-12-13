@@ -480,6 +480,26 @@ def test_edit_thread_post_view_previews_message_inline_in_htmx(
     assert_contains(response, "?inline=true")
 
 
+def test_edit_thread_post_view_validates_post(user_client, user_thread):
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        ),
+        {
+            "posting-post-post": "?",
+        },
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(
+        response, "Posted message must be at least 5 characters long (it has 1)."
+    )
+
+
 def test_edit_thread_post_view_shows_error_if_private_thread_post_is_accessed(
     user_client, user_private_thread
 ):
