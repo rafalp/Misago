@@ -8,6 +8,7 @@ from django.utils.translation import npgettext_lazy, pgettext_lazy
 from ..core.utils import slugify
 from .hooks import (
     validate_post_hook,
+    validate_posted_contents_hook,
     validate_thread_title_hook,
 )
 
@@ -18,15 +19,8 @@ if TYPE_CHECKING:
 
 __all__ = [
     "validate_post",
+    "validate_posted_contents",
     "validate_thread_title",
-    "validate_edited_private_thread",
-    "validate_edited_private_thread_reply",
-    "validate_edited_thread",
-    "validate_edited_thread_reply",
-    "validate_new_private_thread",
-    "validate_new_private_thread_reply",
-    "validate_new_thread",
-    "validate_new_thread_reply",
 ]
 
 
@@ -163,69 +157,6 @@ def _validate_thread_title_action(
         )
 
 
-def posting_validator(f):
-    @wraps(f)
-    def wrapped_posting_validator(
-        formset: "PostingFormset", state: "PostingState"
-    ) -> bool:
-        try:
-            f(formset, state)
-            return not bool(formset.errors)
-        except ValidationError as e:
-            formset.add_error(e)
-            return False
-
-    return wrapped_posting_validator
-
-
-@posting_validator
-def posting_validator_action(formset: "PostingFormset", state: "PostingState") -> bool:
-    return True
-
-
-@posting_validator
-def validate_new_thread(formset: "PostingFormset", state: "PostingState") -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_new_private_thread(formset: "PostingFormset", state: "PostingState") -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_new_thread_reply(formset: "PostingFormset", state: "PostingState") -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_new_private_thread_reply(
-    formset: "PostingFormset", state: "PostingState"
-) -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_edited_thread(formset: "PostingFormset", state: "PostingState") -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_edited_private_thread(
-    formset: "PostingFormset", state: "PostingState"
-) -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_edited_thread_reply(
-    formset: "PostingFormset", state: "PostingState"
-) -> bool:
-    return posting_validator_action(formset, state)
-
-
-@posting_validator
-def validate_edited_private_thread_reply(
-    formset: "PostingFormset", state: "PostingState"
-) -> bool:
-    return posting_validator_action(formset, state)
+def validate_posted_contents(formset: "PostingFormset", state: "PostingState") -> bool:
+    validate_posted_contents_hook(formset, state)
+    return not bool(formset.errors)

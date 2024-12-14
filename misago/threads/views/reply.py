@@ -20,11 +20,13 @@ from ...posting.formsets import (
     get_reply_thread_formset,
 )
 from ...posting.state import (
+    PostingState,
     ReplyPrivateThreadState,
     ReplyThreadState,
     get_reply_private_thread_state,
     get_reply_thread_state,
 )
+from ...posting.validators import validate_posted_contents
 from ...readtracker.tracker import (
     get_thread_read_time,
     mark_thread_read,
@@ -62,7 +64,7 @@ class ReplyView(View):
         if request.POST.get("preview"):
             return self.render(request, thread, formset, state.post.parsed)
 
-        if not formset.is_valid():
+        if not self.is_valid(formset, state):
             return self.render(request, thread, formset)
 
         state.save()
@@ -118,6 +120,9 @@ class ReplyView(View):
 
     def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
         raise NotImplementedError()
+
+    def is_valid(self, formset: PostingFormset, state: PostingState) -> bool:
+        return formset.is_valid() and validate_posted_contents(formset, state)
 
     def render(
         self,
