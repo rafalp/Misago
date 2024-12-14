@@ -1,0 +1,16 @@
+{% load i18n %}
+
+{% if formset.errors %}
+  <div class="posting-errors">
+    <h4 class="posting-errors-title">
+      {% trans "Issues found with your content:" context "posting form errors" %}
+    </h4>
+    <ul class="posting-errors-list">
+      {% for error in formset.errors %}
+        {% for message in error.messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

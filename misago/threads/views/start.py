@@ -27,6 +27,7 @@ from ...posting.state.start import (
     get_start_private_thread_state,
     get_start_thread_state,
 )
+from ...posting.validators import validate_new_private_thread, validate_new_thread
 from ..hooks import (
     get_start_private_thread_page_context_data_hook,
     get_start_thread_page_context_data_hook,
@@ -62,7 +63,7 @@ class StartThreadView(View):
 
             return render(request, self.template_name, context)
 
-        if not formset.is_valid():
+        if not self.is_valid(formset, state):
             return render(
                 request,
                 self.template_name,
@@ -101,6 +102,9 @@ class StartThreadView(View):
     def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
         return get_start_thread_state(request, category)
 
+    def is_valid(self, formset: StartThreadFormset, state: StartThreadState) -> bool:
+        return formset.is_valid() and validate_new_thread(formset, state)
+
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: StartThreadFormset
     ) -> dict:
@@ -137,6 +141,11 @@ class StartPrivateThreadView(StartThreadView):
         self, request: HttpRequest, category: Category
     ) -> StartPrivateThreadState:
         return get_start_private_thread_state(request, category)
+
+    def is_valid(
+        self, formset: StartPrivateThreadFormset, state: StartPrivateThreadState
+    ) -> bool:
+        return formset.is_valid() and validate_new_private_thread(formset, state)
 
     def get_context_data(
         self,
