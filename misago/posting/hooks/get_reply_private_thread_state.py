@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 
 if TYPE_CHECKING:
     from ..state.reply import ReplyPrivateThreadState
@@ -24,6 +24,10 @@ class GetReplyPrivateThreadStateHookAction(Protocol):
 
     The `Thread` instance.
 
+    ## `post: Post | None`
+
+    The `Post` instance to append posted contents to, or `None`.
+
     # Return value
 
     A `ReplyPrivateThreadState` instance to use to create a reply in a private thread
@@ -34,6 +38,7 @@ class GetReplyPrivateThreadStateHookAction(Protocol):
         self,
         request: HttpRequest,
         thread: Thread,
+        post: Post | None = None,
     ) -> "ReplyPrivateThreadState": ...
 
 
@@ -58,6 +63,10 @@ class GetReplyPrivateThreadStateHookFilter(Protocol):
 
     The `Thread` instance.
 
+    ## `post: Post | None`
+
+    The `Post` instance to append posted contents to, or `None`.
+
     # Return value
 
     A `ReplyPrivateThreadState` instance to use to create a reply in a private thread
@@ -69,6 +78,7 @@ class GetReplyPrivateThreadStateHookFilter(Protocol):
         action: GetReplyPrivateThreadStateHookAction,
         request: HttpRequest,
         thread: Thread,
+        post: Post | None = None,
     ) -> "ReplyPrivateThreadState": ...
 
 
@@ -90,12 +100,12 @@ class GetReplyPrivateThreadStateHook(
     from django.http import HttpRequest
     from misago.posting.hooks import get_reply_private_thread_state_hook
     from misago.posting.state import ReplyPrivateThreadState
-    from misago.threads.models import Thread
+    from misago.threads.models import Post, Thread
 
 
     @get_reply_private_thread_state_hook.append_filter
     def set_poster_ip_on_reply_private_thread_state(
-        action, request: HttpRequest, thread: Thread
+        action, request: HttpRequest, thread: Thread, post: Post | None = None
     ) -> ReplyPrivateThreadState:
         state = action(request, thread)
         state.plugin_state["user_id"] = request.user_ip
@@ -110,8 +120,9 @@ class GetReplyPrivateThreadStateHook(
         action: GetReplyPrivateThreadStateHookAction,
         request: HttpRequest,
         thread: Thread,
+        post: Post | None = None,
     ) -> "ReplyPrivateThreadState":
-        return super().__call__(action, request, thread)
+        return super().__call__(action, request, thread, post)
 
 
 get_reply_private_thread_state_hook = GetReplyPrivateThreadStateHook()

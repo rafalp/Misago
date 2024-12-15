@@ -66,7 +66,7 @@ class ReplyView(View):
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
         last_post = self.get_last_post(request, thread)
-        state = self.get_state(request, thread)
+        state = self.get_state(request, thread, last_post)
         formset = self.get_formset(request, thread)
         formset.update_state(state)
 
@@ -78,7 +78,16 @@ class ReplyView(View):
 
         state.save()
 
-        messages.success(request, pgettext("thread reply posted", "Reply posted"))
+        if state.is_merge:
+            messages.success(
+                request,
+                pgettext(
+                    "thread reply posted",
+                    "Your reply was added to the last post's contents",
+                ),
+            )
+        else:
+            messages.success(request, pgettext("thread reply posted", "Reply posted"))
 
         if self.is_quick_reply(request):
             return self.post_quick_reply(request, thread, state)
@@ -101,10 +110,33 @@ class ReplyView(View):
 
         feed = self.get_posts_feed(request, thread, [state.post])
         feed.set_animated_posts([state.post.id])
-        feed.set_unread_posts([state.post.id])
 
-        response = self.render(request, thread, formset, feed=feed.get_feed_data())
+        if state.is_merge:
+            counter_start = (
+                self.get_thread_posts_queryset(request, state.thread)
+                .filter(id__lt=state.post.id)
+                .count()
+            )
+            feed.set_counter_start(counter_start)
+        else:
+            feed.set_unread_posts([state.post.id])
 
+        response = self.render(
+            request,
+            thread,
+            formset,
+            feed=feed.get_feed_data(),
+            htmx_swap=state.is_merge,
+        )
+
+        if not state.is_merge:
+            self.mark_reply_as_read(request, thread, state)
+
+        return response
+
+    def mark_reply_as_read(
+        self, request: HttpRequest, thread: Thread, state: ReplyThreadState
+    ):
         # Is thread (excluding last reply) read?
         read_time = get_thread_read_time(request, thread)
         thread_is_read = not (
@@ -122,8 +154,6 @@ class ReplyView(View):
             ):
                 mark_category_read(request.user, state.category, force_update=True)
 
-        return response
-
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
         merge_span = request.settings.merge_repeated_postings
         if not merge_span:
@@ -137,7 +167,7 @@ class ReplyView(View):
         if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_span):
             return False
 
-        if last_post.is_deleted:
+        if last_post.is_hidden:
             return False
 
         last_post.thread = thread
@@ -163,10 +193,12 @@ class ReplyView(View):
         formset: PostingFormset,
         preview: str | None = None,
         feed: list[dict] | None = None,
+        htmx_swap: bool = False,
     ):
         context = self.get_context_data(request, thread, formset)
         context["preview"] = preview
         context["new_feed"] = feed
+        context["htmx_swap"] = htmx_swap
 
         if self.is_quick_reply(request):
             template_name = self.template_name_quick_reply
@@ -221,9 +253,10 @@ class ReplyThreadView(ReplyView, ThreadView):
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
         try:
             last_post = super().get_last_post(request, thread)
-            check_edit_post_permission(
-                request.user_permissions, thread.category, last_post
-            )
+            if last_post:
+                check_edit_post_permission(
+                    request.user_permissions, thread.category, thread, last_post
+                )
             return last_post
         except (Http404, PermissionDenied):
             return None
