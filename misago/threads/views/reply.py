@@ -78,12 +78,12 @@ class ReplyView(View):
 
         state.save()
 
-        if state.is_merge:
+        if state.is_merged:
             messages.success(
                 request,
                 pgettext(
                     "thread reply posted",
-                    "Your reply was added to the last post's contents",
+                    "Your reply was automatically merged with your previous post",
                 ),
             )
         else:
@@ -111,14 +111,14 @@ class ReplyView(View):
         feed = self.get_posts_feed(request, thread, [state.post])
         feed.set_animated_posts([state.post.id])
 
-        if state.is_merge:
-            counter_start = (
-                self.get_thread_posts_queryset(request, state.thread)
-                .filter(id__lt=state.post.id)
-                .count()
-            )
-            feed.set_counter_start(counter_start)
-        else:
+        counter_start = (
+            self.get_thread_posts_queryset(request, state.thread)
+            .filter(id__lt=state.post.id)
+            .count()
+        )
+        feed.set_counter_start(counter_start)
+
+        if not state.is_merged:
             feed.set_unread_posts([state.post.id])
 
         response = self.render(
@@ -126,10 +126,10 @@ class ReplyView(View):
             thread,
             formset,
             feed=feed.get_feed_data(),
-            htmx_swap=state.is_merge,
+            htmx_swap=state.is_merged,
         )
 
-        if not state.is_merge:
+        if not state.is_merged:
             self.mark_reply_as_read(request, thread, state)
 
         return response
@@ -155,8 +155,8 @@ class ReplyView(View):
                 mark_category_read(request.user, state.category, force_update=True)
 
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
-        merge_span = request.settings.merge_repeated_postings
-        if not merge_span:
+        merge_time = request.settings.merge_recent_posts
+        if not merge_time:
             return None
 
         last_post = self.get_thread_posts_queryset(request, thread).last()
@@ -164,7 +164,7 @@ class ReplyView(View):
         if last_post.poster_id != request.user.id:
             return None
 
-        if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_span):
+        if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_time):
             return False
 
         if last_post.is_hidden:

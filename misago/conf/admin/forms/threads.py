@@ -12,7 +12,7 @@ class ThreadsSettingsForm(SettingsForm):
         "attachment_404_image",
         "daily_post_limit",
         "hourly_post_limit",
-        "merge_repeated_postings",
+        "merge_recent_posts",
         "post_attachments_limit",
         "post_length_max",
         "post_length_min",
@@ -89,14 +89,14 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         min_value=1,
     )
-    merge_repeated_postings = forms.IntegerField(
+    merge_recent_posts = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form",
-            "Automatically merge posted content with the last post if posted withing a specified time",
+            "Automatically merge recent posts made within specified time",
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Period of time (in minutes) during which a user's newly posted reply to a thread will be appended to their last post. The last post must be editable by the user for this to occur. Enter zero to disable this feature.",
+            "Period of time (in minutes) during which user's newly posted reply to a thread will be appended to their last post. The last post must be editable by the user. Enter zero to disable this feature.",
         ),
         min_value=0,
     )

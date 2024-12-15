@@ -3,7 +3,7 @@
 from django.db import migrations
 
 setting = {
-    "setting": "merge_repeated_postings",
+    "setting": "merge_recent_posts",
     "python_type": "int",
     "dry_value": 20,
     "is_public": False,

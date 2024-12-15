@@ -13,7 +13,8 @@ from .base import PostingState
 
 
 class ReplyThreadState(PostingState):
-    is_merge: bool
+    # True if reply was instead appended to the recent post
+    is_merged: bool
 
     def __init__(self, request: HttpRequest, thread: Thread, post: Post | None = None):
         super().__init__(request)
@@ -21,7 +22,7 @@ class ReplyThreadState(PostingState):
         self.category = thread.category
         self.thread = thread
         self.post = post or self.initialize_post()
-        self.is_merge = bool(post.id)
+        self.is_merged = bool(self.post.id)
 
         self.store_object_state(self.category)
         self.store_object_state(self.thread)
@@ -62,21 +63,21 @@ class ReplyThreadState(PostingState):
         self.post.save()
 
     def save_thread(self):
-        if not self.is_merge:
+        if not self.is_merged:
             self.thread.replies = models.F("replies") + 1
             self.thread.set_last_post(self.post)
 
         self.update_object(self.thread)
 
     def save_category(self):
-        if not self.is_merge:
+        if not self.is_merged:
             self.category.posts = models.F("posts") + 1
             self.category.set_last_thread(self.thread)
 
         self.update_object(self.category)
 
     def save_user(self):
-        if not self.is_merge:
+        if not self.is_merged:
             self.user.posts = models.F("posts") + 1
 
         self.update_object(self.user)
