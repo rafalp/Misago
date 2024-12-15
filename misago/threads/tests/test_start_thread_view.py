@@ -187,3 +187,20 @@ def test_start_private_thread_view_validates_post(user_client, default_category)
     assert_contains(
         response, "Posted message must be at least 5 characters long (it has 1)."
     )
+
+
+def test_start_private_thread_view_validates_posted_contents(
+    user_client, default_category, posted_contents_validator
+):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "This is a spam message",
+        },
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(response, "Your message contains spam!")

@@ -60,7 +60,7 @@ class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
         # Check if posting form included thread title
         if (
             THREAD_TITLE_FORM in formset
-            and "spam" in state.thread.title.lower():
+            and "spam" in state.thread.title.lower()
         ):
             return True
 
