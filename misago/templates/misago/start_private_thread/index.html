@@ -27,6 +27,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          {% include "misago/posting/errors.html" %}
           {% for form in formset.get_forms %}
             {% include form.template_name with form=form post_control_large=True %}
           {% endfor %}

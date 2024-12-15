@@ -460,6 +460,23 @@ def test_edit_thread_view_validates_post(user_client, user_thread):
     )
 
 
+def test_edit_thread_view_validates_posted_contents(
+    user_client, user_thread, posted_contents_validator
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "This is a spam message",
+        },
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "Your message contains spam!")
+
+
 def test_edit_thread_view_shows_error_if_private_thread_post_is_accessed(
     user_client, user_private_thread
 ):

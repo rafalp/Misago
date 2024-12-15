@@ -351,6 +351,22 @@ def test_reply_thread_view_validates_post(user_client, thread):
     )
 
 
+def test_reply_thread_view_validates_posted_contents(
+    user_client, thread, posted_contents_validator
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "This is a spam message",
+        },
+    )
+    assert_contains(response, "Post reply")
+    assert_contains(response, "Your message contains spam!")
+
+
 def test_reply_thread_view_shows_error_if_private_thread_is_accessed(
     user_client, user_private_thread
 ):

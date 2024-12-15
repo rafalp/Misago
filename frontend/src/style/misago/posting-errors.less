@@ -1,0 +1,27 @@
+.posting-errors {
+  margin-bottom: @line-height-computed;
+}
+
+.posting-errors-title {
+  margin: 0;
+  margin-bottom: floor(@line-height-computed / 4);
+  padding: 0;
+
+  color: darken(@brand-danger, 15%);
+  font-size: @font-size-base;
+  font-weight: bold;
+  line-height: @line-height-computed;
+}
+
+.posting-errors-list {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  color: darken(@brand-danger, 20%);
+
+  li + li {
+    margin-top: floor(@line-height-computed / 4);
+  }
+}

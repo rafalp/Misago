@@ -1,3 +1,6 @@
+from functools import wraps
+from typing import TYPE_CHECKING
+
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import npgettext_lazy, pgettext_lazy
@@ -5,10 +8,20 @@ from django.utils.translation import npgettext_lazy, pgettext_lazy
 from ..core.utils import slugify
 from .hooks import (
     validate_post_hook,
+    validate_posted_contents_hook,
     validate_thread_title_hook,
 )
 
-__all__ = ["validate_post", "validate_thread_title"]
+if TYPE_CHECKING:
+    from .formsets import PostingFormset
+    from .state import PostingState
+
+
+__all__ = [
+    "validate_post",
+    "validate_posted_contents",
+    "validate_thread_title",
+]
 
 
 def validate_post(
@@ -142,3 +155,8 @@ def _validate_thread_title_action(
                 "show_value": length,
             },
         )
+
+
+def validate_posted_contents(formset: "PostingFormset", state: "PostingState") -> bool:
+    validate_posted_contents_hook(formset, state)
+    return not bool(formset.errors)

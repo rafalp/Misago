@@ -13,12 +13,15 @@ class ActionHook(Generic[Action]):
     _cache: List[Action] | None
 
     def __init__(self):
-        self._actions_first = []
-        self._actions_last = []
-        self._cache = None
+        self.clear_actions()
 
     def __bool__(self) -> bool:
         return bool(self._actions_first or self._actions_last)
+
+    def clear_actions(self):
+        self._actions_first = []
+        self._actions_last = []
+        self._cache = None
 
     def append_action(self, action: Action):
         self._actions_last.append(action)
@@ -52,14 +55,16 @@ class FilterHook(Generic[Action, Filter]):
 
     def __init__(self, cache: bool = True):
         self.cache = cache
+        self.clear_actions()
 
+    def __bool__(self) -> bool:
+        return bool(self._filters_first or self._filters_last)
+
+    def clear_actions(self):
         self._filters_first = []
         self._filters_last = []
         self._use_filters = False
         self._cache = None
-
-    def __bool__(self) -> bool:
-        return bool(self._filters_first or self._filters_last)
 
     def append_filter(self, filter_: Filter):
         self._filters_last.append(filter_)
