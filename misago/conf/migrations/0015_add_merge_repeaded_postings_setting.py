@@ -2,12 +2,10 @@
 
 from django.db import migrations
 
-from ..hydrators import dehydrate_value
-
 setting = {
     "setting": "merge_repeated_postings",
     "python_type": "int",
-    "dry_value": 20 * 60,
+    "dry_value": 20,
     "is_public": False,
 }
 

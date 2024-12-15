@@ -1,17 +1,25 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
 from ...auth.decorators import login_required
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
-from ...permissions.privatethreads import check_reply_private_thread_permission
-from ...permissions.threads import check_reply_thread_permission
+from ...permissions.privatethreads import (
+    check_edit_private_thread_post_permission,
+    check_reply_private_thread_permission,
+)
+from ...permissions.threads import (
+    check_edit_post_permission,
+    check_reply_thread_permission,
+)
 from ...posting.formsets import (
     PostingFormset,
     ReplyPrivateThreadFormset,
@@ -57,6 +65,7 @@ class ReplyView(View):
 
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
+        last_post = self.get_last_post(request, thread)
         state = self.get_state(request, thread)
         formset = self.get_formset(request, thread)
         formset.update_state(state)
@@ -115,7 +124,30 @@ class ReplyView(View):
 
         return response
 
-    def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
+    def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        merge_span = request.settings.merge_repeated_postings
+        if not merge_span:
+            return None
+
+        last_post = self.get_thread_posts_queryset(request, thread).last()
+
+        if last_post.poster_id != request.user.id:
+            return None
+
+        if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_span):
+            return False
+
+        if last_post.is_deleted:
+            return False
+
+        last_post.thread = thread
+        last_post.category = thread.category
+
+        return last_post
+
+    def get_state(
+        self, request: HttpRequest, thread: Thread, post: Post | None
+    ) -> ReplyThreadState:
         raise NotImplementedError()
 
     def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
@@ -186,8 +218,20 @@ class ReplyThreadView(ReplyView, ThreadView):
         check_reply_thread_permission(request.user_permissions, thread.category, thread)
         return thread
 
-    def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
-        return get_reply_thread_state(request, thread)
+    def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        try:
+            last_post = super().get_last_post(request, thread)
+            check_edit_post_permission(
+                request.user_permissions, thread.category, last_post
+            )
+            return last_post
+        except (Http404, PermissionDenied):
+            return None
+
+    def get_state(
+        self, request: HttpRequest, thread: Thread, post: Post | None
+    ) -> ReplyThreadState:
+        return get_reply_thread_state(request, thread, post)
 
     def get_formset(self, request: HttpRequest, thread: Thread) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
@@ -226,10 +270,20 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
         check_reply_private_thread_permission(request.user_permissions, thread)
         return thread
 
+    def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        try:
+            last_post = super().get_last_post(request, thread)
+            check_edit_private_thread_post_permission(
+                request.user_permissions, thread.category, last_post
+            )
+            return last_post
+        except (Http404, PermissionDenied):
+            return None
+
     def get_state(
-        self, request: HttpRequest, thread: Thread
+        self, request: HttpRequest, thread: Thread, post: Post | None
     ) -> ReplyPrivateThreadState:
-        return get_reply_private_thread_state(request, thread)
+        return get_reply_private_thread_state(request, thread, post)
 
     def get_formset(
         self, request: HttpRequest, thread: Thread
