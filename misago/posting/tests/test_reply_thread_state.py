@@ -69,3 +69,41 @@ def test_reply_thread_state_updates_user(user_request, other_user_thread, user):
     user.refresh_from_db()
     assert user.threads == 0
     assert user.posts == 1
+
+
+def test_reply_thread_state_updates_existing_post(user, user_request, user_thread):
+    post = user_thread.first_post
+
+    state = ReplyThreadState(user_request, user_thread, post)
+    state.set_post_message("Test reply")
+    state.save()
+
+    post.refresh_from_db()
+    assert post.original == "I am test message\n\nTest reply"
+    assert post.parsed == "<p>I am test message</p><p>Test reply</p>"
+    assert post.updated_on == state.timestamp
+    assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+
+    user_thread.refresh_from_db()
+    assert user_thread.post_set.count() == 1
+    assert user_thread.replies == 0
+    assert user_thread.last_poster == user
+    assert user_thread.last_poster_name == user.username
+    assert user_thread.last_poster_slug == user.slug
+    assert user_thread.last_post_on == post.posted_on
+
+    category = state.category
+    category.refresh_from_db()
+    assert category.threads == 1
+    assert category.posts == 1
+    assert category.last_thread == state.thread
+    assert category.last_post_on == post.posted_on
+    assert category.last_poster == user
+    assert category.last_poster_name == user.username
+    assert category.last_poster_slug == user.slug
+
+    user.refresh_from_db()
+    assert user.posts == 0

@@ -83,7 +83,7 @@ class ReplyView(View):
                 request,
                 pgettext(
                     "thread reply posted",
-                    "Your reply was automatically merged with your previous post",
+                    "Reply was automatically merged with the previous post",
                 ),
             )
         else:

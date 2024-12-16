@@ -13,7 +13,7 @@ from .base import PostingState
 
 
 class ReplyThreadState(PostingState):
-    # True if reply was instead appended to the recent post
+    # True if new reply was merged with the recent post
     is_merged: bool
 
     def __init__(self, request: HttpRequest, thread: Thread, post: Post | None = None):
@@ -55,8 +55,9 @@ class ReplyThreadState(PostingState):
             self.post.last_editor = self.user
             self.post.last_editor_name = self.user.username
             self.post.last_editor_slug = self.user.slug
-
-        self.post.save()
+        else:
+            # Save new post so it exists before search vector setup
+            self.post.save()
 
         update_post_checksum(self.post)
         self.post.update_search_vector()
