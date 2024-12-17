@@ -1,5 +1,9 @@
-from django.urls import reverse
+from datetime import timedelta
 
+from django.urls import reverse
+from django.utils import timezone
+
+from ...conf.test import override_dynamic_settings
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_not_contains
@@ -406,6 +410,210 @@ def test_reply_private_thread_view_appends_reply_to_user_recent_post_in_quick_re
 
     reply.refresh_from_db()
     assert reply.original == "Previous message\n\nReply contents"
+
+
+@override_dynamic_settings(merge_recent_posts=0)
+def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_feature_is_disabled(
+    user, user_client, other_user_private_thread
+):
+    reply = reply_thread(other_user_private_thread, user, message="Previous message")
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    other_user_private_thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{other_user_private_thread.last_post_id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message"
+    assert other_user_private_thread.last_post_id > reply.id
+
+
+@override_dynamic_settings(merge_recent_posts=1)
+def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_too_old(
+    user, user_client, other_user_private_thread
+):
+    reply = reply_thread(
+        other_user_private_thread,
+        user,
+        message="Previous message",
+        posted_on=timezone.now() - timedelta(minutes=2),
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    other_user_private_thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{other_user_private_thread.last_post_id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message"
+    assert other_user_private_thread.last_post_id > reply.id
+
+
+def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_by_other_user(
+    other_user, user_client, other_user_private_thread
+):
+    reply = reply_thread(
+        other_user_private_thread, other_user, message="Previous message"
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    other_user_private_thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{other_user_private_thread.last_post_id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message"
+    assert other_user_private_thread.last_post_id > reply.id
+
+
+def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_hidden(
+    user, user_client, other_user_private_thread
+):
+    reply = reply_thread(
+        other_user_private_thread,
+        user,
+        message="Previous message",
+        is_hidden=True,
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    other_user_private_thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{other_user_private_thread.last_post_id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message"
+    assert other_user_private_thread.last_post_id > reply.id
+
+
+def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_not_editable(
+    user, user_client, other_user_private_thread
+):
+    reply = reply_thread(
+        other_user_private_thread,
+        user,
+        message="Previous message",
+        is_protected=True,
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    other_user_private_thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{other_user_private_thread.last_post_id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message"
+    assert other_user_private_thread.last_post_id > reply.id
 
 
 def test_reply_private_thread_view_shows_error_if_thread_is_accessed(
