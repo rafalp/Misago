@@ -19,6 +19,7 @@ def custom_get_reply_thread_state_filter(
     action: GetReplyThreadStateHookAction,
     request: HttpRequest,
     thread: Thread,
+    post: Post | None=None,
 ) -> 'ReplyThreadState':
     ...
 ```
@@ -45,6 +46,11 @@ The request object.
 The `Thread` instance.
 
 
+#### `post: Post | None`
+
+The `Post` instance to append posted contents to, or `None`.
+
+
 ### Return value
 
 A `ReplyThreadState` instance to use to create a reply in a thread in the database.
@@ -53,7 +59,9 @@ A `ReplyThreadState` instance to use to create a reply in a thread in the databa
 ## Action
 
 ```python
-def get_reply_thread_state_action(request: HttpRequest, thread: Thread) -> 'ReplyThreadState':
+def get_reply_thread_state_action(
+    request: HttpRequest, thread: Thread, post: Post | None=None
+) -> 'ReplyThreadState':
     ...
 ```
 
@@ -72,6 +80,11 @@ The request object.
 The `Thread` instance.
 
 
+#### `post: Post | None`
+
+The `Post` instance to append posted contents to, or `None`.
+
+
 ### Return value
 
 A `ReplyThreadState` instance to use to create a reply in a thread in the database.
@@ -85,12 +98,12 @@ The code below implements a custom filter function that stores the user's IP in 
 from django.http import HttpRequest
 from misago.posting.hooks import get_reply_thread_state_hook
 from misago.posting.state import ReplyThreadState
-from misago.threads.models import Thread
+from misago.threads.models import Post, Thread
 
 
 @get_reply_thread_state_hook.append_filter
 def set_poster_ip_on_reply_thread_state(
-    action, request: HttpRequest, thread: Thread
+    action, request: HttpRequest, thread: Thread, post: Post | None = None
 ) -> ReplyThreadState:
     state = action(request, thread)
     state.plugin_state["user_id"] = request.user_ip
