@@ -463,6 +463,29 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_feature_is
     assert thread.last_post_id > reply.id
 
 
+def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_in_preview(
+    user, user_client, thread
+):
+    reply_thread(thread, user, message="Previous message")
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "preview": "true",
+        },
+    )
+    assert response.status_code == 200
+    assert_contains(response, "<p>Reply contents</p>")
+    assert_not_contains(response, "<p>Previous message</p>")
+
+
 @override_dynamic_settings(merge_recent_posts=1)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_too_old(
     user, user_client, thread

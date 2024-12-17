@@ -65,7 +65,12 @@ class ReplyView(View):
 
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
-        last_post = self.get_last_post(request, thread)
+
+        if not request.POST.get("preview"):
+            last_post = self.get_last_post(request, thread)
+        else:
+            last_post = None
+
         state = self.get_state(request, thread, last_post)
         formset = self.get_formset(request, thread)
         formset.update_state(state)
