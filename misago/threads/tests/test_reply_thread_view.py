@@ -5,6 +5,7 @@ from ...permissions.models import CategoryGroupPermission
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_not_contains
+from ..test import reply_thread
 
 
 def test_reply_thread_view_displays_login_page_to_guests(client, thread):
@@ -365,6 +366,62 @@ def test_reply_thread_view_validates_posted_contents(
     )
     assert_contains(response, "Post reply")
     assert_contains(response, "Your message contains spam!")
+
+
+def test_reply_thread_view_appends_reply_to_user_recent_post(user, user_client, thread):
+    reply = reply_thread(thread, user, message="Previous message")
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.pk, "slug": thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message\n\nReply contents"
+
+
+def test_reply_thread_view_appends_reply_to_user_recent_post_in_quick_reply_with_htmx(
+    user, user_client, thread
+):
+    reply = reply_thread(thread, user, message="Previous message")
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    assert_contains(response, f"post-{reply.id}")
+    assert_contains(response, reply.parsed)
+
+    reply.refresh_from_db()
+    assert reply.original == "Previous message\n\nReply contents"
 
 
 def test_reply_thread_view_shows_error_if_private_thread_is_accessed(
