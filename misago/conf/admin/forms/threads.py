@@ -12,6 +12,7 @@ class ThreadsSettingsForm(SettingsForm):
         "attachment_404_image",
         "daily_post_limit",
         "hourly_post_limit",
+        "merge_recent_posts",
         "post_attachments_limit",
         "post_length_max",
         "post_length_min",
@@ -87,6 +88,17 @@ class ThreadsSettingsForm(SettingsForm):
             "Period of time (in hours) after which user-uploaded files that weren't attached to any post are deleted from disk.",
         ),
         min_value=1,
+    )
+    merge_recent_posts = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form",
+            "Automatically merge recent posts made within specified time",
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Period of time (in minutes) during which user's newly posted reply to a thread will be appended to their last post. The last post must be editable by the user. Enter zero to disable this feature.",
+        ),
+        min_value=0,
     )
 
     readtracker_cutoff = forms.IntegerField(

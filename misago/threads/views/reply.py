@@ -1,17 +1,25 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
 from ...auth.decorators import login_required
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
-from ...permissions.privatethreads import check_reply_private_thread_permission
-from ...permissions.threads import check_reply_thread_permission
+from ...permissions.privatethreads import (
+    check_edit_private_thread_post_permission,
+    check_reply_private_thread_permission,
+)
+from ...permissions.threads import (
+    check_edit_post_permission,
+    check_reply_thread_permission,
+)
 from ...posting.formsets import (
     PostingFormset,
     ReplyPrivateThreadFormset,
@@ -57,7 +65,13 @@ class ReplyView(View):
 
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
-        state = self.get_state(request, thread)
+
+        if not request.POST.get("preview"):
+            last_post = self.get_last_post(request, thread)
+        else:
+            last_post = None
+
+        state = self.get_state(request, thread, last_post)
         formset = self.get_formset(request, thread)
         formset.update_state(state)
 
@@ -69,7 +83,16 @@ class ReplyView(View):
 
         state.save()
 
-        messages.success(request, pgettext("thread reply posted", "Reply posted"))
+        if state.is_merged:
+            messages.success(
+                request,
+                pgettext(
+                    "thread reply posted",
+                    "Reply was automatically merged with the previous post",
+                ),
+            )
+        else:
+            messages.success(request, pgettext("thread reply posted", "Reply posted"))
 
         if self.is_quick_reply(request):
             return self.post_quick_reply(request, thread, state)
@@ -92,10 +115,33 @@ class ReplyView(View):
 
         feed = self.get_posts_feed(request, thread, [state.post])
         feed.set_animated_posts([state.post.id])
-        feed.set_unread_posts([state.post.id])
 
-        response = self.render(request, thread, formset, feed=feed.get_feed_data())
+        counter_start = (
+            self.get_thread_posts_queryset(request, state.thread)
+            .filter(id__lt=state.post.id)
+            .count()
+        )
+        feed.set_counter_start(counter_start)
 
+        if not state.is_merged:
+            feed.set_unread_posts([state.post.id])
+
+        response = self.render(
+            request,
+            thread,
+            formset,
+            feed=feed.get_feed_data(),
+            htmx_swap=state.is_merged,
+        )
+
+        if not state.is_merged:
+            self.mark_reply_as_read(request, thread, state)
+
+        return response
+
+    def mark_reply_as_read(
+        self, request: HttpRequest, thread: Thread, state: ReplyThreadState
+    ):
         # Is thread (excluding last reply) read?
         read_time = get_thread_read_time(request, thread)
         thread_is_read = not (
@@ -113,9 +159,30 @@ class ReplyView(View):
             ):
                 mark_category_read(request.user, state.category, force_update=True)
 
-        return response
+    def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        merge_time = request.settings.merge_recent_posts
+        if not merge_time:
+            return None
 
-    def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
+        last_post = self.get_thread_posts_queryset(request, thread).last()
+
+        if last_post.poster_id != request.user.id:
+            return None
+
+        if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_time):
+            return False
+
+        if last_post.is_hidden:
+            return False
+
+        last_post.thread = thread
+        last_post.category = thread.category
+
+        return last_post
+
+    def get_state(
+        self, request: HttpRequest, thread: Thread, post: Post | None
+    ) -> ReplyThreadState:
         raise NotImplementedError()
 
     def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
@@ -131,10 +198,12 @@ class ReplyView(View):
         formset: PostingFormset,
         preview: str | None = None,
         feed: list[dict] | None = None,
+        htmx_swap: bool = False,
     ):
         context = self.get_context_data(request, thread, formset)
         context["preview"] = preview
         context["new_feed"] = feed
+        context["htmx_swap"] = htmx_swap
 
         if self.is_quick_reply(request):
             template_name = self.template_name_quick_reply
@@ -186,8 +255,21 @@ class ReplyThreadView(ReplyView, ThreadView):
         check_reply_thread_permission(request.user_permissions, thread.category, thread)
         return thread
 
-    def get_state(self, request: HttpRequest, thread: Thread) -> ReplyThreadState:
-        return get_reply_thread_state(request, thread)
+    def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        try:
+            last_post = super().get_last_post(request, thread)
+            if last_post:
+                check_edit_post_permission(
+                    request.user_permissions, thread.category, thread, last_post
+                )
+            return last_post
+        except (Http404, PermissionDenied):
+            return None
+
+    def get_state(
+        self, request: HttpRequest, thread: Thread, post: Post | None
+    ) -> ReplyThreadState:
+        return get_reply_thread_state(request, thread, post)
 
     def get_formset(self, request: HttpRequest, thread: Thread) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
@@ -226,10 +308,21 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
         check_reply_private_thread_permission(request.user_permissions, thread)
         return thread
 
+    def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        try:
+            last_post = super().get_last_post(request, thread)
+            if last_post:
+                check_edit_private_thread_post_permission(
+                    request.user_permissions, thread.category, last_post
+                )
+            return last_post
+        except (Http404, PermissionDenied):
+            return None
+
     def get_state(
-        self, request: HttpRequest, thread: Thread
+        self, request: HttpRequest, thread: Thread, post: Post | None
     ) -> ReplyPrivateThreadState:
-        return get_reply_private_thread_state(request, thread)
+        return get_reply_private_thread_state(request, thread, post)
 
     def get_formset(
         self, request: HttpRequest, thread: Thread

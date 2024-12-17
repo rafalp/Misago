@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 
 if TYPE_CHECKING:
     from ..state.reply import ReplyThreadState
@@ -24,6 +24,10 @@ class GetReplyThreadStateHookAction(Protocol):
 
     The `Thread` instance.
 
+    ## `post: Post | None`
+
+    The `Post` instance to append posted contents to, or `None`.
+
     # Return value
 
     A `ReplyThreadState` instance to use to create a reply in a thread
@@ -34,6 +38,7 @@ class GetReplyThreadStateHookAction(Protocol):
         self,
         request: HttpRequest,
         thread: Thread,
+        post: Post | None = None,
     ) -> "ReplyThreadState": ...
 
 
@@ -58,6 +63,10 @@ class GetReplyThreadStateHookFilter(Protocol):
 
     The `Thread` instance.
 
+    ## `post: Post | None`
+
+    The `Post` instance to append posted contents to, or `None`.
+
     # Return value
 
     A `ReplyThreadState` instance to use to create a reply in a thread
@@ -69,6 +78,7 @@ class GetReplyThreadStateHookFilter(Protocol):
         action: GetReplyThreadStateHookAction,
         request: HttpRequest,
         thread: Thread,
+        post: Post | None = None,
     ) -> "ReplyThreadState": ...
 
 
@@ -88,12 +98,12 @@ class GetReplyThreadStateHook(
     from django.http import HttpRequest
     from misago.posting.hooks import get_reply_thread_state_hook
     from misago.posting.state import ReplyThreadState
-    from misago.threads.models import Thread
+    from misago.threads.models import Post, Thread
 
 
     @get_reply_thread_state_hook.append_filter
     def set_poster_ip_on_reply_thread_state(
-        action, request: HttpRequest, thread: Thread
+        action, request: HttpRequest, thread: Thread, post: Post | None = None
     ) -> ReplyThreadState:
         state = action(request, thread)
         state.plugin_state["user_id"] = request.user_ip
@@ -108,8 +118,9 @@ class GetReplyThreadStateHook(
         action: GetReplyThreadStateHookAction,
         request: HttpRequest,
         thread: Thread,
+        post: Post | None = None,
     ) -> "ReplyThreadState":
-        return super().__call__(action, request, thread)
+        return super().__call__(action, request, thread, post)
 
 
 get_reply_thread_state_hook = GetReplyThreadStateHook()
