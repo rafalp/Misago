@@ -6,19 +6,22 @@ from ...test import assert_contains, assert_not_contains
 
 
 def test_reply_private_thread_view_displays_login_page_to_guests(
-    client, user_private_thread
+    client, other_user_private_thread
 ):
     response = client.get(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         )
     )
     assert_contains(response, "Sign in to reply to threads")
 
 
 def test_reply_private_thread_view_displays_error_page_to_users_without_private_threads_permission(
-    user, user_client, user_private_thread
+    user, user_client, other_user_private_thread
 ):
     user.group.can_use_private_threads = False
     user.group.save()
@@ -26,7 +29,10 @@ def test_reply_private_thread_view_displays_error_page_to_users_without_private_
     response = user_client.get(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         )
     )
     assert_contains(
@@ -49,24 +55,30 @@ def test_reply_private_thread_view_displays_error_page_to_user_who_cant_see_priv
 
 
 def test_reply_private_thread_view_displays_reply_thread_form(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.get(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         )
     )
     assert_contains(response, "Reply to thread")
 
 
 def test_reply_private_thread_view_posts_new_thread_reply(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -74,24 +86,30 @@ def test_reply_private_thread_view_posts_new_thread_reply(
     )
     assert response.status_code == 302
 
-    user_private_thread.refresh_from_db()
+    other_user_private_thread.refresh_from_db()
     assert (
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
         )
-        + f"#post-{user_private_thread.last_post_id}"
+        + f"#post-{other_user_private_thread.last_post_id}"
     )
 
 
 def test_reply_private_thread_view_posts_new_thread_reply_in_htmx(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -100,24 +118,30 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_htmx(
     )
     assert response.status_code == 204
 
-    user_private_thread.refresh_from_db()
+    other_user_private_thread.refresh_from_db()
     assert (
         response["hx-redirect"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
         )
-        + f"#post-{user_private_thread.last_post_id}"
+        + f"#post-{other_user_private_thread.last_post_id}"
     )
 
 
 def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -126,24 +150,30 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply(
     )
     assert response.status_code == 302
 
-    user_private_thread.refresh_from_db()
+    other_user_private_thread.refresh_from_db()
     assert (
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.pk,
+                "slug": other_user_private_thread.slug,
+            },
         )
-        + f"#post-{user_private_thread.last_post_id}"
+        + f"#post-{other_user_private_thread.last_post_id}"
     )
 
 
 def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply_with_htmx(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -153,20 +183,25 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply_with_ht
     )
     assert response.status_code == 200
 
-    user_private_thread.refresh_from_db()
-    assert_contains(response, f"post-{user_private_thread.last_post_id}")
+    other_user_private_thread.refresh_from_db()
+    assert_contains(response, f"post-{other_user_private_thread.last_post_id}")
     assert_contains(response, f"<p>How&#x27;s going?</p>")
 
 
 def test_reply_private_thread_view_posted_reply_in_quick_reply_with_htmx_is_read(
-    user, user_client, user_private_thread
+    user, user_client, other_user_private_thread
 ):
-    mark_thread_read(user, user_private_thread, user_private_thread.last_post.posted_on)
+    mark_thread_read(
+        user, other_user_private_thread, other_user_private_thread.last_post.posted_on
+    )
 
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -176,22 +211,27 @@ def test_reply_private_thread_view_posted_reply_in_quick_reply_with_htmx_is_read
     )
     assert response.status_code == 200
 
-    user_private_thread.refresh_from_db()
-    assert_contains(response, f"post-{user_private_thread.last_post_id}")
+    other_user_private_thread.refresh_from_db()
+    assert_contains(response, f"post-{other_user_private_thread.last_post_id}")
     assert_contains(response, f"<p>How&#x27;s going?</p>")
 
     ReadCategory.objects.get(
         user=user,
-        category=user_private_thread.category,
-        read_time=user_private_thread.last_post_on,
+        category=other_user_private_thread.category,
+        read_time=other_user_private_thread.last_post_on,
     )
 
 
-def test_reply_private_thread_view_previews_message(user_client, user_private_thread):
+def test_reply_private_thread_view_previews_message(
+    user_client, other_user_private_thread
+):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {"posting-post-post": "How's going?", "preview": "true"},
     )
@@ -200,12 +240,15 @@ def test_reply_private_thread_view_previews_message(user_client, user_private_th
 
 
 def test_reply_private_thread_view_previews_message_in_htmx(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -218,12 +261,15 @@ def test_reply_private_thread_view_previews_message_in_htmx(
 
 
 def test_reply_private_thread_view_previews_message_in_quick_reply(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -236,12 +282,15 @@ def test_reply_private_thread_view_previews_message_in_quick_reply(
 
 
 def test_reply_private_thread_view_previews_message_in_quick_reply_with_htmx(
-    user_client, user_private_thread
+    user_client, other_user_private_thread
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "How's going?",
@@ -254,11 +303,16 @@ def test_reply_private_thread_view_previews_message_in_quick_reply_with_htmx(
     assert_contains(response, "Message preview")
 
 
-def test_reply_private_thread_view_validates_post(user_client, user_private_thread):
+def test_reply_private_thread_view_validates_post(
+    user_client, other_user_private_thread
+):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "?",
@@ -271,12 +325,15 @@ def test_reply_private_thread_view_validates_post(user_client, user_private_thre
 
 
 def test_reply_private_thread_view_validates_posted_contents(
-    user_client, user_private_thread, posted_contents_validator
+    user_client, other_user_private_thread, posted_contents_validator
 ):
     response = user_client.post(
         reverse(
             "misago:reply-private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
         ),
         {
             "posting-post-post": "This is a spam message",

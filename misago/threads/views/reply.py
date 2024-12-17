@@ -306,9 +306,10 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
         try:
             last_post = super().get_last_post(request, thread)
-            check_edit_private_thread_post_permission(
-                request.user_permissions, thread.category, last_post
-            )
+            if last_post:
+                check_edit_private_thread_post_permission(
+                    request.user_permissions, thread.category, last_post
+                )
             return last_post
         except (Http404, PermissionDenied):
             return None
