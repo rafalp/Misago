@@ -160,7 +160,7 @@ class ReplyView(View):
                 mark_category_read(request.user, state.category, force_update=True)
 
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
-        merge_time = request.settings.merge_recent_posts
+        merge_time = request.settings.merge_concurrent_posts
         if not merge_time:
             return None
 

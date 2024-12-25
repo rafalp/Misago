@@ -90,6 +90,14 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% trans "Posting" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.exclude_from_flood_control %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% trans "Private threads" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_use_private_threads %}

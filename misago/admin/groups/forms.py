@@ -142,6 +142,16 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
+    exclude_from_flood_control = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form", "Exclude from flood control"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enable this option to disable all flood control checks for members of this group.",
+        ),
+    )
+
     can_use_private_threads = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can use private threads"),
     )
@@ -212,6 +222,7 @@ class EditGroupForm(forms.ModelForm):
             "own_threads_edit_time_limit",
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
+            "exclude_from_flood_control",
             "can_use_private_threads",
             "can_start_private_threads",
             "private_thread_users_limit",

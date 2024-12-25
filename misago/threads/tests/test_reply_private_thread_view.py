@@ -412,7 +412,7 @@ def test_reply_private_thread_view_appends_reply_to_user_recent_post_in_quick_re
     assert reply.original == "Previous message\n\nReply contents"
 
 
-@override_dynamic_settings(merge_recent_posts=0)
+@override_dynamic_settings(merge_concurrent_posts=0)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_feature_is_disabled(
     user, user_client, other_user_private_thread
 ):
@@ -473,7 +473,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_in_pr
     assert_not_contains(response, "<p>Previous message</p>")
 
 
-@override_dynamic_settings(merge_recent_posts=1)
+@override_dynamic_settings(merge_concurrent_posts=1)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_too_old(
     user, user_client, other_user_private_thread
 ):

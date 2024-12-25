@@ -10,9 +10,10 @@ class ThreadsSettingsForm(SettingsForm):
     settings = [
         "attachment_403_image",
         "attachment_404_image",
+        "flood_control",
         "daily_post_limit",
         "hourly_post_limit",
-        "merge_recent_posts",
+        "merge_concurrent_posts",
         "post_attachments_limit",
         "post_length_max",
         "post_length_min",
@@ -29,11 +30,22 @@ class ThreadsSettingsForm(SettingsForm):
         "events_per_page",
     ]
 
+    flood_control = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form",
+            "Flood control",
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Number of seconds that must pass after a user posts before they can post again. Edits and concurrent replies are excluded from this limit. Enter zero to disable this feature.",
+        ),
+        min_value=0,
+    )
     daily_post_limit = forms.IntegerField(
         label=pgettext_lazy("admin threads settings form", "Daily post limit per user"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Daily limit of posts that may be posted by single user. Fail-safe for situations when forum is flooded by spam bots. Change to 0 to remove the limit.",
+            "Daily limit of posts that may be made by a single user. This serves as a fail-safe for situations where the forum is flooded by spam bots. Enter zero to remove this limit.",
         ),
         min_value=0,
     )
@@ -43,10 +55,11 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Hourly limit of posts that may be posted by single user. Fail-safe for situations when forum is flooded by spam bots. Change to 0 to remove the limit.",
+            "Hourly limit of posts that may be made by a single user. This serves as a fail-safe for situations where the forum is flooded by spam bots. Enter zero to remove this limit.",
         ),
         min_value=0,
     )
+
     post_attachments_limit = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form", "Maximum number of attachments per post"
@@ -85,18 +98,19 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Period of time (in hours) after which user-uploaded files that weren't attached to any post are deleted from disk.",
+            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted from disk.",
         ),
         min_value=1,
     )
-    merge_recent_posts = forms.IntegerField(
+
+    merge_concurrent_posts = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form",
-            "Automatically merge recent posts made within specified time",
+            "Automatically merge concurrent posts made within specified time",
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Period of time (in minutes) during which user's newly posted reply to a thread will be appended to their last post. The last post must be editable by the user. Enter zero to disable this feature.",
+            "Time (in minutes) during which user's newly posted reply to a thread will be appended to their last post. The last post must be editable by the user. Enter zero to disable this feature.",
         ),
         min_value=0,
     )
