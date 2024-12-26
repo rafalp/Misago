@@ -10,7 +10,7 @@ def check_daily_post_limit(request: HttpRequest) -> None:
     if not request.settings.daily_post_limit:
         return
 
-    if request.user_permissions.exclude_from_flood_control:
+    if request.user_permissions.exclude_from_posting_limits:
         return
 
     posts_cutoff = timezone.now() - timedelta(hours=24)
@@ -35,7 +35,7 @@ def check_hourly_post_limit(request: HttpRequest) -> None:
     if not request.settings.hourly_post_limit:
         return
 
-    if request.user_permissions.exclude_from_flood_control:
+    if request.user_permissions.exclude_from_posting_limits:
         return
 
     posts_cutoff = timezone.now() - timedelta(hours=1)

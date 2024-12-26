@@ -76,7 +76,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "own_threads_edit_time_limit": 0,
         "can_edit_own_posts": False,
         "own_posts_edit_time_limit": 0,
-        "exclude_from_flood_control": False,
+        "exclude_from_posting_limits": False,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -123,8 +123,8 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         if_true(
             permissions,
-            "exclude_from_flood_control",
-            group.exclude_from_flood_control,
+            "exclude_from_posting_limits",
+            group.exclude_from_posting_limits,
         )
         if_true(
             permissions,

@@ -10,7 +10,7 @@ def flood_control(request: HttpRequest) -> None:
     if not request.settings.flood_control:
         return
 
-    if request.user_permissions.exclude_from_flood_control:
+    if request.user_permissions.exclude_from_posting_limits:
         return
 
     flood_posts = timezone.now() - timedelta(seconds=request.settings.flood_control)

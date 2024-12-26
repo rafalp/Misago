@@ -26,7 +26,7 @@ class Group(PluginDataModel):
     can_edit_own_posts = models.BooleanField(default=False)
     own_posts_edit_time_limit = models.PositiveIntegerField(default=0)
 
-    exclude_from_flood_control = models.BooleanField(default=False)
+    exclude_from_posting_limits = models.BooleanField(default=False)
 
     can_use_private_threads = models.BooleanField(default=False)
     can_start_private_threads = models.BooleanField(default=False)
