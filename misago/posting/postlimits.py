@@ -16,7 +16,7 @@ def check_daily_post_limit(request: HttpRequest) -> None:
     posts_cutoff = timezone.now() - timedelta(hours=24)
     posts_queryset = request.user.post_set.filter(posted_on__gt=posts_cutoff)
 
-    if posts_queryset.exists():
+    if posts_queryset.count() >= request.settings.daily_post_limit:
         raise ValidationError(
             message=npgettext_lazy(
                 "posts limits",
@@ -41,7 +41,7 @@ def check_hourly_post_limit(request: HttpRequest) -> None:
     posts_cutoff = timezone.now() - timedelta(hours=1)
     posts_queryset = request.user.post_set.filter(posted_on__gt=posts_cutoff)
 
-    if posts_queryset.exists():
+    if posts_queryset.count() >= request.settings.hourly_post_limit:
         raise ValidationError(
             message=npgettext_lazy(
                 "posts limits",

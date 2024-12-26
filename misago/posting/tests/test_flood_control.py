@@ -28,7 +28,7 @@ def test_flood_control_fails_user_if_they_have_recent_post(user_request, user_re
     assert exc_info.value.code == "flood_control"
 
 
-def test_flood_control_passes_user_if_their_post_is_old(user_request, user_reply):
+def test_flood_control_passes_user_if_their_last_post_is_old(user_request, user_reply):
     user_reply.posted_on -= timedelta(hours=1)
     user_reply.save()
 
@@ -36,7 +36,7 @@ def test_flood_control_passes_user_if_their_post_is_old(user_request, user_reply
 
 
 def test_flood_control_passes_user_if_they_are_exempt_from_posting_limits(
-    user_request, members_group
+    user_request, user_reply, members_group
 ):
     members_group.exempt_from_posting_limits = True
     members_group.save()

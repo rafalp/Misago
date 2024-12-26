@@ -11,7 +11,7 @@ from .hooks import (
     validate_posted_contents_hook,
     validate_thread_title_hook,
 )
-from .limits import check_daily_post_limit, check_hourly_post_limit
+from .postlimits import check_daily_post_limit, check_hourly_post_limit
 
 if TYPE_CHECKING:
     from .formsets import PostingFormset
