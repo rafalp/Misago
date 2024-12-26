@@ -69,6 +69,7 @@ def test_reply_thread_state_updates_user(user_request, other_user_thread, user):
     user.refresh_from_db()
     assert user.threads == 0
     assert user.posts == 1
+    assert user.last_posted_on == state.timestamp
 
 
 def test_reply_thread_state_updates_existing_post(user, user_request, user_thread):

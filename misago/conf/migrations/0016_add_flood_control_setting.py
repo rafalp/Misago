@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         CreateSetting(
             setting="flood_control",
             python_type="int",
-            dry_value=3 * 60,
+            dry_value=30,
         ),
     ]

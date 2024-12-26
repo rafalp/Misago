@@ -34,7 +34,7 @@ from ...posting.state import (
     get_reply_private_thread_state,
     get_reply_thread_state,
 )
-from ...posting.validators import validate_posted_contents
+from ...posting.validators import validate_posting_limits, validate_posted_contents
 from ...readtracker.tracker import (
     get_thread_read_time,
     mark_thread_read,
@@ -189,7 +189,11 @@ class ReplyView(View):
         raise NotImplementedError()
 
     def is_valid(self, formset: PostingFormset, state: PostingState) -> bool:
-        return formset.is_valid() and validate_posted_contents(formset, state)
+        return (
+            formset.is_valid()
+            and (state.is_merged or validate_posting_limits(formset, state))
+            and validate_posted_contents(formset, state)
+        )
 
     def render(
         self,
