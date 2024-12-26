@@ -142,9 +142,9 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    exclude_from_posting_limits = YesNoSwitch(
+    exempt_from_posting_limits = YesNoSwitch(
         label=pgettext_lazy(
-            "admin group permissions form", "Exclude from posting limits"
+            "admin group permissions form", "Exempt from posting limits"
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
@@ -222,7 +222,7 @@ class EditGroupForm(forms.ModelForm):
             "own_threads_edit_time_limit",
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
-            "exclude_from_posting_limits",
+            "exempt_from_posting_limits",
             "can_use_private_threads",
             "can_start_private_threads",
             "private_thread_users_limit",
