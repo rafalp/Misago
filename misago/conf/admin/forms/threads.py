@@ -11,8 +11,6 @@ class ThreadsSettingsForm(SettingsForm):
         "attachment_403_image",
         "attachment_404_image",
         "flood_control",
-        "daily_post_limit",
-        "hourly_post_limit",
         "merge_concurrent_posts",
         "post_attachments_limit",
         "post_length_max",
@@ -38,24 +36,6 @@ class ThreadsSettingsForm(SettingsForm):
         help_text=pgettext_lazy(
             "admin threads settings form",
             "Number of seconds that must pass after a user posts before they can post again. Edits and concurrent replies are excluded from this limit. Enter zero to disable this feature.",
-        ),
-        min_value=0,
-    )
-    daily_post_limit = forms.IntegerField(
-        label=pgettext_lazy("admin threads settings form", "Daily post limit per user"),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Daily limit of posts that may be made by a single user. This serves as a fail-safe for situations where the forum is flooded by spam bots. Enter zero to remove this limit.",
-        ),
-        min_value=0,
-    )
-    hourly_post_limit = forms.IntegerField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Hourly post limit per user"
-        ),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Hourly limit of posts that may be made by a single user. This serves as a fail-safe for situations where the forum is flooded by spam bots. Enter zero to remove this limit.",
         ),
         min_value=0,
     )

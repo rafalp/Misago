@@ -35,10 +35,10 @@ def test_flood_control_passes_user_if_their_last_post_is_old(user_request, user_
     flood_control(user_request)
 
 
-def test_flood_control_passes_user_if_they_are_exempt_from_posting_limits(
+def test_flood_control_passes_user_if_they_are_exempt_from_flood_control(
     user_request, user_reply, members_group
 ):
-    members_group.exempt_from_posting_limits = True
+    members_group.exempt_from_flood_control = True
     members_group.save()
 
     flood_control(user_request)

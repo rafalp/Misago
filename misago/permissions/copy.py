@@ -50,7 +50,7 @@ COPY_GROUP_PERMISSIONS = (
     "own_threads_edit_time_limit",
     "can_edit_own_posts",
     "own_posts_edit_time_limit",
-    "exempt_from_posting_limits",
+    "exempt_from_flood_control",
     "can_change_username",
     "username_changes_limit",
     "username_changes_expire",

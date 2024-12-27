@@ -11,7 +11,6 @@ from .hooks import (
     validate_posted_contents_hook,
     validate_thread_title_hook,
 )
-from .postlimits import check_daily_post_limit, check_hourly_post_limit
 
 if TYPE_CHECKING:
     from .formsets import PostingFormset
@@ -19,9 +18,9 @@ if TYPE_CHECKING:
 
 
 __all__ = [
+    "validate_flood_control",
     "validate_post",
     "validate_posted_contents",
-    "validate_posting_limits",
     "validate_thread_title",
 ]
 
@@ -164,11 +163,9 @@ def validate_posted_contents(formset: "PostingFormset", state: "PostingState") -
     return not bool(formset.errors)
 
 
-def validate_posting_limits(formset: "PostingFormset", state: "PostingState") -> bool:
+def validate_flood_control(formset: "PostingFormset", state: "PostingState") -> bool:
     try:
         flood_control(state.request)
-        check_daily_post_limit(state.request)
-        check_hourly_post_limit(state.request)
     except ValidationError as e:
         formset.add_error(e)
     return not bool(formset.errors)

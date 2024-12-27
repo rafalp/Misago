@@ -27,7 +27,7 @@ from ...posting.state.start import (
     get_start_private_thread_state,
     get_start_thread_state,
 )
-from ...posting.validators import validate_posting_limits, validate_posted_contents
+from ...posting.validators import validate_flood_control, validate_posted_contents
 from ..hooks import (
     get_start_private_thread_page_context_data_hook,
     get_start_thread_page_context_data_hook,
@@ -105,7 +105,7 @@ class StartThreadView(View):
     def is_valid(self, formset: StartThreadFormset, state: StartThreadState) -> bool:
         return (
             formset.is_valid()
-            and validate_posting_limits(formset, state)
+            and validate_flood_control(formset, state)
             and validate_posted_contents(formset, state)
         )
 
