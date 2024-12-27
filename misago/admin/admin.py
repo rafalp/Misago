@@ -1,6 +1,8 @@
 from django.urls import path
 from django.utils.translation import pgettext_lazy
 
+from .attachments import views as attachments
+from .attachmenttypes import views as attachmenttypes
 from .categories import views as categories
 from .groups import views as groups
 from .moderators import views as moderators
@@ -26,6 +28,22 @@ class MisagoAdminExtension:
             icon="fas fa-shield-alt",
             after="categories:index",
             namespace="moderators",
+        )
+        site.add_node(
+            name=pgettext_lazy("admin node", "Attachments"),
+            icon="fas fa-paperclip",
+            after="permissions:index",
+            namespace="attachments",
+        )
+        site.add_node(
+            name=pgettext_lazy("admin node", "Attachment types"),
+            description=pgettext_lazy(
+                "admin node",
+                "Specify what files may be uploaded as part of user posts.",
+            ),
+            parent="settings",
+            after="agreements:index",
+            namespace="attachment-types",
         )
 
     def register_urlpatterns(self, urlpatterns):
@@ -83,4 +101,34 @@ class MisagoAdminExtension:
             path("new/user/<int:user>/", moderators.NewView.as_view(), name="new-user"),
             path("edit/<int:pk>/", moderators.EditView.as_view(), name="edit"),
             path("delete/<int:pk>/", moderators.DeleteView.as_view(), name="delete"),
+        )
+
+        urlpatterns.namespace("attachments/", "attachments")
+        urlpatterns.patterns(
+            "attachments",
+            path("", attachments.AttachmentsList.as_view(), name="index"),
+            path("<int:page>/", attachments.AttachmentsList.as_view(), name="index"),
+            path(
+                "delete/<int:pk>/",
+                attachments.DeleteAttachment.as_view(),
+                name="delete",
+            ),
+        )
+
+        # AttachmentType
+        urlpatterns.namespace("attachment-types/", "attachment-types", "settings")
+        urlpatterns.patterns(
+            "settings:attachment-types",
+            path("", attachmenttypes.AttachmentTypesList.as_view(), name="index"),
+            path("new/", attachmenttypes.NewAttachmentType.as_view(), name="new"),
+            path(
+                "edit/<int:pk>/",
+                attachmenttypes.EditAttachmentType.as_view(),
+                name="edit",
+            ),
+            path(
+                "delete/<int:pk>/",
+                attachmenttypes.DeleteAttachmentType.as_view(),
+                name="delete",
+            ),
         )
