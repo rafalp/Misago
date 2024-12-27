@@ -172,7 +172,7 @@ def test_start_thread_view_validates_thread_title(user_client, default_category)
     assert_contains(response, "Thread title must include alphanumeric characters.")
 
 
-def test_start_private_thread_view_validates_post(user_client, default_category):
+def test_start_thread_view_validates_post(user_client, default_category):
     response = user_client.post(
         reverse(
             "misago:start-thread",
@@ -189,7 +189,7 @@ def test_start_private_thread_view_validates_post(user_client, default_category)
     )
 
 
-def test_start_private_thread_view_validates_posted_contents(
+def test_start_thread_view_validates_posted_contents(
     user_client, default_category, posted_contents_validator
 ):
     response = user_client.post(
@@ -204,3 +204,22 @@ def test_start_private_thread_view_validates_posted_contents(
     )
     assert_contains(response, "Start new thread")
     assert_contains(response, "Your message contains spam!")
+
+
+def test_start_thread_view_runs_flood_control(
+    user_client, default_category, user_reply
+):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "This is a flood message",
+        },
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )

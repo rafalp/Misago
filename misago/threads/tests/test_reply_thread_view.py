@@ -372,6 +372,23 @@ def test_reply_thread_view_validates_posted_contents(
     assert_contains(response, "Your message contains spam!")
 
 
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_reply_thread_view_runs_flood_control(user_client, thread, user_reply):
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+        },
+    )
+    assert_contains(response, "Post reply")
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
 def test_reply_thread_view_appends_reply_to_user_recent_post(user, user_client, thread):
     reply = reply_thread(thread, user, message="Previous message")
 
