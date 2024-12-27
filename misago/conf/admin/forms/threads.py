@@ -35,7 +35,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Number of seconds that must pass after a user posts before they can post again. Edits and concurrent replies are excluded from this limit. Enter zero to disable this feature.",
+            "Number of seconds that must pass after a user posts before they can post again. Edits and concurrent posts are excluded from this limit. Enter zero to disable this feature.",
         ),
         min_value=0,
     )

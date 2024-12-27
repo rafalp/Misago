@@ -72,26 +72,12 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Threads" context "admin group permissions form" %}</legend>
+    <legend>{% trans "Posting" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_edit_own_threads %}
     {% form_row form.group.own_threads_edit_time_limit %}
-
-  </fieldset>
-</div>
-<div class="form-fieldset">
-  <fieldset>
-    <legend>{% trans "Posts" context "admin group permissions form" %}</legend>
-
     {% form_row form.group.can_edit_own_posts %}
     {% form_row form.group.own_posts_edit_time_limit %}
-
-  </fieldset>
-</div>
-<div class="form-fieldset">
-  <fieldset>
-    <legend>{% trans "Posting limits" context "admin group permissions form" %}</legend>
-
     {% form_row form.group.exempt_from_flood_control %}
 
   </fieldset>
