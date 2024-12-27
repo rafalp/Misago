@@ -62,6 +62,7 @@ class StartThreadState(PostingState):
     def save_user(self):
         self.user.threads = models.F("threads") + 1
         self.user.posts = models.F("posts") + 1
+        self.user.last_posted_on = self.timestamp
 
         self.update_object(self.user)
 

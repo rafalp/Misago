@@ -348,6 +348,28 @@ def test_reply_private_thread_view_validates_posted_contents(
     assert_contains(response, "Your message contains spam!")
 
 
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_reply_private_thread_view_runs_flood_control(
+    user_client, other_user_private_thread, user_reply
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+        },
+    )
+    assert_contains(response, "Post reply")
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
 def test_reply_private_thread_view_appends_reply_to_user_recent_post(
     user, user_client, other_user_private_thread
 ):
@@ -412,7 +434,7 @@ def test_reply_private_thread_view_appends_reply_to_user_recent_post_in_quick_re
     assert reply.original == "Previous message\n\nReply contents"
 
 
-@override_dynamic_settings(merge_recent_posts=0)
+@override_dynamic_settings(merge_concurrent_posts=0, flood_control=0)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_feature_is_disabled(
     user, user_client, other_user_private_thread
 ):
@@ -450,6 +472,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_fe
     assert other_user_private_thread.last_post_id > reply.id
 
 
+@override_dynamic_settings(flood_control=0)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_in_preview(
     user, user_client, other_user_private_thread
 ):
@@ -473,7 +496,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_in_pr
     assert_not_contains(response, "<p>Previous message</p>")
 
 
-@override_dynamic_settings(merge_recent_posts=1)
+@override_dynamic_settings(merge_concurrent_posts=1)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_too_old(
     user, user_client, other_user_private_thread
 ):
@@ -516,6 +539,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
     assert other_user_private_thread.last_post_id > reply.id
 
 
+@override_dynamic_settings(flood_control=0)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_by_other_user(
     other_user, user_client, other_user_private_thread
 ):
@@ -555,6 +579,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
     assert other_user_private_thread.last_post_id > reply.id
 
 
+@override_dynamic_settings(flood_control=0)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_hidden(
     user, user_client, other_user_private_thread
 ):
@@ -597,6 +622,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
     assert other_user_private_thread.last_post_id > reply.id
 
 
+@override_dynamic_settings(flood_control=0)
 def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_not_editable(
     user, user_client, other_user_private_thread
 ):

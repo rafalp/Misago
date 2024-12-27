@@ -1,4 +1,3 @@
-from functools import wraps
 from typing import TYPE_CHECKING
 
 from django.core.exceptions import ValidationError
@@ -6,6 +5,7 @@ from django.http import HttpRequest
 from django.utils.translation import npgettext_lazy, pgettext_lazy
 
 from ..core.utils import slugify
+from .floodcontrol import flood_control
 from .hooks import (
     validate_post_hook,
     validate_posted_contents_hook,
@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 
 __all__ = [
+    "validate_flood_control",
     "validate_post",
     "validate_posted_contents",
     "validate_thread_title",
@@ -159,4 +160,12 @@ def _validate_thread_title_action(
 
 def validate_posted_contents(formset: "PostingFormset", state: "PostingState") -> bool:
     validate_posted_contents_hook(formset, state)
+    return not bool(formset.errors)
+
+
+def validate_flood_control(formset: "PostingFormset", state: "PostingState") -> bool:
+    try:
+        flood_control(state.request)
+    except ValidationError as e:
+        formset.add_error(e)
     return not bool(formset.errors)

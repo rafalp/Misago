@@ -477,6 +477,34 @@ def test_edit_thread_view_validates_posted_contents(
     assert_contains(response, "Your message contains spam!")
 
 
+def test_edit_thread_view_skips_flood_control(user_client, user_thread, user_reply):
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "This is a flood message",
+        },
+    )
+    assert response.status_code == 302
+
+    user_thread.refresh_from_db()
+    assert user_thread.title == "Edited title"
+
+    assert response["location"] == reverse(
+        "misago:thread",
+        kwargs={"id": user_thread.pk, "slug": user_thread.slug},
+    )
+
+    post = user_thread.first_post
+    post.refresh_from_db()
+
+    assert post.original == "This is a flood message"
+    assert post.edits == 1
+
+
 def test_edit_thread_view_shows_error_if_private_thread_post_is_accessed(
     user_client, user_private_thread
 ):

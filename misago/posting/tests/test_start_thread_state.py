@@ -63,3 +63,4 @@ def test_start_thread_state_updates_user(user_request, default_category, user):
     user.refresh_from_db()
     assert user.threads == 1
     assert user.posts == 1
+    assert user.last_posted_on == state.timestamp

@@ -113,3 +113,20 @@ def test_start_private_thread_view_validates_posted_contents(
     )
     assert_contains(response, "Start new private thread")
     assert_contains(response, "Your message contains spam!")
+
+
+def test_start_private_thread_view_runs_flood_control(
+    user_client, other_user, user_reply
+):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "This is a flood message",
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
