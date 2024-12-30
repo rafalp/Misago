@@ -31115,7 +31115,7 @@ function cleanUrl(url) {
   return "http://" + url;
 }
 function startsWith(text, prefix) {
-  return text.toLowerCase().substring(0, prefix.length) === text;
+  return text.toLowerCase().substring(0, prefix.length) === prefix;
 }
 
 /***/ }),
