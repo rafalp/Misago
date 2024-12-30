@@ -1,7 +1,10 @@
+import { MarkupEditorImageModal, MarkupEditorLinkModal } from "./modals"
+
 class MarkupEditor {
   constructor() {
     this.actions = {}
     this.linkModal = new MarkupEditorLinkModal()
+    this.imageModal = new MarkupEditorImageModal()
   }
 
   setAction = (name, init) => {
@@ -54,97 +57,10 @@ class MarkupEditor {
   showLinkModal(selection) {
     this.linkModal.show(selection)
   }
-}
 
-class MarkupEditorModal {
-  constructor() {
-    this.selection = null
-    this.element = null
-    this.form = null
-
-    document.addEventListener("DOMContentLoaded", () => {
-      this.element = this.getElement()
-      this.form = this.element.querySelector("form")
-      this.initForm(this.form)
-    })
+  showImageModal(selection) {
+    this.imageModal.show(selection)
   }
-
-  getElement() {
-    throw "Subclasses of 'MarkupEditorModal' must implement 'getElement' method"
-  }
-
-  initForm(form) {
-    form.addEventListener("submit", (event) => {
-      event.preventDefault()
-      const data = new FormData(event.target)
-      this.submit(data, this.selection)
-      return false
-    })
-  }
-
-  reset() {
-    this.element.querySelectorAll("input").forEach((input) => {
-      input.value = ""
-    })
-  }
-
-  setData(form, selection) {}
-
-  submit(data, selection) {}
-
-  show(selection) {
-    this.reset()
-    this.selection = selection
-    this.setData(this.form, selection)
-    $(this.element).modal("show")
-  }
-
-  hide() {
-    $(this.element).modal("hide")
-  }
-}
-
-class MarkupEditorLinkModal extends MarkupEditorModal {
-  getElement() {
-    return document.getElementById("markup-editor-link-modal")
-  }
-
-  setData(form, selection) {
-    form.querySelector('[name="text"]').value = selection.text().trim()
-  }
-
-  submit(data, selection) {
-    const url = data.get("url").trim()
-    const text = data.get("text").trim()
-
-    if (url) {
-      if (text) {
-        if (isUrlUnsafeMarkdown(url) || isUrlTextUnsafeMarkdown(text)) {
-          selection.replace("[url=" + url + "]" + text + "[/url]")
-        } else {
-          selection.replace("[" + text + "](" + url + ")")
-        }
-      } else {
-        selection.replace("<" + url + ">")
-      }
-
-      this.hide()
-    }
-  }
-}
-
-function isUrlUnsafeMarkdown(value) {
-  if (value.indexOf("(") >= 0) return true
-  if (value.indexOf(")") >= 0) return true
-
-  return false
-}
-
-function isUrlTextUnsafeMarkdown(value) {
-  if (value.indexOf("[") >= 0) return true
-  if (value.indexOf("]") >= 0) return true
-
-  return false
 }
 
 class MarkupEditorSelection {
@@ -297,8 +213,6 @@ editor.setAction("link", function ({ editor, selection }) {
   editor.showLinkModal(selection)
 })
 
-export function activateEditors() {
-  document
-    .querySelectorAll("[misago-editor-active='false']")
-    .forEach(editor.activate)
-}
+editor.setAction("image", function ({ editor, selection }) {
+  editor.showImageModal(selection)
+})

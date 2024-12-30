@@ -45,6 +45,30 @@
           >
             <span class="material-icon">insert_link</span>
           </button>
+          <div class="dropdown">
+            <button
+              class="btn btn-markup-editor"
+              title="{% trans 'Image' context 'markup editor' %}"
+              aria-expanded="true"
+              aria-haspopup="true"
+              data-toggle="dropdown"
+              type="button"
+            >
+              <span class="material-icon">insert_photo</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-auto">
+              <li>
+                <button class="btn btn-link" type="button">
+                  <span class="material-icon">file_upload</span> {% trans 'Upload image' context 'markup editor' %}
+                </button>
+              </li>
+              <li>
+                <button class="btn btn-link" type="button" misago-editor-action="image">
+                  <span class="material-icon">insert_link</span> {% trans 'Link to image' context 'markup editor' %}
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="markup-editor-toolbar-right">
           RIGHT
