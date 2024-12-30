@@ -3,9 +3,9 @@
 <div class="toolbar{% if top_toolbar %} toolbar-min-height{% endif %}">
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_START %}
   {% if feed.paginator.has_other_pages %}
-    <div class="toolbar-section{% if not bottom %} flex-order-last-xs{% endif %}">
+    <div class="toolbar-section{% if not bottom_toolbar %} flex-order-last-xs{% endif %}">
       <div class="toolbar-item">
-        {% include "misago/thread/paginator.html" with page=feed.paginator paginator=feed.paginator.paginator bottom=bottom %}
+        {% include "misago/thread/paginator.html" with page=feed.paginator paginator=feed.paginator.paginator bottom=bottom_toolbar %}
       </div>
     </div>
   {% endif %}
