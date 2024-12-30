@@ -1,0 +1,50 @@
+{% load i18n %}
+
+<div
+  id="markup-editor-link-modal"
+  class="modal fade"
+  aria-hidden="false"
+  tabindex="-1"
+>
+  <div class="modal-dialog" role="document">
+    <form>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            {% trans "Insert link" context "markup editor link modal" %}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="control-label " for="markup_link_url">
+              {% trans "Link address:" context "markup editor link modal" %}
+            </label>
+            <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
+          </div>
+          <div class="form-group">
+            <label class="control-label " for="markup_link_text">
+              {% trans "Link text:" context "markup editor link modal" %}
+            </label>
+            <div>
+              <input type="text" id="markup_link_text" name="text" class="form-control" value="">
+              <p class="help-block">
+                {% blocktrans trimmed context "markup editor link modal" %}
+                  Optional. Will be displayed instead of link's address.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            {% trans "Cancel" context "markup editor link modal btn" %}
+          </button>
+          <button class="btn btn-primary">
+            {% trans "Insert link" context "markup editor link modal btn" %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

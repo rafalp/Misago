@@ -1,6 +1,7 @@
 class MarkupEditor {
   constructor() {
     this.actions = {}
+    this.linkModal = new MarkupEditorLinkModal()
   }
 
   setAction = (name, init) => {
@@ -37,13 +38,113 @@ class MarkupEditor {
       control.addEventListener("click", ({ target }) => {
         const action = this.actions[actionName]
         if (action) {
-          action({ input, target, selection: new MarkupEditorSelection(input) })
+          action({
+            input,
+            target,
+            editor: this,
+            selection: new MarkupEditorSelection(input),
+          })
         } else {
           console.warn("Undefined markup editor action: " + actionName)
         }
       })
     })
   }
+
+  showLinkModal(selection) {
+    this.linkModal.show(selection)
+  }
+}
+
+class MarkupEditorModal {
+  constructor() {
+    this.selection = null
+    this.element = null
+    this.form = null
+
+    document.addEventListener("DOMContentLoaded", () => {
+      this.element = this.getElement()
+      this.form = this.element.querySelector("form")
+      this.initForm(this.form)
+    })
+  }
+
+  getElement() {
+    throw "Subclasses of 'MarkupEditorModal' must implement 'getElement' method"
+  }
+
+  initForm(form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault()
+      const data = new FormData(event.target)
+      this.submit(data, this.selection)
+      return false
+    })
+  }
+
+  reset() {
+    this.element.querySelectorAll("input").forEach((input) => {
+      input.value = ""
+    })
+  }
+
+  setData(form, selection) {}
+
+  submit(data, selection) {}
+
+  show(selection) {
+    this.reset()
+    this.selection = selection
+    this.setData(this.form, selection)
+    $(this.element).modal("show")
+  }
+
+  hide() {
+    $(this.element).modal("hide")
+  }
+}
+
+class MarkupEditorLinkModal extends MarkupEditorModal {
+  getElement() {
+    return document.getElementById("markup-editor-link-modal")
+  }
+
+  setData(form, selection) {
+    form.querySelector('[name="text"]').value = selection.text().trim()
+  }
+
+  submit(data, selection) {
+    const url = data.get("url").trim()
+    const text = data.get("text").trim()
+
+    if (url) {
+      if (text) {
+        if (isUrlUnsafeMarkdown(url) || isUrlTextUnsafeMarkdown(text)) {
+          selection.replace("[url=" + url + "]" + text + "[/url]")
+        } else {
+          selection.replace("[" + text + "](" + url + ")")
+        }
+      } else {
+        selection.replace("<" + url + ">")
+      }
+
+      this.hide()
+    }
+  }
+}
+
+function isUrlUnsafeMarkdown(value) {
+  if (value.indexOf("(") >= 0) return true
+  if (value.indexOf(")") >= 0) return true
+
+  return false
+}
+
+function isUrlTextUnsafeMarkdown(value) {
+  if (value.indexOf("[") >= 0) return true
+  if (value.indexOf("]") >= 0) return true
+
+  return false
 }
 
 class MarkupEditorSelection {
@@ -155,7 +256,7 @@ const editor = new MarkupEditor()
 
 export default editor
 
-editor.setAction("strong", function markupStrong({ selection }) {
+editor.setAction("strong", function ({ selection }) {
   if (selection.empty()) {
     selection.replace("**" + pgettext("example markup", "Strong text") + "**", {
       start: 2,
@@ -166,7 +267,7 @@ editor.setAction("strong", function markupStrong({ selection }) {
   }
 })
 
-editor.setAction("emphasis", function markupEmphasis({ selection }) {
+editor.setAction("emphasis", function ({ selection }) {
   if (selection.empty()) {
     selection.replace(
       "_" + pgettext("example markup", "Text with emphasis") + "_",
@@ -177,7 +278,7 @@ editor.setAction("emphasis", function markupEmphasis({ selection }) {
   }
 })
 
-editor.setAction("strikethrough", function markupEmphasis({ selection }) {
+editor.setAction("strikethrough", function ({ selection }) {
   if (selection.empty()) {
     selection.replace(
       "~~" + pgettext("example markup", "Text with strikethrough") + "~~",
@@ -188,8 +289,12 @@ editor.setAction("strikethrough", function markupEmphasis({ selection }) {
   }
 })
 
-editor.setAction("horizontal-ruler", function markupEmphasis({ selection }) {
+editor.setAction("horizontal-ruler", function ({ selection }) {
   selection.replace("\n\n- - -\n\n", { start: 9 })
+})
+
+editor.setAction("link", function ({ editor, selection }) {
+  editor.showLinkModal(selection)
 })
 
 export function activateEditors() {
