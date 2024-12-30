@@ -120,7 +120,9 @@ class RepliesView(View):
 
         page_obj = paginator.get_page(page)
         posts = list(page_obj.object_list)
+
         feed = self.get_posts_feed(request, thread, posts)
+        feed.set_counter_start(page_obj.start_index() - 1)
 
         unread = get_unread_posts(request, thread, posts)
         feed.set_unread_posts(unread)

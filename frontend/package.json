@@ -18,7 +18,7 @@
     "cropit": "^0.5.1",
     "dropzone": "^4.2.0",
     "history": "^2.0.2",
-    "htmx.org": "^1.9.12",
+    "htmx.org": "^2.0.4",
     "jquery": "2.2.x",
     "jquery-mockjax": "^2.0.1",
     "jquery.caret": "^0.3.1",
