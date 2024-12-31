@@ -69,6 +69,38 @@
               </li>
             </ul>
           </div>
+          <button
+            class="btn btn-markup-editor"
+            title="{% trans 'Quote' context 'markup editor' %}"
+            type="button"
+            misago-editor-action="quote"
+          >
+            <span class="material-icon">format_quote</span>
+          </button>
+          <button
+            class="btn btn-markup-editor"
+            title="{% trans 'Spoiler' context 'markup editor' %}"
+            type="button"
+            misago-editor-action="spoiler"
+          >
+            <span class="material-icon">visibility_off</span>
+          </button>
+          <button
+            class="btn btn-markup-editor"
+            title="{% trans 'Code' context 'markup editor' %}"
+            type="button"
+            misago-editor-action="code"
+          >
+            <span class="material-icon">code</span>
+          </button>
+          <button
+            class="btn btn-markup-editor"
+            title="{% trans 'Upload file' context 'markup editor' %}"
+            type="button"
+            misago-editor-action="upload"
+          >
+            <span class="material-icon">file_upload</span>
+          </button>
         </div>
         <div class="markup-editor-toolbar-right">
           RIGHT

@@ -61,7 +61,7 @@ export class MarkupEditorLinkModal extends MarkupEditorModal {
 
     if (url) {
       if (text) {
-        if (useBBCode(url, text)) {
+        if (isBBCode(url, text)) {
           selection.replace("[url=" + url + "]" + text + "[/url]")
         } else {
           selection.replace("[" + text + "](" + url + ")")
@@ -86,12 +86,12 @@ export class MarkupEditorImageModal extends MarkupEditorModal {
 
     if (url) {
       if (text) {
-        if (useBBCode(url, text)) {
+        if (isBBCode(url, text)) {
           selection.replace("[img=" + url + "]" + text + "[/img]")
         } else {
           selection.replace("![" + text + "](" + url + ")")
         }
-      } else if (useBBCode(url, text)) {
+      } else if (isBBCode(url, text)) {
         selection.replace("[img]" + url + "[/img]")
       } else {
         selection.replace("!(" + url + ")")
@@ -102,7 +102,7 @@ export class MarkupEditorImageModal extends MarkupEditorModal {
   }
 }
 
-function useBBCode(url, text) {
+function isBBCode(url, text) {
   if (url.indexOf("(") >= 0) return true
   if (url.indexOf(")") >= 0) return true
   if (text.indexOf("[") >= 0) return true

@@ -48,7 +48,7 @@ class MarkupEditor {
             selection: new MarkupEditorSelection(input),
           })
         } else {
-          console.warn("Undefined markup editor action: " + actionName)
+          console.warn("Undefined editor action: " + actionName)
         }
       })
     })
@@ -71,6 +71,14 @@ class MarkupEditorSelection {
 
   get() {
     return this._range
+  }
+
+  prefix() {
+    return this._range.prefix
+  }
+
+  suffix() {
+    return this._range.suffix
   }
 
   zero() {
@@ -215,4 +223,28 @@ editor.setAction("link", function ({ editor, selection }) {
 
 editor.setAction("image", function ({ editor, selection }) {
   editor.showImageModal(selection)
+})
+
+editor.setAction("quote", function ({ editor, selection }) {
+  console.error("TODO")
+})
+
+editor.setAction("spoiler", function ({ selection }) {
+  const prefix = selection.prefix().trim().length
+    ? "\n\n[spoiler]\n"
+    : "[spoiler]\n"
+  const suffix = "\n[/spoiler]\n\n"
+
+  if (selection.empty()) {
+    selection.replace(
+      prefix + pgettext("example markup", "Spoiler text") + suffix,
+      { start: prefix.length, end: suffix.length }
+    )
+  } else {
+    selection.wrap(prefix, suffix)
+  }
+})
+
+editor.setAction("code", function ({ editor, selection }) {
+  console.error("TODO")
 })
