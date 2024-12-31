@@ -1,10 +1,15 @@
-import { MarkupEditorImageModal, MarkupEditorLinkModal } from "./modals"
+import {
+  MarkupEditorImageModal,
+  MarkupEditorLinkModal,
+  MarkupEditorQuoteModal,
+} from "./modals"
 
 class MarkupEditor {
   constructor() {
     this.actions = {}
     this.linkModal = new MarkupEditorLinkModal()
     this.imageModal = new MarkupEditorImageModal()
+    this.quoteModal = new MarkupEditorQuoteModal()
   }
 
   setAction = (name, init) => {
@@ -60,6 +65,10 @@ class MarkupEditor {
 
   showImageModal(selection) {
     this.imageModal.show(selection)
+  }
+
+  showQuoteModal(selection) {
+    this.quoteModal.show(selection)
   }
 }
 
@@ -226,7 +235,7 @@ editor.setAction("image", function ({ editor, selection }) {
 })
 
 editor.setAction("quote", function ({ editor, selection }) {
-  console.error("TODO")
+  editor.showQuoteModal(selection)
 })
 
 editor.setAction("spoiler", function ({ selection }) {

@@ -122,3 +122,38 @@ function cleanUrl(url) {
 function startsWith(text, prefix) {
   return text.toLowerCase().substring(0, prefix.length) === prefix
 }
+
+export class MarkupEditorQuoteModal extends MarkupEditorModal {
+  getElement() {
+    return document.getElementById("markup-editor-quote-modal")
+  }
+
+  setData(form, selection) {
+    form.querySelector('[name="text"]').value = selection.text().trim()
+  }
+
+  submit(data, selection) {
+    const author = data.get("author").trim()
+    const text = data.get("text").trim()
+
+    if (text) {
+      const prefix = this.getQuotePrefix(selection, author)
+      const suffix = "\n[/quote]\n\n"
+
+      selection.replace(prefix + text + suffix, {
+        start: prefix.length,
+        end: suffix.length,
+      })
+
+      this.hide()
+    }
+  }
+
+  getQuotePrefix(selection, author) {
+    const prefix = selection.prefix().trim().length ? "\n\n" : ""
+    if (author) {
+      return prefix + "[quote=" + author + "]\n"
+    }
+    return prefix + "[quote]\n"
+  }
+}
