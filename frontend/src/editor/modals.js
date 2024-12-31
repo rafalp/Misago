@@ -157,3 +157,38 @@ export class MarkupEditorQuoteModal extends MarkupEditorModal {
     return prefix + "[quote]\n"
   }
 }
+
+export class MarkupEditorCodeModal extends MarkupEditorModal {
+  getElement() {
+    return document.getElementById("markup-editor-code-modal")
+  }
+
+  setData(form, selection) {
+    form.querySelector('[name="code"]').value = selection.text().trim()
+  }
+
+  submit(data, selection) {
+    const syntax = data.get("syntax").trim()
+    const code = data.get("code").trim()
+
+    if (code) {
+      const prefix = this.getQuotePrefix(selection, syntax)
+      const suffix = "\n[/code]\n\n"
+
+      selection.replace(prefix + code + suffix, {
+        start: prefix.length,
+        end: suffix.length,
+      })
+
+      this.hide()
+    }
+  }
+
+  getQuotePrefix(selection, syntax) {
+    const prefix = selection.prefix().trim().length ? "\n\n" : ""
+    if (syntax) {
+      return prefix + "[code=" + syntax + "]\n"
+    }
+    return prefix + "[code]\n"
+  }
+}

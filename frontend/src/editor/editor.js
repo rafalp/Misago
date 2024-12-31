@@ -1,4 +1,5 @@
 import {
+  MarkupEditorCodeModal,
   MarkupEditorImageModal,
   MarkupEditorLinkModal,
   MarkupEditorQuoteModal,
@@ -7,6 +8,8 @@ import {
 class MarkupEditor {
   constructor() {
     this.actions = {}
+
+    this.codeModal = new MarkupEditorCodeModal()
     this.linkModal = new MarkupEditorLinkModal()
     this.imageModal = new MarkupEditorImageModal()
     this.quoteModal = new MarkupEditorQuoteModal()
@@ -57,6 +60,10 @@ class MarkupEditor {
         }
       })
     })
+  }
+
+  showCodeModal(selection) {
+    this.codeModal.show(selection)
   }
 
   showLinkModal(selection) {
@@ -255,5 +262,5 @@ editor.setAction("spoiler", function ({ selection }) {
 })
 
 editor.setAction("code", function ({ editor, selection }) {
-  console.error("TODO")
+  editor.showCodeModal(selection)
 })
