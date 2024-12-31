@@ -1,3 +1,4 @@
+import htmx from "htmx.org"
 import {
   MarkupEditorCodeModal,
   MarkupEditorImageModal,
@@ -46,12 +47,14 @@ class MarkupEditor {
 
     element.querySelectorAll("[misago-editor-action]").forEach((control) => {
       const actionName = control.getAttribute("misago-editor-action")
-      control.addEventListener("click", ({ target }) => {
+      control.addEventListener("click", (event) => {
+        event.preventDefault()
+
         const action = this.actions[actionName]
         if (action) {
           action({
             input,
-            target,
+            target: event.target,
             editor: this,
             selection: new MarkupEditorSelection(input),
           })
@@ -263,4 +266,18 @@ editor.setAction("spoiler", function ({ selection }) {
 
 editor.setAction("code", function ({ editor, selection }) {
   editor.showCodeModal(selection)
+})
+
+editor.setAction("formatting-help", function ({ target }) {
+  const modal = document.getElementById("markup-editor-formatting-help")
+  const element = target.closest("a")
+
+  htmx
+    .ajax("GET", element.href, {
+      target: modal,
+      swap: "innerHTML",
+    })
+    .then(() => {
+      $(modal).modal("show")
+    })
 })
