@@ -103,7 +103,14 @@
           </button>
         </div>
         <div class="markup-editor-toolbar-right">
-          RIGHT
+          <a
+            class="btn btn-markup-editor"
+            href="{% url 'misago:formatting-help' %}"
+            title="{% trans 'Formatting help' context 'markup editor' %}"
+            target="_blank"
+          >
+            <span class="material-icon">help_outline</span>
+          </a>
         </div>
       </div>
       <textarea
