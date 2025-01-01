@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="formatting-help">
+
+  {% for example in examples %}
+    <h4>{{ example.name }}</h4>
+    <div class="formatting-help-item">
+      <div class="formatting-help-item-markup">
+        <pre><code>{{ example.markup }}</code></pre>
+      </div>
+      <div class="formatting-help-item-preview">
+        <article class="misago-markup">
+          <p>{{ example.html|safe }}</p>
+        </article>
+      </div>
+    </div>
+
+    {% if not forloop.last %}
+      <hr />
+    {% endif %}
+  {% endfor %}
+
+</div>

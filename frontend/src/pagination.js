@@ -31,7 +31,7 @@ export function activatePageSelectForm(form) {
 
     const toggle = form.closest(".dropdown").querySelector("[data-toggle]")
     if (toggle) {
-      $().dropdown('toggle')
+      $().dropdown("toggle")
     }
 
     event.preventDefault()

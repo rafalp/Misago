@@ -14,6 +14,7 @@ import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
 import "./liveTimestamps"
+import editor, { activateEditors } from "./editor"
 import "./pagination"
 import * as snackbars from "./snackbars"
 import "./scrollTo"
@@ -26,6 +27,7 @@ export class Misago {
     this._context = {}
 
     this.loader = loader
+    this.editor = editor
   }
 
   addInitializer(initializer) {
@@ -121,6 +123,9 @@ document.addEventListener("htmx:afterRequest", ({ target }) => {
     loader.hide()
   }
 })
+
+// Register editor events
+document.addEventListener("htmx:load", activateEditors)
 
 // Hide moderation modal
 document.addEventListener("misago:afterModeration", () => {

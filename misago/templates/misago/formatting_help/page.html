@@ -1,0 +1,34 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+  {% trans "Formatting help" context "formatting help page" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-formatting-help">
+  <div class="container page-header-container">
+    <div class="page-header page-header-formatting-help">
+      <div class="page-header-bg-image">
+        <div class="page-header-bg-overlay">
+          <div class="page-header-image"></div>
+          <div class="page-header-banner page-header-banner-formatting-help">
+            <div class="page-header-banner-bg-image">
+              <div class="page-header-banner-bg-overlay">
+                <h1>{% trans "Formatting help" context "formatting help page" %}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container page-container">
+
+    {% include "misago/formatting_help/help.html" %}
+
+  </div>
+</div>
+{% endblock content %}

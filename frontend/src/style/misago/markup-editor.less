@@ -17,31 +17,20 @@
 
 // Toolbar
 .markup-editor-toolbar {
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
   padding: @markup-editor-toolbar-padding;
 
   background: @markup-editor-toolbar-bg;
   border-bottom: 1px solid @markup-editor-toolbar-border-color;
 }
 
-.markup-editor-toolbar-left {
-  display: flex;
-  flex-shrink: 0;
-  overflow-x: hidden;
-}
-
+.markup-editor-toolbar-left,
 .markup-editor-toolbar-right {
-  flex-shrink: 0;
-  padding: @markup-editor-toolbar-padding;
-  padding-right: 0;
-  margin-right: @line-height-computed / 2;
-
-  position: absolute;
-  top: 0;
-  right: 0;
   display: flex;
-
-  background: @markup-editor-toolbar-bg;
+  flex-shrink: 0;
 }
 
 .btn-markup-editor {
@@ -98,7 +87,9 @@
 .markup-editor-toolbar,
 .markup-editor-footer {
   // Add spacing between buttons
-  .btn + .btn {
+  .btn + .btn,
+  .btn + .dropdown,
+  .dropdown + .btn {
     margin-left: @line-height-computed / 2;
   }
 }

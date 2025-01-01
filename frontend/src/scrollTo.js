@@ -4,7 +4,7 @@ document.body.addEventListener("click", (event) => {
     event.preventDefault()
     const element = document.querySelector(selector)
     if (element) {
-      element.scrollIntoView({ behavior: "instant" });
+      element.scrollIntoView({ behavior: "instant" })
     }
   }
 })
