@@ -14,6 +14,139 @@ class MarkupEditor {
     this.linkModal = new MarkupEditorLinkModal()
     this.imageModal = new MarkupEditorImageModal()
     this.quoteModal = new MarkupEditorQuoteModal()
+
+    this.resizeConstraints = null
+    this.resizeDebounce = null
+
+    window.addEventListener("resize", (event) => {
+      if (this.resizeDebounce) {
+        window.clearTimeout(this.resizeDebounce)
+      }
+
+      this.resizeDebounce = window.setTimeout(this.onWindowResize, 200)
+    })
+
+    document.addEventListener("DOMContentLoaded", this.onWindowResize)
+  }
+
+  onWindowResize = () => {
+    this.updateResizeConstraints()
+
+    document
+      .querySelectorAll("[misago-editor-active]")
+      .forEach(this.resizeEditor)
+  }
+
+  resizeEditor = (element) => {
+    const constraints = this.getResizeConstraints()
+
+    const firstToolbar = element.querySelector(".markup-editor-toolbar-left")
+    const secondToolbar = element.querySelector(
+      ".markup-editor-toolbar-secondary"
+    )
+    const moreBtn = element.querySelector("[misago-editor-more]")
+
+    let takenSpace = 0
+    const items = []
+    for (let i = 0; i < firstToolbar.children.length; i++) {
+      const child = firstToolbar.children[i]
+      if (child.getAttribute("misago-editor-more") !== "true") {
+        items.push({
+          index: i,
+          priority: parseInt(child.getAttribute("misago-editor-priority") || 0),
+          display: true,
+        })
+
+        if (child.clientWidth) {
+          takenSpace += constraints.btn
+        }
+      }
+    }
+
+    window.requestAnimationFrame(() => {
+      if (takenSpace > constraints.toolbar) {
+        const limit = constraints.toolbar - constraints.btn
+        const sortedItems = items.toSorted((a, b) => {
+          if (a.priority > b.priority) {
+            return 1
+          } else if (a.priority < b.priority) {
+            return -1
+          }
+          return 0
+        })
+
+        sortedItems.forEach((item) => {
+          if (takenSpace > limit) {
+            firstToolbar.children[item.index].classList.add("d-none")
+            secondToolbar.children[item.index].classList.remove("d-none")
+            item.display = false
+            takenSpace -= constraints.btn
+          } else {
+            firstToolbar.children[item.index].classList.remove("d-none")
+            secondToolbar.children[item.index].classList.add("d-none")
+            item.display = true
+          }
+        })
+      } else if (takenSpace + constraints.btn < constraints.toolbar) {
+        const limit = constraints.toolbar
+        const sortedItems = items.toSorted((a, b) => {
+          if (a.priority > b.priority) {
+            return -1
+          } else if (a.priority < b.priority) {
+            return 1
+          }
+          return 0
+        })
+
+        sortedItems.forEach((item) => {
+          if (takenSpace + constraints.btn < limit) {
+            firstToolbar.children[item.index].classList.remove("d-none")
+            secondToolbar.children[item.index].classList.add("d-none")
+            item.display = true
+            takenSpace += constraints.btn
+          } else {
+            firstToolbar.children[item.index].classList.add("d-none")
+            secondToolbar.children[item.index].classList.remove("d-none")
+            item.display = false
+          }
+        })
+      }
+
+      if (items.filter((item) => !item.display).length === 0) {
+        moreBtn.classList.remove("d-none")
+      } else {
+        moreBtn.classList.add("d-none")
+      }
+    })
+  }
+
+  updateResizeConstraints = () => {
+    const element = document.querySelector("[misago-editor-active]")
+    if (!element) {
+      return null
+    }
+
+    const toolbar = element.querySelector(".markup-editor-toolbar-left")
+    const btnWidth = toolbar
+      .querySelector("*:last-child")
+      .getBoundingClientRect().x
+
+    const toolbarWidth = toolbar.parentElement.clientWidth - btnWidth
+
+    const constraints = {
+      btn: btnWidth,
+      toolbar: toolbarWidth,
+    }
+
+    this.resizeConstraints = constraints
+  }
+
+  getResizeConstraints = () => {
+    if (!this.resizeConstraints) {
+      this.updateResizeConstraints()
+    }
+
+    return this.resizeConstraints
   }
 
   setAction = (name, init) => {
@@ -25,6 +158,8 @@ class MarkupEditor {
       this.setEditorActive(element)
       this.setEditorFocus(element)
       this.setEditorActions(element)
+
+      this.getResizeConstraints()
     }
   }
 
@@ -63,6 +198,17 @@ class MarkupEditor {
         }
       })
     })
+
+    element
+      .querySelector("[misago-editor-more]")
+      .addEventListener("click", () => {
+        const subbar = element.querySelector(".markup-editor-toolbar-secondary")
+        if (subbar.classList.contains("show")) {
+          subbar.classList.remove("show")
+        } else {
+          subbar.classList.add("show")
+        }
+      })
   }
 
   showCodeModal(selection) {

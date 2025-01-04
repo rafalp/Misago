@@ -5,101 +5,14 @@
     <div class="markup-editor" misago-editor-active="false">
       <div class="markup-editor-toolbar">
         <div class="markup-editor-toolbar-left">
+          {% include "misago/posting/editor_toolbar.html" %}
           <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Strong' context 'markup editor' %}"
+            class="btn btn-markup-editor d-none"
+            title="{% trans 'Show more actions' context 'markup editor' %}"
             type="button"
-            misago-editor-action="strong"
+            misago-editor-more="true"
           >
-            <span class="material-icon">format_bold</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Emphasis' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="emphasis"
-          >
-            <span class="material-icon">format_italic</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Strikethrough' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="strikethrough"
-          >
-            <span class="material-icon">format_strikethrough</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Horizontal ruler' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="horizontal-ruler"
-          >
-            <span class="material-icon">remove</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Link' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="link"
-          >
-            <span class="material-icon">insert_link</span>
-          </button>
-          <div class="dropdown">
-            <button
-              class="btn btn-markup-editor"
-              title="{% trans 'Image' context 'markup editor' %}"
-              aria-expanded="true"
-              aria-haspopup="true"
-              data-toggle="dropdown"
-              type="button"
-            >
-              <span class="material-icon">insert_photo</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-auto">
-              <li>
-                <button class="btn btn-link" type="button">
-                  <span class="material-icon">file_upload</span> {% trans 'Upload image' context 'markup editor' %}
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button" misago-editor-action="image">
-                  <span class="material-icon">insert_link</span> {% trans 'Link to image' context 'markup editor' %}
-                </button>
-              </li>
-            </ul>
-          </div>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Quote' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="quote"
-          >
-            <span class="material-icon">format_quote</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Spoiler' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="spoiler"
-          >
-            <span class="material-icon">visibility_off</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Code' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="code"
-          >
-            <span class="material-icon">code</span>
-          </button>
-          <button
-            class="btn btn-markup-editor"
-            title="{% trans 'Upload file' context 'markup editor' %}"
-            type="button"
-            misago-editor-action="upload"
-            >
-            <span class="material-icon">file_upload</span>
+            <span class="material-icon">more_vert</span>
           </button>
         </div>
         <div class="markup-editor-toolbar-right">
@@ -114,6 +27,9 @@
           </a>
         </div>
       </div>
+      <div class="markup-editor-toolbar-secondary">
+        {% include "misago/posting/editor_toolbar.html" %}
+      </div>
       <textarea
         id="{{ field.id_for_label }}"
         name="{{ field.html_name }}"
@@ -122,7 +38,7 @@
         aria-label="{% trans 'Post message' context 'posting form' %}"
         {{ field|requiredhtml }}
       >{{ field.value|default:"" }}</textarea>
-  </div>
+    </div>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}

@@ -33,6 +33,23 @@
   flex-shrink: 0;
 }
 
+.markup-editor-toolbar-secondary {
+  display: none;
+
+  &.show {
+    display: block;
+    overflow: auto;
+
+    background: darken(@markup-editor-toolbar-bg, 3%);
+    border-bottom: 1px solid darken(@markup-editor-toolbar-border-color, 3%);
+
+    & > * {
+      float: left;
+      margin: @markup-editor-toolbar-padding;
+    }
+  }
+}
+
 .btn-markup-editor {
   display: flex;
   align-items: center;
@@ -90,7 +107,7 @@
   .btn + .btn,
   .btn + .dropdown,
   .dropdown + .btn {
-    margin-left: @line-height-computed / 2;
+    margin-left: floor(@line-height-computed / 2);
   }
 }
 
