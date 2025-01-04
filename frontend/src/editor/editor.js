@@ -15,7 +15,6 @@ class MarkupEditor {
     this.imageModal = new MarkupEditorImageModal()
     this.quoteModal = new MarkupEditorQuoteModal()
 
-    this.resizeConstraints = null
     this.resizeDebounce = null
 
     window.addEventListener("resize", (event) => {
@@ -23,23 +22,18 @@ class MarkupEditor {
         window.clearTimeout(this.resizeDebounce)
       }
 
-      this.resizeDebounce = window.setTimeout(this.onWindowResize, 200)
+      this.resizeDebounce = window.setTimeout(this._onWindowResize, 200)
     })
-
-    document.addEventListener("DOMContentLoaded", this.onWindowResize)
   }
 
-  onWindowResize = () => {
-    this.updateResizeConstraints()
-
+  _onWindowResize = () => {
     document
       .querySelectorAll("[misago-editor-active]")
-      .forEach(this.resizeEditor)
+      .forEach(this._resizeEditor)
   }
 
-  resizeEditor = (element) => {
-    const constraints = this.getResizeConstraints()
-
+  _resizeEditor = (element) => {
+    const constraints = this._getResizeConstraints(element)
     const firstToolbar = element.querySelector(".markup-editor-toolbar-left")
     const secondToolbar = element.querySelector(
       ".markup-editor-toolbar-secondary"
@@ -63,90 +57,86 @@ class MarkupEditor {
       }
     }
 
-    window.requestAnimationFrame(() => {
-      if (takenSpace > constraints.toolbar) {
-        const limit = constraints.toolbar - constraints.btn
-        const sortedItems = items.toSorted((a, b) => {
-          if (a.priority > b.priority) {
-            return 1
-          } else if (a.priority < b.priority) {
-            return -1
-          }
-          return 0
-        })
+    if (takenSpace > constraints.toolbar) {
+      const limit = constraints.toolbar - constraints.btn
+      items.sort((a, b) => {
+        if (a.priority > b.priority) {
+          return 1
+        } else if (a.priority < b.priority) {
+          return -1
+        }
+        return 0
+      })
 
-        sortedItems.forEach((item) => {
-          if (takenSpace > limit) {
-            firstToolbar.children[item.index].classList.add("d-none")
-            secondToolbar.children[item.index].classList.remove("d-none")
-            item.display = false
-            takenSpace -= constraints.btn
-          } else {
-            firstToolbar.children[item.index].classList.remove("d-none")
-            secondToolbar.children[item.index].classList.add("d-none")
-            item.display = true
-          }
-        })
-      } else if (takenSpace + constraints.btn < constraints.toolbar) {
-        const limit = constraints.toolbar
-        const sortedItems = items.toSorted((a, b) => {
-          if (a.priority > b.priority) {
-            return -1
-          } else if (a.priority < b.priority) {
-            return 1
-          }
-          return 0
-        })
+      items.forEach((item) => {
+        if (takenSpace > limit) {
+          firstToolbar.children[item.index].classList.add("d-none")
+          secondToolbar.children[item.index].classList.remove("d-none")
+          item.display = false
+          takenSpace -= constraints.btn
+        } else {
+          firstToolbar.children[item.index].classList.remove("d-none")
+          secondToolbar.children[item.index].classList.add("d-none")
+          item.display = true
+        }
+      })
+    } else if (takenSpace + constraints.btn < constraints.toolbar) {
+      takenSpace = 0
+      const limit = constraints.toolbar
+      items.sort((a, b) => {
+        if (a.priority > b.priority) {
+          return -1
+        } else if (a.priority < b.priority) {
+          return 1
+        }
+        return 0
+      })
 
-        sortedItems.forEach((item) => {
-          if (takenSpace + constraints.btn < limit) {
-            firstToolbar.children[item.index].classList.remove("d-none")
-            secondToolbar.children[item.index].classList.add("d-none")
-            item.display = true
-            takenSpace += constraints.btn
-          } else {
-            firstToolbar.children[item.index].classList.add("d-none")
-            secondToolbar.children[item.index].classList.remove("d-none")
-            item.display = false
-          }
-        })
-      }
-
-      if (items.filter((item) => !item.display).length === 0) {
-        moreBtn.classList.remove("d-none")
-      } else {
-        moreBtn.classList.add("d-none")
-      }
-    })
-  }
-
-  updateResizeConstraints = () => {
-    const element = document.querySelector("[misago-editor-active]")
-    if (!element) {
-      return null
+      items.forEach((item) => {
+        if (takenSpace + constraints.btn < limit) {
+          firstToolbar.children[item.index].classList.remove("d-none")
+          secondToolbar.children[item.index].classList.add("d-none")
+          item.display = true
+          takenSpace += constraints.btn
+        } else {
+          firstToolbar.children[item.index].classList.add("d-none")
+          secondToolbar.children[item.index].classList.remove("d-none")
+          item.display = false
+        }
+      })
     }
 
+    if (items.filter((item) => !item.display).length === 0) {
+      moreBtn.classList.add("d-none")
+      secondToolbar.classList.remove("show")
+    } else {
+      moreBtn.classList.remove("d-none")
+    }
+  }
+
+  _getResizeConstraints = (element) => {
     const toolbar = element.querySelector(".markup-editor-toolbar-left")
-    const btnWidth = toolbar
-      .querySelector("*:last-child")
-      .getBoundingClientRect().x
+
+    let btnWidth = 0
+    element.querySelectorAll("button").forEach((child) => {
+      let childWidth = child.clientWidth
+      const childStyle = window.getComputedStyle(child)
+      childWidth += parseInt(parseFloat(childStyle.borderLeftWidth))
+      childWidth += parseInt(parseFloat(childStyle.borderRightWidth))
+      childWidth += parseInt(parseFloat(childStyle.marginLeft))
+      childWidth += parseInt(parseFloat(childStyle.marginRight))
+
+      if (childWidth > btnWidth) {
+        btnWidth = childWidth
+      }
+    })
 
     const toolbarWidth = toolbar.parentElement.clientWidth - btnWidth
 
-    const constraints = {
+    return {
       btn: btnWidth,
       toolbar: toolbarWidth,
     }
-
-    this.resizeConstraints = constraints
-  }
-
-  getResizeConstraints = () => {
-    if (!this.resizeConstraints) {
-      this.updateResizeConstraints()
-    }
-
-    return this.resizeConstraints
   }
 
   setAction = (name, init) => {
@@ -155,19 +145,18 @@ class MarkupEditor {
 
   activate = (element) => {
     if (element.getAttribute("misago-editor-active") !== "true") {
-      this.setEditorActive(element)
-      this.setEditorFocus(element)
-      this.setEditorActions(element)
-
-      this.getResizeConstraints()
+      this._setEditorActive(element)
+      this._setEditorFocus(element)
+      this._setEditorActions(element)
+      this._resizeEditor(element)
     }
   }
 
-  setEditorActive(element) {
+  _setEditorActive(element) {
     element.setAttribute("misago-editor-active", "true")
   }
 
-  setEditorFocus(element) {
+  _setEditorFocus(element) {
     element.addEventListener("focusin", () => {
       element.classList.add("markup-editor-focused")
     })
@@ -177,7 +166,7 @@ class MarkupEditor {
     })
   }
 
-  setEditorActions(element) {
+  _setEditorActions(element) {
     const input = element.querySelector("textarea")
 
     element.querySelectorAll("[misago-editor-action]").forEach((control) => {
@@ -202,11 +191,13 @@ class MarkupEditor {
     element
       .querySelector("[misago-editor-more]")
       .addEventListener("click", () => {
-        const subbar = element.querySelector(".markup-editor-toolbar-secondary")
-        if (subbar.classList.contains("show")) {
-          subbar.classList.remove("show")
+        const secondToolbar = element.querySelector(
+          ".markup-editor-toolbar-secondary"
+        )
+        if (secondToolbar.classList.contains("show")) {
+          secondToolbar.classList.remove("show")
         } else {
-          subbar.classList.add("show")
+          secondToolbar.classList.add("show")
         }
       })
   }
