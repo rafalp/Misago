@@ -81,3 +81,14 @@ class PluginOutlet(Enum):
     PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_END = (
         "On the Private thread replies page, at the end of the toolbar."
     )
+
+    MARKUP_EDITOR_TOOLBAR_START = "At the start of the markup editor's toolbar."
+    MARKUP_EDITOR_TOOLBAR_BEFORE_RULER = "On the the markup editor's toolbar, between strikethrough and insert horizontal."
+    MARKUP_EDITOR_TOOLBAR_BEFORE_LINK = "On the the markup editor's toolbar, between insert horizontal ruler and insert link."
+    MARKUP_EDITOR_TOOLBAR_BEFORE_QUOTE = (
+        "On the the markup editor's toolbar, between insert photo and insert quote."
+    )
+    MARKUP_EDITOR_TOOLBAR_BEFORE_UPLOAD = (
+        "On the the markup editor's toolbar, between insert code block and upload."
+    )
+    MARKUP_EDITOR_TOOLBAR_END = "At the end of the markup editor's toolbar."

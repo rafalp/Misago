@@ -1,6 +1,26 @@
 .block {
   display: block;
 }
+
 .inline-block {
   display: inline-block;
+}
+
+.d-xs-block,
+.d-xs-inline-block {
+  display: none;
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .d-xs-none {
+    display: none;
+  }
+
+  .d-xs-block {
+    display: block;
+  }
+
+  .d-xs-inline-block {
+    display: inline-block;
+  }
 }

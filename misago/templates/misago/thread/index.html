@@ -27,3 +27,10 @@
   </div>
 </div>
 {% endblock content %}
+
+
+{% block modals %}
+  {% if user.is_authenticated %}
+    {% include "misago/posting/markup_editor_modals.html" %}
+  {% endif %}
+{% endblock modals %}

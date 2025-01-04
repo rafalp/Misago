@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from . import hooks
 from .conf import settings
 from .forumindex.views import forum_index
+from .parser.views import formatting_help
 
 app_name = "misago"
 
@@ -20,6 +21,7 @@ urlpatterns = [
     path("", include("misago.search.urls")),
     path("", include("misago.oauth2.urls")),
     path("", include("misago.socialauth.urls")),
+    path("formatting-help/", formatting_help, name="formatting-help"),
     path("", include("misago.healthcheck.urls")),
     # default robots.txt
     path(

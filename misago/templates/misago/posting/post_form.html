@@ -2,14 +2,43 @@
 
 {% with form.post as field %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
-    <textarea
-      id="{{ field.id_for_label }}"
-      name="{{ field.html_name }}"
-      class="form-control form-control-post{% if post_control_large %} form-control-post-lg{% endif %}"
-      maxlength="{{ field.field.max_length }}"
-      aria-label="{% trans 'Post message' context 'posting form' %}"
-      {{ field|requiredhtml }}
-    >{{ field.value|default:"" }}</textarea>
+    <div class="markup-editor" misago-editor-active="false">
+      <div class="markup-editor-toolbar">
+        <div class="markup-editor-toolbar-left">
+          {% include "misago/posting/editor_toolbar.html" %}
+          <button
+            class="btn btn-markup-editor d-none"
+            title="{% trans 'Show more actions' context 'markup editor' %}"
+            type="button"
+            misago-editor-more="true"
+          >
+            <span class="material-icon">more_vert</span>
+          </button>
+        </div>
+        <div class="markup-editor-toolbar-right">
+          <a
+            class="btn btn-markup-editor"
+            href="{% url 'misago:formatting-help' %}"
+            title="{% trans 'Formatting help' context 'markup editor' %}"
+            target="_blank"
+            misago-editor-action="formatting-help"
+          >
+            <span class="material-icon">help_outline</span>
+          </a>
+        </div>
+      </div>
+      <div class="markup-editor-toolbar-secondary">
+        {% include "misago/posting/editor_toolbar.html" %}
+      </div>
+      <textarea
+        id="{{ field.id_for_label }}"
+        name="{{ field.html_name }}"
+        class="markup-editor-textarea form-control form-control-post{% if post_control_large %} form-control-post-lg{% endif %}"
+        maxlength="{{ field.field.max_length }}"
+        aria-label="{% trans 'Post message' context 'posting form' %}"
+        {{ field|requiredhtml }}
+      >{{ field.value|default:"" }}</textarea>
+    </div>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}

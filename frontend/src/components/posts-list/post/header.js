@@ -48,10 +48,7 @@ export function UnreadCompact(props) {
 
 export function PostedOn(props) {
   return (
-    <a
-      href={props.post.url.index}
-      className="btn btn-link posted-on hidden-xs"
-    >
+    <a href={props.post.url.index} className="btn btn-link posted-on hidden-xs">
       <Timestamp datetime={props.post.posted_on.toISOString()} />
     </a>
   )

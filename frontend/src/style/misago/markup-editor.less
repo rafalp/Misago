@@ -17,31 +17,38 @@
 
 // Toolbar
 .markup-editor-toolbar {
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
   padding: @markup-editor-toolbar-padding;
 
   background: @markup-editor-toolbar-bg;
   border-bottom: 1px solid @markup-editor-toolbar-border-color;
 }
 
-.markup-editor-toolbar-left {
+.markup-editor-toolbar-left,
+.markup-editor-toolbar-right {
   display: flex;
   flex-shrink: 0;
-  overflow-x: hidden;
 }
 
-.markup-editor-toolbar-right {
-  flex-shrink: 0;
-  padding: @markup-editor-toolbar-padding;
-  padding-right: 0;
-  margin-right: @line-height-computed / 2;
+.markup-editor-toolbar-secondary {
+  display: none;
 
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: flex;
+  &.show {
+    display: block;
+    overflow: auto;
+    padding: @markup-editor-toolbar-secondary-padding;
 
-  background: @markup-editor-toolbar-bg;
+    background: @markup-editor-toolbar-secondary-bg;
+    border-bottom: 1px solid @markup-editor-toolbar-secondary-border-color;
+
+    & > * {
+      float: left;
+      margin: floor(@line-height-computed / 4);
+    }
+  }
 }
 
 .btn-markup-editor {
@@ -98,8 +105,10 @@
 .markup-editor-toolbar,
 .markup-editor-footer {
   // Add spacing between buttons
-  .btn + .btn {
-    margin-left: @line-height-computed / 2;
+  .btn + .btn,
+  .btn + .dropdown,
+  .dropdown + .btn {
+    margin-left: floor(@line-height-computed / 2);
   }
 }
 
