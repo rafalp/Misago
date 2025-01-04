@@ -58,22 +58,22 @@ On the Sign in page, below the form.
 On the Sign in page, above the form.
 
 
-## `MARKUP_EDITOR_BEFORE_LINK`
+## `MARKUP_EDITOR_TOOLBAR_BEFORE_LINK`
 
 On the the markup editor's toolbar, between insert horizontal ruler and insert link.
 
 
-## `MARKUP_EDITOR_BEFORE_QUOTE`
+## `MARKUP_EDITOR_TOOLBAR_BEFORE_QUOTE`
 
 On the the markup editor's toolbar, between insert photo and insert quote.
 
 
-## `MARKUP_EDITOR_BEFORE_RULER`
+## `MARKUP_EDITOR_TOOLBAR_BEFORE_RULER`
 
 On the the markup editor's toolbar, between strikethrough and insert horizontal.
 
 
-## `MARKUP_EDITOR_BEFORE_UPLOAD`
+## `MARKUP_EDITOR_TOOLBAR_BEFORE_UPLOAD`
 
 On the the markup editor's toolbar, between insert code block and upload.
 

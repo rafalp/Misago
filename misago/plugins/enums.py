@@ -83,12 +83,12 @@ class PluginOutlet(Enum):
     )
 
     MARKUP_EDITOR_TOOLBAR_START = "At the start of the markup editor's toolbar."
-    MARKUP_EDITOR_BEFORE_RULER = "On the the markup editor's toolbar, between strikethrough and insert horizontal."
-    MARKUP_EDITOR_BEFORE_LINK = "On the the markup editor's toolbar, between insert horizontal ruler and insert link."
-    MARKUP_EDITOR_BEFORE_QUOTE = (
+    MARKUP_EDITOR_TOOLBAR_BEFORE_RULER = "On the the markup editor's toolbar, between strikethrough and insert horizontal."
+    MARKUP_EDITOR_TOOLBAR_BEFORE_LINK = "On the the markup editor's toolbar, between insert horizontal ruler and insert link."
+    MARKUP_EDITOR_TOOLBAR_BEFORE_QUOTE = (
         "On the the markup editor's toolbar, between insert photo and insert quote."
     )
-    MARKUP_EDITOR_BEFORE_UPLOAD = (
+    MARKUP_EDITOR_TOOLBAR_BEFORE_UPLOAD = (
         "On the the markup editor's toolbar, between insert code block and upload."
     )
     MARKUP_EDITOR_TOOLBAR_END = "At the end of the markup editor's toolbar."
