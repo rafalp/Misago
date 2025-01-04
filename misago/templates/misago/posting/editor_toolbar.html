@@ -1,4 +1,5 @@
-{% load i18n %}
+{% load i18n misago_plugins %}
+{% pluginoutlet MARKUP_EDITOR_TOOLBAR_START %}
 <button
   class="btn btn-markup-editor"
   title="{% trans 'Strong' context 'markup editor' %}"
@@ -26,6 +27,7 @@
 >
   <span class="material-icon">format_strikethrough</span>
 </button>
+{% pluginoutlet MARKUP_EDITOR_BEFORE_RULER %}
 <button
   class="btn btn-markup-editor"
   title="{% trans 'Horizontal ruler' context 'markup editor' %}"
@@ -35,6 +37,7 @@
 >
   <span class="material-icon">remove</span>
 </button>
+{% pluginoutlet MARKUP_EDITOR_BEFORE_LINK %}
 <button
   class="btn btn-markup-editor"
   title="{% trans 'Link' context 'markup editor' %}"
@@ -77,6 +80,7 @@
 >
   <span class="material-icon">insert_photo</span>
 </button>
+{% pluginoutlet MARKUP_EDITOR_BEFORE_QUOTE %}
 <button
   class="btn btn-markup-editor"
   title="{% trans 'Quote' context 'markup editor' %}"
@@ -104,6 +108,7 @@
 >
   <span class="material-icon">code</span>
 </button>
+{% pluginoutlet MARKUP_EDITOR_BEFORE_UPLOAD %}
 <button
   class="btn btn-markup-editor"
   title="{% trans 'Upload file' context 'markup editor' %}"
@@ -113,3 +118,4 @@
 >
   <span class="material-icon">file_upload</span>
 </button>
+{% pluginoutlet MARKUP_EDITOR_TOOLBAR_END %}

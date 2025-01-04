@@ -58,6 +58,36 @@ On the Sign in page, below the form.
 On the Sign in page, above the form.
 
 
+## `MARKUP_EDITOR_BEFORE_LINK`
+
+On the the markup editor's toolbar, between insert horizontal ruler and insert link.
+
+
+## `MARKUP_EDITOR_BEFORE_QUOTE`
+
+On the the markup editor's toolbar, between insert photo and insert quote.
+
+
+## `MARKUP_EDITOR_BEFORE_RULER`
+
+On the the markup editor's toolbar, between strikethrough and insert horizontal.
+
+
+## `MARKUP_EDITOR_BEFORE_UPLOAD`
+
+On the the markup editor's toolbar, between insert code block and upload.
+
+
+## `MARKUP_EDITOR_TOOLBAR_END`
+
+At the end of the markup editor's toolbar.
+
+
+## `MARKUP_EDITOR_TOOLBAR_START`
+
+At the start of the markup editor's toolbar.
+
+
 ## `PRIVATE_THREADS_LIST_END`
 
 On the Private threads page, below the list.
