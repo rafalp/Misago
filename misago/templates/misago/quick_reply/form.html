@@ -17,14 +17,14 @@
       {% for form in formset.get_forms %}
         {% include form.template_name with form=form %}
       {% endfor %}
-    </div>
-    <div class="panel-footer">
-      <button class="btn btn-primary" type="submit">
-        {% trans "Post reply" context "quick reply thread submit btn" %}
-      </button>
-      <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
-        {% trans "Preview" context "quick reply thread submit btn" %}
-      </button>
+      <div class="panel-quick-reply-footer">
+        <button class="btn btn-primary" type="submit">
+          {% trans "Post reply" context "quick reply thread submit btn" %}
+        </button>
+        <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+          {% trans "Preview" context "quick reply thread submit btn" %}
+        </button>
+      </div>
     </div>
   </form>
 </div>
