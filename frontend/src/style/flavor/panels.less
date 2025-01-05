@@ -57,4 +57,23 @@
       margin-bottom: 0;
     }
   }
+
+  .panel-quick-reply-footer {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: @line-height-computed;
+
+    .btn {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
+  }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .panel-quick-reply {
+    margin-left: @grid-gutter-width * -0.5;
+    margin-right: @grid-gutter-width * -0.5;
+    border-radius: 0;
+    border-width: 1px 0;
+  }
 }
