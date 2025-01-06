@@ -40,13 +40,13 @@
         <span class="item-title">{{ item.uploader_name }}</span>
       {% endif %}
     {% endcapture %}
-    {% capture trimmed as uploaded_on %}
-      <abbr data-timestamp="{{ item.uploaded_on.isoformat }}" data-format="LL">
-        {{ item.uploaded_on }}
+    {% capture trimmed as uploaded_at %}
+      <abbr data-timestamp="{{ item.uploaded_at.isoformat }}" data-format="LL">
+        {{ item.uploaded_at }}
       </abbr>
     {% endcapture %}
-    {% blocktranslate trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe context "admin attachments list item" %}
-      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }}.
+    {% blocktranslate trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_at=uploaded_at|safe context "admin attachments list item" %}
+      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_at }}
     {% endblocktranslate %}
   </div>
 </td>
