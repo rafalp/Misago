@@ -5,7 +5,7 @@ from ...attachments.filetypes import filetypes
 
 
 def get_searchable_filetypes():
-    choices = [(0, pgettext_lazy("admin attachments type filter choice", "All types"))]
+    choices = [("", pgettext_lazy("admin attachments type filter choice", "All types"))]
     choices.extend(filetypes.as_django_choices())
     return choices
 
@@ -19,11 +19,9 @@ class FilterAttachmentsForm(forms.Form):
         label=pgettext_lazy("admin attachments filter form", "Filename contains"),
         required=False,
     )
-    filetype = forms.TypedChoiceField(
+    filetype = forms.ChoiceField(
         label=pgettext_lazy("admin attachments filter form", "File type"),
-        coerce=int,
         choices=get_searchable_filetypes,
-        empty_value=0,
         required=False,
     )
     is_orphan = forms.ChoiceField(
@@ -62,7 +60,7 @@ class FilterAttachmentsForm(forms.Form):
         if criteria.get("filename"):
             queryset = queryset.filter(filename__icontains=criteria["filename"])
         if criteria.get("filetype"):
-            queryset = queryset.filter(filetype=criteria["filetype"])
+            queryset = queryset.filter(filetype_name=criteria["filetype"])
         if criteria.get("is_orphan") == "yes":
             queryset = queryset.filter(post__isnull=True)
         elif criteria.get("is_orphan") == "no":
