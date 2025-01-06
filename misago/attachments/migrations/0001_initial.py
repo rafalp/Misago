@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("misago_threads", "0014_plugin_data"),
         ("misago_acl", "0004_cache_version"),
+        ("misago_categories", "0013_new_behaviors"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -30,6 +31,26 @@ class Migration(migrations.Migration):
                         primary_key=True,
                         serialize=False,
                         verbose_name="ID",
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="misago_categories.Category",
+                    ),
+                ),
+                (
+                    "thread",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="misago_threads.Thread",
                     ),
                 ),
                 (
@@ -100,6 +121,7 @@ class Migration(migrations.Migration):
                         upload_to=misago.attachments.models.upload_to,
                     ),
                 ),
+                ("is_deleted", models.BooleanField(db_index=True, default=False)),
                 ("plugin_data", models.JSONField(default=dict)),
             ],
             options={

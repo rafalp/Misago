@@ -17,7 +17,7 @@ def populate_attachments_filetypes_names(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_attachments", "0004_attachment_populate_category_thread"),
+        ("misago_attachments", "0003_attachment_populate_category_thread"),
     ]
 
     operations = [

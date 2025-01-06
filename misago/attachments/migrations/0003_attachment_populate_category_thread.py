@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_attachments", "0003_attachment_category_thread_is_deleted"),
+        ("misago_attachments", "0002_move_data"),
     ]
 
     operations = [

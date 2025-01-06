@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 thumbnail,
                 image,
                 file,
+                is_deleted,
                 plugin_data
             )
             SELECT
@@ -40,6 +41,7 @@ class Migration(migrations.Migration):
                 thumbnail,
                 image,
                 file,
+                'false',
                 plugin_data::jsonb
             FROM misago_threads_attachment;
             """,
