@@ -138,6 +138,15 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "video",
+                    models.FileField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                        upload_to=misago.attachments.models.upload_to,
+                    ),
+                ),
+                (
                     "file",
                     models.FileField(
                         blank=True,

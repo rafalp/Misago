@@ -89,6 +89,12 @@ class Attachment(PluginDataModel):
         null=True,
         upload_to=upload_to,
     )
+    video = models.FileField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to,
+    )
     file = models.FileField(
         max_length=255,
         blank=True,
@@ -110,6 +116,8 @@ class Attachment(PluginDataModel):
             self.thumbnail.delete(save=False)
         if self.image:
             self.image.delete(save=False)
+        if self.video:
+            self.video.delete(save=False)
         if self.file:
             self.file.delete(save=False)
 
@@ -122,8 +130,12 @@ class Attachment(PluginDataModel):
         return bool(self.image)
 
     @property
+    def is_video(self):
+        return bool(self.video)
+
+    @property
     def is_file(self):
-        return not self.is_image
+        return bool(self.file)
 
     def get_absolute_url(self):
         return reverse(
@@ -136,9 +148,6 @@ class Attachment(PluginDataModel):
                 "misago:attachment-thumbnail",
                 kwargs={"pk": self.pk, "secret": self.secret},
             )
-
-    def set_file(self, upload):
-        self.file = File(upload, upload.name)
 
     def set_image(self, upload):
         fileformat = self.filetype.extensions_list[0]
@@ -165,6 +174,12 @@ class Attachment(PluginDataModel):
 
         if downscale_image or strip_animation:
             self.thumbnail = ContentFile(thumb_stream.getvalue(), upload.name)
+
+    def set_video(self, upload):
+        self.video = File(upload, upload.name)
+
+    def set_file(self, upload):
+        self.file = File(upload, upload.name)
 
 
 class AttachmentType(PluginDataModel):
