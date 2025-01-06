@@ -45,7 +45,7 @@
         {{ item.uploaded_at }}
       </abbr>
     {% endcapture %}
-    {% blocktranslate trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_at=uploaded_at|safe context "admin attachments list item" %}
+    {% blocktranslate trimmed with filetype=item.filetype_name|default:"N/A" size=item.size|filesizeformat uploader=uploader|safe uploaded_at=uploaded_at|safe context "admin attachments list item" %}
       {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_at }}
     {% endblocktranslate %}
   </div>

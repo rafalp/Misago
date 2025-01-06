@@ -3,18 +3,17 @@ from hashlib import md5
 from io import BytesIO
 
 from PIL import Image
-from django.contrib.postgres.fields import ArrayField
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.utils.translation import pgettext_lazy
 
 from ..conf import settings
 from ..core.utils import slugify
 from ..plugins.models import PluginDataModel
+from .filetypes import AttachmentFileType, filetypes
 
 
 def upload_to(instance, filename):
@@ -73,9 +72,10 @@ class Attachment(PluginDataModel):
 
     secret = models.CharField(max_length=64)
 
-    filetype = models.ForeignKey("AttachmentType", on_delete=models.CASCADE)
     filename = models.CharField(max_length=255, db_index=True)
     size = models.PositiveIntegerField(default=0, db_index=True)
+
+    filetype_name = models.CharField(max_length=100, null=True)
 
     thumbnail = models.ImageField(
         max_length=255,
@@ -124,6 +124,13 @@ class Attachment(PluginDataModel):
     @classmethod
     def generate_new_secret(cls):
         return get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
+
+    @property
+    def filetype(self) -> AttachmentFileType | None:
+        try:
+            return filetypes.get_filetype(self.filetype_name)
+        except ValueError:
+            return None
 
     @property
     def is_image(self):
@@ -180,66 +187,3 @@ class Attachment(PluginDataModel):
 
     def set_file(self, upload):
         self.file = File(upload, upload.name)
-
-
-class AttachmentType(PluginDataModel):
-    ENABLED = 0
-    LOCKED = 1
-    DISABLED = 2
-
-    name = models.CharField(max_length=255)
-    extensions = models.CharField(max_length=255)
-    mimetypes = models.CharField(null=True, blank=True, max_length=255)
-    size_limit = models.PositiveIntegerField(default=1024)
-    status = models.PositiveIntegerField(
-        default=ENABLED,
-        choices=[
-            (
-                ENABLED,
-                pgettext_lazy(
-                    "attachment availability choice",
-                    "Allow uploads and downloads",
-                ),
-            ),
-            (
-                LOCKED,
-                pgettext_lazy(
-                    "attachment availability choice",
-                    "Allow downloads only",
-                ),
-            ),
-            (
-                DISABLED,
-                pgettext_lazy(
-                    "attachment availability choice",
-                    "Disallow both uploading and downloading",
-                ),
-            ),
-        ],
-    )
-
-    limit_uploads_to = ArrayField(models.PositiveIntegerField(), default=list)
-    limit_downloads_to = ArrayField(models.PositiveIntegerField(), default=list)
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def is_enabled(self):
-        return self.status == AttachmentType.ENABLED
-
-    @property
-    def is_locked(self):
-        return self.status == AttachmentType.LOCKED
-
-    @property
-    def extensions_list(self):
-        if self.extensions:
-            return self.extensions.split(",")
-        return []
-
-    @property
-    def mimetypes_list(self):
-        if self.mimetypes:
-            return self.mimetypes.split(",")
-        return []

@@ -82,6 +82,12 @@ class AttachmentFileTypes:
 
         return filetype
 
+    def as_django_choices(self) -> tuple[tuple[str, str]]:
+        return tuple(
+            (t.name, f"{t.name} ({', '.join(t.extensions)})")
+            for t in sorted(self._filetypes.values(), key=lambda x: x.name)
+        )
+
 
 filetypes = AttachmentFileTypes()
 

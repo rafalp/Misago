@@ -21,55 +21,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="AttachmentType",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("name", models.CharField(max_length=255)),
-                ("extensions", models.CharField(max_length=255)),
-                ("mimetypes", models.CharField(blank=True, max_length=255, null=True)),
-                ("size_limit", models.PositiveIntegerField(default=1024)),
-                (
-                    "status",
-                    models.PositiveIntegerField(
-                        choices=[
-                            (0, "Allow uploads and downloads"),
-                            (1, "Allow downloads only"),
-                            (2, "Disallow both uploading and downloading"),
-                        ],
-                        default=0,
-                    ),
-                ),
-                (
-                    "limit_downloads_to",
-                    django.contrib.postgres.fields.ArrayField(
-                        base_field=models.PositiveIntegerField(),
-                        default=list,
-                        size=None,
-                    ),
-                ),
-                (
-                    "limit_uploads_to",
-                    django.contrib.postgres.fields.ArrayField(
-                        base_field=models.PositiveIntegerField(),
-                        default=list,
-                        size=None,
-                    ),
-                ),
-                ("plugin_data", models.JSONField(default=dict)),
-            ],
-            options={
-                "abstract": False,
-            },
-        ),
-        migrations.CreateModel(
             name="Attachment",
             fields=[
                 (
@@ -110,15 +61,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("secret", models.CharField(max_length=64)),
-                (
-                    "filetype",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="misago_attachments.attachmenttype",
-                    ),
-                ),
                 ("filename", models.CharField(db_index=True, max_length=255)),
                 ("size", models.PositiveIntegerField(db_index=True, default=0)),
+                ("filetype_name", models.CharField(max_length=64, null=True)),
                 (
                     "thumbnail",
                     models.ImageField(
@@ -165,12 +110,6 @@ class Migration(migrations.Migration):
             model_name="attachment",
             index=django.contrib.postgres.indexes.GinIndex(
                 fields=["plugin_data"], name="misago_atta_plugin__305a3d_gin"
-            ),
-        ),
-        migrations.AddIndex(
-            model_name="attachmenttype",
-            index=django.contrib.postgres.indexes.GinIndex(
-                fields=["plugin_data"], name="misago_atta_plugin__d2f0d1_gin"
             ),
         ),
     ]

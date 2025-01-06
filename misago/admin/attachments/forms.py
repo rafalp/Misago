@@ -1,12 +1,12 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ...attachments.models import AttachmentType
+from ...attachments.filetypes import filetypes
 
 
 def get_searchable_filetypes():
     choices = [(0, pgettext_lazy("admin attachments type filter choice", "All types"))]
-    choices += [(a.id, a.name) for a in AttachmentType.objects.order_by("name")]
+    choices.extend(filetypes.as_django_choices())
     return choices
 
 
@@ -62,7 +62,7 @@ class FilterAttachmentsForm(forms.Form):
         if criteria.get("filename"):
             queryset = queryset.filter(filename__icontains=criteria["filename"])
         if criteria.get("filetype"):
-            queryset = queryset.filter(filetype_id=criteria["filetype"])
+            queryset = queryset.filter(filetype=criteria["filetype"])
         if criteria.get("is_orphan") == "yes":
             queryset = queryset.filter(post__isnull=True)
         elif criteria.get("is_orphan") == "no":

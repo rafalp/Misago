@@ -12,46 +12,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            INSERT INTO misago_attachments_attachmenttype (
-                id,
-                name,
-                extensions,
-                mimetypes,
-                size_limit,
-                status,
-                limit_uploads_to,
-                limit_downloads_to,
-                plugin_data
-            )
-            SELECT
-                id,
-                name,
-                extensions,
-                mimetypes,
-                size_limit,
-                status,
-                array[]::int4[],
-                array[]::int4[],
-                plugin_data::jsonb
-            FROM misago_threads_attachmenttype;
-            """,
-            migrations.RunSQL.noop,
-        ),
-        migrations.RunSQL(
-            """
-            SELECT SETVAL(
-                'misago_attachments_attachmenttype_id_seq',
-                (SELECT last_value FROM misago_threads_attachmenttype_id_seq)
-            );
-            """,
-            migrations.RunSQL.noop,
-        ),
-        migrations.RunSQL(
-            """
             INSERT INTO misago_attachments_attachment (
                 id,
                 secret,
-                filetype_id,
                 post_id,
                 uploader_id,
                 uploader_name,
@@ -67,7 +30,6 @@ class Migration(migrations.Migration):
             SELECT
                 id,
                 secret,
-                filetype_id,
                 post_id,
                 uploader_id,
                 uploader_name,
