@@ -88,6 +88,13 @@ class AttachmentFileTypes:
             for t in sorted(self._filetypes.values(), key=lambda x: x.name)
         )
 
+    def get_accept_attr_str(self) -> str:
+        items: list[str] = []
+        for filetype in self._filetypes.values():
+            items.extend(f".{extension}" for extension in filetype.extensions)
+
+        return ", ".join(items)
+
 
 filetypes = AttachmentFileTypes()
 

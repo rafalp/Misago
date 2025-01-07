@@ -6,6 +6,7 @@ from django.db import models
 from django.http import HttpRequest
 from django.utils import timezone
 
+from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
 from ...parser.context import ParserContext, create_parser_context
@@ -28,6 +29,7 @@ class PostingState:
     category: Category
     thread: Thread
     post: Post
+    attachments: list[Attachment]
 
     parser_context: ParserContext
     message_ast: list[dict] | None
@@ -47,6 +49,8 @@ class PostingState:
 
         self.state = {}
         self.plugin_state = {}
+
+        self.attachments = []
 
         self.store_object_state(self.user)
 
@@ -133,3 +137,17 @@ class PostingState:
 
         self.message_ast = ast
         self.message_metadata = metadata
+
+    def set_attachments(self, attachments: list[Attachment]):
+        self.attachments = attachments
+
+    def save_attachments(self):
+        for attachment in self.attachments:
+            if attachment.post_id:
+                continue
+
+            attachment.category = self.category
+            attachment.thread = self.thread
+            attachment.post = self.post
+            attachment.uploaded_at = self.timestamp
+            attachment.save()

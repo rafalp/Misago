@@ -42,6 +42,7 @@ class ReplyThreadState(PostingState):
 
     def save_action(self, request: HttpRequest, state: "ReplyThreadState"):
         self.save_post()
+        self.save_attachments()
 
         self.save_thread()
 

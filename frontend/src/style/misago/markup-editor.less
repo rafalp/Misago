@@ -87,36 +87,6 @@
   margin-right: @line-height-computed / 2;
 }
 
-// Attachments
-.markup-editor-attachments {
-  padding: @markup-editor-padding;
-
-  background: @markup-editor-attachments-bg;
-  border-top: 1px solid @markup-editor-attachments-border-color;
-
-  .form-group {
-    margin: 0;
-
-    .help-block:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
-.markup-editor-attachments-noscript-row {
-  display: flex;
-
-  input {
-    margin-right: floor(@grid-gutter-width / 2);
-  }
-}
-
-@media screen and (min-width: @screen-sm-min) {
-  .markup-editor-attachments-noscript-row button {
-    width: auto;
-  }
-}
-
 // Spacer that pushes items away from each other
 .markup-editor-spacer {
   flex: 1;
@@ -169,143 +139,30 @@
 
 // Attachments
 .markup-editor-attachments {
-  max-height: @markup-editor-attachments-max-height;
-  overflow-y: auto;
-}
+  padding: @markup-editor-padding;
 
-.markup-editor-attachments-container {
-  padding: floor(@markup-editor-padding / 2);
-  overflow: auto;
-}
+  background: @markup-editor-attachments-bg;
+  border-top: 1px solid @markup-editor-attachments-border-color;
 
-.markup-editor-attachments-item {
-  padding: floor(@markup-editor-padding / 2);
-}
+  .form-group {
+    margin: 0;
 
-.markup-editor-attachment {
-  display: flex;
-  align-items: center;
-  padding: floor(@markup-editor-padding / 2);
-
-  border: 1px solid @markup-editor-attachment-border-color;
-  border-radius: @border-radius-small;
-}
-
-.markup-editor-attachment-details {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  strong {
-    display: block;
-  }
-
-  .list-unstyled {
-    margin-bottom: 0;
-  }
-}
-
-.btn-markup-editor-attachment {
-  margin-left: floor(@markup-editor-padding / 2);
-}
-
-// Make attachments responsive
-@media screen and (min-width: @screen-sm-min) {
-  .markup-editor-attachments-item {
-    width: 50%;
-    float: left;
-  }
-}
-
-@media screen and (min-width: @screen-md-min) {
-  .markup-editor-attachments-item {
-    width: 25%;
-  }
-}
-
-// Center attachment's image in modal
-.markup-editor-attachment-modal-preview {
-  margin: @line-height-computed 0 @line-height-computed * 2 0;
-
-  text-align: center;
-
-  a {
-    display: inline-block;
-    padding: @padding-base-horizontal;
-
-    background: #fff;
-    border: 1px solid @gray-lighter;
-  }
-
-  img {
-    max-width: 100%;
-    max-height: 50vh;
-  }
-}
-
-.markup-editor-attachment-modal-filename {
-  font-size: @font-size-base * 2;
-  font-weight: bold;
-  margin-bottom: @line-height-computed;
-}
-
-.markup-editor-attachment-modal-details {
-  margin-bottom: @line-height-computed;
-}
-
-// Make editor take full height on full-screen mode
-.posting-fullscreen .markup-editor {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  .markup-editor-textarea,
-  .markup-editor-preview {
-    flex: 1;
-    height: auto;
-  }
-}
-
-// Make editor take full height on mobile devices
-@media screen and (max-width: @screen-sm-max) {
-  body.posting-default .markup-editor {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-
-    .markup-editor-textarea,
-    .markup-editor-preview {
-      flex: 1;
-      height: 100%;
+    .help-block:last-child {
+      margin-bottom: 0;
     }
   }
 }
 
-// Some overrides for x-small mobile devices
-@media screen and (max-width: @screen-xs-max) {
-  // Limit editor attachments list height on small mobile devices
-  .markup-editor-attachments {
-    max-height: @markup-editor-attachments-max-height-xs;
-  }
+.markup-editor-attachments-noscript-row {
+  display: flex;
 
-  // Make buttons in footer take whole width
-  .markup-editor-footer .btn-auto {
-    flex: 1;
-  }
-
-  .markup-editor-footer .btn-icon {
-    margin-right: @line-height-computed / 2;
-  }
-
-  .markup-editor-spacer {
-    display: none;
+  input {
+    margin-right: floor(@grid-gutter-width / 2);
   }
 }
 
-// Hide controls dropdown on larger displays
-@media screen and (min-width: @screen-md-min) {
-  .markup-editor-controls-dropdown {
-    display: none;
+@media screen and (min-width: @screen-sm-min) {
+  .markup-editor-attachments-noscript-row button {
+    width: auto;
   }
 }

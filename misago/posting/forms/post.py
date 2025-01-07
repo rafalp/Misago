@@ -1,9 +1,10 @@
 from django import forms
-from django.conf import settings
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
+from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
+from ...attachments.store import store_attachment_file
 from ...attachments.validators import (
     validate_attachments_limit,
     validate_uploaded_file,
@@ -21,6 +22,7 @@ class PostForm(PostingForm):
     request: HttpRequest
     attachments: list[Attachment]
     attachments_permissions: AttachmentPermissions | None
+    attachment_secret_name = "attachment_secret"
 
     template_name = "misago/posting/post_form.html"
 
@@ -31,15 +33,19 @@ class PostForm(PostingForm):
         },
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data=None, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.attachments = kwargs.pop("attachments", [])
+        self.attachments = kwargs.pop("attachments", None) or []
         self.attachments_permissions = kwargs.pop("attachments_permissions", None)
 
-        super().__init__(*args, **kwargs)
+        super().__init__(data, *args, **kwargs)
 
         if self.show_attachments_upload:
             self.fields["upload"] = MultipleFileField(required=False)
+
+        if data:
+            if attachments_secrets := data.getlist(self.attachment_secret_name):
+                self.get_temp_attachments(attachments_secrets)
 
     @property
     def show_attachments(self) -> bool:
@@ -67,6 +73,26 @@ class PostForm(PostingForm):
         # Return KB permission size in bytes
         return self.attachments_permissions.attachment_size_limit * 1024
 
+    @property
+    def accept_attachments(self) -> str:
+        return filetypes.get_accept_attr_str()
+
+    def sort_attachments(self):
+        self.attachments.sort(key=lambda a: a.id, reverse=True)
+
+    def get_temp_attachments(self, secrets: list[str]):
+        clean_secrets: set[str] = set(s.strip() for s in secrets if s.strip())
+        if clean_secrets:
+            self.attachments.extend(
+                Attachment.objects.filter(
+                    post__isnull=True,
+                    uploader=self.request.user,
+                    secret__in=clean_secrets,
+                )
+            )
+
+        self.sort_attachments()
+
     def clean_post(self):
         data = self.cleaned_data["post"]
         validate_post(
@@ -85,9 +111,16 @@ class PostForm(PostingForm):
         errors: list[forms.ValidationError] = []
         for upload in data:
             try:
-                validate_uploaded_file(upload, max_size=self.attachment_size_limit)
+                filetype = validate_uploaded_file(
+                    upload, max_size=self.attachment_size_limit
+                )
+                self.attachments.append(
+                    store_attachment_file(self.request, upload, filetype)
+                )
             except forms.ValidationError as error:
                 errors.append(error)
+
+        self.sort_attachments()
 
         if errors:
             raise forms.ValidationError(message=errors)
@@ -96,6 +129,7 @@ class PostForm(PostingForm):
 
     def update_state(self, state: PostingState):
         state.set_post_message(self.cleaned_data["post"])
+        state.set_attachments(self.attachments)
 
 
 def create_post_form(

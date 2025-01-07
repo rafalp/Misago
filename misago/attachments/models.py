@@ -5,6 +5,7 @@ from io import BytesIO
 from PIL import Image
 from django.core.files import File
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import UploadedFile
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -22,7 +23,7 @@ def upload_to(instance, filename):
     secret = Attachment.generate_new_secret()
 
     filename_lowered = filename.lower().strip()
-    for extension in instance.filetype.extensions_list:
+    for extension in instance.filetype.extensions:
         if filename_lowered.endswith(extension):
             break
 
@@ -123,7 +124,7 @@ class Attachment(PluginDataModel):
 
     @classmethod
     def generate_new_secret(cls):
-        return get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
+        return get_random_string(64)
 
     @property
     def filetype(self) -> AttachmentFileType | None:
@@ -156,8 +157,8 @@ class Attachment(PluginDataModel):
                 kwargs={"pk": self.pk, "secret": self.secret},
             )
 
-    def set_image(self, upload):
-        fileformat = self.filetype.extensions_list[0]
+    def set_image(self, upload: UploadedFile):
+        fileformat = self.filetype.extensions[0]
 
         self.image = File(upload, upload.name)
 
@@ -171,8 +172,7 @@ class Attachment(PluginDataModel):
         thumb_stream = BytesIO()
         if downscale_image:
             thumbnail.thumbnail(settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT)
-            if fileformat == "jpg":
-                # normalize jpg to jpeg for Pillow
+            if fileformat == "jepg":
                 thumbnail.save(thumb_stream, "jpeg")
             else:
                 thumbnail.save(thumb_stream, "png")
@@ -182,8 +182,8 @@ class Attachment(PluginDataModel):
         if downscale_image or strip_animation:
             self.thumbnail = ContentFile(thumb_stream.getvalue(), upload.name)
 
-    def set_video(self, upload):
+    def set_video(self, upload: UploadedFile):
         self.video = File(upload, upload.name)
 
-    def set_file(self, upload):
+    def set_file(self, upload: UploadedFile):
         self.file = File(upload, upload.name)

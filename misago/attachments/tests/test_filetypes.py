@@ -41,3 +41,7 @@ def test_filetypes_match_filetype_returns_none_for_file_with_invalid_content_typ
 def test_filetypes_match_filetype_returns_none_for_file_without_extension():
     filetype = filetypes.match_filetype("LOREMIPSUM", "invalid/mP4")
     assert filetype is None
+
+
+def test_filetypes_get_accept_attr_str():
+    assert ".jpeg, .jpg" in filetypes.get_accept_attr_str()
