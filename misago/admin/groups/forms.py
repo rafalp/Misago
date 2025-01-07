@@ -165,7 +165,6 @@ class EditGroupForm(forms.ModelForm):
             "Maximum file size of an attachment in kilobytes. Enter zero to remove this limit. Note: Server and Django request body size limits will still apply.",
         ),
         min_value=0,
-        max_value=settings,
     )
     can_delete_own_attachments = YesNoSwitch(
         label=pgettext_lazy(

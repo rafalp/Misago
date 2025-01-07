@@ -87,13 +87,34 @@
   margin-right: @line-height-computed / 2;
 }
 
-// Footer
-.markup-editor-footer {
-  display: flex;
+// Attachments
+.markup-editor-attachments {
   padding: @markup-editor-padding;
 
-  background: @markup-editor-footer-bg;
-  border-top: 1px solid @markup-editor-footer-border-color;
+  background: @markup-editor-attachments-bg;
+  border-top: 1px solid @markup-editor-attachments-border-color;
+
+  .form-group {
+    margin: 0;
+
+    .help-block:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.markup-editor-attachments-noscript-row {
+  display: flex;
+
+  input {
+    margin-right: floor(@grid-gutter-width / 2);
+  }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .markup-editor-attachments-noscript-row button {
+    width: auto;
+  }
 }
 
 // Spacer that pushes items away from each other
@@ -101,9 +122,8 @@
   flex: 1;
 }
 
-// Toolbar and footer items layout
-.markup-editor-toolbar,
-.markup-editor-footer {
+// Toolbar items layout
+.markup-editor-toolbar {
   // Add spacing between buttons
   .btn + .btn,
   .btn + .dropdown,

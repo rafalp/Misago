@@ -25,10 +25,15 @@ def get_start_thread_formset(
 def _get_start_thread_formset_action(
     request: HttpRequest, category: Category
 ) -> StartThreadFormset:
-    formset = StartThreadFormset()
+    attachments_permissions = request.user_permissions.get_attachment_permissions(
+        category.id
+    )
 
+    formset = StartThreadFormset()
     formset.add_form(create_title_form(request))
-    formset.add_form(create_post_form(request))
+    formset.add_form(
+        create_post_form(request, attachments_permissions=attachments_permissions)
+    )
 
     return formset
 

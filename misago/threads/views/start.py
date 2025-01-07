@@ -70,6 +70,9 @@ class StartThreadView(View):
                 self.get_context_data(request, category, formset),
             )
 
+        if request.POST.get("upload_attachments"):
+            return render(request, self.template_name, context)
+
         state.save()
 
         messages.success(request, pgettext("thread started", "Thread started"))

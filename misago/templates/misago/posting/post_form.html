@@ -38,6 +38,9 @@
         aria-label="{% translate 'Post message' context 'posting form' %}"
         {{ field|requiredhtml }}
       >{{ field.value|default:"" }}</textarea>
+      {% if form.show_attachments %}
+        {% include "misago/posting/attachments_form.html" %}
+      {% endif %}
     </div>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>

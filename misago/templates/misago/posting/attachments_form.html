@@ -1,0 +1,39 @@
+{% load i18n %}
+<div class="markup-editor-attachments">
+  {% if form.show_attachments_upload %}
+    {% with form.upload as upload_field %}
+      <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
+        <label class="control-label" for="{{ upload_field.id_for_label }}">
+          {% trans "Upload files:" context "posting title form" %}
+        </label>
+        <div class="markup-editor-attachments-noscript-row">
+          <input
+            type="file"
+            class="form-control"
+            id="{{ upload_field.id_for_label }}"
+            name="{{ upload_field.html_name }}"
+            multiple
+          />
+          <button class="btn btn-default btn-block" name="upload_attachments" formnovalidate>
+            {% trans "Upload" context "posting form" %}
+          </button>
+        </div>
+        <p class="help-block">
+          {% blocktrans trimmed count limit=form.max_attachments context "posting form" %}
+            You can attach {{ limit }} file to a post.
+          {% plural %}
+            You can attach up to {{ limit }} files to a post.
+          {% endblocktrans %}
+          {% if form.attachment_size_limit %}
+            {% blocktrans trimmed with limit=form.attachment_size_limit|filesizeformat context "posting form" %}
+              Uploaded file can't be larger than {{ limit }}.
+            {% endblocktrans %}
+          {% endif %}
+        </p>
+        {% for error in upload_field.errors %}
+          <p class="help-block">{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endwith %}
+  {% endif %}
+</div>

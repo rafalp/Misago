@@ -18,6 +18,7 @@
     <form 
       action="{% url 'misago:start-private-thread' %}"
       method="post"
+      enctype="multipart/form-data"
     >
       {% csrf_token %}
       <div class="panel panel-default panel-form">

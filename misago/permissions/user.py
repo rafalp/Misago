@@ -78,7 +78,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "own_posts_edit_time_limit": 0,
         "exempt_from_flood_control": False,
         "can_upload_attachments": False,
-        "attachment_size_limit": 1,
+        "attachment_size_limit": 0,
         "can_delete_own_attachments": False,
         "can_change_username": False,
         "username_changes_limit": 0,

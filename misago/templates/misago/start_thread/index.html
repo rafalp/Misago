@@ -18,6 +18,7 @@
     <form 
       action="{% url 'misago:start-thread' id=category.id slug=category.slug %}"
       method="post"
+      enctype="multipart/form-data"
     >
       {% csrf_token %}
       <div class="panel panel-default panel-form">
