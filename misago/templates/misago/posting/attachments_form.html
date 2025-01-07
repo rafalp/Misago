@@ -56,8 +56,28 @@
       <ul class="markup-editor-attachments-other-list">
         {% for attachment in attachments %}
           <li>
-            {{ attachment.filename }}
-            <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
+            <div class="markup-editor-attachments-other-list-item">
+              <div class="markup-editor-attachments-other-list-item-icon">
+                {% if attachment.filetype.is_archive %}
+                  <span class="material-icon">description</span>
+                {% elif attachment.filetype.is_document %}
+                  <span class="material-icon">description</span>
+                {% else %}
+                  <span class="material-icon">description</span>
+                {% endif %}
+              </div>
+              <div class="markup-editor-attachments-other-list-item-body">
+                <div>
+                  <div class="markup-editor-attachments-other-list-item-name">
+                    {{ attachment.filename }}
+                  </div>
+                  <div class="markup-editor-attachments-other-list-item-details">
+                    {{ attachment.size|filesizeformat }}
+                  </div>
+                  <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
+                </div>
+              </div>
+            </div>
           </li>
         {% endfor %}
       </ul>
