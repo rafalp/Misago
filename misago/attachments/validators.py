@@ -14,6 +14,6 @@ def validate_attachments_limit(value: int, limit_value: int):
             code="attachments_limit",
             params={
                 "limit_value": limit_value,
-                "show_value": limit_value,
+                "show_value": value,
             },
         )
