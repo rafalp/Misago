@@ -139,6 +139,12 @@ class PostForm(PostingForm):
         state.set_post_message(self.cleaned_data["post"])
         state.set_attachments(self.attachments)
 
+    def clear_errors_in_preview(self):
+        pass
+
+    def clear_errors_in_upload(self):
+        self.errors.pop("post", None)
+
 
 def create_post_form(
     request: HttpRequest,

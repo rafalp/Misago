@@ -76,6 +76,7 @@ class ReplyView(View):
         formset.update_state(state)
 
         if request.POST.get("preview"):
+            formset.clear_errors_in_preview()
             return self.render(request, thread, formset, state.post.parsed)
 
         if not self.is_valid(formset, state):

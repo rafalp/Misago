@@ -18,3 +18,11 @@ class PostingFormset(Formset):
 
     def add_error(self, error: ValidationError):
         self.errors.append(error)
+
+    def clear_errors_in_preview(self):
+        for form in self.forms.values():
+            form.clear_errors_in_preview()
+
+    def clear_errors_in_upload(self):
+        for form in self.forms.values():
+            form.clear_errors_in_upload()

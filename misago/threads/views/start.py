@@ -60,7 +60,12 @@ class StartThreadView(View):
         if request.POST.get("preview"):
             context = self.get_context_data(request, category, formset)
             context["preview"] = state.post.parsed
+            formset.clear_errors_in_preview()
+            return render(request, self.template_name, context)
 
+        if request.POST.get("upload_attachments"):
+            context = self.get_context_data(request, category, formset)
+            formset.clear_errors_in_upload()
             return render(request, self.template_name, context)
 
         if not self.is_valid(formset, state):
@@ -69,9 +74,6 @@ class StartThreadView(View):
                 self.template_name,
                 self.get_context_data(request, category, formset),
             )
-
-        if request.POST.get("upload_attachments"):
-            return render(request, self.template_name, context)
 
         state.save()
 

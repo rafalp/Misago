@@ -1,5 +1,6 @@
 from django.http import HttpRequest
 
+from ...attachments.models import Attachment
 from ...threads.models import Post
 from ..forms import create_post_form, create_title_form
 from ..hooks import (
@@ -30,8 +31,19 @@ def get_edit_thread_post_formset(
 def _get_edit_thread_post_formset_action(
     request: HttpRequest, post: Post
 ) -> EditThreadPostFormset:
+    attachments_permissions = request.user_permissions.get_attachment_permissions(
+        post.category_id
+    )
+
     formset = EditThreadPostFormset()
-    formset.add_form(create_post_form(request, initial=post.original))
+    formset.add_form(
+        create_post_form(
+            request,
+            initial=post.original,
+            attachments=list(Attachment.objects.filter(post=post)),
+            attachments_permissions=attachments_permissions,
+        )
+    )
     return formset
 
 
@@ -66,9 +78,20 @@ def get_edit_thread_formset(request: HttpRequest, post: Post) -> EditThreadForms
 def _get_edit_thread_formset_action(
     request: HttpRequest, post: Post
 ) -> EditThreadFormset:
+    attachments_permissions = request.user_permissions.get_attachment_permissions(
+        post.category_id
+    )
+
     formset = EditThreadFormset()
     formset.add_form(create_title_form(request, initial=post.thread.title))
-    formset.add_form(create_post_form(request, initial=post.original))
+    formset.add_form(
+        create_post_form(
+            request,
+            initial=post.original,
+            attachments=list(Attachment.objects.filter(post=post)),
+            attachments_permissions=attachments_permissions,
+        )
+    )
     return formset
 
 
