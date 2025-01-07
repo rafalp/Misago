@@ -84,6 +84,16 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% trans "Attachments" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_upload_attachments %}
+    {% form_row form.group.attachment_size_limit %}
+    {% form_row form.group.can_delete_own_attachments %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% trans "Private threads" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_use_private_threads %}

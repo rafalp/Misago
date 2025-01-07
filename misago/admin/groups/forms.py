@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.core.validators import validate_slug
 from django.utils.translation import pgettext_lazy
 
@@ -152,6 +153,30 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
+    can_upload_attachments = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can upload attachments"),
+    )
+    attachment_size_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Attachment file size limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Maximum file size of an attachment in kilobytes. Enter zero to remove this limit. Note: Server and Django request body size limits will still apply.",
+        ),
+        min_value=0,
+        max_value=settings,
+    )
+    can_delete_own_attachments = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can delete own attachments"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "This permission only applies to uploaded attachments that have already been posted.",
+        ),
+    )
+
     can_use_private_threads = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can use private threads"),
     )
@@ -223,6 +248,9 @@ class EditGroupForm(forms.ModelForm):
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
             "exempt_from_flood_control",
+            "can_upload_attachments",
+            "attachment_size_limit",
+            "can_delete_own_attachments",
             "can_use_private_threads",
             "can_start_private_threads",
             "private_thread_users_limit",

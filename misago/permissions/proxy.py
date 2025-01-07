@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Union
 from django.contrib.auth.models import AnonymousUser
 
 from ..users.enums import DefaultGroupId
+from .attachments import AttachmentPermissions
 from .enums import CategoryPermission
 from .models import Moderator
 from .moderator import ModeratorPermissions
@@ -92,3 +93,24 @@ class UserPermissionsProxy:
             return True
 
         return category_id in self.moderated_categories
+
+    def get_attachment_permissions(self, category_id: int) -> AttachmentPermissions:
+        category_permission = (
+            category_id
+            in self.permissions["categories"][CategoryPermission.ATTACHMENTS]
+        )
+
+        if not category_permission or self.user.is_anonymous:
+            return AttachmentPermissions(
+                is_moderator=False,
+                can_upload_attachments=False,
+                attachment_size_limit=0,
+                can_delete_own_attachments=False,
+            )
+
+        return AttachmentPermissions(
+            is_moderator=self.is_category_moderator(category_id),
+            can_upload_attachments=self.permissions["can_upload_attachments"],
+            attachment_size_limit=self.permissions["attachment_size_limit"],
+            can_delete_own_attachments=self.permissions["can_delete_own_attachments"],
+        )

@@ -77,6 +77,9 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_edit_own_posts": False,
         "own_posts_edit_time_limit": 0,
         "exempt_from_flood_control": False,
+        "can_upload_attachments": False,
+        "attachment_size_limit": 1,
+        "can_delete_own_attachments": False,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -125,6 +128,21 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "exempt_from_flood_control",
             group.exempt_from_flood_control,
+        )
+        if_true(
+            permissions,
+            "can_upload_attachments",
+            group.can_upload_attachments,
+        )
+        if_zero_or_greater(
+            permissions,
+            "attachment_size_limit",
+            group.attachment_size_limit,
+        )
+        if_true(
+            permissions,
+            "can_delete_own_attachments",
+            group.can_delete_own_attachments,
         )
         if_true(
             permissions,

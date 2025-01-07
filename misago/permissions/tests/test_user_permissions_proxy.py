@@ -405,10 +405,82 @@ def test_user_permissions_proxy_returns_no_moderated_categories_for_anonymous_us
 
 
 def test_user_permissions_proxy_is_category_moderator_returns_false_for_anonymous_user(
-    django_assert_num_queries, db, anonymous_user, cache_versions, default_category
+    django_assert_num_queries, anonymous_user, cache_versions, default_category
 ):
     proxy = UserPermissionsProxy(anonymous_user, cache_versions)
     proxy.permissions
 
     with django_assert_num_queries(0):
         assert not proxy.is_category_moderator(default_category.id)
+
+
+def test_user_permissions_proxy_get_attachment_permissions_returns_permissions_object_for_user(
+    user, cache_versions, default_category
+):
+    proxy = UserPermissionsProxy(user, cache_versions)
+    proxy.permissions
+
+    permissions = proxy.get_attachment_permissions(default_category.id)
+    assert not permissions.is_moderator
+    assert permissions.can_upload_attachments
+    assert permissions.attachment_size_limit
+    assert permissions.can_delete_own_attachments
+
+
+def test_user_permissions_proxy_get_attachment_permissions_returns_permissions_object_for_user_without_category_attachments_permissison(
+    user, cache_versions, members_group, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        category=default_category,
+        group=members_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    proxy = UserPermissionsProxy(user, cache_versions)
+    proxy.permissions
+
+    permissions = proxy.get_attachment_permissions(default_category.id)
+    assert not permissions.is_moderator
+    assert not permissions.can_upload_attachments
+    assert not permissions.can_delete_own_attachments
+
+
+def test_user_permissions_proxy_get_attachment_permissions_returns_permissions_object_for_moderator(
+    moderator, cache_versions, default_category
+):
+    proxy = UserPermissionsProxy(moderator, cache_versions)
+    proxy.permissions
+
+    permissions = proxy.get_attachment_permissions(default_category.id)
+    assert permissions.is_moderator
+    assert permissions.can_upload_attachments
+    assert not permissions.attachment_size_limit
+    assert permissions.can_delete_own_attachments
+
+
+def test_user_permissions_proxy_get_attachment_permissions_returns_permissions_object_for_moderator_without_category_attachments_permissison(
+    moderator, cache_versions, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        permission=CategoryPermission.ATTACHMENTS
+    ).delete()
+
+    proxy = UserPermissionsProxy(moderator, cache_versions)
+    proxy.permissions
+
+    permissions = proxy.get_attachment_permissions(default_category.id)
+    assert not permissions.is_moderator
+    assert not permissions.can_upload_attachments
+    assert not permissions.can_delete_own_attachments
+
+
+def test_user_permissions_proxy_get_attachment_permissions_returns_permissions_object_for_anonymous_user(
+    anonymous_user, cache_versions, default_category
+):
+    proxy = UserPermissionsProxy(anonymous_user, cache_versions)
+    proxy.permissions
+
+    permissions = proxy.get_attachment_permissions(default_category.id)
+    assert not permissions.is_moderator
+    assert not permissions.can_upload_attachments
+    assert not permissions.can_delete_own_attachments

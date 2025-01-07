@@ -22,11 +22,13 @@ class Group(PluginDataModel):
 
     can_edit_own_threads = models.BooleanField(default=False)
     own_threads_edit_time_limit = models.PositiveIntegerField(default=0)
-
     can_edit_own_posts = models.BooleanField(default=False)
     own_posts_edit_time_limit = models.PositiveIntegerField(default=0)
-
     exempt_from_flood_control = models.BooleanField(default=False)
+
+    can_upload_attachments = models.BooleanField(default=False)
+    attachment_size_limit = models.PositiveIntegerField(default=1000)
+    can_delete_own_attachments = models.BooleanField(default=False)
 
     can_use_private_threads = models.BooleanField(default=False)
     can_start_private_threads = models.BooleanField(default=False)
