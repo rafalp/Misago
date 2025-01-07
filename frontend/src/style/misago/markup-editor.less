@@ -169,7 +169,6 @@
 
   li {
     margin: 0;
-    padding: 0;
 
     border: 1px solid @gray-lighter;
     border-radius: @border-radius-base;
@@ -178,10 +177,38 @@
 
 .markup-editor-attachments-media-list-item {
   display: block;
+  padding: 2px;
+}
+
+.markup-editor-attachments-media-list-item-preview {
+  margin-bottom: floor(@grid-gutter-width / 4);
+  padding-bottom: 100%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: @border-radius-small;
+}
+
+.markup-editor-attachments-media-list-item-body {
+  padding: @padding-small-vertical @padding-small-horizontal;
+
+  font-size: @font-size-small;
+}
+
+.markup-editor-attachments-media-list-item-name {
+  margin-bottom: @padding-base-vertical;
+
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .markup-editor-attachments-other-list-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px 100%;
+  gap: floor(@grid-gutter-width / 4);
 
   min-width: 0;
   padding: 2px;
@@ -195,7 +222,6 @@
 
   width: 40px;
   height: 40px;
-  margin-right: floor(@grid-gutter-width / 4);
 
   background-color: @gray-lighter;
   border-radius: @border-radius-small;
@@ -207,16 +233,17 @@
   display: flex;
   align-items: center;
 
-  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 
   font-size: @font-size-small;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .markup-editor-attachments-other-list-item-name {
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media screen and (min-width: @screen-sm-min) {
@@ -231,7 +258,7 @@
 
 @media screen and (min-width: @screen-md-min) {
   .markup-editor-attachments-media-list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .markup-editor-attachments-other-list {
