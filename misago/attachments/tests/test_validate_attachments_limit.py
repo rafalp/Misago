@@ -18,7 +18,7 @@ def test_validate_attachments_limit_fails_too_many_attachments():
 
     assert exc_info.value.message == (
         "Posted message cannot have more than %(limit_value)s attachments "
-        "(it currently has %(show_value)s)."
+        "(it has %(show_value)s)."
     )
     assert exc_info.value.code == "attachments_limit"
     assert exc_info.value.params == {"limit_value": 5, "show_value": 6}

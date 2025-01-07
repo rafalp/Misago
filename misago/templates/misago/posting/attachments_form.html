@@ -18,7 +18,7 @@
             {% trans "Upload" context "posting form" %}
           </button>
         </div>
-        <p class="help-block">
+        <p class="help-block text-help-block">
           {% blocktrans trimmed count limit=form.max_attachments context "posting form" %}
             You can attach {{ limit }} file to a post.
           {% plural %}
@@ -31,7 +31,7 @@
           {% endif %}
         </p>
         {% for error in upload_field.errors %}
-          <p class="help-block">{{ error }}</p>
+          <p class="help-block text-danger">{{ error }}</p>
         {% endfor %}
       </div>
     {% endwith %}

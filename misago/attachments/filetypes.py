@@ -6,7 +6,7 @@ from typing import Iterable
 class AttachmentFileType:
     name: str
     extensions: Iterable[str]
-    mime_types: Iterable[str] | None = None
+    content_types: Iterable[str] | None = None
     is_image: bool = False
     is_video: bool = False
     is_archive: bool = False
@@ -27,7 +27,7 @@ class AttachmentFileTypes:
         self,
         name: str,
         extensions: str | Iterable[str],
-        mime_types: str | Iterable[str] | None = None,
+        content_types: str | Iterable[str] | None = None,
         is_image: bool = False,
         is_video: bool = False,
         is_archive: bool = False,
@@ -36,7 +36,7 @@ class AttachmentFileTypes:
         filetype = AttachmentFileType(
             name=name,
             extensions=(extensions,) if isinstance(extensions, str) else extensions,
-            mime_types=mime_types,
+            content_types=content_types,
             is_image=is_image,
             is_video=is_video,
             is_archive=is_archive,
@@ -53,21 +53,21 @@ class AttachmentFileTypes:
             raise ValueError(f"'{name}' filetype is not supported")
 
     def match_filetype(
-        self, filename: str, mime_type: str | None = None
+        self, filename: str, content_type: str | None = None
     ) -> AttachmentFileType | None:
         filename_clean = filename.lower()
-        mime_type_clean = mime_type.lower() if mime_type else None
+        content_type_clean = content_type.lower() if content_type else None
 
         for filetype in self._filetypes.values():
             if match := self._match_filetype_to_file(
-                filetype, filename_clean, mime_type_clean
+                filetype, filename_clean, content_type_clean
             ):
                 return match
 
         return None
 
     def _match_filetype_to_file(
-        self, filetype: AttachmentFileType, filename: str, mime_type: str | None
+        self, filetype: AttachmentFileType, filename: str, content_type: str | None
     ) -> AttachmentFileType | None:
         extension_match = False
         for extension in filetype.extensions:
@@ -77,7 +77,7 @@ class AttachmentFileTypes:
         if not extension_match:
             return None
 
-        if mime_type and mime_type not in filetype.mime_types:
+        if content_type and content_type not in filetype.content_types:
             return None
 
         return filetype
@@ -95,25 +95,25 @@ filetypes = AttachmentFileTypes()
 filetypes.add_filetype(
     name="GIF",
     extensions="gif",
-    mime_types="image/gif",
+    content_types="image/gif",
     is_image=True,
 )
 filetypes.add_filetype(
     name="JPEG",
     extensions=("jpeg", "jpg"),
-    mime_types="image/jpeg",
+    content_types="image/jpeg",
     is_image=True,
 )
 filetypes.add_filetype(
     name="PNG",
     extensions="png",
-    mime_types="image/png",
+    content_types="image/png",
     is_image=True,
 )
 filetypes.add_filetype(
     name="WEBP",
     extensions="webp",
-    mime_types="image/webp",
+    content_types="image/webp",
     is_image=True,
 )
 
@@ -121,7 +121,7 @@ filetypes.add_filetype(
 filetypes.add_filetype(
     name="MP4",
     extensions="mp4",
-    mime_types="video/mp4",
+    content_types="video/mp4",
     is_video=True,
 )
 
@@ -129,31 +129,31 @@ filetypes.add_filetype(
 filetypes.add_filetype(
     name="7z",
     extensions="7z",
-    mime_types="application/x-7z-compressed",
+    content_types="application/x-7z-compressed",
     is_archive=True,
 )
 filetypes.add_filetype(
     name="GZ",
     extensions="gz",
-    mime_types="application/gzip",
+    content_types="application/gzip",
     is_archive=True,
 )
 filetypes.add_filetype(
     name="RAR",
     extensions="rar",
-    mime_types="application/vnd.rar",
+    content_types="application/vnd.rar",
     is_archive=True,
 )
 filetypes.add_filetype(
     name="TAR",
     extensions="tar",
-    mime_types="application/x-tar",
+    content_types="application/x-tar",
     is_archive=True,
 )
 filetypes.add_filetype(
     name="ZIP",
     extensions=("zip", "zipx"),
-    mime_types="application/zip",
+    content_types="application/zip",
     is_archive=True,
 )
 
@@ -161,7 +161,7 @@ filetypes.add_filetype(
 filetypes.add_filetype(
     name="PDF",
     extensions="pdf",
-    mime_types=(
+    content_types=(
         "application/pdf",
         "application/x-pdf",
         "application/x-bzpdf",
@@ -172,18 +172,18 @@ filetypes.add_filetype(
 filetypes.add_filetype(
     name="Text",
     extensions="txt",
-    mime_types="text/plain",
+    content_types="text/plain",
     is_document=True,
 )
 filetypes.add_filetype(
     name="Markdown",
     extensions="md",
-    mime_types="text/markdown",
+    content_types="text/markdown",
     is_document=True,
 )
 filetypes.add_filetype(
     name="reStructuredText",
     extensions="rst",
-    mime_types="text/x-rst",
+    content_types="text/x-rst",
     is_document=True,
 )

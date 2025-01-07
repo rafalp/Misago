@@ -4,7 +4,10 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
 from ...attachments.models import Attachment
-from ...attachments.validators import validate_attachments_limit
+from ...attachments.validators import (
+    validate_attachments_limit,
+    validate_uploaded_file,
+)
 from ...permissions.attachments import AttachmentPermissions
 from ..state import PostingState
 from ..validators import validate_post
@@ -79,8 +82,15 @@ class PostForm(PostingForm):
 
         validate_attachments_limit(len(data), self.max_attachments)
 
+        errors: list[forms.ValidationError] = []
         for upload in data:
-            print(upload)
+            try:
+                validate_uploaded_file(upload, max_size=self.attachment_size_limit)
+            except forms.ValidationError as error:
+                errors.append(error)
+
+        if errors:
+            raise forms.ValidationError(message=errors)
 
         return data
 

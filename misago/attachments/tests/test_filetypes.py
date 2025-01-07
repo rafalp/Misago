@@ -23,7 +23,7 @@ def test_filetypes_match_filetype_returns_filetype_by_file_name():
     assert filetype.name == "JPEG"
 
 
-def test_filetypes_match_filetype_returns_filetype_by_file_name_and_mime_type():
+def test_filetypes_match_filetype_returns_filetype_by_file_name_and_content_type():
     filetype = filetypes.match_filetype("LOREMIPSUM.Mp4", "vIdEo/mP4")
     assert filetype.name == "MP4"
 
@@ -33,7 +33,7 @@ def test_filetypes_match_filetype_returns_none_for_file_with_unsupported_extensi
     assert filetype is None
 
 
-def test_filetypes_match_filetype_returns_none_for_file_with_invalid_mime_type():
+def test_filetypes_match_filetype_returns_none_for_file_with_invalid_content_type():
     filetype = filetypes.match_filetype("LOREMIPSUM.mp4", "invalid/mP4")
     assert filetype is None
 
