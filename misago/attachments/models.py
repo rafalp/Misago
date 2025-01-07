@@ -1,4 +1,5 @@
 import os
+from functools import cached_property
 from hashlib import md5
 from io import BytesIO
 
@@ -126,7 +127,7 @@ class Attachment(PluginDataModel):
     def generate_new_secret(cls):
         return get_random_string(64)
 
-    @property
+    @cached_property
     def filetype(self) -> AttachmentFileType | None:
         try:
             return filetypes.get_filetype(self.filetype_name)

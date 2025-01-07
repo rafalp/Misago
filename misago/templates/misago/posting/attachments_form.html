@@ -1,15 +1,5 @@
 {% load i18n %}
 <div class="markup-editor-attachments">
-  {% if form.attachments %}
-  <ul>
-    {% for attachment in form.attachments %}
-      <li>
-        {{ attachment.filename }}
-        <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
-      </li>
-    {% endfor %}
-  </ul>
-  {% endif %}
   {% if form.show_attachments_upload %}
     {% with form.upload as upload_field %}
       <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
@@ -46,5 +36,27 @@
         {% endfor %}
       </div>
     {% endwith %}
+  {% endif %}
+  {% if form.attachments_media %}
+    <strong>Media</strong>
+    <ul>
+      {% for attachment in form.attachments_media %}
+        <li>
+          {{ attachment.filename }}
+          <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if form.attachments_other %}
+    <strong>Files</strong>
+    <ul>
+      {% for attachment in form.attachments_other %}
+        <li>
+          {{ attachment.filename }}
+          <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
+        </li>
+      {% endfor %}
+    </ul>
   {% endif %}
 </div>

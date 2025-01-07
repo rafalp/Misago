@@ -77,6 +77,14 @@ class PostForm(PostingForm):
     def accept_attachments(self) -> str:
         return filetypes.get_accept_attr_str()
 
+    @property
+    def attachments_media(self) -> list[Attachment]:
+        return [a for a in self.attachments if a.is_image or a.is_video]
+
+    @property
+    def attachments_other(self) -> list[Attachment]:
+        return [a for a in self.attachments if not (a.is_image or a.is_video)]
+
     def sort_attachments(self):
         self.attachments.sort(key=lambda a: a.id, reverse=True)
 
