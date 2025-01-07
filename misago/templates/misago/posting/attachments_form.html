@@ -38,7 +38,7 @@
     {% endwith %}
   {% endif %}
   {% with form.attachments_media as attachments %}
-    <div class="markup-editor-attachments-media{% if not attachments %} d-none{% endif %}" misago-editor-attachments="media">
+    <div class="markup-editor-attachments-list{% if not attachments %} d-none{% endif %}" misago-editor-attachments="media">
       <h4 class="markup-editor-attachments-header">{% trans "Uploaded media" context "posting form" %}</h4>
       <ul class="markup-editor-attachments-media-list">
         {% for attachment in attachments %}
@@ -51,7 +51,7 @@
     </div>
   {% endwith %}
   {% with form.attachments_other as attachments %}
-    <div class="markup-editor-attachments-other{% if not attachments %} d-none{% endif %}" misago-editor-attachments="media">
+    <div class="markup-editor-attachments-list{% if not attachments %} d-none{% endif %}" misago-editor-attachments="other">
       <h4 class="markup-editor-attachments-header">{% trans "Uploaded files" context "posting form" %}</h4>
       <ul class="markup-editor-attachments-other-list">
         {% for attachment in attachments %}
