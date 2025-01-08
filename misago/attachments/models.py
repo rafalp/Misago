@@ -1,12 +1,7 @@
 import os
 from functools import cached_property
 from hashlib import md5
-from io import BytesIO
 
-from PIL import Image
-from django.core.files import File
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import UploadedFile
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -162,34 +157,3 @@ class Attachment(PluginDataModel):
                 "misago:attachment-thumbnail",
                 kwargs={"pk": self.pk, "secret": self.secret},
             )
-
-    def set_image(self, upload: UploadedFile):
-        fileformat = self.filetype.extensions[0]
-
-        self.image = File(upload, upload.name)
-
-        thumbnail = Image.open(upload)
-        downscale_image = (
-            thumbnail.size[0] > settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[0]
-            or thumbnail.size[1] > settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[1]
-        )
-        strip_animation = fileformat == "gif"
-
-        thumb_stream = BytesIO()
-        if downscale_image:
-            thumbnail.thumbnail(settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT)
-            if fileformat == "jepg":
-                thumbnail.save(thumb_stream, "jpeg")
-            else:
-                thumbnail.save(thumb_stream, "png")
-        elif strip_animation:
-            thumbnail.save(thumb_stream, "png")
-
-        if downscale_image or strip_animation:
-            self.thumbnail = ContentFile(thumb_stream.getvalue(), upload.name)
-
-    def set_video(self, upload: UploadedFile):
-        self.video = File(upload, upload.name)
-
-    def set_file(self, upload: UploadedFile):
-        self.file = File(upload, upload.name)
