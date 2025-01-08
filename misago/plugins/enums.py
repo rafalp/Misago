@@ -88,7 +88,4 @@ class PluginOutlet(Enum):
     MARKUP_EDITOR_TOOLBAR_BEFORE_QUOTE = (
         "On the the markup editor's toolbar, between insert photo and insert quote."
     )
-    MARKUP_EDITOR_TOOLBAR_BEFORE_UPLOAD = (
-        "On the the markup editor's toolbar, between insert code block and upload."
-    )
     MARKUP_EDITOR_TOOLBAR_END = "At the end of the markup editor's toolbar."
