@@ -1,6 +1,5 @@
 from django.contrib.messages.api import get_messages
 from django.contrib.messages.constants import ERROR, INFO, SUCCESS, WARNING
-from django.test import Client
 
 
 def assert_contains(response, string, status_code=200):
@@ -70,27 +69,3 @@ def _assert_message_exists(messages, level, message: str) -> bool:
         f"Expected message was not set during the request: {message}\n"
         f"Found messages:\n\n{messages}"
     )
-
-
-class MisagoClient(Client):
-    def post(self, *args, **kwargs):
-        if "json" in kwargs:
-            return super().post(
-                *args,
-                data=kwargs.pop("json"),
-                content_type="application/json",
-                **kwargs,
-            )
-
-        return super().post(*args, **kwargs)
-
-    def put(self, *args, **kwargs):
-        if "json" in kwargs:
-            return super().put(
-                *args,
-                data=kwargs.pop("json"),
-                content_type="application/json",
-                **kwargs,
-            )
-
-        return super().put(*args, **kwargs)

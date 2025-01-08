@@ -1,8 +1,13 @@
+import os
+
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
+from .attachments.models import Attachment
+from .attachments.filetypes import filetypes
 from .cache.enums import CacheName
 from .categories.models import Category
 from .conf import SETTINGS_CACHE
@@ -12,7 +17,7 @@ from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
-from .test import MisagoClient
+from .test import IMAGE_LARGE, IMAGE_SMALL, TEXT_FILE, MisagoClient
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread
@@ -520,6 +525,81 @@ def watched_thread_factory():
         )
 
     return create_watched_thread
+
+
+@pytest.fixture
+def attachment_factory():
+    def _attachment_factory(
+        file_path: str,
+        *,
+        uploader=None,
+        post=None,
+        thumbnail_path=None,
+    ):
+        filename = str(os.path.split(file_path)[-1])
+        filetype = filetypes.match_filetype(filename)
+        assert filetype, f"'{filename}' is not supported"
+
+        with open(file_path, "rb") as fp:
+            upload = SimpleUploadedFile(filename, fp.read(), filetype.content_types[0])
+
+        image = None
+        video = None
+        file = None
+
+        if filetype.is_image:
+            image = upload
+        elif filetype.is_video:
+            video = upload
+        else:
+            file = upload
+
+        if thumbnail_path:
+            thumbnail_filename = str(os.path.split(thumbnail_path)[-1])
+            thumbnail_filetype = filetypes.match_filetype(filename)
+            assert thumbnail_filetype, f"'{thumbnail_filename}' is not supported"
+
+            with open(thumbnail_path, "rb") as fp:
+                thumbnail = SimpleUploadedFile(
+                    thumbnail_filename, fp.read(), thumbnail_filetype.content_types[0]
+                )
+        else:
+            thumbnail = None
+
+        return Attachment.objects.create(
+            category_id=post.category_id if post else None,
+            thread_id=post.thread_id if post else None,
+            post=post,
+            uploader=uploader,
+            uploader_name=uploader.username if uploader else "Anonymous",
+            uploader_slug=uploader.slug if uploader else "anonymous",
+            uploaded_at=timezone.now(),
+            secret=Attachment.generate_new_secret(),
+            filename=filename,
+            size=upload.size,
+            filetype_name=filetype.name,
+            thumbnail=thumbnail,
+            image=image,
+            video=video,
+            file=file,
+        )
+
+    return _attachment_factory
+
+
+@pytest.fixture
+def image_large():
+    return IMAGE_LARGE
+
+
+@pytest.fixture
+def image_small():
+    return IMAGE_SMALL
+
+
+@pytest.fixture
+def text_file():
+    return TEXT_FILE
 
 
 @pytest.fixture

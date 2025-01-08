@@ -146,6 +146,10 @@ class Attachment(PluginDataModel):
     def is_file(self):
         return bool(self.file)
 
+    @property
+    def url(self):
+        return (self.image or self.video or self.file).url
+
     def get_absolute_url(self):
         return reverse(
             "misago:attachment", kwargs={"pk": self.pk, "secret": self.secret}

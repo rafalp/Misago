@@ -14,9 +14,9 @@
 {% if item.is_image %}
   <td class="pr-0">
     {% if item.thumbnail %}
-      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.get_thumbnail_url }}?shva=1")' target="_blank"></a>
+      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.thumbnail.url }}?shva=1")' target="_blank"></a>
     {% else %}
-      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.get_absolute_url }}?shva=1")' target="_blank"></a>
+      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.url }}")' target="_blank"></a>
     {% endif %}
   </td>
 {% else %}
