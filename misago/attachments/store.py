@@ -84,7 +84,7 @@ def _store_attachment_image(
     if image.width > thumbnail_width or image.height > thumbnail_height:
         image.thumbnail((thumbnail_width, thumbnail_height))
         thumbnail_stream = BytesIO()
-        image.save(image_stream, filetype.extensions[0])
+        image.save(thumbnail_stream, filetype.extensions[0])
         attachment.thumbnail = SimpleUploadedFile(
             upload.name, thumbnail_stream.read(), upload.content_type
         )
