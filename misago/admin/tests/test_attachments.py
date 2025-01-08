@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from ...attachments.models import Attachment
 from ...test import assert_contains, assert_not_contains
 
 attachments_url = reverse("misago:admin:attachments:index")
@@ -134,3 +135,25 @@ def test_attachments_list_searches_orphaned_attachments(
     response = admin_client.get(attachments_url + f"?redirected=1&is_orphan=yes")
     assert_not_contains(response, attachment.filename)
     assert_contains(response, attachment_other.filename)
+
+
+def test_attachments_list_deletes_attachments(
+    admin_client, text_file, image_small, user, attachment_factory
+):
+    attachment = attachment_factory(text_file, uploader=user)
+    attachment_other = attachment_factory(image_small)
+
+    response = admin_client.post(
+        attachments_url,
+        data={
+            "action": "delete",
+            "selected_items": [str(attachment.id), str(attachment_other.id)],
+        },
+    )
+    assert response.status_code == 302
+
+    with pytest.raises(Attachment.DoesNotExist):
+        attachment.refresh_from_db()
+
+    with pytest.raises(Attachment.DoesNotExist):
+        attachment_other.refresh_from_db()
