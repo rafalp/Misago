@@ -21,6 +21,14 @@ def get_form_data(group: Group) -> dict:
         "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
         "group-can_edit_own_posts": "1" if group.can_edit_own_posts else "",
         "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
+        "group-exempt_from_flood_control": (
+            "1" if group.exempt_from_flood_control else ""
+        ),
+        "group-can_upload_attachments": "1" if group.can_upload_attachments else "",
+        "group-attachment_size_limit": str(group.attachment_size_limit),
+        "group-can_delete_own_attachments": (
+            "1" if group.can_delete_own_attachments else ""
+        ),
         "group-can_use_private_threads": "1" if group.can_use_private_threads else "",
         "group-can_start_private_threads": (
             "1" if group.can_start_private_threads else ""
