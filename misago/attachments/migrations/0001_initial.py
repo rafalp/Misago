@@ -85,6 +85,7 @@ class Migration(migrations.Migration):
                 ("filename", models.CharField(db_index=True, max_length=255)),
                 ("size", models.PositiveIntegerField(db_index=True, default=0)),
                 ("filetype_name", models.CharField(max_length=64, null=True)),
+                ("dimensions", models.CharField(max_length=15, null=True)),
                 (
                     "thumbnail",
                     models.ImageField(

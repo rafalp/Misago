@@ -4,7 +4,7 @@ from django.utils.translation import pgettext_lazy
 
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
-from ...attachments.store import store_attachment_file
+from ...attachments.store import store_uploaded_file
 from ...attachments.validators import (
     validate_attachments_limit,
     validate_uploaded_file,
@@ -123,7 +123,7 @@ class PostForm(PostingForm):
                     upload, max_size=self.attachment_size_limit
                 )
                 self.attachments.append(
-                    store_attachment_file(self.request, upload, filetype)
+                    store_uploaded_file(self.request, upload, filetype)
                 )
             except forms.ValidationError as error:
                 errors.append(error)

@@ -62,6 +62,24 @@
   }
 }
 
+// Image dimensions
+.control-dimensions {
+  display: flex;
+  align-items: center;
+
+  max-width: 280px;
+
+  .form-control {
+    width: 50%;
+  }
+}
+
+.control-dimensions-separator {
+  margin: 0 .5rem;
+
+  color: $gray-700;
+}
+
 // Image upload/preview
 .control-image-preview {
   @extend .d-inline-block;

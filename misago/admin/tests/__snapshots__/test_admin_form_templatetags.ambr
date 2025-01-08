@@ -1,4 +1,31 @@
 # serializer version: 1
+# name: test_dimensions_row_with_input_field_is_rendered
+  '''
+  <div class="form-group">
+    <label for="" class="control-label">
+      Dimensions:
+    </label>
+    <div class="">
+      <div class="control-dimensions">
+        
+  
+    <input id="id_image_width" class="form-control" name="image_width" type="number"  required>
+  
+        <span class="control-dimensions-separator fa fa-times"></span>
+        
+  
+    <input id="id_image_height" class="form-control" name="image_height" type="number"  required>
+  
+      </div>
+      
+      
+      
+        <small class="form-text text-muted">I am a help text.</small>
+      
+    </div>
+  </div>
+  '''
+# ---
 # name: test_image_row_with_value_renders_help_text
   '''
   <div class="form-group">

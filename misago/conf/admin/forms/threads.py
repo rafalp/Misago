@@ -10,6 +10,10 @@ class ThreadsSettingsForm(SettingsForm):
     settings = [
         "attachment_403_image",
         "attachment_404_image",
+        "attachment_image_max_width",
+        "attachment_image_max_height",
+        "attachment_thumbnail_width",
+        "attachment_thumbnail_height",
         "flood_control",
         "merge_concurrent_posts",
         "post_attachments_limit",
@@ -181,6 +185,28 @@ class ThreadsSettingsForm(SettingsForm):
         min_value=5,
     )
 
+    attachment_image_max_width = forms.IntegerField(
+        label=pgettext_lazy("admin threads settings form", "Maximum image dimensions"),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "This setting controls the maximum dimensions of uploaded images, in pixels. Images exceeding these dimensions will be scaled down.",
+        ),
+        min_value=100,
+    )
+    attachment_image_max_height = forms.IntegerField(min_value=100)
+
+    attachment_thumbnail_width = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Image thumbnail dimensions"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Dimensions, in pixels, of the thumbnail image to be generated if the uploaded image exceeds the specified size.",
+        ),
+        min_value=100,
+    )
+    attachment_thumbnail_height = forms.IntegerField(min_value=100)
+
     attachment_403_image = forms.ImageField(
         label=pgettext_lazy("admin threads settings form", "Permission denied"),
         help_text=pgettext_lazy(
@@ -212,8 +238,14 @@ class ThreadsSettingsForm(SettingsForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get("posts_per_page_orphans") > cleaned_data.get(
-            "posts_per_page"
+
+        posts_per_page_orphans = cleaned_data.get("posts_per_page_orphans")
+        posts_per_page = cleaned_data.get("posts_per_page")
+
+        if (
+            posts_per_page_orphans is not None
+            and posts_per_page is not None
+            and posts_per_page_orphans >= posts_per_page
         ):
             self.add_error(
                 "posts_per_page_orphans",
@@ -222,4 +254,37 @@ class ThreadsSettingsForm(SettingsForm):
                     "This value must be lower than number of posts per page.",
                 ),
             )
+
+        attachment_image_max_width = cleaned_data.get("attachment_image_max_width")
+        attachment_thumbnail_width = cleaned_data.get("attachment_thumbnail_width")
+
+        if (
+            attachment_image_max_width is not None
+            and attachment_thumbnail_width is not None
+            and attachment_thumbnail_width >= attachment_image_max_width
+        ):
+            self.add_error(
+                "attachment_thumbnail_width",
+                pgettext_lazy(
+                    "admin threads settings form",
+                    "This value must be lower than the image width limit.",
+                ),
+            )
+
+        attachment_image_max_height = cleaned_data.get("attachment_image_max_height")
+        attachment_thumbnail_height = cleaned_data.get("attachment_thumbnail_height")
+
+        if (
+            attachment_image_max_height is not None
+            and attachment_thumbnail_height is not None
+            and attachment_thumbnail_height >= attachment_image_max_height
+        ):
+            self.add_error(
+                "attachment_thumbnail_height",
+                pgettext_lazy(
+                    "admin threads settings form",
+                    "This value must be lower than the image height limit.",
+                ),
+            )
+
         return cleaned_data

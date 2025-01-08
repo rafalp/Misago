@@ -6,8 +6,8 @@ from .filetypes import AttachmentFileType
 from .models import Attachment
 
 
-def store_attachment_file(
-    request: HttpRequest, file: UploadedFile, filetype: AttachmentFileType
+def store_uploaded_file(
+    request: HttpRequest, upload: UploadedFile, filetype: AttachmentFileType
 ) -> Attachment:
     attachment = Attachment.objects.create(
         uploader=request.user,
@@ -15,18 +15,27 @@ def store_attachment_file(
         uploader_slug=request.user.slug,
         uploaded_at=timezone.now(),
         secret=Attachment.generate_new_secret(),
-        filename=file.name,
-        size=file.size,
+        filename=upload.name,
+        size=upload.size,
         filetype_name=filetype.name,
     )
 
     if filetype.is_image:
-        attachment.set_image(file)
+        _set_attachment_image(request, attachment, upload, filetype)
     elif filetype.is_video:
-        attachment.set_video(file)
+        attachment.video = upload
     else:
-        attachment.set_file(file)
+        attachment.file = upload
 
     attachment.save()
 
     return attachment
+
+
+def _set_attachment_image(
+    request: HttpRequest,
+    attachment: Attachment,
+    upload: UploadedFile,
+    filetype: AttachmentFileType,
+):
+    attachment.set_image(upload)

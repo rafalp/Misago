@@ -78,6 +78,7 @@ class Attachment(PluginDataModel):
     size = models.PositiveIntegerField(default=0, db_index=True)
 
     filetype_name = models.CharField(max_length=100, null=True)
+    dimensions = models.CharField(max_length=15, null=True)
 
     thumbnail = models.ImageField(
         max_length=255,
