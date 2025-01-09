@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.utils.translation import pgettext
 
 from .filetypes import AttachmentFileType
+from .hooks import get_attachment_plugin_data_hook
 from .models import Attachment
 
 
@@ -33,7 +34,7 @@ def store_uploaded_file(
             attachment.video = upload
         else:
             attachment.file = upload
-        attachment.plugin_data = get_plugin_data(request, upload)
+        attachment.plugin_data = get_attachment_plugin_data(request, upload)
 
     attachment.save()
 
@@ -53,7 +54,7 @@ def _store_attachment_image(
             message=pgettext("image opening error", "Image file could not be read.")
         )
 
-    attachment.plugin_data = get_plugin_data(request, upload, image)
+    attachment.plugin_data = get_attachment_plugin_data(request, upload, image)
 
     max_width = request.settings.attachment_image_max_width
     max_height = request.settings.attachment_image_max_height
@@ -91,5 +92,19 @@ def _store_attachment_image(
         del thumbnail_stream
 
 
-def get_plugin_data(request: HttpRequest, upload: UploadedFile, image=None) -> dict:
+def get_attachment_plugin_data(
+    request: HttpRequest,
+    upload: UploadedFile,
+    image: Image.Image | None = None,
+) -> dict:
+    return get_attachment_plugin_data_hook(
+        _get_attachment_plugin_data_action, request, upload, image
+    )
+
+
+def _get_attachment_plugin_data_action(
+    request: HttpRequest,
+    upload: UploadedFile,
+    image: Image.Image | None = None,
+) -> dict:
     return {}

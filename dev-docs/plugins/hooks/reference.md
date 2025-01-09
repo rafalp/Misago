@@ -4,6 +4,7 @@ This document contains a list of all standard plugin hooks existing in Misago.
 
 Hooks instances are importable from the following Python modules:
 
+- [`misago.attachments.hooks`](#misago-attachments-hooks)
 - [`misago.categories.hooks`](#misago-categories-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
@@ -11,6 +12,13 @@ Hooks instances are importable from the following Python modules:
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
 - [`misago.users.hooks`](#misago-users-hooks)
+
+
+## `misago.attachments.hooks`
+
+`misago.attachments.hooks` defines the following hooks:
+
+- [`get_attachment_plugin_data_hook`](./get-attachment-plugin-data-hook.md)
 
 
 ## `misago.categories.hooks`
