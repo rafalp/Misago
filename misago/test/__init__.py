@@ -8,12 +8,14 @@ from .asserts import (
 )
 from .client import MisagoClient
 from .files import (
+    IMAGE_INVALID,
     IMAGE_LARGE,
     IMAGE_SMALL,
     TEXT_FILE,
 )
 
 __all__ = [
+    "IMAGE_INVALID",
     "IMAGE_LARGE",
     "IMAGE_SMALL",
     "TEXT_FILE",

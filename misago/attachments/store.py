@@ -51,7 +51,8 @@ def _store_attachment_image(
         image = Image.open(upload)
     except UnidentifiedImageError:
         raise ValidationError(
-            message=pgettext("image opening error", "Image file could not be read.")
+            message=pgettext("image opening error", "Image file is not valid."),
+            code="unidentified_image"
         )
 
     attachment.plugin_data = get_attachment_plugin_data(request, upload, image)
