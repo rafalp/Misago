@@ -67,7 +67,9 @@ def test_store_uploaded_file_stores_image_file(user, dynamic_settings, image_sma
     attachment_thumbnail_width=400,
     attachment_thumbnail_height=300,
 )
-def test_store_uploaded_file_stores_image_file_with_thumbnail(user, dynamic_settings, image_large):
+def test_store_uploaded_file_stores_image_file_with_thumbnail(
+    user, dynamic_settings, image_large
+):
     with open(image_large, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
 
@@ -99,7 +101,9 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(user, dynamic_sett
     attachment_image_max_width=400,
     attachment_image_max_height=300,
 )
-def test_store_uploaded_file_stores_image_file_scaled_down(user, dynamic_settings, image_large):
+def test_store_uploaded_file_stores_image_file_scaled_down(
+    user, dynamic_settings, image_large
+):
     with open(image_large, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
 
@@ -126,7 +130,9 @@ def test_store_uploaded_file_stores_image_file_scaled_down(user, dynamic_setting
     assert not attachment.file
 
 
-def test_store_uploaded_file_raises_validation_error_for_invalid_image(user, dynamic_settings, image_invalid):
+def test_store_uploaded_file_raises_validation_error_for_invalid_image(
+    user, dynamic_settings, image_invalid
+):
     with open(image_invalid, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
 
@@ -135,6 +141,6 @@ def test_store_uploaded_file_raises_validation_error_for_invalid_image(user, dyn
 
     with pytest.raises(ValidationError) as exc_info:
         store_uploaded_file(request, upload, filetype)
-    
+
     assert exc_info.value.message == "Image file is not valid."
     assert exc_info.value.code == "unidentified_image"
