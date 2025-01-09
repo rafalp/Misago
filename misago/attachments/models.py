@@ -16,7 +16,7 @@ from .filetypes import AttachmentFileType, filetypes
 def upload_to(instance, filename):
     # pylint: disable=undefined-loop-variable
     spread_path = md5(str(instance.secret[:16]).encode()).hexdigest()
-    secret = Attachment.generate_new_secret()
+    secret = Attachment.get_new_secret()
 
     filename_lowered = filename.lower().strip()
     for extension in instance.filetype.extensions:
@@ -120,7 +120,7 @@ class Attachment(PluginDataModel):
             self.file.delete(save=False)
 
     @classmethod
-    def generate_new_secret(cls):
+    def get_new_secret(cls):
         return get_random_string(64)
 
     @cached_property
@@ -143,8 +143,12 @@ class Attachment(PluginDataModel):
         return bool(self.file)
 
     @property
-    def url(self):
+    def url(self) -> str:
         return (self.image or self.video or self.file).url
+
+    @property
+    def thumbnail_url(self) -> str | None:
+        return self.thumbnail.url if self.thumbnail else None
 
     def get_absolute_url(self):
         return reverse(

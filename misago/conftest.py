@@ -574,7 +574,7 @@ def attachment_factory():
             uploader_name=uploader.username if uploader else "Anonymous",
             uploader_slug=uploader.slug if uploader else "anonymous",
             uploaded_at=timezone.now(),
-            secret=Attachment.generate_new_secret(),
+            secret=Attachment.get_new_secret(),
             filename=filename,
             size=upload.size,
             filetype_name=filetype.name,

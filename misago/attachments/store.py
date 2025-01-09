@@ -21,7 +21,7 @@ def store_uploaded_file(
         uploader_name=request.user.username,
         uploader_slug=request.user.slug,
         uploaded_at=timezone.now(),
-        secret=Attachment.generate_new_secret(),
+        secret=Attachment.get_new_secret(),
         filename=upload.name,
         size=upload.size,
         filetype_name=filetype.name,
