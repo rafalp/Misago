@@ -50,10 +50,7 @@ class PostForm(PostingForm):
 
     @property
     def show_attachments(self) -> bool:
-        if self.attachments:
-            return True
-
-        return self.show_attachments_upload
+        return bool(self.attachments or self.show_attachments_upload)
 
     @property
     def show_attachments_upload(self) -> bool:
@@ -103,6 +100,7 @@ class PostForm(PostingForm):
                     post__isnull=True,
                     uploader=self.request.user,
                     secret__in=clean_secrets,
+                    is_deleted=False,
                 )
             )
 
