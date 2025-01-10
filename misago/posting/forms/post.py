@@ -72,7 +72,7 @@ class PostForm(PostingForm):
         if not self.attachments_permissions:
             return 0
 
-        # Return KB permission size in bytes
+        # Return permission size converted from kilobytes to bytes
         return self.attachments_permissions.attachment_size_limit * 1024
 
     @property

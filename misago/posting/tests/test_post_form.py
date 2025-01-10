@@ -380,3 +380,35 @@ def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_a
     request = Mock(settings=dynamic_settings, user=user)
     form = PostForm(request=request)
     assert not form.show_attachments_upload
+
+
+def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert form.max_attachments == dynamic_settings.post_attachments_limit
+
+
+def test_post_form_attachment_size_limit_returns_size_limit_from_permissions_converted_to_bytes(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=False,
+            attachment_size_limit=1234,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert form.attachment_size_limit == 1234 * 1024
+
+
+def test_post_form_attachment_size_limit_returns_zero_if_permissions_are_not_set(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert form.attachment_size_limit == 0
