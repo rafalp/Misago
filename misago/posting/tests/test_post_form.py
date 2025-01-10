@@ -1,5 +1,7 @@
 from unittest.mock import Mock
 
+from ...attachments.enums import AllowedAttachments
+from ...conf.test import override_dynamic_settings
 from ...permissions.attachments import AttachmentsPermissions
 from ..forms import PostForm
 
@@ -206,3 +208,175 @@ def test_post_form_show_attachments_is_false_if_form_has_no_attachments_and_user
         ),
     )
     assert not form.show_attachments
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
+def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission_and_all_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
+def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission_and_only_media_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
+def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission_and_only_image_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_post_form_show_attachments_upload_is_false_if_user_has_upload_permission_and_image_uploads_are_disabled(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
+def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_all_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=False,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
+def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_only_media_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=False,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
+def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_only_image_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=False,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_image_uploads_are_disabled(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=False,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
+def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_all_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
+def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_only_media_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
+def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_only_image_uploads_are_allowed(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert not form.show_attachments_upload
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_image_uploads_are_disabled(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert not form.show_attachments_upload
