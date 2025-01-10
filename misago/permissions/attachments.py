@@ -5,7 +5,7 @@ from .proxy import UserPermissionsProxy
 
 
 @dataclass(frozen=True)
-class AttachmentPermissions:
+class AttachmentsPermissions:
     is_moderator: bool
     can_upload_attachments: bool
     attachment_size_limit: int
@@ -14,20 +14,20 @@ class AttachmentPermissions:
 
 def get_threads_attachments_permissions(
     user_permissions: UserPermissionsProxy, category_id: int
-) -> AttachmentPermissions:
+) -> AttachmentsPermissions:
     category_permission = (
         category_id in user_permissions.categories[CategoryPermission.ATTACHMENTS]
     )
 
     if not category_permission or user_permissions.user.is_anonymous:
-        return AttachmentPermissions(
+        return AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
             can_delete_own_attachments=False,
         )
 
-    return AttachmentPermissions(
+    return AttachmentsPermissions(
         is_moderator=user_permissions.is_category_moderator(category_id),
         can_upload_attachments=bool(user_permissions.can_upload_attachments),
         attachment_size_limit=user_permissions.attachment_size_limit,
@@ -37,16 +37,16 @@ def get_threads_attachments_permissions(
 
 def get_private_threads_attachments_permissions(
     user_permissions: UserPermissionsProxy,
-) -> AttachmentPermissions:
+) -> AttachmentsPermissions:
     if user_permissions.user.is_anonymous:
-        return AttachmentPermissions(
+        return AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
             can_delete_own_attachments=False,
         )
 
-    return AttachmentPermissions(
+    return AttachmentsPermissions(
         is_moderator=user_permissions.is_private_threads_moderator,
         can_upload_attachments=(
             user_permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE

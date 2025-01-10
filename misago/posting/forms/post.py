@@ -10,7 +10,7 @@ from ...attachments.validators import (
     validate_attachments_limit,
     validate_uploaded_file,
 )
-from ...permissions.attachments import AttachmentPermissions
+from ...permissions.attachments import AttachmentsPermissions
 from ..state import PostingState
 from ..validators import validate_post
 from .base import PostingForm
@@ -22,7 +22,7 @@ PREFIX = "posting-post"
 class PostForm(PostingForm):
     request: HttpRequest
     attachments: list[Attachment]
-    attachments_permissions: AttachmentPermissions | None
+    attachments_permissions: AttachmentsPermissions | None
     attachment_secret_name = "attachment_secret"
 
     template_name = "misago/posting/post_form.html"
@@ -159,7 +159,7 @@ def create_post_form(
     request: HttpRequest,
     *,
     attachments: list[Attachment] | None = None,
-    attachments_permissions: AttachmentPermissions | None = None,
+    attachments_permissions: AttachmentsPermissions | None = None,
     initial: str | None = None,
 ) -> PostForm:
     kwargs = {
