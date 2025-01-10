@@ -3,6 +3,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import npgettext, pgettext
 
+from .enums import AllowedAttachments
 from .filetypes import AttachmentFileType, filetypes
 
 
@@ -23,9 +24,17 @@ def validate_attachments_limit(value: int, limit_value: int):
         )
 
 
-def validate_uploaded_file(file: UploadedFile, *, max_size: int) -> AttachmentFileType:
+def validate_uploaded_file(
+    file: UploadedFile,
+    *,
+    max_size: int,
+    allowed_attachments: AllowedAttachments | str,
+) -> AttachmentFileType:
     filetype = filetypes.match_filetype(file.name, file.content_type)
-    if not filetype:
+    if not filetype or (
+        (allowed_attachments != AllowedAttachments.ALL and filetype.is_file)
+        or (allowed_attachments == AllowedAttachments.IMAGES and not filetype.is_image)
+    ):
         raise ValidationError(
             message=pgettext(
                 "attachment uploaded file validator",

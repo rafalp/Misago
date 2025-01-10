@@ -2,6 +2,7 @@ from django import forms
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
+from ...attachments.enums import AllowedAttachments
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.store import store_uploaded_file
@@ -43,9 +44,9 @@ class PostForm(PostingForm):
         if self.show_attachments_upload:
             self.fields["upload"] = MultipleFileField(required=False)
 
-        if data:
-            if attachments_secrets := data.getlist(self.attachment_secret_name):
-                self.get_temp_attachments(attachments_secrets)
+            if data:
+                if attachments_secrets := data.getlist(self.attachment_secret_name):
+                    self.get_temp_attachments(attachments_secrets)
 
     @property
     def show_attachments(self) -> bool:
@@ -56,9 +57,13 @@ class PostForm(PostingForm):
 
     @property
     def show_attachments_upload(self) -> bool:
+        permissions = self.attachments_permissions
+        settings = self.request.settings
+
         return (
-            self.attachments_permissions
-            and self.attachments_permissions.can_upload_attachments
+            permissions
+            and permissions.can_upload_attachments
+            and settings.allowed_attachment_types != AllowedAttachments.NONE
         )
 
     @property
@@ -75,7 +80,9 @@ class PostForm(PostingForm):
 
     @property
     def accept_attachments(self) -> str:
-        return filetypes.get_accept_attr_str()
+        return filetypes.get_accept_attr_str(
+            self.request.settings.allowed_attachment_types
+        )
 
     @property
     def attachments_media(self) -> list[Attachment]:
@@ -120,7 +127,9 @@ class PostForm(PostingForm):
         for upload in data:
             try:
                 filetype = validate_uploaded_file(
-                    upload, max_size=self.attachment_size_limit
+                    upload,
+                    max_size=self.attachment_size_limit,
+                    allowed_attachments=self.request.settings.allowed_attachment_types,
                 )
                 self.attachments.append(
                     store_uploaded_file(self.request, upload, filetype)

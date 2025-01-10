@@ -1,5 +1,6 @@
 import pytest
 
+from ..enums import AllowedAttachments
 from ..filetypes import filetypes
 
 
@@ -43,5 +44,30 @@ def test_filetypes_match_filetype_returns_none_for_file_without_extension():
     assert filetype is None
 
 
-def test_filetypes_get_accept_attr_str():
-    assert ".jpeg, .jpg" in filetypes.get_accept_attr_str()
+def test_filetypes_get_accept_attr_str_returns_all_filetypes():
+    value = filetypes.get_accept_attr_str(AllowedAttachments.ALL)
+    assert ".jpeg, .jpg" in value
+    assert ".mp4" in value
+    assert ".pdf" in value
+    assert ".zip" in value
+
+
+def test_filetypes_get_accept_attr_str_returns_only_media_filetypes():
+    value = filetypes.get_accept_attr_str(AllowedAttachments.MEDIA)
+    assert ".jpeg, .jpg" in value
+    assert ".mp4" in value
+    assert ".pdf" not in value
+    assert ".zip" not in value
+
+
+def test_filetypes_get_accept_attr_str_returns_only_image_filetypes():
+    value = filetypes.get_accept_attr_str(AllowedAttachments.IMAGES)
+    assert ".jpeg, .jpg" in value
+    assert ".mp4" not in value
+    assert ".pdf" not in value
+    assert ".zip" not in value
+
+
+def test_filetypes_get_accept_attr_str_returns_empty_string():
+    value = filetypes.get_accept_attr_str(AllowedAttachments.NONE)
+    assert value == ""

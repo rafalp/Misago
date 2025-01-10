@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
+from ....admin.forms import YesNoSwitch
+from ....attachments.enums import AllowedAttachments
 from ....categories.enums import CategoryChildrenComponent
 from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
@@ -8,6 +10,8 @@ from .base import SettingsForm
 
 class ThreadsSettingsForm(SettingsForm):
     settings = [
+        "allowed_attachment_types",
+        "allow_private_threads_attachments",
         "attachment_403_image",
         "attachment_404_image",
         "attachment_image_max_width",
@@ -185,6 +189,23 @@ class ThreadsSettingsForm(SettingsForm):
         min_value=5,
     )
 
+    allowed_attachment_types = forms.CharField(
+        label=pgettext_lazy("admin threads settings form", "Allowed attachment types"),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            'This setting controls which files can be uploaded as attachments. Select the "Disable" option to disable new attachment uploads.',
+        ),
+        widget=forms.RadioSelect(
+            choices=AllowedAttachments.get_choices(),
+        ),
+    )
+    allow_private_threads_attachments = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin oauth2 settings form",
+            "Allow uploading attachments in private threads",
+        ),
+    )
+
     attachment_image_max_width = forms.IntegerField(
         label=pgettext_lazy("admin threads settings form", "Maximum image dimensions"),
         help_text=pgettext_lazy(
@@ -208,7 +229,7 @@ class ThreadsSettingsForm(SettingsForm):
     attachment_thumbnail_height = forms.IntegerField(min_value=100)
 
     attachment_403_image = forms.ImageField(
-        label=pgettext_lazy("admin threads settings form", "Permission denied"),
+        label=pgettext_lazy("admin threads settings form", "Permission denied image"),
         help_text=pgettext_lazy(
             "admin threads settings form",
             "Attachments proxy will display this image in place of default one when user tries to access attachment they have no permission to see.",
@@ -222,7 +243,7 @@ class ThreadsSettingsForm(SettingsForm):
         required=False,
     )
     attachment_404_image = forms.ImageField(
-        label=pgettext_lazy("admin threads settings form", "Not found"),
+        label=pgettext_lazy("admin threads settings form", "Not found image"),
         help_text=pgettext_lazy(
             "admin threads settings form",
             "Attachments proxy will display this image in place of default one when user tries to access attachment that doesn't exist.",

@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+from ...attachments.enums import AllowedAttachments
 from ..operations import CreateSetting
 
 
@@ -31,5 +32,14 @@ class Migration(migrations.Migration):
             setting="attachment_thumbnail_height",
             python_type="int",
             dry_value=720,
+        ),
+        CreateSetting(
+            setting="allowed_attachment_types",
+            dry_value=AllowedAttachments.ALL.value,
+        ),
+        CreateSetting(
+            setting="allow_private_threads_attachments",
+            python_type="bool",
+            dry_value="True",
         ),
     ]

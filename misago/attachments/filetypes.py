@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Iterable
 
+from .enums import AllowedAttachments
+
 
 @dataclass(frozen=True)
 class AttachmentFileType:
@@ -15,6 +17,10 @@ class AttachmentFileType:
     @property
     def is_file(self):
         return not bool(self.is_image or self.is_video)
+
+    @property
+    def is_media(self):
+        return bool(self.is_image or self.is_video)
 
 
 class AttachmentFileTypes:
@@ -88,9 +94,23 @@ class AttachmentFileTypes:
             for t in sorted(self._filetypes.values(), key=lambda x: x.name)
         )
 
-    def get_accept_attr_str(self) -> str:
+    def get_accept_attr_str(self, allowed_attachments: AllowedAttachments | str) -> str:
+        if allowed_attachments == AllowedAttachments.NONE:
+            return ""
+
         items: list[str] = []
         for filetype in self._filetypes.values():
+            # Exclude regular files if only media is allowed
+            if allowed_attachments != AllowedAttachments.ALL and filetype.is_file:
+                continue
+
+            # Exclude non-images if only images are allowed
+            if (
+                allowed_attachments == AllowedAttachments.IMAGES
+                and not filetype.is_image
+            ):
+                continue
+
             items.extend(f".{extension}" for extension in filetype.extensions)
 
         return ", ".join(items)
@@ -140,9 +160,21 @@ filetypes.add_filetype(
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="GZ",
-    extensions="gz",
+    name="gzip",
+    extensions="tar.gz",
     content_types="application/gzip",
+    is_archive=True,
+)
+filetypes.add_filetype(
+    name="bzip2",
+    extensions="tar.bz2",
+    content_types="application/x-bzip2",
+    is_archive=True,
+)
+filetypes.add_filetype(
+    name="XZ",
+    extensions="tar.xz",
+    content_types="application/x-xz",
     is_archive=True,
 )
 filetypes.add_filetype(
@@ -152,7 +184,7 @@ filetypes.add_filetype(
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="TAR",
+    name="tar",
     extensions="tar",
     content_types="application/x-tar",
     is_archive=True,
