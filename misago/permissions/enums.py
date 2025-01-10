@@ -14,12 +14,12 @@ class CanUploadAttachments(IntEnum):
             (
                 cls.EVERYWHERE,
                 pgettext_lazy(
-                    "upload attachments permission", "Threads and private threads"
+                    "upload attachments permission", "In threads and private threads"
                 ),
             ),
             (
                 cls.THREADS,
-                pgettext_lazy("upload attachments permission", "Threads only"),
+                pgettext_lazy("upload attachments permission", "In threads only"),
             ),
             (cls.NEVER, pgettext_lazy("upload attachments permission", "Never")),
         )
