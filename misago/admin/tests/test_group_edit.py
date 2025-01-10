@@ -24,16 +24,16 @@ def get_form_data(group: Group) -> dict:
         "group-exempt_from_flood_control": (
             "1" if group.exempt_from_flood_control else ""
         ),
-        "group-can_upload_attachments": "1" if group.can_upload_attachments else "",
-        "group-attachment_size_limit": str(group.attachment_size_limit),
-        "group-can_delete_own_attachments": (
-            "1" if group.can_delete_own_attachments else ""
-        ),
         "group-can_use_private_threads": "1" if group.can_use_private_threads else "",
         "group-can_start_private_threads": (
             "1" if group.can_start_private_threads else ""
         ),
         "group-private_thread_users_limit": str(group.private_thread_users_limit),
+        "group-can_upload_attachments": str(group.can_upload_attachments),
+        "group-attachment_size_limit": str(group.attachment_size_limit),
+        "group-can_delete_own_attachments": (
+            "1" if group.can_delete_own_attachments else ""
+        ),
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),

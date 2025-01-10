@@ -95,8 +95,8 @@ def get_edit_thread_formset(request: HttpRequest, post: Post) -> EditThreadForms
 def _get_edit_thread_formset_action(
     request: HttpRequest, post: Post
 ) -> EditThreadFormset:
-    attachments_permissions = request.user_permissions.get_attachments_permissions(
-        post.category_id
+    attachments_permissions = get_threads_attachments_permissions(
+        request.user_permissions, post.category_id
     )
 
     formset = EditThreadFormset()

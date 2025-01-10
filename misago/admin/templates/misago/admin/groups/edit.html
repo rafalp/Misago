@@ -84,21 +84,21 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Attachments" context "admin group permissions form" %}</legend>
-
-    {% form_row form.group.can_upload_attachments %}
-    {% form_row form.group.attachment_size_limit %}
-    {% form_row form.group.can_delete_own_attachments %}
-
-  </fieldset>
-</div>
-<div class="form-fieldset">
-  <fieldset>
     <legend>{% trans "Private threads" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_use_private_threads %}
     {% form_row form.group.can_start_private_threads %}
     {% form_row form.group.private_thread_users_limit %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Attachments" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_upload_attachments %}
+    {% form_row form.group.attachment_size_limit %}
+    {% form_row form.group.can_delete_own_attachments %}
 
   </fieldset>
 </div>

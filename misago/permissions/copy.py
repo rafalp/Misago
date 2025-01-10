@@ -43,14 +43,14 @@ def _copy_category_permissions_action(
 
 
 COPY_GROUP_PERMISSIONS = (
-    "can_use_private_threads",
-    "can_start_private_threads",
-    "private_thread_users_limit",
     "can_edit_own_threads",
     "own_threads_edit_time_limit",
     "can_edit_own_posts",
     "own_posts_edit_time_limit",
     "exempt_from_flood_control",
+    "can_use_private_threads",
+    "can_start_private_threads",
+    "private_thread_users_limit",
     "can_upload_attachments",
     "attachment_size_limit",
     "can_delete_own_attachments",

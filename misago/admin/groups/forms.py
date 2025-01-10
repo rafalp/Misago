@@ -10,6 +10,7 @@ from ...parser.factory import create_parser
 from ...parser.html import render_ast_to_html
 from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import PlainTextFormat, render_ast_to_plaintext
+from ...permissions.enums import CanUploadAttachments
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
@@ -153,8 +154,28 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
-    can_upload_attachments = YesNoSwitch(
+    can_use_private_threads = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can use private threads"),
+    )
+    can_start_private_threads = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can start new private threads"
+        ),
+    )
+    private_thread_users_limit = forms.IntegerField(
+        label=pgettext_lazy("admin group permissions form", "Invited users limit"),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the maximum number of users that can be invited to private threads started by members of this group.",
+        ),
+        min_value=1,
+    )
+
+    can_upload_attachments = forms.TypedChoiceField(
         label=pgettext_lazy("admin group permissions form", "Can upload attachments"),
+        choices=CanUploadAttachments.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
     )
     attachment_size_limit = forms.IntegerField(
         label=pgettext_lazy(
@@ -174,23 +195,6 @@ class EditGroupForm(forms.ModelForm):
             "admin group permissions form",
             "This permission only applies to uploaded attachments that have already been posted.",
         ),
-    )
-
-    can_use_private_threads = YesNoSwitch(
-        label=pgettext_lazy("admin group permissions form", "Can use private threads"),
-    )
-    can_start_private_threads = YesNoSwitch(
-        label=pgettext_lazy(
-            "admin group permissions form", "Can start new private threads"
-        ),
-    )
-    private_thread_users_limit = forms.IntegerField(
-        label=pgettext_lazy("admin group permissions form", "Invited users limit"),
-        help_text=pgettext_lazy(
-            "admin group permissions form",
-            "Enter the maximum number of users that can be invited to private threads started by members of this group.",
-        ),
-        min_value=1,
     )
 
     can_change_username = YesNoSwitch(
@@ -247,12 +251,12 @@ class EditGroupForm(forms.ModelForm):
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
             "exempt_from_flood_control",
-            "can_upload_attachments",
-            "attachment_size_limit",
-            "can_delete_own_attachments",
             "can_use_private_threads",
             "can_start_private_threads",
             "private_thread_users_limit",
+            "can_upload_attachments",
+            "attachment_size_limit",
+            "can_delete_own_attachments",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

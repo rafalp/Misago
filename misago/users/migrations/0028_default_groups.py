@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+from ...permissions.enums import CanUploadAttachments
 from ...permissions.permissionsid import get_permissions_id
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -30,12 +31,12 @@ def create_default_groups(apps, schema_editor):
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
                 exempt_from_flood_control=True,
-                can_upload_attachments=True,
-                attachment_size_limit=0,
-                can_delete_own_attachments=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=20,
+                can_upload_attachments=CanUploadAttachments.EVERYWHERE,
+                attachment_size_limit=0,
+                can_delete_own_attachments=True,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -55,12 +56,12 @@ def create_default_groups(apps, schema_editor):
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
                 exempt_from_flood_control=True,
-                can_upload_attachments=True,
-                attachment_size_limit=0,
-                can_delete_own_attachments=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=20,
+                can_upload_attachments=CanUploadAttachments.EVERYWHERE,
+                attachment_size_limit=0,
+                can_delete_own_attachments=True,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -76,12 +77,12 @@ def create_default_groups(apps, schema_editor):
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
-                can_upload_attachments=True,
-                attachment_size_limit=5 * 1024,
-                can_delete_own_attachments=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=5,
+                can_upload_attachments=CanUploadAttachments.EVERYWHERE,
+                attachment_size_limit=5 * 1024,
+                can_delete_own_attachments=True,
                 can_change_username=True,
                 username_changes_limit=5,
                 username_changes_expire=4,

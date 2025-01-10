@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .enums import CategoryPermission
+from .enums import CanUploadAttachments, CategoryPermission
 from .proxy import UserPermissionsProxy
 
 
@@ -29,7 +29,7 @@ def get_threads_attachments_permissions(
 
     return AttachmentPermissions(
         is_moderator=user_permissions.is_category_moderator(category_id),
-        can_upload_attachments=user_permissions.can_upload_attachments,
+        can_upload_attachments=bool(user_permissions.can_upload_attachments),
         attachment_size_limit=user_permissions.attachment_size_limit,
         can_delete_own_attachments=user_permissions.can_delete_own_attachments,
     )
@@ -48,7 +48,9 @@ def get_private_threads_attachments_permissions(
 
     return AttachmentPermissions(
         is_moderator=user_permissions.is_private_threads_moderator,
-        can_upload_attachments=user_permissions.can_upload_attachments,
+        can_upload_attachments=(
+            user_permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
+        ),
         attachment_size_limit=user_permissions.attachment_size_limit,
         can_delete_own_attachments=user_permissions.can_delete_own_attachments,
     )
