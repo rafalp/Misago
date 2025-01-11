@@ -532,11 +532,12 @@ def attachment_factory():
     def _attachment_factory(
         file_path: str,
         *,
+        filename=None,
         uploader=None,
         post=None,
         thumbnail_path=None,
     ):
-        filename = str(os.path.split(file_path)[-1])
+        filename = filename or str(os.path.split(file_path)[-1])
         filetype = filetypes.match_filetype(filename)
         assert filetype, f"'{filename}' is not supported"
 

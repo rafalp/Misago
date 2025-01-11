@@ -332,6 +332,37 @@ def test_get_edit_thread_formset_initializes_valid_forms(
     assert not formset.invite_users
 
 
+def test_get_edit_thread_formset_loads_post_attachments(
+    user,
+    other_user,
+    cache_versions,
+    dynamic_settings,
+    thread,
+    text_file,
+    attachment_factory,
+    other_thread,
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    attachment = attachment_factory(text_file, uploader=user, post=thread.first_post)
+    second_attachment = attachment_factory(
+        text_file, uploader=other_user, post=thread.first_post
+    )
+    attachment_factory(text_file, uploader=other_user, post=other_thread.first_post)
+    attachment_factory(text_file, uploader=user)
+    attachment_factory(text_file, uploader=other_user)
+
+    formset = get_edit_thread_formset(request, thread.first_post)
+    assert formset.title
+    assert formset.post
+    assert not formset.invite_users
+    assert formset.post.attachments == [second_attachment, attachment]
+
+
 def test_get_edit_thread_formset_setups_post_form_with_attachment_uploads(
     user, cache_versions, dynamic_settings, thread
 ):
@@ -399,6 +430,41 @@ def test_get_edit_private_thread_formset_initializes_valid_forms(
     assert formset.title
     assert formset.post
     assert not formset.invite_users
+
+
+def test_get_edit_private_thread_formset_loads_post_attachments(
+    user,
+    other_user,
+    cache_versions,
+    dynamic_settings,
+    private_thread,
+    text_file,
+    attachment_factory,
+    other_user_private_thread,
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    attachment = attachment_factory(
+        text_file, uploader=user, post=private_thread.first_post
+    )
+    second_attachment = attachment_factory(
+        text_file, uploader=other_user, post=private_thread.first_post
+    )
+    attachment_factory(
+        text_file, uploader=other_user, post=other_user_private_thread.first_post
+    )
+    attachment_factory(text_file, uploader=user)
+    attachment_factory(text_file, uploader=other_user)
+
+    formset = get_edit_private_thread_formset(request, private_thread.first_post)
+    assert formset.title
+    assert formset.post
+    assert not formset.invite_users
+    assert formset.post.attachments == [second_attachment, attachment]
 
 
 def test_get_edit_private_thread_formset_setups_post_form_with_attachment_uploads(
@@ -483,6 +549,37 @@ def test_get_edit_thread_post_formset_initializes_valid_forms(
     assert not formset.invite_users
 
 
+def test_get_edit_thread_post_formset_loads_post_attachments(
+    user,
+    other_user,
+    cache_versions,
+    dynamic_settings,
+    thread,
+    text_file,
+    attachment_factory,
+    other_thread,
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    attachment = attachment_factory(text_file, uploader=user, post=thread.first_post)
+    second_attachment = attachment_factory(
+        text_file, uploader=other_user, post=thread.first_post
+    )
+    attachment_factory(text_file, uploader=other_user, post=other_thread.first_post)
+    attachment_factory(text_file, uploader=user)
+    attachment_factory(text_file, uploader=other_user)
+
+    formset = get_edit_thread_post_formset(request, thread.first_post)
+    assert not formset.title
+    assert formset.post
+    assert not formset.invite_users
+    assert formset.post.attachments == [second_attachment, attachment]
+
+
 def test_get_edit_thread_post_formset_setups_post_form_with_attachment_uploads(
     user, cache_versions, dynamic_settings, thread
 ):
@@ -550,6 +647,41 @@ def test_get_edit_private_thread_post_formset_initializes_valid_forms(
     assert not formset.title
     assert formset.post
     assert not formset.invite_users
+
+
+def test_get_edit_private_thread_post_formset_loads_post_attachments(
+    user,
+    other_user,
+    cache_versions,
+    dynamic_settings,
+    private_thread,
+    text_file,
+    attachment_factory,
+    other_user_private_thread,
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    attachment = attachment_factory(
+        text_file, uploader=user, post=private_thread.first_post
+    )
+    second_attachment = attachment_factory(
+        text_file, uploader=other_user, post=private_thread.first_post
+    )
+    attachment_factory(
+        text_file, uploader=other_user, post=other_user_private_thread.first_post
+    )
+    attachment_factory(text_file, uploader=user)
+    attachment_factory(text_file, uploader=other_user)
+
+    formset = get_edit_private_thread_post_formset(request, private_thread.first_post)
+    assert not formset.title
+    assert formset.post
+    assert not formset.invite_users
+    assert formset.post.attachments == [second_attachment, attachment]
 
 
 def test_get_edit_private_thread_post_formset_setups_post_form_with_attachment_uploads(

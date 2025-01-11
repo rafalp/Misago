@@ -44,7 +44,7 @@ def _get_edit_thread_post_formset_action(
         create_post_form(
             request,
             initial=post.original,
-            attachments=list(Attachment.objects.filter(post=post, is_deleted=False)),
+            attachments=get_post_attachments(post),
             attachments_permissions=attachments_permissions,
         )
     )
