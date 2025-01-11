@@ -143,4 +143,4 @@ def _get_edit_private_thread_formset_action(
 
 
 def get_post_attachments(post: Post) -> list[Attachment]:
-    return list(Attachment.objects.filter(post=post, is_deleted=False))
+    return list(Attachment.objects.filter(post=post, is_deleted=False).order_by("-id"))

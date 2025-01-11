@@ -412,3 +412,82 @@ def test_post_form_attachment_size_limit_returns_zero_if_permissions_are_not_set
     request = Mock(settings=dynamic_settings, user=user)
     form = PostForm(request=request)
     assert form.attachment_size_limit == 0
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
+def test_post_form_accept_attachments_returns_all_types(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+
+    types = form.accept_attachments
+    assert "jpeg" in types
+    assert "mp4" in types
+    assert "pdf" in types
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
+def test_post_form_accept_attachments_returns_only_media_types(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+
+    types = form.accept_attachments
+    assert "jpeg" in types
+    assert "mp4" in types
+    assert "pdf" not in types
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
+def test_post_form_accept_attachments_returns_only_image_types(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+
+    types = form.accept_attachments
+    assert "jpeg" in types
+    assert "mp4" not in types
+    assert "pdf" not in types
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_post_form_accept_attachments_returns_empty_str_types(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+
+    assert form.accept_attachments == ""
+
+
+def test_post_form_attachments_media_returns_media_attachments_only(
+    user, dynamic_settings, attachment_factory, image_small, text_file
+):
+    media_attachment = attachment_factory(image_small, uploader=user)
+    file_attachment = attachment_factory(text_file, uploader=user)
+
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request, attachments=[media_attachment, file_attachment])
+
+    assert form.attachments_media == [media_attachment]
+
+
+def test_post_form_attachments_other_returns_file_attachments_only(
+    user, dynamic_settings, attachment_factory, image_small, text_file
+):
+    media_attachment = attachment_factory(image_small, uploader=user)
+    file_attachment = attachment_factory(text_file, uploader=user)
+
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request, attachments=[media_attachment, file_attachment])
+
+    assert form.attachments_other == [file_attachment]
+
+
+def test_post_form_sort_attachments_method_sorts_attachments_from_newest(
+    user, dynamic_settings, attachment_factory, text_file
+):
+    first_attachment = attachment_factory(text_file, uploader=user)
+    second_attachment = attachment_factory(text_file, uploader=user)
+
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    form.attachments = [first_attachment, second_attachment]
+
+    form.sort_attachments()
+    assert form.attachments == [second_attachment, first_attachment]
