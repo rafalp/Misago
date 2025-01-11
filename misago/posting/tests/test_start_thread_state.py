@@ -64,3 +64,24 @@ def test_start_thread_state_updates_user(user_request, default_category, user):
     assert user.threads == 1
     assert user.posts == 1
     assert user.last_posted_on == state.timestamp
+
+
+def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
+    user_request, default_category, user, text_file, attachment_factory
+):
+    attachment = attachment_factory(text_file, uploader=user)
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+
+    state = StartThreadState(user_request, default_category)
+    state.set_thread_title("Test thread")
+    state.set_post_message("Hello world")
+    state.set_attachments([attachment])
+    state.save()
+
+    attachment.refresh_from_db()
+    assert attachment.category == default_category
+    assert attachment.thread == state.thread
+    assert attachment.post == state.post
+    assert attachment.uploaded_at == state.timestamp
