@@ -108,3 +108,52 @@ def test_reply_thread_state_updates_existing_post(user, user_request, user_threa
 
     user.refresh_from_db()
     assert user.posts == 0
+
+
+def test_reply_thread_state_assigns_attachments_to_category_thread_and_post(
+    user_request, other_user_thread, user, text_file, attachment_factory
+):
+    attachment = attachment_factory(text_file, uploader=user)
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+
+    state = ReplyThreadState(user_request, other_user_thread)
+    state.set_post_message("Test reply")
+    state.set_attachments([attachment])
+    state.save()
+
+    attachment.refresh_from_db()
+    assert attachment.category == other_user_thread.category
+    assert attachment.thread == other_user_thread
+    assert attachment.post == state.post
+    assert attachment.uploaded_at == state.timestamp
+
+
+def test_reply_thread_state_updates_existing_post(
+    user, user_request, user_thread, text_file, attachment_factory
+):
+    post = user_thread.first_post
+    post_attachment = attachment_factory(text_file, uploader=user, post=post)
+
+    attachment = attachment_factory(text_file, uploader=user)
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+
+    state = ReplyThreadState(user_request, user_thread, post)
+    state.set_post_message("Test reply")
+    state.set_attachments([attachment])
+    state.save()
+
+    post_attachment.refresh_from_db()
+    assert post_attachment.category == user_thread.category
+    assert post_attachment.thread == user_thread
+    assert post_attachment.post == post
+    assert post_attachment.uploaded_at < state.timestamp
+
+    attachment.refresh_from_db()
+    assert attachment.category == user_thread.category
+    assert attachment.thread == user_thread
+    assert attachment.post == post
+    assert attachment.uploaded_at == state.timestamp
