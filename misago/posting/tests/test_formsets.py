@@ -355,6 +355,9 @@ def test_get_edit_thread_formset_loads_post_attachments(
     attachment_factory(text_file, uploader=other_user, post=other_thread.first_post)
     attachment_factory(text_file, uploader=user)
     attachment_factory(text_file, uploader=other_user)
+    attachment_factory(
+        text_file, uploader=user, post=thread.first_post, is_deleted=True
+    )
 
     formset = get_edit_thread_formset(request, thread.first_post)
     assert formset.title
@@ -459,6 +462,12 @@ def test_get_edit_private_thread_formset_loads_post_attachments(
     )
     attachment_factory(text_file, uploader=user)
     attachment_factory(text_file, uploader=other_user)
+    attachment_factory(
+        text_file,
+        uploader=user,
+        post=other_user_private_thread.first_post,
+        is_deleted=True,
+    )
 
     formset = get_edit_private_thread_formset(request, private_thread.first_post)
     assert formset.title
@@ -572,6 +581,9 @@ def test_get_edit_thread_post_formset_loads_post_attachments(
     attachment_factory(text_file, uploader=other_user, post=other_thread.first_post)
     attachment_factory(text_file, uploader=user)
     attachment_factory(text_file, uploader=other_user)
+    attachment_factory(
+        text_file, uploader=user, post=thread.first_post, is_deleted=True
+    )
 
     formset = get_edit_thread_post_formset(request, thread.first_post)
     assert not formset.title
@@ -676,6 +688,9 @@ def test_get_edit_private_thread_post_formset_loads_post_attachments(
     )
     attachment_factory(text_file, uploader=user)
     attachment_factory(text_file, uploader=other_user)
+    attachment_factory(
+        text_file, uploader=user, post=private_thread.first_post, is_deleted=True
+    )
 
     formset = get_edit_private_thread_post_formset(request, private_thread.first_post)
     assert not formset.title

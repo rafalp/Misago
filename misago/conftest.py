@@ -536,6 +536,7 @@ def attachment_factory():
         uploader=None,
         post=None,
         thumbnail_path=None,
+        is_deleted=False,
     ):
         filename = filename or str(os.path.split(file_path)[-1])
         filetype = filetypes.match_filetype(filename)
@@ -583,6 +584,7 @@ def attachment_factory():
             image=image,
             video=video,
             file=file,
+            is_deleted=is_deleted,
         )
 
     return _attachment_factory
