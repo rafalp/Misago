@@ -1,9 +1,29 @@
 from unittest.mock import Mock
 
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 from ...attachments.enums import AllowedAttachments
 from ...conf.test import override_dynamic_settings
 from ...permissions.attachments import AttachmentsPermissions
 from ..forms import PostForm
+
+
+class MockQueryDict(dict):
+    def get(self, key: str, default=None):
+        if key not in self:
+            return default
+
+        value = self[key]
+        if isinstance(value, list):
+            return value[0]
+
+        return value
+
+    def getlist(self, key: str, default=None):
+        if key not in self:
+            return default
+
+        return list(self[key])
 
 
 def test_post_form_sets_request(dynamic_settings):
@@ -43,10 +63,10 @@ def test_post_form_populates_attachments_with_temp_attachments_on_init(
 ):
     request = Mock(settings=dynamic_settings, user=user)
     attachment = attachment_factory(text_file, uploader=user)
-    mock_data = Mock(getlist=Mock(return_value=[attachment.secret]))
+    data = MockQueryDict({PostForm.attachment_secret_name: [attachment.secret]})
 
     form = PostForm(
-        mock_data,
+        data,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
@@ -64,10 +84,10 @@ def test_post_form_appends_temp_attachments_to_attachments_on_init(
     request = Mock(settings=dynamic_settings, user=user)
     temp_attachment = attachment_factory(text_file, uploader=user)
     attachment = attachment_factory(text_file, uploader=user, post=post)
-    mock_data = Mock(getlist=Mock(return_value=[temp_attachment.secret]))
+    data = MockQueryDict({PostForm.attachment_secret_name: [temp_attachment.secret]})
 
     form = PostForm(
-        mock_data,
+        data,
         request=request,
         attachments=[attachment],
         attachments_permissions=AttachmentsPermissions(
@@ -85,10 +105,10 @@ def test_post_form_doesnt_populate_attachments_with_temp_attachments_on_init_if_
 ):
     request = Mock(settings=dynamic_settings, user=user)
     attachment = attachment_factory(text_file, uploader=user)
-    mock_data = Mock(getlist=Mock(return_value=[attachment.secret]))
+    data = MockQueryDict({PostForm.attachment_secret_name: [attachment.secret]})
 
     form = PostForm(
-        mock_data,
+        data,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
@@ -382,6 +402,30 @@ def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_a
     assert not form.show_attachments_upload
 
 
+def test_post_form_includes_upload_field_if_show_attachments_upload_is_true(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=False,
+        ),
+    )
+    assert form.fields["upload"]
+
+
+def test_post_form_excludes_upload_field_if_show_attachments_upload_is_false(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+    assert "upload" not in form.fields
+
+
 def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
     user, dynamic_settings
 ):
@@ -491,3 +535,103 @@ def test_post_form_sort_attachments_method_sorts_attachments_from_newest(
 
     form.sort_attachments()
     assert form.attachments == [second_attachment, first_attachment]
+
+
+def test_post_form_clean_upload_cleans_and_stores_valid_upload(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {"upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/plain")]},
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=True,
+        ),
+    )
+
+    assert form.is_valid()
+    assert len(form.attachments) == 1
+
+    attachment = form.attachments[0]
+    assert attachment.filetype_name == "Text"
+    assert attachment.filename == "test.txt"
+    assert attachment.uploader == user
+
+
+def test_post_form_clean_upload_sets_error_for_invalid_upload(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {"upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/invalid")]},
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert not form.attachments
+    assert form.errors["upload"] == ["test.txt: uploaded file type is not allowed."]
+
+
+def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {
+            "upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+                SimpleUploadedFile("invalid.txt", b"Hello world!", "text/invalid"),
+            ]
+        },
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert len(form.attachments) == 1
+    assert form.errors["upload"] == ["invalid.txt: uploaded file type is not allowed."]
+
+    attachment = form.attachments[0]
+    assert attachment.filetype_name == "Text"
+    assert attachment.filename == "test.txt"
+    assert attachment.uploader == user
+
+
+@override_dynamic_settings(post_attachments_limit=2)
+def test_post_form_clean_upload_validates_attachments_limit(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {
+            "upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ]
+            * 3
+        },
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert not form.attachments
+    assert form.errors["upload"] == [
+        "Posted message cannot have more than 2 attachments (it has 3).",
+    ]
