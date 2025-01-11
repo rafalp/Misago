@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 
 from ...forms.formset import Formset
+from ..forms import InviteUsersForm, PostForm, TitleForm
 from ..state.base import PostingState
 
 
@@ -10,6 +11,18 @@ class PostingFormset(Formset):
     def __init__(self):
         super().__init__()
         self.errors = []
+
+    @property
+    def title(self) -> TitleForm | None:
+        return self.forms.get(TitleForm.form_prefix)
+
+    @property
+    def post(self) -> PostForm | None:
+        return self.forms.get(PostForm.form_prefix)
+
+    @property
+    def invite_users(self) -> InviteUsersForm | None:
+        return self.forms.get(InviteUsersForm.form_prefix)
 
     def update_state(self, state: PostingState):
         for form in self.forms.values():

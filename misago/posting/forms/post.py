@@ -16,16 +16,15 @@ from ..validators import validate_post
 from .base import PostingForm
 from .attachments import MultipleFileField
 
-PREFIX = "posting-post"
-
 
 class PostForm(PostingForm):
+    form_prefix = "posting-post"
+    template_name = "misago/posting/post_form.html"
+    attachment_secret_name = "attachment_secret"
+
     request: HttpRequest
     attachments: list[Attachment]
     attachments_permissions: AttachmentsPermissions | None
-    attachment_secret_name = "attachment_secret"
-
-    template_name = "misago/posting/post_form.html"
 
     post = forms.CharField(
         widget=forms.Textarea,
@@ -164,7 +163,7 @@ def create_post_form(
         "request": request,
         "attachments": attachments,
         "attachments_permissions": attachments_permissions,
-        "prefix": PREFIX,
+        "prefix": PostForm.form_prefix,
     }
 
     if request.method == "POST":
