@@ -85,3 +85,46 @@ def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
     assert attachment.thread == state.thread
     assert attachment.post == state.post
     assert attachment.uploaded_at == state.timestamp
+
+
+def test_start_thread_state_deletes_temp_attachments(
+    user_request, default_category, user, text_file, attachment_factory
+):
+    attachment = attachment_factory(text_file, uploader=user)
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+
+    state = StartThreadState(user_request, default_category)
+    state.set_thread_title("Test thread")
+    state.set_post_message("Hello world")
+    state.set_attachments([attachment])
+    state.set_delete_attachments([attachment])
+    state.save()
+
+    attachment.refresh_from_db()
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+    assert attachment.is_deleted
+
+
+def test_start_thread_state_delete_attachments_excludes_unknown_attachments(
+    user_request, default_category, user, text_file, attachment_factory, post
+):
+    attachment = attachment_factory(text_file, uploader=user, post=post)
+    assert attachment.category == post.category
+    assert attachment.thread == post.thread
+    assert attachment.post == post
+
+    state = StartThreadState(user_request, default_category)
+    state.set_thread_title("Test thread")
+    state.set_post_message("Hello world")
+    state.set_delete_attachments([attachment])
+    state.save()
+
+    attachment.refresh_from_db()
+    assert attachment.category == post.category
+    assert attachment.thread == post.thread
+    assert attachment.post == post
+    assert not attachment.is_deleted

@@ -30,3 +30,92 @@ def test_edit_thread_post_state_save_updates_post(
     assert post.last_editor == user
     assert post.last_editor_name == user.username
     assert post.last_editor_slug == user.slug
+
+
+def test_edit_thread_post_state_save_updates_post_attachments(
+    user, other_user, user_request, other_user_thread, text_file, attachment_factory
+):
+    post = other_user_thread.first_post
+    post_attachment = attachment_factory(text_file, uploader=other_user, post=post)
+
+    attachment = attachment_factory(text_file, uploader=user)
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+
+    state = EditThreadPostState(user_request, other_user_thread.first_post)
+    state.set_post_message("Edit reply")
+    state.set_attachments([attachment])
+    state.save()
+
+    post_attachment.refresh_from_db()
+    assert post_attachment.category == other_user_thread.category
+    assert post_attachment.thread == other_user_thread
+    assert post_attachment.post == post
+    assert post_attachment.uploader == other_user
+    assert post_attachment.uploaded_at < state.timestamp
+
+    attachment.refresh_from_db()
+    assert attachment.category == other_user_thread.category
+    assert attachment.thread == other_user_thread
+    assert attachment.post == post
+    assert attachment.uploader == user
+    assert attachment.uploaded_at == state.timestamp
+
+
+def test_edit_thread_post_state_save_deletes_post_attachments(
+    user, other_user, user_request, other_user_thread, text_file, attachment_factory
+):
+    post = other_user_thread.first_post
+    post_attachment = attachment_factory(text_file, uploader=other_user, post=post)
+
+    attachment = attachment_factory(text_file, uploader=user, post=post)
+
+    state = EditThreadPostState(user_request, other_user_thread.first_post)
+    state.set_post_message("Edit reply")
+    state.set_attachments([attachment, post_attachment])
+    state.set_delete_attachments([attachment])
+    state.save()
+
+    post_attachment.refresh_from_db()
+    assert post_attachment.category == other_user_thread.category
+    assert post_attachment.thread == other_user_thread
+    assert post_attachment.post == post
+    assert post_attachment.uploader == other_user
+    assert post_attachment.uploaded_at < state.timestamp
+
+    attachment.refresh_from_db()
+    assert not attachment.category
+    assert not attachment.thread
+    assert not attachment.post
+    assert attachment.uploader == user
+    assert attachment.is_deleted
+
+
+def test_edit_thread_post_state_save_deletes_temporary_attachments(
+    user, other_user, user_request, other_user_thread, text_file, attachment_factory
+):
+    post = other_user_thread.first_post
+    post_attachment = attachment_factory(text_file, uploader=other_user, post=post)
+
+    temp_attachment = attachment_factory(text_file, uploader=user)
+
+    state = EditThreadPostState(user_request, other_user_thread.first_post)
+    state.set_post_message("Edit reply")
+    state.set_attachments([temp_attachment, post_attachment])
+    state.set_delete_attachments([temp_attachment])
+    state.save()
+
+    post_attachment.refresh_from_db()
+    assert post_attachment.category == other_user_thread.category
+    assert post_attachment.thread == other_user_thread
+    assert post_attachment.post == post
+    assert post_attachment.uploader == other_user
+    assert post_attachment.uploaded_at < state.timestamp
+
+    temp_attachment.refresh_from_db()
+    assert not temp_attachment.category
+    assert not temp_attachment.thread
+    assert not temp_attachment.post
+    assert temp_attachment.uploader == user
+    assert temp_attachment.is_deleted

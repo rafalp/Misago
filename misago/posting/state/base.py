@@ -6,6 +6,7 @@ from django.db import models
 from django.http import HttpRequest
 from django.utils import timezone
 
+from ...attachments.delete import delete_attachments
 from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
@@ -30,6 +31,7 @@ class PostingState:
     thread: Thread
     post: Post
     attachments: list[Attachment]
+    delete_attachments: list[Attachment]
 
     parser_context: ParserContext
     message_ast: list[dict] | None
@@ -51,6 +53,7 @@ class PostingState:
         self.plugin_state = {}
 
         self.attachments = []
+        self.delete_attachments = []
 
         self.store_object_state(self.user)
 
@@ -141,6 +144,19 @@ class PostingState:
     def set_attachments(self, attachments: list[Attachment]):
         self.attachments = attachments
 
+    def set_delete_attachments(self, attachments: list[Attachment]):
+        self.delete_attachments = []
+        delete_ids: set[int] = set(a.id for a in attachments)
+        save_attachments: list[Attachment] = []
+
+        for attachment in self.attachments:
+            if attachment.id in delete_ids:
+                self.delete_attachments.append(attachment)
+            else:
+                save_attachments.append(attachment)
+
+        self.set_attachments(save_attachments)
+
     def save_attachments(self):
         for attachment in self.attachments:
             if attachment.post_id:
@@ -151,3 +167,6 @@ class PostingState:
             attachment.post = self.post
             attachment.uploaded_at = self.timestamp
             attachment.save()
+
+        if self.delete_attachments:
+            delete_attachments(self.delete_attachments, request=self.request)

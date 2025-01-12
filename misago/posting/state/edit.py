@@ -1,8 +1,6 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
-from ...attachments.delete import delete_attachments
-from ...attachments.models import Attachment
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post
 from ..hooks import (
@@ -18,12 +16,9 @@ class EditThreadPostState(PostingState):
     # This state can actually edit both post and its thread's title
     thread_title: str
     post_original: str
-    delete_attachments: list[Attachment]
 
     def __init__(self, request: HttpRequest, post: Post):
         super().__init__(request)
-
-        self.delete_attachments = []
 
         self.category = post.category
         self.thread = post.thread
@@ -35,19 +30,6 @@ class EditThreadPostState(PostingState):
 
         self.thread_title = self.thread.title
         self.post_original = post.original
-
-    def set_delete_attachments(self, attachments: list[Attachment]):
-        self.delete_attachments = []
-        delete_ids: list[int] = [a.id for a in attachments]
-        save_attachments: list[Attachment] = []
-
-        for attachment in self.attachments:
-            if attachment.id in delete_ids:
-                self.delete_attachments.append(attachment)
-            else:
-                save_attachments.append(attachment)
-
-        self.set_attachments(save_attachments)
 
     @transaction.atomic()
     def save(self):
@@ -84,12 +66,6 @@ class EditThreadPostState(PostingState):
         self.category.last_thread_title = self.thread.title
         self.category.last_thread_slug = self.thread.slug
         self.update_object(self.category)
-
-    def save_attachments(self):
-        super().save_attachments()
-
-        if self.delete_attachments:
-            delete_attachments(self.delete_attachments, request=self.request)
 
 
 class EditPrivateThreadPostState(EditThreadPostState):

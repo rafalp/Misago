@@ -130,7 +130,7 @@ def test_reply_thread_state_assigns_attachments_to_category_thread_and_post(
     assert attachment.uploaded_at == state.timestamp
 
 
-def test_reply_thread_state_updates_existing_post(
+def test_reply_thread_state_updates_existing_post_attachments(
     user, user_request, user_thread, text_file, attachment_factory
 ):
     post = user_thread.first_post
