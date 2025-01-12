@@ -4,8 +4,7 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th style="width: 550px;">{% trans "Attachment" context "admin attachments list" %}</th>
-<th>{% translate "Thread" context "admin attachments list" %}</th>
+<th style="width: 100%;">{% translate "Attachment" context "admin attachments list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -49,21 +48,28 @@
       {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_at }}
     {% endblocktranslate %}
   </div>
+  <div class="small text-muted">
+    {% if item.post %}
+      {% capture trimmed as thread_url %}
+        <a href="{{ item.post.get_absolute_url }}" target="_blank">
+          {{ item.post.thread }}
+        </a>
+      {% endcapture %}
+      {% blocktrans trimmed with thread_url=thread_url|safe context "admin attachments list item" %}
+        Thread: {{ thread_url }}
+      {% endblocktrans %}
+    {% elif item.is_deleted %}
+      <em>
+        {% trans "Marked for deletion" context "admin attachment status" %}
+      </em>
+    {% else %}
+      <em>
+        {% trans "Not posted" context "admin attachment status" %}
+      </em>
+    {% endif %}
+  </div>
 </td>
 <td class="small">
-  {% if item.post %}
-    <a href="{{ item.post.get_absolute_url }}" class="item-name">
-      {{ item.post.thread }}
-    </a>
-  {% elif item.is_deleted %}
-    <em class="text-muted" title="{% trans 'This attachment is marked for deletion.' context 'admin attachment status' %}">
-      {% trans "Deleted" context "admin attachment status" %}
-    </em>
-  {% else %}
-    <em class="text-muted" title="{% trans 'This attachment is not associated with any existing post.' context 'admin attachment status' %}">
-      {% translate "Temporary" context "admin attachment status" %}
-    </em>
-  {% endif %}
 </td>
 <td>
   <form action="{% url 'misago:admin:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
