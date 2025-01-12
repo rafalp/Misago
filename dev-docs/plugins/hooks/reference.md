@@ -18,6 +18,11 @@ Hooks instances are importable from the following Python modules:
 
 `misago.attachments.hooks` defines the following hooks:
 
+- [`delete_attachments_hook`](./delete-attachments-hook.md)
+- [`delete_categories_attachments_hook`](./delete-categories-attachments-hook.md)
+- [`delete_posts_attachments_hook`](./delete-posts-attachments-hook.md)
+- [`delete_threads_attachments_hook`](./delete-threads-attachments-hook.md)
+- [`delete_users_attachments_hook`](./delete-users-attachments-hook.md)
 - [`get_attachment_plugin_data_hook`](./get-attachment-plugin-data-hook.md)
 
 
