@@ -24,8 +24,8 @@ class FilterAttachmentsForm(forms.Form):
         choices=get_searchable_filetypes,
         required=False,
     )
-    is_orphan = forms.ChoiceField(
-        label=pgettext_lazy("admin attachments filter form", "State"),
+    status = forms.ChoiceField(
+        label=pgettext_lazy("admin attachments filter form", "Status"),
         required=False,
         choices=[
             (
@@ -36,17 +36,24 @@ class FilterAttachmentsForm(forms.Form):
                 ),
             ),
             (
-                "yes",
+                "posted",
                 pgettext_lazy(
                     "admin attachments orphan filter choice",
-                    "Only orphaned",
+                    "Posted",
                 ),
             ),
             (
-                "no",
+                "unused",
                 pgettext_lazy(
                     "admin attachments orphan filter choice",
-                    "Not orphaned",
+                    "Unused",
+                ),
+            ),
+            (
+                "deleted",
+                pgettext_lazy(
+                    "admin attachments orphan filter choice",
+                    "Deleted",
                 ),
             ),
         ],
@@ -61,8 +68,10 @@ class FilterAttachmentsForm(forms.Form):
             queryset = queryset.filter(filename__icontains=criteria["filename"])
         if criteria.get("filetype"):
             queryset = queryset.filter(filetype_name=criteria["filetype"])
-        if criteria.get("is_orphan") == "yes":
-            queryset = queryset.filter(post__isnull=True)
-        elif criteria.get("is_orphan") == "no":
+        if criteria.get("status") == "posted":
             queryset = queryset.filter(post__isnull=False)
+        elif criteria.get("status") == "unused":
+            queryset = queryset.filter(post__isnull=True, is_deleted=False)
+        elif criteria.get("status") == "deleted":
+            queryset = queryset.filter(is_deleted=True)
         return queryset

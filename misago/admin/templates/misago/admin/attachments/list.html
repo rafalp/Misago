@@ -64,7 +64,7 @@
     </em>
   {% else %}
     <em>
-      {% trans "Not posted" context "admin attachment status" %}
+      {% trans "Unused" context "admin attachment status" %}
     </em>
   {% endif %}
 </td>
@@ -108,7 +108,7 @@
 </div>
 <div class="row">
   <div class="col">
-    {% form_row filter_form.is_orphan %}
+    {% form_row filter_form.status %}
   </div>
 </div>
 {% endblock filters-modal-body %}
