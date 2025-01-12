@@ -4,8 +4,8 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th>{% translate "Attachment" context "admin attachments list" %}</th>
-<th style="width: 40%;">{% translate "Thread" context "admin attachments list" %}</th>
+<th style="width: 550px;">{% trans "Attachment" context "admin attachments list" %}</th>
+<th>{% translate "Thread" context "admin attachments list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -14,21 +14,21 @@
 {% if item.is_image %}
   <td class="pr-0">
     {% if item.thumbnail %}
-      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.thumbnail.url }}?shva=1")' target="_blank"></a>
+      <a href="{{ item.url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.thumbnail.url }}')" target="_blank"></a>
     {% else %}
-      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.url }}")' target="_blank"></a>
+      <a href="{{ item.url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.url }}')" target="_blank"></a>
     {% endif %}
   </td>
 {% else %}
   <td class="pr-0 text-center">
-    <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-light btn-block btn-sm" target="_blank">
+    <a href="{{ item.url }}" class="btn btn-light btn-block btn-sm" target="_blank">
       <span class="far fa-file"></span>
     </a>
   </td>
 {% endif %}
 <td>
   <div class="small">
-    <a href="{{ item.get_absolute_url }}?shva=1" class="item-name" target="_blank">
+    <a href="{{ item.url }}" class="item-name" target="_blank">
       {{ item }}
     </a>
   </div>
@@ -55,9 +55,13 @@
     <a href="{{ item.post.get_absolute_url }}" class="item-name">
       {{ item.post.thread }}
     </a>
+  {% elif item.is_deleted %}
+    <em class="text-muted" title="{% trans 'This attachment is marked for deletion.' context 'admin attachment status' %}">
+      {% trans "Deleted" context "admin attachment status" %}
+    </em>
   {% else %}
-    <em class="text-muted" title="{% translate 'This attachment is not associated with any existing post.' context 'admin orphaned attachment' %}">
-      {% translate "Orphaned" context "admin orphaned attachment" %}
+    <em class="text-muted" title="{% trans 'This attachment is not associated with any existing post.' context 'admin attachment status' %}">
+      {% translate "Temporary" context "admin attachment status" %}
     </em>
   {% endif %}
 </td>

@@ -28,7 +28,7 @@ def upload_to(instance, filename):
     )
 
     return os.path.join(
-        "attachments", spread_path[:2], spread_path[2:4], secret, filename_clean
+        "attachments", spread_path[:2], spread_path[2:4], secret[:32], filename_clean
     )
 
 

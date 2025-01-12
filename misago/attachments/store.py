@@ -73,7 +73,7 @@ def _store_attachment_image(
         image_stream = BytesIO()
         image.save(image_stream, filetype.extensions[0])
         upload = SimpleUploadedFile(
-            upload.name, image_stream.read(), upload.content_type
+            upload.name, image_stream.getvalue(), upload.content_type
         )
         del image_stream
 
@@ -88,7 +88,7 @@ def _store_attachment_image(
         thumbnail_stream = BytesIO()
         image.save(thumbnail_stream, filetype.extensions[0])
         attachment.thumbnail = SimpleUploadedFile(
-            upload.name, thumbnail_stream.read(), upload.content_type
+            upload.name, thumbnail_stream.getvalue(), upload.content_type
         )
         del thumbnail_stream
 
