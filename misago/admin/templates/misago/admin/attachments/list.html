@@ -4,7 +4,12 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th style="width: 100%;">{% translate "Attachment" context "admin attachments list" %}</th>
+<th>{% translate "Attachment" context "admin attachments list" %}</th>
+<th style="width: 120px;">{% trans "Size" context "admin attachments list" %}</th>
+<th style="width: 120px;">{% trans "Type" context "admin attachments list" %}</th>
+<th style="width: 140px;">{% trans "Uploader" context "admin attachments list" %}</th>
+<th style="width: 150px;">{% trans "Uploaded at" context "admin attachments list" %}</th>
+<th style="width: 220px;">{% trans "Location" context "admin attachments list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -25,51 +30,43 @@
     </a>
   </td>
 {% endif %}
-<td>
-  <div class="small">
-    <a href="{{ item.url }}" class="item-name" target="_blank">
-      {{ item }}
-    </a>
-  </div>
-  <div class="small text-muted">
-    {% capture trimmed as uploader %}
-      {% if item.uploader %}
-        <a href="{{ item.uploader.get_absolute_url }}" class="item-title">{{ item.uploader }}</a>
-      {% else %}
-        <span class="item-title">{{ item.uploader_name }}</span>
-      {% endif %}
-    {% endcapture %}
-    {% capture trimmed as uploaded_at %}
-      <abbr data-timestamp="{{ item.uploaded_at.isoformat }}" data-format="LL">
-        {{ item.uploaded_at }}
-      </abbr>
-    {% endcapture %}
-    {% blocktranslate trimmed with filetype=item.filetype_name|default:"N/A" size=item.size|filesizeformat uploader=uploader|safe uploaded_at=uploaded_at|safe context "admin attachments list item" %}
-      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_at }}
-    {% endblocktranslate %}
-  </div>
-  <div class="small text-muted">
-    {% if item.post %}
-      {% capture trimmed as thread_url %}
-        <a href="{{ item.post.get_absolute_url }}" target="_blank">
-          {{ item.post.thread }}
-        </a>
-      {% endcapture %}
-      {% blocktrans trimmed with thread_url=thread_url|safe context "admin attachments list item" %}
-        Thread: {{ thread_url }}
-      {% endblocktrans %}
-    {% elif item.is_deleted %}
-      <em>
-        {% trans "Marked for deletion" context "admin attachment status" %}
-      </em>
-    {% else %}
-      <em>
-        {% trans "Not posted" context "admin attachment status" %}
-      </em>
-    {% endif %}
-  </div>
+<td class="small">
+  <a href="{{ item.url }}" class="item-name" target="_blank">
+    {{ item }}
+  </a>
 </td>
 <td class="small">
+  {{ item.size|filesizeformat }}
+</td>
+<td class="small">
+  {{ item.filetype_name }}
+</td>
+<td class="small text-truncate" style="max-width: 140px;">
+  {% if item.uploader %}
+    <a href="{{ item.uploader.get_absolute_url }}" class="item-title" target="_blank">{{ item.uploader }}</a>
+  {% else %}
+    <span class="item-title">{{ item.uploader_name }}</span>
+  {% endif %}
+</td>
+<td class="small text-truncate" style="max-width: 150px;">
+  <abbr data-timestamp="{{ item.uploaded_at.isoformat }}" data-format="LL">
+    {{ item.uploaded_at }}
+  </abbr>
+</td>
+<td class="small text-muted text-truncate" style="max-width: 220px;">
+  {% if item.post %}
+    <a href="{{ item.post.get_absolute_url }}" class="item-title" target="_blank">
+      {{ item.post.thread }}
+    </a>
+  {% elif item.is_deleted %}
+    <em>
+      {% trans "Marked for deletion" context "admin attachment status" %}
+    </em>
+  {% else %}
+    <em>
+      {% trans "Not posted" context "admin attachment status" %}
+    </em>
+  {% endif %}
 </td>
 <td>
   <form action="{% url 'misago:admin:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
@@ -83,7 +80,7 @@
 
 
 {% block blankslate %}
-<td colspan="5">
+<td colspan="9">
   {% if active_filters %}
     {% translate "No attachments matching criteria exist." context "admin attachments" %}
   {% else %}
