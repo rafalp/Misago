@@ -23,7 +23,7 @@ from .test import (
     IMAGE_SMALL,
     TEXT_FILE,
     MisagoClient,
-    clear_attachments,
+    teardown_attachments,
 )
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
@@ -535,7 +535,7 @@ def watched_thread_factory():
 
 
 @pytest.fixture
-def attachment_factory(db, clear_attachments):
+def attachment_factory(db, teardown_attachments):
     def _attachment_factory(
         file_path: str,
         *,

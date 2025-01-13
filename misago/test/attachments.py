@@ -4,7 +4,7 @@ from ..attachments.models import Attachment
 
 
 @pytest.fixture()
-def clear_attachments(db):
+def teardown_attachments(db):
     existing_attachments: list[int] = list(
         Attachment.objects.values_list("id", flat=True)
     )
