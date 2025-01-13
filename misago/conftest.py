@@ -17,7 +17,14 @@ from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
-from .test import IMAGE_INVALID, IMAGE_LARGE, IMAGE_SMALL, TEXT_FILE, MisagoClient
+from .test import (
+    IMAGE_INVALID,
+    IMAGE_LARGE,
+    IMAGE_SMALL,
+    TEXT_FILE,
+    MisagoClient,
+    clear_attachments,
+)
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread
@@ -528,7 +535,7 @@ def watched_thread_factory():
 
 
 @pytest.fixture
-def attachment_factory():
+def attachment_factory(db, clear_attachments):
     def _attachment_factory(
         file_path: str,
         *,

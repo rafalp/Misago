@@ -9,7 +9,9 @@ from ..filetypes import filetypes
 from ..store import store_uploaded_file
 
 
-def test_store_uploaded_file_stores_text_file(user, dynamic_settings, text_file):
+def test_store_uploaded_file_stores_text_file(
+    user, dynamic_settings, text_file, clear_attachments
+):
     with open(text_file, "rb") as fp:
         upload = SimpleUploadedFile("test.txt", fp.read(), "text/plain")
 
@@ -36,7 +38,9 @@ def test_store_uploaded_file_stores_text_file(user, dynamic_settings, text_file)
     assert attachment.file.url
 
 
-def test_store_uploaded_file_stores_image_file(user, dynamic_settings, image_small):
+def test_store_uploaded_file_stores_image_file(
+    user, dynamic_settings, image_small, clear_attachments
+):
     with open(image_small, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
 
@@ -68,7 +72,7 @@ def test_store_uploaded_file_stores_image_file(user, dynamic_settings, image_sma
     attachment_thumbnail_height=300,
 )
 def test_store_uploaded_file_stores_image_file_with_thumbnail(
-    user, dynamic_settings, image_large
+    user, dynamic_settings, image_large, clear_attachments
 ):
     with open(image_large, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
@@ -102,7 +106,7 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(
     attachment_image_max_height=300,
 )
 def test_store_uploaded_file_stores_image_file_scaled_down(
-    user, dynamic_settings, image_large
+    user, dynamic_settings, image_large, clear_attachments
 ):
     with open(image_large, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
@@ -131,7 +135,7 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
 
 
 def test_store_uploaded_file_raises_validation_error_for_invalid_image(
-    user, dynamic_settings, image_invalid
+    user, dynamic_settings, image_invalid, clear_attachments
 ):
     with open(image_invalid, "rb") as fp:
         upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
