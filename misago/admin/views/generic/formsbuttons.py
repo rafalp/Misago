@@ -3,7 +3,6 @@ from django.db import transaction
 from django.shortcuts import redirect
 from django.utils.translation import pgettext_lazy
 
-from ....users.models import Group
 from .base import AdminView
 
 SAFE_HTTP_METHODS = ("GET", "HEAD", "OPTIONS", "TRACE")

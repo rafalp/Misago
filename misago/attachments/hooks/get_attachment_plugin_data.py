@@ -106,7 +106,7 @@ class GetAttachmentPluginDataHook(
         request: HttpRequest,
         upload: UploadedFile,
         image: Image | None = None,
-    ) -> {}:
+    ) -> dict:
         plugin_data = action(request, upload, image)
 
         if image:

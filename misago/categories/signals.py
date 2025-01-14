@@ -3,9 +3,6 @@ from django.dispatch import Signal, receiver
 from ..users.signals import anonymize_user_data, username_changed
 from .models import Category
 
-delete_category_content = Signal()
-move_category_content = Signal()
-
 
 @receiver([anonymize_user_data, username_changed])
 def update_usernames(sender, **kwargs):

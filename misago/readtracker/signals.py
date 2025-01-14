@@ -1,21 +1,8 @@
 from django.dispatch import Signal, receiver
 
-from ..categories.signals import delete_category_content, move_category_content
 from ..threads.signals import merge_thread, move_thread
 
 thread_read = Signal()
-
-
-@receiver(delete_category_content)
-def delete_category_threads(sender, **kwargs):
-    sender.readthread_set.all().delete()
-    sender.readcategory_set.all().delete()
-
-
-@receiver(move_category_content)
-def move_category_tracker(sender, **kwargs):
-    sender.readthread_set.update(category=kwargs["new_category"])
-    sender.readcategory_set.update(category=kwargs["new_category"])
 
 
 @receiver(merge_thread)

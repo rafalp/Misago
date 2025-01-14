@@ -6,7 +6,6 @@ from django.dispatch import Signal, receiver
 from django.utils.translation import pgettext
 
 from ..categories.models import Category
-from ..categories.signals import delete_category_content, move_category_content
 from ..notifications.models import Notification, WatchedThread
 from ..users.signals import (
     anonymize_user_data,
@@ -84,34 +83,6 @@ def move_thread_content(sender, **kwargs):
 @receiver(update_thread_title)
 def change_thread_title(sender, **kwargs):
     sender.notification_set.update(thread_title=sender.title)
-
-
-@receiver(delete_category_content)
-def delete_category_threads(sender, **kwargs):
-    sender.notification_set.all().delete()
-    sender.watchedthread_set.all().delete()
-    sender.subscription_set.all().delete()
-    sender.pollvote_set.all().delete()
-    sender.poll_set.all().delete()
-    sender.postlike_set.all().delete()
-    sender.thread_set.all().delete()
-    sender.postedit_set.all().delete()
-    sender.post_set.all().delete()
-
-
-@receiver(move_category_content)
-def move_category_threads(sender, **kwargs):
-    new_category = kwargs["new_category"]
-
-    sender.thread_set.update(category=new_category)
-    sender.post_set.filter(category=sender).update(category=new_category)
-    sender.postedit_set.filter(category=sender).update(category=new_category)
-    sender.postlike_set.filter(category=sender).update(category=new_category)
-    sender.poll_set.filter(category=sender).update(category=new_category)
-    sender.pollvote_set.update(category=new_category)
-    sender.subscription_set.update(category=new_category)
-    sender.notification_set.update(category=new_category)
-    sender.watchedthread_set.update(category=new_category)
 
 
 @receiver(delete_user_content)

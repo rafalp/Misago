@@ -119,16 +119,6 @@ class Category(MPTTModel, PluginDataModel):
         else:
             self.empty_last_thread()
 
-    def delete_content(self):
-        from .signals import delete_category_content
-
-        delete_category_content.send(sender=self)
-
-    def move_content(self, new_category):
-        from .signals import move_category_content
-
-        move_category_content.send(sender=self, new_category=new_category)
-
     def get_absolute_url(self):
         return self.thread_type.get_category_absolute_url(self)
 

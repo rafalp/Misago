@@ -44,10 +44,10 @@ def delete_all(model: Type[Model], **where):
         if isinstance(value, list):
             in_clause = ", ".join(["%s"] * len(value))
             fields.append(f'"{column}" IN ({in_clause})')
-            params += value
+            params += [(v.pk if isinstance(v, Model) else v) for v in value]
         else:
             fields.append(f'"{column}" = %s')
-            params.append(value)
+            params.append(value.pk if isinstance(value, Model) else value)
 
     table = model._meta.db_table
     where_joined = " AND ".join(fields)

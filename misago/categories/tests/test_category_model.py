@@ -55,46 +55,6 @@ def test_category_synchronize_updates_category_data(default_category):
     assert default_category.last_thread == unapproved
 
 
-def test_category_delete_content_deletes_category_threads(default_category):
-    for _ in range(10):
-        post_thread(default_category)
-
-    default_category.synchronize()
-    assert default_category.threads == 10
-    assert default_category.posts == 10
-
-    default_category.delete_content()
-
-    default_category.synchronize()
-    assert default_category.threads == 0
-    assert default_category.posts == 0
-
-    assert_category_is_empty(default_category)
-
-
-def test_category_move_content_moves_category_contents(default_category):
-    """move_content moves category threads and posts to other category"""
-    for _ in range(10):
-        post_thread(default_category)
-    default_category.synchronize()
-
-    # we are using category so we don't have to fake another category
-    new_category = Category.objects.create(
-        lft=7, rght=8, tree_id=2, level=0, name="Archive", slug="archive"
-    )
-    default_category.move_content(new_category)
-
-    default_category.synchronize()
-    new_category.synchronize()
-
-    assert default_category.threads == 0
-    assert default_category.posts == 0
-    assert_category_is_empty(default_category)
-
-    assert new_category.threads == 10
-    assert new_category.posts == 10
-
-
 def test_category_set_last_thread_updates_last_thread_data(default_category):
     default_category.synchronize()
 

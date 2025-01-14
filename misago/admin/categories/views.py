@@ -6,6 +6,7 @@ from ...acl.cache import clear_acl_cache
 from ...admin.views import generic
 from ...cache.enums import CacheName
 from ...cache.versions import invalidate_cache
+from ...categories.delete import delete_category
 from ...categories.enums import CategoryTree
 from ...categories.models import Category, RoleCategoryACL
 from ...permissions.admin import get_admin_category_permissions
@@ -167,32 +168,17 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         move_children_to = form.cleaned_data.get("move_children_to")
-        move_threads_to = form.cleaned_data.get("move_threads_to")
+        move_contents_to = form.cleaned_data.get("move_contents_to")
 
-        if move_children_to:
-            for child in target.get_children():
-                # refresh child and new parent
-                move_children_to = Category.objects.get(pk=move_children_to.pk)
-                child = Category.objects.get(pk=child.pk)
+        if move_children_to and not move_children_to.level:
+            move_children_to = True
 
-                child.move_to(move_children_to, "last-child")
-                if move_threads_to and child.pk == move_threads_to.pk:
-                    move_threads_to = child
-        else:
-            for child in target.get_descendants().order_by("-lft"):
-                child.delete_content()
-                child.delete()
-
-        if move_threads_to:
-            target.move_content(move_threads_to)
-            move_threads_to.synchronize()
-            move_threads_to.save()
-        else:
-            target.delete_content()
-
-        # refresh instance
-        instance = Category.objects.get(pk=form.instance.pk)
-        instance.delete()
+        delete_category(
+            target,
+            move_contents_to=move_contents_to,
+            move_children_to=move_children_to,
+            request=request,
+        )
 
         invalidate_cache(
             CacheName.CATEGORIES,

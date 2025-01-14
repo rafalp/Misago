@@ -41,7 +41,7 @@ def test_category_delete_form_shows_error_if_category_is_root(
 def test_only_leaf_category_is_deleted(root_category, default_category, admin_client):
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": ""},
+        data={"move_children_to": "", "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -56,7 +56,7 @@ def test_category_with_child_is_deleted_together_with_child(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": ""},
+        data={"move_children_to": "", "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -71,7 +71,7 @@ def test_category_with_child_is_deleted_and_child_is_made_top_category(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": str(root_category.id), "move_threads_to": ""},
+        data={"move_children_to": str(root_category.id), "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -94,7 +94,7 @@ def test_category_with_child_is_deleted_and_child_is_moved_to_sibling(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": str(sibling_category.id), "move_threads_to": ""},
+        data={"move_children_to": str(sibling_category.id), "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -115,7 +115,7 @@ def test_category_with_child_cant_be_deleted_because_move_children_to_is_invalid
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": str(child_category.id + 1), "move_threads_to": ""},
+        data={"move_children_to": str(child_category.id + 1), "move_contents_to": ""},
     )
     assert_contains(response, "That choice is not one of the available choices.")
 
@@ -139,7 +139,7 @@ def test_category_with_children_cant_be_deleted_because_move_children_to_is_dele
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": str(child_category.id), "move_threads_to": ""},
+        data={"move_children_to": str(child_category.id), "move_contents_to": ""},
     )
     assert_contains(response, "That choice is not one of the available choices.")
 
@@ -164,7 +164,7 @@ def test_category_with_children_cant_be_deleted_because_deep_move_children_to_is
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": str(deep_category.id), "move_threads_to": ""},
+        data={"move_children_to": str(deep_category.id), "move_contents_to": ""},
     )
     assert_contains(response, "That choice is not one of the available choices.")
 
@@ -186,7 +186,7 @@ def test_category_is_deleted_and_sibling_edges_are_updated(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": ""},
+        data={"move_children_to": "", "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -209,7 +209,7 @@ def test_category_is_deleted_and_both_siblings_edges_are_updated(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": ""},
+        data={"move_children_to": "", "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -227,7 +227,7 @@ def test_category_thread_is_deleted_with_category(
 ):
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": ""},
+        data={"move_children_to": "", "move_contents_to": ""},
     )
     assert response.status_code == 302
 
@@ -249,7 +249,7 @@ def test_category_thread_is_moved_to_other_category_on_delete(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": str(sibling_category.id)},
+        data={"move_children_to": "", "move_contents_to": str(sibling_category.id)},
     )
     assert response.status_code == 302
 
@@ -277,7 +277,7 @@ def test_category_thread_is_moved_to_kept_child_category_on_delete(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
         data={
             "move_children_to": str(root_category.id),
-            "move_threads_to": str(child_category.id),
+            "move_contents_to": str(child_category.id),
         },
     )
     assert response.status_code == 302
@@ -304,7 +304,7 @@ def test_category_threads_cant_be_moved_to_deleted_child_category(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": str(child_category.id)},
+        data={"move_children_to": "", "move_contents_to": str(child_category.id)},
     )
     assert_contains(
         response,
@@ -334,7 +334,7 @@ def test_category_threads_cant_be_moved_to_deleted_deep_category(
 
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": str(deep_category.id)},
+        data={"move_children_to": "", "move_contents_to": str(deep_category.id)},
     )
     assert_contains(
         response,
@@ -359,7 +359,7 @@ def test_category_threads_cant_be_moved_to_root_category(
 ):
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": str(root_category.id)},
+        data={"move_children_to": "", "move_contents_to": str(root_category.id)},
     )
     assert_contains(response, "That choice is not one of the available choices.")
 
@@ -379,7 +379,7 @@ def test_category_threads_cant_be_moved_to_nonexisting_category(
 ):
     response = admin_client.post(
         reverse("misago:admin:categories:delete", kwargs={"pk": default_category.pk}),
-        data={"move_children_to": "", "move_threads_to": str(default_category.id + 1)},
+        data={"move_children_to": "", "move_contents_to": str(default_category.id + 1)},
     )
     assert_contains(response, "That choice is not one of the available choices.")
 
@@ -400,7 +400,7 @@ def test_deleting_category_invalidates_categories_cache(default_category, admin_
             reverse(
                 "misago:admin:categories:delete", kwargs={"pk": default_category.pk}
             ),
-            data={"move_children_to": "", "move_threads_to": ""},
+            data={"move_children_to": "", "move_contents_to": ""},
         )
 
 
@@ -412,7 +412,7 @@ def test_deleting_category_invalidates_permissions_cache(
             reverse(
                 "misago:admin:categories:delete", kwargs={"pk": default_category.pk}
             ),
-            data={"move_children_to": "", "move_threads_to": ""},
+            data={"move_children_to": "", "move_contents_to": ""},
         )
 
 
@@ -422,5 +422,5 @@ def test_deleting_category_invalidates_moderators_cache(default_category, admin_
             reverse(
                 "misago:admin:categories:delete", kwargs={"pk": default_category.pk}
             ),
-            data={"move_children_to": "", "move_threads_to": ""},
+            data={"move_children_to": "", "move_contents_to": ""},
         )

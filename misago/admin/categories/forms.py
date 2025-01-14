@@ -327,8 +327,8 @@ class DeleteCategoryForm(forms.ModelForm):
 
     def setup_fields(self):
         content_queryset = Category.objects.all_categories().order_by("lft")
-        self.fields["move_threads_to"] = AdminCategoryChoiceField(
-            label=pgettext_lazy("admin category form", "Move category threads to"),
+        self.fields["move_contents_to"] = AdminCategoryChoiceField(
+            label=pgettext_lazy("admin category form", "Move category contents to"),
             queryset=content_queryset,
             initial=self.instance.parent,
             empty_label=pgettext_lazy("admin category form", "Delete with category"),
@@ -353,15 +353,15 @@ class DeleteCategoryForm(forms.ModelForm):
     def clean(self):
         data = super().clean()
 
-        if data.get("move_threads_to"):
-            if data["move_threads_to"].pk == self.instance.pk:
+        if data.get("move_contents_to"):
+            if data["move_contents_to"].pk == self.instance.pk:
                 message = pgettext_lazy(
                     "admin category form",
                     "You are trying to move this category threads to itself.",
                 )
                 raise forms.ValidationError(message)
 
-            moving_to_child = self.instance.has_child(data["move_threads_to"])
+            moving_to_child = self.instance.has_child(data["move_contents_to"])
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
