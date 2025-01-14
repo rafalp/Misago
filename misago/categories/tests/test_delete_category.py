@@ -15,9 +15,8 @@ def test_delete_category_deletes_category(default_category):
 
 
 # A list of parametrized test
-DELETE_CATEGORY_TEST_CASES = [
-    # Case 1
-    (
+DELETE_CATEGORY_TEST_CASES = {
+    "case-1": (
         {
             0: None,
             1: 0,
@@ -28,8 +27,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (0, None, 0, 1, 2),
         ],
     ),
-    # Case 2
-    (
+    "case-2": (
         {
             0: None,
             1: 0,
@@ -42,8 +40,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (2, 0, 1, 2, 3),
         ],
     ),
-    # Case 3
-    (
+    "case-3": (
         {
             0: None,
             1: 0,
@@ -56,8 +53,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (1, 0, 1, 2, 3),
         ],
     ),
-    # Case 4
-    (
+    "case-4": (
         {
             0: None,
             1: 0,
@@ -72,8 +68,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 0, 1, 4, 5),
         ],
     ),
-    # Case 5
-    (
+    "case-5": (
         {
             0: None,
             1: 0,
@@ -88,8 +83,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 0, 1, 4, 5),
         ],
     ),
-    # Case 6
-    (
+    "case-6": (
         {
             0: None,
             1: 0,
@@ -104,8 +98,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (2, 0, 1, 4, 5),
         ],
     ),
-    # Case 7
-    (
+    "case-7": (
         {
             0: None,
             1: 0,
@@ -119,8 +112,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 0, 1, 2, 3),
         ],
     ),
-    # Case 8
-    (
+    "case-8": (
         {
             0: None,
             1: 0,
@@ -135,8 +127,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (2, 0, 1, 4, 5),
         ],
     ),
-    # Case 9
-    (
+    "case-9": (
         {
             0: None,
             1: 0,
@@ -151,8 +142,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (2, 3, 2, 3, 4),
         ],
     ),
-    # Case 10
-    (
+    "case-10": (
         {
             0: None,
             1: 0,
@@ -168,8 +158,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 4, 5),
         ],
     ),
-    # Case 11
-    (
+    "case-11": (
         {
             0: None,
             1: 0,
@@ -186,8 +175,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 6, 7),
         ],
     ),
-    # Case 12
-    (
+    "case-12": (
         {
             0: None,
             1: 0,
@@ -204,8 +192,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 6, 7),
         ],
     ),
-    # Case 13
-    (
+    "case-13": (
         {
             0: None,
             1: 0,
@@ -222,8 +209,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 0, 1, 6, 7),
         ],
     ),
-    # Case 14
-    (
+    "case-14": (
         {
             0: None,
             1: 0,
@@ -240,8 +226,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 6, 7),
         ],
     ),
-    # Case 15
-    (
+    "case-15": (
         {
             0: None,
             1: 0,
@@ -257,8 +242,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 4, 5),
         ],
     ),
-    # Case 16
-    (
+    "case-16": (
         {
             0: None,
             1: 0,
@@ -275,8 +259,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 6, 7),
         ],
     ),
-    # Case 17
-    (
+    "case-17": (
         {
             0: None,
             1: 0,
@@ -293,8 +276,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 2, 2, 5, 6),
         ],
     ),
-    # Case 18
-    (
+    "case-18": (
         {
             0: None,
             1: 0,
@@ -310,8 +292,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 4, 5),
         ],
     ),
-    # Case 19
-    (
+    "case-19": (
         {
             0: None,
             1: 0,
@@ -328,8 +309,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 0, 1, 6, 7),
         ],
     ),
-    # Case 20
-    (
+    "case-20": (
         {
             0: None,
             1: 0,
@@ -346,8 +326,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 0, 1, 6, 7),
         ],
     ),
-    # Case 21
-    (
+    "case-21": (
         {
             0: None,
             1: 0,
@@ -364,8 +343,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (3, 4, 2, 5, 6),
         ],
     ),
-    # Case 22
-    (
+    "case-22": (
         {
             0: None,
             1: 0,
@@ -382,8 +360,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (5, 0, 1, 4, 5),
         ],
     ),
-    # Case 23
-    (
+    "case-23": (
         {
             0: None,
             1: 0,
@@ -402,8 +379,7 @@ DELETE_CATEGORY_TEST_CASES = [
             (4, 3, 2, 7, 8),
         ],
     ),
-    # Case 24
-    (
+    "case-24": (
         {
             0: None,
             1: 0,
@@ -422,13 +398,13 @@ DELETE_CATEGORY_TEST_CASES = [
             (5, 0, 1, 8, 9),
         ],
     ),
-]
+}
 
 
 @pytest.mark.parametrize(
     "tree,delete,move_to,valid_tree",
-    DELETE_CATEGORY_TEST_CASES,
-    ids=[f"Case {i + 1}" for i in range(len(DELETE_CATEGORY_TEST_CASES))],
+    DELETE_CATEGORY_TEST_CASES.values(),
+    ids=DELETE_CATEGORY_TEST_CASES,
 )
 def test_delete_category_maintains_valid_category_tree(
     root_category, tree, delete, move_to, valid_tree
