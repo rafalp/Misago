@@ -1,6 +1,9 @@
+from itertools import product
+
 import pytest
 
 from ..delete import delete_category
+from ..mptt import heal_category_trees
 from ..models import Category
 
 
@@ -11,761 +14,465 @@ def test_delete_category_deletes_category(default_category):
         default_category.refresh_from_db()
 
 
-def test_delete_category_updates_category_tree(root_category, default_category):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=8)
-    root_category.refresh_from_db()
+# A list of parametrized test
+DELETE_CATEGORY_TEST_CASES = [
+    # Case 1
+    (
+        {
+            0: None,
+            1: 0,
+        },
+        1,
+        None,
+        [
+            (0, None, 0, 1, 2),
+        ],
+    ),
+    # Case 2
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+        },
+        1,
+        None,
+        [
+            (0, None, 0, 1, 4),
+            (2, 0, 1, 2, 3),
+        ],
+    ),
+    # Case 3
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+        },
+        2,
+        None,
+        [
+            (0, None, 0, 1, 4),
+            (1, 0, 1, 2, 3),
+        ],
+    ),
+    # Case 4
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 0,
+        },
+        1,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (2, 0, 1, 2, 3),
+            (3, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 5
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 0,
+        },
+        2,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (1, 0, 1, 2, 3),
+            (3, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 6
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 0,
+        },
+        3,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (1, 0, 1, 2, 3),
+            (2, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 7
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+        },
+        1,
+        None,
+        [
+            (0, None, 0, 1, 4),
+            (3, 0, 1, 2, 3),
+        ],
+    ),
+    # Case 8
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+        },
+        1,
+        True,
+        [
+            (0, None, 0, 1, 6),
+            (3, 0, 1, 2, 3),
+            (2, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 9
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+        },
+        1,
+        3,
+        [
+            (0, None, 0, 1, 6),
+            (3, 0, 1, 2, 5),
+            (2, 3, 2, 3, 4),
+        ],
+    ),
+    # Case 10
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+            4: 0,
+        },
+        1,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (3, 0, 1, 2, 3),
+            (4, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 11
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+            4: 0,
+        },
+        2,
+        None,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 3),
+            (3, 0, 1, 4, 5),
+            (4, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 12
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+            4: 0,
+        },
+        3,
+        None,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 5),
+            (2, 1, 2, 3, 4),
+            (4, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 13
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 0,
+            4: 0,
+        },
+        4,
+        None,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 5),
+            (2, 1, 2, 3, 4),
+            (3, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 14
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 2,
+            4: 0,
+        },
+        1,
+        None,
+        [
+            (0, None, 0, 1, 8),
+            (2, 0, 1, 2, 5),
+            (3, 2, 2, 3, 4),
+            (4, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 15
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 2,
+            4: 0,
+        },
+        2,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (1, 0, 1, 2, 3),
+            (4, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 16
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 2,
+            4: 0,
+        },
+        3,
+        None,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 3),
+            (2, 0, 1, 4, 5),
+            (4, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 17
+    (
+        {
+            0: None,
+            1: 0,
+            2: 0,
+            3: 2,
+            4: 0,
+        },
+        4,
+        None,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 3),
+            (2, 0, 1, 4, 7),
+            (3, 2, 2, 5, 6),
+        ],
+    ),
+    # Case 18
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 0,
+        },
+        2,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (1, 0, 1, 2, 3),
+            (4, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 19
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 0,
+        },
+        2,
+        True,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 3),
+            (4, 0, 1, 4, 5),
+            (3, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 20
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 0,
+        },
+        2,
+        1,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 5),
+            (3, 1, 2, 3, 4),
+            (4, 0, 1, 6, 7),
+        ],
+    ),
+    # Case 21
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 0,
+        },
+        2,
+        4,
+        [
+            (0, None, 0, 1, 8),
+            (1, 0, 1, 2, 3),
+            (4, 0, 1, 4, 7),
+            (3, 4, 2, 5, 6),
+        ],
+    ),
+    # Case 22
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 0,
+        },
+        2,
+        None,
+        [
+            (0, None, 0, 1, 6),
+            (1, 0, 1, 2, 3),
+            (5, 0, 1, 4, 5),
+        ],
+    ),
+    # Case 23
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 0,
+        },
+        2,
+        True,
+        [
+            (0, None, 0, 1, 10),
+            (1, 0, 1, 2, 3),
+            (5, 0, 1, 4, 5),
+            (3, 0, 1, 6, 9),
+            (4, 3, 2, 7, 8),
+        ],
+    ),
+    # Case 24
+    (
+        {
+            0: None,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 0,
+        },
+        2,
+        1,
+        [
+            (0, None, 0, 1, 10),
+            (1, 0, 1, 2, 7),
+            (3, 1, 2, 3, 6),
+            (4, 3, 3, 4, 5),
+            (5, 0, 1, 8, 9),
+        ],
+    ),
+]
 
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
 
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=5)
-    default_category.refresh_from_db()
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=6,
-        rght=7,
-    )
-
-    delete_category(default_category)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 6
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 5
-
-
-def test_delete_category_deletes_category_child(root_category, default_category):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=10)
-    root_category.refresh_from_db()
-
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
-
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=7)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=6,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=8,
-        rght=9,
-    )
-
-    delete_category(default_category, move_children_to=None)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    with pytest.raises(Category.DoesNotExist):
-        child_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 6
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 5
-
-
-def test_delete_category_moves_category_child_to_end_of_root(
-    root_category, default_category
+@pytest.mark.parametrize(
+    "tree,delete,move_to,valid_tree",
+    DELETE_CATEGORY_TEST_CASES,
+    ids=[f"Case {i + 1}" for i in range(len(DELETE_CATEGORY_TEST_CASES))],
+)
+def test_delete_category_maintains_valid_category_tree(
+    root_category, tree, delete, move_to, valid_tree
 ):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=10)
-    root_category.refresh_from_db()
+    Category.objects.filter(tree_id=root_category.tree_id, level__gt=0).delete()
+    categories = generate_categories_tree(root_category, tree)
+    indexes = {category.id: index for index, category in categories.items()}
 
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
+    if move_to is True or move_to is None:
+        move_children_to = move_to
+    else:
+        move_children_to = categories[move_to]
+
+    delete_category(
+        categories.pop(delete),
+        move_children_to=move_children_to,
     )
 
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=7)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=6,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=8,
-        rght=9,
-    )
-
-    delete_category(default_category)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 8
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 5
-
-    child_category.refresh_from_db()
-    assert child_category.parent_id == root_category.id
-    assert child_category.level == 1
-    assert child_category.lft == 6
-    assert child_category.rght == 7
-
-
-def test_delete_category_moves_category_child_to_next_category(
-    root_category, default_category
-):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=12)
-    root_category.refresh_from_db()
-
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
-
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=7)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=6,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=8,
-        rght=9,
-    )
-
-    last_category = Category.objects.create(
-        name="Last Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=10,
-        rght=11,
-    )
-
-    delete_category(default_category, move_children_to=next_category)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 10
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 7
-
-    child_category.refresh_from_db()
-    assert child_category.parent_id == next_category.id
-    assert child_category.level == 2
-    assert child_category.lft == 5
-    assert child_category.rght == 6
-
-    last_category.refresh_from_db()
-    assert last_category.parent_id == root_category.id
-    assert last_category.level == 1
-    assert last_category.lft == 8
-    assert last_category.rght == 9
-
-
-def test_delete_category_moves_category_child_to_next_category_child(
-    root_category, default_category
-):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=14)
-    root_category.refresh_from_db()
-
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
-
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=7)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=6,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=8,
-        rght=11,
-    )
-
-    next_category_child = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=next_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=9,
-        rght=10,
-    )
-
-    last_category = Category.objects.create(
-        name="Last Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=12,
-        rght=13,
-    )
-
-    delete_category(default_category, move_children_to=next_category_child)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 12
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 9
-
-    next_category_child.refresh_from_db()
-    assert next_category_child.parent_id == next_category.id
-    assert next_category_child.level == 2
-    assert next_category_child.lft == 5
-    assert next_category_child.rght == 8
-
-    child_category.refresh_from_db()
-    assert child_category.parent_id == next_category_child.id
-    assert child_category.level == 3
-    assert child_category.lft == 6
-    assert child_category.rght == 7
-
-    last_category.refresh_from_db()
-    assert last_category.parent_id == root_category.id
-    assert last_category.level == 1
-    assert last_category.lft == 10
-    assert last_category.rght == 11
-
-
-def test_delete_category_deletes_category_child_with_descendants(
-    root_category, default_category
-):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=18)
-    root_category.refresh_from_db()
-
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
-
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=11)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=10,
-    )
-
-    first_descendant = Category.objects.create(
-        name="First Descendant",
-        slug="category",
-        parent=child_category,
-        tree_id=root_category.tree_id,
-        level=3,
-        lft=6,
-        rght=7,
-    )
-
-    second_descendant = Category.objects.create(
-        name="First Descendant",
-        slug="category",
-        parent=child_category,
-        tree_id=root_category.tree_id,
-        level=3,
-        lft=8,
-        rght=9,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=12,
-        rght=15,
-    )
-
-    next_category_child = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=next_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=13,
-        rght=14,
-    )
-
-    last_category = Category.objects.create(
-        name="Last Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=16,
-        rght=17,
-    )
-
-    delete_category(default_category, move_children_to=None)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    with pytest.raises(Category.DoesNotExist):
-        child_category.refresh_from_db()
-
-    with pytest.raises(Category.DoesNotExist):
-        first_descendant.refresh_from_db()
-
-    with pytest.raises(Category.DoesNotExist):
-        second_descendant.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 10
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 7
-
-    next_category_child.refresh_from_db()
-    assert next_category_child.parent_id == next_category.id
-    assert next_category_child.level == 2
-    assert next_category_child.lft == 5
-    assert next_category_child.rght == 6
-
-    last_category.refresh_from_db()
-    assert last_category.parent_id == root_category.id
-    assert last_category.level == 1
-    assert last_category.lft == 8
-    assert last_category.rght == 9
-
-
-def test_delete_category_moves_category_child_with_descendants_to_end_of_root(
-    root_category, default_category
-):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=18)
-    root_category.refresh_from_db()
-
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
-
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=11)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=10,
-    )
-
-    first_descendant = Category.objects.create(
-        name="First Descendant",
-        slug="category",
-        parent=child_category,
-        tree_id=root_category.tree_id,
-        level=3,
-        lft=6,
-        rght=7,
-    )
-
-    second_descendant = Category.objects.create(
-        name="First Descendant",
-        slug="category",
-        parent=child_category,
-        tree_id=root_category.tree_id,
-        level=3,
-        lft=8,
-        rght=9,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=12,
-        rght=15,
-    )
-
-    next_category_child = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=next_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=13,
-        rght=14,
-    )
-
-    last_category = Category.objects.create(
-        name="Last Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=16,
-        rght=17,
-    )
-
-    delete_category(default_category)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 16
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 3
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 4
-    assert next_category.rght == 7
-
-    next_category_child.refresh_from_db()
-    assert next_category_child.parent_id == next_category.id
-    assert next_category_child.level == 2
-    assert next_category_child.lft == 5
-    assert next_category_child.rght == 6
-
-    last_category.refresh_from_db()
-    assert last_category.parent_id == root_category.id
-    assert last_category.level == 1
-    assert last_category.lft == 8
-    assert last_category.rght == 9
-
-    child_category.refresh_from_db()
-    assert child_category.parent_id == root_category.id
-    assert child_category.level == 1
-    assert child_category.lft == 10
-    assert child_category.rght == 15
-
-    first_descendant.refresh_from_db()
-    assert first_descendant.parent_id == child_category.id
-    assert first_descendant.level == 2
-    assert first_descendant.lft == 11
-    assert first_descendant.rght == 12
-
-    second_descendant.refresh_from_db()
-    assert second_descendant.parent_id == child_category.id
-    assert second_descendant.level == 2
-    assert second_descendant.lft == 13
-    assert second_descendant.rght == 14
-
-
-def test_delete_category_moves_category_child_with_descendants_under_previous_category(
-    root_category, default_category
-):
-    Category.objects.filter(id=root_category.id).update(lft=1, rght=18)
-    root_category.refresh_from_db()
-
-    previous_category = Category.objects.create(
-        name="Previous Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=2,
-        rght=3,
-    )
-
-    Category.objects.filter(id=default_category.id).update(lft=4, rght=11)
-    default_category.refresh_from_db()
-
-    child_category = Category.objects.create(
-        name="Child Category",
-        slug="category",
-        parent=default_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=5,
-        rght=10,
-    )
-
-    first_descendant = Category.objects.create(
-        name="First Descendant",
-        slug="category",
-        parent=child_category,
-        tree_id=root_category.tree_id,
-        level=3,
-        lft=6,
-        rght=7,
-    )
-
-    second_descendant = Category.objects.create(
-        name="First Descendant",
-        slug="category",
-        parent=child_category,
-        tree_id=root_category.tree_id,
-        level=3,
-        lft=8,
-        rght=9,
-    )
-
-    next_category = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=12,
-        rght=15,
-    )
-
-    next_category_child = Category.objects.create(
-        name="Next Category",
-        slug="category",
-        parent=next_category,
-        tree_id=root_category.tree_id,
-        level=2,
-        lft=13,
-        rght=14,
-    )
-
-    last_category = Category.objects.create(
-        name="Last Category",
-        slug="category",
-        parent=root_category,
-        tree_id=root_category.tree_id,
-        level=1,
-        lft=16,
-        rght=17,
-    )
-
-    delete_category(default_category, move_children_to=previous_category)
-
-    with pytest.raises(Category.DoesNotExist):
-        default_category.refresh_from_db()
-
-    root_category.refresh_from_db()
-    assert root_category.parent_id is None
-    assert root_category.level == 0
-    assert root_category.lft == 1
-    assert root_category.rght == 16
-
-    previous_category.refresh_from_db()
-    assert previous_category.parent_id == root_category.id
-    assert previous_category.level == 1
-    assert previous_category.lft == 2
-    assert previous_category.rght == 9
-
-    child_category.refresh_from_db()
-    assert child_category.parent_id == previous_category.id
-    assert child_category.level == 2
-    assert child_category.lft == 3
-    assert child_category.rght == 8
-
-    first_descendant.refresh_from_db()
-    assert first_descendant.parent_id == child_category.id
-    assert first_descendant.level == 3
-    assert first_descendant.lft == 4
-    assert first_descendant.rght == 5
-
-    second_descendant.refresh_from_db()
-    assert second_descendant.parent_id == child_category.id
-    assert second_descendant.level == 3
-    assert second_descendant.lft == 6
-    assert second_descendant.rght == 7
-
-    next_category.refresh_from_db()
-    assert next_category.parent_id == root_category.id
-    assert next_category.level == 1
-    assert next_category.lft == 10
-    assert next_category.rght == 13
-
-    next_category_child.refresh_from_db()
-    assert next_category_child.parent_id == next_category.id
-    assert next_category_child.level == 2
-    assert next_category_child.lft == 11
-    assert next_category_child.rght == 12
-
-    last_category.refresh_from_db()
-    assert last_category.parent_id == root_category.id
-    assert last_category.level == 1
-    assert last_category.lft == 14
-    assert last_category.rght == 15
+    tree_db = [
+        (indexes[c.id], indexes.get(c.parent_id), c.level, c.lft, c.rght)
+        for c in Category.objects.filter(tree_id=root_category.tree_id).order_by("lft")
+    ]
+
+    assert tree_db == valid_tree
+
+
+def generate_categories_tree(
+    root_category: Category, tree: dict[int, int]
+) -> dict[int, Category]:
+    categories: dict[int, Category] = {0: root_category}
+    for category_id, category_parent in tree.items():
+        if category_id == 0:
+            continue
+
+        parent = categories[category_parent]
+        categories[category_id] = Category.objects.create(
+            name=f"Category #{category_id}",
+            slug=f"category-{category_id}",
+            parent=parent,
+            tree_id=parent.tree_id,
+            level=parent.level + 1,
+        )
+
+    heal_category_trees()
+
+    queryset = Category.objects.filter(tree_id=root_category.tree_id).order_by("lft")
+    return {i: category for i, category in enumerate(queryset)}
