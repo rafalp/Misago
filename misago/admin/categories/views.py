@@ -175,8 +175,8 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
 
         delete_category(
             target,
-            move_contents_to=move_contents_to,
             move_children_to=move_children_to,
+            move_contents_to=move_contents_to,
             request=request,
         )
 

@@ -26,10 +26,10 @@
 <fieldset>
   <legend>{% trans "Category contents" context "admin category form" %}</legend>
 
-  {% form_row form.move_contents_to %}
   {% if not form.instance.is_leaf_node %}
     {% form_row form.move_children_to %}
   {% endif %}
+  {% form_row form.move_contents_to %}
 
 </fieldset>
 {% endblock form-body %}

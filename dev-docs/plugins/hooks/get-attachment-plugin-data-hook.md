@@ -107,7 +107,7 @@ def store_attachment_exif_data(
     request: HttpRequest,
     upload: UploadedFile,
     image: Image | None = None,
-) -> {}:
+) -> dict:
     plugin_data = action(request, upload, image)
 
     if image:

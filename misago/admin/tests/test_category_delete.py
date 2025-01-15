@@ -308,7 +308,7 @@ def test_category_threads_cant_be_moved_to_deleted_child_category(
     )
     assert_contains(
         response,
-        "You are trying to move this category&#x27;s threads to a child category that will also be deleted.",
+        "You are trying to move this category&#x27;s contents to a child category that will also be deleted.",
     )
 
     assert_valid_categories_tree(
@@ -338,7 +338,7 @@ def test_category_threads_cant_be_moved_to_deleted_deep_category(
     )
     assert_contains(
         response,
-        "You are trying to move this category&#x27;s threads to a child category that will also be deleted.",
+        "You are trying to move this category&#x27;s contents to a child category that will also be deleted.",
     )
 
     assert_valid_categories_tree(

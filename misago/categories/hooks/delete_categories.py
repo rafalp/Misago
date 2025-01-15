@@ -18,14 +18,14 @@ class DeleteCategoriesHookAction(Protocol):
     it will contain both the deleted category and all its descendants that will
     also be deleted. Otherwise, `categories` list will contain only single item.
 
-    ## `move_contents_to: Category | None = None`
-
-    A category to move categories content to, or `None` to delete contents too.
-
     ## `move_children_to: Category | bool | None = True`
 
     A category to move children categories to, `True` to make them root
     categories, or `None` to delete them too.
+
+    ## `move_contents_to: Category | None = None`
+
+    A category to move categories content to, or `None` to delete contents too.
 
     ## `request: HttpRequest | None`
 
@@ -36,8 +36,8 @@ class DeleteCategoriesHookAction(Protocol):
         self,
         categories: list[Category],
         *,
-        move_contents_to: Category | None = None,
         move_children_to: Category | bool | None = True,
+        move_contents_to: Category | None = None,
         request: HttpRequest | None = None,
     ): ...
 
@@ -58,14 +58,14 @@ class DeleteCategoriesHookFilter(Protocol):
     it will contain both the deleted category and all its descendants that will
     also be deleted. Otherwise, `categories` list will contain only single item.
 
-    ## `move_contents_to: Category | None = None`
-
-    A category to move categories content to, or `None` to delete contents too.
-
     ## `move_children_to: Category | bool | None = True`
 
     A category to move categories children to, `True` to make them root
     categories, or `None` to delete them too.
+
+    ## `move_contents_to: Category | None = None`
+
+    A category to move categories content to, or `None` to delete contents too.
 
     ## `request: HttpRequest | None`
 
@@ -77,8 +77,8 @@ class DeleteCategoriesHookFilter(Protocol):
         action: DeleteCategoriesHookAction,
         categories: list[Category],
         *,
-        move_contents_to: Category | None = None,
         move_children_to: Category | bool | None = True,
+        move_contents_to: Category | None = None,
         request: HttpRequest | None = None,
     ) -> int: ...
 
@@ -113,14 +113,14 @@ class DeleteCategoriesHook(
         action,
         categories: list[Category],
         *,
-        move_contents_to: Category | None = None,
         move_children_to: Category | bool | None = True,
+        move_contents_to: Category | None = None,
         request: HttpRequest | None = None,
     ):
         action(
             categories,
-            move_contents_to=move_contents_to,
             move_children_to=move_children_to,
+            move_contents_to=move_contents_to,
             request=request,
         )
 
@@ -144,15 +144,15 @@ class DeleteCategoriesHook(
         action: DeleteCategoriesHookAction,
         categories: list[Category],
         *,
-        move_contents_to: Category | None = None,
         move_children_to: Category | bool | None = True,
+        move_contents_to: Category | None = None,
         request: HttpRequest | None = None,
     ) -> int:
         return super().__call__(
             action,
             categories,
-            move_contents_to=move_contents_to,
             move_children_to=move_children_to,
+            move_contents_to=move_contents_to,
             request=request,
         )
 

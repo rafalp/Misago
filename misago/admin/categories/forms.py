@@ -326,15 +326,6 @@ class DeleteCategoryForm(forms.ModelForm):
         self.setup_fields()
 
     def setup_fields(self):
-        content_queryset = Category.objects.all_categories().order_by("lft")
-        self.fields["move_contents_to"] = AdminCategoryChoiceField(
-            label=pgettext_lazy("admin category form", "Move category contents to"),
-            queryset=content_queryset,
-            initial=self.instance.parent,
-            empty_label=pgettext_lazy("admin category form", "Delete with category"),
-            required=False,
-        )
-
         not_siblings = models.Q(lft__lt=self.instance.lft)
         not_siblings = not_siblings | models.Q(rght__gt=self.instance.rght)
         children_queryset = Category.objects.all_categories(True)
@@ -349,6 +340,15 @@ class DeleteCategoryForm(forms.ModelForm):
                 ),
                 required=False,
             )
+
+        content_queryset = Category.objects.all_categories().order_by("lft")
+        self.fields["move_contents_to"] = AdminCategoryChoiceField(
+            label=pgettext_lazy("admin category form", "Move contents to"),
+            queryset=content_queryset,
+            initial=self.instance.parent,
+            empty_label=pgettext_lazy("admin category form", "Delete with category"),
+            required=False,
+        )
 
     def clean(self):
         data = super().clean()
@@ -365,7 +365,7 @@ class DeleteCategoryForm(forms.ModelForm):
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
-                    "You are trying to move this category's threads to a child category that will also be deleted.",
+                    "You are trying to move this category's contents to a child category that will also be deleted.",
                 )
                 raise forms.ValidationError(message)
 

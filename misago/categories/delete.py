@@ -6,10 +6,10 @@ from django.http import HttpRequest
 from ..attachments.delete import delete_categories_attachments
 from ..attachments.models import Attachment
 from ..categories.models import RoleCategoryACL
+from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
-from ..notifications.models import Notification, WatchedThread
 from ..threads.models import (
     Attachment as LegacyAttachment,
     Poll,
@@ -29,25 +29,33 @@ __all__ = ["delete_category"]
 def delete_category(
     category: Category,
     *,
-    move_contents_to: Category | None = None,
     move_children_to: Category | bool | None = True,
+    move_contents_to: Category | None = None,
     request: HttpRequest | None = None,
 ):
+    if isinstance(move_children_to, Category) and move_children_to.is_descendant_of(
+        category, include_self=True
+    ):
+        raise ValueError("Category from 'move_children_to' will be deleted.")
+
+    if move_contents_to and (
+        move_contents_to == category
+        or (
+            move_children_to is None
+            and move_contents_to.is_descendant_of(category, include_self=True)
+        )
+    ):
+        raise ValueError("Category from 'move_contents_to' will be deleted.")
+
     categories: list[Category] = [category]
     if move_children_to is None:
         categories = list(category.get_descendants(include_self=True))
 
-    if move_contents_to and move_contents_to in categories:
-        raise ValueError("Category from 'move_contents_to' will be deleted.")
-
-    if isinstance(move_children_to, Category) and move_children_to in categories:
-        raise ValueError("Category from 'move_children_to' will be deleted.")
-
     delete_categories_hook(
         _delete_categories_action,
         categories,
-        move_contents_to=move_contents_to,
         move_children_to=move_children_to,
+        move_contents_to=move_contents_to,
         request=request,
     )
 

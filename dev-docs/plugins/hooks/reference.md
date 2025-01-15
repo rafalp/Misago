@@ -30,6 +30,11 @@ Hooks instances are importable from the following Python modules:
 
 `misago.categories.hooks` defines the following hooks:
 
+- [`delete_categories_hook`](./delete-categories-hook.md)
+- [`get_categories_page_component_hook`](./get-categories-page-component-hook.md)
+- [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
+- [`get_categories_query_values_hook`](./get-categories-query-values-hook.md)
+- [`get_category_data_hook`](./get-category-data-hook.md)
 
 
 ## `misago.oauth2.hooks`

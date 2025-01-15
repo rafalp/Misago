@@ -60,7 +60,7 @@ def heal_category(
     category: dict,
     categories_branches: dict[int, list[dict]],
     position: int,
-    level: int=0,
+    level: int = 0,
 ) -> int:
     category["level"] = level
 

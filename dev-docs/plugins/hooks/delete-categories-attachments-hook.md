@@ -103,15 +103,18 @@ def log_delete_categories_attachments(
     categories: Iterable[Union[Category, int]],
     *,
     request: HttpRequest | None = None,
-) -> {}:
+) -> int:
     deleted = action(categories, request=request)
+
+    if request and request.user.is_authenticated:
+        user = f"#{request.user.id}: {request.user.username}"
+    else:
+        user = None
 
     logger.info(
         "Deleted categories attachments: %s",
         str(deleted),
-        extra={
-            "user": request.user.id if request and request.user.id else None,
-        },
+        extra={"user": user},
     )
 
     return deleted
