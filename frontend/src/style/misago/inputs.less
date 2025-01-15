@@ -76,17 +76,16 @@ input.hidden-file-upload {
 .form-control-post {
   resize: none;
   min-height: 200px;
+}
 
-  &.form-control-post-lg {
+@media screen and (min-height: 800px) {
+  .form-control-post.form-control-post-lg {
     min-height: 300px;
   }
 }
 
-
-@media screen and (min-height: 760px) {
-  .form-control-post {
-    &.form-control-post-lg {
-      min-height: 340px;
-    }
+@media screen and (min-height: 1000px) {
+  .form-control-post.form-control-post-lg {
+    min-height: 400px;
   }
 }
