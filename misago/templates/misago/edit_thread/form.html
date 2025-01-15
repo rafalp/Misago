@@ -12,6 +12,7 @@
   <form 
     action="{% url 'misago:edit-thread' id=thread.id slug=thread.slug %}"
     method="post"
+    enctype="multipart/form-data"
     hx-post="{% url 'misago:edit-thread' id=thread.id slug=thread.slug %}"
     hx-trigger="submit"
     hx-target="#misago-htmx-root"

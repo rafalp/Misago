@@ -75,6 +75,10 @@ class EditView(View):
             formset.clear_errors_in_preview()
             return self.render(request, post_obj, formset, state.post.parsed)
 
+        if request.POST.get("upload_attachments"):
+            formset.clear_errors_in_upload()
+            return self.render(request, post_obj, formset)
+
         if not self.is_valid(formset, state):
             return self.render(request, post_obj, formset)
 
@@ -108,12 +112,13 @@ class EditView(View):
         if animate:
             feed.set_animated_posts([state.post.id])
 
-        counter_start = (
-            self.get_thread_posts_queryset(request, state.thread)
-            .filter(id__lt=state.post.id)
-            .count()
-        )
-        feed.set_counter_start(counter_start)
+        if state.post != state.thread.first_post:
+            counter_start = (
+                self.get_thread_posts_queryset(request, state.thread)
+                .filter(id__lt=state.post.id)
+                .count()
+            )
+            feed.set_counter_start(counter_start)
 
         post_context = feed.get_feed_data()[0]
         return render(request, self.template_name_inline, context=post_context)

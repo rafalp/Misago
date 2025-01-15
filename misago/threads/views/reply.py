@@ -79,6 +79,10 @@ class ReplyView(View):
             formset.clear_errors_in_preview()
             return self.render(request, thread, formset, state.post.parsed)
 
+        if request.POST.get("upload_attachments"):
+            formset.clear_errors_in_upload()
+            return self.render(request, thread, formset)
+
         if not self.is_valid(formset, state):
             return self.render(request, thread, formset)
 
