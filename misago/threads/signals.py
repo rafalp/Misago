@@ -5,6 +5,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
 from django.utils.translation import pgettext
 
+from ..attachments.delete import delete_users_attachments
+from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
 from ..users.signals import (
@@ -14,7 +16,15 @@ from ..users.signals import (
     username_changed,
 )
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
-from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
+from .models import (
+    Attachment as LegacyAttachment,
+    Poll,
+    PollVote,
+    Post,
+    PostEdit,
+    PostLike,
+    Thread,
+)
 
 delete_post = Signal()
 delete_thread = Signal()
@@ -87,6 +97,8 @@ def change_thread_title(sender, **kwargs):
 
 @receiver(delete_user_content)
 def delete_user_threads(sender, **kwargs):
+    delete_users_attachments([sender])
+
     recount_categories = set()
     recount_threads = set()
 
@@ -127,11 +139,16 @@ def delete_user_threads(sender, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_attachments(sender, archive=None, **kwargs):
-    queryset = sender.attachment_set.order_by("id")
+    queryset = Attachment.objects.filter(uploader=sender).order_by("id")
     for attachment in queryset.iterator(chunk_size=50):
         archive.add_model_file(
             attachment.file,
             prefix=attachment.uploaded_on.strftime("%H%M%S-file"),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.video,
+            prefix=attachment.uploaded_on.strftime("%H%M%S-video"),
             date=attachment.uploaded_on,
         )
         archive.add_model_file(
@@ -142,6 +159,27 @@ def archive_user_attachments(sender, archive=None, **kwargs):
         archive.add_model_file(
             attachment.thumbnail,
             prefix=attachment.uploaded_on.strftime("%H%M%S-thumbnail"),
+            date=attachment.uploaded_on,
+        )
+
+
+@receiver(archive_user_data)
+def archive_user_legacy_attachments(sender, archive=None, **kwargs):
+    queryset = sender.attachment_set.order_by("id")
+    for attachment in queryset.iterator(chunk_size=50):
+        archive.add_model_file(
+            attachment.file,
+            prefix=attachment.uploaded_on.strftime("%H%M%S-legacy-file"),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.image,
+            prefix=attachment.uploaded_on.strftime("%H%M%S-legacy-image"),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.thumbnail,
+            prefix=attachment.uploaded_on.strftime("%H%M%S-legacy-thumbnail"),
             date=attachment.uploaded_on,
         )
 
@@ -229,6 +267,9 @@ def update_usernames(sender, **kwargs):
     )
 
     Attachment.objects.filter(uploader=sender).update(
+        uploader_name=sender.username, uploader_slug=sender.slug
+    )
+    LegacyAttachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username, uploader_slug=sender.slug
     )
 
