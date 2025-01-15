@@ -34,6 +34,7 @@ class MarkupEditor {
 
   _resizeEditor = (element) => {
     const constraints = this._getResizeConstraints(element)
+    console.log(constraints)
     const firstToolbar = element.querySelector(".markup-editor-toolbar-left")
     const secondToolbar = element.querySelector(
       ".markup-editor-toolbar-secondary"
@@ -118,7 +119,7 @@ class MarkupEditor {
     const toolbar = element.querySelector(".markup-editor-toolbar-left")
 
     let btnWidth = 0
-    element.querySelectorAll("button").forEach((child) => {
+    toolbar.querySelectorAll("button").forEach((child) => {
       let childWidth = child.clientWidth
       const childStyle = window.getComputedStyle(child)
       childWidth += parseInt(parseFloat(childStyle.borderLeftWidth))
