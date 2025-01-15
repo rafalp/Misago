@@ -298,6 +298,27 @@ def test_edit_private_thread_view_cancels_thread_and_post_edits_inline_in_htmx(
 
     post_original = user_private_thread.first_post.original
     assert_contains(response, post_original)
+    assert_contains(
+        response,
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        ),
+    )
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.title == "User Private Thread"

@@ -378,6 +378,27 @@ def test_edit_thread_view_cancels_thread_and_post_edits_inline_in_htmx(
 
     post_original = user_thread.first_post.original
     assert_contains(response, post_original)
+    assert_contains(
+        response,
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        ),
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        ),
+    )
 
     user_thread.refresh_from_db()
     assert user_thread.title == "Test thread"

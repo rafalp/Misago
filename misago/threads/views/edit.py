@@ -48,6 +48,7 @@ class EditView(View):
     template_name_inline: str = "misago/inline_edit/index.html"
     template_name_inline_form: str = "misago/inline_edit/form.html"
     post_select_related: Iterable[str] = ("thread", "category", "poster")
+    allow_edit_thread: bool = False
 
     def get(
         self, request: HttpRequest, id: int, slug: str, post: int | None = None
@@ -109,10 +110,13 @@ class EditView(View):
     ) -> HttpResponse:
         feed = self.get_posts_feed(request, state.thread, [state.post])
 
+        if self.allow_edit_thread:
+            feed.set_allow_edit_thread(True)
+
         if animate:
             feed.set_animated_posts([state.post.id])
 
-        if state.post != state.thread.first_post:
+        if state.post.id != state.thread.first_post_id:
             counter_start = (
                 self.get_thread_posts_queryset(request, state.thread)
                 .filter(id__lt=state.post.id)
@@ -240,6 +244,7 @@ class EditPrivateThreadPostView(EditView, PrivateThreadView):
 class EditThreadView(EditThreadPostView):
     template_name: str = "misago/edit_thread/index.html"
     template_name_htmx: str = "misago/edit_thread/form.html"
+    allow_edit_thread: bool = True
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -260,6 +265,7 @@ class EditThreadView(EditThreadPostView):
 class EditPrivateThreadView(EditPrivateThreadPostView):
     template_name: str = "misago/edit_private_thread/index.html"
     template_name_htmx: str = "misago/edit_private_thread/form.html"
+    allow_edit_thread: bool = True
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
