@@ -43,15 +43,15 @@ def heal_tree(tree_id: int, categories: dict[int, dict]) -> list[dict]:
     healed_categories: list[dict] = []
     categories_branches: dict[int, list[dict]] = {0: []}
     for category in categories.values():
-        if category["tree_id"] != tree_id:
+        if category["tree_id"] == tree_id:
             category_copy = category.copy()
             healed_categories.append(category_copy)
             categories_branches[category["parent_id"] or 0].append(category_copy)
             categories_branches[category["id"]] = []
 
-    mptt_data = list(range(1, (len(categories) * 2) + 1))
+    position = 0
     for category in categories_branches[0]:
-        heal_category(category, categories_branches, mptt_data, level=0)
+        position = heal_category(category, categories_branches, position, level=0)
 
     return healed_categories
 
@@ -59,11 +59,18 @@ def heal_tree(tree_id: int, categories: dict[int, dict]) -> list[dict]:
 def heal_category(
     category: dict,
     categories_branches: dict[int, list[dict]],
-    mptt_data: list[int],
     level: int,
-):
+    position: int,
+) -> int:
     category["level"] = level
-    category["lft"] = mptt_data.pop(0)
+
+    position += 1
+    category["lft"] = position
+
     for child in categories_branches[category["id"]]:
-        heal_category(child, categories_branches, mptt_data, level + 1)
-    category["rght"] = mptt_data.pop(0)
+        position = heal_category(child, categories_branches, level + 1, position)
+
+    position += 1
+    category["rght"] = position
+
+    return position
