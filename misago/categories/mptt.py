@@ -51,7 +51,7 @@ def heal_tree(tree_id: int, categories: dict[int, dict]) -> list[dict]:
 
     position = 0
     for category in categories_branches[0]:
-        position = heal_category(category, categories_branches, position, level=0)
+        position = heal_category(category, categories_branches, position)
 
     return healed_categories
 
@@ -59,8 +59,8 @@ def heal_tree(tree_id: int, categories: dict[int, dict]) -> list[dict]:
 def heal_category(
     category: dict,
     categories_branches: dict[int, list[dict]],
-    level: int,
     position: int,
+    level: int=0,
 ) -> int:
     category["level"] = level
 
@@ -68,7 +68,7 @@ def heal_category(
     category["lft"] = position
 
     for child in categories_branches[category["id"]]:
-        position = heal_category(child, categories_branches, level + 1, position)
+        position = heal_category(child, categories_branches, position, level + 1)
 
     position += 1
     category["rght"] = position
