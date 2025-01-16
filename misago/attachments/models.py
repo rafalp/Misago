@@ -14,7 +14,6 @@ from .filetypes import AttachmentFileType, filetypes
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:
-    # pylint: disable=undefined-loop-variable
     spread_path = md5(str(instance.secret).encode()).hexdigest()[:4]
     secret = Attachment.get_new_secret()
 

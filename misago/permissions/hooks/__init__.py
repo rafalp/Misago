@@ -1,6 +1,9 @@
 from .build_user_category_permissions import build_user_category_permissions_hook
 from .build_user_permissions import build_user_permissions_hook
 from .check_browse_category_permission import check_browse_category_permission_hook
+from .check_download_attachment_permission import (
+    check_download_attachment_permission_hook,
+)
 from .check_edit_post_permission import check_edit_post_permission_hook
 from .check_edit_private_thread_permission import (
     check_edit_private_thread_permission_hook,
@@ -21,6 +24,7 @@ from .check_reply_private_thread_permission import (
 )
 from .check_reply_thread_permission import check_reply_thread_permission_hook
 from .check_see_category_permission import check_see_category_permission_hook
+from .check_see_post_permission import check_see_post_permission_hook
 from .check_see_private_thread_permission import (
     check_see_private_thread_permission_hook,
 )
@@ -55,6 +59,7 @@ __all__ = [
     "build_user_category_permissions_hook",
     "build_user_permissions_hook",
     "check_browse_category_permission_hook",
+    "check_download_attachment_permission_hook",
     "check_edit_post_permission_hook",
     "check_edit_private_thread_permission_hook",
     "check_edit_private_thread_post_permission_hook",
@@ -65,6 +70,7 @@ __all__ = [
     "check_reply_private_thread_permission_hook",
     "check_reply_thread_permission_hook",
     "check_see_category_permission_hook",
+    "check_see_post_permission_hook",
     "check_see_private_thread_permission_hook",
     "check_see_thread_permission_hook",
     "check_start_private_threads_permission_hook",

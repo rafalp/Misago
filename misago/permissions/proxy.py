@@ -20,6 +20,25 @@ class UserPermissionsProxy:
 
     _wrapped = False
 
+    # Type hints for permissions checks
+    categories: dict[str, list[int]]
+    can_use_private_threads: bool
+    can_start_private_threads: bool
+    private_thread_users_limit: int
+    can_edit_own_threads: bool
+    own_threads_edit_time_limit: int
+    can_edit_own_posts: bool
+    own_posts_edit_time_limit: int
+    exempt_from_flood_control: bool
+    can_upload_attachments: int
+    attachment_size_limit: int
+    can_delete_own_attachments: bool
+    can_change_username: bool
+    username_changes_limit: int
+    username_changes_expire: int
+    username_changes_span: int
+    can_see_user_profiles: bool
+
     def __init__(self, user: Union["User", AnonymousUser], cache_versions: dict):
         self.user = user
         self.cache_versions = cache_versions

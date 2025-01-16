@@ -1,4 +1,5 @@
 from ..attachments import (
+    check_download_attachment_permission,
     get_private_threads_attachments_permissions,
     get_threads_attachments_permissions,
 )

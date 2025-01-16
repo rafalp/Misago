@@ -13,6 +13,7 @@ from ..hooks import (
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
     check_reply_thread_permission_hook,
+    check_see_post_permission_hook,
     check_see_thread_permission_hook,
     check_start_thread_permission_hook,
 )
@@ -216,6 +217,39 @@ def _check_edit_thread_permission_action(
                 permissions.own_threads_edit_time_limit,
             )
         )
+
+
+def check_see_post_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
+):
+    check_see_post_permission_hook(
+        _check_see_post_permission_action, permissions, category, thread, post
+    )
+
+
+def _check_see_post_permission_action(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
+):
+    try:
+        check_see_thread_permission(permissions, category, thread)
+    except PermissionDenied as exc:
+        raise Http404() from exc
+
+    if not permissions.is_category_moderator(category.id):
+        if post.is_unapproved and (
+            post.poster_id is None
+            or permissions.user.is_anonymous
+            or post.poster_id != permissions.user.id
+        ):
+            raise Http404()
+
+        if post.is_hidden:
+            raise PermissionDenied(
+                pgettext(
+                    "threads permission error",
+                    "You can't view this post's contents.",
+                )
+            )
 
 
 def check_edit_post_permission(

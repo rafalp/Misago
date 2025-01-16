@@ -1,7 +1,24 @@
 from dataclasses import dataclass
 
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
+from django.utils.translation import pgettext
+
+from ..attachments.models import Attachment
+from ..categories.enums import CategoryTree
+from ..categories.models import Category
+from ..threads.models import Post, Thread
 from .enums import CanUploadAttachments, CategoryPermission
+from .hooks import check_download_attachment_permission_hook
 from .proxy import UserPermissionsProxy
+from .threads import check_see_post_permission
+
+__all__ = [
+    "AttachmentsPermissions",
+    "check_download_attachment_permission",
+    "get_threads_attachments_permissions",
+    "get_private_threads_attachments_permissions",
+]
 
 
 @dataclass(frozen=True)
@@ -54,3 +71,65 @@ def get_private_threads_attachments_permissions(
         attachment_size_limit=user_permissions.attachment_size_limit,
         can_delete_own_attachments=user_permissions.can_delete_own_attachments,
     )
+
+
+def check_download_attachment_permission(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+    attachment: Attachment,
+):
+    return check_download_attachment_permission_hook(
+        _check_download_attachment_permission_action,
+        permissions,
+        category,
+        thread,
+        post,
+        attachment,
+    )
+
+
+def _check_download_attachment_permission_action(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+    attachment: Attachment,
+):
+    if (
+        permissions.user.is_authenticated
+        and permissions.user.id == attachment.uploader_id
+    ):
+        return  # Users can always download their own attachments
+
+    if category.tree_id == CategoryTree.THREADS:
+        try:
+            check_see_post_permission(permissions, category, thread, post)
+        except PermissionDenied as exc:
+            raise Http404() from exc
+
+        if category.id not in permissions.categories[CategoryPermission.ATTACHMENTS]:
+            raise PermissionDenied(
+                pgettext(
+                    "attachment permission error",
+                    "You can't download attachments in this category.",
+                )
+            )
+
+    elif category.tree_id == CategoryTree.PRIVATE_THREADS:
+        try:
+            pass
+        except PermissionDenied as exc:
+            raise Http404() from exc
+
+        if category.id not in permissions.categories[CategoryPermission.ATTACHMENTS]:
+            raise PermissionDenied(
+                pgettext(
+                    "attachment permission error",
+                    "You can't download attachments in this category.",
+                )
+            )
+
+    else:
+        raise Http404()

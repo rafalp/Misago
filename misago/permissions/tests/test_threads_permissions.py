@@ -11,6 +11,7 @@ from ..threads import (
     check_post_in_closed_category_permission,
     check_post_in_closed_thread_permission,
     check_reply_thread_permission,
+    check_see_post_permission,
     check_see_thread_permission,
     check_start_thread_permission,
 )
@@ -1092,6 +1093,10 @@ def test_check_see_thread_permission_fails_for_anonymous_user_without_browse_per
 
     with pytest.raises(PermissionDenied):
         check_see_thread_permission(permissions, default_category, thread)
+
+
+def test_check_see_post_permission_passes_if_user_has_permission():
+    raise NotImplementedError("TO DO!")
 
 
 def test_check_start_thread_permission_passes_if_user_has_permission(
