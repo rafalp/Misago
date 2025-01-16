@@ -10,8 +10,13 @@ from ..categories.models import Category
 from ..threads.models import Post, Thread
 from .enums import CanUploadAttachments, CategoryPermission
 from .hooks import check_download_attachment_permission_hook
+from .privatethreads import (
+    check_private_threads_permission,
+    check_see_private_thread_permission,
+    check_see_private_thread_post_permission,
+)
 from .proxy import UserPermissionsProxy
-from .threads import check_see_post_permission
+from .threads import check_see_post_permission, check_see_thread_permission
 
 __all__ = [
     "AttachmentsPermissions",
@@ -105,6 +110,7 @@ def _check_download_attachment_permission_action(
 
     if category.tree_id == CategoryTree.THREADS:
         try:
+            check_see_thread_permission(permissions, category, thread)
             check_see_post_permission(permissions, category, thread, post)
         except PermissionDenied as exc:
             raise Http404() from exc
@@ -119,17 +125,11 @@ def _check_download_attachment_permission_action(
 
     elif category.tree_id == CategoryTree.PRIVATE_THREADS:
         try:
-            pass
+            check_private_threads_permission(permissions)
+            check_see_private_thread_permission(permissions, thread)
+            check_see_private_thread_post_permission(permissions, thread, post)
         except PermissionDenied as exc:
             raise Http404() from exc
-
-        if category.id not in permissions.categories[CategoryPermission.ATTACHMENTS]:
-            raise PermissionDenied(
-                pgettext(
-                    "attachment permission error",
-                    "You can't download attachments in this category.",
-                )
-            )
 
     else:
         raise Http404()

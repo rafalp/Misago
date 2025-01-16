@@ -230,11 +230,6 @@ def check_see_post_permission(
 def _check_see_post_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
 ):
-    try:
-        check_see_thread_permission(permissions, category, thread)
-    except PermissionDenied as exc:
-        raise Http404() from exc
-
     if not permissions.is_category_moderator(category.id):
         if post.is_unapproved and (
             post.poster_id is None

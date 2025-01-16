@@ -1095,8 +1095,220 @@ def test_check_see_thread_permission_fails_for_anonymous_user_without_browse_per
         check_see_thread_permission(permissions, default_category, thread)
 
 
-def test_check_see_post_permission_passes_if_user_has_permission():
-    raise NotImplementedError("TO DO!")
+def test_check_see_post_permission_passes_if_user_has_permission(
+    user, cache_versions, default_category, thread, post
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_passes_if_anonymous_has_permission(
+    anonymous_user, cache_versions, default_category, thread, post
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_passes_if_category_moderator_has_permission(
+    user, cache_versions, default_category, thread, post
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_passes_if_global_moderator_has_permission(
+    moderator, cache_versions, default_category, thread, post
+):
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_for_unapproved_post_passes_if_user_is_poster(
+    user, cache_versions, default_category, thread, user_reply
+):
+    user_reply.is_unapproved = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_see_post_permission_for_unapproved_post_fails_if_user_is_not_poster(
+    user, cache_versions, default_category, thread, other_user_reply
+):
+    other_user_reply.is_unapproved = True
+    other_user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_post_permission(
+            permissions, default_category, thread, other_user_reply
+        )
+
+
+def test_check_see_post_permission_for_unapproved_post_fails_if_user_is_anonymous(
+    anonymous_user, cache_versions, default_category, thread, user_reply
+):
+    user_reply.is_unapproved = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_see_post_permission_for_unapproved_post_passes_for_category_moderator(
+    user, cache_versions, default_category, thread, other_user_reply
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    other_user_reply.is_unapproved = True
+    other_user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, other_user_reply)
+
+
+def test_check_see_post_permission_for_unapproved_post_passes_for_global_moderator(
+    moderator, cache_versions, default_category, thread, other_user_reply
+):
+    other_user_reply.is_unapproved = True
+    other_user_reply.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, other_user_reply)
+
+
+def test_check_see_post_permission_for_unapproved_anonymous_post_fails_if_user_is_not_moderator(
+    user, cache_versions, default_category, thread, post
+):
+    post.is_unapproved = True
+    post.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_for_unapproved_anonymous_post_fails_if_user_is_anonymous(
+    anonymous_user, cache_versions, default_category, thread, post
+):
+    post.is_unapproved = True
+    post.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_for_unapproved_anonymous_post_passes_for_category_moderator(
+    user, cache_versions, default_category, thread, post
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    post.is_unapproved = True
+    post.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_for_unapproved_anonymous_post_passes_for_global_moderator(
+    moderator, cache_versions, default_category, thread, post
+):
+    post.is_unapproved = True
+    post.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_see_post_permission_for_hidden_post_fails_if_user_is_poster(
+    user, cache_versions, default_category, thread, user_reply
+):
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_see_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_see_post_permission_for_hidden_post_fails_if_user_is_not_poster(
+    user, cache_versions, default_category, thread, other_user_reply
+):
+    other_user_reply.is_hidden = True
+    other_user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_see_post_permission(
+            permissions, default_category, thread, other_user_reply
+        )
+
+
+def test_check_see_post_permission_for_hidden_post_fails_if_user_is_anonymous(
+    anonymous_user, cache_versions, default_category, thread, user_reply
+):
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_see_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_see_post_permission_for_hidden_post_passes_for_category_moderator(
+    user, cache_versions, default_category, thread, user_reply
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, user_reply)
+
+
+def test_check_see_post_permission_for_hidden_post_passes_for_global_moderator(
+    moderator, cache_versions, default_category, thread, user_reply
+):
+    Moderator.objects.create(
+        user=moderator,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_post_permission(permissions, default_category, thread, user_reply)
 
 
 def test_check_start_thread_permission_passes_if_user_has_permission(

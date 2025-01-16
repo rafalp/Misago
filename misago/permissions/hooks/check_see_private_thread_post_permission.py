@@ -1,17 +1,16 @@
 from typing import TYPE_CHECKING, Protocol
 
-from ...categories.models import Category
 from ...plugins.hooks import FilterHook
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckSeePrivateThreadPermissionHookAction(Protocol):
+class CheckSeePrivateThreadPostPermissionHookAction(Protocol):
     """
     A standard Misago function used to check if the user has a permission to see
-    a private thread. Raises Django's `Http404` if they can't.
+    a private thread post. Raises Django's `Http404` if they can't.
 
     # Arguments
 
@@ -22,22 +21,27 @@ class CheckSeePrivateThreadPermissionHookAction(Protocol):
     ## `thread: Thread`
 
     A thread to check permissions for.
+
+    ## `post: Post`
+
+    A post to check permissions for.
     """
 
     def __call__(
         self,
         permissions: "UserPermissionsProxy",
         thread: Thread,
+        post: Post,
     ) -> None: ...
 
 
-class CheckSeePrivateThreadPermissionHookFilter(Protocol):
+class CheckSeePrivateThreadPostPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckSeePrivateThreadPermissionHookAction`
+    ## `action: CheckSeePrivateThreadPostPermissionHookAction`
 
     A standard Misago function used to check if the user has a permission to see
     a private thread. Raises Django's `Http404` if they can't.
@@ -51,52 +55,58 @@ class CheckSeePrivateThreadPermissionHookFilter(Protocol):
     ## `thread: Thread`
 
     A thread to check permissions for.
+
+    ## `post: Post`
+
+    A post to check permissions for.
     """
 
     def __call__(
         self,
-        action: CheckSeePrivateThreadPermissionHookAction,
+        action: CheckSeePrivateThreadPostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
+        post: Post,
     ) -> None: ...
 
 
-class CheckSeePrivateThreadPermissionHook(
+class CheckSeePrivateThreadPostPermissionHook(
     FilterHook[
-        CheckSeePrivateThreadPermissionHookAction,
-        CheckSeePrivateThreadPermissionHookFilter,
+        CheckSeePrivateThreadPostPermissionHookAction,
+        CheckSeePrivateThreadPostPermissionHookFilter,
     ]
 ):
     """
     This hook wraps the standard Misago function used to check if the user has
-    a permission to see a private thread. Raises Django's `Http404` if they can't.
+    a permission to see a private thread post. Raises Django's `Http404` if they can't.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from seeing
-    a specified thread if there is a custom flag set on their account.
+    a specified post if there is a custom flag set on their account.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.permissions.hooks import check_see_private_thread_permission_hook
+    from misago.permissions.hooks import check_see_private_thread_post_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.threads.models import Thread
+    from misago.threads.models import Post, Thread
 
-    @check_see_private_thread_permission_hook.append_filter
+    @check_see_private_thread_post_permission_hook.append_filter
     def check_user_can_see_thread(
         action,
         permissions: UserPermissionsProxy,
         thread: Thread,
+        post: Post,
     ) -> None:
         # Run standard permission checks
-        action(permissions, category, thread)
+        action(permissions, category, thread, post)
 
-        if thread.id in permissions.user.plugin_data.get("banned_thread", []):
+        if post.id in permissions.user.plugin_data.get("hidden_post", []):
             raise PermissionDenied(
                 pgettext(
                     "thread permission error",
-                    "Site admin has removed your access to this thread."
+                    "Site admin has removed your access to this post."
                 )
             )
     ```
@@ -106,11 +116,14 @@ class CheckSeePrivateThreadPermissionHook(
 
     def __call__(
         self,
-        action: CheckSeePrivateThreadPermissionHookAction,
+        action: CheckSeePrivateThreadPostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
+        post: Post,
     ) -> None:
-        return super().__call__(action, permissions, thread)
+        return super().__call__(action, permissions, thread, post)
 
 
-check_see_private_thread_permission_hook = CheckSeePrivateThreadPermissionHook()
+check_see_private_thread_post_permission_hook = (
+    CheckSeePrivateThreadPostPermissionHook()
+)
