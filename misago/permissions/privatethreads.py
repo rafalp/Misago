@@ -145,8 +145,7 @@ def check_see_private_thread_post_permission(
 def _check_see_private_thread_post_permission_action(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    if permissions.user.id not in thread.participants_ids:
-        raise Http404()
+    pass
 
 
 def check_edit_private_thread_post_permission(

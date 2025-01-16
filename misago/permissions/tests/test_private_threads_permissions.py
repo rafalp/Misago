@@ -11,6 +11,7 @@ from ..privatethreads import (
     check_private_threads_permission,
     check_reply_private_thread_permission,
     check_see_private_thread_permission,
+    check_see_private_thread_post_permission,
     check_start_private_threads_permission,
     filter_private_thread_posts_queryset,
     filter_private_threads_queryset,

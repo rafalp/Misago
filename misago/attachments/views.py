@@ -17,12 +17,8 @@ class AttachmentView(View):
         if attachment.filename != slug:
             raise Http404()
 
-        # Check attachment permissions if its not viewed in admin by admin
-        if not (
-            request.GET.get("shva") == "1"
-            and request.user.is_authenticated
-            and request.user.is_misago_admin
-        ):
+        # Check attachment permissions if its not viewed by admin
+        if not (request.user.is_authenticated and request.user.is_misago_admin):
             if attachment.is_deleted:
                 raise Http404()
 

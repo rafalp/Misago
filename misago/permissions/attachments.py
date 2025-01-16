@@ -80,9 +80,9 @@ def get_private_threads_attachments_permissions(
 
 def check_download_attachment_permission(
     permissions: UserPermissionsProxy,
-    category: Category,
-    thread: Thread,
-    post: Post,
+    category: Category | None,
+    thread: Thread | None,
+    post: Post | None,
     attachment: Attachment,
 ):
     return check_download_attachment_permission_hook(
@@ -97,16 +97,19 @@ def check_download_attachment_permission(
 
 def _check_download_attachment_permission_action(
     permissions: UserPermissionsProxy,
-    category: Category,
-    thread: Thread,
-    post: Post,
+    category: Category | None,
+    thread: Thread | None,
+    post: Post | None,
     attachment: Attachment,
 ):
-    if (
-        permissions.user.is_authenticated
-        and permissions.user.id == attachment.uploader_id
+    if permissions.user.is_authenticated and (
+        permissions.user.id == attachment.uploader_id
+        or permissions.user.is_misago_admin
     ):
         return  # Users can always download their own attachments
+
+    if not (category and thread and post):
+        raise Http404()  # Skip remaining permission checks
 
     if category.tree_id == CategoryTree.THREADS:
         try:

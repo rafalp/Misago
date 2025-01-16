@@ -21,17 +21,17 @@ class CheckDownloadAttachmentPermissionHookAction(Protocol):
 
     A proxy object with the current user's permissions.
 
-    ## `category: Category`
+    ## `category: Category | None`
 
-    A category to check permissions for.
+    A category to check permissions for, or `None` if the attachment wasn't posted.
 
-    ## `thread: Thread`
+    ## `thread: Thread | None`
 
-    A thread to check permissions for.
+    A thread to check permissions for, or `None` if the attachment wasn't posted.
 
-    ## `post: Post`
+    ## `post: Post | None`
 
-    A post to check permissions for.
+    A post to check permissions for, or `None` if the attachment wasn't posted.
 
     ## `attachment: Attachment`
 
@@ -41,9 +41,9 @@ class CheckDownloadAttachmentPermissionHookAction(Protocol):
     def __call__(
         self,
         permissions: "UserPermissionsProxy",
-        category: Category,
-        thread: Thread,
-        post: Post,
+        category: Category | None,
+        thread: Thread | None,
+        post: Post | None,
         attachment: Attachment,
     ) -> None: ...
 
@@ -66,17 +66,17 @@ class CheckDownloadAttachmentPermissionHookFilter(Protocol):
 
     A proxy object with the current user's permissions.
 
-    ## `category: Category`
+    ## `category: Category | None`
 
-    A category to check permissions for.
+    A category to check permissions for, or `None` if the attachment wasn't posted.
 
-    ## `thread: Thread`
+    ## `thread: Thread | None`
 
-    A thread to check permissions for.
+    A thread to check permissions for, or `None` if the attachment wasn't posted.
 
-    ## `post: Post`
+    ## `post: Post | None`
 
-    A post to check permissions for.
+    A post to check permissions for, or `None` if the attachment wasn't posted.
 
     ## `attachment: Attachment`
 
@@ -87,9 +87,9 @@ class CheckDownloadAttachmentPermissionHookFilter(Protocol):
         self,
         action: CheckDownloadAttachmentPermissionHookAction,
         permissions: "UserPermissionsProxy",
-        category: Category,
-        thread: Thread,
-        post: Post,
+        category: Category | None,
+        thread: Thread | None,
+        post: Post | None,
         attachment: Attachment,
     ) -> None: ...
 
@@ -123,9 +123,9 @@ class CheckDownloadAttachmentPermissionHook(
     def check_user_can_edit_thread(
         action,
         permissions: UserPermissionsProxy,
-        category: Category,
-        thread: Thread,
-        post: Post,
+        category: Category | None,
+        thread: Thread | None,
+        post: Post | None,
         attachment: Attachment,
     ) -> None:
         action(permissions, category, thread, post, attachment)
@@ -145,9 +145,9 @@ class CheckDownloadAttachmentPermissionHook(
         self,
         action: CheckDownloadAttachmentPermissionHookAction,
         permissions: "UserPermissionsProxy",
-        category: Category,
-        thread: Thread,
-        post: Post,
+        category: Category | None,
+        thread: Thread | None,
+        post: Post | None,
         attachment: Attachment,
     ) -> None:
         return super().__call__(

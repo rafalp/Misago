@@ -1,3 +1,6 @@
+import pytest
+from django.http import Http404
+
 from ..attachments import (
     check_download_attachment_permission,
     get_private_threads_attachments_permissions,
@@ -6,6 +9,49 @@ from ..attachments import (
 from ..enums import CanUploadAttachments, CategoryPermission
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
+
+
+def test_check_download_attachment_permission_passes_for_uploader_not_posted_attachment(
+    user, cache_versions, user_attachment
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_download_attachment_permission(permissions, None, None, None, user_attachment)
+
+
+def test_check_download_attachment_permission_fails_for_other_user_not_posted_attachment(
+    user, cache_versions, other_user_attachment
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(
+            permissions, None, None, None, other_user_attachment
+        )
+
+
+def test_check_download_attachment_permission_fails_for_anonymous_user_not_posted_attachment(
+    user, cache_versions, attachment
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(permissions, None, None, None, attachment)
+
+
+def test_check_download_attachment_permission_passes_for_other_user_not_posted_attachment_if_user_is_misago_admin(
+    admin, cache_versions, other_user_attachment
+):
+    permissions = UserPermissionsProxy(admin, cache_versions)
+    check_download_attachment_permission(
+        permissions, None, None, None, other_user_attachment
+    )
+
+
+def test_check_download_attachment_permission_passes_for_anonymous_user_not_posted_attachment_if_user_is_misago_admin(
+    admin, cache_versions, attachment
+):
+    permissions = UserPermissionsProxy(admin, cache_versions)
+    check_download_attachment_permission(permissions, None, None, None, attachment)
 
 
 def test_get_threads_attachments_permissions_returns_permissions_object_for_user(

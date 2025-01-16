@@ -618,6 +618,47 @@ def text_file():
 
 
 @pytest.fixture
+def attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        secret=Attachment.get_new_secret(),
+        filename="image.png",
+        size=1024 * 1024,
+        filetype_name="PNG",
+    )
+
+
+@pytest.fixture
+def user_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        secret=Attachment.get_new_secret(),
+        filename="image.png",
+        size=1024 * 1024,
+        filetype_name="PNG",
+    )
+
+
+@pytest.fixture
+def other_user_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        secret=Attachment.get_new_secret(),
+        filename="image.png",
+        size=1024 * 1024,
+        filetype_name="PNG",
+    )
+
+
+@pytest.fixture
 def social_auth_github(db):
     return SocialAuthProvider.objects.create(
         provider="github",
