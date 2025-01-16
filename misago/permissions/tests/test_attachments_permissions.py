@@ -1,4 +1,5 @@
 import pytest
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ..attachments import (
@@ -52,6 +53,180 @@ def test_check_download_attachment_permission_passes_for_anonymous_user_not_post
 ):
     permissions = UserPermissionsProxy(admin, cache_versions)
     check_download_attachment_permission(permissions, None, None, None, attachment)
+
+
+def test_check_download_attachment_permission_passes_user_with_permission(
+    user, cache_versions, attachment, default_category, thread, post
+):
+    attachment.category = default_category
+    attachment.thread = thread
+    attachment.post = post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_download_attachment_permission(
+        permissions, attachment.category, attachment.thread, attachment.post, attachment
+    )
+
+
+def test_check_download_attachment_permission_fails_user_without_category_permission(
+    user, members_group, cache_versions, attachment, default_category, thread, post
+):
+    attachment.category = default_category
+    attachment.thread = thread
+    attachment.post = post
+    attachment.save()
+
+    CategoryGroupPermission.objects.filter(
+        category=default_category,
+        group=members_group,
+        permission=CategoryPermission.BROWSE,
+    ).delete()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_download_attachment_permission_fails_user_without_thread_permission(
+    user, cache_versions, attachment, default_category, thread, post
+):
+    attachment.category = default_category
+    attachment.thread = thread
+    attachment.post = post
+    attachment.save()
+
+    thread.is_hidden = True
+    thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_download_attachment_permission_fails_user_without_post_permission(
+    user, cache_versions, attachment, default_category, thread, post
+):
+    attachment.category = default_category
+    attachment.thread = thread
+    attachment.post = post
+    attachment.save()
+
+    post.is_hidden = True
+    post.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_download_attachment_permission_fails_user_without_attachments_category_permission(
+    user, members_group, cache_versions, attachment, default_category, thread, post
+):
+    attachment.category = default_category
+    attachment.thread = thread
+    attachment.post = post
+    attachment.save()
+
+    CategoryGroupPermission.objects.filter(
+        category=default_category,
+        group=members_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_download_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_download_attachment_permission_passes_user_with_private_threads_permission(
+    user, cache_versions, attachment, private_threads_category, user_private_thread
+):
+    attachment.category = private_threads_category
+    attachment.thread = user_private_thread
+    attachment.post = user_private_thread.first_post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_download_attachment_permission(
+        permissions, attachment.category, attachment.thread, attachment.post, attachment
+    )
+
+
+def test_check_download_attachment_permission_fails_user_without_private_threads_permission(
+    user,
+    members_group,
+    cache_versions,
+    attachment,
+    private_threads_category,
+    user_private_thread,
+):
+    attachment.category = private_threads_category
+    attachment.thread = user_private_thread
+    attachment.post = user_private_thread.first_post
+    attachment.save()
+
+    members_group.can_use_private_threads = False
+    members_group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_download_attachment_permission_fails_user_without_private_thread_permission(
+    user, cache_versions, attachment, private_threads_category, private_thread
+):
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_download_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
 
 
 def test_get_threads_attachments_permissions_returns_permissions_object_for_user(
