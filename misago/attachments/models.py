@@ -13,22 +13,17 @@ from ..plugins.models import PluginDataModel
 from .filetypes import AttachmentFileType, filetypes
 
 
-def upload_to(instance, filename):
+def upload_to(instance: "Attachment", filename: str) -> str:
     # pylint: disable=undefined-loop-variable
-    spread_path = md5(str(instance.secret[:16]).encode()).hexdigest()
+    spread_path = md5(str(instance.secret).encode()).hexdigest()[:4]
     secret = Attachment.get_new_secret()
 
     filename_lowered = filename.lower().strip()
-    for extension in instance.filetype.extensions:
-        if filename_lowered.endswith(extension):
-            break
-
-    filename_clean = ".".join(
-        (slugify(filename[: (len(extension) + 1) * -1])[:16], extension)
-    )
+    filename, extension = filename_lowered.split(".")
+    filename_clean = filename[:16] + "." + extension
 
     return os.path.join(
-        "attachments", spread_path[:2], spread_path[2:4], secret[:32], filename_clean
+        "attachments", spread_path[:2], spread_path[2:], secret[:32], filename_clean
     )
 
 

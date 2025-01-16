@@ -1,5 +1,4 @@
 from io import BytesIO
-from math import ceil
 
 from PIL import Image, UnidentifiedImageError
 from django.core.exceptions import ValidationError
@@ -8,6 +7,7 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import pgettext
 
+from .filename import clean_filename
 from .filetypes import AttachmentFileType
 from .hooks import get_attachment_plugin_data_hook
 from .models import Attachment
@@ -16,6 +16,8 @@ from .models import Attachment
 def store_uploaded_file(
     request: HttpRequest, upload: UploadedFile, filetype: AttachmentFileType
 ) -> Attachment:
+    upload.name = clean_filename(upload.name, filetype)
+
     attachment = Attachment.objects.create(
         uploader=request.user,
         uploader_name=request.user.username,

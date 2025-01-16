@@ -134,6 +134,35 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
     assert not attachment.file
 
 
+def test_store_uploaded_file_cleans_filename(
+    user, dynamic_settings, text_file, teardown_attachments
+):
+    with open(text_file, "rb") as fp:
+        upload = SimpleUploadedFile("test (v2!).txt", fp.read(), "text/plain")
+
+    request = Mock(user=user, settings=dynamic_settings)
+    filetype = filetypes.match_filetype(upload.name)
+
+    attachment = store_uploaded_file(request, upload, filetype)
+
+    assert attachment.id
+    assert attachment.uploader == user
+    assert attachment.uploader_name == user.username
+    assert attachment.uploader_slug == user.slug
+    assert attachment.uploaded_at
+    assert attachment.secret
+    assert attachment.filename == "test-v2.txt"
+    assert attachment.size == upload.size
+    assert attachment.filetype_name == filetype.name
+    assert not attachment.dimensions
+
+    assert not attachment.thumbnail
+    assert not attachment.image
+    assert not attachment.video
+    assert attachment.file
+    assert attachment.file.url
+
+
 def test_store_uploaded_file_raises_validation_error_for_invalid_image(
     user, dynamic_settings, image_invalid, teardown_attachments
 ):
