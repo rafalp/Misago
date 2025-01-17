@@ -1,6 +1,6 @@
 import os
 from functools import cached_property
-from hashlib import md5
+from hashlib import sha256
 
 from django.db import models
 from django.urls import reverse
@@ -8,13 +8,14 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 
 from ..conf import settings
-from ..core.utils import slugify
 from ..plugins.models import PluginDataModel
 from .filetypes import AttachmentFileType, filetypes
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:
-    spread_path = md5(str(instance.secret).encode()).hexdigest()[:4]
+    spread_path = sha256(
+        (instance.secret + settings.SECRET_KEY).encode()
+    ).hexdigest()[:4]
     secret = Attachment.get_new_secret()
 
     filename_lowered = filename.lower().strip()
