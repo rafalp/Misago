@@ -26,16 +26,16 @@ def test_store_uploaded_file_stores_text_file(
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
     assert attachment.secret
-    assert attachment.filename == upload.name
-    assert attachment.size == upload.size
-    assert attachment.filetype_name == filetype.name
+    assert attachment.name == upload.name
+    assert attachment.filetype_id == filetype.name
     assert not attachment.dimensions
 
+    assert attachment.upload
+    assert attachment.upload.url
+    assert attachment.size == upload.size
+
     assert not attachment.thumbnail
-    assert not attachment.image
-    assert not attachment.video
-    assert attachment.file
-    assert attachment.file.url
+    assert not attachment.thumbnail_size
 
 
 def test_store_uploaded_file_stores_image_file(
@@ -55,16 +55,16 @@ def test_store_uploaded_file_stores_image_file(
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
     assert attachment.secret
-    assert attachment.filename == upload.name
-    assert attachment.size == upload.size
-    assert attachment.filetype_name == filetype.name
+    assert attachment.name == upload.name
+    assert attachment.filetype_id == filetype.name
     assert attachment.dimensions == "50x50"
 
+    assert attachment.upload
+    assert attachment.upload.url
+    assert attachment.size == upload.size
+
     assert not attachment.thumbnail
-    assert attachment.image
-    assert attachment.image.url
-    assert not attachment.video
-    assert not attachment.file
+    assert not attachment.thumbnail_size
 
 
 @override_dynamic_settings(
@@ -88,17 +88,17 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
     assert attachment.secret
-    assert attachment.filename == upload.name
-    assert attachment.size == upload.size
-    assert attachment.filetype_name == filetype.name
+    assert attachment.name == upload.name
+    assert attachment.filetype_id == filetype.name
     assert attachment.dimensions == "800x800"
+
+    assert attachment.upload
+    assert attachment.upload.url
+    assert attachment.size == upload.size
 
     assert attachment.thumbnail
     assert attachment.thumbnail.url
-    assert attachment.image
-    assert attachment.image.url
-    assert not attachment.video
-    assert not attachment.file
+    assert attachment.thumbnail.size
 
 
 @override_dynamic_settings(
@@ -122,16 +122,16 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
     assert attachment.secret
-    assert attachment.filename == upload.name
-    assert attachment.size == upload.size
-    assert attachment.filetype_name == filetype.name
+    assert attachment.name == upload.name
+    assert attachment.filetype_id == filetype.name
     assert attachment.dimensions == "300x300"
 
+    assert attachment.upload
+    assert attachment.upload.url
+    assert attachment.size == upload.size
+
     assert not attachment.thumbnail
-    assert attachment.image
-    assert attachment.image.url
-    assert not attachment.video
-    assert not attachment.file
+    assert not attachment.thumbnail_size
 
 
 def test_store_uploaded_file_cleans_filename(
@@ -151,16 +151,17 @@ def test_store_uploaded_file_cleans_filename(
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
     assert attachment.secret
-    assert attachment.filename == "test-v2.txt"
-    assert attachment.size == upload.size
-    assert attachment.filetype_name == filetype.name
+    assert attachment.name == "test (v2!).txt"
+    assert attachment.slug == "test-v2-txt"
+    assert attachment.filetype_id == filetype.name
     assert not attachment.dimensions
 
+    assert attachment.upload
+    assert attachment.upload.url
+    assert attachment.size == upload.size
+
     assert not attachment.thumbnail
-    assert not attachment.image
-    assert not attachment.video
-    assert attachment.file
-    assert attachment.file.url
+    assert not attachment.thumbnail_size
 
 
 def test_store_uploaded_file_raises_validation_error_for_invalid_image(

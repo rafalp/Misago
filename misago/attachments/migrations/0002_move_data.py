@@ -20,11 +20,11 @@ class Migration(migrations.Migration):
                 uploader_name,
                 uploader_slug,
                 uploaded_at,
-                filename,
+                name,
+                upload,
                 size,
                 thumbnail,
-                image,
-                file,
+                thumbnail_size,
                 is_deleted,
                 plugin_data
             )
@@ -37,13 +37,25 @@ class Migration(migrations.Migration):
                 uploader_slug,
                 uploaded_on,
                 filename,
+                image,
                 size,
                 thumbnail,
-                image,
-                file,
+                0,
                 'false',
                 plugin_data::jsonb
             FROM misago_threads_attachment;
+            """,
+            migrations.RunSQL.noop,
+        ),
+        migrations.RunSQL(
+            """
+            UPDATE misago_attachments_attachment a
+            SET upload = b.file
+            FROM misago_threads_attachment b
+            WHERE (
+                a.id = b.id
+                AND (a.upload = '')
+            );
             """,
             migrations.RunSQL.noop,
         ),

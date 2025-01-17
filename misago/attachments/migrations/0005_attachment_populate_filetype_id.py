@@ -8,16 +8,16 @@ from ..filetypes import filetypes
 def populate_attachments_filetypes_names(apps, _):
     Attachment = apps.get_model("misago_attachments", "Attachment")
     for attachment in Attachment.objects.order_by("id").iterator(chunk_size=50):
-        filetype = filetypes.match_filetype(attachment.filename)
+        filetype = filetypes.match_filetype(attachment.name)
         if filetype:
-            attachment.filetype_name = filetype.name
-            attachment.save(update_fields=["filetype_name"])
+            attachment.filetype_id = filetype.id
+            attachment.save(update_fields=["filetype_id"])
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_attachments", "0003_attachment_populate_category_thread"),
+        ("misago_attachments", "0004_attachment_populate_slug"),
     ]
 
     operations = [

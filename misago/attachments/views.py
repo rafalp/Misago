@@ -1,4 +1,4 @@
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse, FileResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 
@@ -7,14 +7,16 @@ from .models import Attachment
 
 
 class AttachmentView(View):
-    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        attachment = self.get_attachment(request, id, slug)
+    def get(self, request: HttpRequest, id: int, filename: str) -> HttpResponse:
+        attachment = self.get_attachment(request, id, filename)
         return self.create_response(request, attachment)
 
-    def get_attachment(self, request: HttpRequest, id: int, slug: str) -> Attachment:
+    def get_attachment(
+        self, request: HttpRequest, id: int, filename: str
+    ) -> Attachment:
         attachment = get_object_or_404(Attachment.objects.select_related(), id=id)
 
-        if attachment.filename != slug:
+        if attachment.filename != filename:
             raise Http404()
 
         # Check attachment permissions if its not viewed by admin
@@ -35,4 +37,38 @@ class AttachmentView(View):
     def create_response(
         self, request: HttpRequest, attachment: Attachment
     ) -> HttpResponse:
-        raise NotImplementedError()
+        raise NotImplementedError(
+            "Views extending 'AttachmentView' must "
+            "implement the 'create_response' method"
+        )
+
+
+class AttachmentDownloadView(AttachmentView):
+    def create_response(
+        self, request: HttpRequest, attachment: Attachment
+    ) -> HttpResponse:
+        response = FileResponse(
+            open(attachment.image.path, "rb"),
+            filename=attachment.filename,
+        )
+        response.headers["Content-Type"] = attachment.filetype.content_type
+        return response
+
+
+class AttachmentThumbnailView(AttachmentView):
+    def create_response(
+        self, request: HttpRequest, attachment: Attachment
+    ) -> HttpResponse:
+        if not attachment.thumbnail:
+            raise Http404()
+
+        response = FileResponse(
+            open(attachment.thumbnail.path, "rb"),
+            filename=attachment.filename,
+        )
+        response.headers["Content-Type"] = attachment.filetype.content_type
+        return response
+
+
+attachment_download = AttachmentDownloadView.as_view()
+attachment_thumbnail = AttachmentThumbnailView.as_view()

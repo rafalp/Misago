@@ -7,6 +7,7 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import pgettext
 
+from ..core.utils import slugify
 from .filename import clean_filename
 from .filetypes import AttachmentFileType
 from .hooks import get_attachment_plugin_data_hook
@@ -16,26 +17,24 @@ from .models import Attachment
 def store_uploaded_file(
     request: HttpRequest, upload: UploadedFile, filetype: AttachmentFileType
 ) -> Attachment:
-    upload.name = clean_filename(upload.name, filetype)
-
     attachment = Attachment.objects.create(
         uploader=request.user,
         uploader_name=request.user.username,
         uploader_slug=request.user.slug,
         uploaded_at=timezone.now(),
         secret=Attachment.get_new_secret(),
-        filename=upload.name,
+        name=upload.name,
+        slug=slugify(upload.name),
         size=upload.size,
-        filetype_name=filetype.name,
+        filetype_id=filetype.name,
     )
+
+    upload.name = clean_filename(upload.name, filetype)
 
     if filetype.is_image:
         _store_attachment_image(request, attachment, upload, filetype)
     else:
-        if filetype.is_video:
-            attachment.video = upload
-        else:
-            attachment.file = upload
+        attachment.upload = upload
         attachment.plugin_data = get_attachment_plugin_data(request, upload)
 
     attachment.save()
@@ -79,7 +78,7 @@ def _store_attachment_image(
         )
         del image_stream
 
-    attachment.image = upload
+    attachment.upload = upload
     attachment.dimensions = "x".join(map(str, image.size))
 
     thumbnail_width = request.settings.attachment_thumbnail_width
@@ -92,6 +91,7 @@ def _store_attachment_image(
         attachment.thumbnail = SimpleUploadedFile(
             upload.name, thumbnail_stream.getvalue(), upload.content_type
         )
+        attachment.thumbnail_size = attachment.thumbnail.size
         del thumbnail_stream
 
 

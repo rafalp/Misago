@@ -2,7 +2,6 @@ from django.urls import path
 
 from ...conf import settings
 
-from ..views.attachment import attachment_server
 from ..views.edit import (
     edit_private_thread,
     edit_private_thread_post,
@@ -177,18 +176,4 @@ urlpatterns += [
     path(root_subscribed_path, redirect_subscribed_to_watched),
     path("c/<slug:slug>/<int:pk>/subscribed/", redirect_subscribed_to_watched),
     path("private-threads/subscribed/", redirect_subscribed_to_watched),
-]
-
-urlpatterns += [
-    path(
-        "a/<slug:secret>/<int:pk>/",
-        attachment_server,
-        name="attachment",
-    ),
-    path(
-        "a/thumb/<slug:secret>/<int:pk>/",
-        attachment_server,
-        name="attachment-thumbnail",
-        kwargs={"thumbnail": True},
-    ),
 ]

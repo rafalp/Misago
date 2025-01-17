@@ -67,7 +67,7 @@ class FilterAttachmentsForm(forms.Form):
         if criteria.get("filename"):
             queryset = queryset.filter(filename__icontains=criteria["filename"])
         if criteria.get("filetype"):
-            queryset = queryset.filter(filetype_name=criteria["filetype"])
+            queryset = queryset.filter(filetype_id=criteria["filetype"])
         if criteria.get("status") == "posted":
             queryset = queryset.filter(post__isnull=False)
         elif criteria.get("status") == "unused":

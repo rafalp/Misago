@@ -55,6 +55,8 @@ class SlugifyTests(TestCase):
             ("An###ne", "anne"),
             ("S**t", "st"),
             ("Łók", "lok"),
+            ("Lorem_Ipsum", "lorem-ipsum"),
+            ("file.png", "file-png"),
         ]
 
         for original, slug in test_cases:

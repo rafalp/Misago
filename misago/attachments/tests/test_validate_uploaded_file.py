@@ -135,4 +135,4 @@ def test_validate_uploaded_file_returns_file_type_for_valid_file():
     filetype = validate_uploaded_file(
         file, max_size=1024, allowed_attachments=AllowedAttachments.ALL
     )
-    assert filetype.name == "Text"
+    assert filetype.id == "txt"

@@ -13,6 +13,7 @@ from .categories.models import Category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
+from .core.utils import slugify
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .socialauth import SOCIALAUTH_CACHE
@@ -539,41 +540,34 @@ def attachment_factory(db, teardown_attachments):
     def _attachment_factory(
         file_path: str,
         *,
-        filename=None,
+        name=None,
         uploader=None,
         post=None,
         thumbnail_path=None,
         is_deleted=False,
     ):
-        filename = filename or str(os.path.split(file_path)[-1])
-        filetype = filetypes.match_filetype(filename)
-        assert filetype, f"'{filename}' is not supported"
+        name = name or str(os.path.split(file_path)[-1])
+        filetype = filetypes.match_filetype(name)
+        content_type = filetype.content_types[0]
+        assert filetype, f"'{name}' is not supported"
 
         with open(file_path, "rb") as fp:
-            upload = SimpleUploadedFile(filename, fp.read(), filetype.content_types[0])
-
-        image = None
-        video = None
-        file = None
-
-        if filetype.is_image:
-            image = upload
-        elif filetype.is_video:
-            video = upload
-        else:
-            file = upload
+            upload = SimpleUploadedFile(name, fp.read(), content_type)
 
         if thumbnail_path:
             thumbnail_filename = str(os.path.split(thumbnail_path)[-1])
-            thumbnail_filetype = filetypes.match_filetype(filename)
+            thumbnail_filetype = filetypes.match_filetype(name)
+            thumbnail_content_type = thumbnail_filetype.content_types[0]
             assert thumbnail_filetype, f"'{thumbnail_filename}' is not supported"
 
             with open(thumbnail_path, "rb") as fp:
                 thumbnail = SimpleUploadedFile(
-                    thumbnail_filename, fp.read(), thumbnail_filetype.content_types[0]
+                    thumbnail_filename, fp.read(), thumbnail_content_type
                 )
+                thumbnail_size = thumbnail.size
         else:
             thumbnail = None
+            thumbnail_size = 0
 
         return Attachment.objects.create(
             category_id=post.category_id if post else None,
@@ -584,13 +578,13 @@ def attachment_factory(db, teardown_attachments):
             uploader_slug=uploader.slug if uploader else "anonymous",
             uploaded_at=timezone.now(),
             secret=Attachment.get_new_secret(),
-            filename=filename,
+            name=name,
+            slug=slugify(name),
+            filetype_id=filetype.id,
+            upload=upload,
             size=upload.size,
-            filetype_name=filetype.name,
             thumbnail=thumbnail,
-            image=image,
-            video=video,
-            file=file,
+            thumbnail_size=thumbnail_size,
             is_deleted=is_deleted,
         )
 

@@ -1,26 +1,33 @@
 from dataclasses import dataclass
 from typing import Iterable
 
+from django.utils.translation import pgettext_lazy
+
 from .enums import AllowedAttachments
 
 
 @dataclass(frozen=True)
 class AttachmentFileType:
+    id: str
     name: str
     extensions: Iterable[str]
-    content_types: Iterable[str] | None = None
+    content_types: Iterable[str]
+    as_attachment: bool = True
     is_image: bool = False
     is_video: bool = False
     is_archive: bool = False
     is_document: bool = False
 
     @property
-    def is_file(self):
-        return not bool(self.is_image or self.is_video)
-
-    @property
-    def is_media(self):
+    def is_media(self) -> bool:
         return bool(self.is_image or self.is_video)
+
+    def split_name(self, name: str) -> tuple[str, str]:
+        for extension in self.extensions:
+            if name.lower().endswith("." + extension):
+                return tuple(name.rsplit(".", 1))
+
+        raise ValueError(f"'{name}' is not a valid file name for this file type.")
 
 
 class AttachmentFileTypes:
@@ -31,32 +38,38 @@ class AttachmentFileTypes:
 
     def add_filetype(
         self,
+        id: str,
         name: str,
         extensions: str | Iterable[str],
-        content_types: str | Iterable[str] | None = None,
+        content_types: str | Iterable[str],
+        as_attachment: bool = True,
         is_image: bool = False,
         is_video: bool = False,
         is_archive: bool = False,
         is_document: bool = False,
     ) -> AttachmentFileType:
         filetype = AttachmentFileType(
+            id=id,
             name=name,
             extensions=(extensions,) if isinstance(extensions, str) else extensions,
-            content_types=content_types,
+            content_types=(
+                (content_types,) if isinstance(content_types, str) else content_types
+            ),
+            as_attachment=as_attachment,
             is_image=is_image,
             is_video=is_video,
             is_archive=is_archive,
             is_document=is_document,
         )
 
-        self._filetypes[name] = filetype
+        self._filetypes[id] = filetype
         return filetype
 
-    def get_filetype(self, name: str) -> AttachmentFileType:
+    def get_filetype(self, id: str) -> AttachmentFileType:
         try:
-            return self._filetypes[name]
+            return self._filetypes[id]
         except KeyError:
-            raise ValueError(f"'{name}' filetype is not supported")
+            raise ValueError(f"'{id}' filetype is not supported")
 
     def match_filetype(
         self, filename: str, content_type: str | None = None
@@ -90,7 +103,7 @@ class AttachmentFileTypes:
 
     def as_django_choices(self) -> tuple[tuple[str, str]]:
         return tuple(
-            (t.name, f"{t.name} ({', '.join(t.extensions)})")
+            (t.id, f"{t.name} ({', '.join(t.extensions)})")
             for t in sorted(self._filetypes.values(), key=lambda x: x.name)
         )
 
@@ -101,7 +114,7 @@ class AttachmentFileTypes:
         items: list[str] = []
         for filetype in self._filetypes.values():
             # Exclude regular files if only media is allowed
-            if allowed_attachments != AllowedAttachments.ALL and filetype.is_file:
+            if allowed_attachments != AllowedAttachments.ALL and not filetype.is_media:
                 continue
 
             # Exclude non-images if only images are allowed
@@ -120,77 +133,94 @@ filetypes = AttachmentFileTypes()
 
 # Images
 filetypes.add_filetype(
-    name="GIF",
+    id="gif",
+    name=pgettext_lazy("file type", "GIF image"),
     extensions="gif",
     content_types="image/gif",
+    as_attachment=False,
     is_image=True,
 )
 filetypes.add_filetype(
-    name="JPEG",
-    extensions=("jpeg", "jpg"),
+    id="jpeg",
+    name=pgettext_lazy("file type", "JPEG image"),
+    extensions=("jpg", "jpeg"),
     content_types="image/jpeg",
+    as_attachment=False,
     is_image=True,
 )
 filetypes.add_filetype(
-    name="PNG",
+    id="png",
+    name=pgettext_lazy("file type", "PNG image"),
     extensions="png",
     content_types="image/png",
+    as_attachment=False,
     is_image=True,
 )
 filetypes.add_filetype(
-    name="WEBP",
+    id="webp",
+    name=pgettext_lazy("file type", "WebP image"),
     extensions="webp",
     content_types="image/webp",
+    as_attachment=False,
     is_image=True,
 )
 
 # Video
 filetypes.add_filetype(
-    name="MP4",
+    id="mp4",
+    name=pgettext_lazy("file type", "MP4 video"),
     extensions="mp4",
     content_types="video/mp4",
+    as_attachment=False,
     is_video=True,
 )
 
 # Archives
 filetypes.add_filetype(
-    name="7z",
+    id="7z",
+    name=pgettext_lazy("file type", "7-Zip archive"),
     extensions="7z",
     content_types="application/x-7z-compressed",
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="gzip",
+    id="gzip",
+    name=pgettext_lazy("file type", "Gzip tar archive"),
     extensions="tar.gz",
     content_types="application/gzip",
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="bzip2",
+    id="bzip2",
+    name=pgettext_lazy("file type", "bzip2 tar archive"),
     extensions="tar.bz2",
     content_types="application/x-bzip2",
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="XZ",
+    id="xz",
+    name=pgettext_lazy("file type", "XZ archive"),
     extensions="tar.xz",
     content_types="application/x-xz",
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="RAR",
+    id="rar",
+    name=pgettext_lazy("file type", "RAR archive"),
     extensions="rar",
     content_types="application/vnd.rar",
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="tar",
+    id="tar",
+    name=pgettext_lazy("file type", "Tar archive"),
     extensions="tar",
     content_types="application/x-tar",
     is_archive=True,
 )
 filetypes.add_filetype(
-    name="ZIP",
+    id="zip",
+    name=pgettext_lazy("file type", "ZIP archive"),
     extensions=("zip", "zipx"),
     content_types="application/zip",
     is_archive=True,
@@ -198,7 +228,8 @@ filetypes.add_filetype(
 
 # Other
 filetypes.add_filetype(
-    name="PDF",
+    id="pdf",
+    name=pgettext_lazy("file type", "PDF"),
     extensions="pdf",
     content_types=(
         "application/pdf",
@@ -206,23 +237,30 @@ filetypes.add_filetype(
         "application/x-bzpdf",
         "application/x-gzpdf",
     ),
+    as_attachment=False,
     is_document=True,
 )
 filetypes.add_filetype(
-    name="Text",
+    id="txt",
+    name=pgettext_lazy("file type", "Text file"),
     extensions="txt",
     content_types="text/plain",
+    as_attachment=False,
     is_document=True,
 )
 filetypes.add_filetype(
-    name="Markdown",
+    id="md",
+    name=pgettext_lazy("file type", "Markdown document"),
     extensions="md",
     content_types="text/markdown",
+    as_attachment=False,
     is_document=True,
 )
 filetypes.add_filetype(
-    name="reStructuredText",
+    id="rst",
+    name=pgettext_lazy("file type", "reStructuredText document"),
     extensions="rst",
     content_types="text/x-rst",
+    as_attachment=False,
     is_document=True,
 )

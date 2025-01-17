@@ -5,18 +5,14 @@ FILENAME_MAX_LENGTH = 50
 
 
 def clean_filename(filename: str, filetype: AttachmentFileType) -> str:
-    extension = _get_filename_extension(filename, filetype)
     filename_clean = filename[: len(extension) * -1] or "attachment"
     filename_clean = slugify(filename_clean)[:FILENAME_MAX_LENGTH]
     return filename_clean + extension
 
 
-def _get_filename_extension(filename: str, filetype: AttachmentFileType) -> str:
-    for extension in filetype.extensions:
-        extension = "." + extension
-        if filename.lower().endswith(extension):
-            return extension
-
-    raise ValueError(
-        f"Filename doesn't match filetype: '{filename}' != '{filetype.name}'"
-    )
+def cut_filename(
+    filename: str, filetype: AttachmentFileType, max_length=FILENAME_MAX_LENGTH
+) -> str:
+    name, extension = filetype.split_name(filename)
+    max_length -= len(extension) + 1
+    return name[:max_length].strip() + "." + extension

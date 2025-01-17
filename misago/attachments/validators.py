@@ -32,7 +32,7 @@ def validate_uploaded_file(
 ) -> AttachmentFileType:
     filetype = filetypes.match_filetype(file.name, file.content_type)
     if not filetype or (
-        (allowed_attachments != AllowedAttachments.ALL and filetype.is_file)
+        (allowed_attachments != AllowedAttachments.ALL and not filetype.is_media)
         or (allowed_attachments == AllowedAttachments.IMAGES and not filetype.is_image)
     ):
         raise ValidationError(

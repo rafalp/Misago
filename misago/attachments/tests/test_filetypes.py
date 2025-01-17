@@ -5,10 +5,10 @@ from ..filetypes import filetypes
 
 
 def test_filetypes_get_filetype_returns_filetype_by_name():
-    filetype = filetypes.get_filetype("JPEG")
+    filetype = filetypes.get_filetype("jpeg")
 
-    assert filetype.name == "JPEG"
-    assert filetype.extensions == ("jpeg", "jpg")
+    assert filetype.id == "jpeg"
+    assert filetype.extensions == ("jpg", "jpeg")
 
 
 def test_filetypes_get_filetype_raises_value_error_for_unsupported_type():
@@ -21,12 +21,12 @@ def test_filetypes_get_filetype_raises_value_error_for_unsupported_type():
 
 def test_filetypes_match_filetype_returns_filetype_by_file_name():
     filetype = filetypes.match_filetype("LOREMIPSUM.JPG")
-    assert filetype.name == "JPEG"
+    assert filetype.id == "jpeg"
 
 
 def test_filetypes_match_filetype_returns_filetype_by_file_name_and_content_type():
     filetype = filetypes.match_filetype("LOREMIPSUM.Mp4", "vIdEo/mP4")
-    assert filetype.name == "MP4"
+    assert filetype.id == "mp4"
 
 
 def test_filetypes_match_filetype_returns_none_for_file_with_unsupported_extension():
@@ -46,7 +46,7 @@ def test_filetypes_match_filetype_returns_none_for_file_without_extension():
 
 def test_filetypes_get_accept_attr_str_returns_all_filetypes():
     value = filetypes.get_accept_attr_str(AllowedAttachments.ALL)
-    assert ".jpeg, .jpg" in value
+    assert ".jpg, .jpeg" in value
     assert ".mp4" in value
     assert ".pdf" in value
     assert ".zip" in value
@@ -54,7 +54,7 @@ def test_filetypes_get_accept_attr_str_returns_all_filetypes():
 
 def test_filetypes_get_accept_attr_str_returns_only_media_filetypes():
     value = filetypes.get_accept_attr_str(AllowedAttachments.MEDIA)
-    assert ".jpeg, .jpg" in value
+    assert ".jpg, .jpeg" in value
     assert ".mp4" in value
     assert ".pdf" not in value
     assert ".zip" not in value
@@ -62,7 +62,7 @@ def test_filetypes_get_accept_attr_str_returns_only_media_filetypes():
 
 def test_filetypes_get_accept_attr_str_returns_only_image_filetypes():
     value = filetypes.get_accept_attr_str(AllowedAttachments.IMAGES)
-    assert ".jpeg, .jpg" in value
+    assert ".jpg, .jpeg" in value
     assert ".mp4" not in value
     assert ".pdf" not in value
     assert ".zip" not in value
@@ -71,3 +71,24 @@ def test_filetypes_get_accept_attr_str_returns_only_image_filetypes():
 def test_filetypes_get_accept_attr_str_returns_empty_string():
     value = filetypes.get_accept_attr_str(AllowedAttachments.NONE)
     assert value == ""
+
+
+def test_attachment_filetype_is_media_is_true_for_image_type():
+    filetype = filetypes.get_filetype("jpeg")
+    assert filetype.is_media
+
+
+def test_attachment_filetype_is_media_is_true_for_video_type():
+    filetype = filetypes.get_filetype("mp4")
+    assert filetype.is_media
+
+
+def test_attachment_filetype_is_media_is_false_for_non_media_type():
+    filetype = filetypes.get_filetype("pdf")
+    assert not filetype.is_media
+
+
+def test_attachment_filetype_split_name_returns_split_name():
+    filetype = filetypes.get_filetype("jpeg")
+    assert filetype.split_name("FILE.JPEG") == ("FILE", "JPEG")
+    assert filetype.split_name("FilE.jpG") == ("FilE", "jpG")

@@ -1,4 +1,4 @@
-from ..filename import clean_filename
+from ..filename import clean_filename, trim_filename
 from ..filetypes import filetypes
 
 

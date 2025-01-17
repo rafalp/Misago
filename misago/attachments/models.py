@@ -63,55 +63,32 @@ class Attachment(PluginDataModel):
 
     secret = models.CharField(max_length=64)
 
-    filename = models.CharField(max_length=255, db_index=True)
-    size = models.PositiveIntegerField(default=0, db_index=True)
+    name = models.CharField(max_length=255, db_index=True)
+    slug = models.CharField(max_length=255)
 
-    filetype_name = models.CharField(max_length=100, null=True)
+    filetype_id = models.CharField(max_length=10, null=True)
     dimensions = models.CharField(max_length=15, null=True)
 
-    thumbnail = models.ImageField(
-        max_length=255,
-        blank=True,
-        null=True,
-        upload_to=upload_to,
-    )
-    image = models.ImageField(
-        max_length=255,
-        blank=True,
-        null=True,
-        upload_to=upload_to,
-    )
-    video = models.FileField(
-        max_length=255,
-        blank=True,
-        null=True,
-        upload_to=upload_to,
-    )
-    file = models.FileField(
-        max_length=255,
-        blank=True,
-        null=True,
-        upload_to=upload_to,
-    )
+    upload = models.ImageField(max_length=255, null=True, upload_to=upload_to)
+    size = models.PositiveIntegerField(default=0)
+
+    thumbnail = models.ImageField(max_length=255, null=True, upload_to=upload_to)
+    thumbnail_size = models.PositiveIntegerField(default=0)
 
     is_deleted = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
-        return self.filename
+        return self.name
 
     def delete(self, *args, **kwargs):
         self.delete_files()
         return super().delete(*args, **kwargs)
 
     def delete_files(self):
+        if self.upload:
+            self.upload.delete(save=False)
         if self.thumbnail:
             self.thumbnail.delete(save=False)
-        if self.image:
-            self.image.delete(save=False)
-        if self.video:
-            self.video.delete(save=False)
-        if self.file:
-            self.file.delete(save=False)
 
     @classmethod
     def get_new_secret(cls):
@@ -119,39 +96,30 @@ class Attachment(PluginDataModel):
 
     @cached_property
     def filetype(self) -> AttachmentFileType | None:
+        if not self.filetype_id:
+            raise ValueError(f"Attachment '{self.name}' is missing 'filetype_id'")
+
         try:
-            return filetypes.get_filetype(self.filetype_name)
+            return filetypes.get_filetype(self.filetype_id)
         except ValueError:
             return None
 
-    @property
-    def is_image(self):
-        return bool(self.image)
+    def filetype_name(self) -> str:
+        return str(self.filetype.name)
 
-    @property
-    def is_video(self):
-        return bool(self.video)
+    def content_type(self) -> str:
+        return self.filetype.content_types[0]
 
-    @property
-    def is_file(self):
-        return bool(self.file)
-
-    @property
-    def url(self) -> str:
-        return (self.image or self.video or self.file).url
-
-    @property
-    def thumbnail_url(self) -> str | None:
-        return self.thumbnail.url if self.thumbnail else None
-
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse(
-            "misago:attachment", kwargs={"pk": self.pk, "secret": self.secret}
+            "misago:attachment-download", kwargs={"id": self.pk, "name": self.name}
         )
 
-    def get_thumbnail_url(self):
-        if self.thumbnail:
-            return reverse(
-                "misago:attachment-thumbnail",
-                kwargs={"pk": self.pk, "secret": self.secret},
-            )
+    def get_thumbnail_url(self) -> str | None:
+        if not self.thumbnail:
+            return None
+
+        return reverse(
+            "misago:attachment-thumbnail",
+            kwargs={"id": self.pk, "name": self.name},
+        )
