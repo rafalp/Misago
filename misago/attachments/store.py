@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.translation import pgettext
 
 from ..core.utils import slugify
-from .filename import clean_filename
+from .filename import clean_filename, trim_filename
 from .filetypes import AttachmentFileType
 from .hooks import get_attachment_plugin_data_hook
 from .models import Attachment
@@ -17,19 +17,21 @@ from .models import Attachment
 def store_uploaded_file(
     request: HttpRequest, upload: UploadedFile, filetype: AttachmentFileType
 ) -> Attachment:
+    clean_name = clean_filename(upload.name, filetype, max_length=200)
+
     attachment = Attachment.objects.create(
         uploader=request.user,
         uploader_name=request.user.username,
         uploader_slug=request.user.slug,
         uploaded_at=timezone.now(),
         secret=Attachment.get_new_secret(),
-        name=upload.name,
-        slug=slugify(upload.name),
+        name=clean_name,
+        slug=slugify(clean_name),
         size=upload.size,
         filetype_id=filetype.name,
     )
 
-    upload.name = clean_filename(upload.name, filetype)
+    upload.name = trim_filename(upload.name, filetype)
 
     if filetype.is_image:
         _store_attachment_image(request, attachment, upload, filetype)
