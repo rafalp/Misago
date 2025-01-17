@@ -31,21 +31,19 @@ def django_file_response(
 def nginx_x_accel_redirect(
     request: HttpRequest, attachment: Attachment, thumbnail: bool = False
 ) -> HttpResponse:
-    response = HttpResponse()
+    response = HttpResponse(content_type=attachment.content_type)
 
     if attachment.filetype.as_attachment:
         response["Content-Disposition"] = f'attachment; filename="{attachment.name}"'
     else:
         response["Content-Disposition"] = f'inline; filename="{attachment.name}"'
 
-    response["Content-Type"] = attachment.content_type
-
     file = _get_django_file(attachment, thumbnail)
     response["X-Accel-Redirect"] = file.url
 
     if thumbnail and attachment.thumbnail_size:
         response["Content-Length"] = attachment.thumbnail_size
-    elif attachment.size:
+    elif not thumbnail and attachment.size:
         response["Content-Length"] = attachment.size
 
     return response
