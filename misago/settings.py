@@ -3,6 +3,7 @@
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
+    "MISAGO_ATTACHMENTS_SERVER",
     "MISAGO_DEFAULT_OG_IMAGE",
     "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
     "MISAGO_DEFAULT_OG_IMAGE_HEIGHT",
@@ -142,6 +143,8 @@ MISAGO_MIDDLEWARE = [
     "misago.admin.middleware.AdminAuthMiddleware",
     "misago.middleware.privatethreads.sync_user_unread_private_threads",
 ]
+
+MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_redirect_response"
 
 MISAGO_DEFAULT_OG_IMAGE = "misago/img/og-image.jpg"
 MISAGO_DEFAULT_OG_IMAGE_WIDTH = 1200

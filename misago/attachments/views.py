@@ -1,9 +1,22 @@
+from typing import Protocol, cast
+
+from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse, FileResponse
 from django.shortcuts import get_object_or_404
+from django.utils.module_loading import import_string
 from django.views import View
 
 from ..permissions.attachments import check_download_attachment_permission
 from .models import Attachment
+
+
+class ServerProtocol(Protocol):
+    def __call__(
+        request: HttpRequest, attachment: Attachment, thumbnail: bool = False
+    ) -> HttpResponse: ...
+
+
+server = cast(ServerProtocol, import_string(settings.MISAGO_ATTACHMENTS_SERVER))
 
 
 class AttachmentView(View):
@@ -45,12 +58,7 @@ class AttachmentDownloadView(AttachmentView):
     def create_response(
         self, request: HttpRequest, attachment: Attachment
     ) -> HttpResponse:
-        response = FileResponse(
-            open(attachment.upload.path, "rb"),
-            filename=attachment.name,
-        )
-        response.headers["Content-Type"] = attachment.content_type
-        return response
+        return server(request, attachment)
 
 
 class AttachmentThumbnailView(AttachmentView):
@@ -60,12 +68,7 @@ class AttachmentThumbnailView(AttachmentView):
         if not attachment.thumbnail:
             raise Http404()
 
-        response = FileResponse(
-            open(attachment.thumbnail.path, "rb"),
-            filename=attachment.name,
-        )
-        response.headers["Content-Type"] = attachment.content_type
-        return response
+        return server(request, attachment, thumbnail=True)
 
 
 attachment_download = AttachmentDownloadView.as_view()
