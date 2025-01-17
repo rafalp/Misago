@@ -149,7 +149,8 @@ def create_category_contents(
         uploader_name=user.username,
         uploader_slug=user.slug,
         secret="secret",
-        filename="filename.txt",
+        name="filename.txt",
+        slug="filename-txt",
     )
 
     legacy_attachment = LegacyAttachment.objects.create(

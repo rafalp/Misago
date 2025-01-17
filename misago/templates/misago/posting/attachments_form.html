@@ -43,10 +43,10 @@
       <ul class="markup-editor-attachments-media-list">
         {% for attachment in attachments %}
           <li class="markup-editor-attachments-media-list-item">
-            <div class="markup-editor-attachments-media-list-item-preview" style="background-image: url('{{ attachment.image.url }}');"></div>
+            <div class="markup-editor-attachments-media-list-item-preview" style="background-image: url('{{ attachment.get_thumbnail_url|default:attachment.get_thumbnail_url }}');"></div>
             <div class="markup-editor-attachments-media-list-item-body">
               <div class="markup-editor-attachments-media-list-item-name">
-                {{ attachment.filename }}
+                {{ attachment.name }}
               </div>
               <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
             </div>
@@ -73,7 +73,7 @@
             <div class="markup-editor-attachments-other-list-item-body">
               <div>
                 <div class="markup-editor-attachments-other-list-item-name">
-                  {{ attachment.filename }}
+                  {{ attachment.name }}
                 </div>
                 <div class="markup-editor-attachments-other-list-item-details">
                   {{ attachment.size|filesizeformat }}

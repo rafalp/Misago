@@ -618,9 +618,10 @@ def attachment(db):
         uploader_slug="anonymous",
         uploaded_at=timezone.now(),
         secret=Attachment.get_new_secret(),
-        filename="image.png",
+        name="image.png",
+        slug="image-png",
         size=1024 * 1024,
-        filetype_name="PNG",
+        filetype_id="PNG",
     )
 
 
@@ -632,9 +633,10 @@ def user_attachment(user):
         uploader_slug=user.slug,
         uploaded_at=timezone.now(),
         secret=Attachment.get_new_secret(),
-        filename="image.png",
+        name="image.png",
+        slug="image-png",
         size=1024 * 1024,
-        filetype_name="PNG",
+        filetype_id="PNG",
     )
 
 
@@ -646,9 +648,10 @@ def other_user_attachment(other_user):
         uploader_slug=other_user.slug,
         uploaded_at=timezone.now(),
         secret=Attachment.get_new_secret(),
-        filename="image.png",
+        name="image.png",
+        slug="image-png",
         size=1024 * 1024,
-        filetype_name="PNG",
+        filetype_id="PNG",
     )
 
 
