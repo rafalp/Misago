@@ -42,12 +42,15 @@ def heal_category_trees() -> int:
 def heal_tree(tree_id: int, categories: dict[int, dict]) -> list[dict]:
     healed_categories: list[dict] = []
     categories_branches: dict[int, list[dict]] = {0: []}
+
+    for category_id in categories:
+        categories_branches[category_id] = []
+
     for category in categories.values():
         if category["tree_id"] == tree_id:
             category_copy = category.copy()
             healed_categories.append(category_copy)
             categories_branches[category["parent_id"] or 0].append(category_copy)
-            categories_branches[category["id"]] = []
 
     position = 0
     for category in categories_branches[0]:
