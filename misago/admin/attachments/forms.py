@@ -15,8 +15,8 @@ class FilterAttachmentsForm(forms.Form):
         label=pgettext_lazy("admin attachments filter form", "Uploader name contains"),
         required=False,
     )
-    filename = forms.CharField(
-        label=pgettext_lazy("admin attachments filter form", "Filename contains"),
+    name = forms.CharField(
+        label=pgettext_lazy("admin attachments filter form", "Name contains"),
         required=False,
     )
     filetype = forms.ChoiceField(
@@ -64,8 +64,8 @@ class FilterAttachmentsForm(forms.Form):
             queryset = queryset.filter(
                 uploader_slug__contains=criteria["uploader"].lower()
             )
-        if criteria.get("filename"):
-            queryset = queryset.filter(filename__icontains=criteria["filename"])
+        if criteria.get("name"):
+            queryset = queryset.filter(name__icontains=criteria["name"])
         if criteria.get("filetype"):
             queryset = queryset.filter(filetype_id=criteria["filetype"])
         if criteria.get("status") == "posted":

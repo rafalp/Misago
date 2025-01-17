@@ -104,15 +104,17 @@ class Attachment(PluginDataModel):
         except ValueError:
             return None
 
+    @property
     def filetype_name(self) -> str:
         return str(self.filetype.name)
 
+    @property
     def content_type(self) -> str:
         return self.filetype.content_types[0]
 
     def get_absolute_url(self) -> str:
         return reverse(
-            "misago:attachment-download", kwargs={"id": self.pk, "name": self.name}
+            "misago:attachment-download", kwargs={"id": self.id, "slug": self.slug}
         )
 
     def get_thumbnail_url(self) -> str | None:
@@ -121,5 +123,5 @@ class Attachment(PluginDataModel):
 
         return reverse(
             "misago:attachment-thumbnail",
-            kwargs={"id": self.pk, "name": self.name},
+            kwargs={"id": self.id, "slug": self.slug},
         )

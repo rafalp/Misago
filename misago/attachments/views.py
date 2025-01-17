@@ -7,16 +7,14 @@ from .models import Attachment
 
 
 class AttachmentView(View):
-    def get(self, request: HttpRequest, id: int, filename: str) -> HttpResponse:
-        attachment = self.get_attachment(request, id, filename)
+    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        attachment = self.get_attachment(request, id, slug)
         return self.create_response(request, attachment)
 
-    def get_attachment(
-        self, request: HttpRequest, id: int, filename: str
-    ) -> Attachment:
+    def get_attachment(self, request: HttpRequest, id: int, slug: str) -> Attachment:
         attachment = get_object_or_404(Attachment.objects.select_related(), id=id)
 
-        if attachment.filename != filename:
+        if attachment.slug != slug:
             raise Http404()
 
         # Check attachment permissions if its not viewed by admin
@@ -48,10 +46,10 @@ class AttachmentDownloadView(AttachmentView):
         self, request: HttpRequest, attachment: Attachment
     ) -> HttpResponse:
         response = FileResponse(
-            open(attachment.image.path, "rb"),
-            filename=attachment.filename,
+            open(attachment.upload.path, "rb"),
+            filename=attachment.name,
         )
-        response.headers["Content-Type"] = attachment.filetype.content_type
+        response.headers["Content-Type"] = attachment.content_type
         return response
 
 
@@ -64,9 +62,9 @@ class AttachmentThumbnailView(AttachmentView):
 
         response = FileResponse(
             open(attachment.thumbnail.path, "rb"),
-            filename=attachment.filename,
+            filename=attachment.name,
         )
-        response.headers["Content-Type"] = attachment.filetype.content_type
+        response.headers["Content-Type"] = attachment.content_type
         return response
 
 

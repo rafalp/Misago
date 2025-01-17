@@ -87,9 +87,9 @@ class DeleteAttachment(AttachmentAdmin, generic.ButtonView):
             self.delete_from_cache(target)
         target.delete()
         message = pgettext(
-            "admin attachments", 'Attachment "%(filename)s" has been deleted.'
+            "admin attachments", 'Attachment "%(name)s" has been deleted.'
         )
-        messages.success(request, message % {"filename": target.filename})
+        messages.success(request, message % {"name": target.name})
 
     def delete_from_cache(self, attachment):
         if not attachment.post.attachments_cache:

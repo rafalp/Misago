@@ -62,7 +62,7 @@ def test_attachments_list_renders_temp_image_with_thumbnail_attachment(
 
     response = admin_client.get(attachments_url + "?redirected=1")
     assert_contains(response, attachment.name)
-    assert_contains(response, attachment.thumbnail.url)
+    assert_contains(response, attachment.get_thumbnail_url())
 
 
 def test_attachments_list_renders_image_with_thumbnail_attachment(
@@ -74,7 +74,7 @@ def test_attachments_list_renders_image_with_thumbnail_attachment(
 
     response = admin_client.get(attachments_url + "?redirected=1")
     assert_contains(response, attachment.name)
-    assert_contains(response, attachment.thumbnail.url)
+    assert_contains(response, attachment.get_thumbnail_url())
     assert_contains(response, post.thread.title)
 
 
@@ -89,14 +89,14 @@ def test_attachments_list_searches_attachment_by_uploader(
     assert_not_contains(response, attachment_other.name)
 
 
-def test_attachments_list_searches_attachment_by_filename(
+def test_attachments_list_searches_attachment_by_name(
     admin_client, text_file, image_small, user, attachment_factory
 ):
     attachment = attachment_factory(text_file, uploader=user)
     attachment_other = attachment_factory(image_small)
 
     response = admin_client.get(
-        attachments_url + f"?redirected=1&filename={attachment.name}"
+        attachments_url + f"?redirected=1&name={attachment.name}"
     )
     assert_contains(response, attachment.name)
     assert_not_contains(response, attachment_other.name)
@@ -119,12 +119,12 @@ def test_attachments_list_searches_posted_attachments(
     admin_client, text_file, user, post, attachment_factory
 ):
     attachment_posted = attachment_factory(
-        text_file, filename="posted.txt", uploader=user, post=post
+        text_file, name="posted.txt", uploader=user, post=post
     )
     attachment_deleted = attachment_factory(
-        text_file, filename="deleted.txt", uploader=user, is_deleted=True
+        text_file, name="deleted.txt", uploader=user, is_deleted=True
     )
-    attachment_unused = attachment_factory(text_file, filename="unused.txt")
+    attachment_unused = attachment_factory(text_file, name="unused.txt")
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=posted")
     assert_contains(response, attachment_posted.name)
@@ -136,12 +136,12 @@ def test_attachments_list_searches_unused_attachments(
     admin_client, text_file, user, post, attachment_factory
 ):
     attachment_posted = attachment_factory(
-        text_file, filename="posted.txt", uploader=user, post=post
+        text_file, name="posted.txt", uploader=user, post=post
     )
     attachment_deleted = attachment_factory(
-        text_file, filename="deleted.txt", uploader=user, is_deleted=True
+        text_file, name="deleted.txt", uploader=user, is_deleted=True
     )
-    attachment_unused = attachment_factory(text_file, filename="unused.txt")
+    attachment_unused = attachment_factory(text_file, name="unused.txt")
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=unused")
     assert_not_contains(response, attachment_posted.name)
@@ -153,12 +153,12 @@ def test_attachments_list_searches_deleted_attachments(
     admin_client, text_file, user, post, attachment_factory
 ):
     attachment_posted = attachment_factory(
-        text_file, filename="posted.txt", uploader=user, post=post
+        text_file, name="posted.txt", uploader=user, post=post
     )
     attachment_deleted = attachment_factory(
-        text_file, filename="deleted.txt", uploader=user, is_deleted=True
+        text_file, name="deleted.txt", uploader=user, is_deleted=True
     )
-    attachment_unused = attachment_factory(text_file, filename="unused.txt")
+    attachment_unused = attachment_factory(text_file, name="unused.txt")
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=deleted")
     assert_not_contains(response, attachment_posted.name)

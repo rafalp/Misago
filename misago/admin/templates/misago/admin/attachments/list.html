@@ -6,7 +6,7 @@
 <th style="width: 1px;">&nbsp;</th>
 <th>{% translate "Attachment" context "admin attachments list" %}</th>
 <th style="width: 120px;">{% trans "Size" context "admin attachments list" %}</th>
-<th style="width: 120px;">{% trans "Type" context "admin attachments list" %}</th>
+<th style="width: 140px;">{% trans "Type" context "admin attachments list" %}</th>
 <th style="width: 140px;">{% trans "Uploader" context "admin attachments list" %}</th>
 <th style="width: 150px;">{% trans "Uploaded at" context "admin attachments list" %}</th>
 <th style="width: 220px;">{% trans "Thread" context "admin attachments list" %}</th>
@@ -15,30 +15,30 @@
 
 
 {% block table-row %}
-{% if item.is_image %}
+{% if item.filetype.is_image %}
   <td class="pr-0">
     {% if item.thumbnail %}
-      <a href="{{ item.url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.thumbnail.url }}')" target="_blank"></a>
+      <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_thumbnail_url }}')" target="_blank"></a>
     {% else %}
-      <a href="{{ item.url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.url }}')" target="_blank"></a>
+      <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_absolute_url }}')" target="_blank"></a>
     {% endif %}
   </td>
 {% else %}
   <td class="pr-0 text-center">
-    <a href="{{ item.url }}" class="btn btn-light btn-block btn-sm" target="_blank">
+    <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-block btn-sm" target="_blank">
       <span class="far fa-file"></span>
     </a>
   </td>
 {% endif %}
 <td class="small">
-  <a href="{{ item.url }}" class="item-name" target="_blank">
-    {{ item }}
+  <a href="{{ item.get_absolute_url }}" class="item-name" target="_blank">
+    {{ item.name }}
   </a>
 </td>
 <td class="small">
   {{ item.size|filesizeformat }}
 </td>
-<td class="small">
+<td class="small text-truncate" style="max-width: 140px;">
   {{ item.filetype_name }}
 </td>
 <td class="small text-truncate" style="max-width: 140px;">
@@ -98,7 +98,7 @@
 </div>
 <div class="row">
   <div class="col">
-    {% form_row filter_form.filename %}
+    {% form_row filter_form.name %}
   </div>
 </div>
 <div class="row">
