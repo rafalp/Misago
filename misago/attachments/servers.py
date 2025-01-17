@@ -11,28 +11,21 @@ from .models import Attachment
 def django_redirect_response(
     request: HttpRequest, attachment: Attachment, thumbnail: bool = False
 ) -> HttpResponse:
-    file = attachment.thumbnail if thumbnail else attachment.upload
+    file = _get_django_file(attachment, thumbnail)
     return HttpResponsePermanentRedirect(file.url)
 
 
 def django_file_response(
     request: HttpRequest, attachment: Attachment, thumbnail: bool = False
 ) -> HttpResponse:
-    file = attachment.thumbnail if thumbnail else attachment.upload
+    file = _get_django_file(attachment, thumbnail)
 
-    response = FileResponse(
+    return FileResponse(
         open(file.path, "rb"),
         filename=attachment.name,
         as_attachment=attachment.filetype.as_attachment,
         content_type=attachment.content_type,
     )
-
-    if thumbnail and attachment.thumbnail_size:
-        response["Content-Length"] = attachment.thumbnail_size
-    elif attachment.size:
-        response["Content-Length"] = attachment.size
-
-    return response
 
 
 def nginx_x_accel_redirect(
@@ -41,13 +34,13 @@ def nginx_x_accel_redirect(
     response = HttpResponse()
 
     if attachment.filetype.as_attachment:
-        response["Content-Disposition"] = "attachment; filename=" + attachment.name
+        response["Content-Disposition"] = f'attachment; filename="{attachment.name}"'
     else:
-        response["Content-Disposition"] = "inline; filename=" + attachment.name
+        response["Content-Disposition"] = f'inline; filename="{attachment.name}"'
 
     response["Content-Type"] = attachment.content_type
 
-    file = attachment.thumbnail if thumbnail else attachment.upload
+    file = _get_django_file(attachment, thumbnail)
     response["X-Accel-Redirect"] = file.url
 
     if thumbnail and attachment.thumbnail_size:
@@ -56,3 +49,16 @@ def nginx_x_accel_redirect(
         response["Content-Length"] = attachment.size
 
     return response
+
+
+def _get_django_file(attachment: Attachment, thumbnail: bool = False):
+    if thumbnail:
+        if not attachment.thumbnail:
+            raise ValueError(f"Required 'Attachment.thumbnail' attribute is 'None'.")
+
+        return attachment.thumbnail
+
+    if not attachment.upload:
+        raise ValueError(f"Required 'Attachment.upload' attribute is 'None'.")
+
+    return attachment.upload
