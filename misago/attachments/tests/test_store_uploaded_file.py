@@ -27,7 +27,7 @@ def test_store_uploaded_file_stores_text_file(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
-    assert attachment.filetype_id == filetype.name
+    assert attachment.filetype_id == filetype.id
     assert not attachment.dimensions
 
     assert attachment.upload
@@ -56,7 +56,7 @@ def test_store_uploaded_file_stores_image_file(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
-    assert attachment.filetype_id == filetype.name
+    assert attachment.filetype_id == filetype.id
     assert attachment.dimensions == "50x50"
 
     assert attachment.upload
@@ -89,7 +89,7 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
-    assert attachment.filetype_id == filetype.name
+    assert attachment.filetype_id == filetype.id
     assert attachment.dimensions == "800x800"
 
     assert attachment.upload
@@ -123,7 +123,7 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
-    assert attachment.filetype_id == filetype.name
+    assert attachment.filetype_id == filetype.id
     assert attachment.dimensions == "300x300"
 
     assert attachment.upload
@@ -153,7 +153,7 @@ def test_store_uploaded_file_cleans_filename(
     assert attachment.secret
     assert attachment.name == "test (v2!).txt"
     assert attachment.slug == "test-v2-txt"
-    assert attachment.filetype_id == filetype.name
+    assert attachment.filetype_id == filetype.id
     assert not attachment.dimensions
 
     assert attachment.upload

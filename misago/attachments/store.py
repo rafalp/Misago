@@ -28,7 +28,7 @@ def store_uploaded_file(
         name=clean_name,
         slug=slugify(clean_name),
         size=upload.size,
-        filetype_id=filetype.name,
+        filetype_id=filetype.id,
     )
 
     upload.name = trim_filename(upload.name, filetype)

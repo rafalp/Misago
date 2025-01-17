@@ -82,11 +82,11 @@ class PostForm(PostingForm):
 
     @property
     def attachments_media(self) -> list[Attachment]:
-        return [a for a in self.attachments if not a.is_file]
+        return [a for a in self.attachments if a.filetype.is_media]
 
     @property
     def attachments_other(self) -> list[Attachment]:
-        return [a for a in self.attachments if a.is_file]
+        return [a for a in self.attachments if not a.filetype.is_media]
 
     def sort_attachments(self):
         self.attachments.sort(key=lambda a: a.id, reverse=True)

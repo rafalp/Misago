@@ -555,8 +555,8 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(user, dynamic_set
     assert len(form.attachments) == 1
 
     attachment = form.attachments[0]
-    assert attachment.filetype_name == "Text"
-    assert attachment.filename == "test.txt"
+    assert attachment.filetype_id == "txt"
+    assert attachment.name == "test.txt"
     assert attachment.uploader == user
 
 
@@ -605,8 +605,8 @@ def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
     assert form.errors["upload"] == ["invalid.txt: uploaded file type is not allowed."]
 
     attachment = form.attachments[0]
-    assert attachment.filetype_name == "Text"
-    assert attachment.filename == "test.txt"
+    assert attachment.filetype_id == "txt"
+    assert attachment.name == "test.txt"
     assert attachment.uploader == user
 
 
