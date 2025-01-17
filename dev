@@ -103,7 +103,7 @@ intro() {
     echo "    ${BOLD}run${NORMAL}               runs \"docker compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
     echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
-    echo "    ${BOLD}loaddevfixture${NORMAL}      populates database with pre-made data for dev."
+    echo "    ${BOLD}loaddevfixture${NORMAL}    populates database with pre-made data for dev."
     echo "    ${BOLD}fakedata${NORMAL}          populates database with generated testing data."
     echo "    ${BOLD}fakebigdata${NORMAL}       populates database with LARGE amount of geerated testing data."
     echo "    ${BOLD}pipcompile${NORMAL}        run pip-compile to update requirements.txt"
