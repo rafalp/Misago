@@ -58,6 +58,7 @@ def _store_attachment_image(
             code="unidentified_image",
         )
 
+    image_format = image.format
     attachment.plugin_data = get_attachment_plugin_data(request, upload, image)
 
     max_width = request.settings.attachment_image_max_width
@@ -74,7 +75,7 @@ def _store_attachment_image(
             image = image.resize(new_size)
 
         image_stream = BytesIO()
-        image.save(image_stream, filetype.extensions[0])
+        image.save(image_stream, image_format)
         upload = SimpleUploadedFile(
             upload.name, image_stream.getvalue(), upload.content_type
         )
@@ -89,7 +90,7 @@ def _store_attachment_image(
     if image.width > thumbnail_width or image.height > thumbnail_height:
         image.thumbnail((thumbnail_width, thumbnail_height))
         thumbnail_stream = BytesIO()
-        image.save(thumbnail_stream, filetype.extensions[0])
+        image.save(thumbnail_stream, image_format)
         attachment.thumbnail = SimpleUploadedFile(
             upload.name, thumbnail_stream.getvalue(), upload.content_type
         )
