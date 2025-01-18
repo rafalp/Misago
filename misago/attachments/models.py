@@ -13,9 +13,9 @@ from .filetypes import AttachmentFileType, filetypes
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:
-    spread_path = sha256(
-        (instance.secret + settings.SECRET_KEY).encode()
-    ).hexdigest()[:4]
+    spread_path = sha256((instance.secret + settings.SECRET_KEY).encode()).hexdigest()[
+        :4
+    ]
     secret = Attachment.get_new_secret()
 
     filename_lowered = filename.lower().strip()
