@@ -126,3 +126,9 @@ class Attachment(PluginDataModel):
             "misago:attachment-thumbnail",
             kwargs={"id": self.id, "slug": self.slug},
         )
+
+    def get_details_url(self) -> str:
+        return reverse(
+            "misago:attachment-details",
+            kwargs={"id": self.id, "slug": self.slug},
+        )

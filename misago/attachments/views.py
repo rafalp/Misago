@@ -1,12 +1,13 @@
 from typing import Protocol, cast
 
 from django.conf import settings
-from django.http import Http404, HttpRequest, HttpResponse, FileResponse
-from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.utils.module_loading import import_string
 from django.views import View
 
 from ..permissions.attachments import check_download_attachment_permission
+from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment
 
 
@@ -74,5 +75,32 @@ class AttachmentThumbnailView(AttachmentView):
         return server(request, attachment, thumbnail=True)
 
 
+class AttachmentDetailsView(AttachmentView):
+    template_name: str = "misago/attachment_details/index.html"
+
+    def create_response(
+        self, request: HttpRequest, attachment: Attachment
+    ) -> HttpResponse:
+        if not attachment.upload:
+            raise Http404()
+
+        return render(
+            self.request,
+            self.template_name,
+            self.get_context_data(request, attachment),
+        )
+
+    def get_context_data(self, request: HttpRequest, attachment: Attachment) -> dict:
+        return get_attachment_details_page_context_data_hook(
+            self.get_context_data_action, request, attachment
+        )
+
+    def get_context_data_action(
+        self, request: HttpRequest, attachment: Attachment
+    ) -> dict:
+        return {"attachment": attachment}
+
+
+attachment_details = AttachmentDetailsView.as_view()
 attachment_download = AttachmentDownloadView.as_view()
 attachment_thumbnail = AttachmentThumbnailView.as_view()
