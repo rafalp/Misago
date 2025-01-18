@@ -1,0 +1,26 @@
+.attachment-details-image,
+.attachment-details-video {
+  overflow: hidden;
+
+  background-color: #000;
+
+  text-align: center;
+
+  img, video {
+    display: block;
+    max-width: 100%;
+
+    margin: 0 auto;
+    padding: 0;
+
+    @media (min-width: @screen-sm-min) {
+      max-width: @container-sm;
+    }
+    @media (min-width: @screen-md-min) {
+      max-width: @container-md;
+    }
+    @media (min-width: @screen-lg-min) {
+      max-width: @container-lg;
+    }
+  }
+}
