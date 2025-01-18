@@ -156,7 +156,6 @@ def test_attachment_thumbnail_view_returns_server_response_for_admin_if_attachme
 
 
 def test_attachment_download_view_checks_user_permissions(
-    user,
     other_user,
     members_group,
     user_client,
@@ -184,7 +183,6 @@ def test_attachment_download_view_checks_user_permissions(
 
 
 def test_attachment_thumbnail_view_checks_user_permissions(
-    user,
     other_user,
     members_group,
     user_client,
