@@ -58,6 +58,9 @@ class AttachmentDownloadView(AttachmentView):
     def create_response(
         self, request: HttpRequest, attachment: Attachment
     ) -> HttpResponse:
+        if not attachment.upload:
+            raise Http404()
+
         return server(request, attachment)
 
 

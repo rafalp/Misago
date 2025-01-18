@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.urls import reverse
 
 
+# TODO: move this to separate file, write tests for it
 RE_IMG_LINK = re.compile(
     r"\[!\[.+?\]\(/a/(?P<secret>[A-Za-z0-9]+)/(?P<id>[1-9][0-9]*)/(\?shva=1)?\)\]\(/a/[A-Za-z0-9]+/[1-9][0-9]*/(\?shva=1)?\)"
 )
@@ -67,8 +68,6 @@ def update_attachments_markup(apps, _):
         if new_original != post.original:
             post.original = new_original
             post.save(update_fields=["original"])
-
-    raise Exception("TODO: REVERSE MIGRATION")
 
 
 def update_img_with_thumb_markdown_syntax(attachment_type, matchobj):
@@ -145,6 +144,51 @@ def downgrade_attachments_markup(apps, _):
     Attachment = apps.get_model("misago_attachments", "Attachment")
     Post = apps.get_model("misago_threads", "Post")
 
+    reverse_attachment_url = partial(update_media_url, Attachment)
+
+    # Replace attachments urls with markdown
+    queryset = Post.objects.filter(original__contains="/a/").order_by("-id")
+    for post in queryset.iterator(chunk_size=20):
+        new_original = RE_IMG_LINK_WITH_THUMB.sub(
+            update_img_with_thumb_markdown_syntax_partial, post.original
+        )
+        new_original = RE_IMG_LINK.sub(
+            update_img_with_thumb_markdown_syntax_partial, new_original
+        )
+        new_original = RE_IMG.sub(
+            update_img_with_thumb_markdown_syntax_partial, new_original
+        )
+        new_original = RE_ATTACHMENT_URL.sub(
+            update_attachment_url_partial, new_original
+        )
+
+        if new_original != post.original:
+            post.original = new_original
+            post.save(update_fields=["original"])
+
+
+def reverse_attachment_url(attachment_type, matchobj):
+    full_match = matchobj.group(0)
+    file_path = full_match[len(settings.MEDIA_URL) :]
+
+    attachment = attachment_type.objects.filter(
+        Q(upload=file_path) | Q(thumbnail=file_path)
+    ).first()
+
+    if not attachment:
+        return full_match
+
+    if attachment.thumbnail and attachment.thumbnail.name == full_match:
+        return reverse(
+            "misago:attachment-thumbnail",
+            kwargs={"id": attachment.id, "slug": attachment.slug},
+        )
+
+    return reverse(
+        "misago:attachment-download",
+        kwargs={"id": attachment.id, "slug": attachment.slug},
+    )
+
 
 class Migration(migrations.Migration):
 
@@ -154,8 +198,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(
-            update_attachments_markup,
-            downgrade_attachments_markup,
-        ),
+        # migrations.RunPython(
+        #     update_attachments_markup,
+        #     downgrade_attachments_markup,
+        # ),
     ]
