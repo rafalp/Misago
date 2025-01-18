@@ -20,6 +20,8 @@ from ..threads.models import (
 from ..threads.test import post_poll, post_thread, reply_thread
 from ..users.models import User, Group
 
+__all__ = ["CategoryRelationsFactory"]
+
 
 class CategoryRelationsFactory:
     category: Category
@@ -47,8 +49,8 @@ class CategoryRelationsFactory:
 
     def __init__(
         self,
-        category: Category,
         *,
+        category: Category,
         user: User,
         other_user: User,
         group: Group,
@@ -79,6 +81,9 @@ class CategoryRelationsFactory:
         self.role_category_acl = self.create_role_category_acl()
         self.subscription = self.create_subscription()
         self.watched_thread = self.create_watched_thread()
+
+        self.category.set_last_thread(self.thread)
+        self.category.save()
 
     def create_attachment(self):
         return Attachment.objects.create(
@@ -123,7 +128,7 @@ class CategoryRelationsFactory:
         )
 
     def create_poll(self) -> Poll:
-        post_poll(self.thread, self.user)
+        return post_poll(self.thread, self.user)
 
     def create_poll_vote(self) -> PollVote:
         return self.poll.pollvote_set.order_by("id").first()

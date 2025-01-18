@@ -7,7 +7,7 @@ from .asserts import (
     assert_not_contains,
 )
 from .attachments import teardown_attachments
-from .categories import CategoryContentsFactory
+from .categories import CategoryRelationsFactory
 from .client import MisagoClient
 from .files import (
     IMAGE_INVALID,
@@ -21,7 +21,7 @@ __all__ = [
     "IMAGE_LARGE",
     "IMAGE_SMALL",
     "TEXT_FILE",
-    "CategoryContentsFactory",
+    "CategoryRelationsFactory",
     "MisagoClient",
     "assert_contains",
     "assert_has_error_message",
