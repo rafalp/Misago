@@ -50,3 +50,27 @@ def test_attachment_delete_deletes_thumbnail_file(image_thumbnail_attachment):
 
     assert not upload_path.exists()
     assert not thumbnail_path.exists()
+
+
+def test_attachment_width_returns_width_from_dimensions():
+    attachment = Attachment(dimensions="20x40")
+    assert attachment.dimensions == "20x40"
+    assert attachment.width == 20
+
+
+def test_attachment_width_returns_none_if_dimensions_are_none():
+    attachment = Attachment()
+    assert attachment.dimensions is None
+    assert attachment.width is None
+
+
+def test_attachment_height_returns_height_from_dimensions():
+    attachment = Attachment(dimensions="20x40")
+    assert attachment.dimensions == "20x40"
+    assert attachment.height == 40
+
+
+def test_attachment_height_returns_none_if_dimensions_are_none():
+    attachment = Attachment()
+    assert attachment.dimensions is None
+    assert attachment.height is None

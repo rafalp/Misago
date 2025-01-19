@@ -1,26 +1,121 @@
-.attachment-details-image,
-.attachment-details-video {
-  overflow: hidden;
-
-  background-color: #000;
-
-  text-align: center;
+.attachment-details-video,
+.attachment-details-image {
+  background-color: #1f1f1f;
 
   img, video {
     display: block;
     max-width: 100%;
+    height: auto;
 
     margin: 0 auto;
     padding: 0;
+  }
+}
 
-    @media (min-width: @screen-sm-min) {
-      max-width: @container-sm;
+@media screen and (max-width: @screen-xs-max) {
+  .attachment-video-container {
+    padding: 0;
+  }
+}
+
+.attachment-details-image,
+.attachment-details-image-sm {
+  img {
+    background-image: url("../img-bg.png");
+    background-repeat: repeat;
+  }
+}
+
+.attachment-details-image-sm {
+  display: flex;
+  justify-content: center;
+
+  a {
+    display: block;
+
+    margin: @line-height-computed auto;
+    padding: 4px;
+
+    background-color: #fff;
+    border: 1px solid #CCC;
+  }
+}
+
+.attachment-details-file {
+  margin: @line-height-computed * 2 0;
+
+  .btn {
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    height: 180px;
+    justify-content: center;
+
+    margin: 0 auto;
+    padding: @padding-xs-horizontal;
+
+    background-color: @body-bg;
+    border: 1px solid @gray-lighter;
+    border-radius: @border-radius-base;
+    color: @text-color;
+
+    span, strong, small {
+      display: block;
     }
-    @media (min-width: @screen-md-min) {
-      max-width: @container-md;
+
+    .material-icon {
+      width: 64px;
+      height: 64px;
+
+      margin: 0 auto;
+      margin-bottom: floor(@line-height-computed / 2);
+
+      color: @gray-light;
+      font-size: 64px;
+      line-height: 64px;
     }
-    @media (min-width: @screen-lg-min) {
-      max-width: @container-lg;
+
+    strong {
+      text-wrap-mode: wrap;
+      word-wrap: break-word;
+    }
+
+    small {
+      margin-top: floor(@line-height-computed / 4);
+    }
+  }
+}
+
+.panel-attachment-details {
+  .panel-title {
+    color: @text-color;
+  }
+
+  .panel-body {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .col-xs-12 {
+    padding: @panel-body-padding;
+
+    border-bottom: 1px solid @gray-lighter;
+  }
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .panel-attachment-details {
+    .panel-body {
+      padding: 0;
+    }
+
+    .row {
+      margin: 0;
+    }
+
+    .col-xs-12 {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 }

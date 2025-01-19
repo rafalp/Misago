@@ -62,3 +62,26 @@
   max-width: 500px;
   margin: @line-height-computed auto;
 }
+
+// Responsive panel
+.panel-responsive {
+  margin-left: floor(@grid-gutter-width / -2);
+  margin-right: floor(@grid-gutter-width / -2);
+  margin-bottom: @line-height-computed;
+
+  .panel-heading {
+    border-bottom: 1px solid @panel-default-border;
+  }
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .panel-responsive {
+    margin-left: 0;
+    margin-right: 0;
+
+    .panel-heading {
+      padding-left: 0;
+      padding-right: 0;
+    }  
+  }
+}

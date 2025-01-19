@@ -9,33 +9,10 @@
 
 {% block content %}
 <div class="page page-attachment">
-  {% if attachment.filetype.is_media %}
-    {% if attachment.filetype.is_video %}
-    <div class="attachment-details-video">
-      <video controls>
-        <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
-        {% trans "Your browser does not support video tag." context "attachment page" %}
-      </video>
-    </div>
-    {% else %}
-      <div class="attachment-details-image">
-        <a href="{{ attachment.get_absolute_url }}">
-          <img src="{{ attachment.get_absolute_url }}" alt=""/>
-        </a>
-      </div>
-    {% endif %}
-  {% endif %}
+  {% include "misago/attachment_details/preview.html" %}
   <div class="container page-container">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">
-          {{ attachment.name }}
-        </h3>
-      </div>
-      <div class="panel-body">
-        ATTACHMENT DETAILS
-      </div>
-    <div>
+    {% include "misago/attachment_details/details.html" %}
+    {% pluginoutlet ATTACHMENT_DETAILS_END %}
   </div>
 </div>
 {% endblock content %}
