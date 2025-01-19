@@ -101,6 +101,22 @@
 
     border-bottom: 1px solid @gray-lighter;
   }
+
+  .item-link {
+    &,
+    &:link,
+    &:visited {
+      color: @gray-dark;
+      text-decoration: none;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: @text-color;
+      text-decoration: underline;
+    }
+  }
 }
 
 @media screen and (min-width: @screen-md-min) {
