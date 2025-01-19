@@ -58,6 +58,7 @@
     border: 1px solid @gray-lighter;
     border-radius: @border-radius-base;
     color: @text-color;
+    text-wrap-mode: wrap;
 
     span, strong, small {
       display: block;
@@ -76,8 +77,7 @@
     }
 
     strong {
-      text-wrap-mode: wrap;
-      word-wrap: break-word;
+      word-break: break-all;
     }
 
     small {

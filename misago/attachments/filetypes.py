@@ -174,6 +174,14 @@ filetypes.add_filetype(
     as_attachment=False,
     is_video=True,
 )
+filetypes.add_filetype(
+    id="mp4",
+    name=pgettext_lazy("file type", "WebM video"),
+    extensions="webm",
+    content_types="video/webm",
+    as_attachment=False,
+    is_video=True,
+)
 
 # Archives
 filetypes.add_filetype(
