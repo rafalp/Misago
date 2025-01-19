@@ -23,6 +23,11 @@ On the Admin dashboard page, below all other content.
 On the Admin dashboard page, above all other content.
 
 
+## `ATTACHMENT_DETAILS_END`
+
+On the attachment details page, under the details block.
+
+
 ## `CATEGORIES_LIST_END`
 
 On the Categories page, below the list.

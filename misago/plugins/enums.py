@@ -15,7 +15,7 @@ class PluginOutlet(Enum):
         "On the Admin dashboard page, below the Analytics card."
     )
     ADMIN_DASHBOARD_END = "On the Admin dashboard page, below all other content."
-    
+
     ATTACHMENT_DETAILS_END = "On the attachment details page, under the details block."
 
     LOGIN_PAGE_START = "On the Sign in page, above the form."

@@ -23,6 +23,7 @@ Hooks instances are importable from the following Python modules:
 - [`delete_posts_attachments_hook`](./delete-posts-attachments-hook.md)
 - [`delete_threads_attachments_hook`](./delete-threads-attachments-hook.md)
 - [`delete_users_attachments_hook`](./delete-users-attachments-hook.md)
+- [`get_attachment_details_page_context_data_hook`](./get-attachment-details-page-context-data-hook.md)
 - [`get_attachment_plugin_data_hook`](./get-attachment-plugin-data-hook.md)
 
 
@@ -67,6 +68,7 @@ Hooks instances are importable from the following Python modules:
 - [`build_user_category_permissions_hook`](./build-user-category-permissions-hook.md)
 - [`build_user_permissions_hook`](./build-user-permissions-hook.md)
 - [`check_browse_category_permission_hook`](./check-browse-category-permission-hook.md)
+- [`check_download_attachment_permission_hook`](./check-download-attachment-permission-hook.md)
 - [`check_edit_post_permission_hook`](./check-edit-post-permission-hook.md)
 - [`check_edit_private_thread_permission_hook`](./check-edit-private-thread-permission-hook.md)
 - [`check_edit_private_thread_post_permission_hook`](./check-edit-private-thread-post-permission-hook.md)
@@ -77,7 +79,9 @@ Hooks instances are importable from the following Python modules:
 - [`check_reply_private_thread_permission_hook`](./check-reply-private-thread-permission-hook.md)
 - [`check_reply_thread_permission_hook`](./check-reply-thread-permission-hook.md)
 - [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
+- [`check_see_post_permission_hook`](./check-see-post-permission-hook.md)
 - [`check_see_private_thread_permission_hook`](./check-see-private-thread-permission-hook.md)
+- [`check_see_private_thread_post_permission_hook`](./check-see-private-thread-post-permission-hook.md)
 - [`check_see_thread_permission_hook`](./check-see-thread-permission-hook.md)
 - [`check_start_private_threads_permission_hook`](./check-start-private-threads-permission-hook.md)
 - [`check_start_thread_permission_hook`](./check-start-thread-permission-hook.md)

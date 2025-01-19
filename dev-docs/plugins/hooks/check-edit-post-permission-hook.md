@@ -113,7 +113,7 @@ def check_user_can_edit_thread(
     thread: Thread,
     post: Post,
 ) -> None:
-    action(permissions, category, post, thread)
+    action(permissions, category, thread, post)
 
     if (
         "[PROTECT]" in post.original
