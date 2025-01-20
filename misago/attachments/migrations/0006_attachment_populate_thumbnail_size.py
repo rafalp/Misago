@@ -17,9 +17,10 @@ def populate_attachments_thumbnails_sizes(apps, _):
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
-        ("misago_attachments", "0005_attachment_populate_filetype_id"),
+        ("misago_attachments", "0005_attachment_clean_names_populate_slugs"),
     ]
 
     operations = [

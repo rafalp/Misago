@@ -2,20 +2,28 @@
 
 from django.db import migrations, models
 
+from ..filename import clean_filename
+from ..filetypes import filetypes
 from ...core.utils import slugify
 
 
 def populate_attachments_slugs(apps, _):
     Attachment = apps.get_model("misago_attachments", "Attachment")
-    for attachment in Attachment.objects.order_by("id").iterator(chunk_size=50):
+
+    queryset = Attachment.objects.filter(filetype_id__isnull=False).order_by("id")
+
+    for attachment in queryset.iterator(chunk_size=50):
+        filetype = filetypes.get_filetype(attachment.filetype_id)
+        attachment.name = clean_filename(attachment.name, filetype)
         attachment.slug = slugify(attachment.name)
-        attachment.save(update_fields=["slug"])
+        attachment.save(update_fields=["name", "slug"])
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
-        ("misago_attachments", "0003_attachment_populate_category_thread"),
+        ("misago_attachments", "0004_attachment_populate_filetype_id"),
     ]
 
     operations = [
