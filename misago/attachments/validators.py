@@ -43,7 +43,7 @@ def validate_uploaded_file(
     *,
     allowed_attachments: AllowedAttachments | str,
     max_size: int = 0,
-    storage: AttachmentsStorage,
+    storage: AttachmentsStorage | None = None,
     storage_limit: int = 0,
     storage_left: int = 0,
 ) -> AttachmentFileType:
@@ -75,7 +75,7 @@ def validate_uploaded_file(
             },
         )
 
-    if storage_limit and storage_left + file.size > storage_limit:
+    if storage and storage_limit and storage_left - file.size <= 0:
         if storage == AttachmentsStorage.GLOBAL:
             logger.error("Global unused attachments storage limit exceeded")
 
