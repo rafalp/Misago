@@ -75,7 +75,7 @@ def validate_uploaded_file(
             },
         )
 
-    if storage and storage_limit and storage_left - file.size <= 0:
+    if storage and storage_limit and storage_left < file.size:
         if storage == AttachmentsStorage.GLOBAL:
             logger.error("Global unused attachments storage limit exceeded")
 
