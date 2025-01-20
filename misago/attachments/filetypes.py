@@ -175,7 +175,7 @@ filetypes.add_filetype(
     is_video=True,
 )
 filetypes.add_filetype(
-    id="mp4",
+    id="webm",
     name=pgettext_lazy("file type", "WebM video"),
     extensions="webm",
     content_types="video/webm",
