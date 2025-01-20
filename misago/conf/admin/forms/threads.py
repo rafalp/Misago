@@ -14,6 +14,7 @@ class ThreadsSettingsForm(SettingsForm):
         "allow_private_threads_attachments",
         "attachment_403_image",
         "attachment_404_image",
+        "unused_attachments_storage_limit",
         "attachment_image_max_width",
         "attachment_image_max_height",
         "attachment_thumbnail_width",
@@ -204,6 +205,17 @@ class ThreadsSettingsForm(SettingsForm):
             "admin oauth2 settings form",
             "Allow uploading attachments in private threads",
         ),
+    )
+
+    unused_attachments_storage_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Unused attachments storage limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Maximum total storage space, in megabytes, for all attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit.",
+        ),
+        min_value=0,
     )
 
     attachment_image_max_width = forms.IntegerField(

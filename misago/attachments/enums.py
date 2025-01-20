@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import IntEnum, StrEnum
 
 from django.utils.translation import pgettext_lazy
 
@@ -26,3 +26,9 @@ class AllowedAttachments(StrEnum):
                 pgettext_lazy("allowed attachment type", "Disable uploads"),
             ),
         )
+
+
+class AttachmentsStorage(IntEnum):
+    GLOBAL = 0
+    USER_TOTAL = 1
+    USER_UNUSED = 2

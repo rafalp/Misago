@@ -7,6 +7,7 @@ from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.upload import store_uploaded_file
 from ...attachments.validators import (
+    get_attachments_storage_constrains,
     validate_post_attachments_limit,
     validate_uploaded_file,
 )
@@ -120,16 +121,28 @@ class PostForm(PostingForm):
 
         validate_post_attachments_limit(len(data), self.max_attachments)
 
+        storage_constraints = get_attachments_storage_constrains(
+            self.request.settings.global_unused_attachments_limit,
+            self.request.user,
+            self.request.user_permissions,
+        )
+
         errors: list[forms.ValidationError] = []
         for upload in data:
             try:
                 filetype = validate_uploaded_file(
                     upload,
-                    max_size=self.attachment_size_limit,
                     allowed_attachments=self.request.settings.allowed_attachment_types,
+                    max_size=self.attachment_size_limit,
+                    **storage_constraints,
                 )
-                self.attachments.append(
-                    store_uploaded_file(self.request, upload, filetype)
+
+                attachment = store_uploaded_file(self.request, upload, filetype)
+                self.attachments.append(attachment)
+
+                attachment_size = attachment.size + attachment.thumbnail_size
+                storage_constraints["storage_left"] = max(
+                    storage_constraints["storage_left"] - attachment_size, 0
                 )
             except forms.ValidationError as error:
                 errors.append(error)
@@ -141,12 +154,15 @@ class PostForm(PostingForm):
 
         return data
 
+    def get_attachment_storage_constraints(self) -> dict:
+        pass
+
     def update_state(self, state: PostingState):
         state.set_post_message(self.cleaned_data["post"])
         state.set_attachments(self.attachments)
 
     def clear_errors_in_preview(self):
-        pass
+        return
 
     def clear_errors_in_upload(self):
         self.errors.pop("post", None)

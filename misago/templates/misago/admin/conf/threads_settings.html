@@ -23,6 +23,7 @@
     <legend>{% translate "Attachments" context "admin threads settings form" %}</legend>
     
     {% form_row form.allowed_attachment_types %}
+    {% form_row form.unused_attachments_storage_limit %}
     {% form_row form.post_attachments_limit %}
     {% form_row form.allow_private_threads_attachments %}
     {% form_dimensions_row form.attachment_image_max_width form.attachment_image_max_height %}

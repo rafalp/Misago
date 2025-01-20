@@ -111,3 +111,11 @@ class UserPermissionsProxy:
             return True
 
         return category_id in self.moderated_categories
+
+    @property
+    def attachment_storage_limit_bytes(self):
+        return self.permissions["attachment_storage_limit"] * 1024 * 1024
+
+    @property
+    def unused_attachments_storage_limit_bytes(self):
+        return self.permissions["unused_attachments_storage_limit"] * 1024 * 1024

@@ -14,6 +14,11 @@ class Migration(migrations.Migration):
 
     operations = [
         CreateSetting(
+            setting="unused_attachments_storage_limit",
+            python_type="int",
+            dry_value=1024,
+        ),
+        CreateSetting(
             setting="attachment_image_max_width",
             python_type="int",
             dry_value=3840,

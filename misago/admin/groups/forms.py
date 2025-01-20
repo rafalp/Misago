@@ -193,7 +193,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not actively associated with any posts. Enter zero to remove this limit.",
+            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit.",
         ),
         min_value=0,
     )
