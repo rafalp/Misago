@@ -45,7 +45,7 @@ class PostForm(PostingForm):
 
             if data:
                 if attachments_secrets := data.getlist(self.attachment_secret_name):
-                    self.get_temp_attachments(attachments_secrets)
+                    self.get_unused_attachments(attachments_secrets)
 
     @property
     def show_attachments(self) -> bool:
@@ -91,7 +91,7 @@ class PostForm(PostingForm):
     def sort_attachments(self):
         self.attachments.sort(key=lambda a: a.id, reverse=True)
 
-    def get_temp_attachments(self, secrets: list[str]):
+    def get_unused_attachments(self, secrets: list[str]):
         clean_secrets: set[str] = set(s.strip() for s in secrets if s.strip())
         if clean_secrets:
             self.attachments.extend(

@@ -86,7 +86,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted from disk.",
+            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted.",
         ),
         min_value=1,
     )

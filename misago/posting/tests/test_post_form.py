@@ -58,7 +58,7 @@ def test_post_form_sets_attachments_permissions(dynamic_settings):
     assert form.attachments_permissions.can_delete_own_attachments
 
 
-def test_post_form_populates_attachments_with_temp_attachments_on_init(
+def test_post_form_populates_attachments_with_unused_attachments_on_init(
     user, dynamic_settings, attachment_factory, text_file
 ):
     request = Mock(settings=dynamic_settings, user=user)
@@ -78,13 +78,13 @@ def test_post_form_populates_attachments_with_temp_attachments_on_init(
     assert form.attachments == [attachment]
 
 
-def test_post_form_appends_temp_attachments_to_attachments_on_init(
+def test_post_form_appends_unused_attachments_to_attachments_on_init(
     user, dynamic_settings, attachment_factory, text_file, post
 ):
     request = Mock(settings=dynamic_settings, user=user)
-    temp_attachment = attachment_factory(text_file, uploader=user)
+    unused_attachment = attachment_factory(text_file, uploader=user)
     attachment = attachment_factory(text_file, uploader=user, post=post)
-    data = MockQueryDict({PostForm.attachment_secret_name: [temp_attachment.secret]})
+    data = MockQueryDict({PostForm.attachment_secret_name: [unused_attachment.secret]})
 
     form = PostForm(
         data,
@@ -97,10 +97,10 @@ def test_post_form_appends_temp_attachments_to_attachments_on_init(
             can_delete_own_attachments=True,
         ),
     )
-    assert form.attachments == [attachment, temp_attachment]
+    assert form.attachments == [attachment, unused_attachment]
 
 
-def test_post_form_doesnt_populate_attachments_with_temp_attachments_on_init_if_user_cant_upload_attachments(
+def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_if_user_cant_upload_attachments(
     user, dynamic_settings, attachment_factory, text_file
 ):
     request = Mock(settings=dynamic_settings, user=user)
@@ -120,7 +120,7 @@ def test_post_form_doesnt_populate_attachments_with_temp_attachments_on_init_if_
     assert form.attachments == []
 
 
-def test_post_form_get_temp_attachments_updates_form_attachments(
+def test_post_form_get_unused_attachments_updates_form_attachments(
     user, dynamic_settings, attachment_factory, text_file, post
 ):
     request = Mock(settings=dynamic_settings, user=user)
@@ -128,33 +128,33 @@ def test_post_form_get_temp_attachments_updates_form_attachments(
     attachment = attachment_factory(text_file, uploader=user)
 
     form = PostForm(request=request, attachments=[other_attachment])
-    form.get_temp_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.secret])
     assert form.attachments == [attachment, other_attachment]
 
 
-def test_post_form_get_temp_attachments_excludes_other_users_temp_attachments(
+def test_post_form_get_unused_attachments_excludes_other_users_unused_attachments(
     user, other_user, dynamic_settings, attachment_factory, text_file
 ):
     request = Mock(settings=dynamic_settings, user=user)
     attachment = attachment_factory(text_file, uploader=other_user)
 
     form = PostForm(request=request)
-    form.get_temp_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.secret])
     assert form.attachments == []
 
 
-def test_post_form_get_temp_attachments_excludes_attachments_with_posts(
+def test_post_form_get_unused_attachments_excludes_attachments_with_posts(
     user, post, dynamic_settings, attachment_factory, text_file
 ):
     request = Mock(settings=dynamic_settings, user=user)
     attachment = attachment_factory(text_file, uploader=user, post=post)
 
     form = PostForm(request=request)
-    form.get_temp_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.secret])
     assert form.attachments == []
 
 
-def test_post_form_get_temp_attachments_excludes_deleted_temp_attachments(
+def test_post_form_get_unused_attachments_excludes_deleted_unused_attachments(
     user, dynamic_settings, attachment_factory, text_file
 ):
     request = Mock(settings=dynamic_settings, user=user)
@@ -164,7 +164,7 @@ def test_post_form_get_temp_attachments_excludes_deleted_temp_attachments(
     attachment.save()
 
     form = PostForm(request=request)
-    form.get_temp_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.secret])
     assert form.attachments == []
 
 

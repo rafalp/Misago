@@ -92,18 +92,18 @@ def test_edit_thread_post_state_save_deletes_post_attachments(
     assert attachment.is_deleted
 
 
-def test_edit_thread_post_state_save_deletes_temporary_attachments(
+def test_edit_thread_post_state_save_deletes_unused_attachments(
     user, other_user, user_request, other_user_thread, text_file, attachment_factory
 ):
     post = other_user_thread.first_post
     post_attachment = attachment_factory(text_file, uploader=other_user, post=post)
 
-    temp_attachment = attachment_factory(text_file, uploader=user)
+    unused_attachment = attachment_factory(text_file, uploader=user)
 
     state = EditThreadPostState(user_request, other_user_thread.first_post)
     state.set_post_message("Edit reply")
-    state.set_attachments([temp_attachment, post_attachment])
-    state.set_delete_attachments([temp_attachment])
+    state.set_attachments([unused_attachment, post_attachment])
+    state.set_delete_attachments([unused_attachment])
     state.save()
 
     post_attachment.refresh_from_db()
@@ -113,9 +113,9 @@ def test_edit_thread_post_state_save_deletes_temporary_attachments(
     assert post_attachment.uploader == other_user
     assert post_attachment.uploaded_at < state.timestamp
 
-    temp_attachment.refresh_from_db()
-    assert not temp_attachment.category
-    assert not temp_attachment.thread
-    assert not temp_attachment.post
-    assert temp_attachment.uploader == user
-    assert temp_attachment.is_deleted
+    unused_attachment.refresh_from_db()
+    assert not unused_attachment.category
+    assert not unused_attachment.thread
+    assert not unused_attachment.post
+    assert unused_attachment.uploader == user
+    assert unused_attachment.is_deleted

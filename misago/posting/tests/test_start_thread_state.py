@@ -87,7 +87,7 @@ def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
     assert attachment.uploaded_at == state.timestamp
 
 
-def test_start_thread_state_deletes_temp_attachments(
+def test_start_thread_state_deletes_unused_attachments(
     user_request, default_category, user, text_file, attachment_factory
 ):
     attachment = attachment_factory(text_file, uploader=user)
