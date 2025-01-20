@@ -9,10 +9,12 @@
 
 {% block content %}
 <div class="page page-attachment">
+  {% pluginoutlet ATTACHMENT_PAGE_START %}
   {% include "misago/attachment_details/preview.html" %}
+  {% pluginoutlet ATTACHMENT_PAGE_AFTER_PREVIEW %}
   <div class="container page-container">
     {% include "misago/attachment_details/details.html" %}
-    {% pluginoutlet ATTACHMENT_DETAILS_END %}
+    {% pluginoutlet ATTACHMENT_PAGE_END %}
   </div>
 </div>
 {% endblock content %}

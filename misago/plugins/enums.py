@@ -7,8 +7,6 @@ class PluginOutlet(Enum):
     Members values are descriptions of outlets locations, used by the docs generator.
     """
 
-    TEST = "Used in some tests."
-
     ADMIN_DASHBOARD_START = "On the Admin dashboard page, above all other content."
     ADMIN_DASHBOARD_AFTER_CHECKS = "On the Admin dashboard page, below the Checks card."
     ADMIN_DASHBOARD_AFTER_ANALYTICS = (
@@ -16,7 +14,9 @@ class PluginOutlet(Enum):
     )
     ADMIN_DASHBOARD_END = "On the Admin dashboard page, below all other content."
 
-    ATTACHMENT_DETAILS_END = "On the attachment details page, under the details block."
+    ATTACHMENT_PAGE_START = "On the attachment details page, above the preview."
+    ATTACHMENT_PAGE_AFTER_PREVIEW = "On the attachment details page, under the preview."
+    ATTACHMENT_PAGE_END = "On the attachment details page, under the details block."
 
     LOGIN_PAGE_START = "On the Sign in page, above the form."
     LOGIN_PAGE_END = "On the Sign in page, below the form."
@@ -91,3 +91,5 @@ class PluginOutlet(Enum):
         "On the the markup editor's toolbar, between insert photo and insert quote."
     )
     MARKUP_EDITOR_TOOLBAR_END = "At the end of the markup editor's toolbar."
+
+    TEST = "Used in some tests."
