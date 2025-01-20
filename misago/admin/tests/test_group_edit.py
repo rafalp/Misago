@@ -30,6 +30,10 @@ def get_form_data(group: Group) -> dict:
         ),
         "group-private_thread_users_limit": str(group.private_thread_users_limit),
         "group-can_upload_attachments": str(group.can_upload_attachments),
+        "group-attachment_storage_limit": str(group.attachment_storage_limit),
+        "group-unused_attachments_storage_limit": str(
+            group.unused_attachments_storage_limit
+        ),
         "group-attachment_size_limit": str(group.attachment_size_limit),
         "group-can_delete_own_attachments": (
             "1" if group.can_delete_own_attachments else ""

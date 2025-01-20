@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from ...conf.test import override_dynamic_settings
 from ..filetypes import filetypes
-from ..store import store_uploaded_file
+from ..upload import store_uploaded_file
 
 
 def test_store_uploaded_file_stores_text_file(

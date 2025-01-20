@@ -31,6 +31,8 @@ class Group(PluginDataModel):
     private_thread_users_limit = models.PositiveIntegerField(default=1)
 
     can_upload_attachments = models.PositiveIntegerField(default=0)
+    attachment_storage_limit = models.PositiveIntegerField(default=512)
+    unused_attachments_storage_limit = models.PositiveIntegerField(default=64)
     attachment_size_limit = models.PositiveIntegerField(default=1000)
     can_delete_own_attachments = models.BooleanField(default=False)
 

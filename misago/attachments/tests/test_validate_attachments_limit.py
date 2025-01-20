@@ -1,20 +1,20 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from ..validators import validate_attachments_limit
+from ..validators import validate_post_attachments_limit
 
 
-def test_validate_attachments_limit_passes_zero_attachments():
-    validate_attachments_limit(0, 5)
+def test_validate_post_attachments_limit_passes_zero_attachments():
+    validate_post_attachments_limit(0, 5)
 
 
-def test_validate_attachments_limit_passes_attachments_within_limit():
-    validate_attachments_limit(5, 5)
+def test_validate_post_attachments_limit_passes_attachments_within_limit():
+    validate_post_attachments_limit(5, 5)
 
 
-def test_validate_attachments_limit_fails_too_many_attachments():
+def test_validate_post_attachments_limit_fails_too_many_attachments():
     with pytest.raises(ValidationError) as exc_info:
-        validate_attachments_limit(6, 5)
+        validate_post_attachments_limit(6, 5)
 
     assert exc_info.value.message == (
         "Posted message cannot have more than %(limit_value)s attachments "

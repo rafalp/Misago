@@ -97,6 +97,8 @@
     <legend>{% trans "Attachments" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_upload_attachments %}
+    {% form_row form.group.attachment_storage_limit %}
+    {% form_row form.group.unused_attachments_storage_limit %}
     {% form_row form.group.attachment_size_limit %}
     {% form_row form.group.can_delete_own_attachments %}
 

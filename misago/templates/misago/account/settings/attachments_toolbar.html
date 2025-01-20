@@ -1,0 +1,70 @@
+{% load i18n %}
+{% if attachments.has_previous or attachments.has_next %}
+<nav class="toolbar">
+  <div class="toolbar-section">
+    <div class="toolbar-item">
+      <div
+        class="misago-pagination"
+        hx-push-url="true"
+        hx-target="#misago-htmx-history"
+        hx-swap="outerHTML show:#misago-page-scroll-target:top"
+      >
+        {% if attachments.has_previous %}
+          <a
+            href="{% url 'misago:account-attachments' %}"
+            class="btn btn-default btn-outline btn-icon"
+            title="{% trans 'Go to first page' context 'username history paginator' %}"
+            hx-get="{% url 'misago:account-attachments' %}"
+          >
+            <span class="material-icon">first_page</span>
+          </a>
+          <a
+            href="{% url 'misago:account-attachments' %}{{ attachments.previous_cursor_query }}"
+            class="btn btn-default btn-outline btn-icon"
+            title="{% trans 'Go to previous page' context 'username history paginator' %}"
+            hx-get="{% url 'misago:account-attachments' %}{{ attachments.previous_cursor_query }}"
+          >
+            <span class="material-icon">chevron_left</span>
+          </a>
+        {% else %}
+          <button
+            class="btn btn-default btn-outline btn-icon"
+            title="{% trans 'Go to first page' context 'username history paginator' %}"
+            type="button"
+            disabled
+          >
+            <span class="material-icon">first_page</span>
+          </button>
+          <button
+            class="btn btn-default btn-outline btn-icon"
+            title="{% trans 'Go to previous page' context 'username history paginator' %}"
+            type="button"
+            disabled
+          >
+            <span class="material-icon">chevron_left</span>
+          </button>
+        {% endif %}
+        {% if attachments.has_next %}
+          <a
+            href="{% url 'misago:account-attachments' %}{{ attachments.next_cursor_query }}"
+            class="btn btn-default btn-outline btn-icon"
+            title="{% trans 'Go to next page' context 'username history paginator' %}"
+            hx-get="{% url 'misago:account-attachments' %}{{ attachments.next_cursor_query }}"
+          >
+            <span class="material-icon">chevron_right</span>
+          </a>
+        {% else %}
+          <button
+            class="btn btn-default btn-outline btn-icon"
+            title="{% trans 'Go to next page' context 'username history paginator' %}"
+            type="button"
+            disabled
+          >
+            <span class="material-icon">chevron_right</span>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+{% endif %}

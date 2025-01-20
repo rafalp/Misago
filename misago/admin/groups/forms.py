@@ -177,6 +177,26 @@ class EditGroupForm(forms.ModelForm):
         widget=forms.RadioSelect(),
         coerce=int,
     )
+    attachment_storage_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Total attachment storage limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Maximum total storage space, in megabytes, that each member of this group can to use for their attachments. Enter zero to remove this limit.",
+        ),
+        min_value=0,
+    )
+    unused_attachments_storage_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Unused attachments storage limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not actively associated with any posts. Enter zero to remove this limit.",
+        ),
+        min_value=0,
+    )
     attachment_size_limit = forms.IntegerField(
         label=pgettext_lazy(
             "admin group permissions form", "Attachment file size limit"
@@ -255,6 +275,8 @@ class EditGroupForm(forms.ModelForm):
             "can_start_private_threads",
             "private_thread_users_limit",
             "can_upload_attachments",
+            "attachment_storage_limit",
+            "unused_attachments_storage_limit",
             "attachment_size_limit",
             "can_delete_own_attachments",
             "can_change_username",

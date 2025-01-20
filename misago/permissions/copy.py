@@ -52,6 +52,8 @@ COPY_GROUP_PERMISSIONS = (
     "can_start_private_threads",
     "private_thread_users_limit",
     "can_upload_attachments",
+    "attachment_storage_limit",
+    "unused_attachments_storage_limit",
     "attachment_size_limit",
     "can_delete_own_attachments",
     "can_change_username",

@@ -41,6 +41,11 @@ urlpatterns = [
         name="account-email-confirm-change",
     ),
     path(
+        "attachments/",
+        settings.AccountAttachmentsView.as_view(),
+        name="account-attachments",
+    ),
+    path(
         "download-data/",
         settings.AccountDownloadDataView.as_view(),
         name="account-download-data",

@@ -59,6 +59,14 @@ account_settings_menu.add_item(
 )
 
 
+account_settings_menu.add_item(
+    key="password",
+    url_name="misago:account-attachments",
+    label=pgettext_lazy("account settings page", "Attachments"),
+    icon="file_download",
+)
+
+
 def show_download_data(request: HttpRequest) -> bool:
     return request.settings.allow_data_downloads
 

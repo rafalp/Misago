@@ -5,9 +5,9 @@ from django.utils.translation import pgettext_lazy
 from ...attachments.enums import AllowedAttachments
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
-from ...attachments.store import store_uploaded_file
+from ...attachments.upload import store_uploaded_file
 from ...attachments.validators import (
-    validate_attachments_limit,
+    validate_post_attachments_limit,
     validate_uploaded_file,
 )
 from ...permissions.attachments import AttachmentsPermissions
@@ -118,7 +118,7 @@ class PostForm(PostingForm):
     def clean_upload(self):
         data = self.cleaned_data["upload"]
 
-        validate_attachments_limit(len(data), self.max_attachments)
+        validate_post_attachments_limit(len(data), self.max_attachments)
 
         errors: list[forms.ValidationError] = []
         for upload in data:

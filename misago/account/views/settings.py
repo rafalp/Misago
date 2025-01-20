@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Any
 
 from django.conf import settings
@@ -12,6 +13,11 @@ from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 from django.views.decorators.debug import sensitive_post_parameters
 
+from ...attachments.models import Attachment
+from ...attachments.storage import (
+    get_user_attachment_storage_usage,
+    get_user_unused_attachments_size,
+)
 from ...auth.decorators import login_required
 from ...core.mail import build_mail
 from ...pagination.cursor import EmptyPageError, paginate_queryset
@@ -415,6 +421,73 @@ def account_email_confirm_change(request, user_id, token):
         "misago/account/settings/email_changed.html",
         {"username": user.username, "new_email": new_email},
     )
+
+
+class AccountAttachmentsView(AccountSettingsFormView):
+    template_name = "misago/account/settings/attachments.html"
+    template_name_htmx = "misago/account/settings/attachments_list.html"
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return self.render(request, template_name)
+
+    def get_context_data(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        context["storage_usage"] = self.get_storage_usage(request)
+        context["attachments"] = self.get_attachments(request)
+
+        return context
+
+    def get_storage_usage(self, request: HttpRequest) -> dict:
+        all_attachments = get_user_attachment_storage_usage(request.user)
+        unused_attachments = get_user_unused_attachments_size(request.user)
+        posted_attachments = max(all_attachments - unused_attachments, 0)
+
+        total_storage = request.user_permissions.attachment_storage_limit * 1024 * 1024
+        unused_storage = (
+            request.user_permissions.unused_attachments_storage_limit * 1024 * 1024
+        )
+
+        posted_pc = 0
+        unused_pc = 0
+
+        if total_storage:
+            free_storage = 100
+            if unused_attachments:
+                unused_pc = ceil(float(unused_attachments) * 100 / float(total_storage))
+                free_storage -= unused_pc
+            if posted_attachments:
+                posted_pc = ceil(float(posted_attachments) * 100 / float(total_storage))
+                posted_pc = min(posted_pc, free_storage)
+        else:
+            if posted_attachments and unused_attachments:
+                unused_pc = ceil(
+                    float(unused_attachments) * 100 / float(all_attachments)
+                )
+                posted_pc = 100 - unused_pc
+
+        return {
+            "total": all_attachments,
+            "posted": posted_attachments,
+            "unused": unused_attachments,
+            "limit": total_storage,
+            "free": total_storage - all_attachments,
+            "posted_pc": posted_pc,
+            "unused_pc": unused_pc,
+        }
+
+    def get_attachments(self, request: HttpRequest):
+        queryset = Attachment.objects.filter(uploader=request.user).select_related(
+            "category", "thread", "post"
+        )
+        return paginate_queryset(request, queryset, 20, "-id")
 
 
 class AccountDownloadDataView(AccountSettingsView):

@@ -7,11 +7,11 @@ from .enums import AllowedAttachments
 from .filetypes import AttachmentFileType, filetypes
 
 
-def validate_attachments_limit(value: int, limit_value: int):
+def validate_post_attachments_limit(value: int, limit_value: int):
     if value > limit_value:
         raise ValidationError(
             message=npgettext(
-                "attachments limit validator",
+                "post attachments limit validator",
                 "Posted message cannot have more than %(limit_value)s attachment (it has %(show_value)s).",
                 "Posted message cannot have more than %(limit_value)s attachments (it has %(show_value)s).",
                 limit_value,
