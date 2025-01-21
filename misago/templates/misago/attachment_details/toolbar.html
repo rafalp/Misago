@@ -13,7 +13,7 @@
           id="misago-delete-attachment"
           action="{{ attachment.get_delete_url }}{{ attachment_referer }}"
           method="post"
-          misago-confirm="{% trans 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment page delete btn prompt' %}"
+          misago-confirm="{% trans 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
         >
           {% csrf_token %}
           <button class="btn btn-default" >
