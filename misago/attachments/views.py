@@ -117,10 +117,27 @@ class AttachmentDetailsView(AttachmentView):
         except (Http404, PermissionDenied):
             can_delete = False
 
-        return {"attachment": attachment, "can_delete_attachment": can_delete}
+        return {
+            "attachment": attachment,
+            "can_delete_attachment": can_delete,
+            "attachment_referer": _get_referer_querystring(request, attachment),
+        }
 
 
 class AttachmentDeleteView(View):
+    template_name: str = "misago/attachment_delete/index.html"
+
+    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        attachment = self.get_attachment(request, id, slug)
+        return render(
+            request,
+            self.template_name,
+            {
+                "attachment": attachment,
+                "attachment_referer": _get_referer_querystring(request, attachment),
+            },
+        )
+
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         attachment = self.get_attachment(request, id, slug)
         attachment.delete()
@@ -163,18 +180,33 @@ class AttachmentDeleteView(View):
         return attachment
 
     def get_redirect_url(self, request: HttpRequest, attachment: Attachment) -> str:
-        if request.GET.get("ref") == "settings":
+        if request.GET.get("referer") == "settings":
             url = reverse("misago:account-attachments")
             if request.GET.get("after"):
-                url += "?after=" + request.GET.get("ref")
+                url += "?after=" + request.GET.get("after")
             elif request.GET.get("before"):
                 url += "?before=" + request.GET.get("before")
             return url
 
-        if request.GET.get("ref") == "post" and attachment.post:
+        if request.GET.get("referer") == "post" and attachment.post:
             return attachment.post.get_absolute_url()
 
         return reverse("misago:index")
+
+
+def _get_referer_querystring(request: HttpRequest, attachment: Attachment) -> str:
+    if request.GET.get("referer") == "settings":
+        querystring = "?referer=settings"
+        if request.GET.get("after"):
+            querystring += "?after=" + request.GET.get("after")
+        elif request.GET.get("before"):
+            querystring += "?before=" + request.GET.get("before")
+        return querystring
+
+    if request.GET.get("referer") == "post" and attachment.post:
+        return "?referer=post"
+
+    return ""
 
 
 attachment_delete = AttachmentDeleteView.as_view()
