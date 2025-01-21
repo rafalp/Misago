@@ -180,7 +180,10 @@ def _check_delete_attachment_permission_action(
     ):
         return  # Uploaders can always delete their own unused attachments
 
-    if category.tree_id in (CategoryTree.THREADS, CategoryTree.PRIVATE_THREADS):
+    if category and category.tree_id in (
+        CategoryTree.THREADS,
+        CategoryTree.PRIVATE_THREADS,
+    ):
         if (
             category.tree_id == CategoryTree.THREADS
             and permissions.is_category_moderator(category.id)

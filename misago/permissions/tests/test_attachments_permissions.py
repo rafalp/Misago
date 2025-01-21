@@ -230,7 +230,7 @@ def test_check_download_attachment_permission_fails_user_without_private_thread_
         )
 
 
-def check_delete_attachment_permission_passes_misago_admin_form_unused_attachment(
+def test_check_delete_attachment_permission_passes_misago_admin_for_unused_attachment(
     admin, attachment, cache_versions
 ):
     permissions = UserPermissionsProxy(admin, cache_versions)
@@ -244,7 +244,58 @@ def check_delete_attachment_permission_passes_misago_admin_form_unused_attachmen
     )
 
 
-def check_delete_attachment_permission_passes_misago_admin_for_thread_attachment(
+def test_check_delete_attachment_permission_passes_global_moderator_for_unused_attachment(
+    moderator, attachment, cache_versions
+):
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def test_check_delete_attachment_permission_fails_category_moderator_for_unused_attachment(
+    user, attachment, cache_versions
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_delete_attachment_permission_passes_uploader_for_unused_attachment(
+    user, attachment, cache_versions
+):
+    attachment.uploader = user
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def test_check_delete_attachment_permission_passes_misago_admin_for_thread_attachment(
     admin, attachment, cache_versions, post
 ):
     attachment.category = post.category
@@ -263,7 +314,7 @@ def check_delete_attachment_permission_passes_misago_admin_for_thread_attachment
     )
 
 
-def check_delete_attachment_permission_passes_global_moderator_for_thread_attachment(
+def test_check_delete_attachment_permission_passes_global_moderator_for_thread_attachment(
     moderator, attachment, cache_versions, post
 ):
     attachment.category = post.category
@@ -282,7 +333,7 @@ def check_delete_attachment_permission_passes_global_moderator_for_thread_attach
     )
 
 
-def check_delete_attachment_permission_passes_category_moderator_for_thread_attachment(
+def test_check_delete_attachment_permission_passes_category_moderator_for_thread_attachment(
     user, attachment, cache_versions, post
 ):
     Moderator.objects.create(
@@ -307,7 +358,72 @@ def check_delete_attachment_permission_passes_category_moderator_for_thread_atta
     )
 
 
-def check_delete_attachment_permission_passes_misago_admin_for_private_thread_attachment(
+def test_check_delete_attachment_permission_passes_uploader_for_thread_attachment(
+    user, attachment, cache_versions, post
+):
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.uploader = user
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def test_check_delete_attachment_permission_fails_uploader_without_permission_for_thread_attachment(
+    user, members_group, attachment, cache_versions, post
+):
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.uploader = user
+    attachment.save()
+
+    members_group.can_delete_own_attachments = False
+    members_group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_delete_attachment_permission_fails_user_for_other_users_thread_attachment(
+    user, other_user, attachment, cache_versions, post
+):
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.uploader = other_user
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_delete_attachment_permission_passes_misago_admin_for_private_thread_attachment(
     admin, attachment, cache_versions, private_threads_category, private_thread
 ):
     attachment.category = private_threads_category
@@ -326,7 +442,7 @@ def check_delete_attachment_permission_passes_misago_admin_for_private_thread_at
     )
 
 
-def check_delete_attachment_permission_passes_global_moderator_for_private_thread_attachment(
+def test_check_delete_attachment_permission_passes_global_moderator_for_private_thread_attachment(
     moderator, attachment, cache_versions, private_threads_category, private_thread
 ):
     attachment.category = private_threads_category
@@ -345,7 +461,7 @@ def check_delete_attachment_permission_passes_global_moderator_for_private_threa
     )
 
 
-def check_delete_attachment_permission_passes_private_threads_moderator_for_private_thread_attachment(
+def test_check_delete_attachment_permission_passes_private_threads_moderator_for_private_thread_attachment(
     user, attachment, cache_versions, private_threads_category, private_thread
 ):
     Moderator.objects.create(
@@ -368,6 +484,81 @@ def check_delete_attachment_permission_passes_private_threads_moderator_for_priv
         attachment.post,
         attachment,
     )
+
+
+def test_check_delete_attachment_permission_passes_uploader_for_private_thread_attachment(
+    user, attachment, cache_versions, private_threads_category, private_thread
+):
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.uploader = user
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def test_check_delete_attachment_permission_fails_uploader_without_permission_for_private_thread_attachment(
+    user,
+    members_group,
+    attachment,
+    cache_versions,
+    private_threads_category,
+    private_thread,
+):
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.uploader = user
+    attachment.save()
+
+    members_group.can_delete_own_attachments = False
+    members_group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
+def test_check_delete_attachment_permission_fails_user_for_other_users_private_thread_attachment(
+    user,
+    other_user,
+    attachment,
+    cache_versions,
+    private_threads_category,
+    private_thread,
+):
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.uploader = other_user
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
 
 
 def test_get_threads_attachments_permissions_returns_permissions_object_for_user(
