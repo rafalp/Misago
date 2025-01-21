@@ -28,7 +28,7 @@ class AllowedAttachments(StrEnum):
         )
 
 
-class AttachmentsStorage(IntEnum):
+class AttachmentStorage(IntEnum):
     GLOBAL = 0
     USER_TOTAL = 1
     USER_UNUSED = 2

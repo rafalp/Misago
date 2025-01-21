@@ -7,7 +7,7 @@ from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.upload import store_uploaded_file
 from ...attachments.validators import (
-    get_attachments_storage_constrains,
+    get_attachments_storage_constraints,
     validate_post_attachments_limit,
     validate_uploaded_file,
 )
@@ -72,8 +72,7 @@ class PostForm(PostingForm):
         if not self.attachments_permissions:
             return 0
 
-        # Return permission size converted from kilobytes to bytes
-        return self.attachments_permissions.attachment_size_limit * 1024
+        return self.attachments_permissions.attachment_size_limit
 
     @property
     def accept_attachments(self) -> str:
@@ -121,9 +120,8 @@ class PostForm(PostingForm):
 
         validate_post_attachments_limit(len(data), self.max_attachments)
 
-        storage_constraints = get_attachments_storage_constrains(
-            self.request.settings.global_unused_attachments_limit,
-            self.request.user,
+        storage_constraints = get_attachments_storage_constraints(
+            self.request.settings.unused_attachments_storage_limit,
             self.request.user_permissions,
         )
 

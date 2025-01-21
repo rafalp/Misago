@@ -7,7 +7,7 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import npgettext, pgettext
 
 from ..permissions.proxy import UserPermissionsProxy
-from .enums import AllowedAttachments, AttachmentsStorage
+from .enums import AllowedAttachments, AttachmentStorage
 from .filetypes import AttachmentFileType, filetypes
 from .storage import (
     get_total_unused_attachments_size,
@@ -43,7 +43,7 @@ def validate_uploaded_file(
     *,
     allowed_attachments: AllowedAttachments | str,
     max_size: int = 0,
-    storage: AttachmentsStorage | None = None,
+    storage: AttachmentStorage | None = None,
     storage_limit: int = 0,
     storage_left: int = 0,
 ) -> AttachmentFileType:
@@ -76,7 +76,7 @@ def validate_uploaded_file(
         )
 
     if storage and storage_limit and storage_left < file.size:
-        if storage == AttachmentsStorage.GLOBAL:
+        if storage == AttachmentStorage.GLOBAL:
             logger.error("Global unused attachments storage limit exceeded")
 
             raise ValidationError(
@@ -106,24 +106,25 @@ def validate_uploaded_file(
     return filetype
 
 
-def get_attachments_storage_constrains(
+def get_attachments_storage_constraints(
     global_unused_limit: int,
-    user: "User",
     permissions: UserPermissionsProxy,
 ) -> dict:
+    user = permissions.user
+
     global_unused_limit = global_unused_limit * 1024 * 1024
-    user_storage_limit = permissions.attachment_storage_limit_bytes
-    user_unused_limit = permissions.unused_attachments_storage_limit_bytes
+    user_storage_limit = permissions.attachment_storage_limit
+    user_unused_limit = permissions.unused_attachments_storage_limit
 
     if not any((global_unused_limit, user_storage_limit, user_unused_limit)):
-        return {"storage_limit": 0, "storage_left": 0}
+        return {"storage": None, "storage_limit": 0, "storage_left": 0}
 
     limits: list[int] = []
 
     if global_unused_limit:
         limits.append(
             (
-                AttachmentsStorage.GLOBAL,
+                AttachmentStorage.GLOBAL,
                 global_unused_limit,
                 global_unused_limit - get_total_unused_attachments_size(),
             )
@@ -132,7 +133,7 @@ def get_attachments_storage_constrains(
     if user_storage_limit:
         limits.append(
             (
-                AttachmentsStorage.USER_TOTAL,
+                AttachmentStorage.USER_TOTAL,
                 user_storage_limit,
                 user_storage_limit - get_user_attachment_storage_usage(user),
             )
@@ -141,15 +142,15 @@ def get_attachments_storage_constrains(
     if user_unused_limit:
         limits.append(
             (
-                AttachmentsStorage.USER_UNUSED,
+                AttachmentStorage.USER_UNUSED,
                 user_unused_limit,
                 user_unused_limit - get_user_unused_attachments_size(user),
             )
         )
 
-    storage, storage_limit, storage_left = min(limits, lambda k: k[2])
+    storage, storage_limit, storage_left = min(limits, key=lambda k: k[2])
     return {
         "storage": storage,
         "storage_limit": storage_limit,
-        "storage_left": storage_left,
+        "storage_left": max(storage_left, 0),
     }
