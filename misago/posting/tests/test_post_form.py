@@ -50,13 +50,13 @@ def test_post_form_sets_attachments_permissions(dynamic_settings):
             is_moderator=True,
             can_upload_attachments=True,
             attachment_size_limit=123,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments_permissions.is_moderator
     assert form.attachments_permissions.can_upload_attachments
     assert form.attachments_permissions.attachment_size_limit == 123
-    assert form.attachments_permissions.can_delete_own_attachments
+    assert form.attachments_permissions.can_always_delete_own_attachments
 
 
 def test_post_form_populates_attachments_with_unused_attachments_on_init(
@@ -73,7 +73,7 @@ def test_post_form_populates_attachments_with_unused_attachments_on_init(
             is_moderator=True,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments == [attachment]
@@ -95,7 +95,7 @@ def test_post_form_appends_unused_attachments_to_attachments_on_init(
             is_moderator=True,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments == [attachment, unused_attachment]
@@ -115,7 +115,7 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
             is_moderator=True,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments == []
@@ -189,7 +189,7 @@ def test_post_form_show_attachments_is_true_if_user_has_upload_permission(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
     assert form.show_attachments
@@ -208,7 +208,7 @@ def test_post_form_show_attachments_is_true_if_form_has_attachments_but_user_can
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments
@@ -225,7 +225,7 @@ def test_post_form_show_attachments_is_false_if_form_has_no_attachments_and_user
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments
@@ -242,7 +242,7 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments_upload
@@ -259,7 +259,7 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments_upload
@@ -276,7 +276,7 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments_upload
@@ -293,7 +293,7 @@ def test_post_form_show_attachments_upload_is_false_if_user_has_upload_permissio
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -310,7 +310,7 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -327,7 +327,7 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -344,7 +344,7 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -361,7 +361,7 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -413,7 +413,7 @@ def test_post_form_includes_upload_field_if_show_attachments_upload_is_true(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert form.fields["upload"]
@@ -445,7 +445,7 @@ def test_post_form_attachment_size_limit_returns_size_limit_from_permissions(
             is_moderator=False,
             can_upload_attachments=False,
             attachment_size_limit=1234,
-            can_delete_own_attachments=False,
+            can_always_delete_own_attachments=False,
         ),
     )
     assert form.attachment_size_limit == 1234
@@ -555,7 +555,7 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -585,7 +585,7 @@ def test_post_form_clean_upload_sets_error_for_invalid_upload(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -616,7 +616,7 @@ def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -665,7 +665,7 @@ def test_post_form_clean_upload_validates_attachments_storage(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -711,7 +711,7 @@ def test_post_form_clean_upload_validates_storage_for_multipe_uploads(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -750,7 +750,7 @@ def test_post_form_clean_upload_validates_attachments_limit(
             is_moderator=False,
             can_upload_attachments=True,
             attachment_size_limit=0,
-            can_delete_own_attachments=True,
+            can_always_delete_own_attachments=True,
         ),
     )
 

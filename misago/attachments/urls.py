@@ -1,6 +1,11 @@
 from django.urls import path
 
-from .views import attachment_details, attachment_download, attachment_thumbnail
+from .views import (
+    attachment_delete,
+    attachment_details,
+    attachment_download,
+    attachment_thumbnail,
+)
 
 
 urlpatterns = [
@@ -13,6 +18,11 @@ urlpatterns = [
         "a/<slug:slug>/<int:id>/details/",
         attachment_details,
         name="attachment-details",
+    ),
+    path(
+        "a/<slug:slug>/<int:id>/delete/",
+        attachment_delete,
+        name="attachment-delete",
     ),
     path(
         "a/<slug:slug>/<int:id>/thumbnail/",

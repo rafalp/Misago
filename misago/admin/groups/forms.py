@@ -206,13 +206,13 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_delete_own_attachments = YesNoSwitch(
+    can_always_delete_own_attachments = YesNoSwitch(
         label=pgettext_lazy(
-            "admin group permissions form", "Can delete own attachments"
+            "admin group permissions form", "Can always delete own attachments"
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "This permission only applies to uploaded attachments that have already been posted.",
+            "This permission allows users to delete their own attachments, even if they no longer have permission to edit or view the post they are associated with.",
         ),
     )
 
@@ -277,7 +277,7 @@ class EditGroupForm(forms.ModelForm):
             "attachment_storage_limit",
             "unused_attachments_storage_limit",
             "attachment_size_limit",
-            "can_delete_own_attachments",
+            "can_always_delete_own_attachments",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

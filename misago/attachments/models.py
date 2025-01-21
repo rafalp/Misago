@@ -141,6 +141,12 @@ class Attachment(PluginDataModel):
             kwargs={"id": self.id, "slug": self.slug},
         )
 
+    def get_delete_url(self) -> str:
+        return reverse(
+            "misago:attachment-delete",
+            kwargs={"id": self.id, "slug": self.slug},
+        )
+
     def get_details_url(self) -> str:
         return reverse(
             "misago:attachment-details",

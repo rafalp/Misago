@@ -32,7 +32,7 @@ class UserPermissionsProxy:
     exempt_from_flood_control: bool
     can_upload_attachments: int
     attachment_size_limit: int
-    can_delete_own_attachments: bool
+    can_always_delete_own_attachments: bool
     can_change_username: bool
     username_changes_limit: int
     username_changes_expire: int

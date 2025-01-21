@@ -35,8 +35,8 @@ def get_form_data(group: Group) -> dict:
             group.unused_attachments_storage_limit
         ),
         "group-attachment_size_limit": str(group.attachment_size_limit),
-        "group-can_delete_own_attachments": (
-            "1" if group.can_delete_own_attachments else ""
+        "group-can_always_delete_own_attachments": (
+            "1" if group.can_always_delete_own_attachments else ""
         ),
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),

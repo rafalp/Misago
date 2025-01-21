@@ -55,7 +55,7 @@ COPY_GROUP_PERMISSIONS = (
     "attachment_storage_limit",
     "unused_attachments_storage_limit",
     "attachment_size_limit",
-    "can_delete_own_attachments",
+    "can_always_delete_own_attachments",
     "can_change_username",
     "username_changes_limit",
     "username_changes_expire",

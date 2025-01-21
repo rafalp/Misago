@@ -1,12 +1,18 @@
 from typing import Protocol, cast
 
 from django.conf import settings
+from django.contrib import messages
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.module_loading import import_string
+from django.utils.translation import pgettext
 from django.views import View
+from django.urls import reverse
 
-from ..permissions.attachments import check_download_attachment_permission
+from ..permissions.attachments import (
+    check_delete_attachment_permission,
+    check_download_attachment_permission,
+)
 from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment
 
@@ -101,6 +107,64 @@ class AttachmentDetailsView(AttachmentView):
         return {"attachment": attachment}
 
 
+class AttachmentDeleteView(View):
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        attachment = self.get_attachment(request, id, slug)
+        attachment.delete()
+
+        messages.success(
+            request,
+            pgettext("attachment delete page", 'Attachment "%(name)s" deleted')
+            % {"name": attachment.name},
+        )
+
+        return redirect(self.get_redirect_url(request, attachment))
+
+    def get_attachment(self, request: HttpRequest, id: int, slug: str) -> Attachment:
+        attachment = get_object_or_404(Attachment.objects.select_related(), id=id)
+
+        if attachment.slug != slug:
+            raise Http404()
+
+        # Check attachment permissions if its not viewed by admin
+        if not (request.user.is_authenticated and request.user.is_misago_admin):
+            if attachment.is_deleted:
+                raise Http404()
+
+            check_download_attachment_permission(
+                request.user_permissions,
+                attachment.category,
+                attachment.thread,
+                attachment.post,
+                attachment,
+            )
+
+        check_delete_attachment_permission(
+            request.user_permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+        return attachment
+
+    def get_redirect_url(self, request: HttpRequest, attachment: Attachment) -> str:
+        if request.GET.get("ref") == "settings":
+            url = reverse("misago:account-attachments")
+            if request.GET.get("after"):
+                url += "?after=" + request.GET.get("ref")
+            elif request.GET.get("before"):
+                url += "?before=" + request.GET.get("before")
+            return url
+
+        if request.GET.get("ref") == "post" and attachment.post:
+            return attachment.post.get_absolute_url()
+
+        return reverse("misago:index")
+
+
+attachment_delete = AttachmentDeleteView.as_view()
 attachment_details = AttachmentDetailsView.as_view()
 attachment_download = AttachmentDownloadView.as_view()
 attachment_thumbnail = AttachmentThumbnailView.as_view()

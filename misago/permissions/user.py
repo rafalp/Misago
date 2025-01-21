@@ -81,7 +81,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "attachment_storage_limit": 0,
         "unused_attachments_storage_limit": 0,
         "attachment_size_limit": 0,
-        "can_delete_own_attachments": False,
+        "can_always_delete_own_attachments": False,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -153,8 +153,8 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         if_true(
             permissions,
-            "can_delete_own_attachments",
-            group.can_delete_own_attachments,
+            "can_always_delete_own_attachments",
+            group.can_always_delete_own_attachments,
         )
         if_true(
             permissions,
