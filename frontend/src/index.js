@@ -133,7 +133,7 @@ document.addEventListener("misago:afterModeration", () => {
 })
 
 // Custom misago-confirm attribute
-document.addEventListener("submit", function(event) {
+document.addEventListener("submit", function (event) {
   const element = event.target.closest("form[misago-confirm]")
   if (!!element && !window.confirm(element.getAttribute("misago-confirm"))) {
     event.preventDefault()
