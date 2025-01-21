@@ -75,14 +75,14 @@ def validate_uploaded_file(
             },
         )
 
-    if storage and storage_limit and storage_left < file.size:
+    if storage_limit and storage_left < file.size:
         if storage == AttachmentStorage.GLOBAL:
             logger.error("Global unused attachments storage limit exceeded")
 
             raise ValidationError(
                 message=pgettext(
                     "attachments file storage left validator",
-                    "%(name)s: uploaded file exceeds the remaining attachments space left (%(limit_value)s).",
+                    "%(name)s: uploaded file exceeds the remaining attachments space (%(limit_value)s).",
                 ),
                 code="attachments_global_storage_left",
                 params={
