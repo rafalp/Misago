@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from ...attachments.enums import AllowedAttachments
 from ...conf.test import override_dynamic_settings
 from ...permissions.attachments import AttachmentsPermissions
+from ...permissions.proxy import UserPermissionsProxy
 from ..forms import PostForm
 
 
@@ -434,7 +435,7 @@ def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
     assert form.max_attachments == dynamic_settings.post_attachments_limit
 
 
-def test_post_form_attachment_size_limit_returns_size_limit_from_permissions_converted_to_bytes(
+def test_post_form_attachment_size_limit_returns_size_limit_from_permissions(
     user, dynamic_settings
 ):
     request = Mock(settings=dynamic_settings, user=user)
@@ -447,7 +448,7 @@ def test_post_form_attachment_size_limit_returns_size_limit_from_permissions_con
             can_delete_own_attachments=False,
         ),
     )
-    assert form.attachment_size_limit == 1234 * 1024
+    assert form.attachment_size_limit == 1234
 
 
 def test_post_form_attachment_size_limit_returns_zero_if_permissions_are_not_set(
@@ -537,8 +538,15 @@ def test_post_form_sort_attachments_method_sorts_attachments_from_newest(
     assert form.attachments == [second_attachment, first_attachment]
 
 
-def test_post_form_clean_upload_cleans_and_stores_valid_upload(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_clean_upload_cleans_and_stores_valid_upload(
+    user, dynamic_settings, cache_versions
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
     form = PostForm(
         MockQueryDict({"post": "Hello world!"}),
         {"upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/plain")]},
@@ -560,8 +568,15 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(user, dynamic_set
     assert attachment.uploader == user
 
 
-def test_post_form_clean_upload_sets_error_for_invalid_upload(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_clean_upload_sets_error_for_invalid_upload(
+    user, dynamic_settings, cache_versions
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
     form = PostForm(
         MockQueryDict({"post": "Hello world!"}),
         {"upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/invalid")]},
@@ -580,9 +595,14 @@ def test_post_form_clean_upload_sets_error_for_invalid_upload(user, dynamic_sett
 
 
 def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
-    user, dynamic_settings
+    user, dynamic_settings, cache_versions
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
     form = PostForm(
         MockQueryDict({"post": "Hello world!"}),
         {
@@ -610,9 +630,113 @@ def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
     assert attachment.uploader == user
 
 
+class SimpleUploadedFileWithForcedSize(SimpleUploadedFile):
+    def __init__(self, *args, size: int):
+        super().__init__(*args)
+        self.size: int = size
+
+
+def test_post_form_clean_upload_validates_attachments_storage(
+    user, members_group, dynamic_settings, cache_versions
+):
+    members_group.unused_attachments_storage_limit = 1
+    members_group.save()
+
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {
+            "upload": [
+                SimpleUploadedFileWithForcedSize(
+                    "test.txt",
+                    b"Hello world!",
+                    "text/plain",
+                    size=5 * 1024 * 1024,
+                ),
+            ]
+        },
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert not form.attachments
+    assert form.errors["upload"] == [
+        "test.txt: uploaded file exceeds your remaining attachment space (1.0\xa0MB).",
+    ]
+
+
+def test_post_form_clean_upload_validates_storage_for_multipe_uploads(
+    user, members_group, dynamic_settings, cache_versions
+):
+    members_group.unused_attachments_storage_limit = 1
+    members_group.save()
+
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {
+            "upload": [
+                SimpleUploadedFileWithForcedSize(
+                    "test.txt",
+                    b"Hello world!",
+                    "text/plain",
+                    size=1000 * 1024,
+                ),
+                SimpleUploadedFileWithForcedSize(
+                    "test2.txt",
+                    b"Hello world!",
+                    "text/plain",
+                    size=1024 * 1024,
+                ),
+            ]
+        },
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert len(form.attachments) == 1
+    assert form.errors["upload"] == [
+        "test2.txt: uploaded file exceeds your remaining attachment space (24.0\xa0KB).",
+    ]
+
+    attachment = form.attachments[0]
+    assert attachment.filetype_id == "txt"
+    assert attachment.name == "test.txt"
+    assert attachment.uploader == user
+
+
 @override_dynamic_settings(post_attachments_limit=2)
-def test_post_form_clean_upload_validates_attachments_limit(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_clean_upload_validates_attachments_limit(
+    user, dynamic_settings, cache_versions
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
     form = PostForm(
         MockQueryDict({"post": "Hello world!"}),
         {

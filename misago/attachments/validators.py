@@ -112,6 +112,7 @@ def get_attachments_storage_constraints(
 ) -> dict:
     user = permissions.user
 
+    # Global limit comes from setting that holds value in MB
     global_unused_limit = global_unused_limit * 1024 * 1024
     user_storage_limit = permissions.attachment_storage_limit
     user_unused_limit = permissions.unused_attachments_storage_limit
