@@ -450,8 +450,8 @@ class AccountAttachmentsView(AccountSettingsFormView):
         unused_attachments = get_user_unused_attachments_size(request.user)
         posted_attachments = max(all_attachments - unused_attachments, 0)
 
-        total_storage = request.user_permissions.attachment_storage_limit_bytes
-        unused_storage = request.user_permissions.unused_attachments_storage_limit_bytes
+        total_storage = request.user_permissions.attachment_storage_limit
+        unused_storage = request.user_permissions.unused_attachments_storage_limit
 
         posted_pc = 0
         unused_pc = 0

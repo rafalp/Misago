@@ -14,8 +14,34 @@
   {% pluginoutlet ATTACHMENT_PAGE_AFTER_PREVIEW %}
   <div class="container page-container">
     {% include "misago/attachment_details/details.html" %}
+    {% if can_delete_attachment %}
+      <div class="toolbar">
+        <div class="toolbar-spacer"></div>
+        <div class="toolbar-section">
+          <noscript>
+            <div class="toolbar-item">
+              <a class="btn btn-default" href="{{ attachment.get_delete_url }}">
+                {% trans "Delete" context "attachment page delete btn" %}
+              </a>
+            </div>
+          </noscript>
+          <div class="toolbar-item d-js-block">
+            <form
+              id="misago-delete-attachment"
+              action="{{ attachment.get_delete_url }}"
+              method="post"
+              misago-confirm="{% trans 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment page delete btn prompt' %}"
+            >
+              {% csrf_token %}
+              <button class="btn btn-default" >
+                {% trans "Delete" context "attachment page delete btn" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endif %}
     {% pluginoutlet ATTACHMENT_PAGE_END %}
   </div>
 </div>
 {% endblock content %}
-
