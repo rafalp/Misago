@@ -18,14 +18,12 @@
       <div class="toolbar">
         <div class="toolbar-spacer"></div>
         <div class="toolbar-section">
-          <noscript>
-            <div class="toolbar-item">
-              <a class="btn btn-default" href="{{ attachment.get_delete_url }}">
-                {% trans "Delete" context "attachment page delete btn" %}
-              </a>
-            </div>
+          <noscript class="toolbar-item text-right">
+            <a class="btn btn-default" href="{{ attachment.get_delete_url }}">
+              {% trans "Delete" context "attachment page delete btn" %}
+            </a>
           </noscript>
-          <div class="toolbar-item d-js-block">
+          <div class="toolbar-item d-js-block text-right">
             <form
               id="misago-delete-attachment"
               action="{{ attachment.get_delete_url }}"
