@@ -9,11 +9,11 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckDownloadAttachmentPermissionHookAction(Protocol):
+class CheckDeleteAttachmentPermissionHookAction(Protocol):
     """
     A standard Misago function used to check if a user has permission to
-    download an attachment. It raises Django's `Http404` if the user cannot
-    see the attachment or `PermissionDenied` if they are not allowed to download it.
+    delete an attachment. It raises `PermissionDenied` if they are not allowed
+    to delete it.
 
     # Arguments
 
@@ -48,17 +48,17 @@ class CheckDownloadAttachmentPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckDownloadAttachmentPermissionHookFilter(Protocol):
+class CheckDeleteAttachmentPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckDownloadAttachmentPermissionHookAction`
+    ## `action: CheckDeleteAttachmentPermissionHookAction`
 
     A standard Misago function used to check if a user has permission to
-    download an attachment. It raises Django's `Http404` if the user cannot
-    see the attachment or `PermissionDenied` if they are not allowed to download it.
+    delete an attachment. It raises `PermissionDenied` if they are not allowed
+    to delete it.
 
     See the [action](#action) section for details.
 
@@ -85,7 +85,7 @@ class CheckDownloadAttachmentPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckDownloadAttachmentPermissionHookAction,
+        action: CheckDeleteAttachmentPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category | None,
         thread: Thread | None,
@@ -94,33 +94,32 @@ class CheckDownloadAttachmentPermissionHookFilter(Protocol):
     ) -> None: ...
 
 
-class CheckDownloadAttachmentPermissionHook(
+class CheckDeleteAttachmentPermissionHook(
     FilterHook[
-        CheckDownloadAttachmentPermissionHookAction,
-        CheckDownloadAttachmentPermissionHookFilter,
+        CheckDeleteAttachmentPermissionHookAction,
+        CheckDeleteAttachmentPermissionHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to check if the user
-    has permission to download an attachment. It raises Django's `Http404` if
-    the user cannot see the attachment or `PermissionDenied` if they are not
-    allowed to download it.
+    has permission to delete an attachment. It raises `PermissionDenied` if they
+    are not allowed to delete it.
 
     # Example
 
     The code below implements a custom filter function that prevents a user from
-    downloading an attachment if its flagged by plugin.
+    deleting an attachment if its flagged by plugin.
 
     ```python
-    from django.http import Http404
+    from django.core.exceptions import PermissionDenied
     from misago.attachments.models import Attachment
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_download_attachment_permission_hook
+    from misago.permissions.hooks import check_delete_attachment_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @check_download_attachment_permission_hook.append_filter
-    def check_user_can_download_attachment(
+    @check_delete_attachment_permission_hook.append_filter
+    def check_user_can_delete_protected_attachment(
         action,
         permissions: UserPermissionsProxy,
         category: Category | None,
@@ -131,11 +130,13 @@ class CheckDownloadAttachmentPermissionHook(
         action(permissions, category, thread, post, attachment)
 
         if not (
-            attachment.plugin_data.get("hidden")
+            attachment.plugin_data.get("protected")
             and permissions.user.is_authenticated
             and permissions.user.is_misago_admin
         ):
-            raise Http404()
+            raise PermissionDenied(
+                "This attachment is protected. You can't delete it."
+            )
     ```
     """
 
@@ -143,7 +144,7 @@ class CheckDownloadAttachmentPermissionHook(
 
     def __call__(
         self,
-        action: CheckDownloadAttachmentPermissionHookAction,
+        action: CheckDeleteAttachmentPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category | None,
         thread: Thread | None,
@@ -160,4 +161,4 @@ class CheckDownloadAttachmentPermissionHook(
         )
 
 
-check_download_attachment_permission_hook = CheckDownloadAttachmentPermissionHook()
+check_delete_attachment_permission_hook = CheckDeleteAttachmentPermissionHook()

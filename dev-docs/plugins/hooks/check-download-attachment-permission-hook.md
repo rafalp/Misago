@@ -119,7 +119,7 @@ from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Post, Thread
 
 @check_download_attachment_permission_hook.append_filter
-def check_user_can_edit_thread(
+def check_user_can_download_attachment(
     action,
     permissions: UserPermissionsProxy,
     category: Category | None,

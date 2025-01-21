@@ -1,6 +1,9 @@
 from .build_user_category_permissions import build_user_category_permissions_hook
 from .build_user_permissions import build_user_permissions_hook
 from .check_browse_category_permission import check_browse_category_permission_hook
+from .check_delete_attachment_permission import (
+    check_delete_attachment_permission_hook,
+)
 from .check_download_attachment_permission import (
     check_download_attachment_permission_hook,
 )

@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ..attachments import (
+    check_delete_attachment_permission,
     check_download_attachment_permission,
     get_private_threads_attachments_permissions,
     get_threads_attachments_permissions,
@@ -227,6 +228,146 @@ def test_check_download_attachment_permission_fails_user_without_private_thread_
             attachment.post,
             attachment,
         )
+
+
+def check_delete_attachment_permission_passes_misago_admin_form_unused_attachment(
+    admin, attachment, cache_versions
+):
+    permissions = UserPermissionsProxy(admin, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def check_delete_attachment_permission_passes_misago_admin_for_thread_attachment(
+    admin, attachment, cache_versions, post
+):
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(admin, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def check_delete_attachment_permission_passes_global_moderator_for_thread_attachment(
+    moderator, attachment, cache_versions, post
+):
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def check_delete_attachment_permission_passes_category_moderator_for_thread_attachment(
+    user, attachment, cache_versions, post
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[post.category_id],
+    )
+
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def check_delete_attachment_permission_passes_misago_admin_for_private_thread_attachment(
+    admin, attachment, cache_versions, private_threads_category, private_thread
+):
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(admin, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def check_delete_attachment_permission_passes_global_moderator_for_private_thread_attachment(
+    moderator, attachment, cache_versions, private_threads_category, private_thread
+):
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
+
+
+def check_delete_attachment_permission_passes_private_threads_moderator_for_private_thread_attachment(
+    user, attachment, cache_versions, private_threads_category, private_thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    attachment.category = private_threads_category
+    attachment.thread = private_thread
+    attachment.post = private_thread.first_post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    check_delete_attachment_permission(
+        permissions,
+        attachment.category,
+        attachment.thread,
+        attachment.post,
+        attachment,
+    )
 
 
 def test_get_threads_attachments_permissions_returns_permissions_object_for_user(
