@@ -161,13 +161,16 @@ class AttachmentDeleteView(View):
             if attachment.is_deleted:
                 raise Http404()
 
-            check_download_attachment_permission(
-                request.user_permissions,
-                attachment.category,
-                attachment.thread,
-                attachment.post,
-                attachment,
-            )
+            try:
+                check_download_attachment_permission(
+                    request.user_permissions,
+                    attachment.category,
+                    attachment.thread,
+                    attachment.post,
+                    attachment,
+                )
+            except PermissionDenied:
+                raise Http404()
 
         check_delete_attachment_permission(
             request.user_permissions,
