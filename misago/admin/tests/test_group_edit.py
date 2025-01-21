@@ -124,7 +124,7 @@ def test_edit_group_form_validates_color(admin_client, custom_group):
     assert_contains(response, "Entered value is not a valid color")
 
     custom_group.refresh_from_db()
-    assert custom_group.css_suffix is None
+    assert custom_group.color is None
 
 
 def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
@@ -139,6 +139,63 @@ def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
 
     custom_group.refresh_from_db()
     assert custom_group.css_suffix is None
+
+
+def test_edit_group_form_validates_unused_attachments_limit_is_smaller_than_total_limit(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["group-attachment_storage_limit"] = "10"
+    form_data["group-unused_attachments_storage_limit"] = "20"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert_contains(
+        response,
+        "Unused attachments limit cannot exceed total attachments limit.",
+    )
+
+    custom_group.refresh_from_db()
+    assert custom_group.attachment_storage_limit == 512
+    assert custom_group.unused_attachments_storage_limit == 64
+
+
+def test_edit_group_form_allows_unused_attachments_limit_smaller_than_total_limit(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["group-attachment_storage_limit"] = "20"
+    form_data["group-unused_attachments_storage_limit"] = "10"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.refresh_from_db()
+    assert custom_group.attachment_storage_limit == 20
+    assert custom_group.unused_attachments_storage_limit == 10
+
+
+def test_edit_group_form_allows_unused_attachments_limit_smaller_than_disabled_total_limit(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["group-attachment_storage_limit"] = "0"
+    form_data["group-unused_attachments_storage_limit"] = "10"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.refresh_from_db()
+    assert custom_group.attachment_storage_limit == 0
+    assert custom_group.unused_attachments_storage_limit == 10
 
 
 def test_edit_group_form_updates_appearance_settings(admin_client, custom_group):

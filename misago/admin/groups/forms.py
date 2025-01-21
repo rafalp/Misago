@@ -1,7 +1,6 @@
 from django import forms
-from django.conf import settings
 from django.core.validators import validate_slug
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
 from ...parser.context import create_parser_context
@@ -292,6 +291,28 @@ class EditGroupForm(forms.ModelForm):
         self.fields["copy_permissions"].queryset = Group.objects.exclude(
             id=kwargs["instance"].id
         )
+
+    def clean(self):
+        data = super().clean()
+
+        attachment_storage_limit = data.get("attachment_storage_limit")
+        unused_attachments_storage_limit = data.get("unused_attachments_storage_limit")
+        if (
+            attachment_storage_limit
+            and unused_attachments_storage_limit
+            and unused_attachments_storage_limit > attachment_storage_limit
+        ):
+            self.add_error(
+                "unused_attachments_storage_limit",
+                forms.ValidationError(
+                    message=pgettext(
+                        "admin group form",
+                        "Unused attachments limit cannot exceed total attachments limit.",
+                    ),
+                ),
+            )
+
+        return data
 
 
 class EditGroupDescriptionForm(forms.ModelForm):
