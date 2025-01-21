@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...test import assert_contains
+from ...test import assert_contains, assert_not_contains
 
 
 def test_attachment_details_view_renders_page_for_text_attachment(
@@ -21,6 +21,26 @@ def test_attachment_details_view_renders_page_for_image_attachment(
     response = user_client.get(attachment.get_details_url())
 
     assert_contains(response, attachment.name)
+
+
+def test_attachment_details_view_renders_page_with_delete_option(
+    user, user_client, image_small, attachment_factory
+):
+    attachment = attachment_factory(image_small, uploader=user)
+    response = user_client.get(attachment.get_details_url())
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, attachment.get_delete_url())
+
+
+def test_attachment_details_view_renders_page_without_delete_option(
+    user, client, image_small, attachment_factory, post
+):
+    attachment = attachment_factory(image_small, uploader=user, post=post)
+    response = client.get(attachment.get_details_url())
+
+    assert_contains(response, attachment.name)
+    assert_not_contains(response, attachment.get_delete_url())
 
 
 def test_attachment_details_view_returns_404_response_if_upload_is_missing(

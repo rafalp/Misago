@@ -561,6 +561,26 @@ def test_check_delete_attachment_permission_fails_user_for_other_users_private_t
         )
 
 
+def test_check_delete_attachment_permission_fails_anonymous_user(
+    anonymous_user, attachment, cache_versions, post
+):
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_attachment_permission(
+            permissions,
+            attachment.category,
+            attachment.thread,
+            attachment.post,
+            attachment,
+        )
+
+
 def test_get_threads_attachments_permissions_returns_permissions_object_for_user(
     user, cache_versions, default_category
 ):
