@@ -1,0 +1,26 @@
+{% load i18n %}
+{% if can_delete_attachment %}
+  <div class="toolbar">
+    <div class="toolbar-spacer"></div>
+    <div class="toolbar-section">
+      <noscript class="toolbar-item text-right">
+        <a class="btn btn-default" href="{{ attachment.get_delete_url }}{{ attachment_referer }}">
+          {% trans "Delete" context "attachment page delete btn" %}
+        </a>
+      </noscript>
+      <div class="toolbar-item d-js-block text-right">
+        <form
+          id="misago-delete-attachment"
+          action="{{ attachment.get_delete_url }}{{ attachment_referer }}"
+          method="post"
+          misago-confirm="{% trans 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment page delete btn prompt' %}"
+        >
+          {% csrf_token %}
+          <button class="btn btn-default" >
+            {% trans "Delete" context "attachment page delete btn" %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endif %}

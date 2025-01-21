@@ -1,0 +1,18 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_plugins %}
+
+
+{% block title %}
+  {{ attachment.name }} | {% trans "Delete attachment" context "attachment delete page" %} | {{ settings.forum_name }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-attachment-delete">
+  <div class="container page-container">
+    {% pluginoutlet ATTACHMENT_DELETE_PAGE_START %}
+    Delete attachment
+    {% pluginoutlet ATTACHMENT_DELETE_PAGE_END %}
+  </div>
+</div>
+{% endblock content %}
