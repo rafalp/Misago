@@ -10,6 +10,7 @@ from ...attachments.validators import (
     get_attachments_storage_constraints,
     validate_post_attachments_limit,
     validate_uploaded_file,
+    validate_uploaded_file_extension,
 )
 from ...permissions.attachments import AttachmentsPermissions
 from ..state import PostingState
@@ -83,7 +84,7 @@ class PostForm(PostingForm):
             )
 
         restriction = self.request.settings.restrict_attachments_extensions_type
-        if restriction == AttachmentTypeRestriction.REQUIRE.value:
+        if restriction == AttachmentTypeRestriction.REQUIRE:
             return filetypes.get_accept_attr_str(
                 self.request.settings.allowed_attachment_types,
                 require_extensions=extensions,
@@ -139,6 +140,11 @@ class PostForm(PostingForm):
             self.request.user_permissions,
         )
 
+        extensions = self.request.settings.restrict_attachments_extensions.split()
+        extensions_restriction = (
+            self.request.settings.restrict_attachments_extensions_type
+        )
+
         errors: list[forms.ValidationError] = []
         for upload in data:
             try:
@@ -148,6 +154,11 @@ class PostForm(PostingForm):
                     max_size=self.attachment_size_limit,
                     **storage_constraints,
                 )
+
+                if extensions:
+                    validate_uploaded_file_extension(
+                        upload, extensions_restriction, extensions
+                    )
 
                 attachment = store_uploaded_file(self.request, upload, filetype)
                 self.attachments.append(attachment)

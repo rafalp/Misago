@@ -7,7 +7,11 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import npgettext, pgettext
 
 from ..permissions.proxy import UserPermissionsProxy
-from .enums import AllowedAttachments, AttachmentStorage
+from .enums import (
+    AllowedAttachments,
+    AttachmentStorage,
+    AttachmentTypeRestriction,
+)
 from .filetypes import AttachmentFileType, filetypes
 from .storage import (
     get_total_unused_attachments_size,
@@ -155,3 +159,47 @@ def get_attachments_storage_constraints(
         "storage_limit": storage_limit,
         "storage_left": max(storage_left, 0),
     }
+
+
+def validate_uploaded_file_extension(
+    file: UploadedFile,
+    restriction: AttachmentTypeRestriction,
+    extensions: list[str],
+):
+    if not extensions:
+        return
+
+    if restriction == AttachmentTypeRestriction.REQUIRE:
+        validate_uploaded_file_has_required_extension(file, extensions)
+    elif restriction == AttachmentTypeRestriction.DISALLOW:
+        validate_uploaded_file_has_disallowed_extension(file, extensions)
+
+
+def validate_uploaded_file_has_required_extension(
+    file: UploadedFile, extensions: list[str]
+):
+    filename = file.name.lower()
+    for extension in extensions:
+        if filename.endswith("." + extension):
+            return
+    _raise_extension_not_allowed(file)
+
+
+def validate_uploaded_file_has_disallowed_extension(
+    file: UploadedFile, extensions: list[str]
+):
+    filename = file.name.lower()
+    for extension in extensions:
+        if filename.endswith("." + extension):
+            _raise_extension_not_allowed(file)
+
+
+def _raise_extension_not_allowed(file: UploadedFile):
+    raise ValidationError(
+        message=pgettext(
+            "attachment uploaded file validator",
+            "%(name)s: uploaded file type is not allowed.",
+        ),
+        code="attachment_extension",
+        params={"name": file.name},
+    )

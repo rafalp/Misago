@@ -211,10 +211,10 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "You can further restrict the types of uploaded files by entering their extensions in the text field above. Leave it empty to impose no additional restrictions.",
+            "You can further restrict the types of uploaded files by entering their extensions in the text field above. Leave it empty to impose no additional restrictions. Items can be separated using spaces and line breaks.",
         ),
         max_length=1024,
-        widget=forms.Textarea(attrs={"rows": 3, "placeholder": "png jpeg tar.gz"}),
+        widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
     restrict_attachments_extensions_type = forms.CharField(
