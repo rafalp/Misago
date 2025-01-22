@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckSeePostPermissionHookAction(Protocol):
+class CheckSeeThreadPostPermissionHookAction(Protocol):
     """
     A standard Misago function used to check if the user has a permission to see
     a post. Raises Django's `Http404` if they can't see it or `PermissionDenied`
@@ -42,13 +42,13 @@ class CheckSeePostPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckSeePostPermissionHookFilter(Protocol):
+class CheckSeeThreadPostPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckSeePostPermissionHookAction`
+    ## `action: CheckSeeThreadPostPermissionHookAction`
 
     A standard Misago function used to check if the user has a permission to see
     a post. Raises Django's `Http404` if they can't see it or `PermissionDenied`
@@ -75,7 +75,7 @@ class CheckSeePostPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckSeePostPermissionHookAction,
+        action: CheckSeeThreadPostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -83,10 +83,10 @@ class CheckSeePostPermissionHookFilter(Protocol):
     ) -> None: ...
 
 
-class CheckSeePostPermissionHook(
+class CheckSeeThreadPostPermissionHook(
     FilterHook[
-        CheckSeePostPermissionHookAction,
-        CheckSeePostPermissionHookFilter,
+        CheckSeeThreadPostPermissionHookAction,
+        CheckSeeThreadPostPermissionHookFilter,
     ]
 ):
     """
@@ -103,11 +103,11 @@ class CheckSeePostPermissionHook(
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_see_post_permission_hook
+    from misago.permissions.hooks import check_see_thread_post_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @check_see_post_permission_hook.append_filter
+    @check_see_thread_post_permission_hook.append_filter
     def check_user_can_see_thread(
         action,
         permissions: UserPermissionsProxy,
@@ -132,7 +132,7 @@ class CheckSeePostPermissionHook(
 
     def __call__(
         self,
-        action: CheckSeePostPermissionHookAction,
+        action: CheckSeeThreadPostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -141,4 +141,4 @@ class CheckSeePostPermissionHook(
         return super().__call__(action, permissions, category, thread, post)
 
 
-check_see_post_permission_hook = CheckSeePostPermissionHook()
+check_see_thread_post_permission_hook = CheckSeeThreadPostPermissionHook()

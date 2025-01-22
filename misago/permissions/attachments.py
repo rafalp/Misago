@@ -19,7 +19,7 @@ from .privatethreads import (
     check_see_private_thread_post_permission,
 )
 from .proxy import UserPermissionsProxy
-from .threads import check_see_post_permission, check_see_thread_permission
+from .threads import check_see_thread_post_permission, check_see_thread_permission
 
 __all__ = [
     "AttachmentsPermissions",
@@ -118,7 +118,7 @@ def _check_download_attachment_permission_action(
     if category.tree_id == CategoryTree.THREADS:
         try:
             check_see_thread_permission(permissions, category, thread)
-            check_see_post_permission(permissions, category, thread, post)
+            check_see_thread_post_permission(permissions, category, thread, post)
         except PermissionDenied as exc:
             raise Http404() from exc
 

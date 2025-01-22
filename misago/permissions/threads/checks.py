@@ -13,7 +13,7 @@ from ..hooks import (
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
     check_reply_thread_permission_hook,
-    check_see_post_permission_hook,
+    check_see_thread_post_permission_hook,
     check_see_thread_permission_hook,
     check_start_thread_permission_hook,
 )
@@ -219,15 +219,15 @@ def _check_edit_thread_permission_action(
         )
 
 
-def check_see_post_permission(
+def check_see_thread_post_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
 ):
-    check_see_post_permission_hook(
-        _check_see_post_permission_action, permissions, category, thread, post
+    check_see_thread_post_permission_hook(
+        _check_see_thread_post_permission_action, permissions, category, thread, post
     )
 
 
-def _check_see_post_permission_action(
+def _check_see_thread_post_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
 ):
     if not permissions.is_category_moderator(category.id):
