@@ -1,5 +1,5 @@
 {% load i18n misago_admin_form %}
-<div class="form-group{% if field.errors %} has-error{% endif %}">
+<div class="form-group{% if field.errors %} has-error{% endif %}" id="{{ field.id_for_label }}_group">
   <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
     {{ field.label }}:
   </label>

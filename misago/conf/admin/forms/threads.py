@@ -1,8 +1,10 @@
 from django import forms
-from django.utils.translation import pgettext_lazy
+from django.template.defaultfilters import filesizeformat
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
 from ....attachments.enums import AllowedAttachments
+from ....attachments.storage import get_total_unused_attachments_size
 from ....categories.enums import CategoryChildrenComponent
 from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
@@ -211,10 +213,6 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy(
             "admin threads settings form", "Unused attachments storage limit"
         ),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Maximum total storage space, in megabytes, for all attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit.",
-        ),
         min_value=0,
     )
 
@@ -268,6 +266,16 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        unused_attachments_size = get_total_unused_attachments_size()
+
+        self.fields["unused_attachments_storage_limit"].help_text = pgettext(
+            "admin threads settings form",
+            "Maximum total storage space, in megabytes, for all attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit. Current usage: %(usage)s",
+        ) % {"usage": filesizeformat(unused_attachments_size)}
 
     def clean(self):
         cleaned_data = super().clean()

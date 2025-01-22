@@ -29,8 +29,8 @@
         <div class="media-body">
           <h5>{% translate "The site is running in DEBUG mode." context "admin debug check" %}</h5>
           {% blocktranslate trimmed context "admin debug check" %}
-            Error pages displayed in DEBUG mode will expose site configuration details like secrets and tokens to all visitors.
-            This is MAJOR security risk.
+            Error pages displayed in the DEBUG mode will expose site configuration details like secrets and tokens to all visitors.
+            This is a MAJOR security risk.
           {% endblocktranslate %}
         </div>
       </div>
@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="col-auto">
-          <a href="{% url 'misago:admin:settings:general:index' %}">
+          <a href="{% url 'misago:admin:settings:general:index' %}#id_forum_address_group">
             <span class="fas fa-external-link-alt"></span>
           </a>
         </div>
@@ -139,6 +139,43 @@
           {% blocktranslate trimmed context "admin data downloads check" %}
             Cron task that should process user data download requests is not running.
           {% endblocktranslate %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.attachments_storage.is_ok %}
+    <div class="card-body border-top">
+      <div class="row">
+        <div class="col">
+          <div class="media media-admin-check">
+            {% if checks.attachments_storage.usage > 85 %}
+              <div class="media-check-icon media-check-icon-danger">
+                <span class="fas fa-times"></span>
+              </div>
+            {% else %}
+              <div class="media-check-icon media-check-icon-warning">
+                <span class="fas fa-exclamation"></span>
+              </div>
+            {% endif %}
+            <div class="media-body">
+              <h5>
+                {% blocktrans trimmed with usage=checks.attachments_storage.usage context "admin attachments storage check" %}
+                  Unused attachments storage is {{ usage }}% full.
+                {% endblocktrans %}
+              </h5>
+              {% blocktrans trimmed context "admin attachments storage check" %}
+                Users without unlimited unused attachments storage will not be able to upload files if it is 100% full.
+              {% endblocktrans %}
+              {% blocktrans trimmed with space_left=checks.attachments_storage.space_left|filesizeformat limit=checks.attachments_storage.limit|filesizeformat context "admin attachments storage check" %}
+                {{ space_left }} of {{ limit }} is available for new attachments.
+              {% endblocktrans %}
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'misago:admin:attachments:index' %}?status=unused&sort=id&direction=asc">
+            <span class="fas fa-external-link-alt"></span>
+          </a>
         </div>
       </div>
     </div>

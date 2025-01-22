@@ -185,7 +185,6 @@ def test_store_uploaded_file_stores_file_with_multiple_dots_in_name(
     assert attachment.filetype_id == filetype.id
 
 
-
 def test_store_uploaded_file_raises_validation_error_for_invalid_image(
     user, dynamic_settings, image_invalid, teardown_attachments
 ):
