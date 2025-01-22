@@ -13,6 +13,7 @@ from .hooks import (
     check_private_threads_permission_hook,
     check_reply_private_thread_permission_hook,
     check_see_private_thread_permission_hook,
+    check_see_private_thread_post_permission_hook,
     check_start_private_threads_permission_hook,
     filter_private_thread_posts_queryset_hook,
     filter_private_threads_queryset_hook,
@@ -137,7 +138,7 @@ def _check_edit_private_thread_permission_action(
 def check_see_private_thread_post_permission(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    check_edit_private_thread_post_permission_hook(
+    check_see_private_thread_post_permission_hook(
         _check_see_private_thread_post_permission_action, permissions, thread, post
     )
 

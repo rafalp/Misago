@@ -8,7 +8,7 @@ from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (
-    check_edit_post_permission_hook,
+    check_edit_thread_post_permission_hook,
     check_edit_thread_permission_hook,
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
@@ -247,18 +247,18 @@ def _check_see_thread_post_permission_action(
             )
 
 
-def check_edit_post_permission(
+def check_edit_thread_post_permission(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
     post: Post,
 ):
-    check_edit_post_permission_hook(
-        _check_edit_post_permission_action, permissions, category, thread, post
+    check_edit_thread_post_permission_hook(
+        _check_edit_thread_post_permission_action, permissions, category, thread, post
     )
 
 
-def _check_edit_post_permission_action(
+def _check_edit_thread_post_permission_action(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,

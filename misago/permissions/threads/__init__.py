@@ -1,5 +1,5 @@
 from .checks import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
     check_edit_thread_permission,
     check_post_in_closed_category_permission,
     check_post_in_closed_thread_permission,
@@ -18,7 +18,7 @@ from .querysets import (
 __all__ = [
     "CategoryThreadsQuerysetFilter",
     "ThreadsQuerysetFilter",
-    "check_edit_post_permission",
+    "check_edit_thread_post_permission",
     "check_edit_thread_permission",
     "check_post_in_closed_category_permission",
     "check_post_in_closed_thread_permission",

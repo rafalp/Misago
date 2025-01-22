@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 class CheckSeeThreadPostPermissionHookAction(Protocol):
     """
     A standard Misago function used to check if the user has a permission to see
-    a post. Raises Django's `Http404` if they can't see it or `PermissionDenied`
-    with an error message if they can't see it's contents.
+    a post in a thread. Raises Django's `Http404` if they can't see it or
+    `PermissionDenied` with an error message if they can't see it's contents.
 
     # Arguments
 
@@ -51,8 +51,8 @@ class CheckSeeThreadPostPermissionHookFilter(Protocol):
     ## `action: CheckSeeThreadPostPermissionHookAction`
 
     A standard Misago function used to check if the user has a permission to see
-    a post. Raises Django's `Http404` if they can't see it or `PermissionDenied`
-    with an error message if they can't see it's contents.
+    a post in a thread. Raises Django's `Http404` if they can't see it or
+    `PermissionDenied` with an error message if they can't see it's contents.
 
     See the [action](#action) section for details.
 
@@ -91,8 +91,9 @@ class CheckSeeThreadPostPermissionHook(
 ):
     """
     This hook wraps the standard Misago function used to check if the user has
-    a permission to see a post. Raises Django's `Http404` if they can't see it
-    or `PermissionDenied` with an error message if they can't see it's contents.
+    a permission to see a post in a thread. Raises Django's `Http404` if they
+    can't see it or `PermissionDenied` with an error message if they can't see
+    it's contents.
 
     # Example
 
@@ -108,7 +109,7 @@ class CheckSeeThreadPostPermissionHook(
     from misago.threads.models import Post, Thread
 
     @check_see_thread_post_permission_hook.append_filter
-    def check_user_can_see_thread(
+    def check_user_can_see_thread_post(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
@@ -116,7 +117,7 @@ class CheckSeeThreadPostPermissionHook(
         post: Post,
     ) -> None:
         # Run standard permission checks
-        action(permissions, category)
+        action(permissions, category, thread, post)
 
         if thread.id in permissions.user.plugin_data.get("banned_thread", []):
             raise PermissionDenied(

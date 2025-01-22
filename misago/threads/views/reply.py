@@ -17,7 +17,7 @@ from ...permissions.privatethreads import (
     check_reply_private_thread_permission,
 )
 from ...permissions.threads import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
 from ...posting.formsets import (
@@ -268,7 +268,7 @@ class ReplyThreadView(ReplyView, ThreadView):
         try:
             last_post = super().get_last_post(request, thread)
             if last_post:
-                check_edit_post_permission(
+                check_edit_thread_post_permission(
                     request.user_permissions, thread.category, thread, last_post
                 )
             return last_post

@@ -10,7 +10,7 @@ from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
 )
 from ..permissions.threads import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
 )
 from .hooks import (
     get_posts_feed_item_user_ids_hook,
@@ -159,7 +159,7 @@ class ThreadPostsFeed(PostsFeed):
             return False
 
         try:
-            check_edit_post_permission(
+            check_edit_thread_post_permission(
                 self.request.user_permissions, self.thread.category, self.thread, post
             )
             return True

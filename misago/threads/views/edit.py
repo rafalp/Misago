@@ -13,7 +13,7 @@ from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
 )
 from ...permissions.threads import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
     check_edit_thread_permission,
 )
 from ...posting.formsets import (
@@ -185,7 +185,7 @@ class EditThreadPostView(EditView, ThreadView):
         self, request: HttpRequest, thread: Thread, post_id: int
     ) -> Post:
         post = super().get_thread_post(request, thread, post_id)
-        check_edit_post_permission(
+        check_edit_thread_post_permission(
             request.user_permissions, post.category, post.thread, post
         )
         return post

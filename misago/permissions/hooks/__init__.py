@@ -7,7 +7,7 @@ from .check_delete_attachment_permission import (
 from .check_download_attachment_permission import (
     check_download_attachment_permission_hook,
 )
-from .check_edit_post_permission import check_edit_post_permission_hook
+from .check_edit_thread_post_permission import check_edit_thread_post_permission_hook
 from .check_edit_private_thread_permission import (
     check_edit_private_thread_permission_hook,
 )
@@ -66,7 +66,7 @@ __all__ = [
     "build_user_permissions_hook",
     "check_browse_category_permission_hook",
     "check_download_attachment_permission_hook",
-    "check_edit_post_permission_hook",
+    "check_edit_thread_post_permission_hook",
     "check_edit_private_thread_permission_hook",
     "check_edit_private_thread_post_permission_hook",
     "check_edit_thread_permission_hook",
