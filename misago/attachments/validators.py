@@ -170,14 +170,17 @@ def validate_uploaded_file_extension(
         return
 
     if restriction == AttachmentTypeRestriction.REQUIRE:
-        validate_uploaded_file_has_required_extension(file, extensions)
+        validate_uploaded_file_required_extension(file, extensions)
     elif restriction == AttachmentTypeRestriction.DISALLOW:
-        validate_uploaded_file_has_disallowed_extension(file, extensions)
+        validate_uploaded_file_disallowed_extension(file, extensions)
 
 
-def validate_uploaded_file_has_required_extension(
+def validate_uploaded_file_required_extension(
     file: UploadedFile, extensions: list[str]
 ):
+    if not extensions:
+        return
+
     filename = file.name.lower()
     for extension in extensions:
         if filename.endswith("." + extension):
@@ -185,9 +188,12 @@ def validate_uploaded_file_has_required_extension(
     _raise_extension_not_allowed(file)
 
 
-def validate_uploaded_file_has_disallowed_extension(
+def validate_uploaded_file_disallowed_extension(
     file: UploadedFile, extensions: list[str]
 ):
+    if not extensions:
+        return
+
     filename = file.name.lower()
     for extension in extensions:
         if filename.endswith("." + extension):
