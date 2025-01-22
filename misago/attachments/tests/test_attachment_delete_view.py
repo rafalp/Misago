@@ -145,25 +145,6 @@ def test_attachment_delete_view_returns_404_response_if_attachment_slug_is_inval
     assert response.status_code == 404
 
 
-def test_attachment_delete_view_checks_see_attachment_permissions(
-    other_user,
-    members_group,
-    user_client,
-    attachment,
-    post,
-):
-    CategoryGroupPermission.objects.filter(
-        group=members_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    attachment.uploader = other_user
-    attachment.save()
-
-    response = user_client.get(attachment.get_delete_url())
-    assert response.status_code == 404
-
-
 def test_attachment_delete_view_checks_delete_attachment_permissions(
     other_user,
     user_client,

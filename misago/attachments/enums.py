@@ -28,6 +28,30 @@ class AllowedAttachments(StrEnum):
         )
 
 
+class AttachmentTypeRestriction(StrEnum):
+    REQUIRE = "require"
+    DISALLOW = "disallow"
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.REQUIRE.value,
+                pgettext_lazy(
+                    "attachment type restriction",
+                    "Require uploaded files to have extensions from the list",
+                ),
+            ),
+            (
+                cls.DISALLOW.value,
+                pgettext_lazy(
+                    "attachment type restriction",
+                    "Disallow uploads of files with listed extensions",
+                ),
+            ),
+        )
+
+
 class AttachmentStorage(IntEnum):
     GLOBAL = 0
     USER_TOTAL = 1

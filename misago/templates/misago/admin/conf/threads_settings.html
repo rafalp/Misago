@@ -23,6 +23,30 @@
     <legend>{% translate "Attachments" context "admin threads settings form" %}</legend>
     
     {% form_row form.allowed_attachment_types %}
+
+    {% with field=form.restrict_attachments_extensions select=form.restrict_attachments_extensions_type %}
+      <div class="form-group{% if field.errors or select.errors %} has-error{% endif %}" id="{{ field.id_for_label }}_group">
+        <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
+          {{ field.label }}:
+        </label>
+        <div>
+          <div class="mb-3">
+            {% form_input select %}
+          </div>
+          {% form_input field %}
+          {% for error in field.errors %}
+            <small class="form-text text-danger font-weight-bold">{{ error }}</small>
+          {% endfor %}
+          {% for error in select.errors %}
+            <small class="form-text text-danger font-weight-bold">{{ error }}</small>
+          {% endfor %}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+        </div>
+      </div>
+    {% endwith%}
+
     {% form_row form.unused_attachments_storage_limit %}
     {% form_row form.post_attachments_limit %}
     {% form_row form.allow_private_threads_attachments %}

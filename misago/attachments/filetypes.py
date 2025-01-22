@@ -110,7 +110,13 @@ class AttachmentFileTypes:
             for t in sorted(self._filetypes.values(), key=lambda x: x.name)
         )
 
-    def get_accept_attr_str(self, allowed_attachments: AllowedAttachments | str) -> str:
+    def get_accept_attr_str(
+        self,
+        allowed_attachments: AllowedAttachments | str,
+        *,
+        require_extensions: list[str] | None = None,
+        disallow_extensions: list[str] | None = None,
+    ) -> str:
         if allowed_attachments == AllowedAttachments.NONE:
             return ""
 
@@ -127,9 +133,19 @@ class AttachmentFileTypes:
             ):
                 continue
 
-            items.extend(f".{extension}" for extension in filetype.extensions)
+            items.extend(filetype.extensions)
 
-        return ", ".join(items)
+        if require_extensions and disallow_extensions:
+            raise ValueError(
+                "'require_extensions' and 'disallow_extensions' can't be used together"
+            )
+
+        if require_extensions:
+            items = set(require_extensions).intersection(items)
+        elif disallow_extensions:
+            items = set(items).difference(disallow_extensions)
+
+        return ", ".join("." + item for item in items)
 
 
 filetypes = AttachmentFileTypes()

@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
-from ...attachments.enums import AllowedAttachments
+from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.upload import store_uploaded_file
@@ -76,9 +76,23 @@ class PostForm(PostingForm):
 
     @property
     def accept_attachments(self) -> str:
-        return filetypes.get_accept_attr_str(
-            self.request.settings.allowed_attachment_types
-        )
+        extensions = self.request.settings.restrict_attachments_extensions.split()
+        if not extensions:
+            return filetypes.get_accept_attr_str(
+                self.request.settings.allowed_attachment_types
+            )
+
+        restriction = self.request.settings.restrict_attachments_extensions_type
+        if restriction == AttachmentTypeRestriction.REQUIRE.value:
+            return filetypes.get_accept_attr_str(
+                self.request.settings.allowed_attachment_types,
+                require_extensions=extensions,
+            )
+        else:
+            return filetypes.get_accept_attr_str(
+                self.request.settings.allowed_attachment_types,
+                disallow_extensions=extensions,
+            )
 
     @property
     def attachments_media(self) -> list[Attachment]:

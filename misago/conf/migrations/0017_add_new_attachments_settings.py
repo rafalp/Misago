@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from ...attachments.enums import AllowedAttachments
+from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ..operations import CreateSetting
 
 
@@ -13,6 +13,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        CreateSetting(
+            setting="allowed_attachment_types",
+            dry_value=AllowedAttachments.ALL.value,
+        ),
+        CreateSetting(
+            setting="restrict_attachments_extensions",
+            dry_value="",
+        ),
+        CreateSetting(
+            setting="restrict_attachments_extensions_type",
+            dry_value=AttachmentTypeRestriction.REQUIRE.value,
+        ),
         CreateSetting(
             setting="unused_attachments_storage_limit",
             python_type="int",
@@ -37,10 +49,6 @@ class Migration(migrations.Migration):
             setting="attachment_thumbnail_height",
             python_type="int",
             dry_value=720,
-        ),
-        CreateSetting(
-            setting="allowed_attachment_types",
-            dry_value=AllowedAttachments.ALL.value,
         ),
         CreateSetting(
             setting="allow_private_threads_attachments",

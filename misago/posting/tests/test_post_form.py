@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ...attachments.enums import AllowedAttachments
+from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ...conf.test import override_dynamic_settings
 from ...permissions.attachments import AttachmentsPermissions
 from ...permissions.proxy import UserPermissionsProxy
@@ -498,6 +498,42 @@ def test_post_form_accept_attachments_returns_empty_str_types(user, dynamic_sett
     form = PostForm(request=request)
 
     assert form.accept_attachments == ""
+
+
+@override_dynamic_settings(
+    allowed_attachment_types=AllowedAttachments.IMAGES.value,
+    restrict_attachments_extensions="jpg png",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.REQUIRE.value,
+)
+def test_post_form_accept_attachments_returns_only_required_types(
+    user, dynamic_settings
+):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+
+    types = form.accept_attachments
+    assert "jpg" in types
+    assert "png" in types
+    assert "jpeg" not in types
+    assert "gif" not in types
+    assert "mp4" not in types
+    assert "pdf" not in types
+
+
+@override_dynamic_settings(
+    allowed_attachment_types=AllowedAttachments.IMAGES.value,
+    restrict_attachments_extensions="jpg gif",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.DISALLOW.value,
+)
+def test_post_form_accept_attachments_excludes_disallowed_types(user, dynamic_settings):
+    request = Mock(settings=dynamic_settings, user=user)
+    form = PostForm(request=request)
+
+    types = form.accept_attachments
+    assert "jpeg" in types
+    assert "png" in types
+    assert "jpg" not in types
+    assert "gif" not in types
 
 
 def test_post_form_attachments_media_returns_media_attachments_only(

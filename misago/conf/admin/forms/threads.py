@@ -3,7 +3,7 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ....admin.forms import YesNoSwitch
-from ....attachments.enums import AllowedAttachments
+from ....attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ....attachments.storage import get_total_unused_attachments_size
 from ....categories.enums import CategoryChildrenComponent
 from ....threads.enums import ThreadsListsPolling
@@ -14,6 +14,8 @@ class ThreadsSettingsForm(SettingsForm):
     settings = [
         "allowed_attachment_types",
         "allow_private_threads_attachments",
+        "restrict_attachments_extensions",
+        "restrict_attachments_extensions_type",
         "attachment_403_image",
         "attachment_404_image",
         "unused_attachments_storage_limit",
@@ -202,6 +204,24 @@ class ThreadsSettingsForm(SettingsForm):
             choices=AllowedAttachments.get_choices(),
         ),
     )
+
+    restrict_attachments_extensions = forms.CharField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Restrict uploaded file extensions"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "You can further restrict the types of uploaded files by entering their extensions in the text field above. Leave it empty to impose no additional restrictions.",
+        ),
+        max_length=1024,
+        widget=forms.Textarea(attrs={"rows": 3, "placeholder": "png jpeg tar.gz"}),
+        required=False,
+    )
+    restrict_attachments_extensions_type = forms.CharField(
+        widget=forms.Select(
+            choices=AttachmentTypeRestriction.get_choices(),
+        ),
+    )
     allow_private_threads_attachments = YesNoSwitch(
         label=pgettext_lazy(
             "admin oauth2 settings form",
@@ -276,6 +296,17 @@ class ThreadsSettingsForm(SettingsForm):
             "admin threads settings form",
             "Maximum total storage space, in megabytes, for all attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit. Current usage: %(usage)s",
         ) % {"usage": filesizeformat(unused_attachments_size)}
+
+    def clean_restrict_attachments_extensions(self):
+        data: str = self.cleaned_data["restrict_attachments_extensions"]
+        unique: set[str] = set()
+
+        for bit in data.lower().split():
+            for c in bit.split(","):
+                if c := c.strip(" ."):
+                    unique.add(c)
+
+        return " ".join(sorted(unique))
 
     def clean(self):
         cleaned_data = super().clean()
