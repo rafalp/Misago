@@ -18,8 +18,7 @@ def upload_to(instance: "Attachment", filename: str) -> str:
     ]
     secret = Attachment.get_new_secret()
 
-    filename_lowered = filename.lower().strip()
-    filename, extension = filename_lowered.split(".")
+    filename, extension = instance.filetype.split_name(filename.lower())
     filename_clean = filename[:16] + "." + extension
 
     return os.path.join(

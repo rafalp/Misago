@@ -27,6 +27,7 @@ def test_store_uploaded_file_stores_text_file(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
+    assert attachment.slug == "test-txt"
     assert attachment.filetype_id == filetype.id
     assert not attachment.dimensions
 
@@ -56,6 +57,7 @@ def test_store_uploaded_file_stores_image_file(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
+    assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
     assert attachment.dimensions == "50x50"
 
@@ -89,6 +91,7 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
+    assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
     assert attachment.dimensions == "800x800"
 
@@ -123,6 +126,7 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
     assert attachment.uploaded_at
     assert attachment.secret
     assert attachment.name == upload.name
+    assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
     assert attachment.dimensions == "300x300"
 
@@ -162,6 +166,24 @@ def test_store_uploaded_file_cleans_filename(
 
     assert not attachment.thumbnail
     assert not attachment.thumbnail_size
+
+
+def test_store_uploaded_file_stores_file_with_multiple_dots_in_name(
+    user, dynamic_settings, text_file, teardown_attachments
+):
+    with open(text_file, "rb") as fp:
+        upload = SimpleUploadedFile("test.final.txt", fp.read(), "text/plain")
+
+    request = Mock(user=user, settings=dynamic_settings)
+    filetype = filetypes.match_filetype(upload.name)
+
+    attachment = store_uploaded_file(request, upload, filetype)
+
+    assert attachment.id
+    assert attachment.name == upload.name
+    assert attachment.slug == "test-final-txt"
+    assert attachment.filetype_id == filetype.id
+
 
 
 def test_store_uploaded_file_raises_validation_error_for_invalid_image(
