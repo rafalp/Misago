@@ -575,7 +575,7 @@ def test_post_form_sort_attachments_method_sorts_attachments_from_newest(
 
 
 def test_post_form_clean_upload_cleans_and_stores_valid_upload(
-    user, dynamic_settings, cache_versions
+    user, dynamic_settings, cache_versions, teardown_attachments
 ):
     request = Mock(
         settings=dynamic_settings,
@@ -604,8 +604,8 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(
     assert attachment.uploader == user
 
 
-def test_post_form_clean_upload_sets_error_for_invalid_upload(
-    user, dynamic_settings, cache_versions
+def test_post_form_clean_upload_validates_uploaded_files(
+    user, dynamic_settings, cache_versions, teardown_attachments
 ):
     request = Mock(
         settings=dynamic_settings,
@@ -630,8 +630,12 @@ def test_post_form_clean_upload_sets_error_for_invalid_upload(
     assert form.errors["upload"] == ["test.txt: uploaded file type is not allowed."]
 
 
-def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
-    user, dynamic_settings, cache_versions
+@override_dynamic_settings(
+    restrict_attachments_extensions="txt",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.REQUIRE.value,
+)
+def test_post_form_clean_upload_validates_allowed_uploaded_files_extensions_if_list_is_set(
+    user, dynamic_settings, cache_versions, teardown_attachments
 ):
     request = Mock(
         settings=dynamic_settings,
@@ -644,8 +648,8 @@ def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
         {
             "upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
-                SimpleUploadedFile("invalid.txt", b"Hello world!", "text/invalid"),
-            ]
+                SimpleUploadedFile("test.pdf", b"Hello world!", "application/pdf"),
+            ],
         },
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -658,12 +662,44 @@ def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
 
     assert not form.is_valid()
     assert len(form.attachments) == 1
-    assert form.errors["upload"] == ["invalid.txt: uploaded file type is not allowed."]
+    assert form.attachments[0].name == "test.txt"
+    assert form.errors["upload"] == ["test.pdf: uploaded file type is not allowed."]
 
-    attachment = form.attachments[0]
-    assert attachment.filetype_id == "txt"
-    assert attachment.name == "test.txt"
-    assert attachment.uploader == user
+
+@override_dynamic_settings(
+    restrict_attachments_extensions="pdf",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.DISALLOW.value,
+)
+def test_post_form_clean_upload_validates_disallowed_uploaded_files_extensions_if_list_is_set(
+    user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {
+            "upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+                SimpleUploadedFile("test.pdf", b"Hello world!", "application/pdf"),
+            ],
+        },
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_always_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert len(form.attachments) == 1
+    assert form.attachments[0].name == "test.txt"
+    assert form.errors["upload"] == ["test.pdf: uploaded file type is not allowed."]
 
 
 class SimpleUploadedFileWithForcedSize(SimpleUploadedFile):
@@ -673,7 +709,7 @@ class SimpleUploadedFileWithForcedSize(SimpleUploadedFile):
 
 
 def test_post_form_clean_upload_validates_attachments_storage(
-    user, members_group, dynamic_settings, cache_versions
+    user, members_group, dynamic_settings, cache_versions, teardown_attachments
 ):
     members_group.unused_attachments_storage_limit = 1
     members_group.save()
@@ -712,8 +748,8 @@ def test_post_form_clean_upload_validates_attachments_storage(
     ]
 
 
-def test_post_form_clean_upload_validates_storage_for_multipe_uploads(
-    user, members_group, dynamic_settings, cache_versions
+def test_post_form_clean_upload_validates_storage_for_multiple_uploads(
+    user, members_group, dynamic_settings, cache_versions, teardown_attachments
 ):
     members_group.unused_attachments_storage_limit = 1
     members_group.save()
@@ -765,7 +801,7 @@ def test_post_form_clean_upload_validates_storage_for_multipe_uploads(
 
 @override_dynamic_settings(post_attachments_limit=2)
 def test_post_form_clean_upload_validates_attachments_limit(
-    user, dynamic_settings, cache_versions
+    user, dynamic_settings, cache_versions, teardown_attachments
 ):
     request = Mock(
         settings=dynamic_settings,
@@ -795,3 +831,39 @@ def test_post_form_clean_upload_validates_attachments_limit(
     assert form.errors["upload"] == [
         "Posted message cannot have more than 2 attachments (it has 3).",
     ]
+
+
+def test_post_form_clean_upload_stores_valid_uploads_on_upload_errors(
+    user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
+    form = PostForm(
+        MockQueryDict({"post": "Hello world!"}),
+        {
+            "upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+                SimpleUploadedFile("invalid.txt", b"Hello world!", "text/invalid"),
+            ]
+        },
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+            attachment_size_limit=0,
+            can_always_delete_own_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert len(form.attachments) == 1
+    assert form.errors["upload"] == ["invalid.txt: uploaded file type is not allowed."]
+
+    attachment = form.attachments[0]
+    assert attachment.filetype_id == "txt"
+    assert attachment.name == "test.txt"
+    assert attachment.uploader == user
