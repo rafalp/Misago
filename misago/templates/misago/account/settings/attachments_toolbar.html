@@ -6,14 +6,14 @@
       <div
         class="misago-pagination"
         hx-push-url="true"
-        hx-target="#misago-htmx-history"
+        hx-target="#misago-htmx-root"
         hx-swap="outerHTML show:#misago-page-scroll-target:top"
       >
         {% if attachments.has_previous %}
           <a
             href="{% url 'misago:account-attachments' %}"
             class="btn btn-default btn-outline btn-icon"
-            title="{% trans 'Go to first page' context 'username history paginator' %}"
+            title="{% trans 'Go to first page' context 'attachments list paginator' %}"
             hx-get="{% url 'misago:account-attachments' %}"
           >
             <span class="material-icon">first_page</span>

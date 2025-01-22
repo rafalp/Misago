@@ -10,61 +10,11 @@
         {% trans "Your attachments" context "account attachments page" %}
       </h3>
     </div>
-    <div class="panel-body panel-attachments-space">
-      <h4>
-        {% trans "Space usage" context "account attachments page" %}
-      </h4>
-      <div class="progress">
-        {% if storage_usage.posted_pc %}
-          <div
-            class="progress-bar"
-            role="progressbar"
-            aria-valuenow="{{ storage_usage.posted_pc }}"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            style="width: {{ storage_usage.posted_pc }}%;"
-          ></div>
-        {% endif %}
-        {% if storage_usage.unused_pc %}
-          <div
-            class="progress-bar progress-bar-warning"
-            role="progressbar"
-            aria-valuenow="{{ storage_usage.unused_pc }}"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            style="width: {{ storage_usage.unused_pc }}%;"
-          ></div>
-        {% endif %}
-      </div>
-      <ul class="attachments-space-legend">
-        <li>
-          <span></span>
-          <strong>{% trans "Total:" context "account attachments page" %}</strong>
-          {{ storage_usage.total|filesizeformat }}
-        </li>
-        <li>
-          <span></span>
-          <strong>{% trans "Posted:" context "account attachments page" %}</strong>
-          {{ storage_usage.posted|filesizeformat }}
-        </li>
-        <li>
-          <span></span>
-          <strong>{% trans "Unused:" context "account attachments page" %}</strong>
-          {{ storage_usage.unused|filesizeformat }}
-        </li>
-        {% if storage_usage.limit %}
-          <li>
-            <span></span>
-            <strong>{% trans "Limit:" context "account attachments page" %}</strong>
-            {{ storage_usage.limit|filesizeformat }}
-          </li>
-        {% endif %}
-      </ul>
-      <p class="text-muted">
-        Posted, unused, total
-      </p>
-    </div>
+    {% include "misago/account/settings/attachments_usage.html" %}
     <ul class="list-group">
+      {% for attachment in attachments.items %}
+        <li class="list-group-item">{{ attachment.name }}</li>
+      {% endfor %}
     </ul>
   </div>
   {% include "misago/account/settings/attachments_toolbar.html" %}
