@@ -14,6 +14,7 @@ from ..permissions.attachments import (
     check_delete_attachment_permission,
     check_download_attachment_permission,
 )
+from ..permissions.posts import check_see_post_permission
 from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment
 
@@ -106,6 +107,18 @@ class AttachmentDetailsView(AttachmentView):
         self, request: HttpRequest, attachment: Attachment
     ) -> dict:
         try:
+            check_see_post_permission(
+                request.user_permissions,
+                attachment.category,
+                attachment.thread,
+                attachment.post,
+                attachment,
+            )
+            can_see_post = True
+        except (Http404, PermissionDenied):
+            can_see_post = False
+
+        try:
             check_delete_attachment_permission(
                 request.user_permissions,
                 attachment.category,
@@ -120,6 +133,7 @@ class AttachmentDetailsView(AttachmentView):
         return {
             "attachment": attachment,
             "can_delete_attachment": can_delete,
+            "can_see_post": can_see_post,
             "attachment_referer": _get_referer_querystring(request, attachment),
         }
 
@@ -129,6 +143,7 @@ class AttachmentDeleteView(View):
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         attachment = self.get_attachment(request, id, slug)
+
         return render(
             request,
             self.template_name,

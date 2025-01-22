@@ -98,7 +98,7 @@ class CheckSeeThreadPostPermissionHook(
     # Example
 
     The code below implements a custom filter function that blocks a user from seeing
-    a specified thread if there is a custom flag set on their account.
+    a specified post if there is a custom flag set on their account.
 
     ```python
     from django.core.exceptions import PermissionDenied
@@ -119,11 +119,11 @@ class CheckSeeThreadPostPermissionHook(
         # Run standard permission checks
         action(permissions, category, thread, post)
 
-        if thread.id in permissions.user.plugin_data.get("banned_thread", []):
+        if post.id in permissions.user.plugin_data.get("hidden_post", []):
             raise PermissionDenied(
                 pgettext(
-                    "thread permission error",
-                    "Site admin has removed your access to this thread."
+                    "post permission error",
+                    "Site admin has removed your access to this post."
                 )
             )
     ```

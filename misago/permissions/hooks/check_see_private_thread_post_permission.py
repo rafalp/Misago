@@ -105,7 +105,7 @@ class CheckSeePrivateThreadPostPermissionHook(
         if post.id in permissions.user.plugin_data.get("hidden_post", []):
             raise PermissionDenied(
                 pgettext(
-                    "thread permission error",
+                    "post permission error",
                     "Site admin has removed your access to this post."
                 )
             )

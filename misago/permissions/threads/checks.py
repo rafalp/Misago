@@ -8,13 +8,13 @@ from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (
-    check_edit_thread_post_permission_hook,
     check_edit_thread_permission_hook,
+    check_edit_thread_post_permission_hook,
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
     check_reply_thread_permission_hook,
-    check_see_thread_post_permission_hook,
     check_see_thread_permission_hook,
+    check_see_thread_post_permission_hook,
     check_start_thread_permission_hook,
 )
 from ..proxy import UserPermissionsProxy

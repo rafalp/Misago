@@ -8,11 +8,11 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckSeePostContentsPermissionHookAction(Protocol):
+class CheckSeePostPermissionHookAction(Protocol):
     """
     A standard Misago function used to check if the user has a permission to see
-    post's contents. Raises Django's `Http404` if they can't see it or
-    `PermissionDenied` with an error message if they can't.
+    a post. Raises Django's `Http404` if they can't see it or `PermissionDenied`
+    with an error message if they can't see it's contents.
 
     # Arguments
 
@@ -42,17 +42,17 @@ class CheckSeePostContentsPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckSeePostContentsPermissionHookFilter(Protocol):
+class CheckSeePostPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckSeePostContentsPermissionHookAction`
+    ## `action: CheckSeePostPermissionHookAction`
 
     A standard Misago function used to check if the user has a permission to see
-    post's contents. Raises Django's `Http404` if they can't see it or
-    `PermissionDenied` with an error message if they can't.
+    a post. Raises Django's `Http404` if they can't see it or `PermissionDenied`
+    with an error message if they can't see it's contents.
 
     See the [action](#action) section for details.
 
@@ -75,7 +75,7 @@ class CheckSeePostContentsPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckSeePostContentsPermissionHookAction,
+        action: CheckSeePostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -83,32 +83,32 @@ class CheckSeePostContentsPermissionHookFilter(Protocol):
     ) -> None: ...
 
 
-class CheckSeePostContentsPermissionHook(
+class CheckSeePostPermissionHook(
     FilterHook[
-        CheckSeePostContentsPermissionHookAction,
-        CheckSeePostContentsPermissionHookFilter,
+        CheckSeePostPermissionHookAction,
+        CheckSeePostPermissionHookFilter,
     ]
 ):
     """
     This hook wraps the standard Misago function used to check if the user has
-    a permission to see post's contents. Raises Django's `Http404` if they can't
-    see it or `PermissionDenied` with an error message if they can't.
+    a permission to see a post. Raises Django's `Http404` if they can't see it
+    or `PermissionDenied` with an error message if they can't see it's contents.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from seeing
-    a specified post's contents if there is a custom flag set on their account.
+    a specified thread's post if there is a custom flag set on their account.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_see_post_contents_permission_hook
+    from misago.permissions.hooks import check_see_post_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @check_see_post_contents_permission_hook.append_filter
-    def check_user_can_see_post_contents(
+    @check_see_post_permission_hook.append_filter
+    def check_user_can_see_thread_post(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
@@ -118,10 +118,10 @@ class CheckSeePostContentsPermissionHook(
         # Run standard permission checks
         action(permissions, category, thread, post)
 
-        if thread.id in permissions.user.plugin_data.get("banned_posts", []):
+        if thread.id in permissions.user.plugin_data.get("hidden_post", []):
             raise PermissionDenied(
                 pgettext(
-                    "thread permission error",
+                    "post permission error",
                     "Site admin has removed your access to this post."
                 )
             )
@@ -132,7 +132,7 @@ class CheckSeePostContentsPermissionHook(
 
     def __call__(
         self,
-        action: CheckSeePostContentsPermissionHookAction,
+        action: CheckSeePostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -141,4 +141,4 @@ class CheckSeePostContentsPermissionHook(
         return super().__call__(action, permissions, category, thread, post)
 
 
-check_see_post_contents_permission_hook = CheckSeePostContentsPermissionHook()
+check_see_post_permission_hook = CheckSeePostPermissionHook()
