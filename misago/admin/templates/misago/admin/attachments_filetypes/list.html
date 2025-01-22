@@ -37,7 +37,7 @@
           <td>
             <a
               class="btn btn-light btn-sm"
-              href="{% url 'misago:admin:attachments:index' %}?filetype={{ item.id }}&redirected=1"
+              href="{% url 'misago:admin:attachments:index' %}?filetype={{ item.id }}"
               target="_blank"
               data-tooltip="left"
               title="{% blocktrans trimmed with filetype=item.id context 'admin attachments filetypes' %}
