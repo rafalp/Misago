@@ -65,11 +65,14 @@ class AttachmentFileTypes:
         self._filetypes[id] = filetype
         return filetype
 
+    def get_all_filetypes(self) -> list[AttachmentFileType]:
+        return sorted(self._filetypes.values(), key=lambda i: i.id)
+
     def get_filetype(self, id: str) -> AttachmentFileType:
         try:
             return self._filetypes[id]
         except KeyError:
-            raise ValueError(f"'{id}' filetype is not supported")
+            raise ValueError(f"'{id}' file type is not supported")
 
     def match_filetype(
         self, filename: str, content_type: str | None = None

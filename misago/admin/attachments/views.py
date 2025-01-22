@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...threads.models import Post
 from ..views import generic
@@ -102,3 +103,12 @@ class DeleteAttachment(AttachmentAdmin, generic.ButtonView):
 
         attachment.post.attachments_cache = clean_cache or None
         attachment.post.save(update_fields=["attachments_cache"])
+
+
+class AttachmentsFiletypesList(generic.AdminView):
+    root_link = "misago:admin:attachments:filetypes:index"
+    templates_dir = "misago/admin/attachments_filetypes"
+    template_name = "list.html"
+
+    def get(self, request):
+        return self.render(request, {"items": filetypes.get_all_filetypes()})

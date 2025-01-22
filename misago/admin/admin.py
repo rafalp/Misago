@@ -34,6 +34,11 @@ class MisagoAdminExtension:
             after="permissions:index",
             namespace="attachments",
         )
+        site.add_node(
+            name=pgettext_lazy("admin node", "File types"),
+            parent="attachments",
+            namespace="filetypes",
+        )
 
     def register_urlpatterns(self, urlpatterns):
         urlpatterns.namespace("groups/", "groups")
@@ -102,4 +107,10 @@ class MisagoAdminExtension:
                 attachments.DeleteAttachment.as_view(),
                 name="delete",
             ),
+        )
+        urlpatterns.single_pattern(
+            "filetypes/",
+            "filetypes",
+            "attachments",
+            attachments.AttachmentsFiletypesList.as_view(),
         )

@@ -4,6 +4,14 @@ from ..enums import AllowedAttachments
 from ..filetypes import filetypes
 
 
+def test_filetypes_get_all_filetypes_returns_list_of_filetypes():
+    filetypes = filetypes.get_all_filetypes("jpeg")
+    assert filetypes
+    assert "jped" in filetypes
+    assert "png" in filetypes
+    assert "pdf" in filetypes
+
+
 def test_filetypes_get_filetype_returns_filetype_by_name():
     filetype = filetypes.get_filetype("jpeg")
 
