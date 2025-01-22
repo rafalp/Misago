@@ -189,7 +189,7 @@
 # ---
 # name: test_row_with_checkbox_select_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Color:
     </label>
@@ -228,7 +228,7 @@
 # ---
 # name: test_row_with_disabled_input_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_text_field_group">
     <label for="id_text_field" class="control-label">
       Hello:
     </label>
@@ -247,7 +247,7 @@
 # ---
 # name: test_row_with_disabled_radio_select_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Choice:
     </label>
@@ -281,7 +281,7 @@
 # ---
 # name: test_row_with_disabled_select_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_select_field_group">
     <label for="id_select_field" class="control-label">
       Choice:
     </label>
@@ -309,7 +309,7 @@
 # ---
 # name: test_row_with_disabled_select_multiple_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_multiple_select_field_group">
     <label for="id_multiple_select_field" class="control-label">
       Rank:
     </label>
@@ -348,7 +348,7 @@
 # ---
 # name: test_row_with_disabled_textarea_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_textarea_field_group">
     <label for="id_textarea_field" class="control-label">
       Message:
     </label>
@@ -365,7 +365,7 @@
 # ---
 # name: test_row_with_disabled_yes_no_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Switch:
     </label>
@@ -395,7 +395,7 @@
 # ---
 # name: test_row_with_input_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_text_field_group">
     <label for="id_text_field" class="control-label">
       Hello:
     </label>
@@ -414,7 +414,7 @@
 # ---
 # name: test_row_with_input_field_with_value_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_text_field_group">
     <label for="id_text_field" class="control-label">
       Hello:
     </label>
@@ -433,7 +433,7 @@
 # ---
 # name: test_row_with_radio_select_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Choice:
     </label>
@@ -467,7 +467,7 @@
 # ---
 # name: test_row_with_radio_select_field_with_value_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Choice:
     </label>
@@ -501,7 +501,7 @@
 # ---
 # name: test_row_with_select_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_select_field_group">
     <label for="id_select_field" class="control-label">
       Choice:
     </label>
@@ -529,7 +529,7 @@
 # ---
 # name: test_row_with_select_field_with_value_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_select_field_group">
     <label for="id_select_field" class="control-label">
       Choice:
     </label>
@@ -557,7 +557,7 @@
 # ---
 # name: test_row_with_select_multiple_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_multiple_select_field_group">
     <label for="id_multiple_select_field" class="control-label">
       Rank:
     </label>
@@ -596,7 +596,7 @@
 # ---
 # name: test_row_with_select_multiple_field_with_value_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_multiple_select_field_group">
     <label for="id_multiple_select_field" class="control-label">
       Rank:
     </label>
@@ -635,7 +635,7 @@
 # ---
 # name: test_row_with_textarea_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_textarea_field_group">
     <label for="id_textarea_field" class="control-label">
       Message:
     </label>
@@ -652,7 +652,7 @@
 # ---
 # name: test_row_with_textarea_field_with_value_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="id_textarea_field_group">
     <label for="id_textarea_field" class="control-label">
       Message:
     </label>
@@ -669,7 +669,7 @@
 # ---
 # name: test_row_with_yes_no_field_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Switch:
     </label>
@@ -699,7 +699,7 @@
 # ---
 # name: test_row_with_yes_no_field_with_value_is_rendered
   '''
-  <div class="form-group">
+  <div class="form-group" id="_group">
     <label for="" class="control-label">
       Switch:
     </label>
