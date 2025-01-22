@@ -38,6 +38,16 @@ On the attachment details page, under the preview.
 On the attachment details page, under the details block.
 
 
+## `ATTACHMENT_DELETE_PAGE_START`
+
+On the attachment delete page, above the confirmation block.
+
+
+## `ATTACHMENT_DELETE_PAGE_END`
+
+On the attachment delete page, below the confirmation block.
+
+
 ## `LOGIN_PAGE_START`
 
 On the Sign in page, above the form.

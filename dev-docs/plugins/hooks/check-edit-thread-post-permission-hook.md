@@ -1,6 +1,6 @@
-# `check_edit_post_permission_hook`
+# `check_edit_thread_post_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to edit a post. It raises Django's `PermissionDenied` with an error message if they can't.
+This hook wraps the standard function that Misago uses to check if the user has permission to edit a post in a thread. It raises Django's `PermissionDenied` with an error message if they can't.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook wraps the standard function that Misago uses to check if the user has 
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import check_edit_post_permission_hook
+from misago.permissions.hooks import check_edit_thread_post_permission_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_check_edit_post_permission_filter(
-    action: CheckEditPostPermissionHookAction,
+def custom_check_edit_thread_post_permission_filter(
+    action: CheckEditThreadPostPermissionHookAction,
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -30,9 +30,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CheckEditPostPermissionHookAction`
+#### `action: CheckEditThreadPostPermissionHookAction`
 
-A standard Misago function used to check if the user has permission to edit a post. It raises Django's `PermissionDenied` with an error message if they can't.
+A standard Misago function used to check if the user has permission to edit a post in a thread. It raises Django's `PermissionDenied` with an error message if they can't.
 
 See the [action](#action) section for details.
 
@@ -60,7 +60,7 @@ A post to check permissions for.
 ## Action
 
 ```python
-def check_edit_post_permission_action(
+def check_edit_thread_post_permission_action(
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -69,7 +69,7 @@ def check_edit_post_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has permission to edit a post. It raises Django's `PermissionDenied` with an error message if they can't.
+A standard Misago function used to check if the user has permission to edit a post in a thread. It raises Django's `PermissionDenied` with an error message if they can't.
 
 
 ### Arguments
@@ -101,12 +101,12 @@ The code below implements a custom filter function that prevents a user from edi
 ```python
 from django.core.exceptions import PermissionDenied
 from misago.categories.models import Category
-from misago.permissions.hooks import check_edit_post_permission_hook
+from misago.permissions.hooks import check_edit_thread_post_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Post, Thread
 
-@check_edit_post_permission_hook.append_filter
-def check_user_can_edit_thread(
+@check_edit_thread_post_permission_hook.append_filter
+def check_user_can_edit_thread_post(
     action,
     permissions: UserPermissionsProxy,
     category: Category,
