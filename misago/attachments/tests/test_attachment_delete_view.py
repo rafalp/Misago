@@ -80,7 +80,7 @@ def test_attachment_delete_view_redirects_to_account_settings_if_settings_refere
         attachment.refresh_from_db()
 
 
-def test_attachment_delete_view_redirects_to_account_settings_after_page_if_settings_referer_is_set(
+def test_attachment_delete_view_redirects_to_account_settings_page_if_settings_referer_is_set(
     user, user_client, attachment, post
 ):
     attachment.category = post.category
@@ -90,29 +90,10 @@ def test_attachment_delete_view_redirects_to_account_settings_after_page_if_sett
     attachment.save()
 
     response = user_client.post(
-        attachment.get_delete_url() + "?referer=settings&after=123"
+        attachment.get_delete_url() + "?referer=settings&cursor=123"
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:account-attachments") + "?after=123"
-
-    with pytest.raises(Attachment.DoesNotExist):
-        attachment.refresh_from_db()
-
-
-def test_attachment_delete_view_redirects_to_account_settings_before_page_if_settings_referer_is_set(
-    user, user_client, attachment, post
-):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
-    attachment.uploader = user
-    attachment.save()
-
-    response = user_client.post(
-        attachment.get_delete_url() + "?referer=settings&before=123"
-    )
-    assert response.status_code == 302
-    assert response["location"] == reverse("misago:account-attachments") + "?before=123"
+    assert response["location"] == reverse("misago:account-attachments") + "?cursor=123"
 
     with pytest.raises(Attachment.DoesNotExist):
         attachment.refresh_from_db()

@@ -12,7 +12,9 @@ def django_redirect_response(
     request: HttpRequest, attachment: Attachment, thumbnail: bool = False
 ) -> HttpResponse:
     file = _get_django_file(attachment, thumbnail)
-    return HttpResponsePermanentRedirect(file.url)
+    response = HttpResponsePermanentRedirect(file.url)
+    response["Cache-Control"] = "max-age=31536000, immutable"
+    return response
 
 
 def django_file_response(

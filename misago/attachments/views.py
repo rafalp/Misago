@@ -182,10 +182,8 @@ class AttachmentDeleteView(View):
     def get_redirect_url(self, request: HttpRequest, attachment: Attachment) -> str:
         if request.GET.get("referer") == "settings":
             url = reverse("misago:account-attachments")
-            if request.GET.get("after"):
-                url += "?after=" + request.GET.get("after")
-            elif request.GET.get("before"):
-                url += "?before=" + request.GET.get("before")
+            if request.GET.get("cursor"):
+                url += "?cursor=" + request.GET.get("cursor")
             return url
 
         if request.GET.get("referer") == "post" and attachment.post:
@@ -197,10 +195,8 @@ class AttachmentDeleteView(View):
 def _get_referer_querystring(request: HttpRequest, attachment: Attachment) -> str:
     if request.GET.get("referer") == "settings":
         querystring = "?referer=settings"
-        if request.GET.get("after"):
-            querystring += "?after=" + request.GET.get("after")
-        elif request.GET.get("before"):
-            querystring += "?before=" + request.GET.get("before")
+        if request.GET.get("cursor"):
+            querystring += "?cursor=" + request.GET.get("cursor")
         return querystring
 
     if request.GET.get("referer") == "post" and attachment.post:

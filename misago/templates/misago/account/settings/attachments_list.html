@@ -1,4 +1,5 @@
-{% load i18n %}
+{% load i18n misago_capture misago_formats %}
+
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
 {% endif %}
@@ -12,8 +13,94 @@
     </div>
     {% include "misago/account/settings/attachments_usage.html" %}
     <ul class="list-group">
-      {% for attachment in attachments.items %}
-        <li class="list-group-item attachment-list-item">{{ attachment.name }}</li>
+      {% for item in attachments.items %}
+        <li class="list-group-item attachment-list-item">
+          {% if item.attachment.upload %}
+            <a href="{{ item.attachment.get_absolute_url }}" class="attachment-list-item-download-btn" target="_blank">
+              {% if item.attachment.filetype.is_image %}
+                <div
+                  class="attachment-list-item-image"
+                  style="background-image: url('{{ item.attachment.get_thumbnail_url|default:item.attachment.get_absolute_url }}');"
+                ></div>
+              {% else %}
+                <div class="attachment-list-item-icon">
+                  {% if item.attachment.filetype.is_video %}
+                    <span class="material-icon">theaters</span>
+                  {% else %}
+                    <span class="material-icon">description</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </a>
+          {% else %}
+            <div class="attachment-list-item-download-btn">
+              <div class="attachment-list-item-icon-broken">
+                <span class="material-icon">broken_image</span>
+              </div>
+            </div>
+          {% endif %}
+          <div class="attachment-list-item-body">
+            <div class="attachment-list-item-name">
+              {% if item.attachment.upload %}
+                <a href="{{ item.attachment.get_details_url }}">{{ item.attachment.name }}</a>
+              {% else %}
+                <s>{{ item.attachment.name }}</s>
+              {% endif %}
+            </div>
+            <ul class="attachment-list-item-details">
+              <li>{{ item.attachment.size|filesizeformat }}</li>
+              <li>
+                {% capture trimmed as uploaded_at %}
+                  <span
+                    title="{{ item.attachment.uploaded_at|date:'DATETIME_FORMAT' }}"
+                    misago-timestamp="{{ item.attachment.uploaded_at.isoformat }}"
+                  >
+                    {{ item.attachment.uploaded_at|date_relative }}
+                  </span>
+                {% endcapture %}
+                {% blocktrans trimmed with uploaded_at=uploaded_at|safe context "account attachments page" %}
+                  Uploaded {{ uploaded_at }}
+                {% endblocktrans %}
+              </li>
+              {% if item.show_post %}
+                <li>
+                  {% capture trimmed as thread %}
+                    <a href="{{ item.attachment.post.get_absolute_url }}" class="attachment-list-item-thread" target="_blank">
+                      {{ item.attachment.thread.title }}
+                    </a>
+                  {% endcapture %}
+                  {% blocktrans trimmed with thread=thread|safe context "account attachments page" %}
+                    In {{ thread }}
+                  {% endblocktrans %}
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+          {% if item.show_delete %}
+            <div class="attachment-list-item-delete-btn">
+              <noscript>
+                <a
+                  class="btn btn-default btn-icon btm-sm"
+                  href="{{ item.attachment.get_delete_url }}{{ attachments.referer }}"
+                  title="{% trans 'Delete' context 'account attachments page' %}"
+                >
+                  <span class="material-icon">delete</span>
+                </a>
+              </noscript>
+              <form
+                class="d-js-block"
+                action="{{ item.attachment.get_delete_url }}{{ attachments.referer }}"
+                method="post"
+                misago-confirm="{% trans 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
+              >
+                {% csrf_token %}
+                <button class="btn btn-default btn-icon btm-sm" title="{% trans 'Delete' context 'account attachments page' %}">
+                  <span class="material-icon">delete</span>
+                </button>
+              </form>
+            </div>
+          {% endif %}
+        </li>
       {% endfor %}
     </ul>
   </div>

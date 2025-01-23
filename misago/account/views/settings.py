@@ -486,9 +486,9 @@ class AccountAttachmentsView(AccountSettingsFormView):
         }
 
     def get_attachments(self, request: HttpRequest) -> dict:
-        queryset = Attachment.objects.filter(uploader=request.user).prefetch_related(
-            "category", "thread", "post"
-        )
+        queryset = Attachment.objects.filter(
+            uploader=request.user, is_deleted=False
+        ).prefetch_related("category", "thread", "post")
 
         result = paginate_queryset(request, queryset, 20, "-id")
         prefetch_private_thread_member_ids(
@@ -502,13 +502,16 @@ class AccountAttachmentsView(AccountSettingsFormView):
         for attachment in result.items:
             attachment.uploader = request.user
 
-            with check_permissions() as can_see_post:
-                check_see_post_permission(
-                    request.user_permissions,
-                    attachment.category,
-                    attachment.thread,
-                    attachment.post,
-                )
+            if attachment.post:
+                with check_permissions() as can_see_post:
+                    check_see_post_permission(
+                        request.user_permissions,
+                        attachment.category,
+                        attachment.thread,
+                        attachment.post,
+                    )
+            else:
+                can_see_post = False
 
             with check_permissions() as can_delete:
                 check_delete_attachment_permission(
@@ -532,9 +535,14 @@ class AccountAttachmentsView(AccountSettingsFormView):
                 }
             )
 
+        referer = "?referer=settings"
+        if request.GET.get("cursor"):
+            referer += "&cursor=" + request.GET.get("cursor")
+
         return {
+            "referer": referer,
             "paginator": result,
-            "items": result.items,
+            "items": items,
             "show_post_column": show_post_column,
             "show_delete_column": show_delete_column,
         }
