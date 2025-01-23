@@ -22,6 +22,10 @@ from ...auth.decorators import login_required
 from ...core.mail import build_mail
 from ...pagination.cursor import EmptyPageError, paginate_queryset
 from ...pagination.redirect import redirect_to_last_page
+from ...permissions.attachments import check_delete_attachment_permission
+from ...permissions.checkutils import check_permissions
+from ...permissions.posts import check_see_post_permission
+from ...threads.privatethreads import prefetch_private_thread_member_ids
 from ...users.datadownloads import (
     request_user_data_download,
     user_has_data_download_request,
@@ -481,11 +485,59 @@ class AccountAttachmentsView(AccountSettingsFormView):
             "unused_pc": unused_pc,
         }
 
-    def get_attachments(self, request: HttpRequest):
-        queryset = Attachment.objects.filter(uploader=request.user).select_related(
+    def get_attachments(self, request: HttpRequest) -> dict:
+        queryset = Attachment.objects.filter(uploader=request.user).prefetch_related(
             "category", "thread", "post"
         )
-        return paginate_queryset(request, queryset, 20, "-id")
+
+        result = paginate_queryset(request, queryset, 20, "-id")
+        prefetch_private_thread_member_ids(
+            [attachment.thread for attachment in result.items if attachment.thread]
+        )
+
+        show_post_column = False
+        show_delete_column = False
+
+        items: list[dict] = []
+        for attachment in result.items:
+            attachment.uploader = request.user
+
+            with check_permissions() as can_see_post:
+                check_see_post_permission(
+                    request.user_permissions,
+                    attachment.category,
+                    attachment.thread,
+                    attachment.post,
+                )
+
+            with check_permissions() as can_delete:
+                check_delete_attachment_permission(
+                    request.user_permissions,
+                    attachment.category,
+                    attachment.thread,
+                    attachment.post,
+                    attachment,
+                )
+
+            if can_see_post:
+                show_post_column = True
+            if can_delete:
+                show_delete_column = True
+
+            items.append(
+                {
+                    "attachment": attachment,
+                    "show_post": can_see_post,
+                    "show_delete": can_delete,
+                }
+            )
+
+        return {
+            "paginator": result,
+            "items": result.items,
+            "show_post_column": show_post_column,
+            "show_delete_column": show_delete_column,
+        }
 
 
 class AccountDownloadDataView(AccountSettingsView):

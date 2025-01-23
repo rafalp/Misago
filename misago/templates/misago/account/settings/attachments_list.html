@@ -13,7 +13,7 @@
     {% include "misago/account/settings/attachments_usage.html" %}
     <ul class="list-group">
       {% for attachment in attachments.items %}
-        <li class="list-group-item">{{ attachment.name }}</li>
+        <li class="list-group-item attachment-list-item">{{ attachment.name }}</li>
       {% endfor %}
     </ul>
   </div>
