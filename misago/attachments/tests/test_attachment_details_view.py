@@ -43,6 +43,41 @@ def test_attachment_details_view_renders_page_without_delete_option(
     assert_not_contains(response, attachment.get_delete_url())
 
 
+def test_attachment_details_view_renders_page_without_post_link_for_unused_attachment(
+    user, user_client, image_small, attachment_factory
+):
+    attachment = attachment_factory(image_small, uploader=user)
+    response = user_client.get(attachment.get_details_url())
+
+    assert_contains(response, attachment.name)
+    assert_not_contains(response, "/post/")
+
+
+def test_attachment_details_view_renders_page_with_post_link_for_user_attachment(
+    user, user_client, image_small, attachment_factory, post
+):
+    attachment = attachment_factory(image_small, uploader=user, post=post)
+    response = user_client.get(attachment.get_details_url())
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, "/post/")
+    assert_contains(response, post.get_absolute_url())
+
+
+def test_attachment_details_view_renders_page_without_post_link_if_user_has_no_post_permission(
+    user, user_client, image_small, attachment_factory, post
+):
+    post.is_hidden = True
+    post.save()
+
+    attachment = attachment_factory(image_small, uploader=user, post=post)
+    response = user_client.get(attachment.get_details_url())
+
+    assert_contains(response, attachment.name)
+    assert_not_contains(response, "/post/")
+    assert_not_contains(response, post.get_absolute_url())
+
+
 def test_attachment_details_view_returns_404_response_if_upload_is_missing(
     user_client, user_attachment
 ):
