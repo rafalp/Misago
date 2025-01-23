@@ -74,7 +74,7 @@ def _check_see_private_thread_permission_action(
 ):
     check_private_threads_permission(permissions)
 
-    if permissions.user.id not in thread.participants_ids:
+    if permissions.user.id not in thread.private_thread_member_ids:
         raise Http404()
 
 
@@ -106,7 +106,7 @@ def _check_edit_private_thread_permission_action(
     if permissions.is_private_threads_moderator:
         return
 
-    if thread.participants_ids[0] != permissions.user.id:
+    if thread.private_thread_member_ids[0] != permissions.user.id:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
