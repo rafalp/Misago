@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Any
 
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
-from django.db.models import QuerySet, prefetch_related_objects
-from django.http import Http404, HttpRequest, HttpResponse
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
@@ -12,6 +12,7 @@ from django.views import View
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
+from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
     check_reply_private_thread_permission,
@@ -257,13 +258,12 @@ class ThreadRepliesView(RepliesView, ThreadView):
         if request.user.is_anonymous:
             return False
 
-        try:
+        with check_permissions() as can_edit_thread:
             check_edit_thread_permission(
                 request.user_permissions, thread.category, thread
             )
-            return True
-        except (Http404, PermissionDenied):
-            return False
+
+        return can_edit_thread
 
     def is_category_read(
         self,
@@ -327,11 +327,10 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         if request.user.is_anonymous:
             return False
 
-        try:
+        with check_permissions() as can_edit_thread:
             check_edit_private_thread_permission(request.user_permissions, thread)
-            return True
-        except (Http404, PermissionDenied):
-            return False
+
+        return can_edit_thread
 
     def update_thread_read_time(
         self,

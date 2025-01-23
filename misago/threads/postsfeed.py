@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, Iterable
 
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.db.models import prefetch_related_objects
-from django.http import Http404, HttpRequest
+from django.http import HttpRequest
 from django.urls import reverse
 
+from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
 )
@@ -158,13 +158,12 @@ class ThreadPostsFeed(PostsFeed):
         if self.request.user.is_anonymous:
             return False
 
-        try:
+        with check_permissions() as can_edit_post:
             check_edit_thread_post_permission(
                 self.request.user_permissions, self.thread.category, self.thread, post
             )
-            return True
-        except (Http404, PermissionDenied):
-            return False
+
+        return can_edit_post
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
@@ -181,13 +180,12 @@ class ThreadPostsFeed(PostsFeed):
 
 class PrivateThreadPostsFeed(PostsFeed):
     def allow_edit_post(self, post: Post) -> bool:
-        try:
+        with check_permissions() as can_edit_post:
             check_edit_private_thread_post_permission(
                 self.request.user_permissions, self.thread, post
             )
-            return True
-        except (Http404, PermissionDenied):
-            return False
+
+        return can_edit_post
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(

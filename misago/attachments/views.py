@@ -2,7 +2,6 @@ from typing import Protocol, cast
 
 from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.module_loading import import_string
@@ -14,6 +13,7 @@ from ..permissions.attachments import (
     check_delete_attachment_permission,
     check_download_attachment_permission,
 )
+from ..permissions.checkutils import check_permissions
 from ..permissions.posts import check_see_post_permission
 from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment
@@ -106,19 +106,15 @@ class AttachmentDetailsView(AttachmentView):
     def get_context_data_action(
         self, request: HttpRequest, attachment: Attachment
     ) -> dict:
-        try:
+        with check_permissions() as can_see_post:
             check_see_post_permission(
                 request.user_permissions,
                 attachment.category,
                 attachment.thread,
                 attachment.post,
-                attachment,
             )
-            can_see_post = True
-        except (Http404, PermissionDenied):
-            can_see_post = False
 
-        try:
+        with check_permissions() as can_delete:
             check_delete_attachment_permission(
                 request.user_permissions,
                 attachment.category,
@@ -126,9 +122,6 @@ class AttachmentDetailsView(AttachmentView):
                 attachment.post,
                 attachment,
             )
-            can_delete = True
-        except (Http404, PermissionDenied):
-            can_delete = False
 
         return {
             "attachment": attachment,

@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -12,6 +11,7 @@ from django.views import View
 from ...auth.decorators import login_required
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
+from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_post_permission,
     check_reply_private_thread_permission,
@@ -265,15 +265,16 @@ class ReplyThreadView(ReplyView, ThreadView):
         return thread
 
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
-        try:
-            last_post = super().get_last_post(request, thread)
-            if last_post:
+        if last_post := super().get_last_post(request, thread):
+            with check_permissions() as can_edit_post:
                 check_edit_thread_post_permission(
                     request.user_permissions, thread.category, thread, last_post
                 )
-            return last_post
-        except (Http404, PermissionDenied):
-            return None
+
+            if can_edit_post:
+                return last_post
+
+        return None
 
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
@@ -318,15 +319,16 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
         return thread
 
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
-        try:
-            last_post = super().get_last_post(request, thread)
-            if last_post:
+        if last_post := super().get_last_post(request, thread):
+            with check_permissions() as can_edit_post:
                 check_edit_private_thread_post_permission(
                     request.user_permissions, thread.category, last_post
                 )
-            return last_post
-        except (Http404, PermissionDenied):
-            return None
+
+            if can_edit_post:
+                return last_post
+
+        return None
 
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None

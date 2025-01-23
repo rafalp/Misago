@@ -1,11 +1,12 @@
 from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import pgettext
 
 from ...categories.models import Category
+from ...permissions.checkutils import check_permissions
 from ...permissions.threads import check_start_thread_permission
 
 
@@ -38,12 +39,8 @@ class SelectCategoryView(View):
 
         choices: list[dict] = []
         for category in queryset:
-            try:
+            with check_permissions() as has_permission:
                 check_start_thread_permission(request.user_permissions, category)
-            except (Http404, PermissionDenied):
-                has_permission = False
-            else:
-                has_permission = True
 
             choice = {
                 "id": category.id,
