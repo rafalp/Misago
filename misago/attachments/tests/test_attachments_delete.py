@@ -70,12 +70,14 @@ def test_delete_categories_attachments_marks_attachments_for_deletion(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert not other_attachment.category
     assert not other_attachment.thread
     assert not other_attachment.post
+    assert not other_attachment.uploader
     assert other_attachment.is_deleted
 
 
@@ -99,12 +101,14 @@ def test_delete_categories_attachments_accepts_categories_ids(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert not other_attachment.category
     assert not other_attachment.thread
     assert not other_attachment.post
+    assert not other_attachment.uploader
     assert other_attachment.is_deleted
 
 
@@ -136,12 +140,14 @@ def test_delete_categories_attachments_excludes_other_categories_attachments(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert other_attachment.category
     assert other_attachment.thread
     assert other_attachment.post
+    assert other_attachment.uploader
     assert not other_attachment.is_deleted
 
 
@@ -167,12 +173,14 @@ def test_delete_threads_attachments_marks_attachments_for_deletion(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert not other_attachment.category
     assert not other_attachment.thread
     assert not other_attachment.post
+    assert not other_attachment.uploader
     assert other_attachment.is_deleted
 
 
@@ -198,12 +206,14 @@ def test_delete_threads_attachments_accepts_threads_ids(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert not other_attachment.category
     assert not other_attachment.thread
     assert not other_attachment.post
+    assert not other_attachment.uploader
     assert other_attachment.is_deleted
 
 
@@ -229,12 +239,14 @@ def test_delete_threads_attachments_excludes_other_threads_attachments(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert other_attachment.category
     assert other_attachment.thread
     assert other_attachment.post
+    assert other_attachment.uploader
     assert not other_attachment.is_deleted
 
 
@@ -260,12 +272,14 @@ def test_delete_posts_attachments_marks_attachments_for_deletion(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert not other_attachment.category
     assert not other_attachment.thread
     assert not other_attachment.post
+    assert not other_attachment.uploader
     assert other_attachment.is_deleted
 
 
@@ -291,12 +305,14 @@ def test_delete_posts_attachments_accepts_posts_ids(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert not other_attachment.category
     assert not other_attachment.thread
     assert not other_attachment.post
+    assert not other_attachment.uploader
     assert other_attachment.is_deleted
 
 
@@ -322,12 +338,14 @@ def test_delete_posts_attachments_excludes_other_threads_attachments(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
+    assert not attachment.uploader
     assert attachment.is_deleted
 
     other_attachment.refresh_from_db()
     assert other_attachment.category
     assert other_attachment.thread
     assert other_attachment.post
+    assert other_attachment.uploader
     assert not other_attachment.is_deleted
 
 

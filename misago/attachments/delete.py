@@ -102,8 +102,7 @@ def _delete_users_attachments_action(
     request: HttpRequest | None = None,
 ) -> int:
     return _update_queryset(
-        Attachment.objects.filter(uploader_id__in=_flatten_ids_list(users)),
-        include_uploader=True,
+        Attachment.objects.filter(uploader_id__in=_flatten_ids_list(users))
     )
 
 
@@ -137,15 +136,11 @@ def _flatten_ids_list(obs_or_ids: Iterable[Union[Model, int]]) -> list[int]:
     return list(ids)
 
 
-def _update_queryset(queryset, include_uploader: bool = False) -> int:
-    kwargs = {
-        "category": None,
-        "thread": None,
-        "post": None,
-        "is_deleted": True,
-    }
-
-    if include_uploader:
-        kwargs["uploader"] = None
-
-    return queryset.update(**kwargs)
+def _update_queryset(queryset) -> int:
+    return queryset.update(
+        category=None,
+        thread=None,
+        post=None,
+        uploader=None,
+        is_deleted=True,
+    )
