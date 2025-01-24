@@ -31,7 +31,7 @@ def test_account_attachments_shows_storage_for_user_with_used_attachment(
 
 
 def test_account_attachments_shows_storage_for_user_with_unused_attachment(
-    user, user_client, attachment, post
+    user, user_client, attachment
 ):
     attachment.uploader = user
     attachment.save()
@@ -53,7 +53,7 @@ def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachm
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_without_attachments_and_no_limits(
     members_group, user_client
 ):
@@ -65,7 +65,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_no_l
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_limits(
     user, members_group, user_client, attachment, post
 ):
@@ -83,9 +83,9 @@ def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_no_limits(
-    user, members_group, user_client, attachment, post
+    user, members_group, user_client, attachment
 ):
     attachment.uploader = user
     attachment.save()
@@ -98,7 +98,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_n
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_limits(
     user, members_group, user_client, attachment, user_attachment, post
 ):
@@ -145,7 +145,7 @@ def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_
 
 
 def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_no_group_limits(
-    user, members_group, user_client, attachment, post
+    user, members_group, user_client, attachment
 ):
     attachment.uploader = user
     attachment.save()
@@ -175,7 +175,7 @@ def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachm
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_without_attachments_and_no_unused_limits(
     members_group, user_client
 ):
@@ -186,7 +186,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_no_u
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_unused_limits(
     user, members_group, user_client, attachment, post
 ):
@@ -203,9 +203,9 @@ def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_no_unused_limits(
-    user, members_group, user_client, attachment, post
+    user, members_group, user_client, attachment
 ):
     attachment.uploader = user
     attachment.save()
@@ -217,7 +217,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_n
     assert response.status_code == 200
 
 
-@override_dynamic_settings(unused_attachments_lifetime=0)
+@override_dynamic_settings(unused_attachments_storage_limit=0)
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_unused_limits(
     user, members_group, user_client, attachment, user_attachment, post
 ):
@@ -261,7 +261,7 @@ def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_
 
 
 def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_no_storage_limit(
-    user, members_group, user_client, attachment, post
+    user, members_group, user_client, attachment
 ):
     attachment.uploader = user
     attachment.save()
@@ -287,6 +287,29 @@ def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachm
 
     response = user_client.get(reverse("misago:account-attachments"))
     assert response.status_code == 200
+
+
+@override_dynamic_settings(unused_attachments_lifetime=12)
+def test_account_attachments_shows_unused_attachments_expire_in_12_hours(
+    user, user_client, attachment
+):
+    attachment.uploader = user
+    attachment.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert_contains(response, "12 hours")
+
+
+@override_dynamic_settings(unused_attachments_lifetime=48)
+def test_account_attachments_shows_unused_attachments_expire_in_two_days(
+    user, user_client, attachment
+):
+    attachment.uploader = user
+    attachment.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    print(response.content.decode())
+    assert_contains(response, "2 days")
 
 
 def test_account_attachments_list_shows_blankslate_for_user_without_attachments(

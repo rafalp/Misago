@@ -454,7 +454,7 @@ class AccountAttachmentsView(AccountSettingsFormView):
         unused_attachments_lifetime = request.settings.unused_attachments_lifetime
 
         if unused_attachments_lifetime >= 24 and unused_attachments_lifetime % 24 == 0:
-            unused_attachments_lifetime_days = unused_attachments_lifetime / 24
+            unused_attachments_lifetime_days = int(unused_attachments_lifetime / 24)
 
         total_storage = request.user_permissions.attachment_storage_limit
         total_unused_storage = (
