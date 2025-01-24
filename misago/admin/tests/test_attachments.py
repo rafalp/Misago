@@ -17,6 +17,22 @@ def test_attachments_list_renders_empty(admin_client):
     assert_contains(response, "No attachments exist.")
 
 
+def test_attachments_list_renders_broken_attachment(admin_client, attachment):
+    attachment.filetype_id = "txt"
+    attachment.save()
+
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, attachment.name)
+
+
+def test_attachments_list_renders_broken_image_attachment(admin_client, attachment):
+    attachment.filetype_id = "png"
+    attachment.save()
+
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, attachment.name)
+
+
 def test_attachments_list_renders_temp_txt_attachment(
     admin_client, text_file, attachment_factory
 ):

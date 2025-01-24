@@ -71,7 +71,7 @@ def test_get_attachments_storage_constraints_counts_all_unused_attachments_to_gl
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -82,7 +82,7 @@ def test_get_attachments_storage_constraints_counts_all_unused_attachments_to_gl
         name="image.png",
         slug="image-png",
         size=512 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -92,7 +92,7 @@ def test_get_attachments_storage_constraints_counts_all_unused_attachments_to_gl
         name="image.png",
         slug="image-png",
         size=128 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=128 * 1024,
     )
 
@@ -122,7 +122,7 @@ def test_get_attachments_storage_constraints_counts_all_user_attachments_to_user
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -132,7 +132,7 @@ def test_get_attachments_storage_constraints_counts_all_user_attachments_to_user
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -144,7 +144,7 @@ def test_get_attachments_storage_constraints_counts_all_user_attachments_to_user
         name="image.png",
         slug="image-png",
         size=512 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -155,7 +155,7 @@ def test_get_attachments_storage_constraints_counts_all_user_attachments_to_user
         name="image.png",
         slug="image-png",
         size=128 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=128 * 1024,
     )
 
@@ -184,7 +184,7 @@ def test_get_attachments_storage_constraints_counts_unused_user_attachments_to_u
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -194,7 +194,7 @@ def test_get_attachments_storage_constraints_counts_unused_user_attachments_to_u
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -206,7 +206,7 @@ def test_get_attachments_storage_constraints_counts_unused_user_attachments_to_u
         name="image.png",
         slug="image-png",
         size=512 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -217,7 +217,7 @@ def test_get_attachments_storage_constraints_counts_unused_user_attachments_to_u
         name="image.png",
         slug="image-png",
         size=128 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=128 * 1024,
     )
 
@@ -245,7 +245,7 @@ def test_get_attachments_storage_constraints_never_returns_negative_storage_left
         name="image.png",
         slug="image-png",
         size=5 * 1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=128 * 1024,
     )
 
@@ -274,7 +274,7 @@ def test_get_attachments_storage_constraints_returns_global_limit_because_its_sm
         name="image.png",
         slug="image-png",
         size=700 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -286,7 +286,7 @@ def test_get_attachments_storage_constraints_returns_global_limit_because_its_sm
         name="image.png",
         slug="image-png",
         size=512 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -297,7 +297,7 @@ def test_get_attachments_storage_constraints_returns_global_limit_because_its_sm
         name="image.png",
         slug="image-png",
         size=100 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=100 * 1024,
     )
 
@@ -326,7 +326,7 @@ def test_get_attachments_storage_constraints_returns_user_total_limit_because_it
         name="image.png",
         slug="image-png",
         size=100 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -338,7 +338,7 @@ def test_get_attachments_storage_constraints_returns_user_total_limit_because_it
         name="image.png",
         slug="image-png",
         size=512 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -349,7 +349,7 @@ def test_get_attachments_storage_constraints_returns_user_total_limit_because_it
         name="image.png",
         slug="image-png",
         size=128 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=128 * 1024,
     )
 
@@ -378,7 +378,7 @@ def test_get_attachments_storage_constraints_returns_user_unused_limit_because_i
         name="image.png",
         slug="image-png",
         size=128 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -390,7 +390,7 @@ def test_get_attachments_storage_constraints_returns_user_unused_limit_because_i
         name="image.png",
         slug="image-png",
         size=512 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -401,7 +401,7 @@ def test_get_attachments_storage_constraints_returns_user_unused_limit_because_i
         name="image.png",
         slug="image-png",
         size=256 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=256 * 1024,
     )
 

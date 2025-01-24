@@ -22,7 +22,7 @@ def test_get_total_attachment_storage_usage_returns_sum_of_all_attachments_sizes
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -32,7 +32,7 @@ def test_get_total_attachment_storage_usage_returns_sum_of_all_attachments_sizes
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -54,7 +54,7 @@ def test_get_total_unused_attachments_size_returns_zero_if_no_unused_attachments
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     assert get_total_unused_attachments_size() == 0
@@ -68,7 +68,7 @@ def test_get_total_unused_attachments_size_returns_sum_of_unused_attachments_siz
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -78,7 +78,7 @@ def test_get_total_unused_attachments_size_returns_sum_of_unused_attachments_siz
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -89,7 +89,7 @@ def test_get_total_unused_attachments_size_returns_sum_of_unused_attachments_siz
         name="image.png",
         slug="image-png",
         size=3,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=2,
     )
 
@@ -105,7 +105,7 @@ def test_get_total_unused_attachments_size_excludes_posted_attachments_sizes(pos
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -115,7 +115,7 @@ def test_get_total_unused_attachments_size_excludes_posted_attachments_sizes(pos
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -134,7 +134,7 @@ def test_get_user_attachment_storage_usage_excludes_anonymous_users_attachments(
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     assert get_user_attachment_storage_usage(user) == 0
@@ -151,7 +151,7 @@ def test_get_user_attachment_storage_usage_excludes_other_users_attachments(
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -172,7 +172,7 @@ def test_get_total_attachment_storage_usage_returns_sum_of_user_attachments_size
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -183,7 +183,7 @@ def test_get_total_attachment_storage_usage_returns_sum_of_user_attachments_size
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -202,7 +202,7 @@ def test_get_user_unused_attachments_size_excludes_anonymous_users_attachments(u
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     assert get_user_unused_attachments_size(user) == 0
@@ -219,7 +219,7 @@ def test_get_user_unused_attachments_size_excludes_other_users_attachments(
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -235,7 +235,7 @@ def test_get_user_unused_attachments_size_excludes_posted_attachments(user, post
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
     Attachment.objects.create(
@@ -247,7 +247,7 @@ def test_get_user_unused_attachments_size_excludes_posted_attachments(user, post
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 
@@ -265,7 +265,7 @@ def test_get_user_unused_attachments_size_returns_sum_of_user_attachments_sizes(
         name="image.png",
         slug="image-png",
         size=50,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
     Attachment.objects.create(
@@ -276,7 +276,7 @@ def test_get_user_unused_attachments_size_returns_sum_of_user_attachments_sizes(
         name="image.png",
         slug="image-png",
         size=20,
-        filetype_id="PNG",
+        filetype_id="png",
         thumbnail_size=10,
     )
 

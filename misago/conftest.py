@@ -621,7 +621,7 @@ def attachment(db):
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
 
@@ -636,7 +636,7 @@ def user_attachment(user):
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
 
@@ -651,7 +651,7 @@ def other_user_attachment(other_user):
         name="image.png",
         slug="image-png",
         size=1024 * 1024,
-        filetype_id="PNG",
+        filetype_id="png",
     )
 
 
