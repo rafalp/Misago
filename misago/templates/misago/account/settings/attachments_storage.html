@@ -61,8 +61,8 @@
     <p class="attachment-usage-help-text">
       <span class="attachment-usage-legend-item attachment-usage-posted"></span>
       <strong>{% trans "Posted:" context "account attachments page" %}</strong>
-      {% blocktrans trimmed with posted=storage_usage.posted|filesizeformat context "account attachments page" %}
-        Attachments associated with posts are taking {{ posted }}.
+      {% blocktrans trimmed with storage=storage_usage.posted|filesizeformat context "account attachments page" %}
+        Attachments associated with posts are taking {{ storage }}.
       {% endblocktrans %}
     </p>
   {% endif %}
@@ -71,17 +71,17 @@
     <p class="attachment-usage-help-text">
       <span class="attachment-usage-legend-item attachment-usage-unused"></span>
       <strong>{% trans "Temporary:" context "account attachments page" %}</strong>
+      {% blocktrans trimmed with storage=storage_usage.unused|filesizeformat context "account attachments page" %}
+        Attachments that are not associated with any post are taking {{ storage }}.
+      {% endblocktrans %}
       {% if storage_usage.unused_lifetime_days %}
-        {% blocktrans trimmed with reserved=storage_usage.unused|filesizeformat context "account attachments page" %}
-          Attachments that are not associated with any post are taking {{ reserved }}.
-        {% endblocktrans %}
         {% blocktrans trimmed count days=storage_usage.unused_lifetime_days context "account attachments page" %}
           These files are automatically deleted one day after upload, freeing up space.
         {% plural %}
           These files are automatically deleted {{ days }} days after upload, freeing up space.
         {% endblocktrans %}
       {% else %}
-        {% blocktrans trimmed count hours=storage_usage.unused_lifetime context "account attachments page" %}
+        {% blocktrans trimmed count hours=storage_usage.unused_lifetime_hours context "account attachments page" %}
           These files are automatically deleted one hour after upload, freeing up space.
         {% plural %}
           These files are automatically deleted {{ hours }} hours after upload, freeing up space.
