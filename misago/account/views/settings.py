@@ -450,39 +450,69 @@ class AccountAttachmentsView(AccountSettingsFormView):
         return context
 
     def get_storage_usage(self, request: HttpRequest) -> dict:
+        unused_attachments_lifetime_days = 0
+        unused_attachments_lifetime = request.settings.unused_attachments_lifetime
+
+        if unused_attachments_lifetime >= 24 and unused_attachments_lifetime % 24 == 0:
+            unused_attachments_lifetime_days = unused_attachments_lifetime / 24
+
+        total_storage = request.user_permissions.attachment_storage_limit
+        total_unused_storage = (
+            request.settings.unused_attachments_storage_limit * 1024 * 1024
+        )
+        unused_storage = request.user_permissions.unused_attachments_storage_limit
+
+        unused_storage_limit = 0
+        if total_unused_storage and unused_storage:
+            unused_storage_limit = min(total_unused_storage, unused_storage)
+        else:
+            unused_storage_limit = total_unused_storage or unused_storage
+
         all_attachments = get_user_attachment_storage_usage(request.user)
         unused_attachments = get_user_unused_attachments_size(request.user)
         posted_attachments = max(all_attachments - unused_attachments, 0)
 
-        total_storage = request.user_permissions.attachment_storage_limit
-        unused_storage = request.user_permissions.unused_attachments_storage_limit
+        free_storage = 0
 
+        free_pc = 100
         posted_pc = 0
         unused_pc = 0
 
         if total_storage:
-            free_storage = 100
+            free_storage = total_storage - all_attachments
+
             if unused_attachments:
                 unused_pc = ceil(float(unused_attachments) * 100 / float(total_storage))
-                free_storage -= unused_pc
+                free_pc -= unused_pc
+
             if posted_attachments:
                 posted_pc = ceil(float(posted_attachments) * 100 / float(total_storage))
-                posted_pc = min(posted_pc, free_storage)
-        else:
-            if posted_attachments and unused_attachments:
-                unused_pc = ceil(
-                    float(unused_attachments) * 100 / float(all_attachments)
-                )
-                posted_pc = 100 - unused_pc
+                posted_pc = min(posted_pc, free_pc)
+
+        elif unused_storage_limit and unused_attachments < unused_storage_limit:
+            free_storage = unused_storage_limit - unused_attachments
+
+            storage_max = posted_attachments + unused_storage_limit
+            if unused_attachments:
+                unused_pc = ceil(float(unused_attachments) * 100 / float(storage_max))
+            if posted_attachments:
+                posted_pc = ceil(float(posted_attachments) * 100 / float(storage_max))
+
+        elif posted_attachments or unused_attachments:
+            unused_pc = ceil(float(unused_attachments) * 100 / float(all_attachments))
+            posted_pc = 100 - unused_pc
 
         return {
             "total": all_attachments,
             "posted": posted_attachments,
             "unused": unused_attachments,
-            "limit": total_storage,
-            "free": total_storage - all_attachments,
+            "total_limit": total_storage,
+            "unused_limit": unused_storage_limit,
+            "free": free_storage,
             "posted_pc": posted_pc,
             "unused_pc": unused_pc,
+            "unused_lifetime_hours": unused_attachments_lifetime,
+            "unused_lifetime_days": unused_attachments_lifetime_days,
         }
 
     def get_attachments(self, request: HttpRequest) -> dict:

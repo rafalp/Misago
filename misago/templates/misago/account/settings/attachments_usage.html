@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="panel-body panel-attachments-usage">
   <h4>
-    {% trans "Space usage" context "account attachments page" %}
+    {% trans "Storage usage" context "account attachments page" %}
   </h4>
   <div class="progress">
     {% if storage_usage.posted_pc %}
@@ -25,31 +25,77 @@
       ></div>
     {% endif %}
   </div>
-  <ul class="attachments-usage-legend">
+  <ul class="attachment-usage-legend">
+    {% if storage_usage.total_limit %}
+      <li>
+        <strong>{% trans "Total:" context "account attachments page" %}</strong>
+        {{ storage_usage.total_limit|filesizeformat }}
+      </li>
+    {% endif %}
     <li>
-      <span></span>
-      <strong>{% trans "Total:" context "account attachments page" %}</strong>
+      <strong>{% trans "Used:" context "account attachments page" %}</strong>
       {{ storage_usage.total|filesizeformat }}
     </li>
     <li>
-      <span></span>
+      <span class="attachment-usage-legend-item attachment-usage-posted"></span>
       <strong>{% trans "Posted:" context "account attachments page" %}</strong>
       {{ storage_usage.posted|filesizeformat }}
     </li>
-    <li>
-      <span></span>
-      <strong>{% trans "Unused:" context "account attachments page" %}</strong>
-      {{ storage_usage.unused|filesizeformat }}
-    </li>
-    {% if storage_usage.limit %}
+    {% if storage_usage.unused %}
       <li>
-        <span></span>
-        <strong>{% trans "Limit:" context "account attachments page" %}</strong>
-        {{ storage_usage.limit|filesizeformat }}
+        <span class="attachment-usage-legend-item attachment-usage-unused"></span>
+        <strong>{% trans "Reserved:" context "account attachments page" %}</strong>
+        {{ storage_usage.unused|filesizeformat }}
+      </li>
+    {% endif %}
+    {% if not storage_usage.total_limit and storage_usage.unused_limit %}
+      <li>
+        <span class="attachment-usage-legend-item"></span>
+        <strong>{% trans "Free:" context "account attachments page" %}</strong>
+        {{ storage_usage.free|filesizeformat }}
       </li>
     {% endif %}
   </ul>
   <p class="text-muted">
-    Posted, unused, total
+    {% if storage_usage.total_limit %}
+      {% blocktrans trimmed with total=storage_usage.total|filesizeformat limit=storage_usage.total_limit|filesizeformat context "account attachments page" %}
+        You are using {{ total }} out of {{ limit }} available.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed with total=storage_usage.total|filesizeformat context "account attachments page" %}
+        You are using {{ total }} for your attachments.
+      {% endblocktrans %}
+    {% endif %}
+    {% if storage_usage.unused %}
+      {% blocktrans trimmed with reserved=storage_usage.unused|filesizeformat context "account attachments page" %}
+        {{ reserved }} is reserved by unused attachments: files that have been uploaded but are not associated with any post.
+      {% endblocktrans %}
+      {% if storage_usage.unused_lifetime_days %}
+        {% blocktrans trimmed count days=storage_usage.unused_lifetime_days context "account attachments page" %}
+          These files are automatically deleted after one day, freeing up space.
+        {% plural %}
+          These files are automatically deleted after {{ days }} days, freeing up space.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed count hours=storage_usage.unused_lifetime context "account attachments page" %}
+          These files are automatically deleted after one hour, freeing up space.
+        {% plural %}
+          These files are automatically deleted after {{ hours }} hours, freeing up space.
+        {% endblocktrans %}
+      {% endif %}
+      {% if storage_usage.unused_limit %}
+        {% blocktrans trimmed with limit=storage_usage.unused_limit|filesizeformat context "account attachments page" %}
+          You can reserve up to {{ limit }}.
+        {% endblocktrans %}
+        {% blocktrans trimmed context "account attachments page" %}
+          If you reserve all available space, you won't be able to upload new attachments until existing unused attachments are either posted or deleted.
+        {% endblocktrans %}
+      {% endif %}
+    {% endif %}
+    {% if not storage_usage.total_limit %}
+      {% blocktrans trimmed context "account attachments page" %}
+        Your attachment storage is unlimited.
+      {% endblocktrans %}
+    {% endif %}
   </p>
 </div>

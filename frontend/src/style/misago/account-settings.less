@@ -47,3 +47,60 @@
 .table-watching-option .material-icon {
   font-size: 18px;
 }
+
+.panel-attachments-usage {
+  h4 {
+    margin: 0;
+  }
+
+  p:last-child {
+    margin: 0;
+  }
+
+  .progress {
+    margin: @line-height-computed 0;
+  }
+
+  .progress-bar-locked {
+    background-color: #434343;
+  }
+}
+
+.attachment-usage-legend {
+  margin: -5px -5px floor(@line-height-computed / 2) -5px;
+  padding: 0;
+
+  list-style: none;
+
+  li {
+    display: inline-block;
+    margin: 5px;
+  }
+}
+
+.attachment-usage-legend-item {
+  display: inline-block;
+
+  width: 10px;
+  height: 10px;
+
+  background-color: @gray-lighter;
+  border-radius: 100%;
+  vertical-align: baseline;
+}
+
+.attachment-usage-posted {
+  background-color: @brand-primary;
+}
+
+.attachment-usage-unused {
+  background-color: @brand-warning;
+}
+
+.attachment-usage-locked {
+  background-color: #434343;
+}
+
+.attachment-usage-locked-message {
+  color: #d90429;
+}

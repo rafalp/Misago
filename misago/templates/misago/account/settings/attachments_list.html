@@ -101,6 +101,12 @@
             </div>
           {% endif %}
         </li>
+      {% empty %}
+        <li class="list-group-item attachment-list-blankslate">
+          {% blocktrans trimmed context "account attachments page" %}
+            You haven’t uploaded any attachments, or they have been deleted.
+          {% endblocktrans %}
+        </li>
       {% endfor %}
     </ul>
   </div>
