@@ -183,7 +183,7 @@ class AttachmentDeleteView(View):
         if request.GET.get("referer") == "settings":
             url = reverse("misago:account-attachments")
             if request.GET.get("cursor"):
-                url += "?cursor=" + request.GET.get("cursor")
+                url += "?cursor=" + request.GET["cursor"]
             return url
 
         if request.GET.get("referer") == "post" and attachment.post:
@@ -196,7 +196,7 @@ def _get_referer_querystring(request: HttpRequest, attachment: Attachment) -> st
     if request.GET.get("referer") == "settings":
         querystring = "?referer=settings"
         if request.GET.get("cursor"):
-            querystring += "?cursor=" + request.GET.get("cursor")
+            querystring += "?cursor=" + request.GET["cursor"]
         return querystring
 
     if request.GET.get("referer") == "post" and attachment.post:

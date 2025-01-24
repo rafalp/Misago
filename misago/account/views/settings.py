@@ -473,12 +473,11 @@ class AccountAttachmentsView(AccountSettingsFormView):
         posted_attachments = max(all_attachments - unused_attachments, 0)
 
         free_storage = 0
-
-        free_pc = 100
         posted_pc = 0
         unused_pc = 0
 
         if total_storage:
+            free_pc = 100
             free_storage = total_storage - all_attachments
 
             if unused_attachments:
@@ -567,7 +566,7 @@ class AccountAttachmentsView(AccountSettingsFormView):
 
         referer = "?referer=settings"
         if request.GET.get("cursor"):
-            referer += "&cursor=" + request.GET.get("cursor")
+            referer += "&cursor=" + request.GET["cursor"]
 
         return {
             "referer": referer,

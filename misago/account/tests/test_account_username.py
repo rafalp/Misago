@@ -165,7 +165,7 @@ def test_account_username_renders_history_item(user_client, user):
     "misago.account.views.settings.paginate_queryset", side_effect=EmptyPageError(10)
 )
 def test_account_username_redirects_to_last_page_for_invalid_cursor(
-    mock_pagination, user_client, user
+    mock_pagination, user_client
 ):
     response = user_client.get(reverse("misago:account-username"))
 
