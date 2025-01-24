@@ -11,7 +11,7 @@ def populate_attachments_dimensions(apps, _):
 
     queryset = Attachment.objects.filter(
         filetype_id__isnull=False,
-        upload__isnull=False,
+        upload="",
     ).order_by("id")
 
     for attachment in queryset.iterator(chunk_size=50):

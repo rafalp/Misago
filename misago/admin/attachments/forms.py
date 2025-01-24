@@ -31,29 +31,36 @@ class FilterAttachmentsForm(forms.Form):
             (
                 "",
                 pgettext_lazy(
-                    "admin attachments orphan filter choice",
+                    "admin attachments status filter choice",
                     "All",
                 ),
             ),
             (
                 "posted",
                 pgettext_lazy(
-                    "admin attachments orphan filter choice",
+                    "admin attachments status filter choice",
                     "Posted",
                 ),
             ),
             (
                 "unused",
                 pgettext_lazy(
-                    "admin attachments orphan filter choice",
+                    "admin attachments status filter choice",
                     "Unused",
                 ),
             ),
             (
                 "deleted",
                 pgettext_lazy(
-                    "admin attachments orphan filter choice",
+                    "admin attachments status filter choice",
                     "Deleted",
+                ),
+            ),
+            (
+                "broken",
+                pgettext_lazy(
+                    "admin attachments status filter choice",
+                    "Broken",
                 ),
             ),
         ],
@@ -74,4 +81,6 @@ class FilterAttachmentsForm(forms.Form):
             queryset = queryset.filter(post__isnull=True, is_deleted=False)
         elif criteria.get("status") == "deleted":
             queryset = queryset.filter(is_deleted=True)
+        elif criteria.get("status") == "broken":
+            queryset = queryset.filter(upload="")
         return queryset

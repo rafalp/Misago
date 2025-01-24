@@ -117,4 +117,12 @@ class Migration(migrations.Migration):
                 fields=["plugin_data"], name="misago_atta_plugin__305a3d_gin"
             ),
         ),
+        migrations.AddIndex(
+            model_name="attachment",
+            index=models.Index(
+                condition=models.Q(("upload", "")),
+                fields=["upload"],
+                name="misago_attachment_miss_upload",
+            ),
+        ),
     ]

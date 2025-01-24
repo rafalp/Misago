@@ -88,6 +88,21 @@
   background-size: cover;
 }
 
+.card-admin-table .btn-thumbnail-broken {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: $font-size-base * 2;
+  height: $font-size-base * 2;
+
+  padding: 0;
+
+  background-color: lighten($red, 30%);
+  color: $red;
+  cursor: default !important;
+}
+
 // Util for making item link stand out
 .card-admin-table .item-name {
   @extend .font-weight-bold;
@@ -105,6 +120,13 @@
   a {
     color: $body-color;
   }
+}
+
+.card-admin-table .item-deleted-name {
+  @extend .font-weight-bold;
+
+  color: $gray-600;
+  text-decoration: line-through;
 }
 
 // Depth indicator

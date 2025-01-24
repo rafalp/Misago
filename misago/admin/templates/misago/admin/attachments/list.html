@@ -15,25 +15,43 @@
 
 
 {% block table-row %}
-{% if item.filetype.is_image %}
-  <td class="pr-0">
-    {% if item.thumbnail %}
-      <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_thumbnail_url }}')" target="_blank"></a>
-    {% else %}
-      <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_absolute_url }}')" target="_blank"></a>
-    {% endif %}
-  </td>
+{% if item.upload %}
+  {% if item.filetype.is_image %}
+    <td class="pr-0">
+      {% if item.thumbnail %}
+        <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_thumbnail_url }}')" target="_blank"></a>
+      {% else %}
+        <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_absolute_url }}')" target="_blank"></a>
+      {% endif %}
+    </td>
+  {% else %}
+    <td class="pr-0 text-center">
+      <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-block btn-sm" target="_blank">
+        <span class="far fa-file"></span>
+      </a>
+    </td>
+  {% endif %}
 {% else %}
   <td class="pr-0 text-center">
-    <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-block btn-sm" target="_blank">
-      <span class="far fa-file"></span>
-    </a>
+    <div
+      class="btn btn-thumbnail-broken"
+      data-tooltip="top"
+      title="{% trans 'Upload is missing' context 'admin attachments' %}""
+    >
+      <span class="fas fa-times"></span>
+    </div>
   </td>
 {% endif %}
 <td class="small">
-  <a href="{{ item.get_details_url }}" class="item-name" target="_blank">
-    {{ item.name }}
-  </a>
+  {% if item.upload %}
+    <a href="{{ item.get_details_url }}" class="item-name" target="_blank">
+      {{ item.name }}
+    </a>
+  {% else %}
+    <span class="item-deleted-name">
+      {{ item.name }}
+    </span>
+  {% endif %}
 </td>
 <td class="small">
   {{ item.size|filesizeformat }}

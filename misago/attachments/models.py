@@ -77,6 +77,16 @@ class Attachment(PluginDataModel):
 
     is_deleted = models.BooleanField(default=False, db_index=True)
 
+    class Meta:
+        indexes = [
+            *PluginDataModel.Meta.indexes,
+            models.Index(
+                name="misago_attachment_miss_upload",
+                fields=["upload"],
+                condition=models.Q(upload=""),
+            ),
+        ]
+
     def __str__(self):
         return self.name
 

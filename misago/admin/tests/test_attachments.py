@@ -182,6 +182,32 @@ def test_attachments_list_searches_deleted_attachments(
     assert_not_contains(response, attachment_unused.name)
 
 
+def test_attachments_list_searches_broken_attachments(
+    admin_client,
+    text_file,
+    user,
+    post,
+    attachment_factory,
+    attachment,
+):
+    attachment_posted = attachment_factory(
+        text_file, name="posted.txt", uploader=user, post=post
+    )
+    attachment_deleted = attachment_factory(
+        text_file, name="deleted.txt", uploader=user, is_deleted=True
+    )
+    attachment_unused = attachment_factory(text_file, name="unused.txt")
+
+    attachment.name = "broken.png"
+    attachment.save()
+
+    response = admin_client.get(attachments_url + f"?redirected=1&status=broken")
+    assert_not_contains(response, attachment_posted.name)
+    assert_not_contains(response, attachment_deleted.name)
+    assert_not_contains(response, attachment_unused.name)
+    assert_contains(response, attachment.name)
+
+
 def test_attachments_list_deletes_attachments(
     admin_client, text_file, image_small, user, attachment_factory
 ):
