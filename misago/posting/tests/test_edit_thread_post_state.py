@@ -88,7 +88,7 @@ def test_edit_thread_post_state_save_deletes_post_attachments(
     assert not attachment.category
     assert not attachment.thread
     assert not attachment.post
-    assert attachment.uploader == user
+    assert not attachment.uploader
     assert attachment.is_deleted
 
 
@@ -117,5 +117,5 @@ def test_edit_thread_post_state_save_deletes_unused_attachments(
     assert not unused_attachment.category
     assert not unused_attachment.thread
     assert not unused_attachment.post
-    assert unused_attachment.uploader == user
+    assert not unused_attachment.uploader
     assert unused_attachment.is_deleted
