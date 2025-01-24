@@ -12,8 +12,49 @@ def test_account_attachments_displays_login_page_for_guests(db, client):
     assert_contains(response, "Sign in to change your settings")
 
 
+def test_account_attachments_shows_storage_for_user_without_attachments(user_client):
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_with_used_attachment(
+    user, user_client, attachment, post
+):
+    attachment.uploader = user
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_with_unused_attachment(
+    user, user_client, attachment, post
+):
+    attachment.uploader = user
+    attachment.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments(
+    user, user_client, attachment, user_attachment, post
+):
+    attachment.uploader = user
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
 @override_dynamic_settings(unused_attachments_lifetime=0)
-def test_account_attachments_shows_storage_for_user_without_attachments_and_limits(
+def test_account_attachments_shows_storage_for_user_without_attachments_and_no_limits(
     members_group, user_client
 ):
     members_group.attachment_storage_limit = 0
@@ -75,7 +116,7 @@ def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachm
     assert response.status_code == 200
 
 
-def test_account_attachments_shows_storage_for_user_without_attachments_and_group_limits(
+def test_account_attachments_shows_storage_for_user_without_attachments_and_no_group_limits(
     members_group, user_client
 ):
     members_group.attachment_storage_limit = 0
@@ -135,7 +176,7 @@ def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachm
 
 
 @override_dynamic_settings(unused_attachments_lifetime=0)
-def test_account_attachments_shows_storage_for_user_without_attachments_and_unused_limit(
+def test_account_attachments_shows_storage_for_user_without_attachments_and_no_unused_limits(
     members_group, user_client
 ):
     members_group.unused_attachments_storage_limit = 0
@@ -146,7 +187,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_unus
 
 
 @override_dynamic_settings(unused_attachments_lifetime=0)
-def test_account_attachments_shows_storage_for_user_with_used_attachment_and_unused_limit(
+def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_unused_limits(
     user, members_group, user_client, attachment, post
 ):
     attachment.uploader = user
@@ -163,7 +204,7 @@ def test_account_attachments_shows_storage_for_user_with_used_attachment_and_unu
 
 
 @override_dynamic_settings(unused_attachments_lifetime=0)
-def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_unused_limit(
+def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_no_unused_limits(
     user, members_group, user_client, attachment, post
 ):
     attachment.uploader = user
@@ -177,7 +218,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_u
 
 
 @override_dynamic_settings(unused_attachments_lifetime=0)
-def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_unused_limit(
+def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_unused_limits(
     user, members_group, user_client, attachment, user_attachment, post
 ):
     attachment.uploader = user
@@ -187,6 +228,61 @@ def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachm
     attachment.save()
 
     members_group.unused_attachments_storage_limit = 0
+    members_group.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_without_attachments_and_no_storage_limit(
+    members_group, user_client
+):
+    members_group.attachment_storage_limit = 0
+    members_group.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_storage_limit(
+    user, members_group, user_client, attachment, post
+):
+    attachment.uploader = user
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    members_group.attachment_storage_limit = 0
+    members_group.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_no_storage_limit(
+    user, members_group, user_client, attachment, post
+):
+    attachment.uploader = user
+    attachment.save()
+
+    members_group.attachment_storage_limit = 0
+    members_group.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert response.status_code == 200
+
+
+def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_storage_limit(
+    user, members_group, user_client, attachment, user_attachment, post
+):
+    attachment.uploader = user
+    attachment.category = post.category
+    attachment.thread = post.thread
+    attachment.post = post
+    attachment.save()
+
+    members_group.attachment_storage_limit = 0
     members_group.save()
 
     response = user_client.get(reverse("misago:account-attachments"))
