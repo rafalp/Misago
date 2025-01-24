@@ -53,9 +53,6 @@
     margin: 0;
   }
 
-  p:last-child {
-    margin: 0;
-  }
 
   .progress {
     margin: @line-height-computed 0;
@@ -97,10 +94,24 @@
   background-color: @brand-warning;
 }
 
-.attachment-usage-locked {
-  background-color: #434343;
-}
+.attachment-usage-help-text {
+  position: relative;
 
-.attachment-usage-locked-message {
-  color: #d90429;
+  padding-left: 15px;
+
+  color: @gray;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  .attachment-usage-legend-item {
+    position: absolute;
+    left: 0;
+    top: 5px;
+  }
+
+  strong {
+    color: @text-color;
+  }
 }
