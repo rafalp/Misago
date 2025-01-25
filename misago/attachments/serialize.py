@@ -1,11 +1,12 @@
 from django.template.defaultfilters import filesizeformat
 
 from .filetypes import AttachmentFileType
+from .hooks import serialize_attachment_hook
 from .models import Attachment
 
 
 def serialize_attachment(attachment: Attachment) -> dict:
-    return _serialize_attachment_action(attachment)
+    return serialize_attachment_hook(_serialize_attachment_action, attachment)
 
 
 def _serialize_attachment_action(attachment: Attachment) -> dict:
@@ -35,10 +36,7 @@ def _serialize_uploader(attachment: Attachment) -> dict:
     }
 
 
-def _serialize_filetype(filetype: AttachmentFileType | None) -> dict | None:
-    if not filetype:
-        return None
-
+def _serialize_filetype(filetype: AttachmentFileType) -> dict:
     return {
         "id": filetype.id,
         "name": str(filetype.name),
@@ -51,7 +49,7 @@ def _serialize_dimensions(dimensions: str | None) -> list[int] | None:
     if not dimensions:
         return None
 
-    return [int(v) for v in dimensions.split["x"]]
+    return [int(v) for v in dimensions.split("x")]
 
 
 def _serialize_file(file, size: int) -> dict:

@@ -7,6 +7,7 @@ from .get_attachment_details_page_context_data import (
     get_attachment_details_page_context_data_hook,
 )
 from .get_attachment_plugin_data import get_attachment_plugin_data_hook
+from .serialize_attachment import serialize_attachment_hook
 
 __all__ = [
     "delete_attachments_hook",
@@ -16,4 +17,5 @@ __all__ = [
     "delete_users_attachments_hook",
     "get_attachment_details_page_context_data_hook",
     "get_attachment_plugin_data_hook",
+    "serialize_attachment_hook",
 ]
