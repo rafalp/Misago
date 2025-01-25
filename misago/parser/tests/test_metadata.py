@@ -8,6 +8,33 @@ def test_create_ast_metadata_creates_metadata_for_empty_ast(parser_context):
     assert metadata["users"] == {}
 
 
+def test_create_ast_metadata_creates_metadata_for_ast_with_attachments(parser_context):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "heading",
+                "level": 1,
+                "children": [
+                    {"type": "text", "text": "Hello "},
+                    {"type": "attachment", "name": "file.png", "id": 123},
+                    {"type": "text", "text": "!"},
+                ],
+            },
+            {
+                "type": "paragraph",
+                "children": [
+                    {"type": "text", "text": "See "},
+                    {"type": "attachment", "name": "image.png", "id": 41},
+                    {"type": "text", "text": "."},
+                ],
+            },
+            {"type": "thematic-break"},
+        ],
+    )
+    assert metadata["attachments"] == set([41, 123])
+
+
 def test_create_ast_metadata_creates_metadata_for_ast_with_mentions(
     parser_context, user, other_user
 ):
@@ -18,17 +45,17 @@ def test_create_ast_metadata_creates_metadata_for_ast_with_mentions(
                 "type": "heading",
                 "level": 1,
                 "children": [
-                    {"type": "text", "text": f"Hello "},
+                    {"type": "text", "text": "Hello "},
                     {"type": "mention", "username": user.username},
-                    {"type": "text", "text": f"!"},
+                    {"type": "text", "text": "!"},
                 ],
             },
             {
                 "type": "paragraph",
                 "children": [
-                    {"type": "text", "text": f"See "},
+                    {"type": "text", "text": "See "},
                     {"type": "mention", "username": other_user.username},
-                    {"type": "text", "text": f"."},
+                    {"type": "text", "text": "."},
                 ],
             },
             {"type": "thematic-break"},
@@ -49,9 +76,9 @@ def test_create_ast_metadata_handles_nonexisting_users_mentions(parser_context, 
                 "type": "heading",
                 "level": 1,
                 "children": [
-                    {"type": "text", "text": f"Hello "},
+                    {"type": "text", "text": "Hello "},
                     {"type": "mention", "username": user.username},
-                    {"type": "text", "text": f"!"},
+                    {"type": "text", "text": "!"},
                 ],
             },
             {
@@ -59,7 +86,7 @@ def test_create_ast_metadata_handles_nonexisting_users_mentions(parser_context, 
                 "children": [
                     {"type": "text", "text": f"See "},
                     {"type": "mention", "username": "Doesnt_Exist"},
-                    {"type": "text", "text": f"."},
+                    {"type": "text", "text": "."},
                 ],
             },
             {"type": "thematic-break"},
@@ -77,17 +104,17 @@ def test_create_ast_metadata_handles_repeated_users_mentions(parser_context, use
                 "type": "heading",
                 "level": 1,
                 "children": [
-                    {"type": "text", "text": f"Hello "},
+                    {"type": "text", "text": "Hello "},
                     {"type": "mention", "username": user.username},
-                    {"type": "text", "text": f"!"},
+                    {"type": "text", "text": "!"},
                 ],
             },
             {
                 "type": "paragraph",
                 "children": [
-                    {"type": "text", "text": f"See "},
+                    {"type": "text", "text": "See "},
                     {"type": "mention", "username": user.username},
-                    {"type": "text", "text": f"."},
+                    {"type": "text", "text": "."},
                 ],
             },
             {"type": "thematic-break"},
@@ -105,9 +132,9 @@ def test_create_ast_metadata_normalizes_mentioned_users_names(parser_context, us
                 "type": "heading",
                 "level": 1,
                 "children": [
-                    {"type": "text", "text": f"Hello "},
+                    {"type": "text", "text": "Hello "},
                     {"type": "mention", "username": user.username.upper()},
-                    {"type": "text", "text": f"!"},
+                    {"type": "text", "text": "!"},
                 ],
             },
             {
@@ -115,7 +142,7 @@ def test_create_ast_metadata_normalizes_mentioned_users_names(parser_context, us
                 "children": [
                     {"type": "text", "text": f"See "},
                     {"type": "mention", "username": user.username.lower()},
-                    {"type": "text", "text": f"."},
+                    {"type": "text", "text": "."},
                 ],
             },
             {"type": "thematic-break"},
