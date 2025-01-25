@@ -69,10 +69,10 @@ class Attachment(PluginDataModel):
     filetype_id = models.CharField(max_length=10, null=True)
     dimensions = models.CharField(max_length=15, null=True)
 
-    upload = models.ImageField(max_length=255, null=True, upload_to=upload_to)
+    upload = models.FileField(max_length=255, upload_to=upload_to)
     size = models.PositiveIntegerField(default=0)
 
-    thumbnail = models.ImageField(max_length=255, null=True, upload_to=upload_to)
+    thumbnail = models.FileField(max_length=255, upload_to=upload_to)
     thumbnail_size = models.PositiveIntegerField(default=0)
 
     is_deleted = models.BooleanField(default=False, db_index=True)

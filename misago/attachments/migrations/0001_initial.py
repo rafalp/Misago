@@ -88,18 +88,16 @@ class Migration(migrations.Migration):
                 ("dimensions", models.CharField(max_length=15, null=True)),
                 (
                     "upload",
-                    models.ImageField(
+                    models.FileField(
                         max_length=255,
-                        null=True,
                         upload_to=misago.attachments.models.upload_to,
                     ),
                 ),
                 ("size", models.PositiveIntegerField(default=0)),
                 (
                     "thumbnail",
-                    models.ImageField(
+                    models.FileField(
                         max_length=255,
-                        null=True,
                         upload_to=misago.attachments.models.upload_to,
                     ),
                 ),
