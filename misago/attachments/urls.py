@@ -5,10 +5,16 @@ from .views import (
     attachment_details,
     attachment_download,
     attachment_thumbnail,
+    attachments_upload,
 )
 
 
 urlpatterns = [
+    path(
+        "a/upload/",
+        attachments_upload,
+        name="attachments-upload",
+    ),
     path(
         "a/<slug:slug>/<int:id>/",
         attachment_download,

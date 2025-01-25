@@ -5,13 +5,8 @@ from django.utils.translation import pgettext_lazy
 from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
-from ...attachments.upload import store_uploaded_file
-from ...attachments.validators import (
-    get_attachments_storage_constraints,
-    validate_post_attachments_limit,
-    validate_uploaded_file,
-    validate_uploaded_file_extension,
-)
+from ...attachments.upload import handle_attachments_upload
+from ...attachments.validators import validate_post_attachments_limit
 from ...permissions.attachments import AttachmentsPermissions
 from ..state import PostingState
 from ..validators import validate_post
@@ -134,46 +129,13 @@ class PostForm(PostingForm):
         data = self.cleaned_data["upload"]
 
         validate_post_attachments_limit(len(data), self.max_attachments)
+        attachments, error = handle_attachments_upload(self.request, data)
 
-        storage_constraints = get_attachments_storage_constraints(
-            self.request.settings.unused_attachments_storage_limit,
-            self.request.user_permissions,
-        )
-
-        extensions = self.request.settings.restrict_attachments_extensions.split()
-        extensions_restriction = (
-            self.request.settings.restrict_attachments_extensions_type
-        )
-
-        errors: list[forms.ValidationError] = []
-        for upload in data:
-            try:
-                filetype = validate_uploaded_file(
-                    upload,
-                    allowed_attachments=self.request.settings.allowed_attachment_types,
-                    max_size=self.attachment_size_limit,
-                    **storage_constraints,
-                )
-
-                if extensions:
-                    validate_uploaded_file_extension(
-                        upload, extensions_restriction, extensions
-                    )
-
-                attachment = store_uploaded_file(self.request, upload, filetype)
-                self.attachments.append(attachment)
-
-                attachment_size = attachment.size + attachment.thumbnail_size
-                storage_constraints["storage_left"] = max(
-                    storage_constraints["storage_left"] - attachment_size, 0
-                )
-            except forms.ValidationError as error:
-                errors.append(error)
-
+        self.attachments += attachments
         self.sort_attachments()
 
-        if errors:
-            raise forms.ValidationError(message=errors)
+        if error:
+            raise error
 
         return data
 

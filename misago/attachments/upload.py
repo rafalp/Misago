@@ -12,6 +12,55 @@ from .filename import clean_filename, trim_filename
 from .filetypes import AttachmentFileType
 from .hooks import get_attachment_plugin_data_hook
 from .models import Attachment
+from .validators import (
+    get_attachments_storage_constraints,
+    validate_uploaded_file,
+    validate_uploaded_file_extension,
+)
+
+
+def handle_attachments_upload(
+    request: HttpRequest, uploads: list[UploadedFile]
+) -> tuple[list[Attachment], ValidationError | None]:
+    storage_constraints = get_attachments_storage_constraints(
+        request.settings.unused_attachments_storage_limit,
+        request.user_permissions,
+    )
+
+    extensions = request.settings.restrict_attachments_extensions.split()
+    extensions_restriction = request.settings.restrict_attachments_extensions_type
+
+    errors: list[ValidationError] = []
+    attachments: list[Attachment] = []
+
+    for upload in uploads:
+        try:
+            filetype = validate_uploaded_file(
+                upload,
+                allowed_attachments=request.settings.allowed_attachment_types,
+                max_size=request.user_permissions.attachment_size_limit,
+                **storage_constraints,
+            )
+
+            if extensions:
+                validate_uploaded_file_extension(
+                    upload, extensions_restriction, extensions
+                )
+
+            attachment = store_uploaded_file(request, upload, filetype)
+            attachments.append(attachment)
+
+            attachment_size = attachment.size + attachment.thumbnail_size
+            storage_constraints["storage_left"] = max(
+                storage_constraints["storage_left"] - attachment_size, 0
+            )
+        except ValidationError as error:
+            errors.append(error)
+
+    if errors:
+        return attachments, ValidationError(errors)
+
+    return attachments, None
 
 
 def store_uploaded_file(

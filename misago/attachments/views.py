@@ -2,7 +2,8 @@ from typing import Protocol, cast
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import Http404, HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.module_loading import import_string
 from django.utils.translation import pgettext
@@ -14,9 +15,12 @@ from ..permissions.attachments import (
     check_download_attachment_permission,
 )
 from ..permissions.checkutils import check_permissions
+from ..permissions.enums import CanUploadAttachments
 from ..permissions.posts import check_see_post_permission
+from .enums import AllowedAttachments
 from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment
+from .upload import handle_attachments_upload
 
 
 class ServerProtocol(Protocol):
@@ -205,7 +209,45 @@ def _get_referer_querystring(request: HttpRequest, attachment: Attachment) -> st
     return ""
 
 
+class AttachmentsUploadView(View):
+    def post(self, request: HttpRequest) -> JsonResponse:
+        try:
+            self.check_permissions(request)
+        except PermissionDenied as error:
+            return JsonResponse({"error": str(error)}, status=403)
+
+        attachments, error = self.process_uploads(request)
+
+        data = {}
+        return JsonResponse(data)
+
+    def check_permissions(self, request: HttpRequest):
+        if request.settings.allowed_attachment_types == AllowedAttachments.NONE:
+            raise PermissionDenied(
+                pgettext("attachments upload", "Attachment uploads are disabled")
+            )
+
+        if not request.user.is_authenticated:
+            raise PermissionDenied(
+                pgettext("attachments upload", "Sign in to upload attachments")
+            )
+
+        if (
+            request.user_permissions.can_upload_attachments
+            == CanUploadAttachments.NEVER
+        ):
+            raise PermissionDenied(
+                pgettext("attachments upload", "You can't upload attachments")
+            )
+
+    def process_uploads(
+        self, request: HttpRequest
+    ) -> tuple[list[Attachment], ValidationError | None]:
+        return handle_attachments_upload(request, request.FILES.getlist("upload"))
+
+
 attachment_delete = AttachmentDeleteView.as_view()
 attachment_details = AttachmentDetailsView.as_view()
 attachment_download = AttachmentDownloadView.as_view()
 attachment_thumbnail = AttachmentThumbnailView.as_view()
+attachments_upload = AttachmentsUploadView.as_view()
