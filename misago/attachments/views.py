@@ -20,6 +20,7 @@ from ..permissions.posts import check_see_post_permission
 from .enums import AllowedAttachments
 from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment
+from .serialize import serialize_attachment
 from .upload import handle_attachments_upload
 
 
@@ -218,7 +219,11 @@ class AttachmentsUploadView(View):
 
         attachments, error = self.process_uploads(request)
 
-        data = {}
+        data = {
+            "errors": error.messages if error else [],
+            "attachments": self.serialize_attachments(request, attachments),
+        }
+
         return JsonResponse(data)
 
     def check_permissions(self, request: HttpRequest):
@@ -244,6 +249,11 @@ class AttachmentsUploadView(View):
         self, request: HttpRequest
     ) -> tuple[list[Attachment], ValidationError | None]:
         return handle_attachments_upload(request, request.FILES.getlist("upload"))
+
+    def serialize_attachments(
+        self, request: HttpRequest, attachments: list[Attachment]
+    ) -> list[dict]:
+        return [serialize_attachment(a) for a in attachments]
 
 
 attachment_delete = AttachmentDeleteView.as_view()
