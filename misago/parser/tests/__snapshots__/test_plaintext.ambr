@@ -1,4 +1,7 @@
 # serializer version: 1
+# name: test_render_ast_to_plaintext_attachment
+  'See the logo: file.png'
+# ---
 # name: test_render_ast_to_plaintext_auto_link
   'See the site: https://misago-project.org'
 # ---

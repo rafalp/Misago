@@ -176,6 +176,9 @@ def _render_ast_node_to_plaintext_action(
 
         return href
 
+    if ast_type == "attachment":
+        return ast_node["name"]
+
     if ast_type in ("auto-link", "auto-url"):
         if text_format == PlainTextFormat.META_DESCRIPTION:
             return ""

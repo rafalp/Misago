@@ -137,6 +137,7 @@ class PostingState:
             metadata,
             text_format=PlainTextFormat.SEARCH_DOCUMENT,
         )
+        self.post.metadata["attachments"] = list(metadata["attachments"])
 
         self.message_ast = ast
         self.message_metadata = metadata

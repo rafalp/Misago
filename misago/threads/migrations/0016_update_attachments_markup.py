@@ -194,7 +194,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("misago_attachments", "0006_attachment_populate_thumbnail_size"),
-        ("misago_threads", "0014_plugin_data"),
+        ("misago_threads", "0015_post_metadata"),
     ]
 
     operations = [
