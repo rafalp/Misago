@@ -2,8 +2,11 @@
 # name: test_complete_markup_html_replaces_default_spoiler_summary
   '<details><summary>Reveal spoiler</summary><p>Hello world!</p></details>'
 # ---
+# name: test_render_ast_to_html_attachment
+  '<p>See the site: <attachment=image.png:123></p>'
+# ---
 # name: test_render_ast_to_html_auto_link
-  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+  '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
 # ---
 # name: test_render_ast_to_html_auto_url
   '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'

@@ -121,6 +121,25 @@ class UrlMarkdown(Pattern):
         clean_match, reserved_patterns = self.prepare_match_str(match)
         return self.parse_clean_match(parser, clean_match, reserved_patterns, parents)
 
+    def prepare_match_str(self, match: str) -> tuple[str, dict[str, str]]:
+        clean_match: str = ""
+        reserved_patterns = {}
+
+        cursor = 0
+        for m in self._exclude_patterns_re.finditer(match):
+            if m.start() > cursor:
+                clean_match += match[cursor : m.start()]
+
+            pattern_id = f"%%{get_random_string(8)}%%"
+            clean_match += pattern_id
+            reserved_patterns[pattern_id] = m.group(0)
+            cursor = m.end()
+
+        if cursor < len(match):
+            clean_match += match[cursor:]
+
+        return clean_match, reserved_patterns
+
     def parse_clean_match(
         self,
         parser: Parser,
@@ -172,25 +191,6 @@ class UrlMarkdown(Pattern):
             ast += parser.parse_inline(markup, parents)
 
         return ast
-
-    def prepare_match_str(self, match: str) -> tuple[str, dict[str, str]]:
-        clean_match: str = ""
-        reserved_patterns = {}
-
-        cursor = 0
-        for m in self._exclude_patterns_re.finditer(match):
-            if m.start() > cursor:
-                clean_match += match[cursor : m.start()]
-
-            pattern_id = f"%%{get_random_string(8)}%%"
-            clean_match += pattern_id
-            reserved_patterns[pattern_id] = m.group(0)
-            cursor = m.end()
-
-        if cursor < len(match):
-            clean_match += match[cursor:]
-
-        return clean_match, reserved_patterns
 
     def reverse_text_patterns(self, text: str, reserved_patterns: dict) -> str:
         for token, value in reserved_patterns.items():

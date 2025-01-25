@@ -367,8 +367,14 @@ def test_render_ast_to_html_url_bbcode_with_text(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_attachment(parser_context, parse_markup, snapshot):
+    ast = parse_markup(f"See the site: <attachment=image.png:123>")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_auto_link(parser_context, parse_markup, snapshot):
-    ast = parse_markup(f"See the site: <https://misago-project.org>")
+    ast = parse_markup(f"See the file: <https://misago-project.org>")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 

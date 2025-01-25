@@ -128,6 +128,9 @@ def _render_ast_node_to_html_action(
     if ast_type in ("thematic-break", "thematic-break-bbcode"):
         return "<hr />"
 
+    if ast_type == "attachment":
+        return f"<attachment={ast_node['name']}:{ast_node['id']}>"
+
     if ast_type in ("image", "image-bbcode"):
         src = escape(clean_href(ast_node["src"]))
         alt = escape(ast_node["alt"]) if ast_node["alt"] else ""
