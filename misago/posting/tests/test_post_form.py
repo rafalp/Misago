@@ -49,13 +49,11 @@ def test_post_form_sets_attachments_permissions(dynamic_settings):
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
-            attachment_size_limit=123,
             can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments_permissions.is_moderator
     assert form.attachments_permissions.can_upload_attachments
-    assert form.attachments_permissions.attachment_size_limit == 123
     assert form.attachments_permissions.can_always_delete_own_attachments
 
 
@@ -72,7 +70,6 @@ def test_post_form_populates_attachments_with_unused_attachments_on_init(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )
@@ -94,7 +91,6 @@ def test_post_form_appends_unused_attachments_to_attachments_on_init(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )
@@ -114,7 +110,6 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )
@@ -188,7 +183,6 @@ def test_post_form_show_attachments_is_true_if_user_has_upload_permission(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )
@@ -207,7 +201,6 @@ def test_post_form_show_attachments_is_true_if_form_has_attachments_but_user_can
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -224,7 +217,6 @@ def test_post_form_show_attachments_is_false_if_form_has_no_attachments_and_user
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -241,7 +233,6 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -258,7 +249,6 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -275,7 +265,6 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -292,7 +281,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_has_upload_permissio
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -309,7 +297,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -326,7 +313,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -343,7 +329,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -360,7 +345,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -412,7 +396,6 @@ def test_post_form_includes_upload_field_if_show_attachments_upload_is_true(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         ),
     )
@@ -435,28 +418,27 @@ def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
     assert form.max_attachments == dynamic_settings.post_attachments_limit
 
 
-def test_post_form_attachment_size_limit_returns_size_limit_from_permissions(
-    user, dynamic_settings
+def test_post_form_attachment_size_limit_returns_size_limit_from_user_permissions(
+    user, members_group, dynamic_settings, cache_versions
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    members_group.attachment_size_limit = 42
+    members_group.save()
+
+    request = Mock(
+        settings=dynamic_settings,
+        user=user,
+        user_permissions=UserPermissionsProxy(user, cache_versions),
+    )
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=1234,
             can_always_delete_own_attachments=False,
         ),
     )
-    assert form.attachment_size_limit == 1234
-
-
-def test_post_form_attachment_size_limit_returns_zero_if_permissions_are_not_set(
-    user, dynamic_settings
-):
-    request = Mock(settings=dynamic_settings, user=user)
-    form = PostForm(request=request)
-    assert form.attachment_size_limit == 0
+    assert form.attachment_size_limit == members_group.attachment_size_limit * 1024
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
@@ -596,7 +578,6 @@ def test_post_form_clean_upload_validates_attachments_limit(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )
@@ -624,7 +605,6 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )
@@ -654,7 +634,6 @@ def test_post_form_clean_upload_validates_uploaded_files(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=True,
         ),
     )

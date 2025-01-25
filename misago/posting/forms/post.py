@@ -65,10 +65,7 @@ class PostForm(PostingForm):
 
     @property
     def attachment_size_limit(self) -> int:
-        if not self.attachments_permissions:
-            return 0
-
-        return self.attachments_permissions.attachment_size_limit
+        return self.request.user_permissions.attachment_size_limit
 
     @property
     def accept_attachments(self) -> str:

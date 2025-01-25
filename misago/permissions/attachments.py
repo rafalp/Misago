@@ -34,7 +34,6 @@ __all__ = [
 class AttachmentsPermissions:
     is_moderator: bool
     can_upload_attachments: bool
-    attachment_size_limit: int
     can_always_delete_own_attachments: bool
 
 
@@ -49,14 +48,12 @@ def get_threads_attachments_permissions(
         return AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         )
 
     return AttachmentsPermissions(
         is_moderator=user_permissions.is_category_moderator(category_id),
         can_upload_attachments=bool(user_permissions.can_upload_attachments),
-        attachment_size_limit=user_permissions.attachment_size_limit,
         can_always_delete_own_attachments=user_permissions.can_always_delete_own_attachments,
     )
 
@@ -68,7 +65,6 @@ def get_private_threads_attachments_permissions(
         return AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            attachment_size_limit=0,
             can_always_delete_own_attachments=False,
         )
 
@@ -77,7 +73,6 @@ def get_private_threads_attachments_permissions(
         can_upload_attachments=(
             user_permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
         ),
-        attachment_size_limit=user_permissions.attachment_size_limit,
         can_always_delete_own_attachments=user_permissions.can_always_delete_own_attachments,
     )
 

@@ -590,7 +590,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_user
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert not permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -606,7 +605,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_user
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert not permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -622,7 +620,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_user
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert not permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -638,7 +635,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_user
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert not permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert not permissions.can_always_delete_own_attachments
 
 
@@ -675,7 +671,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_cate
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -697,7 +692,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_cate
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -719,7 +713,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_cate
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -741,7 +734,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_cate
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert not permissions.can_always_delete_own_attachments
 
 
@@ -776,7 +768,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_glob
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -792,7 +783,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_glob
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -808,7 +798,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_glob
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -824,7 +813,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_glob
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert not permissions.can_always_delete_own_attachments
 
 
@@ -859,7 +847,6 @@ def test_get_threads_attachments_permissions_returns_permissions_object_for_priv
     permissions = get_threads_attachments_permissions(proxy, default_category.id)
     assert not permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -884,7 +871,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert not permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -900,7 +886,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert not permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -916,7 +901,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert not permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -932,7 +916,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert not permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert not permissions.can_always_delete_own_attachments
 
 
@@ -951,7 +934,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -973,7 +955,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -995,7 +976,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -1017,7 +997,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert permissions.attachment_size_limit
     assert not permissions.can_always_delete_own_attachments
 
 
@@ -1030,7 +1009,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -1046,7 +1024,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -1062,7 +1039,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert not permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert permissions.can_always_delete_own_attachments
 
 
@@ -1078,7 +1054,6 @@ def test_get_private_threads_attachments_permissions_returns_permissions_object_
     permissions = get_private_threads_attachments_permissions(proxy)
     assert permissions.is_moderator
     assert permissions.can_upload_attachments
-    assert not permissions.attachment_size_limit
     assert not permissions.can_always_delete_own_attachments
 
 
