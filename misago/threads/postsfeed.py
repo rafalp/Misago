@@ -1,10 +1,13 @@
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING, Iterable, Protocol
 
 from django.contrib.auth import get_user_model
 from django.db.models import prefetch_related_objects
 from django.http import HttpRequest
 from django.urls import reverse
 
+from ..attachments.models import Attachment
+from ..categories.models import Category
+from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -12,6 +15,7 @@ from ..permissions.privatethreads import (
 from ..permissions.threads import (
     check_edit_thread_post_permission,
 )
+from ..permissions.proxy import UserPermissionsProxy
 from .hooks import (
     get_posts_feed_item_user_ids_hook,
     get_posts_feed_users_hook,
@@ -82,7 +86,18 @@ class PostsFeed:
         for i, post in enumerate(self.posts):
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
 
-        self.populate_feed_users(feed)
+        loader = get_posts_feed_data_loader(
+            self.request.settings,
+            self.request.user_permissions,
+            posts=self.posts,
+            categories=[self.thread.category],
+            threads=[self.thread],
+        )
+        data = loader.load_data()
+
+        # raise Exception(data)
+
+        # self.populate_feed_users(feed)
 
         return feed
 
@@ -198,3 +213,225 @@ class PrivateThreadPostsFeed(PostsFeed):
             "misago:edit-private-thread",
             kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
         )
+
+
+class DataLoaderOperation(Protocol):
+    def __call__(
+        self,
+        data: dict,
+        settings: DynamicSettings,
+        permissions: UserPermissionsProxy,
+    ) -> None:
+        pass
+
+
+class PostsFeedDataLoader:
+    ops: list[DataLoaderOperation]
+
+    settings: DynamicSettings
+    permissions: User
+
+    categories: list[Category]
+    threads: list[Thread]
+    posts: list[Post]
+    users: list[User]
+
+    def __init__(
+        self,
+        settings: DynamicSettings,
+        permissions: UserPermissionsProxy,
+        *,
+        posts: Iterable[Post],
+        categories: Iterable[Category] | None = None,
+        threads: Iterable[Thread] | None = None,
+        attachments: Iterable[Attachment] | None = None,
+        users: Iterable[User] | None = None,
+    ):
+        self.ops = []
+
+        self.settings = settings
+        self.permissions = permissions
+
+        self.categories = categories or []
+        self.threads = threads or []
+        self.posts = list(posts)
+        self.attachments = attachments or []
+        self.users = users or []
+
+    def add_operation(
+        self,
+        op: DataLoaderOperation,
+        *,
+        after: DataLoaderOperation | None = None,
+        before: DataLoaderOperation | None = None,
+    ):
+        if after and before:
+            raise ValueError("'after' and 'before' option's can't be used together")
+
+        if after:
+            inserted = False
+            new_ops: list[DataLoaderOperation] = []
+
+            for existing_step in self.ops:
+                new_ops.append(existing_step)
+                if existing_step == after:
+                    new_ops.append(op)
+                    inserted = True
+            self.ops = new_ops
+
+            if not inserted:
+                raise ValueError(
+                    f"Operation '{after}' doesn't exist in this loader instance"
+                )
+
+        elif before:
+            prepended = False
+            new_ops: list[DataLoaderOperation] = []
+
+            for existing_step in self.ops:
+                if existing_step == before:
+                    new_ops.append(op)
+                    prepended = True
+                new_ops.append(existing_step)
+            self.ops = new_ops
+
+            if not prepended:
+                raise ValueError(
+                    f"Operation '{after}' doesn't exist in this loader instance"
+                )
+
+        else:
+            self.ops.append(op)
+
+    def load_data(self) -> dict:
+        data = {
+            "categories_ids": set(),
+            "threads_ids": set(),
+            "posts_ids": set(),
+            "attachments_ids": set(),
+            "categories": {c.id: c for c in self.categories},
+            "threads": {t.id: t for t in self.threads},
+            "posts": {p.id: p for p in self.posts},
+            "attachments": {a.id: a for a in self.attachments},
+            "users": {u.id: u for u in self.users},
+        }
+
+        for op in self.ops:
+            op(data, self.settings, self.permissions)
+
+        return data
+
+
+def get_posts_feed_data_loader(
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+    *,
+    posts: Iterable[Post],
+    categories: Iterable[Category] | None = None,
+    threads: Iterable[Thread] | None = None,
+    attachments: Iterable[Attachment] | None = None,
+    users: Iterable[User] | None = None,
+) -> PostsFeedDataLoader:
+    loader = PostsFeedDataLoader(
+        settings,
+        permissions,
+        posts=posts,
+        categories=categories,
+        threads=threads,
+        attachments=attachments,
+        users=users,
+    )
+
+    loader.add_operation(find_attachments_ids)
+    loader.add_operation(load_attachments)
+    loader.add_operation(find_categories_ids)
+    loader.add_operation(find_threads_ids)
+    loader.add_operation(find_posts_ids)
+    loader.add_operation(find_users_ids)
+    loader.add_operation(load_categories)
+    loader.add_operation(load_threads)
+    loader.add_operation(load_posts)
+    loader.add_operation(load_users)
+
+    return loader
+
+
+def find_categories_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def find_threads_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def find_posts_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def find_attachments_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for post in data["posts"].values():
+        data["attachments_ids"].update(post.metadata.get("attachments", []))
+
+
+def find_users_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def load_categories(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def load_threads(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def load_posts(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def load_attachments(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
+
+
+def load_users(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    pass
