@@ -50,6 +50,9 @@
               </div>
               <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
             </div>
+            <button type="button" misago-editor-action="attachment" misago-editor-attachment="{{ attachment.name }}:{{ attachment.id }}">
+              {% trans "Insert" context "markup editor insert attachment btn" %}
+            </button>
           </li>
         {% endfor %}
       </ul>
@@ -81,6 +84,9 @@
                 <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
               </div>
             </div>
+            <button type="button" misago-editor-action="attachment" misago-editor-attachment="{{ attachment.name }}:{{ attachment.id }}">
+              {% trans "Insert" context "markup editor insert attachment btn" %}
+            </button>
           </li>
         {% endfor %}
       </ul>

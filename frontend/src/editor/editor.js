@@ -34,7 +34,6 @@ class MarkupEditor {
 
   _resizeEditor = (element) => {
     const constraints = this._getResizeConstraints(element)
-    console.log(constraints)
     const firstToolbar = element.querySelector(".markup-editor-toolbar-left")
     const secondToolbar = element.querySelector(
       ".markup-editor-toolbar-secondary"
@@ -170,23 +169,30 @@ class MarkupEditor {
   _setEditorActions(element) {
     const input = element.querySelector("textarea")
 
-    element.querySelectorAll("[misago-editor-action]").forEach((control) => {
-      const actionName = control.getAttribute("misago-editor-action")
-      control.addEventListener("click", (event) => {
-        event.preventDefault()
+    element.addEventListener("click", (event) => {
+      const target = event.target.closest("[misago-editor-action]")
+      if (!target) {
+        return null
+      }
 
-        const action = this.actions[actionName]
-        if (action) {
-          action({
-            input,
-            target: event.target,
-            editor: this,
-            selection: new MarkupEditorSelection(input),
-          })
-        } else {
-          console.warn("Undefined editor action: " + actionName)
-        }
-      })
+      const actionName = target.getAttribute("misago-editor-action")
+      if (!actionName) {
+        return null
+      }
+
+      event.preventDefault()
+
+      const action = this.actions[actionName]
+      if (action) {
+        action({
+          input,
+          target,
+          editor: this,
+          selection: new MarkupEditorSelection(input),
+        })
+      } else {
+        console.warn("Undefined editor action: " + actionName)
+      }
     })
 
     element
@@ -284,6 +290,16 @@ class MarkupEditorSelection {
     }
 
     this._range.length = this._range.end - this._range.start
+
+    this.refocus()
+  }
+
+  insert(text) {
+    const value = this._range.prefix + text + this._range.suffix
+    this.input.value = value
+
+    this._range.end = this._range.start = this._range.start + text.length
+    this._range.length = 0
 
     this.refocus()
   }
@@ -404,6 +420,13 @@ editor.setAction("spoiler", function ({ selection }) {
 
 editor.setAction("code", function ({ editor, selection }) {
   editor.showCodeModal(selection)
+})
+
+editor.setAction("attachment", function ({ target, selection }) {
+  const attachment = target.getAttribute("misago-editor-attachment")
+  if (attachment) {
+    selection.insert("<attachment=" + attachment + ">")
+  }
 })
 
 editor.setAction("formatting-help", function ({ target }) {
