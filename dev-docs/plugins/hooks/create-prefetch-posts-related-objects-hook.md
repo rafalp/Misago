@@ -1,4 +1,4 @@
-# `create_posts_related_objects_prefetch_hook`
+# `create_prefetch_posts_related_objects_hook`
 
 This hook wraps the standard function Misago uses to create a `PrefetchPostsRelatedObjects` object, which prefetches related objects for posts displayed on a thread replies page.
 
@@ -14,15 +14,15 @@ Additional prefetch operations can be added using the add_operation method.
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import create_posts_related_objects_prefetch_hook
+from misago.threads.hooks import create_prefetch_posts_related_objects_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_create_posts_related_objects_prefetch_filter(
-    action: GetCategoryThreadsPageFiltersHookAction,
+def custom_create_prefetch_posts_related_objects_filter(
+    action: CreatePrefetchPostsRelatedObjectsHookAction,
     posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
@@ -40,7 +40,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetCategoryThreadsPageFiltersHookAction`
+#### `action: CreatePrefetchPostsRelatedObjectsHookAction`
 
 A standard Misago function used to create a `PrefetchPostsRelatedObjects` object, which is used to prefetch related objects for posts displayed on a thread replies page.
 
@@ -65,7 +65,7 @@ A Python `list` with `ThreadsFilter` instances.
 ## Action
 
 ```python
-def create_posts_related_objects_prefetch_action(
+def create_prefetch_posts_related_objects_action(
     posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
@@ -91,6 +91,31 @@ Iterable of `Post` instances to prefetch related objects for.
 #### `settings: DynamicSettings`
 
 The `DynamicSettings` object.
+
+
+#### `permissions: UserPermissionsProxy`
+
+The `UserPermissionsProxy` object for current user.
+
+
+#### `categories: Iterable[Category] | None = None`
+
+Iterable of categories that were already loaded. Defaults to `None` if not provided.
+
+
+#### `threads: Iterable[Thread] | None = None`
+
+Iterable of threads that were already loaded. Defaults to `None` if not provided.
+
+
+#### `attachments: Iterable[Attachment] | None = None`
+
+Iterable of attachments that were already loaded. Defaults to `None` if not provided.
+
+
+#### `users: Iterable["User"] | None = None`
+
+Iterable of users that were already loaded. Defaults to `None` if not provided.
 
 
 ### Return value
@@ -133,9 +158,9 @@ def fetch_posts_plugin_data(
         data["plugin_models"] = {u.id: u for u in queryset}
 
 
-@create_posts_related_objects_prefetch_hook.append_filter
+@create_prefetch_posts_related_objects_hook.append_filter
 def include_custom_filter(
-    action: GetCategoryThreadsPageFiltersHookAction,
+    action: CreatePrefetchPostsRelatedObjectsHookAction,
     posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
@@ -146,9 +171,9 @@ def include_custom_filter(
     users: Iterable["User"] | None = None,
 ) -> PrefetchPostsRelatedObjects:
     prefetch = action(
+        posts,
         settings,
         permissions,
-        posts=posts,
         categories=categories,
         threads=threads,
         attachments=attachments,

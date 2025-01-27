@@ -8,7 +8,8 @@ from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
-from .hooks import create_posts_related_objects_prefetch_hook
+from ..users.models import Group
+from .hooks import create_prefetch_posts_related_objects_hook
 from .models import Post, Thread
 
 if TYPE_CHECKING:
@@ -33,20 +34,20 @@ def prefetch_posts_related_objects(
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
-    loader = create_posts_related_objects_prefetch_hook(
-        _create_posts_related_objects_prefetch_action,
+    loader = create_prefetch_posts_related_objects_hook(
+        _create_prefetch_posts_related_objects_action,
+        posts,
         settings,
         permissions,
-        posts=posts,
         categories=categories,
         threads=threads,
         attachments=attachments,
         users=users,
     )
-    return loader.fetch_data()
+    return loader()
 
 
-def _create_posts_related_objects_prefetch_action(
+def _create_prefetch_posts_related_objects_action(
     posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
@@ -76,6 +77,7 @@ def _create_posts_related_objects_prefetch_action(
     loader.add_operation(fetch_threads)
     loader.add_operation(fetch_posts)
     loader.add_operation(fetch_users)
+    loader.add_operation(fetch_users_groups)
     loader.add_operation(filter_attachments)
 
     return loader
@@ -289,6 +291,20 @@ def fetch_users(
     if ids_to_fetch := data["user_ids"].difference(data["users"]):
         queryset = User.objects.filter(id__in=ids_to_fetch, is_active=True)
         data["users"].update({u.id: u for u in queryset})
+
+
+def fetch_users_groups(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    users = data["users"].values()
+
+    ids_to_fetch: set[int] = set(u.group_id for u in users)
+    if ids_to_fetch:
+        groups = {g.id: g for g in Group.objects.filter(id__in=ids_to_fetch)}
+        for user in users:
+            user.group = groups[user.group_id]
 
 
 def filter_attachments(

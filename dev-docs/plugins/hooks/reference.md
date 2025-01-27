@@ -135,7 +135,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.threads.hooks` defines the following hooks:
 
-- [`create_posts_related_objects_prefetch_hook`](./create-posts-related-objects-prefetch-hook.md)
+- [`create_prefetch_posts_related_objects_hook`](./create-prefetch-posts-related-objects-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)

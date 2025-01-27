@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from ..prefetch import PrefetchPostsRelatedObjects
 
 
-class GetCategoryThreadsPageFiltersHookAction(Protocol):
+class CreatePrefetchPostsRelatedObjectsHookAction(Protocol):
     """
     A standard Misago function used to create a `PrefetchPostsRelatedObjects`
     object, which is used to prefetch related objects for posts displayed on
@@ -27,6 +27,28 @@ class GetCategoryThreadsPageFiltersHookAction(Protocol):
     ## `settings: DynamicSettings`
 
     The `DynamicSettings` object.
+
+    ## `permissions: UserPermissionsProxy`
+
+    The `UserPermissionsProxy` object for current user.
+
+    ## `categories: Iterable[Category] | None = None`
+
+    Iterable of categories that were already loaded. Defaults to `None` if not
+    provided.
+
+    ## `threads: Iterable[Thread] | None = None`
+
+    Iterable of threads that were already loaded. Defaults to `None` if not provided.
+
+    ## `attachments: Iterable[Attachment] | None = None`
+
+    Iterable of attachments that were already loaded. Defaults to `None` if not
+    provided.
+
+    ## `users: Iterable["User"] | None = None`
+
+    Iterable of users that were already loaded. Defaults to `None` if not provided.
 
     # Return value
 
@@ -46,13 +68,13 @@ class GetCategoryThreadsPageFiltersHookAction(Protocol):
     ) -> "PrefetchPostsRelatedObjects": ...
 
 
-class GetCategoryThreadsPageFiltersHookFilter(Protocol):
+class CreatePrefetchPostsRelatedObjectsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetCategoryThreadsPageFiltersHookAction`
+    ## `action: CreatePrefetchPostsRelatedObjectsHookAction`
 
     A standard Misago function used to create a `PrefetchPostsRelatedObjects`
     object, which is used to prefetch related objects for posts displayed on
@@ -75,7 +97,7 @@ class GetCategoryThreadsPageFiltersHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetCategoryThreadsPageFiltersHookAction,
+        action: CreatePrefetchPostsRelatedObjectsHookAction,
         posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
@@ -87,10 +109,10 @@ class GetCategoryThreadsPageFiltersHookFilter(Protocol):
     ) -> "PrefetchPostsRelatedObjects": ...
 
 
-class GetCategoryThreadsPageFiltersHook(
+class CreatePrefetchPostsRelatedObjectsHook(
     FilterHook[
-        GetCategoryThreadsPageFiltersHookAction,
-        GetCategoryThreadsPageFiltersHookFilter,
+        CreatePrefetchPostsRelatedObjectsHookAction,
+        CreatePrefetchPostsRelatedObjectsHookFilter,
     ]
 ):
     """
@@ -144,9 +166,9 @@ class GetCategoryThreadsPageFiltersHook(
             data["plugin_models"] = {u.id: u for u in queryset}
 
 
-    @create_posts_related_objects_prefetch_hook.append_filter
+    @create_prefetch_posts_related_objects_hook.append_filter
     def include_custom_filter(
-        action: GetCategoryThreadsPageFiltersHookAction,
+        action: CreatePrefetchPostsRelatedObjectsHookAction,
         posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
@@ -157,9 +179,9 @@ class GetCategoryThreadsPageFiltersHook(
         users: Iterable["User"] | None = None,
     ) -> PrefetchPostsRelatedObjects:
         prefetch = action(
+            posts,
             settings,
             permissions,
-            posts=posts,
             categories=categories,
             threads=threads,
             attachments=attachments,
@@ -176,7 +198,7 @@ class GetCategoryThreadsPageFiltersHook(
 
     def __call__(
         self,
-        action: GetCategoryThreadsPageFiltersHookAction,
+        action: CreatePrefetchPostsRelatedObjectsHookAction,
         posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
@@ -188,9 +210,9 @@ class GetCategoryThreadsPageFiltersHook(
     ) -> "PrefetchPostsRelatedObjects":
         return super().__call__(
             action,
+            posts,
             settings,
             permissions,
-            posts=posts,
             categories=categories,
             threads=threads,
             attachments=attachments,
@@ -198,6 +220,6 @@ class GetCategoryThreadsPageFiltersHook(
         )
 
 
-create_posts_related_objects_prefetch_hook = GetCategoryThreadsPageFiltersHook(
+create_prefetch_posts_related_objects_hook = CreatePrefetchPostsRelatedObjectsHook(
     cache=False
 )
