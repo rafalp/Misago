@@ -1,4 +1,4 @@
-from .attachments import AttachmentsPostProcessor
+from .attachment import AttachmentPostProcessor
 from .block import BlockPostProcessor
 from .quote import QuoteBBCodePostProcessor
 from .removerepeats import RemoveRepeatsPostProcessor
@@ -6,7 +6,7 @@ from .spoiler import SpoilerBBCodePostProcessor
 from .thematicbreak import RemoveThematicBreaksRepeatsPostProcessor
 
 __all__ = [
-    "AttachmentsPostProcessor",
+    "AttachmentPostProcessor",
     "BlockPostProcessor",
     "QuoteBBCodePostProcessor",
     "RemoveRepeatsPostProcessor",
@@ -18,5 +18,5 @@ post_processors = [
     QuoteBBCodePostProcessor(),
     SpoilerBBCodePostProcessor(),
     RemoveThematicBreaksRepeatsPostProcessor(),
-    AttachmentsPostProcessor(),
+    AttachmentPostProcessor(),
 ]
