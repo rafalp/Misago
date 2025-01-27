@@ -1,0 +1,7 @@
+<a href="{{ attachment.get_details_url }}" target="_blank">
+  {% if attachment.thumbnail %}
+    <img src="{{ attachment.get_thumbnail_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}">
+  {% else %}
+    <img src="{{ attachment.get_absolute_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}">
+  {% endif %}
+</a>

@@ -1,14 +1,21 @@
+import re
+from functools import partial
 from html import escape
 
+from django.template.loader import render_to_string
 from django.utils.translation import pgettext
 
+from ..attachments.models import Attachment
 from ..core.utils import slugify
 from .context import ParserContext
 from .exceptions import AstError
-from .hooks import complete_markup_html_hook, render_ast_node_to_html_hook
+from .hooks import (
+    render_ast_node_to_html_hook,
+    replace_rich_text_tokens_hook,
+)
 from .urls import clean_href
 
-SPOILER_SUMMARY = "<spoiler-summary-message>"
+SPOILER_SUMMARY_TOKEN = "<spoiler-summary-message>"
 
 
 def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) -> str:
@@ -85,7 +92,7 @@ def _render_ast_node_to_html_action(
         if ast_node["summary"]:
             summary = escape(ast_node["summary"])
         else:
-            summary = SPOILER_SUMMARY
+            summary = SPOILER_SUMMARY_TOKEN
         children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<details><summary>{summary}</summary>{children}</details>"
 
@@ -170,19 +177,52 @@ def _render_ast_node_to_html_action(
     raise AstError(f"Unknown AST node type: {ast_type}")
 
 
-def complete_markup_html(html: str, **kwargs) -> str:
-    return complete_markup_html_hook(_complete_markup_html_action, html, **kwargs)
+def replace_rich_text_tokens(html: str, data: dict | None = None) -> str:
+    if data is None:
+        data = {}
+
+    return replace_rich_text_tokens_hook(_replace_rich_text_tokens_action, html, data)
 
 
-def _complete_markup_html_action(html: str, **kwargs) -> str:
-    html = complete_markup_html_spoiler_summary(html)
+def _replace_rich_text_tokens_action(html: str, data) -> str:
+    html = replace_rich_text_tokens_attachments(html, data.get("attachments"))
+    html = replace_rich_text_tokens_spoiler_summary(html)
+
     return html
 
 
-def complete_markup_html_spoiler_summary(html: str) -> str:
-    if SPOILER_SUMMARY in html:
+def replace_rich_text_tokens_spoiler_summary(html: str) -> str:
+    if SPOILER_SUMMARY_TOKEN in html:
         html = html.replace(
-            SPOILER_SUMMARY, pgettext("spoiler summary", "Reveal spoiler")
+            SPOILER_SUMMARY_TOKEN, pgettext("spoiler summary", "Reveal spoiler")
         )
 
     return html
+
+
+ATTACHMENT_TOKEN = re.compile(r"\<attachment=(.+?)\>")
+
+
+def replace_rich_text_tokens_attachments(
+    html: str, attachments: dict[int, Attachment] | None
+) -> str:
+    attachments = attachments or {}
+    replace = partial(replace_rich_text_attachment_token, attachments)
+    return ATTACHMENT_TOKEN.sub(replace, html)
+
+
+def replace_rich_text_attachment_token(
+    attachments: dict[int, Attachment], matchobj
+) -> str:
+    name, id = matchobj.group(1).split(":")
+    if attachment := attachments.get(int(id)):
+        if attachment.filetype.is_image:
+            template_name = "misago/rich_text/image_attachment.html"
+        elif attachment.filetype.is_video:
+            template_name = "misago/rich_text/video_attachment.html"
+        else:
+            template_name = "misago/rich_text/file_attachment.html"
+
+        return render_to_string(template_name, {"attachment": attachment})
+
+    return "MISS"

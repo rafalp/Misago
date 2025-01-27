@@ -5,7 +5,7 @@ from .urls import ImgBBCode, ImgMarkdown, UrlBBCode, UrlMarkdown
 
 class AttachmentMarkdown(Pattern):
     pattern_type: str = "attachment"
-    pattern: str = r"\<attachment=[^>]+\>"
+    pattern: str = r"\<attachment=.+?\>"
     invalid_parents: set[str] = {
         ImgBBCode.pattern_type,
         ImgMarkdown.pattern_type,

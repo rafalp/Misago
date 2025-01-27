@@ -265,7 +265,7 @@ class ImgMarkdown(Pattern):
 
 class AutolinkMarkdown(Pattern):
     pattern_type: str = "auto-link"
-    pattern: str = r"\<!?[^\s]*?\>"
+    pattern: str = r"\<!?[^\s]+?\>"
     invalid_parents: set[str] = {UrlMarkdown.pattern_type, UrlBBCode.pattern_type}
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:

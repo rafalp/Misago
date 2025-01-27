@@ -1,7 +1,4 @@
 # serializer version: 1
-# name: test_complete_markup_html_replaces_default_spoiler_summary
-  '<details><summary>Reveal spoiler</summary><p>Hello world!</p></details>'
-# ---
 # name: test_render_ast_to_html_attachment
   '<p>See the site: <attachment=image.png:123></p>'
 # ---
@@ -179,4 +176,7 @@
 # ---
 # name: test_render_ast_to_html_url_bbcode_with_text
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+# ---
+# name: test_replace_rich_text_tokens_replaces_default_spoiler_summary
+  '<details><summary>Reveal spoiler</summary><p>Hello world!</p></details>'
 # ---
