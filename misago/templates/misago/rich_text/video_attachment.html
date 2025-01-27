@@ -1,7 +1,7 @@
 {% load i18n %}
-<span class="misago-rich-text-video">
+<div class="misago-rich-text-video">
   <video controls>
     <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
     {% trans "Your browser does not support video tag." context "attachment video player" %}
   </video>
-</span>
+</div>

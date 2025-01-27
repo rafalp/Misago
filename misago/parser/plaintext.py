@@ -101,7 +101,7 @@ def _render_ast_node_to_plaintext_action(
 
     if ast_type == "list":
         items: list[str] = []
-        for i, ast_item in enumerate(ast_node["items"]):
+        for i, ast_item in enumerate(ast_node["children"]):
             if children := render_inline_ast_to_plaintext(
                 context, ast_item["children"], metadata, text_format
             ).strip():

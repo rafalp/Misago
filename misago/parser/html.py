@@ -48,7 +48,7 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "list":
         html_tag = "ol" if ast_node["ordered"] else "ul"
-        children = render_ast_to_html(context, ast_node["items"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<{html_tag}>{children}</{html_tag}>"
 
     if ast_type == "list-item":
