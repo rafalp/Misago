@@ -25,6 +25,7 @@ Hooks instances are importable from the following Python modules:
 - [`delete_users_attachments_hook`](./delete-users-attachments-hook.md)
 - [`get_attachment_details_page_context_data_hook`](./get-attachment-details-page-context-data-hook.md)
 - [`get_attachment_plugin_data_hook`](./get-attachment-plugin-data-hook.md)
+- [`serialize_attachment_hook`](./serialize-attachment-hook.md)
 
 
 ## `misago.categories.hooks`
@@ -50,11 +51,11 @@ Hooks instances are importable from the following Python modules:
 
 `misago.parser.hooks` defines the following hooks:
 
-- [`complete_markup_html_hook`](./complete-markup-html-hook.md)
 - [`create_parser_hook`](./create-parser-hook.md)
 - [`get_ast_metadata_users_queryset_hook`](./get-ast-metadata-users-queryset-hook.md)
 - [`render_ast_node_to_html_hook`](./render-ast-node-to-html-hook.md)
 - [`render_ast_node_to_plaintext_hook`](./render-ast-node-to-plaintext-hook.md)
+- [`replace_rich_text_tokens_hook`](./replace-rich-text-tokens-hook.md)
 - [`setup_parser_context_hook`](./setup-parser-context-hook.md)
 - [`update_ast_metadata_from_node_hook`](./update-ast-metadata-from-node-hook.md)
 - [`update_ast_metadata_hook`](./update-ast-metadata-hook.md)
@@ -79,6 +80,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_reply_private_thread_permission_hook`](./check-reply-private-thread-permission-hook.md)
 - [`check_reply_thread_permission_hook`](./check-reply-thread-permission-hook.md)
 - [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
+- [`check_see_post_permission_hook`](./check-see-post-permission-hook.md)
 - [`check_see_private_thread_permission_hook`](./check-see-private-thread-permission-hook.md)
 - [`check_see_private_thread_post_permission_hook`](./check-see-private-thread-post-permission-hook.md)
 - [`check_see_thread_permission_hook`](./check-see-thread-permission-hook.md)
@@ -133,6 +135,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.threads.hooks` defines the following hooks:
 
+- [`create_posts_related_objects_prefetch_hook`](./create-posts-related-objects-prefetch-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)

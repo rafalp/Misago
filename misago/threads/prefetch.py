@@ -8,12 +8,19 @@ from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
+from .hooks import create_posts_related_objects_prefetch_hook
 from .models import Post, Thread
 
 if TYPE_CHECKING:
     from ..users.models import User
 else:
     User = get_user_model()
+
+__all__ = [
+    "PrefetchPostsRelatedObjects",
+    "PrefetchPostsRelationsOperation",
+    "prefetch_posts_related_objects",
+]
 
 
 def prefetch_posts_related_objects(
@@ -24,8 +31,31 @@ def prefetch_posts_related_objects(
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
     attachments: Iterable[Attachment] | None = None,
-    users: Iterable[User] | None = None,
+    users: Iterable["User"] | None = None,
 ) -> dict:
+    loader = create_posts_related_objects_prefetch_hook(
+        _create_posts_related_objects_prefetch_action,
+        settings,
+        permissions,
+        posts=posts,
+        categories=categories,
+        threads=threads,
+        attachments=attachments,
+        users=users,
+    )
+    return loader.fetch_data()
+
+
+def _create_posts_related_objects_prefetch_action(
+    posts: Iterable[Post],
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+    *,
+    categories: Iterable[Category] | None = None,
+    threads: Iterable[Thread] | None = None,
+    attachments: Iterable[Attachment] | None = None,
+    users: Iterable["User"] | None = None,
+) -> "PrefetchPostsRelatedObjects":
     loader = PrefetchPostsRelatedObjects(
         settings,
         permissions,
@@ -48,7 +78,7 @@ def prefetch_posts_related_objects(
     loader.add_operation(fetch_users)
     loader.add_operation(filter_attachments)
 
-    return loader.fetch_data()
+    return loader
 
 
 class PrefetchPostsRelationsOperation(Protocol):
@@ -82,7 +112,7 @@ class PrefetchPostsRelatedObjects:
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
         attachments: Iterable[Attachment] | None = None,
-        users: Iterable[User] | None = None,
+        users: Iterable["User"] | None = None,
         **kwargs,
     ):
         self.ops = []
@@ -100,6 +130,27 @@ class PrefetchPostsRelatedObjects:
             self.users.append(permissions.user)
 
         self.extra_kwargs = kwargs
+
+    def __call__(self) -> dict:
+        data = {
+            "category_ids": set(),
+            "thread_ids": set(),
+            "post_ids": set(),
+            "attachment_ids": set(),
+            "user_ids": set(),
+            "categories": {c.id: c for c in self.categories},
+            "threads": {t.id: t for t in self.threads},
+            "posts": {p.id: p for p in self.posts},
+            "attachments": {a.id: a for a in self.attachments},
+            "attachment_errors": {},
+            "users": {u.id: u for u in self.users},
+            "extra_kwargs": self.extra_kwargs,
+        }
+
+        for op in self.ops:
+            op(data, self.settings, self.permissions)
+
+        return data
 
     def add_operation(
         self,
@@ -145,27 +196,6 @@ class PrefetchPostsRelatedObjects:
 
         else:
             self.ops.append(op)
-
-    def fetch_data(self) -> dict:
-        data = {
-            "category_ids": set(),
-            "thread_ids": set(),
-            "post_ids": set(),
-            "attachment_ids": set(),
-            "user_ids": set(),
-            "categories": {c.id: c for c in self.categories},
-            "threads": {t.id: t for t in self.threads},
-            "posts": {p.id: p for p in self.posts},
-            "attachments": {a.id: a for a in self.attachments},
-            "attachment_errors": {},
-            "users": {u.id: u for u in self.users},
-            "extra_kwargs": self.extra_kwargs,
-        }
-
-        for op in self.ops:
-            op(data, self.settings, self.permissions)
-
-        return data
 
 
 def find_category_ids(

@@ -1,6 +1,6 @@
-# `check_see_thread_post_permission_hook`
+# `check_see_post_permission_hook`
 
-This hook wraps the standard Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+This hook wraps the standard Misago function used to check if the user has a permission to see a post. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook wraps the standard Misago function used to check if the user has a per
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import check_see_thread_post_permission_hook
+from misago.permissions.hooks import check_see_post_permission_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_check_see_thread_post_permission_filter(
-    action: CheckSeeThreadPostPermissionHookAction,
+def custom_check_see_post_permission_filter(
+    action: CheckSeePostPermissionHookAction,
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -30,9 +30,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CheckSeeThreadPostPermissionHookAction`
+#### `action: CheckSeePostPermissionHookAction`
 
-A standard Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+A standard Misago function used to check if the user has a permission to see a post. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
 
 See the [action](#action) section for details.
 
@@ -60,7 +60,7 @@ A post to check permissions for.
 ## Action
 
 ```python
-def check_see_thread_post_permission_action(
+def check_see_post_permission_action(
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -69,7 +69,7 @@ def check_see_thread_post_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+A standard Misago function used to check if the user has a permission to see a post. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
 
 
 ### Arguments
@@ -96,17 +96,17 @@ A post to check permissions for.
 
 ## Example
 
-The code below implements a custom filter function that blocks a user from seeing a specified post if there is a custom flag set on their account.
+The code below implements a custom filter function that blocks a user from seeing a specified thread's post if there is a custom flag set on their account.
 
 ```python
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 from misago.categories.models import Category
-from misago.permissions.hooks import check_see_thread_post_permission_hook
+from misago.permissions.hooks import check_see_post_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Post, Thread
 
-@check_see_thread_post_permission_hook.append_filter
+@check_see_post_permission_hook.append_filter
 def check_user_can_see_thread_post(
     action,
     permissions: UserPermissionsProxy,
@@ -117,7 +117,7 @@ def check_user_can_see_thread_post(
     # Run standard permission checks
     action(permissions, category, thread, post)
 
-    if post.id in permissions.user.plugin_data.get("hidden_post", []):
+    if thread.id in permissions.user.plugin_data.get("hidden_post", []):
         raise PermissionDenied(
             pgettext(
                 "post permission error",

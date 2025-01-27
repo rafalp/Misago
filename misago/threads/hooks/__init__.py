@@ -1,3 +1,6 @@
+from .create_posts_related_objects_prefetch import (
+    create_posts_related_objects_prefetch_hook,
+)
 from .get_category_threads_page_context_data import (
     get_category_threads_page_context_data_hook,
 )
@@ -69,6 +72,7 @@ from .get_threads_page_threads import get_threads_page_threads_hook
 from .set_posts_feed_item_users import set_posts_feed_item_users_hook
 
 __all__ = [
+    "create_posts_related_objects_prefetch_hook",
     "get_category_threads_page_context_data_hook",
     "get_category_threads_page_filters_hook",
     "get_category_threads_page_moderation_actions_hook",
