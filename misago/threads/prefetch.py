@@ -34,7 +34,7 @@ def prefetch_posts_related_objects(
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
-    loader = create_prefetch_posts_related_objects_hook(
+    prefetch = create_prefetch_posts_related_objects_hook(
         _create_prefetch_posts_related_objects_action,
         posts,
         settings,
@@ -44,7 +44,7 @@ def prefetch_posts_related_objects(
         attachments=attachments,
         users=users,
     )
-    return loader()
+    return prefetch()
 
 
 def _create_prefetch_posts_related_objects_action(
@@ -57,7 +57,7 @@ def _create_prefetch_posts_related_objects_action(
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> "PrefetchPostsRelatedObjects":
-    loader = PrefetchPostsRelatedObjects(
+    prefetch = PrefetchPostsRelatedObjects(
         settings,
         permissions,
         posts=posts,
@@ -67,20 +67,20 @@ def _create_prefetch_posts_related_objects_action(
         users=users,
     )
 
-    loader.add_operation(find_attachment_ids)
-    loader.add_operation(fetch_attachments)
-    loader.add_operation(find_post_ids)
-    loader.add_operation(find_thread_ids)
-    loader.add_operation(find_category_ids)
-    loader.add_operation(find_users_ids)
-    loader.add_operation(fetch_posts)
-    loader.add_operation(fetch_threads)
-    loader.add_operation(fetch_categories)
-    loader.add_operation(fetch_users)
-    loader.add_operation(fetch_users_groups)
-    loader.add_operation(filter_attachments)
+    prefetch.add_operation(find_attachment_ids)
+    prefetch.add_operation(fetch_attachments)
+    prefetch.add_operation(find_post_ids)
+    prefetch.add_operation(find_thread_ids)
+    prefetch.add_operation(find_category_ids)
+    prefetch.add_operation(find_users_ids)
+    prefetch.add_operation(fetch_posts)
+    prefetch.add_operation(fetch_threads)
+    prefetch.add_operation(fetch_categories)
+    prefetch.add_operation(fetch_users)
+    prefetch.add_operation(fetch_users_groups)
+    prefetch.add_operation(check_attachments_permissions)
 
-    return loader
+    return prefetch
 
 
 class PrefetchPostsRelationsOperation(Protocol):
@@ -328,7 +328,7 @@ def fetch_users_groups(
             user.group = groups[user.group_id]
 
 
-def filter_attachments(
+def check_attachments_permissions(
     data: dict,
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
