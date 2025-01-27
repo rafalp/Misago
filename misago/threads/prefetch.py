@@ -69,13 +69,13 @@ def _create_prefetch_posts_related_objects_action(
 
     loader.add_operation(find_attachment_ids)
     loader.add_operation(fetch_attachments)
-    loader.add_operation(find_category_ids)
-    loader.add_operation(find_thread_ids)
     loader.add_operation(find_post_ids)
+    loader.add_operation(find_thread_ids)
+    loader.add_operation(find_category_ids)
     loader.add_operation(find_users_ids)
-    loader.add_operation(fetch_categories)
-    loader.add_operation(fetch_threads)
     loader.add_operation(fetch_posts)
+    loader.add_operation(fetch_threads)
+    loader.add_operation(fetch_categories)
     loader.add_operation(fetch_users)
     loader.add_operation(fetch_users_groups)
     loader.add_operation(filter_attachments)
@@ -205,7 +205,15 @@ def find_category_ids(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    pass
+    for post in data["posts"].values():
+        data["category_ids"].add(post.category_id)
+
+    for thread in data["threads"].values():
+        data["category_ids"].add(thread.category_id)
+
+    for attachment in data["attachments"].values():
+        if attachment.category_id:
+            data["category_ids"].add(attachment.category_id)
 
 
 def find_thread_ids(
@@ -213,7 +221,12 @@ def find_thread_ids(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    pass
+    for post in data["posts"].values():
+        data["thread_ids"].add(post.thread_id)
+
+    for attachment in data["attachments"].values():
+        if attachment.thread_id:
+            data["thread_ids"].add(attachment.thread_id)
 
 
 def find_post_ids(
@@ -221,7 +234,9 @@ def find_post_ids(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    pass
+    for attachment in data["attachments"].values():
+        if attachment.post_id:
+            data["post_ids"].add(attachment.post_id)
 
 
 def find_attachment_ids(
@@ -247,7 +262,9 @@ def fetch_categories(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    pass
+    if ids_to_fetch := data["category_ids"].difference(data["categories"]):
+        queryset = Category.objects.filter(id__in=ids_to_fetch)
+        data["categories"].update({c.id: c for c in queryset})
 
 
 def fetch_threads(
@@ -255,7 +272,9 @@ def fetch_threads(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    pass
+    if ids_to_fetch := data["thread_ids"].difference(data["threads"]):
+        queryset = Thread.objects.filter(id__in=ids_to_fetch)
+        data["threads"].update({t.id: t for t in queryset})
 
 
 def fetch_posts(
@@ -263,7 +282,9 @@ def fetch_posts(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    pass
+    if ids_to_fetch := data["post_ids"].difference(data["posts"]):
+        queryset = Post.objects.filter(id__in=ids_to_fetch)
+        data["posts"].update({p.id: p for p in queryset})
 
 
 def fetch_attachments(
@@ -318,20 +339,20 @@ def filter_attachments(
 
     accessible_attachments: dict[int, Attachment] = {}
     for attachment in attachments_list:
-        category = None
-        thread = None
-        post = None
-
         if attachment.category_id:
-            category = data["categories"][attachment.category_id]
+            attachment.category = data["categories"][attachment.category_id]
         if attachment.thread_id:
-            thread = data["threads"][attachment.thread_id]
+            attachment.thread = data["threads"][attachment.thread_id]
         if attachment.post_id:
-            post = data["posts"][attachment.post_id]
+            attachment.post = data["posts"][attachment.post_id]
 
         with check_permissions() as can_download:
             check_download_attachment_permission(
-                permissions, category, thread, post, attachment
+                permissions,
+                attachment.category,
+                attachment.thread,
+                attachment.post,
+                attachment,
             )
 
         if can_download:
