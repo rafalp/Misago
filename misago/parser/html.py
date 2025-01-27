@@ -1,21 +1,10 @@
-import re
-from functools import partial
 from html import escape
 
-from django.template.loader import render_to_string
-from django.utils.translation import pgettext
-
-from ..attachments.models import Attachment
 from ..core.utils import slugify
 from .context import ParserContext
 from .exceptions import AstError
-from .hooks import (
-    render_ast_node_to_html_hook,
-    replace_rich_text_tokens_hook,
-)
+from .hooks import render_ast_node_to_html_hook
 from .urls import clean_href
-
-SPOILER_SUMMARY_TOKEN = "<spoiler-summary-message>"
 
 
 def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) -> str:
@@ -71,30 +60,32 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "quote":
         children = render_ast_to_html(context, ast_node["children"], metadata)
-        return f"<blockquote>{children}</blockquote>"
+        return f"<quote>{children}</quote>"
 
     if ast_type == "quote-bbcode":
         children = render_ast_to_html(context, ast_node["children"], metadata)
 
         if not ast_node["author"]:
-            return f"<blockquote>{children}</blockquote>"
+            return f"<quote>{children}</quote>"
 
         heading = escape(ast_node["author"])
 
         return (
-            '<aside class="quote-block">'
-            f'<div class="quote-heading" data-noquote="1">{heading}</div>'
-            f'<blockquote class="quote-body">{children}</blockquote>'
-            "</aside>"
+            "<quote>"
+            f"<heading>{heading}</heading>"
+            f"<body>{children}</body>"
+            "</quote>"
         )
 
     if ast_type == "spoiler-bbcode":
-        if ast_node["summary"]:
-            summary = escape(ast_node["summary"])
-        else:
-            summary = SPOILER_SUMMARY_TOKEN
+        summary = escape(ast_node["summary"])
         children = render_ast_to_html(context, ast_node["children"], metadata)
-        return f"<details><summary>{summary}</summary>{children}</details>"
+        return (
+            "<spoiler>"
+            f"<summary>{summary}</summary>"
+            f"<body>{children}</body>"
+            "</spoiler>"
+        )
 
     if ast_type == "paragraph":
         children = render_ast_to_html(context, ast_node["children"], metadata)
@@ -175,54 +166,3 @@ def _render_ast_node_to_html_action(
         return escape(ast_node["text"])
 
     raise AstError(f"Unknown AST node type: {ast_type}")
-
-
-def replace_rich_text_tokens(html: str, data: dict | None = None) -> str:
-    if data is None:
-        data = {}
-
-    return replace_rich_text_tokens_hook(_replace_rich_text_tokens_action, html, data)
-
-
-def _replace_rich_text_tokens_action(html: str, data) -> str:
-    html = replace_rich_text_tokens_attachments(html, data.get("attachments"))
-    html = replace_rich_text_tokens_spoiler_summary(html)
-
-    return html
-
-
-def replace_rich_text_tokens_spoiler_summary(html: str) -> str:
-    if SPOILER_SUMMARY_TOKEN in html:
-        html = html.replace(
-            SPOILER_SUMMARY_TOKEN, pgettext("spoiler summary", "Reveal spoiler")
-        )
-
-    return html
-
-
-ATTACHMENT_TOKEN = re.compile(r"\<attachment=(.+?)\>")
-
-
-def replace_rich_text_tokens_attachments(
-    html: str, attachments: dict[int, Attachment] | None
-) -> str:
-    attachments = attachments or {}
-    replace = partial(replace_rich_text_attachment_token, attachments)
-    return ATTACHMENT_TOKEN.sub(replace, html)
-
-
-def replace_rich_text_attachment_token(
-    attachments: dict[int, Attachment], matchobj
-) -> str:
-    name, id = matchobj.group(1).split(":")
-    if attachment := attachments.get(int(id)):
-        if attachment.filetype.is_image:
-            template_name = "misago/rich_text/image_attachment.html"
-        elif attachment.filetype.is_video:
-            template_name = "misago/rich_text/video_attachment.html"
-        else:
-            template_name = "misago/rich_text/file_attachment.html"
-
-        return render_to_string(template_name, {"attachment": attachment})
-
-    return "MISS"

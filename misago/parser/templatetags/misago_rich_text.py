@@ -1,7 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
 
-from ..html import replace_rich_text_tokens
+from ..richtext import replace_rich_text_tokens
 
 register = template.Library()
 

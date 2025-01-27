@@ -157,6 +157,7 @@ class PrefetchPostsRelatedObjects:
             "threads": {t.id: t for t in self.threads},
             "posts": {p.id: p for p in self.posts},
             "attachments": {a.id: a for a in self.attachments},
+            "attachment_errors": {},
             "users": {u.id: u for u in self.users},
             "extra_kwargs": self.extra_kwargs,
         }
@@ -289,5 +290,7 @@ def filter_attachments(
 
         if can_download:
             accessible_attachments[attachment.id] = attachment
+        else:
+            data["attachment_errors"][attachment.id] = can_download
 
     data["attachments"] = accessible_attachments
