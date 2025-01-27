@@ -1,4 +1,4 @@
-.misago-rich-text {
+.rich-text {
   font-size: 16px;
 
   h1 {
@@ -55,10 +55,13 @@
   }
 }
 
-.misago-rich-text-image {
+.rich-text-image {
+  display: inline-block;
+  position: relative;
+
   margin-bottom: @line-height-computed;
 
-  a {
+  .rich-text-image-link {
     display: inline-block;
   }
 
@@ -71,7 +74,7 @@
   }
 }
 
-.misago-rich-text-video {
+.rich-text-video {
   position: relative;
 
   display: block;
@@ -101,19 +104,81 @@
   }
 }
 
-.misago-rich-text-file {
+.rich-text-info-hover-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: @border-radius-base;
+
+  &,
+  &:link,
+  &:visited {
+    background-color: fadeout(#000, 50);
+    color: #eee;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: fadeout(#333, 10);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .material-icon {
+    font-size: 24px;
+    line-height: 24px;
+  }
+}
+
+.rich-text-file {
+  display: inline-block;
+
+  position: relative;
+
   margin-bottom: @line-height-computed;
 
   &:last-child {
     margin-bottom: 0;
   }
+
+  .rich-text-info-hover-btn {
+    top: 4px;
+    right: 4px;
+    
+    width: 32px;
+    height: 32px;
+
+    &,
+    &:link,
+    &:visited {
+      background-color: transparent;
+      color: @gray;
+    }
+  
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: darken(@gray-lighter, 10);
+      color: @gray-dark;
+      text-decoration: none;
+    }
+  }
 }
 
-.misago-rich-text-file a {
+.rich-text-file-link {
   display: inline-block;
   position: relative;
 
-  padding: 8px 12px 8px 42px;
+  padding: 8px 48px 8px 42px;
 
   border-radius: @border-radius-base;
 
@@ -141,24 +206,24 @@
     line-height: 24px;
   }
 
-  .misago-rich-text-file-name {
+  .rich-text-file-name {
+    margin-right: 8px;
+
     word-break: break-all;
   }
 
-  .misago-rich-text-file-size {
-    margin-left: 8px;
-
+  .rich-text-file-size {
     color: @gray;
   }
 }
-.misago-rich-text-attachment-error {
+.rich-text-attachment-error {
   margin-bottom: @line-height-computed;
 
   &:last-child {
     margin-bottom: 0;
   }
 
-  .misago-rich-text-attachment-error-body {
+  .rich-text-attachment-error-body {
     position: relative;
 
     display: inline-block;
@@ -179,7 +244,7 @@
     line-height: 24px;
   }
 
-  .misago-rich-text-attachment-error-name {
+  .rich-text-attachment-error-name {
     word-break: break-all;
   }
 }
