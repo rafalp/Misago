@@ -89,6 +89,58 @@ def test_attachment_next_to_other_attachment(parse_markup):
     ]
 
 
+def test_attachments_with_spaces_between(parse_markup):
+    result = parse_markup("Hello <attachment=image.png:6>    <attachment=image2.png:7>")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+            ],
+        },
+        {
+            "type": "attachment",
+            "name": "image.png",
+            "id": 6,
+        },
+        {
+            "type": "attachment",
+            "name": "image2.png",
+            "id": 7,
+        },
+    ]
+
+
+def test_attachments_with_blank_lines_between(parse_markup):
+    result = parse_markup(
+        "Hello <attachment=image.png:6>    \n\nWorld <attachment=image2.png:7>"
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+            ],
+        },
+        {
+            "type": "attachment",
+            "name": "image.png",
+            "id": 6,
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "World "},
+            ],
+        },
+        {
+            "type": "attachment",
+            "name": "image2.png",
+            "id": 7,
+        },
+    ]
+
+
 def test_attachment_without_id_is_not_parsed(parse_markup):
     result = parse_markup("Hello <attachment=image.png>!")
     assert result == [

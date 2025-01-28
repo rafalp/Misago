@@ -1,6 +1,3 @@
-from ...test import disable_parser_clean_ast
-
-
 def test_unordered_list(parse_markup):
     result = parse_markup("- Lorem")
     assert result == [
@@ -665,7 +662,6 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
     ]
 
 
-@disable_parser_clean_ast
 def test_list_with_empty_first_item(parse_markup):
     result = parse_markup(
         """
@@ -721,7 +717,6 @@ def test_list_with_empty_first_item(parse_markup):
     ]
 
 
-@disable_parser_clean_ast
 def test_list_with_empty_middle_item(parse_markup):
     result = parse_markup(
         """
@@ -777,7 +772,6 @@ def test_list_with_empty_middle_item(parse_markup):
     ]
 
 
-@disable_parser_clean_ast
 def test_list_with_empty_nested_item(parse_markup):
     result = parse_markup(
         """

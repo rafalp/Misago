@@ -5,7 +5,7 @@ from ..parser import Parser
 
 class CleanASTPostProcessor:
     valid_attachment_parents = ["quote", "quote-bbcode", "spoiler"]
-    valid_empty_nodes = ["image-bbcode", "url-bbcode"]
+    valid_empty_nodes = ["image-bbcode", "url-bbcode", "list-item"]
 
     def __call__(self, parser: Parser, ast: list[dict]) -> list[dict]:
         if not settings.MISAGO_PARSER_CLEAN_AST:
@@ -56,13 +56,10 @@ class CleanASTPostProcessor:
         if new_children:
             node["children"] = new_children
             new_ast.append(node)
-        
+
         # Re-insert node in new AST if it's valid empty node
         # and above logic omitted it
-        if (
-            valid_empty_node
-            and node["type"] not in [n["type"] for n in new_ast]
-        ):
+        if valid_empty_node and node["type"] not in [n["type"] for n in new_ast]:
             node_copy = node.copy()
             node_copy["children"] = []
             new_ast.insert(0, node_copy)

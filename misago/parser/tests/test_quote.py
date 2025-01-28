@@ -3,6 +3,11 @@ def test_empty_quote_is_removed(parse_markup):
     assert result == []
 
 
+def test_blank_quote_is_removed(parse_markup):
+    result = parse_markup(">      ")
+    assert result == []
+
+
 def test_single_line_quote(parse_markup):
     result = parse_markup("> Lorem ipsum")
     assert result == [

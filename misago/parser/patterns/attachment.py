@@ -5,7 +5,7 @@ from .urls import ImgBBCode, ImgMarkdown, UrlBBCode, UrlMarkdown
 
 class AttachmentMarkdown(Pattern):
     pattern_type: str = "attachment"
-    pattern: str = r"\<attachment=.+?\>"
+    pattern: str = r"\<attachment=.+?\>\s*"
     invalid_parents: set[str] = {
         ImgBBCode.pattern_type,
         ImgMarkdown.pattern_type,
@@ -14,7 +14,7 @@ class AttachmentMarkdown(Pattern):
     }
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:
-        args = [a.strip() for a in match[12:-1].strip('" ').split(":")]
+        args = [a.strip() for a in match.strip()[12:-1].strip('" ').split(":")]
 
         if len(args) != 2:
             return {"type": "text", "text": match}
