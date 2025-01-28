@@ -1,7 +1,5 @@
-from typing import TYPE_CHECKING, Iterable
+from typing import Iterable
 
-from django.contrib.auth import get_user_model
-from django.db.models import prefetch_related_objects
 from django.http import HttpRequest
 from django.urls import reverse
 
@@ -13,17 +11,10 @@ from ..permissions.threads import (
     check_edit_thread_post_permission,
 )
 from .hooks import (
-    get_posts_feed_item_user_ids_hook,
-    get_posts_feed_users_hook,
-    set_posts_feed_item_users_hook,
+    set_posts_feed_related_objects_hook,
 )
 from .models import Post, Thread
 from .prefetch import prefetch_posts_related_objects
-
-if TYPE_CHECKING:
-    from ..users.models import User
-else:
-    User = get_user_model()
 
 
 class PostsFeed:
@@ -90,7 +81,9 @@ class PostsFeed:
             categories=[self.thread.category],
             threads=[self.thread],
         )
-        self.populate_feed_related_objects(feed, related_objects)
+        set_posts_feed_related_objects_hook(
+            self.set_feed_related_objects, feed, related_objects
+        )
 
         return feed
 
@@ -127,36 +120,16 @@ class PostsFeed:
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
 
-    def populate_feed_related_objects(
+    def set_feed_related_objects(
         self, feed: list[dict], related_objects: dict
     ) -> None:
         for item in feed:
-            item["rich_text_data"] = {
-                "attachments": related_objects["attachments"],
-            }
+            if item["type"] == "post":
+                item["rich_text_data"] = {
+                    "attachments": related_objects["attachments"],
+                }
 
-            item["poster"] = related_objects["users"].get(item["post"].poster_id)
-
-    def get_feed_item_users_ids(self, item: dict, user_ids: set[int]):
-        if item["type"] == "post":
-            user_ids.add(item["post"].poster_id)
-
-    def get_feed_users(
-        self, request: HttpRequest, user_ids: set[int]
-    ) -> dict[int, "User"]:
-        users: dict[int, "User"] = {}
-        for user in User.objects.filter(id__in=user_ids):
-            if user.is_active or (
-                request.user.is_authenticated and request.user.is_misago_admin
-            ):
-                users[user.id] = user
-
-        prefetch_related_objects(list(users.values()), "group")
-        return users
-
-    def set_feed_item_users(self, users: dict[int, "User"], item: dict):
-        if item["type"] == "post":
-            item["poster"] = users.get(item["post"].poster_id)
+                item["poster"] = related_objects["users"].get(item["post"].poster_id)
 
 
 class ThreadPostsFeed(PostsFeed):

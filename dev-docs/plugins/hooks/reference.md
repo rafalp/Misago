@@ -146,8 +146,6 @@ Hooks instances are importable from the following Python modules:
 - [`get_edit_private_thread_post_page_context_data_hook`](./get-edit-private-thread-post-page-context-data-hook.md)
 - [`get_edit_thread_page_context_data_hook`](./get-edit-thread-page-context-data-hook.md)
 - [`get_edit_thread_post_page_context_data_hook`](./get-edit-thread-post-page-context-data-hook.md)
-- [`get_posts_feed_item_user_ids_hook`](./get-posts-feed-item-user-ids-hook.md)
-- [`get_posts_feed_users_hook`](./get-posts-feed-users-hook.md)
 - [`get_private_thread_replies_page_context_data_hook`](./get-private-thread-replies-page-context-data-hook.md)
 - [`get_private_thread_replies_page_posts_queryset_hook`](./get-private-thread-replies-page-posts-queryset-hook.md)
 - [`get_private_thread_replies_page_thread_queryset_hook`](./get-private-thread-replies-page-thread-queryset-hook.md)
@@ -170,7 +168,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
-- [`set_posts_feed_item_users_hook`](./set-posts-feed-item-users-hook.md)
+- [`set_posts_feed_related_objects_hook`](./set-posts-feed-related-objects-hook.md)
 
 
 ## `misago.users.hooks`
