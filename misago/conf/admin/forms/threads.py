@@ -23,9 +23,10 @@ class ThreadsSettingsForm(SettingsForm):
         "attachment_image_max_height",
         "attachment_thumbnail_width",
         "attachment_thumbnail_height",
+        "post_attachments_limit",
+        "additional_embedded_attachments_limit",
         "flood_control",
         "merge_concurrent_posts",
-        "post_attachments_limit",
         "post_length_max",
         "post_length_min",
         "readtracker_cutoff",
@@ -53,12 +54,6 @@ class ThreadsSettingsForm(SettingsForm):
         min_value=0,
     )
 
-    post_attachments_limit = forms.IntegerField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Maximum number of attachments per post"
-        ),
-        min_value=1,
-    )
     post_length_max = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form", "Maximum allowed post length"
@@ -84,16 +79,6 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         min_value=2,
         max_value=255,
-    )
-    unused_attachments_lifetime = forms.IntegerField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Unused attachments lifetime"
-        ),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted.",
-        ),
-        min_value=1,
     )
 
     merge_concurrent_posts = forms.IntegerField(
@@ -229,11 +214,38 @@ class ThreadsSettingsForm(SettingsForm):
         ),
     )
 
+    post_attachments_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Maximum number of attachments per post"
+        ),
+        min_value=1,
+    )
+    additional_embedded_attachments_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Additional embedded attachments limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Additional embedded attachments are attachments embedded in post content but not associated with the displayed posts. Loading a large number of these attachments can increase the site's memory usage. Set this value to zero to disable loading these attachments. Users will still see links to them.",
+        ),
+        min_value=0,
+    )
+
     unused_attachments_storage_limit = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form", "Unused attachments storage limit"
         ),
         min_value=0,
+    )
+    unused_attachments_lifetime = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Unused attachments lifetime"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted.",
+        ),
+        min_value=1,
     )
 
     attachment_image_max_width = forms.IntegerField(

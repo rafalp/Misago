@@ -55,4 +55,9 @@ class Migration(migrations.Migration):
             python_type="bool",
             dry_value="True",
         ),
+        CreateSetting(
+            setting="additional_embedded_attachments_limit",
+            python_type="int",
+            dry_value=20,
+        ),
     ]

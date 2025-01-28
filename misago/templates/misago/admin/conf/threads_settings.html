@@ -47,12 +47,13 @@
       </div>
     {% endwith%}
 
-    {% form_row form.unused_attachments_storage_limit %}
-    {% form_row form.post_attachments_limit %}
     {% form_row form.allow_private_threads_attachments %}
+    {% form_row form.post_attachments_limit %}
+    {% form_row form.additional_embedded_attachments_limit %}
+    {% form_row form.unused_attachments_storage_limit %}
+    {% form_row form.unused_attachments_lifetime %}
     {% form_dimensions_row form.attachment_image_max_width form.attachment_image_max_height %}
     {% form_dimensions_row form.attachment_thumbnail_width form.attachment_thumbnail_height %}
-    {% form_row form.unused_attachments_lifetime %}
 
     {% with form.attachment_403_image_delete as delete_field %}
       {% with form_settings.attachment_403_image as setting %}

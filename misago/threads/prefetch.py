@@ -295,11 +295,12 @@ def fetch_attachments(
     queryset = Attachment.objects.filter(post__in=data["posts"])
 
     if ids_to_fetch := data["attachment_ids"].difference(data["attachments"]):
-        queryset = queryset.union(
-            Attachment.objects.filter(id__in=ids_to_fetch).exclude(
-                post__in=data["posts"]
-            )[:10]
-        )
+        if settings.additional_embedded_attachments_limit:
+            queryset = queryset.union(
+                Attachment.objects.filter(id__in=ids_to_fetch).exclude(
+                    post__in=data["posts"]
+                )[: settings.additional_embedded_attachments_limit]
+            )
 
     data["attachments"].update({a.id: a for a in queryset})
 
