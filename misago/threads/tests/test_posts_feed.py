@@ -29,7 +29,7 @@ def test_posts_feed_returns_post_data(request_factory, user, thread, post):
     assert feed_data["items"][0]["post"] == post
 
 
-def test_posts_feed_embeds_poster_data_in_post(
+def test_posts_feed_sets_posters_in_post_data(
     request_factory, user, other_user, thread, other_user_reply
 ):
     request = request_factory(user)

@@ -110,7 +110,7 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
     state.set_post_message("<attachment=image.png:123>")
 
     assert post.original == "<attachment=image.png:123>"
-    assert post.parsed == "<p><attachment=image.png:123></p>"
+    assert post.parsed == "<attachment=image.png:123>"
     assert post.metadata == {"attachments": [123]}
 
     assert state.message_ast == [

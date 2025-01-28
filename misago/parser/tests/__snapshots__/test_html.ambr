@@ -1,6 +1,6 @@
 # serializer version: 1
 # name: test_render_ast_to_html_attachment
-  '<p>See the site: <attachment=image.png:123></p>'
+  '<p>See the site: </p><attachment=image.png:123>'
 # ---
 # name: test_render_ast_to_html_auto_link
   '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
@@ -112,13 +112,13 @@
   '<p>Hello world!</p>'
 # ---
 # name: test_render_ast_to_html_quote
-  '<blockquote><p>Hello world!</p></blockquote>'
+  '<quote><p>Hello world!</p></quote>'
 # ---
 # name: test_render_ast_to_html_quote_bbcode
-  '<blockquote><p>Hello world!</p></blockquote>'
+  '<quote><p>Hello world!</p></quote>'
 # ---
 # name: test_render_ast_to_html_quote_bbcode_with_author
-  '<aside class="quote-block"><div class="quote-heading" data-noquote="1">Author</div><blockquote class="quote-body"><p>Hello world!</p></blockquote></aside>'
+  '<quote><header>Author</header><body><p>Hello world!</p></body></quote>'
 # ---
 # name: test_render_ast_to_html_setex_heading[Hello world!\n-----]
   '<h2>Hello world!</h2>'
@@ -130,10 +130,10 @@
   '<p>Hello world!<br />How&#x27;s going?</p>'
 # ---
 # name: test_render_ast_to_html_spoiler
-  '<details><summary><spoiler-summary-message></summary><p>Hello world!</p></details>'
+  '<spoiler><summary></summary><body><p>Hello world!</p></body></spoiler>'
 # ---
 # name: test_render_ast_to_html_spoiler_with_summary
-  '<details><summary>Secret message</summary><p>Hello world!</p></details>'
+  '<spoiler><summary>Secret message</summary><body><p>Hello world!</p></body></spoiler>'
 # ---
 # name: test_render_ast_to_html_strikethrough_bbcode_text
   '<p>Hello <del>world</del>!</p>'
@@ -176,7 +176,4 @@
 # ---
 # name: test_render_ast_to_html_url_bbcode_with_text
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
-# ---
-# name: test_replace_rich_text_tokens_replaces_default_spoiler_summary
-  '<details><summary>Reveal spoiler</summary><p>Hello world!</p></details>'
 # ---

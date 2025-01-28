@@ -15,6 +15,7 @@ from .files import (
     IMAGE_SMALL,
     TEXT_FILE,
 )
+from .parser import disable_parser_clean_ast
 
 __all__ = [
     "IMAGE_INVALID",
@@ -29,5 +30,6 @@ __all__ = [
     "assert_has_success_message",
     "assert_has_warning_message",
     "assert_not_contains",
+    "disable_parser_clean_ast",
     "teardown_attachments",
 ]

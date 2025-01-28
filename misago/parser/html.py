@@ -72,13 +72,13 @@ def _render_ast_node_to_html_action(
 
         return (
             "<quote>"
-            f"<heading>{heading}</heading>"
+            f"<header>{heading}</header>"
             f"<body>{children}</body>"
             "</quote>"
         )
 
     if ast_type == "spoiler-bbcode":
-        summary = escape(ast_node["summary"])
+        summary = escape(ast_node["summary"] or "")
         children = render_ast_to_html(context, ast_node["children"], metadata)
         return (
             "<spoiler>"
