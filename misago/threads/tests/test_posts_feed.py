@@ -7,9 +7,10 @@ from ..test import reply_thread
 
 
 @pytest.fixture
-def request_factory(rf, cache_versions):
+def request_factory(rf, dynamic_settings, cache_versions):
     def factory(user):
         request = rf.get("/")
+        request.settings = dynamic_settings
         request.user = user
         request.user_permissions = UserPermissionsProxy(user, cache_versions)
         return request

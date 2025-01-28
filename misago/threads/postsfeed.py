@@ -120,9 +120,7 @@ class PostsFeed:
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
 
-    def set_feed_related_objects(
-        self, feed: list[dict], related_objects: dict
-    ) -> None:
+    def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:
             if item["type"] == "post":
                 item["rich_text_data"] = {

@@ -53,12 +53,14 @@ class SetPostsFeedRelatedObjectsHookFilter(Protocol):
         self,
         action: SetPostsFeedRelatedObjectsHookAction,
         feed: list[dict],
-        related_objects: dict
+        related_objects: dict,
     ): ...
 
 
 class SetPostsFeedRelatedObjectsHook(
-    FilterHook[SetPostsFeedRelatedObjectsHookAction, SetPostsFeedRelatedObjectsHookFilter]
+    FilterHook[
+        SetPostsFeedRelatedObjectsHookAction, SetPostsFeedRelatedObjectsHookFilter
+    ]
 ):
     """
     This hook wraps the standard function that Misago uses to set related objects
