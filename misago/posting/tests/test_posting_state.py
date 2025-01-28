@@ -115,10 +115,10 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
 
     assert state.message_ast == [
         {
-            "type": "paragraph",
-            "children": [
-                {"type": "attachment", "name": "image.png", "id": 123},
-            ],
+            "type": "attachment",
+            "name": "image.png",
+            "slug": "image-png",
+            "id": 123,
         },
     ]
     assert state.message_metadata == {

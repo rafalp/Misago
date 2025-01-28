@@ -47,10 +47,11 @@ def replace_rich_text_attachment_token(
     attachment_errors: dict[int, PermissionCheckResult],
     matchobj: re.Match,
 ) -> str:
-    name, id = matchobj.group(1).split(":")
+    name, slug, id = matchobj.group(1).split(":")
 
     id = int(id)
     name = name.strip()
+    slug = slug.strip()
 
     attachment = attachments.get(id)
     error = attachment_errors.get(id)

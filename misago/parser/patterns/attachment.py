@@ -1,4 +1,4 @@
-from ..parents import has_invalid_parent
+from ...core.utils import slugify
 from ..parser import Parser, Pattern
 from .urls import ImgBBCode, ImgMarkdown, UrlBBCode, UrlMarkdown
 
@@ -28,4 +28,9 @@ class AttachmentMarkdown(Pattern):
         if not name or attachment_id < 1:
             return {"type": "text", "text": match}
 
-        return {"type": self.pattern_type, "name": args[0], "id": attachment_id}
+        return {
+            "type": self.pattern_type,
+            "name": name,
+            "slug": slugify(name),
+            "id": attachment_id,
+        }

@@ -127,7 +127,7 @@ def _render_ast_node_to_html_action(
         return "<hr />"
 
     if ast_type == "attachment":
-        return f"<attachment={ast_node['name']}:{ast_node['id']}>"
+        return f"<attachment={ast_node['name']}:{ast_node['slug']}:{ast_node['id']}>"
 
     if ast_type in ("image", "image-bbcode"):
         src = escape(clean_href(ast_node["src"]))

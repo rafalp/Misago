@@ -1,6 +1,6 @@
 # serializer version: 1
 # name: test_render_ast_to_html_attachment
-  '<p>See the site: </p><attachment=image.png:123>'
+  '<p>See the site: </p><attachment=image.png:image-png:123>'
 # ---
 # name: test_render_ast_to_html_auto_link
   '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
