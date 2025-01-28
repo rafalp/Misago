@@ -78,9 +78,11 @@ def replace_rich_text_attachment_token(
         )
 
     return render_to_string(
-        "misago/rich_text/attachment_not_found.html",
+        "misago/rich_text/attachment_link.html",
         {
             "attachment": attachment,
             "name": name,
+            "slug": slug,
+            "id": id,
         },
     )

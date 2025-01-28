@@ -6,6 +6,7 @@ from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
+from ..permissions.posts import check_see_post_permission
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
 from ..users.models import Group
@@ -292,13 +293,26 @@ def fetch_attachments(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    queryset = Attachment.objects.filter(post__in=data["posts"])
+    visible_posts: list[int] = []
+    for post in data["posts"].values():
+        with check_permissions() as can_see:
+            check_see_post_permission(
+                permissions,
+                post.category,
+                post.thread,
+                post,
+            )
+
+        if can_see:
+            visible_posts.append(post.id)
+
+    queryset = Attachment.objects.filter(post_id__in=visible_posts)
 
     if ids_to_fetch := data["attachment_ids"].difference(data["attachments"]):
         if settings.additional_embedded_attachments_limit:
             queryset = queryset.union(
                 Attachment.objects.filter(id__in=ids_to_fetch).exclude(
-                    post__in=data["posts"]
+                    post_id__in=visible_posts
                 )[: settings.additional_embedded_attachments_limit]
             )
 

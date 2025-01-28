@@ -141,7 +141,6 @@
 
 .rich-text-file {
   display: inline-block;
-
   position: relative;
 
   margin-bottom: @line-height-computed;
@@ -151,7 +150,7 @@
   }
 
   .rich-text-info-hover-btn {
-    top: 4px;
+    top: 3px;
     right: 4px;
     
     width: 32px;
@@ -210,13 +209,20 @@
     margin-right: 8px;
 
     word-break: break-all;
+
+    &:last-child {
+      margin: 0;
+    }
   }
 
   .rich-text-file-size {
     color: @gray;
   }
 }
+
 .rich-text-attachment-error {
+  display: inline-block;
+
   margin-bottom: @line-height-computed;
 
   &:last-child {
