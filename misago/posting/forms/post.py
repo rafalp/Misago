@@ -37,6 +37,9 @@ class PostForm(PostingForm):
 
         super().__init__(data, *args, **kwargs)
 
+        if self.request.settings.post_length_max:
+            self.fields["post"].max_length = self.request.settings.post_length_max
+
         if self.show_attachments_upload:
             self.fields["upload"] = MultipleFileField(required=False)
 

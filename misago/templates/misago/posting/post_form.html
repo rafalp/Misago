@@ -34,7 +34,7 @@
         id="{{ field.id_for_label }}"
         name="{{ field.html_name }}"
         class="markup-editor-textarea form-control form-control-post{% if post_control_large %} form-control-post-lg{% endif %}"
-        maxlength="{{ field.field.max_length }}"
+        maxlength="{{ field.field.max_length|default:'' }}"
         aria-label="{% translate 'Post message' context 'posting form' %}"
         {{ field|requiredhtml }}
       >{{ field.value|default:"" }}</textarea>

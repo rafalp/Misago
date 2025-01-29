@@ -43,7 +43,7 @@ default_settings = [
     {
         "setting": "post_length_max",
         "python_type": "int",
-        "wet_value": 60000,
+        "wet_value": 10000,
         "is_public": True,
     },
     {
