@@ -31,7 +31,6 @@ def populate_attachments_dimensions(apps, _):
         attachment.save(update_fields=["dimensions", "thumbnail_dimensions"])
 
 
-
 class Migration(migrations.Migration):
     atomic = False
 
