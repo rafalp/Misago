@@ -592,7 +592,7 @@ def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
         assert other_user.id in data["users"]
 
         assert data["users"][user.id].group
-        assert data["users"][user.id].group
+        assert data["users"][other_user.id].group
 
         assert attachment.id in data["attachments"]
         assert other_user_attachment.id in data["attachments"]
