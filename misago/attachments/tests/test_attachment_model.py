@@ -70,3 +70,15 @@ def test_attachment_height_returns_none_if_dimensions_are_none():
     attachment = Attachment()
     assert attachment.dimensions is None
     assert attachment.height is None
+
+
+def test_attachment_ratio_returns_ratio_from_dimensions():
+    attachment = Attachment(dimensions="150x40")
+    assert attachment.dimensions == "150x40"
+    assert attachment.ratio == "26.67"
+
+
+def test_attachment_height_returns_none_if_dimensions_are_none():
+    attachment = Attachment()
+    assert attachment.dimensions is None
+    assert attachment.ratio is None

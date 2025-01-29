@@ -124,6 +124,17 @@ class Attachment(PluginDataModel):
 
         return None
 
+    @property
+    def ratio(self) -> str | None:
+        if self.dimensions:
+            return (
+                ("{:0.2f}".format(self.height * 100 / self.width))
+                .rstrip("0")
+                .rstrip(".")
+            )
+
+        return None
+
     def get_absolute_url(self) -> str:
         return reverse(
             "misago:attachment-download", kwargs={"id": self.id, "slug": self.slug}
