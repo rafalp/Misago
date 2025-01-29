@@ -26,9 +26,9 @@ __all__ = [
 
 
 def prefetch_posts_related_objects(
-    posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
+    posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
@@ -37,9 +37,9 @@ def prefetch_posts_related_objects(
 ) -> dict:
     prefetch = create_prefetch_posts_related_objects_hook(
         _create_prefetch_posts_related_objects_action,
-        posts,
         settings,
         permissions,
+        posts,
         categories=categories,
         threads=threads,
         attachments=attachments,
@@ -49,9 +49,9 @@ def prefetch_posts_related_objects(
 
 
 def _create_prefetch_posts_related_objects_action(
-    posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
+    posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
@@ -103,6 +103,7 @@ class PrefetchPostsRelatedObjects:
     categories: list[Category]
     threads: list[Thread]
     posts: list[Post]
+    attachments: list[Attachment]
     users: list[User]
     extra_kwargs: dict
 
@@ -311,9 +312,11 @@ def fetch_attachments(
     if ids_to_fetch := data["attachment_ids"].difference(data["attachments"]):
         if settings.additional_embedded_attachments_limit:
             queryset = queryset.union(
-                Attachment.objects.filter(id__in=ids_to_fetch).exclude(
-                    post_id__in=visible_posts
-                )[: settings.additional_embedded_attachments_limit]
+                Attachment.objects.filter(
+                    id__in=ids_to_fetch, post__isnull=False
+                ).exclude(post_id__in=visible_posts)[
+                    : settings.additional_embedded_attachments_limit
+                ]
             )
 
     data["attachments"].update({a.id: a for a in queryset})

@@ -20,10 +20,6 @@ class CreatePrefetchPostsRelatedObjectsHookAction(Protocol):
 
     # Arguments
 
-    ## `posts: Iterable[Post]`
-
-    Iterable of `Post` instances to prefetch related objects for.
-
     ## `settings: DynamicSettings`
 
     The `DynamicSettings` object.
@@ -31,6 +27,10 @@ class CreatePrefetchPostsRelatedObjectsHookAction(Protocol):
     ## `permissions: UserPermissionsProxy`
 
     The `UserPermissionsProxy` object for current user.
+
+    ## `posts: Iterable[Post]`
+
+    Iterable of `Post` instances to prefetch related objects for.
 
     ## `categories: Iterable[Category] | None = None`
 
@@ -57,9 +57,9 @@ class CreatePrefetchPostsRelatedObjectsHookAction(Protocol):
 
     def __call__(
         self,
-        posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
+        posts: Iterable[Post],
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
@@ -82,25 +82,47 @@ class CreatePrefetchPostsRelatedObjectsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `request: HttpRequest`
+    ## `settings: DynamicSettings`
 
-    The request object.
+    The `DynamicSettings` object.
 
-    ## `category: Category`
+    ## `permissions: UserPermissionsProxy`
 
-    A category instance.
+    The `UserPermissionsProxy` object for current user.
+
+    ## `posts: Iterable[Post]`
+
+    Iterable of `Post` instances to prefetch related objects for.
+
+    ## `categories: Iterable[Category] | None = None`
+
+    Iterable of categories that were already loaded. Defaults to `None` if not
+    provided.
+
+    ## `threads: Iterable[Thread] | None = None`
+
+    Iterable of threads that were already loaded. Defaults to `None` if not provided.
+
+    ## `attachments: Iterable[Attachment] | None = None`
+
+    Iterable of attachments that were already loaded. Defaults to `None` if not
+    provided.
+
+    ## `users: Iterable["User"] | None = None`
+
+    Iterable of users that were already loaded. Defaults to `None` if not provided.
 
     # Return value
 
-    A Python `list` with `ThreadsFilter` instances.
+    A `PrefetchPostsRelatedObjects` object to use to fetch related objects.
     """
 
     def __call__(
         self,
         action: CreatePrefetchPostsRelatedObjectsHookAction,
-        posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
+        posts: Iterable[Post],
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
@@ -169,9 +191,9 @@ class CreatePrefetchPostsRelatedObjectsHook(
     @create_prefetch_posts_related_objects_hook.append_filter
     def include_custom_filter(
         action: CreatePrefetchPostsRelatedObjectsHookAction,
-        posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
+        posts: Iterable[Post],
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
@@ -179,9 +201,9 @@ class CreatePrefetchPostsRelatedObjectsHook(
         users: Iterable["User"] | None = None,
     ) -> PrefetchPostsRelatedObjects:
         prefetch = action(
-            posts,
             settings,
             permissions,
+            posts,
             categories=categories,
             threads=threads,
             attachments=attachments,
@@ -199,9 +221,9 @@ class CreatePrefetchPostsRelatedObjectsHook(
     def __call__(
         self,
         action: CreatePrefetchPostsRelatedObjectsHookAction,
-        posts: Iterable[Post],
         settings: DynamicSettings,
         permissions: UserPermissionsProxy,
+        posts: Iterable[Post],
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
@@ -210,9 +232,9 @@ class CreatePrefetchPostsRelatedObjectsHook(
     ) -> "PrefetchPostsRelatedObjects":
         return super().__call__(
             action,
-            posts,
             settings,
             permissions,
+            posts,
             categories=categories,
             threads=threads,
             attachments=attachments,
