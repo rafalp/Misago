@@ -43,6 +43,31 @@ def test_posts_feed_sets_posters_in_post_data(
     assert post_data["poster_name"] == other_user.username
 
 
+def test_posts_feed_sets_rich_text_data_in_post_data(
+    request_factory, user, thread, other_user_reply, attachment
+):
+    attachment.category = other_user_reply.category
+    attachment.thread = other_user_reply.thread
+    attachment.post = other_user_reply
+    attachment.save()
+
+    other_user_reply.metadata = {"attachments": [attachment.id]}
+    other_user_reply.save()
+
+    request = request_factory(user)
+
+    posts_feed = PostsFeed(request, thread, [other_user_reply])
+    feed_data = posts_feed.get_context_data()
+
+    post_data = feed_data["items"][0]
+    assert post_data["rich_text_data"] == {
+        "attachment_errors": {},
+        "attachments": {
+            attachment.id: attachment,
+        },
+    }
+
+
 def test_posts_feed_marks_post_as_animated(request_factory, user, thread, post, reply):
     request = request_factory(user)
 

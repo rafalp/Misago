@@ -123,11 +123,12 @@ class PostsFeed:
     def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:
             if item["type"] == "post":
+                item["poster"] = related_objects["users"].get(item["post"].poster_id)
+
                 item["rich_text_data"] = {
+                    "attachment_errors": related_objects["attachment_errors"],
                     "attachments": related_objects["attachments"],
                 }
-
-                item["poster"] = related_objects["users"].get(item["post"].poster_id)
 
 
 class ThreadPostsFeed(PostsFeed):
