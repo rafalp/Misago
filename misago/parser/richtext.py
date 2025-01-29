@@ -53,12 +53,20 @@ def replace_rich_text_attachment_token(
     name = name.strip()
     slug = slug.strip()
 
-    attachment = attachments.get(id)
     error = attachment_errors.get(id)
+    if error is not None and error.permission_denied:
+        return render_to_string(
+            "misago/rich_text/attachment_permission_denied.html",
+            {
+                "error": error.error,
+                "name": name,
+            },
+        )
 
-    if attachment and not error:
-        attachment = attachments[id]
-        if attachment.filetype.is_image:
+    if attachment := attachments.get(id):
+        if not attachment.upload:
+            template_name = "misago/rich_text/attachment_broken.html"
+        elif attachment.filetype.is_image:
             template_name = "misago/rich_text/attachment_image.html"
         elif attachment.filetype.is_video:
             template_name = "misago/rich_text/attachment_video.html"
@@ -67,20 +75,9 @@ def replace_rich_text_attachment_token(
 
         return render_to_string(template_name, {"attachment": attachment})
 
-    if error and error.permission_denied:
-        return render_to_string(
-            "misago/rich_text/attachment_permission_denied.html",
-            {
-                "attachment": attachment,
-                "error": error.error,
-                "name": name,
-            },
-        )
-
     return render_to_string(
         "misago/rich_text/attachment_link.html",
         {
-            "attachment": attachment,
             "name": name,
             "slug": slug,
             "id": id,

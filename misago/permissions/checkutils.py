@@ -7,8 +7,8 @@ from django.http import Http404
 class PermissionCheckResult:
     error: Http404 | PermissionDenied | None
 
-    def __init__(self):
-        self.error = None
+    def __init__(self, error: Http404 | PermissionDenied | None = None):
+        self.error = error
 
     def __bool__(self):
         return not self.error
