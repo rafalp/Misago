@@ -294,11 +294,25 @@ class MarkupEditorSelection {
     this.refocus()
   }
 
-  insert(text) {
-    const value = this._range.prefix + text + this._range.suffix
+  insert(text, options) {
+    const whitespace = (options && options.whitespace) || ""
+
+    const prefix = whitespace ? this._range.prefix.trimEnd() : this._range.prefix
+    const suffix = whitespace ? this._range.suffix.trim() : this._range.suffix
+
+    let whitespaces = 1
+    let value = prefix
+
+    if (prefix.length && whitespace) {
+      value += whitespace
+      whitespaces += 1;
+    }
+
+    value += text + whitespace + suffix
     this.input.value = value
 
-    this._range.end = this._range.start = this._range.start + text.length
+    const caret = prefix.length + text.length + (whitespace.length * whitespaces)
+    this._range.end = this._range.start = caret
     this._range.length = 0
 
     this.refocus()
@@ -387,7 +401,7 @@ editor.setAction("strikethrough", function ({ selection }) {
 })
 
 editor.setAction("horizontal-ruler", function ({ selection }) {
-  selection.replace("\n\n- - -\n\n", { start: 9 })
+  selection.insert("- - -", {"whitespace": "\n\n"})
 })
 
 editor.setAction("link", function ({ editor, selection }) {
@@ -425,7 +439,7 @@ editor.setAction("code", function ({ editor, selection }) {
 editor.setAction("attachment", function ({ target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
   if (attachment) {
-    selection.insert("<attachment=" + attachment + ">")
+    selection.insert("<attachment=" + attachment + ">", {"whitespace": "\n\n"})
   }
 })
 
