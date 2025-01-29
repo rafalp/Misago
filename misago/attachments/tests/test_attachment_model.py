@@ -69,6 +69,12 @@ def test_attachment_height_returns_height_from_dimensions():
 def test_attachment_height_returns_none_if_dimensions_are_none():
     attachment = Attachment()
     assert attachment.dimensions is None
+    assert attachment.ratio is None
+
+
+def test_attachment_height_returns_none_if_dimensions_are_none():
+    attachment = Attachment()
+    assert attachment.dimensions is None
     assert attachment.height is None
 
 
@@ -78,7 +84,25 @@ def test_attachment_ratio_returns_ratio_from_dimensions():
     assert attachment.ratio == "26.67"
 
 
-def test_attachment_height_returns_none_if_dimensions_are_none():
+def test_attachment_thumbnail_width_returns_width_from_thumbnail_dimensions():
+    attachment = Attachment(thumbnail_dimensions="20x40")
+    assert attachment.thumbnail_dimensions == "20x40"
+    assert attachment.thumbnail_width == 20
+
+
+def test_attachment_thumbnail_width_returns_none_if_thumbnail_dimensions_are_none():
     attachment = Attachment()
-    assert attachment.dimensions is None
-    assert attachment.ratio is None
+    assert attachment.thumbnail_dimensions is None
+    assert attachment.thumbnail_width is None
+
+
+def test_attachment_thumbnail_height_returns_height_from_thumbnail_dimensions():
+    attachment = Attachment(thumbnail_dimensions="20x40")
+    assert attachment.thumbnail_dimensions == "20x40"
+    assert attachment.thumbnail_height == 40
+
+
+def test_attachment_thumbnail_height_returns_none_if_thumbnail_dimensions_are_none():
+    attachment = Attachment()
+    assert attachment.thumbnail_dimensions is None
+    assert attachment.thumbnail_height is None

@@ -59,12 +59,13 @@ class Attachment(PluginDataModel):
     slug = models.CharField(max_length=255)
 
     filetype_id = models.CharField(max_length=10, null=True)
-    dimensions = models.CharField(max_length=15, null=True)
 
     upload = models.FileField(max_length=255, upload_to=upload_to)
+    dimensions = models.CharField(max_length=15, null=True)
     size = models.PositiveIntegerField(default=0)
 
     thumbnail = models.FileField(max_length=255, upload_to=upload_to)
+    thumbnail_dimensions = models.CharField(max_length=15, null=True)
     thumbnail_size = models.PositiveIntegerField(default=0)
 
     is_deleted = models.BooleanField(default=False, db_index=True)
@@ -132,6 +133,20 @@ class Attachment(PluginDataModel):
                 .rstrip("0")
                 .rstrip(".")
             )
+
+        return None
+
+    @property
+    def thumbnail_width(self) -> int | None:
+        if self.thumbnail_dimensions:
+            return int(self.thumbnail_dimensions.split("x")[0])
+
+        return None
+
+    @property
+    def thumbnail_height(self) -> int | None:
+        if self.thumbnail_dimensions:
+            return int(self.thumbnail_dimensions.split("x")[1])
 
         return None
 

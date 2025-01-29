@@ -84,7 +84,6 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(db_index=True, max_length=255)),
                 ("slug", models.CharField(max_length=255, null=True)),
                 ("filetype_id", models.CharField(max_length=10, null=True)),
-                ("dimensions", models.CharField(max_length=15, null=True)),
                 (
                     "upload",
                     models.FileField(
@@ -92,6 +91,7 @@ class Migration(migrations.Migration):
                         upload_to=misago.attachments.models.upload_to,
                     ),
                 ),
+                ("dimensions", models.CharField(max_length=15, null=True)),
                 ("size", models.PositiveIntegerField(default=0)),
                 (
                     "thumbnail",
@@ -100,6 +100,7 @@ class Migration(migrations.Migration):
                         upload_to=misago.attachments.models.upload_to,
                     ),
                 ),
+                ("thumbnail_dimensions", models.CharField(max_length=15, null=True)),
                 ("thumbnail_size", models.PositiveIntegerField(default=0)),
                 ("is_deleted", models.BooleanField(db_index=True, default=False)),
                 ("plugin_data", models.JSONField(default=dict)),

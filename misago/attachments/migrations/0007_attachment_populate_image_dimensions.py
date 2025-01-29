@@ -9,8 +9,8 @@ from ..filetypes import filetypes
 def populate_attachments_dimensions(apps, _):
     Attachment = apps.get_model("misago_attachments", "Attachment")
 
-    queryset = Attachment.objects.filter(
-        filetype_id__isnull=False,
+    queryset = Attachment.objects.exclude(
+        filetype_id__isnull=True,
         upload="",
     ).order_by("id")
 
@@ -21,8 +21,15 @@ def populate_attachments_dimensions(apps, _):
 
         image = Image.open(attachment.upload.path)
         attachment.dimensions = "x".join(map(str, image.size))
-        attachment.save(update_fields=["dimensions"])
         del image
+
+        if attachment.thumbnail:
+            image = Image.open(attachment.thumbnail.path)
+            attachment.thumbnail_dimensions = "x".join(map(str, image.size))
+            del image
+
+        attachment.save(update_fields=["dimensions", "thumbnail_dimensions"])
+
 
 
 class Migration(migrations.Migration):
