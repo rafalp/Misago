@@ -92,7 +92,6 @@ class CategoryRelationsFactory:
             post=self.thread_reply,
             uploader_name="Anonymous",
             uploader_slug="anonymous",
-            secret="secret",
             name="filename.txt",
             slug="filename-txt",
         )

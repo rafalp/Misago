@@ -25,7 +25,6 @@ def test_store_uploaded_file_stores_text_file(
     assert attachment.uploader_name == user.username
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
-    assert attachment.secret
     assert attachment.name == upload.name
     assert attachment.slug == "test-txt"
     assert attachment.filetype_id == filetype.id
@@ -55,7 +54,6 @@ def test_store_uploaded_file_stores_image_file(
     assert attachment.uploader_name == user.username
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
-    assert attachment.secret
     assert attachment.name == upload.name
     assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
@@ -89,7 +87,6 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(
     assert attachment.uploader_name == user.username
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
-    assert attachment.secret
     assert attachment.name == upload.name
     assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
@@ -124,7 +121,6 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
     assert attachment.uploader_name == user.username
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
-    assert attachment.secret
     assert attachment.name == upload.name
     assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
@@ -154,7 +150,6 @@ def test_store_uploaded_file_cleans_filename(
     assert attachment.uploader_name == user.username
     assert attachment.uploader_slug == user.slug
     assert attachment.uploaded_at
-    assert attachment.secret
     assert attachment.name == "test (v2!).txt"
     assert attachment.slug == "test-v2-txt"
     assert attachment.filetype_id == filetype.id

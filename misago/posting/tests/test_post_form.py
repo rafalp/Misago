@@ -62,7 +62,7 @@ def test_post_form_populates_attachments_with_unused_attachments_on_init(
 ):
     request = Mock(settings=dynamic_settings, user=user)
     attachment = attachment_factory(text_file, uploader=user)
-    data = MockQueryDict({PostForm.attachment_secret_name: [attachment.secret]})
+    data = MockQueryDict({PostForm.attachment_id_field: [attachment.id]})
 
     form = PostForm(
         data,
@@ -82,7 +82,7 @@ def test_post_form_appends_unused_attachments_to_attachments_on_init(
     request = Mock(settings=dynamic_settings, user=user)
     unused_attachment = attachment_factory(text_file, uploader=user)
     attachment = attachment_factory(text_file, uploader=user, post=post)
-    data = MockQueryDict({PostForm.attachment_secret_name: [unused_attachment.secret]})
+    data = MockQueryDict({PostForm.attachment_id_field: [unused_attachment.id]})
 
     form = PostForm(
         data,
@@ -102,7 +102,7 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
 ):
     request = Mock(settings=dynamic_settings, user=user)
     attachment = attachment_factory(text_file, uploader=user)
-    data = MockQueryDict({PostForm.attachment_secret_name: [attachment.secret]})
+    data = MockQueryDict({PostForm.attachment_id_field: [attachment.id]})
 
     form = PostForm(
         data,
@@ -124,7 +124,7 @@ def test_post_form_get_unused_attachments_updates_form_attachments(
     attachment = attachment_factory(text_file, uploader=user)
 
     form = PostForm(request=request, attachments=[other_attachment])
-    form.get_unused_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.id])
     assert form.attachments == [attachment, other_attachment]
 
 
@@ -135,7 +135,7 @@ def test_post_form_get_unused_attachments_excludes_other_users_unused_attachment
     attachment = attachment_factory(text_file, uploader=other_user)
 
     form = PostForm(request=request)
-    form.get_unused_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.id])
     assert form.attachments == []
 
 
@@ -146,7 +146,7 @@ def test_post_form_get_unused_attachments_excludes_attachments_with_posts(
     attachment = attachment_factory(text_file, uploader=user, post=post)
 
     form = PostForm(request=request)
-    form.get_unused_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.id])
     assert form.attachments == []
 
 
@@ -160,7 +160,7 @@ def test_post_form_get_unused_attachments_excludes_deleted_unused_attachments(
     attachment.save()
 
     form = PostForm(request=request)
-    form.get_unused_attachments([attachment.secret])
+    form.get_unused_attachments([attachment.id])
     assert form.attachments == []
 
 

@@ -14,7 +14,6 @@ class Migration(migrations.Migration):
             """
             INSERT INTO misago_attachments_attachment (
                 id,
-                secret,
                 post_id,
                 uploader_id,
                 uploader_name,
@@ -30,7 +29,6 @@ class Migration(migrations.Migration):
             )
             SELECT
                 id,
-                secret,
                 post_id,
                 uploader_id,
                 uploader_name,

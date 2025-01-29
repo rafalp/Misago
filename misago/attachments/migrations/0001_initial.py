@@ -81,7 +81,6 @@ class Migration(migrations.Migration):
                         db_index=True, default=django.utils.timezone.now
                     ),
                 ),
-                ("secret", models.CharField(max_length=64)),
                 ("name", models.CharField(db_index=True, max_length=255)),
                 ("slug", models.CharField(max_length=255, null=True)),
                 ("filetype_id", models.CharField(max_length=10, null=True)),

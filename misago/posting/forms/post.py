@@ -17,7 +17,7 @@ from .attachments import MultipleFileField
 class PostForm(PostingForm):
     form_prefix = "posting-post"
     template_name = "misago/posting/post_form.html"
-    attachment_secret_name = "attachment_secret"
+    attachment_id_field = "attachment_id"
 
     request: HttpRequest
     attachments: list[Attachment]
@@ -41,8 +41,8 @@ class PostForm(PostingForm):
             self.fields["upload"] = MultipleFileField(required=False)
 
             if data:
-                if attachments_secrets := data.getlist(self.attachment_secret_name):
-                    self.get_unused_attachments(attachments_secrets)
+                if attachments_ids := data.getlist(self.attachment_id_field):
+                    self.get_unused_attachments(attachments_ids)
 
     @property
     def show_attachments(self) -> bool:
@@ -98,14 +98,22 @@ class PostForm(PostingForm):
     def sort_attachments(self):
         self.attachments.sort(key=lambda a: a.id, reverse=True)
 
-    def get_unused_attachments(self, secrets: list[str]):
-        clean_secrets: set[str] = set(s.strip() for s in secrets if s.strip())
-        if clean_secrets:
+    def get_unused_attachments(self, ids: list[str]):
+        clean_ids: set[str] = set()
+        for value in ids:
+            try:
+                clean_value = int(value)
+                if clean_value > 0:
+                    clean_ids.add(clean_value)
+            except (TypeError, ValueError):
+                pass
+
+        if clean_ids:
             self.attachments.extend(
                 Attachment.objects.filter(
+                    id__in=clean_ids,
                     post__isnull=True,
                     uploader=self.request.user,
-                    secret__in=clean_secrets,
                     is_deleted=False,
                 )
             )

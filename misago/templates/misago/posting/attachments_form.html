@@ -48,7 +48,7 @@
               <div class="markup-editor-attachments-media-list-item-name">
                 {{ attachment.name }}
               </div>
-              <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
+              <input type="hidden" name="{{ form.attachment_id_field }}" value="{{ attachment.id }}" />
             </div>
             <button
               type="button"
@@ -85,7 +85,7 @@
                 <div class="markup-editor-attachments-other-list-item-details">
                   {{ attachment.size|filesizeformat }}
                 </div>
-                <input type="hidden" name="{{ form.attachment_secret_name }}" value="{{ attachment.secret }}" />
+                <input type="hidden" name="{{ form.attachment_id_field }}" value="{{ attachment.id }}" />
               </div>
             </div>
             <button

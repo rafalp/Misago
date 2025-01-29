@@ -4,10 +4,6 @@ import pytest
 from ..models import Attachment
 
 
-def test_attachment_get_new_secret_returns_secret_str():
-    assert Attachment.get_new_secret()
-
-
 @pytest.fixture
 def file_attachment(user, text_file, attachment_factory):
     return attachment_factory(text_file, uploader=user)

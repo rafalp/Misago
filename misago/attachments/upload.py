@@ -73,7 +73,6 @@ def store_uploaded_file(
         uploader_name=request.user.username,
         uploader_slug=request.user.slug,
         uploaded_at=timezone.now(),
-        secret=Attachment.get_new_secret(),
         name=clean_name,
         slug=slugify(clean_name),
         size=upload.size,

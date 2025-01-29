@@ -13,17 +13,11 @@ from .filetypes import AttachmentFileType, filetypes
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:
-    spread_path = sha256((instance.secret + settings.SECRET_KEY).encode()).hexdigest()[
-        :4
-    ]
-    secret = Attachment.get_new_secret()
-
+    salt = sha256(get_random_string(32).encode()).hexdigest()
     filename, extension = instance.filetype.split_name(filename.lower())
     filename_clean = filename[:16] + "." + extension
 
-    return os.path.join(
-        "attachments", spread_path[:2], spread_path[2:], secret[:32], filename_clean
-    )
+    return os.path.join("attachments", salt[:2], salt[2:4], salt[-32:], filename_clean)
 
 
 class Attachment(PluginDataModel):
@@ -61,8 +55,6 @@ class Attachment(PluginDataModel):
 
     uploaded_at = models.DateTimeField(default=timezone.now, db_index=True)
 
-    secret = models.CharField(max_length=64)
-
     name = models.CharField(max_length=255, db_index=True)
     slug = models.CharField(max_length=255)
 
@@ -99,10 +91,6 @@ class Attachment(PluginDataModel):
             self.upload.delete(save=False)
         if self.thumbnail:
             self.thumbnail.delete(save=False)
-
-    @classmethod
-    def get_new_secret(cls):
-        return get_random_string(64)
 
     @cached_property
     def filetype(self) -> AttachmentFileType | None:

@@ -75,9 +75,9 @@ class PostsFeed:
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
 
         related_objects = prefetch_posts_related_objects(
-            self.posts,
             self.request.settings,
             self.request.user_permissions,
+            self.posts,
             categories=[self.thread.category],
             threads=[self.thread],
         )

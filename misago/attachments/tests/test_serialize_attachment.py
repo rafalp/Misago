@@ -13,7 +13,6 @@ def test_serialize_attachment_serializes_attachment(user, user_attachment):
 
     assert json.dumps(data)
     assert data["id"] == user_attachment.id
-    assert data["secret"] == user_attachment.secret
     assert data["name"] == user_attachment.name
     assert data["url"] == user_attachment.get_details_url()
     assert data["uploader"] == {"id": user.id, "username": user.username}
@@ -44,7 +43,6 @@ def test_serialize_attachment_serializes_anonymous_user_attachment(attachment):
 
     assert json.dumps(data)
     assert data["id"] == attachment.id
-    assert data["secret"] == attachment.secret
     assert data["name"] == attachment.name
     assert data["url"] == attachment.get_details_url()
     assert data["uploader"] == {"id": None, "username": "Anonymous"}
