@@ -43,7 +43,20 @@
       <ul class="markup-editor-attachments-media-list">
         {% for attachment in attachments %}
           <li class="markup-editor-attachments-media-list-item">
-            <div class="markup-editor-attachments-media-list-item-preview" style="background-image: url('{{ attachment.get_thumbnail_url|default:attachment.get_thumbnail_url }}');"></div>
+            {% if attachment.upload %}
+              {% if attachment.filetype.is_video %}
+                <div class="markup-editor-attachments-media-list-item-preview-video"></div>
+              {% else %}
+                <div
+                  class="markup-editor-attachments-media-list-item-preview-image"
+                  style="background-image: url('{{ attachment.get_thumbnail_url|default:attachment.get_absolute_url }}');"
+                ></div>
+              {% endif %}
+            {% else %}
+              <div class="markup-editor-attachments-media-list-item-preview-broken">
+                <span class="material-icon">broken_image</span>
+              </div>
+            {% endif %}
             <div class="markup-editor-attachments-media-list-item-body">
               <div class="markup-editor-attachments-media-list-item-name">
                 {{ attachment.name }}
