@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n misago_rich_text %}
 
 <div class="panel panel-default panel-form">
   <div class="panel-heading">
@@ -7,8 +7,8 @@
     </h3>
   </div>
   <div class="panel-body">
-    <article class="misago-markup">
-      {{ preview|safe }}
+    <article class="misago-rich-text">
+      {% rich_text preview preview_rich_text_data %}
     </article>
   </div>
 </div>

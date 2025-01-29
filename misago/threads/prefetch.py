@@ -145,9 +145,9 @@ class PrefetchPostsRelatedObjects:
             "post_ids": set(),
             "attachment_ids": set(),
             "user_ids": set(),
-            "categories": {c.id: c for c in self.categories},
-            "threads": {t.id: t for t in self.threads},
-            "posts": {p.id: p for p in self.posts},
+            "categories": {c.id: c for c in self.categories if c.id},
+            "threads": {t.id: t for t in self.threads if t.id},
+            "posts": {p.id: p for p in self.posts if p.id},
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
@@ -211,10 +211,12 @@ def find_category_ids(
     permissions: UserPermissionsProxy,
 ):
     for post in data["posts"].values():
-        data["category_ids"].add(post.category_id)
+        if post.category_id:
+            data["category_ids"].add(post.category_id)
 
     for thread in data["threads"].values():
-        data["category_ids"].add(thread.category_id)
+        if thread.category_id:
+            data["category_ids"].add(thread.category_id)
 
     for attachment in data["attachments"].values():
         if attachment.category_id:
@@ -237,7 +239,8 @@ def find_thread_ids(
     permissions: UserPermissionsProxy,
 ):
     for post in data["posts"].values():
-        data["thread_ids"].add(post.thread_id)
+        if post.thread_id:
+            data["thread_ids"].add(post.thread_id)
 
     for attachment in data["attachments"].values():
         if attachment.thread_id:

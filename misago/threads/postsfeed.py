@@ -124,11 +124,7 @@ class PostsFeed:
         for item in feed:
             if item["type"] == "post":
                 item["poster"] = related_objects["users"].get(item["post"].poster_id)
-
-                item["rich_text_data"] = {
-                    "attachment_errors": related_objects["attachment_errors"],
-                    "attachments": related_objects["attachments"],
-                }
+                item["rich_text_data"] = related_objects
 
 
 class ThreadPostsFeed(PostsFeed):

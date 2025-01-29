@@ -33,6 +33,7 @@ from ..hooks import (
     get_start_thread_page_context_data_hook,
 )
 from ..models import Thread
+from ..prefetch import prefetch_posts_related_objects
 
 
 class StartThreadView(View):
@@ -58,10 +59,7 @@ class StartThreadView(View):
         formset.update_state(state)
 
         if request.POST.get("preview"):
-            context = self.get_context_data(request, category, formset)
-            context["preview"] = state.post.parsed
-            formset.clear_errors_in_preview()
-            return render(request, self.template_name, context)
+            return self.preview(request, category, formset, state)
 
         if request.POST.get("upload_attachments"):
             context = self.get_context_data(request, category, formset)
@@ -81,6 +79,30 @@ class StartThreadView(View):
 
         thread_url = self.get_thread_url(request, state.thread)
         return redirect(thread_url)
+
+    def preview(
+        self,
+        request: HttpRequest,
+        category: Category,
+        formset: StartThreadFormset,
+        state: StartThreadState,
+    ) -> HttpResponse:
+        formset.clear_errors_in_preview()
+
+        context = self.get_context_data(request, category, formset)
+
+        related_objects = prefetch_posts_related_objects(
+            request.settings,
+            request.user_permissions,
+            [state.post],
+            categories=[category],
+            attachments=state.attachments,
+        )
+
+        context["preview"] = state.post.parsed
+        context["preview_rich_text_data"] = related_objects
+
+        return render(request, self.template_name, context)
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         try:

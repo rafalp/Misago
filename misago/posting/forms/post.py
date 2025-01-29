@@ -111,6 +111,8 @@ class PostForm(PostingForm):
             except (TypeError, ValueError):
                 pass
 
+        clean_ids = clean_ids.difference([a.id for a in self.attachments])
+
         if clean_ids:
             self.attachments.extend(
                 Attachment.objects.filter(

@@ -38,6 +38,7 @@ from ..hooks import (
     get_edit_thread_post_page_context_data_hook,
 )
 from ..models import Post, Thread
+from ..prefetch import prefetch_posts_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
@@ -47,7 +48,7 @@ class EditView(View):
     template_name_htmx: str
     template_name_inline: str = "misago/inline_edit/index.html"
     template_name_inline_form: str = "misago/inline_edit/form.html"
-    post_select_related: Iterable[str] = ("thread", "category", "poster")
+    post_select_related: Iterable[str] = ("poster",)
     allow_edit_thread: bool = False
 
     def get(
@@ -74,7 +75,7 @@ class EditView(View):
 
         if request.POST.get("preview"):
             formset.clear_errors_in_preview()
-            return self.render(request, post_obj, formset, state.post.parsed)
+            return self.render(request, post_obj, formset, state)
 
         if request.POST.get("upload_attachments"):
             formset.clear_errors_in_upload()
@@ -141,10 +142,23 @@ class EditView(View):
         request: HttpRequest,
         post: Post,
         formset: PostingFormset,
-        preview: str | None = None,
+        preview: PostingState | None = None,
     ):
         context = self.get_context_data(request, post, formset)
-        context["preview"] = preview
+
+        if preview:
+            related_objects = prefetch_posts_related_objects(
+                request.settings,
+                request.user_permissions,
+                [preview.post],
+                categories=[post.category],
+                threads=[post.thread],
+                users=[post.poster],
+                attachments=preview.attachments,
+            )
+
+            context["preview"] = preview.post.parsed
+            context["preview_rich_text_data"] = related_objects
 
         if self.is_inline(request):
             template_name = self.template_name_inline_form

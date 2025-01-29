@@ -47,6 +47,7 @@ from ..hooks import (
     get_reply_thread_page_context_data_hook,
 )
 from ..models import Post, Thread
+from ..prefetch import prefetch_posts_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
@@ -77,7 +78,7 @@ class ReplyView(View):
 
         if request.POST.get("preview"):
             formset.clear_errors_in_preview()
-            return self.render(request, thread, formset, state.post.parsed)
+            return self.render(request, thread, formset, state)
 
         if request.POST.get("upload_attachments"):
             formset.clear_errors_in_upload()
@@ -205,14 +206,26 @@ class ReplyView(View):
         request: HttpRequest,
         thread: Thread,
         formset: PostingFormset,
-        preview: str | None = None,
+        preview: PostingState | None = None,
         feed: list[dict] | None = None,
         htmx_swap: bool = False,
     ):
         context = self.get_context_data(request, thread, formset)
-        context["preview"] = preview
         context["new_feed"] = feed
         context["htmx_swap"] = htmx_swap
+
+        if preview:
+            related_objects = prefetch_posts_related_objects(
+                request.settings,
+                request.user_permissions,
+                [preview.post],
+                categories=[thread.category],
+                threads=[thread],
+                attachments=preview.attachments,
+            )
+
+            context["preview"] = preview.post.parsed
+            context["preview_rich_text_data"] = related_objects
 
         if self.is_quick_reply(request):
             template_name = self.template_name_quick_reply
