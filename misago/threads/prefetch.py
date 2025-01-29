@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Iterable, Protocol
 from django.contrib.auth import get_user_model
 
 from ..attachments.models import Attachment
+from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
@@ -12,6 +13,7 @@ from ..permissions.checkutils import check_permissions
 from ..users.models import Group
 from .hooks import create_prefetch_posts_related_objects_hook
 from .models import Post, Thread
+from .privatethreads import prefetch_private_thread_member_ids
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -71,12 +73,13 @@ def _create_prefetch_posts_related_objects_action(
     prefetch.add_operation(find_attachment_ids)
     prefetch.add_operation(fetch_attachments)
     prefetch.add_operation(find_post_ids)
-    prefetch.add_operation(find_thread_ids)
-    prefetch.add_operation(find_category_ids)
-    prefetch.add_operation(find_users_ids)
     prefetch.add_operation(fetch_posts)
+    prefetch.add_operation(find_thread_ids)
     prefetch.add_operation(fetch_threads)
+    prefetch.add_operation(find_category_ids)
     prefetch.add_operation(fetch_categories)
+    prefetch.add_operation(fetch_private_threads_members)
+    prefetch.add_operation(find_users_ids)
     prefetch.add_operation(fetch_users)
     prefetch.add_operation(fetch_users_groups)
     prefetch.add_operation(check_attachments_permissions)
@@ -218,6 +221,16 @@ def find_category_ids(
             data["category_ids"].add(attachment.category_id)
 
 
+def fetch_categories(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    if ids_to_fetch := data["category_ids"].difference(data["categories"]):
+        queryset = Category.objects.filter(id__in=ids_to_fetch)
+        data["categories"].update({c.id: c for c in queryset})
+
+
 def find_thread_ids(
     data: dict,
     settings: DynamicSettings,
@@ -231,44 +244,6 @@ def find_thread_ids(
             data["thread_ids"].add(attachment.thread_id)
 
 
-def find_post_ids(
-    data: dict,
-    settings: DynamicSettings,
-    permissions: UserPermissionsProxy,
-):
-    for attachment in data["attachments"].values():
-        if attachment.post_id:
-            data["post_ids"].add(attachment.post_id)
-
-
-def find_attachment_ids(
-    data: dict,
-    settings: DynamicSettings,
-    permissions: UserPermissionsProxy,
-):
-    for post in data["posts"].values():
-        data["attachment_ids"].update(post.metadata.get("attachments", []))
-
-
-def find_users_ids(
-    data: dict,
-    settings: DynamicSettings,
-    permissions: UserPermissionsProxy,
-):
-    for post in data["posts"].values():
-        data["user_ids"].add(post.poster_id)
-
-
-def fetch_categories(
-    data: dict,
-    settings: DynamicSettings,
-    permissions: UserPermissionsProxy,
-):
-    if ids_to_fetch := data["category_ids"].difference(data["categories"]):
-        queryset = Category.objects.filter(id__in=ids_to_fetch)
-        data["categories"].update({c.id: c for c in queryset})
-
-
 def fetch_threads(
     data: dict,
     settings: DynamicSettings,
@@ -279,6 +254,31 @@ def fetch_threads(
         data["threads"].update({t.id: t for t in queryset})
 
 
+def fetch_private_threads_members(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    private_threads: list[Thread] = []
+    for thread in data["threads"].values():
+        category = data["categories"][thread.category_id]
+        if category.tree_id == CategoryTree.PRIVATE_THREADS:
+            private_threads.append(thread)
+
+    if private_threads:
+        prefetch_private_thread_member_ids(private_threads)
+
+
+def find_post_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for attachment in data["attachments"].values():
+        if attachment.post_id:
+            data["post_ids"].add(attachment.post_id)
+
+
 def fetch_posts(
     data: dict,
     settings: DynamicSettings,
@@ -287,6 +287,15 @@ def fetch_posts(
     if ids_to_fetch := data["post_ids"].difference(data["posts"]):
         queryset = Post.objects.filter(id__in=ids_to_fetch)
         data["posts"].update({p.id: p for p in queryset})
+
+
+def find_attachment_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for post in data["posts"].values():
+        data["attachment_ids"].update(post.metadata.get("attachments", []))
 
 
 def fetch_attachments(
@@ -312,38 +321,12 @@ def fetch_attachments(
     if ids_to_fetch := data["attachment_ids"].difference(data["attachments"]):
         if settings.additional_embedded_attachments_limit:
             queryset = queryset.union(
-                Attachment.objects.filter(
-                    id__in=ids_to_fetch, post__isnull=False
-                ).exclude(post_id__in=visible_posts)[
-                    : settings.additional_embedded_attachments_limit
-                ]
+                Attachment.objects.filter(id__in=ids_to_fetch, post__isnull=False)
+                .exclude(post_id__in=visible_posts)
+                .order_by("-id")[: settings.additional_embedded_attachments_limit]
             )
 
     data["attachments"].update({a.id: a for a in queryset})
-
-
-def fetch_users(
-    data: dict,
-    settings: DynamicSettings,
-    permissions: UserPermissionsProxy,
-):
-    if ids_to_fetch := data["user_ids"].difference(data["users"]):
-        queryset = User.objects.filter(id__in=ids_to_fetch, is_active=True)
-        data["users"].update({u.id: u for u in queryset})
-
-
-def fetch_users_groups(
-    data: dict,
-    settings: DynamicSettings,
-    permissions: UserPermissionsProxy,
-):
-    users = data["users"].values()
-
-    ids_to_fetch: set[int] = set(u.group_id for u in users)
-    if ids_to_fetch:
-        groups = {g.id: g for g in Group.objects.filter(id__in=ids_to_fetch)}
-        for user in users:
-            user.group = groups[user.group_id]
 
 
 def check_attachments_permissions(
@@ -379,3 +362,36 @@ def check_attachments_permissions(
             data["attachment_errors"][attachment.id] = can_download
 
     data["attachments"] = accessible_attachments
+
+
+def find_users_ids(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for post in data["posts"].values():
+        data["user_ids"].add(post.poster_id)
+
+
+def fetch_users(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    if ids_to_fetch := data["user_ids"].difference(data["users"]):
+        queryset = User.objects.filter(id__in=ids_to_fetch, is_active=True)
+        data["users"].update({u.id: u for u in queryset})
+
+
+def fetch_users_groups(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    users = data["users"].values()
+
+    ids_to_fetch: set[int] = set(u.group_id for u in users)
+    if ids_to_fetch:
+        groups = {g.id: g for g in Group.objects.filter(id__in=ids_to_fetch)}
+        for user in users:
+            user.group = groups[user.group_id]
