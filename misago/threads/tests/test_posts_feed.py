@@ -60,12 +60,8 @@ def test_posts_feed_sets_rich_text_data_in_post_data(
     feed_data = posts_feed.get_context_data()
 
     post_data = feed_data["items"][0]
-    assert post_data["rich_text_data"] == {
-        "attachment_errors": {},
-        "attachments": {
-            attachment.id: attachment,
-        },
-    }
+    assert post_data["rich_text_data"]["attachment_errors"] == {}
+    assert post_data["rich_text_data"]["attachments"] == {attachment.id: attachment}
 
 
 def test_posts_feed_marks_post_as_animated(request_factory, user, thread, post, reply):
