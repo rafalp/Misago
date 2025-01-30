@@ -55,6 +55,10 @@
   }
 }
 
+.rich-text-attachment-group:last-child {
+  margin-bottom: @line-height-computed * -1;
+}
+
 .rich-text-image {
   display: inline-block;
   position: relative;
@@ -67,10 +71,6 @@
 
   img {
     border-radius: @border-radius-base;
-  }
-
-  &:last-child {
-    margin-bottom: 0;
   }
 }
 
@@ -86,10 +86,6 @@
 
   background-color: #1e1e1e;
   border-radius: @border-radius-base;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 
   video {
     position: absolute;
@@ -140,11 +136,8 @@
 }
 
 .rich-text-file {
+  display: inline-block;
   margin-bottom: @line-height-computed;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 
 .rich-text-file-body {
@@ -223,6 +216,7 @@
 }
 
 .rich-text-attachment-error {
+  display: inline-block;
   margin-bottom: @line-height-computed;
 
   &:last-child {

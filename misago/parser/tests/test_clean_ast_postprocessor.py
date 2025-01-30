@@ -7,11 +7,16 @@ def test_clean_ast_post_processor_removes_attachment_from_paragraph(parse_markup
     ast = parse_markup("<attachment=file.txt:123>")
     assert ast == [
         {
-            "type": "attachment",
-            "name": "file.txt",
-            "slug": "file-txt",
-            "id": 123,
-        },
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "file.txt",
+                    "slug": "file-txt",
+                    "id": 123,
+                },
+            ],
+        }
     ]
 
 
@@ -25,10 +30,15 @@ def test_clean_ast_post_processor_splits_paragraph_with_attachment(parse_markup)
             ],
         },
         {
-            "type": "attachment",
-            "name": "file.txt",
-            "slug": "file-txt",
-            "id": 123,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "file.txt",
+                    "slug": "file-txt",
+                    "id": 123,
+                },
+            ],
         },
         {
             "type": "paragraph",
@@ -51,10 +61,15 @@ def test_clean_ast_post_processor_splits_paragraph_with_two_attachments(parse_ma
             ],
         },
         {
-            "type": "attachment",
-            "name": "file.txt",
-            "slug": "file-txt",
-            "id": 123,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "file.txt",
+                    "slug": "file-txt",
+                    "id": 123,
+                },
+            ],
         },
         {
             "type": "paragraph",
@@ -63,10 +78,15 @@ def test_clean_ast_post_processor_splits_paragraph_with_two_attachments(parse_ma
             ],
         },
         {
-            "type": "attachment",
-            "name": "file.txt",
-            "slug": "file-txt",
-            "id": 123,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "file.txt",
+                    "slug": "file-txt",
+                    "id": 123,
+                },
+            ],
         },
         {
             "type": "paragraph",

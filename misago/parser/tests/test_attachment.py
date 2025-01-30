@@ -8,10 +8,15 @@ def test_attachment(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 1234,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 1234,
+                },
+            ],
         },
         {
             "type": "paragraph",
@@ -32,10 +37,15 @@ def test_attachment_without_quotes_around_args(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 1234,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 1234,
+                },
+            ],
         },
         {
             "type": "paragraph",
@@ -56,10 +66,15 @@ def test_attachment_with_spaces_in_args(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 1234,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 1234,
+                },
+            ],
         },
         {
             "type": "paragraph",
@@ -80,16 +95,21 @@ def test_attachment_next_to_other_attachment(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 6,
-        },
-        {
-            "type": "attachment",
-            "name": "image2.png",
-            "slug": "image2-png",
-            "id": 7,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 6,
+                },
+                {
+                    "type": "attachment",
+                    "name": "image2.png",
+                    "slug": "image2-png",
+                    "id": 7,
+                },
+            ],
         },
     ]
 
@@ -104,16 +124,21 @@ def test_attachments_with_spaces_between(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 6,
-        },
-        {
-            "type": "attachment",
-            "name": "image2.png",
-            "slug": "image2-png",
-            "id": 7,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 6,
+                },
+                {
+                    "type": "attachment",
+                    "name": "image2.png",
+                    "slug": "image2-png",
+                    "id": 7,
+                },
+            ],
         },
     ]
 
@@ -130,10 +155,15 @@ def test_attachments_with_blank_lines_between(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 6,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 6,
+                },
+            ],
         },
         {
             "type": "paragraph",
@@ -142,10 +172,15 @@ def test_attachments_with_blank_lines_between(parse_markup):
             ],
         },
         {
-            "type": "attachment",
-            "name": "image2.png",
-            "slug": "image2-png",
-            "id": 7,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image2.png",
+                    "slug": "image2-png",
+                    "id": 7,
+                },
+            ],
         },
     ]
 

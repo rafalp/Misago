@@ -126,6 +126,10 @@ def _render_ast_node_to_html_action(
     if ast_type in ("thematic-break", "thematic-break-bbcode"):
         return "<hr />"
 
+    if ast_type == "attachment-group":
+        children = render_ast_to_html(context, ast_node["children"], metadata)
+        return f'<div class="rich-text-attachment-group">{children}</div>'
+
     if ast_type == "attachment":
         return f"<attachment={ast_node['name']}:{ast_node['slug']}:{ast_node['id']}>"
 

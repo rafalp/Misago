@@ -176,6 +176,11 @@ def _render_ast_node_to_plaintext_action(
 
         return href
 
+    if ast_type == "attachment-group":
+        return render_ast_to_plaintext(
+            context, ast_node["children"], metadata, text_format
+        )
+
     if ast_type == "attachment":
         return ast_node["name"]
 

@@ -49,7 +49,10 @@ class CleanASTPostProcessor:
                     new_ast.append(node_copy)
                     new_children = []
 
-                new_ast.append(child)
+                if not new_ast or new_ast[-1]["type"] != "attachment-group":
+                    new_ast.append({"type": "attachment-group", "children": []})
+
+                new_ast[-1]["children"].append(child)
             else:
                 new_children += self.process_node(child)
 
