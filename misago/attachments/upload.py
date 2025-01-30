@@ -12,6 +12,7 @@ from .filename import clean_filename, trim_filename
 from .filetypes import AttachmentFileType
 from .hooks import get_attachment_plugin_data_hook
 from .models import Attachment
+from .thumbnails import generate_attachment_thumbnail
 from .validators import (
     get_attachments_storage_constraints,
     validate_uploaded_file,
@@ -136,15 +137,9 @@ def _store_attachment_image(
     thumbnail_height = request.settings.attachment_thumbnail_height
 
     if image.width > thumbnail_width or image.height > thumbnail_height:
-        image.thumbnail((thumbnail_width, thumbnail_height))
-        thumbnail_stream = BytesIO()
-        image.save(thumbnail_stream, image_format)
-        attachment.thumbnail = SimpleUploadedFile(
-            upload.name, thumbnail_stream.getvalue(), upload.content_type
+        generate_attachment_thumbnail(
+            attachment, image, thumbnail_width, thumbnail_height
         )
-        attachment.thumbnail_dimensions = "x".join(map(str, image.size))
-        attachment.thumbnail_size = attachment.thumbnail.size
-        del thumbnail_stream
 
 
 def get_attachment_plugin_data(
