@@ -450,7 +450,9 @@ def test_render_ast_to_plaintext_url_bbcode_with_text(
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_plaintext_attachment_group(parser_context, parse_markup, snapshot):
+def test_render_ast_to_plaintext_attachment_group(
+    parser_context, parse_markup, snapshot
+):
     ast = parse_markup(
         "See the logo: <attachment=file.png:123><attachment=document.pdf:41>"
     )

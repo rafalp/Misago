@@ -110,15 +110,24 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
     state.set_post_message("<attachment=image.png:123>")
 
     assert post.original == "<attachment=image.png:123>"
-    assert post.parsed == "<attachment=image.png:image-png:123>"
+    assert post.parsed == (
+        '<div class="rich-text-attachment-group">'
+        "<attachment=image.png:image-png:123>"
+        "</div>"
+    )
     assert post.metadata == {"attachments": [123]}
 
     assert state.message_ast == [
         {
-            "type": "attachment",
-            "name": "image.png",
-            "slug": "image-png",
-            "id": 123,
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 123,
+                },
+            ],
         },
     ]
     assert state.message_metadata == {
