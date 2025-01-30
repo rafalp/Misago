@@ -90,15 +90,16 @@ def test_store_uploaded_file_stores_image_file_with_thumbnail(
     assert attachment.name == upload.name
     assert attachment.slug == "image-png"
     assert attachment.filetype_id == filetype.id
-    assert attachment.dimensions == "800x800"
 
     assert attachment.upload
     assert attachment.upload.url
+    assert attachment.dimensions == "800x800"
     assert attachment.size == upload.size
 
     assert attachment.thumbnail
     assert attachment.thumbnail.url
-    assert attachment.thumbnail.size
+    assert attachment.thumbnail_dimensions == "300x300"
+    assert attachment.thumbnail_size
 
 
 @override_dynamic_settings(

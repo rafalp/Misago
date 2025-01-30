@@ -75,8 +75,8 @@ def store_uploaded_file(
         uploaded_at=timezone.now(),
         name=clean_name,
         slug=slugify(clean_name),
-        size=upload.size,
         filetype_id=filetype.id,
+        size=upload.size,
     )
 
     upload.name = trim_filename(upload.name, filetype)
@@ -142,6 +142,7 @@ def _store_attachment_image(
         attachment.thumbnail = SimpleUploadedFile(
             upload.name, thumbnail_stream.getvalue(), upload.content_type
         )
+        attachment.thumbnail_dimensions = "x".join(map(str, image.size))
         attachment.thumbnail_size = attachment.thumbnail.size
         del thumbnail_stream
 
