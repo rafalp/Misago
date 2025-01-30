@@ -193,7 +193,7 @@ def reverse_attachment_url(attachment_type, matchobj):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_attachments", "0006_attachment_populate_thumbnail_size"),
+        ("misago_attachments", "0005_attachment_clean_names_populate_slugs"),
         ("misago_threads", "0015_post_metadata"),
     ]
 
