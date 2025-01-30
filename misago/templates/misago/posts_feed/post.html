@@ -190,6 +190,17 @@
           <article class="rich-text">
             {% rich_text post.parsed rich_text_data %}
           </article>
+          {% if attachments %}
+            <ul class="list-unstyled">
+              {% for attachment in attachments %}
+                <li class="py-3">
+                  <a href="{{ attachment.get_absolute_url }}" target="_blank" class="btn btn-default">
+                    {{ attachment.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
         </div>
 
         <div class="posts-feed-item-post-body-footer">

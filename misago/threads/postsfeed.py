@@ -123,8 +123,19 @@ class PostsFeed:
     def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:
             if item["type"] == "post":
-                item["poster"] = related_objects["users"].get(item["post"].poster_id)
-                item["rich_text_data"] = related_objects
+                self.set_post_related_objects(item, item["post"], related_objects)
+
+    def set_post_related_objects(self, item: dict, post: Post, related_objects: dict) -> None:
+        item["poster"] = related_objects["users"].get(post.poster_id)
+        item["rich_text_data"] = related_objects
+
+        embedded_attachments = post.metadata.get("attachments", [])
+        for attachment in related_objects["attachments"].values():
+            if attachment.post_id == post.id and attachment.id not in embedded_attachments:
+                item["attachments"].append(attachment)
+        
+        if item["attachments"]:
+            item["attachments"].sort(reverse=True, key=lambda a: a.id)
 
 
 class ThreadPostsFeed(PostsFeed):
