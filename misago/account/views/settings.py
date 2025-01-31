@@ -473,19 +473,31 @@ class AccountAttachmentsView(AccountSettingsFormView):
         posted_attachments = max(all_attachments - unused_attachments, 0)
 
         free_storage = 0
+        exceeded_storage = 0
         posted_pc = 0
         unused_pc = 0
+        exceeded_pc = 0
 
         if total_storage:
             free_pc = 100
-            free_storage = total_storage - all_attachments
+            free_storage = max(total_storage - all_attachments, 0)
+
+            if all_attachments > total_storage:
+                exceeded_storage = all_attachments - total_storage
+                max_storage = all_attachments + exceeded_storage
+            else:
+                max_storage = total_storage
+
+            if exceeded_storage:
+                exceeded_pc = ceil(float(exceeded_storage) * 100 / float(max_storage))
+                free_pc -= exceeded_pc
 
             if unused_attachments:
-                unused_pc = ceil(float(unused_attachments) * 100 / float(total_storage))
+                unused_pc = ceil(float(unused_attachments) * 100 / float(max_storage))
                 free_pc -= unused_pc
 
             if posted_attachments:
-                posted_pc = ceil(float(posted_attachments) * 100 / float(total_storage))
+                posted_pc = ceil(float(posted_attachments) * 100 / float(max_storage))
                 posted_pc = min(posted_pc, free_pc)
 
         elif unused_storage_limit and unused_attachments < unused_storage_limit:
@@ -505,11 +517,13 @@ class AccountAttachmentsView(AccountSettingsFormView):
             "total": all_attachments,
             "posted": posted_attachments,
             "unused": unused_attachments,
+            "exceeded": exceeded_storage,
+            "free": free_storage,
             "total_limit": total_storage,
             "unused_limit": unused_storage_limit,
-            "free": free_storage,
             "posted_pc": posted_pc,
             "unused_pc": unused_pc,
+            "exceeded_pc": exceeded_pc,
             "unused_lifetime_hours": unused_attachments_lifetime,
             "unused_lifetime_days": unused_attachments_lifetime_days,
         }

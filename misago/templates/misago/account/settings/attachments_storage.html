@@ -1,9 +1,19 @@
 {% load i18n %}
-<div class="panel-body panel-attachments-storage">
+<div class="panel-body panel-attachments-usage">
   <h4>
     {% trans "Storage usage" context "account attachments page" %}
   </h4>
   <div class="progress">
+    {% if storage_usage.exceeded_pc %}
+      <div
+        class="progress-bar progress-bar-danger"
+        role="progressbar"
+        aria-valuenow="{{ storage_usage.exceeded_pc }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="width: {{ storage_usage.exceeded_pc }}%;"
+      ></div>
+    {% endif %}
     {% if storage_usage.posted_pc %}
       <div
         class="progress-bar"
@@ -36,6 +46,13 @@
       <strong>{% trans "Used:" context "account attachments page" %}</strong>
       {{ storage_usage.total|filesizeformat }}
     </li>
+    {% if storage_usage.exceeded %}
+      <li>
+        <span class="attachment-usage-legend-item attachment-usage-exceeded"></span>
+        <strong>{% trans "Exceeded:" context "account attachments page" %}</strong>
+        {{ storage_usage.exceeded|filesizeformat }}
+      </li>
+    {% endif %}
     <li>
       <span class="attachment-usage-legend-item attachment-usage-posted"></span>
       <strong>{% trans "Posted:" context "account attachments page" %}</strong>
@@ -56,6 +73,19 @@
       </li>
     {% endif %}
   </ul>
+
+  {% if storage_usage.total_limit and storage_usage.total >= storage_usage.total_limit %}
+    <p class="attachment-usage-help-text">
+      <span class="attachment-usage-legend-item attachment-usage-exceeded"></span>
+      <strong>{% trans "Exceeded:" context "account attachments page" %}</strong>
+      {% blocktrans trimmed with exceeded=storage_usage.exceeded|filesizeformat limit=storage_usage.total_limit|filesizeformat context "account attachments page" %}
+        Your attachments are using {{ exceeded }}, exceeding the limit of {{ limit }}.
+      {% endblocktrans %}
+      {% blocktrans trimmed context "account attachments page" %}
+        You won’t be able to upload new attachments until you delete some to free up space.
+      {% endblocktrans %}
+    </p>
+  {% endif %}
 
   {% if storage_usage.total %}
     <p class="attachment-usage-help-text">
