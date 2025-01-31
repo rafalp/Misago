@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n misago_capture %}
 <div class="markup-editor-attachments">
   {% if form.show_attachments_upload %}
     {% with form.upload as upload_field %}
@@ -30,6 +30,12 @@
               Uploaded file can't be larger than {{ limit }}.
             {% endblocktrans %}
           {% endif %}
+          {% capture trimmed as account_attachments %}
+            <a href="{% url 'misago:account-attachments' %}" target="_blank">{% trans "account settings" context "posting form" %}</a>
+          {% endcapture %}
+          {% blocktrans trimmed with settings=account_attachments|safe context "posting form" %}
+            Visit your {{ settings }} to view all your attachments and manage your available storage.
+          {% endblocktrans %}
         </p>
         {% for error in upload_field.errors %}
           <p class="help-block text-danger">{{ error }}</p>
@@ -94,6 +100,8 @@
                 class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
                 title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
                 misago-editor-action="attachment-delete"
+                misago-editor-attachment="{{ attachment.id }}"
+                misago-editor-attachments-field="{{ form.deleted_attachment_ids_field }}"
               >
                 <span class="material-icon">delete</span>
               </button>
