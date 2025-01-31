@@ -73,11 +73,11 @@ class EditView(View):
         formset = self.get_formset(request, post_obj)
         formset.update_state(state)
 
-        if request.POST.get("preview"):
+        if formset.is_request_preview(request):
             formset.clear_errors_in_preview()
             return self.render(request, post_obj, formset, state)
 
-        if request.POST.get("upload_attachments"):
+        if formset.is_request_upload(request):
             formset.clear_errors_in_upload()
             return self.render(request, post_obj, formset)
 

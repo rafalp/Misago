@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.http import HttpRequest
 
 from ...forms.formset import Formset
 from ..forms import InviteUsersForm, PostForm, TitleForm
@@ -31,6 +32,15 @@ class PostingFormset(Formset):
 
     def add_error(self, error: ValidationError):
         self.errors.append(error)
+
+    def is_request_preview(self, request: HttpRequest) -> bool:
+        return bool(request.method == "POST" and request.POST.get("preview"))
+
+    def is_request_upload(self, request: HttpRequest) -> bool:
+        for form in self.forms.values():
+            if form.is_request_upload(request):
+                return True
+        return False
 
     def clear_errors_in_preview(self):
         for form in self.forms.values():

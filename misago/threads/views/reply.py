@@ -66,21 +66,21 @@ class ReplyView(View):
 
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
+        formset = self.get_formset(request, thread)
 
-        if not request.POST.get("preview"):
+        if formset.is_request_preview(request):
             last_post = self.get_last_post(request, thread)
         else:
             last_post = None
 
         state = self.get_state(request, thread, last_post)
-        formset = self.get_formset(request, thread)
         formset.update_state(state)
 
-        if request.POST.get("preview"):
+        if formset.is_request_preview(request):
             formset.clear_errors_in_preview()
             return self.render(request, thread, formset, state)
 
-        if request.POST.get("upload_attachments"):
+        if formset.is_request_upload(request):
             formset.clear_errors_in_upload()
             return self.render(request, thread, formset)
 

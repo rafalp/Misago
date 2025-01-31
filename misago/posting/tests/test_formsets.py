@@ -5,6 +5,7 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
 from ...permissions.proxy import UserPermissionsProxy
 from ..formsets import (
+    PostingFormset,
     get_edit_private_thread_formset,
     get_edit_private_thread_post_formset,
     get_edit_thread_formset,
@@ -14,6 +15,24 @@ from ..formsets import (
     get_start_private_thread_formset,
     get_start_thread_formset,
 )
+
+
+def test_posting_formset_is_request_preview_method_returns_false_for_not_post_request():
+    request = Mock(method="GET", POST={})
+    formset = PostingFormset()
+    assert not formset.is_request_preview(request)
+
+
+def test_posting_formset_is_request_preview_method_returns_false_for_post_request_without_preview():
+    request = Mock(method="POST", POST={})
+    formset = PostingFormset()
+    assert not formset.is_request_preview(request)
+
+
+def test_posting_formset_is_request_preview_method_returns_true_for_post_request():
+    request = Mock(method="POST", POST={"preview": "1"})
+    formset = PostingFormset()
+    assert formset.is_request_preview(request)
 
 
 def test_get_start_thread_formset_initializes_valid_forms(

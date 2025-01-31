@@ -17,11 +17,16 @@ from .attachments import MultipleFileField
 class PostForm(PostingForm):
     form_prefix = "posting-post"
     template_name = "misago/posting/post_form.html"
-    attachment_id_field = "attachment_id"
+
+    attachment_ids_field = "attachment_id"
+    deleted_attachment_ids_field = "deleted_attachment_id"
+    delete_attachment_field = "delete_attachment"
 
     request: HttpRequest
+
     attachments: list[Attachment]
     attachments_permissions: AttachmentsPermissions | None
+    deleted_attachments: list[Attachment]
 
     post = forms.CharField(
         widget=forms.Textarea,
@@ -32,8 +37,10 @@ class PostForm(PostingForm):
 
     def __init__(self, data=None, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.attachments = kwargs.pop("attachments", None) or []
         self.attachments_permissions = kwargs.pop("attachments_permissions", None)
+
+        self.attachments = kwargs.pop("attachments", None) or []
+        self.deleted_attachments = []
 
         super().__init__(data, *args, **kwargs)
 
@@ -44,8 +51,15 @@ class PostForm(PostingForm):
             self.fields["upload"] = MultipleFileField(required=False)
 
             if data:
-                if attachments_ids := data.getlist(self.attachment_id_field):
-                    self.get_unused_attachments(attachments_ids)
+                if attachments_ids := data.getlist(self.attachment_ids_field):
+                    self.set_attachments(attachments_ids)
+
+        if data and self.attachments:
+            delete_attachments_ids = data.getlist(self.deleted_attachment_ids_field)
+            if data.get(self.delete_attachment_field):
+                delete_attachments_ids.append(data[self.delete_attachment_field])
+            if delete_attachments_ids:
+                self.set_deleted_attachments(delete_attachments_ids)
 
     @property
     def show_attachments(self) -> bool:
@@ -92,16 +106,46 @@ class PostForm(PostingForm):
 
     @property
     def attachments_media(self) -> list[Attachment]:
-        return [a for a in self.attachments if a.filetype.is_media]
+        return [
+            a
+            for a in self.attachments
+            if a.filetype.is_media and a not in self.deleted_attachments
+        ]
 
     @property
     def attachments_other(self) -> list[Attachment]:
-        return [a for a in self.attachments if not a.filetype.is_media]
+        return [
+            a
+            for a in self.attachments
+            if not a.filetype.is_media and a not in self.deleted_attachments
+        ]
 
     def sort_attachments(self):
         self.attachments.sort(key=lambda a: a.id, reverse=True)
 
-    def get_unused_attachments(self, ids: list[str]):
+    def set_attachments(self, ids: list[str]):
+        ids = self.clean_ids(ids)
+        ids = ids.difference([a.id for a in self.attachments])
+
+        if ids:
+            self.attachments.extend(
+                Attachment.objects.filter(
+                    id__in=ids,
+                    post__isnull=True,
+                    uploader=self.request.user,
+                    is_deleted=False,
+                )
+            )
+
+        self.sort_attachments()
+
+    def set_deleted_attachments(self, ids: list[str]):
+        ids = self.clean_ids(ids)
+        for attachment in self.attachments:
+            if attachment.id in ids:
+                self.deleted_attachments.append(attachment)
+
+    def clean_ids(self, ids: list[str]) -> set[int]:
         clean_ids: set[str] = set()
         for value in ids:
             try:
@@ -110,20 +154,7 @@ class PostForm(PostingForm):
                     clean_ids.add(clean_value)
             except (TypeError, ValueError):
                 pass
-
-        clean_ids = clean_ids.difference([a.id for a in self.attachments])
-
-        if clean_ids:
-            self.attachments.extend(
-                Attachment.objects.filter(
-                    id__in=clean_ids,
-                    post__isnull=True,
-                    uploader=self.request.user,
-                    is_deleted=False,
-                )
-            )
-
-        self.sort_attachments()
+        return clean_ids
 
     def clean_post(self):
         data = self.cleaned_data["post"]
@@ -149,12 +180,23 @@ class PostForm(PostingForm):
 
         return data
 
-    def get_attachment_storage_constraints(self) -> dict:
-        pass
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data
 
     def update_state(self, state: PostingState):
         state.set_post_message(self.cleaned_data["post"])
         state.set_attachments(self.attachments)
+        state.set_delete_attachments(self.deleted_attachments)
+
+    def is_request_upload(self, request: HttpRequest) -> bool:
+        return bool(
+            request.method == "POST"
+            and (
+                request.POST.get("upload")
+                or request.POST.get(self.delete_attachment_field)
+            )
+        )
 
     def clear_errors_in_preview(self):
         return
