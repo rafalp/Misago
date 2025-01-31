@@ -68,7 +68,7 @@ class ReplyView(View):
         thread = self.get_thread(request, id)
         formset = self.get_formset(request, thread)
 
-        if formset.is_request_preview(request):
+        if not formset.is_request_preview(request):
             last_post = self.get_last_post(request, thread)
         else:
             last_post = None
