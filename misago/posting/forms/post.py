@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
@@ -80,7 +81,10 @@ class PostForm(PostingForm):
 
     @property
     def max_attachments(self) -> int:
-        return self.request.settings.post_attachments_limit
+        return min(
+            self.request.settings.post_attachments_limit,
+            settings.MISAGO_POST_ATTACHMENTS_LIMIT,
+        )
 
     @property
     def attachment_size_limit(self) -> int:
@@ -129,14 +133,16 @@ class PostForm(PostingForm):
         ids = self.clean_ids(ids)
         ids = ids.difference([a.id for a in self.attachments])
 
-        if ids:
+        limit = settings.MISAGO_POST_ATTACHMENTS_LIMIT - len(self.attachments)
+
+        if ids and limit > 0:
             self.attachments.extend(
                 Attachment.objects.filter(
                     id__in=ids,
                     post__isnull=True,
                     uploader=self.request.user,
                     is_deleted=False,
-                )
+                ).order_by("-id")[:limit]
             )
 
         self.sort_attachments()

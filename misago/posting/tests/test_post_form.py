@@ -1,4 +1,5 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
 
 from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ...conf.test import override_dynamic_settings
@@ -343,6 +344,32 @@ def test_post_form_set_attachments_excludes_deleted_unused_attachments(
     form = PostForm(request=request)
     form.set_attachments([user_attachment.id])
     assert form.attachments == []
+
+
+@override_settings(MISAGO_POST_ATTACHMENTS_LIMIT=1)
+def test_post_form_set_attachments_excludes_unused_attachments_over_hard_limit(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    form.set_attachments([user_attachment.id, user_second_attachment.id])
+    assert form.attachments == [user_second_attachment]
+
+
+@override_settings(MISAGO_POST_ATTACHMENTS_LIMIT=1)
+def test_post_form_set_attachments_counts_existing_attachments_to_hard_limit(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_attachments([user_second_attachment.id])
+    assert form.attachments == [user_attachment]
 
 
 def test_post_form_set_deleted_attachments_sets_existing_attachment_as_deleted(
@@ -737,6 +764,19 @@ def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
 
     form = PostForm(request=request)
     assert form.max_attachments == dynamic_settings.post_attachments_limit
+
+
+@override_dynamic_settings(post_attachments_limit=50)
+@override_settings(MISAGO_POST_ATTACHMENTS_LIMIT=20)
+def test_post_form_max_attachments_returns_hard_post_attachments_limit_setting_value_if_lower(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    assert form.max_attachments == 20
 
 
 def test_post_form_attachment_size_limit_returns_size_limit_from_user_permissions(

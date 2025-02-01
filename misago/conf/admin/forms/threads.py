@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings as dj_settings
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import pgettext, pgettext_lazy
 
@@ -219,6 +220,7 @@ class ThreadsSettingsForm(SettingsForm):
             "admin threads settings form", "Maximum number of attachments per post"
         ),
         min_value=1,
+        max_value=dj_settings.MISAGO_POST_ATTACHMENTS_LIMIT,
     )
     additional_embedded_attachments_limit = forms.IntegerField(
         label=pgettext_lazy(
