@@ -37,9 +37,11 @@ class PostingFormset(Formset):
         return bool(request.method == "POST" and request.POST.get("preview"))
 
     def is_request_upload(self, request: HttpRequest) -> bool:
-        for form in self.forms.values():
-            if form.is_request_upload(request):
-                return True
+        if request.method == "POST":
+            for form in self.forms.values():
+                if form.is_request_upload(request):
+                    return True
+
         return False
 
     def clear_errors_in_preview(self):

@@ -1,9 +1,12 @@
 from unittest.mock import Mock
 
+from django.http import HttpRequest
+
 from ...attachments.enums import AllowedAttachments
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
 from ...permissions.proxy import UserPermissionsProxy
+from ..forms import PostingForm
 from ..formsets import (
     PostingFormset,
     get_edit_private_thread_formset,
@@ -17,22 +20,59 @@ from ..formsets import (
 )
 
 
-def test_posting_formset_is_request_preview_method_returns_false_for_not_post_request():
-    request = Mock(method="GET", POST={})
+def test_posting_formset_is_request_preview_method_returns_false_for_not_post_request(
+    rf,
+):
+    request = rf.get("/")
     formset = PostingFormset()
     assert not formset.is_request_preview(request)
 
 
-def test_posting_formset_is_request_preview_method_returns_false_for_post_request_without_preview():
-    request = Mock(method="POST", POST={})
+def test_posting_formset_is_request_preview_method_returns_false_for_post_request_without_preview(
+    rf,
+):
+    request = rf.post("/")
     formset = PostingFormset()
     assert not formset.is_request_preview(request)
 
 
-def test_posting_formset_is_request_preview_method_returns_true_for_post_request():
-    request = Mock(method="POST", POST={"preview": "1"})
+def test_posting_formset_is_request_preview_method_returns_true_for_post_request(rf):
+    request = rf.post("/", {"preview": "1"})
     formset = PostingFormset()
     assert formset.is_request_preview(request)
+
+
+def test_posting_formset_is_request_upload_method_returns_false_for_not_post_request(
+    rf,
+):
+    request = rf.get("/")
+    formset = PostingFormset()
+    assert not formset.is_request_upload(request)
+
+
+class UploadForm(PostingForm):
+    def is_request_upload(self, request: HttpRequest) -> bool:
+        return bool(request.method == "POST" and request.POST.get("upload"))
+
+
+def test_posting_formset_is_request_upload_method_returns_false_for_post_request_without_upload(
+    rf,
+):
+    request = rf.post("/")
+    formset = PostingFormset()
+    formset.add_form(UploadForm(prefix="test"))
+
+    assert not formset.is_request_upload(request)
+
+
+def test_posting_formset_is_request_upload_method_returns_true_for_post_request_with_upload(
+    rf,
+):
+    request = rf.post("/", {"upload": "1"})
+    formset = PostingFormset()
+    formset.add_form(UploadForm(prefix="test"))
+
+    assert formset.is_request_upload(request)
 
 
 def test_get_start_thread_formset_initializes_valid_forms(
