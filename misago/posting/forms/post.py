@@ -39,10 +39,10 @@ class PostForm(PostingForm):
 
     def __init__(self, data=None, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.can_upload_attachments = bool(kwargs.pop("can_upload_attachments", None))
 
         self.attachments = kwargs.pop("attachments", None) or []
         self.deleted_attachments = []
+        self.can_upload_attachments = bool(kwargs.pop("can_upload_attachments", None))
 
         super().__init__(data, *args, **kwargs)
 
@@ -188,10 +188,13 @@ class PostForm(PostingForm):
     def clean(self):
         cleaned_data = super().clean()
 
+        attachments_changed = not all(a.post_id for a in self.attachments)
         attachments_count = len(self.attachments) - len(self.deleted_attachments)
+
         if (
             self.show_attachments_upload
             and "upload" not in self.errors
+            and attachments_changed
             and attachments_count > self.max_attachments
         ):
             try:

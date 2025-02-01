@@ -2,8 +2,8 @@ from django.http import HttpRequest
 
 from ...attachments.models import Attachment
 from ...permissions.attachments import (
-    get_private_threads_attachments_permissions,
-    get_threads_attachments_permissions,
+    can_upload_private_threads_attachments,
+    can_upload_threads_attachments,
 )
 from ...threads.models import Post
 from ..forms import create_post_form, create_title_form
@@ -35,17 +35,15 @@ def get_edit_thread_post_formset(
 def _get_edit_thread_post_formset_action(
     request: HttpRequest, post: Post
 ) -> EditThreadPostFormset:
-    attachments_permissions = get_threads_attachments_permissions(
-        request.user_permissions, post.category_id
-    )
-
     formset = EditThreadPostFormset()
     formset.add_form(
         create_post_form(
             request,
             initial=post.original,
             attachments=get_post_attachments(post),
-            attachments_permissions=attachments_permissions,
+            can_upload_attachments=can_upload_threads_attachments(
+                request.user_permissions, post.category
+            ),
         )
     )
     return formset
@@ -62,9 +60,9 @@ def get_edit_private_thread_post_formset(
 def _get_edit_private_thread_post_formset_action(
     request: HttpRequest, post: Post
 ) -> EditPrivateThreadPostFormset:
-    attachments_permissions = None
+    can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
-        attachments_permissions = get_private_threads_attachments_permissions(
+        can_upload_attachments = can_upload_private_threads_attachments(
             request.user_permissions
         )
 
@@ -74,7 +72,7 @@ def _get_edit_private_thread_post_formset_action(
             request,
             initial=post.original,
             attachments=get_post_attachments(post),
-            attachments_permissions=attachments_permissions,
+            can_upload_attachments=can_upload_attachments,
         )
     )
     return formset
@@ -95,10 +93,6 @@ def get_edit_thread_formset(request: HttpRequest, post: Post) -> EditThreadForms
 def _get_edit_thread_formset_action(
     request: HttpRequest, post: Post
 ) -> EditThreadFormset:
-    attachments_permissions = get_threads_attachments_permissions(
-        request.user_permissions, post.category_id
-    )
-
     formset = EditThreadFormset()
     formset.add_form(create_title_form(request, initial=post.thread.title))
     formset.add_form(
@@ -106,7 +100,9 @@ def _get_edit_thread_formset_action(
             request,
             initial=post.original,
             attachments=get_post_attachments(post),
-            attachments_permissions=attachments_permissions,
+            can_upload_attachments=can_upload_threads_attachments(
+                request.user_permissions, post.category
+            ),
         )
     )
     return formset
@@ -123,9 +119,9 @@ def get_edit_private_thread_formset(
 def _get_edit_private_thread_formset_action(
     request: HttpRequest, post: Post
 ) -> EditPrivateThreadFormset:
-    attachments_permissions = None
+    can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
-        attachments_permissions = get_private_threads_attachments_permissions(
+        can_upload_attachments = can_upload_private_threads_attachments(
             request.user_permissions
         )
 
@@ -136,7 +132,7 @@ def _get_edit_private_thread_formset_action(
             request,
             initial=post.original,
             attachments=get_post_attachments(post),
-            attachments_permissions=attachments_permissions,
+            can_upload_attachments=can_upload_attachments,
         )
     )
     return formset

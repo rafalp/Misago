@@ -1,8 +1,8 @@
 from django.http import HttpRequest
 
 from ...permissions.attachments import (
-    get_private_threads_attachments_permissions,
-    get_threads_attachments_permissions,
+    can_upload_private_threads_attachments,
+    can_upload_threads_attachments,
 )
 from ...threads.models import Thread
 from ..forms import create_post_form
@@ -29,15 +29,13 @@ def get_reply_thread_formset(
 def _get_reply_thread_formset_action(
     request: HttpRequest, thread: Thread
 ) -> ReplyThreadFormset:
-    attachments_permissions = get_threads_attachments_permissions(
-        request.user_permissions, thread.category_id
-    )
-
     formset = ReplyThreadFormset()
     formset.add_form(
         create_post_form(
             request,
-            attachments_permissions=attachments_permissions,
+            can_upload_attachments=can_upload_threads_attachments(
+                request.user_permissions, thread.category
+            ),
         )
     )
     return formset
@@ -54,9 +52,9 @@ def get_reply_private_thread_formset(
 def _get_reply_private_thread_formset_action(
     request: HttpRequest, thread: Thread
 ) -> ReplyPrivateThreadFormset:
-    attachments_permissions = None
+    can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
-        attachments_permissions = get_private_threads_attachments_permissions(
+        can_upload_attachments = can_upload_private_threads_attachments(
             request.user_permissions
         )
 
@@ -64,7 +62,7 @@ def _get_reply_private_thread_formset_action(
     formset.add_form(
         create_post_form(
             request,
-            attachments_permissions=attachments_permissions,
+            can_upload_attachments=can_upload_attachments,
         )
     )
     return formset

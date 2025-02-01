@@ -23,53 +23,34 @@ from .threads import check_see_thread_post_permission, check_see_thread_permissi
 
 __all__ = [
     "AttachmentsPermissions",
-    "check_delete_attachment_permission",
-    "check_download_attachment_permission",
+    "can_upload_private_threads_attachments",
+    "can_upload_threads_attachments",
     "get_threads_attachments_permissions",
     "get_private_threads_attachments_permissions",
 ]
 
 
-@dataclass(frozen=True)
-class AttachmentsPermissions:
-    is_moderator: bool
-    can_upload_attachments: bool
-
-
-def get_threads_attachments_permissions(
-    user_permissions: UserPermissionsProxy, category_id: int
-) -> AttachmentsPermissions:
-    category_permission = (
-        category_id in user_permissions.categories[CategoryPermission.ATTACHMENTS]
-    )
-
-    if not category_permission or user_permissions.user.is_anonymous:
-        return AttachmentsPermissions(
-            is_moderator=False,
-            can_upload_attachments=False,
+def can_upload_threads_attachments(
+    permissions: UserPermissionsProxy, category: Category
+) -> bool:
+    try:
+        return (
+            permissions.can_upload_attachments != CanUploadAttachments.NEVER
+            and category.id in permissions.categories[CategoryPermission.ATTACHMENTS]
         )
+    except (Http404, PermissionDenied):
+        return False
+    else:
+        return True
 
-    return AttachmentsPermissions(
-        is_moderator=user_permissions.is_category_moderator(category_id),
-        can_upload_attachments=bool(user_permissions.can_upload_attachments),
-    )
 
-
-def get_private_threads_attachments_permissions(
-    user_permissions: UserPermissionsProxy,
-) -> AttachmentsPermissions:
-    if user_permissions.user.is_anonymous:
-        return AttachmentsPermissions(
-            is_moderator=False,
-            can_upload_attachments=False,
-        )
-
-    return AttachmentsPermissions(
-        is_moderator=user_permissions.is_private_threads_moderator,
-        can_upload_attachments=(
-            user_permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
-        ),
-    )
+def can_upload_private_threads_attachments(permissions: UserPermissionsProxy) -> bool:
+    try:
+        return permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
+    except (Http404, PermissionDenied):
+        return False
+    else:
+        return True
 
 
 def check_download_attachment_permission(

@@ -18,6 +18,7 @@ from .querysets import (
 __all__ = [
     "CategoryThreadsQuerysetFilter",
     "ThreadsQuerysetFilter",
+    "can_upload_thread_attachments",
     "check_edit_thread_post_permission",
     "check_edit_thread_permission",
     "check_post_in_closed_category_permission",
