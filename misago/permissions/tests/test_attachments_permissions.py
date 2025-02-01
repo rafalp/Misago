@@ -3,10 +3,10 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ..attachments import (
+    can_upload_private_threads_attachments,
+    can_upload_threads_attachments,
     check_delete_attachment_permission,
     check_download_attachment_permission,
-    get_private_threads_attachments_permissions,
-    get_threads_attachments_permissions,
 )
 from ..enums import CanUploadAttachments, CategoryPermission
 from ..models import CategoryGroupPermission, Moderator

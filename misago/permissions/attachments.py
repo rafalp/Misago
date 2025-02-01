@@ -33,24 +33,14 @@ __all__ = [
 def can_upload_threads_attachments(
     permissions: UserPermissionsProxy, category: Category
 ) -> bool:
-    try:
-        return (
-            permissions.can_upload_attachments != CanUploadAttachments.NEVER
-            and category.id in permissions.categories[CategoryPermission.ATTACHMENTS]
-        )
-    except (Http404, PermissionDenied):
-        return False
-    else:
-        return True
+    return (
+        permissions.can_upload_attachments != CanUploadAttachments.NEVER
+        and category.id in permissions.categories[CategoryPermission.ATTACHMENTS]
+    )
 
 
 def can_upload_private_threads_attachments(permissions: UserPermissionsProxy) -> bool:
-    try:
-        return permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
-    except (Http404, PermissionDenied):
-        return False
-    else:
-        return True
+    return permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
 
 
 def check_download_attachment_permission(
