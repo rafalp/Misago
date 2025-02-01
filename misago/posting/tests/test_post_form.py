@@ -46,12 +46,10 @@ def test_post_form_sets_attachments_permissions(rf, dynamic_settings):
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments_permissions.is_moderator
     assert form.attachments_permissions.can_upload_attachments
-    assert form.attachments_permissions.can_always_delete_own_attachments
 
 
 def test_post_form_populates_attachments_with_unused_attachments_on_init(
@@ -67,7 +65,6 @@ def test_post_form_populates_attachments_with_unused_attachments_on_init(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments == [user_attachment]
@@ -90,7 +87,6 @@ def test_post_form_appends_unused_attachments_to_attachments_on_init(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments == [user_second_attachment, user_attachment]
@@ -109,10 +105,134 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=True,
         ),
     )
     assert form.attachments == []
+
+
+def test_post_form_sets_deleted_attachments_on_init(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment, post
+):
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.post(
+        "/", {PostForm.deleted_attachment_ids_field: [user_attachment.id]}
+    )
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(
+        request.POST,
+        request=request,
+        attachments=[user_attachment, user_second_attachment],
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=True,
+            can_upload_attachments=True,
+        ),
+    )
+    assert form.attachments == [user_attachment, user_second_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_sets_deleted_attachments_on_init_if_user_cant_upload_attachments(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment, post
+):
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.post(
+        "/", {PostForm.deleted_attachment_ids_field: [user_attachment.id]}
+    )
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(
+        request.POST,
+        request=request,
+        attachments=[user_attachment, user_second_attachment],
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=True,
+            can_upload_attachments=False,
+        ),
+    )
+    assert form.attachments == [user_attachment, user_second_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_sets_deleted_attachments_on_init_from_delete_attachment_field(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment, post
+):
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.post("/", {PostForm.delete_attachment_field: user_attachment.id})
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(
+        request.POST,
+        request=request,
+        attachments=[user_attachment, user_second_attachment],
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=True,
+            can_upload_attachments=True,
+        ),
+    )
+    assert form.attachments == [user_attachment, user_second_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_sets_deleted_attachments_on_init_from_delete_attachment_field_if_user_cant_upload_attachments(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment, post
+):
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.post("/", {PostForm.delete_attachment_field: user_attachment.id})
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(
+        request.POST,
+        request=request,
+        attachments=[user_attachment, user_second_attachment],
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=True,
+            can_upload_attachments=False,
+        ),
+    )
+    assert form.attachments == [user_attachment, user_second_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_sets_deleted_attachments_on_init_from_both_delete_fields(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment, post
+):
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.post(
+        "/",
+        {
+            PostForm.delete_attachment_field: user_attachment.id,
+            PostForm.deleted_attachment_ids_field: [user_second_attachment.id],
+        },
+    )
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(
+        request.POST,
+        request=request,
+        attachments=[user_attachment, user_second_attachment],
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=True,
+            can_upload_attachments=True,
+        ),
+    )
+    assert form.attachments == [user_attachment, user_second_attachment]
+    assert form.deleted_attachments == [user_attachment, user_second_attachment]
 
 
 def test_post_form_set_attachments_sets_form_attachments(
@@ -241,6 +361,25 @@ def test_post_form_set_deleted_attachments_sets_existing_attachment_as_deleted(
     assert form.deleted_attachments == [user_attachment]
 
 
+def test_post_form_set_deleted_attachments_excludes_other_attachments(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
+):
+    user_attachment.is_deleted = True
+    user_attachment.save()
+
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(
+        request=request,
+        attachments=[user_second_attachment, user_attachment],
+    )
+    form.set_deleted_attachments([user_attachment.id])
+    assert form.attachments == [user_second_attachment, user_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
 def test_post_form_set_deleted_attachments_supports_strings(
     rf, user, dynamic_settings, user_attachment
 ):
@@ -329,7 +468,6 @@ def test_post_form_show_attachments_is_true_if_user_has_upload_permission(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
     assert form.show_attachments
@@ -348,7 +486,6 @@ def test_post_form_show_attachments_is_true_if_form_has_attachments_but_user_can
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments
@@ -366,7 +503,6 @@ def test_post_form_show_attachments_is_false_if_form_has_no_attachments_and_user
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments
@@ -385,7 +521,6 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments_upload
@@ -404,7 +539,6 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments_upload
@@ -423,7 +557,6 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert form.show_attachments_upload
@@ -442,7 +575,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_has_upload_permissio
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -461,7 +593,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -480,7 +611,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -499,7 +629,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -518,7 +647,6 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert not form.show_attachments_upload
@@ -584,7 +712,6 @@ def test_post_form_includes_upload_field_if_show_attachments_upload_is_true(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert form.fields["upload"]
@@ -628,7 +755,6 @@ def test_post_form_attachment_size_limit_returns_size_limit_from_user_permission
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
-            can_always_delete_own_attachments=False,
         ),
     )
     assert form.attachment_size_limit == members_group.attachment_size_limit * 1024
@@ -807,7 +933,6 @@ def test_post_form_clean_upload_validates_attachments_limit(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -839,7 +964,6 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
 
@@ -873,7 +997,6 @@ def test_post_form_clean_upload_validates_uploaded_files(
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=True,
-            can_always_delete_own_attachments=True,
         ),
     )
 
