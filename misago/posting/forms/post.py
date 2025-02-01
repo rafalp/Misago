@@ -8,7 +8,6 @@ from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.upload import handle_attachments_upload
 from ...attachments.validators import validate_post_attachments_limit
-from ...permissions.attachments import AttachmentsPermissions
 from ..state import PostingState
 from ..validators import validate_post
 from .base import PostingForm
@@ -28,8 +27,8 @@ class PostForm(PostingForm):
     request: HttpRequest
 
     attachments: list[Attachment]
-    attachments_permissions: AttachmentsPermissions | None
     deleted_attachments: list[Attachment]
+    can_upload_attachments: bool
 
     post = forms.CharField(
         widget=forms.Textarea,
@@ -40,7 +39,7 @@ class PostForm(PostingForm):
 
     def __init__(self, data=None, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.attachments_permissions = kwargs.pop("attachments_permissions", None)
+        self.can_upload_attachments = bool(kwargs.pop("can_upload_attachments", None))
 
         self.attachments = kwargs.pop("attachments", None) or []
         self.deleted_attachments = []
@@ -70,12 +69,10 @@ class PostForm(PostingForm):
 
     @property
     def show_attachments_upload(self) -> bool:
-        permissions = self.attachments_permissions
         settings = self.request.settings
 
         return (
-            permissions
-            and permissions.can_upload_attachments
+            self.can_upload_attachments
             and settings.allowed_attachment_types != AllowedAttachments.NONE
         )
 
@@ -230,13 +227,13 @@ def create_post_form(
     request: HttpRequest,
     *,
     attachments: list[Attachment] | None = None,
-    attachments_permissions: AttachmentsPermissions | None = None,
+    can_upload_attachments: bool = False,
     initial: str | None = None,
 ) -> PostForm:
     kwargs = {
         "request": request,
         "attachments": attachments,
-        "attachments_permissions": attachments_permissions,
+        "can_upload_attachments": can_upload_attachments,
         "prefix": PostForm.form_prefix,
     }
 
