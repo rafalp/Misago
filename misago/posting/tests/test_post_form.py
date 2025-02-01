@@ -1,5 +1,3 @@
-from unittest.mock import Mock
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
@@ -9,41 +7,40 @@ from ...permissions.proxy import UserPermissionsProxy
 from ..forms import PostForm
 
 
-class MockQueryDict(dict):
-    def get(self, key: str, default=None):
-        if key not in self:
-            return default
+def test_post_form_sets_request(rf, dynamic_settings):
+    request = rf.get("/")
+    request.settings = dynamic_settings
 
-        value = self[key]
-        if isinstance(value, list):
-            return value[0]
-
-        return value
-
-    def getlist(self, key: str, default=None):
-        if key not in self:
-            return default
-
-        return list(self[key])
-
-
-def test_post_form_sets_request(dynamic_settings):
-    request = Mock(settings=dynamic_settings)
     form = PostForm(request=request)
     assert form.request is request
 
 
-def test_post_form_sets_attachments(
-    user, dynamic_settings, attachment_factory, text_file
-):
-    request = Mock(settings=dynamic_settings)
-    attachments = [attachment_factory(text_file, uploader=user)]
+def test_post_form_sets_attachments(rf, user, dynamic_settings, user_attachment):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    attachments = [user_attachment]
     form = PostForm(request=request, attachments=attachments)
-    assert form.attachments is attachments
+    assert form.attachments == attachments
 
 
-def test_post_form_sets_attachments_permissions(dynamic_settings):
-    request = Mock(settings=dynamic_settings)
+def test_post_form_sets_other_users_attachments(
+    rf, user, dynamic_settings, other_user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    attachments = [other_user_attachment]
+    form = PostForm(request=request, attachments=attachments)
+    assert form.attachments == attachments
+
+
+def test_post_form_sets_attachments_permissions(rf, dynamic_settings):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -58,14 +55,14 @@ def test_post_form_sets_attachments_permissions(dynamic_settings):
 
 
 def test_post_form_populates_attachments_with_unused_attachments_on_init(
-    user, dynamic_settings, attachment_factory, text_file
+    rf, user, dynamic_settings, user_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    attachment = attachment_factory(text_file, uploader=user)
-    data = MockQueryDict({PostForm.attachment_ids_field: [attachment.id]})
+    request = rf.post("/", {PostForm.attachment_ids_field: [user_attachment.id]})
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(
-        data,
+        request.POST,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
@@ -73,39 +70,41 @@ def test_post_form_populates_attachments_with_unused_attachments_on_init(
             can_always_delete_own_attachments=True,
         ),
     )
-    assert form.attachments == [attachment]
+    assert form.attachments == [user_attachment]
 
 
 def test_post_form_appends_unused_attachments_to_attachments_on_init(
-    user, dynamic_settings, attachment_factory, text_file, post
+    rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    unused_attachment = attachment_factory(text_file, uploader=user)
-    attachment = attachment_factory(text_file, uploader=user, post=post)
-    data = MockQueryDict({PostForm.attachment_ids_field: [unused_attachment.id]})
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.post("/", {PostForm.attachment_ids_field: [user_second_attachment.id]})
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(
-        data,
+        request.POST,
         request=request,
-        attachments=[attachment],
+        attachments=[user_attachment],
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
             can_upload_attachments=True,
             can_always_delete_own_attachments=True,
         ),
     )
-    assert form.attachments == [attachment, unused_attachment]
+    assert form.attachments == [user_second_attachment, user_attachment]
 
 
 def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_if_user_cant_upload_attachments(
-    user, dynamic_settings, attachment_factory, text_file
+    rf, user, dynamic_settings, user_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    attachment = attachment_factory(text_file, uploader=user)
-    data = MockQueryDict({PostForm.attachment_ids_field: [attachment.id]})
+    request = rf.post("/", {PostForm.attachment_ids_field: [user_attachment.id]})
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(
-        data,
+        request.POST,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=True,
@@ -117,67 +116,77 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
 
 
 def test_post_form_set_attachments_updates_form_attachments(
-    user, dynamic_settings, attachment_factory, text_file, post
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    other_attachment = attachment_factory(text_file, uploader=user, post=post)
-    attachment = attachment_factory(text_file, uploader=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
-    form = PostForm(request=request, attachments=[other_attachment])
-    form.set_attachments([attachment.id])
-    assert form.attachments == [attachment, other_attachment]
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_attachments([user_second_attachment.id])
+    assert form.attachments == [user_second_attachment, user_attachment]
 
 
 def test_post_form_set_attachments_excludes_other_users_unused_attachments(
-    user, other_user, dynamic_settings, attachment_factory, text_file
+    rf, user, dynamic_settings, other_user_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    attachment = attachment_factory(text_file, uploader=other_user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(request=request)
-    form.set_attachments([attachment.id])
+    form.set_attachments([other_user_attachment.id])
     assert form.attachments == []
 
 
 def test_post_form_set_attachments_excludes_attachments_with_posts(
-    user, post, dynamic_settings, attachment_factory, text_file
+    rf, user, dynamic_settings, user_attachment, post
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    attachment = attachment_factory(text_file, uploader=user, post=post)
+    user_attachment.post = post
+    user_attachment.save()
+
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(request=request)
-    form.set_attachments([attachment.id])
+    form.set_attachments([user_attachment.id])
     assert form.attachments == []
 
 
 def test_post_form_set_attachments_excludes_deleted_unused_attachments(
-    user, dynamic_settings, attachment_factory, text_file
+    rf, user, dynamic_settings, user_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    user_attachment.is_deleted = True
+    user_attachment.save()
 
-    attachment = attachment_factory(text_file, uploader=user)
-    attachment.is_deleted = True
-    attachment.save()
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(request=request)
-    form.set_attachments([attachment.id])
+    form.set_attachments([user_attachment.id])
     assert form.attachments == []
 
 
 def test_post_form_show_attachments_is_true_if_form_has_attachments(
-    user, dynamic_settings, attachment_factory, text_file, post
+    rf, user, dynamic_settings, user_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    attachment = attachment_factory(text_file, uploader=user, post=post)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
-    form = PostForm(request=request, attachments=[attachment])
+    form = PostForm(request=request, attachments=[user_attachment])
     assert form.show_attachments
 
 
 def test_post_form_show_attachments_is_true_if_user_has_upload_permission(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -190,14 +199,15 @@ def test_post_form_show_attachments_is_true_if_user_has_upload_permission(
 
 
 def test_post_form_show_attachments_is_true_if_form_has_attachments_but_user_cant_upload(
-    user, dynamic_settings, attachment_factory, text_file, post
+    rf, user, dynamic_settings, user_attachment
 ):
-    request = Mock(settings=dynamic_settings, user=user)
-    attachment = attachment_factory(text_file, uploader=user, post=post)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(
         request=request,
-        attachments=[attachment],
+        attachments=[user_attachment],
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
             can_upload_attachments=False,
@@ -208,9 +218,11 @@ def test_post_form_show_attachments_is_true_if_form_has_attachments_but_user_can
 
 
 def test_post_form_show_attachments_is_false_if_form_has_no_attachments_and_user_cant_upload(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
     form = PostForm(
         request=request,
@@ -225,9 +237,12 @@ def test_post_form_show_attachments_is_false_if_form_has_no_attachments_and_user
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
 def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission_and_all_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -241,9 +256,12 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
 def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission_and_only_media_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -257,9 +275,12 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
 def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission_and_only_image_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -273,9 +294,12 @@ def test_post_form_show_attachments_upload_is_true_if_user_has_upload_permission
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
 def test_post_form_show_attachments_upload_is_false_if_user_has_upload_permission_and_image_uploads_are_disabled(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -289,9 +313,12 @@ def test_post_form_show_attachments_upload_is_false_if_user_has_upload_permissio
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
 def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_all_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -305,9 +332,12 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
 def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_only_media_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -321,9 +351,12 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
 def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_only_image_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -337,9 +370,12 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
 def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_and_image_uploads_are_disabled(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -353,44 +389,59 @@ def test_post_form_show_attachments_upload_is_false_if_user_cant_upload_files_an
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
 def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_all_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
     assert not form.show_attachments_upload
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
 def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_only_media_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
     assert not form.show_attachments_upload
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
 def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_only_image_uploads_are_allowed(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
     assert not form.show_attachments_upload
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
 def test_post_form_show_attachments_upload_is_false_if_permissions_are_not_set_and_image_uploads_are_disabled(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
     assert not form.show_attachments_upload
 
 
 def test_post_form_includes_upload_field_if_show_attachments_upload_is_true(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(
         request=request,
         attachments_permissions=AttachmentsPermissions(
@@ -403,32 +454,37 @@ def test_post_form_includes_upload_field_if_show_attachments_upload_is_true(
 
 
 def test_post_form_excludes_upload_field_if_show_attachments_upload_is_false(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
     assert "upload" not in form.fields
 
 
 def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
     assert form.max_attachments == dynamic_settings.post_attachments_limit
 
 
 def test_post_form_attachment_size_limit_returns_size_limit_from_user_permissions(
-    user, members_group, dynamic_settings, cache_versions
+    rf, user, members_group, dynamic_settings, cache_versions
 ):
     members_group.attachment_size_limit = 42
     members_group.save()
 
-    request = Mock(
-        settings=dynamic_settings,
-        user=user,
-        user_permissions=UserPermissionsProxy(user, cache_versions),
-    )
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
 
     form = PostForm(
         request=request,
@@ -442,8 +498,11 @@ def test_post_form_attachment_size_limit_returns_size_limit_from_user_permission
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
-def test_post_form_accept_attachments_returns_all_types(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_accept_attachments_returns_all_types(rf, user, dynamic_settings):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
 
     types = form.accept_attachments
@@ -453,8 +512,13 @@ def test_post_form_accept_attachments_returns_all_types(user, dynamic_settings):
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.MEDIA.value)
-def test_post_form_accept_attachments_returns_only_media_types(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_accept_attachments_returns_only_media_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
 
     types = form.accept_attachments
@@ -464,8 +528,13 @@ def test_post_form_accept_attachments_returns_only_media_types(user, dynamic_set
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.IMAGES.value)
-def test_post_form_accept_attachments_returns_only_image_types(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_accept_attachments_returns_only_image_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
 
     types = form.accept_attachments
@@ -475,8 +544,13 @@ def test_post_form_accept_attachments_returns_only_image_types(user, dynamic_set
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
-def test_post_form_accept_attachments_returns_empty_str_types(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_accept_attachments_returns_empty_str_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
 
     assert form.accept_attachments == ""
@@ -488,9 +562,12 @@ def test_post_form_accept_attachments_returns_empty_str_types(user, dynamic_sett
     restrict_attachments_extensions_type=AttachmentTypeRestriction.REQUIRE.value,
 )
 def test_post_form_accept_attachments_returns_only_required_types(
-    user, dynamic_settings
+    rf, user, dynamic_settings
 ):
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
 
     types = form.accept_attachments
@@ -507,8 +584,13 @@ def test_post_form_accept_attachments_returns_only_required_types(
     restrict_attachments_extensions="jpg gif",
     restrict_attachments_extensions_type=AttachmentTypeRestriction.DISALLOW.value,
 )
-def test_post_form_accept_attachments_excludes_disallowed_types(user, dynamic_settings):
-    request = Mock(settings=dynamic_settings, user=user)
+def test_post_form_accept_attachments_excludes_disallowed_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request)
 
     types = form.accept_attachments
@@ -519,61 +601,71 @@ def test_post_form_accept_attachments_excludes_disallowed_types(user, dynamic_se
 
 
 def test_post_form_attachments_media_returns_media_attachments_only(
-    user, dynamic_settings, attachment_factory, image_small, text_file
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
 ):
-    media_attachment = attachment_factory(image_small, uploader=user)
-    file_attachment = attachment_factory(text_file, uploader=user)
+    media_attachment = user_attachment
+    file_attachment = user_second_attachment
 
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request, attachments=[media_attachment, file_attachment])
 
     assert form.attachments_media == [media_attachment]
 
 
 def test_post_form_attachments_other_returns_file_attachments_only(
-    user, dynamic_settings, attachment_factory, image_small, text_file
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
 ):
-    media_attachment = attachment_factory(image_small, uploader=user)
-    file_attachment = attachment_factory(text_file, uploader=user)
+    media_attachment = user_attachment
+    file_attachment = user_second_attachment
 
-    request = Mock(settings=dynamic_settings, user=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
     form = PostForm(request=request, attachments=[media_attachment, file_attachment])
 
     assert form.attachments_other == [file_attachment]
 
 
 def test_post_form_sort_attachments_method_sorts_attachments_from_newest(
-    user, dynamic_settings, attachment_factory, text_file
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
 ):
-    first_attachment = attachment_factory(text_file, uploader=user)
-    second_attachment = attachment_factory(text_file, uploader=user)
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
 
-    request = Mock(settings=dynamic_settings, user=user)
     form = PostForm(request=request)
-    form.attachments = [first_attachment, second_attachment]
+    form.attachments = [user_attachment, user_second_attachment]
 
     form.sort_attachments()
-    assert form.attachments == [second_attachment, first_attachment]
+    assert form.attachments == [user_second_attachment, user_attachment]
 
 
 @override_dynamic_settings(post_attachments_limit=2)
 def test_post_form_clean_upload_validates_attachments_limit(
-    user, dynamic_settings, cache_versions, teardown_attachments
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
 ):
-    request = Mock(
-        settings=dynamic_settings,
-        user=user,
-        user_permissions=UserPermissionsProxy(user, cache_versions),
-    )
-
-    form = PostForm(
-        MockQueryDict({"post": "Hello world!"}),
+    request = rf.post(
+        "/",
         {
+            "post": "Hello world!",
             "upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
-            ]
-            * 3
+                SimpleUploadedFile("test2.txt", b"Hello world!", "text/plain"),
+                SimpleUploadedFile("test3.txt", b"Hello world!", "text/plain"),
+            ],
         },
+    )
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    form = PostForm(
+        request.POST,
+        request.FILES,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
@@ -590,17 +682,22 @@ def test_post_form_clean_upload_validates_attachments_limit(
 
 
 def test_post_form_clean_upload_cleans_and_stores_valid_upload(
-    user, dynamic_settings, cache_versions, teardown_attachments
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
 ):
-    request = Mock(
-        settings=dynamic_settings,
-        user=user,
-        user_permissions=UserPermissionsProxy(user, cache_versions),
+    request = rf.post(
+        "/",
+        {
+            "post": "Hello world!",
+            "upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/plain")],
+        },
     )
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
 
     form = PostForm(
-        MockQueryDict({"post": "Hello world!"}),
-        {"upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/plain")]},
+        request.POST,
+        request.FILES,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,
@@ -619,17 +716,22 @@ def test_post_form_clean_upload_cleans_and_stores_valid_upload(
 
 
 def test_post_form_clean_upload_validates_uploaded_files(
-    user, dynamic_settings, cache_versions, teardown_attachments
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
 ):
-    request = Mock(
-        settings=dynamic_settings,
-        user=user,
-        user_permissions=UserPermissionsProxy(user, cache_versions),
+    request = rf.post(
+        "/",
+        {
+            "post": "Hello world!",
+            "upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/invalid")],
+        },
     )
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
 
     form = PostForm(
-        MockQueryDict({"post": "Hello world!"}),
-        {"upload": [SimpleUploadedFile("test.txt", b"Hello world!", "text/invalid")]},
+        request.POST,
+        request.FILES,
         request=request,
         attachments_permissions=AttachmentsPermissions(
             is_moderator=False,

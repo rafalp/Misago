@@ -638,6 +638,20 @@ def user_attachment(user):
 
 
 @pytest.fixture
+def user_second_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="document.pdf",
+        slug="document-pdf",
+        size=1024 * 1024,
+        filetype_id="pdf",
+    )
+
+
+@pytest.fixture
 def other_user_attachment(other_user):
     return Attachment.objects.create(
         uploader=other_user,
