@@ -115,6 +115,62 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
     assert form.attachments == []
 
 
+def test_post_form_set_attachments_sets_form_attachments(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    form.set_attachments([user_attachment.id])
+    assert form.attachments == [user_attachment]
+
+
+def test_post_form_set_attachments_supports_strings(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    form.set_attachments([str(user_attachment.id)])
+    assert form.attachments == [user_attachment]
+
+
+def test_post_form_set_attachments_handles_duplicates(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    form.set_attachments([user_attachment.id, user_attachment.id])
+    assert form.attachments == [user_attachment]
+
+
+def test_post_form_set_attachments_handles_invalid_ids(rf, user, dynamic_settings):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    form.set_attachments(["invalid"])
+    assert form.attachments == []
+
+
+def test_post_form_set_attachments_handles_negative_ids(rf, user, dynamic_settings):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+    form.set_attachments([-10])
+    assert form.attachments == []
+
+
 def test_post_form_set_attachments_updates_form_attachments(
     rf, user, dynamic_settings, user_attachment, user_second_attachment
 ):
@@ -167,6 +223,87 @@ def test_post_form_set_attachments_excludes_deleted_unused_attachments(
     form = PostForm(request=request)
     form.set_attachments([user_attachment.id])
     assert form.attachments == []
+
+
+def test_post_form_set_deleted_attachments_sets_existing_attachment_as_deleted(
+    rf, user, dynamic_settings, user_attachment
+):
+    user_attachment.is_deleted = True
+    user_attachment.save()
+
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_deleted_attachments([user_attachment.id])
+    assert form.attachments == [user_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_set_deleted_attachments_supports_strings(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_deleted_attachments([str(user_attachment.id)])
+    assert form.attachments == [user_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_set_deleted_attachments_handles_duplicates(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_deleted_attachments([user_attachment.id, user_attachment.id])
+    assert form.attachments == [user_attachment]
+    assert form.deleted_attachments == [user_attachment]
+
+
+def test_post_form_set_deleted_attachments_handles_invalid_ids(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_deleted_attachments(["invalid"])
+    assert form.attachments == [user_attachment]
+    assert form.deleted_attachments == []
+
+
+def test_post_form_set_deleted_attachments_handles_negative_ids(
+    rf, user, dynamic_settings, user_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_deleted_attachments([-10])
+    assert form.attachments == [user_attachment]
+    assert form.deleted_attachments == []
+
+
+def test_post_form_set_deleted_attachments_handles_non_existing_ids(
+    rf, user, dynamic_settings, user_attachment, user_second_attachment
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request, attachments=[user_attachment])
+    form.set_deleted_attachments([user_second_attachment.id])
+    assert form.attachments == [user_attachment]
+    assert form.deleted_attachments == []
 
 
 def test_post_form_show_attachments_is_true_if_form_has_attachments(
