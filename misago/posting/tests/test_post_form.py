@@ -1045,6 +1045,77 @@ def test_post_form_clean_upload_validates_uploaded_files(
     assert form.errors["upload"] == ["test.txt: uploaded file type is not allowed."]
 
 
+@override_dynamic_settings(post_attachments_limit=1)
+def test_post_form_clean_validates_attachments_limit(
+    rf, user, dynamic_settings, cache_versions, user_attachment, user_second_attachment
+):
+    request = rf.post(
+        "/",
+        {
+            "post": "Hello world!",
+            PostForm.attachment_ids_field: [
+                user_attachment.id,
+                user_second_attachment.id,
+            ],
+        },
+    )
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    form = PostForm(
+        request.POST,
+        request.FILES,
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+        ),
+    )
+
+    assert not form.is_valid()
+    assert form.attachments == [user_second_attachment, user_attachment]
+    assert form.errors["upload"] == [
+        "Posted message cannot have more than 1 attachment (it has 2).",
+    ]
+
+
+@override_dynamic_settings(post_attachments_limit=1)
+def test_post_form_clean_subtracts_deleted_attachments_from_limit(
+    rf, user, dynamic_settings, cache_versions, user_attachment, user_second_attachment
+):
+    request = rf.post(
+        "/",
+        {
+            "post": "Hello world!",
+            PostForm.attachment_ids_field: [
+                user_attachment.id,
+                user_second_attachment.id,
+            ],
+            PostForm.deleted_attachment_ids_field: [
+                user_second_attachment.id,
+            ],
+        },
+    )
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    form = PostForm(
+        request.POST,
+        request.FILES,
+        request=request,
+        attachments_permissions=AttachmentsPermissions(
+            is_moderator=False,
+            can_upload_attachments=True,
+        ),
+    )
+
+    assert form.is_valid()
+    assert form.attachments == [user_second_attachment, user_attachment]
+    assert form.deleted_attachments == [user_second_attachment]
+
+
 def test_post_form_is_request_upload_returns_false_for_get_request(rf):
     request = rf.get("/")
     assert not PostForm.is_request_upload(request)

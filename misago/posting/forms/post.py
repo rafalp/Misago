@@ -190,6 +190,18 @@ class PostForm(PostingForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        attachments_count = len(self.attachments) - len(self.deleted_attachments)
+        if (
+            self.show_attachments_upload
+            and "upload" not in self.errors
+            and attachments_count > self.max_attachments
+        ):
+            try:
+                validate_post_attachments_limit(attachments_count, self.max_attachments)
+            except forms.ValidationError as error:
+                self.add_error("upload", error)
+
         return cleaned_data
 
     def update_state(self, state: PostingState):
