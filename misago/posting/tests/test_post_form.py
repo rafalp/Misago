@@ -641,3 +641,25 @@ def test_post_form_clean_upload_validates_uploaded_files(
     assert not form.is_valid()
     assert not form.attachments
     assert form.errors["upload"] == ["test.txt: uploaded file type is not allowed."]
+
+
+def test_post_form_is_request_upload_returns_false_for_get_request(rf):
+    request = rf.get("/")
+    assert not PostForm.is_request_upload(request)
+
+
+def test_post_form_is_request_upload_returns_false_for_regular_post_request(rf):
+    request = rf.post("/", {})
+    assert not PostForm.is_request_upload(request)
+
+
+def test_post_form_is_request_upload_returns_true_if_upload_button_was_clicked(rf):
+    request = rf.post("/", {PostForm.upload_attachments: "1"})
+    assert PostForm.is_request_upload(request)
+
+
+def test_post_form_is_request_upload_returns_true_if_delete_attachment_button_was_clicked(
+    rf,
+):
+    request = rf.post("/", {PostForm.delete_attachment_field: "1"})
+    assert PostForm.is_request_upload(request)

@@ -15,7 +15,7 @@
             accept="{{ form.accept_attachments }}"
             multiple
           />
-          <button class="btn btn-default btn-block" type="submit "name="upload_attachments" value="true" formnovalidate>
+          <button class="btn btn-default btn-block" type="submit "name="{{ form.upload_attachments }}" value="true" formnovalidate>
             {% trans "Upload" context "posting form" %}
           </button>
         </div>

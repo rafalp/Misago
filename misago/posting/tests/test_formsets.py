@@ -52,7 +52,7 @@ def test_posting_formset_is_request_upload_method_returns_false_for_not_post_req
 
 class UploadForm(PostingForm):
     def is_request_upload(self, request: HttpRequest) -> bool:
-        return bool(request.method == "POST" and request.POST.get("upload"))
+        return bool(request.method == "POST" and request.POST.get("upload_attachments"))
 
 
 def test_posting_formset_is_request_upload_method_returns_false_for_post_request_without_upload(
@@ -68,7 +68,7 @@ def test_posting_formset_is_request_upload_method_returns_false_for_post_request
 def test_posting_formset_is_request_upload_method_returns_true_for_post_request_with_upload(
     rf,
 ):
-    request = rf.post("/", {"upload": "1"})
+    request = rf.post("/", {"upload_attachments": "1"})
     formset = PostingFormset()
     formset.add_form(UploadForm(prefix="test"))
 

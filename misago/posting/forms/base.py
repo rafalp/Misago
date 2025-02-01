@@ -8,7 +8,8 @@ class PostingForm(forms.Form):
     def update_state(self, state: PostingState):
         pass
 
-    def is_request_upload(self, request: HttpRequest) -> bool:
+    @classmethod
+    def is_request_upload(cls, request: HttpRequest) -> bool:
         return False
 
     def clear_errors_in_preview(self):

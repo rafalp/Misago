@@ -18,6 +18,8 @@ class PostForm(PostingForm):
     form_prefix = "posting-post"
     template_name = "misago/posting/post_form.html"
 
+    upload_attachments = "upload_attachments"
+
     attachment_ids_field = "attachment_id"
     deleted_attachment_ids_field = "deleted_attachment_id"
     delete_attachment_field = "delete_attachment"
@@ -189,12 +191,13 @@ class PostForm(PostingForm):
         state.set_attachments(self.attachments)
         state.set_delete_attachments(self.deleted_attachments)
 
-    def is_request_upload(self, request: HttpRequest) -> bool:
+    @classmethod
+    def is_request_upload(cls, request: HttpRequest) -> bool:
         return bool(
             request.method == "POST"
             and (
-                request.POST.get("upload")
-                or request.POST.get(self.delete_attachment_field)
+                request.POST.get(cls.upload_attachments)
+                or request.POST.get(cls.delete_attachment_field)
             )
         )
 
