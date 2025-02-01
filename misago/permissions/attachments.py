@@ -10,6 +10,8 @@ from ..categories.models import Category
 from ..threads.models import Post, Thread
 from .enums import CanUploadAttachments, CategoryPermission
 from .hooks import (
+    can_upload_private_threads_attachments_hook,
+    can_upload_threads_attachments_hook,
     check_delete_attachment_permission_hook,
     check_download_attachment_permission_hook,
 )
@@ -33,6 +35,14 @@ __all__ = [
 def can_upload_threads_attachments(
     permissions: UserPermissionsProxy, category: Category
 ) -> bool:
+    return can_upload_threads_attachments_hook(
+        _can_upload_threads_attachments_action, permissions, category
+    )
+
+
+def _can_upload_threads_attachments_action(
+    permissions: UserPermissionsProxy, category: Category
+) -> bool:
     return (
         permissions.can_upload_attachments != CanUploadAttachments.NEVER
         and category.id in permissions.categories[CategoryPermission.ATTACHMENTS]
@@ -40,6 +50,14 @@ def can_upload_threads_attachments(
 
 
 def can_upload_private_threads_attachments(permissions: UserPermissionsProxy) -> bool:
+    return can_upload_private_threads_attachments_hook(
+        _can_upload_private_threads_attachments_action, permissions
+    )
+
+
+def _can_upload_private_threads_attachments_action(
+    permissions: UserPermissionsProxy,
+) -> bool:
     return permissions.can_upload_attachments == CanUploadAttachments.EVERYWHERE
 
 

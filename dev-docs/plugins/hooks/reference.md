@@ -68,6 +68,8 @@ Hooks instances are importable from the following Python modules:
 
 - [`build_user_category_permissions_hook`](./build-user-category-permissions-hook.md)
 - [`build_user_permissions_hook`](./build-user-permissions-hook.md)
+- [`can_upload_private_threads_attachments_hook`](./can-upload-private-threads-attachments-hook.md)
+- [`can_upload_threads_attachments_hook`](./can-upload-threads-attachments-hook.md)
 - [`check_browse_category_permission_hook`](./check-browse-category-permission-hook.md)
 - [`check_download_attachment_permission_hook`](./check-download-attachment-permission-hook.md)
 - [`check_edit_private_thread_permission_hook`](./check-edit-private-thread-permission-hook.md)

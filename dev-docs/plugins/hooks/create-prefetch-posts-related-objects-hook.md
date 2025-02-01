@@ -23,9 +23,9 @@ from misago.threads.hooks import create_prefetch_posts_related_objects_hook
 ```python
 def custom_create_prefetch_posts_related_objects_filter(
     action: CreatePrefetchPostsRelatedObjectsHookAction,
-    posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
+    posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None=None,
     threads: Iterable[Thread] | None=None,
@@ -47,28 +47,53 @@ A standard Misago function used to create a `PrefetchPostsRelatedObjects` object
 See the [action](#action) section for details.
 
 
-#### `request: HttpRequest`
+#### `settings: DynamicSettings`
 
-The request object.
+The `DynamicSettings` object.
 
 
-#### `category: Category`
+#### `permissions: UserPermissionsProxy`
 
-A category instance.
+The `UserPermissionsProxy` object for current user.
+
+
+#### `posts: Iterable[Post]`
+
+Iterable of `Post` instances to prefetch related objects for.
+
+
+#### `categories: Iterable[Category] | None = None`
+
+Iterable of categories that were already loaded. Defaults to `None` if not provided.
+
+
+#### `threads: Iterable[Thread] | None = None`
+
+Iterable of threads that were already loaded. Defaults to `None` if not provided.
+
+
+#### `attachments: Iterable[Attachment] | None = None`
+
+Iterable of attachments that were already loaded. Defaults to `None` if not provided.
+
+
+#### `users: Iterable["User"] | None = None`
+
+Iterable of users that were already loaded. Defaults to `None` if not provided.
 
 
 ### Return value
 
-A Python `list` with `ThreadsFilter` instances.
+A `PrefetchPostsRelatedObjects` object to use to fetch related objects.
 
 
 ## Action
 
 ```python
 def create_prefetch_posts_related_objects_action(
-    posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
+    posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None=None,
     threads: Iterable[Thread] | None=None,
@@ -83,11 +108,6 @@ A standard Misago function used to create a `PrefetchPostsRelatedObjects` object
 
 ### Arguments
 
-#### `posts: Iterable[Post]`
-
-Iterable of `Post` instances to prefetch related objects for.
-
-
 #### `settings: DynamicSettings`
 
 The `DynamicSettings` object.
@@ -96,6 +116,11 @@ The `DynamicSettings` object.
 #### `permissions: UserPermissionsProxy`
 
 The `UserPermissionsProxy` object for current user.
+
+
+#### `posts: Iterable[Post]`
+
+Iterable of `Post` instances to prefetch related objects for.
 
 
 #### `categories: Iterable[Category] | None = None`
@@ -161,9 +186,9 @@ def fetch_posts_plugin_data(
 @create_prefetch_posts_related_objects_hook.append_filter
 def include_custom_filter(
     action: CreatePrefetchPostsRelatedObjectsHookAction,
-    posts: Iterable[Post],
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
+    posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
@@ -171,9 +196,9 @@ def include_custom_filter(
     users: Iterable["User"] | None = None,
 ) -> PrefetchPostsRelatedObjects:
     prefetch = action(
-        posts,
         settings,
         permissions,
+        posts,
         categories=categories,
         threads=threads,
         attachments=attachments,
