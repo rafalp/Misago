@@ -77,7 +77,7 @@ class PostForm(PostingForm):
         )
 
     @property
-    def max_attachments(self) -> int:
+    def attachments_limit(self) -> int:
         return min(
             self.request.settings.post_attachments_limit,
             settings.MISAGO_POST_ATTACHMENTS_LIMIT,
@@ -174,7 +174,7 @@ class PostForm(PostingForm):
     def clean_upload(self):
         data = self.cleaned_data["upload"]
 
-        validate_post_attachments_limit(len(data), self.max_attachments)
+        validate_post_attachments_limit(len(data), self.attachments_limit)
         attachments, error = handle_attachments_upload(self.request, data)
 
         self.attachments += attachments
@@ -185,9 +185,7 @@ class PostForm(PostingForm):
 
         return data
 
-    def clean(self):
-        cleaned_data = super().clean()
-
+    def clean_attachments_limit(self):
         attachments_changed = not all(a.post_id for a in self.attachments)
         attachments_count = len(self.attachments) - len(self.deleted_attachments)
 
@@ -195,12 +193,19 @@ class PostForm(PostingForm):
             self.show_attachments_upload
             and "upload" not in self.errors
             and attachments_changed
-            and attachments_count > self.max_attachments
+            and attachments_count > self.attachments_limit
         ):
             try:
-                validate_post_attachments_limit(attachments_count, self.max_attachments)
+                validate_post_attachments_limit(
+                    attachments_count, self.attachments_limit
+                )
             except forms.ValidationError as error:
                 self.add_error("upload", error)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        self.clean_attachments_limit()
 
         return cleaned_data
 

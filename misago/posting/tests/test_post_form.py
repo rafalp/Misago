@@ -698,7 +698,7 @@ def test_post_form_excludes_upload_field_if_show_attachments_upload_is_false(
     assert "upload" not in form.fields
 
 
-def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
+def test_post_form_attachments_limit_returns_post_attachments_limit_setting_value(
     rf, user, dynamic_settings
 ):
     request = rf.get("/")
@@ -706,12 +706,12 @@ def test_post_form_max_attachments_returns_post_attachments_limit_setting_value(
     request.user = user
 
     form = PostForm(request=request)
-    assert form.max_attachments == dynamic_settings.post_attachments_limit
+    assert form.attachments_limit == dynamic_settings.post_attachments_limit
 
 
 @override_dynamic_settings(post_attachments_limit=50)
 @override_settings(MISAGO_POST_ATTACHMENTS_LIMIT=20)
-def test_post_form_max_attachments_returns_hard_post_attachments_limit_setting_value_if_lower(
+def test_post_form_attachments_limit_returns_hard_post_attachments_limit_setting_value_if_lower(
     rf, user, dynamic_settings
 ):
     request = rf.get("/")
@@ -719,7 +719,7 @@ def test_post_form_max_attachments_returns_hard_post_attachments_limit_setting_v
     request.user = user
 
     form = PostForm(request=request)
-    assert form.max_attachments == 20
+    assert form.attachments_limit == 20
 
 
 def test_post_form_attachment_size_limit_returns_size_limit_from_user_permissions(

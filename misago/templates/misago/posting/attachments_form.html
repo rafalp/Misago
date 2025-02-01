@@ -20,7 +20,7 @@
           </button>
         </div>
         <p class="help-block text-help-block">
-          {% blocktrans trimmed count limit=form.max_attachments context "posting form" %}
+          {% blocktrans trimmed count limit=form.attachments_limit context "posting form" %}
             You can attach {{ limit }} file to a post.
           {% plural %}
             You can attach up to {{ limit }} files to a post.
