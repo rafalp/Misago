@@ -117,31 +117,46 @@
       <ul class="markup-editor-attachments-other-list">
         {% for attachment in attachments %}
           <li class="markup-editor-attachments-other-list-item">
-            <div class="markup-editor-attachments-other-list-item-icon">
-              {% if attachment.filetype.is_archive %}
-                <span class="material-icon">description</span>
-              {% elif attachment.filetype.is_document %}
-                <span class="material-icon">description</span>
-              {% else %}
-                <span class="material-icon">description</span>
-              {% endif %}
-            </div>
-            <div class="markup-editor-attachments-other-list-item-body">
-              <div>
-                <div class="markup-editor-attachments-other-list-item-name">
-                  {{ attachment.name }}
-                </div>
-                <div class="markup-editor-attachments-other-list-item-details">
-                  {{ attachment.size|filesizeformat }}
-                </div>
-              </div>
-            </div>
             <button
+              class="markup-editor-attachments-other-list-item-body"
               type="button"
+              title="{% trans 'Click to insert into post' context 'markup editor insert attachment btn' %}"
               misago-editor-action="attachment"
               misago-editor-attachment="{{ attachment.name }}:{{ attachment.id }}"
             >
-              {% trans "Insert" context "markup editor insert attachment btn" %}
+              <div class="markup-editor-attachments-other-list-item-name">
+                {{ attachment.name }}
+              </div>
+              <div class="markup-editor-attachments-other-list-item-description">
+                <span class="markup-editor-attachments-other-list-item-size">
+                  {{ attachment.size|filesizeformat }}
+                </span>
+                <span class="markup-editor-attachments-other-list-item-cta">
+                  {% trans "Insert into post" context "markup editor insert attachment btn" %}
+                </span>
+              </div>
+            </button>
+            <noscript>
+              <button
+                type="submit"
+                class="markup-editor-attachments-other-list-item-delete-button"
+                title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
+                name="{{ form.delete_attachment_field }}"
+                value="{{ attachment.id }}"
+                formnovalidate
+              >
+                <span class="material-icon">delete</span>
+              </button>
+            </noscript>
+            <button
+              type="button"
+              class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
+              title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
+              misago-editor-action="attachment-delete"
+              misago-editor-attachment="{{ attachment.id }}"
+              misago-editor-attachments-field="{{ form.deleted_attachment_ids_field }}"
+            >
+              <span class="material-icon">delete</span>
             </button>
           </li>
         {% endfor %}

@@ -134,17 +134,22 @@
   }
 }
 
-.markup-editor-attachments-noscript-row {
-  display: flex;
-
-  input {
-    margin-right: floor(@grid-gutter-width / 2);
-  }
+.markup-editor-attachments-noscript-row input {
+  margin-bottom: floor(@line-height-computed / 2);
 }
 
-@media screen and (min-width: @screen-sm-min) {
-  .markup-editor-attachments-noscript-row button {
-    width: auto;
+@media screen and (min-width: 400px) {
+  .markup-editor-attachments-noscript-row {
+    display: flex;
+  
+    input {
+      margin-right: floor(@grid-gutter-width / 2);
+      margin-bottom: 0;
+    }
+
+    button {
+      width: auto;
+    }
   }
 }
 
@@ -239,7 +244,6 @@
   font-size: @font-size-small;
   font-weight: bold;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -277,44 +281,78 @@
 }
 
 .markup-editor-attachments-other-list-item {
-  display: grid;
-  grid-template-columns: 40px 100%;
-  gap: floor(@grid-gutter-width / 4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  width: 100%;
   min-width: 0;
-  padding: 2px;
+  height: 100%;
+
+  padding-right: 6px;
 }
 
-.markup-editor-attachments-other-list-item-icon {
+.markup-editor-attachments-other-list-item-body {
+  width: calc(100% - 36px);
+  padding: 2px 6px;
+
+  background: transparent;
+  border: 0;
+  text-align: left;
+
+  cursor: default;
+}
+
+.markup-editor-attachments-other-list-item-name {
+  overflow: hidden;
+
+  font-weight: bold;
+  font-size: @font-size-small;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.markup-editor-attachments-other-list-item-description {
+  color: @gray-light;
+  font-size: @font-size-small;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.markup-editor-attachments-other-list-item-cta {
+  margin-left: 8px;
+}
+
+.markup-editor-attachments-other-list-item-delete-button {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
 
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
 
   background-color: @gray-lighter;
+  border: none;
   border-radius: @border-radius-small;
-  color: @gray-light;
-  font-size: 24px;
+
+  .material-icon {
+    font-size: 16px;
+    line-height: 16px;
+  }
 }
 
-.markup-editor-attachments-other-list-item-body {
-  display: flex;
-  align-items: center;
+.misago-javascript .markup-editor-attachments-other-list-item-body {
+  cursor: pointer;
 
-  width: 100%;
-  max-width: 100%;
-
-  font-size: @font-size-small;
-}
-
-.markup-editor-attachments-other-list-item-name {
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  &:hover,
+  &:active {
+    .markup-editor-attachments-other-list-item-cta {
+      color: @gray-dark;
+      text-decoration: underline;
+    }
+  }
 }
 
 @media screen and (min-width: @screen-sm-min) {
