@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% trans "Log in" context "admin login form" %} | {% if target == "django" %}{% trans "Django Administration" context "admin title" %}{% else %}{% trans "Misago Administration" context "admin title" %}{% endif %}
+  {% translate "Log in" context "admin login form" %} | {% if target == "django" %}{% translate "Django Administration" context "admin title" %}{% else %}{% translate "Misago Administration" context "admin title" %}{% endif %}
 {% endblock %}
 
 
@@ -21,12 +21,12 @@
 
     <div class="card login-form-card">
       <div class="card-body">
-        <h1 class="card-title login-form-title">{% trans "Administration" context "admin login form" %}</h1>
+        <h1 class="card-title login-form-title">{% translate "Administration" context "admin login form" %}</h1>
 
         {% for error in form.non_field_errors %}
           <p class="alert alert-danger text-center" role="alert">
             {{ error }}
-            <br>{% trans "Please try again." context "admin login form" %}
+            <br>{% translate "Please try again." context "admin login form" %}
           </p>
         {% endfor %}
         {% for message in messages %}
@@ -49,7 +49,7 @@
               type="text"
               name="username"
               class="form-control input-lg"
-              placeholder="{% trans 'Username or email' context 'admin login form' %}"
+              placeholder="{% translate 'Username or email' context 'admin login form' %}"
               value="{{ form.username.value|default:'' }}"
             >
           </div>
@@ -60,15 +60,15 @@
               type="password"
               name="password"
               class="form-control input-lg"
-              placeholder="{% trans 'Password' context 'admin login form' %}"
+              placeholder="{% translate 'Password' context 'admin login form' %}"
             >
           </div>
         </div>
         <button class="btn btn-primary btn-block">
-          {% trans "Sign in" context "admin login form btn" %}
+          {% translate "Sign in" context "admin login form btn" %}
         </button>
         <a href="{% url 'misago:index' %}" class="btn btn-light btn-block">
-          {% trans "Return to site" context "admin login form btn" %}
+          {% translate "Return to site" context "admin login form btn" %}
         </a>
       </div>
     </div>

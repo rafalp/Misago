@@ -9,7 +9,7 @@
     </p>
     <div class="threads-list-blankslate-links">
       <a class="btn btn-default" href="{{ threads.filters_clear_url }}">
-        {% trans "Clear filters" context "threads list filter" %}
+        {% translate "Clear filters" context "threads list filter" %}
       </a>
     </div>
   {% else %}
@@ -21,7 +21,7 @@
     {% if start_thread_url %}
       <div class="threads-list-blankslate-links">
         <a class="btn btn-primary" href="{{ start_thread_url }}">
-          {% trans "Start new thread" context "threads list" %}
+          {% translate "Start new thread" context "threads list" %}
         </a>
       </div>
     {% endif %}

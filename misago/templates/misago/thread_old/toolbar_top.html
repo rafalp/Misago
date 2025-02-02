@@ -21,7 +21,7 @@
         <div class="toolbar-item">
           <button class="btn btn-default btn-outline btn-block" type="button" disabled>
             <span class="material-icon">poll</span>
-            {% trans "Add poll" context "thread page options" %}
+            {% translate "Add poll" context "thread page options" %}
           </button>
         </div>
       </div>
@@ -29,7 +29,7 @@
     <div class="toolbar-section">
       <div class="toolbar-item hidden-sm hidden-md hidden-lg toolbar-item-shrink">
         <div class="dropdown">
-          <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Shortcuts' context 'thread page options' %}" type="button" disabled>
+          <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Shortcuts' context 'thread page options' %}" type="button" disabled>
             <span class="material-icon">bookmark</span>
           </button>
         </div>
@@ -38,13 +38,13 @@
         <div class="toolbar-item">
           <button class="btn btn-primary btn-outline btn-block" type="button" disabled>
             <span class="material-icon">chat</span>
-            {% trans "Reply" context "thread page options" %}
+            {% translate "Reply" context "thread page options" %}
           </button>
         </div>
       {% endif %}
       {% if thread.acl.can_start_poll %}
         <div class="toolbar-item hidden-sm hidden-md hidden-lg toolbar-item-shrink">
-          <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Add poll' context 'thread page options' %}" type="button" disabled>
+          <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Add poll' context 'thread page options' %}" type="button" disabled>
             <span class="material-icon">poll</span>
           </button>
         </div>

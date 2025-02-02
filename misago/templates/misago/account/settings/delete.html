@@ -2,7 +2,7 @@
 {% load i18n misago_forms %}
 
 
-{% block title %}{% trans "Delete account" context "account delete page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Delete account" context "account delete page" %} | {{ block.super }}{% endblock %}
 
 
 {% block page %}
@@ -11,21 +11,21 @@
   <div class="panel panel-default panel-form">
     <div class="panel-heading">
       <h3 class="panel-title">
-        {% trans "Delete account" context "account delete page" %}
+        {% translate "Delete account" context "account delete page" %}
       </h3>
     </div>
     <div class="panel-body">
       <p>
-        {% trans "This form allows you to delete your account. This action is not reversible." context "account delete help" %}
+        {% translate "This form allows you to delete your account. This action is not reversible." context "account delete help" %}
       </p>
       <p>
-        {% trans "Your account, including its profile details, IP addresses, and notifications, will be deleted." context "account delete help" %}
+        {% translate "Your account, including its profile details, IP addresses, and notifications, will be deleted." context "account delete help" %}
       </p>
       <p>
-        {% trans "Other content will NOT be deleted, but the username displayed next to it will be changed to one shared by all deleted accounts." context "account delete help" %}
+        {% translate "Other content will NOT be deleted, but the username displayed next to it will be changed to one shared by all deleted accounts." context "account delete help" %}
       </p>
       <p>
-        {% trans "Your username and email address will become available again for use during registration or for other accounts to change to." context "account delete help" %}
+        {% translate "Your username and email address will become available again for use during registration or for other accounts to change to." context "account delete help" %}
       </p>
     </div>
     <div class="panel-footer">
@@ -34,10 +34,10 @@
           <p class="text-danger">{{ error }}</p>
         {% endfor %}
         <div class="input-group">
-          <input type="password" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{% trans 'Enter your password to confirm' context 'account delete page form' %}" {{ field|requiredhtml }} />
+          <input type="password" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{% translate 'Enter your password to confirm' context 'account delete page form' %}" {{ field|requiredhtml }} />
           <span class="input-group-btn">
             <button class="btn btn-danger" type="submit">
-              {% trans "Delete my account" context "account delete submit btn" %}
+              {% translate "Delete my account" context "account delete submit btn" %}
             </button>
           </span>
         </div>

@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% translate "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% translate "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -39,7 +39,7 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You haven't started any threads." context "user profile page threads" %}
+        {% translate "You haven't started any threads." context "user profile page threads" %}
       {% else %}
         {% blocktranslate trimmed with username=profile.username context "user profile page threads" %}
           {{ username }} hasn't started any threads

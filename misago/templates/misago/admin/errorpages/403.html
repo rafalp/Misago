@@ -2,20 +2,20 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Page not available" context "admin error 403" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Page not available" context "admin error 403" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
 <div class="container-fluid">
   <div class="card card-admin-error">
     <h5 class="card-header">
-      {% trans "Requested page is not available"  context "admin error 403"%}
+      {% translate "Requested page is not available"  context "admin error 403"%}
     </h5>
     <div class="card-body">
       {% if message %}
         <p class="mb-0">{{ message }}</p>
       {% else %}
-        <p class="mb-0">{% trans "You don't have permission to access this page." context "admin error 403" %}</p>
+        <p class="mb-0">{% translate "You don't have permission to access this page." context "admin error 403" %}</p>
       {% endif %}
     </div>
   </div>

@@ -15,18 +15,18 @@
   <div class="panel panel-default panel-form">
     <div class="panel-heading">
       <h3 class="panel-title">
-        {% trans "Change preferences" context "account preferences page" %}
+        {% translate "Change preferences" context "account preferences page" %}
       </h3>
     </div>
     <div class="panel-body">
       <fieldset>
         <legend>
-          {% trans "Privacy" context "account preferences page fieldset" %}
+          {% translate "Privacy" context "account preferences page fieldset" %}
         </legend>
         <div class="form-group">
           {% with field=form.is_hiding_presence %}
             <label class="control-label">
-              {% trans "Show my online status to other users:" context "account preferences page form" %}
+              {% translate "Show my online status to other users:" context "account preferences page form" %}
             </label>
             <div class="form-control-choices">
               {% for choice in field.subwidgets %}
@@ -48,7 +48,7 @@
         <div class="form-group">
           {% with field=form.limits_private_thread_invites_to %}
             <label class="control-label">
-              {% trans "Limit who can invite me to their private threads:" context "account preferences page form" %}
+              {% translate "Limit who can invite me to their private threads:" context "account preferences page form" %}
             </label>
             <div class="form-control-choices">
               {% for choice in field.subwidgets %}
@@ -70,20 +70,20 @@
       </fieldset>
       <fieldset>
         <legend>
-          {% trans "Automatic watching" context "account preferences page fieldset" %}
+          {% translate "Automatic watching" context "account preferences page fieldset" %}
         </legend>
         {% include "misago/account/settings/preferences_table.html" with table=watching_preferences %}
       </fieldset>
       <fieldset>
         <legend>
-          {% trans "Notifications" context "account preferences page fieldset" %}
+          {% translate "Notifications" context "account preferences page fieldset" %}
         </legend>
         {% include "misago/account/settings/preferences_table.html" with table=notifications_preferences %}
       </fieldset>
     </div>
     <div class="panel-footer panel-footer-sticky">
       <button class="btn btn-primary" type="submit">
-        {% trans "Save changes" context "account preferences submit btn" %}
+        {% translate "Save changes" context "account preferences submit btn" %}
       </button>
     </div>
   </div>

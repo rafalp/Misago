@@ -22,7 +22,7 @@
     {{ replies }} reply, last one from {{ last_post_on }}.
   {% plural %}
     {{ replies }} replies, last one from {{ last_post_on }}.
-  {% endblocktranslate %}{% if thread.has_best_answer %} {% trans "Answered." context "thread page meta" %}{% endif %}{% if thread.has_best_answer %} {% trans "Closed." context "thread page meta" %}{% endif %}
+  {% endblocktranslate %}{% if thread.has_best_answer %} {% translate "Answered." context "thread page meta" %}{% endif %}{% if thread.has_best_answer %} {% translate "Closed." context "thread page meta" %}{% endif %}
 {% endblock og-description %}
 
 
@@ -33,7 +33,7 @@
     {{ replies }} reply, last one from {{ last_post_on }}.
   {% plural %}
     {{ replies }} replies, last one from {{ last_post_on }}.
-  {% endblocktranslate %}{% if thread.has_best_answer %} {% trans "Answered." context "thread page meta" %}{% endif %}{% if thread.has_best_answer %} {% trans "Closed." context "thread page meta" %}{% endif %}
+  {% endblocktranslate %}{% if thread.has_best_answer %} {% translate "Answered." context "thread page meta" %}{% endif %}{% if thread.has_best_answer %} {% translate "Closed." context "thread page meta" %}{% endif %}
 {% endblock twitter-description %}
 
 

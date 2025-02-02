@@ -4,9 +4,9 @@
 
 {% block title %}
 {% if user.is_authenticated and not user.has_usable_password %}
-  {% trans "Set new password error" context "set new password error page" %} | {{ block.super }}
+  {% translate "Set new password error" context "set new password error page" %} | {{ block.super }}
 {% else %}
-  {% trans "Change forgotten password error" context "forgotten password error page" %} | {{ block.super }}
+  {% translate "Change forgotten password error" context "forgotten password error page" %} | {{ block.super }}
 {% endif %}
 {% endblock %}
 
@@ -22,14 +22,14 @@
 
       <div class="message-body">
         {% if user.is_authenticated and not user.has_usable_password %}
-          <p class="lead">{% trans "Can't set new password." context "set new password error page" %}</p>
+          <p class="lead">{% translate "Can't set new password." context "set new password error page" %}</p>
         {% else %}
-          <p class="lead">{% trans "Can't change forgotten password." context "forgotten password error page" %}</p>
+          <p class="lead">{% translate "Can't change forgotten password." context "forgotten password error page" %}</p>
         {% endif %}
         <p>{{ message }}</p>
         <p>
           <a href="{% url 'misago:forgotten-password' %}">
-            {% trans "Request another password change link." context "forgotten password error page cta" %}
+            {% translate "Request another password change link." context "forgotten password error page cta" %}
           </a>
         </p>
       </div>

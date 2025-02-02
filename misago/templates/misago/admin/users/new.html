@@ -3,19 +3,19 @@
 
 
 {% block title %}
-{% trans "New user" context "admin user form" %} | {{ active_link.name }} | {{ block.super }}
+{% translate "New user" context "admin user form" %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block form-header %}
-{% trans "New user" context "admin user form" %}
+{% translate "New user" context "admin user form" %}
 {% endblock %}
 
 
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic account settings" context "admin user form" %}</legend>
+    <legend>{% translate "Basic account settings" context "admin user form" %}</legend>
 
     {% form_row form.username %}
 
@@ -28,10 +28,10 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "User permissions (deprecated)" context "admin user form" %}</legend>
+    <legend>{% translate "User permissions (deprecated)" context "admin user form" %}</legend>
 
     <div class="alert alert-warning" role="alert">
-      <strong>{% trans "Deprecation warning" context "admin user form" %}:</strong>
+      <strong>{% translate "Deprecation warning" context "admin user form" %}:</strong>
       {% blocktranslate trimmed context "admin user form" %}
       User ranks and roles have been replaced with user groups and moderators and will be removed in a future version of Misago.
       {% endblocktranslate %}
@@ -46,7 +46,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Sign-in credentials" context "admin user form" %}</legend>
+    <legend>{% translate "Sign-in credentials" context "admin user form" %}</legend>
 
     {% form_row form.email %}
     {% form_row form.new_password %}
@@ -56,5 +56,5 @@
 
 
 {% block form-footer %}
-<button class="btn btn-primary btn-sm">{% trans "Save user" context "admin user form" %}</button>
+<button class="btn btn-primary btn-sm">{% translate "Save user" context "admin user form" %}</button>
 {% endblock form-footer %}

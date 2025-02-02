@@ -2,7 +2,7 @@
 {% pluginoutlet MARKUP_EDITOR_TOOLBAR_START %}
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Strong' context 'markup editor' %}"
+  title="{% translate 'Strong' context 'markup editor' %}"
   type="button"
   misago-editor-action="strong"
   misago-editor-priority="6000"
@@ -11,7 +11,7 @@
 </button>
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Emphasis' context 'markup editor' %}"
+  title="{% translate 'Emphasis' context 'markup editor' %}"
   type="button"
   misago-editor-action="emphasis"
   misago-editor-priority="2000"
@@ -20,7 +20,7 @@
 </button>
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Strikethrough' context 'markup editor' %}"
+  title="{% translate 'Strikethrough' context 'markup editor' %}"
   type="button"
   misago-editor-action="strikethrough"
   misago-editor-priority="1000"
@@ -30,7 +30,7 @@
 {% pluginoutlet MARKUP_EDITOR_TOOLBAR_BEFORE_RULER %}
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Horizontal ruler' context 'markup editor' %}"
+  title="{% translate 'Horizontal ruler' context 'markup editor' %}"
   type="button"
   misago-editor-action="horizontal-ruler"
   misago-editor-priority="3000"
@@ -40,7 +40,7 @@
 {% pluginoutlet MARKUP_EDITOR_TOOLBAR_BEFORE_LINK %}
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Link' context 'markup editor' %}"
+  title="{% translate 'Link' context 'markup editor' %}"
   type="button"
   misago-editor-action="link"
   misago-editor-priority="10000"
@@ -50,7 +50,7 @@
 <div class="dropdown d-xs-none" misago-editor-priority="8000">
   <button
     class="btn btn-markup-editor"
-    title="{% trans 'Image' context 'markup editor' %}"
+    title="{% translate 'Image' context 'markup editor' %}"
     aria-expanded="true"
     aria-haspopup="true"
     data-toggle="dropdown"
@@ -61,19 +61,19 @@
   <ul class="dropdown-menu dropdown-menu-auto">
     <li>
       <button class="btn btn-link" type="button">
-        <span class="material-icon">file_upload</span> {% trans 'Upload image' context 'markup editor' %}
+        <span class="material-icon">file_upload</span> {% translate 'Upload image' context 'markup editor' %}
       </button>
     </li>
     <li>
       <button class="btn btn-link" type="button" misago-editor-action="image">
-        <span class="material-icon">insert_link</span> {% trans 'Link to image' context 'markup editor' %}
+        <span class="material-icon">insert_link</span> {% translate 'Link to image' context 'markup editor' %}
       </button>
     </li>
   </ul>
 </div>
 <button
   class="btn btn-markup-editor d-xs-block"
-  title="{% trans 'Image' context 'markup editor' %}"
+  title="{% translate 'Image' context 'markup editor' %}"
   type="button"
   misago-editor-action="image"
   misago-editor-priority="9000"
@@ -83,7 +83,7 @@
 {% pluginoutlet MARKUP_EDITOR_TOOLBAR_BEFORE_QUOTE %}
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Quote' context 'markup editor' %}"
+  title="{% translate 'Quote' context 'markup editor' %}"
   type="button"
   misago-editor-action="quote"
   misago-editor-priority="7000"
@@ -92,7 +92,7 @@
 </button>
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Spoiler' context 'markup editor' %}"
+  title="{% translate 'Spoiler' context 'markup editor' %}"
   type="button"
   misago-editor-action="spoiler"
   misago-editor-priority="4000"
@@ -101,7 +101,7 @@
 </button>
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Code' context 'markup editor' %}"
+  title="{% translate 'Code' context 'markup editor' %}"
   type="button"
   misago-editor-action="code"
   misago-editor-priority="5000"
@@ -111,7 +111,7 @@
 {% pluginoutlet MARKUP_EDITOR_TOOLBAR_BEFORE_UPLOAD %}
 <button
   class="btn btn-markup-editor"
-  title="{% trans 'Upload file' context 'markup editor' %}"
+  title="{% translate 'Upload file' context 'markup editor' %}"
   type="button"
   misago-editor-action="upload"
   misago-editor-priority="11000"

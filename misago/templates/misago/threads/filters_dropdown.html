@@ -10,14 +10,14 @@
     {% if active_filter %}
       {{ active_filter.name }}
     {% else %}
-      {% trans "Filter threads" context "threads list filter" %}
+      {% translate "Filter threads" context "threads list filter" %}
     {% endif %}
   </button>
   <ul class="dropdown-menu stick-to-bottom">
     {% if active_filter %}
       <li>
         <a href="{{ threads.filters_clear_url }}">
-          {% trans "Clear filters" context "threads list filter" %}
+          {% translate "Clear filters" context "threads list filter" %}
         </a>
       </li>
     {% endif %}
@@ -39,7 +39,7 @@
       {% if threads.active_filter %}
         {{ threads.active_filter.name }}
       {% else %}
-        {% trans "Filter threads" context "threads list filter" %}
+        {% translate "Filter threads" context "threads list filter" %}
       {% endif %}
     </label>
     <input id="threads-filters-collapsible" type="checkbox" />
@@ -47,7 +47,7 @@
       {% if active_filter %}
         <li>
           <a href="{{ threads.filters_clear_url }}">
-            {% trans "Clear filters" context "threads list filter" %}
+            {% translate "Clear filters" context "threads list filter" %}
           </a>
         </li>
       {% endif %}

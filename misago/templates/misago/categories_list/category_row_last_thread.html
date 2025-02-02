@@ -28,9 +28,9 @@
       {% else %}
         <span
           class="list-group-category-item-last-thread-title-muted"
-          title="{% trans 'You don\'t have permission to see this thread.' context 'category last reply' %}"
+          title="{% translate 'You don\'t have permission to see this thread.' context 'category last reply' %}"
         >
-          {% trans "Hidden thread" context "category last reply" %}
+          {% translate "Hidden thread" context "category last reply" %}
         </span>
       {% endif %}
       {% if last_thread.last_poster %}
@@ -71,7 +71,7 @@
           info_outline
         </span>
       </span>
-      {% trans "Private category" context "category last reply" %}
+      {% translate "Private category" context "category last reply" %}
     </div>
   {% else %}
     <div class="list-group-category-item-last-thread-text">
@@ -80,7 +80,7 @@
           info_outline
         </span>
       </span>
-      {% trans "Empty category" context "category last reply" %}
+      {% translate "Empty category" context "category last reply" %}
     </div>
   {% endif %}
 </div>

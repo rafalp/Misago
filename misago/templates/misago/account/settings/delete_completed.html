@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Account deleted" context "account deleted page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Account deleted" context "account deleted page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -21,14 +21,14 @@
           {% endblocktranslate %}
         </p>
         <p>
-          {% trans "You have been logged out, and your account will remain locked until it is deleted." context "account deleted page" %}
+          {% translate "You have been logged out, and your account will remain locked until it is deleted." context "account deleted page" %}
         </p>
         <p>
-          {% trans "This process may take a few minutes to complete." context "account deleted page" %}
+          {% translate "This process may take a few minutes to complete." context "account deleted page" %}
         </p>
         <p>
           <a href="{% url 'misago:index'%}" class="btn btn-default">
-            {% trans "Return to homepage" context "account deleted page" %}
+            {% translate "Return to homepage" context "account deleted page" %}
           </a>
         </p>
       </div>

@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Site details" context "admin general settings form" %}</legend>
+    <legend>{% translate "Site details" context "admin general settings form" %}</legend>
 
     {% form_row form.forum_name %}
     {% form_row form.forum_address %}
@@ -14,7 +14,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Logo" context "admin general settings form" %}</legend>
+    <legend>{% translate "Logo" context "admin general settings form" %}</legend>
 
     {% form_row form.logo_text %}
     {% with delete_field=form.logo_delete setting=form_settings.logo %}
@@ -28,7 +28,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Open Graph image" context "admin general settings form" %}</legend>
+    <legend>{% translate "Open Graph image" context "admin general settings form" %}</legend>
 
     {% with delete_field=form.og_image_delete setting=form_settings.og_image %}
       {% form_image_row form.og_image delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
@@ -40,7 +40,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Forum index" context "admin general settings form" %}</legend>
+    <legend>{% translate "Forum index" context "admin general settings form" %}</legend>
 
     {% form_row form.index_view %}
     {% form_row form.index_title %}
@@ -52,7 +52,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Forum footnote" context "admin general settings form" %}</legend>
+    <legend>{% translate "Forum footnote" context "admin general settings form" %}</legend>
 
     {% form_row form.forum_footnote %}
     {% form_row form.email_footer %}
@@ -61,7 +61,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Admin Control Panel" context "admin general settings form" %}</legend>
+    <legend>{% translate "Admin Control Panel" context "admin general settings form" %}</legend>
 
     {% form_row form.show_admin_panel_link_in_ui %}
 

@@ -2,11 +2,11 @@
 {% load i18n misago_avatars %}
 
 
-{% block title %}{% trans "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% translate "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% translate "Username history" context "user profile page username history" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -80,7 +80,7 @@
       {% empty %}
         <li class="list-group-item empty-message">
           {% if is_authenticated_user %}
-            {% trans "Your account has no history of name changes." context "username history empty" %}
+            {% translate "Your account has no history of name changes." context "username history empty" %}
           {% else %}
             {% blocktranslate trimmed with username=profile.username context "user profile page username history" %}
               {{ username }}'s username was never changed.

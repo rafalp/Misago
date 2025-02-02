@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Posting" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Posting" context "admin threads settings form" %}</legend>
 
     {% form_row form.thread_title_length_min %}
     {% form_row form.thread_title_length_max %}
@@ -23,7 +23,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Threads lists" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Threads lists" context "admin threads settings form" %}</legend>
     
     {% form_row form.threads_list_item_categories_component %}
     {% form_row form.threads_per_page %}
@@ -33,7 +33,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Main threads page" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Main threads page" context "admin threads settings form" %}</legend>
 
     {% form_row form.threads_list_categories_component %}
 
@@ -41,7 +41,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Thread pages" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Thread pages" context "admin threads settings form" %}</legend>
     
     {% form_row form.posts_per_page %}
     {% form_row form.posts_per_page_orphans %}
@@ -51,7 +51,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Read-tracker" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Read-tracker" context "admin threads settings form" %}</legend>
     
     {% form_row form.readtracker_cutoff %}
 
@@ -59,7 +59,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Attachment error images" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Attachment error images" context "admin threads settings form" %}</legend>
 
     {% with delete_field=form.attachment_403_image_delete setting=form_settings.attachment_403_image %}
       {% form_image_row form.attachment_403_image delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}

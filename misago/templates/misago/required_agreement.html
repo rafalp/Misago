@@ -16,7 +16,7 @@
         {% if misago_agreement.link %}
           <p class="lead">
             {% capture trimmed as link %}
-              <a href="{{ misago_agreement.link }}" target="_blank">{% trans "here" context "agreement overlay" %}</a>
+              <a href="{{ misago_agreement.link }}" target="_blank">{% translate "here" context "agreement overlay" %}</a>
             {% endcapture %}
             {% blocktranslate trimmed with agreement=misago_agreement.type link=link|safe context "agreement overlay" %}
               Please review the updated {{ agreement }} available {{ link }}.

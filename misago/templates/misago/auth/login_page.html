@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% trans "Sign in" context "login page" %} | {{ block.super }}
+  {% translate "Sign in" context "login page" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -19,7 +19,7 @@
           {% if form_header %}
             {{ form_header }}
           {% else %}
-            {% trans "Sign in" context "login page" %}
+            {% translate "Sign in" context "login page" %}
           {% endif %}
         </h1>
 
@@ -31,7 +31,7 @@
               {% if form_error.code == "inactive_user" %}
                 <br />
                 <a href="{% url 'misago:request-activation' %}" class="inline-block mt-2 link-text-color">
-                  {% trans "Request new activation link?" context "login form" %}
+                  {% translate "Request new activation link?" context "login form" %}
                 </a>
               {% endif %}
             </p>

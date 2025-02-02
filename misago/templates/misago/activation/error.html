@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Activation error" context "account activation page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Activation error" context "account activation page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -15,11 +15,11 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{% trans "Can't activate account." context "account activation page" %}</p>
+        <p class="lead">{% translate "Can't activate account." context "account activation page" %}</p>
         <p>{{ message }}</p>
         <p>
           <a href="{% url 'misago:request-activation' %}">
-            {% trans "Request another activation link."  context "account activation page" %}
+            {% translate "Request another activation link."  context "account activation page" %}
           </a>
         </p>
       </div>

@@ -15,14 +15,14 @@
     <div class="panel panel-default panel-form">
       <div class="panel-heading">
         <h3 class="panel-title">
-          {% trans "Change email address" context "account email page" %}
+          {% translate "Change email address" context "account email page" %}
         </h3>
       </div>
       <div class="panel-body">
         {% with field=form.current_password %}
           <div class="form-group{% if field.errors %} has-error{% endif %}">
             <label class="control-label" for="{{ field.id_for_label }}">
-              {% trans "Current password:" context "account settings form" %}
+              {% translate "Current password:" context "account settings form" %}
             </label>
             <input type="password" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" {{ field|requiredhtml }}/>
             {% for error in field.errors %}
@@ -38,7 +38,7 @@
             misago-validate-user="{{ user.id }}"
           >
             <label class="control-label" for="{{ field.id_for_label }}">
-              {% trans "New email address:" context "account email page form" %}
+              {% translate "New email address:" context "account email page form" %}
             </label>
             <input type="email" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
             {% for error in field.errors %}
@@ -49,7 +49,7 @@
         {% with field=form.confirm_email %}
           <div class="form-group{% if field.errors %} has-error{% endif %}">
             <label class="control-label" for="{{ field.id_for_label }}">
-              {% trans "Confirm new email address:" context "account email page form" %}
+              {% translate "Confirm new email address:" context "account email page form" %}
             </label>
             <input type="email" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
             {% for error in field.errors %}
@@ -60,7 +60,7 @@
       </div>
       <div class="panel-footer panel-footer-sticky">
         <button class="btn btn-primary" type="submit">
-          {% trans "Change email" context "account email submit btn" %}
+          {% translate "Change email" context "account email submit btn" %}
         </button>
       </div>
     </div>

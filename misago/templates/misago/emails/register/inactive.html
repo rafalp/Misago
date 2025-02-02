@@ -24,11 +24,11 @@
   {% endblocktranslate %}
   <br>
   <br>
-  <a href="{% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}">{% trans "Activate my account" context "welcome email activate link" %}</a>
+  <a href="{% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}">{% translate "Activate my account" context "welcome email activate link" %}</a>
   <br>
   <br>
   {% capture trimmed as login_link %}
-  <a href="{% absoluteurl LOGIN_URL %}">{% trans "this form" context "welcome email inactive sign in cta link" %}</a>
+  <a href="{% absoluteurl LOGIN_URL %}">{% translate "this form" context "welcome email inactive sign in cta link" %}</a>
   {% endcapture %}
   {% blocktranslate trimmed with login_form=login_link|safe context "welcome email inactive sign in cta" %}
   Once your account is activated, you can always sign in to it using {{ login_form }}.

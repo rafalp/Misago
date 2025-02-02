@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% if threads.active_filter %}{{ threads.active_filter.name }} | {% endif %}{% trans "Private threads" context "private threads page" %} | {{ block.super }}
+  {% if threads.active_filter %}{{ threads.active_filter.name }} | {% endif %}{% translate "Private threads" context "private threads page" %} | {{ block.super }}
 {% endblock title %}
 
 

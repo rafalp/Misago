@@ -4,8 +4,8 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "Attachment" context "admin attachments list" %}</th>
-<th style="width: 40%;">{% trans "Thread" context "admin attachments list" %}</th>
+<th>{% translate "Attachment" context "admin attachments list" %}</th>
+<th style="width: 40%;">{% translate "Thread" context "admin attachments list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -56,8 +56,8 @@
       {{ item.post.thread }}
     </a>
   {% else %}
-    <em class="text-muted" title="{% trans 'This attachment is not associated with any existing post.' context 'admin orphaned attachment' %}">
-      {% trans "Orphaned" context "admin orphaned attachment" %}
+    <em class="text-muted" title="{% translate 'This attachment is not associated with any existing post.' context 'admin orphaned attachment' %}">
+      {% translate "Orphaned" context "admin orphaned attachment" %}
     </em>
   {% endif %}
 </td>
@@ -65,7 +65,7 @@
   <form action="{% url 'misago:admin:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
     {% csrf_token %}
     <button class="btn btn-light btn-sm">
-      {% trans "Delete" context "admin attachments" %}
+      {% translate "Delete" context "admin attachments" %}
     </button>
   </form>
 </td>
@@ -75,9 +75,9 @@
 {% block blankslate %}
 <td colspan="5">
   {% if active_filters %}
-    {% trans "No attachments matching criteria exist." context "admin attachments" %}
+    {% translate "No attachments matching criteria exist." context "admin attachments" %}
   {% else %}
-    {% trans "No attachments exist." context "admin attachments" %}
+    {% translate "No attachments exist." context "admin attachments" %}
   {% endif %}
 </td>
 {% endblock blankslate %}
@@ -112,7 +112,7 @@
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-delete-confirmation]",
-    "{% trans 'Are you sure you want to delete this attachment?' context 'admin attachments' %}"
+    "{% translate 'Are you sure you want to delete this attachment?' context 'admin attachments' %}"
   )
 </script>
 {% endblock %}

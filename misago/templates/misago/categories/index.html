@@ -6,7 +6,7 @@
   {% if is_index %}
     {{ settings.index_title|default:settings.forum_name }}
   {% else %}
-    {% trans "Categories" context "categories page" %} | {{ block.super }}
+    {% translate "Categories" context "categories page" %} | {{ block.super }}
   {% endif %}
 {% endblock title %}
 
@@ -26,7 +26,7 @@
 
 {% block og-title %}
   {% if THREADS_ON_INDEX %}
-    {% trans "Categories" context "categories page" %}
+    {% translate "Categories" context "categories page" %}
   {% else %}
     {{ settings.index_title|default:settings.forum_name }}
   {% endif %}
@@ -35,7 +35,7 @@
 
 {% block twitter-title %}
   {% if THREADS_ON_INDEX %}
-    {% trans "Categories" context "categories page" %}
+    {% translate "Categories" context "categories page" %}
   {% else %}
     {{ settings.index_title|default:settings.forum_name }}
   {% endif %}

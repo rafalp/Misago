@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% trans "Sign in" context "login page" %} | {{ block.super }}
+  {% translate "Sign in" context "login page" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -17,7 +17,7 @@
           {% if form_header %}
             {{ form_header }}
           {% else %}
-            {% trans "Sign in" context "login page" %}
+            {% translate "Sign in" context "login page" %}
           {% endif %}
         </h1>
     

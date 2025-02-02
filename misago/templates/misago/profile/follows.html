@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Follows" context "user profile page follows" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Follows" context "user profile page follows" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Follows" context "user profile page follows" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Follows" context "user profile page follows" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% translate "Follows" context "user profile page follows" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% translate "Follows" context "user profile page follows" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -50,7 +50,7 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You are not following any users." context "user profile page follows" %}
+        {% translate "You are not following any users." context "user profile page follows" %}
       {% else %}
         {% blocktranslate trimmed with username=profile.username context "user profile page follows" %}
           {{ username }} is not following any users.

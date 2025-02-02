@@ -20,7 +20,7 @@
           {% if error.message %}
             <p>{{ error.message }}</p>
           {% endif %}
-          <p>{% trans "Found problems:" context "error oauth2 profile page" %}</p>
+          <p>{% translate "Found problems:" context "error oauth2 profile page" %}</p>
           {% for validation_error in error_list %}
             <p>&mdash; {{ validation_error }}</p>
           {% endfor %}

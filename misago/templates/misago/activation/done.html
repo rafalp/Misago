@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Account activated" context "account activation page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Account activated" context "account activation page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -16,7 +16,7 @@
 
       <div class="message-body">
         <p class="lead">{{ message }}</p>
-        <p>{% trans "You can now sign in to finish setting up your account and to participate in or start new discussions." context "account activation page" %}</p>
+        <p>{% translate "You can now sign in to finish setting up your account and to participate in or start new discussions." context "account activation page" %}</p>
       </div>
 
     </div>

@@ -3,7 +3,7 @@
 {% if formset.errors %}
   <div class="posting-errors">
     <h4 class="posting-errors-title">
-      {% trans "Content could not be saved:" context "posting form errors" %}
+      {% translate "Content could not be saved:" context "posting form errors" %}
     </h4>
     <ul class="posting-errors-list">
       {% for error in formset.errors %}

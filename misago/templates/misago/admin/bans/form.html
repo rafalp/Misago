@@ -4,9 +4,9 @@
 
 {% block title %}
 {% if target.pk %}
-{% trans target.banned_value %}
+{% translate target.banned_value %}
 {% else %}
-{% trans "New ban" context "admin ban form" %}
+{% translate "New ban" context "admin ban form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -23,9 +23,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit ban" context "admin ban form" %}
+  {% translate "Edit ban" context "admin ban form" %}
 {% else %}
-  {% trans "New ban" context "admin ban form" %}
+  {% translate "New ban" context "admin ban form" %}
 {% endif %}
 {% endblock %}
 
@@ -33,7 +33,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Ban settings" context "admin ban form" %}</legend>
+    <legend>{% translate "Ban settings" context "admin ban form" %}</legend>
 
     {% form_row form.check_type %}
     {% form_row form.banned_value %}
@@ -44,7 +44,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Messages" context "admin ban form" %}</legend>
+    <legend>{% translate "Messages" context "admin ban form" %}</legend>
 
     {% form_row form.user_message %}
     {% form_row form.staff_message %}
@@ -58,8 +58,8 @@
 <script type="text/javascript">
   window.misago.initDatepicker({
     elementId: "id_expires_on",
-    never: "{% trans 'Never' context 'admin ban expires choice' %}",
-    setDate: "{% trans 'Set date' context 'admin ban expires choice' %}"
+    never: "{% translate 'Never' context 'admin ban expires choice' %}",
+    setDate: "{% translate 'Set date' context 'admin ban expires choice' %}"
   })
 </script>
 {% endblock %}

@@ -2,18 +2,18 @@
 <div class="card card-admin-info">
   <div class="card-body">
     <h4 class="card-title">
-      {% trans "System checks" context "admin checks title" %}
+      {% translate "System checks" context "admin checks title" %}
     </h4>
   </div>
   <div id="admin-version-check" class="card-body border-top">
     <div class="media media-admin-check">
       <div class="media-check-icon">
         <div class="spinner-border" role="status">
-          <span class="sr-only">{% trans "Loading..." context "admin version check" %}</span>
+          <span class="sr-only">{% translate "Loading..." context "admin version check" %}</span>
         </div>
       </div>
       <div class="media-body">
-        <h5>{% trans "Checking Misago version used by the site..." context "admin version check" %}</h5>
+        <h5>{% translate "Checking Misago version used by the site..." context "admin version check" %}</h5>
         {% blocktranslate trimmed context "admin version check" %}
           Version check feature relies on the API operated by the Python Package Index (pypi.org) to retrieve the latest Misago release version.
         {% endblocktranslate %}
@@ -27,7 +27,7 @@
           <span class="fas fa-times"></span>
         </div>
         <div class="media-body">
-          <h5>{% trans "The site is running in DEBUG mode." context "admin debug check" %}</h5>
+          <h5>{% translate "The site is running in DEBUG mode." context "admin debug check" %}</h5>
           {% blocktranslate trimmed context "admin debug check" %}
             Error pages displayed in DEBUG mode will expose site configuration details like secrets and tokens to all visitors.
             This is MAJOR security risk.
@@ -45,8 +45,8 @@
               <span class="fas fa-times"></span>
             </div>
             <div class="media-body">
-              <h5>{% trans "Forum address is not configured." context "admin site address check" %}</h5>
-              {% trans "Links in e-mails sent by Misago will be broken." context "admin site address check" %}
+              <h5>{% translate "Forum address is not configured." context "admin site address check" %}</h5>
+              {% translate "Links in e-mails sent by Misago will be broken." context "admin site address check" %}
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@
               <span class="fas fa-question"></span>
             </div>
             <div class="media-body">
-              <h5>{% trans "Configured forum address appears to be incorrect." context "admin site address check" %}</h5>
+              <h5>{% translate "Configured forum address appears to be incorrect." context "admin site address check" %}</h5>
               <div class="d-block">
                 {% capture trimmed as set_address %}
                   <code>{{ checks.address.set_address }}</code>
@@ -79,7 +79,7 @@
                 {% endblocktranslate %}
               </div>
               <div>
-                {% trans "Links in e-mails sent by Misago may be broken." context "admin site address check" %}
+                {% translate "Links in e-mails sent by Misago may be broken." context "admin site address check" %}
               </div>
             </div>
           </div>
@@ -99,7 +99,7 @@
           <span class="fas fa-question"></span>
         </div>
         <div class="media-body">
-          <h5>{% trans "The site is not running over HTTPS." context "admin https check" %}</h5>
+          <h5>{% translate "The site is not running over HTTPS." context "admin https check" %}</h5>
           {% blocktranslate trimmed context "admin https check" %}
             Browsers may warn users visiting the site about it being insecure. Search engines will lower its position in search results.
           {% endblocktranslate %}
@@ -114,7 +114,7 @@
           <span class="fas fa-times"></span>
         </div>
         <div class="media-body">
-          <h5>{% trans "Cache is disabled." context "admin cache check" %}</h5>
+          <h5>{% translate "Cache is disabled." context "admin cache check" %}</h5>
           {% blocktranslate trimmed context "admin cache check" %}
             This will cause degraded performance and increased CPU usage by the site, leading to worse user experience and increased hosting costs.
           {% endblocktranslate %}

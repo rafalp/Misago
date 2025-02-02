@@ -42,10 +42,10 @@ Could not sign in with {{ provider }}
           {% endif %}
           {% if error.recoverable %}
             <p>
-              {% trans "Please try again." context "error oauth2 page" %}
+              {% translate "Please try again." context "error oauth2 page" %}
             </p>
             <p>
-              <a class="btn btn-primary" href="{% url 'misago:oauth2-login' %}">{% trans "Sign in" context "error oauth2 page cta" %}</a>
+              <a class="btn btn-primary" href="{% url 'misago:oauth2-login' %}">{% translate "Sign in" context "error oauth2 page cta" %}</a>
             </p>
           {% endif %}
       </div>

@@ -37,7 +37,7 @@
       {% endif %}
       {% if user_acl.can_search %}
         <div id="navbar-search-link">
-          <a class="btn btn-navbar-icon" href="{% url 'misago:search' %}" title="{% trans 'Open search' context 'navbar' %}">
+          <a class="btn btn-navbar-icon" href="{% url 'misago:search' %}" title="{% translate 'Open search' context 'navbar' %}">
             <span class="material-icon">search</span>
           </a>
         </div>
@@ -48,31 +48,31 @@
         </button>
       </div>
       {% if user.is_authenticated and user_acl.can_use_private_threads %}
-        <a id="navbar-private-threads" class="btn btn-navbar-icon" href="{% url 'misago:private-threads' %}" title="{% trans 'Open private threads' context 'navbar' %}">
+        <a id="navbar-private-threads" class="btn btn-navbar-icon" href="{% url 'misago:private-threads' %}" title="{% translate 'Open private threads' context 'navbar' %}">
           <span class="material-icon">inbox</span>
         </a>
       {% endif %}
       {% if user.is_authenticated %}
         <div id="navbar-notifications-link">
-          <a class="btn btn-navbar-icon" href="{% url 'misago:notifications' %}" title="{% trans 'Open notifications' context 'navbar' %}">
+          <a class="btn btn-navbar-icon" href="{% url 'misago:notifications' %}" title="{% translate 'Open notifications' context 'navbar' %}">
             <span class="material-icon">notifications_none</span>
           </a>
         </div>
         <div id="navbar-user-nav-link">
-          <a class="btn-navbar-image" href="{% url 'misago:user' slug=user.slug pk=user.id %}" title="{% trans 'Open your options' context 'navbar' %}">
+          <a class="btn-navbar-image" href="{% url 'misago:user' slug=user.slug pk=user.id %}" title="{% translate 'Open your options' context 'navbar' %}">
             <img alt="" class="user-avatar" src="{{ user|avatar:34 }}" srcset="{{ user|avatar:68 }}" width="34" height="34">
           </a>
         </div>
       {% elif settings.enable_oauth2_client %}
         <a class="btn btn-sign-in btn-navbar-sign-in" href="{% url 'misago:oauth2-login' %}">
-          {% trans "Sign in" context "cta" %}
+          {% translate "Sign in" context "cta" %}
         </a>
       {% else %}
         <button class="btn btn-sign-in btn-navbar-sign-in" type="button" disabled>
-          {% trans "Sign in" context "cta" %}
+          {% translate "Sign in" context "cta" %}
         </button>
         <button class="btn btn-register btn-navbar-register" type="button" disabled>
-          {% trans "Register" context "cta" %}
+          {% translate "Register" context "cta" %}
         </button>
       {% endif %}
     </div>

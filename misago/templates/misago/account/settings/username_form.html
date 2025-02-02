@@ -15,7 +15,7 @@
     <div class="panel panel-default panel-form">
       <div class="panel-heading">
         <h3 class="panel-title">
-          {% trans "Change username" context "account username page" %}
+          {% translate "Change username" context "account username page" %}
         </h3>
       </div>
       {% if user_permissions.can_change_username and form.available_changes.can_change_username %}
@@ -27,7 +27,7 @@
               misago-validate-user="{{ user.id }}"
             >
               <label class="control-label" for="{{ field.id_for_label }}">
-                {% trans "New username:" context "account username page form" %}
+                {% translate "New username:" context "account username page form" %}
               </label>
               <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
               {% for error in field.errors %}
@@ -35,7 +35,7 @@
               {% endfor %}
               <p class="help-block">
                 {% if form.available_changes.unlimited %}
-                  {% trans "You can change your username unlimited number of times." context "account username help" %}
+                  {% translate "You can change your username unlimited number of times." context "account username help" %}
                 {% elif form.available_changes.changes_left %}
                   {% blocktranslate trimmed count changes_left=form.available_changes.changes_left context "account username help" %}
                     You can change your username {{ changes_left }} more time.
@@ -56,19 +56,19 @@
         </div>
         <div class="panel-footer panel-footer-sticky">
           <button class="btn btn-primary" type="submit">
-            {% trans "Change username" context "account username submit btn" %}
+            {% translate "Change username" context "account username submit btn" %}
           </button>
         </div>
       {% elif not user_permissions.can_change_username %}
         <div class="panel-body">
-          {% trans "You can't change your username." context "account username help" %}
+          {% translate "You can't change your username." context "account username help" %}
         </div>
       {% else %}
         <div class="panel-body">
           {% if form.available_changes.changes_left == 0 %}
-            {% trans "You have used up all available username changes." context "account username help" %}
+            {% translate "You have used up all available username changes." context "account username help" %}
           {% else %}
-            {% trans "You can't change your username at the moment." context "account username help" %}
+            {% translate "You can't change your username at the moment." context "account username help" %}
           {% endif %}
           {% if form.available_changes.next_change %}
             {% capture trimmed as next_change %}

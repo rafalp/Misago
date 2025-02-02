@@ -38,7 +38,7 @@
               <li class="poll-chart-selected">
                 <span class="material-icon">
                   check_box
-                </span> {% trans "You've voted on this choice." context "thread poll" %}
+                </span> {% translate "You've voted on this choice." context "thread poll" %}
               </li>
             {% endif %}
           </ul>
@@ -52,28 +52,28 @@
       {% if poll.acl.can_vote %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "Vote" context "thread poll" %}
+            {% translate "Vote" context "thread poll" %}
           </button>
         </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "See votes" context "thread poll" %}
+            {% translate "See votes" context "thread poll" %}
           </button>
         </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "Edit" context "thread poll" %}
+            {% translate "Edit" context "thread poll" %}
           </button>
         </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
         <div class="col-xs-6 col-sm-4 col-md-2">
           <button class="btn btn-default btn-block btn-sm" disabled>
-            {% trans "Delete" context "thread poll" %}
+            {% translate "Delete" context "thread poll" %}
           </button>
         </div>
       {% endif %}

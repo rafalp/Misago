@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% translate "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% translate "Followers" context "user profile page followers" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -50,7 +50,7 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You have no followers." context "user profile page followers" %}
+        {% translate "You have no followers." context "user profile page followers" %}
       {% else %}
         {% blocktranslate trimmed with username=profile.username context "user profile page followers" %}
           {{ username }} has no followers.

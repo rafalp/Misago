@@ -28,20 +28,20 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:categories:edit' pk=target.pk %}" class="btn btn-primary btn-sm">
     <span class="fa fa-edit"></span>
-    {% trans "Edit category" context "admin categories" %}
+    {% translate "Edit category" context "admin categories" %}
   </a>
 </div>
 <div class="col-auto page-action">
   <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
     <span class="fas fa-external-link-alt"></span>
-    {% trans "View on site" context "admin categories" %}
+    {% translate "View on site" context "admin categories" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block form-header %}
-{% trans "Change permissions (deprecated)" context "admin category roles form" %}
+{% translate "Change permissions (deprecated)" context "admin category roles form" %}
 {% endblock form-header %}
 
 
@@ -63,7 +63,7 @@
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-cancel-confirmation]",
-    "{% trans 'Are you sure you want to abandon changes?' context 'admin category roles form' %}"
+    "{% translate 'Are you sure you want to abandon changes?' context 'admin category roles form' %}"
   )
 </script>
 {% endblock %}

@@ -6,11 +6,11 @@
       {% if user.is_authenticated %}
         <div class="threads-list-item-col-read-status">
           {% if thread_data.unread %}
-            <div class="threads-list-item-read-status" title="{% trans 'Has unread posts' context 'threads list' %}">
+            <div class="threads-list-item-read-status" title="{% translate 'Has unread posts' context 'threads list' %}">
               <span class="threads-list-unread-icon"></span>
             </div>
           {% else %}
-            <div class="threads-list-item-read-status" title="{% trans 'No unread posts' context 'threads list' %}">
+            <div class="threads-list-item-read-status" title="{% translate 'No unread posts' context 'threads list' %}">
               <span class="threads-list-read-icon"></span>
             </div>
           {% endif %}
@@ -29,7 +29,7 @@
               <a
                 href="{{ thread_data.absolute_url }}{{ thread_data.pages }}/"
                 class="threads-list-item-goto-page"
-                title="{% trans 'Go to last page' context 'threads list' %}"
+                title="{% translate 'Go to last page' context 'threads list' %}"
               >
                 {{ thread_data.pages }}
               </a>
