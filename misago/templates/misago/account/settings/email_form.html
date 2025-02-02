@@ -19,7 +19,7 @@
         </h3>
       </div>
       <div class="panel-body">
-        {% with form.current_password as field %}
+        {% with field=form.current_password %}
           <div class="form-group{% if field.errors %} has-error{% endif %}">
             <label class="control-label" for="{{ field.id_for_label }}">
               {% trans "Current password:" context "account settings form" %}
@@ -31,7 +31,7 @@
             {% include "misago/account/settings/forgotten_password_help_block.html" %}
           </div>
         {% endwith %}
-        {% with form.new_email as field %}
+        {% with field=form.new_email %}
           <div
             class="form-group{% if field.errors %} has-error{% endif %}"
             misago-validate="{% url 'misago:account-validate-email' %}"
@@ -46,7 +46,7 @@
             {% endfor %}
           </div>
         {% endwith %}
-        {% with form.confirm_email as field %}
+        {% with field=form.confirm_email %}
           <div class="form-group{% if field.errors %} has-error{% endif %}">
             <label class="control-label" for="{{ field.id_for_label }}">
               {% trans "Confirm new email address:" context "account email page form" %}

@@ -25,7 +25,7 @@
             {{ fieldset.name }}
           </legend>
           {% for field in fieldset.fields %}
-            {% with field|profilefieldwidget as field_widget %}
+            {% with field_widget=field|profilefieldwidget %}
               <div class="form-group{% if field.errors %} has-error{% endif %}">
                 <label class="control-label"{% if field_widget.type != "radiochoice" %} for="{{ field.id_for_label }}"{% endif %}>
                   {{ field.label }}

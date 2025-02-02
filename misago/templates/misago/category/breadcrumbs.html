@@ -16,7 +16,7 @@
 </ul>
 <ul class="breadcrumbs breadcrumbs-compact">
   {% if breadcrumbs %}
-    {% with breadcrumbs|last as item %}
+    {% with item=breadcrumbs|last %}
       <li class="breadcrumbs-item">
         <a href="{{ item.url }}">
           <span class="material-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>label</span>

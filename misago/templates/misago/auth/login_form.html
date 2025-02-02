@@ -6,7 +6,7 @@
     <input name="next" type="hidden" value="{{ next_page_url }}" />
   {% endif %}
 
-  {% with form.username as field %}
+  {% with field=form.username %}
     <div class="form-group">
       <label class="control-label"  for="{{ field.id_for_label }}">
         {{ field.label }}
@@ -22,7 +22,7 @@
       />
     </div>
   {% endwith %}
-  {% with form.password as field %}
+  {% with field=form.password %}
     <div class="form-group">
       <div class="flex content-center justify-between">
         <label class="control-label"  for="{{ field.id_for_label }}">

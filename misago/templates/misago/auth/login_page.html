@@ -24,7 +24,7 @@
         </h1>
 
         {% if form.non_field_errors %}
-          {% with form.non_field_errors.as_data|first as form_error %}
+          {% with form_error=form.non_field_errors.as_data|first %}
             <p class="panel-login-form-error">
               {{ form_error.message }}
 

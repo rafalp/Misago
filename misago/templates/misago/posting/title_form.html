@@ -1,6 +1,6 @@
 {% load i18n misago_forms %}
 
-{% with form.title as field %}
+{% with field=form.title %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
       {% trans "Title:" context "posting title form" %}

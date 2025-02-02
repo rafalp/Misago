@@ -1,7 +1,7 @@
 {% load i18n misago_forms %}
 
 <div class="form-group">
-  {% with form.category as field %}
+  {% with field=form.category %}
     <label class="control-label" for="{{ field.id_for_label }}">
       {{ field.label }}:
     </label>

@@ -1,5 +1,5 @@
 {% load i18n %}
-{% with ban.get_serialized_message.message as ban_message %}
+{% with ban_message=ban.get_serialized_message.message %}
   {% if ban_message.html %}
     <div class="lead">
       {{ ban_message.html|safe }}

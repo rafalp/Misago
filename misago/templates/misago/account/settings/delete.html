@@ -29,7 +29,7 @@
       </p>
     </div>
     <div class="panel-footer">
-      {% with form.password as field %}
+      {% with field=form.password %}
         {% for error in field.errors %}
           <p class="text-danger">{{ error }}</p>
         {% endfor %}

@@ -1,7 +1,7 @@
 {% load i18n misago_absoluteurl misago_avatars misago_formats %}
 
 {% for thread_data in threads %}
-  {% with thread_data.thread as thread %}
+  {% with thread=thread_data.thread %}
     <li id="threads-item-{{ thread.id }}" class="threads-list-item{% if thread_data.animate %} threads-list-item-animate{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
       {% if user.is_authenticated %}
         <div class="threads-list-item-col-read-status">
@@ -75,7 +75,7 @@
             {% endif %}
             {% if thread_data.categories and categories_component == "breadcrumbs" %}
               <div class="threads-list-item-col-categories">
-                {% with thread_data.categories|last as category %}
+                {% with category=thread_data.categories|last %}
                   <a
                     href="{{ category.url }}"
                     class="threads-list-category-link{% if category.color %} threads-list-category-link-color{% endif %}"
