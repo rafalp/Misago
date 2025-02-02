@@ -40,13 +40,13 @@
 
         <p class="lead">
           {% if ban.expires_on %}
-            {% blocktrans trimmed with username=profile.username expires_on=ban.expires_on|date:"DATETIME_FORMAT" context "user profile page ban details" %}
+            {% blocktranslate trimmed with username=profile.username expires_on=ban.expires_on|date:"DATETIME_FORMAT" context "user profile page ban details" %}
               {{ username }}'s ban expires on {{ expires_on }}.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed with username=profile.username context "user profile page ban details" %}
+            {% blocktranslate trimmed with username=profile.username context "user profile page ban details" %}
               {{ username }}'s ban is permanent.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </p>
       </div>

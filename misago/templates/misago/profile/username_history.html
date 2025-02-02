@@ -17,17 +17,17 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count changes=count context "user profile page username history" %}
+            {% blocktranslate trimmed count changes=count context "user profile page username history" %}
               Your username was changed {{ changes }} time.
             {% plural %}
               Your username was changed {{ changes }} times.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed count changes=count with username=profile context "user profile page username history" %}
+            {% blocktranslate trimmed count changes=count with username=profile context "user profile page username history" %}
               {{ username }}'s username was changed {{ changes }} time.
             {% plural %}
               {{ username }}'s username was changed {{ changes }} times.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </h3>
       </div>
@@ -82,9 +82,9 @@
           {% if is_authenticated_user %}
             {% trans "Your account has no history of name changes." context "username history empty" %}
           {% else %}
-            {% blocktrans trimmed with username=profile.username context "user profile page username history" %}
+            {% blocktranslate trimmed with username=profile.username context "user profile page username history" %}
               {{ username }}'s username was never changed.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </li>
       {% endfor %}

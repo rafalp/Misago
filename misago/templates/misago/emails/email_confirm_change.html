@@ -3,9 +3,9 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user context "email confirm change email" %}
+{% blocktranslate trimmed with user=user context "email confirm change email" %}
   {{ user }}, you are receiving this message because you are changing your e-mail address.
-{% endblocktrans %}
+{% endblocktranslate %}
 <br>
 <br>
 <a href="{% absoluteurl 'misago:account-email-confirm-change' user_id=user.id token=token %}">
@@ -13,10 +13,10 @@
 </a>
 <br>
 <br>
-{% blocktrans trimmed count expires_in=expires_in context "email confirm change email" %}
+{% blocktranslate trimmed count expires_in=expires_in context "email confirm change email" %}
   This link will remain active for {{ expires_in }} hour from the time this message has been sent.
 {% plural %}
   This link will remain active for {{ expires_in }} hours from the time this message has been sent.
-{% endblocktrans %}
+{% endblocktranslate %}
 <br>
 {% endblock content %}

@@ -75,9 +75,9 @@
         {% if is_authenticated_user %}
           {% trans "You are not sharing any details with others." context "user profile page details" %}
         {% else %}
-          {% blocktrans trimmed with username=profile context "user profile page details" %}
+          {% blocktranslate trimmed with username=profile context "user profile page details" %}
             {{ username }} is not sharing any details with others.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% endif %}
       </div>
     </div>

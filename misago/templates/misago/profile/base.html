@@ -6,9 +6,9 @@
 
 
 {% block meta-description %}
-  {% blocktrans trimmed with title=profile.get_any_title joined_on=profile.joined_on|date context "user profile page" %}
+  {% blocktranslate trimmed with title=profile.get_any_title joined_on=profile.joined_on|date context "user profile page" %}
     {{ title }}, joined on {{ joined_on }}.
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock %}
 
 
@@ -17,32 +17,32 @@
 
 
 {% block og-description %}
-  {% blocktrans trimmed with title=profile.get_any_title joined_on=profile.joined_on|date context "user profile page" %}
+  {% blocktranslate trimmed with title=profile.get_any_title joined_on=profile.joined_on|date context "user profile page" %}
     {{ title }}, joined on {{ joined_on }}.
-  {% endblocktrans %} {% blocktrans trimmed count posts=profile.posts context "user profile page" %}
+  {% endblocktranslate %} {% blocktranslate trimmed count posts=profile.posts context "user profile page" %}
     Wrote {{ posts }} post.
   {% plural %}
     Wrote {{ posts }} posts.
-  {% endblocktrans %} {% blocktrans trimmed count threads=profile.threads context "user profile page" %}
+  {% endblocktranslate %} {% blocktranslate trimmed count threads=profile.threads context "user profile page" %}
     Started {{ threads }} thread.
   {% plural %}
     Started {{ threads }} threads.
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock og-description %}
 
 
 {% block twitter-description %}
-  {% blocktrans trimmed with title=profile.get_any_title joined_on=profile.joined_on|date context "user profile page" %}
+  {% blocktranslate trimmed with title=profile.get_any_title joined_on=profile.joined_on|date context "user profile page" %}
     {{ title }}, joined on {{ joined_on }}.
-  {% endblocktrans %} {% blocktrans trimmed count posts=profile.posts context "user profile page" %}
+  {% endblocktranslate %} {% blocktranslate trimmed count posts=profile.posts context "user profile page" %}
     Wrote {{ posts }} post.
   {% plural %}
     Wrote {{ posts }} posts.
-  {% endblocktrans %} {% blocktrans trimmed count threads=profile.threads context "user profile page" %}
+  {% endblocktranslate %} {% blocktranslate trimmed count threads=profile.threads context "user profile page" %}
     Started {{ threads }} thread.
   {% plural %}
     Started {{ threads }} threads.
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock twitter-description %}
 
 

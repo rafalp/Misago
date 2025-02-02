@@ -24,9 +24,9 @@
   {% endif %}
   <div class="dropdown">
     <button aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-block btn-outline" type="button" disabled>
-      {% blocktrans trimmed with page=paginator.page pages=paginator.pages context 'thread paginator' %}
+      {% blocktranslate trimmed with page=paginator.page pages=paginator.pages context 'thread paginator' %}
         Page {{ page }} of {{ pages }}
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </button>
   </div>
   {% if paginator.last %}

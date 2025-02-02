@@ -17,17 +17,17 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count users=count context "user profile page followers" %}
+            {% blocktranslate trimmed count users=count context "user profile page followers" %}
               You have {{ users }} follower.
             {% plural %}
               You have {{ users }} followers.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed count users=count with username=profile context "user profile page followers" %}
+            {% blocktranslate trimmed count users=count with username=profile context "user profile page followers" %}
               {{ username }} has {{ users }} follower.
             {% plural %}
               {{ username }} has {{ users }} followers.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </h3>
       </div>
@@ -52,9 +52,9 @@
       {% if is_authenticated_user %}
         {% trans "You have no followers." context "user profile page followers" %}
       {% else %}
-        {% blocktrans trimmed with username=profile.username context "user profile page followers" %}
+        {% blocktranslate trimmed with username=profile.username context "user profile page followers" %}
           {{ username }} has no followers.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       {% endif %}
     </p>
   {% endif %}

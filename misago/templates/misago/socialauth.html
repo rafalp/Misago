@@ -2,9 +2,9 @@
 {% load i18n %}
 
 
-{% block title %}{% blocktrans trimmed with backend=backend_name context "social auth page" %}
+{% block title %}{% blocktranslate trimmed with backend=backend_name context "social auth page" %}
   Sign in with {{ backend }}
-{% endblocktrans %} | {{ block.super }}{% endblock %}
+{% endblocktranslate %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -20,9 +20,9 @@
         <div class="message-body">
           <p class="lead">{% trans "Enable JavaScript" context "social auth page" %}</p>
           <p>
-            {% blocktrans trimmed with backend=backend_name context "social auth page" %}
+            {% blocktranslate trimmed with backend=backend_name context "social auth page" %}
               You need to enable JavaScript in your browser to complete the sign in with {{ backend }}.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </p>
         </div>
 

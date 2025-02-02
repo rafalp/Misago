@@ -7,17 +7,17 @@
 
 {% block meta-description %}
   {% if users_count %}
-    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
+    {% blocktranslate trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
       {{ posters }} most active poster from last {{ days }} days.
     {% plural %}
       {{ posters }} most active posters from last {{ days }} days.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
-    {% blocktrans trimmed count days=tracked_period context "active posters page meta" %}
+    {% blocktranslate trimmed count days=tracked_period context "active posters page meta" %}
       No users have posted any new messages during last {{ days }} day.
     {% plural %}
       No users have posted any new messages during last {{ days }} days.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% endif %}
 {% endblock meta-description %}
 
@@ -28,34 +28,34 @@
 
 {% block og-description %}
   {% if users_count %}
-    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
+    {% blocktranslate trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
       {{ posters }} top poster from last {{ days }} days.
     {% plural %}
       {{ posters }} top posters from last {{ days }} days.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
-    {% blocktrans trimmed count days=tracked_period context "active posters page meta" %}
+    {% blocktranslate trimmed count days=tracked_period context "active posters page meta" %}
       No users have posted any new messages during last {{ days }} day.
     {% plural %}
       No users have posted any new messages during last {{ days }} days.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% endif %}
 {% endblock og-description %}
 
 
 {% block twitter-description %}
   {% if users_count %}
-    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
+    {% blocktranslate trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page meta" %}
       {{ posters }} top poster from last {{ days }} days.
     {% plural %}
       {{ posters }} top posters from last {{ days }} days.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
-    {% blocktrans trimmed count days=tracked_period context "active posters page meta" %}
+    {% blocktranslate trimmed count days=tracked_period context "active posters page meta" %}
       No users have posted any new messages during last {{ days }} day.
     {% plural %}
       No users have posted any new messages during last {{ days }} days.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% endif %}
 {% endblock twitter-description %}
 
@@ -72,11 +72,11 @@
 
     {% if users_count %}
       <p class="lead">
-        {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page" %}
+        {% blocktranslate trimmed with posters=users_count days=tracked_period count counter=users_count context "active posters page" %}
           {{ posters }} top poster from last {{ days }} days.
         {% plural %}
           {{ posters }} top posters from last {{ days }} days.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </p>
 
       <div class="active-posters ui-ready">
@@ -148,11 +148,11 @@
       </div>
     {% else %}
       <p class="lead">
-        {% blocktrans trimmed count days=tracked_period context "active posters page meta" %}
+        {% blocktranslate trimmed count days=tracked_period context "active posters page meta" %}
           No users have posted any new messages during last {{ days }} day.
         {% plural %}
           No users have posted any new messages during last {{ days }} days.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </p>
     {% endif %}
 

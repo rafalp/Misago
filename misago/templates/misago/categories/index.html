@@ -13,11 +13,11 @@
 
 {% block meta-description %}
   {% if is_index  %}
-    {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
+    {% blocktranslate trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% elif settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% endif %}
@@ -46,11 +46,11 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
+    {% blocktranslate trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% endif %}
 {% endblock og-description %}
 
@@ -59,11 +59,11 @@
   {% if not THREADS_ON_INDEX and settings.index_meta_description %}
     {{ settings.index_meta_description }}
   {% else %}
-    {% blocktrans trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
+    {% blocktranslate trimmed count categories=categories_list|length with forum_name=settings.forum_name context "categories page" %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% endif %}
 {% endblock twitter-description %}
 

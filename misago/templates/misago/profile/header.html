@@ -53,9 +53,9 @@
                   {% endif %}
                   <li class="user-joined-on">
                     <abbr>
-                      {% blocktrans trimmed with joined_on=profile.joined_on|date context "user profile page header" %}
+                      {% blocktranslate trimmed with joined_on=profile.joined_on|date context "user profile page header" %}
                         Joined {{ joined_on }}
-                      {% endblocktrans %}
+                      {% endblocktranslate %}
                     </abbr>
                   </li>
                   {% if user_acl.can_see_users_emails or profile.id == user.id %}

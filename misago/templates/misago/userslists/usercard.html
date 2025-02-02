@@ -39,35 +39,35 @@
         <div class="user-card-stats">
           <ul class="list-unstyled">
             <li class="user-stat-join-date">
-              <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date:'DATETIME_FORMAT' context 'users list item' %}
+              <abbr title="{% blocktranslate trimmed with joined_on=user.joined_on|date:'DATETIME_FORMAT' context 'users list item' %}
                   Joined on {{ joined_on }}
-                {% endblocktrans %}">
-                {% blocktrans trimmed with joined_on=user.joined_on|date context "users list item" %}
+                {% endblocktranslate %}">
+                {% blocktranslate trimmed with joined_on=user.joined_on|date context "users list item" %}
                   Joined on {{ joined_on }}
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </abbr>
             </li>
             <li class="user-stat-divider" />
             <li class="user-stat-posts {{ user.posts|iffalse:'user-stat-empty' }}">
-              {% blocktrans trimmed count posts=user.posts context "users list item" %}
+              {% blocktranslate trimmed count posts=user.posts context "users list item" %}
                 {{ posts }} post
               {% plural %}
                 {{ posts }} posts
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </li>
             <li class="user-stat-threads {{ user.threads|iffalse:'user-stat-empty' }}">
-              {% blocktrans trimmed count threads=user.threads context "users list item" %}
+              {% blocktranslate trimmed count threads=user.threads context "users list item" %}
                 {{ threads }} thread
               {% plural %}
                 {{ threads }} threads
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </li>
             <li class="user-stat-followers {{ user.followers|iffalse:'user-stat-empty' }}">
-              {% blocktrans trimmed count followers=user.followers context "users list item" %}
+              {% blocktranslate trimmed count followers=user.followers context "users list item" %}
                 {{ followers }} follower
               {% plural %}
                 {{ followers }} followers
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </li>
           </ul>
         </div>

@@ -4,24 +4,24 @@
 
 {% block activation-message %}
 {% if activation_by_admin %}
-  {% blocktrans trimmed context "welcome email" %}
+  {% blocktranslate trimmed context "welcome email" %}
   Before you will be able to join discussion on our site, one of administrators will have to activate your account.
-  {% endblocktrans %}
+  {% endblocktranslate %}
   <br>
   <br>
-  {% blocktrans trimmed context "welcome email" %}
+  {% blocktranslate trimmed context "welcome email" %}
   You will receive an e-mail with notification once this happens.
-  {% endblocktrans %}
+  {% endblocktranslate %}
   <br>
   <br>
-  {% blocktrans trimmed context "welcome email" %}
+  {% blocktranslate trimmed context "welcome email" %}
   Thank you for your patience and see you soon!
-  {% endblocktrans %}
+  {% endblocktranslate %}
   <br>
 {% elif activation_by_user %}
-  {% blocktrans trimmed  context "welcome email"%}
+  {% blocktranslate trimmed  context "welcome email"%}
   Before you will be able to join discussion on our site, you have to activate your account. To do so, simply click the link below:
-  {% endblocktrans %}
+  {% endblocktranslate %}
   <br>
   <br>
   <a href="{% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}">{% trans "Activate my account" context "welcome email activate link" %}</a>
@@ -30,9 +30,9 @@
   {% capture trimmed as login_link %}
   <a href="{% absoluteurl LOGIN_URL %}">{% trans "this form" context "welcome email inactive sign in cta link" %}</a>
   {% endcapture %}
-  {% blocktrans trimmed with login_form=login_link|safe context "welcome email inactive sign in cta" %}
+  {% blocktranslate trimmed with login_form=login_link|safe context "welcome email inactive sign in cta" %}
   Once your account is activated, you can always sign in to it using {{ login_form }}.
-  {% endblocktrans %}
+  {% endblocktranslate %}
   <br>
 {% endif %}
 {% endblock activation-message %}

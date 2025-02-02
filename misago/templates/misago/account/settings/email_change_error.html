@@ -21,9 +21,9 @@
         <p>{{ message }}</p>
         {% if error_code == "SIGNATURE_INVALID" %}
           <p>
-            {% blocktrans trimmed context "account email change error page" %}
+            {% blocktranslate trimmed context "account email change error page" %}
               Link's signature will also become invalid when valid link is used for the first time.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </p>
         {% endif %}
       </div>

@@ -33,11 +33,11 @@
       {% endif %}
       <div class="col-xs-12 col-sm-9">
         <p>
-          {% blocktrans trimmed count users=participants|length context "private thread participants" %}
+          {% blocktranslate trimmed count users=participants|length context "private thread participants" %}
             This thread has {{ users }} participant.
           {% plural %}
             This thread has {{ users }} participants.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </p>
       </div>
     </div>

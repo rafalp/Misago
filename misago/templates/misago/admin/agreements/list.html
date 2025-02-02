@@ -57,9 +57,9 @@
       <span class="item-title">{{ item.created_by_name }}</span>
     {% endif %}
   {% endcapture %}
-  {% blocktrans trimmed with created_on=created_on|safe created_by=created_by|safe context "admin agreements list item" %}
+  {% blocktranslate trimmed with created_on=created_on|safe created_by=created_by|safe context "admin agreements list item" %}
     {{ created_on }} by {{ created_by }}
-  {% endblocktrans %}
+  {% endblocktranslate %}
 </td>
 <td class="small">
   {% if item.last_modified_on %}
@@ -75,9 +75,9 @@
         <span class="item-title">{{ item.last_modified_by }}</span>
       {% endif %}
     {% endcapture %}
-    {% blocktrans trimmed with last_modified_on=last_modified_on|safe last_modified_by=last_modified_by|safe context "admin agreements list item" %}
+    {% blocktranslate trimmed with last_modified_on=last_modified_on|safe last_modified_by=last_modified_by|safe context "admin agreements list item" %}
       {{ last_modified_on }} by {{ last_modified_by }}
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
     <em>{% trans "never" context "admin never modified agreement" %}</em>
   {% endif %}

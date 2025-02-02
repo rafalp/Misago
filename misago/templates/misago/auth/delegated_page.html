@@ -22,9 +22,9 @@
         </h1>
     
         <a href="{% url 'misago:oauth2-login' %}" class="btn btn-primary btn-block">
-          {% blocktrans trimmed with provider=settings.oauth2_provider context "login form oauth btn" %}
+          {% blocktranslate trimmed with provider=settings.oauth2_provider context "login form oauth btn" %}
             Sign in with {{ provider }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </a>
       </div>
     </div>

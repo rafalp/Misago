@@ -95,9 +95,9 @@
 {% if settings.enable_oauth2_client %}  
   <div class="alert alert-warning" role="alert">
     <strong>{% trans "Note" context "admin social auth providers" %}:</strong>
-    {% blocktrans trimmed with provider=settings.oauth2_provider context "admin social auth providers" %}
+    {% blocktranslate trimmed with provider=settings.oauth2_provider context "admin social auth providers" %}
     OAuth2 client is enabled. Social authentication has been disabled with login and registration delegated to the {{ provider }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </div>
 {% endif %}
 

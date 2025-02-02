@@ -7,9 +7,9 @@
   {% if settings.enable_oauth2_client %}  
     <div class="alert alert-warning" role="alert">
       <strong>{% trans "Note" context "admin users settings form" %}:</strong>
-      {% blocktrans trimmed with provider=settings.oauth2_provider context "admin users settings form" %}
+      {% blocktranslate trimmed with provider=settings.oauth2_provider context "admin users settings form" %}
       OAuth2 client is enabled. On site registration, password and account deletion features have been disabled and delegated to the {{ provider }}.
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </div>
   {% endif %}
   <fieldset>

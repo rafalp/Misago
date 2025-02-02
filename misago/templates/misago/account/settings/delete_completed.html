@@ -16,9 +16,9 @@
 
       <div class="message-body">
         <p class="lead">
-          {% blocktrans trimmed with username=deleted_account context "account deleted page" %}
+          {% blocktranslate trimmed with username=deleted_account context "account deleted page" %}
             {{ username }}, your account is now being deleted.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </p>
         <p>
           {% trans "You have been logged out, and your account will remain locked until it is deleted." context "account deleted page" %}

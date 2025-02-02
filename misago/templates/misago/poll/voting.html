@@ -21,11 +21,11 @@
 
     <ul class="list-unstyled list-inline poll-help">
       <li class="poll-help-choices-left">
-        {% blocktrans trimmed count choices=poll.allowed_choices context "thread poll" %}
+        {% blocktranslate trimmed count choices=poll.allowed_choices context "thread poll" %}
           You can select {{ choices }} choice.
         {% plural %}
           You can select {{ choices }} choices.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </li>
       {% if poll.allow_revotes %}
         <li class="poll-help-allow-revotes">

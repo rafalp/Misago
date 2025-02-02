@@ -2,9 +2,9 @@
 
 <h4>
   {% if misago_user.is_authenticated %}
-    {% blocktrans trimmed with user=misago_user.username context "debug toolbar user acl" %}
+    {% blocktranslate trimmed with user=misago_user.username context "debug toolbar user acl" %}
     {{ user }} roles
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
     {% trans "Anonymous roles" context "debug toolbar user acl" %}
   {% endif %}

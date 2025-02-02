@@ -96,18 +96,18 @@
         </li>
       {% endif %}
       <li class="list-inline-item">
-        {% blocktrans trimmed count posts=target.posts context "admin user stats" %}
+        {% blocktranslate trimmed count posts=target.posts context "admin user stats" %}
           {{ posts }} post
         {% plural %}
           {{ posts }} posts
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </li>
       <li class="list-inline-item">
-        {% blocktrans trimmed count threads=target.threads context "admin user stats" %}
+        {% blocktranslate trimmed count threads=target.threads context "admin user stats" %}
           {{ threads }} thread
         {% plural %}
           {{ threads }} threads
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </li>
     </ul>
   </div>

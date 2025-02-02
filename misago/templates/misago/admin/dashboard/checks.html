@@ -14,9 +14,9 @@
       </div>
       <div class="media-body">
         <h5>{% trans "Checking Misago version used by the site..." context "admin version check" %}</h5>
-        {% blocktrans trimmed context "admin version check" %}
+        {% blocktranslate trimmed context "admin version check" %}
           Version check feature relies on the API operated by the Python Package Index (pypi.org) to retrieve the latest Misago release version.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </div>
     </div>
   </div>
@@ -28,10 +28,10 @@
         </div>
         <div class="media-body">
           <h5>{% trans "The site is running in DEBUG mode." context "admin debug check" %}</h5>
-          {% blocktrans trimmed context "admin debug check" %}
+          {% blocktranslate trimmed context "admin debug check" %}
             Error pages displayed in DEBUG mode will expose site configuration details like secrets and tokens to all visitors.
             This is MAJOR security risk.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </div>
       </div>
     </div>
@@ -74,9 +74,9 @@
                 {% capture trimmed as correct_address %}
                   <code>{{ checks.address.correct_address }}</code>
                 {% endcapture %}
-                {% blocktrans trimmed with configured_address=set_address|safe correct_address=correct_address|safe context "admin site address check" %}
+                {% blocktranslate trimmed with configured_address=set_address|safe correct_address=correct_address|safe context "admin site address check" %}
                   Your forum address is set to {{ configured_address }} while correct value appears to be {{ correct_address }}.
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </div>
               <div>
                 {% trans "Links in e-mails sent by Misago may be broken." context "admin site address check" %}
@@ -100,9 +100,9 @@
         </div>
         <div class="media-body">
           <h5>{% trans "The site is not running over HTTPS." context "admin https check" %}</h5>
-          {% blocktrans trimmed context "admin https check" %}
+          {% blocktranslate trimmed context "admin https check" %}
             Browsers may warn users visiting the site about it being insecure. Search engines will lower its position in search results.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </div>
       </div>
     </div>
@@ -115,9 +115,9 @@
         </div>
         <div class="media-body">
           <h5>{% trans "Cache is disabled." context "admin cache check" %}</h5>
-          {% blocktrans trimmed context "admin cache check" %}
+          {% blocktranslate trimmed context "admin cache check" %}
             This will cause degraded performance and increased CPU usage by the site, leading to worse user experience and increased hosting costs.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </div>
       </div>
     </div>
@@ -130,15 +130,15 @@
         </div>
         <div class="media-body">
           <h5>
-            {% blocktrans trimmed count downloads=checks.data_downloads.count context "admin data downloads check" %}
+            {% blocktranslate trimmed count downloads=checks.data_downloads.count context "admin data downloads check" %}
               There is {{ downloads }} unprocessed data download request.
             {% plural %}
               There are {{ downloads }} unprocessed data download requests.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </h5>
-          {% blocktrans trimmed context "admin data downloads check" %}
+          {% blocktranslate trimmed context "admin data downloads check" %}
             Cron task that should process user data download requests is not running.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </div>
       </div>
     </div>
@@ -153,15 +153,15 @@
             </div>
             <div class="media-body">
               <h5>
-                {% blocktrans trimmed count users=checks.inactive_users.count context "admin inactive users check" %}
+                {% blocktranslate trimmed count users=checks.inactive_users.count context "admin inactive users check" %}
                   There is {{ users }} inactive user accounts.
                 {% plural %}
                   There are {{ users }} inactive users accounts.
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </h5>
-              {% blocktrans trimmed context "admin inactive users check" %}
+              {% blocktranslate trimmed context "admin inactive users check" %}
                 The site may be targeted by bots, is not sending activation e-mails, or is not configured to delete inactive user accounts.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </div>
           </div>
         </div>

@@ -13,9 +13,9 @@
 
       <div class="message-body">
           <p class="lead">
-            {% blocktrans trimmed with provider=settings.oauth2_provider context "error oauth2 profile page" %}
+            {% blocktranslate trimmed with provider=settings.oauth2_provider context "error oauth2 profile page" %}
               Could not sign in with {{ provider }}
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </p>
           {% if error.message %}
             <p>{{ error.message }}</p>

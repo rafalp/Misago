@@ -3,9 +3,9 @@
 
 
 {% block content %}
-{% blocktrans trimmed with sender=sender thread=thread context "new thread reply email" %}
+{% blocktranslate trimmed with sender=sender thread=thread context "new thread reply email" %}
 {{ sender }} has posted a new reply to the "{{ thread }}" thread that you are watching.
-{% endblocktrans %}
+{% endblocktranslate %}
 
 {% trans "You can read this reply by clicking on the following link:" context "new thread reply email" %}
 {% absoluteurl post.get_absolute_url %}

@@ -50,9 +50,9 @@
           {% if item.manifest_error %}
             <div class="text-danger">
               <em>
-                {% blocktrans trimmed with error=item.manifest_error context "admin plugins" %}
+                {% blocktranslate trimmed with error=item.manifest_error context "admin plugins" %}
                   Invalid manifest: {{ error }}
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </em>
             </div>
           {% elif not item.has_manifest %}

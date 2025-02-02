@@ -60,9 +60,9 @@
     <legend>{% trans "User JSON mappings" context "admin oauth2 settings form" %}</legend>
 
     <p>
-      {% blocktrans trimmed context "admin oauth2 settings form" %}
+      {% blocktranslate trimmed context "admin oauth2 settings form" %}
         Path to value is a key under which it can be found in the JSON with user data returned by the provider. If this key is nested under other key, use full path and separate keys with periods ("<code>.</code>").
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </p>
     <p>
       {% trans "For example, for given JSON with user data:" context "admin oauth2 settings form" %}
@@ -80,9 +80,9 @@
       </code>
     </p>
     <p>
-      {% blocktrans trimmed context "admin oauth2 settings form" %}
+      {% blocktranslate trimmed context "admin oauth2 settings form" %}
         Those paths should be used:
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </p>
     <ul class="list-unstyled">
       <li>{% trans "User ID" context "admin oauth2 settings form" %}: <code>id</code></li>

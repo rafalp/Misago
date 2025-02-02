@@ -43,9 +43,9 @@
       type="button"
       data-toggle="dropdown"
     >
-      {% blocktrans trimmed with page=page.number pages=paginator.num_pages context "thread paginator" %}
+      {% blocktranslate trimmed with page=page.number pages=paginator.num_pages context "thread paginator" %}
         Page {{ page }} of {{ pages }}
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </button>
     <div class="dropdown-menu" role="menu">
       <form class="thread-paginator-form" misago-page="{{ page.number }}" misago-page-url="{{ thread_url }}" misago-page-form>

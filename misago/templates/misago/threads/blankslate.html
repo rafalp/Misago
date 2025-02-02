@@ -3,9 +3,9 @@
 <li class="threads-list-blankslate">
   {% if threads.active_filter %}
     <p class="threads-list-blankslate-message">
-      {% blocktrans trimmed with filter=threads.active_filter.name context "threads list blankslate" %}
+      {% blocktranslate trimmed with filter=threads.active_filter.name context "threads list blankslate" %}
         No threads matching the "{{ filter }}" filter exist, or you can't see them.
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </p>
     <div class="threads-list-blankslate-links">
       <a class="btn btn-default" href="{{ threads.filters_clear_url }}">
@@ -14,9 +14,9 @@
     </div>
   {% else %}
     <p class="threads-list-blankslate-message">
-      {% blocktrans trimmed context "threads list blankslate" %}
+      {% blocktranslate trimmed context "threads list blankslate" %}
         No threads have been started yet, or you can't see them.
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </p>
     {% if start_thread_url %}
       <div class="threads-list-blankslate-links">

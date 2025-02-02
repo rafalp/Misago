@@ -37,18 +37,18 @@
                 {% if form.available_changes.unlimited %}
                   {% trans "You can change your username unlimited number of times." context "account username help" %}
                 {% elif form.available_changes.changes_left %}
-                  {% blocktrans trimmed count changes_left=form.available_changes.changes_left context "account username help" %}
+                  {% blocktranslate trimmed count changes_left=form.available_changes.changes_left context "account username help" %}
                     You can change your username {{ changes_left }} more time.
                   {% plural %}
                     You can change your username {{ changes_left }} more times.
-                  {% endblocktrans %}
+                  {% endblocktranslate %}
                 {% endif %}
                 {% if user_permissions.username_changes_span %}
-                  {% blocktrans trimmed count span=user_permissions.username_changes_span context "account username help" %}
+                  {% blocktranslate trimmed count span=user_permissions.username_changes_span context "account username help" %}
                     You will have to wait {{ span }} hour after changing your name before you can change it again.
                   {% plural %}
                     You will have to wait {{ span }} hours after changing your name before you can change it again.
-                  {% endblocktrans %}
+                  {% endblocktranslate %}
                 {% endif %}
               </p>
             </div>
@@ -79,9 +79,9 @@
                 {{ form.available_changes.next_change|date_relative }}
               </attr>
             {% endcapture %}
-            {% blocktrans trimmed with next_change=next_change|safe context "account username help" %}
+            {% blocktranslate trimmed with next_change=next_change|safe context "account username help" %}
               You will be able to change your username again {{ next_change }}.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </div>
       {% endif %}

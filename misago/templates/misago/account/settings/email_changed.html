@@ -16,9 +16,9 @@
 
       <div class="message-body">
         <p class="lead">
-          {% blocktrans trimmed with username=username new_email=new_email context "account email changed page" %}
+          {% blocktranslate trimmed with username=username new_email=new_email context "account email changed page" %}
             {{ username }}, your email has been changed to {{ new_email }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </p>
         <p class="message-buttons">
           {% if user.is_authenticated %}

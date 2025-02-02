@@ -17,17 +17,17 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count posts=profile.posts context "user profile page posts" %}
+            {% blocktranslate trimmed count posts=profile.posts context "user profile page posts" %}
               You have posted {{ posts }} message.
             {% plural %}
               You have posted {{ posts }} messages.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed count posts=profile.posts with username=profile context "user profile page posts" %}
+            {% blocktranslate trimmed count posts=profile.posts with username=profile context "user profile page posts" %}
               {{ username }} has posted {{ posts }} message.
             {% plural %}
               {{ username }} has posted {{ posts }} messages.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </h3>
       </div>
@@ -41,9 +41,9 @@
       {% if is_authenticated_user %}
         {% trans "You have posted no messages" context "user profile page posts" %}
       {% else %}
-        {% blocktrans trimmed with username=profile.username context "user profile page posts" %}
+        {% blocktranslate trimmed with username=profile.username context "user profile page posts" %}
           {{ username }} posted no messages.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       {% endif %}
     </p>
   {% endif %}

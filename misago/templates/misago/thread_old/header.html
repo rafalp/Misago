@@ -35,9 +35,9 @@
                       {% endif %}
                     </div>
                     <div>
-                      <span class="text-muted" title="{% blocktrans trimmed with timestamp=thread.started_on|date:'DATETIME_FORMAT' context 'thread page header' %}
+                      <span class="text-muted" title="{% blocktranslate trimmed with timestamp=thread.started_on|date:'DATETIME_FORMAT' context 'thread page header' %}
                         Started on: {{ timestamp }}
-                      {% endblocktrans %}">
+                      {% endblocktranslate %}">
                         {{ thread.started_on|date:'DATE_FORMAT' }}
                       </span>
                     </div>

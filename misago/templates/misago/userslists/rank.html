@@ -6,11 +6,11 @@
 
 
 {% block meta-description %}
-  {{ rank.description|default:"" }} {% blocktrans trimmed count users=paginator.count context "rank users page meta" %}
+  {{ rank.description|default:"" }} {% blocktranslate trimmed count users=paginator.count context "rank users page meta" %}
     {{ users }} user have this rank.
   {% plural %}
     {{ users }} users have this rank.
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock %}
 
 
@@ -38,22 +38,22 @@
 {% block og-description %}
   {% if rank.description %}
     {{ rank.description }}
-  {% endif %} {% blocktrans trimmed count users=paginator.count context "rank users page meta" %}
+  {% endif %} {% blocktranslate trimmed count users=paginator.count context "rank users page meta" %}
     {{ users }} user have this rank.
   {% plural %}
     {{ users }} users have this rank.
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock og-description %}
 
 
 {% block twitter-description %}
   {% if rank.description %}
     {{ rank.description }}
-  {% endif %} {% blocktrans trimmed count users=paginator.count context "rank users page meta" %}
+  {% endif %} {% blocktranslate trimmed count users=paginator.count context "rank users page meta" %}
     {{ users }} user have this rank.
   {% plural %}
     {{ users }} users have this rank.
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock twitter-description %}
 
 
@@ -99,11 +99,11 @@
             <div class="toolbar-item">
               <p>
                 {% if paginator.more %}
-                  {% blocktrans trimmed count more=paginator.more context "rank users page" %}
+                  {% blocktranslate trimmed count more=paginator.more context "rank users page" %}
                     There is {{ more }} more users with this rank.
                   {% plural %}
                     There are {{ more }} more users with this rank.
-                  {% endblocktrans %}
+                  {% endblocktranslate %}
                 {% else %}
                   {% trans "There are no more users with this rank." context "rank users page" %}
                 {% endif %}

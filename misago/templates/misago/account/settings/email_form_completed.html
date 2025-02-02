@@ -14,9 +14,9 @@
         <strong>{{ new_email }}</strong>
       {% endcapture %}
       <p>
-        {% blocktrans trimmed with email=new_email|safe context "account email page" %}
+        {% blocktranslate trimmed with email=new_email|safe context "account email page" %}
           To confirm the change of your email address please click the confirmation link in a message that was sent to "{{ email }}".
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </p>
     </div>
     <div class="panel-footer panel-footer-sticky">

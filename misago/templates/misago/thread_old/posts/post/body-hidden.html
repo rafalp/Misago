@@ -11,8 +11,8 @@
     {% endif %}
   {% endcapture %}
   <p class="text-muted">
-    {% blocktrans trimmed with hidden_by=hidden_by|safe hidden_on=post.hidden_on|date:'DATETIME_FORMAT' context "post body hidden" %}
+    {% blocktranslate trimmed with hidden_by=hidden_by|safe hidden_on=post.hidden_on|date:'DATETIME_FORMAT' context "post body hidden" %}
       Hidden by {{ hidden_by }} on {{ hidden_on }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </p>
 </div>

@@ -9,6 +9,6 @@
 
 ------------------------------------------------
 {% if settings.email_footer %}{{ settings.email_footer }}{% endif %}
-{% blocktrans trimmed with forum_host=forum_host context "email footer" %}
+{% blocktranslate trimmed with forum_host=forum_host context "email footer" %}
 Sent from {{ forum_host }}
-{% endblocktrans %}
+{% endblocktranslate %}

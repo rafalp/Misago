@@ -65,9 +65,9 @@
         {% if social_site.button_text %}
           {{ social_site.button_text }}
         {% else %}
-          {% blocktrans trimmed with site_name=social_site.name context "login form social auth btn" %}
+          {% blocktranslate trimmed with site_name=social_site.name context "login form social auth btn" %}
             Sign in with {{ site_name }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% endif %}
       </a>
     {% endfor %}

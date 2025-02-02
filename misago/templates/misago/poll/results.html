@@ -18,21 +18,21 @@
               style="width: {{ choice.proc }}%""
             >
               <span class="sr-only">
-                {% blocktrans trimmed count votes=choice.votes with proc=choice.proc context "thread poll" %}
+                {% blocktranslate trimmed count votes=choice.votes with proc=choice.proc context "thread poll" %}
                   {{ votes }} vote, {{ proc }}% of total.
                 {% plural %}
                   {{ votes }} votes, {{ proc }}% of total.
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </span>
             </div>
           </div>
           <ul class="list-unstyled list-inline poll-chart">
             <li class="poll-chart-votes">
-              {% blocktrans trimmed count votes=choice.votes with proc=choice.proc context "thread poll" %}
+              {% blocktranslate trimmed count votes=choice.votes with proc=choice.proc context "thread poll" %}
                 {{ votes }} vote, {{ proc }}% of total.
               {% plural %}
                 {{ votes }} votes, {{ proc }}% of total.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </li>
             {% if choice.selected %}
               <li class="poll-chart-selected">

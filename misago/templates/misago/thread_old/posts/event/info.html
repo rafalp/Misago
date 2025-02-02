@@ -9,9 +9,9 @@
           <span class="item-title">{{ post.hidden_by_name }}</span>
         {% endif %}
       {% endcapture %}
-      {% blocktrans trimmed with hidden_by=hidden_by|safe hidden_on=post.hidden_on|date:'DATETIME_FORMAT' context "thread event" %}
+      {% blocktranslate trimmed with hidden_by=hidden_by|safe hidden_on=post.hidden_on|date:'DATETIME_FORMAT' context "thread event" %}
         Hidden by {{ hidden_by }} on {{ hidden_on }}.
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </li>
   {% endif %}
   <li class="event-poster">
@@ -25,8 +25,8 @@
     {% capture trimmed as event_on %}
       <a href="{{ post.get_absolute_url }}">{{ post.posted_on|date:'DATETIME_FORMAT' }}</a>
     {% endcapture %}
-    {% blocktrans trimmed with event_by=event_by|safe event_on=event_on|safe context "thread event" %}
+    {% blocktranslate trimmed with event_by=event_by|safe event_on=event_on|safe context "thread event" %}
       By {{ event_by }} on {{ event_on }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </li>
 </ul>
