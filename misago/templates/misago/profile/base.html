@@ -52,7 +52,7 @@
 
 {% block og-image %}
 {% if settings.og_image_avatar_on_profile %}
-  {% with profile.avatars|first as og_image %}
+  {% with og_image=profile.avatars|first %}
     <meta name="twitter:image" content="{% absoluteurl og_image.url %}" />
     <meta property="og:image" content="{% absoluteurl og_image.url %}" />
     <meta property="og:image:width" content="{{ og_image.size }}" />

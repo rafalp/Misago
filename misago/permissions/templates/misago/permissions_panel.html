@@ -91,7 +91,7 @@
       <td>categories</td>
       <td>{{ misago_permissions.moderated_categories }}</td>
     </tr>
-    {% with misago_permissions.moderator as moderator %}
+    {% with moderator=misago_permissions.moderator %}
       <tr>
         <td>is_private_threads_moderator</td>
         <td>{{ misago_permissions.is_private_threads_moderator }}</td>

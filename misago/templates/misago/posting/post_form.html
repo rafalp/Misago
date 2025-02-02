@@ -1,6 +1,6 @@
 {% load i18n misago_forms %}
 
-{% with form.post as field %}
+{% with field=form.post %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <div class="markup-editor" misago-editor-active="false">
       <div class="markup-editor-toolbar">

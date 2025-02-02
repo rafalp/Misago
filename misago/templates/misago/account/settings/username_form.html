@@ -20,7 +20,7 @@
       </div>
       {% if user_permissions.can_change_username and form.available_changes.can_change_username %}
         <div class="panel-body">
-          {% with form.username as field %}
+          {% with field=form.username %}
             <div
               class="form-group{% if field.errors %} has-error{% endif %}"
               misago-validate="{% url 'misago:account-validate-username' %}"

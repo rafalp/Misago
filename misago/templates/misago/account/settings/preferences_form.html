@@ -24,7 +24,7 @@
           {% trans "Privacy" context "account preferences page fieldset" %}
         </legend>
         <div class="form-group">
-          {% with form.is_hiding_presence as field %}
+          {% with field=form.is_hiding_presence %}
             <label class="control-label">
               {% trans "Show my online status to other users:" context "account preferences page form" %}
             </label>
@@ -46,7 +46,7 @@
           {% endwith %}
         </div>
         <div class="form-group">
-          {% with form.limits_private_thread_invites_to as field %}
+          {% with field=form.limits_private_thread_invites_to %}
             <label class="control-label">
               {% trans "Limit who can invite me to their private threads:" context "account preferences page form" %}
             </label>

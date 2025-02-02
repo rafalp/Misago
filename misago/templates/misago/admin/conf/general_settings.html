@@ -17,15 +17,11 @@
     <legend>{% trans "Logo" context "admin general settings form" %}</legend>
 
     {% form_row form.logo_text %}
-    {% with form.logo_delete as delete_field %}
-      {% with form_settings.logo as setting %}
-        {% form_image_row form.logo delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
-      {% endwith %}
+    {% with delete_field=form.logo_delete setting=form_settings.logo %}
+      {% form_image_row form.logo delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
     {% endwith %}
-    {% with form.logo_small_delete as delete_field %}
-      {% with form_settings.logo_small as setting %}
-        {% form_image_row form.logo_small delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
-      {% endwith %}
+    {% with delete_field=form.logo_small_delete setting=form_settings.logo_small %}
+      {% form_image_row form.logo_small delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
     {% endwith %}
 
   </fieldset>
@@ -34,10 +30,8 @@
   <fieldset>
     <legend>{% trans "Open Graph image" context "admin general settings form" %}</legend>
 
-    {% with form.og_image_delete as delete_field %}
-      {% with form_settings.og_image as setting %}
-        {% form_image_row form.og_image delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
-      {% endwith %}
+    {% with delete_field=form.og_image_delete setting=form_settings.og_image %}
+      {% form_image_row form.og_image delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
     {% endwith %}
     {% form_row form.og_image_avatar_on_profile %}
     {% form_row form.og_image_avatar_on_thread %}
