@@ -99,10 +99,7 @@ class AttachmentFileTypes:
         if not extension_match:
             return None
 
-        if (
-            content_type
-            and content_type not in filetype.content_types
-        ):
+        if content_type and content_type not in filetype.content_types:
             return None
 
         return filetype

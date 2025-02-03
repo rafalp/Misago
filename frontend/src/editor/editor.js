@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import MarkupEditorUploader from "./uploader"
 import {
   MarkupEditorCodeModal,
   MarkupEditorImageModal,
@@ -148,6 +149,8 @@ class MarkupEditor {
       this._setEditorActive(element)
       this._setEditorFocus(element)
       this._setEditorActions(element)
+      this._setEditorPasteUpload(element)
+      this._setEditorDropUpload(element)
       this._resizeEditor(element)
     }
   }
@@ -207,6 +210,41 @@ class MarkupEditor {
           secondToolbar.classList.add("show")
         }
       })
+  }
+
+  _setEditorPasteUpload = (element) => {
+    element.addEventListener("paste", (event) => {
+      const uploader = new MarkupEditorUploader(this, element)
+      if (!uploader.canUpload) {
+        uploader.showPermissionDeniedError()
+      } else if (event.clipboardData.files) {
+        event.preventDefault()
+        uploader.uploadFiles(event.clipboardData.files)
+      }
+    })
+  }
+
+  _setEditorDropUpload = (element) => {
+    element.addEventListener("drop", (event) => {
+      const uploader = new MarkupEditorUploader(this, element)
+      if (event.dataTransfer.files) {
+        event.preventDefault()
+        if (!uploader.canUpload) {
+          uploader.showPermissionDeniedError()
+        } else if (event.dataTransfer.files) {
+          uploader.uploadFiles(event.dataTransfer.files)
+        }
+      }
+    })
+  }
+
+  showUploadPrompt(element) {
+    const uploader = new MarkupEditorUploader(this, element)
+    if (!uploader.canUpload) {
+      uploader.showPermissionDeniedError()
+    } else {
+      // uploader.uploadFiles(event.dataTransfer.files)
+    }
   }
 
   showCodeModal(selection) {
@@ -447,7 +485,7 @@ editor.setAction("attachment", function ({ target, selection }) {
 
 editor.setAction("attachment-delete", function ({ target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
-  const fieldName = target.getAttribute("misago-editor-attachments-field")
+  const fieldName = target.closest("[misago-editor-deleted-attachments-field]").getAttribute("misago-editor-deleted-attachments-field")
 
   selection.input.value = selection.input.value.replace(
     /<attachment=(.+?)>/gi,

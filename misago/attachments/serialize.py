@@ -16,6 +16,7 @@ def _serialize_attachment_action(attachment: Attachment) -> dict:
         "url": attachment.get_details_url(),
         "uploader": _serialize_uploader(attachment),
         "filetype": _serialize_filetype(attachment.filetype),
+        "content_type": attachment.content_type,
         "dimensions": _serialize_dimensions(attachment.dimensions),
         "upload": _serialize_file(attachment.upload, attachment.size),
         "thumbnail": _serialize_file(attachment.thumbnail, attachment.thumbnail_size),

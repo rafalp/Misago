@@ -1,5 +1,5 @@
 {% load i18n misago_capture %}
-<div class="markup-editor-attachments" misago-editor="attachments">
+<div class="markup-editor-attachments" misago-editor="attachments" misago-editor-deleted-attachments-field="{{ form.deleted_attachment_ids_field }}">
   {% if form.show_attachments_upload %}
     {% with form.upload as upload_field %}
       <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
@@ -102,7 +102,6 @@
                 title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
                 misago-editor-action="attachment-delete"
                 misago-editor-attachment="{{ attachment.id }}"
-                misago-editor-attachments-field="{{ form.deleted_attachment_ids_field }}"
               >
                 <span class="material-icon">delete</span>
               </button>
@@ -155,7 +154,6 @@
               title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
               misago-editor-action="attachment-delete"
               misago-editor-attachment="{{ attachment.id }}"
-              misago-editor-attachments-field="{{ form.deleted_attachment_ids_field }}"
             >
               <span class="material-icon">delete</span>
             </button>
