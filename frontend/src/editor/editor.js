@@ -297,7 +297,9 @@ class MarkupEditorSelection {
   insert(text, options) {
     const whitespace = (options && options.whitespace) || ""
 
-    const prefix = whitespace ? this._range.prefix.trimEnd() : this._range.prefix
+    const prefix = whitespace
+      ? this._range.prefix.trimEnd()
+      : this._range.prefix
     const suffix = whitespace ? this._range.suffix.trim() : this._range.suffix
 
     let whitespaces = 1
@@ -305,13 +307,13 @@ class MarkupEditorSelection {
 
     if (prefix.length && whitespace) {
       value += whitespace
-      whitespaces += 1;
+      whitespaces += 1
     }
 
     value += text + whitespace + suffix
     this.input.value = value
 
-    const caret = prefix.length + text.length + (whitespace.length * whitespaces)
+    const caret = prefix.length + text.length + whitespace.length * whitespaces
     this._range.end = this._range.start = caret
     this._range.length = 0
 
@@ -401,7 +403,7 @@ editor.setAction("strikethrough", function ({ selection }) {
 })
 
 editor.setAction("horizontal-ruler", function ({ selection }) {
-  selection.insert("- - -", {"whitespace": "\n\n"})
+  selection.insert("- - -", { whitespace: "\n\n" })
 })
 
 editor.setAction("link", function ({ editor, selection }) {
@@ -439,8 +441,65 @@ editor.setAction("code", function ({ editor, selection }) {
 editor.setAction("attachment", function ({ target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
   if (attachment) {
-    selection.insert("<attachment=" + attachment + ">", {"whitespace": "\n\n"})
+    selection.insert("<attachment=" + attachment + ">", { whitespace: "\n\n" })
   }
+})
+
+editor.setAction("attachment-delete", function ({ target, selection }) {
+  const attachment = target.getAttribute("misago-editor-attachment")
+  const fieldName = target.getAttribute("misago-editor-attachments-field")
+
+  selection.input.value = selection.input.value.replace(
+    /<attachment=(.+?)>/gi,
+    function (match, p1) {
+      if (p1.match(/:/g).length !== 1) {
+        return match
+      }
+
+      let value = p1.trim()
+      while (value.substring(0, 1) === '"') {
+        value = value.substring(1)
+      }
+      while (value.substring(value.length - 1) === '"') {
+        value = value.substring(0, value.length - 1)
+      }
+
+      const id = value.substring(value.indexOf(":") + 1).trim()
+      if (id === attachment) {
+        return ""
+      }
+
+      return match
+    }
+  )
+
+  const list = target.closest("ul")
+  const element = target.closest("li")
+
+  element.querySelectorAll("button").forEach((element) => {
+    element.setAttribute("disabled", "")
+  })
+
+  element.addEventListener("animationend", ({ animationName }) => {
+    if (animationName === "deleteAttachment") {
+      element.remove()
+
+      if (!list.querySelector("li")) {
+        const container = list.closest(".markup-editor-attachments-list")
+        container.classList.add("d-none")
+      }
+    }
+  })
+
+  element.classList.add("deleted")
+
+  const input = document.createElement("input")
+  input.setAttribute("type", "hidden")
+  input.setAttribute("name", fieldName)
+  input.setAttribute("value", attachment)
+
+  const attachments = target.closest('[misago-editor="attachments"]')
+  attachments.appendChild(input)
 })
 
 editor.setAction("formatting-help", function ({ target }) {

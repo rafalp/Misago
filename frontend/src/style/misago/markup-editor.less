@@ -104,9 +104,10 @@
 
 // Textarea
 .markup-editor-textarea.form-control {
-  height: @markup-editor-height;
+  min-height: @markup-editor-height;
   padding: @markup-editor-padding;
   resize: none;
+  field-sizing: content;
 
   border: 0;
   border-radius: 0;
@@ -141,7 +142,7 @@
 @media screen and (min-width: 400px) {
   .markup-editor-attachments-noscript-row {
     display: flex;
-  
+
     input {
       margin-right: floor(@grid-gutter-width / 2);
       margin-bottom: 0;
@@ -161,6 +162,15 @@
   font-weight: bold;
 }
 
+@keyframes deleteAttachment {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .markup-editor-attachments-media-list,
 .markup-editor-attachments-other-list {
   display: grid;
@@ -178,6 +188,13 @@
     border: 1px solid @gray-lighter;
     border-radius: @border-radius-base;
   }
+
+  .deleted {
+    animation-name: deleteAttachment;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    opacity: 0;
+  }
 }
 
 .markup-editor-attachments-media-list-item {
@@ -187,7 +204,7 @@
 
 .markup-editor-attachments-media-list-item-preview-video {
   position: relative;
-  
+
   background-color: #1e1e1e;
 
   .markup-editor-attachments-media-list-item-preview-video-container {
@@ -214,13 +231,12 @@
 .markup-editor-attachments-media-list-item-preview-video,
 .markup-editor-attachments-media-list-item-preview-image {
   margin-bottom: floor(@grid-gutter-width / 4);
-  
+
   padding-bottom: 100%;
 
   border-radius: @border-radius-small;
   overflow: hidden;
 }
-
 
 .markup-editor-attachments-media-list-item-preview {
   margin-bottom: floor(@grid-gutter-width / 4);
@@ -262,6 +278,10 @@
   background-color: @gray-lighter;
   border: none;
   border-radius: @border-radius-small;
+
+  &:disabled {
+    opacity: 0.3;
+  }
 }
 
 .markup-editor-attachments-media-list-item-delete-button {
@@ -301,6 +321,10 @@
   text-align: left;
 
   cursor: default;
+
+  &:disabled {
+    cursor: default !important;
+  }
 }
 
 .markup-editor-attachments-other-list-item-name {
@@ -336,6 +360,10 @@
   background-color: @gray-lighter;
   border: none;
   border-radius: @border-radius-small;
+
+  &:disabled {
+    opacity: 0.3;
+  }
 
   .material-icon {
     font-size: 16px;
