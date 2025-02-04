@@ -5,7 +5,7 @@
     <div
       class="markup-editor"
       misago-editor-active="false"
-      misago-editor-attachment-ids="{{ form.attachment_ids_field }}"
+      misago-editor-attachments-name="{{ form.attachment_ids_field }}"
       misago-editor-attachments-url="{% if form.can_upload_attachments %}{% url 'misago:attachments-upload' %}{% endif %}"
     >
       <div class="markup-editor-toolbar">

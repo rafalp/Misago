@@ -70,6 +70,8 @@ class Attachment(PluginDataModel):
 
     is_deleted = models.BooleanField(default=False, db_index=True)
 
+    upload_key: str  # or missing
+
     class Meta:
         indexes = [
             *PluginDataModel.Meta.indexes,

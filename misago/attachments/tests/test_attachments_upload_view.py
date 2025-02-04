@@ -52,18 +52,36 @@ def test_attachments_upload_view_stores_uploaded_files(
             "upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
             ],
+            "keys": ["key1"],
         },
     )
     assert response.status_code == 200
 
     attachment = Attachment.objects.first()
+    attachment.upload_key = "key1"
+
     assert attachment.id
     assert attachment.name == "test.txt"
     assert attachment.uploader == user
 
     assert json.loads(response.content) == {
-        "errors": [],
+        "errors": {},
         "attachments": [serialize_attachment(attachment)],
+    }
+
+
+def test_attachments_upload_view_validates_uploads_keys(user_client):
+    response = user_client.post(
+        upload_url,
+        {
+            "upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert response.status_code == 400
+    assert json.loads(response.content) == {
+        "error": "'keys' and 'uploads' must have same length",
     }
 
 
@@ -76,12 +94,13 @@ def test_attachments_upload_view_validates_uploaded_files(
             "upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/invalid"),
             ],
+            "keys": ["key1"],
         },
     )
 
     assert response.status_code == 200
     assert json.loads(response.content) == {
-        "errors": ["test.txt: uploaded file type is not allowed."],
+        "errors": {"key1": "test.txt: uploaded file type is not allowed."},
         "attachments": [],
     }
 
@@ -98,16 +117,19 @@ def test_attachments_upload_view_stores_valid_uploads_on_upload_errors(
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
                 SimpleUploadedFile("invalid.txt", b"Hello world!", "text/invalid"),
             ],
+            "keys": ["key1", "key2"],
         },
     )
     assert response.status_code == 200
 
     attachment = Attachment.objects.first()
+    attachment.upload_key = "key1"
+
     assert attachment.id
     assert attachment.name == "test.txt"
     assert attachment.uploader == user
 
     assert json.loads(response.content) == {
-        "errors": ["invalid.txt: uploaded file type is not allowed."],
+        "errors": {"key2": "invalid.txt: uploaded file type is not allowed."},
         "attachments": [serialize_attachment(attachment)],
     }

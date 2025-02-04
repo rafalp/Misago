@@ -12,6 +12,7 @@ def serialize_attachment(attachment: Attachment) -> dict:
 def _serialize_attachment_action(attachment: Attachment) -> dict:
     return {
         "id": attachment.id,
+        "key": getattr(attachment, "upload_key", None),
         "name": attachment.name,
         "url": attachment.get_details_url(),
         "uploader": _serialize_uploader(attachment),

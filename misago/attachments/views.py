@@ -217,10 +217,18 @@ class AttachmentsUploadView(View):
         except PermissionDenied as error:
             return JsonResponse({"error": str(error)}, status=403)
 
-        attachments, error = self.process_uploads(request)
+        try:
+            attachments, error = self.process_uploads(request)
+        except ValidationError as error:
+            return JsonResponse({"error": error.messages[0]}, status=400)
+
+        if error:
+            errors_dict = {k: v[0] for k, v in error.message_dict.items()}
+        else:
+            errors_dict = {}
 
         data = {
-            "errors": error.messages if error else [],
+            "errors": errors_dict,
             "attachments": self.serialize_attachments(request, attachments),
         }
 
@@ -248,7 +256,11 @@ class AttachmentsUploadView(View):
     def process_uploads(
         self, request: HttpRequest
     ) -> tuple[list[Attachment], ValidationError | None]:
-        return handle_attachments_upload(request, request.FILES.getlist("upload"))
+        return handle_attachments_upload(
+            request,
+            request.FILES.getlist("upload"),
+            request.POST.getlist("keys"),
+        )
 
     def serialize_attachments(
         self, request: HttpRequest, attachments: list[Attachment]

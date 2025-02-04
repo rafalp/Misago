@@ -1,3 +1,5 @@
+import pytest
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from ...permissions.proxy import UserPermissionsProxy
@@ -214,3 +216,161 @@ def test_handle_attachments_upload_validates_storage_for_multiple_uploads(
     assert attachment.filetype_id == "txt"
     assert attachment.name == "test.txt"
     assert attachment.uploader == user
+
+
+def test_handle_attachments_upload_annotates_attachments_with_keys_if_they_are_used(
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = rf.post("/upload/")
+    request.cache_versions = cache_versions
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    attachments, error = handle_attachments_upload(
+        request,
+        [
+            SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            SimpleUploadedFile("test2.txt", b"Hello world!", "text/plain"),
+        ],
+        ["key1", "key2"],
+    )
+
+    assert not error
+
+    assert len(attachments) == 2
+    attachment = attachments[0]
+    assert attachment.filetype_id == "txt"
+    assert attachment.name == "test.txt"
+    assert attachment.uploader == user
+    assert attachment.upload_key == "key1"
+
+    attachment2 = attachments[1]
+    assert attachment2.filetype_id == "txt"
+    assert attachment2.name == "test2.txt"
+    assert attachment2.uploader == user
+    assert attachment2.upload_key == "key2"
+
+
+def test_handle_attachments_upload_raises_validation_error_if_keys_is_empty_list(
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = rf.post("/upload/")
+    request.cache_versions = cache_versions
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(ValidationError) as exc_info:
+        handle_attachments_upload(
+            request,
+            [SimpleUploadedFile("test.txt", b"Hello world!", "text/plain")],
+            [],
+        )
+
+    assert exc_info.value.messages == ["'keys' and 'uploads' must have same length"]
+    assert exc_info.value.code == "upload_handler"
+
+
+def test_handle_attachments_upload_raises_validation_error_if_there_are_more_keys_than_uploads(
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = rf.post("/upload/")
+    request.cache_versions = cache_versions
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(ValidationError) as exc_info:
+        handle_attachments_upload(
+            request,
+            [SimpleUploadedFile("test.txt", b"Hello world!", "text/plain")],
+            ["key1", "key2"],
+        )
+
+    assert exc_info.value.messages == ["'keys' and 'uploads' must have same length"]
+    assert exc_info.value.code == "upload_handler"
+
+
+def test_handle_attachments_upload_raises_validation_error_if_there_duplicated_keys(
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = rf.post("/upload/")
+    request.cache_versions = cache_versions
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(ValidationError) as exc_info:
+        handle_attachments_upload(
+            request,
+            [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+                SimpleUploadedFile("test2.txt", b"Hello world!", "text/plain"),
+            ],
+            ["key1", "key1"],
+        )
+
+    assert exc_info.value.messages == ["'keys' must be unique"]
+    assert exc_info.value.code == "upload_handler"
+
+
+def test_handle_attachments_upload_raises_validation_error_if_there_are_less_keys_than_uploads(
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = rf.post("/upload/")
+    request.cache_versions = cache_versions
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(ValidationError) as exc_info:
+        handle_attachments_upload(
+            request,
+            [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+                SimpleUploadedFile("test2.txt", b"Hello world!", "text/plain"),
+            ],
+            ["key1"],
+        )
+
+    assert exc_info.value.messages == ["'keys' and 'uploads' must have same length"]
+    assert exc_info.value.code == "upload_handler"
+
+
+def test_handle_attachments_upload_returns_validation_errors_dict_if_keys_are_used(
+    rf, user, dynamic_settings, cache_versions, teardown_attachments
+):
+    request = rf.post("/upload/")
+    request.cache_versions = cache_versions
+    request.settings = dynamic_settings
+    request.user = user
+    request.user_permissions = UserPermissionsProxy(user, cache_versions)
+
+    attachments, error = handle_attachments_upload(
+        request,
+        [
+            SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            SimpleUploadedFile("test2.txt", b"Hello world!", "text/invalid"),
+            SimpleUploadedFile("test3.txt", b"Hello world!", "text/plain"),
+        ],
+        ["key1", "key2", "key3"],
+    )
+
+    assert error
+    assert error.message_dict == {
+        "key2": ["test2.txt: uploaded file type is not allowed."],
+    }
+
+    assert len(attachments) == 2
+    attachment = attachments[0]
+    assert attachment.filetype_id == "txt"
+    assert attachment.name == "test.txt"
+    assert attachment.uploader == user
+    assert attachment.upload_key == "key1"
+
+    attachment2 = attachments[1]
+    assert attachment2.filetype_id == "txt"
+    assert attachment2.name == "test3.txt"
+    assert attachment2.uploader == user
+    assert attachment2.upload_key == "key3"

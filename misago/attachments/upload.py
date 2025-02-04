@@ -21,8 +21,24 @@ from .validators import (
 
 
 def handle_attachments_upload(
-    request: HttpRequest, uploads: list[UploadedFile]
+    request: HttpRequest,
+    uploads: list[UploadedFile],
+    keys: list[str] | None = None,
 ) -> tuple[list[Attachment], ValidationError | None]:
+    if keys is not None:
+        if len(keys) != len(uploads):
+            raise ValidationError(
+                message=pgettext(
+                    "attachments upload", "'keys' and 'uploads' must have same length"
+                ),
+                code="upload_handler",
+            )
+        if len(keys) != len(set(keys)):
+            raise ValidationError(
+                message=pgettext("attachments upload", "'keys' must be unique"),
+                code="upload_handler",
+            )
+
     storage_constraints = get_attachments_storage_constraints(
         request.settings.unused_attachments_storage_limit,
         request.user_permissions,
@@ -31,10 +47,15 @@ def handle_attachments_upload(
     extensions = request.settings.restrict_attachments_extensions.split()
     extensions_restriction = request.settings.restrict_attachments_extensions_type
 
-    errors: list[ValidationError] = []
+    errors_list: list[ValidationError] = []
+    errors_dict: dict[str, ValidationError] = {}
     attachments: list[Attachment] = []
 
-    for upload in uploads:
+    for i, upload in enumerate(uploads):
+        upload_key = None
+        if keys:
+            upload_key = keys[i]
+
         try:
             filetype = validate_uploaded_file(
                 upload,
@@ -49,6 +70,7 @@ def handle_attachments_upload(
                 )
 
             attachment = store_uploaded_file(request, upload, filetype)
+            attachment.upload_key = upload_key
             attachments.append(attachment)
 
             attachment_size = attachment.size + attachment.thumbnail_size
@@ -56,10 +78,13 @@ def handle_attachments_upload(
                 storage_constraints["storage_left"] - attachment_size, 0
             )
         except ValidationError as error:
-            errors.append(error)
+            if upload_key:
+                errors_dict[upload_key] = error
+            else:
+                errors_list.append(error)
 
-    if errors:
-        return attachments, ValidationError(errors)
+    if errors_list or errors_dict:
+        return attachments, ValidationError(errors_list or errors_dict)
 
     return attachments, None
 

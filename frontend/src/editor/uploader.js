@@ -22,7 +22,7 @@ export default class MarkupEditorUploader {
     }
 
     this.field = {
-      name: element.getAttribute("misago-editor-attachment-ids"),
+      name: element.getAttribute("misago-editor-attachments-name"),
       element: element.querySelector('[misago-editor="attachments"]'),
     }
   }
@@ -43,15 +43,15 @@ export default class MarkupEditorUploader {
     this._addOnLoadEventListener(request);
     this._addOnProgressEventListener(request);
 
-    const secrets = []
+    const keys = []
     
     const data = new FormData()
     appendCSRFTokenToForm(data)
 
     for (let i = 0; i < files.length; i ++) {
-      const secret = getRandomString(16)
-      secrets.push(secret)
-      data.append("secret", secret)
+      const key = getRandomString(16)
+      keys.push(key)
+      data.append("keys", key)
       data.append("upload", files[i])
     }
 

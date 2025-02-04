@@ -485,7 +485,7 @@ editor.setAction("attachment", function ({ target, selection }) {
 
 editor.setAction("attachment-delete", function ({ target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
-  const fieldName = target.closest("[misago-editor-deleted-attachments-field]").getAttribute("misago-editor-deleted-attachments-field")
+  const name = target.closest("[misago-editor-deleted-attachments-name]").getAttribute("misago-editor-deleted-attachments-name")
 
   selection.input.value = selection.input.value.replace(
     /<attachment=(.+?)>/gi,
@@ -533,7 +533,7 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
 
   const input = document.createElement("input")
   input.setAttribute("type", "hidden")
-  input.setAttribute("name", fieldName)
+  input.setAttribute("name", name)
   input.setAttribute("value", attachment)
 
   const attachments = target.closest('[misago-editor="attachments"]')

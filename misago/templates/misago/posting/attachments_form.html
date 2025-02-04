@@ -1,5 +1,5 @@
 {% load i18n misago_capture %}
-<div class="markup-editor-attachments" misago-editor="attachments" misago-editor-deleted-attachments-field="{{ form.deleted_attachment_ids_field }}">
+<div class="markup-editor-attachments" misago-editor="attachments" misago-editor-deleted-attachments-name="{{ form.deleted_attachment_ids_field }}">
   {% if form.show_attachments_upload %}
     {% with form.upload as upload_field %}
       <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
