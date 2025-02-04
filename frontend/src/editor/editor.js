@@ -225,6 +225,8 @@ class MarkupEditor {
   }
 
   _setEditorDropUpload = (element) => {
+    const className = "markup-editor-dragdrop"
+
     element.addEventListener("drop", (event) => {
       const uploader = new MarkupEditorUploader(this, element)
       if (event.dataTransfer.files) {
@@ -235,6 +237,21 @@ class MarkupEditor {
           uploader.uploadFiles(event.dataTransfer.files)
         }
       }
+
+      element.classList.remove(className)
+    })
+
+    element.addEventListener("dragenter", (event) => {
+      element.classList.add(className)
+      event.preventDefault()
+    })
+  
+    element.addEventListener("dragleave", (event) => {
+      element.classList.remove(className)
+    })
+
+    element.addEventListener("dragover", (event) => {
+      event.preventDefault()
     })
   }
 

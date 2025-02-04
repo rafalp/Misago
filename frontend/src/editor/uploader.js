@@ -128,6 +128,11 @@ export default class MarkupEditorUploader {
 
   _prependAttachmentsOtherListItem(attachment) {
     const item = renderTemplate(this.templates.other, attachment)
+
+    item.querySelector("[misago-editor-attachment]").setAttribute(
+      "misago-editor-attachment", attachment.name + ":" + attachment.id
+    )
+
     this._prependToAndShowList(this.lists.other, item)
   }
 

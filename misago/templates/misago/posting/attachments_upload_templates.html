@@ -1,42 +1,7 @@
 {% load i18n %}
 
-<template id="attachment-media-preview-template">
-  <li class="markup-editor-attachments-media-list-item fade in">
-    <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="filetype.is_video">
-      <div class="markup-editor-attachments-media-list-item-preview-video-container">
-        <video muted>
-          {% trans "Your browser does not support video tag." context "attachment video player" %}
-        </video>
-      </div>
-    </div>
-    <div class="markup-editor-attachments-media-list-item-preview-image" misago-tpl-ifnot="filetype.is_video" misago-tpl-image></div>
-    <div class="markup-editor-attachments-media-list-item-name" misago-tpl-var="name"></div>
-    <div class="markup-editor-attachments-media-list-item-footer">
-      <button
-        type="button"
-        class="markup-editor-attachments-media-list-item-button d-js-block"
-        title="{% trans 'Click to insert into post' context 'markup editor insert attachment btn' %}"
-        misago-editor-action="attachment"
-        misago-editor-attachment=""
-      >
-        {% trans "Insert" context "markup editor insert attachment btn" %}
-      </button>
-      <div class="markup-editor-attachments-media-list-item-footer-spacer"></div>
-      <button
-        type="button"
-        class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
-        title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
-        misago-editor-action="attachment-delete"
-        misago-tpl-attr="misago-editor-attachment:id"
-      >
-        <span class="material-icon">delete</span>
-      </button>
-    </div>
-  </li>
-</template>
-
 <template id="attachment-media-template">
-  <li class="markup-editor-attachments-media-list-item fade in">
+  <li class="markup-editor-attachments-media-list-item" misago-tpl-attr="misago-editor-upload-key:key">
     <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="filetype.is_video">
       <div class="markup-editor-attachments-media-list-item-preview-video-container">
         <video muted>
@@ -71,7 +36,30 @@
 </template>
 
 <template id="attachment-other-template">
-  <li class="markup-editor-attachments-other-list-item">
-    <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
+  <li class="markup-editor-attachments-other-list-item" misago-tpl-attr="misago-editor-upload-key:key">
+    <button
+      class="markup-editor-attachments-other-list-item-body"
+      type="button"
+      title="{% trans 'Click to insert into post' context 'markup editor insert attachment btn' %}"
+      misago-editor-action="attachment"
+      misago-editor-attachment=""
+    >
+      <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
+      <div class="markup-editor-attachments-other-list-item-description">
+        <span class="markup-editor-attachments-other-list-item-size" misago-tpl-var="upload.size.formatted"></span>
+        <span class="markup-editor-attachments-other-list-item-cta">
+          {% trans "Insert into post" context "markup editor insert attachment btn" %}
+        </span>
+      </div>
+    </button>
+    <button
+      type="button"
+      class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
+      title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
+      misago-editor-action="attachment-delete"
+      misago-tpl-attr="misago-editor-attachment:id"
+    >
+      <span class="material-icon">delete</span>
+    </button>
   </li>
 </template>
