@@ -3,7 +3,7 @@ from typing import Iterable
 
 from django.utils.translation import pgettext_lazy
 
-from .enums import AllowedAttachments
+from .enums import AllowedAttachments, AttachmentType
 
 
 @dataclass(frozen=True)
@@ -116,12 +116,23 @@ class AttachmentFileTypes:
         *,
         require_extensions: list[str] | None = None,
         disallow_extensions: list[str] | None = None,
+        type_filter: AttachmentType | str | None = None
     ) -> str:
         if allowed_attachments == AllowedAttachments.NONE:
             return ""
 
         items: list[str] = []
         for filetype in self._filetypes.values():
+            # Filter attachment types
+            if type_filter == AttachmentType.IMAGE and not filetype.is_image:
+                continue
+
+            if type_filter == AttachmentType.VIDEO and not filetype.is_video:
+                continue
+
+            if type_filter == AttachmentType.OTHER and filetype.is_media:
+                continue
+
             # Exclude regular files if only media is allowed
             if allowed_attachments != AllowedAttachments.ALL and not filetype.is_media:
                 continue

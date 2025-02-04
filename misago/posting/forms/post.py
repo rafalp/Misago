@@ -3,7 +3,11 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
-from ...attachments.enums import AllowedAttachments, AttachmentTypeRestriction
+from ...attachments.enums import (
+    AllowedAttachments,
+    AttachmentType,
+    AttachmentTypeRestriction,
+)
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.upload import handle_attachments_upload
@@ -106,6 +110,40 @@ class PostForm(PostingForm):
                 self.request.settings.allowed_attachment_types,
                 disallow_extensions=extensions,
             )
+        
+    def get_accept_attachments(self, type_filter: AttachmentType | None=None) -> str:
+        extensions = self.request.settings.restrict_attachments_extensions.split()
+        if not extensions:
+            return filetypes.get_accept_attr_str(
+                self.request.settings.allowed_attachment_types,
+                type_filter=type_filter,
+            )
+
+        restriction = self.request.settings.restrict_attachments_extensions_type
+        if restriction == AttachmentTypeRestriction.REQUIRE:
+            return filetypes.get_accept_attr_str(
+                self.request.settings.allowed_attachment_types,
+                require_extensions=extensions,
+                type_filter=type_filter,
+            )
+        else:
+            return filetypes.get_accept_attr_str(
+                self.request.settings.allowed_attachment_types,
+                disallow_extensions=extensions,
+                type_filter=type_filter,
+            )
+
+    @property
+    def accept_attachments(self) -> str:
+        return self.get_accept_attachments()
+        
+    @property
+    def accept_image_attachments(self) -> str:
+        return self.get_accept_attachments(type_filter=AttachmentType.IMAGE)
+
+    @property
+    def accept_video_attachments(self) -> str:
+        return self.get_accept_attachments(type_filter=AttachmentType.VIDEO)
 
     @property
     def attachments_media(self) -> list[Attachment]:

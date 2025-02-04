@@ -28,6 +28,12 @@ class AllowedAttachments(StrEnum):
         )
 
 
+class AttachmentType(StrEnum):
+    IMAGE = "image"
+    VIDEO = "video"
+    OTHER = "other"
+
+
 class AttachmentTypeRestriction(StrEnum):
     REQUIRE = "require"
     DISALLOW = "disallow"
