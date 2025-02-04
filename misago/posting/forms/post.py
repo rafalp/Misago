@@ -110,8 +110,8 @@ class PostForm(PostingForm):
                 self.request.settings.allowed_attachment_types,
                 disallow_extensions=extensions,
             )
-        
-    def get_accept_attachments(self, type_filter: AttachmentType | None=None) -> str:
+
+    def get_accept_attachments(self, type_filter: AttachmentType | None = None) -> str:
         extensions = self.request.settings.restrict_attachments_extensions.split()
         if not extensions:
             return filetypes.get_accept_attr_str(
@@ -136,7 +136,7 @@ class PostForm(PostingForm):
     @property
     def accept_attachments(self) -> str:
         return self.get_accept_attachments()
-        
+
     @property
     def accept_image_attachments(self) -> str:
         return self.get_accept_attachments(type_filter=AttachmentType.IMAGE)

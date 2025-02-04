@@ -116,7 +116,7 @@ class AttachmentFileTypes:
         *,
         require_extensions: list[str] | None = None,
         disallow_extensions: list[str] | None = None,
-        type_filter: AttachmentType | str | None = None
+        type_filter: AttachmentType | str | None = None,
     ) -> str:
         if allowed_attachments == AllowedAttachments.NONE:
             return ""
