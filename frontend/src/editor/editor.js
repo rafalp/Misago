@@ -160,12 +160,21 @@ class MarkupEditor {
   }
 
   _setEditorFocus(element) {
-    element.addEventListener("focusin", () => {
-      element.classList.add("markup-editor-focused")
+    const focusEvents = ["focusin", "click"]
+    const className = "markup-editor-focused"
+
+    focusEvents.forEach((event) => {
+      element.addEventListener(event, () => {
+        element.classList.add(className)
+      })
     })
 
-    element.addEventListener("focusout", () => {
-      element.classList.remove("markup-editor-focused")
+    focusEvents.forEach((event) => {
+      document.addEventListener(event, (event) => {
+        if (!element.contains(event.target)) {
+          element.classList.remove(className)
+        }
+      })
     })
   }
 
