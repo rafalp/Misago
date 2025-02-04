@@ -1,7 +1,42 @@
 {% load i18n %}
 
+<template id="attachment-media-preview-template">
+  <li class="markup-editor-attachments-media-list-item fade in">
+    <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="filetype.is_video">
+      <div class="markup-editor-attachments-media-list-item-preview-video-container">
+        <video muted>
+          {% trans "Your browser does not support video tag." context "attachment video player" %}
+        </video>
+      </div>
+    </div>
+    <div class="markup-editor-attachments-media-list-item-preview-image" misago-tpl-ifnot="filetype.is_video" misago-tpl-image></div>
+    <div class="markup-editor-attachments-media-list-item-name" misago-tpl-var="name"></div>
+    <div class="markup-editor-attachments-media-list-item-footer">
+      <button
+        type="button"
+        class="markup-editor-attachments-media-list-item-button d-js-block"
+        title="{% trans 'Click to insert into post' context 'markup editor insert attachment btn' %}"
+        misago-editor-action="attachment"
+        misago-editor-attachment=""
+      >
+        {% trans "Insert" context "markup editor insert attachment btn" %}
+      </button>
+      <div class="markup-editor-attachments-media-list-item-footer-spacer"></div>
+      <button
+        type="button"
+        class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
+        title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
+        misago-editor-action="attachment-delete"
+        misago-tpl-attr="misago-editor-attachment:id"
+      >
+        <span class="material-icon">delete</span>
+      </button>
+    </div>
+  </li>
+</template>
+
 <template id="attachment-media-template">
-  <li class="markup-editor-attachments-media-list-item">
+  <li class="markup-editor-attachments-media-list-item fade in">
     <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="filetype.is_video">
       <div class="markup-editor-attachments-media-list-item-preview-video-container">
         <video muted>

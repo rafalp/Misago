@@ -67,7 +67,7 @@ def test_attachment_thumbnail_view_returns_404_response_if_attachment_with_id_do
     assert response.status_code == 404
 
 
-def test_attachment_download_view_returns_404_response_if_attachment_slug_is_invalid(
+def test_attachment_download_view_returns_301_response_if_attachment_slug_is_invalid(
     user, user_client, text_file, attachment_factory
 ):
     attachment = attachment_factory(text_file, uploader=user)
@@ -78,10 +78,11 @@ def test_attachment_download_view_returns_404_response_if_attachment_slug_is_inv
             kwargs={"id": attachment.id, "slug": "invalid"},
         )
     )
-    assert response.status_code == 404
+    assert response.status_code == 301
+    assert response["location"] == attachment.get_absolute_url()
 
 
-def test_attachment_thumbnail_view_returns_404_response_if_attachment_slug_is_invalid(
+def test_attachment_thumbnail_view_returns_301_response_if_attachment_slug_is_invalid(
     user, user_client, image_small, attachment_factory
 ):
     attachment = attachment_factory(
@@ -93,7 +94,8 @@ def test_attachment_thumbnail_view_returns_404_response_if_attachment_slug_is_in
             kwargs={"id": attachment.id, "slug": "invalid"},
         )
     )
-    assert response.status_code == 404
+    assert response.status_code == 301
+    assert response["location"] == attachment.get_thumbnail_url()
 
 
 def test_attachment_download_view_returns_404_response_for_user_if_attachment_is_deleted(

@@ -10,6 +10,7 @@ from django.utils.translation import pgettext
 from django.views import View
 from django.urls import reverse
 
+from ..core.exceptions import OutdatedSlug
 from ..permissions.attachments import (
     check_delete_attachment_permission,
     check_download_attachment_permission,
@@ -42,7 +43,7 @@ class AttachmentView(View):
         attachment = get_object_or_404(Attachment.objects.select_related(), id=id)
 
         if attachment.slug != slug:
-            raise Http404()
+            raise OutdatedSlug(attachment)
 
         # Check attachment permissions if its not viewed by admin
         if not (request.user.is_authenticated and request.user.is_misago_admin):
