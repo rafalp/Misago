@@ -579,13 +579,13 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
 
   element.classList.add("deleted")
 
-  const textarea = document.createElement("textarea")
-  textarea.setAttribute("type", "hidden")
-  textarea.setAttribute("name", name)
-  textarea.setAttribute("value", attachment)
+  const input = document.createElement("input")
+  input.setAttribute("type", "hidden")
+  input.setAttribute("name", name)
+  input.setAttribute("value", attachment)
 
   const attachments = target.closest('[misago-editor="attachments"]')
-  attachments.appendChild(textarea)
+  attachments.appendChild(input)
 })
 
 editor.setAction("formatting-help", function ({ target }) {
