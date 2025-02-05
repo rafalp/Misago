@@ -17,8 +17,6 @@ class ThreadsSettingsForm(SettingsForm):
         "allow_private_threads_attachments",
         "restrict_attachments_extensions",
         "restrict_attachments_extensions_type",
-        "attachment_403_image",
-        "attachment_404_image",
         "unused_attachments_storage_limit",
         "attachment_image_max_width",
         "attachment_image_max_height",
@@ -271,35 +269,6 @@ class ThreadsSettingsForm(SettingsForm):
         min_value=100,
     )
     attachment_thumbnail_height = forms.IntegerField(min_value=100)
-
-    attachment_403_image = forms.ImageField(
-        label=pgettext_lazy("admin threads settings form", "Permission denied image"),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Attachments proxy will display this image in place of default one when user tries to access attachment they have no permission to see.",
-        ),
-        required=False,
-    )
-    attachment_403_image_delete = forms.BooleanField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Delete custom permission denied image"
-        ),
-        required=False,
-    )
-    attachment_404_image = forms.ImageField(
-        label=pgettext_lazy("admin threads settings form", "Not found image"),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Attachments proxy will display this image in place of default one when user tries to access attachment that doesn't exist.",
-        ),
-        required=False,
-    )
-    attachment_404_image_delete = forms.BooleanField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Delete custom not found image"
-        ),
-        required=False,
-    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
