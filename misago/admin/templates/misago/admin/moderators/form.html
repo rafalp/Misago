@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New moderator" context "admin moderator form" %}
+  {% translate "New moderator" context "admin moderator form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -21,9 +21,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-    {% trans "Edit moderator" context "admin moderator form" %}
+    {% translate "Edit moderator" context "admin moderator form" %}
 {% else %}
-  {% trans "New moderator" context "admin moderator form" %}
+  {% translate "New moderator" context "admin moderator form" %}
 {% endif %}
 {% endblock %}
 
@@ -31,7 +31,7 @@
 {% block form-body %}
 <div class="form-fieldset form-fieldset-global">
   <fieldset>
-    <legend>{% trans "Basic settings" context "admin moderator form" %}</legend>
+    <legend>{% translate "Basic settings" context "admin moderator form" %}</legend>
 
     {% form_row form.is_global %}
 
@@ -39,7 +39,7 @@
 </div>
 <div class="form-fieldset form-fieldset-dynamic{% if target.is_global %} d-none{% endif %}">
   <fieldset>
-    <legend>{% trans "Categories" context "admin moderator form" %}</legend>
+    <legend>{% translate "Categories" context "admin moderator form" %}</legend>
 
     {% form_row form.categories %}
 
@@ -47,12 +47,12 @@
 </div>
 <div class="form-fieldset form-fieldset-dynamic{% if target.is_global %} d-none{% endif %}">
   <fieldset>
-    <legend>{% trans "Private threads" context "admin moderator form" %}</legend>
+    <legend>{% translate "Private threads" context "admin moderator form" %}</legend>
 
     <div class="alert alert-info">
-      {% blocktrans trimmed context "admin moderator form" %}
+      {% blocktranslate trimmed context "admin moderator form" %}
         Moderators can only access private threads they've been invited to or those that contain reported content.
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </div>
 
     {% form_row form.private_threads %}
@@ -67,7 +67,7 @@
   {% include "misago/admin/generic/form_footer.html" %}
 {% else %}
   <button class="btn btn-primary btn-sm">
-    {% trans "Create moderator" context "admin moderator form action" %}
+    {% translate "Create moderator" context "admin moderator form action" %}
   </button>
 {% endif %}
 {% endblock %}

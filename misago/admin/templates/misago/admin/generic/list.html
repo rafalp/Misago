@@ -84,10 +84,10 @@
         <div class="modal-header">
           <h5 class="modal-title" id="filter-modal-label">
             {% block filters-modal-title %}
-              {% trans "Filters" context "admin list filters" %}
+              {% translate "Filters" context "admin list filters" %}
             {% endblock filters-modal-title %}
           </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'admin list filters' %}">
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'admin list filters' %}">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -102,10 +102,10 @@
           <div class="modal-footer">
             {% block filters-modal-footer %}
               <button type="button" class="btn btn-light" data-dismiss="modal">
-                {% trans "Close" context "admin list filters" %}
+                {% translate "Close" context "admin list filters" %}
               </button>
               <button type="submit" class="btn btn-primary">
-                {% trans "Done" context "admin list filters" %}
+                {% translate "Done" context "admin list filters" %}
               </button>
             {% endblock filters-modal-footer %}
           </div>

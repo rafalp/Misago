@@ -159,16 +159,16 @@
             {% endif %}
             <div class="media-body">
               <h5>
-                {% blocktrans trimmed with usage=checks.attachments_storage.usage context "admin attachments storage check" %}
+                {% blocktranslate trimmed with usage=checks.attachments_storage.usage context "admin attachments storage check" %}
                   Unused attachments storage is {{ usage }}% full.
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </h5>
-              {% blocktrans trimmed context "admin attachments storage check" %}
+              {% blocktranslate trimmed context "admin attachments storage check" %}
                 Users without unlimited unused attachments storage will not be able to upload files if it is 100% full.
-              {% endblocktrans %}
-              {% blocktrans trimmed with space_left=checks.attachments_storage.space_left|filesizeformat limit=checks.attachments_storage.limit|filesizeformat context "admin attachments storage check" %}
+              {% endblocktranslate %}
+              {% blocktranslate trimmed with space_left=checks.attachments_storage.space_left|filesizeformat limit=checks.attachments_storage.limit|filesizeformat context "admin attachments storage check" %}
                 {{ space_left }} of {{ limit }} is available for new attachments.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </div>
           </div>
         </div>

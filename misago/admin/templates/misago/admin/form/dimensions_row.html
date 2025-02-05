@@ -11,12 +11,12 @@
     </div>
     {% for error in field_width.errors %}
       <small class="form-text text-danger font-weight-bold">
-        {% trans "Width:" context "admin dimension field" %} {{ error }}
+        {% translate "Width:" context "admin dimension field" %} {{ error }}
       </small>
     {% endfor %}
     {% for error in field_height.errors %}
       <small class="form-text text-danger font-weight-bold">
-        {% trans "Height:" context "admin dimension field" %} {{ error }}
+        {% translate "Height:" context "admin dimension field" %} {{ error }}
       </small>
     {% endfor %}
     {% if field_width.help_text %}

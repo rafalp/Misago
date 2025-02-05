@@ -1,16 +1,16 @@
 {% load i18n %}
 {% if target and target.pk %}
 <button class="btn btn-primary btn-sm" name="stay" value="1">
-  {% trans "Save and keep editing" context "admin form action" %}
+  {% translate "Save and keep editing" context "admin form action" %}
 </button>
 <button class="btn btn-primary btn-sm">
-  {% trans "Save changes" context "admin form action" %}
+  {% translate "Save changes" context "admin form action" %}
 </button>
 {% else %}
 <button class="btn btn-primary btn-sm" name="stay" value="1">
-  {% trans "Save and add another" context "admin form action" %}
+  {% translate "Save and add another" context "admin form action" %}
 </button>
 <button class="btn btn-primary btn-sm">
-  {% trans "Save" context "admin form action" %}
+  {% translate "Save" context "admin form action" %}
 </button>
 {% endif %}

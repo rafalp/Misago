@@ -8,15 +8,15 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-xs-12 col-sm-6 col-md-3">
-        <strong>{% trans "Type:" context "attachment details page" %}</strong>
+        <strong>{% translate "Type:" context "attachment details page" %}</strong>
         {{ attachment.filetype.name }}
       </div>
       <div class="col-xs-12 col-sm-6 col-md-3">
-        <strong>{% trans "Size:" context "attachment details page" %}</strong>
+        <strong>{% translate "Size:" context "attachment details page" %}</strong>
         {{ attachment.size|filesizeformat }}
       </div>
       <div class="col-xs-12 col-sm-6 col-md-3 text-ellipsis">
-        <strong>{% trans "Uploader:" context "attachment details page" %}</strong>
+        <strong>{% translate "Uploader:" context "attachment details page" %}</strong>
         {% if attachment.uploader %}
           <a href="{{ attachment.uploader.get_absolute_url }}" class="item-link">
             {{ attachment.uploader.username }}
@@ -28,7 +28,7 @@
         {% endif %}
       </div>
       <div class="col-xs-12 col-sm-6 col-md-3 text-ellipsis">
-        <strong>{% trans "Uploaded:" context "attachment details page" %}</strong>
+        <strong>{% translate "Uploaded:" context "attachment details page" %}</strong>
         <span
           title="{{ attachment.uploaded_at|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ attachment.uploaded_at.isoformat }}"
@@ -40,7 +40,7 @@
     {% if can_see_post and attachment.post %}
       <div class="row">
         <div class="col-xs-12 text-ellipsis">
-          <strong>{% trans "Thread:" context "attachment details page" %}</strong>
+          <strong>{% translate "Thread:" context "attachment details page" %}</strong>
           <a href="{{ attachment.post.get_absolute_url }}" class="item-link">
             {{ attachment.thread.title }}
           </a>

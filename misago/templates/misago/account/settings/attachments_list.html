@@ -8,7 +8,7 @@
   <div class="panel panel-default panel-form">
     <div class="panel-heading">
       <h3 class="panel-title">
-        {% trans "Your attachments" context "account attachments page" %}
+        {% translate "Your attachments" context "account attachments page" %}
       </h3>
     </div>
     {% include "misago/account/settings/attachments_storage.html" %}
@@ -58,9 +58,9 @@
                     {{ item.attachment.uploaded_at|date_relative }}
                   </span>
                 {% endcapture %}
-                {% blocktrans trimmed with uploaded_at=uploaded_at|safe context "account attachments page" %}
+                {% blocktranslate trimmed with uploaded_at=uploaded_at|safe context "account attachments page" %}
                   Uploaded {{ uploaded_at }}
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </li>
               {% if item.show_post %}
                 <li>
@@ -69,9 +69,9 @@
                       {{ item.attachment.thread.title }}
                     </a>
                   {% endcapture %}
-                  {% blocktrans trimmed with thread=thread|safe context "account attachments page" %}
+                  {% blocktranslate trimmed with thread=thread|safe context "account attachments page" %}
                     In {{ thread }}
-                  {% endblocktrans %}
+                  {% endblocktranslate %}
                 </li>
               {% endif %}
             </ul>
@@ -82,7 +82,7 @@
                 <a
                   class="btn btn-default btn-icon btm-sm"
                   href="{{ item.attachment.get_delete_url }}{{ attachments.referer }}"
-                  title="{% trans 'Delete' context 'account attachments page' %}"
+                  title="{% translate 'Delete' context 'account attachments page' %}"
                 >
                   <span class="material-icon">delete</span>
                 </a>
@@ -91,10 +91,10 @@
                 class="d-js-block"
                 action="{{ item.attachment.get_delete_url }}{{ attachments.referer }}"
                 method="post"
-                misago-confirm="{% trans 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
+                misago-confirm="{% translate 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
               >
                 {% csrf_token %}
-                <button class="btn btn-default btn-icon btm-sm" title="{% trans 'Delete this attachment' context 'account attachments page' %}">
+                <button class="btn btn-default btn-icon btm-sm" title="{% translate 'Delete this attachment' context 'account attachments page' %}">
                   <span class="material-icon">delete</span>
                 </button>
               </form>
@@ -103,9 +103,9 @@
         </li>
       {% empty %}
         <li class="list-group-item attachment-list-blankslate">
-          {% blocktrans trimmed context "account attachments page" %}
+          {% blocktranslate trimmed context "account attachments page" %}
             You haven’t uploaded any attachments, or they have been deleted.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </li>
       {% endfor %}
     </ul>

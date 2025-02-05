@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{% trans "Category permissions" context "admin group form" %} | {{ target }} | {{ active_link.name }} | {{ block.super }}
+{% translate "Category permissions" context "admin group form" %} | {{ target }} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -19,17 +19,17 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:groups:edit' pk=target.pk %}" class="btn btn-primary btn-sm">
     <span class="fa fa-edit"></span>
-    {% trans "Edit group" context "admin groups" %}
+    {% translate "Edit group" context "admin groups" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block form-header %}
-{% trans "Category permissions" context "admin group form" %}
+{% translate "Category permissions" context "admin group form" %}
 {% endblock %}
 
 
 {% block item-header %}
-{% trans "Category" context "admin group form" %}
+{% translate "Category" context "admin group form" %}
 {% endblock item-header %}

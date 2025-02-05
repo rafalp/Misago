@@ -2,33 +2,33 @@
 <div class="card card-admin-info overflow-hidden">
   <div class="card-body">
     <h4 class="card-title">
-      {% trans "Totals" context "admin dashboard totals" %}
+      {% translate "Totals" context "admin dashboard totals" %}
     </h4>
   </div>
   <table class="table m-0 small">
     <tr>
       <td>
-        <strong>{% trans "Users:" context "admin dashboard totals" %}</strong>
+        <strong>{% translate "Users:" context "admin dashboard totals" %}</strong>
         {{ totals.users }}
       </td>
       <td>
-        <strong>{% trans "Threads:" context "admin dashboard totals" %}</strong>
+        <strong>{% translate "Threads:" context "admin dashboard totals" %}</strong>
         {{ totals.threads }}
       </td>
       <td>
-        <strong>{% trans "Posts:" context "admin dashboard totals" %}</strong>
+        <strong>{% translate "Posts:" context "admin dashboard totals" %}</strong>
         {{ totals.posts }}
       </td>
       <td>
-        <strong>{% trans "Attachments:" context "admin dashboard totals" %}</strong>
+        <strong>{% translate "Attachments:" context "admin dashboard totals" %}</strong>
         {{ totals.attachments }}
       </td>
       <td>
-        <strong>{% trans "Attachments size:" context "admin dashboard totals" %}</strong>
+        <strong>{% translate "Attachments size:" context "admin dashboard totals" %}</strong>
         {{ totals.attachments_total_size|filesizeformat }}
       </td>
       <td>
-        <strong>{% trans "Unused attachments:" context "admin dashboard totals" %}</strong>
+        <strong>{% translate "Unused attachments:" context "admin dashboard totals" %}</strong>
         {{ totals.attachments_unused_size|filesizeformat }}
       </td>
     </tr>

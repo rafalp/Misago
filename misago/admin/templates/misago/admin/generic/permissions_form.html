@@ -13,8 +13,8 @@
         <h5 class="card-header">
           {% block form-header %}{% endblock form-header %}
           <span class="card-header-hint">
-            <strong>{% trans "Hint:" context "admin permissions table" %}</strong>
-            {% trans "Click on permission or item name to quickly toggle selection." context "admin permissions table" %}
+            <strong>{% translate "Hint:" context "admin permissions table" %}</strong>
+            {% translate "Click on permission or item name to quickly toggle selection." context "admin permissions table" %}
           </span>
         </h5>
         <table class="table admin-permissions-table">
@@ -53,7 +53,7 @@
         <div class="card-footer sticky text-right">
           {% block form-footer-cancel %}
             <a href="{% url root_link %}" class="btn btn-light btn-sm" data-cancel-confirmation="true">
-              {% trans "Cancel" context "admin form" %}
+              {% translate "Cancel" context "admin form" %}
             </a>
           {% endblock %}
           {% block form-footer %}

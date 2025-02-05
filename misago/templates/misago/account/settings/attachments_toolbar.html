@@ -14,7 +14,7 @@
             <a
               href="{% url 'misago:account-attachments' %}"
               class="btn btn-default btn-outline btn-icon"
-              title="{% trans 'Go to first page' context 'attachments list paginator' %}"
+              title="{% translate 'Go to first page' context 'attachments list paginator' %}"
               hx-get="{% url 'misago:account-attachments' %}"
             >
               <span class="material-icon">first_page</span>
@@ -22,7 +22,7 @@
             <a
               href="{% url 'misago:account-attachments' %}{{ paginator.previous_cursor_query }}"
               class="btn btn-default btn-outline btn-icon"
-              title="{% trans 'Go to previous page' context 'username history paginator' %}"
+              title="{% translate 'Go to previous page' context 'username history paginator' %}"
               hx-get="{% url 'misago:account-attachments' %}{{ paginator.previous_cursor_query }}"
             >
               <span class="material-icon">chevron_left</span>
@@ -30,7 +30,7 @@
           {% else %}
             <button
               class="btn btn-default btn-outline btn-icon"
-              title="{% trans 'Go to first page' context 'username history paginator' %}"
+              title="{% translate 'Go to first page' context 'username history paginator' %}"
               type="button"
               disabled
             >
@@ -38,7 +38,7 @@
             </button>
             <button
               class="btn btn-default btn-outline btn-icon"
-              title="{% trans 'Go to previous page' context 'username history paginator' %}"
+              title="{% translate 'Go to previous page' context 'username history paginator' %}"
               type="button"
               disabled
             >
@@ -49,7 +49,7 @@
             <a
               href="{% url 'misago:account-attachments' %}{{ paginator.next_cursor_query }}"
               class="btn btn-default btn-outline btn-icon"
-              title="{% trans 'Go to next page' context 'username history paginator' %}"
+              title="{% translate 'Go to next page' context 'username history paginator' %}"
               hx-get="{% url 'misago:account-attachments' %}{{ paginator.next_cursor_query }}"
             >
               <span class="material-icon">chevron_right</span>
@@ -57,7 +57,7 @@
           {% else %}
             <button
               class="btn btn-default btn-outline btn-icon"
-              title="{% trans 'Go to next page' context 'username history paginator' %}"
+              title="{% translate 'Go to next page' context 'username history paginator' %}"
               type="button"
               disabled
             >

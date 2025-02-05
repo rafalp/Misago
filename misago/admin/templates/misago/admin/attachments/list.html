@@ -5,11 +5,11 @@
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
 <th>{% translate "Attachment" context "admin attachments list" %}</th>
-<th style="width: 120px;">{% trans "Size" context "admin attachments list" %}</th>
-<th style="width: 140px;">{% trans "Type" context "admin attachments list" %}</th>
-<th style="width: 140px;">{% trans "Uploader" context "admin attachments list" %}</th>
-<th style="width: 150px;">{% trans "Uploaded at" context "admin attachments list" %}</th>
-<th style="width: 220px;">{% trans "Thread" context "admin attachments list" %}</th>
+<th style="width: 120px;">{% translate "Size" context "admin attachments list" %}</th>
+<th style="width: 140px;">{% translate "Type" context "admin attachments list" %}</th>
+<th style="width: 140px;">{% translate "Uploader" context "admin attachments list" %}</th>
+<th style="width: 150px;">{% translate "Uploaded at" context "admin attachments list" %}</th>
+<th style="width: 220px;">{% translate "Thread" context "admin attachments list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -36,7 +36,7 @@
     <div
       class="btn btn-thumbnail-broken"
       data-tooltip="top"
-      title="{% trans 'Upload is missing' context 'admin attachments' %}""
+      title="{% translate 'Upload is missing' context 'admin attachments' %}""
     >
       <span class="fas fa-times"></span>
     </div>
@@ -78,11 +78,11 @@
     </a>
   {% elif item.is_deleted %}
     <em>
-      {% trans "Marked for deletion" context "admin attachment status" %}
+      {% translate "Marked for deletion" context "admin attachment status" %}
     </em>
   {% else %}
     <em>
-      {% trans "Unused" context "admin attachment status" %}
+      {% translate "Unused" context "admin attachment status" %}
     </em>
   {% endif %}
 </td>

@@ -12,10 +12,10 @@
   <table class="table">
     <thead>
       <tr>
-        <th>{% trans "ID" context "admin attachment filetypes list" %}</th>
-        <th>{% trans "Name" context "admin attachment filetypes list" %}</th>
-        <th>{% trans "Extensions" context "admin attachment filetypes list" %}</th>
-        <th>{% trans "Content types" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "ID" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "Name" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "Extensions" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "Content types" context "admin attachment filetypes list" %}</th>
         <th style="width: 1px;">&nbsp;</th>
       </tr>
     </thead>
@@ -40,9 +40,9 @@
               href="{% url 'misago:admin:attachments:index' %}?filetype={{ item.id }}"
               target="_blank"
               data-tooltip="left"
-              title="{% blocktrans trimmed with filetype=item.id context 'admin attachments filetypes' %}
+              title="{% blocktranslate trimmed with filetype=item.id context 'admin attachments filetypes' %}
               Search attachments with the &quot;{{ filetype }}&quot; file type
-              {% endblocktrans %}"
+              {% endblocktranslate %}"
             >
               <i class="fas fa-search fa-fw"></i>
             </a>
@@ -51,7 +51,7 @@
       {% empty %}
         <tr class="blankslate">
           <td colspan="5">
-            {% trans "No attachments file types exist." context "admin attachments filetypes" %}
+            {% translate "No attachments file types exist." context "admin attachments filetypes" %}
           </td>
         </tr>
       {% endfor %}

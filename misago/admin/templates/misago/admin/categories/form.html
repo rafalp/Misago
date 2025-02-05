@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New category" context "admin category form" %}
+  {% translate "New category" context "admin category form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -26,13 +26,13 @@
   <div class="col-auto page-action">
     <a href="{% url 'misago:admin:categories:permissions' pk=target.pk %}" class="btn btn-primary btn-sm">
       <span class="fa fa-adjust"></span>
-      {% trans "Change permissions" context "admin categories" %}
+      {% translate "Change permissions" context "admin categories" %}
     </a>
   </div>
   <div class="col-auto page-action">
     <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
       <span class="fas fa-external-link-alt"></span>
-      {% trans "View on site" context "admin categories" %}
+      {% translate "View on site" context "admin categories" %}
     </a>
   </div>
 {% endif %}
@@ -41,9 +41,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit category" context "admin category form" %}
+  {% translate "Edit category" context "admin category form" %}
 {% else %}
-  {% trans "New category" context "admin category form" %}
+  {% translate "New category" context "admin category form" %}
 {% endif %}
 {% endblock %}
 
@@ -51,7 +51,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Display and position" context "admin category form" %}</legend>
+    <legend>{% translate "Display and position" context "admin category form" %}</legend>
 
     {% form_row form.new_parent %}
     {% form_row form.name %}
@@ -64,7 +64,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Behavior" context "admin category form" %}</legend>
+    <legend>{% translate "Behavior" context "admin category form" %}</legend>
 
     {% form_row form.copy_permissions %}
     {% form_row form.allow_polls %}
@@ -79,7 +79,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Content approval" context "admin category form" %}</legend>
+    <legend>{% translate "Content approval" context "admin category form" %}</legend>
 
     {% form_row form.require_threads_approval %}
     {% form_row form.require_replies_approval %}
@@ -89,7 +89,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Prune threads" context "admin category form" %}</legend>
+    <legend>{% translate "Prune threads" context "admin category form" %}</legend>
 
     {% form_row form.prune_started_after %}
     {% form_row form.prune_replied_after %}

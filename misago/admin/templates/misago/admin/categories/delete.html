@@ -3,9 +3,9 @@
 
 
 {% block title %}
-{% blocktrans trimmed with category=target.name context "admin category form" %}
+{% blocktranslate trimmed with category=target.name context "admin category form" %}
   Delete category: {{ category }}
-{% endblocktrans %} | {{ active_link.name }} | {{ block.super }}
+{% endblocktranslate %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -18,13 +18,13 @@
 
 
 {% block form-header %}
-{% trans "Delete category" context "admin category form" %}
+{% translate "Delete category" context "admin category form" %}
 {% endblock %}
 
 
 {% block form-body %}
 <fieldset>
-  <legend>{% trans "Category contents" context "admin category form" %}</legend>
+  <legend>{% translate "Category contents" context "admin category form" %}</legend>
 
   {% if not form.instance.is_leaf_node %}
     {% form_row form.move_children_to %}
@@ -36,5 +36,5 @@
 
 
 {% block form-footer %}
-<button class="btn btn-danger btn-sm">{% trans "Delete category" context "admin category form" %}</button>
+<button class="btn btn-danger btn-sm">{% translate "Delete category" context "admin category form" %}</button>
 {% endblock %}
