@@ -4,9 +4,9 @@
     {% if post.acl.can_like %}
       <button type="button" class="btn btn-{% if post.is_liked %}success{% else %}default{% endif %} pull-left" disabled="disabled">
         {% if post.is_liked %}
-          {% trans "Liked" context "post control" %}
+          {% translate "Liked" context "post control" %}
         {% else %}
-          {% trans "Like" context "post control" %}
+          {% translate "Like" context "post control" %}
         {% endif %}
       </button>
     {% endif %}
@@ -23,15 +23,15 @@
     {% endif %}
     {% if post.acl.can_reply %}
       <button type="button" class="btn btn-default btn-sm pull-right" disabled="disabled">
-        {% trans "Reply" context "post control" %}
+        {% translate "Reply" context "post control" %}
       </button>
       <button type="button" class="btn btn-default btn-sm pull-right" disabled="disabled">
-        {% trans "Quote" context "post control" %}
+        {% translate "Quote" context "post control" %}
       </button>
     {% endif %}
     {% if post.acl.can_edit %}
       <button type="button" class="hidden-xs  btn btn-default btn-sm pull-right" disabled="disabled">
-        {% trans "Edit" context "post control" %}
+        {% translate "Edit" context "post control" %}
       </button>
     {% endif %}
   </div>

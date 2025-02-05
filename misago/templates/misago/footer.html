@@ -6,7 +6,7 @@
       <noscript>
         <p class="noscript-message">
           <i class="material-icon hidden-xs hidden-sm">info_outline</i>
-          {% trans "For complete experience please enable JavaScript." context "forum footer" %}
+          {% translate "For complete experience please enable JavaScript." context "forum footer" %}
         </p>
       </noscript>
 
@@ -26,12 +26,12 @@
           {% endfor %}
           {% if TERMS_OF_SERVICE_URL %}
             <li>
-              <a href="{{ TERMS_OF_SERVICE_URL }}">{% trans "Terms of service" context "forum footer" %}</a>
+              <a href="{{ TERMS_OF_SERVICE_URL }}">{% translate "Terms of service" context "forum footer" %}</a>
             </li>
           {% endif %}
           {% if PRIVACY_POLICY_URL %}
             <li>
-              <a href="{{ PRIVACY_POLICY_URL }}">{% trans "Privacy policy" context "forum footer" %}</a>
+              <a href="{{ PRIVACY_POLICY_URL }}">{% translate "Privacy policy" context "forum footer" %}</a>
             </li>
           {% endif %}
         </ul>

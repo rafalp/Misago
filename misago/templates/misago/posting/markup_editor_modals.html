@@ -10,38 +10,38 @@
     <form>
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
-            {% trans "Insert link" context "markup editor link modal" %}
+            {% translate "Insert link" context "markup editor link modal" %}
           </h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label class="control-label " for="markup_link_url">
-              {% trans "Link address:" context "markup editor link modal" %}
+              {% translate "Link address:" context "markup editor link modal" %}
             </label>
             <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
           </div>
           <div class="form-group">
             <label class="control-label " for="markup_link_text">
-              {% trans "Link text:" context "markup editor link modal" %}
+              {% translate "Link text:" context "markup editor link modal" %}
             </label>
             <div>
               <input type="text" id="markup_link_text" name="text" class="form-control" value="">
               <p class="help-block">
-                {% blocktrans trimmed context "markup editor link modal" %}
+                {% blocktranslate trimmed context "markup editor link modal" %}
                   Optional. Will be displayed instead of link's address.
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </p>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">
-            {% trans "Cancel" context "markup editor modal btn" %}
+            {% translate "Cancel" context "markup editor modal btn" %}
           </button>
           <button class="btn btn-primary">
-            {% trans "Insert link" context "markup editor link modal btn" %}
+            {% translate "Insert link" context "markup editor link modal btn" %}
           </button>
         </div>
       </div>
@@ -59,38 +59,38 @@
     <form>
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
-            {% trans "Insert image" context "markup editor image modal" %}
+            {% translate "Insert image" context "markup editor image modal" %}
           </h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label class="control-label " for="markup_link_url">
-              {% trans "Image URL:" context "markup editor image modal" %}
+              {% translate "Image URL:" context "markup editor image modal" %}
             </label>
             <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
           </div>
           <div class="form-group">
             <label class="control-label " for="markup_link_text">
-              {% trans "Alternate text:" context "markup editor image modal" %}
+              {% translate "Alternate text:" context "markup editor image modal" %}
             </label>
             <div>
               <input type="text" id="markup_link_text" name="text" class="form-control" value="">
               <p class="help-block">
-                {% blocktrans trimmed context "markup editor image modal" %}
+                {% blocktranslate trimmed context "markup editor image modal" %}
                   Optional. Used as the image's description if it fails to load and by screen readers.
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </p>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">
-            {% trans "Cancel" context "markup editor modal btn" %}
+            {% translate "Cancel" context "markup editor modal btn" %}
           </button>
           <button class="btn btn-primary">
-            {% trans "Insert image" context "markup editor image modal btn" %}
+            {% translate "Insert image" context "markup editor image modal btn" %}
           </button>
         </div>
       </div>
@@ -108,26 +108,26 @@
     <form>
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
-            {% trans "Insert quote" context "markup editor quote modal" %}
+            {% translate "Insert quote" context "markup editor quote modal" %}
           </h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label class="control-label " for="markup_quote_author">
-              {% trans "Quote's author or source:" context "markup editor quote modal" %}
+              {% translate "Quote's author or source:" context "markup editor quote modal" %}
             </label>
             <input type="text" id="markup_quote_author" name="author" class="form-control" value="" >
             <p class="help-block">
-              {% blocktrans trimmed context "markup editor quote modal" %}
+              {% blocktranslate trimmed context "markup editor quote modal" %}
                 Optional. If it's username, put "@" before it ("@JohnDoe").
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </p>
           </div>
           <div class="form-group">
             <label class="control-label " for="markup_quote_text">
-              {% trans "Quoted text:" context "markup editor quote modal" %}
+              {% translate "Quoted text:" context "markup editor quote modal" %}
             </label>
             <div>
               <textarea type="text" id="markup_quote_text" name="text" class="form-control" rows="6" required></textarea>
@@ -136,10 +136,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">
-            {% trans "Cancel" context "markup editor modal btn" %}
+            {% translate "Cancel" context "markup editor modal btn" %}
           </button>
           <button class="btn btn-primary">
-            {% trans "Insert quote" context "markup editor quote modal btn" %}
+            {% translate "Insert quote" context "markup editor quote modal btn" %}
           </button>
         </div>
       </div>
@@ -157,18 +157,18 @@
     <form>
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
-            {% trans "Insert code" context "markup editor code modal" %}
+            {% translate "Insert code" context "markup editor code modal" %}
           </h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label class="control-label " for="markup_code_syntax">
-              {% trans "Syntax highlighting:" context "markup editor code modal" %}
+              {% translate "Syntax highlighting:" context "markup editor code modal" %}
             </label>
             <select id="markup_code_syntax" class="form-control" name="syntax">
-              <option value="">{% trans "No syntax highlighting" context "markup editor code syntax choice" %}</option>
+              <option value="">{% translate "No syntax highlighting" context "markup editor code syntax choice" %}</option>
               <option value="bash">Bash</option>
               <option value="c">C</option>
               <option value="c#">C#</option>
@@ -198,7 +198,7 @@
               <option value="rust">Rust</option>
               <option value="scss">SCSS</option>
               <option value="sql">SQL</option>
-              <option value="shell">{% trans "Shell Session" context "markup editor code syntax choice" %}</option>
+              <option value="shell">{% translate "Shell Session" context "markup editor code syntax choice" %}</option>
               <option value="swift">Swift</option>
               <option value="toml">TOML</option>
               <option value="ini">INI</option>
@@ -210,7 +210,7 @@
           </div>
           <div class="form-group">
             <label class="control-label " for="markup_code">
-              {% trans "Code to insert:" context "markup editor code modal" %}
+              {% translate "Code to insert:" context "markup editor code modal" %}
             </label>
             <div>
               <textarea type="text" id="markup_code" name="code" class="form-control" rows="6" required></textarea>
@@ -219,10 +219,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">
-            {% trans "Cancel" context "markup editor modal btn" %}
+            {% translate "Cancel" context "markup editor modal btn" %}
           </button>
           <button class="btn btn-primary">
-            {% trans "Insert code" context "markup editor code modal btn" %}
+            {% translate "Insert code" context "markup editor code modal btn" %}
           </button>
         </div>
       </div>

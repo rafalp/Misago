@@ -8,9 +8,9 @@
     aria-expanded="false"
   >
     {% if category %}
-      {% trans "Go to subcategory" context "threads list subcategories" %}
+      {% translate "Go to subcategory" context "threads list subcategories" %}
     {% else %}
-      {% trans "Go to category" context "threads list subcategories" %}
+      {% translate "Go to category" context "threads list subcategories" %}
     {% endif %}
   </button>
   <ul class="dropdown-menu stick-to-bottom">
@@ -35,9 +35,9 @@
       for="threads-subcategories-collapsible"
     >
       {% if category %}
-        {% trans "Go to subcategory" context "threads list subcategories" %}
+        {% translate "Go to subcategory" context "threads list subcategories" %}
       {% else %}
-        {% trans "Go to category" context "threads list subcategories" %}
+        {% translate "Go to category" context "threads list subcategories" %}
       {% endif %}
     </label>
     <input id="threads-subcategories-collapsible" type="checkbox" />

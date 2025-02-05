@@ -3,18 +3,18 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user context "data download ready email" %}
+{% blocktranslate trimmed with user=user context "data download ready email" %}
 {{ user }}, you are receiving this message because your data is ready for download.
-{% endblocktrans %}
+{% endblocktranslate %}
 
-{% blocktrans trimmed context "data download ready email" %}
+{% blocktranslate trimmed context "data download ready email" %}
 To download your data, click the following link:
-{% endblocktrans %}
+{% endblocktranslate %}
 {% absoluteurl data_download.file.url %}
 
-{% blocktrans trimmed count expires_in=expires_in context "data download ready email" %}
+{% blocktranslate trimmed count expires_in=expires_in context "data download ready email" %}
 This link will remain active for {{ expires_in }} hour from the time this message has been sent.
 {% plural %}
 This link will remain active for {{ expires_in }} hours from the time this message has been sent.
-{% endblocktrans %}
+{% endblocktranslate %}
 {% endblock content %}

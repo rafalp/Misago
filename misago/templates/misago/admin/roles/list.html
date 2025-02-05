@@ -6,7 +6,7 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:permissions:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New role" context "admin roles" %}
+    {% translate "New role" context "admin roles" %}
   </a>
 </div>
 {% endblock %}
@@ -20,7 +20,7 @@
 
 
 {% block table-header %}
-<th>{% trans "Role" context "admin roles list" %}</th>
+<th>{% translate "Role" context "admin roles list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -43,15 +43,15 @@
         </a>
       {% endfor %}
       <a class="dropdown-item" href="{% url 'misago:admin:permissions:users' pk=item.pk %}">
-        {% trans "Users with role" context "admin roles" %}
+        {% translate "Users with role" context "admin roles" %}
       </a>
       <a class="dropdown-item" href="{% url 'misago:admin:permissions:edit' pk=item.pk %}">
-        {% trans "Edit role" context "admin roles" %}
+        {% translate "Edit role" context "admin roles" %}
       </a>
       <form action="{% url 'misago:admin:permissions:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
-          {% trans "Delete role" context "admin roles" %}
+          {% translate "Delete role" context "admin roles" %}
         </button>
       </form>
     </div>
@@ -62,7 +62,7 @@
 
 {% block blankslate %}
 <td colspan="2">
-  {% trans "No user roles are set." context "admin roles" %}
+  {% translate "No user roles are set." context "admin roles" %}
 </td>
 {% endblock blankslate %}
 
@@ -71,7 +71,7 @@
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-delete-confirmation]",
-    "{% trans 'Are you sure you want to delete this role?' context 'admin roles' %}"
+    "{% translate 'Are you sure you want to delete this role?' context 'admin roles' %}"
   )
 </script>
 {% endblock %}

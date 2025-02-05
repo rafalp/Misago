@@ -2,7 +2,7 @@
 <li id="post-{{ post.pk }}" class="event {{ post.is_hidden|iftrue:'event-hidden' }}">
   {% if not post.is_read %}
     <div class="event-label">
-      <span class="label label-unread">{% trans "New event" context "thread event" %}</span>
+      <span class="label label-unread">{% translate "New event" context "thread event" %}</span>
     </div>
   {% endif %}
   <div class="event-body">
@@ -49,66 +49,66 @@
           {% capture trimmed as old_title %}
             <span class="item-title">{{ post.event_context.old_title }}</span>
           {% endcapture %}
-          {% blocktrans trimmed with old_title=old_title|safe context "thread event" %}
+          {% blocktranslate trimmed with old_title=old_title|safe context "thread event" %}
             Thread title has been changed from {{ old_title }}.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% elif post.event_type == 'pinned_globally' %}
-          {% trans "Thread has been pinned globally." context "thread event" %}
+          {% translate "Thread has been pinned globally." context "thread event" %}
         {% elif post.event_type == 'pinned_locally' %}
-          {% trans "Thread has been pinned in category." context "thread event" %}
+          {% translate "Thread has been pinned in category." context "thread event" %}
         {% elif post.event_type == 'unpinned' %}
-          {% trans "Thread has been unpinned." context "thread event" %}
+          {% translate "Thread has been unpinned." context "thread event" %}
         {% elif post.event_type == 'moved' %}
           {% capture trimmed as from_category %}
             <a href="{{ post.event_context.from_category.url }}" class="item-title">{{ post.event_context.from_category.name }}</a>
           {% endcapture %}
-          {% blocktrans trimmed with from_category=from_category|safe context "thread event" %}
+          {% blocktranslate trimmed with from_category=from_category|safe context "thread event" %}
             Thread has been moved from {{ from_category }}.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% elif post.event_type == 'merged' %}
           {% capture trimmed as merged_thread %}
             <span class="item-title">{{ post.event_context.merged_thread }}</span>
           {% endcapture %}
-          {% blocktrans trimmed with merged_thread=merged_thread|safe context "thread event" %}
+          {% blocktranslate trimmed with merged_thread=merged_thread|safe context "thread event" %}
             The {{ merged_thread }} thread has been merged into this thread.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% elif post.event_type == 'approved' %}
-          {% trans "Thread has been approved." context "thread event" %}
+          {% translate "Thread has been approved." context "thread event" %}
         {% elif post.event_type == 'opened' %}
-          {% trans "Thread has been opened." context "thread event" %}
+          {% translate "Thread has been opened." context "thread event" %}
         {% elif post.event_type == 'closed' %}
-          {% trans "Thread has been closed." context "thread event" %}
+          {% translate "Thread has been closed." context "thread event" %}
         {% elif post.event_type == 'unhid' %}
-          {% trans "Thread has been revealed." context "thread event" %}
+          {% translate "Thread has been revealed." context "thread event" %}
         {% elif post.event_type == 'hid' %}
-          {% trans "Thread has been made hidden." context "thread event" %}
+          {% translate "Thread has been made hidden." context "thread event" %}
         {% elif post.event_type == 'tookover' %}
-          {% trans "Took thread over." context "thread event" %}
+          {% translate "Took thread over." context "thread event" %}
         {% elif post.event_type == 'owner_left' %}
-          {% trans "Owner has left thread. This thread is now closed." context "thread event" %}
+          {% translate "Owner has left thread. This thread is now closed." context "thread event" %}
         {% elif post.event_type == 'participant_left' %}
-          {% trans "Participant has left thread." context "thread event" %}
+          {% translate "Participant has left thread." context "thread event" %}
         {% elif post.event_type == 'changed_owner' %}
           {% capture trimmed as user %}
             <a href="{{ post.event_context.user.url }}" class="item-title">{{ post.event_context.user.username }}</a>
           {% endcapture %}
-          {% blocktrans trimmed with user=user|safe context "thread event" %}
+          {% blocktranslate trimmed with user=user|safe context "thread event" %}
             Changed thread owner to {{ user }}.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% elif post.event_type == 'added_participant' %}
           {% capture trimmed as user %}
             <a href="{{ post.event_context.user.url }}" class="item-title">{{ post.event_context.user.username }}</a>
           {% endcapture %}
-          {% blocktrans trimmed with user=user|safe context "thread event" %}
+          {% blocktranslate trimmed with user=user|safe context "thread event" %}
             Added {{ user }} to thread.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% elif post.event_type == 'removed_participant' %}
           {% capture trimmed as user %}
             <a href="{{ post.event_context.user.url }}" class="item-title">{{ post.event_context.user.username }}</a>
           {% endcapture %}
-          {% blocktrans trimmed with user=user|safe context "thread event" %}
+          {% blocktranslate trimmed with user=user|safe context "thread event" %}
             Removed {{ user }} from thread.
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% endif %}
       </p>
 

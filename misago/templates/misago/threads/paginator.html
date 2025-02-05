@@ -9,7 +9,7 @@
     <a
       href="{{ pagination_url }}"
       class="btn btn-default btn-icon"
-      title="{% trans 'Go to first page' context 'threads paginator' %}"
+      title="{% translate 'Go to first page' context 'threads paginator' %}"
       hx-get="{{ pagination_url }}"
     >
       <span class="material-icon">first_page</span>
@@ -17,7 +17,7 @@
     <a
       href="{{ pagination_url }}{{ threads.paginator.previous_cursor_query }}"
       class="btn btn-default btn-icon"
-      title="{% trans 'Go to previous page' context 'threads paginator' %}"
+      title="{% translate 'Go to previous page' context 'threads paginator' %}"
       hx-get="{{ pagination_url }}{{ threads.paginator.previous_cursor_query }}"
     >
       <span class="material-icon">chevron_left</span>
@@ -34,7 +34,7 @@
     <a
       href="{{ pagination_url }}{{ threads.paginator.next_cursor_query }}"
       class="btn btn-default btn-icon"
-      title="{% trans 'Go to next page' context 'threads paginator' %}"
+      title="{% translate 'Go to next page' context 'threads paginator' %}"
       hx-get="{{ pagination_url }}{{ threads.paginator.next_cursor_query }}"
     >
       <span class="material-icon">chevron_right</span>

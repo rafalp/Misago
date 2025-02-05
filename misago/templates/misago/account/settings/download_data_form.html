@@ -28,19 +28,19 @@
   <div class="panel panel-default panel-form">
     <div class="panel-heading">
       <h3 class="panel-title">
-        {% trans "Download your data" context "account download data page" %}
+        {% translate "Download your data" context "account download data page" %}
       </h3>
     </div>
     <div class="panel-body">
       <p>
-        {% blocktrans trimmed context "account download data page" %}
+        {% blocktranslate trimmed context "account download data page" %}
           To download your data from the site, click the "Request data download" button. Depending on the amount of data to be archived and the number of users wanting to download their data at the same time, it may take up to a few days for your download to be prepared. An email notification will be sent to you when your data is ready to be downloaded.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </p>
       <p>
-        {% blocktrans trimmed context "account download data page" %}
+        {% blocktranslate trimmed context "account download data page" %}
           The download will only be available for a limited amount of time, after which it will be deleted from the site and marked as expired."
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </p>
     </div>
   </div>
@@ -48,16 +48,16 @@
   <div class="panel panel-default panel-form">
     <div class="panel-heading">
       <h3 class="panel-title">
-        {% trans "Data downloads" context "account download data page" %}
+        {% translate "Data downloads" context "account download data page" %}
       </h3>
     </div>
     <table class="table">
       <tr>
         <th>
-          {% trans "Requested at" context "account download data page" %}
+          {% translate "Requested at" context "account download data page" %}
         </th>
         <th class="col-md-4">
-          {% trans "Download" context "account download data page" %}
+          {% translate "Download" context "account download data page" %}
         </th>
       </tr>
       {% for item in data_downloads.items %}
@@ -73,15 +73,15 @@
           <td>
             {% if item.is_ready %}
               <a class="btn btn-primary btn-sm btn-block" href="{{ item.file.url }}">
-                {% trans "Download data" context "account download data btn" %}
+                {% translate "Download data" context "account download data btn" %}
               </a>
             {% elif item.is_expired %}
               <div class="btn btn-default btn-sm btn-block">
-                {% trans "Download expired" context "account download data btn" %}
+                {% translate "Download expired" context "account download data btn" %}
               </div>
             {% else %}
               <button class="btn btn-primary btn-sm btn-block" disabled>
-                {% trans "Preparing..." context "account download data btn" %}
+                {% translate "Preparing..." context "account download data btn" %}
               </button>
             {% endif %}
           </td>
@@ -89,7 +89,7 @@
       {% empty %}
         <tr>
           <td colspan="2">
-            {% trans "You have no data downloads." context "account download data page" %}
+            {% translate "You have no data downloads." context "account download data page" %}
           </td>
         </tr>
       {% endfor %}
@@ -108,7 +108,7 @@
               <a
                 href="{% url 'misago:account-download-data' %}"
                 class="btn btn-default btn-outline btn-icon"
-                title="{% trans 'Go to first page' context 'download data paginator' %}"
+                title="{% translate 'Go to first page' context 'download data paginator' %}"
                 hx-get="{% url 'misago:account-download-data' %}"
               >
                 <span class="material-icon">first_page</span>
@@ -116,7 +116,7 @@
               <a
                 href="{% url 'misago:account-download-data' %}{{ threads.paginator.previous_cursor_query }}"
                 class="btn btn-default btn-outline btn-icon"
-                title="{% trans 'Go to previous page' context 'download data paginator' %}"
+                title="{% translate 'Go to previous page' context 'download data paginator' %}"
                 hx-get="{% url 'misago:account-download-data' %}{{ threads.paginator.previous_cursor_query }}"
               >
                 <span class="material-icon">chevron_left</span>
@@ -124,7 +124,7 @@
             {% else %}
               <button
                 class="btn btn-default btn-outline btn-icon"
-                title="{% trans 'Go to first page' context 'download data paginator' %}"
+                title="{% translate 'Go to first page' context 'download data paginator' %}"
                 type="button"
                 disabled
               >
@@ -132,7 +132,7 @@
               </button>
               <button
                 class="btn btn-default btn-outline btn-icon"
-                title="{% trans 'Go to previous page' context 'download data paginator' %}"
+                title="{% translate 'Go to previous page' context 'download data paginator' %}"
                 type="button"
                 disabled
               >
@@ -143,7 +143,7 @@
               <a
                 href="{% url 'misago:account-download-data' %}{{ threads.paginator.next_cursor_query }}"
                 class="btn btn-default btn-outline btn-icon"
-                title="{% trans 'Go to next page' context 'download data paginator' %}"
+                title="{% translate 'Go to next page' context 'download data paginator' %}"
                 hx-get="{% url 'misago:account-download-data' %}{{ threads.paginator.next_cursor_query }}"
               >
                 <span class="material-icon">chevron_right</span>
@@ -151,7 +151,7 @@
             {% else %}
               <button
                 class="btn btn-default btn-outline btn-icon"
-                title="{% trans 'Go to next page' context 'download data paginator' %}"
+                title="{% translate 'Go to next page' context 'download data paginator' %}"
                 type="button"
                 disabled
               >
@@ -166,7 +166,7 @@
     <div class="toolbar-section">
       <div class="toolbar-item">
         <button class="btn btn-primary" type="submit"{% if has_data_download_request %} disabled{% endif %}>
-          {% trans "Prepare new download" context "account download data submit btn" %}
+          {% translate "Prepare new download" context "account download data submit btn" %}
         </button>
       </div>
     </div>

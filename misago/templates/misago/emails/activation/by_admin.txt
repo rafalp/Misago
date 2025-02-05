@@ -3,12 +3,12 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=user context "account activated email" %}
+{% blocktranslate trimmed with user=user context "account activated email" %}
 {{ user }}, your account has been activated by site administrator.
-{% endblocktrans %}
+{% endblocktranslate %}
 
-{% blocktrans trimmed context "account activated email" %}
+{% blocktranslate trimmed context "account activated email" %}
 You can now sign in to it using the form below:
-{% endblocktrans %}
+{% endblocktranslate %}
 {% absoluteurl LOGIN_URL %}
 {% endblock content %}

@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {{ thread }}{% if feed.paginator.number > 1 %} | {% blocktrans with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktrans %}{% endif %} | {% trans "Private threads" context "private threads page" %} | {{ settings.forum_name }}
+  {{ thread }}{% if feed.paginator.number > 1 %} | {% blocktranslate with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {% translate "Private threads" context "private threads page" %} | {{ settings.forum_name }}
 {% endblock title %}
 
 

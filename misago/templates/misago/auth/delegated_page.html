@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% trans "Sign in" context "login page" %} | {{ block.super }}
+  {% translate "Sign in" context "login page" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -17,14 +17,14 @@
           {% if form_header %}
             {{ form_header }}
           {% else %}
-            {% trans "Sign in" context "login page" %}
+            {% translate "Sign in" context "login page" %}
           {% endif %}
         </h1>
     
         <a href="{% url 'misago:oauth2-login' %}" class="btn btn-primary btn-block">
-          {% blocktrans trimmed with provider=settings.oauth2_provider context "login form oauth btn" %}
+          {% blocktranslate trimmed with provider=settings.oauth2_provider context "login form oauth btn" %}
             Sign in with {{ provider }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </a>
       </div>
     </div>

@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "E-mail notifications disabled" context "notifications disabled page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "E-mail notifications disabled" context "notifications disabled page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -15,15 +15,15 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{% trans "E-mail notifications disabled" context "notifications disabled page" %}</p>
-        <p>{% trans "You will no longer receive e-mail notifications when someone replies to this thread." context "notifications disabled page" %}</p>
-        <p>{% trans "If you change your mind and want to re-enable e-mail notifications, you can do so by adjusting your notification settings on thread's page." context "notifications disabled page" %}</p>
+        <p class="lead">{% translate "E-mail notifications disabled" context "notifications disabled page" %}</p>
+        <p>{% translate "You will no longer receive e-mail notifications when someone replies to this thread." context "notifications disabled page" %}</p>
+        <p>{% translate "If you change your mind and want to re-enable e-mail notifications, you can do so by adjusting your notification settings on thread's page." context "notifications disabled page" %}</p>
         <p class="message-buttons">
           <a href="{{ thread.get_absolute_url }}" class="btn btn-default">
-            {% trans "Go to thread" context "notifications disabled page" %}
+            {% translate "Go to thread" context "notifications disabled page" %}
           </a>
           <a href="{% url 'misago:index' %}" class="btn btn-default">
-            {% trans "Go to home page" context "notifications disabled page" %}
+            {% translate "Go to home page" context "notifications disabled page" %}
           </a>
         </p>
       </div>

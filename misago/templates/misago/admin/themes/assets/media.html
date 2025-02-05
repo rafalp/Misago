@@ -4,12 +4,12 @@
     <div class="row align-items-center">
       <div class="col">
         <h4 class="card-title">
-          {% trans "Media" context "admin theme media assets" %}
+          {% translate "Media" context "admin theme media assets" %}
         </h4>
       </div>
       <div class="col-auto">
         <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#uploadMedia">
-          {% trans "Upload" context "admin theme media assets" %}
+          {% translate "Upload" context "admin theme media assets" %}
         </button>
       </div>
     </div>
@@ -18,11 +18,11 @@
     <table class="table">
       <tr>
         <th style="width: 1px;">&nbsp;</th>
-        <th style="width: 250px;">{% trans "Name" context "admin theme media assets" %}</th>
-        <th style="width: 250px;">{% trans "Modified" context "admin theme media assets" %}</th>
-        <th>{% trans "Size" context "admin theme media assets" %}</th>
-        <th>{% trans "Type" context "admin theme media assets" %}</th>
-        <th>{% trans "Dimensions" context "admin theme media assets" %}</th>
+        <th style="width: 250px;">{% translate "Name" context "admin theme media assets" %}</th>
+        <th style="width: 250px;">{% translate "Modified" context "admin theme media assets" %}</th>
+        <th>{% translate "Size" context "admin theme media assets" %}</th>
+        <th>{% translate "Type" context "admin theme media assets" %}</th>
+        <th>{% translate "Dimensions" context "admin theme media assets" %}</th>
         <th style="width: 1px;">
           <input type="checkbox" {% if not media %}disabled{% endif %}>
         </th>
@@ -67,7 +67,7 @@
         </tr>
       {% empty %}
         <tr class="blankslate">
-          <td colspan="8">{% trans "This theme has no media." context "admin theme media assets" %}</td>
+          <td colspan="8">{% translate "This theme has no media." context "admin theme media assets" %}</td>
         </tr>
       {% endfor %}
     </table>
@@ -76,7 +76,7 @@
         <form id="delete-media" action="{% url 'misago:admin:themes:delete-media' pk=theme.pk %}" method="post">
           {% csrf_token %}
           <button class="btn btn-light btn-sm" disabled>
-            {% trans "Delete selected" context "admin theme media assets" %}
+            {% translate "Delete selected" context "admin theme media assets" %}
           </button>
         </form>
       </div>

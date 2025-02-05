@@ -1,25 +1,25 @@
 {% load i18n misago_capture %}
 <ul class="list-unstyled list-inline poll-details">
   <li class="poll-info-votes">
-    {% blocktrans trimmed count votes=poll.votes context "thread poll" %}
+    {% blocktranslate trimmed count votes=poll.votes context "thread poll" %}
       {{ votes }} vote.
     {% plural %}
       {{ votes }} votes.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </li>
   {% if poll.length %}
     <li class="poll-info-ends-on">
       {% capture trimmed as ends_on %}
         <abbr title="{{ poll.ends_on }}">{{ poll.ends_on|date }}</abbr>
       {% endcapture %}
-      {% blocktrans trimmed with ends_on=ends_on|safe context "thread poll" %}
+      {% blocktranslate trimmed with ends_on=ends_on|safe context "thread poll" %}
         Voting ends {{ ends_on }}.
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </li>
   {% endif %}
   {% if poll.is_public %}
     <li class="poll-info-public">
-      {% trans "Voting is public." context "thread poll" %}
+      {% translate "Voting is public." context "thread poll" %}
     </li>
   {% endif %}
   <li class="poll-info-creation">
@@ -33,8 +33,8 @@
     {% capture trimmed as posted_on %}
       <abbr title="{{ poll.posted_on }}">{{ poll.posted_on|date }}</abbr>
     {% endcapture %}
-    {% blocktrans trimmed with poster=poster|safe posted_on=posted_on|safe context "thread poll" %}
+    {% blocktranslate trimmed with poster=poster|safe posted_on=posted_on|safe context "thread poll" %}
       Started by {{ poster }} on {{ posted_on }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </li>
 </ul>

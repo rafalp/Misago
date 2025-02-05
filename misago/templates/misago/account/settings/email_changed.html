@@ -2,7 +2,7 @@
 {% load i18n misago_capture %}
 
 
-{% block title %}{% trans "Confirm email change" context "account email change page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Confirm email change" context "account email change page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -16,18 +16,18 @@
 
       <div class="message-body">
         <p class="lead">
-          {% blocktrans trimmed with username=username new_email=new_email context "account email changed page" %}
+          {% blocktranslate trimmed with username=username new_email=new_email context "account email changed page" %}
             {{ username }}, your email has been changed to {{ new_email }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         </p>
         <p class="message-buttons">
           {% if user.is_authenticated %}
             <a href="{% url 'misago:account-settings' %}" class="btn btn-default">
-              {% trans "Go to account settings" context "account email changed page" %}
+              {% translate "Go to account settings" context "account email changed page" %}
             </a>
           {% endif %}
           <a href="{% url 'misago:index' %}" class="btn btn-default">
-            {% trans "Go to home page" context "account email changed page" %}
+            {% translate "Go to home page" context "account email changed page" %}
           </a>
         </p>
       </div>

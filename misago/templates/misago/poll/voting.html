@@ -21,19 +21,19 @@
 
     <ul class="list-unstyled list-inline poll-help">
       <li class="poll-help-choices-left">
-        {% blocktrans trimmed count choices=poll.allowed_choices context "thread poll" %}
+        {% blocktranslate trimmed count choices=poll.allowed_choices context "thread poll" %}
           You can select {{ choices }} choice.
         {% plural %}
           You can select {{ choices }} choices.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       </li>
       {% if poll.allow_revotes %}
         <li class="poll-help-allow-revotes">
-          {% trans "You can change your vote later." context "thread poll" %}
+          {% translate "You can change your vote later." context "thread poll" %}
         </li>
       {% else %}
         <li class="poll-help-no-revotes">
-          {% trans "Votes are final." context "thread poll" %}
+          {% translate "Votes are final." context "thread poll" %}
         </li>
       {% endif %}
     </ul>
@@ -43,12 +43,12 @@
     <div class="row">
       <div class="col-xs-6 col-sm-4 col-md-2">
         <button class="btn btn-primary btn-block btn-sm" disabled>
-          {% trans "Save your vote" context "thread poll" %}
+          {% translate "Save your vote" context "thread poll" %}
         </button>
       </div>
       <div class="col-xs-6 col-sm-4 col-md-2">
         <button class="btn btn-default btn-block btn-sm" disabled>
-          {% trans "See results" context "thread poll" %}
+          {% translate "See results" context "thread poll" %}
         </button>
       </div>
     </div>

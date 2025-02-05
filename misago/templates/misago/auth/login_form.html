@@ -29,7 +29,7 @@
           {{ field.label }}
         </label>
         <a href="{% url 'misago:forgotten-password' %}" class="link-gray">
-          {% trans "Forgot your password?" context "login form" %}
+          {% translate "Forgot your password?" context "login form" %}
         </a>
       </div>
       <input
@@ -44,13 +44,13 @@
   {% endwith %}
 
   <button class="btn btn-primary btn-block" type="submit">
-    {% trans "Sign in" context "login form btn" %}
+    {% translate "Sign in" context "login form btn" %}
   </button>
 
   {% if social_login %}
     <div class="section-divider my-2">
       <hr />
-      <strong>{% trans "Or" context "login form social auth" %}</strong>
+      <strong>{% translate "Or" context "login form social auth" %}</strong>
       <hr />
     </div>
 
@@ -65,9 +65,9 @@
         {% if social_site.button_text %}
           {{ social_site.button_text }}
         {% else %}
-          {% blocktrans trimmed with site_name=social_site.name context "login form social auth btn" %}
+          {% blocktranslate trimmed with site_name=social_site.name context "login form social auth btn" %}
             Sign in with {{ site_name }}
-          {% endblocktrans %}
+          {% endblocktranslate %}
         {% endif %}
       </a>
     {% endfor %}

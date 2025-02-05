@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Confirm email change" context "account email change page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Confirm email change" context "account email change page" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -16,14 +16,14 @@
 
       <div class="message-body">
         <p class="lead">
-          {% trans "Couldn't confirm email change" context "account email change error page" %}
+          {% translate "Couldn't confirm email change" context "account email change error page" %}
         </p>
         <p>{{ message }}</p>
         {% if error_code == "SIGNATURE_INVALID" %}
           <p>
-            {% blocktrans trimmed context "account email change error page" %}
+            {% blocktranslate trimmed context "account email change error page" %}
               Link's signature will also become invalid when valid link is used for the first time.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </p>
         {% endif %}
       </div>

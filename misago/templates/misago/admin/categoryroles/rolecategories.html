@@ -3,9 +3,9 @@
 
 
 {% block title %}
-{% blocktrans trimmed with role=target context "admin role categories form" %}
+{% blocktranslate trimmed with role=target context "admin role categories form" %}
   {{ role }}: Category permissions
-{% endblocktrans %} | {{ block.super }}
+{% endblocktranslate %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -28,14 +28,14 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:permissions:edit' pk=target.pk %}" class="btn btn-primary btn-sm">
     <span class="fa fa-edit"></span>
-    {% trans "Edit role" context "admin roles" %}
+    {% translate "Edit role" context "admin roles" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block form-header %}
-{% trans "Change permissions" context "admin role categories form" %}
+{% translate "Change permissions" context "admin role categories form" %}
 {% endblock form-header %}
 
 
@@ -60,7 +60,7 @@
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-cancel-confirmation]",
-    "{% trans 'Are you sure you want to abandon changes?' context 'admin role categories form' %}"
+    "{% translate 'Are you sure you want to abandon changes?' context 'admin role categories form' %}"
   )
 </script>
 {% endblock %}

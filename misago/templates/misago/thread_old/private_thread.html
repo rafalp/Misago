@@ -4,7 +4,7 @@
 
 {% block title %}
   {% if paginator.page > 1 %}
-    {{ thread.title }} ({% blocktrans with page=paginator.page context "page title pagination" %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
+    {{ thread.title }} ({% blocktranslate with page=paginator.page context "page title pagination" %}page: {{ page }}{% endblocktranslate %}) | {{ category }} | {{ block.super }}
   {% else %}
     {{ thread.title }} | {{ category }} | {{ block.super }}
   {% endif %}

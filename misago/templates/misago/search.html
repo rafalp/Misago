@@ -2,11 +2,11 @@
 {% load i18n misago_absoluteurl %}
 
 
-{% block title %}{% trans "Search site" context "search page" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Search site" context "search page" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Search site" context "search page" %}{% endblock %}
-{% block twitter-title %}{% trans "Search site" context "search page" %}{% endblock %}
+{% block og-title %}{% translate "Search site" context "search page" %}{% endblock %}
+{% block twitter-title %}{% translate "Search site" context "search page" %}{% endblock %}
 
 
 {% block og-url %}{% absoluteurl request_path %}{% endblock %}
@@ -23,7 +23,7 @@
           <div class="page-header-banner page-header-banner-site-search">
             <div class="page-header-banner-bg-image">
               <div class="page-header-banner-bg-overlay">
-                <h1>{% trans "Search" context "search page header" %}</h1>
+                <h1>{% translate "Search" context "search page header" %}</h1>
               </div>
             </div>
           </div>
@@ -35,7 +35,7 @@
                     class="form-control"
                     type="text"
                     value="{{ search_query }}"
-                    placeholder="{% trans 'Search' context 'search input placeholder' %}"
+                    placeholder="{% translate 'Search' context 'search input placeholder' %}"
                     disabled
                   />
                 </div>
@@ -54,7 +54,7 @@
 
   <div class="container page-container">
     <p class="lead text-center xs-margin-top sm-margin-top">
-      {% trans "Loading search..." context "search page" %}
+      {% translate "Loading search..." context "search page" %}
     </p>
   </div>
 </div>

@@ -4,9 +4,9 @@
 
 {% block title %}
 {% if user.is_authenticated and not user.has_usable_password %}
-  {% trans "Set new password" context "set new password page" %} | {{ block.super }}
+  {% translate "Set new password" context "set new password page" %} | {{ block.super }}
 {% else %}
-  {% trans "Change forgotten password" context "forgotten password page" %} | {{ block.super }}
+  {% translate "Change forgotten password" context "forgotten password page" %} | {{ block.super }}
 {% endif %}
 {% endblock %}
 
@@ -22,9 +22,9 @@
             <div class="page-header-banner-bg-image">
               <div class="page-header-banner-bg-overlay">
                 {% if user.is_authenticated and not user.has_usable_password %}
-                  <h1>{% trans "Set new password" context "set new password page" %}</h1>
+                  <h1>{% translate "Set new password" context "set new password page" %}</h1>
                 {% else %}
-                  <h1>{% trans "Change forgotten password" context "forgotten password page" %}</h1>
+                  <h1>{% translate "Change forgotten password" context "forgotten password page" %}</h1>
                 {% endif %}
               </div>
             </div>
@@ -40,16 +40,16 @@
         <div class="side-form-copy">
 
           {% if user.is_authenticated and not user.has_usable_password %}
-            <p class="lead">{% trans "Your user account has no password set for it because it was created with other service." context "set new password page" %}</p>
-            <p>{% trans "To set password for your account, you can use special secure form that will be available by special link valid only for your browser, for seven days or until your password is set." context "set new password page" %}</p>
+            <p class="lead">{% translate "Your user account has no password set for it because it was created with other service." context "set new password page" %}</p>
+            <p>{% translate "To set password for your account, you can use special secure form that will be available by special link valid only for your browser, for seven days or until your password is set." context "set new password page" %}</p>
           {% else %}
-            <p class="lead">{% trans "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password." context "forgotten password page" %}</p>
-            <p>{% trans "Instead, you can change your password using special secure form that will be available by special link valid only for your browser, for seven days or until your password is changed." context "forgotten password page" %}</p>
+            <p class="lead">{% translate "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password." context "forgotten password page" %}</p>
+            <p>{% translate "Instead, you can change your password using special secure form that will be available by special link valid only for your browser, for seven days or until your password is changed." context "forgotten password page" %}</p>
           {% endif %}
           <p>
-            {% blocktrans trimmed context "forgotten password page" %}
+            {% blocktranslate trimmed context "forgotten password page" %}
               To receive this link, enter your account's e-mail address and press the "Send link" button.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </p>
 
         </div>
@@ -65,7 +65,7 @@
               </div>
 
               <div class="message-body">
-                <p>{% trans "To request new password reset link please enable JavaScript." context "forgotten password page" %}</p>
+                <p>{% translate "To request new password reset link please enable JavaScript." context "forgotten password page" %}</p>
               </div>
 
             </div>

@@ -33,7 +33,7 @@
           <form method="post">
             {% csrf_token %}
             <button class="btn btn-default btn-block" name="mark_as_read">
-              {% trans "Mark as read" context "threads list toolbar" %}
+              {% translate "Mark as read" context "threads list toolbar" %}
             </button>
           </form>
         </noscript>
@@ -43,7 +43,7 @@
           data-toggle="modal"
           data-target="#mark-as-read"
         >
-          {% trans "Mark as read" context "threads list toolbar" %}
+          {% translate "Mark as read" context "threads list toolbar" %}
         </button>
       </div>
     </div>
@@ -62,15 +62,15 @@
             data-toggle="modal"
             data-target="#start-thread-modal"
           >
-            {% trans "Start new thread" context "threads list toolbar" %}
+            {% translate "Start new thread" context "threads list toolbar" %}
           </a>
         {% elif category and category.is_closed %}
           <a href="{{ start_thread_url }}" class="btn btn-default btn-block">
-            <span class="text-danger">{% trans "Locked" context "threads list toolbar" %}</span>
+            <span class="text-danger">{% translate "Locked" context "threads list toolbar" %}</span>
           </a>
         {% else %}
           <a href="{{ start_thread_url }}" class="btn btn-primary btn-block">
-            {% trans "Start new thread" context "threads list toolbar" %}
+            {% translate "Start new thread" context "threads list toolbar" %}
           </a>
         {% endif %}
       </div>

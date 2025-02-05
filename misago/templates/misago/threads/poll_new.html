@@ -15,11 +15,11 @@
       hx-swap="outerHTML"
       hx-silent="false"
     >
-      {% blocktrans trimmed count new_threads=new_threads context "threads list" %}
+      {% blocktranslate trimmed count new_threads=new_threads context "threads list" %}
         Show {{ new_threads }} new or updated thread
       {% plural %}
         Show {{ new_threads }} new or updated threads
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </button>
   {% endif %}
 </li>

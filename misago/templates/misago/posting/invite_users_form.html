@@ -3,7 +3,7 @@
 {% with field=form.users %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {% trans "Invite users:" context "posting users form" %}
+      {% translate "Invite users:" context "posting users form" %}
     </label>
     <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
     {% for error in field.errors %}

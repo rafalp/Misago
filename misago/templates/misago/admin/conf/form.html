@@ -13,7 +13,7 @@
     {% csrf_token %}
 
     <h5 class="card-header">
-      {% trans "Change settings" context "admin settings form" %}
+      {% translate "Change settings" context "admin settings form" %}
     </h5>
     <div class="card-body">
 
@@ -24,7 +24,7 @@
           </div>
         {% empty %}
           <div class="alert alert-danger" role="alert">
-            {% trans "Form was completed with errors." context "admin settings form" %}
+            {% translate "Form was completed with errors." context "admin settings form" %}
           </div>
         {% endfor %}
       {% endif %}
@@ -34,7 +34,7 @@
     </div>
     <div class="card-footer sticky text-right">
       <button class="btn btn-primary btn-sm">
-        {% trans "Save changes" context "admin settings form" %}
+        {% translate "Save changes" context "admin settings form" %}
       </button>
     </div>
 

@@ -20,10 +20,10 @@
     </div>
     <div class="posts-feed-item-post-edit-form-footer">
       <button class="btn btn-primary" type="submit">
-        {% trans "Save" context "inline edit submit btn" %}
+        {% translate "Save" context "inline edit submit btn" %}
       </button>
       <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
-        {% trans "Preview" context "inline edit preview btn" %}
+        {% translate "Preview" context "inline edit preview btn" %}
       </button>
       <button
         class="btn btn-secondary"
@@ -31,10 +31,10 @@
         name="cancel"
         value="true"
         formnovalidate
-        hx-confirm="{% trans 'Cancel edits? Unsaved changes will be lost.' context 'inline edit cancel prompt' %}"
+        hx-confirm="{% translate 'Cancel edits? Unsaved changes will be lost.' context 'inline edit cancel prompt' %}"
         hx-post="{{ request_path }}?inline=true"
       >
-        {% trans "Cancel" context "inline edit cancel btn" %}
+        {% translate "Cancel" context "inline edit cancel btn" %}
       </button>
     </div>
   </form>

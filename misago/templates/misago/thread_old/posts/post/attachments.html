@@ -30,9 +30,9 @@
               {% capture trimmed as uploaded_on %}
                 <abbr title="{{ attachment.uploaded_on }}">{{ attachment.uploaded_on|date }}</abbr>
               {% endcapture %}
-              {% blocktrans trimmed with filetype=attachment.filetype size=attachment.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe context "post attachment" %}
+              {% blocktranslate trimmed with filetype=attachment.filetype size=attachment.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe context "post attachment" %}
                 {{ filetype }}, {{ size }}, uploaded by {{ uploader }} on {{ uploaded_on }}.
-              {% endblocktrans %}
+              {% endblocktranslate %}
             </p>
           </div>
         </div>

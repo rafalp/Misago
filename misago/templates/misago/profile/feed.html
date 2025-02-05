@@ -8,7 +8,7 @@
             <div class="post-side post-side-registered">
               <a class="btn btn-default btn-icon pull-right" href="{{ post.get_absolute_url }}">
                 <span class="btn-text-left hidden-xs">
-                  {% trans "See post" context "user profile page feed item" %}
+                  {% translate "See post" context "user profile page feed item" %}
                 </span>
                 <span class="material-icon">
                   chevron_right
@@ -59,8 +59,8 @@
               </div>
             {% else %}
               <div class="post-body post-body-invalid">
-                <p class="lead">{% trans "This post's contents cannot be displayed." context "post body invalid" %}</p>
-                <p class="text-muted">{% trans "This error is caused by invalid post content manipulation." context "post body invalid" %}</p>
+                <p class="lead">{% translate "This post's contents cannot be displayed." context "post body invalid" %}</p>
+                <p class="text-muted">{% translate "This error is caused by invalid post content manipulation." context "post body invalid" %}</p>
               </div>
             {% endif %}
           </div>

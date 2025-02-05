@@ -1,7 +1,7 @@
 {% load i18n misago_avatars %}
 <div class="post-side post-side-{% if post.poster %}registered{% else %}anonymous{% endif %}">
   <div class="pull-right">
-    <a href="{{ post.get_absolute_url }}" title="{% trans 'Post link' context 'post permalink' %}" class="btn btn-default btn-icon">
+    <a href="{{ post.get_absolute_url }}" title="{% translate 'Post link' context 'post permalink' %}" class="btn btn-default btn-icon">
       <span class="material-icon">
         link
       </span>
@@ -38,19 +38,19 @@
 
         {% if post.poster.title or post.poster.rank.title or post.poster.rank.is_tab %}
           <span class="user-postcount hidden-xs hidden-sm">
-            {% blocktrans trimmed count posts=post.poster.posts context "post poster stats" %}
+            {% blocktranslate trimmed count posts=post.poster.posts context "post poster stats" %}
               {{ posts }} post
             {% plural %}
               {{ posts }} posts
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </span>
         {% else %}
           <span class="user-postcount">
-            {% blocktrans trimmed count posts=post.poster.posts context "post poster stats" %}
+            {% blocktranslate trimmed count posts=post.poster.posts context "post poster stats" %}
               {{ posts }} post
             {% plural %}
               {{ posts }} posts
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </span>
         {% endif %}
 
@@ -70,7 +70,7 @@
         </span>
 
         <span class="user-title user-title-anonymous">
-          {% trans "Removed user" context "post removed poster username" %}
+          {% translate "Removed user" context "post removed poster username" %}
         </span>
 
       </div>

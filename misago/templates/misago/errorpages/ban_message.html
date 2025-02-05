@@ -12,10 +12,10 @@
 {% endwith %}
 <p class="message-footnote">
   {% if ban.expires_on %}
-    {% blocktrans trimmed with expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
+    {% blocktranslate trimmed with expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
       This ban expires on {{ expires_on }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   {% else %}
-    {% trans "This ban is permanent." context "error banned message" %}
+    {% translate "This ban is permanent." context "error banned message" %}
   {% endif %}
 </p>

@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% trans "Mark as read" context "mark as read" %} | {{ category }} | {{ block.super }}
+  {% translate "Mark as read" context "mark as read" %} | {{ category }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -16,7 +16,7 @@
 
 
 {% block panel-body %}
-  {% blocktrans trimmed context "mark threads as read" %}
+  {% blocktranslate trimmed context "mark threads as read" %}
     Are you sure you want to mark all threads in this category as read?
-  {% endblocktrans %}
+  {% endblocktranslate %}
 {% endblock panel-body %}

@@ -4,7 +4,7 @@
   {% if thread.weight == 2 %}
     <li
       class="thread-flag-pinned-globally"
-      title="{% trans 'Pinned globally' context 'thread flag' %}"
+      title="{% translate 'Pinned globally' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark</span>
     </li>
@@ -12,14 +12,14 @@
   {% if thread.weight == 1 and category and thread.category_id == category.id %}
     <li
       class="thread-flag-pinned-locally"
-      title="{% trans 'Pinned in a category' context 'thread flag' %}"
+      title="{% translate 'Pinned in a category' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
   {% elif thread.weight == 1 and for_moderator %}
     <li
       class="thread-flag-pinned-locally-elsewhere"
-      title="{% trans 'Pinned in a category, but not on this list' context 'thread flag' %}"
+      title="{% translate 'Pinned in a category, but not on this list' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
@@ -27,7 +27,7 @@
   {% if thread.best_answer %}
     <li
       class="thread-flag-answered"
-      title="{% trans 'Answered' context 'thread flag' %}"
+      title="{% translate 'Answered' context 'thread flag' %}"
     >
       <span class="material-icon">check_circle</span>
     </li>
@@ -35,14 +35,14 @@
   {% if thread.is_unapproved %}
     <li
       class="thread-flag-unapproved"
-      title="{% trans 'Requires moderator approval' context 'thread flag' %}"
+      title="{% translate 'Requires moderator approval' context 'thread flag' %}"
     >
       <span class="material-icon">visibility</span>
     </li>
   {% elif thread.has_unapproved_posts and for_moderator %}
     <li
       class="thread-flag-unapproved"
-      title="{% trans 'Replies require moderator approval' context 'thread flag' %}"
+      title="{% translate 'Replies require moderator approval' context 'thread flag' %}"
     >
       <span class="material-icon">view_list</span>
     </li>
@@ -50,7 +50,7 @@
   {% if thread.has_poll %}
     <li
       class="thread-flag-poll"
-      title="{% trans 'Poll' context 'thread flag' %}"
+      title="{% translate 'Poll' context 'thread flag' %}"
     >
       <span class="material-icon">poll</span>
     </li>
@@ -58,7 +58,7 @@
   {% if thread.is_closed %}
     <li
       class="thread-flag-closed"
-      title="{% trans 'Closed' context 'thread flag' %}"
+      title="{% translate 'Closed' context 'thread flag' %}"
     >
       <span class="material-icon">lock</span>
     </li>
@@ -66,7 +66,7 @@
   {% if thread.is_hidden %}
     <li
       class="thread-flag-hidden"
-      title="{% trans 'Hidden' context 'thread flag' %}"
+      title="{% translate 'Hidden' context 'thread flag' %}"
     >
       <span class="material-icon">visibility_off</span>
     </li>

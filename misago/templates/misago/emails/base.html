@@ -70,9 +70,9 @@
             <div style="border-top: 1px solid #ddd; color: #666; font-size: 12px; line-height: 18px;">
               {% if settings.email_footer %}<br>{{ settings.email_footer }}{% endif %}
               <br><a href="{{ settings.forum_address }}" style="color: #888; text-decoration: underline;">
-                {% blocktrans trimmed with forum_host=forum_host context "email footer" %}
+                {% blocktranslate trimmed with forum_host=forum_host context "email footer" %}
                 Sent from {{ forum_host }}
-                {% endblocktrans %}
+                {% endblocktranslate %}
               </a>
             </div>
 

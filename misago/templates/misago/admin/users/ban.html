@@ -3,12 +3,12 @@
 
 
 {% block title %}
-{% trans "Ban users" context "admin ban users form" %} | {{ active_link.name }} | {{ block.super }}
+{% translate "Ban users" context "admin ban users form" %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block form-header %}
-{% trans "Ban selected users" context "admin ban users form" %}
+{% translate "Ban selected users" context "admin ban users form" %}
 {% endblock %}
 
 
@@ -19,15 +19,15 @@
 {% endfor %}
 <div class="form-fieldset pt-0">
   <fieldset>
-    <legend>{% trans "Users" context "admin ban users form" %}</legend>
+    <legend>{% translate "Users" context "admin ban users form" %}</legend>
     <div class="card card-admin-table">
       <table class="table">
         <thead>
           <tr>
             <th style="width: 1px;">&nbsp;</th>
-            <th>{% trans "User" context "admin ban users list" %}</th>
-            <th style="width: 50%;">{% trans "E-mail" context "admin ban users list" %}</th>
-            <th style="width: 200px;">{% trans "IP address" context "admin ban users list" %}</th>
+            <th>{% translate "User" context "admin ban users list" %}</th>
+            <th style="width: 50%;">{% translate "E-mail" context "admin ban users list" %}</th>
+            <th style="width: 200px;">{% translate "IP address" context "admin ban users list" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
           <tr>
             <td class="pr-0">
               <a href="{{ user.get_absolute_url }}">
-                <img src="{{ user|avatar:24 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
+                <img src="{{ user|avatar:24 }}" alt="{% translate 'Avatar' %}" width="24" height="24">
               </a>
             </td>
             <td class="small">
@@ -48,7 +48,7 @@
               {% if user.joined_from_ip %}
                 {{ user.joined_from_ip }}
               {% else %}
-                <i class="text-muted">{% trans "IP removed" context "admin user ip deleted" %}</i>
+                <i class="text-muted">{% translate "IP removed" context "admin user ip deleted" %}</i>
               {% endif %}
             </td>
           </tr>
@@ -59,7 +59,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Ban settings" context "admin ban users form" %}</legend>
+    <legend>{% translate "Ban settings" context "admin ban users form" %}</legend>
 
     {% form_row form.ban_type %}
     {% form_row form.expires_on %}
@@ -68,7 +68,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Messages" context "admin ban users form" %}</legend>
+    <legend>{% translate "Messages" context "admin ban users form" %}</legend>
 
     {% form_row form.user_message %}
     {% form_row form.staff_message %}
@@ -80,7 +80,7 @@
 
 {% block form-footer %}
 <button class="btn btn-primary btn-sm" name="finalize">
-  {% trans "Ban users" context "admin ban users form" %}
+  {% translate "Ban users" context "admin ban users form" %}
 </button>
 {% endblock %}
 
@@ -89,8 +89,8 @@
 <script type="text/javascript">
   window.misago.initDatepicker({
     elementId: "id_expires_on",
-    never: "{% trans 'Never' context 'admin ban users form' %}",
-    setDate: "{% trans 'Set date' context 'admin ban users form' %}"
+    never: "{% translate 'Never' context 'admin ban users form' %}",
+    setDate: "{% translate 'Set date' context 'admin ban users form' %}"
   })
 </script>
 {% endblock %}

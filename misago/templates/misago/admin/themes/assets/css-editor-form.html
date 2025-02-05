@@ -6,7 +6,7 @@
 {% if target.pk %}
   {{ target }}
 {% else %}
-  {% trans "New CSS" context "admin theme css form" %}
+  {% translate "New CSS" context "admin theme css form" %}
 {% endif %} | {{ theme }} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -36,9 +36,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit CSS" context "admin theme css form" %}
+  {% translate "Edit CSS" context "admin theme css form" %}
 {% else %}
-  {% trans "New CSS" context "admin theme css form" %}
+  {% translate "New CSS" context "admin theme css form" %}
 {% endif %}
 {% endblock %}
 
@@ -55,18 +55,18 @@
 
 
 {% block form-footer %}
-<button class="btn btn-primary btn-sm" name="stay" value="1">{% trans "Save and keep editing" context "admin theme css form" %}</button>
+<button class="btn btn-primary btn-sm" name="stay" value="1">{% translate "Save and keep editing" context "admin theme css form" %}</button>
 {% if target and target.pk %}
-  <button class="btn btn-primary btn-sm">{% trans "Save changes" context "admin theme css form" %}</button>
+  <button class="btn btn-primary btn-sm">{% translate "Save changes" context "admin theme css form" %}</button>
 {% else %}
-  <button class="btn btn-primary btn-sm">{% trans "Save" context "admin theme css form" %}</button>
+  <button class="btn btn-primary btn-sm">{% translate "Save" context "admin theme css form" %}</button>
 {% endif %}
 {% endblock %}
 
 
 {% block form-footer-cancel %}
 <a href="{% url 'misago:admin:themes:assets' pk=theme.pk %}" class="btn btn-light btn-sm">
-  {% trans "Cancel" context "admin theme css form" %}
+  {% translate "Cancel" context "admin theme css form" %}
 </a>
 {% endblock %}
 

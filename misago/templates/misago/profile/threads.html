@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% translate "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% translate "Threads" context "user profile page threads" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
@@ -17,17 +17,17 @@
       <div class="toolbar-item">
         <h3>
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count threads=profile.threads context "user profile page threads" %}
+            {% blocktranslate trimmed count threads=profile.threads context "user profile page threads" %}
               You have started {{ threads }} thread.
             {% plural %}
               You have started {{ threads }} threads.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed count threads=profile.threads with username=profile context "user profile page threads" %}
+            {% blocktranslate trimmed count threads=profile.threads with username=profile context "user profile page threads" %}
               {{ username }} has started {{ threads }} thread.
             {% plural %}
               {{ username }} has started {{ threads }} threads.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </h3>
       </div>
@@ -39,11 +39,11 @@
   {% else %}
     <p class="lead">
       {% if is_authenticated_user %}
-        {% trans "You haven't started any threads." context "user profile page threads" %}
+        {% translate "You haven't started any threads." context "user profile page threads" %}
       {% else %}
-        {% blocktrans trimmed with username=profile.username context "user profile page threads" %}
+        {% blocktranslate trimmed with username=profile.username context "user profile page threads" %}
           {{ username }} hasn't started any threads
-        {% endblocktrans %}
+        {% endblocktranslate %}
       {% endif %}
     </p>
   {% endif %}

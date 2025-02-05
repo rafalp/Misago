@@ -12,7 +12,7 @@
   {% if page.has_previous %}
     <a
       class="btn btn-default btn-outline btn-icon"
-      title="{% trans 'Go to first page' context 'thread paginator' %}"
+      title="{% translate 'Go to first page' context 'thread paginator' %}"
       href="{{ thread_url }}"
       hx-get="{{ thread_url }}"
     >
@@ -21,17 +21,17 @@
     <a
       class="btn btn-default btn-outline btn-icon"
       rel="prev"
-      title="{% trans 'Go to previous page' context 'thread paginator' %}"
+      title="{% translate 'Go to previous page' context 'thread paginator' %}"
       href="{{ thread_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
       hx-get="{{ thread_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
     >
       <span class="material-icon">chevron_left</span>
     </a>
   {% else %}
-    <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to first page' context 'thread paginator' %}" type="button" disabled>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to first page' context 'thread paginator' %}" type="button" disabled>
       <span class="material-icon">first_page</span>
     </button>
-    <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to previous page' context 'thread paginator' %}" type="button" disabled>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to previous page' context 'thread paginator' %}" type="button" disabled>
       <span class="material-icon">chevron_left</span>
     </button>
   {% endif %}
@@ -43,9 +43,9 @@
       type="button"
       data-toggle="dropdown"
     >
-      {% blocktrans trimmed with page=page.number pages=paginator.num_pages context "thread paginator" %}
+      {% blocktranslate trimmed with page=page.number pages=paginator.num_pages context "thread paginator" %}
         Page {{ page }} of {{ pages }}
-      {% endblocktrans %}
+      {% endblocktranslate %}
     </button>
     <div class="dropdown-menu" role="menu">
       <form class="thread-paginator-form" misago-page="{{ page.number }}" misago-page-url="{{ thread_url }}" misago-page-form>
@@ -54,11 +54,11 @@
           min="1"
           max="{{ paginator.num_pages }}"
           class="form-control"
-          placeholder="{% trans 'Page' context 'thread paginator' %}"
+          placeholder="{% translate 'Page' context 'thread paginator' %}"
           required
         >
         <button class="btn btn-primary" type="submit">
-          {% trans "Go" context "thread paginator" %}
+          {% translate "Go" context "thread paginator" %}
         </button>
       </form>
     </div>
@@ -66,7 +66,7 @@
   {% if page.has_next %}
     <a
       class="btn btn-default btn-outline btn-icon"
-      title="{% trans 'Go to next page' context 'thread paginator' %}"
+      title="{% translate 'Go to next page' context 'thread paginator' %}"
       rel="next"
       href="{{ thread_url }}{{ page.next_page_number }}/"
       hx-get="{{ thread_url }}{{ page.next_page_number }}/"
@@ -75,17 +75,17 @@
     </a>
     <a
       class="btn btn-default btn-outline btn-icon"
-      title="{% trans 'Go to last page' context 'thread paginator' %}"
+      title="{% translate 'Go to last page' context 'thread paginator' %}"
       href="{{ thread_url }}{{ paginator.num_pages }}/"
       hx-get="{{ thread_url }}{{ paginator.num_pages }}/"
     >
       <span class="material-icon">last_page</span>
     </a>
   {% else %}
-    <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to next page' context 'thread paginator' %}" type="button" disabled>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to next page' context 'thread paginator' %}" type="button" disabled>
       <span class="material-icon">chevron_right</span>
     </button>
-    <button class="btn btn-default btn-outline btn-icon" title="{% trans 'Go to last page' context 'thread paginator' %}" type="button" disabled>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to last page' context 'thread paginator' %}" type="button" disabled>
       <span class="material-icon">last_page</span>
     </button>
   {% endif %}

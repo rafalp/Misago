@@ -4,9 +4,9 @@
 
 {% block title %}
 {% if target.pk %}
-{% trans target.get_final_title %}
+{% translate target.get_final_title %}
 {% else %}
-{% trans "New agreement" context "admin agreement form" %}
+{% translate "New agreement" context "admin agreement form" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -26,7 +26,7 @@
   <div class="col-auto page-action">
     <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
       <span class="fas fa-external-link-alt"></span>
-      {% trans "View on site" context "admin agreement form" %}
+      {% translate "View on site" context "admin agreement form" %}
     </a>
   </div>
 {% endif %}
@@ -35,9 +35,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit agreement" context "admin agreement form" %}
+  {% translate "Edit agreement" context "admin agreement form" %}
 {% else %}
-  {% trans "New agreement" context "admin agreement form" %}
+  {% translate "New agreement" context "admin agreement form" %}
 {% endif %}
 {% endblock %}
 
@@ -45,7 +45,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" context "admin agreement form" %}</legend>
+    <legend>{% translate "Basic settings" context "admin agreement form" %}</legend>
 
     {% form_row form.type %}
     {% form_row form.title %}
@@ -55,10 +55,10 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Agreement contents" context "admin agreement form" %}</legend>
+    <legend>{% translate "Agreement contents" context "admin agreement form" %}</legend>
 
     <div class="alert alert-info" role="alert">
-      {% trans "Fill in one of the fields." context "admin agreement form" %}
+      {% translate "Fill in one of the fields." context "admin agreement form" %}
     </div>
 
     {% form_row form.link %}

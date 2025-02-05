@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {{ moderation_action.full_name }} | {% trans "Threads" context "threads page" %} | {{ block.super }}
+  {{ moderation_action.full_name }} | {% translate "Threads" context "threads page" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -37,7 +37,7 @@
             {{ moderation_action.name }}
           </button>
           <a href="{{ cancel_url }}" class="btn btn-default">
-            {% trans "Cancel" context "threads list moderation" %}
+            {% translate "Cancel" context "threads list moderation" %}
           </a>
         </div>
       </div>

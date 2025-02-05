@@ -2,20 +2,20 @@
 {% load i18n %}
 
 
-{% block title %}{% blocktrans trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
+{% block title %}{% blocktranslate trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
 Could not sign in with {{ provider }}
-{% endblocktrans %} | {{ block.super }}{% endblock %}
+{% endblocktranslate %} | {{ block.super }}{% endblock %}
 
 
 {% block meta-description %}{{ message }}{% endblock %}
 
 
-{% block og-title %}{% blocktrans trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
+{% block og-title %}{% blocktranslate trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
 Could not sign in with {{ provider }}
-{% endblocktrans %}{% endblock %}
-{% block twitter-title %}{% blocktrans trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
+{% endblocktranslate %}{% endblock %}
+{% block twitter-title %}{% blocktranslate trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
 Could not sign in with {{ provider }}
-{% endblocktrans %}{% endblock %}
+{% endblocktranslate %}{% endblock %}
 
 
 {% block og-description %}{{ message }}{% endblock %}
@@ -33,19 +33,19 @@ Could not sign in with {{ provider }}
 
       <div class="message-body">
           <p class="lead">
-            {% blocktrans trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
+            {% blocktranslate trimmed with provider=settings.oauth2_provider context "error oauth2 page" %}
               Could not sign in with {{ provider }}
-            {% endblocktrans %}
+            {% endblocktranslate %}
           </p>
           {% if error.message %}
             <p>{{ error.message }}</p>
           {% endif %}
           {% if error.recoverable %}
             <p>
-              {% trans "Please try again." context "error oauth2 page" %}
+              {% translate "Please try again." context "error oauth2 page" %}
             </p>
             <p>
-              <a class="btn btn-primary" href="{% url 'misago:oauth2-login' %}">{% trans "Sign in" context "error oauth2 page cta" %}</a>
+              <a class="btn btn-primary" href="{% url 'misago:oauth2-login' %}">{% translate "Sign in" context "error oauth2 page cta" %}</a>
             </p>
           {% endif %}
       </div>

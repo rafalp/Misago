@@ -26,9 +26,9 @@
           misago-focus-on="#misago-htmx-quick-reply textarea"
         >
           {% if thread.is_closed or category.is_closed %}
-            <span class="text-danger">{% trans "Reply in locked" context "thread replies toolbar" %}</span>
+            <span class="text-danger">{% translate "Reply in locked" context "thread replies toolbar" %}</span>
           {% else %}
-            {% trans "Post reply" context "thread replies toolbar" %}
+            {% translate "Post reply" context "thread replies toolbar" %}
           {% endif %}
         </a>
       </div>

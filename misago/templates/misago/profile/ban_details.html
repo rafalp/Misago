@@ -2,24 +2,24 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Ban details" context "user profile page ban details" %} | {{ block.super }}{% endblock %}
+{% block title %}{% translate "Ban details" context "user profile page ban details" %} | {{ block.super }}{% endblock %}
 
 
-{% block og-title %}{% trans "Ban details" context "user profile page ban details" %} | {{ block.super }}{% endblock %}
-{% block twitter-title %}{% trans "Ban details" context "user profile page ban details" %} | {{ block.super }}{% endblock %}
+{% block og-title %}{% translate "Ban details" context "user profile page ban details" %} | {{ block.super }}{% endblock %}
+{% block twitter-title %}{% translate "Ban details" context "user profile page ban details" %} | {{ block.super }}{% endblock %}
 
 
 {% block section %}
 <div class="profile-ban-details">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">{% trans "Ban details" context "user profile page ban details" %}</h3>
+      <h3 class="panel-title">{% translate "Ban details" context "user profile page ban details" %}</h3>
     </div>
     <div>
 
       {% if ban.user_message %}
         <div class="panel-body ban-message ban-user-message">
-          <h4>{% trans "User-shown ban message" context "user profile page ban details" %}</h4>
+          <h4>{% translate "User-shown ban message" context "user profile page ban details" %}</h4>
           <div class="lead">
             {{ ban.user_message|force_escape|urlize|linebreaks }}
           </div>
@@ -28,7 +28,7 @@
 
       {% if ban.staff_message %}
         <div class="panel-body ban-message ban-staff-message">
-          <h4>{% trans "Team-shown ban message" context "user profile page ban details" %}</h4>
+          <h4>{% translate "Team-shown ban message" context "user profile page ban details" %}</h4>
           <div class="lead">
             {{ ban.staff_message|force_escape|urlize|linebreaks }}
           </div>
@@ -36,17 +36,17 @@
       {% endif %}
 
       <div class="panel-body ban-expires">
-        <h4>{% trans "Ban expiration" %}</h4>
+        <h4>{% translate "Ban expiration" %}</h4>
 
         <p class="lead">
           {% if ban.expires_on %}
-            {% blocktrans trimmed with username=profile.username expires_on=ban.expires_on|date:"DATETIME_FORMAT" context "user profile page ban details" %}
+            {% blocktranslate trimmed with username=profile.username expires_on=ban.expires_on|date:"DATETIME_FORMAT" context "user profile page ban details" %}
               {{ username }}'s ban expires on {{ expires_on }}.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% else %}
-            {% blocktrans trimmed with username=profile.username context "user profile page ban details" %}
+            {% blocktranslate trimmed with username=profile.username context "user profile page ban details" %}
               {{ username }}'s ban is permanent.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
         </p>
       </div>

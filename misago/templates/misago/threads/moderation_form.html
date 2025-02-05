@@ -9,7 +9,7 @@
         <div class="toolbar-item">
           <select name="moderation" class="form-control w-100-xs" style="min-width: 300px;">
             <option value="none" selected>
-              {% trans "Select moderation action" context "threads list moderation" %}
+              {% translate "Select moderation action" context "threads list moderation" %}
             </option>
             {% for action in moderation_actions %}
               <option value="{{ action.id }}">
@@ -22,7 +22,7 @@
       <div class="toolbar-section">
         <div class="toolbar-item">
           <button class="btn btn-moderation btn-block">
-            {% trans "Moderate threads" context "threads list moderation" %}
+            {% translate "Moderate threads" context "threads list moderation" %}
           </button>
         </div>
       </div>

@@ -4,9 +4,9 @@
 
 {% block title %}
 {% if user.is_authenticated and not user.has_usable_password %}
-  {% trans "Set new password" context "set new password form page" %} | {{ block.super }}
+  {% translate "Set new password" context "set new password form page" %} | {{ block.super }}
 {% else %}
-  {% trans "Change forgotten password" context "forgotten password form page" %} | {{ block.super }}
+  {% translate "Change forgotten password" context "forgotten password form page" %} | {{ block.super }}
 {% endif %}
 {% endblock %}
 
@@ -22,9 +22,9 @@
             <div class="page-header-banner-bg-image">
               <div class="page-header-banner-bg-overlay">
                 {% if user.is_authenticated and not user.has_usable_password %}
-                  <h1>{% trans "Set new password" context "set new password form page" %}</h1>
+                  <h1>{% translate "Set new password" context "set new password form page" %}</h1>
                 {% else %}
-                  <h1>{% trans "Change forgotten password" context "forgotten password form page" %}</h1>
+                  <h1>{% translate "Change forgotten password" context "forgotten password form page" %}</h1>
                 {% endif %}
               </div>
             </div>
@@ -47,7 +47,7 @@
               </div>
 
               <div class="message-body">
-                <p>{% trans "To reset your password please enable JavaScript." context "forgotten password form page" %}</p>
+                <p>{% translate "To reset your password please enable JavaScript." context "forgotten password form page" %}</p>
               </div>
 
             </div>
