@@ -16,12 +16,16 @@ export default class MarkupEditorUploader {
 
     this.templates = {
       media: document.getElementById("attachment-media-template"),
+      mediaFooter: document.getElementById("attachment-media-footer-template"),
       other: document.getElementById("attachment-other-template"),
-      mediaUpload: document.getElementById("attachment-media-upload-template"),
-      otherUpload: document.getElementById("attachment-other-upload-template"),
+      otherUploaded: document.getElementById(
+        "attachment-other-uploaded-template"
+      ),
     }
 
-    const attachmentsElement = element.querySelector('[misago-editor="attachments"]')
+    const attachmentsElement = element.querySelector(
+      '[misago-editor="attachments"]'
+    )
     this.field = {
       name: element.getAttribute("misago-editor-attachments-name"),
       element: attachmentsElement,
@@ -48,18 +52,16 @@ export default class MarkupEditorUploader {
   }
 
   _getAcceptedExtensions(extensions) {
-    return extensions.split(",").map(item => item.trim())
+    return extensions.split(",").map((item) => item.trim())
   }
 
   showPermissionDeniedError() {
-    error(
-      pgettext("markup editor upload", "You can't upload attachments")
-    )
+    error(pgettext("markup editor upload", "You can't upload attachments"))
   }
 
   uploadFiles(files) {
     const allowedFiles = []
-    for (let i = 0; i < files.length; i ++) {
+    for (let i = 0; i < files.length; i++) {
       const file = files[i]
       if (this._isFileTypeAccepted(file)) {
         allowedFiles.push(file)
@@ -68,13 +70,11 @@ export default class MarkupEditorUploader {
           pgettext(
             "markup editor upload",
             "%(name)s: uploaded file type is not allowed."
-          ).replace(
-            "%(name)s", file.name
-          )
+          ).replace("%(name)s", file.name)
         )
       }
     }
-    
+
     if (!allowedFiles) {
       return
     }
@@ -84,25 +84,62 @@ export default class MarkupEditorUploader {
     const data = new FormData()
     appendCSRFTokenToForm(data)
 
-    allowedFiles.forEach(file => {
+    allowedFiles.forEach((file) => {
       const key = getRandomString(16)
       keys.push(key)
       data.append("keys", key)
       data.append("upload", file)
 
-      this._prependAttachmentsListUploadItem(file, key)
-      elements[key] = this.element.querySelector(
-        'ul li[misago-editor-upload-key="' + key +'"]'
-      )
+      elements[key] = this._createFileUI(file, key)
     })
 
     const request = new XMLHttpRequest()
-    
-    // this._addOnLoadEventListener(request, keys, elements);
-    this._addOnProgressEventListener(request, keys, elements);
 
-    request.open("POST", this.uploadUrl);
+    this._addOnLoadEventListener(request, keys, elements)
+    this._addOnProgressEventListener(request, keys, elements)
+
+    request.open("POST", this.uploadUrl)
     request.send(data)
+  }
+
+  _addOnLoadEventListener(request, keys, elements) {
+    request.addEventListener("load", () => {
+      if (
+        request.readyState === XMLHttpRequest.DONE &&
+        request.status === 200
+      ) {
+        try {
+          const { attachments } = JSON.parse(request.response)
+          if (attachments) {
+            attachments.forEach((attachment) => {
+              try {
+                this._updateFileUI(attachment, elements[attachment.key])
+                this._createAttachmentIDField(attachment)
+              } catch (error) {
+                console.error(error)
+              }
+            })
+          }
+
+          keys.forEach((key) => (elements[key] = null))
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    })
+  }
+
+  _addOnProgressEventListener(request, keys, elements) {
+    request.upload.addEventListener("progress", (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.ceil((event.loaded * 100) / event.total)
+        for (const key of keys) {
+          const progressBar = elements[key].querySelector(".progress-bar")
+          progressBar.setAttribute("aria-valuenow", progress)
+          progressBar.style.width = progress + "%"
+        }
+      }
+    })
   }
 
   _isFileTypeAccepted(file) {
@@ -127,7 +164,7 @@ export default class MarkupEditorUploader {
     return false
   }
 
-  _prependAttachmentsListUploadItem(file, key) {
+  _createFileUI(file, key) {
     const data = {
       key,
       file,
@@ -138,17 +175,21 @@ export default class MarkupEditorUploader {
 
     if (this._isFileTypeImage(file)) {
       data.isImage = true
-      this._prependAttachmentsListUploadMediaItem(data)
+      this._createMediaFileUI(data)
     } else if (this._isFileTypeVideo(file)) {
       data.isVideo = true
-      this._prependAttachmentsListUploadMediaItem(data)
+      this._createMediaFileUI(data)
     } else {
-      this._prependAttachmentsListUploadOtherItem(data)
+      this._createOtherFileUI(data)
     }
+
+    return this.element.querySelector(
+      'ul li[misago-editor-upload-key="' + key + '"]'
+    )
   }
-  
-  _prependAttachmentsListUploadMediaItem(data) {
-    const element = renderTemplate(this.templates.mediaUpload, data)
+
+  _createMediaFileUI(data) {
+    const element = renderTemplate(this.templates.media, data)
 
     if (data.isImage) {
       const image = element.querySelector("[misago-tpl-image]")
@@ -170,50 +211,20 @@ export default class MarkupEditorUploader {
       buffer.readAsDataURL(data.file)
     }
 
-    this._prependToAndShowList(this.lists.media, element)
+    this._addUIToAttachmentsList(this.lists.media, element)
   }
 
-  _prependAttachmentsListUploadOtherItem(data) {
-    const element = renderTemplate(this.templates.otherUpload, data)
-    this._prependToAndShowList(this.lists.other, element)
+  _createOtherFileUI(data) {
+    const element = renderTemplate(this.templates.other, data)
+    this._addUIToAttachmentsList(this.lists.other, element)
   }
 
-  _addOnLoadEventListener(request, keys, elements) {
-    request.addEventListener("load", () => {
-      if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-        try {
-          const { attachments } = JSON.parse(request.response)
-          if (attachments) {
-            attachments.forEach(attachment => {
-              try {
-                this._prependAttachmentHiddenField(attachment)
-                this._prependAttachmentsListItem(attachment)
-              } catch(error) {
-                console.error(error)
-              }
-            })
-          }
-        } catch(error) {
-  
-        }
-      }
-    });
+  _addUIToAttachmentsList(list, element) {
+    list.querySelector("ul").prepend(element)
+    list.classList.remove("d-none")
   }
 
-  _addOnProgressEventListener(request, keys, elements) {
-    request.upload.addEventListener("progress", (event) => {
-      if (event.lengthComputable) {
-        const progress = Math.ceil(event.loaded * 100 / event.total)
-        for (const key of keys) {
-          const progressBar = elements[key].querySelector(".progress-bar")
-          progressBar.setAttribute("aria-valuenow", progress)
-          progressBar.style.width = progress + "%"
-        }
-      }
-    });
-  }
-
-  _prependAttachmentHiddenField(attachment) {
+  _createAttachmentIDField(attachment) {
     const input = document.createElement("input")
     input.setAttribute("type", "hidden")
     input.setAttribute("name", this.field.name)
@@ -221,51 +232,37 @@ export default class MarkupEditorUploader {
     this.field.element.appendChild(input)
   }
 
-  _prependAttachmentsListItem(attachment) {
+  _updateFileUI(attachment, element) {
     if (attachment.filetype["is_media"]) {
-      this._prependAttachmentsMediaListItem(attachment)
+      this._updateMediaFileUI(attachment, element)
     } else {
-      this._prependAttachmentsOtherListItem(attachment)
+      this._updateOtherFileUI(attachment, element)
     }
   }
 
-  _prependAttachmentsMediaListItem(attachment) {
-    const item = renderTemplate(this.templates.media, attachment)
+  _updateMediaFileUI(attachment, element) {
+    const footer = renderTemplate(this.templates.mediaFooter, attachment)
 
-    if (attachment.filetype["is_video"]) {
-      const video = item.querySelector("video")
-      if (video) {
-        const source = document.createElement("source")
-        source.setAttribute("src", attachment.upload.url)
-        source.setAttribute("type", attachment.content_type)
-        video.append(source)
-      }
-    } else {
-      const image = item.querySelector("[misago-tpl-image]")
-      const url = attachment.thumbnail ? attachment.thumbnail.url : attachment.upload.url
-      image.style.backgroundImage = "url('" + url + "')"
-      image.removeAttribute("misago-tpl-image")
-    }
+    footer
+      .querySelector("[misago-editor-attachment]")
+      .setAttribute(
+        "misago-editor-attachment",
+        attachment.name + ":" + attachment.id
+      )
 
-    item.querySelector("[misago-editor-attachment]").setAttribute(
-      "misago-editor-attachment", attachment.name + ":" + attachment.id
-    )
-
-    this._prependToAndShowList(this.lists.media, item)
+    element.querySelector("[misago-tpl-footer]").replaceWith(footer)
   }
 
-  _prependAttachmentsOtherListItem(attachment) {
-    const item = renderTemplate(this.templates.other, attachment)
+  _updateOtherFileUI(attachment, element) {
+    const item = renderTemplate(this.templates.otherUploaded, attachment)
 
-    item.querySelector("[misago-editor-attachment]").setAttribute(
-      "misago-editor-attachment", attachment.name + ":" + attachment.id
-    )
+    item
+      .querySelector("[misago-editor-attachment]")
+      .setAttribute(
+        "misago-editor-attachment",
+        attachment.name + ":" + attachment.id
+      )
 
-    this._prependToAndShowList(this.lists.other, item)
-  }
-
-  _prependToAndShowList(list, element) {
-    list.querySelector("ul").prepend(element)
-    list.classList.remove("d-none")
+    element.replaceWith(item)
   }
 }

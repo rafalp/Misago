@@ -1,8 +1,7 @@
-
 export default function renderTemplate(template, data) {
   const node = template.content.cloneNode(true)
 
-  node.querySelectorAll("[misago-tpl-if]").forEach(element => {
+  node.querySelectorAll("[misago-tpl-if]").forEach((element) => {
     const variable = element.getAttribute("misago-tpl-if")
     if (getVariableValue(data, variable)) {
       element.removeAttribute("misago-tpl-if")
@@ -11,7 +10,7 @@ export default function renderTemplate(template, data) {
     }
   })
 
-  node.querySelectorAll("[misago-tpl-ifnot]").forEach(element => {
+  node.querySelectorAll("[misago-tpl-ifnot]").forEach((element) => {
     const variable = element.getAttribute("misago-tpl-ifnot")
     if (getVariableValue(data, variable)) {
       element.remove()
@@ -20,13 +19,13 @@ export default function renderTemplate(template, data) {
     }
   })
 
-  node.querySelectorAll("[misago-tpl-var]").forEach(element => {
+  node.querySelectorAll("[misago-tpl-var]").forEach((element) => {
     const variable = element.getAttribute("misago-tpl-var")
     element.innerText = getVariableValue(data, variable) || ""
     element.removeAttribute("misago-tpl-var")
   })
 
-  node.querySelectorAll("[misago-tpl-attr]").forEach(element => {
+  node.querySelectorAll("[misago-tpl-attr]").forEach((element) => {
     const attr = element.getAttribute("misago-tpl-attr")
     if (attr.indexOf(":") !== ":") {
       const name = attr.substring(0, attr.indexOf(":")).trim()

@@ -166,6 +166,15 @@
   font-weight: bold;
 }
 
+@keyframes fadeInAttachment {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes deleteAttachment {
   from {
     opacity: 1;
@@ -191,6 +200,12 @@
 
     border: 1px solid @gray-lighter;
     border-radius: @border-radius-base;
+  }
+
+  .fade-in {
+    animation-name: fadeInAttachment;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
   }
 
   .deleted {
@@ -308,7 +323,7 @@
   display: flex;
   align-items: center;
 
-  height: 28px;
+  height: 36px;
   padding: 0 4px;
 
   .progress {
@@ -392,7 +407,7 @@
   display: flex;
   align-items: center;
 
-  height: 28px;
+  height: 17px;
   padding: 0 4px;
 
   .progress {

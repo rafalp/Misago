@@ -1,7 +1,9 @@
 export const CSRF_FIELD_NAME = "csrfmiddlewaretoken"
 
 export function getCSRFToken() {
-  const element = document.querySelector('input[name="' + CSRF_FIELD_NAME + '"]')
+  const element = document.querySelector(
+    'input[name="' + CSRF_FIELD_NAME + '"]'
+  )
 
   if (element) {
     return element.value

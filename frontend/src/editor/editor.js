@@ -254,7 +254,7 @@ class MarkupEditor {
       element.classList.add(className)
       event.preventDefault()
     })
-  
+
     element.addEventListener("dragleave", (event) => {
       element.classList.remove(className)
     })
@@ -511,7 +511,9 @@ editor.setAction("attachment", function ({ target, selection }) {
 
 editor.setAction("attachment-delete", function ({ target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
-  const name = target.closest("[misago-editor-deleted-attachments-name]").getAttribute("misago-editor-deleted-attachments-name")
+  const name = target
+    .closest("[misago-editor-deleted-attachments-name]")
+    .getAttribute("misago-editor-deleted-attachments-name")
 
   selection.input.value = selection.input.value.replace(
     /<attachment=(.+?)>/gi,

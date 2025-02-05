@@ -1,42 +1,7 @@
 {% load i18n %}
 
 <template id="attachment-media-template">
-  <li class="markup-editor-attachments-media-list-item" misago-tpl-attr="misago-editor-upload-key:key">
-    <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="filetype.is_video">
-      <div class="markup-editor-attachments-media-list-item-preview-video-container">
-        <video muted>
-          {% trans "Your browser does not support video tag." context "attachment video player" %}
-        </video>
-      </div>
-    </div>
-    <div class="markup-editor-attachments-media-list-item-preview-image" misago-tpl-ifnot="filetype.is_video" misago-tpl-image></div>
-    <div class="markup-editor-attachments-media-list-item-name" misago-tpl-var="name"></div>
-    <div class="markup-editor-attachments-media-list-item-footer">
-      <button
-        type="button"
-        class="markup-editor-attachments-media-list-item-button d-js-block"
-        title="{% trans 'Click to insert into post' context 'markup editor insert attachment btn' %}"
-        misago-editor-action="attachment"
-        misago-editor-attachment=""
-      >
-        {% trans "Insert" context "markup editor insert attachment btn" %}
-      </button>
-      <div class="markup-editor-attachments-media-list-item-footer-spacer"></div>
-      <button
-        type="button"
-        class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
-        title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
-        misago-editor-action="attachment-delete"
-        misago-tpl-attr="misago-editor-attachment:id"
-      >
-        <span class="material-icon">delete</span>
-      </button>
-    </div>
-  </li>
-</template>
-
-<template id="attachment-media-upload-template">
-  <li class="markup-editor-attachments-media-list-item" misago-tpl-attr="misago-editor-upload-key:key">
+  <li class="markup-editor-attachments-media-list-item fade-in" misago-tpl-attr="misago-editor-upload-key:key">
     <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="isVideo">
       <div class="markup-editor-attachments-media-list-item-preview-video-container">
         <video muted>
@@ -47,7 +12,7 @@
     <div class="markup-editor-attachments-media-list-item-preview-image" misago-tpl-if="isImage" misago-tpl-image>
     </div>
     <div class="markup-editor-attachments-media-list-item-name" misago-tpl-var="name"></div>
-    <div class="markup-editor-attachments-media-list-item-upload-progress">
+    <div class="markup-editor-attachments-media-list-item-upload-progress" misago-tpl-footer>
       <div class="progress">
         <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
@@ -55,8 +20,56 @@
   </li>
 </template>
 
+<template id="attachment-media-footer-template">
+  <div class="markup-editor-attachments-media-list-item-footer fade-in">
+    <button
+      type="button"
+      class="markup-editor-attachments-media-list-item-button d-js-block"
+      title="{% trans 'Click to insert into post' context 'markup editor insert attachment btn' %}"
+      misago-editor-action="attachment"
+      misago-editor-attachment=""
+    >
+      {% trans "Insert" context "markup editor insert attachment btn" %}
+    </button>
+    <div class="markup-editor-attachments-media-list-item-footer-spacer"></div>
+    <button
+      type="button"
+      class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
+      title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
+      misago-editor-action="attachment-delete"
+      misago-tpl-attr="misago-editor-attachment:id"
+    >
+      <span class="material-icon">delete</span>
+    </button>
+  </div>
+</template>
+
 <template id="attachment-other-template">
-  <li class="markup-editor-attachments-other-list-item" misago-tpl-attr="misago-editor-upload-key:key">
+  <li class="markup-editor-attachments-other-list-item uploading" misago-tpl-attr="misago-editor-upload-key:key">
+    <button
+      class="markup-editor-attachments-other-list-item-body"
+      type="button"
+      disabled
+    >
+      <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
+      <div class="markup-editor-attachments-other-list-item-upload-progress">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </button>
+    <button
+      type="button"
+      class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
+      disabled
+    >
+      <span class="material-icon">delete</span>
+    </button>
+  </li>
+</template>
+
+<template id="attachment-other-uploaded-template">
+  <li class="markup-editor-attachments-other-list-item fade-in" misago-tpl-attr="misago-editor-upload-key:key">
     <button
       class="markup-editor-attachments-other-list-item-body"
       type="button"
@@ -78,30 +91,6 @@
       title="{% trans 'Delete' context 'markup editor delete attachment btn' %}"
       misago-editor-action="attachment-delete"
       misago-tpl-attr="misago-editor-attachment:id"
-    >
-      <span class="material-icon">delete</span>
-    </button>
-  </li>
-</template>
-
-<template id="attachment-other-upload-template">
-  <li class="markup-editor-attachments-other-list-item" misago-tpl-attr="misago-editor-upload-key:key">
-    <button
-      class="markup-editor-attachments-other-list-item-body"
-      type="button"
-      disabled
-    >
-      <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
-      <div class="markup-editor-attachments-other-list-item-upload-progress">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-      </div>
-    </button>
-    <button
-      type="button"
-      class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
-      disabled
     >
       <span class="material-icon">delete</span>
     </button>
