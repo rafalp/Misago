@@ -274,7 +274,8 @@ class MarkupEditor {
 
   showFilePrompt(element, options) {
     const uploader = new MarkupEditorUploader(
-      this, element.closest("[misago-editor-active]")
+      this,
+      element.closest("[misago-editor-active]")
     )
 
     if (!uploader.canUpload) {
@@ -520,11 +521,11 @@ editor.setAction("attachment", function ({ target, selection }) {
   }
 })
 
-editor.setAction("image-upload", function ({  editor, target }) {
-  editor.showFilePrompt(target, {accept: "image", insert: true})
+editor.setAction("image-upload", function ({ editor, target }) {
+  editor.showFilePrompt(target, { accept: "image", insert: true })
 })
 
-editor.setAction("attachment-upload", function ({  editor, target }) {
+editor.setAction("attachment-upload", function ({ editor, target }) {
   editor.showFilePrompt(target)
 })
 

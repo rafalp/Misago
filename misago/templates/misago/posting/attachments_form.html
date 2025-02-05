@@ -10,22 +10,32 @@
   {% if form.show_attachments_upload %}
     {% with form.upload as upload_field %}
       <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
-        <label class="control-label" for="{{ upload_field.id_for_label }}">
-          {% trans "Upload files:" context "posting title form" %}
-        </label>
-        <div class="markup-editor-attachments-noscript-row">
-          <input
-            type="file"
-            class="form-control"
-            id="{{ upload_field.id_for_label }}"
-            name="{{ upload_field.html_name }}"
-            accept="{{ form.accept_attachments }}"
-            multiple
-          />
-          <button class="btn btn-default btn-block" type="submit "name="{{ form.upload_attachments }}" value="true" formnovalidate>
-            {% trans "Upload" context "posting form" %}
-          </button>
-        </div>
+        <noscript>
+          <label class="control-label" for="{{ upload_field.id_for_label }}">
+            {% trans "Upload files:" context "posting title form" %}
+          </label>
+          <div class="markup-editor-attachments-noscript-row">
+            <input
+              type="file"
+              class="form-control"
+              id="{{ upload_field.id_for_label }}"
+              name="{{ upload_field.html_name }}"
+              accept="{{ form.accept_attachments }}"
+              multiple
+            />
+            <button class="btn btn-default btn-block" type="submit "name="{{ form.upload_attachments }}" value="true" formnovalidate>
+              {% trans "Upload" context "posting form" %}
+            </button>
+          </div>
+        </noscript>
+        <p class="markup-editor-attachments-script-row d-js-block">
+          {% capture trimmed as upload_button %}
+            <button misago-editor-action="attachment-upload" type="button">{% trans "click here" context "posting form" %}</button>
+          {% endcapture %}
+          {% blocktrans trimmed with upload=upload_button|safe context "posting form" %}
+            To attach files to your message, {{ upload }}, paste them into the text field above, or drag them over the message editor.
+          {% endblocktrans %}
+        </p>
         <p class="help-block text-help-block">
           {% blocktrans trimmed count limit=form.attachments_limit context "posting form" %}
             You can attach {{ limit }} file to a post.

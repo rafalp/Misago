@@ -67,7 +67,8 @@ export default class MarkupEditorUploader {
     const input = document.createElement("input")
     input.setAttribute("type", "file")
     input.setAttribute(
-      "accept", (this.accept[accept] || this.accept.all).join(",")
+      "accept",
+      (this.accept[accept] || this.accept.all).join(",")
     )
     input.setAttribute("multiple", true)
     input.classList.add("d-none")
@@ -80,7 +81,7 @@ export default class MarkupEditorUploader {
         if (insert) {
           const markup = []
 
-          for (let i = 0; i < keys.length; i ++) {
+          for (let i = 0; i < keys.length; i++) {
             const key = keys[i]
             const upload = uploads[i]
             markup.push("<attachment=" + upload.name + ":" + key + ">")
@@ -100,7 +101,7 @@ export default class MarkupEditorUploader {
   }
 
   _getAcceptAttributeStr(accept) {
-    return (this.accept[accept] || this.accept.all ).join(",")
+    return (this.accept[accept] || this.accept.all).join(",")
   }
 
   uploadFiles(files, textarea) {
@@ -218,9 +219,11 @@ export default class MarkupEditorUploader {
   _replaceTextareaPlaceholders(textarea, keys, attachments) {
     const results = {}
 
-    keys.forEach(key => results[key] = null)
+    keys.forEach((key) => (results[key] = null))
     if (attachments) {
-      attachments.forEach(attachment => results[attachment.key] = attachment)
+      attachments.forEach(
+        (attachment) => (results[attachment.key] = attachment)
+      )
     }
 
     textarea.value = textarea.value.replace(
@@ -229,7 +232,7 @@ export default class MarkupEditorUploader {
         if (p1.match(/:/g).length !== 1) {
           return match
         }
-  
+
         let value = p1.trim()
         while (value.substring(0, 1) === '"') {
           value = value.substring(1)
@@ -237,7 +240,7 @@ export default class MarkupEditorUploader {
         while (value.substring(value.length - 1) === '"') {
           value = value.substring(0, value.length - 1)
         }
-  
+
         const key = value.substring(value.indexOf(":") + 1).trim()
         if (key) {
           const attachment = results[key]
@@ -247,7 +250,7 @@ export default class MarkupEditorUploader {
             return ""
           }
         }
-  
+
         return match
       }
     )
