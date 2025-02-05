@@ -8,6 +8,7 @@ export default class MarkupEditorUploader {
     this.editor = editor
 
     this.element = element
+    this.textarea = editor.getTextarea(element)
 
     this.lists = {
       media: element.querySelector('[misago-editor-attachments="media"]'),
@@ -59,8 +60,52 @@ export default class MarkupEditorUploader {
     error(pgettext("markup editor upload", "You can't upload attachments"))
   }
 
-  uploadFiles(files) {
+  prompt(options) {
+    const accept = options ? options.accept : "all"
+    const insert = options ? options.insert : false
+
+    const input = document.createElement("input")
+    input.setAttribute("type", "file")
+    input.setAttribute(
+      "accept", (this.accept[accept] || this.accept.all).join(",")
+    )
+    input.setAttribute("multiple", true)
+    input.classList.add("d-none")
+
+    input.addEventListener("change", (event) => {
+      const files = event.target.files
+      if (files.length) {
+        const { keys, files: uploads } = this.uploadFiles(files, this.textarea)
+
+        if (insert) {
+          const markup = []
+
+          for (let i = 0; i < keys.length; i ++) {
+            const key = keys[i]
+            const upload = uploads[i]
+            markup.push("<attachment=" + upload.name + ":" + key + ">")
+          }
+
+          if (markup) {
+            const selection = this.editor.getSelection(this.textarea)
+            selection.insert(markup.join("\n"), { whitespace: "\n\n" })
+          }
+        }
+      }
+      input.remove()
+    })
+
+    this.element.appendChild(input)
+    input.click()
+  }
+
+  _getAcceptAttributeStr(accept) {
+    return (this.accept[accept] || this.accept.all ).join(",")
+  }
+
+  uploadFiles(files, textarea) {
     const allowedFiles = []
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       if (this._isFileTypeAccepted(file)) {
@@ -76,11 +121,12 @@ export default class MarkupEditorUploader {
     }
 
     if (!allowedFiles) {
-      return
+      return { keys: [], files: [] }
     }
 
-    const elements = {}
     const keys = []
+    const elements = {}
+
     const data = new FormData()
     appendCSRFTokenToForm(data)
 
@@ -100,6 +146,8 @@ export default class MarkupEditorUploader {
 
     request.open("POST", this.uploadUrl)
     request.send(data)
+
+    return { keys, files: allowedFiles }
   }
 
   _addOnLoadEventListener(request, keys, elements) {
@@ -110,6 +158,9 @@ export default class MarkupEditorUploader {
       ) {
         try {
           const { attachments } = JSON.parse(request.response)
+
+          this._replaceTextareaPlaceholders(this.textarea, keys, attachments)
+
           if (attachments) {
             attachments.forEach((attachment) => {
               try {
@@ -162,6 +213,44 @@ export default class MarkupEditorUploader {
       }
     }
     return false
+  }
+
+  _replaceTextareaPlaceholders(textarea, keys, attachments) {
+    const results = {}
+
+    keys.forEach(key => results[key] = null)
+    if (attachments) {
+      attachments.forEach(attachment => results[attachment.key] = attachment)
+    }
+
+    textarea.value = textarea.value.replace(
+      /<attachment=(.+?)>/gi,
+      function (match, p1) {
+        if (p1.match(/:/g).length !== 1) {
+          return match
+        }
+  
+        let value = p1.trim()
+        while (value.substring(0, 1) === '"') {
+          value = value.substring(1)
+        }
+        while (value.substring(value.length - 1) === '"') {
+          value = value.substring(0, value.length - 1)
+        }
+  
+        const key = value.substring(value.indexOf(":") + 1).trim()
+        if (key) {
+          const attachment = results[key]
+          if (attachment) {
+            return "<attachment=" + attachment.name + ":" + attachment.id + ">"
+          } else if (attachment === null) {
+            return ""
+          }
+        }
+  
+        return match
+      }
+    )
   }
 
   _createFileUI(file, key) {

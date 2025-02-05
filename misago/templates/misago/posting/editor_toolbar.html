@@ -47,30 +47,42 @@
 >
   <span class="material-icon">insert_link</span>
 </button>
-<div class="dropdown d-xs-none" misago-editor-priority="8000">
+{% if form.show_attachments_upload %}
+  <div class="dropdown d-xs-none" misago-editor-priority="8000">
+    <button
+      class="btn btn-markup-editor"
+      title="{% translate 'Image' context 'markup editor' %}"
+      aria-expanded="true"
+      aria-haspopup="true"
+      data-toggle="dropdown"
+      type="button"
+    >
+      <span class="material-icon">insert_photo</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-auto">
+      <li>
+        <button class="btn btn-link" type="button" misago-editor-action="image-upload">
+          <span class="material-icon">file_upload</span> {% translate 'Upload image' context 'markup editor' %}
+        </button>
+      </li>
+      <li>
+        <button class="btn btn-link" type="button" misago-editor-action="image">
+          <span class="material-icon">insert_link</span> {% translate 'Link to image' context 'markup editor' %}
+        </button>
+      </li>
+    </ul>
+  </div>
+{% else %}
   <button
     class="btn btn-markup-editor"
     title="{% translate 'Image' context 'markup editor' %}"
-    aria-expanded="true"
-    aria-haspopup="true"
-    data-toggle="dropdown"
     type="button"
+    misago-editor-action="image"
+    misago-editor-priority="8000"
   >
     <span class="material-icon">insert_photo</span>
   </button>
-  <ul class="dropdown-menu dropdown-menu-auto">
-    <li>
-      <button class="btn btn-link" type="button">
-        <span class="material-icon">file_upload</span> {% translate 'Upload image' context 'markup editor' %}
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button" misago-editor-action="image">
-        <span class="material-icon">insert_link</span> {% translate 'Link to image' context 'markup editor' %}
-      </button>
-    </li>
-  </ul>
-</div>
+{% endif %}
 <button
   class="btn btn-markup-editor d-xs-block"
   title="{% translate 'Image' context 'markup editor' %}"

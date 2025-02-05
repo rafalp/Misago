@@ -179,7 +179,7 @@ class MarkupEditor {
   }
 
   _setEditorActions(element) {
-    const input = element.querySelector("textarea")
+    const textarea = this.getTextarea(element)
 
     element.addEventListener("click", (event) => {
       const target = event.target.closest("[misago-editor-action]")
@@ -197,10 +197,10 @@ class MarkupEditor {
       const action = this.actions[actionName]
       if (action) {
         action({
-          input,
+          textarea,
           target,
           editor: this,
-          selection: new MarkupEditorSelection(input),
+          selection: new MarkupEditorSelection(textarea),
         })
       } else {
         console.warn("Undefined editor action: " + actionName)
@@ -264,12 +264,23 @@ class MarkupEditor {
     })
   }
 
-  showUploadPrompt(element) {
-    const uploader = new MarkupEditorUploader(this, element)
+  getTextarea(element) {
+    return element.querySelector("textarea")
+  }
+
+  getSelection(textarea) {
+    return new MarkupEditorSelection(textarea)
+  }
+
+  showFilePrompt(element, options) {
+    const uploader = new MarkupEditorUploader(
+      this, element.closest("[misago-editor-active]")
+    )
+
     if (!uploader.canUpload) {
       uploader.showPermissionDeniedError()
     } else {
-      // uploader.uploadFiles(event.dataTransfer.files)
+      uploader.prompt(options)
     }
   }
 
@@ -291,8 +302,8 @@ class MarkupEditor {
 }
 
 class MarkupEditorSelection {
-  constructor(input) {
-    this.input = input
+  constructor(textarea) {
+    this.textarea = textarea
     this._range = this._getRange()
   }
 
@@ -325,7 +336,7 @@ class MarkupEditorSelection {
     value += prefix + this._range.text + suffix
     value += this._range.suffix
 
-    this.input.value = value
+    this.textarea.value = value
 
     this._range.start += prefix.length
     this._range.end += prefix.length
@@ -336,7 +347,7 @@ class MarkupEditorSelection {
 
   replace(text, options) {
     const value = this._range.prefix + text + this._range.suffix
-    this.input.value = value
+    this.textarea.value = value
 
     if (options && options.start) {
       this._range.start += options.start
@@ -375,7 +386,7 @@ class MarkupEditorSelection {
     }
 
     value += text + whitespace + suffix
-    this.input.value = value
+    this.textarea.value = value
 
     const caret = prefix.length + text.length + whitespace.length * whitespaces
     this._range.end = this._range.start = caret
@@ -386,33 +397,33 @@ class MarkupEditorSelection {
 
   refocus() {
     window.setTimeout(() => {
-      const scroll = this.input.scrollTop
-      this.input.focus()
-      this.input.scrollTop = scroll
+      const scroll = this.textarea.scrollTop
+      this.textarea.focus()
+      this.textarea.scrollTop = scroll
 
       const caret = this._range.start
-      this.input.setSelectionRange(caret, caret + this._range.length)
+      this.textarea.setSelectionRange(caret, caret + this._range.length)
     }, 250)
   }
 
   _getRange() {
     if (document.selection) {
-      this.input.focus()
+      this.textarea.focus()
       const range = document.selection.createRange()
       const length = range.text.length
-      range.moveStart("character", -this.input.value.length)
+      range.moveStart("character", -this.textarea.value.length)
       return this._createRange(
-        this.input,
+        this.textarea,
         range.text.length - length,
         range.text.length
       )
     }
 
-    if (this.input.selectionStart || this.input.selectionStart == "0") {
+    if (this.textarea.selectionStart || this.textarea.selectionStart == "0") {
       return this._createRange(
-        this.input,
-        this.input.selectionStart,
-        this.input.selectionEnd
+        this.textarea,
+        this.textarea.selectionStart,
+        this.textarea.selectionEnd
       )
     }
   }
@@ -509,13 +520,21 @@ editor.setAction("attachment", function ({ target, selection }) {
   }
 })
 
+editor.setAction("image-upload", function ({  editor, target }) {
+  editor.showFilePrompt(target, {accept: "image", insert: true})
+})
+
+editor.setAction("attachment-upload", function ({  editor, target }) {
+  editor.showFilePrompt(target)
+})
+
 editor.setAction("attachment-delete", function ({ target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
   const name = target
     .closest("[misago-editor-deleted-attachments-name]")
     .getAttribute("misago-editor-deleted-attachments-name")
 
-  selection.input.value = selection.input.value.replace(
+  selection.textarea.value = selection.textarea.value.replace(
     /<attachment=(.+?)>/gi,
     function (match, p1) {
       if (p1.match(/:/g).length !== 1) {
@@ -559,13 +578,13 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
 
   element.classList.add("deleted")
 
-  const input = document.createElement("input")
-  input.setAttribute("type", "hidden")
-  input.setAttribute("name", name)
-  input.setAttribute("value", attachment)
+  const textarea = document.createElement("textarea")
+  textarea.setAttribute("type", "hidden")
+  textarea.setAttribute("name", name)
+  textarea.setAttribute("value", attachment)
 
   const attachments = target.closest('[misago-editor="attachments"]')
-  attachments.appendChild(input)
+  attachments.appendChild(textarea)
 })
 
 editor.setAction("formatting-help", function ({ target }) {
