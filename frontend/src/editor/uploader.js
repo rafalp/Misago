@@ -19,7 +19,9 @@ export default class MarkupEditorUploader {
       error: document.getElementById("attachment-upload-error-template"),
       media: document.getElementById("attachment-media-template"),
       mediaFooter: document.getElementById("attachment-media-footer-template"),
+      mediaFailedFooter: document.getElementById("attachment-media-failed-footer-template"),
       other: document.getElementById("attachment-other-template"),
+      otherFailed: document.getElementById("attachment-other-failed-template"),
       otherUploaded: document.getElementById(
         "attachment-other-uploaded-template"
       ),
@@ -138,7 +140,7 @@ export default class MarkupEditorUploader {
       data.append("keys", key)
       data.append("upload", file)
 
-      elements[key] = this._createFileUI(file, key)
+      elements[key] = this._createUploadUI(file, key)
     })
 
     const request = new XMLHttpRequest()
@@ -171,14 +173,23 @@ export default class MarkupEditorUploader {
       this._replaceTextareaPlaceholders(this.textarea, keys, attachments)
 
       if (errors) {
-        const element = this.element.querySelector("[misago-editor-attachments-errors]")
+        const element = this.element.querySelector("[misago-editor-attachments-help]")
         keys.forEach((key) => {
           const error = errors[key]
           if (error) {
-            const template = renderTemplate(
+            const errorTemplate = renderTemplate(
               this.templates.error, {key, error}
             )
-            element.prepend(template)
+            element.after(errorTemplate)
+            
+            const attachment = this.editor.getAttachmentByKey(key)
+            const footer = attachment.querySelector("[misago-tpl-footer]")
+            if (footer) {
+              footer.replaceWith(renderTemplate(this.templates.mediaFailedFooter))
+            } else {
+              const upload = attachment.querySelector("[misago-tpl-upload]")
+              upload.replaceWith(renderTemplate(this.templates.otherFailed))
+            }
           }
         })
       }
@@ -186,7 +197,7 @@ export default class MarkupEditorUploader {
       if (attachments) {
         attachments.forEach((attachment) => {
           try {
-            this._updateFileUI(attachment, elements[attachment.key])
+            this._updateUploadUI(attachment, elements[attachment.key])
             this._createAttachmentIDField(attachment)
           } catch (error) {
             console.error(error)
@@ -271,7 +282,7 @@ export default class MarkupEditorUploader {
     })
   }
 
-  _createFileUI(file, key) {
+  _createUploadUI(file, key) {
     const data = {
       key,
       file,
@@ -282,20 +293,18 @@ export default class MarkupEditorUploader {
 
     if (this._isFileTypeImage(file)) {
       data.isImage = true
-      this._createMediaFileUI(data)
+      this._createMediaUploadUI(data)
     } else if (this._isFileTypeVideo(file)) {
       data.isVideo = true
-      this._createMediaFileUI(data)
+      this._createMediaUploadUI(data)
     } else {
-      this._createOtherFileUI(data)
+      this._createOtherUploadUI(data)
     }
 
-    return this.element.querySelector(
-      'ul li[misago-editor-upload-key="' + key + '"]'
-    )
+    return this.editor.getAttachmentByKey(key)
   }
 
-  _createMediaFileUI(data) {
+  _createMediaUploadUI(data) {
     const element = renderTemplate(this.templates.media, data)
 
     if (data.isImage) {
@@ -321,7 +330,7 @@ export default class MarkupEditorUploader {
     this._addUIToAttachmentsList(this.lists.media, element)
   }
 
-  _createOtherFileUI(data) {
+  _createOtherUploadUI(data) {
     const element = renderTemplate(this.templates.other, data)
     this._addUIToAttachmentsList(this.lists.other, element)
   }
@@ -339,15 +348,15 @@ export default class MarkupEditorUploader {
     this.field.element.appendChild(input)
   }
 
-  _updateFileUI(attachment, element) {
+  _updateUploadUI(attachment, element) {
     if (attachment.filetype["is_media"]) {
-      this._updateMediaFileUI(attachment, element)
+      this._updateMediaUploadUI(attachment, element)
     } else {
-      this._updateOtherFileUI(attachment, element)
+      this._updateOtherUploadUI(attachment, element)
     }
   }
 
-  _updateMediaFileUI(attachment, element) {
+  _updateMediaUploadUI(attachment, element) {
     const footer = renderTemplate(this.templates.mediaFooter, attachment)
 
     footer
@@ -360,7 +369,7 @@ export default class MarkupEditorUploader {
     element.querySelector("[misago-tpl-footer]").replaceWith(footer)
   }
 
-  _updateOtherFileUI(attachment, element) {
+  _updateOtherUploadUI(attachment, element) {
     const item = renderTemplate(this.templates.otherUploaded, attachment)
 
     item

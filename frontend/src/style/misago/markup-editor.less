@@ -178,21 +178,15 @@
   font-weight: bold;
 }
 
-@keyframes fadeInAttachment {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+.markup-editor-attachments-error-dismiss-button {
+  margin-left: 4px;
+  padding: 0;
 
-@keyframes deleteAttachment {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
+  background-color: transparent;
+  border: 0;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
@@ -212,19 +206,6 @@
 
     border: 1px solid @gray-lighter;
     border-radius: @border-radius-base;
-  }
-
-  .fade-in {
-    animation-name: fadeInAttachment;
-    animation-duration: 0.3s;
-    animation-iteration-count: 1;
-  }
-
-  .deleted {
-    animation-name: deleteAttachment;
-    animation-duration: 0.3s;
-    animation-iteration-count: 1;
-    opacity: 0;
   }
 }
 
@@ -345,6 +326,23 @@
   }
 }
 
+.markup-editor-attachments-media-list-item-failed-footer {
+  display: flex;
+  align-items: center;
+
+  height: 36px;
+  padding: 0 4px;
+
+  color: darken(@brand-danger, 30);
+  font-size: @font-size-small;
+
+  .material-icon {
+    margin-right: 4px;
+
+    font-size: 18px;
+  }
+}
+
 .markup-editor-attachments-other-list-item {
   display: flex;
   align-items: center;
@@ -421,12 +419,21 @@
   align-items: center;
 
   height: 17px;
-  padding: 0 4px;
 
   .progress {
     width: 100%;
     margin: 0;
   }
+}
+
+.markup-editor-attachments-other-list-item-upload-failed {
+  display: flex;
+  align-items: center;
+
+  height: 17px;
+
+  color: darken(@brand-danger, 30);
+  font-size: @font-size-small;
 }
 
 .misago-javascript .markup-editor-attachments-other-list-item-body {

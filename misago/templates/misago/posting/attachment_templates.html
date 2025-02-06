@@ -5,14 +5,17 @@
     <span misago-tpl-var="error"></span>
     <button
       type="button"
+      class="markup-editor-attachments-error-dismiss-button"
       misago-editor-action="attachment-error-dismiss"
       misago-tpl-attr="misago-editor-attachment-key:key"
-    >&times;</button>
+    >
+      {% translate "(dismiss)" context "markup editor dismiss attachment error btn" %}
+    </button>
   </p>
 </template>
 
 <template id="attachment-media-template">
-  <li class="markup-editor-attachments-media-list-item fade-in" misago-tpl-attr="misago-editor-upload-key:key">
+  <li class="markup-editor-attachments-media-list-item animation-fade-in" misago-tpl-attr="misago-editor-upload-key:key">
     <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="isVideo">
       <div class="markup-editor-attachments-media-list-item-preview-video-container">
         <video muted>
@@ -32,7 +35,7 @@
 </template>
 
 <template id="attachment-media-footer-template">
-  <div class="markup-editor-attachments-media-list-item-footer fade-in">
+  <div class="markup-editor-attachments-media-list-item-footer animation-fade-in">
     <button
       type="button"
       class="markup-editor-attachments-media-list-item-button d-js-block"
@@ -55,6 +58,15 @@
   </div>
 </template>
 
+<template id="attachment-media-failed-footer-template">
+  <div class="markup-editor-attachments-media-list-item-failed-footer animation-fade-in">
+    <span class="material-icon">warning</span>
+    <span>
+      {% translate "Upload failed" context "markup editor insert attachment btn" %}
+    </span>
+  </div>
+</template>
+
 <template id="attachment-other-template">
   <li class="markup-editor-attachments-other-list-item uploading" misago-tpl-attr="misago-editor-upload-key:key">
     <button
@@ -63,7 +75,7 @@
       disabled
     >
       <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
-      <div class="markup-editor-attachments-other-list-item-upload-progress">
+      <div class="markup-editor-attachments-other-list-item-upload-progress" misago-tpl-upload>
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -79,32 +91,14 @@
   </li>
 </template>
 
-<template id="attachment-other-error-template">
-  <li class="markup-editor-attachments-other-list-item uploading" misago-tpl-attr="misago-editor-upload-key:key">
-    <button
-      class="markup-editor-attachments-other-list-item-body"
-      type="button"
-      disabled
-    >
-      <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
-      <div class="markup-editor-attachments-other-list-item-upload-progress">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-      </div>
-    </button>
-    <button
-      type="button"
-      class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
-      disabled
-    >
-      <span class="material-icon">delete</span>
-    </button>
-  </li>
+<template id="attachment-other-failed-template">
+  <div class="markup-editor-attachments-other-list-item-upload-failed">
+    {% translate "Upload failed" context "markup editor insert attachment btn" %}
+  </div>
 </template>
 
 <template id="attachment-other-uploaded-template">
-  <li class="markup-editor-attachments-other-list-item fade-in" misago-tpl-attr="misago-editor-upload-key:key">
+  <li class="markup-editor-attachments-other-list-item animation-fade-in" misago-tpl-attr="misago-editor-upload-key:key">
     <button
       class="markup-editor-attachments-other-list-item-body"
       type="button"

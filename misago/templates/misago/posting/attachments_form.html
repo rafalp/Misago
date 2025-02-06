@@ -36,7 +36,7 @@
             To attach files to your message, {{ upload }}, paste them into the text field above, or drag them over the message editor.
           {% endblocktranslate %}
         </p>
-        <p class="help-block text-help-block">
+        <p class="help-block text-help-block" misago-editor-attachments-help>
           {% blocktranslate trimmed count limit=form.attachments_limit context "posting form" %}
             You can attach {{ limit }} file to a post.
           {% plural %}
@@ -54,7 +54,6 @@
             Visit your {{ settings }} to view all your attachments and manage your available storage.
           {% endblocktranslate %}
         </p>
-        <div misago-editor-attachments-errors></div>
         {% for error in upload_field.errors %}
           <p class="help-block text-danger">{{ error }}</p>
         {% endfor %}

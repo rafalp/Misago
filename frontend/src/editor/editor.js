@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import * as animations from "../animations"
 import MarkupEditorUploader from "./uploader"
 import {
   MarkupEditorCodeModal,
@@ -300,6 +301,21 @@ class MarkupEditor {
   showQuoteModal(selection) {
     this.quoteModal.show(selection)
   }
+
+  getAttachmentByKey(key) {
+    return document.querySelector('[misago-editor-upload-key="' + key + '"]')
+  }
+
+  removeAttachmentElement(element) {
+    const list = element.closest("ul")
+
+    animations.deleteElement(element, function() {
+      if (!list.querySelector("li")) {
+        const container = list.closest(".markup-editor-attachments-list")
+        container.classList.add("d-none")
+      }
+    })
+  }
 }
 
 class MarkupEditorSelection {
@@ -560,7 +576,7 @@ editor.setAction("attachment-upload", function ({ editor, target }) {
   editor.showFilePrompt(target)
 })
 
-editor.setAction("attachment-delete", function ({ target, selection }) {
+editor.setAction("attachment-delete", function ({ editor, target, selection }) {
   const attachment = target.getAttribute("misago-editor-attachment")
   const name = target
     .closest("[misago-editor-deleted-attachments-name]")
@@ -574,25 +590,8 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
     return false
   })
 
-  const list = target.closest("ul")
   const element = target.closest("li")
-
-  element.querySelectorAll("button").forEach((element) => {
-    element.setAttribute("disabled", "")
-  })
-
-  element.addEventListener("animationend", ({ animationName }) => {
-    if (animationName === "deleteAttachment") {
-      element.remove()
-
-      if (!list.querySelector("li")) {
-        const container = list.closest(".markup-editor-attachments-list")
-        container.classList.add("d-none")
-      }
-    }
-  })
-
-  element.classList.add("deleted")
+  editor.removeAttachmentElement(element)
 
   const input = document.createElement("input")
   input.setAttribute("type", "hidden")
@@ -603,7 +602,7 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
   attachments.appendChild(input)
 })
 
-editor.setAction("attachment-error-dismiss", function ({ target, selection }) {
+editor.setAction("attachment-error-dismiss", function ({ editor, target, selection }) {
   const key = target.getAttribute("misago-editor-attachment-key")
 
   selection.replaceAttachments(function(attachment) {
@@ -615,15 +614,10 @@ editor.setAction("attachment-error-dismiss", function ({ target, selection }) {
   })
 
   const message = target.closest("p")
-  const attachment = document.querySelector('[misago-editor-upload-key="' + key + '"]')
+  animations.deleteElement(message)
 
-  message.addEventListener("animationend", ({ animationName }) => {
-    if (animationName === "deleteAttachment") {
-      message.remove()
-    }
-  })
-
-  message.classList.add("deleted")
+  const element = editor.getAttachmentByKey(key)
+  editor.removeAttachmentElement(element)
 })
 
 editor.setAction("formatting-help", function ({ target }) {
