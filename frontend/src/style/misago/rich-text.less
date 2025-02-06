@@ -58,14 +58,19 @@
 .rich-text-image {
   display: inline-block;
   position: relative;
+  overflow: hidden;
+  max-width: 100%;
+
+  border-radius: @border-radius-base;
 
   .rich-text-image-link {
     display: inline-block;
   }
+}
 
-  img {
-    border-radius: @border-radius-base;
-  }
+.rich-text-image-responsive img {
+  width: 100%;
+  height: auto;
 }
 
 .rich-text-video {
