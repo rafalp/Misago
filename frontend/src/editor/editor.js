@@ -229,39 +229,49 @@ class MarkupEditor {
         uploader.showPermissionDeniedError()
       } else if (event.clipboardData.files) {
         event.preventDefault()
-        uploader.uploadFiles(event.clipboardData.files)
+        const textarea = event.target.closest("textarea")
+        uploader.uploadFiles(event.clipboardData.files, textarea)
       }
     })
   }
 
   _setEditorDropUpload = (element) => {
-    const className = "markup-editor-dragdrop"
+    const className = "markup-editor-drag-drop"
+    const elements = [element.querySelector("textarea")]
 
-    element.addEventListener("drop", (event) => {
-      const uploader = new MarkupEditorUploader(this, element)
-      if (event.dataTransfer.files) {
-        event.preventDefault()
-        if (!uploader.canUpload) {
-          uploader.showPermissionDeniedError()
-        } else if (event.dataTransfer.files) {
-          uploader.uploadFiles(event.dataTransfer.files)
+    const attachments = element.querySelector("[misago-editor-attachments]")
+    if (attachments) {
+      elements.push(attachments)
+    }
+
+    elements.forEach((child) => {
+      child.addEventListener("drop", (event) => {
+        const uploader = new MarkupEditorUploader(this, element)
+        if (event.dataTransfer.files) {
+          event.preventDefault()
+          if (!uploader.canUpload) {
+            uploader.showPermissionDeniedError()
+          } else if (event.dataTransfer.files) {
+            const textarea = event.target.closest("textarea")
+            uploader.uploadFiles(event.dataTransfer.files, textarea)
+          }
         }
-      }
 
-      element.classList.remove(className)
-    })
+        child.classList.remove(className)
+      })
 
-    element.addEventListener("dragenter", (event) => {
-      element.classList.add(className)
-      event.preventDefault()
-    })
+      child.addEventListener("dragenter", (event) => {
+        event.preventDefault()
+      })
 
-    element.addEventListener("dragleave", (event) => {
-      element.classList.remove(className)
-    })
+      child.addEventListener("dragleave", () => {
+        child.classList.remove(className)
+      })
 
-    element.addEventListener("dragover", (event) => {
-      event.preventDefault()
+      child.addEventListener("dragover", (event) => {
+        child.classList.add(className)
+        event.preventDefault()
+      })
     })
   }
 
@@ -309,7 +319,7 @@ class MarkupEditor {
   removeAttachmentElement(element) {
     const list = element.closest("ul")
 
-    animations.deleteElement(element, function() {
+    animations.deleteElement(element, function () {
       if (!list.querySelector("li")) {
         const container = list.closest(".markup-editor-attachments-list")
         container.classList.add("d-none")
@@ -419,7 +429,7 @@ class MarkupEditorSelection {
         if (p1.match(/:/g).length !== 1) {
           return match
         }
-  
+
         let value = p1.trim()
         while (value.substring(0, 1) === '"') {
           value = value.substring(1)
@@ -427,17 +437,17 @@ class MarkupEditorSelection {
         while (value.substring(value.length - 1) === '"') {
           value = value.substring(0, value.length - 1)
         }
-  
+
         const name = value.substring(0, value.indexOf(":")).trim()
         const id = value.substring(value.indexOf(":") + 1).trim()
 
-        if (name, id) {
+        if ((name, id)) {
           const result = callback({ match, name, id })
           if (typeof result === "string" || result instanceof String) {
             return result
           }
         }
-  
+
         return match
       }
     )
@@ -582,7 +592,7 @@ editor.setAction("attachment-delete", function ({ editor, target, selection }) {
     .closest("[misago-editor-deleted-attachments-name]")
     .getAttribute("misago-editor-deleted-attachments-name")
 
-  selection.replaceAttachments(function({ id }) {
+  selection.replaceAttachments(function ({ id }) {
     if (id === attachment) {
       return ""
     }
@@ -598,27 +608,36 @@ editor.setAction("attachment-delete", function ({ editor, target, selection }) {
   input.setAttribute("name", name)
   input.setAttribute("value", attachment)
 
-  const attachments = target.closest('[misago-editor="attachments"]')
+  const attachments = target.closest("[misago-editor-attachments]")
   attachments.appendChild(input)
 })
 
-editor.setAction("attachment-error-dismiss", function ({ editor, target, selection }) {
-  const key = target.getAttribute("misago-editor-attachment-key")
+editor.setAction(
+  "attachment-error-dismiss",
+  function ({ editor, target, selection }) {
+    const key = target.getAttribute("misago-editor-attachment-key")
 
-  selection.replaceAttachments(function(attachment) {
-    if (attachment.id === key) {
-      return ""
+    selection.replaceAttachments(function (attachment) {
+      if (attachment.id === key) {
+        return ""
+      }
+
+      return false
+    })
+
+    const message = document.querySelector(
+      '[misago-editor-attachment-error="' + key + '"]'
+    )
+    if (message) {
+      animations.deleteElement(message)
     }
 
-    return false
-  })
-
-  const message = target.closest("p")
-  animations.deleteElement(message)
-
-  const element = editor.getAttachmentByKey(key)
-  editor.removeAttachmentElement(element)
-})
+    const attachment = editor.getAttachmentByKey(key)
+    if (attachment) {
+      editor.removeAttachmentElement(attachment)
+    }
+  }
+)
 
 editor.setAction("formatting-help", function ({ target }) {
   const modal = document.getElementById("markup-editor-formatting-help")

@@ -1,7 +1,10 @@
 {% load i18n %}
 
 <template id="attachment-upload-error-template">
-  <p class="help-block text-danger">
+  <p
+    class="help-block text-danger" 
+    misago-tpl-attr="misago-editor-attachment-error:key"
+  >
     <span misago-tpl-var="error"></span>
     <button
       type="button"
@@ -59,20 +62,29 @@
 </template>
 
 <template id="attachment-media-failed-footer-template">
-  <div class="markup-editor-attachments-media-list-item-failed-footer animation-fade-in">
-    <span class="material-icon">warning</span>
-    <span>
-      {% translate "Upload failed" context "markup editor insert attachment btn" %}
-    </span>
+  <div class="markup-editor-attachments-media-list-item-footer animation-fade-in">
+    <div class="markup-editor-attachments-media-list-item-failed-message">
+      <span class="material-icon">warning</span>
+      <span>
+        {% translate "Upload failed" context "markup editor insert attachment btn" %}
+      </span>
+    </div>
+    <button
+      type="button"
+      class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
+      title="{% translate 'Delete' context 'markup editor delete attachment btn' %}"
+      misago-editor-action="attachment-error-dismiss"
+      misago-tpl-attr="misago-editor-attachment-key:key"
+    >
+      <span class="material-icon">delete</span>
+    </button>
   </div>
 </template>
 
 <template id="attachment-other-template">
   <li class="markup-editor-attachments-other-list-item uploading" misago-tpl-attr="misago-editor-upload-key:key">
-    <button
+    <div
       class="markup-editor-attachments-other-list-item-body"
-      type="button"
-      disabled
     >
       <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
       <div class="markup-editor-attachments-other-list-item-upload-progress" misago-tpl-upload>
@@ -80,10 +92,11 @@
           <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
-    </button>
+    </div>
     <button
       type="button"
       class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
+      title="{% translate 'Delete' context 'markup editor delete attachment btn' %}"
       disabled
     >
       <span class="material-icon">delete</span>

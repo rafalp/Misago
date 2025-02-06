@@ -15,10 +15,6 @@
   border: 2px solid @markup-editor-border-focus;
 }
 
-.markup-editor.markup-editor-dragdrop {
-  border: 2px dashed @markup-editor-border-focus;
-}
-
 // Toolbar
 .markup-editor-toolbar {
   display: flex;
@@ -326,12 +322,10 @@
   }
 }
 
-.markup-editor-attachments-media-list-item-failed-footer {
+.markup-editor-attachments-media-list-item-failed-message {
   display: flex;
   align-items: center;
-
-  height: 36px;
-  padding: 0 4px;
+  width: 100%;
 
   color: darken(@brand-danger, 30);
   font-size: @font-size-small;
@@ -466,4 +460,15 @@
   .markup-editor-attachments-other-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+// Drag and drop focus
+.markup-editor-textarea.form-control,
+.markup-editor-attachments {
+  transition: background-color 0.5s;
+}
+
+.markup-editor-textarea.form-control.markup-editor-drag-drop,
+.markup-editor-attachments.markup-editor-drag-drop {
+  background-color: @markup-editor-drag-drop-bg;
 }

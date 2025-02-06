@@ -19,7 +19,9 @@ export default class MarkupEditorUploader {
       error: document.getElementById("attachment-upload-error-template"),
       media: document.getElementById("attachment-media-template"),
       mediaFooter: document.getElementById("attachment-media-footer-template"),
-      mediaFailedFooter: document.getElementById("attachment-media-failed-footer-template"),
+      mediaFailedFooter: document.getElementById(
+        "attachment-media-failed-footer-template"
+      ),
       other: document.getElementById("attachment-other-template"),
       otherFailed: document.getElementById("attachment-other-failed-template"),
       otherUploaded: document.getElementById(
@@ -28,7 +30,7 @@ export default class MarkupEditorUploader {
     }
 
     const attachmentsElement = element.querySelector(
-      '[misago-editor="attachments"]'
+      "[misago-editor-attachments]"
     )
     this.field = {
       name: element.getAttribute("misago-editor-attachments-name"),
@@ -60,7 +62,9 @@ export default class MarkupEditorUploader {
   }
 
   showPermissionDeniedError() {
-    snackbar.error(pgettext("markup editor upload", "You can't upload attachments"))
+    snackbar.error(
+      pgettext("markup editor upload", "You can't upload attachments")
+    )
   }
 
   prompt(options) {
@@ -79,22 +83,7 @@ export default class MarkupEditorUploader {
     input.addEventListener("change", (event) => {
       const files = event.target.files
       if (files.length) {
-        const { keys, files: uploads } = this.uploadFiles(files, this.textarea)
-
-        if (insert) {
-          const markup = []
-
-          for (let i = 0; i < keys.length; i++) {
-            const key = keys[i]
-            const upload = uploads[i]
-            markup.push("<attachment=" + upload.name + ":" + key + ">")
-          }
-
-          if (markup) {
-            const selection = this.editor.getSelection(this.textarea)
-            selection.insert(markup.join("\n"), { whitespace: "\n\n" })
-          }
-        }
+        this.uploadFiles(files, insert)
       }
       input.remove()
     })
@@ -107,7 +96,7 @@ export default class MarkupEditorUploader {
     return (this.accept[accept] || this.accept.all).join(",")
   }
 
-  uploadFiles(files, textarea) {
+  uploadFiles(files, insert) {
     const allowedFiles = []
 
     for (let i = 0; i < files.length; i++) {
@@ -143,6 +132,10 @@ export default class MarkupEditorUploader {
       elements[key] = this._createUploadUI(file, key)
     })
 
+    if (insert) {
+      this._insertAttachmentsInTextarea(keys, allowedFiles)
+    }
+
     const request = new XMLHttpRequest()
 
     this._addOnLoadedEventListener(request, keys, elements)
@@ -152,92 +145,6 @@ export default class MarkupEditorUploader {
     request.send(data)
 
     return { keys, files: allowedFiles }
-  }
-
-  _addOnLoadedEventListener(request, keys, elements) {
-    request.addEventListener("loadend", () => {
-      if (request.readyState === XMLHttpRequest.DONE) {
-        if (request.status === 200) {
-          this._handleUploadSuccess(request, keys, elements)
-        } else {
-          this._handleUploadError(request)
-        }
-      }
-    })
-  }
-
-  _handleUploadSuccess(request, keys, elements) {
-    try {
-      const { attachments, errors } = JSON.parse(request.response)
-
-      this._replaceTextareaPlaceholders(this.textarea, keys, attachments)
-
-      if (errors) {
-        const element = this.element.querySelector("[misago-editor-attachments-help]")
-        keys.forEach((key) => {
-          const error = errors[key]
-          if (error) {
-            const errorTemplate = renderTemplate(
-              this.templates.error, {key, error}
-            )
-            element.after(errorTemplate)
-            
-            const attachment = this.editor.getAttachmentByKey(key)
-            const footer = attachment.querySelector("[misago-tpl-footer]")
-            if (footer) {
-              footer.replaceWith(renderTemplate(this.templates.mediaFailedFooter))
-            } else {
-              const upload = attachment.querySelector("[misago-tpl-upload]")
-              upload.replaceWith(renderTemplate(this.templates.otherFailed))
-            }
-          }
-        })
-      }
-
-      if (attachments) {
-        attachments.forEach((attachment) => {
-          try {
-            this._updateUploadUI(attachment, elements[attachment.key])
-            this._createAttachmentIDField(attachment)
-          } catch (error) {
-            console.error(error)
-          }
-        })
-      }
-
-      keys.forEach((key) => (elements[key] = null))
-    } catch (error) {
-      snackbar.error(pgettext("markup editor upload", "Unexpected upload API response"))
-      console.error(error)
-    }
-  }
-
-  _handleUploadError(request) {
-    if (request.status === 0) {
-      snackbar.error(pgettext("markup editor upload", "Site could not be reached"))
-    } else if (request.status >= 400 && request.status < 500) {
-      try {
-        snackbar.error(JSON.parse(request.response).error)
-      } catch(error) {
-        snackbar.error(pgettext("markup editor upload", "Unexpected upload API error response"))
-        console.error(error)
-      }
-    } else {
-      snackbar.error(pgettext("markup editor upload", "Unexpected error during upload"))
-    }
-  }
-
-  _addOnProgressEventListener(request, keys, elements) {
-    request.upload.addEventListener("progress", (event) => {
-      if (event.lengthComputable) {
-        const progress = Math.ceil((event.loaded * 100) / event.total)
-        for (const key of keys) {
-          const progressBar = elements[key].querySelector(".progress-bar")
-          progressBar.setAttribute("aria-valuenow", progress)
-          progressBar.style.width = progress + "%"
-        }
-      }
-    })
   }
 
   _isFileTypeAccepted(file) {
@@ -262,6 +169,108 @@ export default class MarkupEditorUploader {
     return false
   }
 
+  _insertAttachmentsInTextarea(keys, files) {
+    const markup = []
+
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
+      const file = files[i]
+      markup.push("<attachment=" + file.name + ":" + key + ">")
+    }
+
+    if (markup) {
+      const selection = this.editor.getSelection(this.textarea)
+      selection.insert(markup.join("\n"), { whitespace: "\n\n" })
+    }
+  }
+
+  _addOnLoadedEventListener(request, keys, elements) {
+    request.addEventListener("loadend", () => {
+      if (request.readyState === XMLHttpRequest.DONE) {
+        if (request.status === 200) {
+          this._handleUploadSuccess(request, keys, elements)
+        } else {
+          this._handleUploadError(request)
+        }
+      }
+    })
+  }
+
+  _handleUploadSuccess(request, keys, elements) {
+    try {
+      const { attachments, errors } = JSON.parse(request.response)
+
+      this._replaceTextareaPlaceholders(this.textarea, keys, attachments)
+
+      if (errors) {
+        const helpText = this.element.querySelector(
+          "[misago-editor-attachments-help]"
+        )
+        keys.forEach((key) => {
+          const error = errors[key]
+          if (error) {
+            this._updateUploadUIWithError(helpText, key, error)
+          }
+        })
+      }
+
+      if (attachments) {
+        attachments.forEach((attachment) => {
+          try {
+            this._updateUploadUI(attachment, elements[attachment.key])
+            this._createAttachmentIDField(attachment)
+          } catch (error) {
+            console.error(error)
+          }
+        })
+      }
+
+      keys.forEach((key) => (elements[key] = null))
+    } catch (error) {
+      snackbar.error(
+        pgettext("markup editor upload", "Unexpected upload API response")
+      )
+      console.error(error)
+    }
+  }
+
+  _handleUploadError(request) {
+    if (request.status === 0) {
+      snackbar.error(
+        pgettext("markup editor upload", "Site could not be reached")
+      )
+    } else if (request.status >= 400 && request.status < 500) {
+      try {
+        snackbar.error(JSON.parse(request.response).error)
+      } catch (error) {
+        snackbar.error(
+          pgettext(
+            "markup editor upload",
+            "Unexpected upload API error response"
+          )
+        )
+        console.error(error)
+      }
+    } else {
+      snackbar.error(
+        pgettext("markup editor upload", "Unexpected error during upload")
+      )
+    }
+  }
+
+  _addOnProgressEventListener(request, keys, elements) {
+    request.upload.addEventListener("progress", (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.ceil((event.loaded * 100) / event.total)
+        for (const key of keys) {
+          const progressBar = elements[key].querySelector(".progress-bar")
+          progressBar.setAttribute("aria-valuenow", progress)
+          progressBar.style.width = progress + "%"
+        }
+      }
+    })
+  }
+
   _replaceTextareaPlaceholders(textarea, keys, attachments) {
     const results = {}
     keys.forEach((key) => (results[key] = null))
@@ -272,7 +281,7 @@ export default class MarkupEditorUploader {
     }
 
     const selection = this.editor.getSelection(textarea)
-    selection.replaceAttachments(function({ id: key }) {
+    selection.replaceAttachments(function ({ id: key }) {
       const attachment = results[key]
       if (attachment) {
         return "<attachment=" + attachment.name + ":" + attachment.id + ">"
@@ -380,5 +389,28 @@ export default class MarkupEditorUploader {
       )
 
     element.replaceWith(item)
+  }
+
+  _updateUploadUIWithError(helpText, key, error) {
+    const errorTemplate = renderTemplate(this.templates.error, { key, error })
+    helpText.after(errorTemplate)
+
+    const attachment = this.editor.getAttachmentByKey(key)
+    const footer = attachment.querySelector("[misago-tpl-footer]")
+    if (footer) {
+      // Media attachment
+      const template = renderTemplate(this.templates.mediaFailedFooter, { key })
+      footer.replaceWith(template)
+    } else {
+      // Other attachment
+      const upload = attachment.querySelector("[misago-tpl-upload]")
+      const button = upload.closest("li").querySelector("button")
+
+      button.setAttribute("misago-editor-action", "attachment-error-dismiss")
+      button.setAttribute("misago-editor-attachment-key", key)
+      button.removeAttribute("disabled")
+
+      upload.replaceWith(renderTemplate(this.templates.otherFailed))
+    }
   }
 }
