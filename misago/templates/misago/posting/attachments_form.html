@@ -54,6 +54,7 @@
             Visit your {{ settings }} to view all your attachments and manage your available storage.
           {% endblocktranslate %}
         </p>
+        <div misago-editor-attachments-errors></div>
         {% for error in upload_field.errors %}
           <p class="help-block text-danger">{{ error }}</p>
         {% endfor %}

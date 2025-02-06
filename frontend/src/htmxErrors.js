@@ -30,7 +30,7 @@ function handleSendError(event) {
   if (isEventVisible(event)) {
     const message = pgettext(
       "htmx response error",
-      "Site could not be reached."
+      "Site could not be reached"
     )
     error(message)
   }

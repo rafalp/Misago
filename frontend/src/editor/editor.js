@@ -396,6 +396,37 @@ class MarkupEditorSelection {
     this.refocus()
   }
 
+  replaceAttachments(callback) {
+    this.textarea.value = this.textarea.value.replace(
+      /<attachment=(.+?)>/gi,
+      function (match, p1) {
+        if (p1.match(/:/g).length !== 1) {
+          return match
+        }
+  
+        let value = p1.trim()
+        while (value.substring(0, 1) === '"') {
+          value = value.substring(1)
+        }
+        while (value.substring(value.length - 1) === '"') {
+          value = value.substring(0, value.length - 1)
+        }
+  
+        const name = value.substring(0, value.indexOf(":")).trim()
+        const id = value.substring(value.indexOf(":") + 1).trim()
+
+        if (name, id) {
+          const result = callback({ match, name, id })
+          if (typeof result === "string" || result instanceof String) {
+            return result
+          }
+        }
+  
+        return match
+      }
+    )
+  }
+
   refocus() {
     window.setTimeout(() => {
       const scroll = this.textarea.scrollTop
@@ -535,29 +566,13 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
     .closest("[misago-editor-deleted-attachments-name]")
     .getAttribute("misago-editor-deleted-attachments-name")
 
-  selection.textarea.value = selection.textarea.value.replace(
-    /<attachment=(.+?)>/gi,
-    function (match, p1) {
-      if (p1.match(/:/g).length !== 1) {
-        return match
-      }
-
-      let value = p1.trim()
-      while (value.substring(0, 1) === '"') {
-        value = value.substring(1)
-      }
-      while (value.substring(value.length - 1) === '"') {
-        value = value.substring(0, value.length - 1)
-      }
-
-      const id = value.substring(value.indexOf(":") + 1).trim()
-      if (id === attachment) {
-        return ""
-      }
-
-      return match
+  selection.replaceAttachments(function({ id }) {
+    if (id === attachment) {
+      return ""
     }
-  )
+
+    return false
+  })
 
   const list = target.closest("ul")
   const element = target.closest("li")
@@ -586,6 +601,29 @@ editor.setAction("attachment-delete", function ({ target, selection }) {
 
   const attachments = target.closest('[misago-editor="attachments"]')
   attachments.appendChild(input)
+})
+
+editor.setAction("attachment-error-dismiss", function ({ target, selection }) {
+  const key = target.getAttribute("misago-editor-attachment-key")
+
+  selection.replaceAttachments(function(attachment) {
+    if (attachment.id === key) {
+      return ""
+    }
+
+    return false
+  })
+
+  const message = target.closest("p")
+  const attachment = document.querySelector('[misago-editor-upload-key="' + key + '"]')
+
+  message.addEventListener("animationend", ({ animationName }) => {
+    if (animationName === "deleteAttachment") {
+      message.remove()
+    }
+  })
+
+  message.classList.add("deleted")
 })
 
 editor.setAction("formatting-help", function ({ target }) {

@@ -1,7 +1,7 @@
 import { appendCSRFTokenToForm } from "../csrf"
 import getRandomString from "../getRandomString"
 import renderTemplate from "../renderTemplate"
-import { error } from "../snackbars"
+import * as snackbar from "../snackbars"
 
 export default class MarkupEditorUploader {
   constructor(editor, element) {
@@ -16,6 +16,7 @@ export default class MarkupEditorUploader {
     }
 
     this.templates = {
+      error: document.getElementById("attachment-upload-error-template"),
       media: document.getElementById("attachment-media-template"),
       mediaFooter: document.getElementById("attachment-media-footer-template"),
       other: document.getElementById("attachment-other-template"),
@@ -57,7 +58,7 @@ export default class MarkupEditorUploader {
   }
 
   showPermissionDeniedError() {
-    error(pgettext("markup editor upload", "You can't upload attachments"))
+    snackbar.error(pgettext("markup editor upload", "You can't upload attachments"))
   }
 
   prompt(options) {
@@ -112,7 +113,7 @@ export default class MarkupEditorUploader {
       if (this._isFileTypeAccepted(file)) {
         allowedFiles.push(file)
       } else {
-        error(
+        snackbar.error(
           pgettext(
             "markup editor upload",
             "%(name)s: uploaded file type is not allowed."
@@ -142,7 +143,7 @@ export default class MarkupEditorUploader {
 
     const request = new XMLHttpRequest()
 
-    this._addOnLoadEventListener(request, keys, elements)
+    this._addOnLoadedEventListener(request, keys, elements)
     this._addOnProgressEventListener(request, keys, elements)
 
     request.open("POST", this.uploadUrl)
@@ -151,34 +152,68 @@ export default class MarkupEditorUploader {
     return { keys, files: allowedFiles }
   }
 
-  _addOnLoadEventListener(request, keys, elements) {
-    request.addEventListener("load", () => {
-      if (
-        request.readyState === XMLHttpRequest.DONE &&
-        request.status === 200
-      ) {
-        try {
-          const { attachments } = JSON.parse(request.response)
-
-          this._replaceTextareaPlaceholders(this.textarea, keys, attachments)
-
-          if (attachments) {
-            attachments.forEach((attachment) => {
-              try {
-                this._updateFileUI(attachment, elements[attachment.key])
-                this._createAttachmentIDField(attachment)
-              } catch (error) {
-                console.error(error)
-              }
-            })
-          }
-
-          keys.forEach((key) => (elements[key] = null))
-        } catch (error) {
-          console.error(error)
+  _addOnLoadedEventListener(request, keys, elements) {
+    request.addEventListener("loadend", () => {
+      if (request.readyState === XMLHttpRequest.DONE) {
+        if (request.status === 200) {
+          this._handleUploadSuccess(request, keys, elements)
+        } else {
+          this._handleUploadError(request)
         }
       }
     })
+  }
+
+  _handleUploadSuccess(request, keys, elements) {
+    try {
+      const { attachments, errors } = JSON.parse(request.response)
+
+      this._replaceTextareaPlaceholders(this.textarea, keys, attachments)
+
+      if (errors) {
+        const element = this.element.querySelector("[misago-editor-attachments-errors]")
+        keys.forEach((key) => {
+          const error = errors[key]
+          if (error) {
+            const template = renderTemplate(
+              this.templates.error, {key, error}
+            )
+            element.prepend(template)
+          }
+        })
+      }
+
+      if (attachments) {
+        attachments.forEach((attachment) => {
+          try {
+            this._updateFileUI(attachment, elements[attachment.key])
+            this._createAttachmentIDField(attachment)
+          } catch (error) {
+            console.error(error)
+          }
+        })
+      }
+
+      keys.forEach((key) => (elements[key] = null))
+    } catch (error) {
+      snackbar.error(pgettext("markup editor upload", "Unexpected upload API response"))
+      console.error(error)
+    }
+  }
+
+  _handleUploadError(request) {
+    if (request.status === 0) {
+      snackbar.error(pgettext("markup editor upload", "Site could not be reached"))
+    } else if (request.status >= 400 && request.status < 500) {
+      try {
+        snackbar.error(JSON.parse(request.response).error)
+      } catch(error) {
+        snackbar.error(pgettext("markup editor upload", "Unexpected upload API error response"))
+        console.error(error)
+      }
+    } else {
+      snackbar.error(pgettext("markup editor upload", "Unexpected error during upload"))
+    }
   }
 
   _addOnProgressEventListener(request, keys, elements) {
@@ -218,7 +253,6 @@ export default class MarkupEditorUploader {
 
   _replaceTextareaPlaceholders(textarea, keys, attachments) {
     const results = {}
-
     keys.forEach((key) => (results[key] = null))
     if (attachments) {
       attachments.forEach(
@@ -226,34 +260,15 @@ export default class MarkupEditorUploader {
       )
     }
 
-    textarea.value = textarea.value.replace(
-      /<attachment=(.+?)>/gi,
-      function (match, p1) {
-        if (p1.match(/:/g).length !== 1) {
-          return match
-        }
-
-        let value = p1.trim()
-        while (value.substring(0, 1) === '"') {
-          value = value.substring(1)
-        }
-        while (value.substring(value.length - 1) === '"') {
-          value = value.substring(0, value.length - 1)
-        }
-
-        const key = value.substring(value.indexOf(":") + 1).trim()
-        if (key) {
-          const attachment = results[key]
-          if (attachment) {
-            return "<attachment=" + attachment.name + ":" + attachment.id + ">"
-          } else if (attachment === null) {
-            return ""
-          }
-        }
-
-        return match
+    const selection = this.editor.getSelection(textarea)
+    selection.replaceAttachments(function({ id: key }) {
+      const attachment = results[key]
+      if (attachment) {
+        return "<attachment=" + attachment.name + ":" + attachment.id + ">"
+      } else if (attachment === null) {
+        return ""
       }
-    )
+    })
   }
 
   _createFileUI(file, key) {

@@ -1,5 +1,16 @@
 {% load i18n %}
 
+<template id="attachment-upload-error-template">
+  <p class="help-block text-danger">
+    <span misago-tpl-var="error"></span>
+    <button
+      type="button"
+      misago-editor-action="attachment-error-dismiss"
+      misago-tpl-attr="misago-editor-attachment-key:key"
+    >&times;</button>
+  </p>
+</template>
+
 <template id="attachment-media-template">
   <li class="markup-editor-attachments-media-list-item fade-in" misago-tpl-attr="misago-editor-upload-key:key">
     <div class="markup-editor-attachments-media-list-item-preview-video" misago-tpl-if="isVideo">
@@ -45,6 +56,30 @@
 </template>
 
 <template id="attachment-other-template">
+  <li class="markup-editor-attachments-other-list-item uploading" misago-tpl-attr="misago-editor-upload-key:key">
+    <button
+      class="markup-editor-attachments-other-list-item-body"
+      type="button"
+      disabled
+    >
+      <div class="markup-editor-attachments-other-list-item-name" misago-tpl-var="name"></div>
+      <div class="markup-editor-attachments-other-list-item-upload-progress">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </button>
+    <button
+      type="button"
+      class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
+      disabled
+    >
+      <span class="material-icon">delete</span>
+    </button>
+  </li>
+</template>
+
+<template id="attachment-other-error-template">
   <li class="markup-editor-attachments-other-list-item uploading" misago-tpl-attr="misago-editor-upload-key:key">
     <button
       class="markup-editor-attachments-other-list-item-body"
