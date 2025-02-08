@@ -671,3 +671,17 @@ def test_reply_thread_view_shows_error_if_private_thread_is_accessed(
 
     assert_not_contains(response, "Reply to thread", status_code=404)
     assert_not_contains(response, user_private_thread.title, status_code=404)
+
+
+def test_reply_thread_view_displays_attachments_form(user_client, thread):
+    response = user_client.get(
+        reverse(
+            "misago:reply-thread",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, "misago-editor-attachments")

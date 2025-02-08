@@ -223,3 +223,14 @@ def test_start_thread_view_runs_flood_control(
     assert_contains(
         response, "You can&#x27;t post a new message so soon after the previous one."
     )
+
+
+def test_start_thread_view_displays_attachments_form(user_client, default_category):
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(response, "misago-editor-attachments")

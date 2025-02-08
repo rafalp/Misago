@@ -487,3 +487,19 @@ def test_edit_private_thread_view_shows_error_if_thread_post_is_accessed(
 
     assert_not_contains(response, "Edit thread", status_code=404)
     assert_not_contains(response, thread.title, status_code=404)
+
+
+def test_edit_private_thread_view_displays_attachments_form(
+    user_client, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "misago-editor-attachments")

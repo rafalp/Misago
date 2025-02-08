@@ -130,3 +130,9 @@ def test_start_private_thread_view_runs_flood_control(
     assert_contains(
         response, "You can&#x27;t post a new message so soon after the previous one."
     )
+
+
+def test_start_private_thread_view_displays_attachments_form(user_client):
+    response = user_client.get(reverse("misago:start-private-thread"))
+    assert_contains(response, "Start new private thread")
+    assert_contains(response, "misago-editor-attachments")
