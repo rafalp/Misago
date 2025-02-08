@@ -904,6 +904,52 @@ def test_post_form_accept_image_attachments_returns_empty_str_if_nothing_is_allo
     assert not form.accept_image_attachments
 
 
+@override_dynamic_settings(
+    allowed_attachment_types=AllowedAttachments.IMAGES.value,
+    restrict_attachments_extensions="jpg png",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.REQUIRE.value,
+)
+def test_post_form_accept_image_attachments_returns_only_required_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+
+    types = form.accept_image_attachments
+    assert "jpg" in types
+    assert "png" in types
+    assert "jpeg" not in types
+    assert "gif" not in types
+    assert "mp4" not in types
+    assert "pdf" not in types
+
+
+@override_dynamic_settings(
+    allowed_attachment_types=AllowedAttachments.IMAGES.value,
+    restrict_attachments_extensions="jpg gif",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.DISALLOW.value,
+)
+def test_post_form_accept_image_attachments_excludes_disallowed_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+
+    types = form.accept_image_attachments
+    assert "jpeg" in types
+    assert "png" in types
+    assert "jpg" not in types
+    assert "gif" not in types
+    assert "mp4" not in types
+    assert "pdf" not in types
+
+
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.ALL.value)
 def test_post_form_accept_video_attachments_returns_all_video_types(
     rf, user, dynamic_settings
@@ -960,6 +1006,48 @@ def test_post_form_accept_video_attachments_returns_empty_str_if_nothing_is_allo
     form = PostForm(request=request)
 
     assert not form.accept_video_attachments
+
+
+@override_dynamic_settings(
+    restrict_attachments_extensions="mp4",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.REQUIRE.value,
+)
+def test_post_form_accept_video_attachments_returns_only_required_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+
+    types = form.accept_video_attachments
+    assert "mp4" in types
+    assert "webm" not in types
+    assert "jpg" not in types
+    assert "gif" not in types
+    assert "pdf" not in types
+
+
+@override_dynamic_settings(
+    restrict_attachments_extensions="mp4",
+    restrict_attachments_extensions_type=AttachmentTypeRestriction.DISALLOW.value,
+)
+def test_post_form_accept_video_attachments_excludes_disallowed_types(
+    rf, user, dynamic_settings
+):
+    request = rf.get("/")
+    request.settings = dynamic_settings
+    request.user = user
+
+    form = PostForm(request=request)
+
+    types = form.accept_video_attachments
+    assert "webm" in types
+    assert "mp4" not in types
+    assert "jpg" not in types
+    assert "gif" not in types
+    assert "pdf" not in types
 
 
 def test_post_form_attachments_media_returns_media_attachments_only(

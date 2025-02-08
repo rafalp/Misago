@@ -190,8 +190,10 @@ export default class MarkupEditorUploader {
         if (request.status === 200) {
           this._handleUploadSuccess(request, keys, elements)
         } else {
-          this._handleUploadError(request)
+          this._handleUploadError(request, keys)
         }
+
+        keys.forEach((key) => (elements[key] = null))
       }
     })
   }
@@ -209,7 +211,7 @@ export default class MarkupEditorUploader {
         keys.forEach((key) => {
           const error = errors[key]
           if (error) {
-            this._updateUploadUIWithError(helpText, key, error)
+            this._updateUploadUIWithError(key, helpText, error)
           }
         })
       }
@@ -225,7 +227,6 @@ export default class MarkupEditorUploader {
         })
       }
 
-      keys.forEach((key) => (elements[key] = null))
     } catch (error) {
       snackbar.error(
         pgettext("markup editor upload", "Unexpected upload API response")
@@ -234,7 +235,7 @@ export default class MarkupEditorUploader {
     }
   }
 
-  _handleUploadError(request) {
+  _handleUploadError(request, keys) {
     if (request.status === 0) {
       snackbar.error(
         pgettext("markup editor upload", "Site could not be reached")
@@ -256,6 +257,10 @@ export default class MarkupEditorUploader {
         pgettext("markup editor upload", "Unexpected error during upload")
       )
     }
+
+    keys.forEach(key => {
+      this._updateUploadUIWithError(key)
+    })
   }
 
   _addOnProgressEventListener(request, keys, elements) {
@@ -391,9 +396,10 @@ export default class MarkupEditorUploader {
     element.replaceWith(item)
   }
 
-  _updateUploadUIWithError(helpText, key, error) {
-    const errorTemplate = renderTemplate(this.templates.error, { key, error })
-    helpText.after(errorTemplate)
+  _updateUploadUIWithError(key, helpText, error) {
+    if (error) {
+      this._createErrorMessage(key, error, helpText)
+    }
 
     const attachment = this.editor.getAttachmentByKey(key)
     const footer = attachment.querySelector("[misago-tpl-footer]")
@@ -412,5 +418,10 @@ export default class MarkupEditorUploader {
 
       upload.replaceWith(renderTemplate(this.templates.otherFailed))
     }
+  }
+
+  _createErrorMessage(key, error, insertAfter) {
+    const errorTemplate = renderTemplate(this.templates.error, { key, error })
+    insertAfter.after(errorTemplate)
   }
 }
