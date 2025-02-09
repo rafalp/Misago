@@ -1,6 +1,8 @@
 from django.urls import reverse
 
-from ...permissions.enums import CategoryPermission
+from ...attachments.enums import AllowedAttachments
+from ...conf.test import override_dynamic_settings
+from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 
@@ -554,4 +556,40 @@ def test_edit_thread_view_displays_attachments_form(user_client, user_thread):
         ),
     )
     assert_contains(response, "Edit thread")
-    assert_contains(response, "misago-editor-attachments")
+    assert_contains(response, "misago-editor-attachments=")
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_edit_thread_view_hides_attachments_form_if_uploads_are_disabled(
+    user_client, user_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Edit thread")
+    assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_edit_thread_view_hides_attachments_form_if_user_has_no_group_permission(
+    members_group, user_client, user_thread
+):
+    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Edit thread")
+    assert_not_contains(response, "misago-editor-attachments=")

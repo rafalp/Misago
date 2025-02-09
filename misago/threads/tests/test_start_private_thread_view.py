@@ -1,6 +1,9 @@
 from django.urls import reverse
 
-from ...test import assert_contains
+from ...attachments.enums import AllowedAttachments
+from ...conf.test import override_dynamic_settings
+from ...permissions.enums import CanUploadAttachments
+from ...test import assert_contains, assert_not_contains
 from ..models import Thread
 
 
@@ -135,4 +138,24 @@ def test_start_private_thread_view_runs_flood_control(
 def test_start_private_thread_view_displays_attachments_form(user_client):
     response = user_client.get(reverse("misago:start-private-thread"))
     assert_contains(response, "Start new private thread")
-    assert_contains(response, "misago-editor-attachments")
+    assert_contains(response, "misago-editor-attachments=")
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_start_private_thread_view_hides_attachments_form_if_uploads_are_disabled(
+    user_client, default_category
+):
+    response = user_client.get(reverse("misago:start-private-thread"))
+    assert_contains(response, "Start new private thread")
+    assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_start_private_thread_view_hides_attachments_form_if_user_has_no_group_permission(
+    members_group, user_client
+):
+    members_group.can_upload_attachments = CanUploadAttachments.THREADS
+    members_group.save()
+
+    response = user_client.get(reverse("misago:start-private-thread"))
+    assert_contains(response, "Start new private thread")
+    assert_not_contains(response, "misago-editor-attachments=")

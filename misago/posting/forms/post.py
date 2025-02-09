@@ -74,7 +74,6 @@ class PostForm(PostingForm):
     @property
     def show_attachments_upload(self) -> bool:
         settings = self.request.settings
-
         return (
             self.can_upload_attachments
             and settings.allowed_attachment_types != AllowedAttachments.NONE

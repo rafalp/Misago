@@ -3,8 +3,9 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
+from ...attachments.enums import AllowedAttachments
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CategoryPermission
+from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
@@ -684,4 +685,40 @@ def test_reply_thread_view_displays_attachments_form(user_client, thread):
         ),
     )
     assert_contains(response, "Reply to thread")
-    assert_contains(response, "misago-editor-attachments")
+    assert_contains(response, "misago-editor-attachments=")
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_reply_thread_view_hides_attachments_form_if_uploads_are_disabled(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:reply-thread",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Reply to thread")
+    assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_reply_thread_view_hides_attachments_form_if_user_has_no_group_permission(
+    members_group, user_client, thread
+):
+    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:reply-thread",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Reply to thread")
+    assert_not_contains(response, "misago-editor-attachments=")

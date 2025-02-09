@@ -1,8 +1,10 @@
 from django.urls import reverse
 
-from ...permissions.enums import CategoryPermission
+from ...attachments.enums import AllowedAttachments
+from ...conf.test import override_dynamic_settings
+from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...test import assert_contains
+from ...test import assert_contains, assert_not_contains
 from ..models import Thread
 
 
@@ -233,4 +235,53 @@ def test_start_thread_view_displays_attachments_form(user_client, default_catego
         ),
     )
     assert_contains(response, "Start new thread")
-    assert_contains(response, "misago-editor-attachments")
+    assert_contains(response, "misago-editor-attachments=")
+
+
+def test_start_thread_view_hides_attachments_form_if_user_has_no_category_permission(
+    members_group, user_client, default_category
+):
+    CategoryGroupPermission.objects.filter(
+        category=default_category,
+        group=members_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_not_contains(response, "misago-editor-attachments=")
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_start_thread_view_hides_attachments_form_if_uploads_are_disabled(
+    user_client, default_category
+):
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_start_thread_view_hides_attachments_form_if_user_has_no_group_permission(
+    members_group, user_client, default_category
+):
+    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_not_contains(response, "misago-editor-attachments=")
