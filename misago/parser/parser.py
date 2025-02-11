@@ -46,11 +46,15 @@ class Parser:
         self._reserved_patterns = {}
 
     def __call__(self, markup: str) -> list[dict]:
+        markup = self.normalize_newlines(markup)
         markup = self.reserve_patterns(markup)
         ast = self.parse_blocks(markup, [])
         for post_processor in self.post_processors:
             ast = post_processor(self, ast)
         return ast
+
+    def normalize_newlines(self, markup: str) -> str:
+        return markup.replace("\r\n", "\n").replace("\r", "\n")
 
     def reserve_patterns(self, markup: str) -> str:
         if not "`" in markup:

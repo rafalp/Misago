@@ -32,8 +32,7 @@ def render_ast_to_plaintext(
         PlainTextFormat.SEARCH_DOCUMENT,
     ):
         return re.sub("\s\s+", " ", text)
-
-    return text
+    return text.replace("\n", "\r\n")
 
 
 def render_inline_ast_to_plaintext(

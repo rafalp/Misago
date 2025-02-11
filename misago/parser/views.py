@@ -121,13 +121,13 @@ FORMATS = [
     (
         pgettext_lazy("formatting help", "Unordered list"),
         pgettext_lazy(
-            "formatting help", "- Lorem ipsum\n- Dolor met\n- Vulputate lectus"
+            "formatting help", "- Lorem ipsum\r\n- Dolor met\r\n- Vulputate lectus"
         ),
     ),
     (
         pgettext_lazy("formatting help", "Ordered list"),
         pgettext_lazy(
-            "formatting help", "1. Lorem ipsum\n2. Dolor met\n3. Vulputate lectus"
+            "formatting help", "1. Lorem ipsum\r\n2. Dolor met\r\n3. Vulputate lectus"
         ),
     ),
     (
@@ -136,17 +136,17 @@ FORMATS = [
     ),
     (
         pgettext_lazy("formatting help", "Quote text (BBCode)"),
-        pgettext_lazy("formatting help", "[quote]\nQuoted text\n[/quote]"),
+        pgettext_lazy("formatting help", "[quote]\r\nQuoted text\r\n[/quote]"),
     ),
     (
         pgettext_lazy("formatting help", "Quote text with author (BBCode)"),
         pgettext_lazy(
-            "formatting help", '[quote="Quote author"]\nQuoted text\n[/quote]'
+            "formatting help", '[quote="Quote author"]\r\nQuoted text\r\n[/quote]'
         ),
     ),
     (
         pgettext_lazy("formatting help", "Spoiler"),
-        pgettext_lazy("formatting help", "[spoiler]\nSecret text\n[/spoiler]"),
+        pgettext_lazy("formatting help", "[spoiler]\r\nSecret text\r\n[/spoiler]"),
     ),
     (
         pgettext_lazy("formatting help", "Inline code"),
@@ -154,30 +154,30 @@ FORMATS = [
     ),
     (
         pgettext_lazy("formatting help", "Code block"),
-        pgettext_lazy("formatting help", '```\nalert("Hello world!");\n```'),
+        pgettext_lazy("formatting help", '```\r\nalert("Hello world!");\r\n```'),
     ),
     (
         pgettext_lazy("formatting help", "Code block with syntax highlighting"),
-        pgettext_lazy("formatting help", '```python\nalert("Hello world!");\n```'),
+        pgettext_lazy("formatting help", '```python\r\nalert("Hello world!");\r\n```'),
     ),
     (
         pgettext_lazy("formatting help", "Code block (BBCode)"),
-        pgettext_lazy("formatting help", '[code]\nalert("Hello world!");\n[/code]'),
+        pgettext_lazy("formatting help", '[code]\r\nalert("Hello world!");\r\n[/code]'),
     ),
     (
         pgettext_lazy(
             "formatting help", "Code block with syntax highlighting (BBCode)"
         ),
         pgettext_lazy(
-            "formatting help", '[code=python]\nprint("Hello world!");\n[/code]'
+            "formatting help", '[code=python]\r\nprint("Hello world!");\r\n[/code]'
         ),
     ),
     (
         pgettext_lazy("formatting help", "Horizontal rule"),
-        pgettext_lazy("formatting help", "Lorem ipsum\n- - -\nDolor met"),
+        pgettext_lazy("formatting help", "Lorem ipsum\r\n- - -\r\nDolor met"),
     ),
     (
         pgettext_lazy("formatting help", "Horizontal rule (BBCode)"),
-        pgettext_lazy("formatting help", "Lorem ipsum\n[hr]\nDolor met"),
+        pgettext_lazy("formatting help", "Lorem ipsum\r\n[hr]\r\nDolor met"),
     ),
 ]
