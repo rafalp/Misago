@@ -1,9 +1,11 @@
 from datetime import timedelta
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.utils import timezone
 
 from ...attachments.enums import AllowedAttachments
+from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
@@ -722,3 +724,33 @@ def test_reply_thread_view_hides_attachments_form_if_user_has_no_group_permissio
     )
     assert_contains(response, "Reply to thread")
     assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_reply_thread_view_uploads_attachment_on_submit(
+    user, user_client, thread, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "How's going?",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert response.status_code == 302
+
+    thread.refresh_from_db()
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id == thread.category_id
+    assert attachment.thread_id == thread.id
+    assert attachment.post_id == thread.last_post_id
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"

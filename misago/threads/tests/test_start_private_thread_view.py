@@ -1,6 +1,8 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from ...attachments.enums import AllowedAttachments
+from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
 from ...test import assert_contains, assert_not_contains
@@ -159,3 +161,35 @@ def test_start_private_thread_view_hides_attachments_form_if_user_has_no_group_p
     response = user_client.get(reverse("misago:start-private-thread"))
     assert_contains(response, "Start new private thread")
     assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_start_private_thread_view_uploads_attachment_on_submit(
+    user, other_user, user_client, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"id": thread.pk, "slug": thread.slug}
+    )
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id == thread.category_id
+    assert attachment.thread_id == thread.id
+    assert attachment.post_id == thread.first_post_id
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"

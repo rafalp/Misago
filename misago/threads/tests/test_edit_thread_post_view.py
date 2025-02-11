@@ -1,6 +1,8 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from ...attachments.enums import AllowedAttachments
+from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
@@ -636,3 +638,35 @@ def test_edit_thread_post_view_hides_attachments_form_if_user_has_no_group_permi
     )
     assert_contains(response, "Edit post")
     assert_not_contains(response, "misago-editor-attachments=")
+
+
+def test_edit_thread_post_view_uploads_attachment_on_submit(
+    user, user_client, user_thread, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        ),
+        {
+            "posting-post-post": "Edited post",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert response.status_code == 302
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id == user_thread.category_id
+    assert attachment.thread_id == user_thread.id
+    assert attachment.post_id == user_thread.first_post_id
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
