@@ -22,8 +22,7 @@ class PostForm(PostingForm):
     form_prefix = "posting-post"
     template_name = "misago/posting/post_form.html"
 
-    upload_attachments = "upload_attachments"
-
+    upload_action = "upload_attachments"
     attachment_ids_field = "attachment_id"
     deleted_attachment_ids_field = "deleted_attachment_id"
     delete_attachment_field = "delete_attachment"
@@ -256,7 +255,7 @@ class PostForm(PostingForm):
         return bool(
             request.method == "POST"
             and (
-                request.POST.get(cls.upload_attachments)
+                request.POST.get(cls.upload_action)
                 or request.POST.get(cls.delete_attachment_field)
             )
         )

@@ -37,7 +37,7 @@
           <button class="btn btn-primary" type="submit">
             {% translate "Start thread" context "start thread submit btn" %}
           </button>
-          <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+          <button class="btn btn-secondary" type="submit" name="{{ formset.preview_action }}" value="true" formnovalidate>
             {% translate "Preview" context "start thread preview btn" %}
           </button>
         </div>

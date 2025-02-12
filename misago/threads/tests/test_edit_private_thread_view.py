@@ -5,6 +5,8 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
+from ...posting.forms import PostForm
+from ...posting.formsets import PostingFormset
 from ...test import assert_contains, assert_not_contains
 
 
@@ -344,7 +346,10 @@ def test_edit_private_thread_view_previews_message(user_client, user_private_thr
                 "slug": user_private_thread.slug,
             },
         ),
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            PostingFormset.preview_action: "true",
+            "posting-post-post": "How's going?",
+        },
     )
     assert_contains(response, "Edit thread")
     assert_contains(response, "Message preview")
@@ -361,7 +366,10 @@ def test_edit_private_thread_view_previews_message_in_htmx(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            PostingFormset.preview_action: "true",
+            "posting-post-post": "How's going?",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Edit thread")
@@ -380,7 +388,10 @@ def test_edit_private_thread_view_previews_message_inline_in_htmx(
             },
         )
         + "?inline=true",
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            PostingFormset.preview_action: "true",
+            "posting-post-post": "How's going?",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Message preview")

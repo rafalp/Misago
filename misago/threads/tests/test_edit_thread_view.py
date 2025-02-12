@@ -6,6 +6,8 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...posting.forms import PostForm
+from ...posting.formsets import PostingFormset
 from ...test import assert_contains, assert_not_contains
 
 
@@ -420,7 +422,10 @@ def test_edit_thread_view_previews_message(user_client, user_thread):
             "misago:edit-thread",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            "posting-post-post": "How's going?",
+            PostingFormset.preview_action: "true",
+        },
     )
     assert_contains(response, "Edit thread")
     assert_contains(response, "Message preview")
@@ -432,7 +437,10 @@ def test_edit_thread_view_previews_message_in_htmx(user_client, user_thread):
             "misago:edit-thread",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            "posting-post-post": "How's going?",
+            PostingFormset.preview_action: "true",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Edit thread")
@@ -446,7 +454,10 @@ def test_edit_thread_view_previews_message_inline_in_htmx(user_client, user_thre
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         )
         + "?inline=true",
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            "posting-post-post": "How's going?",
+            PostingFormset.preview_action: "true",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Message preview")

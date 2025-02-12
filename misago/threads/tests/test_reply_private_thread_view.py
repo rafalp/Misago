@@ -8,6 +8,8 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
+from ...posting.forms import PostForm
+from ...posting.formsets import PostingFormset
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_not_contains
@@ -242,7 +244,10 @@ def test_reply_private_thread_view_previews_message(
                 "slug": other_user_private_thread.slug,
             },
         ),
-        {"posting-post-post": "How's going?", "preview": "true"},
+        {
+            PostingFormset.preview_action: "true",
+            "posting-post-post": "How's going?",
+        },
     )
     assert_contains(response, "Reply to thread")
     assert_contains(response, "Message preview")
@@ -260,8 +265,8 @@ def test_reply_private_thread_view_previews_message_in_htmx(
             },
         ),
         {
+            PostingFormset.preview_action: "true",
             "posting-post-post": "How's going?",
-            "preview": "true",
         },
         headers={"hx-request": "true"},
     )
@@ -281,9 +286,9 @@ def test_reply_private_thread_view_previews_message_in_quick_reply(
             },
         ),
         {
+            PostingFormset.preview_action: "true",
             "posting-post-post": "How's going?",
             "quick_reply": "true",
-            "preview": "true",
         },
     )
     assert_contains(response, "Post reply")
@@ -302,9 +307,9 @@ def test_reply_private_thread_view_previews_message_in_quick_reply_with_htmx(
             },
         ),
         {
+            PostingFormset.preview_action: "true",
             "posting-post-post": "How's going?",
             "quick_reply": "true",
-            "preview": "true",
         },
         headers={"hx-request": "true"},
     )
@@ -491,8 +496,8 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_in_pr
             },
         ),
         {
+            PostingFormset.preview_action: "true",
             "posting-post-post": "Reply contents",
-            "preview": "true",
         },
     )
     assert response.status_code == 200
@@ -766,3 +771,75 @@ def test_reply_private_thread_view_uploads_attachment_on_submit(
     assert attachment.uploader_id == user.id
     assert not attachment.is_deleted
     assert attachment.name == "test.txt"
+
+
+def test_reply_private_thread_view_uploads_attachment_on_preview(
+    user, user_client, other_user_private_thread, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            PostingFormset.preview_action: "true",
+            "posting-post-post": "How's going?",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, f'value="{attachment.id}"')
+
+
+def test_reply_private_thread_view_uploads_attachment_on_upload(
+    user, user_client, other_user_private_thread, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            PostForm.upload_action: "true",
+            "posting-post-post": "How's going?",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, f'value="{attachment.id}"')

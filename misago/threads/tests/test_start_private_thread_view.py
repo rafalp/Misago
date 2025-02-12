@@ -5,6 +5,8 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
+from ...posting.forms import PostForm
+from ...posting.formsets import PostingFormset
 from ...test import assert_contains, assert_not_contains
 from ..models import Thread
 
@@ -68,9 +70,9 @@ def test_start_private_thread_view_previews_message(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
+            PostingFormset.preview_action: "true",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "preview": "true",
         },
     )
     assert_contains(response, "Start new private thread")
@@ -193,3 +195,67 @@ def test_start_private_thread_view_uploads_attachment_on_submit(
     assert attachment.uploader_id == user.id
     assert not attachment.is_deleted
     assert attachment.name == "test.txt"
+
+
+def test_start_private_thread_view_uploads_attachment_on_preview(
+    user, other_user, user_client, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            PostingFormset.preview_action: "true",
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, f'value="{attachment.id}"')
+
+
+def test_start_private_thread_view_uploads_attachment_on_upload(
+    user, other_user, user_client, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            PostForm.upload_action: "true",
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, f'value="{attachment.id}"')

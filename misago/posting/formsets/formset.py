@@ -7,6 +7,8 @@ from ..state.base import PostingState
 
 
 class PostingFormset(Formset):
+    preview_action: str = "preview"
+
     errors: list[ValidationError]
 
     def __init__(self):
@@ -34,7 +36,7 @@ class PostingFormset(Formset):
         self.errors.append(error)
 
     def is_request_preview(self, request: HttpRequest) -> bool:
-        return bool(request.method == "POST" and request.POST.get("preview"))
+        return bool(request.method == "POST" and request.POST.get(self.preview_action))
 
     def is_request_upload(self, request: HttpRequest) -> bool:
         if request.method == "POST":
