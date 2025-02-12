@@ -587,3 +587,77 @@ def test_edit_private_thread_view_uploads_attachment_on_submit(
     assert attachment.uploader_id == user.id
     assert not attachment.is_deleted
     assert attachment.name == "test.txt"
+
+
+def test_edit_private_thread_view_uploads_attachment_on_preview(
+    user, user_client, user_private_thread, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            PostingFormset.preview_action: "true",
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, f'value="{attachment.id}"')
+
+
+def test_edit_private_thread_view_uploads_attachment_on_upload(
+    user, user_client, user_private_thread, teardown_attachments
+):
+    assert not Attachment.objects.exists()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            PostForm.upload_action: "true",
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+            "posting-post-upload": [
+                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
+            ],
+        },
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    attachment = Attachment.objects.get(uploader=user)
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.uploader_id == user.id
+    assert not attachment.is_deleted
+    assert attachment.name == "test.txt"
+
+    assert_contains(response, attachment.name)
+    assert_contains(response, f'value="{attachment.id}"')
