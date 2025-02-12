@@ -6,7 +6,7 @@ from ...attachments.enums import AllowedAttachments
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
 from ...permissions.proxy import UserPermissionsProxy
-from ..forms import PostingForm
+from ..forms import PostForm, PostingForm
 from ..formsets import (
     PostingFormset,
     get_edit_private_thread_formset,
@@ -37,7 +37,7 @@ def test_posting_formset_is_request_preview_method_returns_false_for_post_reques
 
 
 def test_posting_formset_is_request_preview_method_returns_true_for_post_request(rf):
-    request = rf.post("/", {"preview": "1"})
+    request = rf.post("/", {PostingFormset.preview_action: "1"})
     formset = PostingFormset()
     assert formset.is_request_preview(request)
 
@@ -52,7 +52,7 @@ def test_posting_formset_is_request_upload_method_returns_false_for_not_post_req
 
 class UploadForm(PostingForm):
     def is_request_upload(self, request: HttpRequest) -> bool:
-        return bool(request.method == "POST" and request.POST.get("upload_attachments"))
+        return PostForm.is_request_upload(request)
 
 
 def test_posting_formset_is_request_upload_method_returns_false_for_post_request_without_upload(
@@ -68,7 +68,7 @@ def test_posting_formset_is_request_upload_method_returns_false_for_post_request
 def test_posting_formset_is_request_upload_method_returns_true_for_post_request_with_upload(
     rf,
 ):
-    request = rf.post("/", {"upload_attachments": "1"})
+    request = rf.post("/", {PostForm.upload_action: "1"})
     formset = PostingFormset()
     formset.add_form(UploadForm(prefix="test"))
 

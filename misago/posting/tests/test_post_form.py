@@ -1298,7 +1298,7 @@ def test_post_form_is_request_upload_returns_false_for_regular_post_request(rf):
 
 
 def test_post_form_is_request_upload_returns_true_if_upload_button_was_clicked(rf):
-    request = rf.post("/", {PostForm.upload_attachments: "1"})
+    request = rf.post("/", {PostForm.upload_action: "1"})
     assert PostForm.is_request_upload(request)
 
 
