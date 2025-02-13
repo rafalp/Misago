@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.utils import timezone
@@ -830,8 +831,11 @@ def test_reply_thread_view_uploads_attachment_on_upload(
     assert_contains(response, f'value="{attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_reply_thread_view_displays_image_attachment(
-    user_client, thread, user_attachment
+    action_name, user_client, thread, user_attachment
 ):
     user_attachment.name = "image-attachment.png"
     user_attachment.slug = "image-attachment-png"
@@ -846,7 +850,7 @@ def test_reply_thread_view_displays_image_attachment(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-post-post": "How's going?",
         },
@@ -859,8 +863,11 @@ def test_reply_thread_view_displays_image_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_reply_thread_view_displays_image_with_thumbnail_attachment(
-    user_client, thread, user_attachment
+    action_name, user_client, thread, user_attachment
 ):
     user_attachment.name = "image-attachment.png"
     user_attachment.slug = "image-attachment-png"
@@ -877,7 +884,7 @@ def test_reply_thread_view_displays_image_with_thumbnail_attachment(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-post-post": "How's going?",
         },
@@ -890,8 +897,11 @@ def test_reply_thread_view_displays_image_with_thumbnail_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_reply_thread_view_displays_video_attachment(
-    user_client, thread, user_attachment
+    action_name, user_client, thread, user_attachment
 ):
     user_attachment.name = "video-attachment.mp4"
     user_attachment.slug = "video-attachment-mp4"
@@ -905,7 +915,7 @@ def test_reply_thread_view_displays_video_attachment(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-post-post": "How's going?",
         },
@@ -918,8 +928,11 @@ def test_reply_thread_view_displays_video_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_reply_thread_view_displays_file_attachment(
-    user_client, thread, user_attachment
+    action_name, user_client, thread, user_attachment
 ):
     user_attachment.name = "document-attachment.pdf"
     user_attachment.slug = "document-attachment-pdf"
@@ -933,7 +946,7 @@ def test_reply_thread_view_displays_file_attachment(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-post-post": "How's going?",
         },

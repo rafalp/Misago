@@ -1,3 +1,4 @@
+import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
@@ -261,8 +262,11 @@ def test_start_private_thread_view_uploads_attachment_on_upload(
     assert_contains(response, f'value="{attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_start_private_thread_view_displays_image_attachment(
-    other_user, user_client, user_attachment
+    action_name, other_user, user_client, user_attachment
 ):
     user_attachment.name = "image-attachment.png"
     user_attachment.slug = "image-attachment-png"
@@ -274,7 +278,7 @@ def test_start_private_thread_view_displays_image_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
@@ -289,8 +293,11 @@ def test_start_private_thread_view_displays_image_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
-    other_user, user_client, user_attachment
+    action_name, other_user, user_client, user_attachment
 ):
     user_attachment.name = "image-attachment.png"
     user_attachment.slug = "image-attachment-png"
@@ -304,7 +311,7 @@ def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
@@ -319,8 +326,11 @@ def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_start_private_thread_view_displays_video_attachment(
-    other_user, user_client, user_attachment
+    action_name, other_user, user_client, user_attachment
 ):
     user_attachment.name = "video-attachment.mp4"
     user_attachment.slug = "video-attachment-mp4"
@@ -331,7 +341,7 @@ def test_start_private_thread_view_displays_video_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
@@ -346,8 +356,11 @@ def test_start_private_thread_view_displays_video_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
 def test_start_private_thread_view_displays_file_attachment(
-    other_user, user_client, user_attachment
+    action_name, other_user, user_client, user_attachment
 ):
     user_attachment.name = "document-attachment.pdf"
     user_attachment.slug = "document-attachment-pdf"
@@ -358,7 +371,7 @@ def test_start_private_thread_view_displays_file_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
