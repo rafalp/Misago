@@ -575,3 +575,31 @@ def test_start_thread_view_adds_attachment_to_deleted_list(
     assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
     assert_not_contains(response, user_attachment.name)
     assert_not_contains(response, user_attachment.get_absolute_url())
+
+
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
+def test_start_thread_view_maintains_deleted_attachments_list(
+    action_name, user_client, default_category, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            action_name: "true",
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(user_attachment.id)],
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
+    assert_not_contains(response, user_attachment.name)
+    assert_not_contains(response, user_attachment.get_absolute_url())
