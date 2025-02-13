@@ -991,3 +991,38 @@ def test_edit_thread_post_view_maintains_deleted_attachments_list(
     assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
     assert_not_contains(response, user_attachment.name)
     assert_not_contains(response, user_attachment.get_absolute_url())
+
+
+def test_edit_thread_post_view_deletes_attachment_on_submit(
+    user_client, user_thread, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(user_attachment.id)],
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert response.status_code == 302
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+        )
+        + f"#post-{user_thread.first_post_id}"
+    )
+
+    user_attachment.refresh_from_db()
+    assert user_attachment.category_id is None
+    assert user_attachment.thread_id is None
+    assert user_attachment.post_id is None
+    assert user_attachment.is_deleted

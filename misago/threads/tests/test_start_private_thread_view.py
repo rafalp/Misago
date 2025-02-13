@@ -457,3 +457,30 @@ def test_start_private_thread_view_maintains_deleted_attachments_list(
     assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
     assert_not_contains(response, user_attachment.name)
     assert_not_contains(response, user_attachment.get_absolute_url())
+
+
+def test_start_private_thread_view_deletes_attachment_on_submit(
+    other_user, user_client, user_attachment
+):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(user_attachment.id)],
+            "posting-invite-users-users": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"id": thread.pk, "slug": thread.slug}
+    )
+
+    user_attachment.refresh_from_db()
+    assert user_attachment.category_id is None
+    assert user_attachment.thread_id is None
+    assert user_attachment.post_id is None
+    assert user_attachment.is_deleted

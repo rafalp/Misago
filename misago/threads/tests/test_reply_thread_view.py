@@ -1030,3 +1030,37 @@ def test_reply_thread_view_maintains_deleted_attachments_list(
     assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
     assert_not_contains(response, user_attachment.name)
     assert_not_contains(response, user_attachment.get_absolute_url())
+
+
+def test_reply_thread_view_deletes_attachment_on_submit(
+    user_client, thread, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(user_attachment.id)],
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread.refresh_from_db()
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.pk, "slug": thread.slug},
+        )
+        + f"#post-{thread.last_post_id}"
+    )
+
+    user_attachment.refresh_from_db()
+    assert user_attachment.category_id is None
+    assert user_attachment.thread_id is None
+    assert user_attachment.post_id is None
+    assert user_attachment.is_deleted
