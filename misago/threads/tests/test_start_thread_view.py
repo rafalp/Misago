@@ -525,7 +525,7 @@ def test_start_thread_view_displays_file_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
-def test_start_thread_view_updates_unused_attachment_on_submit(
+def test_start_view_associates_unused_attachment_on_submit(
     user_client, default_category, user_attachment
 ):
     response = user_client.post(

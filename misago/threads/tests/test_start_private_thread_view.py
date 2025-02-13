@@ -385,7 +385,7 @@ def test_start_private_thread_view_displays_file_attachment(
     assert_contains(response, f'value="{user_attachment.id}"')
 
 
-def test_start_private_thread_view_updates_unused_attachment_on_submit(
+def test_start_private_thread_view_associates_unused_attachment_on_submit(
     other_user, user_client, user_attachment
 ):
     response = user_client.post(
