@@ -409,7 +409,7 @@ def test_start_thread_view_displays_image_attachment(
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
@@ -441,7 +441,7 @@ def test_start_thread_view_displays_image_with_thumbnail_attachment(
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
@@ -470,7 +470,7 @@ def test_start_thread_view_displays_video_attachment(
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
@@ -499,7 +499,7 @@ def test_start_thread_view_displays_file_attachment(
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",

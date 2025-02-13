@@ -274,7 +274,7 @@ def test_start_private_thread_view_displays_image_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
@@ -304,7 +304,7 @@ def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
@@ -331,7 +331,7 @@ def test_start_private_thread_view_displays_video_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
@@ -358,7 +358,7 @@ def test_start_private_thread_view_displays_file_attachment(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            PostForm.upload_action: "true",
+            PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
             "posting-invite-users-users": other_user.username,
             "posting-title-title": "Hello world",
