@@ -117,3 +117,67 @@ def test_parser_parses_line_breaks_surrounded_by_spaces():
             ],
         },
     ]
+
+
+def test_parser_parses_crlf_line_break():
+    result = parse("Paragraph with\r\na line break.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Paragraph with"},
+                {"type": "line-break"},
+                {"type": "text", "text": "a line break."},
+            ],
+        },
+    ]
+
+
+def test_parser_parses_crlf_line_breaks_surrounded_by_spaces():
+    result = parse("Paragraph with  \r\n   a line break.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Paragraph with"},
+                {"type": "line-break"},
+                {"type": "text", "text": "a line break."},
+            ],
+        },
+    ]
+
+
+def test_parser_parses_crlf_two_paragraphs():
+    result = parse("First paragraph.\r\n\r\nSecond paragraph.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "First paragraph."},
+            ],
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Second paragraph."},
+            ],
+        },
+    ]
+
+
+def test_parser_parses_crlf_skips_extra_linebreaks_between_blocks():
+    result = parse("First paragraph.\r\n\r\n\r\n\r\nSecond paragraph.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "First paragraph."},
+            ],
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Second paragraph."},
+            ],
+        },
+    ]

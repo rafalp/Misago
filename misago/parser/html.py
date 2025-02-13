@@ -17,7 +17,8 @@ def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) 
         node_html = render_ast_node_to_html(context, ast_node, metadata)
         if node_html:
             html += node_html
-    return html
+
+    return html.replace("\n", "\r\n")
 
 
 def render_ast_node_to_html(
