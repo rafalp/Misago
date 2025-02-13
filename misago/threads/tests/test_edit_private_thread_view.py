@@ -837,3 +837,57 @@ def test_edit_private_thread_view_associates_unused_attachment_on_submit(
     assert user_attachment.thread_id == user_private_thread.id
     assert user_attachment.post_id == user_private_thread.first_post_id
     assert not user_attachment.is_deleted
+
+
+def test_edit_private_thread_view_adds_attachment_to_deleted_list(
+    user_client, user_private_thread, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.delete_attachment_field: str(user_attachment.id),
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
+    assert_not_contains(response, user_attachment.name)
+    assert_not_contains(response, user_attachment.get_absolute_url())
+
+
+def test_edit_private_thread_view_adds_attachment_to_deleted_list(
+    user_client, user_private_thread, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.delete_attachment_field: str(user_attachment.id),
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, "misago-editor-attachments=")
+
+    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
+    assert_not_contains(response, user_attachment.name)
+    assert_not_contains(response, user_attachment.get_absolute_url())
