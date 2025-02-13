@@ -254,7 +254,7 @@ def test_reply_thread_view_posts_new_thread_reply_in_quick_reply_with_htmx(
 
     thread.refresh_from_db()
     assert_contains(response, f"post-{thread.last_post_id}")
-    assert_contains(response, f"<p>How&#x27;s going?</p>")
+    assert_contains(response, f"<p>Reply contents</p>")
 
 
 def test_reply_thread_view_posted_reply_in_quick_reply_with_htmx_is_read(
@@ -277,7 +277,7 @@ def test_reply_thread_view_posted_reply_in_quick_reply_with_htmx_is_read(
 
     thread.refresh_from_db()
     assert_contains(response, f"post-{thread.last_post_id}")
-    assert_contains(response, f"<p>How&#x27;s going?</p>")
+    assert_contains(response, f"<p>Reply contents</p>")
 
     ReadCategory.objects.get(
         user=user,
