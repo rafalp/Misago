@@ -172,7 +172,7 @@ def test_reply_thread_view_posts_new_thread_reply(user_client, thread):
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
     )
     assert response.status_code == 302
@@ -195,7 +195,7 @@ def test_reply_thread_view_posts_new_thread_reply_in_htmx(user_client, thread):
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
         headers={"hx-request": "true"},
     )
@@ -219,7 +219,7 @@ def test_reply_thread_view_posts_new_thread_reply_in_quick_reply(user_client, th
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
     )
@@ -245,7 +245,7 @@ def test_reply_thread_view_posts_new_thread_reply_in_quick_reply_with_htmx(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
         headers={"hx-request": "true"},
@@ -268,7 +268,7 @@ def test_reply_thread_view_posted_reply_in_quick_reply_with_htmx_is_read(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
         headers={"hx-request": "true"},
@@ -294,7 +294,7 @@ def test_reply_thread_view_previews_message(user_client, thread):
         ),
         {
             PostingFormset.preview_action: "true",
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
     )
     assert_contains(response, "Reply to thread")
@@ -309,7 +309,7 @@ def test_reply_thread_view_previews_message_in_htmx(user_client, thread):
         ),
         {
             PostingFormset.preview_action: "true",
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
         headers={"hx-request": "true"},
     )
@@ -325,7 +325,7 @@ def test_reply_thread_view_previews_message_in_quick_reply(user_client, thread):
         ),
         {
             PostingFormset.preview_action: "true",
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
     )
@@ -343,7 +343,7 @@ def test_reply_thread_view_previews_message_in_quick_reply_with_htmx(
         ),
         {
             PostingFormset.preview_action: "true",
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
         headers={"hx-request": "true"},
@@ -746,7 +746,7 @@ def test_reply_thread_view_uploads_attachment_on_submit(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "posting-post-upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
             ],
@@ -777,7 +777,7 @@ def test_reply_thread_view_uploads_attachment_on_preview(
         ),
         {
             PostingFormset.preview_action: "true",
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "posting-post-upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
             ],
@@ -810,7 +810,7 @@ def test_reply_thread_view_uploads_attachment_on_upload(
         ),
         {
             PostForm.upload_action: "true",
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
             "posting-post-upload": [
                 SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
             ],
@@ -852,7 +852,7 @@ def test_reply_thread_view_displays_image_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
     )
     assert_contains(response, "Reply to thread")
@@ -886,7 +886,7 @@ def test_reply_thread_view_displays_image_with_thumbnail_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
     )
     assert_contains(response, "Reply to thread")
@@ -917,7 +917,7 @@ def test_reply_thread_view_displays_video_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
     )
     assert_contains(response, "Reply to thread")
@@ -948,7 +948,7 @@ def test_reply_thread_view_displays_file_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_attachment.id)],
-            "posting-post-post": "How's going?",
+            "posting-post-post": "Reply contents",
         },
     )
     assert_contains(response, "Reply to thread")
@@ -956,3 +956,27 @@ def test_reply_thread_view_displays_file_attachment(
 
     assert_contains(response, user_attachment.name)
     assert_contains(response, f'value="{user_attachment.id}"')
+
+
+def test_reply_thread_view_updates_unused_attachment_on_submit(
+    user_client, thread, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:reply-thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        ),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    thread.refresh_from_db()
+
+    user_attachment.refresh_from_db()
+    assert user_attachment.category_id == thread.category_id
+    assert user_attachment.thread_id == thread.id
+    assert user_attachment.post_id == thread.last_post_id
+    assert not user_attachment.is_deleted

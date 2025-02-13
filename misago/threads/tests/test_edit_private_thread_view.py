@@ -805,3 +805,35 @@ def test_edit_private_thread_view_displays_file_attachment(
 
     assert_contains(response, user_attachment.name)
     assert_contains(response, f'value="{user_attachment.id}"')
+
+
+def test_edit_private_thread_view_updates_unused_attachment_on_submit(
+    user_client, user_private_thread, user_attachment
+):
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert response.status_code == 302
+
+    user_private_thread.refresh_from_db()
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.pk, "slug": user_private_thread.slug},
+    )
+
+    user_attachment.refresh_from_db()
+    assert user_attachment.category_id == user_private_thread.category_id
+    assert user_attachment.thread_id == user_private_thread.id
+    assert user_attachment.post_id == user_private_thread.first_post_id
+    assert not user_attachment.is_deleted
