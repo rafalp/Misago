@@ -44,14 +44,14 @@ def assert_not_contains_element(response, element, status_code=200, **attrs):
         assert not _find_html_element(document, element, attrs), fail_message
 
 
-HTML_RE = re.compile(r"\<.+?\>")
+_HTML_RE = re.compile(r"\<.+?\>", re.DOTALL)
 
 
 def _find_html_element(document, element, attrs) -> bool:
-    for match in HTML_RE.findall(document):
+    for match in _HTML_RE.findall(document):
         if element not in match:
             continue
-        print(match)
+
         if _match_html_element(match, element, attrs):
             return True
 
@@ -79,7 +79,7 @@ def _match_html_element(match, element, attrs) -> bool:
 
 
 def _parse_element_html(html) -> tuple[str, dict]:
-    parts = _split_element_html(html.strip(" <>/"))
+    parts = _split_element_html(html.strip(" <>/").replace("\r\n", "\n"))
     tag_name: str = parts[0].lower()
 
     attrs: dict[str, str | bool] = {}
@@ -95,6 +95,9 @@ def _parse_element_html(html) -> tuple[str, dict]:
     return tag_name, attrs
 
 
+_HTML_SEPARATOR = (" ", "\n")
+
+
 def _split_element_html(html) -> list[str]:
     parts: list[str] = []
 
@@ -102,9 +105,10 @@ def _split_element_html(html) -> list[str]:
     quoted = False
 
     for c in html:
-        if c == " " and not quoted:
-            parts.append(part)
-            part = ""
+        if c in _HTML_SEPARATOR and not quoted:
+            if part:
+                parts.append(part)
+                part = ""
         else:
             if c == '"':
                 quoted = not quoted

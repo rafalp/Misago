@@ -8,7 +8,12 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
 from ...posting.forms import PostForm
 from ...posting.formsets import PostingFormset
-from ...test import assert_contains, assert_contains_element, assert_not_contains
+from ...test import (
+    assert_contains,
+    assert_contains_element,
+    assert_not_contains,
+    assert_not_contains_element,
+)
 from ..test import reply_thread
 
 
@@ -913,6 +918,7 @@ def test_edit_private_thread_post_view_displays_existing_attachment(
     )
     assert_contains(response, "Edit post")
     assert_contains(response, "misago-editor-attachments=")
+    assert_contains_element(response, "input", type="file", name="posting-post-upload")
 
     assert_contains(response, attachment.name)
     assert_contains_element(
@@ -945,6 +951,9 @@ def test_edit_private_thread_post_view_displays_attachment_if_uploads_are_disabl
     )
     assert_contains(response, "Edit post")
     assert_contains(response, "misago-editor-attachments=")
+    assert_not_contains_element(
+        response, "input", type="file", name="posting-post-upload"
+    )
 
     assert_contains(response, attachment.name)
     assert_contains_element(
@@ -979,6 +988,9 @@ def test_edit_private_thread_post_view_displays_attachment_for_user_without_perm
     )
     assert_contains(response, "Edit post")
     assert_contains(response, "misago-editor-attachments=")
+    assert_not_contains_element(
+        response, "input", type="file", name="posting-post-upload"
+    )
 
     assert_contains(response, attachment.name)
     assert_contains_element(
