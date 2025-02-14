@@ -983,7 +983,7 @@ def test_edit_thread_view_displays_existing_attachment(
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
-def test_edit_thread_view_displays_attachment_if_uploads_are_disabled(
+def test_edit_thread_view_displays_existing_attachment_if_uploads_are_disabled(
     user_client, user_thread, attachment
 ):
     attachment.category_id = user_thread.category_id
@@ -1013,7 +1013,7 @@ def test_edit_thread_view_displays_attachment_if_uploads_are_disabled(
     )
 
 
-def test_edit_thread_view_displays_attachment_for_user_without_permission(
+def test_edit_thread_view_displays_existing_attachment_for_user_without_permission(
     members_group, user_client, user_thread, attachment
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
