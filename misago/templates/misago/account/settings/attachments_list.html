@@ -81,7 +81,7 @@
               <noscript>
                 <a
                   class="btn btn-default btn-icon btm-sm"
-                  href="{{ item.attachment.get_delete_url }}{{ attachments.referer }}"
+                  href="{{ item.attachment.get_delete_url }}{{ attachments.referrer }}"
                   title="{% translate 'Delete' context 'account attachments page' %}"
                 >
                   <span class="material-icon">delete</span>
@@ -89,7 +89,7 @@
               </noscript>
               <form
                 class="d-js-block"
-                action="{{ item.attachment.get_delete_url }}{{ attachments.referer }}"
+                action="{{ item.attachment.get_delete_url }}{{ attachments.referrer }}"
                 method="post"
                 misago-confirm="{% translate 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
               >

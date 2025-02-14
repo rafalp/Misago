@@ -11,7 +11,7 @@
 <div class="page page-attachment-delete">
   <div class="container page-container">
     {% pluginoutlet ATTACHMENT_DELETE_PAGE_START %}
-    <form action="{{ attachment.get_delete_url }}{{ attachment_referer }}" method="post">
+    <form action="{{ attachment.get_delete_url }}{{ attachment_referrer }}" method="post">
       {% csrf_token %}
       <div class="panel panel-default panel-form">
         <div class="panel-heading">
@@ -28,7 +28,7 @@
           <button class="btn btn-primary" type="submit">
             {% translate "Delete" context "attachment delete page btn" %}
           </button>
-          <a href="{{ attachment.get_details_url }}{{ attachment_referer }}" class="btn btn-default">
+          <a href="{{ attachment.get_details_url }}{{ attachment_referrer }}" class="btn btn-default">
             {% translate "Cancel" context "attachment delete page btn" %}
           </a>
         </div>

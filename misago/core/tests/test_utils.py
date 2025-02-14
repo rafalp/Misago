@@ -10,7 +10,7 @@ from ..utils import (
     format_plaintext_for_html,
     get_exception_message,
     get_host_from_address,
-    is_referer_local,
+    is_referrer_local,
     is_request_to_misago,
     parse_iso8601_string,
     slugify,
@@ -205,8 +205,8 @@ class CleanReturnPathTests(TestCase):
 
 
 class IsRefererLocalTests(TestCase):
-    def test_local_referers(self):
-        """local referers return true"""
+    def test_local_referrers(self):
+        """local referrers return true"""
         ok_request = MockRequest(
             "GET",
             {
@@ -214,7 +214,7 @@ class IsRefererLocalTests(TestCase):
                 "HTTP_HOST": "misago-project.org/",
             },
         )
-        self.assertTrue(is_referer_local(ok_request))
+        self.assertTrue(is_referrer_local(ok_request))
 
         ok_request = MockRequest(
             "GET",
@@ -223,7 +223,7 @@ class IsRefererLocalTests(TestCase):
                 "HTTP_HOST": "misago-project.org/",
             },
         )
-        self.assertTrue(is_referer_local(ok_request))
+        self.assertTrue(is_referrer_local(ok_request))
 
         ok_request = MockRequest(
             "GET",
@@ -232,10 +232,10 @@ class IsRefererLocalTests(TestCase):
                 "HTTP_HOST": "misago-project.org/",
             },
         )
-        self.assertTrue(is_referer_local(ok_request))
+        self.assertTrue(is_referrer_local(ok_request))
 
-    def test_foreign_referers(self):
-        """non-local referers return false"""
+    def test_foreign_referrers(self):
+        """non-local referrers return false"""
         bad_request = MockRequest(
             "GET",
             {
@@ -243,7 +243,7 @@ class IsRefererLocalTests(TestCase):
                 "HTTP_HOST": "misago-project.org/",
             },
         )
-        self.assertFalse(is_referer_local(bad_request))
+        self.assertFalse(is_referrer_local(bad_request))
 
         bad_request = MockRequest(
             "GET",
@@ -252,7 +252,7 @@ class IsRefererLocalTests(TestCase):
                 "HTTP_HOST": "misago-project.org/",
             },
         )
-        self.assertFalse(is_referer_local(bad_request))
+        self.assertFalse(is_referrer_local(bad_request))
 
         bad_request = MockRequest(
             "GET",
@@ -261,7 +261,7 @@ class IsRefererLocalTests(TestCase):
                 "HTTP_HOST": "misago-project.org/assadsa/",
             },
         )
-        self.assertFalse(is_referer_local(bad_request))
+        self.assertFalse(is_referrer_local(bad_request))
 
 
 class GetExceptionMessageTests(TestCase):

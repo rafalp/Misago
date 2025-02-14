@@ -42,9 +42,6 @@ class AttachmentView(View):
     def get_attachment(self, request: HttpRequest, id: int, slug: str) -> Attachment:
         attachment = get_object_or_404(Attachment.objects.select_related(), id=id)
 
-        if attachment.slug != slug:
-            raise OutdatedSlug(attachment)
-
         # Check attachment permissions if its not viewed by admin
         if not (request.user.is_authenticated and request.user.is_misago_admin):
             if attachment.is_deleted:
@@ -57,6 +54,9 @@ class AttachmentView(View):
                 attachment.post,
                 attachment,
             )
+
+        if attachment.slug != slug:
+            raise OutdatedSlug(attachment)
 
         return attachment
 
@@ -133,7 +133,7 @@ class AttachmentDetailsView(AttachmentView):
             "attachment": attachment,
             "can_delete_attachment": can_delete,
             "can_see_post": can_see_post,
-            "attachment_referer": _get_referer_querystring(request, attachment),
+            "attachment_referrer": _get_referrer_querystring(request, attachment),
         }
 
 
@@ -148,7 +148,7 @@ class AttachmentDeleteView(View):
             self.template_name,
             {
                 "attachment": attachment,
-                "attachment_referer": _get_referer_querystring(request, attachment),
+                "attachment_referrer": _get_referrer_querystring(request, attachment),
             },
         )
 
@@ -167,9 +167,6 @@ class AttachmentDeleteView(View):
     def get_attachment(self, request: HttpRequest, id: int, slug: str) -> Attachment:
         attachment = get_object_or_404(Attachment.objects.select_related(), id=id)
 
-        if attachment.slug != slug:
-            raise Http404()
-
         # Check attachment permissions if its not viewed by admin
         if not (request.user.is_authenticated and request.user.is_misago_admin):
             if attachment.is_deleted:
@@ -183,30 +180,33 @@ class AttachmentDeleteView(View):
             attachment,
         )
 
+        if attachment.slug != slug:
+            raise OutdatedSlug(attachment)
+
         return attachment
 
     def get_redirect_url(self, request: HttpRequest, attachment: Attachment) -> str:
-        if request.GET.get("referer") == "settings":
+        if request.GET.get("referrer") == "settings":
             url = reverse("misago:account-attachments")
             if request.GET.get("cursor"):
                 url += "?cursor=" + request.GET["cursor"]
             return url
 
-        if request.GET.get("referer") == "post" and attachment.post:
+        if request.GET.get("referrer") == "post" and attachment.post:
             return attachment.post.get_absolute_url()
 
         return reverse("misago:index")
 
 
-def _get_referer_querystring(request: HttpRequest, attachment: Attachment) -> str:
-    if request.GET.get("referer") == "settings":
-        querystring = "?referer=settings"
+def _get_referrer_querystring(request: HttpRequest, attachment: Attachment) -> str:
+    if request.GET.get("referrer") == "settings":
+        querystring = "?referrer=settings"
         if request.GET.get("cursor"):
             querystring += "?cursor=" + request.GET["cursor"]
         return querystring
 
-    if request.GET.get("referer") == "post" and attachment.post:
-        return "?referer=post"
+    if request.GET.get("referrer") == "post" and attachment.post:
+        return "?referrer=post"
 
     return ""
 

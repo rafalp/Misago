@@ -578,12 +578,12 @@ class AccountAttachmentsView(AccountSettingsFormView):
                 }
             )
 
-        referer = "?referer=settings"
+        referrer = "?referrer=settings"
         if request.GET.get("cursor"):
-            referer += "&cursor=" + request.GET["cursor"]
+            referrer += "&cursor=" + request.GET["cursor"]
 
         return {
-            "referer": referer,
+            "referrer": referrer,
             "paginator": result,
             "items": items,
             "show_post_column": show_post_column,
