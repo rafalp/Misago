@@ -1,7 +1,4 @@
-from io import BytesIO
-
 from PIL import Image, UnidentifiedImageError
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand, CommandError
 
 from ....conf.dynamicsettings import DynamicSettings
