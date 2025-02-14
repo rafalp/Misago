@@ -4,20 +4,29 @@ from django.contrib.messages.api import get_messages
 from django.contrib.messages.constants import ERROR, INFO, SUCCESS, WARNING
 
 
+def assert_status_code(response, status_code):
+    assert (
+        response.status_code == status_code
+    ), f"unexpected status code: {response.status_code} (expected: {status_code})"
+
+
 def assert_contains(response, string, status_code=200):
-    assert response.status_code == status_code
+    assert_status_code(response, status_code)
+
     fail_message = f'"{string}" not found in response.content'
     assert string in response.content.decode("utf-8"), fail_message
 
 
 def assert_not_contains(response, string, status_code=200):
-    assert response.status_code == status_code
+    assert_status_code(response, status_code)
+
     fail_message = f'"{string}" was unexpectedly found in response.content'
     assert string not in response.content.decode("utf-8"), fail_message
 
 
 def assert_contains_element(response, element, status_code=200, **attrs):
-    assert response.status_code == status_code
+    assert_status_code(response, status_code)
+
     fail_message = f'"{element}" element not found in response.content'
 
     document = response.content.decode("utf-8")
@@ -26,7 +35,8 @@ def assert_contains_element(response, element, status_code=200, **attrs):
 
 
 def assert_not_contains_element(response, element, status_code=200, **attrs):
-    assert response.status_code == status_code
+    assert_status_code(response, status_code)
+
     fail_message = f'"{element}" was unexpectedly found in response.content'
 
     document = response.content.decode("utf-8")

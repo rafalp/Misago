@@ -1057,3 +1057,69 @@ def test_edit_thread_post_view_displays_existing_attachment(
         name=PostForm.attachment_ids_field,
         value=attachment.id,
     )
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_edit_thread_post_view_displays_attachment_if_uploads_are_disabled(
+    user_client, user_thread, attachment
+):
+    attachment.category_id = user_thread.category_id
+    attachment.thread_id = user_thread.id
+    attachment.post_id = user_thread.first_post_id
+    attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        ),
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, "misago-editor-attachments=")
+
+    assert_contains(response, attachment.name)
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
+    )
+
+
+def test_edit_thread_post_view_displays_attachment_for_user_without_permission(
+    members_group, user_client, user_thread, attachment
+):
+    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.save()
+
+    attachment.category_id = user_thread.category_id
+    attachment.thread_id = user_thread.id
+    attachment.post_id = user_thread.first_post_id
+    attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:edit-thread",
+            kwargs={
+                "id": user_thread.id,
+                "slug": user_thread.slug,
+                "post": user_thread.first_post_id,
+            },
+        ),
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, "misago-editor-attachments=")
+
+    assert_contains(response, attachment.name)
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
+    )
