@@ -7,11 +7,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import CommandError
 
 from ...conf.test import override_dynamic_settings
-from ..management.commands import regenerateattachmentthumbnails
+from ..management.commands import processimageattachments
 
 
 def call_command(after: int | None = None):
-    command = regenerateattachmentthumbnails.Command()
+    command = processimageattachments.Command()
 
     out = StringIO()
     management.call_command(command, after=after, stdout=out, stderr=out)
