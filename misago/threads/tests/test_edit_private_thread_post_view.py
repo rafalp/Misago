@@ -1000,3 +1000,146 @@ def test_edit_private_thread_post_view_existing_displays_attachment_for_user_wit
         name=PostForm.attachment_ids_field,
         value=attachment.id,
     )
+
+
+def test_edit_private_thread_post_view_adds_existing_attachment_to_deleted_list(
+    user_client, user_private_thread, attachment
+):
+    attachment.category_id = user_private_thread.category_id
+    attachment.thread_id = user_private_thread.id
+    attachment.post_id = user_private_thread.first_post_id
+    attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(attachment.id)],
+            PostForm.delete_attachment_field: str(attachment.id),
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, "misago-editor-attachments=")
+    assert_contains_element(response, "input", type="file", name="posting-post-upload")
+
+    assert_not_contains(response, attachment.name)
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
+    )
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.deleted_attachment_ids_field,
+        value=attachment.id,
+    )
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_edit_private_thread_post_view_adds_existing_attachment_to_deleted_list_if_uploads_are_disabled(
+    user_client, user_private_thread, attachment
+):
+    attachment.category_id = user_private_thread.category_id
+    attachment.thread_id = user_private_thread.id
+    attachment.post_id = user_private_thread.first_post_id
+    attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(attachment.id)],
+            PostForm.delete_attachment_field: str(attachment.id),
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, "misago-editor-attachments=")
+    assert_not_contains_element(
+        response, "input", type="file", name="posting-post-upload"
+    )
+
+    assert_not_contains(response, attachment.name)
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
+    )
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.deleted_attachment_ids_field,
+        value=attachment.id,
+    )
+
+
+def test_edit_private_thread_post_view_adds_existing_attachment_to_deleted_list_for_user_without_permission(
+    members_group, user_client, user_private_thread, attachment
+):
+    members_group.can_upload_attachments = CanUploadAttachments.THREADS
+    members_group.save()
+
+    attachment.category_id = user_private_thread.category_id
+    attachment.thread_id = user_private_thread.id
+    attachment.post_id = user_private_thread.first_post_id
+    attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        ),
+        {
+            PostForm.attachment_ids_field: [str(attachment.id)],
+            PostForm.delete_attachment_field: str(attachment.id),
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, "misago-editor-attachments=")
+    assert_not_contains_element(
+        response, "input", type="file", name="posting-post-upload"
+    )
+
+    assert_not_contains(response, attachment.name)
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
+    )
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.deleted_attachment_ids_field,
+        value=attachment.id,
+    )
