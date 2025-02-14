@@ -16,9 +16,9 @@ def test_attachment_download_view_returns_server_response(
 
 
 def test_attachment_download_view_returns_404_response_if_upload_is_missing(
-    user_client, user_attachment
+    user_client, user_broken_text_attachment
 ):
-    response = user_client.get(user_attachment.get_absolute_url())
+    response = user_client.get(user_broken_text_attachment.get_absolute_url())
     assert response.status_code == 404
 
 

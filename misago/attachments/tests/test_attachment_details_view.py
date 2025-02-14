@@ -6,82 +6,90 @@ from ...test import assert_contains, assert_not_contains
 
 
 def test_attachment_details_view_renders_page_for_text_attachment(
-    user, user_client, text_file, attachment_factory
+    user_client, user_text_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user)
-    response = user_client.get(attachment.get_details_url())
-
-    assert_contains(response, attachment.name)
+    response = user_client.get(user_text_attachment.get_details_url())
+    assert_contains(response, user_text_attachment.name)
 
 
 def test_attachment_details_view_renders_page_for_image_attachment(
-    user, user_client, image_small, attachment_factory
+    user_client, user_image_attachment
 ):
-    attachment = attachment_factory(image_small, uploader=user)
-    response = user_client.get(attachment.get_details_url())
+    response = user_client.get(user_image_attachment.get_details_url())
+    assert_contains(response, user_image_attachment.name)
 
-    assert_contains(response, attachment.name)
+
+def test_attachment_details_view_renders_page_for_video_attachment(
+    user_client, user_video_attachment
+):
+    response = user_client.get(user_video_attachment.get_details_url())
+    assert_contains(response, user_video_attachment.name)
 
 
 def test_attachment_details_view_renders_page_with_delete_option(
-    user, user_client, image_small, attachment_factory
+    user_client, user_text_attachment
 ):
-    attachment = attachment_factory(image_small, uploader=user)
-    response = user_client.get(attachment.get_details_url())
-
-    assert_contains(response, attachment.name)
-    assert_contains(response, attachment.get_delete_url())
+    response = user_client.get(user_text_attachment.get_details_url())
+    assert_contains(response, user_text_attachment.name)
+    assert_contains(response, user_text_attachment.get_delete_url())
 
 
 def test_attachment_details_view_renders_page_without_delete_option(
-    user, client, image_small, attachment_factory, post
+    user_client, text_attachment, post
 ):
-    attachment = attachment_factory(image_small, uploader=user, post=post)
-    response = client.get(attachment.get_details_url())
+    text_attachment.category_id = post.category_id
+    text_attachment.thread_id = post.thread_id
+    text_attachment.post = post
+    text_attachment.save()
 
-    assert_contains(response, attachment.name)
-    assert_not_contains(response, attachment.get_delete_url())
+    response = user_client.get(text_attachment.get_details_url())
+    assert_contains(response, text_attachment.name)
+    assert_not_contains(response, text_attachment.get_delete_url())
 
 
 def test_attachment_details_view_renders_page_without_post_link_for_unused_attachment(
-    user, user_client, image_small, attachment_factory
+    user_client, user_text_attachment
 ):
-    attachment = attachment_factory(image_small, uploader=user)
-    response = user_client.get(attachment.get_details_url())
-
-    assert_contains(response, attachment.name)
+    response = user_client.get(user_text_attachment.get_details_url())
+    assert_contains(response, user_text_attachment.name)
     assert_not_contains(response, "/post/")
 
 
 def test_attachment_details_view_renders_page_with_post_link_for_user_attachment(
-    user, user_client, image_small, attachment_factory, post
+    user_client, text_attachment, post
 ):
-    attachment = attachment_factory(image_small, uploader=user, post=post)
-    response = user_client.get(attachment.get_details_url())
+    text_attachment.category_id = post.category_id
+    text_attachment.thread_id = post.thread_id
+    text_attachment.post = post
+    text_attachment.save()
 
-    assert_contains(response, attachment.name)
+    response = user_client.get(text_attachment.get_details_url())
+    assert_contains(response, text_attachment.name)
     assert_contains(response, "/post/")
     assert_contains(response, post.get_absolute_url())
 
 
 def test_attachment_details_view_renders_page_without_post_link_if_user_has_no_post_permission(
-    user, user_client, image_small, attachment_factory, post
+    user_client, user_text_attachment, post
 ):
+    user_text_attachment.category_id = post.category_id
+    user_text_attachment.thread_id = post.thread_id
+    user_text_attachment.post = post
+    user_text_attachment.save()
+
     post.is_hidden = True
     post.save()
 
-    attachment = attachment_factory(image_small, uploader=user, post=post)
-    response = user_client.get(attachment.get_details_url())
-
-    assert_contains(response, attachment.name)
+    response = user_client.get(user_text_attachment.get_details_url())
+    assert_contains(response, user_text_attachment.name)
     assert_not_contains(response, "/post/")
     assert_not_contains(response, post.get_absolute_url())
 
 
 def test_attachment_details_view_returns_404_response_if_upload_is_missing(
-    user_client, user_attachment
+    user_client, user_broken_text_attachment
 ):
-    response = user_client.get(user_attachment.get_details_url())
+    response = user_client.get(user_broken_text_attachment.get_details_url())
     assert response.status_code == 404
 
 
@@ -98,67 +106,62 @@ def test_attachment_details_view_returns_404_response_if_attachment_with_id_does
 
 
 def test_attachment_details_view_returns_301_response_if_attachment_slug_is_invalid(
-    user, user_client, text_file, attachment_factory
+    user_client, user_text_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user)
-
     response = user_client.get(
         reverse(
             "misago:attachment-details",
-            kwargs={"id": attachment.id, "slug": "invalid"},
+            kwargs={"id": user_text_attachment.id, "slug": "invalid"},
         )
     )
     assert response.status_code == 301
-    assert response["location"] == attachment.get_details_url()
+    assert response["location"] == user_text_attachment.get_details_url()
 
 
 def test_attachment_details_view_returns_404_response_for_user_if_attachment_is_deleted(
-    user, user_client, text_file, attachment_factory
+    user_client, user_text_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user, is_deleted=True)
+    user_text_attachment.is_deleted = True
+    user_text_attachment.save()
 
-    response = user_client.get(attachment.get_details_url())
+    response = user_client.get(user_text_attachment.get_details_url())
     assert response.status_code == 404
 
 
 def test_attachment_details_view_returns_404_response_for_anonymous_user_if_attachment_is_deleted(
-    user, client, text_file, attachment_factory
+    client, user_text_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user, is_deleted=True)
+    user_text_attachment.is_deleted = True
+    user_text_attachment.save()
 
-    response = client.get(attachment.get_details_url())
+    response = client.get(user_text_attachment.get_details_url())
     assert response.status_code == 404
 
 
 def test_attachment_details_view_renders_page_for_admin_if_attachment_is_deleted(
-    user, admin_client, text_file, attachment_factory
+    admin_client, text_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user, is_deleted=True)
+    text_attachment.is_deleted = True
+    text_attachment.save()
 
-    response = admin_client.get(attachment.get_details_url())
-    assert_contains(response, attachment.name)
+    response = admin_client.get(text_attachment.get_details_url())
+    assert_contains(response, text_attachment.name)
 
 
 def test_attachment_details_view_checks_user_permissions(
-    other_user,
-    members_group,
-    user_client,
-    text_file,
-    attachment_factory,
-    post,
+    other_user_text_attachment, members_group, user_client, post
 ):
     CategoryGroupPermission.objects.filter(
         group=members_group,
         permission=CategoryPermission.ATTACHMENTS,
     ).delete()
 
-    attachment = attachment_factory(
-        text_file,
-        uploader=other_user,
-        post=post,
-    )
+    other_user_text_attachment.category_id = post.category_id
+    other_user_text_attachment.thread_id = post.thread_id
+    other_user_text_attachment.post = post
+    other_user_text_attachment.save()
 
-    response = user_client.get(attachment.get_details_url())
+    response = user_client.get(other_user_text_attachment.get_details_url())
     assert_contains(
         response,
         "You can&#x27;t download attachments in this category.",
