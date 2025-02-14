@@ -8,7 +8,7 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
 from ...posting.forms import PostForm
 from ...posting.formsets import PostingFormset
-from ...test import assert_contains, assert_not_contains
+from ...test import assert_contains, assert_contains_element, assert_not_contains
 from ..test import reply_thread
 
 
@@ -891,3 +891,34 @@ def test_edit_private_thread_post_view_deletes_attachment_on_submit(
     assert user_attachment.thread_id is None
     assert user_attachment.post_id is None
     assert user_attachment.is_deleted
+
+
+def test_edit_private_thread_post_view_displays_existing_attachment(
+    user_client, user_private_thread, attachment
+):
+    attachment.category_id = user_private_thread.category_id
+    attachment.thread_id = user_private_thread.id
+    attachment.post_id = user_private_thread.first_post_id
+    attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:edit-private-thread",
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post": user_private_thread.first_post_id,
+            },
+        ),
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, "misago-editor-attachments=")
+
+    assert_contains(response, attachment.name)
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
+    )
