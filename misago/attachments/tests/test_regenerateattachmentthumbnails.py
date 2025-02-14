@@ -26,70 +26,61 @@ def test_regenerateattachmentthumbnails_command_does_nothing_if_there_are_no_att
 
 
 def test_regenerateattachmentthumbnails_command_excludes_attachments_without_uploads(
-    attachment,
+    broken_image_attachment,
 ):
     command_output = call_command()
     assert command_output == ("No attachments to process exist",)
 
 
-def test_regenerateattachmentthumbnails_command_skips_video_attachments(attachment):
-    attachment.name = "video.mp4"
-    attachment.filetype_id = "mp4"
-    attachment.upload = "attachments/video.mp4"
-    attachment.save()
-
+def test_regenerateattachmentthumbnails_command_skips_file_attachments(text_attachment):
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: video.mp4 -> not image",
+        f"#{text_attachment.id}: text.txt -> not image",
     )
 
 
-def test_regenerateattachmentthumbnails_command_skips_file_attachments(attachment):
-    attachment.name = "doc.pdf"
-    attachment.filetype_id = "pdf"
-    attachment.upload = "attachments/doc.pdf"
-    attachment.save()
-
+def test_regenerateattachmentthumbnails_command_skips_video_attachments(
+    video_attachment,
+):
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: doc.pdf -> not image",
+        f"#{video_attachment.id}: video.mp4 -> not image",
     )
 
 
 def test_regenerateattachmentthumbnails_command_handles_attachments_with_upload_not_existing(
-    attachment,
+    image_attachment,
 ):
-    attachment.upload = "attachments/missing.png"
-    attachment.save()
-
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png -> file not found",
+        f"#{image_attachment.id}: image.png -> file not found",
     )
 
 
 def test_regenerateattachmentthumbnails_command_handles_attachments_with_broken_images(
-    attachment, image_invalid, teardown_attachments
+    image_attachment, image_invalid, teardown_attachments
 ):
     with open(image_invalid, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png -> cannot identify image format",
+        f"#{image_attachment.id}: image.png -> cannot identify image format",
     )
 
 
@@ -97,156 +88,172 @@ def test_regenerateattachmentthumbnails_command_handles_attachments_with_broken_
     attachment_thumbnail_width=3000, attachment_thumbnail_height=3000
 )
 def test_regenerateattachmentthumbnails_command_sets_image_dimensions(
-    attachment, image_small, teardown_attachments
+    image_attachment, image_small, teardown_attachments
 ):
     with open(image_small, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.dimensions = None
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.dimensions = None
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    attachment.refresh_from_db()
-    assert attachment.dimensions == "50x50"
+    image_attachment.refresh_from_db()
+    assert image_attachment.dimensions == "50x50"
 
 
 @override_dynamic_settings(
     attachment_thumbnail_width=3000, attachment_thumbnail_height=3000
 )
 def test_regenerateattachmentthumbnails_command_updates_image_dimensions(
-    attachment, image_small, teardown_attachments
+    image_attachment, image_small, teardown_attachments
 ):
     with open(image_small, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.dimensions = "123x456"
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.dimensions = "123x456"
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    attachment.refresh_from_db()
-    assert attachment.dimensions == "50x50"
+    image_attachment.refresh_from_db()
+    assert image_attachment.dimensions == "50x50"
 
 
 @override_dynamic_settings(
     attachment_thumbnail_width=3000, attachment_thumbnail_height=3000
 )
 def test_regenerateattachmentthumbnails_command_doesnt_generate_small_image_thumbnail(
-    attachment, image_small, teardown_attachments
+    image_attachment, image_small, teardown_attachments
 ):
     with open(image_small, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    attachment.refresh_from_db()
-    assert not attachment.thumbnail
-    assert not attachment.thumbnail_dimensions
-    assert not attachment.thumbnail_size
+    image_attachment.refresh_from_db()
+    assert not image_attachment.thumbnail
+    assert not image_attachment.thumbnail_dimensions
+    assert not image_attachment.thumbnail_size
 
 
 @override_dynamic_settings(
     attachment_thumbnail_width=3000, attachment_thumbnail_height=3000
 )
 def test_regenerateattachmentthumbnails_command_deletes_small_image_thumbnail(
-    attachment, image_small, teardown_attachments
+    image_attachment, image_small, teardown_attachments
 ):
     with open(image_small, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.thumbnail = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.thumbnail_dimensions = "50x50"
-        attachment.thumbnail_size = 400
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.thumbnail = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.thumbnail_dimensions = "50x50"
+        image_attachment.thumbnail_size = 400
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    assert not os.path.exists(attachment.thumbnail.path)
+    assert not os.path.exists(image_attachment.thumbnail.path)
 
-    attachment.refresh_from_db()
-    assert not attachment.thumbnail
-    assert not attachment.thumbnail_dimensions
-    assert not attachment.thumbnail_size
+    image_attachment.refresh_from_db()
+    assert not image_attachment.thumbnail
+    assert not image_attachment.thumbnail_dimensions
+    assert not image_attachment.thumbnail_size
 
 
 @override_dynamic_settings(
     attachment_thumbnail_width=50, attachment_thumbnail_height=50
 )
 def test_regenerateattachmentthumbnails_command_generates_large_image_thumbnail(
-    attachment, image_large, teardown_attachments
+    image_attachment, image_large, teardown_attachments
 ):
     with open(image_large, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    attachment.refresh_from_db()
-    assert attachment.thumbnail
-    assert attachment.thumbnail_dimensions == "50x50"
-    assert attachment.thumbnail_size
+    image_attachment.refresh_from_db()
+    assert image_attachment.thumbnail
+    assert image_attachment.thumbnail_dimensions == "50x50"
+    assert image_attachment.thumbnail_size
 
-    assert os.path.exists(attachment.thumbnail.path)
+    assert os.path.exists(image_attachment.thumbnail.path)
 
 
 @override_dynamic_settings(
     attachment_thumbnail_width=50, attachment_thumbnail_height=50
 )
 def test_regenerateattachmentthumbnails_command_generates_new_large_image_thumbnail(
-    attachment, image_large, teardown_attachments
+    image_attachment, image_large, teardown_attachments
 ):
     with open(image_large, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.thumbnail = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.thumbnail_dimensions = "150x150"
-        attachment.thumbnail_size = 400
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.thumbnail = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.thumbnail_dimensions = "150x150"
+        image_attachment.thumbnail_size = 400
+        image_attachment.save()
 
     command_output = call_command()
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    assert not os.path.exists(attachment.thumbnail.path)
+    assert not os.path.exists(image_attachment.thumbnail.path)
 
-    attachment.refresh_from_db()
-    assert attachment.thumbnail
-    assert attachment.thumbnail_dimensions == "50x50"
-    assert attachment.thumbnail_size
+    image_attachment.refresh_from_db()
+    assert image_attachment.thumbnail
+    assert image_attachment.thumbnail_dimensions == "50x50"
+    assert image_attachment.thumbnail_size
 
-    assert os.path.exists(attachment.thumbnail.path)
+    assert os.path.exists(image_attachment.thumbnail.path)
 
 
 def test_regenerateattachmentthumbnails_command_prints_error_if_after_is_one(db):
@@ -274,39 +281,43 @@ def test_regenerateattachmentthumbnails_command_prints_error_if_after_is_negativ
     attachment_thumbnail_width=50, attachment_thumbnail_height=50
 )
 def test_regenerateattachmentthumbnails_command_after_option_includes_attachments_with_lesser_id(
-    attachment, image_large, teardown_attachments
+    image_attachment, image_large, teardown_attachments
 ):
     with open(image_large, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.save()
 
-    command_output = call_command(after=attachment.id + 1)
+    command_output = call_command(after=image_attachment.id + 1)
     assert command_output == (
         "Attachments to process: 1",
         "",
         "Processing:",
-        f"#{attachment.id}: image.png",
+        f"#{image_attachment.id}: image.png",
     )
 
-    attachment.refresh_from_db()
-    assert attachment.thumbnail
-    assert attachment.thumbnail_dimensions == "50x50"
-    assert attachment.thumbnail_size
+    image_attachment.refresh_from_db()
+    assert image_attachment.thumbnail
+    assert image_attachment.thumbnail_dimensions == "50x50"
+    assert image_attachment.thumbnail_size
 
-    assert os.path.exists(attachment.thumbnail.path)
+    assert os.path.exists(image_attachment.thumbnail.path)
 
 
 @override_dynamic_settings(
     attachment_thumbnail_width=50, attachment_thumbnail_height=50
 )
 def test_regenerateattachmentthumbnails_command_after_option_excludes_attachments_with_equal_id(
-    attachment, image_large, teardown_attachments
+    image_attachment, image_large, teardown_attachments
 ):
     with open(image_large, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.save()
 
-    command_output = call_command(after=attachment.id)
+    command_output = call_command(after=image_attachment.id)
     assert command_output == ("No attachments to process exist",)
 
 
@@ -314,11 +325,13 @@ def test_regenerateattachmentthumbnails_command_after_option_excludes_attachment
     attachment_thumbnail_width=50, attachment_thumbnail_height=50
 )
 def test_regenerateattachmentthumbnails_command_after_option_excludes_attachments_with_greater_id(
-    attachment, image_large, teardown_attachments
+    image_attachment, image_large, teardown_attachments
 ):
     with open(image_large, "rb") as fp:
-        attachment.upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
-        attachment.save()
+        image_attachment.upload = SimpleUploadedFile(
+            "image.png", fp.read(), "image/png"
+        )
+        image_attachment.save()
 
-    command_output = call_command(after=attachment.id)
+    command_output = call_command(after=image_attachment.id)
     assert command_output == ("No attachments to process exist",)
