@@ -91,23 +91,15 @@ class PostForm(PostingForm):
 
     @property
     def accept_attachments(self) -> str:
-        extensions = self.request.settings.restrict_attachments_extensions.split()
-        if not extensions:
-            return filetypes.get_accept_attr_str(
-                self.request.settings.allowed_attachment_types
-            )
+        return self.get_accept_attachments()
 
-        restriction = self.request.settings.restrict_attachments_extensions_type
-        if restriction == AttachmentTypeRestriction.REQUIRE:
-            return filetypes.get_accept_attr_str(
-                self.request.settings.allowed_attachment_types,
-                require_extensions=extensions,
-            )
-        else:
-            return filetypes.get_accept_attr_str(
-                self.request.settings.allowed_attachment_types,
-                disallow_extensions=extensions,
-            )
+    @property
+    def accept_image_attachments(self) -> str:
+        return self.get_accept_attachments(type_filter=AttachmentType.IMAGE)
+
+    @property
+    def accept_video_attachments(self) -> str:
+        return self.get_accept_attachments(type_filter=AttachmentType.VIDEO)
 
     def get_accept_attachments(self, type_filter: AttachmentType | None = None) -> str:
         extensions = self.request.settings.restrict_attachments_extensions.split()
@@ -130,18 +122,6 @@ class PostForm(PostingForm):
                 disallow_extensions=extensions,
                 type_filter=type_filter,
             )
-
-    @property
-    def accept_attachments(self) -> str:
-        return self.get_accept_attachments()
-
-    @property
-    def accept_image_attachments(self) -> str:
-        return self.get_accept_attachments(type_filter=AttachmentType.IMAGE)
-
-    @property
-    def accept_video_attachments(self) -> str:
-        return self.get_accept_attachments(type_filter=AttachmentType.VIDEO)
 
     @property
     def attachments_media(self) -> list[Attachment]:
