@@ -1013,7 +1013,7 @@ def test_edit_thread_view_displays_existing_attachment_if_uploads_are_disabled(
     )
 
 
-def test_edit_thread_view_displays_existing_attachment_for_user_without_permission(
+def test_edit_thread_view_displays_existing_attachment_for_user_without_upload_permission(
     members_group, user_client, user_thread, attachment
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
@@ -1131,7 +1131,7 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list_if_uploads_ar
     )
 
 
-def test_edit_thread_view_adds_existing_attachment_to_deleted_list_for_user_without_permission(
+def test_edit_thread_view_adds_existing_attachment_to_deleted_list_for_user_without_upload_permission(
     members_group, user_client, user_thread, attachment
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
@@ -1175,3 +1175,109 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list_for_user_with
         name=PostForm.deleted_attachment_ids_field,
         value=attachment.id,
     )
+
+
+def test_edit_thread_view_deletes_existing_attachment_on_submit(
+    user_client, user_thread, attachment
+):
+    attachment.category_id = user_thread.category_id
+    attachment.thread_id = user_thread.id
+    attachment.post_id = user_thread.first_post_id
+    attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            PostForm.attachment_ids_field: [str(attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(attachment.id)],
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert response.status_code == 302
+
+    user_thread.refresh_from_db()
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+    )
+
+    attachment.refresh_from_db()
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.is_deleted
+
+
+@override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
+def test_edit_thread_view_deletes_existing_attachment_on_submit_if_uploads_are_disabled(
+    user_client, user_thread, attachment
+):
+    attachment.category_id = user_thread.category_id
+    attachment.thread_id = user_thread.id
+    attachment.post_id = user_thread.first_post_id
+    attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            PostForm.attachment_ids_field: [str(attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(attachment.id)],
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert response.status_code == 302
+
+    user_thread.refresh_from_db()
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+    )
+
+    attachment.refresh_from_db()
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.is_deleted
+
+
+def test_edit_thread_view_deletes_existing_attachment_on_submit_for_user_without_upload_permission(
+    members_group, user_client, user_thread, attachment
+):
+    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.save()
+
+    attachment.category_id = user_thread.category_id
+    attachment.thread_id = user_thread.id
+    attachment.post_id = user_thread.first_post_id
+    attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            PostForm.attachment_ids_field: [str(attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(attachment.id)],
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+        },
+    )
+    assert response.status_code == 302
+
+    user_thread.refresh_from_db()
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+    )
+
+    attachment.refresh_from_db()
+    assert attachment.category_id is None
+    assert attachment.thread_id is None
+    assert attachment.post_id is None
+    assert attachment.is_deleted
