@@ -18,7 +18,6 @@ from ...test import (
     assert_contains,
     assert_contains_element,
     assert_not_contains,
-    assert_not_contains_element,
 )
 from ..test import reply_thread
 
