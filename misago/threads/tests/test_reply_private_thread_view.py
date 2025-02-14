@@ -1131,3 +1131,35 @@ def test_reply_private_thread_view_deletes_attachment_on_submit(
     assert user_attachment.thread_id is None
     assert user_attachment.post_id is None
     assert user_attachment.is_deleted
+
+
+def test_reply_private_thread_view_embeds_attachments_in_preview(
+    user_client, other_user_private_thread, user_attachment
+):
+    user_attachment.name = "image-attachment.png"
+    user_attachment.slug = "image-attachment-png"
+    user_attachment.filetype_id = "png"
+    user_attachment.upload = "attachments/image-attachment.png"
+    user_attachment.dimensions = "200x200"
+    user_attachment.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:reply-private-thread",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            PostingFormset.preview_action: "true",
+            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            "posting-post-post": (
+                f"Attachment: <attachment={user_attachment.name}:{user_attachment.id}>"
+            ),
+        },
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, "Message preview")
+    assert_contains_element(response, "a", href=user_attachment.get_details_url())
+    assert_contains_element(response, "img", src=user_attachment.get_absolute_url())

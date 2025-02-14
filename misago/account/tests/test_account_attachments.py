@@ -308,7 +308,6 @@ def test_account_attachments_shows_unused_attachments_expire_in_two_days(
     attachment.save()
 
     response = user_client.get(reverse("misago:account-attachments"))
-    print(response.content.decode())
     assert_contains(response, "2 days")
 
 
