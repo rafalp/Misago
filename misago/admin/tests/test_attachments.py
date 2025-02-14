@@ -17,195 +17,251 @@ def test_attachments_list_renders_empty(admin_client):
     assert_contains(response, "No attachments exist.")
 
 
-def test_attachments_list_renders_broken_attachment(admin_client, attachment):
-    attachment.filetype_id = "txt"
-    attachment.save()
-
-    response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
-
-
-def test_attachments_list_renders_broken_image_attachment(admin_client, attachment):
-    attachment.filetype_id = "png"
-    attachment.save()
-
-    response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
-
-
-def test_attachments_list_renders_temp_txt_attachment(
-    admin_client, text_file, attachment_factory
+def test_attachments_list_renders_broken_text_attachment(
+    admin_client, broken_text_attachment
 ):
-    attachment = attachment_factory(text_file)
-
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
+    assert_contains(response, broken_text_attachment.name)
 
 
-def test_attachments_list_renders_txt_attachment(
-    admin_client, text_file, user, post, attachment_factory
+def test_attachments_list_renders_broken_image_attachment(
+    admin_client, broken_image_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user, post=post)
-
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
-    assert_contains(response, post.thread.title)
+    assert_contains(response, broken_image_attachment.name)
 
 
-def test_attachments_list_renders_temp_image_attachment(
-    admin_client, image_small, attachment_factory
+def test_attachments_list_renders_broken_video_attachment(
+    admin_client, broken_video_attachment
 ):
-    attachment = attachment_factory(image_small)
-
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
+    assert_contains(response, broken_video_attachment.name)
 
 
-def test_attachments_list_renders_image_attachment(
-    admin_client, image_small, user, post, attachment_factory
+def test_attachments_list_renders_text_attachment(admin_client, text_attachment):
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.get_details_url())
+
+
+def test_attachments_list_renders_image_attachment(admin_client, image_attachment):
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_attachment.get_details_url())
+
+
+def test_attachments_list_renders_image_attachment_with_thumbnail(
+    admin_client, image_thumbnail_attachment
 ):
-    attachment = attachment_factory(image_small, uploader=user, post=post)
-
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
-    assert_contains(response, post.thread.title)
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.get_details_url())
 
 
-def test_attachments_list_renders_temp_image_with_thumbnail_attachment(
-    admin_client, image_large, image_small, attachment_factory
+def test_attachments_list_renders_video_attachment(admin_client, video_attachment):
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.get_details_url())
+
+
+def test_attachments_list_renders_user_text_attachment(
+    admin_client, user_text_attachment
 ):
-    attachment = attachment_factory(image_large, thumbnail_path=image_small)
-
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
-    assert_contains(response, attachment.get_thumbnail_url())
+    assert_contains(response, user_text_attachment.name)
+    assert_contains(response, user_text_attachment.get_absolute_url())
+    assert_contains(response, user_text_attachment.get_details_url())
 
 
-def test_attachments_list_renders_image_with_thumbnail_attachment(
-    admin_client, image_large, image_small, user, post, attachment_factory
+def test_attachments_list_renders_user_image_attachment(
+    admin_client, user_image_attachment
 ):
-    attachment = attachment_factory(
-        image_large, thumbnail_path=image_small, uploader=user, post=post
-    )
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, user_image_attachment.name)
+    assert_contains(response, user_image_attachment.get_absolute_url())
+    assert_contains(response, user_image_attachment.get_details_url())
+
+
+def test_attachments_list_renders_user_image_attachment_with_thumbnail(
+    admin_client, user_image_thumbnail_attachment
+):
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, user_image_thumbnail_attachment.name)
+    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, user_image_thumbnail_attachment.get_details_url())
+
+
+def test_attachments_list_renders_user_video_attachment(
+    admin_client, user_video_attachment
+):
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, user_video_attachment.name)
+    assert_contains(response, user_video_attachment.get_absolute_url())
+    assert_contains(response, user_video_attachment.get_details_url())
+
+
+def test_attachments_list_renders_posted_text_attachment(
+    admin_client, text_attachment, thread, post
+):
+    text_attachment.category_id = post.category_id
+    text_attachment.thread_id = thread
+    text_attachment.post = post
+    text_attachment.save()
 
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, attachment.name)
-    assert_contains(response, attachment.get_thumbnail_url())
-    assert_contains(response, post.thread.title)
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.get_details_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, post.get_absolute_url())
+
+
+def test_attachments_list_renders_posted_image_attachment(
+    admin_client, image_attachment, thread, post
+):
+    image_attachment.category_id = post.category_id
+    image_attachment.thread_id = thread
+    image_attachment.post = post
+    image_attachment.save()
+
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_attachment.get_details_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, post.get_absolute_url())
+
+
+def test_attachments_list_renders_posted_image_attachment_with_thumbnail(
+    admin_client, image_thumbnail_attachment, thread, post
+):
+    image_thumbnail_attachment.category_id = post.category_id
+    image_thumbnail_attachment.thread_id = thread
+    image_thumbnail_attachment.post = post
+    image_thumbnail_attachment.save()
+
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.get_details_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, post.get_absolute_url())
+
+
+def test_attachments_list_renders_posted_video_attachment(
+    admin_client, video_attachment, thread, post
+):
+    video_attachment.category_id = post.category_id
+    video_attachment.thread_id = thread
+    video_attachment.post = post
+    video_attachment.save()
+
+    response = admin_client.get(attachments_url + "?redirected=1")
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.get_details_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, post.get_absolute_url())
 
 
 def test_attachments_list_searches_attachment_by_uploader(
-    admin_client, text_file, image_small, user, attachment_factory
+    admin_client,
+    other_user,
+    text_attachment,
+    user_text_attachment,
+    other_user_text_attachment,
 ):
-    attachment = attachment_factory(text_file, uploader=user)
-    attachment_other = attachment_factory(image_small)
-
-    response = admin_client.get(attachments_url + f"?redirected=1&uploader={user.slug}")
-    assert_contains(response, attachment.name)
-    assert_not_contains(response, attachment_other.name)
+    response = admin_client.get(
+        attachments_url + f"?redirected=1&uploader={other_user.slug}"
+    )
+    assert_contains(response, other_user_text_attachment.get_absolute_url())
+    assert_not_contains(response, user_text_attachment.get_absolute_url())
+    assert_not_contains(response, text_attachment.get_absolute_url())
 
 
 def test_attachments_list_searches_attachment_by_name(
-    admin_client, text_file, image_small, user, attachment_factory
+    admin_client, text_attachment, image_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user)
-    attachment_other = attachment_factory(image_small)
-
     response = admin_client.get(
-        attachments_url + f"?redirected=1&name={attachment.name}"
+        attachments_url + f"?redirected=1&name={text_attachment.name}"
     )
-    assert_contains(response, attachment.name)
-    assert_not_contains(response, attachment_other.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
 
 def test_attachments_list_searches_attachment_by_filetype(
-    admin_client, text_file, image_small, user, attachment_factory
+    admin_client, text_attachment, image_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user)
-    attachment_other = attachment_factory(image_small)
-
     response = admin_client.get(
-        attachments_url + f"?redirected=1&filetype={attachment.filetype_id}"
+        attachments_url + f"?redirected=1&filetype={text_attachment.filetype_id}"
     )
-    assert_contains(response, attachment.name)
-    assert_not_contains(response, attachment_other.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
 
 def test_attachments_list_searches_posted_attachments(
-    admin_client, text_file, user, post, attachment_factory
+    admin_client, text_attachment, image_attachment, post
 ):
-    attachment_posted = attachment_factory(
-        text_file, name="posted.txt", uploader=user, post=post
-    )
-    attachment_deleted = attachment_factory(
-        text_file, name="deleted.txt", uploader=user, is_deleted=True
-    )
-    attachment_unused = attachment_factory(text_file, name="unused.txt")
+    text_attachment.category_id = post.category_id
+    text_attachment.thread_id = post.thread_id
+    text_attachment.post = post
+    text_attachment.save()
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=posted")
-    assert_contains(response, attachment_posted.name)
-    assert_not_contains(response, attachment_deleted.name)
-    assert_not_contains(response, attachment_unused.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
 
 def test_attachments_list_searches_unused_attachments(
-    admin_client, text_file, user, post, attachment_factory
+    admin_client, text_attachment, image_attachment, post
 ):
-    attachment_posted = attachment_factory(
-        text_file, name="posted.txt", uploader=user, post=post
-    )
-    attachment_deleted = attachment_factory(
-        text_file, name="deleted.txt", uploader=user, is_deleted=True
-    )
-    attachment_unused = attachment_factory(text_file, name="unused.txt")
+    image_attachment.category_id = post.category_id
+    image_attachment.thread_id = post.thread_id
+    image_attachment.post = post
+    image_attachment.save()
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=unused")
-    assert_not_contains(response, attachment_posted.name)
-    assert_not_contains(response, attachment_deleted.name)
-    assert_contains(response, attachment_unused.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
 
 def test_attachments_list_searches_deleted_attachments(
-    admin_client, text_file, user, post, attachment_factory
+    admin_client, text_attachment, image_attachment
 ):
-    attachment_posted = attachment_factory(
-        text_file, name="posted.txt", uploader=user, post=post
-    )
-    attachment_deleted = attachment_factory(
-        text_file, name="deleted.txt", uploader=user, is_deleted=True
-    )
-    attachment_unused = attachment_factory(text_file, name="unused.txt")
+    text_attachment.is_deleted = True
+    text_attachment.save()
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=deleted")
-    assert_not_contains(response, attachment_posted.name)
-    assert_contains(response, attachment_deleted.name)
-    assert_not_contains(response, attachment_unused.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
 
 def test_attachments_list_searches_broken_attachments(
-    admin_client,
-    text_file,
-    user,
-    post,
-    attachment_factory,
-    attachment,
+    admin_client, broken_text_attachment, image_attachment
 ):
-    attachment_posted = attachment_factory(
-        text_file, name="posted.txt", uploader=user, post=post
-    )
-    attachment_deleted = attachment_factory(
-        text_file, name="deleted.txt", uploader=user, is_deleted=True
-    )
-    attachment_unused = attachment_factory(text_file, name="unused.txt")
-
-    attachment.name = "broken.png"
-    attachment.save()
-
     response = admin_client.get(attachments_url + f"?redirected=1&status=broken")
-    assert_not_contains(response, attachment_posted.name)
-    assert_not_contains(response, attachment_deleted.name)
-    assert_not_contains(response, attachment_unused.name)
-    assert_contains(response, attachment.name)
+    assert_contains(response, broken_text_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
+
+
+def test_attachments_list_deletes_broken_attachments(
+    admin_client, broken_text_attachment
+):
+    response = admin_client.post(
+        attachments_url,
+        data={
+            "action": "delete",
+            "selected_items": [str(broken_text_attachment.id)],
+        },
+    )
+    assert response.status_code == 302
+
+    with pytest.raises(Attachment.DoesNotExist):
+        broken_text_attachment.refresh_from_db()
 
 
 def test_attachments_list_deletes_attachments(
