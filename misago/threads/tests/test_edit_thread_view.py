@@ -646,8 +646,11 @@ def test_edit_thread_view_uploads_attachment_on_submit(
     assert attachment.name == "test.txt"
 
 
-def test_edit_thread_view_uploads_attachment_on_preview(
-    user, user_client, user_thread, teardown_attachments
+@pytest.mark.parametrize(
+    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+)
+def test_edit_thread_view_uploads_attachment_on_preview_or_upload(
+    action_name, user, user_client, user_thread, teardown_attachments
 ):
     assert not Attachment.objects.exists()
 
@@ -657,7 +660,7 @@ def test_edit_thread_view_uploads_attachment_on_preview(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            action_name: "true",
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
             "posting-post-upload": [
@@ -677,41 +680,13 @@ def test_edit_thread_view_uploads_attachment_on_preview(
     assert attachment.name == "test.txt"
 
     assert_contains(response, attachment.name)
-    assert_contains(response, f'value="{attachment.id}"')
-
-
-def test_edit_thread_view_uploads_attachment_on_upload(
-    user, user_client, user_thread, teardown_attachments
-):
-    assert not Attachment.objects.exists()
-
-    response = user_client.post(
-        reverse(
-            "misago:edit-thread",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
-        ),
-        {
-            PostForm.upload_action: "true",
-            "posting-title-title": "Edited title",
-            "posting-post-post": "Edited post",
-            "posting-post-upload": [
-                SimpleUploadedFile("test.txt", b"Hello world!", "text/plain"),
-            ],
-        },
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=attachment.id,
     )
-    assert_contains(response, "Edit thread")
-    assert_contains(response, "misago-editor-attachments=")
-
-    attachment = Attachment.objects.get(uploader=user)
-    assert attachment.category_id is None
-    assert attachment.thread_id is None
-    assert attachment.post_id is None
-    assert attachment.uploader_id == user.id
-    assert not attachment.is_deleted
-    assert attachment.name == "test.txt"
-
-    assert_contains(response, attachment.name)
-    assert_contains(response, f'value="{attachment.id}"')
 
 
 @pytest.mark.parametrize(
@@ -744,7 +719,13 @@ def test_edit_thread_view_displays_image_attachment(
 
     assert_contains(response, user_attachment.name)
     assert_contains(response, user_attachment.get_absolute_url())
-    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=user_attachment.id,
+    )
 
 
 @pytest.mark.parametrize(
@@ -779,7 +760,13 @@ def test_edit_thread_view_displays_image_with_thumbnail_attachment(
 
     assert_contains(response, user_attachment.name)
     assert_contains(response, user_attachment.get_thumbnail_url())
-    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=user_attachment.id,
+    )
 
 
 @pytest.mark.parametrize(
@@ -811,7 +798,13 @@ def test_edit_thread_view_displays_video_attachment(
 
     assert_contains(response, user_attachment.name)
     assert_contains(response, user_attachment.get_absolute_url())
-    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=user_attachment.id,
+    )
 
 
 @pytest.mark.parametrize(
@@ -842,7 +835,13 @@ def test_edit_thread_view_displays_file_attachment(
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_attachment.name)
-    assert_contains(response, f'value="{user_attachment.id}"')
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=user_attachment.id,
+    )
 
 
 def test_edit_thread_view_associates_unused_attachment_on_submit(
@@ -891,8 +890,20 @@ def test_edit_thread_view_adds_attachment_to_deleted_list(
     assert_contains(response, "Edit thread")
     assert_contains(response, "misago-editor-attachments=")
 
-    assert_contains(response, f'value="{user_attachment.id}"')
-    assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=user_attachment.id,
+    )
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.deleted_attachment_ids_field,
+        value=user_attachment.id,
+    )
     assert_not_contains(response, user_attachment.name)
     assert_not_contains(response, user_attachment.get_absolute_url())
 
@@ -919,8 +930,20 @@ def test_edit_thread_view_maintains_deleted_attachments_list(
     assert_contains(response, "Edit thread")
     assert_contains(response, "misago-editor-attachments=")
 
-    assert_contains(response, f'value="{user_attachment.id}"')
-    assert_contains(response, f'name="{PostForm.deleted_attachment_ids_field}"')
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.attachment_ids_field,
+        value=user_attachment.id,
+    )
+    assert_contains_element(
+        response,
+        "input",
+        type="hidden",
+        name=PostForm.deleted_attachment_ids_field,
+        value=user_attachment.id,
+    )
     assert_not_contains(response, user_attachment.name)
     assert_not_contains(response, user_attachment.get_absolute_url())
 
