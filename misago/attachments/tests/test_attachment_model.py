@@ -4,48 +4,46 @@ import pytest
 from ..models import Attachment
 
 
-@pytest.fixture
-def file_attachment(user, text_file, attachment_factory):
-    return attachment_factory(text_file, uploader=user)
-
-
-@pytest.fixture
-def image_attachment(user, image_small, attachment_factory):
-    return attachment_factory(image_small, uploader=user)
-
-
-@pytest.fixture
-def image_thumbnail_attachment(user, image_large, image_small, attachment_factory):
-    return attachment_factory(image_large, uploader=user, thumbnail_path=image_small)
-
-
 def test_attachment_filetype_property_returns_filetype_instance(
-    file_attachment, image_attachment
+    text_attachment, image_attachment, video_attachment
 ):
-    assert file_attachment.filetype.id == "txt"
+    assert text_attachment.filetype.id == "txt"
     assert image_attachment.filetype.id == "png"
+    assert video_attachment.filetype.id == "mp4"
 
 
-def test_attachment_delete_deletes_uploaded_file(file_attachment):
-    upload_path = Path(file_attachment.upload.path)
+def test_attachment_delete_deletes_uploaded_file(text_file, attachment_factory):
+    attachment = attachment_factory(text_file)
+
+    upload_path = Path(attachment.upload.path)
     assert upload_path.exists()
 
-    file_attachment.delete()
+    attachment.delete()
 
     assert not upload_path.exists()
 
+    with pytest.raises(Attachment.DoesNotExist):
+        attachment.refresh_from_db()
 
-def test_attachment_delete_deletes_thumbnail_file(image_thumbnail_attachment):
-    upload_path = Path(image_thumbnail_attachment.upload.path)
+
+def test_attachment_delete_deletes_thumbnail_file(
+    image_large, image_small, attachment_factory
+):
+    attachment = attachment_factory(image_large, thumbnail_path=image_small)
+
+    upload_path = Path(attachment.upload.path)
     assert upload_path.exists()
 
-    thumbnail_path = Path(image_thumbnail_attachment.thumbnail.path)
+    thumbnail_path = Path(attachment.thumbnail.path)
     assert thumbnail_path.exists()
 
-    image_thumbnail_attachment.delete()
+    attachment.delete()
 
     assert not upload_path.exists()
     assert not thumbnail_path.exists()
+
+    with pytest.raises(Attachment.DoesNotExist):
+        attachment.refresh_from_db()
 
 
 def test_attachment_width_returns_width_from_dimensions():
