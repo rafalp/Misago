@@ -107,9 +107,7 @@ def test_attachments_list_renders_user_video_attachment(
 def test_attachments_list_renders_posted_text_attachment(
     admin_client, text_attachment, thread, post
 ):
-    text_attachment.category_id = post.category_id
-    text_attachment.thread_id = thread
-    text_attachment.post = post
+    text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = admin_client.get(attachments_url + "?redirected=1")
@@ -123,9 +121,7 @@ def test_attachments_list_renders_posted_text_attachment(
 def test_attachments_list_renders_posted_image_attachment(
     admin_client, image_attachment, thread, post
 ):
-    image_attachment.category_id = post.category_id
-    image_attachment.thread_id = thread
-    image_attachment.post = post
+    image_attachment.associate_with_post(post)
     image_attachment.save()
 
     response = admin_client.get(attachments_url + "?redirected=1")
@@ -139,9 +135,7 @@ def test_attachments_list_renders_posted_image_attachment(
 def test_attachments_list_renders_posted_image_attachment_with_thumbnail(
     admin_client, image_thumbnail_attachment, thread, post
 ):
-    image_thumbnail_attachment.category_id = post.category_id
-    image_thumbnail_attachment.thread_id = thread
-    image_thumbnail_attachment.post = post
+    image_thumbnail_attachment.associate_with_post(post)
     image_thumbnail_attachment.save()
 
     response = admin_client.get(attachments_url + "?redirected=1")
@@ -155,9 +149,7 @@ def test_attachments_list_renders_posted_image_attachment_with_thumbnail(
 def test_attachments_list_renders_posted_video_attachment(
     admin_client, video_attachment, thread, post
 ):
-    video_attachment.category_id = post.category_id
-    video_attachment.thread_id = thread
-    video_attachment.post = post
+    video_attachment.associate_with_post(post)
     video_attachment.save()
 
     response = admin_client.get(attachments_url + "?redirected=1")
@@ -206,9 +198,7 @@ def test_attachments_list_searches_attachment_by_filetype(
 def test_attachments_list_searches_posted_attachments(
     admin_client, text_attachment, image_attachment, post
 ):
-    text_attachment.category_id = post.category_id
-    text_attachment.thread_id = post.thread_id
-    text_attachment.post = post
+    text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=posted")
@@ -219,9 +209,7 @@ def test_attachments_list_searches_posted_attachments(
 def test_attachments_list_searches_unused_attachments(
     admin_client, text_attachment, image_attachment, post
 ):
-    image_attachment.category_id = post.category_id
-    image_attachment.thread_id = post.thread_id
-    image_attachment.post = post
+    image_attachment.associate_with_post(post)
     image_attachment.save()
 
     response = admin_client.get(attachments_url + f"?redirected=1&status=unused")
