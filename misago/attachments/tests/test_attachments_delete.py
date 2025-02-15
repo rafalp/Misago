@@ -20,9 +20,7 @@ def test_delete_attachments_marks_attachments_for_deletion(
 
 
 def test_delete_attachments_removes_attachments_relations(user_text_attachment, post):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     delete_attachments([user_text_attachment])
@@ -62,14 +60,10 @@ def test_delete_attachments_excludes_unspecified_attachments(
 def test_delete_categories_attachments_marks_attachments_for_deletion(
     user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    user_image_attachment.category_id = post.category_id
-    user_image_attachment.thread_id = post.thread_id
-    user_image_attachment.post = post
+    user_image_attachment.associate_with_post(post)
     user_image_attachment.save()
 
     delete_categories_attachments([post.category])
@@ -92,14 +86,10 @@ def test_delete_categories_attachments_marks_attachments_for_deletion(
 def test_delete_categories_attachments_accepts_categories_ids(
     user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    user_image_attachment.category_id = post.category_id
-    user_image_attachment.thread_id = post.thread_id
-    user_image_attachment.post = post
+    user_image_attachment.associate_with_post(post)
     user_image_attachment.save()
 
     delete_categories_attachments([post.category_id, post.category_id])
@@ -128,14 +118,10 @@ def test_delete_categories_attachments_excludes_other_categories_attachments(
     other_thread.first_post.category = other_category
     other_thread.first_post.save()
 
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    user_image_attachment.category = other_category
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_categories_attachments([post.category])
@@ -169,14 +155,10 @@ def test_delete_threads_attachments_marks_attachments_for_deletion(
     other_thread.first_post.category = other_category
     other_thread.first_post.save()
 
-    user_text_attachment.category_id = thread.category_id
-    user_text_attachment.thread = thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    user_image_attachment.category = other_category
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_threads_attachments([thread, other_thread])
@@ -210,14 +192,10 @@ def test_delete_threads_attachments_accepts_threads_ids(
     other_thread.first_post.category = other_category
     other_thread.first_post.save()
 
-    user_text_attachment.category_id = thread.category_id
-    user_text_attachment.thread = thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    user_image_attachment.category = other_category
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_threads_attachments([thread.id, other_thread.id])
@@ -251,14 +229,10 @@ def test_delete_threads_attachments_excludes_other_threads_attachments(
     other_thread.first_post.category = other_category
     other_thread.first_post.save()
 
-    user_text_attachment.category_id = thread.category_id
-    user_text_attachment.thread = thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    user_image_attachment.category = other_category
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_threads_attachments([thread])
@@ -281,14 +255,10 @@ def test_delete_threads_attachments_excludes_other_threads_attachments(
 def test_delete_posts_attachments_marks_attachments_for_deletion(
     user_text_attachment, user_image_attachment, thread, other_thread
 ):
-    user_text_attachment.category_id = thread.category_id
-    user_text_attachment.thread = thread
-    user_text_attachment.post = thread.first_post
+    user_text_attachment.associate_with_post(thread.first_post)
     user_text_attachment.save()
 
-    user_image_attachment.category_id = other_thread.category_id
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_posts_attachments([thread.first_post, other_thread.first_post])
@@ -311,14 +281,10 @@ def test_delete_posts_attachments_marks_attachments_for_deletion(
 def test_delete_posts_attachments_accepts_posts_ids(
     user_text_attachment, user_image_attachment, thread, other_thread
 ):
-    user_text_attachment.category_id = thread.category_id
-    user_text_attachment.thread = thread
-    user_text_attachment.post = thread.first_post
+    user_text_attachment.associate_with_post(thread.first_post)
     user_text_attachment.save()
 
-    user_image_attachment.category_id = other_thread.category_id
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_posts_attachments([thread.first_post_id, other_thread.first_post_id])
@@ -341,14 +307,10 @@ def test_delete_posts_attachments_accepts_posts_ids(
 def test_delete_posts_attachments_excludes_other_posts_attachments(
     user_text_attachment, user_image_attachment, thread, other_thread
 ):
-    user_text_attachment.category_id = thread.category_id
-    user_text_attachment.thread = thread
-    user_text_attachment.post = thread.first_post
+    user_text_attachment.associate_with_post(thread.first_post)
     user_text_attachment.save()
 
-    user_image_attachment.category_id = other_thread.category_id
-    user_image_attachment.thread = other_thread
-    user_image_attachment.post = other_thread.first_post
+    user_image_attachment.associate_with_post(other_thread.first_post)
     user_image_attachment.save()
 
     delete_posts_attachments([thread.first_post])
@@ -371,14 +333,10 @@ def test_delete_posts_attachments_excludes_other_posts_attachments(
 def test_delete_users_attachments_marks_attachments_for_deletion(
     user, other_user, user_text_attachment, other_user_text_attachment, post
 ):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    other_user_text_attachment.category_id = post.category_id
-    other_user_text_attachment.thread_id = post.thread_id
-    other_user_text_attachment.post = post
+    other_user_text_attachment.associate_with_post(post)
     other_user_text_attachment.save()
 
     delete_users_attachments([user, other_user])
@@ -401,14 +359,10 @@ def test_delete_users_attachments_marks_attachments_for_deletion(
 def test_delete_users_attachments_accepts_users_ids(
     user, other_user, user_text_attachment, other_user_text_attachment, post
 ):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    other_user_text_attachment.category_id = post.category_id
-    other_user_text_attachment.thread_id = post.thread_id
-    other_user_text_attachment.post = post
+    other_user_text_attachment.associate_with_post(post)
     other_user_text_attachment.save()
 
     delete_users_attachments([user.id, other_user.id])
@@ -431,14 +385,10 @@ def test_delete_users_attachments_accepts_users_ids(
 def test_delete_users_attachments_excludes_other_threads_attachments(
     user, user_text_attachment, other_user_text_attachment, post
 ):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    other_user_text_attachment.category_id = post.category_id
-    other_user_text_attachment.thread_id = post.thread_id
-    other_user_text_attachment.post = post
+    other_user_text_attachment.associate_with_post(post)
     other_user_text_attachment.save()
 
     delete_users_attachments([user])

@@ -28,9 +28,7 @@ def test_attachment_delete_view_deletes_attachment_on_post(
 def test_attachment_delete_view_redirects_to_attachment_post_if_post_referrer_is_set(
     user_client, user_text_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     response = user_client.post(
@@ -126,9 +124,7 @@ def test_attachment_delete_view_checks_delete_attachment_permissions(
     other_user_text_attachment,
     post,
 ):
-    other_user_text_attachment.category = post.category
-    other_user_text_attachment.thread = post.thread
-    other_user_text_attachment.post = post
+    other_user_text_attachment.associate_with_post(post)
     other_user_text_attachment.save()
 
     response = user_client.get(other_user_text_attachment.get_delete_url())

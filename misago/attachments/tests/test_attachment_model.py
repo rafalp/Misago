@@ -63,6 +63,20 @@ def test_attachment_delete_deletes_thumbnail_file(
         attachment.refresh_from_db()
 
 
+def test_attachment_associate_with_post_sets_attachment_category_thread_post(
+    text_attachment, post
+):
+    assert not text_attachment.category
+    assert not text_attachment.thread
+    assert not text_attachment.post
+
+    text_attachment.associate_with_post(post)
+
+    assert text_attachment.category == post.category
+    assert text_attachment.thread == post.thread
+    assert text_attachment.post == post
+
+
 def test_attachment_filetype_property_returns_filetype_instance(
     text_attachment, image_attachment, video_attachment
 ):

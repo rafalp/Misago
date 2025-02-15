@@ -46,9 +46,7 @@ def test_clearattachments_command_omits_recent_attachment_not_marked_for_deletio
 
 @override_dynamic_settings(unused_attachments_lifetime=2)
 def test_clearattachments_command_omits_old_attachment_with_post(text_attachment, post):
-    text_attachment.category_id = post.category_id
-    text_attachment.thread_id = post.thread_id
-    text_attachment.post = post
+    text_attachment.associate_with_post(post)
     text_attachment.uploaded_at = timezone.now() - timedelta(hours=3)
     text_attachment.save()
 

@@ -37,9 +37,7 @@ def test_attachment_details_view_renders_page_with_delete_option(
 def test_attachment_details_view_renders_page_without_delete_option(
     user_client, text_attachment, post
 ):
-    text_attachment.category_id = post.category_id
-    text_attachment.thread_id = post.thread_id
-    text_attachment.post = post
+    text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(text_attachment.get_details_url())
@@ -58,9 +56,7 @@ def test_attachment_details_view_renders_page_without_post_link_for_unused_attac
 def test_attachment_details_view_renders_page_with_post_link_for_user_attachment(
     user_client, text_attachment, post
 ):
-    text_attachment.category_id = post.category_id
-    text_attachment.thread_id = post.thread_id
-    text_attachment.post = post
+    text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(text_attachment.get_details_url())
@@ -72,9 +68,7 @@ def test_attachment_details_view_renders_page_with_post_link_for_user_attachment
 def test_attachment_details_view_renders_page_without_post_link_if_user_has_no_post_permission(
     user_client, user_text_attachment, post
 ):
-    user_text_attachment.category_id = post.category_id
-    user_text_attachment.thread_id = post.thread_id
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     post.is_hidden = True
@@ -156,9 +150,7 @@ def test_attachment_details_view_checks_user_permissions(
         permission=CategoryPermission.ATTACHMENTS,
     ).delete()
 
-    other_user_text_attachment.category_id = post.category_id
-    other_user_text_attachment.thread_id = post.thread_id
-    other_user_text_attachment.post = post
+    other_user_text_attachment.associate_with_post(post)
     other_user_text_attachment.save()
 
     response = user_client.get(other_user_text_attachment.get_details_url())

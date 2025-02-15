@@ -1,6 +1,7 @@
 import os
 from functools import cached_property
 from hashlib import sha256
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.urls import reverse
@@ -10,6 +11,9 @@ from django.utils.crypto import get_random_string
 from ..conf import settings
 from ..plugins.models import PluginDataModel
 from .filetypes import AttachmentFileType, filetypes
+
+if TYPE_CHECKING:
+    from ..threads.models import Post
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:
@@ -94,6 +98,11 @@ class Attachment(PluginDataModel):
             self.upload.delete(save=False)
         if self.thumbnail:
             self.thumbnail.delete(save=False)
+
+    def associate_with_post(self, post: "Post"):
+        self.category = post.category
+        self.thread = post.thread
+        self.post = post
 
     @cached_property
     def filetype(self) -> AttachmentFileType | None:
