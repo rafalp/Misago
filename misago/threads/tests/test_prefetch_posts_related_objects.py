@@ -62,20 +62,23 @@ def test_prefetch_posts_related_objects_prefetches_attachments_categories(
     cache_versions,
     anonymous_user,
     default_category,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
 ):
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(post)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(post)
+    user_text_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     data = prefetch_posts_related_objects(
-        dynamic_settings, permissions, [], attachments=[attachment, user_attachment]
+        dynamic_settings,
+        permissions,
+        [],
+        attachments=[text_attachment, user_text_attachment],
     )
     assert data["categories"] == {default_category.id: default_category}
 
@@ -116,15 +119,15 @@ def test_prefetch_posts_related_objects_prefetches_posts_threads(
 
 
 def test_prefetch_posts_related_objects_prefetches_attachments_threads(
-    dynamic_settings, cache_versions, anonymous_user, thread, post, attachment
+    dynamic_settings, cache_versions, anonymous_user, thread, post, text_attachment
 ):
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     data = prefetch_posts_related_objects(
-        dynamic_settings, permissions, [], attachments=[attachment]
+        dynamic_settings, permissions, [], attachments=[text_attachment]
     )
     assert data["threads"] == {thread.id: thread}
 
@@ -170,19 +173,22 @@ def test_prefetch_posts_related_objects_prefetches_attachments_posts(
     anonymous_user,
     post,
     user_reply,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
 ):
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(user_reply)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(user_reply)
+    user_text_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     data = prefetch_posts_related_objects(
-        dynamic_settings, permissions, [], attachments=[attachment, user_attachment]
+        dynamic_settings,
+        permissions,
+        [],
+        attachments=[text_attachment, user_text_attachment],
     )
     assert data["posts"] == {
         post.id: post,
@@ -194,24 +200,27 @@ def test_prefetch_posts_related_objects_preloads_attachments(
     dynamic_settings,
     cache_versions,
     anonymous_user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
 ):
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(post)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(post)
+    user_text_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     data = prefetch_posts_related_objects(
-        dynamic_settings, permissions, [], attachments=[attachment, user_attachment]
+        dynamic_settings,
+        permissions,
+        [],
+        attachments=[text_attachment, user_text_attachment],
     )
     assert data["attachments"] == {
-        attachment.id: attachment,
-        user_attachment.id: user_attachment,
+        text_attachment.id: text_attachment,
+        user_text_attachment.id: user_text_attachment,
     }
 
 
@@ -219,16 +228,19 @@ def test_prefetch_posts_related_objects_removes_preloaded_attachments_without_pe
     dynamic_settings,
     cache_versions,
     user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
 
     data = prefetch_posts_related_objects(
-        dynamic_settings, permissions, [], attachments=[attachment, user_attachment]
+        dynamic_settings,
+        permissions,
+        [],
+        attachments=[text_attachment, user_text_attachment],
     )
     assert data["attachments"] == {
-        user_attachment.id: user_attachment,
+        user_text_attachment.id: user_text_attachment,
     }
 
 
@@ -236,16 +248,16 @@ def test_prefetch_posts_related_objects_fetches_posts_attachments(
     dynamic_settings,
     cache_versions,
     anonymous_user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
     user_reply,
 ):
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(user_reply)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(user_reply)
+    user_text_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
@@ -253,8 +265,8 @@ def test_prefetch_posts_related_objects_fetches_posts_attachments(
         dynamic_settings, permissions, [post, user_reply]
     )
     assert data["attachments"] == {
-        attachment.id: attachment,
-        user_attachment.id: user_attachment,
+        text_attachment.id: text_attachment,
+        user_text_attachment.id: user_text_attachment,
     }
 
 
@@ -262,22 +274,22 @@ def test_prefetch_posts_related_objects_fetches_posts_metadata_attachments(
     dynamic_settings,
     cache_versions,
     anonymous_user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
     user_reply,
     other_user_reply,
 ):
-    attachment.associate_with_post(other_user_reply)
-    attachment.save()
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(other_user_reply)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(other_user_reply)
+    user_text_attachment.save()
 
-    post.metadata["attachments"] = [attachment.id]
+    post.metadata["attachments"] = [text_attachment.id]
     post.save()
 
-    user_reply.metadata["attachments"] = [user_attachment.id]
+    user_reply.metadata["attachments"] = [user_text_attachment.id]
     user_reply.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -286,8 +298,8 @@ def test_prefetch_posts_related_objects_fetches_posts_metadata_attachments(
         dynamic_settings, permissions, [post, user_reply]
     )
     assert data["attachments"] == {
-        attachment.id: attachment,
-        user_attachment.id: user_attachment,
+        text_attachment.id: text_attachment,
+        user_text_attachment.id: user_text_attachment,
     }
 
 
@@ -296,22 +308,22 @@ def test_prefetch_posts_related_objects_doesnt_fetch_posts_metadata_attachments_
     dynamic_settings,
     cache_versions,
     anonymous_user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
     user_reply,
     other_user_reply,
 ):
-    attachment.associate_with_post(other_user_reply)
-    attachment.save()
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(other_user_reply)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(other_user_reply)
+    user_text_attachment.save()
 
-    post.metadata["attachments"] = [attachment.id]
+    post.metadata["attachments"] = [text_attachment.id]
     post.save()
 
-    user_reply.metadata["attachments"] = [user_attachment.id]
+    user_reply.metadata["attachments"] = [user_text_attachment.id]
     user_reply.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -327,22 +339,22 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_is_limi
     dynamic_settings,
     cache_versions,
     anonymous_user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
     user_reply,
     other_user_reply,
 ):
-    attachment.associate_with_post(other_user_reply)
-    attachment.save()
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(other_user_reply)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(other_user_reply)
+    user_text_attachment.save()
 
-    post.metadata["attachments"] = [attachment.id]
+    post.metadata["attachments"] = [text_attachment.id]
     post.save()
 
-    user_reply.metadata["attachments"] = [user_attachment.id]
+    user_reply.metadata["attachments"] = [user_text_attachment.id]
     user_reply.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -350,26 +362,26 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_is_limi
     data = prefetch_posts_related_objects(
         dynamic_settings, permissions, [post, user_reply]
     )
-    assert data["attachments"] == {user_attachment.id: user_attachment}
+    assert data["attachments"] == {user_text_attachment.id: user_text_attachment}
 
 
 def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_excludes_unused_attachments(
     dynamic_settings,
     cache_versions,
     user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
     user_reply,
     other_user_reply,
 ):
-    attachment.associate_with_post(other_user_reply)
-    attachment.save()
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
 
-    post.metadata["attachments"] = [attachment.id]
+    post.metadata["attachments"] = [text_attachment.id]
     post.save()
 
-    user_reply.metadata["attachments"] = [user_attachment.id]
+    user_reply.metadata["attachments"] = [user_text_attachment.id]
     user_reply.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -378,7 +390,7 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
         dynamic_settings, permissions, [post, user_reply]
     )
     assert data["attachments"] == {
-        attachment.id: attachment,
+        text_attachment.id: text_attachment,
     }
 
 
@@ -386,23 +398,23 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
     dynamic_settings,
     cache_versions,
     anonymous_user,
-    attachment,
-    user_attachment,
+    text_attachment,
+    user_text_attachment,
     post,
     user_reply,
     other_user_reply,
     private_thread,
 ):
-    attachment.associate_with_post(other_user_reply)
-    attachment.save()
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
 
-    user_attachment.associate_with_post(private_thread.first_post)
-    user_attachment.save()
+    user_text_attachment.associate_with_post(private_thread.first_post)
+    user_text_attachment.save()
 
-    post.metadata["attachments"] = [attachment.id]
+    post.metadata["attachments"] = [text_attachment.id]
     post.save()
 
-    user_reply.metadata["attachments"] = [user_attachment.id]
+    user_reply.metadata["attachments"] = [user_text_attachment.id]
     user_reply.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -411,9 +423,9 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
         dynamic_settings, permissions, [post, user_reply]
     )
     assert data["attachments"] == {
-        attachment.id: attachment,
+        text_attachment.id: text_attachment,
     }
-    assert data["attachment_errors"][user_attachment.id].not_found
+    assert data["attachment_errors"][user_text_attachment.id].not_found
 
 
 def test_prefetch_posts_related_objects_preloads_users(
@@ -510,25 +522,28 @@ def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
     user_reply,
     other_user_reply,
     user_private_thread,
-    attachment,
-    user_attachment,
-    other_user_attachment,
+    text_attachment,
+    user_text_attachment,
+    other_user_text_attachment,
     django_assert_num_queries,
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
     permissions.permissions
     permissions.is_global_moderator
 
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
-    other_user_attachment.associate_with_post(user_private_thread.first_post)
-    other_user_attachment.save()
+    other_user_text_attachment.associate_with_post(user_private_thread.first_post)
+    other_user_text_attachment.save()
 
-    user_reply.metadata["attachments"] = [user_attachment.id, other_user_attachment.id]
+    user_reply.metadata["attachments"] = [
+        user_text_attachment.id,
+        other_user_text_attachment.id,
+    ]
     user_reply.save()
 
-    with django_assert_num_queries(8):
+    with django_assert_num_queries(7):
         data = prefetch_posts_related_objects(
             dynamic_settings,
             permissions,
@@ -554,5 +569,5 @@ def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
         assert data["users"][user.id].group
         assert data["users"][other_user.id].group
 
-        assert attachment.id in data["attachments"]
-        assert other_user_attachment.id in data["attachments"]
+        assert text_attachment.id in data["attachments"]
+        assert other_user_text_attachment.id in data["attachments"]

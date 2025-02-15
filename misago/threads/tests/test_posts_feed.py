@@ -44,12 +44,12 @@ def test_posts_feed_sets_posters_in_post_data(
 
 
 def test_posts_feed_sets_rich_text_data_in_post_data(
-    request_factory, user, thread, other_user_reply, attachment
+    request_factory, user, thread, other_user_reply, text_attachment
 ):
-    attachment.associate_with_post(other_user_reply)
-    attachment.save()
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
 
-    other_user_reply.metadata = {"attachments": [attachment.id]}
+    other_user_reply.metadata = {"attachments": [text_attachment.id]}
     other_user_reply.save()
 
     request = request_factory(user)
@@ -59,7 +59,9 @@ def test_posts_feed_sets_rich_text_data_in_post_data(
 
     post_data = feed_data["items"][0]
     assert post_data["rich_text_data"]["attachment_errors"] == {}
-    assert post_data["rich_text_data"]["attachments"] == {attachment.id: attachment}
+    assert post_data["rich_text_data"]["attachments"] == {
+        text_attachment.id: text_attachment
+    }
 
 
 def test_posts_feed_marks_post_as_animated(request_factory, user, thread, post, reply):
