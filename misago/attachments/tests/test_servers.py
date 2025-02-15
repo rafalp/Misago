@@ -21,13 +21,10 @@ def test_django_file_response_serves_file(text_file, attachment_factory):
 
 
 def test_django_file_response_raises_value_error_for_missing_upload(
-    text_file, attachment_factory
+    broken_text_attachment,
 ):
-    attachment = attachment_factory(text_file)
-    attachment.upload = None
-
     with pytest.raises(ValueError) as exc_info:
-        django_file_response(None, attachment)
+        django_file_response(None, broken_text_attachment)
 
     assert str(exc_info.value) == "Required 'Attachment.upload' attribute is 'None'."
 
@@ -48,12 +45,10 @@ def test_django_file_response_serves_thumbnail(
 
 
 def test_django_file_response_raises_value_error_for_missing_thumbnail(
-    text_file, attachment_factory
+    image_attachment,
 ):
-    attachment = attachment_factory(text_file)
-
     with pytest.raises(ValueError) as exc_info:
-        django_file_response(None, attachment, thumbnail=True)
+        django_file_response(None, image_attachment, thumbnail=True)
 
     assert str(exc_info.value) == "Required 'Attachment.thumbnail' attribute is 'None'."
 
@@ -67,13 +62,10 @@ def test_django_redirect_response_serves_file(text_file, attachment_factory):
 
 
 def test_django_redirect_response_raises_value_error_for_missing_upload(
-    text_file, attachment_factory
+    broken_text_attachment,
 ):
-    attachment = attachment_factory(text_file)
-    attachment.upload = None
-
     with pytest.raises(ValueError) as exc_info:
-        django_redirect_response(None, attachment)
+        django_redirect_response(None, broken_text_attachment)
 
     assert str(exc_info.value) == "Required 'Attachment.upload' attribute is 'None'."
 
@@ -89,12 +81,10 @@ def test_django_redirect_response_serves_thumbnail(
 
 
 def test_django_redirect_response_raises_value_error_for_missing_thumbnail(
-    text_file, attachment_factory
+    image_attachment,
 ):
-    attachment = attachment_factory(text_file)
-
     with pytest.raises(ValueError) as exc_info:
-        django_redirect_response(None, attachment, thumbnail=True)
+        django_redirect_response(None, image_attachment, thumbnail=True)
 
     assert str(exc_info.value) == "Required 'Attachment.thumbnail' attribute is 'None'."
 
@@ -127,13 +117,10 @@ def test_nginx_x_accel_redirect_skips_content_length_if_upload_size_is_zero(
 
 
 def test_nginx_x_accel_redirect_raises_value_error_for_missing_upload(
-    text_file, attachment_factory
+    broken_text_attachment,
 ):
-    attachment = attachment_factory(text_file)
-    attachment.upload = None
-
     with pytest.raises(ValueError) as exc_info:
-        nginx_x_accel_redirect(None, attachment)
+        nginx_x_accel_redirect(None, broken_text_attachment)
 
     assert str(exc_info.value) == "Required 'Attachment.upload' attribute is 'None'."
 
@@ -168,11 +155,9 @@ def test_nginx_x_accel_redirect_skips_content_length_if_thumbnail_size_is_zero(
 
 
 def test_nginx_x_accel_redirect_raises_value_error_for_missing_thumbnail(
-    text_file, attachment_factory
+    image_attachment,
 ):
-    attachment = attachment_factory(text_file)
-
     with pytest.raises(ValueError) as exc_info:
-        nginx_x_accel_redirect(None, attachment, thumbnail=True)
+        nginx_x_accel_redirect(None, image_attachment, thumbnail=True)
 
     assert str(exc_info.value) == "Required 'Attachment.thumbnail' attribute is 'None'."

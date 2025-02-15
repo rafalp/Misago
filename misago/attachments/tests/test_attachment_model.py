@@ -4,12 +4,29 @@ import pytest
 from ..models import Attachment
 
 
-def test_attachment_filetype_property_returns_filetype_instance(
-    text_attachment, image_attachment, video_attachment
+def test_attachment_delete_deletes_broken_attachment(broken_text_attachment):
+    broken_text_attachment.delete()
+
+    with pytest.raises(Attachment.DoesNotExist):
+        broken_text_attachment.refresh_from_db()
+
+
+def test_attachment_delete_deletes_attachment_with_nonexisting_files(
+    image_thumbnail_attachment,
 ):
-    assert text_attachment.filetype.id == "txt"
-    assert image_attachment.filetype.id == "png"
-    assert video_attachment.filetype.id == "mp4"
+    assert image_thumbnail_attachment.upload
+    assert image_thumbnail_attachment.thumbnail
+
+    upload_path = Path(image_thumbnail_attachment.upload.path)
+    assert not upload_path.exists()
+
+    thumbnail_path = Path(image_thumbnail_attachment.thumbnail.path)
+    assert not thumbnail_path.exists()
+
+    image_thumbnail_attachment.delete()
+
+    with pytest.raises(Attachment.DoesNotExist):
+        image_thumbnail_attachment.refresh_from_db()
 
 
 def test_attachment_delete_deletes_uploaded_file(text_file, attachment_factory):
@@ -44,6 +61,14 @@ def test_attachment_delete_deletes_thumbnail_file(
 
     with pytest.raises(Attachment.DoesNotExist):
         attachment.refresh_from_db()
+
+
+def test_attachment_filetype_property_returns_filetype_instance(
+    text_attachment, image_attachment, video_attachment
+):
+    assert text_attachment.filetype.id == "txt"
+    assert image_attachment.filetype.id == "png"
+    assert video_attachment.filetype.id == "mp4"
 
 
 def test_attachment_width_returns_width_from_dimensions():
