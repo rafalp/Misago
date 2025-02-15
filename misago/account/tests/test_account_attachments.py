@@ -20,9 +20,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments(user_cli
 def test_account_attachments_shows_storage_for_user_with_used_attachment(
     user_client, user_text_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     response = user_client.get(reverse("misago:account-attachments"))
@@ -39,9 +37,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment(
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments(
     user_client, user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     response = user_client.get(reverse("misago:account-attachments"))
@@ -64,9 +60,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_no_l
 def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_limits(
     members_group, user_client, user_text_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.attachment_storage_limit = 0
@@ -93,9 +87,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_n
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_limits(
     members_group, user_client, user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.attachment_storage_limit = 0
@@ -120,9 +112,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_no_g
 def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_group_limits(
     members_group, user_client, user_text_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.attachment_storage_limit = 0
@@ -147,9 +137,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_n
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_group_limits(
     members_group, user_client, user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.attachment_storage_limit = 0
@@ -175,9 +163,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_no_u
 def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_unused_limits(
     members_group, user_client, user_text_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.unused_attachments_storage_limit = 0
@@ -202,9 +188,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_n
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_unused_limits(
     members_group, user_client, user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.unused_attachments_storage_limit = 0
@@ -227,9 +211,7 @@ def test_account_attachments_shows_storage_for_user_without_attachments_and_no_s
 def test_account_attachments_shows_storage_for_user_with_used_attachment_and_no_storage_limit(
     members_group, user_client, user_text_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.attachment_storage_limit = 0
@@ -252,9 +234,7 @@ def test_account_attachments_shows_storage_for_user_with_unused_attachment_and_n
 def test_account_attachments_shows_storage_for_user_with_used_and_unused_attachments_and_no_storage_limit(
     members_group, user_client, user_text_attachment, user_image_attachment, post
 ):
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     members_group.attachment_storage_limit = 0
@@ -344,9 +324,7 @@ def test_account_attachments_list_hides_attachment_delete_option_if_user_has_no_
     members_group.can_always_delete_own_attachments = False
     members_group.save()
 
-    user_text_attachment.category = post.category
-    user_text_attachment.thread = post.thread
-    user_text_attachment.post = post
+    user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
     response = user_client.get(reverse("misago:account-attachments"))
