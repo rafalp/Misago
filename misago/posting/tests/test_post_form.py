@@ -74,7 +74,7 @@ def test_post_form_populates_attachments_with_unused_attachments_on_init(
 def test_post_form_appends_unused_attachments_to_attachments_on_init(
     rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.post("/", {PostForm.attachment_ids_field: [user_second_attachment.id]})
@@ -108,7 +108,7 @@ def test_post_form_doesnt_populate_attachments_with_unused_attachments_on_init_i
 def test_post_form_sets_deleted_attachments_on_init(
     rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.post(
@@ -130,7 +130,7 @@ def test_post_form_sets_deleted_attachments_on_init(
 def test_post_form_sets_deleted_attachments_on_init_if_user_cant_upload_attachments(
     rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.post(
@@ -152,7 +152,7 @@ def test_post_form_sets_deleted_attachments_on_init_if_user_cant_upload_attachme
 def test_post_form_sets_deleted_attachments_on_init_from_delete_attachment_field(
     rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.post("/", {PostForm.delete_attachment_field: user_attachment.id})
@@ -172,7 +172,7 @@ def test_post_form_sets_deleted_attachments_on_init_from_delete_attachment_field
 def test_post_form_sets_deleted_attachments_on_init_from_delete_attachment_field_if_user_cant_upload_attachments(
     rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.post("/", {PostForm.delete_attachment_field: user_attachment.id})
@@ -192,7 +192,7 @@ def test_post_form_sets_deleted_attachments_on_init_from_delete_attachment_field
 def test_post_form_sets_deleted_attachments_on_init_from_both_delete_fields(
     rf, user, dynamic_settings, user_attachment, user_second_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.post(
@@ -298,7 +298,7 @@ def test_post_form_set_attachments_excludes_other_users_unused_attachments(
 def test_post_form_set_attachments_excludes_attachments_with_posts(
     rf, user, dynamic_settings, user_attachment, post
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     request = rf.get("/")
@@ -1224,10 +1224,10 @@ def test_post_form_clean_skips_attachments_limit_validation_all_attachments_are_
     user_second_attachment,
     post,
 ):
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
-    user_second_attachment.post = post
+    user_second_attachment.associate_with_post(post)
     user_second_attachment.save()
 
     request = rf.post(

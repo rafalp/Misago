@@ -46,9 +46,7 @@ def test_posts_feed_sets_posters_in_post_data(
 def test_posts_feed_sets_rich_text_data_in_post_data(
     request_factory, user, thread, other_user_reply, attachment
 ):
-    attachment.category = other_user_reply.category
-    attachment.thread = other_user_reply.thread
-    attachment.post = other_user_reply
+    attachment.associate_with_post(other_user_reply)
     attachment.save()
 
     other_user_reply.metadata = {"attachments": [attachment.id]}

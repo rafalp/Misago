@@ -126,9 +126,7 @@ def test_check_download_attachment_permission_passes_for_anonymous_user_not_post
 def test_check_download_attachment_permission_passes_user_with_permission(
     user, cache_versions, attachment, default_category, thread, post
 ):
-    attachment.category = default_category
-    attachment.thread = thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -140,9 +138,7 @@ def test_check_download_attachment_permission_passes_user_with_permission(
 def test_check_download_attachment_permission_fails_user_without_category_permission(
     user, members_group, cache_versions, attachment, default_category, thread, post
 ):
-    attachment.category = default_category
-    attachment.thread = thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     CategoryGroupPermission.objects.filter(
@@ -166,9 +162,7 @@ def test_check_download_attachment_permission_fails_user_without_category_permis
 def test_check_download_attachment_permission_fails_user_without_thread_permission(
     user, cache_versions, attachment, default_category, thread, post
 ):
-    attachment.category = default_category
-    attachment.thread = thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     thread.is_hidden = True
@@ -189,9 +183,7 @@ def test_check_download_attachment_permission_fails_user_without_thread_permissi
 def test_check_download_attachment_permission_fails_user_without_post_permission(
     user, cache_versions, attachment, default_category, thread, post
 ):
-    attachment.category = default_category
-    attachment.thread = thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     post.is_hidden = True
@@ -212,9 +204,7 @@ def test_check_download_attachment_permission_fails_user_without_post_permission
 def test_check_download_attachment_permission_fails_user_without_attachments_category_permission(
     user, members_group, cache_versions, attachment, default_category, thread, post
 ):
-    attachment.category = default_category
-    attachment.thread = thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     CategoryGroupPermission.objects.filter(
@@ -238,9 +228,7 @@ def test_check_download_attachment_permission_fails_user_without_attachments_cat
 def test_check_download_attachment_permission_passes_user_with_private_threads_permission(
     user, cache_versions, attachment, private_threads_category, user_private_thread
 ):
-    attachment.category = private_threads_category
-    attachment.thread = user_private_thread
-    attachment.post = user_private_thread.first_post
+    attachment.associate_with_post(user_private_thread.first_post)
     attachment.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -257,9 +245,7 @@ def test_check_download_attachment_permission_fails_user_without_private_threads
     private_threads_category,
     user_private_thread,
 ):
-    attachment.category = private_threads_category
-    attachment.thread = user_private_thread
-    attachment.post = user_private_thread.first_post
+    attachment.associate_with_post(user_private_thread.first_post)
     attachment.save()
 
     members_group.can_use_private_threads = False
@@ -280,9 +266,7 @@ def test_check_download_attachment_permission_fails_user_without_private_threads
 def test_check_download_attachment_permission_fails_user_without_private_thread_permission(
     user, cache_versions, attachment, private_threads_category, private_thread
 ):
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -365,9 +349,7 @@ def test_check_delete_attachment_permission_passes_uploader_for_unused_attachmen
 def test_check_delete_attachment_permission_passes_misago_admin_for_thread_attachment(
     admin, attachment, cache_versions, post
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     permissions = UserPermissionsProxy(admin, cache_versions)
@@ -384,9 +366,7 @@ def test_check_delete_attachment_permission_passes_misago_admin_for_thread_attac
 def test_check_delete_attachment_permission_passes_global_moderator_for_thread_attachment(
     moderator, attachment, cache_versions, post
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
@@ -409,9 +389,7 @@ def test_check_delete_attachment_permission_passes_category_moderator_for_thread
         categories=[post.category_id],
     )
 
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -428,9 +406,7 @@ def test_check_delete_attachment_permission_passes_category_moderator_for_thread
 def test_check_delete_attachment_permission_passes_uploader_for_thread_attachment(
     user, attachment, cache_versions, post
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.uploader = user
     attachment.save()
 
@@ -448,9 +424,7 @@ def test_check_delete_attachment_permission_passes_uploader_for_thread_attachmen
 def test_check_delete_attachment_permission_fails_uploader_without_permission_for_thread_attachment(
     user, members_group, attachment, cache_versions, post
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.uploader = user
     attachment.save()
 
@@ -472,9 +446,7 @@ def test_check_delete_attachment_permission_fails_uploader_without_permission_fo
 def test_check_delete_attachment_permission_fails_user_for_other_users_thread_attachment(
     user, other_user, attachment, cache_versions, post
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.uploader = other_user
     attachment.save()
 
@@ -493,9 +465,7 @@ def test_check_delete_attachment_permission_fails_user_for_other_users_thread_at
 def test_check_delete_attachment_permission_passes_misago_admin_for_private_thread_attachment(
     admin, attachment, cache_versions, private_threads_category, private_thread
 ):
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.save()
 
     permissions = UserPermissionsProxy(admin, cache_versions)
@@ -512,9 +482,7 @@ def test_check_delete_attachment_permission_passes_misago_admin_for_private_thre
 def test_check_delete_attachment_permission_passes_global_moderator_for_private_thread_attachment(
     moderator, attachment, cache_versions, private_threads_category, private_thread
 ):
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
@@ -537,9 +505,7 @@ def test_check_delete_attachment_permission_passes_private_threads_moderator_for
         private_threads=True,
     )
 
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -556,9 +522,7 @@ def test_check_delete_attachment_permission_passes_private_threads_moderator_for
 def test_check_delete_attachment_permission_passes_uploader_for_private_thread_attachment(
     user, attachment, cache_versions, private_threads_category, private_thread
 ):
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.uploader = user
     attachment.save()
 
@@ -581,9 +545,7 @@ def test_check_delete_attachment_permission_fails_uploader_without_permission_fo
     private_threads_category,
     private_thread,
 ):
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.uploader = user
     attachment.save()
 
@@ -610,9 +572,7 @@ def test_check_delete_attachment_permission_fails_user_for_other_users_private_t
     private_threads_category,
     private_thread,
 ):
-    attachment.category = private_threads_category
-    attachment.thread = private_thread
-    attachment.post = private_thread.first_post
+    attachment.associate_with_post(private_thread.first_post)
     attachment.uploader = other_user
     attachment.save()
 
@@ -631,9 +591,7 @@ def test_check_delete_attachment_permission_fails_user_for_other_users_private_t
 def test_check_delete_attachment_permission_fails_anonymous_user(
     anonymous_user, attachment, cache_versions, post
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)

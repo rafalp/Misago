@@ -163,9 +163,7 @@ class PostingState:
             if attachment.post_id:
                 continue
 
-            attachment.category = self.category
-            attachment.thread = self.thread
-            attachment.post = self.post
+            attachment.associate_with_post(self.post)
             attachment.uploaded_at = self.timestamp
             attachment.save()
 

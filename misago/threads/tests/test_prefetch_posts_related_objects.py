@@ -66,14 +66,10 @@ def test_prefetch_posts_related_objects_prefetches_attachments_categories(
     user_attachment,
     post,
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
-    user_attachment.category = post.category
-    user_attachment.thread = post.thread
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -122,9 +118,7 @@ def test_prefetch_posts_related_objects_prefetches_posts_threads(
 def test_prefetch_posts_related_objects_prefetches_attachments_threads(
     dynamic_settings, cache_versions, anonymous_user, thread, post, attachment
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -179,14 +173,10 @@ def test_prefetch_posts_related_objects_prefetches_attachments_posts(
     attachment,
     user_attachment,
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
-    user_attachment.category = user_reply.category
-    user_attachment.thread = user_reply.thread
-    user_attachment.post = user_reply
+    user_attachment.associate_with_post(user_reply)
     user_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -208,14 +198,10 @@ def test_prefetch_posts_related_objects_preloads_attachments(
     user_attachment,
     post,
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
-    user_attachment.category = post.category
-    user_attachment.thread = post.thread
-    user_attachment.post = post
+    user_attachment.associate_with_post(post)
     user_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -255,14 +241,10 @@ def test_prefetch_posts_related_objects_fetches_posts_attachments(
     post,
     user_reply,
 ):
-    attachment.category = post.category
-    attachment.thread = post.thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
-    user_attachment.category = user_reply.category
-    user_attachment.thread = user_reply.thread
-    user_attachment.post = user_reply
+    user_attachment.associate_with_post(user_reply)
     user_attachment.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -286,14 +268,10 @@ def test_prefetch_posts_related_objects_fetches_posts_metadata_attachments(
     user_reply,
     other_user_reply,
 ):
-    attachment.category = other_user_reply.category
-    attachment.thread = other_user_reply.thread
-    attachment.post = other_user_reply
+    attachment.associate_with_post(other_user_reply)
     attachment.save()
 
-    user_attachment.category = other_user_reply.category
-    user_attachment.thread = other_user_reply.thread
-    user_attachment.post = other_user_reply
+    user_attachment.associate_with_post(other_user_reply)
     user_attachment.save()
 
     post.metadata["attachments"] = [attachment.id]
@@ -324,14 +302,10 @@ def test_prefetch_posts_related_objects_doesnt_fetch_posts_metadata_attachments_
     user_reply,
     other_user_reply,
 ):
-    attachment.category = other_user_reply.category
-    attachment.thread = other_user_reply.thread
-    attachment.post = other_user_reply
+    attachment.associate_with_post(other_user_reply)
     attachment.save()
 
-    user_attachment.category = other_user_reply.category
-    user_attachment.thread = other_user_reply.thread
-    user_attachment.post = other_user_reply
+    user_attachment.associate_with_post(other_user_reply)
     user_attachment.save()
 
     post.metadata["attachments"] = [attachment.id]
@@ -359,14 +333,10 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_is_limi
     user_reply,
     other_user_reply,
 ):
-    attachment.category = other_user_reply.category
-    attachment.thread = other_user_reply.thread
-    attachment.post = other_user_reply
+    attachment.associate_with_post(other_user_reply)
     attachment.save()
 
-    user_attachment.category = other_user_reply.category
-    user_attachment.thread = other_user_reply.thread
-    user_attachment.post = other_user_reply
+    user_attachment.associate_with_post(other_user_reply)
     user_attachment.save()
 
     post.metadata["attachments"] = [attachment.id]
@@ -393,9 +363,7 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
     user_reply,
     other_user_reply,
 ):
-    attachment.category = other_user_reply.category
-    attachment.thread = other_user_reply.thread
-    attachment.post = other_user_reply
+    attachment.associate_with_post(other_user_reply)
     attachment.save()
 
     post.metadata["attachments"] = [attachment.id]
@@ -425,14 +393,10 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
     other_user_reply,
     private_thread,
 ):
-    attachment.category = other_user_reply.category
-    attachment.thread = other_user_reply.thread
-    attachment.post = other_user_reply
+    attachment.associate_with_post(other_user_reply)
     attachment.save()
 
-    user_attachment.category = private_thread.category
-    user_attachment.thread = private_thread
-    user_attachment.post = private_thread.first_post
+    user_attachment.associate_with_post(private_thread.first_post)
     user_attachment.save()
 
     post.metadata["attachments"] = [attachment.id]
@@ -555,14 +519,10 @@ def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
     permissions.permissions
     permissions.is_global_moderator
 
-    attachment.category = default_category
-    attachment.thread = thread
-    attachment.post = post
+    attachment.associate_with_post(post)
     attachment.save()
 
-    other_user_attachment.category = private_threads_category
-    other_user_attachment.thread = user_private_thread
-    other_user_attachment.post = user_private_thread.first_post
+    other_user_attachment.associate_with_post(user_private_thread.first_post)
     other_user_attachment.save()
 
     user_reply.metadata["attachments"] = [user_attachment.id, other_user_attachment.id]
