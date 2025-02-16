@@ -28,6 +28,14 @@ account_settings_menu.add_item(
 )
 
 
+account_settings_menu.add_item(
+    key="attachments",
+    url_name="misago:account-attachments",
+    label=pgettext_lazy("account settings page", "Attachments"),
+    icon="file_download",
+)
+
+
 def auth_is_not_delegated(request: HttpRequest) -> bool:
     return not request.settings.enable_oauth2_client
 
@@ -51,19 +59,11 @@ account_settings_menu.add_item(
 
 
 account_settings_menu.add_item(
-    key="password",
+    key="email",
     url_name="misago:account-email",
     label=pgettext_lazy("account settings page", "Email address"),
     icon="mail_outline",
     visible=auth_is_not_delegated,
-)
-
-
-account_settings_menu.add_item(
-    key="password",
-    url_name="misago:account-attachments",
-    label=pgettext_lazy("account settings page", "Attachments"),
-    icon="file_download",
 )
 
 
