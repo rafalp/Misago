@@ -5,7 +5,7 @@ from ...test import assert_contains, assert_not_contains
 
 
 def test_thread_replies_view_shows_error_on_missing_permission(
-    guests_group, client, thread, post
+    guests_group, client, thread
 ):
     CategoryGroupPermission.objects.filter(group=guests_group).delete()
 
@@ -216,6 +216,38 @@ def test_thread_replies_view_shows_other_users_unapproved_reply_to_global_modera
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
     assert_contains(response, other_user_unapproved_reply.parsed)
+
+
+def test_thread_replies_view_shows_post_with_attachments(
+    client,
+    thread,
+    post,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
+    text_attachment,
+):
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, post.parsed)
+    assert_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.get_absolute_url())
 
 
 def test_thread_replies_view_shows_error_if_private_thread_is_accessed(
