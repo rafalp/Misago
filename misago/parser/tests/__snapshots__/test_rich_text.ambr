@@ -1,0 +1,4 @@
+# serializer version: 1
+# name: test_replace_rich_text_tokens_replaces_default_spoiler_summary
+  '<spoiler><summary></summary><body><p>Hello world!</p></body></spoiler>'
+# ---

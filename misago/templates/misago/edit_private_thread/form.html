@@ -12,6 +12,7 @@
   <form 
     action="{% url 'misago:edit-private-thread' id=thread.id slug=thread.slug %}"
     method="post"
+    enctype="multipart/form-data"
     hx-post="{% url 'misago:edit-private-thread' id=thread.id slug=thread.slug %}"
     hx-trigger="submit"
     hx-target="#misago-htmx-root"
@@ -34,7 +35,7 @@
         <button class="btn btn-primary" type="submit">
           {% translate "Save" context "edit thread post submit btn" %}
         </button>
-        <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+        <button class="btn btn-secondary" type="submit" name="{{ formset.preview_action }}" value="true" formnovalidate>
           {% translate "Preview" context "edit thread post preview btn" %}
         </button>
       </div>

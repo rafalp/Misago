@@ -1,0 +1,9 @@
+{% load i18n %}
+<div class="attachment-details-video">
+  <div class="container attachment-video-container">
+    <video controls>
+      <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
+      {% translate "Your browser does not support video tag." context "attachment video player" %}
+    </video>
+  </div>
+</div>

@@ -3,6 +3,7 @@
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
+    "MISAGO_ATTACHMENTS_SERVER",
     "MISAGO_DEFAULT_OG_IMAGE",
     "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
     "MISAGO_DEFAULT_OG_IMAGE_HEIGHT",
@@ -10,9 +11,10 @@ __all__ = [
     "MISAGO_FORUM_ADDRESS_HISTORY",
     "MISAGO_MIDDLEWARE",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
-    "MISAGO_PARSER_MAX_ATTACHMENTS",
+    "MISAGO_PARSER_CLEAN_AST",
     "MISAGO_PARSER_MAX_POSTS",
     "MISAGO_PARSER_MAX_USERS",
+    "MISAGO_POST_ATTACHMENTS_LIMIT",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     "misago.account",
     "misago.acl",
     "misago.analytics",
+    "misago.attachments",
     "misago.auth",
     "misago.cache",
     "misago.categories",
@@ -142,6 +145,8 @@ MISAGO_MIDDLEWARE = [
     "misago.middleware.privatethreads.sync_user_unread_private_threads",
 ]
 
+MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_redirect_response"
+
 MISAGO_DEFAULT_OG_IMAGE = "misago/img/og-image.jpg"
 MISAGO_DEFAULT_OG_IMAGE_WIDTH = 1200
 MISAGO_DEFAULT_OG_IMAGE_HEIGHT = 630
@@ -152,6 +157,10 @@ MISAGO_FORUM_ADDRESS_HISTORY = []
 
 MISAGO_NOTIFICATIONS_RETRY_DELAY = 5  # Seconds
 
-MISAGO_PARSER_MAX_ATTACHMENTS = 30
+MISAGO_POST_ATTACHMENTS_LIMIT = 64
+
 MISAGO_PARSER_MAX_POSTS = 20
 MISAGO_PARSER_MAX_USERS = 25
+
+# For use in tests only
+MISAGO_PARSER_CLEAN_AST = True

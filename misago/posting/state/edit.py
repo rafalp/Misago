@@ -45,6 +45,8 @@ class EditThreadPostState(PostingState):
             if self.category.last_thread_id == self.thread.id:
                 self.save_category()
 
+        self.save_attachments()
+
     def save_post(self):
         self.post.updated_on = self.timestamp
         self.post.edits = models.F("edits") + 1

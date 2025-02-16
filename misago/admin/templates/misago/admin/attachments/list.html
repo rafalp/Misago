@@ -1,0 +1,143 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_admin_form misago_capture %}
+
+
+{% block table-header %}
+<th style="width: 1px;">&nbsp;</th>
+<th>{% translate "Attachment" context "admin attachments list" %}</th>
+<th style="width: 120px;">{% translate "Size" context "admin attachments list" %}</th>
+<th style="width: 140px;">{% translate "Type" context "admin attachments list" %}</th>
+<th style="width: 140px;">{% translate "Uploader" context "admin attachments list" %}</th>
+<th style="width: 150px;">{% translate "Uploaded at" context "admin attachments list" %}</th>
+<th style="width: 220px;">{% translate "Thread" context "admin attachments list" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+{% if item.upload %}
+  {% if item.filetype.is_image %}
+    <td class="pr-0">
+      {% if item.thumbnail %}
+        <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_thumbnail_url }}')" target="_blank"></a>
+      {% else %}
+        <a href="{{ item.get_absolute_url }}" class="btn btn-thumbnail" style="background-image: url('{{ item.get_absolute_url }}')" target="_blank"></a>
+      {% endif %}
+    </td>
+  {% else %}
+    <td class="pr-0 text-center">
+      <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-block btn-sm" target="_blank">
+        <span class="far fa-file"></span>
+      </a>
+    </td>
+  {% endif %}
+{% else %}
+  <td class="pr-0 text-center">
+    <div
+      class="btn btn-thumbnail-broken"
+      data-tooltip="top"
+      title="{% translate 'Upload is missing' context 'admin attachments' %}""
+    >
+      <span class="fas fa-times"></span>
+    </div>
+  </td>
+{% endif %}
+<td class="small">
+  {% if item.upload %}
+    <a href="{{ item.get_details_url }}" class="item-name" target="_blank">
+      {{ item.name }}
+    </a>
+  {% else %}
+    <span class="item-deleted-name">
+      {{ item.name }}
+    </span>
+  {% endif %}
+</td>
+<td class="small">
+  {{ item.size|filesizeformat }}
+</td>
+<td class="small text-truncate" style="max-width: 140px;">
+  {{ item.filetype_name }}
+</td>
+<td class="small text-truncate" style="max-width: 140px;">
+  {% if item.uploader %}
+    <a href="{{ item.uploader.get_absolute_url }}" class="item-title" target="_blank">{{ item.uploader }}</a>
+  {% else %}
+    <span class="item-title">{{ item.uploader_name }}</span>
+  {% endif %}
+</td>
+<td class="small text-truncate" style="max-width: 150px;">
+  <abbr data-timestamp="{{ item.uploaded_at.isoformat }}" data-format="LL">
+    {{ item.uploaded_at }}
+  </abbr>
+</td>
+<td class="small text-muted text-truncate" style="max-width: 220px;">
+  {% if item.post %}
+    <a href="{{ item.post.get_absolute_url }}" class="item-title" target="_blank">
+      {{ item.post.thread }}
+    </a>
+  {% elif item.is_deleted %}
+    <em>
+      {% translate "Marked for deletion" context "admin attachment status" %}
+    </em>
+  {% else %}
+    <em>
+      {% translate "Unused" context "admin attachment status" %}
+    </em>
+  {% endif %}
+</td>
+<td>
+  <form action="{% url 'misago:admin:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+    {% csrf_token %}
+    <button class="btn btn-light btn-sm">
+      {% translate "Delete" context "admin attachments" %}
+    </button>
+  </form>
+</td>
+{% endblock table-row %}
+
+
+{% block blankslate %}
+<td colspan="9">
+  {% if active_filters %}
+    {% translate "No attachments matching criteria exist." context "admin attachments" %}
+  {% else %}
+    {% translate "No attachments exist." context "admin attachments" %}
+  {% endif %}
+</td>
+{% endblock blankslate %}
+
+
+{% block filters-modal-body %}
+<div class="row">
+  <div class="col">
+    {% form_row filter_form.uploader %}
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    {% form_row filter_form.name %}
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    {% form_row filter_form.filetype %}
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    {% form_row filter_form.status %}
+  </div>
+</div>
+{% endblock filters-modal-body %}
+
+
+{% block javascripts %}
+{{ block.super }}
+<script type="text/javascript">
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% translate 'Are you sure you want to delete this attachment?' context 'admin attachments' %}"
+  )
+</script>
+{% endblock %}

@@ -139,14 +139,6 @@ def test_remote_image_link_is_added_to_images_and_links_lists(request_mock, user
     assert result["images"] == ["other.com/media/img.png"]
 
 
-def test_parser_adds_shva_to_attachment_link_querystring_if_force_option_is_enabled(
-    request_mock, user
-):
-    text = "clean_links step cleans ![3.png](http://example.com/a/thumb/test/43/)"
-    result = parse(text, request_mock, user, force_shva=True)
-    assert "/a/thumb/test/43/?shva=1" in result["parsed_text"]
-
-
 def test_parser_skips_shva_in_attachment_link_querystring_if_force_option_is_omitted(
     request_mock, user
 ):

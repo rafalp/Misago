@@ -25,6 +25,7 @@ class Post(PluginDataModel):
     original = models.TextField()
     parsed = models.TextField()
     checksum = models.CharField(max_length=64, default="-")
+    metadata = models.JSONField(default=dict)
     mentions = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="mention_set"
     )

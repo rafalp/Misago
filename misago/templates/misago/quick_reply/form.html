@@ -3,6 +3,7 @@
   <form
     action="{{ url }}"
     method="post"
+    enctype="multipart/form-data"
     hx-post="{{ url }}"
     hx-trigger="submit"
     hx-target="#misago-htmx-quick-reply"
@@ -21,7 +22,7 @@
         <button class="btn btn-primary" type="submit">
           {% translate "Post reply" context "quick reply thread submit btn" %}
         </button>
-        <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+        <button class="btn btn-secondary" type="submit" name="{{ formset.preview_action }}" value="true" formnovalidate>
           {% translate "Preview" context "quick reply thread submit btn" %}
         </button>
       </div>

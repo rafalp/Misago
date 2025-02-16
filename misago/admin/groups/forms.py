@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import validate_slug
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
 from ...parser.context import create_parser_context
@@ -9,6 +9,7 @@ from ...parser.factory import create_parser
 from ...parser.html import render_ast_to_html
 from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import PlainTextFormat, render_ast_to_plaintext
+from ...permissions.enums import CanUploadAttachments
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
@@ -169,6 +170,52 @@ class EditGroupForm(forms.ModelForm):
         min_value=1,
     )
 
+    can_upload_attachments = forms.TypedChoiceField(
+        label=pgettext_lazy("admin group permissions form", "Can upload attachments"),
+        choices=CanUploadAttachments.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
+    )
+    attachment_storage_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Total attachment storage limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Maximum total storage space, in megabytes, that each member of this group can to use for their attachments. Enter zero to remove this limit.",
+        ),
+        min_value=0,
+    )
+    unused_attachments_storage_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Unused attachments storage limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit.",
+        ),
+        min_value=0,
+    )
+    attachment_size_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Attachment file size limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Maximum file size of an attachment in kilobytes. Enter zero to remove this limit. Note: Server and Django request body size limits will still apply.",
+        ),
+        min_value=0,
+    )
+    can_always_delete_own_attachments = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can always delete own attachments"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "This permission allows users to delete their own attachments, even if they no longer have permission to edit or view the post they are associated with.",
+        ),
+    )
+
     can_change_username = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
@@ -226,6 +273,11 @@ class EditGroupForm(forms.ModelForm):
             "can_use_private_threads",
             "can_start_private_threads",
             "private_thread_users_limit",
+            "can_upload_attachments",
+            "attachment_storage_limit",
+            "unused_attachments_storage_limit",
+            "attachment_size_limit",
+            "can_always_delete_own_attachments",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",
@@ -239,6 +291,28 @@ class EditGroupForm(forms.ModelForm):
         self.fields["copy_permissions"].queryset = Group.objects.exclude(
             id=kwargs["instance"].id
         )
+
+    def clean(self):
+        data = super().clean()
+
+        attachment_storage_limit = data.get("attachment_storage_limit")
+        unused_attachments_storage_limit = data.get("unused_attachments_storage_limit")
+        if (
+            attachment_storage_limit
+            and unused_attachments_storage_limit
+            and unused_attachments_storage_limit > attachment_storage_limit
+        ):
+            self.add_error(
+                "unused_attachments_storage_limit",
+                forms.ValidationError(
+                    message=pgettext(
+                        "admin group form",
+                        "Unused attachments limit cannot exceed total attachments limit.",
+                    ),
+                ),
+            )
+
+        return data
 
 
 class EditGroupDescriptionForm(forms.ModelForm):

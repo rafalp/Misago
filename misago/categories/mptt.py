@@ -20,53 +20,60 @@ def heal_category_trees() -> int:
         trees.add(category["tree_id"])
         categories[category["id"]] = category
 
-    healthy_categories: list[dict] = []
+    healed_categories: list[dict] = []
     for tree_id in trees:
-        healthy_categories += heal_tree(tree_id, categories)
+        healed_categories += heal_tree(tree_id, categories)
 
-    updates = 0
-    for healed_category in healthy_categories:
+    update_categories: list[Category] = []
+    for healed_category in healed_categories:
         org_category = categories[healed_category["id"]]
         if org_category != healed_category:
-            Category.objects.filter(id=healed_category["id"]).update(
-                level=healed_category["level"],
-                lft=healed_category["lft"],
-                rght=healed_category["rght"],
-            )
-            updates += 1
+            update_categories.append(Category(**healed_category))
 
-    return updates
+    if not update_categories:
+        return 0
+
+    return Category.objects.bulk_update(
+        update_categories,
+        ("level", "lft", "rght"),
+    )
 
 
 def heal_tree(tree_id: int, categories: dict[int, dict]) -> list[dict]:
-    tree_categories = {
-        c["id"]: c.copy() for c in categories.values() if c["tree_id"] == tree_id
-    }
-    tree_categories_list = list(tree_categories.values())
+    healed_categories: list[dict] = []
+    categories_branches: dict[int, list[dict]] = {0: []}
 
-    cursor = 0
-    for category in tree_categories_list:
-        if category["parent_id"]:
-            continue
+    for category_id in categories:
+        categories_branches[category_id] = []
 
-        category["level"] = 0
-        cursor += 1
-        category["lft"] = cursor
-        category["rght"] = cursor = heal_category(category, tree_categories_list) + 1
+    for category in categories.values():
+        if category["tree_id"] == tree_id:
+            category_copy = category.copy()
+            healed_categories.append(category_copy)
+            categories_branches[category["parent_id"] or 0].append(category_copy)
 
-    return sorted(tree_categories_list, key=lambda i: i["lft"])
+    position = 0
+    for category in categories_branches[0]:
+        position = heal_category(category, categories_branches, position)
+
+    return healed_categories
 
 
-def heal_category(category: dict, tree_categories_list: list[dict]) -> int:
-    cursor = category["lft"]
-    for child in tree_categories_list:
-        if child["parent_id"] != category["id"]:
-            continue
+def heal_category(
+    category: dict,
+    categories_branches: dict[int, list[dict]],
+    position: int,
+    level: int = 0,
+) -> int:
+    category["level"] = level
 
-        child["level"] = category["level"] + 1
+    position += 1
+    category["lft"] = position
 
-        cursor += 1
-        child["lft"] = cursor
-        child["rght"] = cursor = heal_category(child, tree_categories_list) + 1
+    for child in categories_branches[category["id"]]:
+        position = heal_category(child, categories_branches, position, level + 1)
 
-    return cursor
+    position += 1
+    category["rght"] = position
+
+    return position

@@ -13,7 +13,7 @@ from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
 )
 from ...permissions.threads import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
     check_edit_thread_permission,
 )
 from ...posting.formsets import (
@@ -38,6 +38,7 @@ from ..hooks import (
     get_edit_thread_post_page_context_data_hook,
 )
 from ..models import Post, Thread
+from ..prefetch import prefetch_posts_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
@@ -47,7 +48,8 @@ class EditView(View):
     template_name_htmx: str
     template_name_inline: str = "misago/inline_edit/index.html"
     template_name_inline_form: str = "misago/inline_edit/form.html"
-    post_select_related: Iterable[str] = ("thread", "category", "poster")
+    post_select_related: Iterable[str] = ("poster",)
+    allow_edit_thread: bool = False
 
     def get(
         self, request: HttpRequest, id: int, slug: str, post: int | None = None
@@ -71,8 +73,13 @@ class EditView(View):
         formset = self.get_formset(request, post_obj)
         formset.update_state(state)
 
-        if request.POST.get("preview"):
-            return self.render(request, post_obj, formset, state.post.parsed)
+        if formset.is_request_preview(request):
+            formset.clear_errors_in_preview()
+            return self.render(request, post_obj, formset, state)
+
+        if formset.is_request_upload(request):
+            formset.clear_errors_in_upload()
+            return self.render(request, post_obj, formset)
 
         if not self.is_valid(formset, state):
             return self.render(request, post_obj, formset)
@@ -104,15 +111,19 @@ class EditView(View):
     ) -> HttpResponse:
         feed = self.get_posts_feed(request, state.thread, [state.post])
 
+        if self.allow_edit_thread:
+            feed.set_allow_edit_thread(True)
+
         if animate:
             feed.set_animated_posts([state.post.id])
 
-        counter_start = (
-            self.get_thread_posts_queryset(request, state.thread)
-            .filter(id__lt=state.post.id)
-            .count()
-        )
-        feed.set_counter_start(counter_start)
+        if state.post.id != state.thread.first_post_id:
+            counter_start = (
+                self.get_thread_posts_queryset(request, state.thread)
+                .filter(id__lt=state.post.id)
+                .count()
+            )
+            feed.set_counter_start(counter_start)
 
         post_context = feed.get_feed_data()[0]
         return render(request, self.template_name_inline, context=post_context)
@@ -131,10 +142,23 @@ class EditView(View):
         request: HttpRequest,
         post: Post,
         formset: PostingFormset,
-        preview: str | None = None,
+        preview: PostingState | None = None,
     ):
         context = self.get_context_data(request, post, formset)
-        context["preview"] = preview
+
+        if preview:
+            related_objects = prefetch_posts_related_objects(
+                request.settings,
+                request.user_permissions,
+                [preview.post],
+                categories=[post.category],
+                threads=[post.thread],
+                users=[post.poster],
+                attachments=preview.attachments,
+            )
+
+            context["preview"] = preview.post.parsed
+            context["preview_rich_text_data"] = related_objects
 
         if self.is_inline(request):
             template_name = self.template_name_inline_form
@@ -175,7 +199,7 @@ class EditThreadPostView(EditView, ThreadView):
         self, request: HttpRequest, thread: Thread, post_id: int
     ) -> Post:
         post = super().get_thread_post(request, thread, post_id)
-        check_edit_post_permission(
+        check_edit_thread_post_permission(
             request.user_permissions, post.category, post.thread, post
         )
         return post
@@ -234,6 +258,7 @@ class EditPrivateThreadPostView(EditView, PrivateThreadView):
 class EditThreadView(EditThreadPostView):
     template_name: str = "misago/edit_thread/index.html"
     template_name_htmx: str = "misago/edit_thread/form.html"
+    allow_edit_thread: bool = True
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -254,6 +279,7 @@ class EditThreadView(EditThreadPostView):
 class EditPrivateThreadView(EditPrivateThreadPostView):
     template_name: str = "misago/edit_private_thread/index.html"
     template_name_htmx: str = "misago/edit_private_thread/form.html"
+    allow_edit_thread: bool = True
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)

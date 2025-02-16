@@ -26,6 +26,7 @@ class GenericView(View):
     thread_select_related: Iterable[str] | True | None = None
     thread_annotate_read_time: bool = False
     thread_url_name: str
+    post_select_related: Iterable[str] | True | None = None
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         queryset = self.get_thread_queryset(request)
@@ -50,6 +51,11 @@ class GenericView(View):
         self, request: HttpRequest, thread: Thread, post_id: int
     ) -> Post:
         queryset = self.get_thread_posts_queryset(request, thread)
+        if self.post_select_related is True:
+            queryset = queryset.select_related()
+        elif self.post_select_related:
+            queryset = queryset.select_related(*self.post_select_related)
+
         post = get_object_or_404(queryset, id=post_id)
 
         if self.thread_select_related and (

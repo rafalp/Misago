@@ -18,6 +18,7 @@
     <form 
       action="{% url 'misago:start-private-thread' %}"
       method="post"
+      enctype="multipart/form-data"
     >
       {% csrf_token %}
       <div class="panel panel-default panel-form">
@@ -36,7 +37,7 @@
           <button class="btn btn-primary" type="submit">
             {% translate "Start thread" context "start thread submit btn" %}
           </button>
-          <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+          <button class="btn btn-secondary" type="submit" name="{{ formset.preview_action }}" value="true" formnovalidate>
             {% translate "Preview" context "start thread preview btn" %}
           </button>
         </div>
@@ -49,4 +50,5 @@
 
 {% block modals %}
 {% include "misago/posting/markup_editor_modals.html" %}
+{% include "misago/posting/attachment_templates.html" %}
 {% endblock modals %}

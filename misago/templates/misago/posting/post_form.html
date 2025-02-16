@@ -1,8 +1,13 @@
 {% load i18n misago_forms %}
 
 {% with field=form.post %}
-  <div class="form-group{% if field.errors %} has-error{% endif %}">
-    <div class="markup-editor" misago-editor-active="false">
+  <div class="form-group">
+    <div
+      class="markup-editor"
+      misago-editor-active="false"
+      misago-editor-attachments-name="{{ form.attachment_ids_field }}"
+      misago-editor-attachments-url="{% if form.can_upload_attachments %}{% url 'misago:attachments-upload' %}{% endif %}"
+    >
       <div class="markup-editor-toolbar">
         <div class="markup-editor-toolbar-left">
           {% include "misago/posting/editor_toolbar.html" %}
@@ -34,13 +39,16 @@
         id="{{ field.id_for_label }}"
         name="{{ field.html_name }}"
         class="markup-editor-textarea form-control form-control-post{% if post_control_large %} form-control-post-lg{% endif %}"
-        maxlength="{{ field.field.max_length }}"
+        maxlength="{{ field.field.max_length|default:'' }}"
         aria-label="{% translate 'Post message' context 'posting form' %}"
         {{ field|requiredhtml }}
       >{{ field.value|default:"" }}</textarea>
+      {% if form.show_attachments %}
+        {% include "misago/posting/attachments_form.html" %}
+      {% endif %}
     </div>
     {% for error in field.errors %}
-      <p class="help-block">{{ error }}</p>
+      <p class="help-block text-danger">{{ error }}</p>
     {% endfor %}
   </div>
 {% endwith %}

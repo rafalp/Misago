@@ -1,0 +1,143 @@
+{% load i18n %}
+<div class="panel-body panel-attachments-usage">
+  <h4>
+    {% translate "Storage usage" context "account attachments page" %}
+  </h4>
+  <div class="progress">
+    {% if storage_usage.exceeded_pc %}
+      <div
+        class="progress-bar progress-bar-danger"
+        role="progressbar"
+        aria-valuenow="{{ storage_usage.exceeded_pc }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="width: {{ storage_usage.exceeded_pc }}%;"
+      ></div>
+    {% endif %}
+    {% if storage_usage.posted_pc %}
+      <div
+        class="progress-bar"
+        role="progressbar"
+        aria-valuenow="{{ storage_usage.posted_pc }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="width: {{ storage_usage.posted_pc }}%;"
+      ></div>
+    {% endif %}
+    {% if storage_usage.unused_pc %}
+      <div
+        class="progress-bar progress-bar-warning"
+        role="progressbar"
+        aria-valuenow="{{ storage_usage.unused_pc }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="width: {{ storage_usage.unused_pc }}%;"
+      ></div>
+    {% endif %}
+  </div>
+  <ul class="attachment-usage-legend">
+    {% if storage_usage.total_limit %}
+      <li>
+        <strong>{% translate "Total:" context "account attachments page" %}</strong>
+        {{ storage_usage.total_limit|filesizeformat }}
+      </li>
+    {% endif %}
+    <li>
+      <strong>{% translate "Used:" context "account attachments page" %}</strong>
+      {{ storage_usage.total|filesizeformat }}
+    </li>
+    {% if storage_usage.exceeded %}
+      <li>
+        <span class="attachment-usage-legend-item attachment-usage-exceeded"></span>
+        <strong>{% translate "Exceeded:" context "account attachments page" %}</strong>
+        {{ storage_usage.exceeded|filesizeformat }}
+      </li>
+    {% endif %}
+    <li>
+      <span class="attachment-usage-legend-item attachment-usage-posted"></span>
+      <strong>{% translate "Posted:" context "account attachments page" %}</strong>
+      {{ storage_usage.posted|filesizeformat }}
+    </li>
+    {% if storage_usage.unused %}
+      <li>
+        <span class="attachment-usage-legend-item attachment-usage-unused"></span>
+        <strong>{% translate "Temporary:" context "account attachments page" %}</strong>
+        {{ storage_usage.unused|filesizeformat }}
+      </li>
+    {% endif %}
+    {% if not storage_usage.total_limit and storage_usage.unused_limit %}
+      <li>
+        <span class="attachment-usage-legend-item"></span>
+        <strong>{% translate "Available:" context "account attachments page" %}</strong>
+        {{ storage_usage.free|filesizeformat }}
+      </li>
+    {% endif %}
+  </ul>
+
+  {% if storage_usage.total_limit and storage_usage.total >= storage_usage.total_limit %}
+    <p class="attachment-usage-help-text">
+      <span class="attachment-usage-legend-item attachment-usage-exceeded"></span>
+      <strong>{% translate "Exceeded:" context "account attachments page" %}</strong>
+      {% blocktranslate trimmed with exceeded=storage_usage.exceeded|filesizeformat limit=storage_usage.total_limit|filesizeformat context "account attachments page" %}
+        Your attachments are using {{ exceeded }}, exceeding the limit of {{ limit }}.
+      {% endblocktranslate %}
+      {% blocktranslate trimmed context "account attachments page" %}
+        You won’t be able to upload new attachments until you delete some to free up space.
+      {% endblocktranslate %}
+    </p>
+  {% endif %}
+
+  {% if storage_usage.total %}
+    <p class="attachment-usage-help-text">
+      <span class="attachment-usage-legend-item attachment-usage-posted"></span>
+      <strong>{% translate "Posted:" context "account attachments page" %}</strong>
+      {% blocktranslate trimmed with storage=storage_usage.posted|filesizeformat context "account attachments page" %}
+        Attachments associated with posts are taking {{ storage }}.
+      {% endblocktranslate %}
+    </p>
+  {% endif %}
+
+  {% if storage_usage.unused %}
+    <p class="attachment-usage-help-text">
+      <span class="attachment-usage-legend-item attachment-usage-unused"></span>
+      <strong>{% translate "Temporary:" context "account attachments page" %}</strong>
+      {% blocktranslate trimmed with storage=storage_usage.unused|filesizeformat context "account attachments page" %}
+        Attachments that are not associated with any post are taking {{ storage }}.
+      {% endblocktranslate %}
+      {% if storage_usage.unused_lifetime_days %}
+        {% blocktranslate trimmed count days=storage_usage.unused_lifetime_days context "account attachments page" %}
+          These files are automatically deleted one day after upload, freeing up space.
+        {% plural %}
+          These files are automatically deleted {{ days }} days after upload, freeing up space.
+        {% endblocktranslate %}
+      {% else %}
+        {% blocktranslate trimmed count hours=storage_usage.unused_lifetime_hours context "account attachments page" %}
+          These files are automatically deleted one hour after upload, freeing up space.
+        {% plural %}
+          These files are automatically deleted {{ hours }} hours after upload, freeing up space.
+        {% endblocktranslate %}
+      {% endif %}
+      {% if storage_usage.total_limit and storage_usage.unused_limit %}
+        {% blocktranslate trimmed with limit=storage_usage.unused_limit|filesizeformat context "account attachments page" %}
+          Their total size cannot exceed {{ limit }}, even if your available storage space is larger.
+        {% endblocktranslate %}
+        {% blocktranslate trimmed context "account attachments page" %}
+          Once this limit is reached, you won't be able to upload new attachments until some of it is freed by posting or deleting existing temporary attachments.
+        {% endblocktranslate %}
+      {% endif %}
+    </p>
+  {% endif %}
+
+  {% if not storage_usage.total_limit and storage_usage.unused_limit %}
+    <p class="attachment-usage-help-text">
+      <span class="attachment-usage-legend-item"></span>
+      <strong>{% translate "Available:" context "account attachments page" %}</strong>
+      {% blocktranslate trimmed with limit=storage_usage.unused_limit|filesizeformat context "account attachments page" %}
+        Your attachment storage is unlimited, but you can't exceed {{ limit }} in temporary attachments.
+      {% endblocktranslate %}
+      {% blocktranslate trimmed context "account attachments page" %}
+        Once this space is full, you won't be able to upload new attachments until some of it is freed by posting or deleting existing temporary attachments.
+      {% endblocktranslate %}
+    </p>
+  {% endif %}
+</div>

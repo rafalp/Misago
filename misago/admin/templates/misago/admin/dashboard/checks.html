@@ -1,0 +1,213 @@
+{% load i18n misago_capture %}
+<div class="card card-admin-info">
+  <div class="card-body">
+    <h4 class="card-title">
+      {% translate "System checks" context "admin checks title" %}
+    </h4>
+  </div>
+  <div id="admin-version-check" class="card-body border-top">
+    <div class="media media-admin-check">
+      <div class="media-check-icon">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">{% translate "Loading..." context "admin version check" %}</span>
+        </div>
+      </div>
+      <div class="media-body">
+        <h5>{% translate "Checking Misago version used by the site..." context "admin version check" %}</h5>
+        {% blocktranslate trimmed context "admin version check" %}
+          Version check feature relies on the API operated by the Python Package Index (pypi.org) to retrieve the latest Misago release version.
+        {% endblocktranslate %}
+      </div>
+    </div>
+  </div>
+  {% if not checks.debug.is_ok %}
+    <div class="card-body border-top">
+      <div class="media media-admin-check">
+        <div class="media-check-icon media-check-icon-danger">
+          <span class="fas fa-times"></span>
+        </div>
+        <div class="media-body">
+          <h5>{% translate "The site is running in DEBUG mode." context "admin debug check" %}</h5>
+          {% blocktranslate trimmed context "admin debug check" %}
+            Error pages displayed in the DEBUG mode will expose site configuration details like secrets and tokens to all visitors.
+            This is a MAJOR security risk.
+          {% endblocktranslate %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.address.set_address %}
+    <div class="card-body border-top">
+      <div class="row">
+        <div class="col">
+          <div class="media media-admin-check">
+            <div class="media-check-icon media-check-icon-danger">
+              <span class="fas fa-times"></span>
+            </div>
+            <div class="media-body">
+              <h5>{% translate "Forum address is not configured." context "admin site address check" %}</h5>
+              {% translate "Links in e-mails sent by Misago will be broken." context "admin site address check" %}
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'misago:admin:settings:general:index' %}">
+            <span class="fas fa-external-link-alt"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% elif not checks.address.is_ok %}
+    <div class="card-body border-top">
+      <div class="row">
+        <div class="col">
+          <div class="media media-admin-check">
+            <div class="media-check-icon media-check-icon-warning">
+              <span class="fas fa-question"></span>
+            </div>
+            <div class="media-body">
+              <h5>{% translate "Configured forum address appears to be incorrect." context "admin site address check" %}</h5>
+              <div class="d-block">
+                {% capture trimmed as set_address %}
+                  <code>{{ checks.address.set_address }}</code>
+                {% endcapture %}
+                {% capture trimmed as correct_address %}
+                  <code>{{ checks.address.correct_address }}</code>
+                {% endcapture %}
+                {% blocktranslate trimmed with configured_address=set_address|safe correct_address=correct_address|safe context "admin site address check" %}
+                  Your forum address is set to {{ configured_address }} while correct value appears to be {{ correct_address }}.
+                {% endblocktranslate %}
+              </div>
+              <div>
+                {% translate "Links in e-mails sent by Misago may be broken." context "admin site address check" %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'misago:admin:settings:general:index' %}#id_forum_address_group">
+            <span class="fas fa-external-link-alt"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.https.is_ok %}
+    <div class="card-body border-top">
+      <div class="media media-admin-check">
+        <div class="media-check-icon media-check-icon-warning">
+          <span class="fas fa-question"></span>
+        </div>
+        <div class="media-body">
+          <h5>{% translate "The site is not running over HTTPS." context "admin https check" %}</h5>
+          {% blocktranslate trimmed context "admin https check" %}
+            Browsers may warn users visiting the site about it being insecure. Search engines will lower its position in search results.
+          {% endblocktranslate %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.cache.is_ok %}
+    <div class="card-body border-top">
+      <div class="media media-admin-check">
+        <div class="media-check-icon media-check-icon-danger">
+          <span class="fas fa-times"></span>
+        </div>
+        <div class="media-body">
+          <h5>{% translate "Cache is disabled." context "admin cache check" %}</h5>
+          {% blocktranslate trimmed context "admin cache check" %}
+            This will cause degraded performance and increased CPU usage by the site, leading to worse user experience and increased hosting costs.
+          {% endblocktranslate %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.data_downloads.is_ok %}
+    <div class="card-body border-top">
+      <div class="media media-admin-check">
+        <div class="media-check-icon media-check-icon-danger">
+          <span class="fas fa-times"></span>
+        </div>
+        <div class="media-body">
+          <h5>
+            {% blocktranslate trimmed count downloads=checks.data_downloads.count context "admin data downloads check" %}
+              There is {{ downloads }} unprocessed data download request.
+            {% plural %}
+              There are {{ downloads }} unprocessed data download requests.
+            {% endblocktranslate %}
+          </h5>
+          {% blocktranslate trimmed context "admin data downloads check" %}
+            Cron task that should process user data download requests is not running.
+          {% endblocktranslate %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.attachments_storage.is_ok %}
+    <div class="card-body border-top">
+      <div class="row">
+        <div class="col">
+          <div class="media media-admin-check">
+            {% if checks.attachments_storage.usage > 85 %}
+              <div class="media-check-icon media-check-icon-danger">
+                <span class="fas fa-times"></span>
+              </div>
+            {% else %}
+              <div class="media-check-icon media-check-icon-warning">
+                <span class="fas fa-exclamation"></span>
+              </div>
+            {% endif %}
+            <div class="media-body">
+              <h5>
+                {% blocktranslate trimmed with usage=checks.attachments_storage.usage context "admin attachments storage check" %}
+                  Unused attachments storage is {{ usage }}% full.
+                {% endblocktranslate %}
+              </h5>
+              {% blocktranslate trimmed context "admin attachments storage check" %}
+                Users without unlimited unused attachments storage will not be able to upload files if it is 100% full.
+              {% endblocktranslate %}
+              {% blocktranslate trimmed with space_left=checks.attachments_storage.space_left|filesizeformat limit=checks.attachments_storage.limit|filesizeformat context "admin attachments storage check" %}
+                {{ space_left }} of {{ limit }} is available for new attachments.
+              {% endblocktranslate %}
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'misago:admin:attachments:index' %}?status=unused&sort=id&direction=asc">
+            <span class="fas fa-external-link-alt"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if not checks.inactive_users.is_ok %}
+    <div class="card-body border-top">
+      <div class="row">
+        <div class="col">
+          <div class="media media-admin-check">
+            <div class="media-check-icon media-check-icon-warning">
+              <span class="fas fa-question"></span>
+            </div>
+            <div class="media-body">
+              <h5>
+                {% blocktranslate trimmed count users=checks.inactive_users.count context "admin inactive users check" %}
+                  There is {{ users }} inactive user accounts.
+                {% plural %}
+                  There are {{ users }} inactive users accounts.
+                {% endblocktranslate %}
+              </h5>
+              {% blocktranslate trimmed context "admin inactive users check" %}
+                The site may be targeted by bots, is not sending activation e-mails, or is not configured to delete inactive user accounts.
+              {% endblocktranslate %}
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'misago:admin:users:index' %}?is_inactive=1">
+            <span class="fas fa-external-link-alt"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

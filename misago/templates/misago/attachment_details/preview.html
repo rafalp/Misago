@@ -1,0 +1,11 @@
+{% if attachment.filetype.is_video %}
+  {% include "misago/attachment_details/video.html" %}
+{% elif attachment.filetype.is_image %}
+  {% if attachment.dimensions and attachment.width < 300 and attachment.height < 300 %}
+    {% include "misago/attachment_details/image_small.html" %}
+  {% else %}
+    {% include "misago/attachment_details/image_large.html" %}
+  {% endif %}
+{% else %}
+  {% include "misago/attachment_details/file.html" %}
+{% endif %}

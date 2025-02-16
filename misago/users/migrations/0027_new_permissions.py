@@ -42,6 +42,17 @@ class Migration(migrations.Migration):
                 ("can_use_private_threads", models.BooleanField(default=False)),
                 ("can_start_private_threads", models.BooleanField(default=False)),
                 ("private_thread_users_limit", models.PositiveIntegerField(default=1)),
+                ("can_upload_attachments", models.PositiveIntegerField(default=0)),
+                ("attachment_storage_limit", models.PositiveIntegerField(default=512)),
+                (
+                    "unused_attachments_storage_limit",
+                    models.PositiveIntegerField(default=64),
+                ),
+                ("attachment_size_limit", models.PositiveIntegerField(default=1000)),
+                (
+                    "can_always_delete_own_attachments",
+                    models.BooleanField(default=False),
+                ),
                 ("can_change_username", models.BooleanField(default=False)),
                 ("username_changes_limit", models.PositiveIntegerField(default=0)),
                 ("username_changes_expire", models.PositiveIntegerField(default=0)),

@@ -1,6 +1,6 @@
 import pytest
 
-from ..html import complete_markup_html, render_ast_to_html
+from ..html import render_ast_to_html
 from ..metadata import create_ast_metadata
 
 
@@ -367,8 +367,14 @@ def test_render_ast_to_html_url_bbcode_with_text(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_attachment(parser_context, parse_markup, snapshot):
+    ast = parse_markup(f"See the site: <attachment=image.png:123>")
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_auto_link(parser_context, parse_markup, snapshot):
-    ast = parse_markup(f"See the site: <https://misago-project.org>")
+    ast = parse_markup(f"See the file: <https://misago-project.org>")
     metadata = create_ast_metadata(parser_context, ast)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
@@ -402,12 +408,3 @@ def test_render_ast_to_html_for_unsupported_ast_raises_error(parser_context):
     with pytest.raises(ValueError):
         metadata = create_ast_metadata(parser_context, [])
         render_ast_to_html(parser_context, [{"type": "unsupported"}], metadata)
-
-
-def test_complete_markup_html_replaces_default_spoiler_summary(
-    parser_context, parse_markup, snapshot
-):
-    ast = parse_markup("[spoiler]Hello world![/spoiler]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
-    assert snapshot == complete_markup_html(html)

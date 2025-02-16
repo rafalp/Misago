@@ -2,12 +2,12 @@
 <div class="col-auto">
   <div class="dropdown">
     <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-      {% trans "Sort:" context "admin list ordering" %}
+      {% translate "Sort:" context "admin list ordering" %}
       <strong>{{ order.name }}</strong>
     </button>
     <div class="dropdown-menu">
       <h6 class="dropdown-header">
-        {% trans "Change sorting to:" context "admin list ordering" %}
+        {% translate "Change sorting to:" context "admin list ordering" %}
       </h6>
       {% for ordering in order_by %}
         <form method="get">

@@ -21,11 +21,23 @@ def get_form_data(group: Group) -> dict:
         "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
         "group-can_edit_own_posts": "1" if group.can_edit_own_posts else "",
         "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
+        "group-exempt_from_flood_control": (
+            "1" if group.exempt_from_flood_control else ""
+        ),
         "group-can_use_private_threads": "1" if group.can_use_private_threads else "",
         "group-can_start_private_threads": (
             "1" if group.can_start_private_threads else ""
         ),
         "group-private_thread_users_limit": str(group.private_thread_users_limit),
+        "group-can_upload_attachments": str(group.can_upload_attachments),
+        "group-attachment_storage_limit": str(group.attachment_storage_limit),
+        "group-unused_attachments_storage_limit": str(
+            group.unused_attachments_storage_limit
+        ),
+        "group-attachment_size_limit": str(group.attachment_size_limit),
+        "group-can_always_delete_own_attachments": (
+            "1" if group.can_always_delete_own_attachments else ""
+        ),
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),
@@ -112,7 +124,7 @@ def test_edit_group_form_validates_color(admin_client, custom_group):
     assert_contains(response, "Entered value is not a valid color")
 
     custom_group.refresh_from_db()
-    assert custom_group.css_suffix is None
+    assert custom_group.color is None
 
 
 def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
@@ -127,6 +139,63 @@ def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
 
     custom_group.refresh_from_db()
     assert custom_group.css_suffix is None
+
+
+def test_edit_group_form_validates_unused_attachments_limit_is_smaller_than_total_limit(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["group-attachment_storage_limit"] = "10"
+    form_data["group-unused_attachments_storage_limit"] = "20"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert_contains(
+        response,
+        "Unused attachments limit cannot exceed total attachments limit.",
+    )
+
+    custom_group.refresh_from_db()
+    assert custom_group.attachment_storage_limit == 512
+    assert custom_group.unused_attachments_storage_limit == 64
+
+
+def test_edit_group_form_allows_unused_attachments_limit_smaller_than_total_limit(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["group-attachment_storage_limit"] = "20"
+    form_data["group-unused_attachments_storage_limit"] = "10"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.refresh_from_db()
+    assert custom_group.attachment_storage_limit == 20
+    assert custom_group.unused_attachments_storage_limit == 10
+
+
+def test_edit_group_form_allows_unused_attachments_limit_smaller_than_disabled_total_limit(
+    admin_client, custom_group
+):
+    form_data = get_form_data(custom_group)
+    form_data["group-attachment_storage_limit"] = "0"
+    form_data["group-unused_attachments_storage_limit"] = "10"
+
+    response = admin_client.post(
+        reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
+        form_data,
+    )
+    assert response.status_code == 302
+
+    custom_group.refresh_from_db()
+    assert custom_group.attachment_storage_limit == 0
+    assert custom_group.unused_attachments_storage_limit == 10
 
 
 def test_edit_group_form_updates_appearance_settings(admin_client, custom_group):

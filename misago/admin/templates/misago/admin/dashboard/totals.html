@@ -1,0 +1,36 @@
+{% load i18n %}
+<div class="card card-admin-info overflow-hidden">
+  <div class="card-body">
+    <h4 class="card-title">
+      {% translate "Totals" context "admin dashboard totals" %}
+    </h4>
+  </div>
+  <table class="table m-0 small">
+    <tr>
+      <td>
+        <strong>{% translate "Users:" context "admin dashboard totals" %}</strong>
+        {{ totals.users }}
+      </td>
+      <td>
+        <strong>{% translate "Threads:" context "admin dashboard totals" %}</strong>
+        {{ totals.threads }}
+      </td>
+      <td>
+        <strong>{% translate "Posts:" context "admin dashboard totals" %}</strong>
+        {{ totals.posts }}
+      </td>
+      <td>
+        <strong>{% translate "Attachments:" context "admin dashboard totals" %}</strong>
+        {{ totals.attachments }}
+      </td>
+      <td>
+        <strong>{% translate "Attachments size:" context "admin dashboard totals" %}</strong>
+        {{ totals.attachments_total_size|filesizeformat }}
+      </td>
+      <td>
+        <strong>{% translate "Unused attachments:" context "admin dashboard totals" %}</strong>
+        {{ totals.attachments_unused_size|filesizeformat }}
+      </td>
+    </tr>
+  </table>
+</div>

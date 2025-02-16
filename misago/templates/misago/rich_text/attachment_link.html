@@ -1,0 +1,17 @@
+{% load i18n %}
+<div class="rich-text-file">
+  <div class="rich-text-file-body">
+    <a href="{% url 'misago:attachment-download' slug=slug id=id %}" target="_blank" class="rich-text-file-link">
+      <span class="material-icon">open_in_new</span>
+      <span class="rich-text-file-name">{{ name }}</span>
+    </a>
+    <a
+      href="{% url 'misago:attachment-details' slug=slug id=id %}"
+      target="_blank"
+      class="rich-text-info-hover-btn"
+      title="{% translate 'See information' context 'rich text attachment info btn' %}"
+    >
+      <span class="material-icon">info</span>
+    </a>
+  </div>
+</div>

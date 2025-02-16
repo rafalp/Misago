@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{% trans "Category permissions" context "admin category form" %} | {{ target }} | {{ active_link.name }} | {{ block.super }}
+{% translate "Category permissions" context "admin category form" %} | {{ target }} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -19,23 +19,23 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:categories:edit' pk=target.pk %}" class="btn btn-primary btn-sm">
     <span class="fa fa-edit"></span>
-    {% trans "Edit category" context "admin categories" %}
+    {% translate "Edit category" context "admin categories" %}
   </a>
 </div>
 <div class="col-auto page-action">
   <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
     <span class="fas fa-external-link-alt"></span>
-    {% trans "View on site" context "admin categories" %}
+    {% translate "View on site" context "admin categories" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block form-header %}
-{% trans "Category permissions" context "admin category form" %}
+{% translate "Category permissions" context "admin category form" %}
 {% endblock %}
 
 
 {% block item-header %}
-{% trans "Category" context "admin category form" %}
+{% translate "Category" context "admin category form" %}
 {% endblock item-header %}

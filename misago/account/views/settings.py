@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Any
 
 from django.conf import settings
@@ -12,10 +13,19 @@ from django.utils.translation import gettext as _, pgettext, pgettext_lazy
 from django.views import View
 from django.views.decorators.debug import sensitive_post_parameters
 
+from ...attachments.models import Attachment
+from ...attachments.storage import (
+    get_user_attachment_storage_usage,
+    get_user_unused_attachments_size,
+)
 from ...auth.decorators import login_required
 from ...core.mail import build_mail
 from ...pagination.cursor import EmptyPageError, paginate_queryset
 from ...pagination.redirect import redirect_to_last_page
+from ...permissions.attachments import check_delete_attachment_permission
+from ...permissions.checkutils import check_permissions
+from ...permissions.posts import check_see_post_permission
+from ...threads.privatethreads import prefetch_private_thread_member_ids
 from ...users.datadownloads import (
     request_user_data_download,
     user_has_data_download_request,
@@ -415,6 +425,170 @@ def account_email_confirm_change(request, user_id, token):
         "misago/account/settings/email_changed.html",
         {"username": user.username, "new_email": new_email},
     )
+
+
+class AccountAttachmentsView(AccountSettingsFormView):
+    template_name = "misago/account/settings/attachments.html"
+    template_name_htmx = "misago/account/settings/attachments_list.html"
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return self.render(request, template_name)
+
+    def get_context_data(
+        self,
+        request: HttpRequest,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        context["storage_usage"] = self.get_storage_usage(request)
+        context["attachments"] = self.get_attachments(request)
+
+        return context
+
+    def get_storage_usage(self, request: HttpRequest) -> dict:
+        unused_attachments_lifetime_days = 0
+        unused_attachments_lifetime = request.settings.unused_attachments_lifetime
+
+        if unused_attachments_lifetime >= 24 and unused_attachments_lifetime % 24 == 0:
+            unused_attachments_lifetime_days = int(unused_attachments_lifetime / 24)
+
+        total_storage = request.user_permissions.attachment_storage_limit
+        total_unused_storage = (
+            request.settings.unused_attachments_storage_limit * 1024 * 1024
+        )
+        unused_storage = request.user_permissions.unused_attachments_storage_limit
+
+        unused_storage_limit = 0
+        if total_unused_storage and unused_storage:
+            unused_storage_limit = min(total_unused_storage, unused_storage)
+        else:
+            unused_storage_limit = total_unused_storage or unused_storage
+
+        all_attachments = get_user_attachment_storage_usage(request.user)
+        unused_attachments = get_user_unused_attachments_size(request.user)
+        posted_attachments = max(all_attachments - unused_attachments, 0)
+
+        free_storage = 0
+        exceeded_storage = 0
+        posted_pc = 0
+        unused_pc = 0
+        exceeded_pc = 0
+
+        if total_storage:
+            free_pc = 100
+            free_storage = max(total_storage - all_attachments, 0)
+
+            if all_attachments > total_storage:
+                exceeded_storage = all_attachments - total_storage
+                max_storage = all_attachments + exceeded_storage
+            else:
+                max_storage = total_storage
+
+            if exceeded_storage:
+                exceeded_pc = ceil(float(exceeded_storage) * 100 / float(max_storage))
+                free_pc -= exceeded_pc
+
+            if unused_attachments:
+                unused_pc = ceil(float(unused_attachments) * 100 / float(max_storage))
+                free_pc -= unused_pc
+
+            if posted_attachments:
+                posted_pc = ceil(float(posted_attachments) * 100 / float(max_storage))
+                posted_pc = min(posted_pc, free_pc)
+
+        elif unused_storage_limit and unused_attachments < unused_storage_limit:
+            free_storage = unused_storage_limit - unused_attachments
+
+            storage_max = posted_attachments + unused_storage_limit
+            if unused_attachments:
+                unused_pc = ceil(float(unused_attachments) * 100 / float(storage_max))
+            if posted_attachments:
+                posted_pc = ceil(float(posted_attachments) * 100 / float(storage_max))
+
+        elif posted_attachments or unused_attachments:
+            unused_pc = ceil(float(unused_attachments) * 100 / float(all_attachments))
+            posted_pc = 100 - unused_pc
+
+        return {
+            "total": all_attachments,
+            "posted": posted_attachments,
+            "unused": unused_attachments,
+            "exceeded": exceeded_storage,
+            "free": free_storage,
+            "total_limit": total_storage,
+            "unused_limit": unused_storage_limit,
+            "posted_pc": posted_pc,
+            "unused_pc": unused_pc,
+            "exceeded_pc": exceeded_pc,
+            "unused_lifetime_hours": unused_attachments_lifetime,
+            "unused_lifetime_days": unused_attachments_lifetime_days,
+        }
+
+    def get_attachments(self, request: HttpRequest) -> dict:
+        queryset = Attachment.objects.filter(
+            uploader=request.user, is_deleted=False
+        ).prefetch_related("category", "thread", "post")
+
+        result = paginate_queryset(request, queryset, 20, "-id")
+        prefetch_private_thread_member_ids(
+            [attachment.thread for attachment in result.items if attachment.thread]
+        )
+
+        show_post_column = False
+        show_delete_column = False
+
+        items: list[dict] = []
+        for attachment in result.items:
+            attachment.uploader = request.user
+
+            if attachment.post:
+                with check_permissions() as can_see_post:
+                    check_see_post_permission(
+                        request.user_permissions,
+                        attachment.category,
+                        attachment.thread,
+                        attachment.post,
+                    )
+            else:
+                can_see_post = False
+
+            with check_permissions() as can_delete:
+                check_delete_attachment_permission(
+                    request.user_permissions,
+                    attachment.category,
+                    attachment.thread,
+                    attachment.post,
+                    attachment,
+                )
+
+            if can_see_post:
+                show_post_column = True
+            if can_delete:
+                show_delete_column = True
+
+            items.append(
+                {
+                    "attachment": attachment,
+                    "show_post": can_see_post,
+                    "show_delete": can_delete,
+                }
+            )
+
+        referrer = "?referrer=settings"
+        if request.GET.get("cursor"):
+            referrer += "&cursor=" + request.GET["cursor"]
+
+        return {
+            "referrer": referrer,
+            "paginator": result,
+            "items": items,
+            "show_post_column": show_post_column,
+            "show_delete_column": show_delete_column,
+        }
 
 
 class AccountDownloadDataView(AccountSettingsView):

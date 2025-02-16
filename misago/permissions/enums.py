@@ -1,4 +1,28 @@
-from enum import StrEnum
+from enum import IntEnum, StrEnum
+
+from django.utils.translation import pgettext_lazy
+
+
+class CanUploadAttachments(IntEnum):
+    EVERYWHERE = 2
+    THREADS = 1
+    NEVER = 0
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.EVERYWHERE,
+                pgettext_lazy(
+                    "upload attachments permission", "In threads and private threads"
+                ),
+            ),
+            (
+                cls.THREADS,
+                pgettext_lazy("upload attachments permission", "In threads only"),
+            ),
+            (cls.NEVER, pgettext_lazy("upload attachments permission", "Never")),
+        )
 
 
 class CategoryPermission(StrEnum):

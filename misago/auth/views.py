@@ -43,7 +43,7 @@ class LoginView(View):
 
         if form.user_ban:
             raise Banned(form.user_ban)
-        print(form.non_field_errors)
+
         return self.render(request, form, kwargs)
 
     def handle_valid_form(

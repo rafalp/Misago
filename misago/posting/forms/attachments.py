@@ -1,7 +1,4 @@
 from django import forms
-from django.utils.translation import npgettext, pgettext
-
-from .base import PostingForm, PostingState
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -20,7 +17,3 @@ class MultipleFileField(forms.FileField):
         else:
             result = [single_file_clean(data, initial)]
         return result
-
-
-class AttachmentsForm(PostingForm):
-    upload = MultipleFileField(required=False)

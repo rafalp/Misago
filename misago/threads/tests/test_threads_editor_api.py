@@ -541,27 +541,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
     @patch_category_acl({"can_edit_posts": 1})
     def test_edit(self):
         """endpoint returns valid configuration for editor"""
-        with patch_category_acl({"max_attachment_size": 1000}):
-            for _ in range(3):
-                with open(TEST_DOCUMENT_PATH, "rb") as upload:
-                    response = self.client.post(
-                        reverse("misago:api:attachment-list"), data={"upload": upload}
-                    )
-                self.assertEqual(response.status_code, 200)
-
-        attachments = list(Attachment.objects.order_by("id"))
-
-        attachments[0].uploader = None
-        attachments[0].save()
-
-        for attachment in attachments[:2]:
-            attachment.post = self.post
-            attachment.save()
-
         response = self.client.get(self.api_link)
-        user_acl = useracl.get_user_acl(self.user, cache_versions)
-        for attachment in attachments:
-            add_acl_to_obj(user_acl, attachment)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -573,13 +553,6 @@ class EditReplyEditorApiTests(EditorApiTestCase):
                 "can_protect": False,
                 "is_protected": self.post.is_protected,
                 "poster": self.post.poster_name,
-                "attachments": [
-                    AttachmentSerializer(
-                        attachments[1], context={"user": self.user}
-                    ).data,
-                    AttachmentSerializer(
-                        attachments[0], context={"user": self.user}
-                    ).data,
-                ],
+                "attachments": [],
             },
         )

@@ -1,6 +1,11 @@
 from django import forms
-from django.utils.translation import pgettext_lazy
+from django.conf import settings as dj_settings
+from django.template.defaultfilters import filesizeformat
+from django.utils.translation import pgettext, pgettext_lazy
 
+from ....admin.forms import YesNoSwitch
+from ....attachments.enums import AllowedAttachments, AttachmentTypeRestriction
+from ....attachments.storage import get_total_unused_attachments_size
 from ....categories.enums import CategoryChildrenComponent
 from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
@@ -8,11 +13,19 @@ from .base import SettingsForm
 
 class ThreadsSettingsForm(SettingsForm):
     settings = [
-        "attachment_403_image",
-        "attachment_404_image",
+        "allowed_attachment_types",
+        "allow_private_threads_attachments",
+        "restrict_attachments_extensions",
+        "restrict_attachments_extensions_type",
+        "unused_attachments_storage_limit",
+        "attachment_image_max_width",
+        "attachment_image_max_height",
+        "attachment_thumbnail_width",
+        "attachment_thumbnail_height",
+        "post_attachments_limit",
+        "additional_embedded_attachments_limit",
         "flood_control",
         "merge_concurrent_posts",
-        "post_attachments_limit",
         "post_length_max",
         "post_length_min",
         "readtracker_cutoff",
@@ -40,12 +53,6 @@ class ThreadsSettingsForm(SettingsForm):
         min_value=0,
     )
 
-    post_attachments_limit = forms.IntegerField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Maximum number of attachments per post"
-        ),
-        min_value=1,
-    )
     post_length_max = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form", "Maximum allowed post length"
@@ -71,16 +78,6 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         min_value=2,
         max_value=255,
-    )
-    unused_attachments_lifetime = forms.IntegerField(
-        label=pgettext_lazy(
-            "admin threads settings form", "Unused attachments lifetime"
-        ),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted from disk.",
-        ),
-        min_value=1,
     )
 
     merge_concurrent_posts = forms.IntegerField(
@@ -181,39 +178,129 @@ class ThreadsSettingsForm(SettingsForm):
         min_value=5,
     )
 
-    attachment_403_image = forms.ImageField(
-        label=pgettext_lazy("admin threads settings form", "Permission denied"),
+    allowed_attachment_types = forms.CharField(
+        label=pgettext_lazy("admin threads settings form", "Allowed attachment types"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Attachments proxy will display this image in place of default one when user tries to access attachment they have no permission to see.",
+            'This setting controls which files can be uploaded as attachments. Select the "Disable" option to disable new attachment uploads.',
         ),
-        required=False,
+        widget=forms.RadioSelect(
+            choices=AllowedAttachments.get_choices(),
+        ),
     )
-    attachment_403_image_delete = forms.BooleanField(
+
+    restrict_attachments_extensions = forms.CharField(
         label=pgettext_lazy(
-            "admin threads settings form", "Delete custom permission denied image"
+            "admin threads settings form", "Restrict uploaded file extensions"
         ),
-        required=False,
-    )
-    attachment_404_image = forms.ImageField(
-        label=pgettext_lazy("admin threads settings form", "Not found"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Attachments proxy will display this image in place of default one when user tries to access attachment that doesn't exist.",
+            "You can further restrict the types of uploaded files by entering their extensions in the text field above. Leave it empty to impose no additional restrictions. Items can be separated using spaces and line breaks.",
         ),
+        max_length=1024,
+        widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
-    attachment_404_image_delete = forms.BooleanField(
+    restrict_attachments_extensions_type = forms.CharField(
+        widget=forms.Select(
+            choices=AttachmentTypeRestriction.get_choices(),
+        ),
+    )
+    allow_private_threads_attachments = YesNoSwitch(
         label=pgettext_lazy(
-            "admin threads settings form", "Delete custom not found image"
+            "admin oauth2 settings form",
+            "Allow uploading attachments in private threads",
         ),
-        required=False,
     )
+
+    post_attachments_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Maximum number of attachments per post"
+        ),
+        min_value=1,
+        max_value=dj_settings.MISAGO_POST_ATTACHMENTS_LIMIT,
+    )
+    additional_embedded_attachments_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Additional embedded attachments limit"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Additional embedded attachments are attachments embedded in post content but not associated with the displayed posts. Loading a large number of these attachments can increase the site's memory usage. Set this value to zero to disable loading these attachments. Users will still see links to them.",
+        ),
+        min_value=0,
+    )
+
+    unused_attachments_storage_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Unused attachments storage limit"
+        ),
+        min_value=0,
+    )
+    unused_attachments_lifetime = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Unused attachments lifetime"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted.",
+        ),
+        min_value=1,
+    )
+
+    attachment_image_max_width = forms.IntegerField(
+        label=pgettext_lazy("admin threads settings form", "Maximum image dimensions"),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "This setting controls the maximum dimensions of uploaded images, in pixels. Images exceeding these dimensions will be scaled down.",
+        ),
+        min_value=100,
+    )
+    attachment_image_max_height = forms.IntegerField(min_value=100)
+
+    attachment_thumbnail_width = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin threads settings form", "Image thumbnail dimensions"
+        ),
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "Dimensions, in pixels, of the thumbnail image to be generated if the uploaded image exceeds the specified size.",
+        ),
+        min_value=100,
+    )
+    attachment_thumbnail_height = forms.IntegerField(min_value=100)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        unused_attachments_size = get_total_unused_attachments_size()
+
+        self.fields["unused_attachments_storage_limit"].help_text = pgettext(
+            "admin threads settings form",
+            "Maximum total storage space, in megabytes, for all attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit. Current usage: %(usage)s",
+        ) % {"usage": filesizeformat(unused_attachments_size)}
+
+    def clean_restrict_attachments_extensions(self):
+        data: str = self.cleaned_data["restrict_attachments_extensions"]
+        unique: set[str] = set()
+
+        for bit in data.lower().split():
+            for c in bit.split(","):
+                if c := c.strip(" ."):
+                    unique.add(c)
+
+        return " ".join(sorted(unique))
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get("posts_per_page_orphans") > cleaned_data.get(
-            "posts_per_page"
+
+        posts_per_page_orphans = cleaned_data.get("posts_per_page_orphans")
+        posts_per_page = cleaned_data.get("posts_per_page")
+
+        if (
+            posts_per_page_orphans is not None
+            and posts_per_page is not None
+            and posts_per_page_orphans >= posts_per_page
         ):
             self.add_error(
                 "posts_per_page_orphans",
@@ -222,4 +309,37 @@ class ThreadsSettingsForm(SettingsForm):
                     "This value must be lower than number of posts per page.",
                 ),
             )
+
+        attachment_image_max_width = cleaned_data.get("attachment_image_max_width")
+        attachment_thumbnail_width = cleaned_data.get("attachment_thumbnail_width")
+
+        if (
+            attachment_image_max_width is not None
+            and attachment_thumbnail_width is not None
+            and attachment_thumbnail_width >= attachment_image_max_width
+        ):
+            self.add_error(
+                "attachment_thumbnail_width",
+                pgettext_lazy(
+                    "admin threads settings form",
+                    "This value must be lower than the image width limit.",
+                ),
+            )
+
+        attachment_image_max_height = cleaned_data.get("attachment_image_max_height")
+        attachment_thumbnail_height = cleaned_data.get("attachment_thumbnail_height")
+
+        if (
+            attachment_image_max_height is not None
+            and attachment_thumbnail_height is not None
+            and attachment_thumbnail_height >= attachment_image_max_height
+        ):
+            self.add_error(
+                "attachment_thumbnail_height",
+                pgettext_lazy(
+                    "admin threads settings form",
+                    "This value must be lower than the image height limit.",
+                ),
+            )
+
         return cleaned_data

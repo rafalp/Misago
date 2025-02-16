@@ -19,21 +19,21 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:groups:categories' pk=target.pk %}" class="btn btn-primary btn-sm">
     <span class="fa fa-sitemap"></span>
-    {% trans "Category permissions" context "admin groups" %}
+    {% translate "Category permissions" context "admin groups" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block form-header %}
-{% trans "Edit group" context "admin group form" %}
+{% translate "Edit group" context "admin group form" %}
 {% endblock %}
 
 
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" context "admin group form" %}</legend>
+    <legend>{% translate "Basic settings" context "admin group form" %}</legend>
 
     {% form_row form.group.name %}
     {% form_row form.group.slug %}
@@ -42,7 +42,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Description" context "admin group form" %}</legend>
+    <legend>{% translate "Description" context "admin group form" %}</legend>
 
     {% form_row form.description.markdown %}
     {% form_row form.description.meta %}
@@ -51,7 +51,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Display and appearance" context "admin group form" %}</legend>
+    <legend>{% translate "Display and appearance" context "admin group form" %}</legend>
 
     {% form_row form.group.user_title %}
     {% form_row form.group.color %}
@@ -64,7 +64,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Permissions" context "admin group form" %}</legend>
+    <legend>{% translate "Permissions" context "admin group form" %}</legend>
 
     {% form_row form.group.copy_permissions %}
 
@@ -72,7 +72,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Posting" context "admin group permissions form" %}</legend>
+    <legend>{% translate "Posting" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_edit_own_threads %}
     {% form_row form.group.own_threads_edit_time_limit %}
@@ -84,7 +84,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Private threads" context "admin group permissions form" %}</legend>
+    <legend>{% translate "Private threads" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_use_private_threads %}
     {% form_row form.group.can_start_private_threads %}
@@ -94,7 +94,19 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Usernames" context "admin group permissions form" %}</legend>
+    <legend>{% translate "Attachments" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_upload_attachments %}
+    {% form_row form.group.attachment_storage_limit %}
+    {% form_row form.group.unused_attachments_storage_limit %}
+    {% form_row form.group.attachment_size_limit %}
+    {% form_row form.group.can_always_delete_own_attachments %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Usernames" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_change_username %}
     {% form_row form.group.username_changes_limit %}
@@ -105,7 +117,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "User profiles" context "admin group permissions form" %}</legend>
+    <legend>{% translate "User profiles" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_see_user_profiles %}
 

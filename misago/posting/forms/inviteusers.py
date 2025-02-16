@@ -14,14 +14,13 @@ if TYPE_CHECKING:
 else:
     User = get_user_model()
 
-PREFIX = "posting-invite-users"
-
 
 class InviteUsersForm(PostingForm):
+    form_prefix = "posting-invite-users"
+    template_name = "misago/posting/invite_users_form.html"
+
     request: HttpRequest
     invite_users: list["User"]
-
-    template_name = "misago/posting/invite_users_form.html"
 
     users = forms.CharField(max_length=200)
 
@@ -98,7 +97,7 @@ def create_invite_users_form(request: HttpRequest) -> InviteUsersForm:
         return InviteUsersForm(
             request.POST,
             request=request,
-            prefix=PREFIX,
+            prefix=InviteUsersForm.form_prefix,
         )
 
-    return InviteUsersForm(request=request, prefix=PREFIX)
+    return InviteUsersForm(request=request, prefix=InviteUsersForm.form_prefix)

@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 
 from ...categories.models import Category
 from ...permissions.enums import CategoryPermission
-from ...posting.forms.title import PREFIX as THREAD_TITLE_FORM
 from ...posting.hooks import validate_posted_contents_hook
 from ...testutils import grant_category_group_permissions
 
@@ -52,7 +51,7 @@ def posted_contents_validator():
 
 def validate_spam_contents(formset, state):
     # Check if posting form included thread title
-    if THREAD_TITLE_FORM in formset and "spam" in state.thread.title.lower():
+    if formset.title and "spam" in state.thread.title.lower():
         raise ValidationError("Your message contains spam!")
 
     if "spam" in state.post.original.lower():

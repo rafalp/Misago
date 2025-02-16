@@ -1,0 +1,15 @@
+{% load i18n %}
+<div class="rich-text-video">
+  <video controls>
+    <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
+    {% translate "Your browser does not support video tag." context "attachment video player" %}
+  </video>
+  <a
+    href="{{ attachment.get_details_url }}"
+    target="_blank"
+    class="rich-text-info-hover-btn"
+    title="{% translate 'See information' context 'rich text attachment info btn' %}"
+  >
+    <span class="material-icon">info</span>
+  </a>
+</div>

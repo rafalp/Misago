@@ -67,10 +67,10 @@ def hide_post_parameters(request):
 
 
 def clean_return_path(request):
-    """return path utility that returns return path from referer or POST"""
+    """return path utility that returns return path from referrer or POST"""
     if request.method == "POST" and "return_path" in request.POST:
         return _get_return_path_from_post(request)
-    return _get_return_path_from_referer(request)
+    return _get_return_path_from_referrer(request)
 
 
 def _get_return_path_from_post(request):
@@ -86,21 +86,21 @@ def _get_return_path_from_post(request):
         return None
 
 
-def _get_return_path_from_referer(request):
-    referer = request.META.get("HTTP_REFERER")
+def _get_return_path_from_referrer(request):
+    referrer = request.META.get("HTTP_REFERER")
     try:
-        if not referer:
+        if not referrer:
             raise ValueError()
-        if not referer.startswith(request.scheme):
+        if not referrer.startswith(request.scheme):
             raise ValueError()
-        referer = referer[len(request.scheme) + 3 :]
-        if not referer.startswith(request.META["HTTP_HOST"]):
+        referrer = referrer[len(request.scheme) + 3 :]
+        if not referrer.startswith(request.META["HTTP_HOST"]):
             raise ValueError()
-        referer = referer[len(request.META["HTTP_HOST"].rstrip("/")) :]
-        if not referer.startswith("/"):
+        referrer = referrer[len(request.META["HTTP_HOST"].rstrip("/")) :]
+        if not referrer.startswith("/"):
             raise ValueError()
-        resolve(referer)
-        return referer
+        resolve(referrer)
+        return referrer
     except (Http404, KeyError, ValueError):
         return None
 
@@ -123,18 +123,18 @@ def _is_request_path_under_misago(request):
     return path[: len(forum_index)] == forum_index
 
 
-def is_referer_local(request):
-    referer = request.META.get("HTTP_REFERER")
+def is_referrer_local(request):
+    referrer = request.META.get("HTTP_REFERER")
 
-    if not referer:
+    if not referrer:
         return False
-    if not referer.startswith(request.scheme):
+    if not referrer.startswith(request.scheme):
         return False
-    referer = referer[len(request.scheme) + 3 :]
-    if not referer.startswith(request.META["HTTP_HOST"]):
+    referrer = referrer[len(request.scheme) + 3 :]
+    if not referrer.startswith(request.META["HTTP_HOST"]):
         return False
-    referer = referer[len(request.META["HTTP_HOST"].rstrip("/")) :]
-    if not referer.startswith("/"):
+    referrer = referrer[len(request.META["HTTP_HOST"].rstrip("/")) :]
+    if not referrer.startswith("/"):
         return False
 
     return True

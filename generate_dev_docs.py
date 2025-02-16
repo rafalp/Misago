@@ -8,6 +8,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 
 HOOKS_MODULES = (
+    "misago.attachments.hooks",
     "misago.categories.hooks",
     "misago.oauth2.hooks",
     "misago.parser.hooks",
@@ -328,11 +329,11 @@ def generate_outlets_reference():
         fp.write(
             "This document contains a list of all built-in template outlets in Misago."
         )
-        for outlet_name in sorted(outlets_dict):
+        for outlet_name, outlet_contents in outlets_dict.items():
             fp.write("\n\n\n")
             fp.write(f"## `{outlet_name}`")
             fp.write("\n\n")
-            fp.write(outlets_dict[outlet_name])
+            fp.write(outlet_contents)
 
 
 def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | None]:

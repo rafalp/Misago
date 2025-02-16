@@ -7,11 +7,11 @@
     </button>
   {% empty %}
     <div class="admin-user-select-message">
-      {% trans "No matching users have been found." context "admin select user" %}
+      {% translate "No matching users have been found." context "admin select user" %}
     </div>
   {% endfor %}
 {% else %}
   <div class="admin-user-select-message">
-    {% trans "Enter a user name to search." context "admin select user" %}
+    {% translate "Enter a user name to search." context "admin select user" %}
   </div>
 {% endif %}

@@ -6,3 +6,18 @@ abbr {
   outline: none;
   text-decoration: none;
 }
+
+.text-danger {
+  color: @state-danger-text !important;
+}
+
+.text-help-block {
+  color: @gray-light !important;
+
+  a,
+  a:link,
+  a:visited {
+    color: darken(@gray-light, 5);
+    text-decoration: underline;
+  }
+}

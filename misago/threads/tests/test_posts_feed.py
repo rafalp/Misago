@@ -7,9 +7,10 @@ from ..test import reply_thread
 
 
 @pytest.fixture
-def request_factory(rf, cache_versions):
+def request_factory(rf, dynamic_settings, cache_versions):
     def factory(user):
         request = rf.get("/")
+        request.settings = dynamic_settings
         request.user = user
         request.user_permissions = UserPermissionsProxy(user, cache_versions)
         return request
@@ -28,7 +29,7 @@ def test_posts_feed_returns_post_data(request_factory, user, thread, post):
     assert feed_data["items"][0]["post"] == post
 
 
-def test_posts_feed_embeds_poster_data_in_post(
+def test_posts_feed_sets_posters_in_post_data(
     request_factory, user, other_user, thread, other_user_reply
 ):
     request = request_factory(user)
@@ -40,6 +41,27 @@ def test_posts_feed_embeds_poster_data_in_post(
     assert post_data["post"] == other_user_reply
     assert post_data["poster"] == other_user
     assert post_data["poster_name"] == other_user.username
+
+
+def test_posts_feed_sets_rich_text_data_in_post_data(
+    request_factory, user, thread, other_user_reply, text_attachment
+):
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
+
+    other_user_reply.metadata = {"attachments": [text_attachment.id]}
+    other_user_reply.save()
+
+    request = request_factory(user)
+
+    posts_feed = PostsFeed(request, thread, [other_user_reply])
+    feed_data = posts_feed.get_context_data()
+
+    post_data = feed_data["items"][0]
+    assert post_data["rich_text_data"]["attachment_errors"] == {}
+    assert post_data["rich_text_data"]["attachments"] == {
+        text_attachment.id: text_attachment
+    }
 
 
 def test_posts_feed_marks_post_as_animated(request_factory, user, thread, post, reply):

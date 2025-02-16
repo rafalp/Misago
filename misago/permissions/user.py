@@ -8,7 +8,7 @@ from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..users.enums import DefaultGroupId
 from ..users.models import Group
-from .enums import CategoryPermission
+from .enums import CanUploadAttachments, CategoryPermission
 from .hooks import (
     build_user_category_permissions_hook,
     build_user_permissions_hook,
@@ -77,6 +77,11 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_edit_own_posts": False,
         "own_posts_edit_time_limit": 0,
         "exempt_from_flood_control": False,
+        "can_upload_attachments": CanUploadAttachments.NEVER.value,
+        "attachment_storage_limit": 0,
+        "unused_attachments_storage_limit": 0,
+        "attachment_size_limit": 0,
+        "can_always_delete_own_attachments": False,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -125,6 +130,31 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "exempt_from_flood_control",
             group.exempt_from_flood_control,
+        )
+        if_greater(
+            permissions,
+            "can_upload_attachments",
+            group.can_upload_attachments,
+        )
+        if_zero_or_greater(
+            permissions,
+            "attachment_storage_limit",
+            group.attachment_storage_limit,
+        )
+        if_zero_or_greater(
+            permissions,
+            "unused_attachments_storage_limit",
+            group.unused_attachments_storage_limit,
+        )
+        if_zero_or_greater(
+            permissions,
+            "attachment_size_limit",
+            group.attachment_size_limit,
+        )
+        if_true(
+            permissions,
+            "can_always_delete_own_attachments",
+            group.can_always_delete_own_attachments,
         )
         if_true(
             permissions,

@@ -326,15 +326,6 @@ class DeleteCategoryForm(forms.ModelForm):
         self.setup_fields()
 
     def setup_fields(self):
-        content_queryset = Category.objects.all_categories().order_by("lft")
-        self.fields["move_threads_to"] = AdminCategoryChoiceField(
-            label=pgettext_lazy("admin category form", "Move category threads to"),
-            queryset=content_queryset,
-            initial=self.instance.parent,
-            empty_label=pgettext_lazy("admin category form", "Delete with category"),
-            required=False,
-        )
-
         not_siblings = models.Q(lft__lt=self.instance.lft)
         not_siblings = not_siblings | models.Q(rght__gt=self.instance.rght)
         children_queryset = Category.objects.all_categories(True)
@@ -350,22 +341,31 @@ class DeleteCategoryForm(forms.ModelForm):
                 required=False,
             )
 
+        content_queryset = Category.objects.all_categories().order_by("lft")
+        self.fields["move_contents_to"] = AdminCategoryChoiceField(
+            label=pgettext_lazy("admin category form", "Move contents to"),
+            queryset=content_queryset,
+            initial=self.instance.parent,
+            empty_label=pgettext_lazy("admin category form", "Delete with category"),
+            required=False,
+        )
+
     def clean(self):
         data = super().clean()
 
-        if data.get("move_threads_to"):
-            if data["move_threads_to"].pk == self.instance.pk:
+        if data.get("move_contents_to"):
+            if data["move_contents_to"].pk == self.instance.pk:
                 message = pgettext_lazy(
                     "admin category form",
                     "You are trying to move this category threads to itself.",
                 )
                 raise forms.ValidationError(message)
 
-            moving_to_child = self.instance.has_child(data["move_threads_to"])
+            moving_to_child = self.instance.has_child(data["move_contents_to"])
             if moving_to_child and not data.get("move_children_to"):
                 message = pgettext_lazy(
                     "admin category form",
-                    "You are trying to move this category's threads to a child category that will also be deleted.",
+                    "You are trying to move this category's contents to a child category that will also be deleted.",
                 )
                 raise forms.ValidationError(message)
 

@@ -13,6 +13,7 @@ from .hooks import (
     check_private_threads_permission_hook,
     check_reply_private_thread_permission_hook,
     check_see_private_thread_permission_hook,
+    check_see_private_thread_post_permission_hook,
     check_start_private_threads_permission_hook,
     filter_private_thread_posts_queryset_hook,
     filter_private_threads_queryset_hook,
@@ -73,7 +74,7 @@ def _check_see_private_thread_permission_action(
 ):
     check_private_threads_permission(permissions)
 
-    if permissions.user.id not in thread.participants_ids:
+    if permissions.user.id not in thread.private_thread_member_ids:
         raise Http404()
 
 
@@ -105,7 +106,7 @@ def _check_edit_private_thread_permission_action(
     if permissions.is_private_threads_moderator:
         return
 
-    if thread.participants_ids[0] != permissions.user.id:
+    if thread.private_thread_member_ids[0] != permissions.user.id:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -137,7 +138,7 @@ def _check_edit_private_thread_permission_action(
 def check_see_private_thread_post_permission(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    check_edit_private_thread_post_permission_hook(
+    check_see_private_thread_post_permission_hook(
         _check_see_private_thread_post_permission_action, permissions, thread, post
     )
 
@@ -145,10 +146,7 @@ def check_see_private_thread_post_permission(
 def _check_see_private_thread_post_permission_action(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    check_private_threads_permission(permissions)
-
-    if permissions.user.id not in thread.participants_ids:
-        raise Http404()
+    pass
 
 
 def check_edit_private_thread_post_permission(

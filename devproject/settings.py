@@ -279,6 +279,11 @@ CELERY_WORKER_MAX_TASKS_PER_CHILD = 10
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
 
+# Use Django's FileResponse to serve attachments in dev server
+
+MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_file_response"
+
+
 # On dev instance, generate only three sizes of avatars instead of default 6 sizes.
 
 MISAGO_AVATARS_SIZES = [400, 200, 100]

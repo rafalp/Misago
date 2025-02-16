@@ -3,7 +3,7 @@ Capture tag: renders its contents as template, and stores them in value
 
 Syntax:
 {% capture trimmed as loremipsum %}
-<a href="{% url 'misago:terms-of-service' %}">{% trans "guidelines" %}</a>
+<a href="{% url 'misago:terms-of-service' %}">{% translate "guidelines" %}</a>
 {% endcapture %} # renders block contents to context variable loremipsum
 """
 

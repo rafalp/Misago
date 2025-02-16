@@ -13,3 +13,9 @@
   {% include template_name_htmx %}
 </div>
 {% endblock content %}
+
+
+{% block modals %}
+{% include "misago/posting/markup_editor_modals.html" %}
+{% include "misago/posting/attachment_templates.html" %}
+{% endblock modals %}

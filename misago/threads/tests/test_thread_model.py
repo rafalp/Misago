@@ -409,11 +409,26 @@ class ThreadModelTests(TestCase):
             Thread.objects.get(id=self.thread.id)
 
 
-def test_thread_participants_ids_property_returns_list_of_participants_users_ids(
+def test_thread_private_thread_member_ids_property_returns_list_of_private_thread_member_ids(
     thread, user, other_user
 ):
     ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
     ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    participants_ids = list(thread.participants_ids)
-    assert participants_ids == [other_user.id, user.id]
+    private_thread_member_ids = list(thread.private_thread_member_ids)
+    assert private_thread_member_ids == [other_user.id, user.id]
+
+
+def test_thread_private_thread_owner_id_property_returns_id_of_private_thread_owner(
+    thread, user, other_user
+):
+    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
+    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
+
+    assert thread.private_thread_owner_id == other_user.id
+
+
+def test_thread_private_thread_owner_id_property_returns_none_if_thread_has_no_members(
+    thread,
+):
+    assert thread.private_thread_owner_id is None

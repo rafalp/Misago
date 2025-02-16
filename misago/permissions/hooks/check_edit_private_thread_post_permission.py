@@ -103,7 +103,7 @@ class CheckEditPrivateThreadPostPermissionHook(
         thread: Thread,
         post: Post,
     ) -> None:
-        action(permissions, category, post, thread)
+        action(permissions, thread, post)
 
         if (
             "[PROTECT]" in post.original

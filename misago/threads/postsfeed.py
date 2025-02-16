@@ -1,28 +1,20 @@
-from typing import TYPE_CHECKING, Iterable
+from typing import Iterable
 
-from django.core.exceptions import PermissionDenied
-from django.contrib.auth import get_user_model
-from django.db.models import prefetch_related_objects
-from django.http import Http404, HttpRequest
+from django.http import HttpRequest
 from django.urls import reverse
 
+from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
 )
 from ..permissions.threads import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
 )
 from .hooks import (
-    get_posts_feed_item_user_ids_hook,
-    get_posts_feed_users_hook,
-    set_posts_feed_item_users_hook,
+    set_posts_feed_related_objects_hook,
 )
 from .models import Post, Thread
-
-if TYPE_CHECKING:
-    from ..users.models import User
-else:
-    User = get_user_model()
+from .prefetch import prefetch_posts_related_objects
 
 
 class PostsFeed:
@@ -82,7 +74,16 @@ class PostsFeed:
         for i, post in enumerate(self.posts):
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
 
-        self.populate_feed_users(feed)
+        related_objects = prefetch_posts_related_objects(
+            self.request.settings,
+            self.request.user_permissions,
+            self.posts,
+            categories=[self.thread.category],
+            threads=[self.thread],
+        )
+        set_posts_feed_related_objects_hook(
+            self.set_feed_related_objects, feed, related_objects
+        )
 
         return feed
 
@@ -106,6 +107,8 @@ class PostsFeed:
             "unread": post.id in self.unread,
             "edit_url": edit_url,
             "moderation": False,
+            "attachments": [],
+            "rich_text_data": None,
         }
 
     def allow_edit_post(self, post: Post) -> bool:
@@ -117,40 +120,27 @@ class PostsFeed:
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
 
-    def populate_feed_users(self, feed: list[dict]) -> None:
-        user_ids: set[int] = set()
+    def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:
-            self.get_feed_item_users_ids(item, user_ids)
-            get_posts_feed_item_user_ids_hook(item, user_ids)
+            if item["type"] == "post":
+                self.set_post_related_objects(item, item["post"], related_objects)
 
-        if not user_ids:
-            return
+    def set_post_related_objects(
+        self, item: dict, post: Post, related_objects: dict
+    ) -> None:
+        item["poster"] = related_objects["users"].get(post.poster_id)
+        item["rich_text_data"] = related_objects
 
-        users = get_posts_feed_users_hook(self.get_feed_users, self.request, user_ids)
-
-        for item in feed:
-            set_posts_feed_item_users_hook(self.set_feed_item_users, users, item)
-
-    def get_feed_item_users_ids(self, item: dict, user_ids: set[int]):
-        if item["type"] == "post":
-            user_ids.add(item["post"].poster_id)
-
-    def get_feed_users(
-        self, request: HttpRequest, user_ids: set[int]
-    ) -> dict[int, "User"]:
-        users: dict[int, "User"] = {}
-        for user in User.objects.filter(id__in=user_ids):
-            if user.is_active or (
-                request.user.is_authenticated and request.user.is_misago_admin
+        embedded_attachments = post.metadata.get("attachments", [])
+        for attachment in related_objects["attachments"].values():
+            if (
+                attachment.post_id == post.id
+                and attachment.id not in embedded_attachments
             ):
-                users[user.id] = user
+                item["attachments"].append(attachment)
 
-        prefetch_related_objects(list(users.values()), "group")
-        return users
-
-    def set_feed_item_users(self, users: dict[int, "User"], item: dict):
-        if item["type"] == "post":
-            item["poster"] = users.get(item["post"].poster_id)
+        if item["attachments"]:
+            item["attachments"].sort(reverse=True, key=lambda a: a.id)
 
 
 class ThreadPostsFeed(PostsFeed):
@@ -158,13 +148,12 @@ class ThreadPostsFeed(PostsFeed):
         if self.request.user.is_anonymous:
             return False
 
-        try:
-            check_edit_post_permission(
+        with check_permissions() as can_edit_post:
+            check_edit_thread_post_permission(
                 self.request.user_permissions, self.thread.category, self.thread, post
             )
-            return True
-        except (Http404, PermissionDenied):
-            return False
+
+        return can_edit_post
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
@@ -181,13 +170,12 @@ class ThreadPostsFeed(PostsFeed):
 
 class PrivateThreadPostsFeed(PostsFeed):
     def allow_edit_post(self, post: Post) -> bool:
-        try:
+        with check_permissions() as can_edit_post:
             check_edit_private_thread_post_permission(
                 self.request.user_permissions, self.thread, post
             )
-            return True
-        except (Http404, PermissionDenied):
-            return False
+
+        return can_edit_post
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(

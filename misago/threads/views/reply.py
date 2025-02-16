@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -12,12 +11,13 @@ from django.views import View
 from ...auth.decorators import login_required
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
+from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_post_permission,
     check_reply_private_thread_permission,
 )
 from ...permissions.threads import (
-    check_edit_post_permission,
+    check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
 from ...posting.formsets import (
@@ -47,6 +47,7 @@ from ..hooks import (
     get_reply_thread_page_context_data_hook,
 )
 from ..models import Post, Thread
+from ..prefetch import prefetch_posts_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
@@ -65,18 +66,23 @@ class ReplyView(View):
 
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
+        formset = self.get_formset(request, thread)
 
-        if not request.POST.get("preview"):
+        if not formset.is_request_preview(request):
             last_post = self.get_last_post(request, thread)
         else:
             last_post = None
 
         state = self.get_state(request, thread, last_post)
-        formset = self.get_formset(request, thread)
         formset.update_state(state)
 
-        if request.POST.get("preview"):
-            return self.render(request, thread, formset, state.post.parsed)
+        if formset.is_request_preview(request):
+            formset.clear_errors_in_preview()
+            return self.render(request, thread, formset, state)
+
+        if formset.is_request_upload(request):
+            formset.clear_errors_in_upload()
+            return self.render(request, thread, formset)
 
         if not self.is_valid(formset, state):
             return self.render(request, thread, formset)
@@ -200,14 +206,26 @@ class ReplyView(View):
         request: HttpRequest,
         thread: Thread,
         formset: PostingFormset,
-        preview: str | None = None,
+        preview: PostingState | None = None,
         feed: list[dict] | None = None,
         htmx_swap: bool = False,
     ):
         context = self.get_context_data(request, thread, formset)
-        context["preview"] = preview
         context["new_feed"] = feed
         context["htmx_swap"] = htmx_swap
+
+        if preview:
+            related_objects = prefetch_posts_related_objects(
+                request.settings,
+                request.user_permissions,
+                [preview.post],
+                categories=[thread.category],
+                threads=[thread],
+                attachments=preview.attachments,
+            )
+
+            context["preview"] = preview.post.parsed
+            context["preview_rich_text_data"] = related_objects
 
         if self.is_quick_reply(request):
             template_name = self.template_name_quick_reply
@@ -260,15 +278,16 @@ class ReplyThreadView(ReplyView, ThreadView):
         return thread
 
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
-        try:
-            last_post = super().get_last_post(request, thread)
-            if last_post:
-                check_edit_post_permission(
+        if last_post := super().get_last_post(request, thread):
+            with check_permissions() as can_edit_post:
+                check_edit_thread_post_permission(
                     request.user_permissions, thread.category, thread, last_post
                 )
-            return last_post
-        except (Http404, PermissionDenied):
-            return None
+
+            if can_edit_post:
+                return last_post
+
+        return None
 
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
@@ -313,15 +332,16 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
         return thread
 
     def get_last_post(self, request: HttpRequest, thread: Thread) -> Post | None:
-        try:
-            last_post = super().get_last_post(request, thread)
-            if last_post:
+        if last_post := super().get_last_post(request, thread):
+            with check_permissions() as can_edit_post:
                 check_edit_private_thread_post_permission(
                     request.user_permissions, thread.category, last_post
                 )
-            return last_post
-        except (Http404, PermissionDenied):
-            return None
+
+            if can_edit_post:
+                return last_post
+
+        return None
 
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None

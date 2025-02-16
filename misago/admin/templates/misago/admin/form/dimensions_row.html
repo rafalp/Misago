@@ -1,0 +1,26 @@
+{% load i18n misago_admin_form %}
+<div class="form-group{% if field_width.errors or field_height.errors %} has-error{% endif %}">
+  <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
+    {{ field_width.label }}:
+  </label>
+  <div class="{% if field_class %}{{ field_class }}{% endif %}">
+    <div class="control-dimensions">
+      {% form_input field_width %}
+      <span class="control-dimensions-separator fa fa-times"></span>
+      {% form_input field_height %}
+    </div>
+    {% for error in field_width.errors %}
+      <small class="form-text text-danger font-weight-bold">
+        {% translate "Width:" context "admin dimension field" %} {{ error }}
+      </small>
+    {% endfor %}
+    {% for error in field_height.errors %}
+      <small class="form-text text-danger font-weight-bold">
+        {% translate "Height:" context "admin dimension field" %} {{ error }}
+      </small>
+    {% endfor %}
+    {% if field_width.help_text %}
+      <small class="form-text text-muted">{{ field_width.help_text }}</small>
+    {% endif %}
+  </div>
+</div>

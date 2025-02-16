@@ -4,7 +4,7 @@ from typing import Any, TYPE_CHECKING, Type
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import Http404, HttpRequest
 from django.http.response import HttpResponse
@@ -41,6 +41,7 @@ from ...pagination.cursor import (
 )
 from ...pagination.redirect import redirect_to_last_page
 from ...permissions.categories import check_browse_category_permission
+from ...permissions.checkutils import check_permissions
 from ...permissions.enums import CategoryPermission
 from ...permissions.privatethreads import (
     check_private_threads_permission,
@@ -1455,12 +1456,13 @@ class PrivateThreadsListView(ListView):
         return reverse("misago:private-threads")
 
     def get_start_thread_url(self, request: HttpRequest) -> str | None:
-        try:
+        with check_permissions() as can_start_thread:
             check_start_private_threads_permission(request.user_permissions)
-        except (Http404, PermissionDenied):
-            return None
-        else:
+
+        if can_start_thread:
             return reverse("misago:start-private-thread")
+
+        return None
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         category = self.get_category(request, kwargs)

@@ -6,7 +6,7 @@
 <div class="col-auto page-action">
   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#new-moderator-modal" data-backdrop="static">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New moderator" context "admin moderators" %}
+    {% translate "New moderator" context "admin moderators" %}
   </button>
 </div>
 {% endblock %}
@@ -14,7 +14,7 @@
 
 {% block table-header %}
 <th style="width: 1px;">&nbsp;</th>
-<th>{% trans "Moderator" context "admin moderators list" %}</th>
+<th>{% translate "Moderator" context "admin moderators list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
@@ -24,12 +24,12 @@
 {% block table-row %}
 <td class="pr-0">
   {% if item.group %}
-    <span class="media-admin-icon" style="width: 24px; height: 24px;" data-tooltip="top" title="{% trans 'User group' context 'admin moderators list item' %}">
+    <span class="media-admin-icon" style="width: 24px; height: 24px;" data-tooltip="top" title="{% translate 'User group' context 'admin moderators list item' %}">
       <span class="fas fa-adjust"></span>
     </span>
   {% else %}
     <a href="{{ item.user.get_absolute_url }}" style="line-height: 0; font-size: 24px;">
-      <img src="{{ item.user|avatar:24 }}" alt="{% trans 'Avatar' context 'admin user avatar' %}" width="24" height="24">
+      <img src="{{ item.user|avatar:24 }}" alt="{% translate 'Avatar' context 'admin user avatar' %}" width="24" height="24">
     </a>
   {% endif %}
 </td>
@@ -44,13 +44,13 @@
 </td>
 <td class="badges-list">
   {% if item.is_global %}
-    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can moderate all content they have access to' context 'admin moderators list item' %}">
-      {% trans "Global" context "admin moderators admin global status" %}
+    <span class="badge badge-danger" data-tooltip="top" title="{% translate 'Can moderate all content they have access to' context 'admin moderators list item' %}">
+      {% translate "Global" context "admin moderators admin global status" %}
     </span>
   {% endif %}
   {% if item.is_protected %}
-    <span class="badge badge-light" data-tooltip="top" title="{% trans 'This moderator permission can\'t be changed or removed' context 'admin moderators list item' %}">
-      {% trans "Protected" context "admin moderators admin protected status" %}
+    <span class="badge badge-light" data-tooltip="top" title="{% translate 'This moderator permission can\'t be changed or removed' context 'admin moderators list item' %}">
+      {% translate "Protected" context "admin moderators admin protected status" %}
     </span>
   {% endif %}
 </td>
@@ -60,7 +60,7 @@
       <span class="fas fa-edit fa-fw"></span>
     </button>
   {% else %}
-    <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" data-tooltip="top" title="{% trans 'Edit moderator' context 'admin moderators' %}">
+    <a class="btn btn-light btn-sm" href="{% url 'misago:admin:moderators:edit' pk=item.pk %}" data-tooltip="top" title="{% translate 'Edit moderator' context 'admin moderators' %}">
       <span class="fas fa-edit fa-fw"></span>
     </a>
   {% endif %}
@@ -73,7 +73,7 @@
   {% else %}
     <form action="{% url 'misago:admin:moderators:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
       {% csrf_token %}
-      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Delete moderator' context 'admin moderators' %}">
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% translate 'Delete moderator' context 'admin moderators' %}">
         <span class="fa fa-times fa-fw"></span>
       </button>
     </form>
@@ -89,8 +89,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="new-moderator-label">{% trans "New moderator" context "admin moderators form" %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' context 'admin dialog' %}">
+        <h5 class="modal-title" id="new-moderator-label">{% translate "New moderator" context "admin moderators form" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'admin dialog' %}">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -106,7 +106,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary">
-            {% trans "Add moderator" context "admin moderators form" %}
+            {% translate "Add moderator" context "admin moderators form" %}
           </button>
         </div>
       </form>
@@ -120,7 +120,7 @@
 <script type="text/javascript">
   window.misago.initConfirmation(
     "[data-delete-confirmation]",
-    "{% trans 'Are you sure you want to delete this moderator?' context 'admin moderators' %}"
+    "{% translate 'Are you sure you want to delete this moderator?' context 'admin moderators' %}"
   )
 
   const userInput = document.getElementById("new_moderator_form_user")
@@ -129,8 +129,8 @@
     {
       input: userInput,
       api: "{% url 'misago:admin:select-user' %}",
-      initial: "{% trans 'Enter a user name to search.' context 'admin select user' %}",
-      clear: "{% trans 'Clear' context 'admin select user' %}",
+      initial: "{% translate 'Enter a user name to search.' context 'admin select user' %}",
+      clear: "{% translate 'Clear' context 'admin select user' %}",
     } 
   )
 
@@ -165,7 +165,7 @@
     } else if (!misago.hasFieldError(userInput)) {
       misago.setFieldError(
         userInput,
-        "{% trans 'You must select a user.' context 'admin select user' %}",
+        "{% translate 'You must select a user.' context 'admin select user' %}",
       )
     }
   })

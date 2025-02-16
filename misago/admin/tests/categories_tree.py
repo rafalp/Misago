@@ -6,7 +6,10 @@ def assert_valid_categories_tree(expected_tree: list[tuple]):
     queryset = Category.objects.filter(tree_id=root.tree_id).order_by("lft")
 
     current_tree = []
+    valid_parents = set()
+
     for category in queryset:
+        valid_parents.add(category.id)
         current_tree.append(
             (
                 category,
@@ -17,16 +20,21 @@ def assert_valid_categories_tree(expected_tree: list[tuple]):
         )
 
     c_len, e_len = len(current_tree), len(expected_tree)
-    assert c_len == e_len, (
-        "categories trees lengths don't match: " f"found {c_len}, expected {e_len}"
-    )
+    assert (
+        c_len == e_len
+    ), f"categories trees lengths don't match: found {c_len}, expected {e_len}"
 
     for i, current in enumerate(current_tree):
         expected = expected_tree[i]
 
-        assert current[0] == expected[0], (
-            f"category #{i} is wrong: " f"'{current[0].name}' != '{expected[0].name}'"
-        )
+        assert (
+            current[0] == expected[0]
+        ), f"category #{i} is wrong: '{current[0].name}' != '{expected[0].name}'"
+
+        if current[0].parent_id:
+            assert (
+                current[0].parent_id in valid_parents
+            ), f"category #{i} is missing parent: {current[0].parent_id}"
 
         c_level, e_level = current[1], expected[1]
         assert (

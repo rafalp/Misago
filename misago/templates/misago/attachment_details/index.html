@@ -1,0 +1,21 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_plugins %}
+
+
+{% block title %}
+  {{ attachment.name }} | {% translate "Attachment" context "attachment page" %} | {{ settings.forum_name }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-attachment">
+  {% pluginoutlet ATTACHMENT_PAGE_START %}
+  {% include "misago/attachment_details/preview.html" %}
+  {% pluginoutlet ATTACHMENT_PAGE_AFTER_PREVIEW %}
+  <div class="container page-container">
+    {% include "misago/attachment_details/details.html" %}
+    {% include "misago/attachment_details/toolbar.html" %}
+    {% pluginoutlet ATTACHMENT_PAGE_END %}
+  </div>
+</div>
+{% endblock content %}

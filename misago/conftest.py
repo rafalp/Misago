@@ -1,18 +1,31 @@
+import os
+
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
+from .attachments.models import Attachment
+from .attachments.filetypes import filetypes
 from .cache.enums import CacheName
 from .categories.models import Category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
+from .core.utils import slugify
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
-from .test import MisagoClient
+from .test import (
+    IMAGE_INVALID,
+    IMAGE_LARGE,
+    IMAGE_SMALL,
+    TEXT_FILE,
+    MisagoClient,
+    teardown_attachments,
+)
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread
@@ -520,6 +533,379 @@ def watched_thread_factory():
         )
 
     return create_watched_thread
+
+
+@pytest.fixture
+def attachment_factory(db, teardown_attachments):
+    def _attachment_factory(
+        file_path: str,
+        *,
+        name=None,
+        uploader=None,
+        post=None,
+        thumbnail_path=None,
+        is_deleted=False,
+    ):
+        name = name or str(os.path.split(file_path)[-1])
+        filetype = filetypes.match_filetype(name)
+        content_type = filetype.content_types[0]
+        assert filetype, f"'{name}' is not supported"
+
+        with open(file_path, "rb") as fp:
+            upload = SimpleUploadedFile(name, fp.read(), content_type)
+
+        if thumbnail_path:
+            thumbnail_filename = str(os.path.split(thumbnail_path)[-1])
+            thumbnail_filetype = filetypes.match_filetype(name)
+            thumbnail_content_type = thumbnail_filetype.content_types[0]
+            assert thumbnail_filetype, f"'{thumbnail_filename}' is not supported"
+
+            with open(thumbnail_path, "rb") as fp:
+                thumbnail = SimpleUploadedFile(
+                    thumbnail_filename, fp.read(), thumbnail_content_type
+                )
+                thumbnail_size = thumbnail.size
+        else:
+            thumbnail = None
+            thumbnail_size = 0
+
+        return Attachment.objects.create(
+            category_id=post.category_id if post else None,
+            thread_id=post.thread_id if post else None,
+            post=post,
+            uploader=uploader,
+            uploader_name=uploader.username if uploader else "Anonymous",
+            uploader_slug=uploader.slug if uploader else "anonymous",
+            uploaded_at=timezone.now(),
+            name=name,
+            slug=slugify(name),
+            filetype_id=filetype.id,
+            upload=upload,
+            size=upload.size,
+            thumbnail=thumbnail,
+            thumbnail_size=thumbnail_size,
+            is_deleted=is_deleted,
+        )
+
+    return _attachment_factory
+
+
+@pytest.fixture
+def image_invalid():
+    return IMAGE_INVALID
+
+
+@pytest.fixture
+def image_large():
+    return IMAGE_LARGE
+
+
+@pytest.fixture
+def image_small():
+    return IMAGE_SMALL
+
+
+@pytest.fixture
+def text_file():
+    return TEXT_FILE
+
+
+@pytest.fixture
+def text_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="text.txt",
+        slug="text-txt",
+        upload="attachments/text.txt",
+        size=1024 * 1024,
+        filetype_id="txt",
+    )
+
+
+@pytest.fixture
+def image_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="image.png",
+        slug="image-png",
+        upload="attachments/image.png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def image_thumbnail_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="image-with-thumbnail.png",
+        slug="image-with-thumbnail-png",
+        upload="attachments/image-with-thumbnail.png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        thumbnail="attachments/image-thumbnail.png",
+        thumbnail_size=128 * 1024,
+        thumbnail_dimensions="50x50",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def video_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="video.mp4",
+        slug="video-mp4",
+        upload="attachments/video.mp4",
+        size=1024 * 1024,
+        filetype_id="mp4",
+    )
+
+
+@pytest.fixture
+def broken_text_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="text.txt",
+        slug="text-txt",
+        size=1024 * 1024,
+        filetype_id="txt",
+    )
+
+
+@pytest.fixture
+def broken_image_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="image.png",
+        slug="image-png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def broken_video_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="video.mp4",
+        slug="video-mp4",
+        size=1024 * 1024,
+        filetype_id="mp4",
+    )
+
+
+@pytest.fixture
+def user_text_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-text.txt",
+        slug="user-text-txt",
+        upload="attachments/user-text.txt",
+        size=1024 * 1024,
+        filetype_id="txt",
+    )
+
+
+@pytest.fixture
+def user_image_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-image.png",
+        slug="user-image-png",
+        upload="attachments/user-image.png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def user_image_thumbnail_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-image-with-thumbnail.png",
+        slug="user-image-with-thumbnail-png",
+        upload="attachments/user-image-with-thumbnail.png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        thumbnail="attachments/user-image-thumbnail.png",
+        thumbnail_size=128 * 1024,
+        thumbnail_dimensions="50x50",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def user_video_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-video.mp4",
+        slug="user-video-mp4",
+        upload="attachments/user-video.mp4",
+        size=1024 * 1024,
+        filetype_id="mp4",
+    )
+
+
+@pytest.fixture
+def user_broken_text_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-text.txt",
+        slug="user-text-txt",
+        size=1024 * 1024,
+        filetype_id="txt",
+    )
+
+
+@pytest.fixture
+def user_broken_image_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-image.png",
+        slug="user-image-png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def user_broken_video_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-video.mp4",
+        slug="user-video-mp4",
+        size=1024 * 1024,
+        filetype_id="mp4",
+    )
+
+
+@pytest.fixture
+def other_user_text_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-text.txt",
+        slug="other_user-text-txt",
+        upload="attachments/other_user-text.txt",
+        size=1024 * 1024,
+        filetype_id="txt",
+    )
+
+
+@pytest.fixture
+def other_user_image_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-image.png",
+        slug="other_user-image-png",
+        upload="attachments/other_user-image.png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def other_user_video_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-video.mp4",
+        slug="other_user-video-mp4",
+        upload="attachments/other_user-video.mp4",
+        size=1024 * 1024,
+        filetype_id="mp4",
+    )
+
+
+@pytest.fixture
+def other_user_broken_text_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-text.txt",
+        slug="other_user-text-txt",
+        size=1024 * 1024,
+        filetype_id="txt",
+    )
+
+
+@pytest.fixture
+def other_user_broken_image_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-image.png",
+        slug="other_user-image-png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def other_user_broken_video_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-video.mp4",
+        slug="other_user-video-mp4",
+        size=1024 * 1024,
+        filetype_id="mp4",
+    )
 
 
 @pytest.fixture

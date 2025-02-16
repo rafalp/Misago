@@ -6,18 +6,18 @@
 <div class="col-auto page-action">
   <a href="{% url 'misago:admin:categories:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New category" context "admin categories" %}
+    {% translate "New category" context "admin categories" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block table-header %}
-<th>{% trans "Category" context "admin categories list" %}</th>
-<th>{% trans "Label" context "admin categories list" %}</th>
-<th>{% trans "CSS class" context "admin categories list" %}</th>
-<th style="width: 1px;">{% trans "Threads" context "admin categories list" %}</th>
-<th style="width: 1px;">{% trans "Posts" context "admin categories list" %}</th>
+<th>{% translate "Category" context "admin categories list" %}</th>
+<th>{% translate "Label" context "admin categories list" %}</th>
+<th>{% translate "CSS class" context "admin categories list" %}</th>
+<th style="width: 1px;">{% translate "Threads" context "admin categories list" %}</th>
+<th style="width: 1px;">{% translate "Posts" context "admin categories list" %}</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
@@ -46,7 +46,7 @@
   {% if item.css_class %}
     <pre class="m-0">{{ item.css_class }}</pre>
   {% else %}
-    <i class="text-muted">{% trans "Not set" context "admin category css class" %}</i>
+    <i class="text-muted">{% translate "Not set" context "admin category css class" %}</i>
   {% endif %}
 </td>
 <td class="small">
@@ -56,7 +56,7 @@
   {{ item.posts }}
 </td>
 <td>
-  <a href="{{ item.get_absolute_url }}" target="_blank" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Go to category' context 'admin categories' %}">
+  <a href="{{ item.get_absolute_url }}" target="_blank" class="btn btn-light btn-sm" data-tooltip="top" title="{% translate 'Go to category' context 'admin categories' %}">
     <span class="fas fa-external-link-alt fa-fw"></span>
   </a>
 </td>
@@ -64,7 +64,7 @@
   {% if not item.first %}
     <form action="{% url 'misago:admin:categories:up' pk=item.pk %}" method="post">
       {% csrf_token %}
-      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' context 'admin categories' %}">
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% translate 'Move up' context 'admin categories' %}">
         <span class="fa fa-chevron-up fa-fw"></span>
       </button>
     </form>
@@ -78,7 +78,7 @@
   {% if not item.last %}
     <form action="{% url 'misago:admin:categories:down' pk=item.pk %}" method="post">
       {% csrf_token %}
-      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' context 'admin categories' %}">
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% translate 'Move down' context 'admin categories' %}">
         <span class="fa fa-chevron-down fa-fw"></span>
       </button>
     </form>
@@ -89,7 +89,7 @@
   {% endif %}
 </td>
 <td>
-  <a href="{% url 'misago:admin:categories:permissions' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Change permissions' context 'admin categories' %}">
+  <a href="{% url 'misago:admin:categories:permissions' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% translate 'Change permissions' context 'admin categories' %}">
     <span class="fa fa-adjust fa-fw"></span>
   </a>
 </td>
@@ -100,7 +100,7 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
       <a class="dropdown-item" href="{% url 'misago:admin:categories:permissions' pk=item.pk %}">
-        {% trans "Change permissions" context "admin categories" %}
+        {% translate "Change permissions" context "admin categories" %}
       </a>
       {% for action in extra_actions %}
         <a href="{% url action.link pk=item.pk %}" class="dropdown-item">
@@ -108,10 +108,10 @@
         </a>
       {% endfor %}
       <a class="dropdown-item" href="{% url 'misago:admin:categories:edit' pk=item.pk %}">
-        {% trans "Edit category" context "admin categories" %}
+        {% translate "Edit category" context "admin categories" %}
       </a>
       <a class="dropdown-item" href="{% url 'misago:admin:categories:delete' pk=item.pk %}">
-        {% trans "Delete category" context "admin categories" %}
+        {% translate "Delete category" context "admin categories" %}
       </a>
     </div>
   </div>
@@ -121,6 +121,6 @@
 
 {% block blankslate %}
 <td colspan="8">
-  {% trans "No categories are set." context "admin categories" %}
+  {% translate "No categories are set." context "admin categories" %}
 </td>
 {% endblock blankslate %}

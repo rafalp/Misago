@@ -22,7 +22,7 @@
               </div>
             {% empty %}
               <div class="alert alert-danger" role="alert">
-                {% trans "Form was completed with errors." context "admin form" %}
+                {% translate "Form was completed with errors." context "admin form" %}
               </div>
             {% endfor %}
           {% endif %}
@@ -33,7 +33,7 @@
         <div class="card-footer sticky text-right">
           {% block form-footer-cancel %}
             <a href="{% url root_link %}" class="btn btn-light btn-sm" data-cancel-confirmation="true">
-              {% trans "Cancel" context "admin form" %}
+              {% translate "Cancel" context "admin form" %}
             </a>
           {% endblock %}
           {% block form-footer %}

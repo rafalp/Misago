@@ -169,6 +169,119 @@
   padding: floor(@line-height-computed / 2) 0;
 }
 
+.posts-feed-item-attachments {
+  margin-top: @line-height-computed;
+}
+
+.posts-feed-item-attachments-header {
+  margin: 0 0 floor(@line-height-computed / 2) 0;
+
+  color: @gray-dark;
+  font-size: @font-size-base;
+  font-weight: bold;
+}
+
+.posts-feed-item-attachments-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+@media screen and (min-width: 600px) {
+  .posts-feed-item-attachments-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .posts-feed-item-attachments-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.posts-feed-item-attachments-list-item {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  padding: 2px;
+
+  border: 1px solid @gray-lighter;
+  border-radius: @border-radius-small;
+}
+
+.posts-feed-item-attachments-list-item-image,
+.posts-feed-item-attachments-list-item-icon {
+  flex-shrink: 0;
+
+  width: 38px;
+  height: 38px;
+  margin-right: floor(@grid-gutter-width / 4);
+
+  border-radius: @border-radius-small;
+}
+
+.posts-feed-item-attachments-list-item-image {
+  background-size: cover;
+}
+
+.posts-feed-item-attachments-list-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  line-height: 24px;
+
+  &,
+  &:link,
+  &:visited {
+    color: darken(@gray-lighter, 10);
+  }
+
+  &:hover,
+  &:focus {
+    color: @gray;
+    background-color: @gray-lighter;
+    text-decoration: none;
+  }
+
+  &:active {
+    color: darken(@gray, 10);
+    background-color: darken(@gray-lighter, 10);
+    text-decoration: none;
+  }
+}
+
+.posts-feed-item-attachments-list-item-body {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.posts-feed-item-attachments-list-item-name {
+  font-size: @font-size-small;
+  font-weight: bold;
+
+  &,
+  &:link,
+  &:visited {
+    color: @text-color;
+  }
+}
+
+.posts-feed-item-attachments-list-item-details {
+  color: @gray;
+  font-size: @font-size-small;
+}
+
 .posts-feed-item-post-body-footer {
   display: flex;
   align-items: center;

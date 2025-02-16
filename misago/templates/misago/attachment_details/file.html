@@ -1,0 +1,8 @@
+{% load i18n %}
+<div class="attachment-details-file">
+  <a href="{{ attachment.get_absolute_url }}" class="btn" target="_blank">
+    <span class="material-icon">file_download</span>
+    <strong>{{ attachment.name }}</strong>
+    <small>{% translate "(Click to download)" context "attachment details page" %}</small>
+  </a>
+</div>

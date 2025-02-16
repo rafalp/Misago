@@ -31,6 +31,8 @@ class Parser:
     reserve_inline_code = re.compile(r"`*`(.|\n)+?``*")
     _reserved_patterns: dict[str, str]
 
+    _paragraph_re = re.compile(r".+(\n.+)*")
+
     def __init__(
         self,
         block_patterns: list[Pattern] | None = None,
@@ -194,10 +196,6 @@ class Parser:
     @cached_property
     def _block_re(self) -> re.Pattern:
         return self._build_re_pattern(self._final_block_patterns)
-
-    @cached_property
-    def _paragraph_re(self) -> re.Pattern:
-        return re.compile(r".+(\n.+)*")
 
     @cached_property
     def _final_inline_patterns(self) -> dict[str, Pattern]:

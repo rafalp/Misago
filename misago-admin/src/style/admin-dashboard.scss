@@ -17,13 +17,6 @@
   padding: $table-cell-padding;
 }
 
-// Make stat larger
-.card-admin-stat {
-  @extend .text-center;
-
-  font-size: $font-size-lg;
-}
-
 // Make text sizes in admin checks smaller
 .media-admin-check {
   font-size: $font-size-sm;

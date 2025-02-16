@@ -1,0 +1,162 @@
+.attachment-list-item {
+  display: flex;
+  align-items: start;
+}
+
+.attachment-list-item-download-btn {
+  display: block;
+  flex: 1;
+
+  padding: 2px;
+
+  border: 1px solid @gray-lighter;
+  border-radius: 4px;
+
+  &,
+  &:link,
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited {
+    color: darken(@gray-lighter, 25);
+    font-size: 32px;
+    line-height: 32px;
+    text-decoration: none;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: darken(@gray-lighter, 15);
+  }
+}
+
+.attachment-list-item-icon,
+.attachment-list-item-icon-broken {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  background-color: @gray-lighter;
+  border-radius: 2px;
+}
+
+.attachment-list-item-icon-broken {
+  color: #ee6e6c;
+  background-color: #fae3e2;
+}
+
+.attachment-list-item-image {
+  width: 40px;
+  height: 40px;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 2px;
+}
+
+.attachment-list-item-body {
+  width: 100%;
+
+  margin-left: 15px;
+}
+
+.attachment-list-item-name {
+  word-break: break-word;
+
+  s {
+    color: @gray;
+    font-weight: bold;
+  }
+
+  a,
+  a:link,
+  a:hover,
+  a:focus,
+  a:active,
+  a:visited {
+    color: @text-color;
+    font-weight: bold;
+  }
+}
+
+.attachment-list-item-details {
+  display: block;
+
+  margin: 2px -4px -2px -4px;
+  padding: 0;
+
+  color: @gray-light;
+  list-style-image: none;
+
+  li {
+    display: inline-block;
+
+    margin: 2px 4px;
+  }
+}
+
+.attachment-list-item-thread {
+  word-break: break-word;
+
+  &,
+  &:link,
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited {
+    color: @gray-darker;
+  }
+}
+
+.attachment-list-item-delete-btn {
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    left: 7px;
+
+    width: 28px;
+    height: 28px;
+    padding: 0;
+
+    color: darken(@gray-lighter, 35);
+  }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .attachment-list-item {
+    align-items: center;
+  }
+
+  .attachment-list-item-icon,
+  .attachment-list-item-icon-broken,
+  .attachment-list-item-image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .attachment-list-item-delete-btn {
+    margin-left: 15px;
+
+    .btn {
+      position: static;
+
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+.attachment-list-blankslate {
+  padding: 30px 15px;
+
+  font-size: @font-size-large;
+  text-align: center;
+}

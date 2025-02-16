@@ -1,5 +1,6 @@
 from ..parser import Pattern
 
+from .attachment import AttachmentMarkdown
 from .bbcode import (
     BoldBBCode,
     InlineBBCodePattern,
@@ -54,6 +55,8 @@ block_patterns: list[Pattern] = [
     SpoilerBBCodeClose(),
 ]
 
+attachment_markdown = AttachmentMarkdown()
+
 bold_bbcode = BoldBBCode()
 italics_bbcode = ItalicsBBCode()
 underline_bbcode = UnderlineBBCode()
@@ -93,6 +96,7 @@ inline_patterns: list[Pattern] = [
     strong_underscore_markdown,
     emphasis_underscore_markdown,
     strikethrough_markdown,
+    attachment_markdown,
     autolink_markdown,
     img_markdown,
     url_markdown,

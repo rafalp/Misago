@@ -405,7 +405,7 @@ def test_user_permissions_proxy_returns_no_moderated_categories_for_anonymous_us
 
 
 def test_user_permissions_proxy_is_category_moderator_returns_false_for_anonymous_user(
-    django_assert_num_queries, db, anonymous_user, cache_versions, default_category
+    django_assert_num_queries, anonymous_user, cache_versions, default_category
 ):
     proxy = UserPermissionsProxy(anonymous_user, cache_versions)
     proxy.permissions

@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+from ...permissions.enums import CanUploadAttachments
 from ...permissions.permissionsid import get_permissions_id
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -33,6 +34,11 @@ def create_default_groups(apps, schema_editor):
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=20,
+                can_upload_attachments=CanUploadAttachments.EVERYWHERE,
+                attachment_size_limit=0,
+                attachment_storage_limit=3 * 1024,
+                unused_attachments_storage_limit=128,
+                can_always_delete_own_attachments=True,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -55,6 +61,11 @@ def create_default_groups(apps, schema_editor):
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=20,
+                can_upload_attachments=CanUploadAttachments.EVERYWHERE,
+                attachment_size_limit=0,
+                attachment_storage_limit=3 * 1024,
+                unused_attachments_storage_limit=64,
+                can_always_delete_own_attachments=True,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -73,6 +84,11 @@ def create_default_groups(apps, schema_editor):
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_users_limit=5,
+                can_upload_attachments=CanUploadAttachments.EVERYWHERE,
+                attachment_size_limit=5 * 1024,
+                attachment_storage_limit=3 * 1024,
+                unused_attachments_storage_limit=40,
+                can_always_delete_own_attachments=True,
                 can_change_username=True,
                 username_changes_limit=5,
                 username_changes_expire=4,

@@ -1,6 +1,7 @@
 from django.urls import path
 from django.utils.translation import pgettext_lazy
 
+from .attachments import views as attachments
 from .categories import views as categories
 from .groups import views as groups
 from .moderators import views as moderators
@@ -26,6 +27,17 @@ class MisagoAdminExtension:
             icon="fas fa-shield-alt",
             after="categories:index",
             namespace="moderators",
+        )
+        site.add_node(
+            name=pgettext_lazy("admin node", "Attachments"),
+            icon="fas fa-paperclip",
+            after="permissions:index",
+            namespace="attachments",
+        )
+        site.add_node(
+            name=pgettext_lazy("admin node", "File types"),
+            parent="attachments",
+            namespace="filetypes",
         )
 
     def register_urlpatterns(self, urlpatterns):
@@ -83,4 +95,22 @@ class MisagoAdminExtension:
             path("new/user/<int:user>/", moderators.NewView.as_view(), name="new-user"),
             path("edit/<int:pk>/", moderators.EditView.as_view(), name="edit"),
             path("delete/<int:pk>/", moderators.DeleteView.as_view(), name="delete"),
+        )
+
+        urlpatterns.namespace("attachments/", "attachments")
+        urlpatterns.patterns(
+            "attachments",
+            path("", attachments.AttachmentsList.as_view(), name="index"),
+            path("<int:page>/", attachments.AttachmentsList.as_view(), name="index"),
+            path(
+                "delete/<int:pk>/",
+                attachments.DeleteAttachment.as_view(),
+                name="delete",
+            ),
+        )
+        urlpatterns.single_pattern(
+            "filetypes/",
+            "filetypes",
+            "attachments",
+            attachments.AttachmentsFiletypesList.as_view(),
         )

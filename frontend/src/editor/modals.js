@@ -6,8 +6,10 @@ class MarkupEditorModal {
 
     document.addEventListener("DOMContentLoaded", () => {
       this.element = this.getElement()
-      this.form = this.element.querySelector("form")
-      this.initForm(this.form)
+      if (this.element) {
+        this.form = this.element.querySelector("form")
+        this.initForm(this.form)
+      }
     })
   }
 

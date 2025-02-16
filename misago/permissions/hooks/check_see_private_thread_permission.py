@@ -90,7 +90,7 @@ class CheckSeePrivateThreadPermissionHook(
         thread: Thread,
     ) -> None:
         # Run standard permission checks
-        action(permissions, category)
+        action(permissions, category, thread)
 
         if thread.id in permissions.user.plugin_data.get("banned_thread", []):
             raise PermissionDenied(

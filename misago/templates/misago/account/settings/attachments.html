@@ -1,0 +1,10 @@
+{% extends "misago/account/settings/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Attachments" context "account attachments page" %} | {{ block.super }}{% endblock %}
+
+
+{% block page %}
+{% include "misago/account/settings/attachments_list.html" %}
+{% endblock page %}

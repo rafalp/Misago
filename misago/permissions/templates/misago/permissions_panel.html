@@ -1,45 +1,45 @@
 {% load i18n %}
 <h4>
-  {% trans "Proxy status" context "debug toolbar user permissions" %}
+  {% translate "Proxy status" context "debug toolbar user permissions" %}
 </h4>
 <table>
   <thead>
     <tr>
-      <th style="width: 180px;">{% trans "Attribute" context "debug toolbar user permissions" %}</th>
-      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+      <th style="width: 180px;">{% translate "Attribute" context "debug toolbar user permissions" %}</th>
+      <th>{% translate "Value" context "debug toolbar user permissions" %}</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>{% trans "User ID" context "debug toolbar user permissions" %}</td>
+      <td>{% translate "User ID" context "debug toolbar user permissions" %}</td>
       <td>
         {% if misago_permissions.user.is_authenticated %}
           #{{ misago_permissions.user.id }}
         {% else %}
-          <i>{% trans "Anonymous" context "debug toolbar user permissions" %}</i>
+          <i>{% translate "Anonymous" context "debug toolbar user permissions" %}</i>
         {% endif %}
       </td>
     </tr>
     <tr>
-      <td>{% trans "Accessed permissions" context "debug toolbar user permissions" %}</td>
+      <td>{% translate "Accessed permissions" context "debug toolbar user permissions" %}</td>
       <td>
         {% if misago_permissions.accessed_permissions %}
-          {% trans "Yes" context "debug toolbar user permissions" %}
+          {% translate "Yes" context "debug toolbar user permissions" %}
         {% else %}
-          {% trans "No" context "debug toolbar user permissions" %}
+          {% translate "No" context "debug toolbar user permissions" %}
         {% endif %}
       </td>
     </tr>
   </tbody>
 </table>
 <h4>
-  {% trans "Permissions" context "debug toolbar user permissions" %}
+  {% translate "Permissions" context "debug toolbar user permissions" %}
 </h4>
 <table>
   <thead>
     <tr>
-      <th style="width: 180px;">{% trans "Permission" context "debug toolbar user permissions" %}</th>
-      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+      <th style="width: 180px;">{% translate "Permission" context "debug toolbar user permissions" %}</th>
+      <th>{% translate "Value" context "debug toolbar user permissions" %}</th>
     </tr>
   </thead>
   <tbody>
@@ -54,13 +54,13 @@
   </tbody>
 </table>
 <h4>
-  {% trans "Category Permissions" context "debug toolbar user permissions" %}
+  {% translate "Category Permissions" context "debug toolbar user permissions" %}
 </h4>
 <table>
   <thead>
     <tr>
-      <th style="width: 180px;">{% trans "Permission" context "debug toolbar user permissions" %}</th>
-      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+      <th style="width: 180px;">{% translate "Permission" context "debug toolbar user permissions" %}</th>
+      <th>{% translate "Value" context "debug toolbar user permissions" %}</th>
     </tr>
   </thead>
   <tbody>
@@ -73,13 +73,13 @@
   </tbody>
 </table>
 <h4>
-  {% trans "Moderator Permissions" context "debug toolbar user permissions" %}
+  {% translate "Moderator Permissions" context "debug toolbar user permissions" %}
 </h4>
 <table>
   <thead>
     <tr>
-      <th style="width: 180px;">{% trans "Permission" context "debug toolbar user permissions" %}</th>
-      <th>{% trans "Value" context "debug toolbar user permissions" %}</th>
+      <th style="width: 180px;">{% translate "Permission" context "debug toolbar user permissions" %}</th>
+      <th>{% translate "Value" context "debug toolbar user permissions" %}</th>
     </tr>
   </thead>
   <tbody>

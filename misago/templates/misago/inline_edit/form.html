@@ -4,6 +4,7 @@
   <form
     action="{{ request_path }}"
     method="post"
+    enctype="multipart/form-data"
     hx-post="{{ request_path }}?inline=true"
     hx-trigger="submit"
     hx-target="#posts-feed-item-post-{{ post.id }} .posts-feed-item-post-body"
@@ -22,7 +23,7 @@
       <button class="btn btn-primary" type="submit">
         {% translate "Save" context "inline edit submit btn" %}
       </button>
-      <button class="btn btn-secondary" type="submit" name="preview" value="true" formnovalidate>
+      <button class="btn btn-secondary" type="submit" name="{{ formset.preview_action }}" value="true" formnovalidate>
         {% translate "Preview" context "inline edit preview btn" %}
       </button>
       <button

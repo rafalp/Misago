@@ -32,5 +32,6 @@
 {% block modals %}
   {% if user.is_authenticated %}
     {% include "misago/posting/markup_editor_modals.html" %}
+    {% include "misago/posting/attachment_templates.html" %}
   {% endif %}
 {% endblock modals %}

@@ -1,4 +1,6 @@
 import htmx from "htmx.org"
+import * as animations from "../animations"
+import MarkupEditorUploader from "./uploader"
 import {
   MarkupEditorCodeModal,
   MarkupEditorImageModal,
@@ -118,7 +120,7 @@ class MarkupEditor {
     const toolbar = element.querySelector(".markup-editor-toolbar-left")
 
     let btnWidth = 0
-    element.querySelectorAll("button").forEach((child) => {
+    toolbar.querySelectorAll("button").forEach((child) => {
       let childWidth = child.clientWidth
       const childStyle = window.getComputedStyle(child)
       childWidth += parseInt(parseFloat(childStyle.borderLeftWidth))
@@ -148,6 +150,8 @@ class MarkupEditor {
       this._setEditorActive(element)
       this._setEditorFocus(element)
       this._setEditorActions(element)
+      this._setEditorPasteUpload(element)
+      this._setEditorDropUpload(element)
       this._resizeEditor(element)
     }
   }
@@ -157,35 +161,51 @@ class MarkupEditor {
   }
 
   _setEditorFocus(element) {
-    element.addEventListener("focusin", () => {
-      element.classList.add("markup-editor-focused")
+    const focusEvents = ["focusin", "click"]
+    const className = "markup-editor-focused"
+
+    focusEvents.forEach((event) => {
+      element.addEventListener(event, () => {
+        element.classList.add(className)
+      })
     })
 
-    element.addEventListener("focusout", () => {
-      element.classList.remove("markup-editor-focused")
+    focusEvents.forEach((event) => {
+      document.addEventListener(event, (event) => {
+        if (!element.contains(event.target)) {
+          element.classList.remove(className)
+        }
+      })
     })
   }
 
   _setEditorActions(element) {
-    const input = element.querySelector("textarea")
+    const textarea = this.getTextarea(element)
 
-    element.querySelectorAll("[misago-editor-action]").forEach((control) => {
-      const actionName = control.getAttribute("misago-editor-action")
-      control.addEventListener("click", (event) => {
-        event.preventDefault()
+    element.addEventListener("click", (event) => {
+      const target = event.target.closest("[misago-editor-action]")
+      if (!target) {
+        return null
+      }
 
-        const action = this.actions[actionName]
-        if (action) {
-          action({
-            input,
-            target: event.target,
-            editor: this,
-            selection: new MarkupEditorSelection(input),
-          })
-        } else {
-          console.warn("Undefined editor action: " + actionName)
-        }
-      })
+      const actionName = target.getAttribute("misago-editor-action")
+      if (!actionName) {
+        return null
+      }
+
+      event.preventDefault()
+
+      const action = this.actions[actionName]
+      if (action) {
+        action({
+          textarea,
+          target,
+          editor: this,
+          selection: new MarkupEditorSelection(textarea),
+        })
+      } else {
+        console.warn("Undefined editor action: " + actionName)
+      }
     })
 
     element
@@ -200,6 +220,80 @@ class MarkupEditor {
           secondToolbar.classList.add("show")
         }
       })
+  }
+
+  _setEditorPasteUpload = (element) => {
+    element.addEventListener("paste", (event) => {
+      const uploader = new MarkupEditorUploader(this, element)
+      if (!uploader.canUpload) {
+        uploader.showPermissionDeniedError()
+      } else if (event.clipboardData.files) {
+        event.preventDefault()
+        const textarea = event.target.closest("textarea")
+        uploader.uploadFiles(event.clipboardData.files, textarea)
+      }
+    })
+  }
+
+  _setEditorDropUpload = (element) => {
+    const className = "markup-editor-drag-drop"
+    const elements = [element.querySelector("textarea")]
+
+    const attachments = element.querySelector("[misago-editor-attachments]")
+    if (attachments) {
+      elements.push(attachments)
+    }
+
+    elements.forEach((child) => {
+      child.addEventListener("drop", (event) => {
+        const uploader = new MarkupEditorUploader(this, element)
+        if (event.dataTransfer.files) {
+          event.preventDefault()
+          if (!uploader.canUpload) {
+            uploader.showPermissionDeniedError()
+          } else if (event.dataTransfer.files) {
+            const textarea = event.target.closest("textarea")
+            uploader.uploadFiles(event.dataTransfer.files, textarea)
+          }
+        }
+
+        child.classList.remove(className)
+      })
+
+      child.addEventListener("dragenter", (event) => {
+        event.preventDefault()
+      })
+
+      child.addEventListener("dragleave", () => {
+        child.classList.remove(className)
+      })
+
+      child.addEventListener("dragover", (event) => {
+        child.classList.add(className)
+        event.preventDefault()
+      })
+    })
+  }
+
+  getTextarea(element) {
+    return element.querySelector("textarea")
+  }
+
+  getSelection(textarea) {
+    return new MarkupEditorSelection(textarea)
+  }
+
+  showFilePrompt(element, options) {
+    const uploader = new MarkupEditorUploader(
+      this,
+      element.closest("[misago-editor-active]")
+    )
+
+    if (!uploader.canUpload) {
+      uploader.showPermissionDeniedError()
+    } else {
+      uploader.prompt(options)
+    }
   }
 
   showCodeModal(selection) {
@@ -217,11 +311,26 @@ class MarkupEditor {
   showQuoteModal(selection) {
     this.quoteModal.show(selection)
   }
+
+  getAttachmentByKey(key) {
+    return document.querySelector('[misago-editor-upload-key="' + key + '"]')
+  }
+
+  removeAttachmentElement(element) {
+    const list = element.closest("ul")
+
+    animations.deleteElement(element, function () {
+      if (!list.querySelector("li")) {
+        const container = list.closest(".markup-editor-attachments-list")
+        container.classList.add("d-none")
+      }
+    })
+  }
 }
 
 class MarkupEditorSelection {
-  constructor(input) {
-    this.input = input
+  constructor(textarea) {
+    this.textarea = textarea
     this._range = this._getRange()
   }
 
@@ -254,7 +363,7 @@ class MarkupEditorSelection {
     value += prefix + this._range.text + suffix
     value += this._range.suffix
 
-    this.input.value = value
+    this.textarea.value = value
 
     this._range.start += prefix.length
     this._range.end += prefix.length
@@ -265,7 +374,7 @@ class MarkupEditorSelection {
 
   replace(text, options) {
     const value = this._range.prefix + text + this._range.suffix
-    this.input.value = value
+    this.textarea.value = value
 
     if (options && options.start) {
       this._range.start += options.start
@@ -287,35 +396,92 @@ class MarkupEditorSelection {
     this.refocus()
   }
 
+  insert(text, options) {
+    const whitespace = (options && options.whitespace) || ""
+
+    const prefix = whitespace
+      ? this._range.prefix.trimEnd()
+      : this._range.prefix
+    const suffix = whitespace ? this._range.suffix.trim() : this._range.suffix
+
+    let whitespaces = 1
+    let value = prefix
+
+    if (prefix.length && whitespace) {
+      value += whitespace
+      whitespaces += 1
+    }
+
+    value += text + whitespace + suffix
+    this.textarea.value = value
+
+    const caret = prefix.length + text.length + whitespace.length * whitespaces
+    this._range.end = this._range.start = caret
+    this._range.length = 0
+
+    this.refocus()
+  }
+
+  replaceAttachments(callback) {
+    this.textarea.value = this.textarea.value.replace(
+      /<attachment=(.+?)>/gi,
+      function (match, p1) {
+        if (p1.match(/:/g).length !== 1) {
+          return match
+        }
+
+        let value = p1.trim()
+        while (value.substring(0, 1) === '"') {
+          value = value.substring(1)
+        }
+        while (value.substring(value.length - 1) === '"') {
+          value = value.substring(0, value.length - 1)
+        }
+
+        const name = value.substring(0, value.indexOf(":")).trim()
+        const id = value.substring(value.indexOf(":") + 1).trim()
+
+        if ((name, id)) {
+          const result = callback({ match, name, id })
+          if (typeof result === "string" || result instanceof String) {
+            return result
+          }
+        }
+
+        return match
+      }
+    )
+  }
+
   refocus() {
     window.setTimeout(() => {
-      const scroll = this.input.scrollTop
-      this.input.focus()
-      this.input.scrollTop = scroll
+      const scroll = this.textarea.scrollTop
+      this.textarea.focus()
+      this.textarea.scrollTop = scroll
 
       const caret = this._range.start
-      this.input.setSelectionRange(caret, caret + this._range.length)
+      this.textarea.setSelectionRange(caret, caret + this._range.length)
     }, 250)
   }
 
   _getRange() {
     if (document.selection) {
-      this.input.focus()
+      this.textarea.focus()
       const range = document.selection.createRange()
       const length = range.text.length
-      range.moveStart("character", -this.input.value.length)
+      range.moveStart("character", -this.textarea.value.length)
       return this._createRange(
-        this.input,
+        this.textarea,
         range.text.length - length,
         range.text.length
       )
     }
 
-    if (this.input.selectionStart || this.input.selectionStart == "0") {
+    if (this.textarea.selectionStart || this.textarea.selectionStart == "0") {
       return this._createRange(
-        this.input,
-        this.input.selectionStart,
-        this.input.selectionEnd
+        this.textarea,
+        this.textarea.selectionStart,
+        this.textarea.selectionEnd
       )
     }
   }
@@ -370,7 +536,7 @@ editor.setAction("strikethrough", function ({ selection }) {
 })
 
 editor.setAction("horizontal-ruler", function ({ selection }) {
-  selection.replace("\n\n- - -\n\n", { start: 9 })
+  selection.insert("- - -", { whitespace: "\n\n" })
 })
 
 editor.setAction("link", function ({ editor, selection }) {
@@ -404,6 +570,74 @@ editor.setAction("spoiler", function ({ selection }) {
 editor.setAction("code", function ({ editor, selection }) {
   editor.showCodeModal(selection)
 })
+
+editor.setAction("attachment", function ({ target, selection }) {
+  const attachment = target.getAttribute("misago-editor-attachment")
+  if (attachment) {
+    selection.insert("<attachment=" + attachment + ">", { whitespace: "\n\n" })
+  }
+})
+
+editor.setAction("image-upload", function ({ editor, target }) {
+  editor.showFilePrompt(target, { accept: "image", insert: true })
+})
+
+editor.setAction("attachment-upload", function ({ editor, target }) {
+  editor.showFilePrompt(target)
+})
+
+editor.setAction("attachment-delete", function ({ editor, target, selection }) {
+  const attachment = target.getAttribute("misago-editor-attachment")
+  const name = target
+    .closest("[misago-editor-deleted-attachments-name]")
+    .getAttribute("misago-editor-deleted-attachments-name")
+
+  selection.replaceAttachments(function ({ id }) {
+    if (id === attachment) {
+      return ""
+    }
+
+    return false
+  })
+
+  const element = target.closest("li")
+  editor.removeAttachmentElement(element)
+
+  const input = document.createElement("input")
+  input.setAttribute("type", "hidden")
+  input.setAttribute("name", name)
+  input.setAttribute("value", attachment)
+
+  const attachments = target.closest("[misago-editor-attachments]")
+  attachments.appendChild(input)
+})
+
+editor.setAction(
+  "attachment-error-dismiss",
+  function ({ editor, target, selection }) {
+    const key = target.getAttribute("misago-editor-attachment-key")
+
+    selection.replaceAttachments(function (attachment) {
+      if (attachment.id === key) {
+        return ""
+      }
+
+      return false
+    })
+
+    const message = document.querySelector(
+      '[misago-editor-attachment-error="' + key + '"]'
+    )
+    if (message) {
+      animations.deleteElement(message)
+    }
+
+    const attachment = editor.getAttachmentByKey(key)
+    if (attachment) {
+      editor.removeAttachmentElement(attachment)
+    }
+  }
+)
 
 editor.setAction("formatting-help", function ({ target }) {
   const modal = document.getElementById("markup-editor-formatting-help")

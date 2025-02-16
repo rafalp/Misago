@@ -32,6 +32,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# Use Django's redirects for serving attachments
+MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_redirect_response"
+
 # Use english search config
 MISAGO_SEARCH_CONFIG = "english"
 

@@ -96,6 +96,44 @@ def test_posting_state_set_post_message_updates_post_contents(user_request, post
     assert state.message_metadata == {
         "outbound-links": set(),
         "posts": {"ids": set(), "objs": {}},
+        "attachments": set(),
+        "usernames": set(),
+        "users": {},
+    }
+
+
+def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
+    user_request, post
+):
+    state = PostingState(user_request)
+    state.post = post
+    state.set_post_message("<attachment=image.png:123>")
+
+    assert post.original == "<attachment=image.png:123>"
+    assert post.parsed == (
+        '<div class="rich-text-attachment-group">'
+        "<attachment=image.png:image-png:123>"
+        "</div>"
+    )
+    assert post.metadata == {"attachments": [123]}
+
+    assert state.message_ast == [
+        {
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "image.png",
+                    "slug": "image-png",
+                    "id": 123,
+                },
+            ],
+        },
+    ]
+    assert state.message_metadata == {
+        "outbound-links": set(),
+        "posts": {"ids": set(), "objs": {}},
+        "attachments": {123},
         "usernames": set(),
         "users": {},
     }

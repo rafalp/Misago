@@ -1,0 +1,51 @@
+{% load i18n misago_formats %}
+<div class="panel-responsive panel-attachment-details">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {{ attachment.name }}
+    </h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <strong>{% translate "Type:" context "attachment details page" %}</strong>
+        {{ attachment.filetype.name }}
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <strong>{% translate "Size:" context "attachment details page" %}</strong>
+        {{ attachment.size|filesizeformat }}
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 text-ellipsis">
+        <strong>{% translate "Uploader:" context "attachment details page" %}</strong>
+        {% if attachment.uploader %}
+          <a href="{{ attachment.uploader.get_absolute_url }}" class="item-link">
+            {{ attachment.uploader.username }}
+          </a>
+        {% else %}
+          <span>
+            {{ attachment.uploader_name }}
+          </span>
+        {% endif %}
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 text-ellipsis">
+        <strong>{% translate "Uploaded:" context "attachment details page" %}</strong>
+        <span
+          title="{{ attachment.uploaded_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ attachment.uploaded_at.isoformat }}"
+        >
+          {{ attachment.uploaded_at|date_relative }}
+        </span>
+      </div>
+    </div>
+    {% if can_see_post and attachment.post %}
+      <div class="row">
+        <div class="col-xs-12 text-ellipsis">
+          <strong>{% translate "Thread:" context "attachment details page" %}</strong>
+          <a href="{{ attachment.post.get_absolute_url }}" class="item-link">
+            {{ attachment.thread.title }}
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>

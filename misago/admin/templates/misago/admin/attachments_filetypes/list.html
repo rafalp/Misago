@@ -1,0 +1,61 @@
+{% extends "misago/admin/generic/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block view %}
+<div class="card card-admin-table">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% translate "ID" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "Name" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "Extensions" context "admin attachment filetypes list" %}</th>
+        <th>{% translate "Content types" context "admin attachment filetypes list" %}</th>
+        <th style="width: 1px;">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td class="small" style="width: 1%;">{{ item.id }}</td>
+          <td class="item-name small">{{ item.name }}</td>
+          <td class="small">
+            {% for extension in item.extensions %}
+              <span class="text-monospace">.{{ extension }}</span>{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </td>
+          <td class="small">
+            {% for content_type in item.content_types %}
+              <span class="text-monospace">{{ content_type }}</span>{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            <a
+              class="btn btn-light btn-sm"
+              href="{% url 'misago:admin:attachments:index' %}?filetype={{ item.id }}"
+              target="_blank"
+              data-tooltip="left"
+              title="{% blocktranslate trimmed with filetype=item.id context 'admin attachments filetypes' %}
+              Search attachments with the &quot;{{ filetype }}&quot; file type
+              {% endblocktranslate %}"
+            >
+              <i class="fas fa-search fa-fw"></i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr class="blankslate">
+          <td colspan="5">
+            {% translate "No attachments file types exist." context "admin attachments filetypes" %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock view %}

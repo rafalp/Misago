@@ -1,14 +1,10 @@
 from html import escape
 
-from django.utils.translation import pgettext
-
 from ..core.utils import slugify
 from .context import ParserContext
 from .exceptions import AstError
-from .hooks import complete_markup_html_hook, render_ast_node_to_html_hook
+from .hooks import render_ast_node_to_html_hook
 from .urls import clean_href
-
-SPOILER_SUMMARY = "<spoiler-summary-message>"
 
 
 def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) -> str:
@@ -41,7 +37,7 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "list":
         html_tag = "ol" if ast_node["ordered"] else "ul"
-        children = render_ast_to_html(context, ast_node["items"], metadata)
+        children = render_ast_to_html(context, ast_node["children"], metadata)
         return f"<{html_tag}>{children}</{html_tag}>"
 
     if ast_type == "list-item":
@@ -64,30 +60,32 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "quote":
         children = render_ast_to_html(context, ast_node["children"], metadata)
-        return f"<blockquote>{children}</blockquote>"
+        return f"<quote>{children}</quote>"
 
     if ast_type == "quote-bbcode":
         children = render_ast_to_html(context, ast_node["children"], metadata)
 
         if not ast_node["author"]:
-            return f"<blockquote>{children}</blockquote>"
+            return f"<quote>{children}</quote>"
 
         heading = escape(ast_node["author"])
 
         return (
-            '<aside class="quote-block">'
-            f'<div class="quote-heading" data-noquote="1">{heading}</div>'
-            f'<blockquote class="quote-body">{children}</blockquote>'
-            "</aside>"
+            "<quote>"
+            f"<header>{heading}</header>"
+            f"<body>{children}</body>"
+            "</quote>"
         )
 
     if ast_type == "spoiler-bbcode":
-        if ast_node["summary"]:
-            summary = escape(ast_node["summary"])
-        else:
-            summary = SPOILER_SUMMARY
+        summary = escape(ast_node["summary"] or "")
         children = render_ast_to_html(context, ast_node["children"], metadata)
-        return f"<details><summary>{summary}</summary>{children}</details>"
+        return (
+            "<spoiler>"
+            f"<summary>{summary}</summary>"
+            f"<body>{children}</body>"
+            "</spoiler>"
+        )
 
     if ast_type == "paragraph":
         children = render_ast_to_html(context, ast_node["children"], metadata)
@@ -128,6 +126,13 @@ def _render_ast_node_to_html_action(
     if ast_type in ("thematic-break", "thematic-break-bbcode"):
         return "<hr />"
 
+    if ast_type == "attachment-group":
+        children = render_ast_to_html(context, ast_node["children"], metadata)
+        return f'<div class="rich-text-attachment-group">{children}</div>'
+
+    if ast_type == "attachment":
+        return f"<attachment={ast_node['name']}:{ast_node['slug']}:{ast_node['id']}>"
+
     if ast_type in ("image", "image-bbcode"):
         src = escape(clean_href(ast_node["src"]))
         alt = escape(ast_node["alt"]) if ast_node["alt"] else ""
@@ -165,21 +170,3 @@ def _render_ast_node_to_html_action(
         return escape(ast_node["text"])
 
     raise AstError(f"Unknown AST node type: {ast_type}")
-
-
-def complete_markup_html(html: str, **kwargs) -> str:
-    return complete_markup_html_hook(_complete_markup_html_action, html, **kwargs)
-
-
-def _complete_markup_html_action(html: str, **kwargs) -> str:
-    html = complete_markup_html_spoiler_summary(html)
-    return html
-
-
-def complete_markup_html_spoiler_summary(html: str) -> str:
-    if SPOILER_SUMMARY in html:
-        html = html.replace(
-            SPOILER_SUMMARY, pgettext("spoiler summary", "Reveal spoiler")
-        )
-
-    return html

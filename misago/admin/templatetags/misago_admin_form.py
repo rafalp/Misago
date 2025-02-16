@@ -11,6 +11,16 @@ def form_row(field, label_class=None, field_class=None):
     return {"field": field, "label_class": label_class, "field_class": field_class}
 
 
+@register.inclusion_tag("misago/admin/form/dimensions_row.html")
+def form_dimensions_row(field_width, field_height, label_class=None, field_class=None):
+    return {
+        "field_width": field_width,
+        "field_height": field_height,
+        "label_class": label_class,
+        "field_class": field_class,
+    }
+
+
 @register.inclusion_tag("misago/admin/form/image_row.html")
 def form_image_row(
     field,

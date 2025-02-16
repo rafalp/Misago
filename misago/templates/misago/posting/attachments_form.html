@@ -1,0 +1,188 @@
+{% load i18n misago_capture %}
+<div
+  class="markup-editor-attachments"
+  misago-editor-attachments="true"
+  misago-editor-deleted-attachments-name="{{ form.deleted_attachment_ids_field }}"
+  misago-editor-accept-attachments="{{ form.accept_attachments }}"
+  misago-editor-accept-image="{{ form.accept_image_attachments }}"
+  misago-editor-accept-video="{{ form.accept_video_attachments }}"
+>
+  {% if form.show_attachments_upload %}
+    {% with upload_field=form.upload %}
+      <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
+        <noscript>
+          <label class="control-label" for="{{ upload_field.id_for_label }}">
+            {% translate "Upload files:" context "posting title form" %}
+          </label>
+          <div class="markup-editor-attachments-noscript-row">
+            <input
+              type="file"
+              class="form-control"
+              id="{{ upload_field.id_for_label }}"
+              name="{{ upload_field.html_name }}"
+              accept="{{ form.accept_attachments }}"
+              multiple
+            />
+            <button class="btn btn-default btn-block" type="submit "name="{{ form.upload_action }}" value="true" formnovalidate>
+              {% translate "Upload" context "posting form" %}
+            </button>
+          </div>
+        </noscript>
+        <p class="markup-editor-attachments-script-row d-js-block">
+          {% capture trimmed as upload_button %}
+            <button misago-editor-action="attachment-upload" type="button">{% translate "click here" context "posting form" %}</button>
+          {% endcapture %}
+          {% blocktranslate trimmed with upload=upload_button|safe context "posting form" %}
+            To attach files to your message, {{ upload }}, paste them into the text field above, or drag them over the message editor.
+          {% endblocktranslate %}
+        </p>
+        <p class="help-block text-help-block" misago-editor-attachments-help>
+          {% blocktranslate trimmed count limit=form.attachments_limit context "posting form" %}
+            You can attach {{ limit }} file to a post.
+          {% plural %}
+            You can attach up to {{ limit }} files to a post.
+          {% endblocktranslate %}
+          {% if form.attachment_size_limit %}
+            {% blocktranslate trimmed with limit=form.attachment_size_limit|filesizeformat context "posting form" %}
+              Uploaded file can't be larger than {{ limit }}.
+            {% endblocktranslate %}
+          {% endif %}
+          {% capture trimmed as account_attachments %}
+            <a href="{% url 'misago:account-attachments' %}" target="_blank">{% translate "account settings" context "posting form" %}</a>
+          {% endcapture %}
+          {% blocktranslate trimmed with settings=account_attachments|safe context "posting form" %}
+            Visit your {{ settings }} to view all your attachments and manage your available storage.
+          {% endblocktranslate %}
+        </p>
+        {% for error in upload_field.errors %}
+          <p class="help-block text-danger">{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endwith %}
+  {% endif %}
+  {% with attachments=form.attachments_media %}
+    <div class="markup-editor-attachments-list{% if not attachments %} d-none{% endif %}" misago-editor-attachments="media">
+      <h4 class="markup-editor-attachments-header">{% translate "Uploaded media" context "posting form" %}</h4>
+      <ul class="markup-editor-attachments-media-list">
+        {% for attachment in attachments %}
+          <li class="markup-editor-attachments-media-list-item">
+            {% if attachment.upload %}
+              {% if attachment.filetype.is_video %}
+                <div class="markup-editor-attachments-media-list-item-preview-video">
+                  <div class="markup-editor-attachments-media-list-item-preview-video-container">
+                    <video muted>
+                      <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
+                      {% translate "Your browser does not support video tag." context "attachment video player" %}
+                    </video>
+                  </div>
+                </div>
+              {% else %}
+                <div
+                  class="markup-editor-attachments-media-list-item-preview-image"
+                  style="background-image: url('{{ attachment.get_thumbnail_url|default:attachment.get_absolute_url }}');"
+                ></div>
+              {% endif %}
+            {% else %}
+              <div class="markup-editor-attachments-media-list-item-preview-broken">
+                <span class="material-icon">broken_image</span>
+              </div>
+            {% endif %}
+            <div class="markup-editor-attachments-media-list-item-name">
+              {{ attachment.name }}
+            </div>
+            <div class="markup-editor-attachments-media-list-item-footer">
+              <button
+                type="button"
+                class="markup-editor-attachments-media-list-item-button d-js-block"
+                title="{% translate 'Click to insert into post' context 'markup editor insert attachment btn' %}"
+                misago-editor-action="attachment"
+                misago-editor-attachment="{{ attachment.name }}:{{ attachment.id }}"
+              >
+                {% translate "Insert" context "markup editor insert attachment btn" %}
+              </button>
+              <div class="markup-editor-attachments-media-list-item-footer-spacer"></div>
+              <noscript>
+                <button
+                  type="submit"
+                  class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button"
+                  title="{% translate 'Delete' context 'markup editor delete attachment btn' %}"
+                  name="{{ form.delete_attachment_field }}"
+                  value="{{ attachment.id }}"
+                  formnovalidate
+                >
+                  <span class="material-icon">delete</span>
+                </button>
+              </noscript>
+              <button
+                type="button"
+                class="markup-editor-attachments-media-list-item-button markup-editor-attachments-media-list-item-delete-button d-js-flex"
+                title="{% translate 'Delete' context 'markup editor delete attachment btn' %}"
+                misago-editor-action="attachment-delete"
+                misago-editor-attachment="{{ attachment.id }}"
+              >
+                <span class="material-icon">delete</span>
+              </button>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endwith %}
+  {% with attachments=form.attachments_other %}
+    <div class="markup-editor-attachments-list{% if not attachments %} d-none{% endif %}" misago-editor-attachments="other">
+      <h4 class="markup-editor-attachments-header">{% translate "Uploaded files" context "posting form" %}</h4>
+      <ul class="markup-editor-attachments-other-list">
+        {% for attachment in attachments %}
+          <li class="markup-editor-attachments-other-list-item">
+            <button
+              class="markup-editor-attachments-other-list-item-body"
+              type="button"
+              title="{% translate 'Click to insert into post' context 'markup editor insert attachment btn' %}"
+              misago-editor-action="attachment"
+              misago-editor-attachment="{{ attachment.name }}:{{ attachment.id }}"
+            >
+              <div class="markup-editor-attachments-other-list-item-name">
+                {{ attachment.name }}
+              </div>
+              <div class="markup-editor-attachments-other-list-item-description">
+                <span class="markup-editor-attachments-other-list-item-size">
+                  {{ attachment.size|filesizeformat }}
+                </span>
+                <span class="markup-editor-attachments-other-list-item-cta">
+                  {% translate "Insert into post" context "markup editor insert attachment btn" %}
+                </span>
+              </div>
+            </button>
+            <noscript>
+              <button
+                type="submit"
+                class="markup-editor-attachments-other-list-item-delete-button"
+                title="{% translate 'Delete' context 'markup editor delete attachment btn' %}"
+                name="{{ form.delete_attachment_field }}"
+                value="{{ attachment.id }}"
+                formnovalidate
+              >
+                <span class="material-icon">delete</span>
+              </button>
+            </noscript>
+            <button
+              type="button"
+              class="markup-editor-attachments-other-list-item-delete-button d-js-flex"
+              title="{% translate 'Delete' context 'markup editor delete attachment btn' %}"
+              misago-editor-action="attachment-delete"
+              misago-editor-attachment="{{ attachment.id }}"
+            >
+              <span class="material-icon">delete</span>
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endwith %}
+  {% for attachment in form.attachments %}
+    <input type="hidden" name="{{ form.attachment_ids_field }}" value="{{ attachment.id }}" />
+  {% endfor %}
+  {% for attachment in form.deleted_attachments %}
+    <input type="hidden" name="{{ form.deleted_attachment_ids_field }}" value="{{ attachment.id }}" />
+  {% endfor %}
+</div>

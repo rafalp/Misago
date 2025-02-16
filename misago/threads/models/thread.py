@@ -229,7 +229,7 @@ class Thread(PluginDataModel):
         return "%sK" % round(self.replies / 1000, 0)
 
     @cached_property
-    def participants_ids(self) -> list[int]:
+    def private_thread_member_ids(self) -> list[int]:
         """Returns lists of private thread participating users ids.
 
         Cached property. Thread owner is guaranteed to be first item of the list.
@@ -239,6 +239,12 @@ class Thread(PluginDataModel):
                 "user_id", flat=True
             )
         )
+
+    @property
+    def private_thread_owner_id(self) -> int | None:
+        if members_ids := self.private_thread_member_ids:
+            return members_ids[0]
+        return None
 
     @property
     def thread_type(self):

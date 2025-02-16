@@ -39,6 +39,8 @@ class Form(forms.Form):
         label="Rank", choices=(("r", "Red"), ("g", "Green"), ("b", "Blue"))
     )
     yesno_field = YesNoSwitch(label="Switch")
+    image_width = forms.IntegerField(label="Dimensions", help_text="I am a help text.")
+    image_height = forms.IntegerField()
     image_field = forms.ImageField(label="Image!", help_text="I am a help text.")
 
 
@@ -104,6 +106,31 @@ def test_field_help_text_is_rendered():
 def test_tag_without_field_raises_exception():
     with pytest.raises(TemplateSyntaxError):
         render("{% form_row %}")
+
+
+def test_dimensions_row_with_input_field_is_rendered(snapshot):
+    html = render("{% form_dimensions_row form.image_width form.image_height %}")
+    assert snapshot == html
+
+
+def test_dimensions_field_label_is_rendered():
+    html = render("{% form_dimensions_row form.image_width form.image_height %}")
+    assert "Dimensions" in html
+
+
+def test_dimensions_field_help_text_is_rendered():
+    html = render("{% form_dimensions_row form.image_width form.image_height %}")
+    assert "I am a help text." in html
+
+
+def test_dimensions_tag_without_fields_raises_exception():
+    with pytest.raises(TemplateSyntaxError):
+        render("{% form_dimensions_row %}")
+
+
+def test_dimensions_tag_without_height_field_raises_exception():
+    with pytest.raises(TemplateSyntaxError):
+        render("{% form_dimensions_row form.image_width %}")
 
 
 def test_image_row_with_field_input_is_rendered():

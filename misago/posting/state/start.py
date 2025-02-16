@@ -39,6 +39,7 @@ class StartThreadState(PostingState):
     def save_action(self, request: HttpRequest, state: "StartThreadState"):
         self.save_thread()
         self.save_post()
+        self.save_attachments()
 
         self.save_category()
         self.save_user()

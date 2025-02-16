@@ -6,13 +6,12 @@ from ..state import StartPrivateThreadState, StartThreadState
 from ..validators import validate_thread_title
 from .base import PostingForm
 
-PREFIX = "posting-title"
-
 
 class TitleForm(PostingForm):
-    request: HttpRequest
-
+    form_prefix = "posting-title"
     template_name = "misago/posting/title_form.html"
+
+    request: HttpRequest
 
     title = forms.CharField(
         max_length=255,
@@ -48,7 +47,7 @@ def create_title_form(request: HttpRequest, initial: str | None = None) -> Title
         return TitleForm(
             request.POST,
             request=request,
-            prefix=PREFIX,
+            prefix=TitleForm.form_prefix,
         )
 
     if initial:
@@ -56,4 +55,6 @@ def create_title_form(request: HttpRequest, initial: str | None = None) -> Title
     else:
         initial_data = None
 
-    return TitleForm(request=request, prefix=PREFIX, initial=initial_data)
+    return TitleForm(
+        request=request, prefix=TitleForm.form_prefix, initial=initial_data
+    )
