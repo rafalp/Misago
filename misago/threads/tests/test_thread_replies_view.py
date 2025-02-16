@@ -250,6 +250,55 @@ def test_thread_replies_view_shows_post_with_attachments(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
+def test_private_thread_replies_view_shows_post_with_embed_attachments(
+    client,
+    thread,
+    post,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
+    text_attachment,
+):
+    post.parsed = (
+        "<p>Hello world!</>"
+        f"<attachment={image_attachment.name}:{image_attachment.slug}:{image_attachment.id}>"
+        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.slug}:{image_thumbnail_attachment.id}>"
+        f"<attachment={video_attachment.name}:{video_attachment.slug}:{video_attachment.id}>"
+        f"<attachment={text_attachment.name}:{text_attachment.slug}:{text_attachment.id}>"
+    )
+    post.metadata = {
+        "attachments": [
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+            text_attachment.id,
+        ],
+    }
+    post.save()
+
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_not_contains(response, post.parsed)
+    assert_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
 def test_thread_replies_view_shows_error_if_private_thread_is_accessed(
     user_client, user_private_thread
 ):
