@@ -693,15 +693,8 @@ def test_edit_thread_view_uploads_attachment_on_preview_or_upload(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_image_attachment(
-    action_name, user_client, user_thread, user_attachment
+    action_name, user_client, user_thread, user_image_attachment
 ):
-    user_attachment.name = "image-attachment.png"
-    user_attachment.slug = "image-attachment-png"
-    user_attachment.filetype_id = "png"
-    user_attachment.upload = "attachments/image-attachment.png"
-    user_attachment.dimensions = "200x200"
-    user_attachment.save()
-
     response = user_client.post(
         reverse(
             "misago:edit-thread",
@@ -709,7 +702,7 @@ def test_edit_thread_view_displays_image_attachment(
         ),
         {
             action_name: "true",
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_image_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -717,14 +710,14 @@ def test_edit_thread_view_displays_image_attachment(
     assert_contains(response, "Edit thread")
     assert_contains(response, "misago-editor-attachments=")
 
-    assert_contains(response, user_attachment.name)
-    assert_contains(response, user_attachment.get_absolute_url())
+    assert_contains(response, user_image_attachment.name)
+    assert_contains(response, user_image_attachment.get_absolute_url())
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=user_attachment.id,
+        value=user_image_attachment.id,
     )
 
 
@@ -732,17 +725,8 @@ def test_edit_thread_view_displays_image_attachment(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_image_with_thumbnail_attachment(
-    action_name, user_client, user_thread, user_attachment
+    action_name, user_client, user_thread, user_image_thumbnail_attachment
 ):
-    user_attachment.name = "image-attachment.png"
-    user_attachment.slug = "image-attachment-png"
-    user_attachment.filetype_id = "png"
-    user_attachment.upload = "attachments/image-attachment.png"
-    user_attachment.dimensions = "200x200"
-    user_attachment.thumbnail = "attachments/image-thumbnail.png"
-    user_attachment.thumbnail_dimensions = "50x50"
-    user_attachment.save()
-
     response = user_client.post(
         reverse(
             "misago:edit-thread",
@@ -750,7 +734,7 @@ def test_edit_thread_view_displays_image_with_thumbnail_attachment(
         ),
         {
             action_name: "true",
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_image_thumbnail_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -758,14 +742,14 @@ def test_edit_thread_view_displays_image_with_thumbnail_attachment(
     assert_contains(response, "Edit thread")
     assert_contains(response, "misago-editor-attachments=")
 
-    assert_contains(response, user_attachment.name)
-    assert_contains(response, user_attachment.get_thumbnail_url())
+    assert_contains(response, user_image_thumbnail_attachment.name)
+    assert_contains(response, user_image_thumbnail_attachment.get_thumbnail_url())
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=user_attachment.id,
+        value=user_image_thumbnail_attachment.id,
     )
 
 
@@ -773,14 +757,8 @@ def test_edit_thread_view_displays_image_with_thumbnail_attachment(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_video_attachment(
-    action_name, user_client, user_thread, user_attachment
+    action_name, user_client, user_thread, user_video_attachment
 ):
-    user_attachment.name = "video-attachment.mp4"
-    user_attachment.slug = "video-attachment-mp4"
-    user_attachment.filetype_id = "mp4"
-    user_attachment.upload = "attachments/video-attachment.mp4"
-    user_attachment.save()
-
     response = user_client.post(
         reverse(
             "misago:edit-thread",
@@ -788,7 +766,7 @@ def test_edit_thread_view_displays_video_attachment(
         ),
         {
             action_name: "true",
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_video_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -796,14 +774,14 @@ def test_edit_thread_view_displays_video_attachment(
     assert_contains(response, "Edit thread")
     assert_contains(response, "misago-editor-attachments=")
 
-    assert_contains(response, user_attachment.name)
-    assert_contains(response, user_attachment.get_absolute_url())
+    assert_contains(response, user_video_attachment.name)
+    assert_contains(response, user_video_attachment.get_absolute_url())
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=user_attachment.id,
+        value=user_video_attachment.id,
     )
 
 
@@ -811,14 +789,8 @@ def test_edit_thread_view_displays_video_attachment(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_file_attachment(
-    action_name, user_client, user_thread, user_attachment
+    action_name, user_client, user_thread, user_text_attachment
 ):
-    user_attachment.name = "document-attachment.pdf"
-    user_attachment.slug = "document-attachment-pdf"
-    user_attachment.filetype_id = "pdf"
-    user_attachment.upload = "attachments/document-attachment.pdf"
-    user_attachment.save()
-
     response = user_client.post(
         reverse(
             "misago:edit-thread",
@@ -826,7 +798,7 @@ def test_edit_thread_view_displays_file_attachment(
         ),
         {
             action_name: "true",
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -834,18 +806,18 @@ def test_edit_thread_view_displays_file_attachment(
     assert_contains(response, "Edit thread")
     assert_contains(response, "misago-editor-attachments=")
 
-    assert_contains(response, user_attachment.name)
+    assert_contains(response, user_text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=user_attachment.id,
+        value=user_text_attachment.id,
     )
 
 
 def test_edit_thread_view_associates_unused_attachment_on_submit(
-    user_client, user_thread, user_attachment
+    user_client, user_thread, user_text_attachment
 ):
     response = user_client.post(
         reverse(
@@ -853,7 +825,7 @@ def test_edit_thread_view_associates_unused_attachment_on_submit(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -865,15 +837,15 @@ def test_edit_thread_view_associates_unused_attachment_on_submit(
         "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
     )
 
-    user_attachment.refresh_from_db()
-    assert user_attachment.category_id == user_thread.category_id
-    assert user_attachment.thread_id == user_thread.id
-    assert user_attachment.post_id == user_thread.first_post_id
-    assert not user_attachment.is_deleted
+    user_text_attachment.refresh_from_db()
+    assert user_text_attachment.category_id == user_thread.category_id
+    assert user_text_attachment.thread_id == user_thread.id
+    assert user_text_attachment.post_id == user_thread.first_post_id
+    assert not user_text_attachment.is_deleted
 
 
 def test_edit_thread_view_adds_attachment_to_deleted_list(
-    user_client, user_thread, user_attachment
+    user_client, user_thread, user_text_attachment
 ):
     response = user_client.post(
         reverse(
@@ -881,8 +853,8 @@ def test_edit_thread_view_adds_attachment_to_deleted_list(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
-            PostForm.delete_attachment_field: str(user_attachment.id),
+            PostForm.attachment_ids_field: [str(user_text_attachment.id)],
+            PostForm.delete_attachment_field: str(user_text_attachment.id),
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -895,24 +867,24 @@ def test_edit_thread_view_adds_attachment_to_deleted_list(
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=user_attachment.id,
+        value=user_text_attachment.id,
     )
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.deleted_attachment_ids_field,
-        value=user_attachment.id,
+        value=user_text_attachment.id,
     )
-    assert_not_contains(response, user_attachment.name)
-    assert_not_contains(response, user_attachment.get_absolute_url())
+    assert_not_contains(response, user_text_attachment.name)
+    assert_not_contains(response, user_text_attachment.get_absolute_url())
 
 
 @pytest.mark.parametrize(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_maintains_deleted_attachments_list(
-    action_name, user_client, user_thread, user_attachment
+    action_name, user_client, user_thread, user_text_attachment
 ):
     response = user_client.post(
         reverse(
@@ -921,8 +893,8 @@ def test_edit_thread_view_maintains_deleted_attachments_list(
         ),
         {
             action_name: "true",
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
-            PostForm.deleted_attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_text_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -935,21 +907,21 @@ def test_edit_thread_view_maintains_deleted_attachments_list(
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=user_attachment.id,
+        value=user_text_attachment.id,
     )
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.deleted_attachment_ids_field,
-        value=user_attachment.id,
+        value=user_text_attachment.id,
     )
-    assert_not_contains(response, user_attachment.name)
-    assert_not_contains(response, user_attachment.get_absolute_url())
+    assert_not_contains(response, user_text_attachment.name)
+    assert_not_contains(response, user_text_attachment.get_absolute_url())
 
 
 def test_edit_thread_view_deletes_attachment_on_submit(
-    user_client, user_thread, user_attachment
+    user_client, user_thread, user_text_attachment
 ):
     response = user_client.post(
         reverse(
@@ -957,8 +929,8 @@ def test_edit_thread_view_deletes_attachment_on_submit(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
-            PostForm.deleted_attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_text_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -970,20 +942,18 @@ def test_edit_thread_view_deletes_attachment_on_submit(
         "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
     )
 
-    user_attachment.refresh_from_db()
-    assert user_attachment.category_id is None
-    assert user_attachment.thread_id is None
-    assert user_attachment.post_id is None
-    assert user_attachment.is_deleted
+    user_text_attachment.refresh_from_db()
+    assert user_text_attachment.category_id is None
+    assert user_text_attachment.thread_id is None
+    assert user_text_attachment.post_id is None
+    assert user_text_attachment.is_deleted
 
 
-def test_edit_thread_view_displays_existing_attachment(
-    user_client, user_thread, attachment
+def test_edit_thread_view_displays_associated_attachment(
+    user_client, user_thread, text_attachment
 ):
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.get(
         reverse(
@@ -995,24 +965,22 @@ def test_edit_thread_view_displays_existing_attachment(
     assert_contains(response, "misago-editor-attachments=")
     assert_contains_element(response, "input", type="file", name="posting-post-upload")
 
-    assert_contains(response, attachment.name)
+    assert_contains(response, text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
-def test_edit_thread_view_displays_existing_attachment_if_uploads_are_disabled(
-    user_client, user_thread, attachment
+def test_edit_thread_view_displays_associated_attachment_if_uploads_are_disabled(
+    user_client, user_thread, text_attachment
 ):
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.get(
         reverse(
@@ -1026,26 +994,24 @@ def test_edit_thread_view_displays_existing_attachment_if_uploads_are_disabled(
         response, "input", type="file", name="posting-post-upload"
     )
 
-    assert_contains(response, attachment.name)
+    assert_contains(response, text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
 
 
-def test_edit_thread_view_displays_existing_attachment_for_user_without_upload_permission(
-    members_group, user_client, user_thread, attachment
+def test_edit_thread_view_displays_associated_attachment_for_user_without_upload_permission(
+    members_group, user_client, user_thread, text_attachment
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
     members_group.save()
 
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.get(
         reverse(
@@ -1059,23 +1025,21 @@ def test_edit_thread_view_displays_existing_attachment_for_user_without_upload_p
         response, "input", type="file", name="posting-post-upload"
     )
 
-    assert_contains(response, attachment.name)
+    assert_contains(response, text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
 
 
 def test_edit_thread_view_adds_existing_attachment_to_deleted_list(
-    user_client, user_thread, attachment
+    user_client, user_thread, text_attachment
 ):
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.post(
         reverse(
@@ -1083,8 +1047,8 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(attachment.id)],
-            PostForm.delete_attachment_field: str(attachment.id),
+            PostForm.attachment_ids_field: [str(text_attachment.id)],
+            PostForm.delete_attachment_field: str(text_attachment.id),
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -1093,31 +1057,29 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list(
     assert_contains(response, "misago-editor-attachments=")
     assert_contains_element(response, "input", type="file", name="posting-post-upload")
 
-    assert_not_contains(response, attachment.name)
+    assert_not_contains(response, text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.deleted_attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
 def test_edit_thread_view_adds_existing_attachment_to_deleted_list_if_uploads_are_disabled(
-    user_client, user_thread, attachment
+    user_client, user_thread, text_attachment
 ):
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.post(
         reverse(
@@ -1125,8 +1087,8 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list_if_uploads_ar
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(attachment.id)],
-            PostForm.delete_attachment_field: str(attachment.id),
+            PostForm.attachment_ids_field: [str(text_attachment.id)],
+            PostForm.delete_attachment_field: str(text_attachment.id),
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -1137,33 +1099,31 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list_if_uploads_ar
         response, "input", type="file", name="posting-post-upload"
     )
 
-    assert_not_contains(response, attachment.name)
+    assert_not_contains(response, text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.deleted_attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
 
 
 def test_edit_thread_view_adds_existing_attachment_to_deleted_list_for_user_without_upload_permission(
-    members_group, user_client, user_thread, attachment
+    members_group, user_client, user_thread, text_attachment
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
     members_group.save()
 
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.post(
         reverse(
@@ -1171,8 +1131,8 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list_for_user_with
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(attachment.id)],
-            PostForm.delete_attachment_field: str(attachment.id),
+            PostForm.attachment_ids_field: [str(text_attachment.id)],
+            PostForm.delete_attachment_field: str(text_attachment.id),
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -1183,30 +1143,28 @@ def test_edit_thread_view_adds_existing_attachment_to_deleted_list_for_user_with
         response, "input", type="file", name="posting-post-upload"
     )
 
-    assert_not_contains(response, attachment.name)
+    assert_not_contains(response, text_attachment.name)
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
     assert_contains_element(
         response,
         "input",
         type="hidden",
         name=PostForm.deleted_attachment_ids_field,
-        value=attachment.id,
+        value=text_attachment.id,
     )
 
 
 def test_edit_thread_view_deletes_existing_attachment_on_submit(
-    user_client, user_thread, attachment
+    user_client, user_thread, text_attachment
 ):
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.post(
         reverse(
@@ -1214,8 +1172,8 @@ def test_edit_thread_view_deletes_existing_attachment_on_submit(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(attachment.id)],
-            PostForm.deleted_attachment_ids_field: [str(attachment.id)],
+            PostForm.attachment_ids_field: [str(text_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -1227,21 +1185,19 @@ def test_edit_thread_view_deletes_existing_attachment_on_submit(
         "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
     )
 
-    attachment.refresh_from_db()
-    assert attachment.category_id is None
-    assert attachment.thread_id is None
-    assert attachment.post_id is None
-    assert attachment.is_deleted
+    text_attachment.refresh_from_db()
+    assert text_attachment.category_id is None
+    assert text_attachment.thread_id is None
+    assert text_attachment.post_id is None
+    assert text_attachment.is_deleted
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
 def test_edit_thread_view_deletes_existing_attachment_on_submit_if_uploads_are_disabled(
-    user_client, user_thread, attachment
+    user_client, user_thread, text_attachment
 ):
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.post(
         reverse(
@@ -1249,8 +1205,8 @@ def test_edit_thread_view_deletes_existing_attachment_on_submit_if_uploads_are_d
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(attachment.id)],
-            PostForm.deleted_attachment_ids_field: [str(attachment.id)],
+            PostForm.attachment_ids_field: [str(text_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -1262,23 +1218,21 @@ def test_edit_thread_view_deletes_existing_attachment_on_submit_if_uploads_are_d
         "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
     )
 
-    attachment.refresh_from_db()
-    assert attachment.category_id is None
-    assert attachment.thread_id is None
-    assert attachment.post_id is None
-    assert attachment.is_deleted
+    text_attachment.refresh_from_db()
+    assert text_attachment.category_id is None
+    assert text_attachment.thread_id is None
+    assert text_attachment.post_id is None
+    assert text_attachment.is_deleted
 
 
 def test_edit_thread_view_deletes_existing_attachment_on_submit_for_user_without_upload_permission(
-    members_group, user_client, user_thread, attachment
+    members_group, user_client, user_thread, text_attachment
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
     members_group.save()
 
-    attachment.category_id = user_thread.category_id
-    attachment.thread_id = user_thread.id
-    attachment.post_id = user_thread.first_post_id
-    attachment.save()
+    text_attachment.associate_with_post(user_thread.first_post)
+    text_attachment.save()
 
     response = user_client.post(
         reverse(
@@ -1286,8 +1240,8 @@ def test_edit_thread_view_deletes_existing_attachment_on_submit_for_user_without
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostForm.attachment_ids_field: [str(attachment.id)],
-            PostForm.deleted_attachment_ids_field: [str(attachment.id)],
+            PostForm.attachment_ids_field: [str(text_attachment.id)],
+            PostForm.deleted_attachment_ids_field: [str(text_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": "Edited post",
         },
@@ -1299,23 +1253,16 @@ def test_edit_thread_view_deletes_existing_attachment_on_submit_for_user_without
         "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
     )
 
-    attachment.refresh_from_db()
-    assert attachment.category_id is None
-    assert attachment.thread_id is None
-    assert attachment.post_id is None
-    assert attachment.is_deleted
+    text_attachment.refresh_from_db()
+    assert text_attachment.category_id is None
+    assert text_attachment.thread_id is None
+    assert text_attachment.post_id is None
+    assert text_attachment.is_deleted
 
 
 def test_edit_thread_view_embeds_attachments_in_preview(
-    user_client, user_thread, user_attachment
+    user_client, user_thread, user_image_attachment
 ):
-    user_attachment.name = "image-attachment.png"
-    user_attachment.slug = "image-attachment-png"
-    user_attachment.filetype_id = "png"
-    user_attachment.upload = "attachments/image-attachment.png"
-    user_attachment.dimensions = "200x200"
-    user_attachment.save()
-
     response = user_client.post(
         reverse(
             "misago:edit-thread",
@@ -1323,14 +1270,16 @@ def test_edit_thread_view_embeds_attachments_in_preview(
         ),
         {
             PostingFormset.preview_action: "true",
-            PostForm.attachment_ids_field: [str(user_attachment.id)],
+            PostForm.attachment_ids_field: [str(user_image_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": (
-                f"Edit: <attachment={user_attachment.name}:{user_attachment.id}>"
+                f"Edit: <attachment={user_image_attachment.name}:{user_image_attachment.id}>"
             ),
         },
     )
     assert_contains(response, "Edit thread")
     assert_contains(response, "Message preview")
-    assert_contains_element(response, "a", href=user_attachment.get_details_url())
-    assert_contains_element(response, "img", src=user_attachment.get_absolute_url())
+    assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
+    assert_contains_element(
+        response, "img", src=user_image_attachment.get_absolute_url()
+    )
