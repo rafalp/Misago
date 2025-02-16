@@ -17,91 +17,73 @@ def test_replace_rich_text_tokens_replaces_default_spoiler_summary(
     assert snapshot == replace_rich_text_tokens(html)
 
 
-def test_replace_rich_text_tokens_replaces_attachment_with_image(attachment):
-    attachment.name = "image.png"
-    attachment.slug = "image-png"
-    attachment.filetype_id = "png"
-    attachment.upload = "attachments/image.png"
-    attachment.dimensions = "400x150"
-    attachment.save()
+def test_replace_rich_text_tokens_replaces_attachment_with_image(image_attachment):
 
-    html = f"<attachment={attachment.name}:{attachment.slug}:{attachment.id}>"
-    data = {"attachment_errors": {}, "attachments": {attachment.id: attachment}}
+    html = f"<attachment={image_attachment.name}:{image_attachment.slug}:{image_attachment.id}>"
+    data = {
+        "attachment_errors": {},
+        "attachments": {image_attachment.id: image_attachment},
+    }
 
     result = replace_rich_text_tokens(html, data)
-    assert f'href="{attachment.get_details_url()}"' in result
-    assert f'href="{attachment.get_absolute_url()}"' in result
-    assert f'src="{attachment.get_absolute_url()}"' in result
+    assert f'href="{image_attachment.get_details_url()}"' in result
+    assert f'href="{image_attachment.get_absolute_url()}"' in result
+    assert f'src="{image_attachment.get_absolute_url()}"' in result
 
 
-def test_replace_rich_text_tokens_replaces_attachment_with_thumbnail(attachment):
-    attachment.name = "image.png"
-    attachment.slug = "image-png"
-    attachment.filetype_id = "png"
-    attachment.upload = "attachments/image.png"
-    attachment.dimensions = "400x150"
-    attachment.thumbnail = "attachments/thumbnail.png"
-    attachment.save()
-
-    html = f"<attachment={attachment.name}:{attachment.slug}:{attachment.id}>"
-    data = {"attachment_errors": {}, "attachments": {attachment.id: attachment}}
+def test_replace_rich_text_tokens_replaces_attachment_with_thumbnail(
+    image_thumbnail_attachment,
+):
+    html = f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.slug}:{image_thumbnail_attachment.id}>"
+    data = {
+        "attachment_errors": {},
+        "attachments": {image_thumbnail_attachment.id: image_thumbnail_attachment},
+    }
 
     result = replace_rich_text_tokens(html, data)
-    assert f'href="{attachment.get_details_url()}"' in result
-    assert f'href="{attachment.get_absolute_url()}"' in result
-    assert f'src="{attachment.get_thumbnail_url()}"' in result
+    assert f'href="{image_thumbnail_attachment.get_details_url()}"' in result
+    assert f'href="{image_thumbnail_attachment.get_absolute_url()}"' in result
+    assert f'src="{image_thumbnail_attachment.get_thumbnail_url()}"' in result
 
 
-def test_replace_rich_text_tokens_replaces_attachment_with_video(attachment):
-    attachment.name = "video.mp4"
-    attachment.slug = "video-mp4"
-    attachment.filetype_id = "mp4"
-    attachment.upload = "attachments/video.mp4"
-    attachment.dimensions = None
-    attachment.save()
-
-    html = f"<attachment={attachment.name}:{attachment.slug}:{attachment.id}>"
-    data = {"attachment_errors": {}, "attachments": {attachment.id: attachment}}
+def test_replace_rich_text_tokens_replaces_attachment_with_video(video_attachment):
+    html = f"<attachment={video_attachment.name}:{video_attachment.slug}:{video_attachment.id}>"
+    data = {
+        "attachment_errors": {},
+        "attachments": {video_attachment.id: video_attachment},
+    }
 
     result = replace_rich_text_tokens(html, data)
-    assert f'href="{attachment.get_details_url()}"' in result
-    assert f'src="{attachment.get_absolute_url()}"' in result
+    assert f'href="{video_attachment.get_details_url()}"' in result
+    assert f'src="{video_attachment.get_absolute_url()}"' in result
 
 
-def test_replace_rich_text_tokens_replaces_attachment_with_file_link(attachment):
-    attachment.name = "document.pdf"
-    attachment.slug = "document-pdf"
-    attachment.filetype_id = "pdf"
-    attachment.upload = "attachments/document.pdf"
-    attachment.dimensions = None
-    attachment.save()
-
-    html = f"<attachment={attachment.name}:{attachment.slug}:{attachment.id}>"
-    data = {"attachment_errors": {}, "attachments": {attachment.id: attachment}}
+def test_replace_rich_text_tokens_replaces_attachment_with_file_link(text_attachment):
+    html = f"<attachment={text_attachment.name}:{text_attachment.slug}:{text_attachment.id}>"
+    data = {
+        "attachment_errors": {},
+        "attachments": {text_attachment.id: text_attachment},
+    }
 
     result = replace_rich_text_tokens(html, data)
-    assert attachment.name in result
-    assert f'href="{attachment.get_details_url()}"' in result
-    assert f'href="{attachment.get_absolute_url()}"' in result
+    assert text_attachment.name in result
+    assert f'href="{text_attachment.get_details_url()}"' in result
+    assert f'href="{text_attachment.get_absolute_url()}"' in result
 
 
 def test_replace_rich_text_tokens_replaces_attachment_without_upload_with_broken_link(
-    attachment,
+    broken_image_attachment,
 ):
-    attachment.name = "image.png"
-    attachment.slug = "image-png"
-    attachment.filetype_id = "png"
-    attachment.upload = None
-    attachment.dimensions = "400x150"
-    attachment.save()
-
-    html = f"<attachment={attachment.name}:{attachment.slug}:{attachment.id}>"
-    data = {"attachment_errors": {}, "attachments": {attachment.id: attachment}}
+    html = f"<attachment={broken_image_attachment.name}:{broken_image_attachment.slug}:{broken_image_attachment.id}>"
+    data = {
+        "attachment_errors": {},
+        "attachments": {broken_image_attachment.id: broken_image_attachment},
+    }
 
     result = replace_rich_text_tokens(html, data)
-    assert attachment.name in result
-    assert f'href="{attachment.get_details_url()}"' not in result
-    assert f'href="{attachment.get_absolute_url()}"' not in result
+    assert broken_image_attachment.name in result
+    assert f'href="{broken_image_attachment.get_details_url()}"' not in result
+    assert f'href="{broken_image_attachment.get_absolute_url()}"' not in result
 
 
 def test_replace_rich_text_tokens_replaces_permission_denied_attachment_with_error():
