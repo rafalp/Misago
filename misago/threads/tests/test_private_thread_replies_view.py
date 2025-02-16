@@ -249,12 +249,23 @@ def test_private_thread_replies_view_shows_post_with_embed_attachments(
 ):
     post = user_private_thread.first_post
 
+    invalid_id = (
+        max(
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+            text_attachment.id,
+        )
+        * 100
+    )
+
     post.parsed = (
         "<p>Hello world!</>"
         f"<attachment={image_attachment.name}:{image_attachment.slug}:{image_attachment.id}>"
         f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.slug}:{image_thumbnail_attachment.id}>"
         f"<attachment={video_attachment.name}:{video_attachment.slug}:{video_attachment.id}>"
         f"<attachment={text_attachment.name}:{text_attachment.slug}:{text_attachment.id}>"
+        f"<attachment=invalid-attachment.txt:invalid-attachment-txt:{invalid_id}>"
     )
     post.metadata = {
         "attachments": [
