@@ -220,11 +220,16 @@
 .threads-list-item-col-category-labels {
   padding-left: @grid-gutter-width / 2;
 
+  font-size: 0;
   white-space: nowrap;
 }
 
 .threads-list-category-label {
-  padding: 3px 6px;
+  display: inline-flex;
+  align-items: center;
+
+  height: @thread-flag-block-size;
+  padding: 0 6px;
 
   font-size: @font-size-small;
   font-weight: bold;
@@ -280,8 +285,6 @@
 
   a {
     display: inline-block;
-
-    line-height: 0;
   }
   a:hover,
   a:focus {
@@ -296,9 +299,6 @@
 // Small first and last posters, hidden by default
 .threads-list-item-col-posters-sm {
   display: none;
-
-  font-size: @thread-flag-block-size;
-  line-height: 1;
 
   img {
     width: @thread-flag-block-size;
@@ -323,6 +323,14 @@
     color: @thread-last-activity-color;
     font-size: @thread-last-activity-size;
   }
+}
+
+// Checkbox
+.threads-list-item-col-checkbox {
+  width: 36px;
+  margin-right: -10px;
+
+  text-align: center;
 }
 
 @media screen and (max-width: @screen-sm-max) {
@@ -396,23 +404,32 @@
     display: block;
     margin-left: @grid-gutter-width / 2;
   }
+}
 
-  // Make checkbox separate
-  .threads-list-item-col-checkbox {
-    width: 40px;
-    margin-right: -10px;
+@media screen and (max-width: @threads-list-breadcrumbs-breakpoint) {
+  // Hide non-last category
+  .threads-list-item-col-categories {
+    a {
+      display: none;
+    }
 
-    text-align: center;
+    a:last-child {
+      display: inline-block;
+      margin: 0;
+    }
   }
+
 }
 
 @media screen and (max-width: @screen-xs-max) {
   // Make card full-width
   .threads-list {
-    margin-left: @grid-gutter-width * -0.5;
-    margin-right: @grid-gutter-width * -0.5;
     border-radius: 0;
     border-width: 1px 0;
+  }
+
+  .threads-list-item {
+    padding: 10px 0;
   }
 
   // Remove top margin from bottom row itself
@@ -443,8 +460,6 @@
 
   // Make padding on thread read icon smaller, offset it to right
   .threads-list-item-col-read-status {
-    position: relative;
-    right: @thread-read-icon-offset-right;
     padding-right: floor(@grid-gutter-width / 4);
   }
 
@@ -461,7 +476,7 @@
   // Make last activity small but add spacing to make it easier to click
   .threads-list-item-col-last-activity {
     padding-left: floor(@grid-gutter-width / 2);
-    padding-right: floor(@grid-gutter-width / 4);
+    padding-right: 0;
 
     a:link,
     a:hover,
