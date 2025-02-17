@@ -226,7 +226,6 @@ export default class MarkupEditorUploader {
           }
         })
       }
-
     } catch (error) {
       snackbar.error(
         pgettext("markup editor upload", "Unexpected upload API response")
@@ -258,7 +257,7 @@ export default class MarkupEditorUploader {
       )
     }
 
-    keys.forEach(key => {
+    keys.forEach((key) => {
       this._updateUploadUIWithError(key)
     })
   }
