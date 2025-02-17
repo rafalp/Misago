@@ -44,6 +44,15 @@
   padding-right: @grid-gutter-width / 2;
 }
 
+// Make avatars block elements
+.threads-list-item-starter,
+.threads-list-item-last-poster {
+  &, img {
+    display: block;
+  }
+}
+
+
 // Thread icon
 .threads-list-item-col-read-status {
   padding-right: floor(@grid-gutter-width / 2);
@@ -152,11 +161,16 @@ a.threads-list-item-title-new {
 .threads-list-item-col-category {
   padding-left: @grid-gutter-width / 2;
 
+  font-size: 0;
   white-space: nowrap;
 }
 
 .threads-list-category-label {
-  padding: 3px 6px;
+  display: inline-flex;
+  align-items: center;
+
+  height: @thread-flag-block-size;
+  padding: 0px 6px;
 
   border-radius: @border-radius-small;
 
@@ -211,9 +225,6 @@ a.threads-list-item-title-new {
 .threads-list-item-col-starter-sm,
 .threads-list-item-col-last-poster-sm {
   display: none;
-
-  font-size: @thread-flag-block-size;
-  line-height: 1;
 
   img {
     width: @thread-flag-block-size;

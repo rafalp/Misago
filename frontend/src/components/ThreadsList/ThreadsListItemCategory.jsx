@@ -1,7 +1,7 @@
 import React from "react"
 
 const ThreadsListItemCategory = ({ parent, category }) => (
-  <span>
+  <div>
     {parent && (
       <a
         href={parent.url.index}
@@ -20,7 +20,7 @@ const ThreadsListItemCategory = ({ parent, category }) => (
     >
       {category.short_name || category.name}
     </a>
-  </span>
+  </div>
 )
 
 const getClassName = (category) => {

@@ -69,7 +69,7 @@
         {% endif %}
         {% if thread.category != category %}
           <div class="threads-list-item-col-category">
-            <span>
+            <div>
               {% if thread.category.parent and not thread.category.parent.special_role and thread.category.parent != category %}
                 <a
                   href="{{ thread.category.parent.get_absolute_url }}"
@@ -88,7 +88,7 @@
               >
                 {% if thread.category.short_name %}{{ thread.category.short_name }}{% else %}{{ thread.category.name }}{% endif %}
               </a>
-            </span>
+            </div>
           </div>
         {% endif %}
       </div>
