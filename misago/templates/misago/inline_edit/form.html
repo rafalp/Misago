@@ -8,7 +8,7 @@
     hx-post="{{ request_path }}?inline=true"
     hx-trigger="submit"
     hx-target="#posts-feed-item-post-{{ post.id }} .posts-feed-item-post-body"
-    hx-swap="innerHTML"
+    hx-swap="innerHTML show:#post-{{ post.id }}:top"
   >
     {% csrf_token %}
     <div class="posts-feed-item-post-edit-form-body">
