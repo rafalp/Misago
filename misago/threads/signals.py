@@ -59,15 +59,6 @@ def merge_threads(sender, **kwargs):
     )
 
 
-@receiver(merge_post)
-def merge_posts(sender, **kwargs):
-    other_post = kwargs["other_post"]
-    for user in sender.mentions.iterator(chunk_size=50):
-        other_post.mentions.add(user)
-
-    sender.notification_set.update(post=other_post)
-
-
 @receiver(move_post)
 def move_post_notifications(sender, **kwargs):
     sender.notification_set.update(
