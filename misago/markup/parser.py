@@ -10,7 +10,6 @@ from .htmlparser import parse_html_string, print_html_string
 from .links import clean_links, linkify_texts
 from .md.shortimgs import ShortImagesExtension
 from .md.strikethrough import StrikethroughExtension
-from .mentions import add_mentions
 from .pipeline import pipeline
 
 
@@ -55,14 +54,11 @@ def parse(
     parsing_result["parsed_text"] = parsed_text.strip()
 
     # Run additional operations
-    if allow_mentions or allow_links or allow_images:
+    if allow_links or allow_images:
         root_node = parse_html_string(parsing_result["parsed_text"])
 
         if allow_links:
             linkify_texts(root_node)
-
-        if allow_mentions:
-            add_mentions(parsing_result, root_node)
 
         if allow_links or allow_images:
             clean_links(request, parsing_result, root_node, force_shva)
