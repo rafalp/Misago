@@ -31,8 +31,6 @@ def submit_image(admin_client, image=""):
         "default_gravatar_fallback": "dynamic",
         "signature_length_max": 100,
         "blank_avatar": image,
-        "subscribe_start": "no",
-        "subscribe_reply": "no",
         "users_per_page": 12,
         "users_per_page_orphans": 4,
         "top_posters_ranking_length": 10,

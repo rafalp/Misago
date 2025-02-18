@@ -197,7 +197,6 @@ def merge_threads(request, validated_data, threads, merge_conflict):
 
     # set extra attrs on thread for UI
     new_thread.is_read = False
-    new_thread.subscription = None
 
     # Deduplicate watched threads
     delete_duplicate_watched_threads.delay(new_thread.id)

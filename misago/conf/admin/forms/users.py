@@ -17,8 +17,6 @@ class UsersSettingsForm(SettingsForm):
         "default_gravatar_fallback",
         "blank_avatar",
         "signature_length_max",
-        "subscribe_reply",
-        "subscribe_start",
         "username_length_max",
         "username_length_min",
         "anonymous_username",
@@ -181,49 +179,6 @@ class UsersSettingsForm(SettingsForm):
         ),
         min_value=10,
         max_value=5000,
-    )
-
-    subscribe_start = forms.ChoiceField(
-        label=pgettext_lazy("admin users settings form", "Started threads"),
-        choices=[
-            ("no", pgettext_lazy("admin users settings form", "Don't watch")),
-            (
-                "watch",
-                pgettext_lazy(
-                    "admin users default subscription choice",
-                    "Put on watched threads list",
-                ),
-            ),
-            (
-                "watch_email",
-                pgettext_lazy(
-                    "admin users default subscription choice",
-                    "Put on watched threads list and e-mail user when somebody replies",
-                ),
-            ),
-        ],
-        widget=forms.RadioSelect(),
-    )
-    subscribe_reply = forms.ChoiceField(
-        label=pgettext_lazy("admin users settings form", "Replied threads"),
-        choices=[
-            ("no", pgettext_lazy("admin users settings form", "Don't watch")),
-            (
-                "watch",
-                pgettext_lazy(
-                    "admin users default subscription choice",
-                    "Put on watched threads list",
-                ),
-            ),
-            (
-                "watch_email",
-                pgettext_lazy(
-                    "admin users default subscription choice",
-                    "Put on watched threads list and e-mail user when somebody replies",
-                ),
-            ),
-        ],
-        widget=forms.RadioSelect(),
     )
 
     users_per_page = forms.IntegerField(

@@ -329,8 +329,6 @@ def get_default_edit_form_data(user):
         "limits_private_thread_invites_to": str(user.limits_private_thread_invites_to),
         "signature_lock_staff_message": str(user.signature_lock_staff_message or ""),
         "signature_lock_user_message": str(user.signature_lock_user_message or ""),
-        "subscribe_to_started_threads": str(user.subscribe_to_started_threads),
-        "subscribe_to_replied_threads": str(user.subscribe_to_replied_threads),
         "watch_started_threads": str(user.watch_started_threads),
         "watch_replied_threads": str(user.watch_replied_threads),
         "watch_new_private_threads_by_followed": str(

@@ -14,7 +14,6 @@ from ..threads.models import (
     Post,
     PostEdit,
     PostLike,
-    Subscription,
     Thread,
 )
 from ..threads.test import post_poll, post_thread, reply_thread
@@ -44,7 +43,6 @@ class CategoryRelationsFactory:
     thread: Thread
     thread_first_post: Post
     thread_reply: Post
-    thread_subscription: Subscription
     watched_thread: WatchedThread
 
     def __init__(
@@ -79,7 +77,6 @@ class CategoryRelationsFactory:
         self.read_category = self.create_read_category()
         self.read_thread = self.create_read_thread()
         self.role_category_acl = self.create_role_category_acl()
-        self.subscription = self.create_subscription()
         self.watched_thread = self.create_watched_thread()
 
         self.category.set_last_thread(self.thread)
@@ -174,13 +171,6 @@ class CategoryRelationsFactory:
             category_role=CategoryRole.objects.order_by("id").first(),
         )
 
-    def create_subscription(self) -> Subscription:
-        return Subscription.objects.create(
-            user=self.user,
-            thread=self.thread,
-            category=self.category,
-        )
-
     def create_thread(self) -> Thread:
         return post_thread(self.category, poster=self.user)
 
@@ -245,10 +235,6 @@ class CategoryRelationsFactory:
         with pytest.raises(RoleCategoryACL.DoesNotExist):
             """RoleCategoryACL should be deleted when category is deleted"""
             self.role_category_acl.refresh_from_db()
-
-        with pytest.raises(Subscription.DoesNotExist):
-            """Subscription should be deleted when category is deleted"""
-            self.subscription.refresh_from_db()
 
         with pytest.raises(Thread.DoesNotExist):
             """Thread should be deleted when category is deleted"""
@@ -319,11 +305,6 @@ class CategoryRelationsFactory:
         with pytest.raises(RoleCategoryACL.DoesNotExist):
             """RoleCategoryACL should be deleted when category is deleted"""
             self.role_category_acl.refresh_from_db()
-
-        self.subscription.refresh_from_db()
-        assert (
-            self.subscription.category_id == new_category.id
-        ), "Subscription category relation was not updated"
 
         self.thread.refresh_from_db()
         assert (

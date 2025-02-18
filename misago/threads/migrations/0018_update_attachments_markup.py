@@ -194,7 +194,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("misago_attachments", "0005_attachment_clean_names_populate_slugs"),
-        ("misago_threads", "0016_remove_post_mentions"),
+        ("misago_threads", "0017_delete_subscription"),
     ]
 
     operations = [

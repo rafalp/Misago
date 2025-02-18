@@ -25,38 +25,6 @@ def test_avatar_from_url_is_set_for_user(dynamic_settings, user):
     assert user.avatar_set.exists()
 
 
-def test_default_started_threads_subscription_option_is_set_for_user(
-    dynamic_settings, user
-):
-    with override_dynamic_settings(subscribe_start="no"):
-        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.subscribe_to_started_threads == User.SUBSCRIPTION_NONE
-
-    with override_dynamic_settings(subscribe_start="watch"):
-        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.subscribe_to_started_threads == User.SUBSCRIPTION_NOTIFY
-
-    with override_dynamic_settings(subscribe_start="watch_email"):
-        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.subscribe_to_started_threads == User.SUBSCRIPTION_ALL
-
-
-def test_default_replied_threads_subscription_option_is_set_for_user(
-    dynamic_settings, user
-):
-    with override_dynamic_settings(subscribe_reply="no"):
-        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_NONE
-
-    with override_dynamic_settings(subscribe_reply="watch"):
-        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_NOTIFY
-
-    with override_dynamic_settings(subscribe_reply="watch_email"):
-        setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)
-        assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_ALL
-
-
 def test_default_watch_started_threads_option_is_set_for_user(dynamic_settings, user):
     with override_dynamic_settings(watch_started_threads=ThreadNotifications.NONE):
         setup_new_user(dynamic_settings, user, avatar_url=AVATAR_URL)

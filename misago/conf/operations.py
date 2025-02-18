@@ -10,9 +10,15 @@ class CreateSetting(RunPython):
         dry_value: str | int | None = None,
         is_public: bool = False,
     ):
-        code = create_setting(setting, python_type, dry_value, is_public)
-        reverse_code = delete_setting(setting)
-        super().__init__(code, reverse_code, atomic=False)
+        operation = create_setting(setting, python_type, dry_value, is_public)
+        reverse_operation = delete_setting(setting)
+        super().__init__(operation, reverse_operation, atomic=False)
+
+
+class DeleteSetting(RunPython):
+    def __init__(self, *, setting: str):
+        operation = delete_setting(setting)
+        super().__init__(operation, atomic=False)
 
 
 def create_setting(

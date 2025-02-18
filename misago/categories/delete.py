@@ -17,7 +17,6 @@ from ..threads.models import (
     Post,
     PostEdit,
     PostLike,
-    Subscription,
     Thread,
 )
 from .hooks import delete_categories_hook
@@ -112,7 +111,6 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     _move_objects(Post, categories, new_category)
     _move_objects(PostEdit, categories, new_category)
     _move_objects(PostLike, categories, new_category)
-    _move_objects(Subscription, categories, new_category)
     _move_objects(Thread, categories, new_category)
 
     new_category.synchronize()
@@ -143,6 +141,5 @@ def _delete_categories_contents(
     delete_all(Poll, category_id=categories)
     delete_all(PostEdit, category_id=categories)
     delete_all(PostLike, category_id=categories)
-    delete_all(Subscription, category_id=categories)
     delete_all(Post, category_id=categories)
     delete_all(Thread, category_id=categories)
