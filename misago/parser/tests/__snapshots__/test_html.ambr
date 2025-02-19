@@ -3,10 +3,10 @@
   '<p>See the site: </p><div class="rich-text-attachment-group"><attachment=image.png:image-png:123></div>'
 # ---
 # name: test_render_ast_to_html_auto_link
-  '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+  '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a></p>'
 # ---
 # name: test_render_ast_to_html_auto_url
-  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a></p>'
 # ---
 # name: test_render_ast_to_html_bold_bbcode_text
   '<p>Hello <b>world</b>!</p>'
@@ -169,11 +169,11 @@
   '<ul><li>Lorem</li><li><em>Ipsum</em><ul><li>Met</li><li>Elit</li></ul></li><li>Dolor</li></ul>'
 # ---
 # name: test_render_ast_to_html_url
-  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'
 # ---
 # name: test_render_ast_to_html_url_bbcode
-  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a>!</p>'
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a>!</p>'
 # ---
 # name: test_render_ast_to_html_url_bbcode_with_text
-  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'
 # ---
