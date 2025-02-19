@@ -23,7 +23,6 @@ from ..views.replies import private_thread_replies, thread_replies
 from ..views.reply import reply_private_thread, reply_thread
 from ..views.selectcategory import SelectCategoryView
 from ..views.start import start_private_thread, start_thread
-from ..views.subscribed import redirect_subscribed_to_watched
 
 
 urlpatterns = [
@@ -163,17 +162,4 @@ urlpatterns = [
         PostRedirectView.as_view(),
         name="post",
     ),
-]
-
-
-# Redirect from subscribed to watched
-if settings.MISAGO_THREADS_ON_INDEX:
-    root_subscribed_path = "subscribed/"
-else:
-    root_subscribed_path = "threads/subscribed/"
-
-urlpatterns += [
-    path(root_subscribed_path, redirect_subscribed_to_watched),
-    path("c/<slug:slug>/<int:pk>/subscribed/", redirect_subscribed_to_watched),
-    path("private-threads/subscribed/", redirect_subscribed_to_watched),
 ]

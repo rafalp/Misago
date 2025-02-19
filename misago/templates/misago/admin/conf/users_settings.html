@@ -77,22 +77,7 @@
 
   </fieldset>
 </div>
-<div class="form-fieldset">
-  <fieldset>
-    <legend>{% translate "Default subscription preferences" context "admin users settings form" %}</legend>
 
-    <div class="alert alert-warning" role="alert">
-      <strong>{% translate "Deprecation warning" context "admin users settings form" %}:</strong>
-      {% blocktranslate trimmed context "admin users settings form" %}
-      The thread subscriptions feature has been replaced with notifications and will be removed in a future version of Misago. Please use the notification settings instead.
-      {% endblocktranslate %}
-    </div>
-
-    {% form_row form.subscribe_start %}
-    {% form_row form.subscribe_reply %}
-
-  </fieldset>
-</div>
 <div class="form-fieldset">
   <fieldset>
     <legend>{% translate "Users lists" context "admin users settings form" %}</legend>

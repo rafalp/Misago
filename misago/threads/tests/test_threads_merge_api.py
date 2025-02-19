@@ -630,19 +630,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         poststracker.save_read(self.user, self.thread.first_post)
         poststracker.save_read(self.user, thread.first_post)
 
-        self.user.subscription_set.create(
-            thread=self.thread,
-            category=self.thread.category,
-            last_read_on=self.thread.last_post_on,
-            send_email=False,
-        )
-        self.user.subscription_set.create(
-            thread=thread,
-            category=thread.category,
-            last_read_on=thread.last_post_on,
-            send_email=False,
-        )
-
         response = self.client.post(
             self.api_link,
             json.dumps(
@@ -697,11 +684,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(postreads.filter(thread=new_thread).count(), 2)
         self.assertEqual(postreads.filter(category=self.category).count(), 2)
-
-        # subscriptions are kept
-        self.assertEqual(self.user.subscription_set.count(), 1)
-        self.user.subscription_set.get(thread=new_thread)
-        self.user.subscription_set.get(category=self.category)
 
     @patch_category_acl({"can_merge_threads": True})
     @patch("misago.threads.api.threadendpoints.merge.delete_duplicate_watched_threads")

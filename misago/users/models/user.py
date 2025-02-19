@@ -166,25 +166,6 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     ACTIVATION_USER = 1
     ACTIVATION_ADMIN = 2
 
-    SUBSCRIPTION_NONE = 0
-    SUBSCRIPTION_NOTIFY = 1
-    SUBSCRIPTION_ALL = 2
-
-    SUBSCRIPTION_CHOICES = [
-        (
-            SUBSCRIPTION_NONE,
-            pgettext_lazy("user default subscription choice", "No"),
-        ),
-        (
-            SUBSCRIPTION_NOTIFY,
-            pgettext_lazy("user default subscription choice", "Notify"),
-        ),
-        (
-            SUBSCRIPTION_ALL,
-            pgettext_lazy("user default subscription choice", "Notify with e-mail"),
-        ),
-    ]
-
     LIMIT_INVITES_TO_NONE = 0
     LIMIT_INVITES_TO_FOLLOWED = 1
     LIMIT_INVITES_TO_NOBODY = 2
@@ -301,13 +282,6 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     )
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
-
-    subscribe_to_started_threads = models.PositiveIntegerField(
-        default=SUBSCRIPTION_NONE, choices=SUBSCRIPTION_CHOICES
-    )
-    subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=SUBSCRIPTION_NONE, choices=SUBSCRIPTION_CHOICES
-    )
 
     unread_notifications = models.PositiveIntegerField(default=0)
 

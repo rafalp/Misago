@@ -43,10 +43,6 @@ def merge_threads(sender, **kwargs):
     other_thread.postedit_set.update(category=sender.category, thread=sender)
     other_thread.postlike_set.update(category=sender.category, thread=sender)
 
-    other_thread.subscription_set.exclude(
-        user__in=sender.subscription_set.values("user")
-    ).update(category=sender.category, thread=sender)
-
     other_thread.notification_set.update(
         category=sender.category,
         thread=sender,
@@ -74,7 +70,6 @@ def move_thread_content(sender, **kwargs):
     sender.postedit_set.update(category=sender.category)
     sender.postlike_set.update(category=sender.category)
     sender.pollvote_set.update(category=sender.category)
-    sender.subscription_set.update(category=sender.category)
     sender.notification_set.update(category=sender.category)
     sender.watchedthread_set.update(category=sender.category)
 

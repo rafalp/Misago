@@ -39,8 +39,6 @@ class JoinIpProfileFieldTests(AdminTestCase):
                 "limits_private_thread_invites_to": "0",
                 "signature_lock_staff_message": "",
                 "signature_lock_user_message": "",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
                 "watch_started_threads": "0",
                 "watch_replied_threads": "0",
                 "watch_new_private_threads_by_followed": "0",

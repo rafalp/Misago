@@ -221,17 +221,6 @@ class EditUserForm(BaseUserForm):
         choices=User.LIMIT_INVITES_TO_CHOICES,
     )
 
-    subscribe_to_started_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("admin user form", "Started threads"),
-        coerce=int,
-        choices=User.SUBSCRIPTION_CHOICES,
-    )
-    subscribe_to_replied_threads = forms.TypedChoiceField(
-        label=pgettext_lazy("admin user form", "Replied threads"),
-        coerce=int,
-        choices=User.SUBSCRIPTION_CHOICES,
-    )
-
     watch_started_threads = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin user form",
@@ -299,8 +288,6 @@ class EditUserForm(BaseUserForm):
             "limits_private_thread_invites_to",
             "signature_lock_user_message",
             "signature_lock_staff_message",
-            "subscribe_to_started_threads",
-            "subscribe_to_replied_threads",
             "watch_started_threads",
             "watch_replied_threads",
             "watch_new_private_threads_by_followed",
