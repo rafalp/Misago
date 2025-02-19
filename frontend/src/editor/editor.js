@@ -224,13 +224,15 @@ class MarkupEditor {
 
   _setEditorPasteUpload = (element) => {
     element.addEventListener("paste", (event) => {
-      const uploader = new MarkupEditorUploader(this, element)
-      if (!uploader.canUpload) {
-        uploader.showPermissionDeniedError()
-      } else if (event.clipboardData.files) {
-        event.preventDefault()
-        const textarea = event.target.closest("textarea")
-        uploader.uploadFiles(event.clipboardData.files, textarea)
+      if (event.clipboardData.files.length) {
+        const uploader = new MarkupEditorUploader(this, element)
+        if (!uploader.canUpload) {
+          uploader.showPermissionDeniedError()
+        } else {
+          event.preventDefault()
+          const textarea = event.target.closest("textarea")
+          uploader.uploadFiles(event.clipboardData.files, textarea)
+        }
       }
     })
   }
@@ -247,7 +249,7 @@ class MarkupEditor {
     elements.forEach((child) => {
       child.addEventListener("drop", (event) => {
         const uploader = new MarkupEditorUploader(this, element)
-        if (event.dataTransfer.files) {
+        if (event.dataTransfer.files.length) {
           event.preventDefault()
           if (!uploader.canUpload) {
             uploader.showPermissionDeniedError()
