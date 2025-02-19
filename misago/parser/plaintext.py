@@ -154,27 +154,34 @@ def _render_ast_node_to_plaintext_action(
 
     if ast_type in ("image", "image-bbcode"):
         alt = ast_node["alt"] or ""
+        title = ast_node.get("title") or ""
+
         if text_format == PlainTextFormat.META_DESCRIPTION:
-            return alt
+            return title or alt
 
         src = clean_href(ast_node["src"])
-        return f"{alt} {src}".strip()
+        return " ".join((title, alt, src))
 
     if ast_type in ("url", "url-bbcode"):
         href = clean_href(ast_node["href"])
+        title = ast_node.get("title") or ""
 
         if children := render_inline_ast_to_plaintext(
             context, ast_node["children"], metadata, text_format
         ).strip():
             if text_format == PlainTextFormat.META_DESCRIPTION:
+                if title:
+                    return f"{children} ({title})"
                 return children
             else:
+                if title:
+                    return f"{children} ({title}) {href}"
                 return f"{children} {href}"
 
         if text_format == PlainTextFormat.META_DESCRIPTION:
-            return ""
+            return title
 
-        return href
+        return f"{title} {href}".strip()
 
     if ast_type == "attachment-group":
         return render_ast_to_plaintext(

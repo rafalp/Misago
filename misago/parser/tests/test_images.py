@@ -8,6 +8,7 @@ def test_image(parse_markup):
                 {
                     "type": "image",
                     "alt": None,
+                    "title": None,
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
@@ -26,6 +27,7 @@ def test_image_with_alt_text(parse_markup):
                 {
                     "type": "image",
                     "alt": "Image Alt",
+                    "title": None,
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
@@ -44,6 +46,7 @@ def test_image_alt_text_whitespace_is_stripped(parse_markup):
                 {
                     "type": "image",
                     "alt": "Image Alt",
+                    "title": None,
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
@@ -62,6 +65,7 @@ def test_image_alt_text_is_empty(parse_markup):
                 {
                     "type": "image",
                     "alt": None,
+                    "title": None,
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
@@ -80,6 +84,7 @@ def test_image_alt_text_is_not_parsed(parse_markup):
                 {
                     "type": "image",
                     "alt": "*Image Alt*",
+                    "title": None,
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
@@ -98,6 +103,104 @@ def test_image_alt_text_reserved_tokens_are_reversed(parse_markup):
                 {
                     "type": "image",
                     "alt": "`Image`",
+                    "title": None,
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_with_title(parse_markup):
+    result = parse_markup('Hello !(https://image.com/img.jpg "Lorem ipsum")!')
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": "Lorem ipsum",
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_title_whitespace_is_stripped(parse_markup):
+    result = parse_markup(
+        'Hello !(https://image.com/img.jpg     "   Lorem ipsum  "   )!'
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": "Lorem ipsum",
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_title_is_empty(parse_markup):
+    result = parse_markup('Hello !(https://image.com/img.jpg "")!')
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": None,
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_title_is_not_parsed(parse_markup):
+    result = parse_markup('Hello !(https://image.com/img.jpg "*Lorem ipsum*")!')
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": "*Lorem ipsum*",
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_title_reserved_tokens_are_reversed(parse_markup):
+    result = parse_markup('Hello !(https://image.com/img.jpg "`Image`")!')
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": "`Image`",
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},
@@ -155,12 +258,14 @@ def test_image_with_alt_text_next_to_another_image_with_alt_text(parse_markup):
                 {
                     "type": "image",
                     "alt": "Image Alt",
+                    "title": None,
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": " "},
                 {
                     "type": "image",
                     "alt": "Other Alt",
+                    "title": None,
                     "src": "https://image.com/other.jpg",
                 },
                 {"type": "text", "text": "!"},

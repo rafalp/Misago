@@ -237,7 +237,9 @@ class UrlMarkdown(Pattern):
         return re.compile("|".join(f"({p})" for p in self.exclude_patterns))
 
 
-IMAGE_CONTENTS = re.compile(r"!(\[(?P<alt>(.|\n)*?)\])?\((?P<src>.*?)\)")
+IMAGE_CONTENTS = re.compile(
+    r"!(\[(?P<alt>(.|\n)*?)\])?\((?P<src>.*?)(?P<title>\s*\".*?\"\s*?)?\)"
+)
 
 
 class ImgMarkdown(Pattern):
@@ -252,11 +254,17 @@ class ImgMarkdown(Pattern):
         else:
             alt = None
 
+        if contents["title"]:
+            title = contents["title"].strip('" ') or None
+        else:
+            title = None
+
         src = contents["src"].strip()
         if URL_RE.match(src):
             return {
                 "type": "image",
                 "alt": alt,
+                "title": title,
                 "src": src,
             }
 
