@@ -683,7 +683,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(postreads.filter(thread=new_thread).count(), 2)
         self.assertEqual(postreads.filter(category=self.category).count(), 2)
 
-
     @patch_category_acl({"can_merge_threads": True})
     @patch("misago.threads.api.threadendpoints.merge.delete_duplicate_watched_threads")
     def test_merge_threads_merged_best_answer(
