@@ -1,4 +1,4 @@
-def clean_href(href: str) -> str:
+def clean_url(href: str) -> str:
     if href.startswith("://"):
         return "http" + href
     if "://" not in href:
