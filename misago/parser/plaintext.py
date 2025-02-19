@@ -160,7 +160,7 @@ def _render_ast_node_to_plaintext_action(
             title = ""
 
         if text_format == PlainTextFormat.META_DESCRIPTION:
-            return title or alt
+            return f"{alt} {title}".strip()
 
         src = clean_href(ast_node["src"])
         return " ".join(i for i in (alt, src, title) if i).strip()

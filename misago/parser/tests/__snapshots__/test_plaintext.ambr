@@ -95,6 +95,15 @@
 # name: test_render_ast_to_plaintext_image_with_title
   'See the logo: https://misago-project.org/img.png Amazing, right?'
 # ---
+# name: test_render_ast_to_plaintext_image_with_title_and_alt_text
+  'See the logo: Alt text https://misago-project.org/img.png Amazing, right?'
+# ---
+# name: test_render_ast_to_plaintext_image_with_title_and_alt_text_meta_description
+  'See the logo: Alt text Amazing, right?'
+# ---
+# name: test_render_ast_to_plaintext_image_with_title_meta_description
+  'See the logo: Amazing, right?'
+# ---
 # name: test_render_ast_to_plaintext_inline_code
   'Hello world!'
 # ---
@@ -187,4 +196,10 @@
 # ---
 # name: test_render_ast_to_plaintext_url_meta_description
   'See the site!'
+# ---
+# name: test_render_ast_to_plaintext_url_with_title
+  'See the site (misago forums) https://misago-project.org!'
+# ---
+# name: test_render_ast_to_plaintext_url_with_title_meta_description
+  'See the site (misago forums)!'
 # ---
