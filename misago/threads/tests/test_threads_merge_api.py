@@ -592,7 +592,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         new_thread = Thread.objects.get(pk=response_json["id"])
         new_thread.is_read = False
-        new_thread.subscription = None
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         add_acl_to_obj(user_acl, new_thread.category)
@@ -651,7 +650,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         new_thread = Thread.objects.get(pk=response_json["id"])
         new_thread.is_read = False
-        new_thread.subscription = None
 
         self.assertEqual(new_thread.weight, 2)
         self.assertTrue(new_thread.is_closed)
@@ -684,6 +682,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(postreads.filter(thread=new_thread).count(), 2)
         self.assertEqual(postreads.filter(category=self.category).count(), 2)
+
 
     @patch_category_acl({"can_merge_threads": True})
     @patch("misago.threads.api.threadendpoints.merge.delete_duplicate_watched_threads")
