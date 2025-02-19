@@ -92,6 +92,9 @@
 # name: test_render_ast_to_plaintext_image_with_alt_text_meta_description
   'See the logo: Alt text'
 # ---
+# name: test_render_ast_to_plaintext_image_with_title
+  'See the logo: https://misago-project.org/img.png Amazing, right?'
+# ---
 # name: test_render_ast_to_plaintext_inline_code
   'Hello world!'
 # ---

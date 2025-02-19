@@ -8,6 +8,7 @@ def test_url(parse_markup):
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "link label"},
                     ],
@@ -30,10 +31,12 @@ def test_url_with_image_with_alt_markdown(parse_markup):
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [
                         {
                             "type": "image",
                             "alt": "Image Alt",
+                            "title": None,
                             "src": "https://image.com/image.jpg",
                         },
                     ],
@@ -57,10 +60,12 @@ def test_two_urls_with_image_with_alt_markdown(parse_markup):
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [
                         {
                             "type": "image",
                             "alt": "Image Alt",
+                            "title": None,
                             "src": "https://image.com/image.jpg",
                         },
                     ],
@@ -69,13 +74,38 @@ def test_two_urls_with_image_with_alt_markdown(parse_markup):
                 {
                     "type": "url",
                     "href": "https://other.com/",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "Image: "},
                         {
                             "type": "image",
                             "alt": "Image Other",
+                            "title": None,
                             "src": "https://image.com/other.jpg",
                         },
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_with_title(parse_markup):
+    result = parse_markup(
+        'Hello [link label](https://example.com/Link "Check it out (new design)!")!'
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://example.com/Link",
+                    "title": "Check it out (new design)!",
+                    "children": [
+                        {"type": "text", "text": "link label"},
                     ],
                 },
                 {"type": "text", "text": "!"},
@@ -94,6 +124,7 @@ def test_url_with_parenthesis(parse_markup):
                 {
                     "type": "url",
                     "href": "https://example.com/Link_(Film)",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "link label"},
                     ],
@@ -116,6 +147,7 @@ def test_url_with_multiple_parenthesis(parse_markup):
                 {
                     "type": "url",
                     "href": "https://example.com/Link_(Film)_(Comedy)",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "link label"},
                     ],
@@ -138,8 +170,32 @@ def test_url_with_nested_parenthesis(parse_markup):
                 {
                     "type": "url",
                     "href": "https://example.com/Link_(Film_(Comedy))",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "link label"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_with_wikipedia_link(parse_markup):
+    result = parse_markup(
+        "Check this out: [Adwaita](https://en.wikipedia.org/wiki/Adwaita_(design_language))!"
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Check this out: "},
+                {
+                    "type": "url",
+                    "href": "https://en.wikipedia.org/wiki/Adwaita_(design_language)",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "Adwaita"},
                     ],
                 },
                 {"type": "text", "text": "!"},
@@ -158,6 +214,7 @@ def test_url_with_missing_closing_parenthesis_is_trimmed_to_last_one(parse_marku
                 {
                     "type": "url",
                     "href": "https://example.com/Link_(Film_(Comedy",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "link label"},
                     ],
@@ -186,6 +243,7 @@ def test_url_with_missing_closing_parenthesis_next_to_other_url(parse_markup):
                 {
                     "type": "url",
                     "href": "https://example.com/other",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "other link"},
                     ],
@@ -206,6 +264,7 @@ def test_url_with_extra_closing_parenthesis_excludes_them(parse_markup):
                 {
                     "type": "url",
                     "href": "https://example.com/Link_(Film)",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "link label"},
                     ],
@@ -230,18 +289,21 @@ def test_image_between_two_urls(parse_markup):
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [{"type": "text", "text": "Lorem"}],
                 },
                 {"type": "text", "text": " "},
                 {
                     "type": "image",
                     "alt": "Image Alt",
+                    "title": None,
                     "src": "https://image.com/image.jpg",
                 },
                 {"type": "text", "text": " "},
                 {
                     "type": "url",
                     "href": "https://other.com/",
+                    "title": None,
                     "children": [{"type": "text", "text": "Ipsum"}],
                 },
                 {"type": "text", "text": "!"},
@@ -263,12 +325,14 @@ def test_image_before_url(parse_markup):
                 {
                     "type": "image",
                     "alt": "Image Alt",
+                    "title": None,
                     "src": "https://image.com/image.jpg",
                 },
                 {"type": "text", "text": " "},
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [{"type": "text", "text": "Lorem"}],
                 },
                 {"type": "text", "text": "!"},
@@ -290,12 +354,14 @@ def test_image_after_url(parse_markup):
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [{"type": "text", "text": "Lorem"}],
                 },
                 {"type": "text", "text": " "},
                 {
                     "type": "image",
                     "alt": "Image Alt",
+                    "title": None,
                     "src": "https://image.com/image.jpg",
                 },
                 {"type": "text", "text": "!"},

@@ -156,11 +156,14 @@ def _render_ast_node_to_plaintext_action(
         alt = ast_node["alt"] or ""
         title = ast_node.get("title") or ""
 
+        if title == alt:
+            title = ""
+
         if text_format == PlainTextFormat.META_DESCRIPTION:
             return title or alt
 
         src = clean_href(ast_node["src"])
-        return " ".join((title, alt, src))
+        return " ".join(i for i in (alt, src, title) if i).strip()
 
     if ast_type in ("url", "url-bbcode"):
         href = clean_href(ast_node["href"])
