@@ -4,3 +4,7 @@ def clean_href(href: str) -> str:
     if "://" not in href:
         return "http://" + href
     return href
+
+
+def shorten_url(url: str) -> str:
+    pass
