@@ -142,7 +142,7 @@ def _render_ast_node_to_html_action(
             "img",
             attrs={
                 "src": clean_url(ast_node["src"]),
-                "alt": ast_node["alt"],
+                "alt": ast_node["alt"] or "",
                 "title": ast_node.get("title"),
             },
         )
@@ -150,14 +150,24 @@ def _render_ast_node_to_html_action(
     if ast_type in ("url", "url-bbcode"):
         children = render_ast_to_html(context, ast_node["children"], metadata)
         href = clean_url(ast_node["href"])
+        display_href = clean_displayed_url(href)
+        title = ast_node.get("title")
+
+        if title:
+            title = f"{title} ({href})"
+        elif not children:
+            title = None
+        elif display_href != clean_displayed_url(children):
+            title = href
+
         return html_element(
             "a",
-            children or clean_displayed_url(href),
+            children or display_href,
             {
                 "href": href,
                 "rel": URL_REL,
                 "target": URL_TARGET,
-                "title": ast_node.get("title") or href,
+                "title": title,
             },
         )
 

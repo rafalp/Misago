@@ -15,6 +15,11 @@ def test_html_element_returns_single_tag_with_str_attribute():
     assert html == '<img src="https://example.com" />'
 
 
+def test_html_element_returns_single_tag_with_empty_alt_attribute():
+    html = html_element("img", attrs={"alt": ""})
+    assert html == '<img alt="" />'
+
+
 def test_html_element_returns_tag_with_content():
     html = html_element("b", "string")
     assert html == "<b>string</b>"

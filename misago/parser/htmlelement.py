@@ -22,6 +22,6 @@ def _html_attributes(attrs: dict) -> str:
     for attr, value in attrs.items():
         if value is True:
             html += " " + attr
-        elif value is not None and value != "":
+        elif value is not None:
             html += f' {attr}="{escape(value)}"'
     return html
