@@ -91,6 +91,7 @@ class RenderAstNodeToHtmlHook(
 
     ```python
     from misago.parser.context import ParserContext
+    from misago.parser.hooks import render_ast_node_to_html_hook
 
 
     @render_ast_node_to_html_hook.append_filter

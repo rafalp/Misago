@@ -68,6 +68,7 @@ class SetupParserContextHook(
 
     ```python
     from misago.parser.context import ParserContext
+    from misago.parser.hooks import setup_parser_context_hook
 
 
     @setup_parser_context_hook.append_filter

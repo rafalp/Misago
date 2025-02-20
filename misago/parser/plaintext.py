@@ -5,7 +5,7 @@ from .context import ParserContext
 from .enums import PlainTextFormat
 from .exceptions import AstError
 from .hooks import render_ast_node_to_plaintext_hook
-from .urls import clean_href
+from .urls import clean_url
 
 
 def render_ast_to_plaintext(
@@ -154,27 +154,37 @@ def _render_ast_node_to_plaintext_action(
 
     if ast_type in ("image", "image-bbcode"):
         alt = ast_node["alt"] or ""
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return alt
+        title = ast_node.get("title") or ""
 
-        src = clean_href(ast_node["src"])
-        return f"{alt} {src}".strip()
+        if title == alt:
+            title = ""
+
+        if text_format == PlainTextFormat.META_DESCRIPTION:
+            return f"{alt} {title}".strip()
+
+        src = clean_url(ast_node["src"])
+        return " ".join(i for i in (alt, src, title) if i).strip()
 
     if ast_type in ("url", "url-bbcode"):
-        href = clean_href(ast_node["href"])
+        href = clean_url(ast_node["href"])
+        title = ast_node.get("title") or ""
 
         if children := render_inline_ast_to_plaintext(
             context, ast_node["children"], metadata, text_format
         ).strip():
             if text_format == PlainTextFormat.META_DESCRIPTION:
+                if title:
+                    return f"{children} ({title})"
                 return children
             else:
+                if title:
+                    return f"{children} ({title}) {href}"
                 return f"{children} {href}"
 
         if text_format == PlainTextFormat.META_DESCRIPTION:
-            return ""
+            return title
 
-        return href
+        return f"{title} {href}".strip()
 
     if ast_type == "attachment-group":
         return render_ast_to_plaintext(
@@ -188,7 +198,7 @@ def _render_ast_node_to_plaintext_action(
         if text_format == PlainTextFormat.META_DESCRIPTION:
             return ""
 
-        return clean_href(ast_node["href"])
+        return clean_url(ast_node["href"])
 
     if ast_type == "mention":
         username = slugify(ast_node["username"])

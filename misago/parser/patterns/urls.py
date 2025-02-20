@@ -172,7 +172,17 @@ class UrlMarkdown(Pattern):
 
             url, end = self.extract_url_from_source(url_source)
             if text and url:
-                ast.append(self.make_link_ast(parser, text, url, parents))
+                url, title = self.split_url_and_title(url)
+                ast.append(
+                    {
+                        "type": self.pattern_type,
+                        "href": url,
+                        "title": title or None,
+                        "children": parser.parse_inline(
+                            text, parents + [self.pattern_type]
+                        ),
+                    }
+                )
                 cursor = m.end() - 1 + end
             else:
                 markup = self.reverse_text_patterns(m.group(0), reserved_patterns)
@@ -223,21 +233,21 @@ class UrlMarkdown(Pattern):
         url = source[1:length].strip()
         return url, length + 1
 
-    def make_link_ast(
-        self, parser: Parser, text: str, url: str, parents: list[dict]
-    ) -> dict:
-        return {
-            "type": self.pattern_type,
-            "href": url,
-            "children": parser.parse_inline(text, parents + [self.pattern_type]),
-        }
+    def split_url_and_title(self, value: str) -> tuple[str | None, str | None]:
+        if ' "' not in value:
+            return value, None
+
+        url, title = [v.strip() for v in value.split('"', 1)]
+        return url or None, title.strip('" ') or None
 
     @cached_property
     def _exclude_patterns_re(self) -> re.Pattern:
         return re.compile("|".join(f"({p})" for p in self.exclude_patterns))
 
 
-IMAGE_CONTENTS = re.compile(r"!(\[(?P<alt>(.|\n)*?)\])?\((?P<src>.*?)\)")
+IMAGE_CONTENTS = re.compile(
+    r"!(\[(?P<alt>(.|\n)*?)\])?\((?P<src>.*?)(?P<title>\s*\".*?\"\s*?)?\)"
+)
 
 
 class ImgMarkdown(Pattern):
@@ -252,11 +262,17 @@ class ImgMarkdown(Pattern):
         else:
             alt = None
 
+        if contents["title"]:
+            title = contents["title"].strip('" ') or None
+        else:
+            title = None
+
         src = contents["src"].strip()
         if URL_RE.match(src):
             return {
                 "type": "image",
                 "alt": alt,
+                "title": title,
                 "src": src,
             }
 

@@ -68,6 +68,7 @@ def test_autolink_in_url_is_not_parsed(parse_markup):
                 {
                     "type": "url",
                     "href": "https://image.com/",
+                    "title": None,
                     "children": [
                         {"type": "text", "text": "<!https://image.com/>"},
                     ],

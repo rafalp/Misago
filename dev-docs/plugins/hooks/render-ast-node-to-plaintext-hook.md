@@ -110,6 +110,7 @@ The code below implements a custom filter function that only inserts images alt 
 
 ```python
 from misago.parser.context import ParserContext
+from misago.parser.hooks import render_ast_node_to_plaintext_hook
 
 
 @render_ast_node_to_plaintext_hook.append_filter

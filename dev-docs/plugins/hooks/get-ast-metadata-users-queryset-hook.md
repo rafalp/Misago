@@ -89,6 +89,8 @@ The code below implements a custom filter function that updates the queryset to 
 
 ```python
 from misago.parser.context import ParserContext
+from misago.parser.hooks import get_ast_metadata_users_queryset_hook
+
 
 @get_ast_metadata_users_queryset_hook.append_filter
 def get_ast_metadata_users_queryset_exclude_promotors(

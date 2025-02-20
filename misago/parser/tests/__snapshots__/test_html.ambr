@@ -3,10 +3,10 @@
   '<p>See the site: </p><div class="rich-text-attachment-group"><attachment=image.png:image-png:123></div>'
 # ---
 # name: test_render_ast_to_html_auto_link
-  '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+  '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a></p>'
 # ---
 # name: test_render_ast_to_html_auto_url
-  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a></p>'
+  '<p>See the site: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a></p>'
 # ---
 # name: test_render_ast_to_html_bold_bbcode_text
   '<p>Hello <b>world</b>!</p>'
@@ -93,6 +93,12 @@
 # name: test_render_ast_to_html_image_with_alt_text
   '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" /></p>'
 # ---
+# name: test_render_ast_to_html_image_with_title
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" title="Amazing, right?" /></p>'
+# ---
+# name: test_render_ast_to_html_image_with_title_and_alt_text
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" title="Amazing, right?" /></p>'
+# ---
 # name: test_render_ast_to_html_inline_code
   '<p>Hello <code>world</code>!</p>'
 # ---
@@ -169,11 +175,14 @@
   '<ul><li>Lorem</li><li><em>Ipsum</em><ul><li>Met</li><li>Elit</li></ul></li><li>Dolor</li></ul>'
 # ---
 # name: test_render_ast_to_html_url
-  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'
 # ---
 # name: test_render_ast_to_html_url_bbcode
-  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">https://misago-project.org</a>!</p>'
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a>!</p>'
 # ---
 # name: test_render_ast_to_html_url_bbcode_with_text
-  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank"><em>the site</em></a>!</p>'
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'
+# ---
+# name: test_render_ast_to_plaintext_url_with_title
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="misago forums (https://misago-project.org)"><em>the site</em></a>!</p>'
 # ---

@@ -4,7 +4,11 @@ from ..core.utils import slugify
 from .context import ParserContext
 from .exceptions import AstError
 from .hooks import render_ast_node_to_html_hook
-from .urls import clean_href
+from .htmlelement import html_element
+from .urls import clean_displayed_url, clean_url
+
+URL_REL = "external nofollow noopener"
+URL_TARGET = "_blank"
 
 
 def render_ast_to_html(context: ParserContext, ast: list[dict], metadata: dict) -> str:
@@ -134,23 +138,55 @@ def _render_ast_node_to_html_action(
         return f"<attachment={ast_node['name']}:{ast_node['slug']}:{ast_node['id']}>"
 
     if ast_type in ("image", "image-bbcode"):
-        src = escape(clean_href(ast_node["src"]))
-        alt = escape(ast_node["alt"]) if ast_node["alt"] else ""
-        return f'<img src="{src}" alt="{alt}" />'
+        return html_element(
+            "img",
+            attrs={
+                "src": clean_url(ast_node["src"]),
+                "alt": ast_node["alt"] or "",
+                "title": ast_node.get("title"),
+            },
+        )
 
     if ast_type in ("url", "url-bbcode"):
         children = render_ast_to_html(context, ast_node["children"], metadata)
-        href = escape(clean_href(ast_node["href"]))
-        rel = "external nofollow noopener"
-        return f'<a href="{href}" rel="{rel}" target="_blank">{children or href}</a>'
+        href = clean_url(ast_node["href"])
+        display_href = clean_displayed_url(href)
+        title = ast_node.get("title")
+
+        if title:
+            title = f"{title} ({href})"
+        elif not children:
+            title = None
+        elif display_href != clean_displayed_url(children):
+            title = href
+
+        return html_element(
+            "a",
+            children or display_href,
+            {
+                "href": href,
+                "rel": URL_REL,
+                "target": URL_TARGET,
+                "title": title,
+            },
+        )
 
     if ast_type in ("auto-link", "auto-url"):
-        href = escape(clean_href(ast_node["href"]))
-        rel = "external nofollow noopener"
+        href = clean_url(ast_node["href"])
         if ast_node.get("image"):
-            return f'<img src="{href}" alt="" />'
+            return f'<img src="{escape(href)}" alt="" />'
         else:
-            return f'<a href="{href}" rel="{rel}" target="_blank">{href}</a>'
+            display_href = clean_displayed_url(href)
+            return html_element(
+                "a",
+                display_href,
+                {
+                    "href": href,
+                    "rel": URL_REL,
+                    "target": URL_TARGET,
+                    "title": href if len(href) - len(display_href) > 8 else None,
+                },
+            )
 
     if ast_type == "mention":
         username = slugify(ast_node["username"])

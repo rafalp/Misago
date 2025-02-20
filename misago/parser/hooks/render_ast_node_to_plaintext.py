@@ -101,6 +101,7 @@ class RenderAstNodeToPlainTextHook(
 
     ```python
     from misago.parser.context import ParserContext
+    from misago.parser.hooks import render_ast_node_to_plaintext_hook
 
 
     @render_ast_node_to_plaintext_hook.append_filter
