@@ -106,7 +106,7 @@ class RenderAstNodeToPlainTextHook(
 
     @render_ast_node_to_plaintext_hook.append_filter
     def render_images_alt_text_only(
-        action: RenderAstNodeToPlainTextHookAction,
+        action,
         context: ParserContext,
         ast_node: dict,
         metadata: dict,

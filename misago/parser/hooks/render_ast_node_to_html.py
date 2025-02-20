@@ -96,7 +96,7 @@ class RenderAstNodeToHtmlHook(
 
     @render_ast_node_to_html_hook.append_filter
     def render_twitter_media_link_as_image(
-        action: RenderAstNodeToHtmlHookAction,
+        action,
         context: ParserContext,
         ast_node: dict,
         metadata: dict,

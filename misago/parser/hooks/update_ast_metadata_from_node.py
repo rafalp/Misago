@@ -95,7 +95,7 @@ class UpdateAstMetadataFromNodeHook(
 
     @update_ast_metadata_from_node_hook.append_filter
     def update_ast_metadata_threads(
-        action: UpdateAstMetadataFromNodeHookAction,
+        action,
         context: ParserContext,
         ast_node: dict,
         metadata: dict,

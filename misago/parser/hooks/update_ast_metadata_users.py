@@ -81,7 +81,7 @@ class UpdateAstMetadataUsersHook(
 
     @update_ast_metadata_users_hook.append_filter
     def update_ast_metadata_users_remove(
-        action: UpdateAstMetadataUsersHookAction,
+        action,
         context: ParserContext,
         metadata: dict,
     ) -> None:

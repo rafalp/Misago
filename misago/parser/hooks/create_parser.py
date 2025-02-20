@@ -128,7 +128,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
 
     @create_parser_hook.append_filter
     def create_parser_with_custom_pattern(
-        action: CreateParserHookAction,
+        action,
         context: ParserContext,
         *,
         block_patterns,

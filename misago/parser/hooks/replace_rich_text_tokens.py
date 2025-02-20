@@ -83,7 +83,7 @@ class ReplaceRichTextTokensHook(
 
     @replace_rich_text_tokens_hook.append_filter
     def replace_rich_text_spoiler_hoom(
-        action: ReplaceRichTextTokensHookAction,
+        action,
         html: str,
         data: dict,
     ) -> str:

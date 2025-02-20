@@ -103,7 +103,7 @@ class GetAstMetadataUsersQuerysetHook(
 
     @get_ast_metadata_users_queryset_hook.append_filter
     def get_ast_metadata_users_queryset_exclude_promotors(
-        action: GetAstMetadataUsersQuerysetHookAction,
+        action,
         context: ParserContext,
         usernames: list[str],
     ):

@@ -108,7 +108,7 @@ class UpdateAstMetadataHook(
 
     @update_ast_metadata_hook.append_filter
     def update_ast_metadata_threads(
-        action: UpdateAstMetadataHookAction,
+        action,
         context: ParserContext,
         ast: list[dict],
         metadata: dict,
