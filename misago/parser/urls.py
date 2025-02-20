@@ -15,33 +15,25 @@ def clean_displayed_url(url: str) -> str:
     return clean_displayed_url_hook(_clean_displayed_url_action, url)
 
 
+URL_LENGTH_LIMIT = 80
+URL_HEAD_LENGTH = 35
+URL_TAIL_LENGTH = 40
+
+
 def _clean_displayed_url_action(url: str) -> str:
     if "://" in url:
         url = url[url.index("://") + 3 :]
 
-    if "?" in url:
-        url = _clean_displayed_url_querystring(url)
-
     if "index" in url.lower():
         url = _clean_displayed_url_index(url)
 
-    if "/" not in url.strip("/"):
+    if not url.startswith("/") and url.endswith("/") and url.count("/") == 1:
         url = url.strip("/")
-    else:
-        url = _clean_displayed_url_path(url)
 
-    return url
+    if len(url) <= URL_LENGTH_LIMIT:
+        return url
 
-
-QUERYSTRING_LENGTH_LIMIT = 15
-
-
-def _clean_displayed_url_querystring(url: str) -> str:
-    querystring = url[url.index("?") :]
-    if len(querystring) > QUERYSTRING_LENGTH_LIMIT:
-        url = url[: url.index("?")]
-        url += f"{querystring[:QUERYSTRING_LENGTH_LIMIT]}..."
-    return url
+    return f"{url[:URL_HEAD_LENGTH]}...{url[URL_TAIL_LENGTH * -1:]}"
 
 
 INDEX_FILE_NAMES = ("index.php", "index.html", "index.htm")
@@ -55,23 +47,5 @@ def _clean_displayed_url_index(url: str) -> str:
             tail = url[stop:]
             if not tail or tail[0] == "?":
                 return url[:start] + url[stop:]
-
-    return url
-
-
-PATH_MAX_LENGTH = 50
-
-
-def _clean_displayed_url_path(url: str) -> str:
-    start = url.index("/")
-
-    if "?" in url:
-        end = url.index("?")
-    else:
-        end = len(url)
-
-    path = url[start:end]
-    if len(path) > PATH_MAX_LENGTH:
-        return f"{url[:start]}{path[:20]}...{path[-20:]}{url[end:]}"
 
     return url
