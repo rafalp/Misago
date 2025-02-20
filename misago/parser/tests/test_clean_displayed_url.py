@@ -59,3 +59,8 @@ def test_clean_displayed_url_strips_index_before_querystring():
 def test_clean_displayed_url_keeps_index_html_if_its_path_segment():
     result = clean_displayed_url("https://misago-project.org/index.php/")
     assert result == "misago-project.org/index.php/"
+
+
+def test_clean_displayed_url_works_with_relative_urls():
+    result = clean_displayed_url("/thread/posts/lorem/ipsum/")
+    assert result == "/thread/posts/lorem/ipsum/"
