@@ -86,6 +86,7 @@ The code below implements a custom filter function that populates `threads` entr
 
 ```python
 from django.urls import Resolver404, resolve
+from misago.parser.hooks import update_ast_metadata_from_node_hook
 from misago.parser.context import ParserContext
 
 

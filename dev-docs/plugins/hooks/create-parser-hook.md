@@ -130,6 +130,7 @@ The code below implements a custom filter function that adds new block pattern t
 
 ```python
 from misago.parser.context import ParserContext
+from misago.parser.hooks import create_parser_hook
 from misago.parser.parser import Parser
 
 from .patterns import PluginPattern

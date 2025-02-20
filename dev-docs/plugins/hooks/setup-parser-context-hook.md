@@ -71,6 +71,7 @@ The code below implements a custom filter function that adds extra data to `plug
 
 ```python
 from misago.parser.context import ParserContext
+from misago.parser.hooks import setup_parser_context_hook
 
 
 @setup_parser_context_hook.append_filter

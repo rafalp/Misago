@@ -51,6 +51,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.parser.hooks` defines the following hooks:
 
+- [`clean_displayed_url_hook`](./clean-displayed-url-hook.md)
 - [`create_parser_hook`](./create-parser-hook.md)
 - [`get_ast_metadata_users_queryset_hook`](./get-ast-metadata-users-queryset-hook.md)
 - [`render_ast_node_to_html_hook`](./render-ast-node-to-html-hook.md)

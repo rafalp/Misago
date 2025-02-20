@@ -83,6 +83,7 @@ The code below implements a custom filter function that replaces default spoiler
 
 ```python
 from misago.parser.context import ParserContext
+from misago.parser.hooks import replace_rich_text_tokens_hook
 from misago.parser.html import SPOILER_SUMMARY
 
 
