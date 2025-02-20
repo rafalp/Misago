@@ -2,6 +2,8 @@ from .hooks import clean_displayed_url_hook
 
 
 def clean_url(href: str) -> str:
+    if href.startswith("/"):
+        return href
     if href.startswith("://"):
         return "http" + href
     if "://" not in href:
