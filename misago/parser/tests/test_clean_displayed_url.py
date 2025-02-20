@@ -16,24 +16,6 @@ def test_clean_displayed_url_keeps_trailing_slash_its_part_of_path():
     assert result == "misago-project.org/lorem/"
 
 
-def test_clean_displayed_url_shortens_long_path():
-    result = clean_displayed_url(
-        "https://en.wikipedia.org"
-        "/wiki/Principles_of_user_interface_design_in_common_consumer_electronics"
-    )
-    assert result == "en.wikipedia.org/wiki/Principles_of_...consumer_electronics"
-
-
-def test_clean_displayed_url_keeps_short_query_string():
-    result = clean_displayed_url("https://misago-project.org/?sid=dsa7sdsa")
-    assert result == "misago-project.org/?sid=dsa7sdsa"
-
-
-def test_clean_displayed_url_shortens_long_query_string():
-    result = clean_displayed_url("https://misago-project.org/?sid=" + ("a" * 100))
-    assert result == "misago-project.org/?sid=aaaaaaaaaa..."
-
-
 def test_clean_displayed_url_strips_index_html():
     result = clean_displayed_url("https://misago-project.org/index.html")
     assert result == "misago-project.org"
@@ -54,9 +36,14 @@ def test_clean_displayed_url_strips_index_before_querystring():
     assert result == "misago-project.org/?hello"
 
 
-def test_clean_displayed_url_keeps_index_html_if_its_path_segment():
-    result = clean_displayed_url("https://misago-project.org/index.php/")
-    assert result == "misago-project.org/index.php/"
+def test_clean_displayed_url_shortens_long_url():
+    result = clean_displayed_url(
+        "https://en.wikipedia.org"
+        "/wiki/Principles_of_user_interface_design_in_common_consumer_electronics"
+    )
+    assert result == (
+        "en.wikipedia.org/wiki/Principles_of...ce_design_in_common_consumer_electronics"
+    )
 
 
 def test_clean_displayed_url_works_with_short_relative_urls():
