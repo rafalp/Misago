@@ -30,10 +30,8 @@ def test_clean_displayed_url_keeps_short_query_string():
 
 
 def test_clean_displayed_url_shortens_long_query_string():
-    result = clean_displayed_url(
-        "https://misago-project.org/?sid=dsa7sdsa8s7a678ds6a786d8sa678d6as8778s6876d8a"
-    )
-    assert result == "misago-project.org/?sid=dsa7sdsa8s..."
+    result = clean_displayed_url("https://misago-project.org/?sid=" + ("a" * 100))
+    assert result == "misago-project.org/?sid=aaaaaaaaaa..."
 
 
 def test_clean_displayed_url_strips_index_html():
@@ -61,6 +59,11 @@ def test_clean_displayed_url_keeps_index_html_if_its_path_segment():
     assert result == "misago-project.org/index.php/"
 
 
-def test_clean_displayed_url_works_with_relative_urls():
+def test_clean_displayed_url_works_with_short_relative_urls():
+    result = clean_displayed_url("/")
+    assert result == "/"
+
+
+def test_clean_displayed_url_works_with_long_relative_urls():
     result = clean_displayed_url("/thread/posts/lorem/ipsum/")
     assert result == "/thread/posts/lorem/ipsum/"

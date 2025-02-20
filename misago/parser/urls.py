@@ -15,32 +15,30 @@ def clean_displayed_url(url: str) -> str:
     return clean_displayed_url_hook(_clean_displayed_url_action, url)
 
 
+URL_LENGTH_LIMIT = 80
+
+
 def _clean_displayed_url_action(url: str) -> str:
     if "://" in url:
         url = url[url.index("://") + 3 :]
 
-    if "?" in url:
-        url = _clean_displayed_url_querystring(url)
-
     if "index" in url.lower():
         url = _clean_displayed_url_index(url)
+
+    if len(url) <= URL_LENGTH_LIMIT:
+        if not url.startswith("/") and url.endswith("/") and url.count("/") == 1:
+            return url.strip("/")
+
+        return url
+
+    if "?" in url:
+        url = _clean_displayed_url_querystring(url)
 
     if "/" not in url.strip("/"):
         url = url.strip("/")
     else:
         url = _clean_displayed_url_path(url)
 
-    return url
-
-
-QUERYSTRING_LENGTH_LIMIT = 15
-
-
-def _clean_displayed_url_querystring(url: str) -> str:
-    querystring = url[url.index("?") :]
-    if len(querystring) > QUERYSTRING_LENGTH_LIMIT:
-        url = url[: url.index("?")]
-        url += f"{querystring[:QUERYSTRING_LENGTH_LIMIT]}..."
     return url
 
 
@@ -56,6 +54,17 @@ def _clean_displayed_url_index(url: str) -> str:
             if not tail or tail[0] == "?":
                 return url[:start] + url[stop:]
 
+    return url
+
+
+QUERYSTRING_LENGTH_LIMIT = 15
+
+
+def _clean_displayed_url_querystring(url: str) -> str:
+    querystring = url[url.index("?") :]
+    if len(querystring) > QUERYSTRING_LENGTH_LIMIT:
+        url = url[: url.index("?")]
+        url += f"{querystring[:QUERYSTRING_LENGTH_LIMIT]}..."
     return url
 
 
