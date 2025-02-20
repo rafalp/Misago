@@ -93,6 +93,12 @@
 # name: test_render_ast_to_html_image_with_alt_text
   '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" /></p>'
 # ---
+# name: test_render_ast_to_html_image_with_title
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" title="Amazing, right?" /></p>'
+# ---
+# name: test_render_ast_to_html_image_with_title_and_alt_text
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" title="Amazing, right?" /></p>'
+# ---
 # name: test_render_ast_to_html_inline_code
   '<p>Hello <code>world</code>!</p>'
 # ---
@@ -176,4 +182,7 @@
 # ---
 # name: test_render_ast_to_html_url_bbcode_with_text
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'
+# ---
+# name: test_render_ast_to_plaintext_url_with_title
+  '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="misago forums (https://misago-project.org)"><em>the site</em></a>!</p>'
 # ---
