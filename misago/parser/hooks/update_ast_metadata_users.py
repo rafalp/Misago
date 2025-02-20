@@ -76,6 +76,7 @@ class UpdateAstMetadataUsersHook(
 
     ```python
     from misago.parser.context import ParserContext
+    from misago.parser.hooks import update_ast_metadata_users_hook
 
 
     @update_ast_metadata_users_hook.append_filter

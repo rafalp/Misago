@@ -102,6 +102,7 @@ class UpdateAstMetadataHook(
 
     ```python
     from misago.parser.context import ParserContext
+    from misago.parser.hooks import update_ast_metadata_hook
     from misago.threads.models import Thread
 
 

@@ -1,3 +1,6 @@
+from .hooks import clean_displayed_url_hook
+
+
 def clean_url(href: str) -> str:
     if href.startswith("://"):
         return "http" + href
@@ -7,6 +10,10 @@ def clean_url(href: str) -> str:
 
 
 def clean_displayed_url(url: str) -> str:
+    return clean_displayed_url_hook(_clean_displayed_url_action, url)
+
+
+def _clean_displayed_url_action(url: str) -> str:
     if "://" in url:
         url = url[url.index("://") + 3 :]
 

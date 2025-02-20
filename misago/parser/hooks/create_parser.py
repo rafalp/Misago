@@ -120,6 +120,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
 
     ```python
     from misago.parser.context import ParserContext
+    from misago.parser.hooks import create_parser_hook
     from misago.parser.parser import Parser
 
     from .patterns import PluginPattern
