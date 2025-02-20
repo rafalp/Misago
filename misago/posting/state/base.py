@@ -131,6 +131,7 @@ class PostingState:
 
         self.post.original = message
         self.post.parsed = render_ast_to_html(self.parser_context, ast, metadata)
+        print(self.post.parsed.replace("\r", "[R]").replace("\n", "[N]"))
         self.post.search_document = render_ast_to_plaintext(
             self.parser_context,
             ast,

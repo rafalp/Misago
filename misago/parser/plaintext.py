@@ -14,6 +14,23 @@ def render_ast_to_plaintext(
     metadata: dict,
     text_format: str | None = None,
 ) -> str:
+    text = render_children_ast_to_plaintext(context, ast, metadata, text_format)
+
+    if text_format in (
+        PlainTextFormat.META_DESCRIPTION,
+        PlainTextFormat.SEARCH_DOCUMENT,
+    ):
+        return re.sub("\s\s+", " ", text)
+
+    return text.replace("\n", "\r\n")
+
+
+def render_children_ast_to_plaintext(
+    context: ParserContext,
+    ast: list[dict],
+    metadata: dict,
+    text_format: str | None = None,
+) -> str:
     plain_text = []
     for ast_node in ast:
         node_text = render_ast_node_to_plaintext(
@@ -25,15 +42,7 @@ def render_ast_to_plaintext(
         if node_text:
             plain_text.append(node_text)
 
-    text = (" ".join(plain_text)).strip()
-
-    if text_format in (
-        PlainTextFormat.META_DESCRIPTION,
-        PlainTextFormat.SEARCH_DOCUMENT,
-    ):
-        return re.sub("\s\s+", " ", text)
-
-    return text.replace("\n", "\r\n")
+    return (" ".join(plain_text)).strip()
 
 
 def render_inline_ast_to_plaintext(
@@ -112,7 +121,7 @@ def _render_ast_node_to_plaintext_action(
                     item += ast_node["sign"]
 
                 item += " " + children
-                if lists := render_ast_to_plaintext(
+                if lists := render_children_ast_to_plaintext(
                     context, ast_item["lists"], metadata, text_format
                 ):
                     item += " " + lists
@@ -133,7 +142,7 @@ def _render_ast_node_to_plaintext_action(
         return ast_node["code"]
 
     if ast_type in ("quote", "quote-bbcode"):
-        children = render_ast_to_plaintext(
+        children = render_children_ast_to_plaintext(
             context, ast_node["children"], metadata, text_format
         )
 
@@ -143,7 +152,7 @@ def _render_ast_node_to_plaintext_action(
         return children
 
     if ast_type == "spoiler-bbcode":
-        children = render_ast_to_plaintext(
+        children = render_children_ast_to_plaintext(
             context, ast_node["children"], metadata, text_format
         )
 
@@ -187,7 +196,7 @@ def _render_ast_node_to_plaintext_action(
         return f"{title} {href}".strip()
 
     if ast_type == "attachment-group":
-        return render_ast_to_plaintext(
+        return render_children_ast_to_plaintext(
             context, ast_node["children"], metadata, text_format
         )
 
