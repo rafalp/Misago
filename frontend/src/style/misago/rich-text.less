@@ -42,7 +42,8 @@
   hr,
   p,
   ul,
-  ol {
+  ol,
+  table {
     margin-bottom: @line-height-computed;
 
     &:last-child {
@@ -278,4 +279,22 @@
   &:last-child {
     margin-bottom: @line-height-computed * -1;
   }
+}
+
+.rich-text-table {
+  &, td, th {
+    border: 1px solid darken(@gray-lighter, 10);
+  }
+
+  td, th {
+    padding: 4px 8px;
+  }
+}
+
+.rich-text-table-cell-align-center {
+  text-align: center;
+}
+
+.rich-text-table-cell-align-right {
+  text-align: right;
 }

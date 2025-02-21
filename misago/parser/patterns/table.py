@@ -30,13 +30,48 @@ class TableMarkdown(Pattern):
         cols = self.parse_cols_row(data[1])
         rows = [self.split_row(r) for r in data[2:]]
 
-        if len(header) != len(cols):
-            # TODO: return paragraph with text lines containing table markup
-            return []
+        num_cols = len(cols)
+        if len(header) != num_cols:
+            return {
+                "type": "paragraph",
+                "children": parser.parse_inline(match, [], True),
+            }
 
-        ast = {"type": self.pattern_type}
+        ast = {
+            "type": self.pattern_type,
+            "header": [
+                {
+                    "type": "table-header",
+                    "align": cols[i].value,
+                    "children": (
+                        parser.parse_inline(text, ["table", "table-header"], True)
+                        if text
+                        else []
+                    ),
+                }
+                for i, text in enumerate(header)
+            ],
+            "children": [],
+        }
 
-        # TODO: return table AST
+        for row in rows:
+            row += [""] * (num_cols - len(row))
+            row_ast = {"type": "table-row", "children": []}
+
+            for i, text in enumerate(row):
+                row_ast["children"].append(
+                    {
+                        "type": "table-cell",
+                        "align": cols[i].value,
+                        "children": (
+                            parser.parse_inline(text, ["table", "table-cell"], True)
+                            if text
+                            else []
+                        ),
+                    }
+                )
+
+            ast["children"].append(row_ast)
 
         return [ast]
 

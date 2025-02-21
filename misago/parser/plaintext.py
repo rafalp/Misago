@@ -130,6 +130,9 @@ def _render_ast_node_to_plaintext_action(
 
         return " ".join(items)
 
+    if ast_type == "table":
+        return ""
+
     if ast_type in ("code", "code-bbcode", "code-indented"):
         code_lines = [
             line.strip() for line in ast_node["code"].splitlines() if line.strip()
