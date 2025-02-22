@@ -45,6 +45,20 @@ def test_thematic_break_breaks_paragraphs(parse_markup):
     ]
 
 
+def test_thematic_break_doesnt_consume_trailing_linebreak(parse_markup):
+    result = parse_markup("- - -\n# Dolor met")
+    assert result == [
+        {"type": "thematic-break"},
+        {
+            "type": "heading",
+            "level": 1,
+            "children": [
+                {"type": "text", "text": "Dolor met"},
+            ],
+        },
+    ]
+
+
 def test_thematic_break_bbcode(parse_markup):
     result = parse_markup("[hr]")
     assert result == [

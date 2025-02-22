@@ -98,7 +98,7 @@ def test_clean_ast_post_processor_splits_paragraph_with_two_attachments(parse_ma
 
 
 def test_clean_ast_post_processor_removes_empty_node(parse_markup):
-    ast = parse_markup("#\n\nLorem")
+    ast = parse_markup("# \n\nLorem")
     assert ast == [
         {
             "type": "paragraph",
