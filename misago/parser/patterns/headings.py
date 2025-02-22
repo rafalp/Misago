@@ -3,7 +3,7 @@ from ..parser import Parser, Pattern
 
 class AtxHeading(Pattern):
     pattern_type: str = "heading"
-    pattern: str = r"(\n|^)#{1,6}.*"
+    pattern: str = r"(^|\n)#{1,6} .*"
 
     def parse(
         self, parser: Parser, match: str, parents: list[str]
