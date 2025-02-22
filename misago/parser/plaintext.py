@@ -131,7 +131,24 @@ def _render_ast_node_to_plaintext_action(
         return " ".join(items)
 
     if ast_type == "table":
-        return ""
+        items: list[str] = []
+        for header in ast_node["header"]:
+            if header["children"]:
+                items.append(
+                    render_inline_ast_to_plaintext(
+                        context, header["children"], metadata, text_format
+                    ).strip()
+                )
+        for row in ast_node["children"]:
+            for cell in row["children"]:
+                if cell["children"]:
+                    items.append(
+                        render_inline_ast_to_plaintext(
+                            context, cell["children"], metadata, text_format
+                        ).strip()
+                    )
+
+        return " ".join(items)
 
     if ast_type in ("code", "code-bbcode", "code-indented"):
         code_lines = [

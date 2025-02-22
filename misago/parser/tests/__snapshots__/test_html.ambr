@@ -111,6 +111,9 @@
 # name: test_render_ast_to_html_mention_non_existing_user
   '<p>How&#x27;s going, @JohnDoe?</p>'
 # ---
+# name: test_render_ast_to_html_minimal_table
+  '<table class="rich-text-table"><tr><th class="rich-text-table-cell-align-left">Col1</th></tr></table></table>'
+# ---
 # name: test_render_ast_to_html_ordered_list
   '<ol><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ol>'
 # ---
@@ -157,7 +160,7 @@
   '<p>Hello <sup>world</sup>!</p>'
 # ---
 # name: test_render_ast_to_html_table
-  '<table class="rich-text-table"><tr><th class="rich-text-table-cell-align-left">Col1</th><th class="rich-text-table-cell-align-left">Col2</th><th class="rich-text-table-cell-align-center"><em>Col3</em></th><th class="rich-text-table-cell-align-right">Col4</th></tr><tr><td class="rich-text-table-cell-align-left">Cel1</td><td class="rich-text-table-cell-align-left">Cel2</td><td class="rich-text-table-cell-align-center">Cel3</td><td class="rich-text-table-cell-align-right">Cel4</td></tr><tr><td class="rich-text-table-cell-align-left">Cel5</td><td class="rich-text-table-cell-align-left"><em>Cel6</em></td><td class="rich-text-table-cell-align-center">Cel7</td><td class="rich-text-table-cell-align-right">Cel8</td></tr></table></table>'
+  '<table class="rich-text-table"><tr><th class="rich-text-table-cell-align-left">Col1</th><th class="rich-text-table-cell-align-left">Col2</th><th class="rich-text-table-cell-align-center"><em>Col3</em></th><th class="rich-text-table-cell-align-right">Col4</th></tr><tr><td class="rich-text-table-cell-align-left">Cel1</td><td class="rich-text-table-cell-align-left">Cel2</td><td class="rich-text-table-cell-align-center"></td><td class="rich-text-table-cell-align-right">Cel4</td></tr><tr><td class="rich-text-table-cell-align-left">Cel5</td><td class="rich-text-table-cell-align-left"><em>Cel6</em></td><td class="rich-text-table-cell-align-center">Cel7</td><td class="rich-text-table-cell-align-right">Cel8</td></tr></table></table>'
 # ---
 # name: test_render_ast_to_html_thematic_break
   '<p>Hello world!</p><hr /><p>How&#x27;s going?</p>'
@@ -185,9 +188,6 @@
 # ---
 # name: test_render_ast_to_html_url_bbcode_with_text
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'
-# ---
-# name: test_render_ast_to_minimal_html_table
-  '<table class="rich-text-table"><tr><th class="rich-text-table-cell-align-left">Col1</th></tr></table></table>'
 # ---
 # name: test_render_ast_to_plaintext_url_with_title
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="misago forums (https://misago-project.org)"><em>the site</em></a>!</p>'

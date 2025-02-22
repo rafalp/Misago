@@ -108,7 +108,7 @@ def test_render_ast_to_html_unordered_list_with_nested_list(
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
-def test_render_ast_to_minimal_html_table(parser_context, parse_markup, snapshot):
+def test_render_ast_to_html_minimal_table(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         | Col1 |
@@ -124,7 +124,7 @@ def test_render_ast_to_html_table(parser_context, parse_markup, snapshot):
         """
         | Col1 | Col2 |*Col3*| Col4 |
         | ---- | :--- | :--: | ---: |
-        | Cel1 | Cel2 | Cel3 | Cel4 |
+        | Cel1 | Cel2 |      | Cel4 |
         | Cel5 |*Cel6*| Cel7 | Cel8 |
         """
     )
