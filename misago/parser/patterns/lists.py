@@ -4,9 +4,9 @@ from textwrap import dedent
 from ..parser import Parser, Pattern
 
 LIST_PATTERN = (
-    r"(\n|^)"  # List is preceded by a new line or the start of the text
-    r" *(([-*+]|(1[.)]))( +.+)?(\n+|$))"  # First list item
-    r"( *([-*+]|([0-9]+[.)]))( +.+)?(\n+|$))*"  # Next list items
+    r"(\n|^)"
+    r" *([-*+]|(1[.)]))(( .*)|(=\n|$))"
+    r"(\n+ *([-*+]|([0-9]+[.)]))(( .*)|(=\n|$)))*"
 )
 LIST_CONTENTS = re.compile(
     r"(?P<prefix> *)(?P<marker>[-*+i]|([0-9]+[.)]))(?P<text> *.*)"
