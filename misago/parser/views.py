@@ -131,6 +131,13 @@ FORMATS = [
         ),
     ),
     (
+        pgettext_lazy("formatting help", "Table"),
+        pgettext_lazy(
+            "formatting help",
+            "| Left aligned | Center aligned | Right aligned |\r\n| ------------ | :------------: | ------------: |\r\n| Cell 1       | Cell 2         | Cell 3        |\r\n| Cell 4       | Cell 5         | Cell 6        |",
+        ),
+    ),
+    (
         pgettext_lazy("formatting help", "Quote text"),
         pgettext_lazy("formatting help", "> Quoted text"),
     ),
