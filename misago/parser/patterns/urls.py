@@ -8,7 +8,14 @@ from ..parser import Parser, Pattern
 
 MAIL_RE = re.compile(r"^\w+[.-_+\w]*@[-\w]+(.\w+)+$")
 URL_RE = re.compile(
-    r"^(((https?)|(ftps?))://)?\w+(([-_\w])?\w+)*(\.\w+(([-_\w])?\w+))+[^\s]*$"
+    r"^(((https?)|(ftps?)|(wss?))://)?"  # http/ftp/ws(s) prefix
+    r"("  # start hostnames
+    r"(localhost)"  # localhost
+    r"|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"  # IP address
+    r"|((\w+((-|_)\w+)*\w+\.)+[a-z]+)"  # Other hostname
+    r")"  # end hostnames
+    r"(:[1-9][0-9]*)?"
+    r"(/+[^\s\|]*)?$"
 )
 
 
@@ -21,6 +28,9 @@ def clean_url(value: str) -> str | None:
         return f"mailto:{value}"
 
     if URL_RE.match(value):
+        return value
+
+    if value.startswith("/"):
         return value
 
     return None
@@ -229,6 +239,8 @@ class UrlMarkdown(Pattern):
                 nesting -= 1
                 if nesting >= 0:
                     length = i
+                if nesting == 0:
+                    break
 
         url = source[1:length].strip()
         return url, length + 1
@@ -256,6 +268,7 @@ class ImgMarkdown(Pattern):
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> list[dict]:
         contents = IMAGE_CONTENTS.match(match).groupdict()
+        print(contents)
 
         if contents["alt"]:
             alt = contents["alt"].strip() or None
@@ -268,7 +281,7 @@ class ImgMarkdown(Pattern):
             title = None
 
         src = contents["src"].strip()
-        if URL_RE.match(src):
+        if src.startswith("/") or URL_RE.match(src):
             return {
                 "type": "image",
                 "alt": alt,
@@ -307,7 +320,18 @@ class AutolinkMarkdown(Pattern):
 class AutoUrl(AutolinkMarkdown):
     pattern_type: str = "auto-url"
     pattern: str = (
-        r"(?<!\w)((https?://(www\.)?)|(www\.))\w+(-|\w)*(\.\w+(-|\w)*)+[^\s)]*"
+        r"(?<!\w)"
+        r"(((https?)|(ftps?)|(wss?))://)?"  # http/ftp/ws(s) prefix
+        r"("  # start hostnames
+        r"("  # start ther hostname
+        r"(\w+((-|_)\w+)*\w+\.)+"  # word-word.
+        r"((com)|(gov)|(net)|(org)|(info)|(edu)|(io)|(cn)|(hk)|(in)|(us)|(id)|(pk)|(ng)|(br)|(bd)|(ru)|(mx)|(ja)|(ph)|(tr)|(ca)|(uk)|(ie)|(de)|(fr)|(es)|(pt)|(it)|(pl)|(cz)|(sk)|(hu)|(se)|(no)|(is)|(fi))(\.[a-z]{2})?"
+        r")"  # end other hostname
+        r"|(localhost)"  # localhost
+        r"|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"  # IP address
+        r")"  # end hostnames
+        r"(:[1-9][0-9]*)?"
+        r"(/+[^\s\|]*)?"
     )
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:

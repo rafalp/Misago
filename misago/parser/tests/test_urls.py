@@ -1,3 +1,34 @@
+import pytest
+from ..patterns.urls import clean_url
+
+
+@pytest.mark.parametrize(
+    "value",
+    (
+        "lorem@example.com",
+        "lorem123@example.com",
+        "lorem.ipsum@example.com",
+        "lorem.ipsum+dolormet123@example.com",
+        "localhost",
+        "localhost:8000",
+        "http://localhost:8000/t/table-test/1346/",
+        "127.0.0.1",
+        "127.0.0.1:8000",
+        "http://127.0.0.1:8000/t/table-test/1346/",
+        "example.com",
+        "example.com:8000",
+        "https://example.com:8000/t/table-test/1346/",
+        "www.example.com",
+        "www.sub.domain.example-test.com/lorem?ipsum=123",
+        "https://misago-project.org",
+        "/t/table-test/1346/",
+        "/a/thumb/fI7RjdAPf2Uk1i60QZpzbwRSCKOzT0T9ZF6omFHwXu0WLPWgHVLMnHgpqtnsiOsK/599/?shva=1",
+    ),
+)
+def test_clean_url_validates_valid_values(value):
+    assert clean_url(value)
+
+
 def test_url(parse_markup):
     result = parse_markup("Hello [link label](https://image.com/)!")
     assert result == [
@@ -275,6 +306,62 @@ def test_url_with_extra_closing_parenthesis_excludes_them(parse_markup):
     ]
 
 
+def test_url_with_follow_up_parenthesis(parse_markup):
+    result = parse_markup(
+        "Lorem ipsum [example](https://example.com) dolor met sit (amet)."
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Lorem ipsum "},
+                {
+                    "type": "url",
+                    "href": "https://example.com",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "example"},
+                    ],
+                },
+                {"type": "text", "text": " dolor met sit (amet)."},
+            ],
+        }
+    ]
+
+
+def test_url_with_multiple_follow_up_parenthesis(parse_markup):
+    result = parse_markup(
+        "Lorem ipsum [example](https://example.com) dolor met "
+        "([other](https://other.io))) sit (amet)."
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Lorem ipsum "},
+                {
+                    "type": "url",
+                    "href": "https://example.com",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "example"},
+                    ],
+                },
+                {"type": "text", "text": " dolor met ("},
+                {
+                    "type": "url",
+                    "href": "https://other.io",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "other"},
+                    ],
+                },
+                {"type": "text", "text": ")) sit (amet)."},
+            ],
+        }
+    ]
+
+
 def test_image_between_two_urls(parse_markup):
     result = parse_markup(
         "Hello [Lorem](https://image.com/) "
@@ -363,6 +450,25 @@ def test_image_after_url(parse_markup):
                     "alt": "Image Alt",
                     "title": None,
                     "src": "https://image.com/image.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_with_relative_url(parse_markup):
+    result = parse_markup("Hello: ![Image Alt](/uploads/image.jpg)!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello: "},
+                {
+                    "type": "image",
+                    "alt": "Image Alt",
+                    "title": None,
+                    "src": "/uploads/image.jpg",
                 },
                 {"type": "text", "text": "!"},
             ],
