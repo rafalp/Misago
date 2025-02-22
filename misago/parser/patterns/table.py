@@ -55,9 +55,8 @@ class TableMarkdown(Pattern):
         }
 
         for row in rows:
-            row += [""] * (num_cols - len(row))
             row_ast = {"type": "table-row", "children": []}
-
+            row += [""] * (num_cols - len(row))
             for i, text in enumerate(row):
                 row_ast["children"].append(
                     {
