@@ -4,7 +4,13 @@ from ..parser import Parser
 
 
 class CleanASTPostProcessor:
-    valid_attachment_parents = ["quote", "quote-bbcode", "spoiler", "list-item"]
+    valid_attachment_parents = [
+        "quote",
+        "quote-bbcode",
+        "spoiler",
+        "list-item",
+        "table-cell",
+    ]
     valid_empty_nodes = [
         "table",
         "table-header",
