@@ -268,7 +268,6 @@ class ImgMarkdown(Pattern):
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> list[dict]:
         contents = IMAGE_CONTENTS.match(match).groupdict()
-        print(contents)
 
         if contents["alt"]:
             alt = contents["alt"].strip() or None

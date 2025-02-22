@@ -4,8 +4,20 @@ from ..parser import Parser
 
 
 class CleanASTPostProcessor:
-    valid_attachment_parents = ["quote", "quote-bbcode", "spoiler", "list-item"]
-    valid_empty_nodes = ["image-bbcode", "url-bbcode"]
+    valid_attachment_parents = [
+        "quote",
+        "quote-bbcode",
+        "spoiler",
+        "list-item",
+        "table-cell",
+    ]
+    valid_empty_nodes = [
+        "table",
+        "table-header",
+        "table-cell",
+        "image-bbcode",
+        "url-bbcode",
+    ]
 
     def __call__(self, parser: Parser, ast: list[dict]) -> list[dict]:
         if not settings.MISAGO_PARSER_CLEAN_AST:

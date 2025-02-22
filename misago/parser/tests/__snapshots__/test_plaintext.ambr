@@ -116,6 +116,9 @@
 # name: test_render_ast_to_plaintext_mention_non_existing_user
   "How's going, @JohnDoe?"
 # ---
+# name: test_render_ast_to_plaintext_minimal_table
+  'Col1'
+# ---
 # name: test_render_ast_to_plaintext_ordered_list
   '1. Lorem 2. Ipsum 3. Dolor'
 # ---
@@ -160,6 +163,9 @@
 # ---
 # name: test_render_ast_to_plaintext_superscript_bbcode_text
   'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_table
+  'Col1 Col2 Col3 Col4 Cel1 Cel2 Cel4 Cel5 Cel6 Cel7 Cel8'
 # ---
 # name: test_render_ast_to_plaintext_thematic_break
   "Hello world! How's going?"

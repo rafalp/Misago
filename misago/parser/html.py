@@ -63,6 +63,34 @@ def _render_ast_node_to_html_action(
         ).strip()
         return f"<li>{text}{children}</li>"
 
+    if ast_type == "table":
+        header = render_children_ast_to_html(context, ast_node["header"], metadata)
+        children = render_children_ast_to_html(context, ast_node["children"], metadata)
+        return html_element(
+            "table",
+            f"<tr>{header}</tr>{children}</table>",
+            {"class": "rich-text-table"},
+        )
+
+    if ast_type == "table-header":
+        children = render_children_ast_to_html(context, ast_node["children"], metadata)
+        return html_element(
+            "th",
+            render_children_ast_to_html(context, ast_node["children"], metadata),
+            {"class": "rich-text-table-cell-align-" + ast_node["align"]},
+        )
+
+    if ast_type == "table-row":
+        children = render_children_ast_to_html(context, ast_node["children"], metadata)
+        return f"<tr>{children}</tr>"
+
+    if ast_type == "table-cell":
+        return html_element(
+            "td",
+            render_children_ast_to_html(context, ast_node["children"], metadata),
+            {"class": "rich-text-table-cell-align-" + ast_node["align"]},
+        )
+
     if ast_type in ("code", "code-bbcode"):
         if ast_node["syntax"]:
             html_class = f"language-{ast_node['syntax']}"

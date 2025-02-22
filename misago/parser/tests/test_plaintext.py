@@ -110,6 +110,30 @@ def test_render_ast_to_plaintext_unordered_list_with_nested_list(
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
+def test_render_ast_to_plaintext_minimal_table(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        | Col1 |
+        | ---- |
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
+
+
+def test_render_ast_to_plaintext_table(parser_context, parse_markup, snapshot):
+    ast = parse_markup(
+        """
+        | Col1 | Col2 |*Col3*| Col4 |
+        | ---- | :--- | :--: | ---: |
+        | Cel1 | Cel2 |      | Cel4 |
+        | Cel5 |*Cel6*| Cel7 | Cel8 |
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
+
+
 def test_render_ast_to_plaintext_spoiler(parser_context, parse_markup, snapshot):
     ast = parse_markup("[spoiler]Hello world![/spoiler]")
     metadata = create_ast_metadata(parser_context, ast)

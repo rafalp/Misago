@@ -29,6 +29,7 @@ from .markdown import (
 from .mention import Mention
 from .quote import QuoteBBCodeOpen, QuoteBBCodeClose, QuoteMarkdown
 from .spoiler import SpoilerBBCodeOpen, SpoilerBBCodeClose
+from .table import TableMarkdown
 from .thematicbreak import ThematicBreakBBCode, ThematicBreakMarkdown
 from .urls import (
     AutolinkMarkdown,
@@ -47,6 +48,7 @@ block_patterns: list[Pattern] = [
     ThematicBreakBBCode(),
     ThematicBreakMarkdown(),
     ListMarkdown(),
+    TableMarkdown(),
     IndentedCodeMarkdown(),
     QuoteMarkdown(),
     QuoteBBCodeOpen(),
