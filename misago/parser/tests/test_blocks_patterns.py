@@ -3,12 +3,32 @@ import pytest
 PATTERNS = (
     (
         "paragraph",
+        "paragraph",
         {
             "type": "paragraph",
             "children": [{"type": "text", "text": "paragraph"}],
         },
     ),
     (
+        "setex heading level 1",
+        "heading\n====",
+        {
+            "type": "heading-setex",
+            "level": 1,
+            "children": [{"type": "text", "text": "heading"}],
+        },
+    ),
+    (
+        "setex heading level 2",
+        "heading\n----",
+        {
+            "type": "heading-setex",
+            "level": 2,
+            "children": [{"type": "text", "text": "heading"}],
+        },
+    ),
+    (
+        "heading",
         "# heading",
         {
             "type": "heading",
@@ -17,26 +37,31 @@ PATTERNS = (
         },
     ),
     (
+        "thematic break bbcode",
         "[hr]",
         {"type": "thematic-break-bbcode"},
     ),
     (
+        "thematic break dashes",
         "- - -",
         {"type": "thematic-break"},
     ),
     (
+        "thematic break asterisks",
         "* * *",
         {"type": "thematic-break"},
     ),
 )
 
+PATTERNS_IDS = tuple(pattern[0] for pattern in PATTERNS)
 
-@pytest.mark.parametrize("first_pattern", PATTERNS)
-@pytest.mark.parametrize("second_pattern", PATTERNS)
+
 @pytest.mark.parametrize("separator", ("\n", "\n\n"))
+@pytest.mark.parametrize("second_pattern", PATTERNS, ids=PATTERNS_IDS)
+@pytest.mark.parametrize("first_pattern", PATTERNS, ids=PATTERNS_IDS)
 def test_block_patterns(parse_markup, first_pattern, second_pattern, separator):
-    first_markdown, first_ast = first_pattern
-    second_markdown, second_ast = second_pattern
+    _, first_markdown, first_ast = first_pattern
+    _, second_markdown, second_ast = second_pattern
     expected_result = get_expected_ast(first_ast, second_ast, separator)
 
     assert (
