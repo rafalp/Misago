@@ -3,13 +3,19 @@ from ...test import disable_parser_clean_ast
 
 @disable_parser_clean_ast
 def test_empty_atx_heading(parse_markup):
-    result = parse_markup("#")
+    result = parse_markup("# \nText")
     assert result == [
         {
             "type": "heading",
             "level": 1,
             "children": [],
-        }
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Text"},
+            ],
+        },
     ]
 
 

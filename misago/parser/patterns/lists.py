@@ -4,9 +4,13 @@ from textwrap import dedent
 from ..parser import Parser, Pattern
 
 LIST_PATTERN = (
-    r"(\n|^)"  # List is preceded by a new line or the start of the text
-    r" *(([-*+]|(1[.)]))( +.+)?(\n+|$))"  # First list item
-    r"( *([-*+]|([0-9]+[.)]))( +.+)?(\n+|$))*"  # Next list items
+    r"(\n|^)"
+    r" {0,3}("
+    r"(-((( .*)?(\n+(( *-( .*)?)))+)|( .*)|(?=\n|$)))"
+    r"|(\+((( .*)?(\n+(( *\+( .*)?)))+)|( .*)|(?=\n|$)))"
+    r"|(\*((( .*)?(\n+(( *\*( .*)?)))+)|( .*)|(?=\n|$)))"
+    r"|([0-9]{1,9}(\.|\))(( .*)?(\n+((( *[0-9]{1,9}(\.|\))( .*)?)))+)|( .*)|(?=\n|$)))"
+    r")"
 )
 LIST_CONTENTS = re.compile(
     r"(?P<prefix> *)(?P<marker>[-*+i]|([0-9]+[.)]))(?P<text> *.*)"
@@ -20,6 +24,7 @@ class ListMarkdown(Pattern):
     pattern: str = LIST_PATTERN
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> list[dict]:
+        print(match)
         items = self.parse_list_items(
             parser, match, parents + [self.pattern_type, "list-item"]
         )
