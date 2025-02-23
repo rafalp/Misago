@@ -37,12 +37,7 @@ PATTERNS = (
 def test_block_patterns(parse_markup, first_pattern, second_pattern, separator):
     first_markdown, first_ast = first_pattern
     second_markdown, second_ast = second_pattern
-    expected_result = [first_ast, second_ast]
-
-    if expected_result_override := override_expected_result(
-        first_ast, second_ast, separator
-    ):
-        expected_result = expected_result_override
+    expected_result = get_expected_ast(first_ast, second_ast, separator)
 
     assert (
         parse_markup(f"{first_markdown}{separator}{second_markdown}") == expected_result
@@ -52,7 +47,7 @@ def test_block_patterns(parse_markup, first_pattern, second_pattern, separator):
 THEMATIC_BREAK = ("thematic-break", "thematic-break-bbcode")
 
 
-def override_expected_result(ast, other_ast, separator):
+def get_expected_ast(ast, other_ast, separator):
     if (
         ast["type"] == "paragraph"
         and ast["type"] == other_ast["type"]
@@ -74,4 +69,4 @@ def override_expected_result(ast, other_ast, separator):
         # Multiple thematic breaks are combined into one
         return [ast]
 
-    return None
+    return [ast, other_ast]
