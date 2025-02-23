@@ -10,6 +10,24 @@ PATTERNS = (
         },
     ),
     (
+        "fenced code",
+        '```\nalert("Hello world!")\n```',
+        {
+            "type": "code",
+            "syntax": None,
+            "code": 'alert("Hello world!")',
+        },
+    ),
+    (
+        "fenced code alternate",
+        '~~~\nalert("Hello world!")\n~~~',
+        {
+            "type": "code",
+            "syntax": None,
+            "code": 'alert("Hello world!")',
+        },
+    ),
+    (
         "setex heading level 1",
         "heading\n====",
         {
@@ -50,6 +68,206 @@ PATTERNS = (
         "thematic break asterisks",
         "* * *",
         {"type": "thematic-break"},
+    ),
+    (
+        "single item dash list",
+        "- item",
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "-",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "multiple items dash list",
+        "- item1\n- item2\n- item3",
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "-",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item1"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item2"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item3"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "single item asterisk list",
+        "* item",
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "*",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "multiple items asterisk list",
+        "* item1\n* item2\n* item3",
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "*",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item1"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item2"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item3"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "single item plus list",
+        "+ item",
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "+",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "multiple items plus list",
+        "+ item1\n+ item2\n+ item3",
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "+",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item1"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item2"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item3"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered list",
+        "1. item",
+        {
+            "type": "list",
+            "ordered": True,
+            "sign": None,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
+    ),
+    (
+        "multiple items ordered list",
+        "1. item1\n2. item2\n3. item3",
+        {
+            "type": "list",
+            "ordered": True,
+            "sign": None,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item1"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item2"},
+                    ],
+                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {"type": "text", "text": "item3"},
+                    ],
+                    "lists": [],
+                },
+            ],
+        },
     ),
 )
 
@@ -93,5 +311,37 @@ def get_expected_ast(ast, other_ast, separator):
     if ast["type"] in THEMATIC_BREAK and other_ast["type"] in THEMATIC_BREAK:
         # Multiple thematic breaks are combined into one
         return [ast]
+
+    if (
+        ast["type"] == "list"
+        and ast["type"] == other_ast["type"]
+        and ast["ordered"]
+        and other_ast["ordered"]
+        and separator == "\n"
+    ):
+        # Multiple lists of same type are combined into one
+        return [
+            {
+                "type": "list",
+                "ordered": True,
+                "sign": None,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {"type": "text", "text": "item"},
+                        ],
+                        "lists": [],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {"type": "text", "text": "item"},
+                        ],
+                        "lists": [],
+                    },
+                ],
+            },
+        ]
 
     return [ast, other_ast]
