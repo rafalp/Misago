@@ -91,19 +91,39 @@
 
 .lightbox-caption {
   margin: 0 auto;
-  padding: @line-height-computed ceil(@grid-gutter-width / 2)
-    @line-height-computed * 2 floor(@grid-gutter-width / 2);
+  padding: @line-height-computed ceil(@grid-gutter-width / 2);
 
+  text-align: center;
   word-break: break-all;
 
   @media (min-width: @screen-sm-min) {
-    width: @container-sm;
+    max-width: @container-sm;
   }
   @media (min-width: @screen-md-min) {
-    width: @container-md;
+    max-width: @container-md;
   }
   @media (min-width: @screen-lg-min) {
-    width: @container-lg;
+    max-width: @container-lg;
+  }
+
+  .attachment-caption-title {
+    font-weight: bold;
+  }
+
+  .attachment-caption-description {
+    color: #e0e0e0;
+  }
+
+  a:link,
+  a:visited {
+    color: #f0f0f0;
+  }
+
+  a:focus,
+  a:hover,
+  a:active {
+    color: #fff;
+    text-decoration: underline;
   }
 }
 
@@ -127,7 +147,7 @@
   border: 0;
   border-radius: @border-radius-base;
   color: fadeout(#fff, 70);
-  text-shadow: 0 0 3px #212121;
+  text-shadow: 0 0 2px #000, 0 0 4px #212121, 0 0 8px #212121;
 
   &:focus,
   &:hover {

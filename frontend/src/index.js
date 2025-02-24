@@ -14,11 +14,11 @@ import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
 import Lightbox from "./lightbox"
-import "./liveTimestamps"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
 import * as snackbars from "./snackbars"
 import "./scrollTo"
+import "./timestamps"
 
 const loader = new AjaxLoader()
 const lightbox = new Lightbox()

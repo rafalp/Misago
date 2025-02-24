@@ -1,3 +1,5 @@
+import { updateTimestamps } from "./timestamps"
+
 export default class Lightbox {
   constructor() {
     this.modal = null
@@ -214,7 +216,9 @@ export default class Lightbox {
     const { media } = state
 
     if (media.caption) {
-      caption.replaceChildren(media.caption.content.cloneNode(true))
+      const node = media.caption.content.cloneNode(true)
+      updateTimestamps(node)
+      caption.replaceChildren(node)
     } else {
       if (media.link) {
         const a = document.createElement("a")
@@ -241,11 +245,11 @@ export default class Lightbox {
   }
 
   showLightbox() {
-    document.querySelectorAll("video").forEach(video => video.pause())
+    document.querySelectorAll("video").forEach((video) => video.pause())
     $(this.modal).modal("show")
   }
 
   onHideLightbox() {
-    this.modal.querySelectorAll("video").forEach(video => video.pause())
+    this.modal.querySelectorAll("video").forEach((video) => video.pause())
   }
 }
