@@ -42,6 +42,10 @@ export default class Lightbox {
       }
     })
 
+    this.modal.querySelector("[data-dismiss]").addEventListener("click", () => {
+      this.onHideLightbox()
+    })
+
     this.container
       .querySelector("[misago-lightbox-previous]")
       .addEventListener("click", () => {
@@ -237,6 +241,11 @@ export default class Lightbox {
   }
 
   showLightbox() {
+    document.querySelectorAll("video").forEach(video => video.pause())
     $(this.modal).modal("show")
+  }
+
+  onHideLightbox() {
+    this.modal.querySelectorAll("video").forEach(video => video.pause())
   }
 }
