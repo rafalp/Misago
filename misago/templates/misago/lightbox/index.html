@@ -8,20 +8,30 @@
   <div class="lightbox-body" role="document">
     <div class="lightbox-toolbar">
       <span class="lightbox-pager" misago-lightbox-pager="{% translate '%(index)s of %(total)s' context 'lightbox' %}"></span>
-      <a href="" class="btn-lightbox" aria-label="{% translate 'Info' context 'lightbox' %}" target="_blank" misago-lightbox-details>
+      <a href="" class="btn-lightbox" title="{% translate 'Info' context 'lightbox' %}" target="_blank" misago-lightbox-details>
         <span class="material-icon" aria-hidden="true">info</span>
       </a>
-      <a href="" class="btn-lightbox" aria-label="{% translate 'Zoom out' context 'lightbox' %}" target="_blank" misago-lightbox-zoom>
+      <a href="" class="btn-lightbox" title="{% translate 'Show original' context 'lightbox' %}" target="_blank" misago-lightbox-zoom>
         <span class="material-icon" aria-hidden="true">zoom_out_map</span>
       </a>
-      <a href="" class="btn-lightbox" aria-label="{% translate 'Download' context 'lightbox' %}" misago-lightbox-download>
+      <a href="" class="btn-lightbox" title="{% translate 'Download' context 'lightbox' %}" download misago-lightbox-download>
         <span class="material-icon" aria-hidden="true">file_download</span>
       </a>
-      <button type="button" class="btn-lightbox" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}">
+      <a href="" class="btn-lightbox" title="{% translate 'Follow link' context 'lightbox' %}" target="_blank" misago-lightbox-link>
+        <span class="material-icon" aria-hidden="true">language</span>
+      </a>
+      <button type="button" class="btn-lightbox" data-dismiss="modal" title="{% translate 'Close' context 'modal' %}">
         <span class="material-icon" aria-hidden="true">close</span>
       </button>
     </div>
-    <div class="lightbox-item" misago-lightbox-item>
+    <div class="lightbox-container" misago-lightbox-container>
+      <span misago-lightbox-item></span>
+      <button misago-lightbox-previous>
+        <span class="material-icon">chevron_left</span>
+      </button>
+      <button misago-lightbox-next>
+        <span class="material-icon">chevron_right</span>
+      </button>
     </div>
     <div class="lightbox-caption" misago-lightbox-caption>
     </div>

@@ -1,6 +1,12 @@
 {% load i18n %}
-<div class="rich-text-video">
-  <video controls>
+<div
+  class="rich-text-video"
+  misago-lightbox-context
+  misago-lightbox-url="{{ attachment.get_absolute_url }}"
+  misago-lightbox-details="{{ attachment.get_details_url }}"
+  misago-lightbox-download="{{ attachment.name }}"
+>
+  <video controls [misago-lightbox-video]>
     <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
     {% translate "Your browser does not support video tag." context "attachment video player" %}
   </video>

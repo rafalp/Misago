@@ -26,7 +26,7 @@
   height: 30px;
   padding: 12px;
 
-  background-color: fadeOut(#212121, 0.5);
+  background-color: #212121;
   border-radius: @border-radius-small;
   font-weight: bold;
 }
@@ -45,7 +45,7 @@
 
   &,
   &:link {
-    background-color: fadeOut(#212121, 0.5);
+    background-color: #212121;
     border: 0;
     border-radius: @border-radius-small;
     color: #f0f0f0;
@@ -59,16 +59,17 @@
   }
 
   &:active {
-    background-color: #000;
+    background-color: #161616;
     color: #fff;
   }
 }
 
-.lightbox-item {
+.lightbox-container {
   position: relative;
   flex: 1;
 
-  img {
+  img,
+  video {
     position: absolute;
     top: 0;
     right: 0;
@@ -79,6 +80,63 @@
     max-height: 100%;
 
     margin: auto;
+  }
+
+  button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    font-size: 48px;
+    line-height: 48px;
+
+    background: transparent;
+    border: 0;
+    border-radius: @border-radius-base;
+    color: fadeout(#fff, 70);
+    text-shadow: 0 0 3px #212121;
+
+    &:focus,
+    &:hover {
+      color: fadeout(#fff, 30);
+    }
+
+    &:active {
+      background-color: fadeout(#000, 90);
+      color: #fff;
+    }
+
+    &:first-child {
+      left: ceil(@grid-gutter-width / 2);
+    }
+
+    &:last-child {
+      right: ceil(@grid-gutter-width / 2);
+    }
+
+    @media (min-width: @screen-sm-min) {
+      width: 100px;
+      height: 100px;
+
+      font-size: 96px;
+      line-height: 96px;
+
+      &:first-child {
+        left: @grid-gutter-width;
+      }
+
+      &:last-child {
+        right: @grid-gutter-width;
+      }
+    }
   }
 }
 

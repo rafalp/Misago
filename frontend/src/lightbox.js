@@ -3,7 +3,10 @@ export default class Lightbox {
     this.modal = null
     this.pager = null
     this.details = null
-    this.item = null
+    this.zoom = null
+    this.download = null
+    this.link = null
+    this.container = null
     this.caption = null
 
     this.state = null
@@ -16,7 +19,10 @@ export default class Lightbox {
     if (this.modal) {
       this.pager = this.modal.querySelector("[misago-lightbox-pager]")
       this.details = this.modal.querySelector("[misago-lightbox-details]")
-      this.item = this.modal.querySelector("[misago-lightbox-item]")
+      this.zoom = this.modal.querySelector("[misago-lightbox-zoom]")
+      this.download = this.modal.querySelector("[misago-lightbox-download]")
+      this.link = this.modal.querySelector("[misago-lightbox-link]")
+      this.container = this.modal.querySelector("[misago-lightbox-container]")
       this.caption = this.modal.querySelector("[misago-lightbox-caption]")
 
       this._registerEvents()
@@ -30,6 +36,26 @@ export default class Lightbox {
         this.onImageClick(event, image)
       }
     })
+
+    this.container
+      .querySelector("[misago-lightbox-previous]")
+      .addEventListener("click", () => {
+        this.state.index = (this.state.index || this.state.total) - 1
+        this.state.media = this.state.items[this.state.index]
+        this.updateLightbox()
+      })
+
+    this.container
+      .querySelector("[misago-lightbox-next]")
+      .addEventListener("click", () => {
+        this.state.index += 1
+        if (this.state.index === this.state.total) {
+          this.state.index = 0
+        }
+
+        this.state.media = this.state.items[this.state.index]
+        this.updateLightbox()
+      })
   }
 
   onImageClick(event, image) {
@@ -43,14 +69,14 @@ export default class Lightbox {
   }
 
   getInitialState(root, image) {
-    const images = this.getRootImages(root, image)
-    const index = images.map(({ active }) => active).indexOf(true)
+    const items = this.getRootImages(root, image)
+    const index = items.map(({ active }) => active).indexOf(true)
 
     return {
-      images,
-      image: images[index],
+      items,
+      media: items[index],
       index: index,
-      total: images.length,
+      total: items.length,
     }
   }
 
@@ -59,6 +85,7 @@ export default class Lightbox {
 
     root.querySelectorAll("[misago-lightbox-img]").forEach((element) => {
       const context = element.closest("[misago-lightbox-context]")
+      const link = element.closest("a")
 
       images.push({
         element,
@@ -67,7 +94,10 @@ export default class Lightbox {
         details: !!context
           ? context.getAttribute("misago-lightbox-details")
           : null,
-        link: element.closest("a"),
+        download: !!context
+          ? context.getAttribute("misago-lightbox-download")
+          : null,
+        link: !context && link,
         url: !!context
           ? context.getAttribute("misago-lightbox-url")
           : element.getAttribute("src"),
@@ -79,7 +109,8 @@ export default class Lightbox {
 
   updateLightbox() {
     this.updateLightboxPager()
-    this.updateLightboxDetails()
+    this.updateLightboxOptions()
+    this.updateLightboxButtons()
     this.updateLightboxItem()
     this.updateLightboxCaption()
   }
@@ -98,43 +129,64 @@ export default class Lightbox {
     }
   }
 
-  updateLightboxDetails() {
-    const { state, details } = this
-    if (state.image.details) {
-      details.setAttribute("href", state.image.details)
-      details.classList.remove("d-none")
+  updateLightboxOptions() {
+    const { media } = this.state
+
+    this.updateLightboxOption(this.details, media.details)
+    this.updateLightboxOption(this.download, media.download && media.url)
+    this.updateLightboxOption(this.link, media.link && media.link.href)
+    this.updateLightboxOption(this.zoom, media.url)
+  }
+
+  updateLightboxOption(element, value) {
+    if (value) {
+      element.setAttribute("href", value)
+      element.classList.remove("d-none")
     } else {
-      details.classList.add("d-none")
+      element.classList.add("d-none")
     }
   }
 
+  updateLightboxButtons() {
+    const { state, container } = this
+    container.querySelectorAll("button").forEach(function (button) {
+      if (state.total) {
+        button.classList.remove("d-none")
+      } else {
+        button.classList.add("d-none")
+      }
+    })
+  }
+
   updateLightboxItem() {
-    const { state, item } = this
-    const { image } = state
+    const { state, container } = this
+    const { media } = state
 
     const img = document.createElement("img")
-    img.setAttribute("src", image.url)
+    img.setAttribute("src", media.url)
     img.setAttribute("alt", "")
-    item.replaceChildren(img)
+    img.setAttribute("misago-lightbox-item", "")
+
+    container.querySelector("[misago-lightbox-item]").replaceWith(img)
   }
 
   updateLightboxCaption() {
     const { state, caption } = this
-    const { image } = state
+    const { media } = state
 
-    if (image.caption) {
-      caption.replaceChildren(image.caption.content.cloneNode(true))
+    if (media.caption) {
+      caption.replaceChildren(media.caption.content.cloneNode(true))
     } else {
-      if (image.link) {
+      if (media.link) {
         const a = document.createElement("a")
-        const href = image.link.getAttribute("href")
+        const href = media.link.getAttribute("href")
         a.setAttribute("href", href)
         a.setAttribute("target", "_blank")
         a.textContent = this.cleanDisplayUrl(href)
         caption.replaceChildren(a)
       } else {
         caption.textContent = this.cleanDisplayUrl(
-          image.element.getAttribute("src")
+          media.element.getAttribute("src")
         )
       }
     }
