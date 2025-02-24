@@ -31,9 +31,14 @@ export default class Lightbox {
 
   _registerEvents() {
     document.addEventListener("click", (event) => {
-      const image = event.target.closest("[misago-lightbox-img]")
+      const image = event.target.closest("img[misago-lightbox-media]")
       if (!!image) {
         this.onImageClick(event, image)
+      } else {
+        const button = event.target.closest("[misago-lightbox-button]")
+        if (!!button) {
+          this.onMediaButtonClick(event, button)
+        }
       }
     })
 
@@ -68,8 +73,21 @@ export default class Lightbox {
     this.showLightbox()
   }
 
-  getInitialState(root, image) {
-    const items = this.getRootImages(root, image)
+  onMediaButtonClick(event, button) {
+    event.preventDefault()
+
+    const root = button.closest("[misago-lightbox-root]")
+    const media = button
+      .closest("[misago-lightbox-context]")
+      .querySelector("[misago-lightbox-media]")
+    this.state = this.getInitialState(root, media)
+
+    this.updateLightbox()
+    this.showLightbox()
+  }
+
+  getInitialState(root, media) {
+    const items = this.getRootMedia(root, media)
     const index = items.map(({ active }) => active).indexOf(true)
 
     return {
@@ -80,16 +98,17 @@ export default class Lightbox {
     }
   }
 
-  getRootImages(root, image) {
-    const images = []
-
-    root.querySelectorAll("[misago-lightbox-img]").forEach((element) => {
+  getRootMedia(root, media) {
+    const items = []
+    root.querySelectorAll("[misago-lightbox-media]").forEach((element) => {
       const context = element.closest("[misago-lightbox-context]")
       const link = element.closest("a")
 
-      images.push({
+      items.push({
         element,
-        active: element === image,
+        active: element === media,
+        video: element.tagName === "VIDEO",
+        image: element.tagName === "IMG",
         caption: !!context ? context.querySelector("template") : null,
         details: !!context
           ? context.getAttribute("misago-lightbox-details")
@@ -104,7 +123,7 @@ export default class Lightbox {
       })
     })
 
-    return images
+    return items
   }
 
   updateLightbox() {
@@ -161,13 +180,29 @@ export default class Lightbox {
   updateLightboxItem() {
     const { state, container } = this
     const { media } = state
+    const item = container.querySelector("[misago-lightbox-item]")
 
+    if (media.image) {
+      this.replaceLightboxItemWithImage(item, media)
+    } else if (media.video) {
+      this.replaceLightboxItemWithVideo(item, media)
+    }
+  }
+
+  replaceLightboxItemWithImage(item, media) {
     const img = document.createElement("img")
     img.setAttribute("src", media.url)
     img.setAttribute("alt", "")
     img.setAttribute("misago-lightbox-item", "")
+    item.replaceWith(img)
+  }
 
-    container.querySelector("[misago-lightbox-item]").replaceWith(img)
+  replaceLightboxItemWithVideo(item, media) {
+    const video = document.createElement("video")
+    video.innerHTML = media.element.innerHTML
+    video.setAttribute("controls", "true")
+    video.setAttribute("misago-lightbox-item", "")
+    item.replaceWith(video)
   }
 
   updateLightboxCaption() {

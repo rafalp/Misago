@@ -79,25 +79,25 @@
   '<h6>Hello world!</h6>'
 # ---
 # name: test_render_ast_to_html_image
-  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" misago-lightbox-img /></p>'
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" misago-lightbox-media /></p>'
 # ---
 # name: test_render_ast_to_html_image_auto_link
   '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" /></p>'
 # ---
 # name: test_render_ast_to_html_image_bbcode
-  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" misago-lightbox-img /></p>'
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" misago-lightbox-media /></p>'
 # ---
 # name: test_render_ast_to_html_image_bbcode_with_alt_text
-  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" misago-lightbox-img /></p>'
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" misago-lightbox-media /></p>'
 # ---
 # name: test_render_ast_to_html_image_with_alt_text
-  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" misago-lightbox-img /></p>'
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" misago-lightbox-media /></p>'
 # ---
 # name: test_render_ast_to_html_image_with_title
-  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" title="Amazing, right?" misago-lightbox-img /></p>'
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="" title="Amazing, right?" misago-lightbox-media /></p>'
 # ---
 # name: test_render_ast_to_html_image_with_title_and_alt_text
-  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" title="Amazing, right?" misago-lightbox-img /></p>'
+  '<p>See the logo: <img src="https://misago-project.org/img.png" alt="Alt text" title="Amazing, right?" misago-lightbox-media /></p>'
 # ---
 # name: test_render_ast_to_html_inline_code
   '<p>Hello <code>world</code>!</p>'

@@ -8,9 +8,9 @@
 >
   <a class="rich-text-image-link" href="{{ attachment.get_absolute_url }}" target="_blank">
     {% if attachment.thumbnail %}
-      <img src="{{ attachment.get_thumbnail_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.thumbnail_dimensions %}width="{{ attachment.thumbnail_width }}" height="{{ attachment.thumbnail_height }}" {% endif %}loading="lazy" misago-lightbox-img>
+      <img src="{{ attachment.get_thumbnail_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.thumbnail_dimensions %}width="{{ attachment.thumbnail_width }}" height="{{ attachment.thumbnail_height }}" {% endif %}loading="lazy" misago-lightbox-media>
     {% else %}
-      <img src="{{ attachment.get_absolute_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.dimensions %}width="{{ attachment.width }}" height="{{ attachment.height }}" {% endif %} loading="lazy" misago-lightbox-img>
+      <img src="{{ attachment.get_absolute_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.dimensions %}width="{{ attachment.width }}" height="{{ attachment.height }}" {% endif %} loading="lazy" misago-lightbox-media>
     {% endif %}
   </a>
   <a
@@ -18,6 +18,7 @@
     target="_blank"
     class="rich-text-info-hover-btn"
     title="{% translate 'See information' context 'rich text attachment info btn' %}"
+    misago-lightbox-button
   >
     <span class="material-icon">info</span>
   </a>
