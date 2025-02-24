@@ -201,8 +201,13 @@ export default class Lightbox {
     const img = document.createElement("img")
     img.setAttribute("src", media.url)
     img.setAttribute("alt", "")
-    img.setAttribute("misago-lightbox-item", "")
-    container.replaceChildren(img)
+
+    const a = document.createElement("a")
+    a.setAttribute("href", media.url)
+    a.setAttribute("target", "_blank")
+    a.appendChild(img)
+
+    container.replaceChildren(a)
   }
 
   updateLightboxContainerWithVideo(container, media) {
@@ -210,7 +215,6 @@ export default class Lightbox {
     video.innerHTML = media.element.innerHTML
     video.setAttribute("controls", "true")
     video.setAttribute("preload", "metadata")
-    video.setAttribute("misago-lightbox-item", "")
     container.replaceChildren(video)
   }
 
