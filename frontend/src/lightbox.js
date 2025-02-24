@@ -46,7 +46,7 @@ export default class Lightbox {
       this.onHideLightbox()
     })
 
-    this.container
+    this.modal
       .querySelector("[misago-lightbox-previous]")
       .addEventListener("click", () => {
         this.state.index = (this.state.index || this.state.total) - 1
@@ -54,7 +54,7 @@ export default class Lightbox {
         this.updateLightbox()
       })
 
-    this.container
+    this.modal
       .querySelector("[misago-lightbox-next]")
       .addEventListener("click", () => {
         this.state.index += 1
@@ -134,7 +134,7 @@ export default class Lightbox {
     this.updateLightboxPager()
     this.updateLightboxOptions()
     this.updateLightboxButtons()
-    this.updateLightboxItem()
+    this.updateLightboxContainer()
     this.updateLightboxCaption()
   }
 
@@ -181,32 +181,32 @@ export default class Lightbox {
     })
   }
 
-  updateLightboxItem() {
+  updateLightboxContainer() {
     const { state, container } = this
     const { media } = state
-    const item = container.querySelector("[misago-lightbox-item]")
 
     if (media.image) {
-      this.replaceLightboxItemWithImage(item, media)
+      this.updateLightboxContainerWithImage(container, media)
     } else if (media.video) {
-      this.replaceLightboxItemWithVideo(item, media)
+      this.updateLightboxContainerWithVideo(container, media)
     }
   }
 
-  replaceLightboxItemWithImage(item, media) {
+  updateLightboxContainerWithImage(container, media) {
     const img = document.createElement("img")
     img.setAttribute("src", media.url)
     img.setAttribute("alt", "")
     img.setAttribute("misago-lightbox-item", "")
-    item.replaceWith(img)
+    container.replaceChildren(img)
   }
 
-  replaceLightboxItemWithVideo(item, media) {
+  updateLightboxContainerWithVideo(container, media) {
     const video = document.createElement("video")
     video.innerHTML = media.element.innerHTML
     video.setAttribute("controls", "true")
+    video.setAttribute("preload", "metadata")
     video.setAttribute("misago-lightbox-item", "")
-    item.replaceWith(video)
+    container.replaceChildren(video)
   }
 
   updateLightboxCaption() {

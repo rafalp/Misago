@@ -7,7 +7,7 @@
   misago-lightbox-download="{{ attachment.name }}"
 >
   <video controls misago-lightbox-media="{{ attachment.get_absolute_url }}">
-    <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
+    <source src="{{ attachment.get_absolute_url }}#t=0.001" type="{{ attachment.content_type }}">
     {% translate "Your browser does not support video tag." context "attachment video player" %}
   </video>
   <a

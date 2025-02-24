@@ -334,7 +334,6 @@ export default class MarkupEditorUploader {
         const source = document.createElement("source")
         source.setAttribute("src", buffer.result)
         source.setAttribute("type", data.file.type)
-
         video.append(source)
       }
       buffer.readAsDataURL(data.file)
