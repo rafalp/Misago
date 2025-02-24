@@ -7,7 +7,6 @@ const cache = {}
 export function updateTimestamp(element) {
   const timestamp = element.getAttribute("misago-timestamp")
   const format = element.getAttribute("misago-timestamp-format")
-  console.log(element.textContent, format)
 
   if (!cache[timestamp]) {
     cache[timestamp] = new Date(timestamp)

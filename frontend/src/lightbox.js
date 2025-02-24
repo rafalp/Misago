@@ -12,6 +12,7 @@ export default class Lightbox {
     this.caption = null
 
     this.state = null
+    this.template = null
 
     document.addEventListener("DOMContentLoaded", this._onDOMContentLoaded)
   }
@@ -26,6 +27,8 @@ export default class Lightbox {
       this.link = this.modal.querySelector("[misago-lightbox-link]")
       this.container = this.modal.querySelector("[misago-lightbox-container]")
       this.caption = this.modal.querySelector("[misago-lightbox-caption]")
+
+      this.template = document.getElementById("lightbox-image-caption")
 
       this._registerEvents()
     }
@@ -216,23 +219,55 @@ export default class Lightbox {
     const { media } = state
 
     if (media.caption) {
-      const node = media.caption.content.cloneNode(true)
-      updateTimestamps(node)
-      caption.replaceChildren(node)
+      const template = media.caption.content.cloneNode(true)
+      updateTimestamps(template)
+      caption.replaceChildren(template)
     } else {
+      const template = this.template.content.cloneNode(true)
+      const name = template.querySelector("[lightbox-image-caption-name]")
+      const description = template.querySelector(
+        "[lightbox-image-caption-description]"
+      )
+
+      name.removeAttribute("lightbox-image-caption-name")
+      description.removeAttribute("lightbox-image-caption-description")
+
+      const alt = (media.element.getAttribute("alt") || "").trim()
+      const title = (media.element.getAttribute("title") || "").trim()
+      const src = media.element.getAttribute("src")
+
+      if (title && alt) {
+        name.textContent = title + " — " + alt
+      } else {
+        name.textContent = title || alt || this.cleanDisplayFilename(src)
+      }
+
       if (media.link) {
         const a = document.createElement("a")
         const href = media.link.getAttribute("href")
         a.setAttribute("href", href)
         a.setAttribute("target", "_blank")
         a.textContent = this.cleanDisplayUrl(href)
-        caption.replaceChildren(a)
+        description.appendChild(a)
+      } else if (title || alt) {
+        description.textContent = this.cleanDisplayUrl(src)
       } else {
-        caption.textContent = this.cleanDisplayUrl(
-          media.element.getAttribute("src")
-        )
+        description.remove()
       }
+
+      caption.replaceChildren(template)
     }
+  }
+
+  cleanDisplayFilename(href) {
+    const slash = href.lastIndexOf("/")
+    const filename = href.substring(slash + 1).trim()
+
+    if (filename) {
+      return filename
+    }
+
+    return this.cleanDisplayUrl(href)
   }
 
   cleanDisplayUrl(href) {
