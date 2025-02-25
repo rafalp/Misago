@@ -8,14 +8,14 @@ from ..parser import Parser, Pattern
 
 MAIL_RE = re.compile(r"^\w+[.-_+\w]*@[-\w]+(.\w+)+$")
 URL_RE = re.compile(
-    r"^(((https?)|(ftps?)|(wss?))://)?"  # http/ftp/ws(s) prefix
+    r"^(((https?)|(ftps?)|(wss?)):\/\/)?"  # http/ftp/ws(s) prefix
     r"("  # start hostnames
     r"(localhost)"  # localhost
     r"|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"  # IP address
-    r"|((\w+((-|_)\w+)*\w+\.)+[a-z]+)"  # Other hostname
+    r"|((\w+([-_]\w+)*\.)+[a-z]+)"  # Other hostname
     r")"  # end hostnames
     r"(:[1-9][0-9]*)?"
-    r"(/+[^\s\|]*)?$"
+    r"(\/+[^\s\|]*)?$"
 )
 
 
@@ -320,7 +320,7 @@ class AutoUrl(AutolinkMarkdown):
     pattern_type: str = "auto-url"
     pattern: str = (
         r"(?<!\w)"
-        r"(((https?)|(ftps?)|(wss?))://)?"  # http/ftp/ws(s) prefix
+        r"(((https?)|(ftps?)|(wss?)):\/\/)?"  # http/ftp/ws(s) prefix
         r"("  # start hostnames
         r"("  # start ther hostname
         r"(\w+((-|_)\w+)*\w+\.)+"  # word-word.
@@ -330,7 +330,7 @@ class AutoUrl(AutolinkMarkdown):
         r"|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"  # IP address
         r")"  # end hostnames
         r"(:[1-9][0-9]*)?"
-        r"(/+[^\s\|]*)?"
+        r"(\/+[^\s\|]*)?"
     )
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:

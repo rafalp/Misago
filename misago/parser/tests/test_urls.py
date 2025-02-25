@@ -21,6 +21,7 @@ from ..patterns.urls import clean_url
         "www.example.com",
         "www.sub.domain.example-test.com/lorem?ipsum=123",
         "https://misago-project.org",
+        "https://i.ytimg.com/vi/aaaaaa/hq720.jpg?sqp=-oaymw&rs=AOn4C-KhMkw",
         "/t/table-test/1346/",
         "/a/thumb/fI7RjdAPf2Uk1i60QZpzbwRSCKOzT0T9ZF6omFHwXu0WLPWgHVLMnHgpqtnsiOsK/599/?shva=1",
     ),
