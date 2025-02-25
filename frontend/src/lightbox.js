@@ -240,10 +240,14 @@ export default class Lightbox {
       const title = (media.element.getAttribute("title") || "").trim()
       const src = media.element.getAttribute("src")
 
-      if (title && alt) {
-        name.textContent = title + " — " + alt
-      } else {
-        name.textContent = title || alt || this.cleanDisplayFilename(src)
+      const nameText =
+        title && alt
+          ? title + " — " + alt
+          : title || alt || this.cleanDisplayFilename(src)
+
+      name.textContent = this.shortenLongString(nameText)
+      if (name.textContent !== nameText) {
+        name.setAttribute("title", nameText)
       }
 
       if (media.link) {
@@ -265,22 +269,37 @@ export default class Lightbox {
 
   cleanDisplayFilename(href) {
     const slash = href.lastIndexOf("/")
-    const filename = href.substring(slash + 1).trim()
+    if (slash === -1) {
+      return this.cleanDisplayUrl(href)
+    }
 
+    const filename = href.substring(slash + 1).trim()
     if (filename) {
-      return filename
+      return this.shortenLongString(filename)
     }
 
     return this.cleanDisplayUrl(href)
   }
 
   cleanDisplayUrl(href) {
-    if (href.startsWith("https://")) {
-      return href.substring(8)
-    } else if (href.startsWith("http://")) {
-      return href.substring(7)
+    let clean = href
+    if (clean.startsWith("https://")) {
+      clean = clean.substring(8)
+    } else if (clean.startsWith("http://")) {
+      clean = clean.substring(7)
     }
-    return href
+    return this.shortenLongString(clean)
+  }
+
+  shortenLongString(value) {
+    console.log(value, value.length)
+    if (value.length <= 80) {
+      return value
+    }
+
+    const prefix = value.substring(0, 35)
+    const suffix = value.substring(value.length - 40)
+    return prefix + "..." + suffix
   }
 
   showLightbox() {
