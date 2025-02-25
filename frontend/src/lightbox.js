@@ -138,14 +138,14 @@ export default class Lightbox {
   updateLightbox() {
     this.updateLightboxPager()
     this.updateLightboxOptions()
-    this.updateLightboxButtons()
+    this.updateLightboxNav()
     this.updateLightboxContainer()
     this.updateLightboxCaption()
   }
 
   updateLightboxPager() {
     const { state, pager } = this
-    if (state.total) {
+    if (state.total > 1) {
       pager.textContent = pager
         .getAttribute("misago-lightbox-pager")
         .replace("%(total)s", state.total)
@@ -175,15 +175,17 @@ export default class Lightbox {
     }
   }
 
-  updateLightboxButtons() {
-    const { state, container } = this
-    container.querySelectorAll("button").forEach(function (button) {
-      if (state.total) {
-        button.classList.remove("d-none")
-      } else {
-        button.classList.add("d-none")
-      }
-    })
+  updateLightboxNav() {
+    const { state } = this
+    this.modal
+      .querySelectorAll("[misago-lightbox-previous], [misago-lightbox-next]")
+      .forEach(function (button) {
+        if (state.total > 1) {
+          button.classList.remove("d-none")
+        } else {
+          button.classList.add("d-none")
+        }
+      })
   }
 
   updateLightboxContainer() {
