@@ -55,7 +55,7 @@ def test_replace_rich_text_tokens_replaces_attachment_with_video(video_attachmen
 
     result = replace_rich_text_tokens(html, data)
     assert f'href="{video_attachment.get_details_url()}"' in result
-    assert f'src="{video_attachment.get_absolute_url()}"' in result
+    assert f'src="{video_attachment.get_absolute_url()}#t=0.001"' in result
 
 
 def test_replace_rich_text_tokens_replaces_attachment_with_file_link(text_attachment):

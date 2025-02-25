@@ -1,0 +1,9 @@
+{% load i18n misago_formats %}
+<template>
+  <div class="attachment-caption-title">
+    {{ attachment.name }}
+  </div>
+  <div class="attachment-caption-description">
+    {% if attachment.dimensions %}{{ attachment.width }}px &times; {{ attachment.height }}px &mdash; {% endif %}{{ attachment.size|filesizeformat }}
+  </div>
+</template>

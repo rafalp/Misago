@@ -201,6 +201,7 @@ def _render_ast_node_to_html_action(
                 "src": clean_url(ast_node["src"]),
                 "alt": ast_node["alt"] or "",
                 "title": ast_node.get("title"),
+                "misago-lightbox-media": True,
             },
         )
 

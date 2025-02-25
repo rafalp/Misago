@@ -1,7 +1,13 @@
 {% load i18n %}
-<div class="rich-text-video">
-  <video controls>
-    <source src="{{ attachment.get_absolute_url }}" type="{{ attachment.content_type }}">
+<div
+  class="rich-text-video"
+  misago-lightbox-context
+  misago-lightbox-url="{{ attachment.get_absolute_url }}"
+  misago-lightbox-details="{{ attachment.get_details_url }}"
+  misago-lightbox-download="{{ attachment.name }}"
+>
+  <video controls misago-lightbox-media="{{ attachment.get_absolute_url }}">
+    <source src="{{ attachment.get_absolute_url }}#t=0.001" type="{{ attachment.content_type }}">
     {% translate "Your browser does not support video tag." context "attachment video player" %}
   </video>
   <a
@@ -9,7 +15,9 @@
     target="_blank"
     class="rich-text-info-hover-btn"
     title="{% translate 'See information' context 'rich text attachment info btn' %}"
+    misago-lightbox-button
   >
     <span class="material-icon">info</span>
   </a>
+  {% include "misago/rich_text/attachment_caption.html" %}
 </div>

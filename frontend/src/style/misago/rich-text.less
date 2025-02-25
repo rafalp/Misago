@@ -1,5 +1,6 @@
 .rich-text {
   font-size: 16px;
+  word-break: break-all;
 
   h1 {
     font-size: 36px;
@@ -282,11 +283,14 @@
 }
 
 .rich-text-table {
-  &, td, th {
+  &,
+  td,
+  th {
     border: 1px solid darken(@gray-lighter, 10);
   }
 
-  td, th {
+  td,
+  th {
     padding: 4px 8px;
   }
 }

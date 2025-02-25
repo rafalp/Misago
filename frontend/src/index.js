@@ -13,13 +13,15 @@ import BulkModeration from "./BulkModeration"
 import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
-import "./liveTimestamps"
+import Lightbox from "./lightbox"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
 import * as snackbars from "./snackbars"
 import "./scrollTo"
+import "./timestamps"
 
 const loader = new AjaxLoader()
+const lightbox = new Lightbox()
 
 export class Misago {
   constructor() {
@@ -28,6 +30,7 @@ export class Misago {
 
     this.loader = loader
     this.editor = editor
+    this.lightbox = lightbox
   }
 
   addInitializer(initializer) {
