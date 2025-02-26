@@ -51,7 +51,7 @@ class ListMarkdown(Pattern):
         }
 
     def split_match_into_groups(self, match: str) -> list[dict]:
-        lines = [self.parse_match_line(line) for line in match.splitlines()]
+        lines = self.split_match_into_lines(match)
 
         groups: list[dict] = []
         for line in lines:
@@ -74,6 +74,20 @@ class ListMarkdown(Pattern):
                 pass
 
         return groups
+
+    def split_match_into_lines(self, match: str) -> list[dict]:
+        lines = [self.parse_match_line(line) for line in match.splitlines()]
+
+        # Strip blank lines separating list items from each other
+        clean_lines: list[dict] = []
+        for line in reversed(lines):
+            if line["type"] != "blank":
+                clean_lines.append(line)
+            elif clean_lines and clean_lines[-1]["type"] != "line":
+                clean_lines.append(line)
+
+        clean_lines.reverse()
+        return clean_lines
 
     def parse_match_line(self, line: str) -> dict:
         if self.item_start_pattern.match(line):
