@@ -114,9 +114,6 @@
 # name: test_render_ast_to_html_minimal_table
   '<table class="rich-text-table"><tr><th class="rich-text-table-cell-align-left">Col1</th></tr></table></table>'
 # ---
-# name: test_render_ast_to_html_ordered_list
-  '<ol><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ol>'
-# ---
 # name: test_render_ast_to_html_paragraph
   '<p>Hello world!</p>'
 # ---
@@ -176,12 +173,6 @@
 # ---
 # name: test_render_ast_to_html_underline_bbcode_text
   '<p>Hello <u>world</u>!</p>'
-# ---
-# name: test_render_ast_to_html_unordered_list
-  '<ul><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ul>'
-# ---
-# name: test_render_ast_to_html_unordered_list_with_nested_list
-  '<ul><li>Lorem</li><li><em>Ipsum</em><ul><li>Met</li><li>Elit</li></ul></li><li>Dolor</li></ul>'
 # ---
 # name: test_render_ast_to_html_url
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'

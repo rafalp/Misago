@@ -417,7 +417,7 @@ def test_emphasis_underscore(parse_markup, text):
     ]
 
 
-def test_emphasis_underscore_with_line_break(parse_markup):
+def test_emphasis_underscore_with_softbreak(parse_markup):
     result = parse_markup(f"Hello _lorem\nipsum_.")
     assert result == [
         {
@@ -428,7 +428,7 @@ def test_emphasis_underscore_with_line_break(parse_markup):
                     "type": "emphasis-underscore",
                     "children": [
                         {"type": "text", "text": "lorem"},
-                        {"type": "line-break"},
+                        {"type": "softbreak"},
                         {"type": "text", "text": "ipsum"},
                     ],
                 },
@@ -479,7 +479,7 @@ def test_emphasis_underscore_with_only_whitespaces_is_skipped(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello _"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "_."},
             ],
         }
@@ -563,7 +563,7 @@ def test_strong_underscore(parse_markup, text):
     ]
 
 
-def test_strong_underscore_with_line_break(parse_markup):
+def test_strong_underscore_with_softbreak(parse_markup):
     result = parse_markup(f"Hello __lorem\nipsum__.")
     assert result == [
         {
@@ -574,7 +574,7 @@ def test_strong_underscore_with_line_break(parse_markup):
                     "type": "strong-underscore",
                     "children": [
                         {"type": "text", "text": "lorem"},
-                        {"type": "line-break"},
+                        {"type": "softbreak"},
                         {"type": "text", "text": "ipsum"},
                     ],
                 },
@@ -625,7 +625,7 @@ def test_strong_underscores_with_whitespaces_only_is_skipped(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello __"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "__."},
             ],
         }
@@ -802,7 +802,7 @@ def test_strikethrough_two_words(parse_markup):
     ]
 
 
-def test_strikethrough_with_line_break(parse_markup):
+def test_strikethrough_with_softbreak(parse_markup):
     result = parse_markup(f"Hello ~~lorem\nipsum~~.")
     assert result == [
         {
@@ -813,7 +813,7 @@ def test_strikethrough_with_line_break(parse_markup):
                     "type": "strikethrough",
                     "children": [
                         {"type": "text", "text": "lorem"},
-                        {"type": "line-break"},
+                        {"type": "softbreak"},
                         {"type": "text", "text": "ipsum"},
                     ],
                 },
@@ -887,7 +887,7 @@ def test_strikethrough_with_whitespaces_only_is_skipped(parse_markup):
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Hello ~~"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "~~."},
             ],
         }

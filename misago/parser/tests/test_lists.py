@@ -121,6 +121,56 @@ CASES = (
             ],
         },
     ),
+    (
+        "single indented item dash",
+        "   - item",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single indented item dash with_text",
+        "   - item\nnext line",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                                {"type": "softbreak"},
+                                {"type": "text", "text": "next line"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
 )
 
 CASES_IDS = tuple(case[0] for case in CASES)
