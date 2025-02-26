@@ -191,7 +191,7 @@ def test_render_ast_to_plaintext_code(parser_context, parse_markup, snapshot):
         """
         ```
         if random.randint(0, 10) > 4:
-            print("Gotcha!")
+            output("Gotcha!")
             return True
         return False
         ```
@@ -223,7 +223,7 @@ def test_render_ast_to_plaintext_code_with_syntax(
         """
         ```python
         if random.randint(0, 10) > 4:
-            print("Gotcha!")
+            output("Gotcha!")
             return True
         return False
         ```
@@ -255,7 +255,7 @@ def test_render_ast_to_plaintext_code_bbcode(parser_context, parse_markup, snaps
         """
         [code]
             if random.randint(0, 10) > 4:
-                print("Gotcha!")
+                output("Gotcha!")
                 return True
             return False
         [/code]
@@ -272,7 +272,7 @@ def test_render_ast_to_plaintext_code_bbcode_with_syntax(
         """
         [code=python]
             if random.randint(0, 10) > 4:
-                print("Gotcha!")
+                output("Gotcha!")
                 return True
             return False
         [/code]
@@ -288,7 +288,7 @@ def test_render_ast_to_plaintext_code_indented(parser_context, parse_markup, sna
         Hello:
 
             if random.randint(0, 10) > 4:
-                print("Gotcha!")
+                output("Gotcha!")
                 return True
             return False
         """

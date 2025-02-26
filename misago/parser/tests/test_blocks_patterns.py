@@ -75,14 +75,20 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": False,
-            "sign": "-",
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -93,28 +99,42 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": False,
-            "sign": "-",
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item1"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item2"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item2"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item3"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item3"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -125,14 +145,20 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": False,
-            "sign": "*",
+            "start": None,
+            "delimiter": "*",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -143,28 +169,42 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": False,
-            "sign": "*",
+            "start": None,
+            "delimiter": "*",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item1"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item2"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item2"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item3"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item3"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -175,14 +215,20 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": False,
-            "sign": "+",
+            "start": None,
+            "delimiter": "+",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -193,28 +239,42 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": False,
-            "sign": "+",
+            "start": None,
+            "delimiter": "+",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item1"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item2"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item2"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item3"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item3"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -225,14 +285,20 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": True,
-            "sign": None,
+            "start": None,
+            "delimiter": ".",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },
@@ -243,28 +309,42 @@ PATTERNS = (
         {
             "type": "list",
             "ordered": True,
-            "sign": None,
+            "start": None,
+            "delimiter": ".",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item1"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item2"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item2"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
                 {
                     "type": "list-item",
                     "children": [
-                        {"type": "text", "text": "item3"},
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item3"},
+                            ],
+                        },
                     ],
-                    "lists": [],
                 },
             ],
         },

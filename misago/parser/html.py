@@ -50,19 +50,19 @@ def _render_ast_node_to_html_action(
 
     if ast_type == "list":
         html_tag = "ol" if ast_node["ordered"] else "ul"
-        children = render_children_ast_to_html(
-            context, ast_node["children"], metadata
-        ).strip()
-        return f"<{html_tag}>{children}</{html_tag}>"
+        return html_element(
+            "ol" if ast_node["ordered"] else "ul",
+            render_children_ast_to_html(
+                context, ast_node["children"], metadata
+            ).strip(),
+            {"start": ast_node["start"]},
+        )
 
     if ast_type == "list-item":
-        text = render_children_ast_to_html(
+        children = render_children_ast_to_html(
             context, ast_node["children"], metadata
         ).strip()
-        children = render_children_ast_to_html(
-            context, ast_node["lists"], metadata
-        ).strip()
-        return f"<li>{text}{children}</li>"
+        return f"<li>{children}</li>"
 
     if ast_type == "table":
         header = render_children_ast_to_html(context, ast_node["header"], metadata)

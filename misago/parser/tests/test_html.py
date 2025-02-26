@@ -104,6 +104,20 @@ def test_render_ast_to_html_ordered_list(parser_context, parse_markup, snapshot)
     assert snapshot == render_ast_to_html(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_ordered_list_with_custom_start(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        """
+        3. Lorem
+        4. _Ipsum_
+        5. Dolor
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_html(parser_context, ast, metadata)
+
+
 def test_render_ast_to_html_unordered_list_with_nested_list(
     parser_context, parse_markup, snapshot
 ):
@@ -187,7 +201,7 @@ def test_render_ast_to_html_code(parser_context, parse_markup, snapshot):
         """
         ```
         if random.randint(0, 10) > 4:
-            print("Gotcha!")
+            output("Gotcha!")
             return True
         return False
         ```
@@ -202,7 +216,7 @@ def test_render_ast_to_html_code_with_syntax(parser_context, parse_markup, snaps
         """
         ```python
         if random.randint(0, 10) > 4:
-            print("Gotcha!")
+            output("Gotcha!")
             return True
         return False
         ```
@@ -217,7 +231,7 @@ def test_render_ast_to_html_code_bbcode(parser_context, parse_markup, snapshot):
         """
         [code]
             if random.randint(0, 10) > 4:
-                print("Gotcha!")
+                output("Gotcha!")
                 return True
             return False
         [/code]
@@ -234,7 +248,7 @@ def test_render_ast_to_html_code_bbcode_with_syntax(
         """
         [code=python]
             if random.randint(0, 10) > 4:
-                print("Gotcha!")
+                output("Gotcha!")
                 return True
             return False
         [/code]
@@ -250,7 +264,7 @@ def test_render_ast_to_html_code_indented(parser_context, parse_markup, snapshot
         Hello:
 
             if random.randint(0, 10) > 4:
-                print("Gotcha!")
+                output("Gotcha!")
                 return True
             return False
         """
