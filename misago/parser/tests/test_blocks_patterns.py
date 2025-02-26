@@ -392,36 +392,9 @@ def get_expected_ast(ast, other_ast, separator):
         # Multiple thematic breaks are combined into one
         return [ast]
 
-    if (
-        ast["type"] == "list"
-        and ast["type"] == other_ast["type"]
-        and ast["ordered"]
-        and other_ast["ordered"]
-        and separator == "\n"
-    ):
+    if ast["type"] == "list" and ast["delimiter"] == other_ast["delimiter"]:
         # Multiple lists of same type are combined into one
-        return [
-            {
-                "type": "list",
-                "ordered": True,
-                "sign": None,
-                "children": [
-                    {
-                        "type": "list-item",
-                        "children": [
-                            {"type": "text", "text": "item"},
-                        ],
-                        "lists": [],
-                    },
-                    {
-                        "type": "list-item",
-                        "children": [
-                            {"type": "text", "text": "item"},
-                        ],
-                        "lists": [],
-                    },
-                ],
-            },
-        ]
+        ast["children"] += other_ast["children"]
+        return [ast]
 
     return [ast, other_ast]

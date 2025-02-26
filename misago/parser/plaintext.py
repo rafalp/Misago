@@ -110,23 +110,20 @@ def _render_ast_node_to_plaintext_action(
 
     if ast_type == "list":
         items: list[str] = []
+        start = int(ast_node["start"] or 1)
         for i, ast_item in enumerate(ast_node["children"]):
-            if children := render_inline_ast_to_plaintext(
+            item = ""
+            if ast_node["ordered"]:
+                item += f"{start + i}" + ast_node["delimiter"]
+            else:
+                item += ast_node["delimiter"]
+            item += " "
+
+            item += render_children_ast_to_plaintext(
                 context, ast_item["children"], metadata, text_format
-            ).strip():
-                item = ""
-                if ast_node["ordered"]:
-                    item += f"{i + 1}."
-                else:
-                    item += ast_node["sign"]
+            ).strip()
 
-                item += " " + children
-                if lists := render_children_ast_to_plaintext(
-                    context, ast_item["lists"], metadata, text_format
-                ):
-                    item += " " + lists
-
-                items.append(item)
+            items.append(item)
 
         return " ".join(items)
 
