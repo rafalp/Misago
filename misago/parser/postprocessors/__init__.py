@@ -1,5 +1,6 @@
 from .cleanast import CleanASTPostProcessor
 from .block import BlockPostProcessor
+from .list import MergeListsASTPostProcessor
 from .quote import QuoteBBCodePostProcessor
 from .removerepeats import RemoveRepeatsPostProcessor
 from .spoiler import SpoilerBBCodePostProcessor
@@ -8,6 +9,7 @@ from .thematicbreak import RemoveThematicBreaksRepeatsPostProcessor
 __all__ = [
     "CleanASTPostProcessor",
     "BlockPostProcessor",
+    "MergeListsASTPostProcessor",
     "QuoteBBCodePostProcessor",
     "RemoveRepeatsPostProcessor",
     "SpoilerBBCodePostProcessor",
@@ -19,4 +21,5 @@ post_processors = [
     SpoilerBBCodePostProcessor(),
     RemoveThematicBreaksRepeatsPostProcessor(),
     CleanASTPostProcessor(),
+    MergeListsASTPostProcessor(),
 ]
