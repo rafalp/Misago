@@ -106,6 +106,20 @@ def test_render_ast_to_plaintext_ordered_list(parser_context, parse_markup, snap
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
+def test_render_ast_to_html_ordered_list_with_custom_start(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        """
+        3. Lorem
+        4. _Ipsum_
+        5. Dolor
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
+
+
 def test_render_ast_to_plaintext_unordered_list_with_nested_list(
     parser_context, parse_markup, snapshot
 ):
