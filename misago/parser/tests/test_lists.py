@@ -179,7 +179,9 @@ CASES_IDS = tuple(case[0] for case in CASES)
 @pytest.mark.parametrize("case", CASES, ids=CASES_IDS)
 def test_lists(parse_markup, case):
     _, markdown, expected_ast = case
+    import json
 
+    print(json.dumps(parse_markup(markdown)[0], indent=4))
     if not isinstance(expected_ast, list):
         expected_ast = [expected_ast]
 
