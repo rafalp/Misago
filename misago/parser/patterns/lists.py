@@ -4,16 +4,11 @@ from textwrap import dedent
 from ..parser import Parser, Pattern
 
 LIST_PATTERN = (
-    r"(\n|^)"
+    r"(^|\n)"
     r" {0,3}("
-    r"(-((( .*)?(\n+(( *-( .*)?)))+)|( .*)|(?=\n|$)))"
-    r"|(\+((( .*)?(\n+(( *\+( .*)?)))+)|( .*)|(?=\n|$)))"
-    r"|(\*((( .*)?(\n+(( *\*( .*)?)))+)|( .*)|(?=\n|$)))"
-    r"|([0-9]{1,9}(\.|\))(( .*)?(\n+((( *[0-9]{1,9}(\.|\))( .*)?)))+)|( .*)|(?=\n|$)))"
-    r")"
-)
-LIST_CONTENTS = re.compile(
-    r"(?P<prefix> *)(?P<marker>[-*+i]|([0-9]+[.)]))(?P<text> *.*)"
+    r"(-|\+|\*|([0-9]{1,9}(\.|\))))"
+    r"((( .*)?((\n.+)|(\n+  +.*))+)|( .*))"
+    r")(?=\n|$)"
 )
 
 ListItem = tuple[int, str, list[dict]]
@@ -23,95 +18,83 @@ class ListMarkdown(Pattern):
     pattern_type: str = "list"
     pattern: str = LIST_PATTERN
 
+    item_start_pattern = re.compile(r"^ *(-|\+|\*|([0-9]{1,9}(\.|\))))( .*)?$")
+    delimiters: str = "-+*"
+
     def parse(self, parser: Parser, match: str, parents: list[str]) -> list[dict]:
-        print(match)
-        items = self.parse_list_items(
-            parser, match, parents + [self.pattern_type, "list-item"]
-        )
-        return self.get_lists_from_items(items)
+        groups = self.split_match_into_groups(match)
 
-    def parse_list_items(
-        self, parser: Parser, match: str, parents: list[str]
-    ) -> list[ListItem]:
-        items: list[ListItem] = []
-        prev_level: int | None = None
-        for item in LIST_CONTENTS.finditer(dedent(match).strip()):
-            raw_level = len(item.group("prefix") or "")
-
-            if not items:
-                clean_level = 0
-                prev_level = raw_level
-            else:
-                level_diff = raw_level - prev_level
-                if level_diff >= 2:
-                    clean_level = items[-1][1] + 1
-                elif level_diff >= 0:
-                    clean_level = items[-1][1]
-                else:
-                    clean_level = 0
-                    for prev_item in items:
-                        if raw_level - prev_item[0] >= 2:
-                            clean_level += 1
-
-                prev_level = raw_level
-
-            marker = item.group("marker")
-            if marker not in "-*+":
-                marker = "n"
-
-            text = item.group("text").strip()
-            items.append(
-                (
-                    raw_level,
-                    clean_level,
-                    marker,
-                    parser.parse_inline(text, parents),
-                )
-            )
-
-        return items
-
-    def get_lists_from_items(self, items: list[ListItem]) -> list[dict]:
-        lists_asts: list[dict] = []
-        lists_stack: list[dict] = []
-
-        level: int = -1
-        marker: str | None = None
-
-        for _, item_level, item_sign, children in items:
-            if item_level > level or item_sign != marker:
-                list_ast = {
-                    "type": ListMarkdown.pattern_type,
-                    "ordered": item_sign == "n",
-                    "sign": item_sign if item_sign != "n" else None,
-                    "children": [],
-                }
-
-                if item_level == level:
-                    lists_stack.pop(-1)
-
-                if not lists_stack:
-                    lists_asts.append(list_ast)
-
-                if lists_stack:
-                    lists_stack[-1]["children"][-1]["lists"].append(list_ast)
-
-                lists_stack.append(list_ast)
-
-            if item_level < level:
-                for _ in range(level - item_level):
-                    lists_stack.pop(-1)
-
-            if item_level != level or item_sign != marker:
-                level = item_level
-                marker = item_sign
-
-            lists_stack[-1]["children"].append(
+        ast: list[dict] = []
+        for group in groups:
+            ast.append(
                 {
-                    "type": "list-item",
-                    "children": children,
-                    "lists": [],
+                    "type": "list",
+                    "ordered": group["number"] is not None,
+                    "start": group["number"],
+                    "delimiter": group["delimiter"],
+                    "tight": True,
+                    "children": [
+                        {
+                            "type": "list-item",
+                            "children": [
+                                {
+                                    "type": "paragraph",
+                                    "children": [
+                                        {"type": "text", "text": group["text"].strip()},
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
                 }
             )
 
-        return lists_asts
+        return ast
+
+    def split_match_into_groups(self, match: str) -> list[dict]:
+        lines = [self.parse_match_line(line) for line in match.splitlines()]
+        return lines
+
+    def parse_match_line(self, line: str) -> dict:
+        if self.item_start_pattern.match(line):
+            return self.parse_list_item_line(line)
+
+        if not line.strip():
+            return {"type": "blank", "text": line}
+
+        return {
+            "type": "text",
+            "indent": len(line) - len(line.lstrip()),
+            "text": line,
+        }
+
+    def parse_list_item_line(self, line: str) -> dict | None:
+        line_clean = line.lstrip()
+        indent = len(line) - len(line_clean)
+
+        if line_clean[0] in self.delimiters:
+            number = None
+            delimiter = line_clean[0]
+            start = 1 + len(line_clean[1:]) - len(line_clean[1:].lstrip())
+            line_clean = line_clean[1:]
+        else:
+            if ")" in line_clean and "." in line_clean:
+                delimiter_position = min(line_clean.index(")"), line_clean.index("."))
+            elif ")" in line_clean:
+                delimiter_position = line_clean.index(")")
+            else:
+                delimiter_position = line_clean.index(".")
+
+            number = int(line_clean[:delimiter_position])
+            delimiter = line_clean[delimiter_position]
+            line_clean = line_clean[delimiter_position + 1 :]
+            start = delimiter_position + 1 + len(line_clean) - len(line_clean.lstrip())
+
+        return {
+            "type": "list",
+            "indent": indent,
+            "number": number,
+            "delimiter": delimiter,
+            "start": indent + start,
+            "text": line_clean,
+        }

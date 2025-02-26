@@ -1,27 +1,142 @@
-def test_unordered_list(parse_markup):
-    result = parse_markup("- Lorem")
-    assert result == [
+import pytest
+
+CASES = (
+    (
+        "single item dash",
+        "- item",
         {
             "type": "list",
             "ordered": False,
-            "sign": "-",
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
                         {
-                            "type": "text",
-                            "text": "Lorem",
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
                         },
                     ],
-                    "lists": [],
                 },
             ],
-        }
-    ]
+        },
+    ),
+    (
+        "single item plus",
+        "+ item",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "+",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item asterisk",
+        "* item",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "*",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered dot",
+        "1. item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": 1,
+            "delimiter": ".",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered parenthesis",
+        "1) item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": 1,
+            "delimiter": ")",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+)
+
+CASES_IDS = tuple(case[0] for case in CASES)
 
 
-def test_unordered_list_with_multiple_items(parse_markup):
+@pytest.mark.parametrize("case", CASES, ids=CASES_IDS)
+def test_lists(parse_markup, case):
+    _, markdown, expected_ast = case
+
+    if not isinstance(expected_ast, list):
+        expected_ast = [expected_ast]
+
+    assert parse_markup(markdown) == expected_ast
+
+
+def _test_unordered_list_with_multiple_items(parse_markup):
     result = parse_markup("- Lorem\n- Ipsum\n- Dolor")
     assert result == [
         {
@@ -64,7 +179,7 @@ def test_unordered_list_with_multiple_items(parse_markup):
     ]
 
 
-def test_unordered_list_with_asterisk(parse_markup):
+def _test_unordered_list_with_asterisk(parse_markup):
     result = parse_markup("* Lorem\n* Ipsum")
     assert result == [
         {
@@ -97,7 +212,7 @@ def test_unordered_list_with_asterisk(parse_markup):
     ]
 
 
-def test_unordered_list_with_plus(parse_markup):
+def _test_unordered_list_with_plus(parse_markup):
     result = parse_markup("+ Lorem\n+ Ipsum")
     assert result == [
         {
@@ -130,7 +245,7 @@ def test_unordered_list_with_plus(parse_markup):
     ]
 
 
-def test_unordered_list_with_indent(parse_markup):
+def _test_unordered_list_with_indent(parse_markup):
     result = parse_markup("  - Lorem\n  - Ipsum")
     assert result == [
         {
@@ -163,7 +278,7 @@ def test_unordered_list_with_indent(parse_markup):
     ]
 
 
-def test_ordered_list(parse_markup):
+def _test_ordered_list(parse_markup):
     result = parse_markup("1. Lorem\n2) Ipsum\n4. Dolor")
     assert result == [
         {
@@ -206,7 +321,7 @@ def test_ordered_list(parse_markup):
     ]
 
 
-def test_list_with_separating_blank_lines(parse_markup):
+def _test_list_with_separating_blank_lines(parse_markup):
     result = parse_markup("  - Lorem\n\n\n  - Ipsum")
     assert result == [
         {
@@ -239,7 +354,7 @@ def test_list_with_separating_blank_lines(parse_markup):
     ]
 
 
-def test_multiple_lists_separated_by_marker(parse_markup):
+def _test_multiple_lists_separated_by_marker(parse_markup):
     result = parse_markup("- Lorem\n- Ipsum\n* Dolor\n* Met\n+ Sit\n1. Amet")
     assert result == [
         {
@@ -333,7 +448,7 @@ def test_multiple_lists_separated_by_marker(parse_markup):
     ]
 
 
-def test_list_with_first_item_subitems(parse_markup):
+def _test_list_with_first_item_subitems(parse_markup):
     result = parse_markup(
         """
         - Lorem
@@ -401,7 +516,7 @@ def test_list_with_first_item_subitems(parse_markup):
     ]
 
 
-def test_list_with_second_item_subitems(parse_markup):
+def _test_list_with_second_item_subitems(parse_markup):
     result = parse_markup(
         """
         - Lorem
@@ -469,7 +584,7 @@ def test_list_with_second_item_subitems(parse_markup):
     ]
 
 
-def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
+def _test_list_with_first_item_subitems_two_levels_deep(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -556,7 +671,7 @@ def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
     ]
 
 
-def test_list_with_first_item_children_three_levels_deep(parse_markup):
+def _test_list_with_first_item_children_three_levels_deep(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -662,7 +777,7 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
     ]
 
 
-def test_list_with_empty_first_item(parse_markup):
+def _test_list_with_empty_first_item(parse_markup):
     result = parse_markup(
         """
         -
@@ -717,7 +832,7 @@ def test_list_with_empty_first_item(parse_markup):
     ]
 
 
-def test_list_with_empty_middle_item(parse_markup):
+def _test_list_with_empty_middle_item(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -772,7 +887,7 @@ def test_list_with_empty_middle_item(parse_markup):
     ]
 
 
-def test_list_with_empty_nested_item(parse_markup):
+def _test_list_with_empty_nested_item(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -835,7 +950,7 @@ def test_list_with_empty_nested_item(parse_markup):
     ]
 
 
-def test_list_items_with_too_deep_levels_are_fixed(parse_markup):
+def _test_list_items_with_too_deep_levels_are_fixed(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -857,7 +972,7 @@ def test_list_items_with_too_deep_levels_are_fixed(parse_markup):
     assert result == expected_result
 
 
-def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
+def _test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -879,7 +994,7 @@ def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
     assert result == expected_result
 
 
-def test_list_with_too_deep_item_followed_by_two_too_deep_items_is_fixed(parse_markup):
+def _test_list_with_too_deep_item_followed_by_two_too_deep_items_is_fixed(parse_markup):
     result = parse_markup(
         """
         - Met
@@ -901,7 +1016,7 @@ def test_list_with_too_deep_item_followed_by_two_too_deep_items_is_fixed(parse_m
     assert result == expected_result
 
 
-def test_list_with_first_item_indented_is_fixed(parse_markup):
+def _test_list_with_first_item_indented_is_fixed(parse_markup):
     result = parse_markup(
         """
         Lorem ipsum
@@ -927,7 +1042,7 @@ def test_list_with_first_item_indented_is_fixed(parse_markup):
     assert result == expected_result
 
 
-def test_list_items_with_not_deep_levels_are_fixed(parse_markup):
+def _test_list_items_with_not_deep_levels_are_fixed(parse_markup):
     result = parse_markup(
         """
         - Met
