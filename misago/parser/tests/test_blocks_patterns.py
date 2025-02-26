@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 
 PATTERNS = (
@@ -354,8 +356,8 @@ PATTERNS = (
 PATTERNS_IDS = tuple(pattern[0] for pattern in PATTERNS)
 
 
-@pytest.mark.parametrize("separator", ("\n", "\n\n"))
 @pytest.mark.parametrize("second_pattern", PATTERNS, ids=PATTERNS_IDS)
+@pytest.mark.parametrize("separator", ("\n", "\n\n"))
 @pytest.mark.parametrize("first_pattern", PATTERNS, ids=PATTERNS_IDS)
 def test_block_patterns(parse_markup, first_pattern, second_pattern, separator):
     _, first_markdown, first_ast = first_pattern
@@ -392,9 +394,28 @@ def get_expected_ast(ast, other_ast, separator):
         # Multiple thematic breaks are combined into one
         return [ast]
 
-    if ast["type"] == "list" and ast["delimiter"] == other_ast["delimiter"]:
+    if (
+        ast["type"] == "list"
+        and ast["type"] == other_ast["type"]
+        and ast["delimiter"] == other_ast["delimiter"]
+    ):
         # Multiple lists of same type are combined into one
+        ast = copy.deepcopy(ast)
+        ast["tight"] = separator == "\n"
         ast["children"] += other_ast["children"]
+        return [ast]
+
+    if ast["type"] == "list" and separator == "\n":
+        ast = copy.deepcopy(ast)
+
+        if other_ast["type"] == "paragraph":
+            ast["children"][-1]["children"][0]["children"] += [
+                {"type": "softbreak"},
+                {"type": "text", "text": "paragraph"},
+            ]
+        else:
+            ast["children"][-1]["children"].append(other_ast)
+
         return [ast]
 
     return [ast, other_ast]
