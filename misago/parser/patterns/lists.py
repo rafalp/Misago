@@ -34,10 +34,15 @@ class ListMarkdown(Pattern):
         return ast
 
     def parse_list_block(self, parser: Parser, block: dict, parents: list[str]) -> dict:
+        if block["number"] is not None and block["number"] != 1:
+            start = str(block["number"])
+        else:
+            start = None
+
         return {
             "type": "list",
             "ordered": block["number"] is not None,
-            "start": block["number"],
+            "start": start,
             "delimiter": block["delimiter"],
             "tight": True,
             "children": [
@@ -65,17 +70,18 @@ class ListMarkdown(Pattern):
 
             last_block = blocks[-1]
             if line["type"] == "list":
-                if last_block["type"] == "text" or (
+                if last_block["type"] in ("text", "blank") or (
                     last_block["type"] == "list"
-                    and line["indent"] <= last_block["start"]
+                    and line["indent"] < last_block["start"]
                 ):
                     blocks.append(line)
                 else:
                     text = "\n" + ((line["indent"] - last_block["start"]) * " ")
-                    if last_block["number"] is not None:
-                        text += str(last_block["number"])
-                    text += str(last_block["delimiter"])
-                    text += line["text"]
+                    if line["number"] is not None:
+                        text += str(line["number"])
+                    text += str(line["delimiter"])
+                    if line["text"]:
+                        text += " " + line["text"]
 
                     last_block["text"] += text
 
