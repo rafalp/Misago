@@ -79,7 +79,7 @@ CASES = (
         {
             "type": "list",
             "ordered": True,
-            "start": 1,
+            "start": None,
             "delimiter": ".",
             "tight": True,
             "children": [
@@ -103,7 +103,55 @@ CASES = (
         {
             "type": "list",
             "ordered": True,
-            "start": 1,
+            "start": None,
+            "delimiter": ")",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered with zero start",
+        "0) item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": "0",
+            "delimiter": ")",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered with start",
+        "7) item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": "7",
             "delimiter": ")",
             "tight": True,
             "children": [
@@ -363,7 +411,7 @@ CASES = (
         },
     ),
     (
-        "list with nested item",
+        "list with nested list",
         "- item1\n  - item2",
         {
             "type": "list",
@@ -381,22 +429,22 @@ CASES = (
                                 {"type": "text", "text": "item1"},
                             ],
                         },
-                    ],
-                },
-                {
-                    "type": "list",
-                    "ordered": False,
-                    "start": None,
-                    "delimiter": "-",
-                    "tight": True,
-                    "children": [
                         {
-                            "type": "list-item",
+                            "type": "list",
+                            "ordered": False,
+                            "start": None,
+                            "delimiter": "-",
+                            "tight": True,
                             "children": [
                                 {
-                                    "type": "paragraph",
+                                    "type": "list-item",
                                     "children": [
-                                        {"type": "text", "text": "item2"},
+                                        {
+                                            "type": "paragraph",
+                                            "children": [
+                                                {"type": "text", "text": "item2"},
+                                            ],
+                                        },
                                     ],
                                 },
                             ],
