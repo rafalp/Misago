@@ -1,4 +1,7 @@
 # serializer version: 1
+# name: test_render_ast_to_html_ordered_list_with_custom_start
+  '3. Lorem 4. Ipsum 5. Dolor'
+# ---
 # name: test_render_ast_to_plaintext_attachment
   'See the logo: file.png'
 # ---
@@ -125,6 +128,9 @@
 # name: test_render_ast_to_plaintext_minimal_table
   'Col1'
 # ---
+# name: test_render_ast_to_plaintext_ordered_list
+  '1. Lorem 2. Ipsum 3. Dolor'
+# ---
 # name: test_render_ast_to_plaintext_paragraph
   'Hello world!'
 # ---
@@ -184,6 +190,12 @@
 # ---
 # name: test_render_ast_to_plaintext_underline_bbcode_text
   'Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_unordered_list
+  '- Lorem - Ipsum - Dolor'
+# ---
+# name: test_render_ast_to_plaintext_unordered_list_with_nested_list
+  '- Lorem - Ipsum - Met - Elit - Dolor'
 # ---
 # name: test_render_ast_to_plaintext_url
   'See the site https://misago-project.org!'
