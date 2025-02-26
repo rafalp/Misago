@@ -146,7 +146,7 @@ CASES = (
         },
     ),
     (
-        "single indented item dash with_text",
+        "single list item with softbreak",
         "   - item\nnext line",
         {
             "type": "list",
@@ -164,6 +164,62 @@ CASES = (
                                 {"type": "text", "text": "item"},
                                 {"type": "softbreak"},
                                 {"type": "text", "text": "next line"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single list item with softbreak, second line indented",
+        "   - item\n  next line",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                                {"type": "softbreak"},
+                                {"type": "text", "text": "next line"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single list item with two paragraphs",
+        "- paragraph1\n\n  paragraph2",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph1"},
+                            ],
+                        },
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph2"},
                             ],
                         },
                     ],
