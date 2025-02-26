@@ -22,58 +22,113 @@ class ListMarkdown(Pattern):
     delimiters: str = "-+*"
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> list[dict]:
-        groups = self.split_match_into_groups(match)
+        blocks = self.split_match_into_blocks(match)
 
         ast: list[dict] = []
-        for group in groups:
-            if group["type"] == "list":
-                ast.append(self.parse_list_group(parser, group, parents))
-            elif group["type"] == "text":
-                ast += parser.parse_blocks(group["text"], parents)
+        for block in blocks:
+            if block["type"] == "list":
+                ast.append(self.parse_list_block(parser, block, parents))
+            elif block["type"] == "text":
+                ast += parser.parse_blocks(block["text"], parents)
 
         return ast
 
-    def parse_list_group(self, parser: Parser, group: dict, parents: list[str]) -> dict:
+    def parse_list_block(self, parser: Parser, block: dict, parents: list[str]) -> dict:
         return {
             "type": "list",
-            "ordered": group["number"] is not None,
-            "start": group["number"],
-            "delimiter": group["delimiter"],
+            "ordered": block["number"] is not None,
+            "start": block["number"],
+            "delimiter": block["delimiter"],
             "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": parser.parse_blocks(
-                        group["text"], parents + ["list", "list-item"]
+                        child, parents + ["list", "list-item"]
                     ),
-                },
+                }
+                for child in block["children"]
             ],
         }
 
-    def split_match_into_groups(self, match: str) -> list[dict]:
+    def split_match_into_blocks(self, match: str) -> list[dict]:
         lines = self.split_match_into_lines(match)
 
-        groups: list[dict] = []
+        blocks: list[dict] = []
+        last_line = None
+
         for line in lines:
-            if not groups:
-                groups.append(line)
+            if not blocks:
+                blocks.append(line)
+                last_line = line
                 continue
 
-            last_group = groups[-1]
-            if line["type"] == "blank" and last_group["type"] == "list":
-                last_group["tight"] = False
-
-            if line["type"] in ("text", "blank"):
-                if last_group["type"] == "list":
-                    last_group["text"] += "\n" + line["text"]
-
-                if last_group["type"] == "text":
-                    last_group["text"] += "\n" + line["text"]
-
+            last_block = blocks[-1]
             if line["type"] == "list":
-                pass
+                if last_block["type"] == "text" or (
+                    last_block["type"] == "list"
+                    and line["indent"] <= last_block["start"]
+                ):
+                    blocks.append(line)
+                else:
+                    text = "\n" + ((line["indent"] - last_block["start"]) * " ")
+                    if last_block["number"] is not None:
+                        text += str(last_block["number"])
+                    text += str(last_block["delimiter"])
+                    text += line["text"]
 
-        return groups
+                    last_block["text"] += text
+
+            elif line["type"] == "blank":
+                if last_block["type"] == "list":
+                    last_block["tight"] = False
+                last_block["text"] += "\n" + line["text"]
+
+            elif line["type"] == "text":
+                if last_block["type"] == "list":
+                    if last_line["type"] == "blank":
+                        if line["indent"] >= last_block["start"]:
+                            last_block["text"] += (
+                                "\n" + line["text"][last_block["start"] :]
+                            )
+                        else:
+                            blocks.append(line)
+                            continue
+
+                    else:
+                        last_block["text"] += "\n" + line["text"]
+
+                elif last_block["type"] == "text":
+                    last_block["text"] += "\n" + line["text"]
+
+            last_line = line
+
+        # Replace blocks text with block children
+        for block in blocks:
+            text = block.pop("text")
+            block["children"] = [text]
+
+        # Merge blocks
+        merged_blocks: list[dict] = []
+        for block in blocks:
+            if not merged_blocks:
+                merged_blocks.append(block)
+                continue
+
+            last_block = merged_blocks[-1]
+            if block["type"] == "list":
+                if (
+                    last_block["type"] == "list"
+                    and block["delimiter"] == last_block["delimiter"]
+                ):
+                    last_block["children"] += block["children"]
+                else:
+                    merged_blocks.append(block)
+
+            else:
+                merged_blocks.append(block)
+
+        return merged_blocks
 
     def split_match_into_lines(self, match: str) -> list[dict]:
         lines = [self.parse_match_line(line) for line in match.splitlines()]
@@ -131,5 +186,5 @@ class ListMarkdown(Pattern):
             "delimiter": delimiter,
             "start": indent + start,
             "tight": True,
-            "text": line_clean,
+            "text": line_clean[1:] if line_clean.strip() else "",
         }
