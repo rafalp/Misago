@@ -26,33 +26,54 @@ class ListMarkdown(Pattern):
 
         ast: list[dict] = []
         for group in groups:
-            ast.append(
-                {
-                    "type": "list",
-                    "ordered": group["number"] is not None,
-                    "start": group["number"],
-                    "delimiter": group["delimiter"],
-                    "tight": True,
-                    "children": [
-                        {
-                            "type": "list-item",
-                            "children": [
-                                {
-                                    "type": "paragraph",
-                                    "children": [
-                                        {"type": "text", "text": group["text"].strip()},
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                }
-            )
+            if group["type"] == "list":
+                ast.append(self.parse_list_group(parser, group, parents))
+            elif group["type"] == "text":
+                ast += parser.parse_blocks(group["text"], parents)
 
         return ast
 
+    def parse_list_group(self, parser: Parser, group: dict, parents: list[str]) -> dict:
+        return {
+            "type": "list",
+            "ordered": group["number"] is not None,
+            "start": group["number"],
+            "delimiter": group["delimiter"],
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": parser.parse_blocks(
+                        group["text"], parents + ["list", "list-item"]
+                    ),
+                },
+            ],
+        }
+
     def split_match_into_groups(self, match: str) -> list[dict]:
-        return [self.parse_match_line(line) for line in match.splitlines()]
+        lines = [self.parse_match_line(line) for line in match.splitlines()]
+
+        groups: list[dict] = []
+        for line in lines:
+            if not groups:
+                groups.append(line)
+                continue
+
+            last_group = groups[-1]
+            if line["type"] == "blank" and last_group["type"] == "list":
+                last_group["tight"] = False
+
+            if line["type"] in ("text", "blank"):
+                if last_group["type"] == "list":
+                    last_group["text"] += "\n" + line["text"]
+
+                if last_group["type"] == "text":
+                    last_group["text"] += "\n" + line["text"]
+
+            if line["type"] == "list":
+                pass
+
+        return groups
 
     def parse_match_line(self, line: str) -> dict:
         if self.item_start_pattern.match(line):
@@ -95,5 +116,6 @@ class ListMarkdown(Pattern):
             "number": number,
             "delimiter": delimiter,
             "start": indent + start,
+            "tight": True,
             "text": line_clean,
         }
