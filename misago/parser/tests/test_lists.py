@@ -455,14 +455,82 @@ CASES = (
         },
     ),
     (
-        "test_list_unescapes_items",
-        "- \*Lorem\*",
+        "list of items are split by delimiters",
+        "- item1\n- item2\n* item3\n* item4",
+        [
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "-",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item1"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item2"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "*",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item3"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item4"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    ),
+    (
+        "two lists are merged",
+        "- item1\n- item2\n\n- item3\n- item4",
         {
             "type": "list",
             "ordered": False,
             "start": None,
             "delimiter": "-",
-            "tight": True,
+            "tight": False,
             "children": [
                 {
                     "type": "list-item",
@@ -470,16 +538,114 @@ CASES = (
                         {
                             "type": "paragraph",
                             "children": [
-                                {
-                                    "type": "text",
-                                    "text": "*Lorem*",
-                                },
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item2"},
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item3"},
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item4"},
                             ],
                         },
                     ],
                 },
             ],
         },
+    ),
+    (
+        "two different lists arent merged",
+        "- item1\n- item2\n\n+ item3\n+ item4",
+        [
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "-",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item1"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item2"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "+",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item3"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item4"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
     ),
 )
 
