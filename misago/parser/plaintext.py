@@ -252,7 +252,7 @@ def _render_ast_node_to_plaintext_action(
     if ast_type == "escape":
         return ast_node["character"]
 
-    if ast_type in ("thematic-break", "thematic-break-bbcode", "line-break"):
+    if ast_type in ("thematic-break", "thematic-break-bbcode", "softbreak"):
         return " "
 
     if ast_type == "text":

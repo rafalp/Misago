@@ -52,8 +52,7 @@ class ListMarkdown(Pattern):
         return ast
 
     def split_match_into_groups(self, match: str) -> list[dict]:
-        lines = [self.parse_match_line(line) for line in match.splitlines()]
-        return lines
+        return [self.parse_match_line(line) for line in match.splitlines()]
 
     def parse_match_line(self, line: str) -> dict:
         if self.item_start_pattern.match(line):

@@ -261,7 +261,7 @@ def _render_ast_node_to_html_action(
     if ast_type == "escape":
         return escape(ast_node["character"])
 
-    if ast_type == "line-break":
+    if ast_type == "softbreak":
         return "<br />"
 
     if ast_type == "text":

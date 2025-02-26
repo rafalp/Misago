@@ -302,7 +302,7 @@ def get_expected_ast(ast, other_ast, separator):
                 "type": "paragraph",
                 "children": [
                     {"type": "text", "text": "paragraph"},
-                    {"type": "line-break"},
+                    {"type": "softbreak"},
                     {"type": "text", "text": "paragraph"},
                 ],
             },
