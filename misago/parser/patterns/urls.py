@@ -304,7 +304,7 @@ class AutolinkMarkdown(Pattern):
         else:
             is_image = False
 
-        url = clean_url(parser.unescape(match))
+        url = clean_url(parser.unescape(url))
 
         if (
             not url
