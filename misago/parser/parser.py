@@ -16,7 +16,7 @@ class Pattern:
 
 
 class LineBreak(Pattern):
-    pattern_type = "line-break"
+    pattern_type = "softbreak"
     pattern = r" *\n *"
 
     def parse(self, parser: "Parser", match: str, parents: list[str]) -> dict:

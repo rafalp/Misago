@@ -1,648 +1,544 @@
-def test_unordered_list(parse_markup):
-    result = parse_markup("- Lorem")
-    assert result == [
+import pytest
+
+CASES = (
+    (
+        "single item dash",
+        "- item",
         {
             "type": "list",
             "ordered": False,
-            "sign": "-",
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
                         {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_unordered_list_with_multiple_items(parse_markup):
-    result = parse_markup("- Lorem\n- Ipsum\n- Dolor")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Dolor",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_unordered_list_with_asterisk(parse_markup):
-    result = parse_markup("* Lorem\n* Ipsum")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "*",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_unordered_list_with_plus(parse_markup):
-    result = parse_markup("+ Lorem\n+ Ipsum")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "+",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_unordered_list_with_indent(parse_markup):
-    result = parse_markup("  - Lorem\n  - Ipsum")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_ordered_list(parse_markup):
-    result = parse_markup("1. Lorem\n2) Ipsum\n4. Dolor")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": True,
-            "sign": None,
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Dolor",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_list_with_separating_blank_lines(parse_markup):
-    result = parse_markup("  - Lorem\n\n\n  - Ipsum")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_multiple_lists_separated_by_marker(parse_markup):
-    result = parse_markup("- Lorem\n- Ipsum\n* Dolor\n* Met\n+ Sit\n1. Amet")
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        },
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "*",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Dolor",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        },
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "+",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Sit",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        },
-        {
-            "type": "list",
-            "ordered": True,
-            "sign": None,
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Amet",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        },
-    ]
-
-
-def test_list_with_first_item_subitems(parse_markup):
-    result = parse_markup(
-        """
-        - Lorem
-          - Ipsum
-          - Dolor
-        - Met
-        """
-    )
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [
-                        {
-                            "type": "list",
-                            "ordered": False,
-                            "sign": "-",
+                            "type": "paragraph",
                             "children": [
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Ipsum",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Dolor",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
-                            ],
-                        }
-                    ],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_list_with_second_item_subitems(parse_markup):
-    result = parse_markup(
-        """
-        - Lorem
-        - Met
-          - Ipsum
-          - Dolor
-        """
-    )
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [
-                        {
-                            "type": "list",
-                            "ordered": False,
-                            "sign": "-",
-                            "children": [
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Ipsum",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Dolor",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
+                                {"type": "text", "text": "item"},
                             ],
                         },
                     ],
                 },
             ],
-        }
-    ]
-
-
-def test_list_with_first_item_subitems_two_levels_deep(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-          - Ipsum
-            - Dolor
-          - Elit
-        - Lorem
-        """
-    )
-    assert result == [
+        },
+    ),
+    (
+        "single item plus",
+        "+ item",
         {
             "type": "list",
             "ordered": False,
-            "sign": "-",
+            "start": None,
+            "delimiter": "+",
+            "tight": True,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
                         {
-                            "type": "text",
-                            "text": "Met",
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
                         },
                     ],
-                    "lists": [
+                },
+            ],
+        },
+    ),
+    (
+        "single item asterisk",
+        "* item",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "*",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered dot",
+        "1. item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": None,
+            "delimiter": ".",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered parenthesis",
+        "1) item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": None,
+            "delimiter": ")",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered with zero start",
+        "0) item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": "0",
+            "delimiter": ")",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single item ordered with start",
+        "7) item",
+        {
+            "type": "list",
+            "ordered": True,
+            "start": "7",
+            "delimiter": ")",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "single indented item dash",
+        "   - item",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "list item with softbreak",
+        "   - item\nnext line",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                                {"type": "softbreak"},
+                                {"type": "text", "text": "next line"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "indented list item with softbreak, second line indented",
+        "   - item\n  next line",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item"},
+                                {"type": "softbreak"},
+                                {"type": "text", "text": "next line"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "indented list item with two paragraphs",
+        "   - paragraph1\n\n     paragraph2",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph1"},
+                            ],
+                        },
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph2"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "list item with two paragraphs",
+        "- paragraph1\n\n  paragraph2",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph1"},
+                            ],
+                        },
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph2"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "list item with two paragraphs and two softbreaks",
+        "- paragraph1\nline1\n\n  paragraph2\nline2",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph1"},
+                                {"type": "softbreak"},
+                                {"type": "text", "text": "line1"},
+                            ],
+                        },
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph2"},
+                                {"type": "softbreak"},
+                                {"type": "text", "text": "line2"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "list item with three paragraphs",
+        "- paragraph1\n\n  paragraph2\n\n  paragraph3",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph1"},
+                            ],
+                        },
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph2"},
+                            ],
+                        },
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "paragraph3"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "list with two items",
+        "- item1\n- item2",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item2"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
+    (
+        "list with nested list",
+        "- item1\n  - item2",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item1"},
+                            ],
+                        },
                         {
                             "type": "list",
                             "ordered": False,
-                            "sign": "-",
+                            "start": None,
+                            "delimiter": "-",
+                            "tight": True,
                             "children": [
                                 {
                                     "type": "list-item",
                                     "children": [
                                         {
-                                            "type": "text",
-                                            "text": "Ipsum",
-                                        },
-                                    ],
-                                    "lists": [
-                                        {
-                                            "type": "list",
-                                            "ordered": False,
-                                            "sign": "-",
+                                            "type": "paragraph",
                                             "children": [
-                                                {
-                                                    "type": "list-item",
-                                                    "children": [
-                                                        {
-                                                            "type": "text",
-                                                            "text": "Dolor",
-                                                        },
-                                                    ],
-                                                    "lists": [],
-                                                },
+                                                {"type": "text", "text": "item2"},
                                             ],
                                         },
                                     ],
                                 },
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Elit",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
                             ],
                         },
                     ],
                 },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
             ],
-        }
-    ]
-
-
-def test_list_with_first_item_children_three_levels_deep(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-          - Ipsum
-            - Dolor
-              - Pacem
-          - Elit
-        - Lorem
-        """
-    )
-    assert result == [
+        },
+    ),
+    (
+        "list of items are split by delimiters",
+        "- item1\n- item2\n* item3\n* item4",
+        [
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "-",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item1"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item2"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "*",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item3"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item4"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    ),
+    (
+        "two lists are merged",
+        "- item1\n- item2\n\n- item3\n- item4",
         {
             "type": "list",
             "ordered": False,
-            "sign": "-",
+            "start": None,
+            "delimiter": "-",
+            "tight": False,
             "children": [
                 {
                     "type": "list-item",
                     "children": [
                         {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [
-                        {
-                            "type": "list",
-                            "ordered": False,
-                            "sign": "-",
+                            "type": "paragraph",
                             "children": [
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Ipsum",
-                                        },
-                                    ],
-                                    "lists": [
-                                        {
-                                            "type": "list",
-                                            "ordered": False,
-                                            "sign": "-",
-                                            "children": [
-                                                {
-                                                    "type": "list-item",
-                                                    "children": [
-                                                        {
-                                                            "type": "text",
-                                                            "text": "Dolor",
-                                                        },
-                                                    ],
-                                                    "lists": [
-                                                        {
-                                                            "type": "list",
-                                                            "ordered": False,
-                                                            "sign": "-",
-                                                            "children": [
-                                                                {
-                                                                    "type": "list-item",
-                                                                    "children": [
-                                                                        {
-                                                                            "type": "text",
-                                                                            "text": "Pacem",
-                                                                        },
-                                                                    ],
-                                                                    "lists": [],
-                                                                },
-                                                            ],
-                                                        },
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Elit",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
+                                {"type": "text", "text": "item1"},
                             ],
                         },
                     ],
@@ -651,171 +547,9 @@ def test_list_with_first_item_children_three_levels_deep(parse_markup):
                     "type": "list-item",
                     "children": [
                         {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_list_with_empty_first_item(parse_markup):
-    result = parse_markup(
-        """
-        -
-        - Met
-        - Ipsum
-        - Lorem
-        """
-    )
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_list_with_empty_middle_item(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-        - Ipsum
-        -
-        - Lorem
-        """
-    )
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Ipsum",
-                        },
-                    ],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [],
-                    "lists": [],
-                },
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Lorem",
-                        },
-                    ],
-                    "lists": [],
-                },
-            ],
-        }
-    ]
-
-
-def test_list_with_empty_nested_item(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-          - Ipsum
-          -
-        - Lorem
-        """
-    )
-    assert result == [
-        {
-            "type": "list",
-            "ordered": False,
-            "sign": "-",
-            "children": [
-                {
-                    "type": "list-item",
-                    "children": [
-                        {
-                            "type": "text",
-                            "text": "Met",
-                        },
-                    ],
-                    "lists": [
-                        {
-                            "type": "list",
-                            "ordered": False,
-                            "sign": "-",
+                            "type": "paragraph",
                             "children": [
-                                {
-                                    "type": "list-item",
-                                    "children": [
-                                        {
-                                            "type": "text",
-                                            "text": "Ipsum",
-                                        },
-                                    ],
-                                    "lists": [],
-                                },
-                                {
-                                    "type": "list-item",
-                                    "children": [],
-                                    "lists": [],
-                                },
+                                {"type": "text", "text": "item2"},
                             ],
                         },
                     ],
@@ -824,126 +558,105 @@ def test_list_with_empty_nested_item(parse_markup):
                     "type": "list-item",
                     "children": [
                         {
-                            "type": "text",
-                            "text": "Lorem",
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item3"},
+                            ],
                         },
                     ],
-                    "lists": [],
+                },
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "item4"},
+                            ],
+                        },
+                    ],
                 },
             ],
-        }
-    ]
+        },
+    ),
+    (
+        "two different lists arent merged",
+        "- item1\n- item2\n\n+ item3\n+ item4",
+        [
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "-",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item1"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item2"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "type": "list",
+                "ordered": False,
+                "start": None,
+                "delimiter": "+",
+                "tight": True,
+                "children": [
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item3"},
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "type": "list-item",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {"type": "text", "text": "item4"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    ),
+)
+
+CASES_IDS = tuple(case[0] for case in CASES)
 
 
-def test_list_items_with_too_deep_levels_are_fixed(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-            - Ipsum
-            - Dolor
-          - Sit
-        - Lorem
-        """
-    )
-    expected_result = parse_markup(
-        """
-        - Met
-          - Ipsum
-          - Dolor
-          - Sit
-        - Lorem
-        """
-    )
-    assert result == expected_result
+@pytest.mark.parametrize("case", CASES, ids=CASES_IDS)
+def test_lists(parse_markup, case):
+    _, markdown, expected_ast = case
 
+    if not isinstance(expected_ast, list):
+        expected_ast = [expected_ast]
 
-def test_list_with_too_deep_item_followed_by_deep_item_is_fixed(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-                - Ipsum
-            - Dolor
-          - Sit
-        - Lorem
-        """
-    )
-    expected_result = parse_markup(
-        """
-        - Met
-          - Ipsum
-          - Dolor
-          - Sit
-        - Lorem
-        """
-    )
-    assert result == expected_result
-
-
-def test_list_with_too_deep_item_followed_by_two_too_deep_items_is_fixed(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-                - Ipsum
-              - Dolor
-          - Sit
-        - Lorem
-        """
-    )
-    expected_result = parse_markup(
-        """
-        - Met
-          - Ipsum
-          - Dolor
-          - Sit
-        - Lorem
-        """
-    )
-    assert result == expected_result
-
-
-def test_list_with_first_item_indented_is_fixed(parse_markup):
-    result = parse_markup(
-        """
-        Lorem ipsum
-
-              - Met
-              - Ipsum
-            - Dolor
-            - Sit
-            - Lorem
-        """
-    )
-    expected_result = parse_markup(
-        """
-        Lorem ipsum
-
-        - Met
-          - Ipsum
-        - Dolor
-        - Sit
-        - Lorem
-        """
-    )
-    assert result == expected_result
-
-
-def test_list_items_with_not_deep_levels_are_fixed(parse_markup):
-    result = parse_markup(
-        """
-        - Met
-         - Ipsum
-          - Dolor
-           - Sit
-        - Lorem
-        """
-    )
-    expected_result = parse_markup(
-        """
-        - Met
-        - Ipsum
-        - Dolor
-        - Sit
-        - Lorem
-        """
-    )
-    assert result == expected_result
+    assert parse_markup(markdown) == expected_ast
