@@ -10,6 +10,6 @@ class Mention(Pattern):
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:
         if has_invalid_parent(self.invalid_parents, parents):
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         return {"type": self.pattern_type, "username": match[1:]}

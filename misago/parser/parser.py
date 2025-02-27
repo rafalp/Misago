@@ -24,6 +24,9 @@ class LineBreak(Pattern):
 
 
 class Parser:
+    escaped_characters = "\\!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
+    characters_replacements: dict[str, str]
+
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
     post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
@@ -41,6 +44,8 @@ class Parser:
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
     ):
+        self.characters_replacements = {}
+
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
         self.post_processors = post_processors or []
@@ -49,6 +54,7 @@ class Parser:
 
     def __call__(self, markup: str) -> list[dict]:
         markup = self.normalize_newlines(markup)
+        markup = self.escape(markup)
         markup = self.reserve_patterns(markup)
         ast = self.parse_blocks(markup, [])
         for post_processor in self.post_processors:
@@ -57,6 +63,31 @@ class Parser:
 
     def normalize_newlines(self, markup: str) -> str:
         return markup.replace("\r\n", "\n").replace("\r", "\n")
+
+    def escape(self, text: str) -> str:
+        return self.escape_special_characters(text)
+
+    def unescape(self, text: str) -> str:
+        return self.unescape_special_characters(text)
+
+    def escape_special_characters(self, markup: str) -> str:
+        for character in self.escaped_characters:
+            escaped_character = f"\\{character}"
+            if escaped_character in markup:
+                replacement = ""
+                while replacement in markup:
+                    replacement = get_random_string(16)
+
+                self.characters_replacements[character] = replacement
+                markup = markup.replace(escaped_character, replacement)
+
+        return markup
+
+    def unescape_special_characters(self, text: str) -> str:
+        for character, replacement in self.characters_replacements.items():
+            if replacement in text:
+                text = text.replace(replacement, character)
+        return text
 
     def reserve_patterns(self, markup: str) -> str:
         if not "`" in markup:
@@ -83,6 +114,12 @@ class Parser:
         for pattern, org in self._reserved_patterns.items():
             value = value.replace(pattern, org)
         return value
+
+    def text_ast(self, text: str, unescape: bool = True) -> dict:
+        if unescape:
+            text = self.unescape(text)
+
+        return {"type": "text", "text": text}
 
     def parse_blocks(self, markup: str, parents: list[str]) -> list[dict]:
         cursor = 0
@@ -149,11 +186,9 @@ class Parser:
                     start = m.start()
                     if start > cursor:
                         if result and result[-1]["type"] == "text":
-                            result[-1]["text"] += markup[cursor:start]
+                            result[-1]["text"] += self.unescape(markup[cursor:start])
                         else:
-                            result.append(
-                                {"type": "text", "text": markup[cursor:start]}
-                            )
+                            result.append(self.text_ast(markup[cursor:start]))
 
                     inline_ast = pattern.parse(self, block_match, parents)
                     if isinstance(inline_ast, list):
@@ -182,9 +217,9 @@ class Parser:
 
         if cursor < len(markup):
             if result and result[-1]["type"] == "text":
-                result[-1]["text"] += markup[cursor:]
+                result[-1]["text"] += self.unescape(markup[cursor:])
             else:
-                result.append({"type": "text", "text": markup[cursor:]})
+                result.append(self.text_ast(markup[cursor:]))
 
         return result
 

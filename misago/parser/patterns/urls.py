@@ -65,7 +65,7 @@ class UrlBBCode(Pattern):
             or not contents["content"].strip()
             or has_invalid_parent(self.invalid_parents, parents)
         ):
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         return self.make_ast(parser, match, url, content, parents)
 
@@ -103,7 +103,7 @@ class ImgBBCode(UrlBBCode):
         parents: list[dict],
     ) -> dict:
         if url.startswith("mailto:"):
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         if alt_text:
             alt_text = alt_text.strip()
@@ -270,16 +270,16 @@ class ImgMarkdown(Pattern):
         contents = IMAGE_CONTENTS.match(match).groupdict()
 
         if contents["alt"]:
-            alt = contents["alt"].strip() or None
+            alt = parser.unescape(contents["alt"]).strip() or None
         else:
             alt = None
 
         if contents["title"]:
-            title = contents["title"].strip('" ') or None
+            title = parser.unescape(contents["title"]).strip('" ') or None
         else:
             title = None
 
-        src = contents["src"].strip()
+        src = parser.unescape(contents["src"]).strip()
         if src.startswith("/") or URL_RE.match(src):
             return {
                 "type": "image",
@@ -288,7 +288,7 @@ class ImgMarkdown(Pattern):
                 "src": src,
             }
 
-        return {"type": "text", "text": match}
+        return parser.text_ast(match)
 
 
 class AutolinkMarkdown(Pattern):
@@ -304,14 +304,14 @@ class AutolinkMarkdown(Pattern):
         else:
             is_image = False
 
-        url = clean_url(url)
+        url = clean_url(parser.unescape(match))
 
         if (
             not url
             or (is_image and url.startswith("mailto:"))
             or has_invalid_parent(self.invalid_parents, parents)
         ):
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         return {"type": self.pattern_type, "image": is_image, "href": url}
 
@@ -334,8 +334,8 @@ class AutoUrl(AutolinkMarkdown):
     )
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:
-        url = clean_url(match)
+        url = clean_url(parser.unescape(match))
         if not url or has_invalid_parent(self.invalid_parents, parents):
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         return {"type": self.pattern_type, "href": url}
