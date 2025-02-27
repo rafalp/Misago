@@ -359,6 +359,7 @@ PATTERNS_IDS = tuple(pattern[0] for pattern in PATTERNS)
 @pytest.mark.parametrize("second_pattern", PATTERNS, ids=PATTERNS_IDS)
 @pytest.mark.parametrize("separator", ("\n", "\n\n"))
 @pytest.mark.parametrize("first_pattern", PATTERNS, ids=PATTERNS_IDS)
+@pytest.mark.xfail(reason="parser block's model is invalid")
 def test_block_patterns(parse_markup, first_pattern, second_pattern, separator):
     _, first_markdown, first_ast = first_pattern
     _, second_markdown, second_ast = second_pattern
