@@ -25,7 +25,8 @@ class LineBreak(Pattern):
 
 class Parser:
     escaped_characters = "\\!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
-    characters_replacements: dict[str, str]
+    escaped_characters_replacements: dict[str, str]
+    escaped_character_replacement_length = 16
 
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
@@ -76,15 +77,17 @@ class Parser:
             if escaped_character in markup:
                 replacement = ""
                 while replacement in markup:
-                    replacement = get_random_string(16)
+                    replacement = get_random_string(
+                        self.escaped_character_replacement_length
+                    )
 
-                self.characters_replacements[character] = replacement
+                self.escaped_characters_replacements[character] = replacement
                 markup = markup.replace(escaped_character, replacement)
 
         return markup
 
     def unescape_special_characters(self, text: str) -> str:
-        for character, replacement in self.characters_replacements.items():
+        for character, replacement in self.escaped_characters_replacements.items():
             if replacement in text:
                 text = text.replace(replacement, character)
         return text
