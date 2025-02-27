@@ -45,7 +45,7 @@ class Parser:
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
     ):
-        self.characters_replacements = {}
+        self.escaped_characters_replacements = {}
 
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
