@@ -25,17 +25,16 @@ class LineBreak(Pattern):
 
 class Parser:
     escaped_characters = "\\!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
-    escaped_characters_placeholders: dict[str, str]
-    escaped_character_placeholder_length = 16
+
+    placeholders: dict[str, str]
+    placeholder_length = 16
 
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
     post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
 
-    reserve_inline_code = re.compile(r"`*`(.|\n)+?``*")
-    _reserved_patterns: dict[str, str]
-
-    _paragraph_re = re.compile(r".+(\n.+)*")
+    inline_code = re.compile(r"(?<!`)`.+`(?!`)")
+    paragraph = re.compile(r".+(\n.+)*")
 
     def __init__(
         self,
@@ -45,7 +44,7 @@ class Parser:
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
     ):
-        self.escaped_characters_placeholders = {}
+        self.placeholders = {}
 
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
@@ -56,10 +55,11 @@ class Parser:
     def __call__(self, markup: str) -> list[dict]:
         markup = self.normalize_newlines(markup)
         markup = self.escape(markup)
-        markup = self.reserve_patterns(markup)
+
         ast = self.parse_blocks(markup, [])
         for post_processor in self.post_processors:
             ast = post_processor(self, ast)
+
         return ast
 
     def normalize_newlines(self, markup: str) -> str:
@@ -69,39 +69,30 @@ class Parser:
         if not text:
             return ""
 
-        return self.escape_special_characters(text)
+        text = self.escape_special_characters(text)
+        text = self.escape_inline_code(text)
+        return text
 
     def unescape(self, text: str) -> str:
         if not text:
             return ""
 
-        return self.unescape_special_characters(text)
+        for value, placeholder in self.placeholders.items():
+            if placeholder in text:
+                text = text.replace(placeholder, value)
+        return text
 
     def escape_special_characters(self, markup: str) -> str:
         for character in self.escaped_characters:
             escaped_character = f"\\{character}"
             if escaped_character in markup:
                 placeholder = self.get_unique_placeholder(markup)
-                self.escaped_characters_placeholders[character] = placeholder
+                self.placeholders[character] = placeholder
                 markup = markup.replace(escaped_character, placeholder)
 
         return markup
 
-    def unescape_special_characters(self, text: str) -> str:
-        for character, placeholder in self.escaped_characters_placeholders.items():
-            if placeholder in text:
-                text = text.replace(placeholder, character)
-        return text
-
-    def get_unique_placeholder(self, text: str) -> str:
-        placeholder = ""
-        while (
-            placeholder in text or placeholder in self.escaped_characters_placeholders
-        ):
-            placeholder = get_random_string(self.escaped_character_placeholder_length)
-        return placeholder
-
-    def reserve_patterns(self, markup: str) -> str:
+    def escape_inline_code(self, markup: str) -> str:
         if not "`" in markup:
             return markup
 
@@ -110,22 +101,32 @@ class Parser:
             if match_str.startswith("``") or match_str.endswith("``"):
                 return match_str
 
-            pattern_id = f"%%{get_random_string(12)}%%"
-            while pattern_id in markup or pattern_id in self._reserved_patterns:
-                pattern_id = f"%%{get_random_string(12)}%%"
+            placeholder = self.get_unique_placeholder(markup)
+            self.placeholders[placeholder] = match_str[1:-1]
+            return f"`{placeholder}`"
 
-            self._reserved_patterns[pattern_id] = match_str
-            return pattern_id
+        return self.inline_code.sub(replace_pattern, markup)
 
-        return self.reserve_inline_code.sub(replace_pattern, markup)
+    def replace_placeholders(self, text: str) -> str:
+        for value, placeholder in self.placeholders.items():
+            if placeholder in text:
+                text = text.replace(placeholder, value)
+        return text
 
-    def reverse_reservations(self, value: str) -> str:
-        if not self._reserved_patterns or "%%" not in value:
-            return value
+    def reverse_placeholders(self, text: str) -> str:
+        for value, placeholder in self.placeholders.items():
+            if placeholder in text:
+                text = text.replace(placeholder, "`" if value == "`" else "\\" + value)
+        return text
 
-        for pattern, org in self._reserved_patterns.items():
-            value = value.replace(pattern, org)
-        return value
+    def pop_placeholder_value(self, placeholder: str) -> str | None:
+        return self.placeholders.pop(placeholder, None)
+
+    def get_unique_placeholder(self, text: str) -> str:
+        placeholder = ""
+        while placeholder in text or placeholder in self.placeholders:
+            placeholder = get_random_string(self.placeholder_length)
+        return placeholder
 
     def text_ast(self, text: str, unescape: bool = True) -> dict:
         if unescape:
@@ -168,13 +169,11 @@ class Parser:
         parents = parents + ["paragraph"]
 
         result: list[dict] = []
-        for m in self._paragraph_re.finditer(markup):
+        for m in self.paragraph.finditer(markup):
             result.append(
                 {
                     "type": "paragraph",
-                    "children": self.parse_inline(
-                        m.group(0).strip(), parents, reverse_reservations=True
-                    ),
+                    "children": self.parse_inline(m.group(0).strip(), parents),
                 }
             )
         return result
@@ -183,11 +182,7 @@ class Parser:
         self,
         markup: str,
         parents: list[str],
-        reverse_reservations: bool = False,
     ) -> list[dict]:
-        if reverse_reservations:
-            markup = self.reverse_reservations(markup)
-
         cursor = 0
 
         result: list[dict] = []
