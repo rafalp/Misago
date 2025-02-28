@@ -1,8 +1,6 @@
 import re
 from functools import cached_property
 
-from django.utils.crypto import get_random_string
-
 from ..parents import has_invalid_parent
 from ..parser import Parser, Pattern
 
@@ -49,8 +47,10 @@ class UrlBBCode(Pattern):
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> dict:
         contents = BBCODE_CONTENTS.match(match).groupdict()
 
-        arg = contents["arg"].strip(" \"'") if contents["arg"] else None
-        content = contents["content"]
+        arg = (
+            parser.unescape(contents["arg"].strip(" \"'")) if contents["arg"] else None
+        )
+        content = parser.unescape(contents["content"])
 
         if arg:
             url = clean_url(arg)
@@ -106,7 +106,7 @@ class ImgBBCode(UrlBBCode):
             return parser.text_ast(match)
 
         if alt_text:
-            alt_text = alt_text.strip()
+            alt_text = parser.unescape(alt_text.strip())
 
         return {
             "type": self.pattern_type,
@@ -128,33 +128,35 @@ class UrlMarkdown(Pattern):
     exclude_patterns: list[str] = [INLINE_CODE_PATTERN, IMAGE_PATTERN]
 
     def parse(self, parser: Parser, match: str, parents: list[dict]) -> list[dict]:
-        clean_match, reserved_patterns = self.prepare_match_str(match)
-        return self.parse_clean_match(parser, clean_match, reserved_patterns, parents)
+        clean_match, placeholders = self.prepare_match_str(parser, match)
+        return self.parse_clean_match(parser, clean_match, placeholders, parents)
 
-    def prepare_match_str(self, match: str) -> tuple[str, dict[str, str]]:
+    def prepare_match_str(
+        self, parser: Parser, match: str
+    ) -> tuple[str, dict[str, str]]:
         clean_match: str = ""
-        reserved_patterns = {}
+        placeholders = {}
 
         cursor = 0
         for m in self._exclude_patterns_re.finditer(match):
             if m.start() > cursor:
                 clean_match += match[cursor : m.start()]
 
-            pattern_id = f"%%{get_random_string(8)}%%"
-            clean_match += pattern_id
-            reserved_patterns[pattern_id] = m.group(0)
+            placeholder = parser.get_unique_placeholder(match)
+            clean_match += placeholder
+            placeholders[placeholder] = m.group(0)
             cursor = m.end()
 
         if cursor < len(match):
             clean_match += match[cursor:]
 
-        return clean_match, reserved_patterns
+        return clean_match, placeholders
 
     def parse_clean_match(
         self,
         parser: Parser,
         clean_match: str,
-        reserved_patterns: dict[str, str],
+        placeholders: dict[str, str],
         parents: list[dict],
     ) -> list[dict]:
         ast: list[dict] = []
@@ -165,13 +167,13 @@ class UrlMarkdown(Pattern):
         for i, m in enumerate(urls_starts):
             if m.start() > cursor:
                 markup = clean_match[cursor : m.start()]
-                if reserved_patterns:
-                    markup = self.reverse_text_patterns(markup, reserved_patterns)
+                if placeholders:
+                    markup = self.reverse_placeholders(markup, placeholders)
                 ast += parser.parse_inline(markup, parents)
 
             text = m.group(0)[1:-2]
-            if reserved_patterns:
-                text = self.reverse_text_patterns(text, reserved_patterns)
+            if placeholders:
+                text = self.reverse_placeholders(text, placeholders)
 
             url_source_start = m.end() - 1
             if i < urls_starts_last:
@@ -180,22 +182,28 @@ class UrlMarkdown(Pattern):
             else:
                 url_source = clean_match[url_source_start:]
 
+            title = None
             url, end = self.extract_url_from_source(url_source)
-            if text and url:
+
+            if url:
                 url, title = self.split_url_and_title(url)
+                url = clean_url(parser.unescape(url))
+
+            if text and url:
                 ast.append(
                     {
                         "type": self.pattern_type,
                         "href": url,
-                        "title": title or None,
+                        "title": parser.unescape(title) or None,
                         "children": parser.parse_inline(
                             text, parents + [self.pattern_type]
                         ),
                     }
                 )
                 cursor = m.end() - 1 + end
+
             else:
-                markup = self.reverse_text_patterns(m.group(0), reserved_patterns)
+                markup = self.reverse_placeholders(m.group(0), placeholders)
                 for ast_node in parser.parse_inline(markup, parents):
                     if ast_node["type"] == "text" and ast and ast[-1]["type"] == "text":
                         ast[-1]["text"] += ast_node["text"]
@@ -206,15 +214,15 @@ class UrlMarkdown(Pattern):
 
         if cursor < len(clean_match):
             markup = clean_match[cursor:]
-            if reserved_patterns:
-                markup = self.reverse_text_patterns(markup, reserved_patterns)
+            if placeholders:
+                markup = self.reverse_placeholders(markup, placeholders)
             ast += parser.parse_inline(markup, parents)
 
         return ast
 
-    def reverse_text_patterns(self, text: str, reserved_patterns: dict) -> str:
-        for token, value in reserved_patterns.items():
-            text = text.replace(token, value)
+    def reverse_placeholders(self, text: str, placeholders: dict) -> str:
+        for placeholder, value in placeholders.items():
+            text = text.replace(placeholder, value)
         return text
 
     def extract_url_from_source(self, source: str) -> tuple[str, int]:
@@ -270,12 +278,12 @@ class ImgMarkdown(Pattern):
         contents = IMAGE_CONTENTS.match(match).groupdict()
 
         if contents["alt"]:
-            alt = parser.unescape(contents["alt"]).strip() or None
+            alt = parser.unescape(contents["alt"].strip()) or None
         else:
             alt = None
 
         if contents["title"]:
-            title = parser.unescape(contents["title"]).strip('" ') or None
+            title = parser.unescape(contents["title"].strip('" ')) or None
         else:
             title = None
 

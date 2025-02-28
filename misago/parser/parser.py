@@ -25,8 +25,8 @@ class LineBreak(Pattern):
 
 class Parser:
     escaped_characters = "\\!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
-    escaped_characters_replacements: dict[str, str]
-    escaped_character_replacement_length = 16
+    escaped_characters_placeholders: dict[str, str]
+    escaped_character_placeholder_length = 16
 
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
@@ -45,7 +45,7 @@ class Parser:
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
     ):
-        self.escaped_characters_replacements = {}
+        self.escaped_characters_placeholders = {}
 
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
@@ -66,31 +66,40 @@ class Parser:
         return markup.replace("\r\n", "\n").replace("\r", "\n")
 
     def escape(self, text: str) -> str:
+        if not text:
+            return ""
+
         return self.escape_special_characters(text)
 
     def unescape(self, text: str) -> str:
+        if not text:
+            return ""
+
         return self.unescape_special_characters(text)
 
     def escape_special_characters(self, markup: str) -> str:
         for character in self.escaped_characters:
             escaped_character = f"\\{character}"
             if escaped_character in markup:
-                replacement = ""
-                while replacement in markup:
-                    replacement = get_random_string(
-                        self.escaped_character_replacement_length
-                    )
-
-                self.escaped_characters_replacements[character] = replacement
-                markup = markup.replace(escaped_character, replacement)
+                placeholder = self.get_unique_placeholder(markup)
+                self.escaped_characters_placeholders[character] = placeholder
+                markup = markup.replace(escaped_character, placeholder)
 
         return markup
 
     def unescape_special_characters(self, text: str) -> str:
-        for character, replacement in self.escaped_characters_replacements.items():
-            if replacement in text:
-                text = text.replace(replacement, character)
+        for character, placeholder in self.escaped_characters_placeholders.items():
+            if placeholder in text:
+                text = text.replace(placeholder, character)
         return text
+
+    def get_unique_placeholder(self, text: str) -> str:
+        placeholder = ""
+        while (
+            placeholder in text or placeholder in self.escaped_characters_placeholders
+        ):
+            placeholder = get_random_string(self.escaped_character_placeholder_length)
+        return placeholder
 
     def reserve_patterns(self, markup: str) -> str:
         if not "`" in markup:

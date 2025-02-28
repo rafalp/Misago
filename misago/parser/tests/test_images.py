@@ -17,6 +17,44 @@ def test_image(parse_markup):
     ]
 
 
+def test_image_with_relative_url(parse_markup):
+    result = parse_markup("Hello: ![Image Alt](/uploads/image.jpg)!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello: "},
+                {
+                    "type": "image",
+                    "alt": "Image Alt",
+                    "title": None,
+                    "src": "/uploads/image.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_url_is_unescaped(parse_markup):
+    result = parse_markup("Hello !(https://image\.com/img\.jpg)!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": None,
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_image_with_alt_text(parse_markup):
     result = parse_markup("Hello ![Image Alt](https://image.com/img.jpg)!")
     assert result == [
@@ -103,6 +141,25 @@ def test_image_alt_text_reserved_tokens_are_reversed(parse_markup):
                 {
                     "type": "image",
                     "alt": "`Image`",
+                    "title": None,
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_alt_text_is_unescaped(parse_markup):
+    result = parse_markup("Hello ![\*Image Alt\*](https://image.com/img.jpg)!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": "*Image Alt*",
                     "title": None,
                     "src": "https://image.com/img.jpg",
                 },
@@ -201,6 +258,25 @@ def test_image_title_reserved_tokens_are_reversed(parse_markup):
                     "type": "image",
                     "alt": None,
                     "title": "`Image`",
+                    "src": "https://image.com/img.jpg",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_image_title_is_unescaped(parse_markup):
+    result = parse_markup('Hello !(https://image.com/img.jpg "Lorem \\"ipsum\\"")!')
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "image",
+                    "alt": None,
+                    "title": 'Lorem "ipsum"',
                     "src": "https://image.com/img.jpg",
                 },
                 {"type": "text", "text": "!"},

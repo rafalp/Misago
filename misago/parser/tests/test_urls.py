@@ -51,6 +51,94 @@ def test_url(parse_markup):
     ]
 
 
+def test_url_with_title(parse_markup):
+    result = parse_markup(
+        'Hello [link label](https://example.com/Link "Check it out (new design)!")!'
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://example.com/Link",
+                    "title": "Check it out (new design)!",
+                    "children": [
+                        {"type": "text", "text": "link label"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_unescapes_url(parse_markup):
+    result = parse_markup("Hello [link label](https://localhost\:8000/)!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://localhost:8000/",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "link label"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_unescapes_text(parse_markup):
+    result = parse_markup("Hello [link \[label\]](https://image.com/)!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://image.com/",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "link [label]"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_unescapes_title(parse_markup):
+    result = parse_markup(
+        'Hello [link \[label\]](https://image.com/ "This \\"is\\" title")!'
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url",
+                    "href": "https://image.com/",
+                    "title": 'This "is" title',
+                    "children": [
+                        {"type": "text", "text": "link [label]"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_url_with_image_with_alt_markdown(parse_markup):
     result = parse_markup(
         "Hello [![Image Alt](https://image.com/image.jpg)](https://image.com/)!"
@@ -115,29 +203,6 @@ def test_two_urls_with_image_with_alt_markdown(parse_markup):
                             "title": None,
                             "src": "https://image.com/other.jpg",
                         },
-                    ],
-                },
-                {"type": "text", "text": "!"},
-            ],
-        }
-    ]
-
-
-def test_url_with_title(parse_markup):
-    result = parse_markup(
-        'Hello [link label](https://example.com/Link "Check it out (new design)!")!'
-    )
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [
-                {"type": "text", "text": "Hello "},
-                {
-                    "type": "url",
-                    "href": "https://example.com/Link",
-                    "title": "Check it out (new design)!",
-                    "children": [
-                        {"type": "text", "text": "link label"},
                     ],
                 },
                 {"type": "text", "text": "!"},
@@ -458,25 +523,6 @@ def test_image_after_url(parse_markup):
     ]
 
 
-def test_image_with_relative_url(parse_markup):
-    result = parse_markup("Hello: ![Image Alt](/uploads/image.jpg)!")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [
-                {"type": "text", "text": "Hello: "},
-                {
-                    "type": "image",
-                    "alt": "Image Alt",
-                    "title": None,
-                    "src": "/uploads/image.jpg",
-                },
-                {"type": "text", "text": "!"},
-            ],
-        }
-    ]
-
-
 def test_url_bbcode(parse_markup):
     result = parse_markup("Hello [url]https://image.com/img.jpg[/url]!")
     assert result == [
@@ -495,8 +541,94 @@ def test_url_bbcode(parse_markup):
     ]
 
 
+def test_url_with_escaped_text_between_urls(parse_markup):
+    result = parse_markup(
+        "Lorem ipsum [example](https://example.com) "
+        "dolor \*met\* sit "
+        "[amet](https://example.com) elit."
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Lorem ipsum "},
+                {
+                    "type": "url",
+                    "href": "https://example.com",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "example"},
+                    ],
+                },
+                {"type": "text", "text": " dolor *met* sit "},
+                {
+                    "type": "url",
+                    "href": "https://example.com",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "amet"},
+                    ],
+                },
+                {"type": "text", "text": " elit."},
+            ],
+        }
+    ]
+
+
+def test_url_with_escaped_text_after(parse_markup):
+    result = parse_markup(
+        "Lorem ipsum [example](https://example.com) "
+        "dolor \*met\* sit "
+        "[amet](https://example.com) \*elit\*."
+    )
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Lorem ipsum "},
+                {
+                    "type": "url",
+                    "href": "https://example.com",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "example"},
+                    ],
+                },
+                {"type": "text", "text": " dolor *met* sit "},
+                {
+                    "type": "url",
+                    "href": "https://example.com",
+                    "title": None,
+                    "children": [
+                        {"type": "text", "text": "amet"},
+                    ],
+                },
+                {"type": "text", "text": " *elit*."},
+            ],
+        }
+    ]
+
+
 def test_url_bbcode_url_whitespace_is_stripped(parse_markup):
     result = parse_markup("Hello [url]   https://image.com/img.jpg  [/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "https://image.com/img.jpg",
+                    "children": [],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_url_is_unescaped(parse_markup):
+    result = parse_markup("Hello [url]https://image\.com/img\.jpg[/url]!")
     assert result == [
         {
             "type": "paragraph",
@@ -599,6 +731,26 @@ def test_url_bbcode_with_children_invalid_url(parse_markup):
     ]
 
 
+def test_url_bbcode_with_children_url_is_unescaped(parse_markup):
+    result = parse_markup("Hello [url=example\.com]Alt text[/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "example.com",
+                    "children": [
+                        {"type": "text", "text": "Alt text"},
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_url_bbcode_children_are_parsed(parse_markup):
     result = parse_markup("Hello [url=example.com]Alt **text**[/url]!")
     assert result == [
@@ -617,6 +769,26 @@ def test_url_bbcode_children_are_parsed(parse_markup):
                                 {"type": "text", "text": "text"},
                             ],
                         },
+                    ],
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
+def test_url_bbcode_children_are_unescaped(parse_markup):
+    result = parse_markup("Hello [url=example.com]Alt text\[/url\][/url]!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "url-bbcode",
+                    "href": "example.com",
+                    "children": [
+                        {"type": "text", "text": "Alt text[/url]"},
                     ],
                 },
                 {"type": "text", "text": "!"},
