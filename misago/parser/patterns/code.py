@@ -72,13 +72,18 @@ class CodeBBCode(Pattern):
 
 class InlineCodeMarkdown(Pattern):
     pattern_type: str = "code-inline"
-    pattern: str = r"`.*`"
+    pattern: str = r"`.+?(\n.+?)*?`"
     linebreaks_pattern = re.compile(r"\n+")
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        code = parser.reverse_placeholders(parser.pop_placeholder_value(match[1:-1]))
+        code = parser.placeholders.pop(match[1:-1])[1:-1]
+
+        for value, placeholder in parser.placeholders.items():
+            if placeholder in code:
+                replacement = "`" if value == "`" else "\\" + value
+                code = code.replace(placeholder, replacement)
 
         return {
             "type": self.pattern_type,
-            "code": code,
+            "code": code.replace("\n", " "),
         }

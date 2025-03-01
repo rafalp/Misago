@@ -33,7 +33,7 @@ class Parser:
     inline_patterns: list[Pattern]
     post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
 
-    inline_code = re.compile(r"(?<!`)`.+`(?!`)")
+    inline_code = re.compile(r"(?<!`)`.+?(\n.+?)*?`(?!`)")
     paragraph = re.compile(r".+(\n.+)*")
 
     def __init__(
@@ -77,10 +77,7 @@ class Parser:
         if not text:
             return ""
 
-        for value, placeholder in self.placeholders.items():
-            if placeholder in text:
-                text = text.replace(placeholder, value)
-        return text
+        return self.replace_placeholders(text)
 
     def escape_special_characters(self, markup: str) -> str:
         for character in self.escaped_characters:
@@ -102,7 +99,7 @@ class Parser:
                 return match_str
 
             placeholder = self.get_unique_placeholder(markup)
-            self.placeholders[placeholder] = match_str[1:-1]
+            self.placeholders[placeholder] = match_str
             return f"`{placeholder}`"
 
         return self.inline_code.sub(replace_pattern, markup)
@@ -112,15 +109,6 @@ class Parser:
             if placeholder in text:
                 text = text.replace(placeholder, value)
         return text
-
-    def reverse_placeholders(self, text: str) -> str:
-        for value, placeholder in self.placeholders.items():
-            if placeholder in text:
-                text = text.replace(placeholder, "`" if value == "`" else "\\" + value)
-        return text
-
-    def pop_placeholder_value(self, placeholder: str) -> str | None:
-        return self.placeholders.pop(placeholder, None)
 
     def get_unique_placeholder(self, text: str) -> str:
         placeholder = ""

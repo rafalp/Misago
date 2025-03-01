@@ -42,17 +42,21 @@ def test_inline_code_linebreak_is_replaced_with_space(parse_markup):
     ]
 
 
-def test_inline_code_linebreaks_are_replaced_with_single_space(parse_markup):
+def test_inline_code_multiple_linebreaks_dont_match(parse_markup):
     result = parse_markup("Hello `lorem\n\n\n\nipsum`.")
     assert result == [
         {
             "type": "paragraph",
             "children": [
-                {"type": "text", "text": "Hello "},
-                {"type": "code-inline", "code": "lorem ipsum"},
-                {"type": "text", "text": "."},
+                {"type": "text", "text": "Hello `lorem"},
             ],
-        }
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "ipsum`."},
+            ],
+        },
     ]
 
 
@@ -78,6 +82,34 @@ def test_inline_code_content_is_skipped_by_inline_parser(parse_markup):
             "children": [
                 {"type": "text", "text": "Hello "},
                 {"type": "code-inline", "code": "<http://misago-project.org>"},
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_inline_code_preserves_escape_strings(parse_markup):
+    result = parse_markup("Hello `wor\+ld`.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {"type": "code-inline", "code": "wor\+ld"},
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
+def test_inline_code_maintains_escaped_inline_character(parse_markup):
+    result = parse_markup("This is how: `\`escaped text\``.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "This is how: "},
+                {"type": "code-inline", "code": "`escaped text`"},
                 {"type": "text", "text": "."},
             ],
         }
