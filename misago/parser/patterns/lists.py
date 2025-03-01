@@ -60,7 +60,7 @@ class ListMarkdown(Pattern):
                     raw_level,
                     clean_level,
                     marker,
-                    parser.parse_inline(text, parents, reverse_reservations=True),
+                    parser.parse_inline(text, parents),
                 )
             )
 

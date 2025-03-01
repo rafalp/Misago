@@ -1,46 +1,72 @@
 import re
-from textwrap import dedent
 
 from ..parser import Parser, Pattern
 
-BLOCK_START = r"(\n|^)"
-BLOCK_END = r"(\s+)?($|\n)"
-CODE_FENCE = r"(```(.+)?\n(.|\n)+?\n```)"
-CODE_FENCE_ALT = r"(~~~(.+)?\n(.|\n)+?\n~~~)"
 
-CODE_FENCE_CONTENTS = re.compile(r"(?P<syntax>(.+))?\n(?P<code>(.|\n)+)\n")
+def dedent_and_strip(text: str) -> str:
+    lines = text.strip("\n").splitlines()
+    min_spaces = min(len(line) - len(line.lstrip()) for line in lines if line.strip())
+    return "\n".join(line[min_spaces:] if line.strip() else "" for line in lines)
+
+
+def unescape(parser: Parser, code: str) -> str:
+    for placeholder, value in parser.string_placeholders.items():
+        if placeholder in code:
+            code = code.replace(placeholder, value)
+
+    for value, placeholder in parser.character_placeholders.items():
+        if placeholder in code:
+            code = code.replace(placeholder, "\\" + value)
+
+    return code
 
 
 class FencedCodeMarkdown(Pattern):
     pattern_type: str = "code"
-    pattern: str = BLOCK_START + f"{CODE_FENCE}|{CODE_FENCE_ALT}" + BLOCK_END
+    pattern: str = (
+        r"(^|\n)"
+        r"("
+        r"(```.*(\n.*)*?\n```(?=\n|$))"
+        r"|(~~~.*(\n.*)*?\n~~~(?=\n|$))"
+        r"|(```.*(\n.*)*)"
+        r"|(~~~.*(\n.*)*)"
+        r")"
+    )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        contents = CODE_FENCE_CONTENTS.match(match.strip()[3:-3])
-        syntax = str(contents.group("syntax") or "").strip()
-        if syntax:
-            syntax = parser.reverse_reservations(syntax)
+        # TODO:
+        # Test empty code block
+        # Test unclosed code block
+        # Test unescaping
+        # Test unescaping inline code in code block
+        match = match.strip("\n")
+        if match.startswith("```") or match.startswith("~~~"):
+            match = match[3:]
+        if match.endswith("```") or match.endswith("~~~"):
+            match = match[:-3]
+
+        match = match.rstrip("\n")
+
+        syntax = parser.unescape(match[: match.index("\n")].strip())
+        code = unescape(parser, match[match.index("\n") :]).strip("\n")
+        code = "\n".join(line if line.strip() else "" for line in code.splitlines())
 
         return {
             "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": parser.reverse_reservations(
-                contents.group("code").lstrip("\n").rstrip(),
-            ),
+            "code": code,
         }
 
 
 class IndentedCodeMarkdown(Pattern):
     pattern_type = "code-indented"
-    pattern: str = r"(\n|^) {4}.+(\n {4}.+)*"
+    pattern: str = r"(^|\n) {4}.+" r"((\n *)*\n+ {4}.+)*"
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         return {
             "type": self.pattern_type,
             "syntax": None,
-            "code": parser.reverse_reservations(
-                dedent(match.strip("\n")).strip(),
-            ),
+            "code": dedent_and_strip(unescape(parser, match)),
         }
 
 
@@ -56,14 +82,12 @@ class CodeBBCode(Pattern):
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         contents = CODE_BBCODE_CONTENTS.match(match.strip())
-        syntax = str(contents.group("syntax") or "").strip("\"' ")
-        if syntax:
-            syntax = parser.reverse_reservations(syntax)
+        syntax = parser.unescape(str(contents.group("syntax") or "").strip("\"' "))
 
         return {
             "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": parser.reverse_reservations(
+            "code": parser.unescape(
                 dedent(contents.group("code").rstrip()).strip(),
             ),
         }
@@ -71,15 +95,18 @@ class CodeBBCode(Pattern):
 
 class InlineCodeMarkdown(Pattern):
     pattern_type: str = "code-inline"
-    pattern: str = r"(?<!\\)`(.|\n)*?(?<!\\)`"
+    pattern: str = r"`.+?(\n.+?)*?`"
     linebreaks_pattern = re.compile(r"\n+")
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        code = match.strip("`")
-        if "\n" in code:
-            code = self.linebreaks_pattern.sub(" ", code)
+        code = parser.string_placeholders.pop(match[1:-1])
+
+        for value, placeholder in parser.character_placeholders.items():
+            if placeholder in code:
+                replacement = "`" if value == "`" else "\\" + value
+                code = code.replace(placeholder, replacement)
 
         return {
             "type": self.pattern_type,
-            "code": code,
+            "code": code.replace("\n", " "),
         }

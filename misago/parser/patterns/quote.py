@@ -28,14 +28,12 @@ class QuoteBBCodeOpen(Pattern):
     pattern: str = r"\[quote(=.*?)?\]"
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        args = parse_args(
-            parser.reverse_reservations(match[6:-1].strip("\"' =")),
-        )
+        args = parse_args(match[6:-1].strip("\"' ="))
 
         return {
             "type": self.pattern_type,
-            "author": args["author"],
-            "post": args["post"],
+            "author": parser.unescape(args["author"]),
+            "post": parser.unescape(args["post"]),
         }
 
 

@@ -16,7 +16,6 @@ from .code import (
     IndentedCodeMarkdown,
     InlineCodeMarkdown,
 )
-from .escape import Escape, unescape_markup
 from .headings import AtxHeading, SetexHeading
 from .lists import ListMarkdown
 from .markdown import (
@@ -106,5 +105,4 @@ inline_patterns: list[Pattern] = [
     url_bbcode,
     auto_url,
     mention,
-    Escape(),
 ]

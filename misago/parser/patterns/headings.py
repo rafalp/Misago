@@ -19,9 +19,7 @@ class AtxHeading(Pattern):
             "type": self.pattern_type,
             "level": level,
             "children": parser.parse_inline(
-                content.strip(),
-                parents + [self.pattern_type],
-                reverse_reservations=True,
+                content.strip(), parents + [self.pattern_type]
             ),
         }
 
@@ -39,8 +37,6 @@ class SetexHeading(Pattern):
             "type": self.pattern_type,
             "level": 1 if underline[0] == "=" else 2,
             "children": parser.parse_inline(
-                content.strip(),
-                parents + [self.pattern_type],
-                reverse_reservations=True,
+                content.strip(), parents + [self.pattern_type]
             ),
         }
