@@ -10,10 +10,22 @@ CODE_FENCE_ALT = r"(~~~(.+)?\n(.|\n)+?\n~~~)"
 CODE_FENCE_CONTENTS = re.compile(r"(?P<syntax>(.+))?\n(?P<code>(.|\n)+)\n")
 
 
-def dedent(text: str) -> str:
-    lines = text.splitlines()
+def dedent_and_strip(text: str) -> str:
+    lines = text.strip("\n").splitlines()
     min_spaces = min(len(line) - len(line.lstrip()) for line in lines if line.strip())
     return "\n".join(line[min_spaces:] if line.strip() else "" for line in lines)
+
+
+def unescape(parser: Parser, code: str) -> str:
+    for placeholder, value in parser.placeholders.items():
+        if len(placeholder) == parser.placeholder_length and placeholder in code:
+            code = code.replace(placeholder, value)
+
+    for value, placeholder in parser.placeholders.items():
+        if len(value) == 1 and placeholder in code:
+            code = code.replace(placeholder, "\\" + value)
+
+    return code
 
 
 class FencedCodeMarkdown(Pattern):
@@ -27,7 +39,7 @@ class FencedCodeMarkdown(Pattern):
         return {
             "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": parser.unescape(
+            "code": unescape(
                 contents.group("code").lstrip("\n").rstrip(),
             ),
         }
@@ -35,14 +47,14 @@ class FencedCodeMarkdown(Pattern):
 
 class IndentedCodeMarkdown(Pattern):
     pattern_type = "code-indented"
-    pattern: str = r"(\n|^) {4}.+(\n+ {4}.+)*"
+    pattern: str = r"(^|\n) {4}.+" r"((\n *)*\n+ {4}.+)*"
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         return {
             "type": self.pattern_type,
             "syntax": None,
-            "code": parser.unescape(
-                dedent(match.strip("\n")).strip(),
+            "code": dedent_and_strip(
+                unescape(parser, match),
             ),
         }
 
@@ -76,7 +88,7 @@ class InlineCodeMarkdown(Pattern):
     linebreaks_pattern = re.compile(r"\n+")
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        code = parser.placeholders.pop(match[1:-1])[1:-1]
+        code = parser.placeholders.pop(match[1:-1])
 
         for value, placeholder in parser.placeholders.items():
             if placeholder in code:

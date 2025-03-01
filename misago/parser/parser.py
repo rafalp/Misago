@@ -99,7 +99,7 @@ class Parser:
                 return match_str
 
             placeholder = self.get_unique_placeholder(markup)
-            self.placeholders[placeholder] = match_str
+            self.placeholders[placeholder] = match_str[1:-1]
             return f"`{placeholder}`"
 
         return self.inline_code.sub(replace_pattern, markup)
