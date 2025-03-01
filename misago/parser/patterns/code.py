@@ -2,13 +2,6 @@ import re
 
 from ..parser import Parser, Pattern
 
-BLOCK_START = r"(\n|^)"
-BLOCK_END = r"(\s+)?($|\n)"
-CODE_FENCE = r"(```(.+)?\n(.|\n)+?\n```)"
-CODE_FENCE_ALT = r"(~~~(.+)?\n(.|\n)+?\n~~~)"
-
-CODE_FENCE_CONTENTS = re.compile(r"(?P<syntax>(.+))?\n(?P<code>(.|\n)+)\n")
-
 
 def dedent_and_strip(text: str) -> str:
     lines = text.strip("\n").splitlines()
@@ -30,18 +23,38 @@ def unescape(parser: Parser, code: str) -> str:
 
 class FencedCodeMarkdown(Pattern):
     pattern_type: str = "code"
-    pattern: str = BLOCK_START + f"{CODE_FENCE}|{CODE_FENCE_ALT}" + BLOCK_END
+    pattern: str = (
+        r"(^|\n)"
+        r"("
+        r"(```.*(\n.*)*?\n```(?=\n|$))"
+        r"|(~~~.*(\n.*)*?\n~~~(?=\n|$))"
+        r"|(```.*(\n.*)*)"
+        r"|(~~~.*(\n.*)*)"
+        r")"
+    )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        contents = CODE_FENCE_CONTENTS.match(match.strip()[3:-3])
-        syntax = parser.unescape(str(contents.group("syntax") or "").strip())
+        # TODO:
+        # Test empty code block
+        # Test unclosed code block
+        # Test unescaping
+        # Test unescaping inline code in code block
+        match = match.strip("\n")
+        if match.startswith("```") or match.startswith("~~~"):
+            match = match[3:]
+        if match.endswith("```") or match.endswith("~~~"):
+            match = match[:-3]
+
+        match = match.rstrip("\n")
+
+        syntax = parser.unescape(match[: match.index("\n")].strip())
+        code = unescape(parser, match[match.index("\n") :]).strip("\n")
+        code = "\n".join(line if line.strip() else "" for line in code.splitlines())
 
         return {
             "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": unescape(
-                contents.group("code").lstrip("\n").rstrip(),
-            ),
+            "code": code,
         }
 
 
@@ -53,9 +66,7 @@ class IndentedCodeMarkdown(Pattern):
         return {
             "type": self.pattern_type,
             "syntax": None,
-            "code": dedent_and_strip(
-                unescape(parser, match),
-            ),
+            "code": dedent_and_strip(unescape(parser, match)),
         }
 
 
