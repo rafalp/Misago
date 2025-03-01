@@ -26,7 +26,8 @@ class LineBreak(Pattern):
 class Parser:
     escaped_characters = "\\!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
 
-    placeholders: dict[str, str]
+    character_placeholders: dict[str, str]
+    string_placeholders: dict[str, str]
     placeholder_length = 16
 
     block_patterns: list[Pattern]
@@ -44,7 +45,8 @@ class Parser:
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
     ):
-        self.placeholders = {}
+        self.character_placeholders = {}
+        self.string_placeholders = {}
 
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
@@ -77,14 +79,17 @@ class Parser:
         if not text:
             return ""
 
-        return self.replace_placeholders(text)
+        text = self.replace_string_placeholders(text)
+        text = self.replace_character_placeholders(text)
+
+        return text
 
     def escape_special_characters(self, markup: str) -> str:
         for character in self.escaped_characters:
             escaped_character = f"\\{character}"
             if escaped_character in markup:
                 placeholder = self.get_unique_placeholder(markup)
-                self.placeholders[character] = placeholder
+                self.character_placeholders[character] = placeholder
                 markup = markup.replace(escaped_character, placeholder)
 
         return markup
@@ -99,20 +104,26 @@ class Parser:
                 return match_str
 
             placeholder = self.get_unique_placeholder(markup)
-            self.placeholders[placeholder] = match_str[1:-1]
+            self.string_placeholders[placeholder] = match_str[1:-1]
             return f"`{placeholder}`"
 
         return self.inline_code.sub(replace_pattern, markup)
 
-    def replace_placeholders(self, text: str) -> str:
-        for value, placeholder in self.placeholders.items():
+    def replace_character_placeholders(self, text: str) -> str:
+        for value, placeholder in self.character_placeholders.items():
             if placeholder in text:
                 text = text.replace(placeholder, value)
         return text
 
+    def replace_string_placeholders(self, text: str) -> str:
+        for placeholder, string in self.string_placeholders.items():
+            if placeholder in text:
+                text = text.replace(placeholder, string)
+        return text
+
     def get_unique_placeholder(self, text: str) -> str:
         placeholder = ""
-        while placeholder in text or placeholder in self.placeholders:
+        while placeholder in text:
             placeholder = get_random_string(self.placeholder_length)
         return placeholder
 

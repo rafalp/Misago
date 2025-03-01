@@ -17,12 +17,12 @@ def dedent_and_strip(text: str) -> str:
 
 
 def unescape(parser: Parser, code: str) -> str:
-    for placeholder, value in parser.placeholders.items():
-        if len(placeholder) == parser.placeholder_length and placeholder in code:
+    for placeholder, value in parser.string_placeholders.items():
+        if placeholder in code:
             code = code.replace(placeholder, value)
 
-    for value, placeholder in parser.placeholders.items():
-        if len(value) == 1 and placeholder in code:
+    for value, placeholder in parser.character_placeholders.items():
+        if placeholder in code:
             code = code.replace(placeholder, "\\" + value)
 
     return code
@@ -88,9 +88,9 @@ class InlineCodeMarkdown(Pattern):
     linebreaks_pattern = re.compile(r"\n+")
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        code = parser.placeholders.pop(match[1:-1])
+        code = parser.string_placeholders.pop(match[1:-1])
 
-        for value, placeholder in parser.placeholders.items():
+        for value, placeholder in parser.character_placeholders.items():
             if placeholder in code:
                 replacement = "`" if value == "`" else "\\" + value
                 code = code.replace(placeholder, replacement)
