@@ -26,26 +26,22 @@ class FencedCodeMarkdown(Pattern):
     pattern: str = (
         r"(^|\n)"
         r"("
-        r"(```.*(\n.*)*?\n```(?=\n|$))"
-        r"|(~~~.*(\n.*)*?\n~~~(?=\n|$))"
+        r"((?P<delimiter>```+).*(\n.*)*?\n(?P=delimiter) *(?=\n|$))"
+        r"|((?P<delimiter2>~~~+).*(\n.*)*?\n(?P=delimiter2) *(?=\n|$))"
         r"|(```.*(\n.*)*)"
         r"|(~~~.*(\n.*)*)"
         r")"
     )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        # TODO:
-        # Test empty code block
-        # Test unclosed code block
-        # Test unescaping
-        # Test unescaping inline code in code block
-        match = match.strip("\n")
-        if match.startswith("```") or match.startswith("~~~"):
-            match = match[3:]
-        if match.endswith("```") or match.endswith("~~~"):
-            match = match[:-3]
+        match = match.lstrip()
 
-        match = match.rstrip("\n")
+        delimiter = match[0]
+        delimiter_len = len(match) - len(match.lstrip(delimiter))
+
+        match = match[delimiter_len:]
+        if match.rstrip().endswith(delimiter * delimiter_len):
+            match = match.rstrip()[: -1 * delimiter_len]
 
         syntax = parser.unescape(match[: match.index("\n")].strip())
         code = unescape(parser, match[match.index("\n") :]).strip("\n")

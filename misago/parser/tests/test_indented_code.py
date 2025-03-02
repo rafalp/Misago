@@ -88,7 +88,7 @@ def test_indented_code_is_continued_after_lines_with_spaces(parse_markup):
     ]
 
 
-def test_indented_code_unescapes_characters(parse_markup):
+def test_indented_code_preserves_escaping_characters(parse_markup):
     result = parse_markup(
         """
         Code:
@@ -109,7 +109,7 @@ def test_indented_code_unescapes_characters(parse_markup):
     ]
 
 
-def test_indented_code_unescapes_inline_code(parse_markup):
+def test_indented_code_preserves_inline_code(parse_markup):
     result = parse_markup(
         """
         Code:
