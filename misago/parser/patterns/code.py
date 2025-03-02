@@ -26,8 +26,8 @@ class FencedCodeMarkdown(Pattern):
     pattern: str = (
         r"(^|\n)"
         r"("
-        r"((?P<delimiter>```+).*(\n.*)*?\n(?P=delimiter) *(?=\n|$))"
-        r"|((?P<delimiter2>~~~+).*(\n.*)*?\n(?P=delimiter2) *(?=\n|$))"
+        r"((?P<codedelimiter>```+).*(\n.*)*?\n(?P=codedelimiter) *(?=\n|$))"
+        r"|((?P<codedelimiter2>~~~+).*(\n.*)*?\n(?P=codedelimiter2) *(?=\n|$))"
         r"|(```.*(\n.*)*)"
         r"|(~~~.*(\n.*)*)"
         r")"
