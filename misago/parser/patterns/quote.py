@@ -5,13 +5,12 @@ from ..parser import Parser, Pattern
 
 class QuoteMarkdown(Pattern):
     pattern_type: str = "quote"
-    pattern: str = r"(\n|^) ? ? ?>.*(\n ? ? ?>.*)*"
+    pattern: str = r"(^|\n) {0,3}>.*(\n{0,3}>.*)*"
 
     def parse(
         self, parser: Parser, match: str, parents: list[str]
     ) -> dict | list[dict]:
-        content = clean_quote_markdown_content(match)
-
+        content = self.strip_quote_prefix(match)
         if not content.strip():
             return []
 
@@ -20,9 +19,8 @@ class QuoteMarkdown(Pattern):
             "children": parser.parse_blocks(content, parents + [self.pattern_type]),
         }
 
-
-def clean_quote_markdown_content(match: str) -> str:
-    return "\n".join(line.lstrip()[1:] for line in match.splitlines())
+    def strip_quote_prefix(self, match: str) -> str:
+        return "\n".join(line.lstrip()[1:] for line in match.splitlines())
 
 
 class QuoteBBCodeOpen(Pattern):
