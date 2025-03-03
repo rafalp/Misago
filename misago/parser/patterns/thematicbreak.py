@@ -4,7 +4,13 @@ from ..parser import Parser, Pattern
 class ThematicBreakMarkdown(Pattern):
     pattern_type: str = "thematic-break"
     pattern: str = (
-        r"(\n|^) {0,3}((-\s*-\s*-(\s*-)*)|(_\s*_\s*_(\s*_)*)|(\*\s*\*\s*\*(\s*\*)*))\s*(\n|$)"
+        r"(\n|^)"
+        r" {0,3}"
+        r"("
+        r"(- *- *-( *-)*)"
+        r"|(_ *_ *_( *_)*)"
+        r"|(\* *\* *\*( *\*)*)"
+        r") *(\n|$)"
     )
 
     def parse(

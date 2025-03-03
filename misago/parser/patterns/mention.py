@@ -12,4 +12,4 @@ class Mention(Pattern):
         if has_invalid_parent(self.invalid_parents, parents):
             return parser.text_ast(match)
 
-        return {"type": self.pattern_type, "username": match[1:]}
+        return {"type": self.pattern_type, "username": parser.unescape(match[1:])}
