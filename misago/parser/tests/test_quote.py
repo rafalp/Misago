@@ -99,3 +99,20 @@ def test_nested_quote(parse_markup):
             ],
         }
     ]
+
+
+def test_quote_unescapes_text(parse_markup):
+    result = parse_markup("> Lorem \*ipsum\*")
+    assert result == [
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {"type": "text", "text": "Lorem *ipsum*"},
+                    ],
+                },
+            ],
+        }
+    ]

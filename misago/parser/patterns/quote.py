@@ -1,3 +1,5 @@
+import re
+
 from ..parser import Parser, Pattern
 
 
@@ -26,24 +28,64 @@ def clean_quote_markdown_content(match: str) -> str:
 class QuoteBBCodeOpen(Pattern):
     pattern_type: str = "quote-bbcode-open"
     pattern: str = r"\[quote(=.*?)?\]"
+    user_post_pattern = re.compile(
+        r"^(?P<user>[a-zA-Z0-9]+) *[;,] +post: *(?P<post>[0-9]+) *$"
+    )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        args = parse_args(match[6:-1].strip("\"' ="))
+        match = match[6:-1]
+        if match and match[0] == "=":
+            match = match[1:]
+
+        match = match.strip("\"' ")
+        if args := self.parse_user_post_args(parser, match):
+            return {
+                "type": self.pattern_type,
+                "user": parser.unescape(args["user"]) or None,
+                "post": parser.unescape(args["post"]) or None,
+                "info": None,
+            }
+
+        if info := match.strip():
+            return {
+                "type": self.pattern_type,
+                "user": None,
+                "post": None,
+                "info": parser.parse_inline(info, parents + ["quote-info"]) or [],
+            }
 
         return {
             "type": self.pattern_type,
-            "author": parser.unescape(args["author"]),
-            "post": parser.unescape(args["post"]),
+            "user": None,
+            "post": None,
+            "info": None,
         }
+
+    def parse_user_post_args(self, parser: Parser, args: str) -> dict | None:
+        match = self.user_post_pattern.match(args)
+        if not match:
+            return None
+
+        user = parser.unescape(match.group("user"))
+        post = match.group("post")
+
+        try:
+            post = int(post)
+            if post < 1:
+                return None
+        except (TypeError, ValueError):
+            return None
+
+        return {"user": user, "post": post}
 
 
 def parse_args(args: str) -> dict:
     if "post:" not in args:
-        return {"author": args or None, "post": None}
+        return {"user": args or None, "post": None}
 
-    data = {"author": None, "post": None}
+    data = {"user": None, "post": None}
     post_pos = args.rfind("post:")
-    data["author"] = args[:post_pos].rstrip("; ") or None
+    data["user"] = args[:post_pos].rstrip("; ") or None
     try:
         post_id = int(args[post_pos + 5 :].strip())
         if post_id > 0:

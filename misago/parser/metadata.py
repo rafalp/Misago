@@ -65,8 +65,6 @@ def _update_ast_metadata_from_node_action(
         metadata["usernames"].add(slugify(ast_node["username"]))
 
     elif ast_node["type"] == "quote-bbcode":
-        if ast_node["author"]:
-            metadata["usernames"].add(slugify(ast_node["author"]))
         if ast_node["post"]:
             metadata["posts"]["ids"].add(ast_node["post"])
 

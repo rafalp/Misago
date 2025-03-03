@@ -166,8 +166,14 @@ def _render_ast_node_to_plaintext_action(
             context, ast_node["children"], metadata, text_format
         )
 
-        if author := ast_node.get("author"):
-            return f"{author}: {children}"
+        if user := ast_node.get("user"):
+            return f"{user}: {children}"
+
+        if ast_node.get("info"):
+            info = render_children_ast_to_plaintext(
+                context, ast_node["info"], metadata, text_format
+            )
+            return f"{info}: {children}"
 
         return children
 
