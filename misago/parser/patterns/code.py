@@ -1,4 +1,5 @@
 import re
+from textwrap import dedent
 
 from ..parser import Parser, Pattern
 
@@ -66,25 +67,24 @@ class IndentedCodeMarkdown(Pattern):
         }
 
 
-CODE_BBCODE_PATTERN = r"\[code(=.+)?\]((.|\n)*?)\[\/code\]"
-CODE_BBCODE_CONTENTS = re.compile(
-    r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[\/code\]", re.IGNORECASE
-)
-
-
 class CodeBBCode(Pattern):
     pattern_type: str = "code-bbcode"
-    pattern: str = CODE_BBCODE_PATTERN
+    pattern: str = r"\[code(=.+)?\]((.|\n)*?)\[\/code\]"
+    contents_pattern = re.compile(
+        r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[\/code\]",
+        re.IGNORECASE,
+    )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        contents = CODE_BBCODE_CONTENTS.match(match.strip())
-        syntax = parser.unescape(str(contents.group("syntax") or "").strip("\"' "))
+        contents = self.contents_pattern.match(match.strip())
+        syntax = parser.unescape((contents.group("syntax") or "").strip("\"'")).strip()
 
         return {
             "type": self.pattern_type,
             "syntax": syntax or None,
-            "code": parser.unescape(
-                dedent(contents.group("code").rstrip()).strip(),
+            "code": unescape(
+                parser,
+                dedent(contents.group("code").lstrip("\n").rstrip()).rstrip(),
             ),
         }
 
