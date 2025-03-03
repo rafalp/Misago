@@ -20,7 +20,13 @@ class QuoteMarkdown(Pattern):
         }
 
     def strip_quote_prefix(self, match: str) -> str:
-        return "\n".join(line.lstrip()[1:] for line in match.splitlines())
+        lines: list[str] = []
+        for line in match.splitlines():
+            line = line.lstrip()[1:]
+            if line and line[0] == " ":
+                line = line[1:]
+            lines.append(line)
+        return "\n".join(lines)
 
 
 class QuoteBBCodeOpen(Pattern):
