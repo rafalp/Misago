@@ -169,10 +169,7 @@ def _render_ast_node_to_plaintext_action(
         if user := ast_node.get("user"):
             return f"{user}: {children}"
 
-        if ast_node.get("info"):
-            info = render_children_ast_to_plaintext(
-                context, ast_node["info"], metadata, text_format
-            )
+        if info := ast_node.get("info"):
             return f"{info}: {children}"
 
         return children
@@ -182,8 +179,8 @@ def _render_ast_node_to_plaintext_action(
             context, ast_node["children"], metadata, text_format
         )
 
-        if summary := ast_node["summary"]:
-            return f"{summary}: {children}"
+        if info := ast_node.get("info"):
+            return f"{info}: {children}"
 
         return children
 

@@ -39,9 +39,8 @@ class QuoteBBCodeOpen(Pattern):
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         match = match[6:-1]
         if match and match[0] == "=":
-            match = match[1:]
+            match = match[1:].strip("\"' ")
 
-        match = match.strip("\"' ")
         if args := self.parse_user_post_args(parser, match):
             return {
                 "type": self.pattern_type,
@@ -55,7 +54,7 @@ class QuoteBBCodeOpen(Pattern):
                 "type": self.pattern_type,
                 "user": None,
                 "post": None,
-                "info": parser.parse_inline(info, parents + ["quote-info"]) or [],
+                "info": parser.unescape(info).strip() or None,
             }
 
         return {

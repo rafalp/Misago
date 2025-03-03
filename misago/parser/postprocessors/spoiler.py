@@ -18,6 +18,6 @@ class SpoilerBBCodePostProcessor(BlockPostProcessor):
 
         return {
             "type": "spoiler-bbcode",
-            "summary": opening_block["summary"],
+            "info": opening_block["info"],
             "children": self(parser, children),
         }

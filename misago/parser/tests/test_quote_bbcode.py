@@ -41,9 +41,7 @@ def test_quote_bbcode_with_info(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": "Dune, part 2"},
-            ],
+            "info": "Dune, part 2",
             "children": [
                 {
                     "type": "paragraph",
@@ -79,9 +77,7 @@ def test_quote_bbcode_with_author_and_empty_post(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": "John; post:"},
-            ],
+            "info": "John; post:",
             "children": [
                 {
                     "type": "paragraph",
@@ -99,9 +95,7 @@ def test_quote_bbcode_with_author_and_invalid_post(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": "John; post:dsadsa"},
-            ],
+            "info": "John; post:dsadsa",
             "children": [
                 {
                     "type": "paragraph",
@@ -119,9 +113,7 @@ def test_quote_bbcode_without_author_and_with_post(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": "post:2137"},
-            ],
+            "info": "post:2137",
             "children": [
                 {
                     "type": "paragraph",
@@ -139,9 +131,7 @@ def test_quote_bbcode_with_extra_post(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": "John; post:1; post:3"},
-            ],
+            "info": "John; post:1; post:3",
             "children": [
                 {
                     "type": "paragraph",
@@ -177,9 +167,7 @@ def test_quote_bbcode_strips_quotations_and_spaces_from_info(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": "Dune, part 2"},
-            ],
+            "info": "Dune, part 2",
             "children": [
                 {
                     "type": "paragraph",
@@ -197,9 +185,7 @@ def test_quote_bbcode_unescapes_info(parse_markup):
             "type": "quote-bbcode",
             "user": None,
             "post": None,
-            "info": [
-                {"type": "text", "text": 'Dune, "part 2"'},
-            ],
+            "info": 'Dune, "part 2"',
             "children": [
                 {
                     "type": "paragraph",

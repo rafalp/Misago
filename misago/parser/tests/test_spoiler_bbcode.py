@@ -3,7 +3,7 @@ def test_spoiler_bbcode(parse_markup):
     assert result == [
         {
             "type": "spoiler-bbcode",
-            "summary": None,
+            "info": None,
             "children": [
                 {
                     "type": "paragraph",
@@ -14,12 +14,12 @@ def test_spoiler_bbcode(parse_markup):
     ]
 
 
-def test_spoiler_bbcode_with_empty_summary(parse_markup):
+def test_spoiler_bbcode_with_empty_info(parse_markup):
     result = parse_markup("[spoiler=]Hello world![/spoiler]")
     assert result == [
         {
             "type": "spoiler-bbcode",
-            "summary": None,
+            "info": None,
             "children": [
                 {
                     "type": "paragraph",
@@ -30,12 +30,12 @@ def test_spoiler_bbcode_with_empty_summary(parse_markup):
     ]
 
 
-def test_spoiler_bbcode_with_summary(parse_markup):
+def test_spoiler_bbcode_with_info(parse_markup):
     result = parse_markup("[spoiler=Dune, part 2]Hello world![/spoiler]")
     assert result == [
         {
             "type": "spoiler-bbcode",
-            "summary": "Dune, part 2",
+            "info": "Dune, part 2",
             "children": [
                 {
                     "type": "paragraph",
@@ -46,12 +46,28 @@ def test_spoiler_bbcode_with_summary(parse_markup):
     ]
 
 
-def test_spoiler_bbcode_strips_quotations_and_spaces_from_summary(parse_markup):
+def test_spoiler_bbcode_strips_quotations_and_spaces_from_info(parse_markup):
     result = parse_markup('[spoiler="  Dune, part 2 "]Hello world![/spoiler]')
     assert result == [
         {
             "type": "spoiler-bbcode",
-            "summary": "Dune, part 2",
+            "info": "Dune, part 2",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [{"type": "text", "text": "Hello world!"}],
+                },
+            ],
+        },
+    ]
+
+
+def test_spoiler_bbcode_unescapes_info(parse_markup):
+    result = parse_markup('[spoiler="Dune, \\"part 2\\""]Hello world![/spoiler]')
+    assert result == [
+        {
+            "type": "spoiler-bbcode",
+            "info": 'Dune, "part 2"',
             "children": [
                 {
                     "type": "paragraph",
@@ -91,7 +107,7 @@ def test_spoiler_bbcode_next_to_paragraph_is_parsed(parse_markup):
         },
         {
             "type": "spoiler-bbcode",
-            "summary": None,
+            "info": None,
             "children": [
                 {
                     "type": "paragraph",
