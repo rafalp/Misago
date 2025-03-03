@@ -647,6 +647,30 @@ CASES = (
             },
         ],
     ),
+    (
+        "test_list_unescapes_items",
+        "- \*Item\*",
+        {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "delimiter": "-",
+            "tight": True,
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {"type": "text", "text": "*Item*"},
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ),
 )
 
 CASES_IDS = tuple(case[0] for case in CASES)
