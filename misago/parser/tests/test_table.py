@@ -874,6 +874,35 @@ def test_markdown_table(parse_markup, prepend, append, separator, case):
                 ],
             },
         ),
+        (
+            "|\|Col\|\n|---\n|\|Cell\|",
+            {
+                "type": "table",
+                "header": [
+                    {
+                        "type": "table-header",
+                        "align": "left",
+                        "children": [
+                            {"type": "text", "text": "|Col|"},
+                        ],
+                    },
+                ],
+                "children": [
+                    {
+                        "type": "table-row",
+                        "children": [
+                            {
+                                "type": "table-cell",
+                                "align": "left",
+                                "children": [
+                                    {"type": "text", "text": "|Cell|"},
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ),
     ),
 )
 def test_markdown_table_contents(parse_markup, case):
