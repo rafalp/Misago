@@ -104,6 +104,19 @@ def test_atx_heading_text_whitespace_is_stripped(parse_markup):
     ]
 
 
+def test_atx_heading_is_unescaped(parse_markup):
+    result = parse_markup("## Hello \*World\*!")
+    assert result == [
+        {
+            "type": "heading",
+            "level": 2,
+            "children": [
+                {"type": "text", "text": "Hello *World*!"},
+            ],
+        }
+    ]
+
+
 def test_atx_heading_breaks_paragraphs(parse_markup):
     result = parse_markup("Lorem ipsum\n# Dolor met\nSit amet")
     assert result == [
@@ -163,6 +176,19 @@ def test_setex_heading_text_whitespace_is_stripped(parse_markup):
             "level": 2,
             "children": [
                 {"type": "text", "text": "Hello World!"},
+            ],
+        }
+    ]
+
+
+def test_setex_heading_is_unescaped(parse_markup):
+    result = parse_markup("Hello \*World\*!\n===")
+    assert result == [
+        {
+            "type": "heading-setex",
+            "level": 1,
+            "children": [
+                {"type": "text", "text": "Hello *World*!"},
             ],
         }
     ]
