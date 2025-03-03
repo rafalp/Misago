@@ -1,6 +1,23 @@
 import pytest
 
 
+def test_inline_markdown_is_unescaped(parse_markup):
+    result = parse_markup(f"Hello _\*word\*_.")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "emphasis-underscore",
+                    "children": [{"type": "text", "text": "*word*"}],
+                },
+                {"type": "text", "text": "."},
+            ],
+        }
+    ]
+
+
 def test_emphasis_whole_word(parse_markup):
     result = parse_markup(f"Hello *word*.")
     assert result == [

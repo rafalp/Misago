@@ -19,7 +19,7 @@ class InlineBBCodePattern(Pattern):
         content = match[content_start:content_end]
 
         if not content.strip():
-            return []
+            return parser.parse_inline(content, parents)
 
         if has_invalid_parent(self.invalid_parents, parents):
             return parser.parse_inline(content, parents)
