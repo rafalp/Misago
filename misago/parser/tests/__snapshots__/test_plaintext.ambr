@@ -131,8 +131,11 @@
 # name: test_render_ast_to_plaintext_quote_bbcode
   'Hello world!'
 # ---
-# name: test_render_ast_to_plaintext_quote_bbcode_with_author
-  'Author: Hello world!'
+# name: test_render_ast_to_plaintext_quote_bbcode_with_info
+  'Lorem ipsum dolor met: Hello world!'
+# ---
+# name: test_render_ast_to_plaintext_quote_bbcode_with_user_and_post
+  'Lorem: Hello world!'
 # ---
 # name: test_render_ast_to_plaintext_setex_heading[Hello world!\n-----]
   'Hello world!'

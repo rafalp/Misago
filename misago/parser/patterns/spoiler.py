@@ -6,11 +6,13 @@ class SpoilerBBCodeOpen(Pattern):
     pattern: str = r"\[spoiler(=.*?)?\]"
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
-        summary = parser.reverse_reservations(match[8:-1].strip("\"' ="))
+        match = match[8:-1]
+        if match.startswith("="):
+            match = match[1:].strip("\"' ")
 
         return {
             "type": self.pattern_type,
-            "summary": summary or None,
+            "info": parser.unescape(match).strip() or None,
         }
 
 

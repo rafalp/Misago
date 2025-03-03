@@ -17,16 +17,17 @@ class AttachmentMarkdown(Pattern):
         args = [a.strip() for a in match.strip()[12:-1].strip('" ').split(":")]
 
         if len(args) != 2:
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         name, attachment_id = args
         try:
             attachment_id = int(attachment_id)
         except (ValueError, TypeError):
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
+        name = parser.unescape(name)
         if not name or attachment_id < 1:
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         return {
             "type": self.pattern_type,

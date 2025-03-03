@@ -58,12 +58,24 @@ def test_render_ast_to_plaintext_quote_bbcode(parser_context, parse_markup, snap
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_plaintext_quote_bbcode_with_author(
+def test_render_ast_to_plaintext_quote_bbcode_with_info(
     parser_context, parse_markup, snapshot
 ):
     ast = parse_markup(
         """
-        [quote=Author]Hello world![/quote]
+        [quote=Lorem ipsum dolor met]Hello world![/quote]
+        """
+    )
+    metadata = create_ast_metadata(parser_context, ast)
+    assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
+
+
+def test_render_ast_to_plaintext_quote_bbcode_with_user_and_post(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup(
+        """
+        [quote=Lorem, post:1234]Hello world![/quote]
         """
     )
     metadata = create_ast_metadata(parser_context, ast)

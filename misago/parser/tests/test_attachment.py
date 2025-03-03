@@ -85,6 +85,35 @@ def test_attachment_with_spaces_in_args(parse_markup):
     ]
 
 
+def test_attachment_unescapes_name(parse_markup):
+    result = parse_markup('Hello <attachment="im\.age.png:1234">!')
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+            ],
+        },
+        {
+            "type": "attachment-group",
+            "children": [
+                {
+                    "type": "attachment",
+                    "name": "im.age.png",
+                    "slug": "im-age-png",
+                    "id": 1234,
+                },
+            ],
+        },
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "!"},
+            ],
+        },
+    ]
+
+
 def test_attachment_next_to_other_attachment(parse_markup):
     result = parse_markup("Hello <attachment=image.png:6><attachment=image2.png:7>")
     assert result == [

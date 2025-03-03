@@ -18,7 +18,8 @@ class QuoteBBCodePostProcessor(BlockPostProcessor):
 
         return {
             "type": "quote-bbcode",
-            "author": opening_block["author"],
+            "user": opening_block["user"],
             "post": opening_block["post"],
+            "info": opening_block["info"],
             "children": self(parser, children),
         }

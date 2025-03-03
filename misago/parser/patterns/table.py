@@ -34,7 +34,7 @@ class TableMarkdown(Pattern):
         if len(header) != num_cols:
             return {
                 "type": "paragraph",
-                "children": parser.parse_inline(match, [], True),
+                "children": parser.parse_inline(match, parents),
             }
 
         ast = {
@@ -44,7 +44,7 @@ class TableMarkdown(Pattern):
                     "type": "table-header",
                     "align": cols[i].value,
                     "children": (
-                        parser.parse_inline(text, ["table", "table-header"], True)
+                        parser.parse_inline(text, parents + ["table", "table-header"])
                         if text
                         else []
                     ),
@@ -63,7 +63,7 @@ class TableMarkdown(Pattern):
                         "type": "table-cell",
                         "align": cols[i].value,
                         "children": (
-                            parser.parse_inline(text, ["table", "table-cell"], True)
+                            parser.parse_inline(text, parents + ["table", "table-cell"])
                             if text
                             else []
                         ),

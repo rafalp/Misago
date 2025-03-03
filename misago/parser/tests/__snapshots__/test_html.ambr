@@ -126,8 +126,11 @@
 # name: test_render_ast_to_html_quote_bbcode
   '<quote><p>Hello world!</p></quote>'
 # ---
-# name: test_render_ast_to_html_quote_bbcode_with_author
-  '<quote><header>Author</header><body><p>Hello world!</p></body></quote>'
+# name: test_render_ast_to_html_quote_bbcode_with_info
+  '<quote info="Lorem ipsum dolor"><p>Hello world!</p></quote>'
+# ---
+# name: test_render_ast_to_html_quote_bbcode_with_user_and_post
+  '<quote user="Arthur" post="1234"><p>Hello world!</p></quote>'
 # ---
 # name: test_render_ast_to_html_setex_heading[Hello world!\n-----]
   '<h2>Hello world!</h2>'
@@ -139,10 +142,10 @@
   '<p>Hello world!<br />How&#x27;s going?</p>'
 # ---
 # name: test_render_ast_to_html_spoiler
-  '<spoiler><summary></summary><body><p>Hello world!</p></body></spoiler>'
+  '<spoiler><p>Hello world!</p></spoiler>'
 # ---
-# name: test_render_ast_to_html_spoiler_with_summary
-  '<spoiler><summary>Secret message</summary><body><p>Hello world!</p></body></spoiler>'
+# name: test_render_ast_to_html_spoiler_with_info
+  '<spoiler info="Secret message"><p>Hello world!</p></spoiler>'
 # ---
 # name: test_render_ast_to_html_strikethrough_bbcode_text
   '<p>Hello <del>world</del>!</p>'

@@ -120,29 +120,22 @@ def _render_ast_node_to_html_action(
             context, ast_node["children"], metadata
         ).strip()
 
-        if not ast_node["author"]:
-            return f"<quote>{children}</quote>"
-
-        heading = escape(ast_node["author"])
-
-        return (
-            "<quote>"
-            f"<header>{heading}</header>"
-            f"<body>{children}</body>"
-            "</quote>"
+        return html_element(
+            "quote",
+            children,
+            {
+                "user": ast_node.get("user"),
+                "post": str(ast_node["post"]) if ast_node.get("post") else None,
+                "info": ast_node.get("info"),
+            },
         )
 
     if ast_type == "spoiler-bbcode":
-        summary = escape(ast_node["summary"] or "")
         children = render_children_ast_to_html(
             context, ast_node["children"], metadata
         ).strip()
-        return (
-            "<spoiler>"
-            f"<summary>{summary}</summary>"
-            f"<body>{children}</body>"
-            "</spoiler>"
-        )
+
+        return html_element("spoiler", children, {"info": ast_node.get("info")})
 
     if ast_type == "paragraph":
         children = render_children_ast_to_html(

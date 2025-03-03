@@ -99,6 +99,24 @@ def test_autolink_in_url_bbcode_is_not_parsed(parse_markup):
     ]
 
 
+def test_autolink_unescapes_url(parse_markup):
+    result = parse_markup("Hello <https://image\.com/>!")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "auto-link",
+                    "image": False,
+                    "href": "https://image.com/",
+                },
+                {"type": "text", "text": "!"},
+            ],
+        }
+    ]
+
+
 def test_auto_url(parse_markup):
     result = parse_markup("Hello https://image.com/ !")
     assert result == [
@@ -109,6 +127,23 @@ def test_auto_url(parse_markup):
                 {
                     "type": "auto-url",
                     "href": "https://image.com/",
+                },
+                {"type": "text", "text": " !"},
+            ],
+        }
+    ]
+
+
+def test_auto_url_unescapes_url(parse_markup):
+    result = parse_markup("Hello https://image.com/page\.html !")
+    assert result == [
+        {
+            "type": "paragraph",
+            "children": [
+                {"type": "text", "text": "Hello "},
+                {
+                    "type": "auto-url",
+                    "href": "https://image.com/page.html",
                 },
                 {"type": "text", "text": " !"},
             ],

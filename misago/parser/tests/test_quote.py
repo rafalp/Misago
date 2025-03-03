@@ -99,3 +99,36 @@ def test_nested_quote(parse_markup):
             ],
         }
     ]
+
+
+def test_quote_with_indented_code(parse_markup):
+    result = parse_markup(">     test")
+    assert result == [
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "code-indented",
+                    "syntax": None,
+                    "code": "test",
+                },
+            ],
+        }
+    ]
+
+
+def test_quote_unescapes_text(parse_markup):
+    result = parse_markup("> Lorem \*ipsum\*")
+    assert result == [
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {"type": "text", "text": "Lorem *ipsum*"},
+                    ],
+                },
+            ],
+        }
+    ]

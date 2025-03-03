@@ -1,4 +1,4 @@
 # serializer version: 1
 # name: test_complete_markup_template_tag_replaces_default_spoiler_summary
-  '<spoiler><summary></summary><body><p>Hello world!</p></body></spoiler>'
+  '<spoiler><p>Hello world!</p></spoiler>'
 # ---

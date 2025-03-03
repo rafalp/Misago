@@ -21,6 +21,8 @@ def custom_create_parser_filter(
     *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
+    pre_processors: list[Callable[[Parser, str],
+    str]],
     post_processors: list[Callable[[Parser, list[dict]],
     list[dict]]],
 ) -> Parser:
@@ -54,6 +56,19 @@ A list of `Pattern` instances of block patterns to be used by the parser.
 A list of `Pattern` instances of inline patterns to be used by the parser.
 
 
+#### `pre_processors: list[Callable[[Parser, str], str]]`
+
+A list of pre-processor functions called by the parser to prepare markup for parsing.
+
+A pre-processor function should have the following signature:
+
+```python
+def custom_postprocessor(parser: Parser, markup: str) -> str:
+    # Do something with the 'markup'...
+    return markup
+```
+
+
 #### `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
 
 A list of post-processor functions called by the parser to finalize the AST.
@@ -80,6 +95,8 @@ def create_parser_action(
     *,
     block_patterns: list[Pattern],
     inline_patterns: list[Pattern],
+    pre_processors: list[Callable[[Parser, str],
+    str]],
     post_processors: list[Callable[[Parser, list[dict]],
     list[dict]]],
 ) -> Parser:
@@ -104,6 +121,19 @@ A list of `Pattern` instances of block patterns to be used by the parser.
 #### `inline_patterns: list[Pattern]`
 
 A list of `Pattern` instances of inline patterns to be used by the parser.
+
+
+#### `pre_processors: list[Callable[[Parser, str], str]]`
+
+A list of pre-processor functions called by the parser to prepare markup for parsing.
+
+A pre-processor function should have the following signature:
+
+```python
+def custom_postprocessor(parser: Parser, markup: str) -> str:
+    # Do something with the 'markup'...
+    return markup
+```
 
 
 #### `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
@@ -138,7 +168,7 @@ from .patterns import PluginPattern
 
 @create_parser_hook.append_filter
 def create_parser_with_custom_pattern(
-    action: CreateParserHookAction,
+    action,
     context: ParserContext,
     *,
     block_patterns,

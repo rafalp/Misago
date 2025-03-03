@@ -947,3 +947,26 @@ def test_list_items_with_not_deep_levels_are_fixed(parse_markup):
         """
     )
     assert result == expected_result
+
+
+def test_list_unescapes_items(parse_markup):
+    result = parse_markup("- \*Lorem\*")
+    assert result == [
+        {
+            "type": "list",
+            "ordered": False,
+            "sign": "-",
+            "children": [
+                {
+                    "type": "list-item",
+                    "children": [
+                        {
+                            "type": "text",
+                            "text": "*Lorem*",
+                        },
+                    ],
+                    "lists": [],
+                },
+            ],
+        }
+    ]

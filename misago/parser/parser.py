@@ -24,65 +24,104 @@ class LineBreak(Pattern):
 
 
 class Parser:
+    escaped_characters = "\\!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~"
+
+    character_placeholders: dict[str, str]
+    string_placeholders: dict[str, str]
+    placeholder_length = 16
+
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
+    pre_processors: list[Callable[["Parser", str], str]]
     post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
 
-    reserve_inline_code = re.compile(r"`*`(.|\n)+?``*")
-    _reserved_patterns: dict[str, str]
-
-    _paragraph_re = re.compile(r".+(\n.+)*")
+    inline_code = re.compile(r"(?<!`)`.+?(\n.+?)*?`(?!`)")
+    paragraph = re.compile(r".+(\n.+)*")
 
     def __init__(
         self,
         block_patterns: list[Pattern] | None = None,
         inline_patterns: list[Pattern] | None = None,
+        pre_processors: list[Callable[["Parser", str], str]] | None = None,
         post_processors: (
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
     ):
+        self.character_placeholders = {}
+        self.string_placeholders = {}
+
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
+        self.pre_processors = pre_processors or []
         self.post_processors = post_processors or []
 
         self._reserved_patterns = {}
 
     def __call__(self, markup: str) -> list[dict]:
         markup = self.normalize_newlines(markup)
-        markup = self.reserve_patterns(markup)
+        markup = self.escape(markup)
+
+        for pre_processor in self.pre_processors:
+            markup = pre_processor(self, markup)
+
         ast = self.parse_blocks(markup, [])
+
         for post_processor in self.post_processors:
             ast = post_processor(self, ast)
+
         return ast
 
     def normalize_newlines(self, markup: str) -> str:
         return markup.replace("\r\n", "\n").replace("\r", "\n")
 
-    def reserve_patterns(self, markup: str) -> str:
-        if not "`" in markup:
-            return markup
+    def escape(self, text: str) -> str:
+        if not text:
+            return ""
 
-        def replace_pattern(match):
-            match_str = match.group(0)
-            if match_str.startswith("``") or match_str.endswith("``"):
-                return match_str
+        return self.escape_special_characters(text)
 
-            pattern_id = f"%%{get_random_string(12)}%%"
-            while pattern_id in markup or pattern_id in self._reserved_patterns:
-                pattern_id = f"%%{get_random_string(12)}%%"
+    def unescape(self, text: str) -> str:
+        if not text:
+            return ""
 
-            self._reserved_patterns[pattern_id] = match_str
-            return pattern_id
+        text = self.replace_string_placeholders(text)
+        text = self.replace_character_placeholders(text)
 
-        return self.reserve_inline_code.sub(replace_pattern, markup)
+        return text
 
-    def reverse_reservations(self, value: str) -> str:
-        if not self._reserved_patterns or "%%" not in value:
-            return value
+    def escape_special_characters(self, markup: str) -> str:
+        for character in self.escaped_characters:
+            escaped_character = f"\\{character}"
+            if escaped_character in markup:
+                placeholder = self.get_unique_placeholder(markup)
+                self.character_placeholders[character] = placeholder
+                markup = markup.replace(escaped_character, placeholder)
 
-        for pattern, org in self._reserved_patterns.items():
-            value = value.replace(pattern, org)
-        return value
+        return markup
+
+    def replace_character_placeholders(self, text: str) -> str:
+        for value, placeholder in reversed(self.character_placeholders.items()):
+            if placeholder in text:
+                text = text.replace(placeholder, value)
+        return text
+
+    def replace_string_placeholders(self, text: str) -> str:
+        for placeholder, string in self.string_placeholders.items():
+            if placeholder in text:
+                text = text.replace(placeholder, string)
+        return text
+
+    def get_unique_placeholder(self, text: str) -> str:
+        placeholder = ""
+        while placeholder in text:
+            placeholder = get_random_string(self.placeholder_length)
+        return placeholder
+
+    def text_ast(self, text: str, unescape: bool = True) -> dict:
+        if unescape:
+            text = self.unescape(text)
+
+        return {"type": "text", "text": text}
 
     def parse_blocks(self, markup: str, parents: list[str]) -> list[dict]:
         cursor = 0
@@ -119,13 +158,11 @@ class Parser:
         parents = parents + ["paragraph"]
 
         result: list[dict] = []
-        for m in self._paragraph_re.finditer(markup):
+        for m in self.paragraph.finditer(markup):
             result.append(
                 {
                     "type": "paragraph",
-                    "children": self.parse_inline(
-                        m.group(0).strip(), parents, reverse_reservations=True
-                    ),
+                    "children": self.parse_inline(m.group(0).strip(), parents),
                 }
             )
         return result
@@ -134,11 +171,7 @@ class Parser:
         self,
         markup: str,
         parents: list[str],
-        reverse_reservations: bool = False,
     ) -> list[dict]:
-        if reverse_reservations:
-            markup = self.reverse_reservations(markup)
-
         cursor = 0
 
         result: list[dict] = []
@@ -149,11 +182,9 @@ class Parser:
                     start = m.start()
                     if start > cursor:
                         if result and result[-1]["type"] == "text":
-                            result[-1]["text"] += markup[cursor:start]
+                            result[-1]["text"] += self.unescape(markup[cursor:start])
                         else:
-                            result.append(
-                                {"type": "text", "text": markup[cursor:start]}
-                            )
+                            result.append(self.text_ast(markup[cursor:start]))
 
                     inline_ast = pattern.parse(self, block_match, parents)
                     if isinstance(inline_ast, list):
@@ -182,9 +213,9 @@ class Parser:
 
         if cursor < len(markup):
             if result and result[-1]["type"] == "text":
-                result[-1]["text"] += markup[cursor:]
+                result[-1]["text"] += self.unescape(markup[cursor:])
             else:
-                result.append({"type": "text", "text": markup[cursor:]})
+                result.append(self.text_ast(markup[cursor:]))
 
         return result
 

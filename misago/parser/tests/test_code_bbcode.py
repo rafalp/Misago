@@ -141,6 +141,58 @@ def test_code_bbcode_trims_syntax_single_quotes(parse_markup):
     ]
 
 
+def test_code_bbcode_unescapes_info(parse_markup):
+    result = parse_markup(
+        """
+        [code="Failing \"feature\" example"]
+        alert("hello!")
+        alert("world!")
+        [/code]
+        """
+    )
+    assert result == [
+        {
+            "type": "code-bbcode",
+            "syntax": 'Failing "feature" example',
+            "code": 'alert("hello!")\nalert("world!")',
+        }
+    ]
+
+
+def test_code_bbcode_preserves_escaping_characters(parse_markup):
+    result = parse_markup(
+        """
+        [code]
+        alert("hel\+lo!")
+        [/code]
+        """
+    )
+    assert result == [
+        {
+            "type": "code-bbcode",
+            "syntax": None,
+            "code": 'alert("hel\+lo!")',
+        }
+    ]
+
+
+def test_code_bbcode_preserves_inline_code(parse_markup):
+    result = parse_markup(
+        """
+        [code]
+        `text`
+        [/code]
+        """
+    )
+    assert result == [
+        {
+            "type": "code-bbcode",
+            "syntax": None,
+            "code": "`text`",
+        }
+    ]
+
+
 def test_code_bbcode_can_be_mixed_with_other_blocks(parse_markup):
     result = parse_markup(
         """

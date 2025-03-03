@@ -13,10 +13,10 @@ class InlineMarkdownPattern(Pattern):
     ) -> dict | list[dict]:
         content = match[self.pattern_length : self.pattern_length * -1]
         if not content:
-            return {"type": "text", "text": match}
+            return parser.text_ast(match)
 
         if not content.strip():
-            pattern = {"type": "text", "text": match[: self.pattern_length]}
+            pattern = parser.text_ast(match[: self.pattern_length])
             return [pattern] + parser.parse_inline(content, parents) + [pattern]
 
         if has_invalid_parent(self.invalid_parents, parents):
