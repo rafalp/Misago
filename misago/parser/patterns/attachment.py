@@ -25,6 +25,7 @@ class AttachmentMarkdown(Pattern):
         except (ValueError, TypeError):
             return parser.text_ast(match)
 
+        name = parser.unescape(name)
         if not name or attachment_id < 1:
             return parser.text_ast(match)
 
