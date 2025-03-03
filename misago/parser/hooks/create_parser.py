@@ -27,6 +27,18 @@ class CreateParserHookAction(Protocol):
 
     A list of `Pattern` instances of inline patterns to be used by the parser.
 
+    ## `pre_processors: list[Callable[[Parser, str], str]]`
+
+    A list of pre-processor functions called by the parser to prepare markup for parsing.
+
+    A pre-processor function should have the following signature:
+
+    ```python
+    def custom_postprocessor(parser: Parser, markup: str) -> str:
+        # Do something with the 'markup'...
+        return markup
+    ```
+
     ## `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
 
     A list of post-processor functions called by the parser to finalize the AST.
@@ -50,6 +62,7 @@ class CreateParserHookAction(Protocol):
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
+        pre_processors: list[Callable[[Parser, str], str]],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
     ) -> Parser: ...
 
@@ -80,6 +93,18 @@ class CreateParserHookFilter(Protocol):
 
     A list of `Pattern` instances of inline patterns to be used by the parser.
 
+    ## `pre_processors: list[Callable[[Parser, str], str]]`
+
+    A list of pre-processor functions called by the parser to prepare markup for parsing.
+
+    A pre-processor function should have the following signature:
+
+    ```python
+    def custom_postprocessor(parser: Parser, markup: str) -> str:
+        # Do something with the 'markup'...
+        return markup
+    ```
+
     ## `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
 
     A list of post-processor functions called by the parser to finalize the AST.
@@ -104,6 +129,7 @@ class CreateParserHookFilter(Protocol):
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
+        pre_processors: list[Callable[[Parser, str], str]],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
     ) -> Parser: ...
 
@@ -150,6 +176,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
         *,
         block_patterns: list[Pattern],
         inline_patterns: list[Pattern],
+        pre_processors: list[Callable[[Parser, str], str]],
         post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
     ) -> Parser:
         return super().__call__(
@@ -157,6 +184,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
             context,
             block_patterns=block_patterns,
             inline_patterns=inline_patterns,
+            pre_processors=pre_processors,
             post_processors=post_processors,
         )
 

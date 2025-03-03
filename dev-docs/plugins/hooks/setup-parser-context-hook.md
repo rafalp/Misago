@@ -76,7 +76,7 @@ from misago.parser.hooks import setup_parser_context_hook
 
 @setup_parser_context_hook.append_filter
 def register_plugin_data_in_parser_context(
-    action: SetupParserContextHookAction, context: ParserContext
+    action, context: ParserContext
 ) -> ParserContext:
     if context.request:
         context.plugin_data["my_plugin"] = request.my_plugin.get_parser_context()

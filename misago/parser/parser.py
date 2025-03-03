@@ -32,6 +32,7 @@ class Parser:
 
     block_patterns: list[Pattern]
     inline_patterns: list[Pattern]
+    pre_processors: list[Callable[["Parser", str], str]]
     post_processors: list[Callable[["Parser", list[dict]], list[dict]]]
 
     inline_code = re.compile(r"(?<!`)`.+?(\n.+?)*?`(?!`)")
@@ -41,6 +42,7 @@ class Parser:
         self,
         block_patterns: list[Pattern] | None = None,
         inline_patterns: list[Pattern] | None = None,
+        pre_processors: list[Callable[["Parser", str], str]] | None = None,
         post_processors: (
             list[Callable[["Parser", list[dict]], list[dict]]] | None
         ) = None,
@@ -50,6 +52,7 @@ class Parser:
 
         self.block_patterns = block_patterns or []
         self.inline_patterns = inline_patterns or []
+        self.pre_processors = pre_processors or []
         self.post_processors = post_processors or []
 
         self._reserved_patterns = {}
@@ -58,7 +61,11 @@ class Parser:
         markup = self.normalize_newlines(markup)
         markup = self.escape(markup)
 
+        for pre_processor in self.pre_processors:
+            markup = pre_processor(self, markup)
+
         ast = self.parse_blocks(markup, [])
+
         for post_processor in self.post_processors:
             ast = post_processor(self, ast)
 
@@ -71,9 +78,7 @@ class Parser:
         if not text:
             return ""
 
-        text = self.escape_special_characters(text)
-        text = self.escape_inline_code(text)
-        return text
+        return self.escape_special_characters(text)
 
     def unescape(self, text: str) -> str:
         if not text:
@@ -94,23 +99,8 @@ class Parser:
 
         return markup
 
-    def escape_inline_code(self, markup: str) -> str:
-        if not "`" in markup:
-            return markup
-
-        def replace_pattern(match):
-            match_str = match.group(0)
-            if match_str.startswith("``") or match_str.endswith("``"):
-                return match_str
-
-            placeholder = self.get_unique_placeholder(markup)
-            self.string_placeholders[placeholder] = match_str[1:-1]
-            return f"`{placeholder}`"
-
-        return self.inline_code.sub(replace_pattern, markup)
-
     def replace_character_placeholders(self, text: str) -> str:
-        for value, placeholder in self.character_placeholders.items():
+        for value, placeholder in reversed(self.character_placeholders.items()):
             if placeholder in text:
                 text = text.replace(placeholder, value)
         return text
