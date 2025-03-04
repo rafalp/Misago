@@ -7,7 +7,7 @@ from ..categories.models import Category
 from ..permissions.threads import filter_category_threads_queryset
 from ..threads.models import Thread
 from .readtime import get_default_read_time
-from .tracker import annotate_threads_read_time
+from .tracker import thread_select_related_user_readthread
 
 
 def is_category_read(
@@ -22,8 +22,8 @@ def is_category_read(
         filter_category_threads_queryset(
             request.user_permissions,
             request.categories.categories[category.id],
-            annotate_threads_read_time(
-                request.user, Thread.objects, with_category=False
+            thread_select_related_user_readthread(
+                Thread.objects, request.user, with_category=False
             ),
         )
         .filter(last_post_on__gt=read_time)
