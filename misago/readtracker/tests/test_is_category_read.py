@@ -186,9 +186,7 @@ def test_is_category_read_returns_true_for_read_category_with_both_read_threads(
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    old_thread = post_thread(
-        default_category, started_on=timezone.now() - timedelta(minutes=30)
-    )
+    post_thread(default_category, started_on=timezone.now() - timedelta(minutes=30))
     recent_thread = post_thread(default_category)
 
     default_category.last_post_on = recent_thread.last_post_on
@@ -211,9 +209,7 @@ def test_is_category_read_returns_false_for_read_category_with_one_read_and_one_
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(
-        default_category, started_on=timezone.now() - timedelta(minutes=30)
-    )
+    post_thread(default_category, started_on=timezone.now() - timedelta(minutes=30))
     unread_thread = post_thread(default_category)
 
     default_category.last_post_on = unread_thread.last_post_on
