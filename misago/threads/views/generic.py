@@ -16,7 +16,7 @@ from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
 )
-from ...readtracker.tracker import annotate_threads_read_time
+from ...readtracker.tracker import threads_select_related_user_read
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
@@ -35,7 +35,7 @@ class GenericView(View):
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         queryset = Thread.objects
         if self.thread_annotate_read_time:
-            queryset = annotate_threads_read_time(request.user, queryset)
+            queryset = threads_select_related_user_read(queryset, request.user)
         if self.thread_select_related is True:
             return queryset.select_related()
         elif self.thread_select_related:

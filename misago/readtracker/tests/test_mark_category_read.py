@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from ..models import ReadCategory, ReadThread
+from ..models import ReadCategory
 from ..tracker import mark_category_read
 
 

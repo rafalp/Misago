@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Iterable
 
 from django.http import HttpRequest
-from django.db.models import OuterRef
+from django.db.models import BooleanField, FilteredRelation, OuterRef, Q, Value
 
 from ..categories.models import Category
 from ..threads.models import Post, Thread
@@ -13,16 +13,24 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-def annotate_categories_read_time(user, queryset):
+def category_select_related_user_readcategory(queryset, user):
     if user.is_anonymous:
         return queryset
 
-    return queryset.annotate(
-        read_time=ReadCategory.objects.filter(
-            user=user,
-            category=OuterRef("id"),
-        ).values("read_time"),
+    return queryset.select_related("user_readcategory").annotate(
+        user_readcategory=FilteredRelation(
+            "readcategory",
+            condition=Q(readcategory__user=user),
+        )
     )
+
+
+def annotate_categories_read_time(*args):
+    raise NotImplementedError("FIX ME")
+
+
+def annotate_threads_read_time(*args):
+    raise NotImplementedError("FIX ME")
 
 
 def get_unread_categories(
@@ -51,10 +59,34 @@ def is_category_unread(
     if category.last_post_on < default_read_time:
         return False
 
-    if not category.read_time:
-        return True
+    if user_readcategory := category.user_readcategory:
+        return category.last_post_on > user_readcategory.read_time
 
-    return category.last_post_on > category.read_time
+    return True
+
+
+def threads_select_related_user_read(queryset, user, *, with_category: bool = True):
+    if user.is_anonymous:
+        return queryset.annotate(
+            user_readcategory=Value(None), user_readthread=Value(None)
+        )
+
+    queryset = queryset.select_related("user_readthread").annotate(
+        user_readthread=FilteredRelation(
+            "readthread",
+            condition=Q(readthread__user=user),
+        )
+    )
+
+    if with_category:
+        queryset = queryset.annotate(
+            user_readcategory_time=ReadCategory.objects.filter(
+                user=user,
+                category=OuterRef("category_id"),
+            ).values("read_time"),
+        )
+
+    return queryset
 
 
 def annotate_threads_read_time(user, queryset, *, with_category: bool = True):
@@ -85,12 +117,12 @@ def get_unread_threads(request: HttpRequest, threads: Iterable[Thread]) -> set[i
 
     default_read_time = get_default_read_time(request.settings, request.user)
 
-    unread_threads: set[int] = set()
+    unreadthreads: set[int] = set()
     for thread in threads:
         if is_thread_unread(thread, default_read_time):
-            unread_threads.add(thread.id)
+            unreadthreads.add(thread.id)
 
-    return unread_threads
+    return unreadthreads
 
 
 def is_thread_unread(
