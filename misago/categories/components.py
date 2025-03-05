@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..readtracker.tracker import (
-    annotate_categories_read_time,
+    categories_select_related_user_readcategory,
     get_unread_categories,
 )
 from .enums import CategoryTree
@@ -32,7 +32,7 @@ def get_categories_data(request: HttpRequest) -> list[dict]:
         level__gt=0,
     )
 
-    queryset = annotate_categories_read_time(request.user, queryset)
+    queryset = categories_select_related_user_readcategory(queryset, request.user)
     unread_categories = get_unread_categories(request, queryset)
 
     categories_data: dict[int, dict] = {
@@ -72,7 +72,7 @@ def get_subcategories_data(request: HttpRequest, category: Category) -> list[dic
         rght__lt=category.rght,
     )
 
-    queryset = annotate_categories_read_time(request.user, queryset)
+    queryset = categories_select_related_user_readcategory(queryset, request.user)
     unread_categories = get_unread_categories(request, queryset)
 
     categories_data: dict[int, dict] = {

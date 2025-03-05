@@ -6,7 +6,9 @@ from ..models import ReadCategory
 from ..tracker import mark_category_read
 
 
-def test_mark_category_read_creates_read_category(user, default_category):
+def test_mark_category_read_creates_read_category_for_category_without_user_readcategory(
+    user, default_category
+):
     default_category.last_post_on = timezone.now()
     default_category.save()
 
@@ -42,7 +44,7 @@ def test_mark_category_read_updates_read_category_for_category_with_user_readcat
     assert read_category.read_time == read_time
 
 
-def test_mark_category_read_updates_read_category_for_force_update(
+def test_mark_category_read_updates_read_category_for_category_in_forced_update(
     user, default_category
 ):
     read_time = timezone.now()

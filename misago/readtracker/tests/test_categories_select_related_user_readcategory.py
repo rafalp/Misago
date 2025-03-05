@@ -2,13 +2,13 @@ from django.utils import timezone
 
 from ...categories.models import Category
 from ..models import ReadCategory
-from ..tracker import category_select_related_user_readcategory
+from ..tracker import categories_select_related_user_readcategory
 
 
-def test_category_select_related_user_readcategory_is_noop_for_anonymous_user(
+def test_categories_select_related_user_readcategory_is_noop_for_anonymous_user(
     db, anonymous_user
 ):
-    queryset = category_select_related_user_readcategory(
+    queryset = categories_select_related_user_readcategory(
         Category.objects.all(), anonymous_user
     )
 
@@ -16,16 +16,16 @@ def test_category_select_related_user_readcategory_is_noop_for_anonymous_user(
     assert not hasattr(category, "user_readcategory")
 
 
-def test_category_select_related_user_readcategory_doesnt_set_user_readcategory_for_user_without_one(
+def test_categories_select_related_user_readcategory_doesnt_set_user_readcategory_for_user_without_one(
     user,
 ):
-    queryset = category_select_related_user_readcategory(Category.objects.all(), user)
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
 
     category = queryset.get(slug="first-category")
     assert not hasattr(category, "user_readcategory")
 
 
-def test_category_select_related_user_readcategory_sets_user_readcategory_if_it_exists(
+def test_categories_select_related_user_readcategory_sets_user_readcategory_if_it_exists(
     user, default_category
 ):
     read_time = timezone.now().replace(year=2012)
@@ -36,7 +36,7 @@ def test_category_select_related_user_readcategory_sets_user_readcategory_if_it_
         read_time=read_time,
     )
 
-    queryset = category_select_related_user_readcategory(Category.objects.all(), user)
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
 
     category = queryset.get(slug="first-category")
     assert category.user_readcategory == readcategory

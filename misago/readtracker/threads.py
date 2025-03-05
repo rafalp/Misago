@@ -7,7 +7,7 @@ from ..categories.models import Category
 from ..permissions.threads import filter_category_threads_queryset
 from ..threads.models import Thread
 from .readtime import get_default_read_time
-from .tracker import thread_select_related_user_readthread
+from .tracker import threads_select_related_user_readthread
 
 
 def is_category_read(
@@ -22,12 +22,13 @@ def is_category_read(
         filter_category_threads_queryset(
             request.user_permissions,
             request.categories.categories[category.id],
-            thread_select_related_user_readthread(
-                Thread.objects, request.user, with_category=False
-            ),
+            threads_select_related_user_readthread(Thread.objects, request.user),
         )
         .filter(last_post_on__gt=read_time)
-        .filter(Q(last_post_on__gt=F("read_time")) | Q(read_time__isnull=True))
+        .filter(
+            Q(last_post_on__gt=F("user_readthread__read_time"))
+            | Q(user_readthread__isnull=True)
+        )
     )
 
     return not queryset.exists()

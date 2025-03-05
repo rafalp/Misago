@@ -62,10 +62,10 @@ class UnreadPostRedirectView(RedirectView):
             return None
 
         read_times = [get_default_read_time(request.settings, request.user)]
-        if thread.read_time:
-            read_times.append(thread.read_time)
-        if thread.category_read_time:
-            read_times.append(thread.category_read_time)
+        if user_readthread := getattr(thread, "user_readthread", None):
+            read_times.append(user_readthread.read_time)
+        if thread.user_readcategory_time:
+            read_times.append(thread.user_readcategory_time)
 
         read_time = max(read_times)
         return queryset.filter(posted_on__gt=read_time).first()

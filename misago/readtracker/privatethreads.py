@@ -6,7 +6,7 @@ from django.db.models import F, Q
 from ..categories.models import Category
 from ..permissions.privatethreads import filter_private_threads_queryset
 from .readtime import get_default_read_time
-from .tracker import annotate_threads_read_time
+from .tracker import threads_select_related_user_readthread
 
 
 def unread_private_threads_exist(
@@ -31,10 +31,11 @@ def get_unread_private_threads(
     return (
         filter_private_threads_queryset(
             request.user_permissions,
-            annotate_threads_read_time(
-                request.user, category.thread_set, with_category=False
-            ),
+            threads_select_related_user_readthread(category.thread_set, request.user),
         )
         .filter(last_post_on__gt=read_time)
-        .filter(Q(last_post_on__gt=F("read_time")) | Q(read_time__isnull=True))
+        .filter(
+            Q(last_post_on__gt=F("user_readthread__read_time"))
+            | Q(user_readthread__isnull=True)
+        )
     )
