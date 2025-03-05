@@ -1127,12 +1127,10 @@ class CategoryThreadsListView(ListView):
             return False
         if not category.last_post_on:
             return False
+        if category_read_time := get_category_read_time(category):
+            return category.last_post_on > category_read_time
 
-        category_read_time = get_category_read_time(category)
-        if not category_read_time:
-            return True
-
-        return category.last_post_on > category_read_time
+        return True
 
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
