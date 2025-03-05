@@ -5,7 +5,10 @@ from django.utils import timezone
 
 from ...categories.models import Category
 from ..models import ReadCategory
-from ..tracker import annotate_categories_read_time, get_unread_categories
+from ..tracker import (
+    categories_select_related_user_readcategory,
+    get_unread_categories,
+)
 
 
 def test_get_unread_categories_returns_empty_set_for_anonymous_user(
@@ -15,7 +18,9 @@ def test_get_unread_categories_returns_empty_set_for_anonymous_user(
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=anonymous_user)
-    queryset = annotate_categories_read_time(anonymous_user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(
+        Category.objects.all(), anonymous_user
+    )
     unread_categories = get_unread_categories(request, queryset)
 
     assert not unread_categories
@@ -23,7 +28,7 @@ def test_get_unread_categories_returns_empty_set_for_anonymous_user(
 
 def test_get_unread_categories_excludes_unread_empty_category(dynamic_settings, user):
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert not unread_categories
@@ -36,7 +41,7 @@ def test_get_unread_categories_includes_unread_category_with_last_post(
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert default_category.id in unread_categories
@@ -52,7 +57,7 @@ def test_get_unread_categories_excludes_read_empty_category(
     )
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert not unread_categories
@@ -74,7 +79,7 @@ def test_get_unread_categories_includes_read_category_with_new_last_post(
     )
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert default_category.id in unread_categories
@@ -96,7 +101,7 @@ def test_get_unread_categories_excludes_read_category(
     )
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert default_category.id not in unread_categories
@@ -112,7 +117,7 @@ def test_get_unread_categories_excludes_unread_category_with_last_post_older_tha
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert not unread_categories
@@ -128,7 +133,7 @@ def test_get_unread_categories_excludes_unread_category_with_last_post_older_tha
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert not unread_categories
@@ -150,7 +155,7 @@ def test_get_unread_categories_excludes_read_category_with_last_post_older_than_
     )
 
     request = Mock(settings=dynamic_settings, user=user)
-    queryset = annotate_categories_read_time(user, Category.objects.all())
+    queryset = categories_select_related_user_readcategory(Category.objects.all(), user)
     unread_categories = get_unread_categories(request, queryset)
 
     assert not unread_categories

@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
 
-from django.http import HttpRequest
-
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..readtracker.privatethreads import get_unread_private_threads
-from ..readtracker.tracker import annotate_categories_read_time
+from ..readtracker.tracker import (
+    categories_select_related_user_readcategory,
+    get_category_read_time,
+)
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -16,7 +17,8 @@ def sync_user_unread_private_threads(get_response):
         if request.user.is_authenticated and request.user.sync_unread_private_threads:
             user = request.user
             category = get_private_threads_category(user)
-            queryset = get_unread_private_threads(request, category, category.read_time)
+            read_time = get_category_read_time(category)
+            queryset = get_unread_private_threads(request, category, read_time)
             update_user_unread_private_threads(user, queryset.count())
 
         return get_response(request)
@@ -25,9 +27,9 @@ def sync_user_unread_private_threads(get_response):
 
 
 def get_private_threads_category(user: "User") -> Category:
-    return annotate_categories_read_time(
-        user,
+    return categories_select_related_user_readcategory(
         Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS),
+        user,
     ).first()
 
 

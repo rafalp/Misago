@@ -161,7 +161,7 @@ class ReplyView(View):
         if thread_is_read:
             mark_thread_read(request.user, thread, state.timestamp)
             if self.is_category_read(
-                request, state.category, thread.category_read_time
+                request, state.category, thread.user_readcategory_time
             ):
                 mark_category_read(request.user, state.category, force_update=True)
 

@@ -56,9 +56,11 @@ from ...permissions.threads import (
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
-    annotate_categories_read_time,
-    annotate_threads_read_time,
+    categories_select_related_user_readcategory,
+    get_category_read_time,
     get_unread_threads,
+    threads_annotate_user_readcategory_time,
+    threads_select_related_user_readthread,
     mark_category_read,
 )
 from ...readtracker.models import ReadCategory, ReadThread
@@ -501,7 +503,8 @@ class ThreadsListView(ListView):
         queryset = self.get_threads_queryset(request)
 
         if not active_filter or active_filter.url != "unread":
-            queryset = annotate_threads_read_time(request.user, queryset)
+            queryset = threads_select_related_user_readthread(queryset, request.user)
+            queryset = threads_annotate_user_readcategory_time(queryset, request.user)
 
         if active_filter:
             threads_queryset = active_filter.filter(queryset)
@@ -840,7 +843,9 @@ class CategoryThreadsListView(ListView):
 
     def get_category(self, request: HttpRequest, kwargs: dict):
         try:
-            queryset = annotate_categories_read_time(request.user, Category.objects)
+            queryset = categories_select_related_user_readcategory(
+                Category.objects, request.user
+            )
             category = queryset.get(
                 id=kwargs["id"],
                 tree_id=CategoryTree.THREADS,
@@ -930,7 +935,8 @@ class CategoryThreadsListView(ListView):
         queryset = self.get_threads_queryset(request)
 
         if not active_filter or active_filter.url != "unread":
-            queryset = annotate_threads_read_time(request.user, queryset)
+            queryset = threads_select_related_user_readthread(queryset, request.user)
+            queryset = threads_annotate_user_readcategory_time(queryset, request.user)
 
         if active_filter:
             threads_queryset = active_filter.filter(queryset)
@@ -987,10 +993,11 @@ class CategoryThreadsListView(ListView):
             thread_data.update(self.get_thread_urls(thread))
             items.append(thread_data)
 
+        category_read_time = get_category_read_time(category)
         if (
             mark_read
             and self.is_category_unread(request.user, category)
-            and is_category_read(request, category, category.read_time)
+            and is_category_read(request, category, category_read_time)
         ):
             mark_category_read(request.user, category)
 
@@ -1120,9 +1127,10 @@ class CategoryThreadsListView(ListView):
             return False
         if not category.last_post_on:
             return False
-        if not category.read_time:
-            return True
-        return category.last_post_on > category.read_time
+        if category_read_time := get_category_read_time(category):
+            return category.last_post_on > category_read_time
+
+        return True
 
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
@@ -1302,8 +1310,8 @@ class PrivateThreadsListView(ListView):
         return context
 
     def get_category(self, request: HttpRequest, kwargs: dict):
-        queryset = annotate_categories_read_time(
-            request.user, Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS)
+        queryset = categories_select_related_user_readcategory(
+            Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS), request.user
         )
         return queryset.first()
 
@@ -1323,7 +1331,8 @@ class PrivateThreadsListView(ListView):
         queryset = self.get_threads_queryset(request, category)
 
         if not active_filter or active_filter.url != "unread":
-            queryset = annotate_threads_read_time(request.user, queryset)
+            queryset = threads_select_related_user_readthread(queryset, request.user)
+            queryset = threads_annotate_user_readcategory_time(queryset, request.user)
 
         if active_filter:
             queryset = active_filter.filter(queryset)
@@ -1362,8 +1371,9 @@ class PrivateThreadsListView(ListView):
             thread_data.update(self.get_thread_urls(thread))
             items.append(thread_data)
 
+        category_read_time = get_category_read_time(category)
         if mark_read and not unread_private_threads_exist(
-            request, category, category.read_time
+            request, category, category_read_time
         ):
             mark_category_read(request.user, category)
             request.user.clear_unread_private_threads()
