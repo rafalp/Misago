@@ -91,56 +91,56 @@ def test_parser_parses_skips_tabs_between_paragraphs():
     ]
 
 
-def test_parser_parses_line_breaks():
+def test_parser_parses_softbreaks():
     result = parse("Paragraph with\na line break.")
     assert result == [
         {
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Paragraph with"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "a line break."},
             ],
         },
     ]
 
 
-def test_parser_parses_line_breaks_surrounded_by_spaces():
+def test_parser_parses_softbreaks_surrounded_by_spaces():
     result = parse("Paragraph with  \n   a line break.")
     assert result == [
         {
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Paragraph with"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "a line break."},
             ],
         },
     ]
 
 
-def test_parser_parses_crlf_line_break():
+def test_parser_parses_crlf_softbreak():
     result = parse("Paragraph with\r\na line break.")
     assert result == [
         {
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Paragraph with"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "a line break."},
             ],
         },
     ]
 
 
-def test_parser_parses_crlf_line_breaks_surrounded_by_spaces():
+def test_parser_parses_crlf_softbreaks_surrounded_by_spaces():
     result = parse("Paragraph with  \r\n   a line break.")
     assert result == [
         {
             "type": "paragraph",
             "children": [
                 {"type": "text", "text": "Paragraph with"},
-                {"type": "line-break"},
+                {"type": "softbreak"},
                 {"type": "text", "text": "a line break."},
             ],
         },
