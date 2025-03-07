@@ -33,7 +33,7 @@ class QuoteBBCodeOpen(Pattern):
     pattern_type: str = "quote-bbcode-open"
     pattern: str = r"\[quote(=.*?)?\]"
     user_post_pattern = re.compile(
-        r"^(?P<user>[a-zA-Z0-9]+) *[;,] +post: *(?P<post>[0-9]+) *$"
+        r"^(?P<user>[a-zA-Z0-9]+) *[;,] *post: *(?P<post>[0-9]+) *$"
     )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
