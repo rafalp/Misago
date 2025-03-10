@@ -118,7 +118,7 @@
             <label class="control-label" for="markup_quote_author">
               {% translate "Quote's author or source:" context "markup editor quote modal" %}
             </label>
-            <input type="text" id="markup_quote_author" name="author" class="form-control" value="" >
+            <input type="text" id="markup_quote_author" name="author" class="form-control" value="">
             <p class="help-block">
               {% blocktranslate trimmed context "markup editor quote modal" %}
                 Optional. If it's username, put "@" before it ("@JohnDoe").
@@ -167,9 +167,12 @@
             <label class="control-label" for="markup_code_info">
               {% translate "Info:" context "markup editor code modal" %}
             </label>
-            <div>
-              <input type="text" id="markup_code_info" name="info" class="form-control">
-            </div>
+            <input type="text" id="markup_code_info" name="info" class="form-control">
+            <p class="help-block">
+              {% blocktranslate trimmed context "markup editor quote modal" %}
+                Short description for the code. Optional.
+              {% endblocktranslate %}
+            </p>
           </div>
           <div class="form-group">
             <label class="control-label" for="markup_code_syntax">
