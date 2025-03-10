@@ -23,7 +23,7 @@ def unescape(parser: Parser, code: str) -> str:
     return code
 
 
-CODE_ARGS = re.compile(r"^(?P<info>.+)[;,] *syntax: *(?P<syntax>.+) *$")
+CODE_ARGS = re.compile(r"^(?P<info>.+)[;,] *syntax[:=] *(?P<syntax>.+) *$")
 
 
 def parse_code_args(parser: Parser, args: str) -> dict:
@@ -36,8 +36,8 @@ def parse_code_args(parser: Parser, args: str) -> dict:
 
     if match := CODE_ARGS.match(args):
         return {
-            "info": unescape(parser, match.group("info") or None),
-            "syntax": unescape(parser, match.group("syntax") or None),
+            "info": unescape(parser, match.group("info")).strip() or None,
+            "syntax": unescape(parser, match.group("syntax")).strip() or None,
         }
 
     if args.lower() in PYGMENTS_LANGUAGES:
