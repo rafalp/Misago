@@ -5,7 +5,7 @@ from pygments.lexers import get_all_lexers
 
 
 def get_pygments_options(
-    enable_languages: Iterable[str] | bool,
+    enabled_languages: Iterable[str] | bool,
 ) -> tuple[dict[str, str], set[str]]:
     languages: list[str] = []
     choices: list[tuple[str, str]] = []
@@ -15,9 +15,9 @@ def get_pygments_options(
         if not aliases:
             continue
 
-        if enable_languages is True or (
-            isinstance(enable_languages, (list, tuple))
-            and aliases[0] in enable_languages
+        if enabled_languages is True or (
+            isinstance(enabled_languages, (list, tuple))
+            and aliases[0] in enabled_languages
         ):
             languages.extend(aliases)
             choices.append((name, aliases[0]))
