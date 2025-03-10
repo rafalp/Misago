@@ -167,46 +167,12 @@
             <label class="control-label " for="markup_code_syntax">
               {% translate "Syntax highlighting:" context "markup editor code modal" %}
             </label>
-            <select id="markup_code_syntax" class="form-control" name="syntax">
-              <option value="">{% translate "No syntax highlighting" context "markup editor code syntax choice" %}</option>
-              <option value="bash">Bash</option>
-              <option value="c">C</option>
-              <option value="c#">C#</option>
-              <option value="c++">C++</option>
-              <option value="css">CSS</option>
-              <option value="diff">Diff</option>
-              <option value="go">Go</option>
-              <option value="graphql">GraphQL</option>
-              <option value="html,">HTML</option>
-              <option value="xml">XML</option>
-              <option value="json">JSON</option>
-              <option value="java">Java</option>
-              <option value="javascript">JavaScript</option>
-              <option value="kotlin">Kotlin</option>
-              <option value="less">Less</option>
-              <option value="lua">Lua</option>
-              <option value="makefile">Makefile</option>
-              <option value="markdown">Markdown</option>
-              <option value="objectivec">Objective-C</option>
-              <option value="php">PHP</option>
-              <option value="perl">Perl</option>
-              <option value="plaintext">Plaintext</option>
-              <option value="python">Python</option>
-              <option value="repl">REPL</option>
-              <option value="r">R</option>
-              <option value="ruby">Ruby</option>
-              <option value="rust">Rust</option>
-              <option value="scss">SCSS</option>
-              <option value="sql">SQL</option>
-              <option value="shell">{% translate "Shell Session" context "markup editor code syntax choice" %}</option>
-              <option value="swift">Swift</option>
-              <option value="toml">TOML</option>
-              <option value="ini">INI</option>
-              <option value="typescript">TypeScript</option>
-              <option value="visualbasic">Visual Basic .NET</option>
-              <option value="webassembly">WebAssembly</option>
-              <option value="yaml">YAML</option>
-            </select>
+            {% if syntax_highlighting %}
+              <select id="markup_code_syntax" class="form-control" name="syntax">
+                <option value="">{% translate "No syntax highlighting" context "markup editor code syntax choice" %}</option>
+                {% for choice in syntax_highlighting %}<option value="{{ choice.1 }}">{{ choice.0 }}</option>{% endfor %}
+              </select>
+            {% endif %}
           </div>
           <div class="form-group">
             <label class="control-label " for="markup_code">

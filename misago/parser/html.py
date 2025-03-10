@@ -92,15 +92,14 @@ def _render_ast_node_to_html_action(
         )
 
     if ast_type in ("code", "code-bbcode"):
-        if ast_node["syntax"]:
-            html_class = f"language-{ast_node['syntax']}"
-        else:
-            html_class = None
-
         return html_element(
-            "pre",
-            f"<code>{escape(ast_node['code'])}</code>",
-            attrs={"class": html_class},
+            "misago-code",
+            f"<pre><code>{escape(ast_node['code'])}</code></pre>",
+            attrs={
+                "syntax": ast_node["syntax"],
+                "info": ast_node.get("info"),
+                "code": ast_node["code"],
+            },
         )
 
     if ast_type == "code-indented":

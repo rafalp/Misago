@@ -2,6 +2,7 @@ import re
 from textwrap import dedent
 
 from ..parser import Parser, Pattern
+from ..pygments import PYGMENTS_LANGUAGES
 
 
 def dedent_and_strip(text: str) -> str:
@@ -35,11 +36,14 @@ def parse_code_args(parser: Parser, args: str) -> dict:
 
     if match := CODE_ARGS.match(args):
         return {
-            "info": unescape(parser, match.group("info")),
-            "syntax": unescape(parser, match.group("syntax")),
+            "info": unescape(parser, match.group("info") or None),
+            "syntax": unescape(parser, match.group("syntax") or None),
         }
 
-    return {"info": args, "syntax": None}
+    if args.lower() in PYGMENTS_LANGUAGES:
+        return {"info": None, "syntax": args}
+
+    return {"info": args or None, "syntax": None}
 
 
 class FencedCodeMarkdown(Pattern):
@@ -59,10 +63,12 @@ class FencedCodeMarkdown(Pattern):
 
         delimiter = match[0]
         delimiter_len = len(match) - len(match.lstrip(delimiter))
+        closed = False
 
         match = match[delimiter_len:]
         if match.rstrip().endswith(delimiter * delimiter_len):
             match = match.rstrip()[: -1 * delimiter_len]
+            closed = True
 
         args = parse_code_args(parser, match[: match.index("\n")].strip())
 
@@ -73,6 +79,7 @@ class FencedCodeMarkdown(Pattern):
         return {
             "type": self.pattern_type,
             "delimiter": delimiter * delimiter_len,
+            "closed": closed,
             "info": args["info"],
             "syntax": args["syntax"],
             "code": code,
