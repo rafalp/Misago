@@ -151,12 +151,21 @@ def _render_ast_node_to_plaintext_action(
         return " ".join(items)
 
     if ast_type in ("code", "code-bbcode", "code-indented"):
-        code_lines = [
+        content = []
+
+        if ast_node.get("info") and ast_node.get("syntax"):
+            content.append(f"{ast_node['info']} ({ast_node['syntax']}):")
+        else:
+            if info := ast_node.get("info"):
+                content.append(f"{info}:")
+            if syntax := ast_node.get("syntax"):
+                content.append(f"{syntax}:")
+
+        content += [
             line.strip() for line in ast_node["code"].splitlines() if line.strip()
         ]
-        if syntax := ast_node["syntax"]:
-            return f"{syntax}: " + " ".join(code_lines)
-        return " ".join(code_lines)
+
+        return " ".join(content)
 
     if ast_type == "code-inline":
         return ast_node["code"]
