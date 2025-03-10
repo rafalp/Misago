@@ -17,13 +17,13 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_link_url">
+            <label class="control-label" for="markup_link_url">
               {% translate "Link address:" context "markup editor link modal" %}
             </label>
             <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_link_text">
+            <label class="control-label" for="markup_link_text">
               {% translate "Link text:" context "markup editor link modal" %}
             </label>
             <div>
@@ -66,13 +66,13 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_link_url">
+            <label class="control-label" for="markup_link_url">
               {% translate "Image URL:" context "markup editor image modal" %}
             </label>
             <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_link_text">
+            <label class="control-label" for="markup_link_text">
               {% translate "Alternate text:" context "markup editor image modal" %}
             </label>
             <div>
@@ -115,7 +115,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_quote_author">
+            <label class="control-label" for="markup_quote_author">
               {% translate "Quote's author or source:" context "markup editor quote modal" %}
             </label>
             <input type="text" id="markup_quote_author" name="author" class="form-control" value="" >
@@ -126,7 +126,7 @@
             </p>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_quote_text">
+            <label class="control-label" for="markup_quote_text">
               {% translate "Quoted text:" context "markup editor quote modal" %}
             </label>
             <div>
@@ -164,7 +164,15 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_code_syntax">
+            <label class="control-label" for="markup_code_info">
+              {% translate "Info:" context "markup editor code modal" %}
+            </label>
+            <div>
+              <input type="text" id="markup_code_info" name="info" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="markup_code_syntax">
               {% translate "Syntax highlighting:" context "markup editor code modal" %}
             </label>
             {% if syntax_highlighting %}
@@ -175,11 +183,11 @@
             {% endif %}
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_code">
+            <label class="control-label" for="markup_code">
               {% translate "Code to insert:" context "markup editor code modal" %}
             </label>
             <div>
-              <textarea type="text" id="markup_code" name="code" class="form-control" rows="6" required></textarea>
+              <textarea id="markup_code" name="code" class="form-control" rows="6" required></textarea>
             </div>
           </div>
         </div>

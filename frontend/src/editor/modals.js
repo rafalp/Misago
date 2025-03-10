@@ -170,27 +170,45 @@ export class MarkupEditorCodeModal extends MarkupEditorModal {
   }
 
   submit(data, selection) {
-    const syntax = data.get("syntax").trim()
-    const code = data.get("code").trim()
+    const info = data.get("info")
+    const syntax = data.get("syntax")
+    const code = data.get("code")
 
     if (code) {
-      const prefix = this.getQuotePrefix(selection, syntax)
-      const suffix = "\n[/code]\n\n"
+      const prefix = this.getCodePrefix(selection)
+      const args = this.getCodeArguments(info, syntax)
+      const delimiter = this.getCodeDelimiter(args, code)
 
-      selection.replace(prefix + code + suffix, {
-        start: prefix.length,
-        end: suffix.length,
-      })
+      const markup =
+        prefix + delimiter + args + "\n" + code + "\n" + delimiter + "\n\n"
+
+      selection.replace(markup, { start: markup.length })
 
       this.hide()
     }
   }
 
-  getQuotePrefix(selection, syntax) {
-    const prefix = selection.prefix().trim().length ? "\n\n" : ""
-    if (syntax) {
-      return prefix + "[code=" + syntax + "]\n"
+  getCodeArguments(info, syntax) {
+    const cleanInfo = (info || "").trim()
+    const cleanSyntax = (syntax || "").trim()
+
+    if (cleanInfo && cleanSyntax) {
+      return cleanInfo + ", syntax: " + cleanSyntax
     }
-    return prefix + "[code]\n"
+
+    return cleanInfo || cleanSyntax || ""
+  }
+
+  getCodeDelimiter(args, code) {
+    let delimiter = args.startsWith("`") ? "~" : "`"
+    while (delimiter.length < 3 || code.indexOf(delimiter) !== -1) {
+      delimiter += delimiter[0]
+      console.log(delimiter)
+    }
+    return delimiter
+  }
+
+  getCodePrefix(selection) {
+    return selection.prefix().trim().length ? "\n\n" : ""
   }
 }
