@@ -94,7 +94,7 @@ def _render_ast_node_to_html_action(
     if ast_type in ("code", "code-bbcode"):
         return html_element(
             "misago-code",
-            f"<pre><code>{escape(ast_node['code'])}</code></pre>",
+            escape(ast_node['code']),
             attrs={
                 "syntax": ast_node["syntax"],
                 "info": ast_node.get("info"),

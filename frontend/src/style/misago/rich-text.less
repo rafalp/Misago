@@ -44,7 +44,9 @@
   p,
   ul,
   ol,
-  table {
+  table,
+  pre,
+  .rich-text-code {
     margin-bottom: @line-height-computed;
 
     &:last-child {
@@ -301,4 +303,64 @@
 
 .rich-text-table-cell-align-right {
   text-align: right;
+}
+
+.rich-text-code {
+  overflow: hidden;
+
+  background-color: @rich-text-code-bg;
+  border-radius: @border-radius-base;
+
+  pre {
+    padding: @rich-text-code-padding;
+
+    background-color: @rich-text-code-bg;
+    border: none;
+    border-radius: 0;
+  }
+}
+
+.rich-text-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: @rich-text-code-padding;
+
+  background-color: @rich-text-code-header-bg;
+  color: @rich-text-code-header-color;
+}
+
+.rich-text-code-info {
+  width: 100%;
+  overflow: hidden;
+
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rich-text-code-copy-btn {
+  border-radius: @border-radius-base;
+  font-size: @font-size-small;
+  white-space: nowrap;
+
+  & {
+    background-color: @rich-text-code-btn-bg;
+    border: 1px solid @rich-text-code-btn-border;
+    color: @rich-text-code-btn-color;
+  }
+
+  &:focus,
+  &:hover {
+    background-color: @rich-text-code-btn-hover-bg;
+    border: 1px solid @rich-text-code-btn-hover-border;
+    color: @rich-text-code-btn-hover-color;
+  }
+
+  &:active {
+    background-color: @rich-text-code-btn-active-bg;
+    border: 1px solid @rich-text-code-btn-active-border;
+    color: @rich-text-code-btn-active-color;
+  }
 }

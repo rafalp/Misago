@@ -20,6 +20,7 @@ def _replace_rich_text_tokens_action(html: str, data) -> str:
     html = replace_rich_text_tokens_attachments(
         html, data.get("attachments"), data.get("attachment_errors")
     )
+    html = replace_rich_text_code_blocks_tokens(html)
 
     return html
 
@@ -83,3 +84,43 @@ def replace_rich_text_attachment_token(
             "id": id,
         },
     )
+
+
+CODE_BLOCK_TOKEN = re.compile(
+    r"\<misago-code(?P<args>.+?)\>(?P<code>.*?)\<\/misago-code\>",
+    re.DOTALL
+)
+
+
+def replace_rich_text_code_blocks_tokens(html: str) -> str:
+    return CODE_BLOCK_TOKEN.sub(replace_rich_text_code_block, html)
+
+
+def replace_rich_text_code_block(match) -> str:
+    info: str | None = None
+    code_plain: str | None = None
+
+    if args := match.group("args"):
+        info = _extract_arg(args, "info")
+        code_plain = _extract_arg(args, "code")
+
+    code = match.group("code") or ""
+
+    return render_to_string(
+        "misago/rich_text/code_block.html",
+        {
+            "info": info,
+            "code_plain": code_plain,
+            "code": code,
+        },
+    )
+
+
+def _extract_arg(args: str, arg: str) -> str | None:
+    arg_html = f'{arg}="'
+
+    if arg_html not in args:
+        return None
+
+    info = args[args.index(arg_html) + len(arg_html):]
+    return info[:info.index('"')].strip() or None
