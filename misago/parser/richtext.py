@@ -2,9 +2,9 @@ import re
 from functools import partial
 
 from django.template.loader import render_to_string
-from django.utils.translation import pgettext
 
 from ..attachments.models import Attachment
+from ..html.replace import replace_html_element, replace_html_element_func
 from ..permissions.checkutils import PermissionCheckResult
 from .hooks import replace_rich_text_tokens_hook
 
@@ -20,7 +20,7 @@ def _replace_rich_text_tokens_action(html: str, data) -> str:
     html = replace_rich_text_tokens_attachments(
         html, data.get("attachments"), data.get("attachment_errors")
     )
-    html = replace_rich_text_code_blocks_tokens(html)
+    html = replace_html_element(html, "misago-code", replace_rich_text_code_block)
 
     return html
 
@@ -86,43 +86,14 @@ def replace_rich_text_attachment_token(
     )
 
 
-CODE_BLOCK_TOKEN = re.compile(
-    r"\<misago-code(?P<args>.+?)\>(?P<code>.*?)\<\/misago-code\>", re.DOTALL
-)
-
-
-def replace_rich_text_code_blocks_tokens(html: str) -> str:
-    return CODE_BLOCK_TOKEN.sub(replace_rich_text_code_block, html)
-
-
-def replace_rich_text_code_block(match) -> str:
-    info: str | None = None
-    syntax: str | None = None
-    language: str | None = None
-
-    if args := match.group("args"):
-        info = _extract_arg(args, "info")
-        syntax = _extract_arg(args, "syntax")
-        language = _extract_arg(args, "language")
-
-    code = match.group("code") or ""
-
+@replace_html_element_func
+def replace_rich_text_code_block(html: str, code: str, args: dict | None) -> str:
     return render_to_string(
         "misago/rich_text/code_block.html",
         {
-            "info": info,
-            "syntax": syntax,
-            "language": language,
+            "info": args.get("info") if args else None,
+            "syntax": args.get("syntax") if args else None,
+            "language": args.get("language") if args else None,
             "code": code,
         },
     )
-
-
-def _extract_arg(args: str, arg: str) -> str | None:
-    arg_html = f'{arg}="'
-
-    if arg_html not in args:
-        return None
-
-    info = args[args.index(arg_html) + len(arg_html) :]
-    return info[: info.index('"')].strip() or None

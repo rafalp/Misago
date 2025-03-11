@@ -72,5 +72,25 @@
   '<spoiler><p>Hello world!</p></spoiler>'
 # ---
 # name: test_replace_rich_text_tokens_replaces_minimal_code_block
-  '<misago-code>Hello world!</misago-code>'
+  '''
+  
+  <div class="rich-text-code" misago-rich-text-code>
+    <div class="rich-text-code-header">
+      <div class="rich-text-code-info">
+        
+          Code
+        
+      </div>
+      
+        <button
+          type="button"
+          class="rich-text-code-copy-btn d-js-block"
+        >
+          Copy
+        </button>
+      
+    </div>
+    <pre><code>Hello world!</code></pre>
+  </div>
+  '''
 # ---
