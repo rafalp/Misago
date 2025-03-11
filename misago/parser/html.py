@@ -1,10 +1,10 @@
 from html import escape
 
 from ..core.utils import slugify
+from ..html.htmlelement import html_element
 from .context import ParserContext
 from .exceptions import AstError
 from .hooks import render_ast_node_to_html_hook
-from .htmlelement import html_element
 from .pygments import PYGMENTS_NAMES
 from .urls import clean_displayed_url, clean_url
 

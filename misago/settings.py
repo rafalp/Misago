@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "misago.formats",
     "misago.forms",
     "misago.forumindex",
+    "misago.html",
     "misago.htmx",
     "misago.icons",
     "misago.legal",
