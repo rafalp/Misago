@@ -5,6 +5,7 @@ from .context import ParserContext
 from .exceptions import AstError
 from .hooks import render_ast_node_to_html_hook
 from .htmlelement import html_element
+from .pygments import PYGMENTS_NAMES
 from .urls import clean_displayed_url, clean_url
 
 URL_REL = "external nofollow noopener"
@@ -92,18 +93,22 @@ def _render_ast_node_to_html_action(
         )
 
     if ast_type in ("code", "code-bbcode"):
+        language = (
+            PYGMENTS_NAMES.get(ast_node["syntax"]) if ast_node["syntax"] else None
+        )
+
         return html_element(
             "misago-code",
-            escape(ast_node['code']),
+            escape(ast_node["code"]),
             attrs={
                 "syntax": ast_node["syntax"],
+                "language": language,
                 "info": ast_node.get("info"),
-                "code": ast_node["code"],
             },
         )
 
     if ast_type == "code-indented":
-        return f"<pre><code>{escape(ast_node['code'])}</code></pre>"
+        return html_element("misago-code", escape(ast_node["code"]))
 
     if ast_type == "code-inline":
         return f"<code>{escape(ast_node['code'])}</code>"

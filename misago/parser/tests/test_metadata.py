@@ -4,8 +4,41 @@ from ..metadata import create_ast_metadata
 def test_create_ast_metadata_creates_metadata_for_empty_ast(parser_context):
     metadata = create_ast_metadata(parser_context, [])
     assert metadata["outbound-links"] == set()
+    assert not metadata["highlight_code"]
     assert metadata["usernames"] == set()
     assert metadata["users"] == {}
+
+
+def test_create_ast_metadata_creates_metadata_for_ast_with_code(parser_context):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "code",
+                "delimiter": "```",
+                "closed": True,
+                "info": None,
+                "syntax": "python",
+                "code": "...",
+            },
+        ],
+    )
+    assert metadata["highlight_code"]
+
+
+def test_create_ast_metadata_creates_metadata_for_ast_with_code_bbcode(parser_context):
+    metadata = create_ast_metadata(
+        parser_context,
+        [
+            {
+                "type": "code-bbcode",
+                "info": None,
+                "syntax": "php",
+                "code": "...",
+            },
+        ],
+    )
+    assert metadata["highlight_code"]
 
 
 def test_create_ast_metadata_creates_metadata_for_ast_with_attachments(parser_context):

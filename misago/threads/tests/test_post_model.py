@@ -202,3 +202,7 @@ class PostModelTests(TestCase):
         self.post.move(new_thread)
 
         self.assertEqual(self.post.thread, new_thread)
+
+
+def test_post_sha256_checksum(post):
+    assert post.sha256_checksum

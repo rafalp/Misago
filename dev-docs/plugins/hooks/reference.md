@@ -54,6 +54,7 @@ Hooks instances are importable from the following Python modules:
 - [`clean_displayed_url_hook`](./clean-displayed-url-hook.md)
 - [`create_parser_hook`](./create-parser-hook.md)
 - [`get_ast_metadata_users_queryset_hook`](./get-ast-metadata-users-queryset-hook.md)
+- [`highlight_syntax_hook`](./highlight-syntax-hook.md)
 - [`render_ast_node_to_html_hook`](./render-ast-node-to-html-hook.md)
 - [`render_ast_node_to_plaintext_hook`](./render-ast-node-to-plaintext-hook.md)
 - [`replace_rich_text_tokens_hook`](./replace-rich-text-tokens-hook.md)

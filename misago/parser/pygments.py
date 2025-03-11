@@ -6,9 +6,10 @@ from pygments.lexers import get_all_lexers
 
 def get_pygments_options(
     enabled_languages: Iterable[str] | bool,
-) -> tuple[dict[str, str], set[str]]:
+) -> tuple[set[str], tuple[tuple[str, str], ...], dict[str, str]]:
     languages: list[str] = []
     choices: list[tuple[str, str]] = []
+    names: dict[str, str] = {}
 
     for lexer in get_all_lexers():
         name, aliases = lexer[:2]
@@ -20,17 +21,21 @@ def get_pygments_options(
             and aliases[0] in enabled_languages
         ):
             languages.extend(aliases)
-            choices.append((name, aliases[0]))
+            choices.append((aliases[0], name))
 
-    return set(languages), tuple(choices)
+            for alias in aliases:
+                names[alias] = name
+
+    return set(languages), tuple(choices), names
 
 
 PYGMENTS_LANGUAGES: set[str] = set()
 PYGMENTS_CHOICES: tuple[tuple[str, str], ...] = ()
+PYGMENTS_NAMES: dict[str, str] = {}
 
-if settings.MISAGO_PARSER_PYGMENTS_LANGUAGES is True or isinstance(
-    settings.MISAGO_PARSER_PYGMENTS_LANGUAGES, (list, tuple)
+if settings.MISAGO_PYGMENTS_LANGUAGES is True or isinstance(
+    settings.MISAGO_PYGMENTS_LANGUAGES, (list, tuple)
 ):
-    PYGMENTS_LANGUAGES, PYGMENTS_CHOICES = get_pygments_options(
-        settings.MISAGO_PARSER_PYGMENTS_LANGUAGES
+    PYGMENTS_LANGUAGES, PYGMENTS_CHOICES, PYGMENTS_NAMES = get_pygments_options(
+        settings.MISAGO_PYGMENTS_LANGUAGES
     )

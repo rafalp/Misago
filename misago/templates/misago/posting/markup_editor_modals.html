@@ -181,7 +181,7 @@
             {% if syntax_highlighting %}
               <select id="markup_code_syntax" class="form-control" name="syntax">
                 <option value="">{% translate "No syntax highlighting" context "markup editor code syntax choice" %}</option>
-                {% for choice in syntax_highlighting %}<option value="{{ choice.1 }}">{{ choice.0 }}</option>{% endfor %}
+                {% for value, name in syntax_highlighting %}<option value="{{ value }}">{{ name }}</option>{% endfor %}
               </select>
             {% endif %}
           </div>

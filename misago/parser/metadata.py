@@ -23,6 +23,7 @@ def create_ast_metadata(
         "outbound-links": set(),
         "attachments": set(),
         "usernames": set(),
+        "highlight_code": False,
         "users": {},
         "posts": {
             "ids": set(),
@@ -67,6 +68,9 @@ def _update_ast_metadata_from_node_action(
     elif ast_node["type"] == "quote-bbcode":
         if ast_node["post"]:
             metadata["posts"]["ids"].add(ast_node["post"])
+
+    if ast_node["type"] in ("code", "code-bbcode") and ast_node["syntax"]:
+        metadata["highlight_code"] = True
 
     if ast_node["type"] == "attachment":
         metadata["attachments"].add(ast_node["id"])

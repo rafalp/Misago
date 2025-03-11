@@ -201,9 +201,7 @@ def test_render_ast_to_plaintext_code(parser_context, parse_markup, snapshot):
     assert snapshot == render_ast_to_plaintext(parser_context, ast, metadata)
 
 
-def test_render_ast_to_plaintext_code_with_info(
-    parser_context, parse_markup, snapshot
-):
+def test_render_ast_to_plaintext_code_with_info(parser_context, parse_markup, snapshot):
     ast = parse_markup(
         """
         ```misago.py

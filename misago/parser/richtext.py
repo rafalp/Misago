@@ -87,8 +87,7 @@ def replace_rich_text_attachment_token(
 
 
 CODE_BLOCK_TOKEN = re.compile(
-    r"\<misago-code(?P<args>.+?)\>(?P<code>.*?)\<\/misago-code\>",
-    re.DOTALL
+    r"\<misago-code(?P<args>.+?)\>(?P<code>.*?)\<\/misago-code\>", re.DOTALL
 )
 
 
@@ -98,11 +97,13 @@ def replace_rich_text_code_blocks_tokens(html: str) -> str:
 
 def replace_rich_text_code_block(match) -> str:
     info: str | None = None
-    code_plain: str | None = None
+    syntax: str | None = None
+    language: str | None = None
 
     if args := match.group("args"):
         info = _extract_arg(args, "info")
-        code_plain = _extract_arg(args, "code")
+        syntax = _extract_arg(args, "syntax")
+        language = _extract_arg(args, "language")
 
     code = match.group("code") or ""
 
@@ -110,7 +111,8 @@ def replace_rich_text_code_block(match) -> str:
         "misago/rich_text/code_block.html",
         {
             "info": info,
-            "code_plain": code_plain,
+            "syntax": syntax,
+            "language": language,
             "code": code,
         },
     )
@@ -122,5 +124,5 @@ def _extract_arg(args: str, arg: str) -> str | None:
     if arg_html not in args:
         return None
 
-    info = args[args.index(arg_html) + len(arg_html):]
-    return info[:info.index('"')].strip() or None
+    info = args[args.index(arg_html) + len(arg_html) :]
+    return info[: info.index('"')].strip() or None

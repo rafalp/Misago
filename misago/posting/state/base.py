@@ -17,6 +17,7 @@ from ...parser.html import render_ast_to_html
 from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import render_ast_to_plaintext
 from ...threads.models import Post, Thread
+from ..tasks import update_post_html
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -141,6 +142,9 @@ class PostingState:
 
         self.message_ast = ast
         self.message_metadata = metadata
+
+    def schedule_post_html_update(self):
+        update_post_html.delay(self.post.id, self.post.sha256_checksum)
 
     def set_attachments(self, attachments: list[Attachment]):
         self.attachments = attachments

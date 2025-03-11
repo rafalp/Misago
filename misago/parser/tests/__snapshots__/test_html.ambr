@@ -13,54 +13,42 @@
 # ---
 # name: test_render_ast_to_html_code
   '''
-  <misago-code code="if random.randint(0, 10) &gt; 4:
+  <misago-code>if random.randint(0, 10) &gt; 4:
       print(&quot;Gotcha!&quot;)
       return True
-  return False"><pre><code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
-      return True
-  return False</code></pre></misago-code>
+  return False</misago-code>
   '''
 # ---
 # name: test_render_ast_to_html_code_bbcode
   '''
-  <misago-code code="if random.randint(0, 10) &gt; 4:
+  <misago-code>if random.randint(0, 10) &gt; 4:
       print(&quot;Gotcha!&quot;)
       return True
-  return False"><pre><code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
-      return True
-  return False</code></pre></misago-code>
+  return False</misago-code>
   '''
 # ---
 # name: test_render_ast_to_html_code_bbcode_with_syntax
   '''
-  <misago-code syntax="python" code="if random.randint(0, 10) &gt; 4:
+  <misago-code syntax="python" language="Python">if random.randint(0, 10) &gt; 4:
       print(&quot;Gotcha!&quot;)
       return True
-  return False"><pre><code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
-      return True
-  return False</code></pre></misago-code>
+  return False</misago-code>
   '''
 # ---
 # name: test_render_ast_to_html_code_indented
   '''
-  <p>Hello:</p><pre><code>if random.randint(0, 10) &gt; 4:
+  <p>Hello:</p><misago-code>if random.randint(0, 10) &gt; 4:
       print(&quot;Gotcha!&quot;)
       return True
-  return False</code></pre>
+  return False</misago-code>
   '''
 # ---
 # name: test_render_ast_to_html_code_with_syntax
   '''
-  <misago-code syntax="python" code="if random.randint(0, 10) &gt; 4:
+  <misago-code syntax="python" language="Python">if random.randint(0, 10) &gt; 4:
       print(&quot;Gotcha!&quot;)
       return True
-  return False"><pre><code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
-      return True
-  return False</code></pre></misago-code>
+  return False</misago-code>
   '''
 # ---
 # name: test_render_ast_to_html_emphasis_text

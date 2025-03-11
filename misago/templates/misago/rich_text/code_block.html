@@ -4,6 +4,8 @@
     <div class="rich-text-code-info">
       {% if info %}
         {{ info }}
+      {% elif language %}
+        {{ language }}
       {% else %}
         {% trans "Code" context "rich text code" %}
       {% endif %}

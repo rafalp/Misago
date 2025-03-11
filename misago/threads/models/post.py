@@ -1,4 +1,5 @@
 import copy
+import hashlib
 
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
@@ -170,6 +171,12 @@ class Post(PluginDataModel):
                 self._hydrated_attachments_cache.append(attachment)
 
         return self._hydrated_attachments_cache
+
+    @property
+    def sha256_checksum(self) -> str:
+        return hashlib.sha256(
+            f"{self.id}:{self.updated_on}:{self.parsed}".encode()
+        ).hexdigest()
 
     @property
     def content(self):

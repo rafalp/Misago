@@ -64,6 +64,8 @@ class ReplyThreadState(PostingState):
         self.post.update_search_vector()
         self.post.save()
 
+        self.schedule_post_html_update()
+
     def save_thread(self):
         if not self.is_merged:
             self.thread.replies = models.F("replies") + 1

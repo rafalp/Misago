@@ -138,3 +138,39 @@ def test_replace_rich_text_tokens_replaces_not_existing_attachment_with_link():
     assert "image.png" in result
     assert f'href="{download_url}"' in result
     assert f'href="{details_url}"' in result
+
+
+def test_replace_rich_text_tokens_replaces_minimal_code_block(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[code]Hello world![/code]")
+    metadata = create_ast_metadata(parser_context, ast)
+    html = render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == replace_rich_text_tokens(html)
+
+
+def test_replace_rich_text_tokens_replaces_code_block_with_syntax(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[code=php]Hello world![/code]")
+    metadata = create_ast_metadata(parser_context, ast)
+    html = render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == replace_rich_text_tokens(html)
+
+
+def test_replace_rich_text_tokens_replaces_code_block_with_info(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[code=Example string]Hello world![/code]")
+    metadata = create_ast_metadata(parser_context, ast)
+    html = render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == replace_rich_text_tokens(html)
+
+
+def test_replace_rich_text_tokens_replaces_code_block_with_info_and_syntax(
+    parser_context, parse_markup, snapshot
+):
+    ast = parse_markup("[code=Example string, syntax=php]Hello world![/code]")
+    metadata = create_ast_metadata(parser_context, ast)
+    html = render_ast_to_html(parser_context, ast, metadata)
+    assert snapshot == replace_rich_text_tokens(html)
