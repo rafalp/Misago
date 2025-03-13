@@ -4,6 +4,11 @@ from ...permissions.proxy import UserPermissionsProxy
 
 
 @pytest.fixture
+def mock_upgrade_post_content(mocker):
+    return mocker.patch("misago.posting.tasks.upgrade_post_content")
+
+
+@pytest.fixture
 def user_request(rf, cache_versions, dynamic_settings, user):
     request = rf.post("/post/")
 

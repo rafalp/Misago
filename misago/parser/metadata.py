@@ -22,8 +22,8 @@ def create_ast_metadata(
     metadata = {
         "outbound-links": set(),
         "attachments": set(),
-        "usernames": set(),
         "highlight_code": False,
+        "usernames": set(),
         "users": {},
         "posts": {
             "ids": set(),

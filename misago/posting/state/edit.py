@@ -59,7 +59,7 @@ class EditThreadPostState(PostingState):
         self.post.update_search_vector()
         self.update_object(self.post)
 
-        self.schedule_post_html_update()
+        self.upgrade_post_content()
 
     def save_thread(self):
         self.update_object(self.thread)
