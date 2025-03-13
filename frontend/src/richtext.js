@@ -16,7 +16,7 @@ async function copyCode(event) {
     const code = element.querySelector("code").textContent
     if (code.trim()) {
       await navigator.clipboard.writeText(code)
-      snackbars.info(pgettext("code copied", "Copied"))
+      snackbars.info(pgettext("code copied", "Code copied"))
     }
   }
 }

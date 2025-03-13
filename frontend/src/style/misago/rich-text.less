@@ -326,6 +326,7 @@
   justify-content: space-between;
 
   padding: @rich-text-code-padding;
+  padding-bottom: 0;
 
   background-color: @rich-text-code-header-bg;
   color: @rich-text-code-header-color;
@@ -341,8 +342,11 @@
 }
 
 .rich-text-code-copy-btn {
+  padding: 4px 8px;
+
   border-radius: @border-radius-base;
   font-size: @font-size-small;
+  font-weight: bold;
   white-space: nowrap;
 
   & {
