@@ -39,13 +39,17 @@ def upgrade_post_code_blocks(post: Post):
 
 
 def _upgrade_post_code_blocks_action(post: Post):
-    if not post.metadata.get("highlight_code"):
+    if "highlight_code" not in post.metadata:
         return
 
-    html = CODE_BLOCK_PATTERN.sub(upgrade_post_code_blocks_syntax, post.parsed)
+    if post.metadata["highlight_code"]:
+        html = CODE_BLOCK_PATTERN.sub(upgrade_post_code_blocks_syntax, post.parsed)
+    else:
+        html = None
+
     post.metadata.pop("highlight_code")
 
-    if post.parsed != html:
+    if html and post.parsed != html:
         post.parsed = html
         post.save(update_fields=["parsed", "metadata"])
     else:
