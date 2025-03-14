@@ -2,6 +2,7 @@ import re
 from textwrap import dedent
 
 from ..parser import Parser, Pattern
+from ..pygments import PYGMENTS_LANGUAGES
 
 
 def dedent_and_strip(text: str) -> str:
@@ -22,6 +23,29 @@ def unescape(parser: Parser, code: str) -> str:
     return code
 
 
+CODE_ARGS = re.compile(r"^(?P<info>.+)[;,] *syntax[:=] *(?P<syntax>.+) *$")
+
+
+def parse_code_args(parser: Parser, args: str) -> dict:
+    args = args.strip()
+
+    if args.startswith("syntax:"):
+        syntax = args[args.index("syntax:") + 7 :].strip()
+        syntax = unescape(parser, syntax)
+        return {"info": None, "syntax": syntax.lower()}
+
+    if match := CODE_ARGS.match(args):
+        return {
+            "info": unescape(parser, match.group("info")).strip() or None,
+            "syntax": unescape(parser, match.group("syntax")).strip() or None,
+        }
+
+    if args.lower() in PYGMENTS_LANGUAGES:
+        return {"info": None, "syntax": args}
+
+    return {"info": args or None, "syntax": None}
+
+
 class FencedCodeMarkdown(Pattern):
     pattern_type: str = "code"
     pattern: str = (
@@ -39,18 +63,25 @@ class FencedCodeMarkdown(Pattern):
 
         delimiter = match[0]
         delimiter_len = len(match) - len(match.lstrip(delimiter))
+        closed = False
 
         match = match[delimiter_len:]
         if match.rstrip().endswith(delimiter * delimiter_len):
             match = match.rstrip()[: -1 * delimiter_len]
+            closed = True
 
-        syntax = parser.unescape(match[: match.index("\n")].strip())
+        args = parse_code_args(parser, match[: match.index("\n")].strip())
+
+        # syntax = parser.unescape(match[: match.index("\n")].strip())
         code = unescape(parser, match[match.index("\n") :]).strip("\n")
         code = "\n".join(line if line.strip() else "" for line in code.splitlines())
 
         return {
             "type": self.pattern_type,
-            "syntax": syntax or None,
+            "delimiter": delimiter * delimiter_len,
+            "closed": closed,
+            "info": args["info"],
+            "syntax": args["syntax"],
             "code": code,
         }
 
@@ -71,17 +102,18 @@ class CodeBBCode(Pattern):
     pattern_type: str = "code-bbcode"
     pattern: str = r"\[code(=.+)?\]((.|\n)*?)\[\/code\]"
     contents_pattern = re.compile(
-        r"\[code(=(?P<syntax>(.+)))?\](?P<code>((.|\n)*?))\[\/code\]",
+        r"\[code(=(?P<args>(.+)))?\](?P<code>((.|\n)*?))\[\/code\]",
         re.IGNORECASE,
     )
 
     def parse(self, parser: Parser, match: str, parents: list[str]) -> dict:
         contents = self.contents_pattern.match(match.strip())
-        syntax = parser.unescape((contents.group("syntax") or "").strip("\"'")).strip()
+        args = parse_code_args(parser, (contents.group("args") or "").strip("\"'"))
 
         return {
             "type": self.pattern_type,
-            "syntax": syntax or None,
+            "info": args["info"],
+            "syntax": args["syntax"],
             "code": unescape(
                 parser,
                 dedent(contents.group("code").lstrip("\n").rstrip()).rstrip(),

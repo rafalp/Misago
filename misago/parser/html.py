@@ -1,10 +1,11 @@
 from html import escape
 
 from ..core.utils import slugify
+from ..html.element import html_element
 from .context import ParserContext
 from .exceptions import AstError
 from .hooks import render_ast_node_to_html_hook
-from .htmlelement import html_element
+from .pygments import PYGMENTS_NAMES
 from .urls import clean_displayed_url, clean_url
 
 URL_REL = "external nofollow noopener"
@@ -92,19 +93,22 @@ def _render_ast_node_to_html_action(
         )
 
     if ast_type in ("code", "code-bbcode"):
-        if ast_node["syntax"]:
-            html_class = f"language-{ast_node['syntax']}"
-        else:
-            html_class = None
+        language = (
+            PYGMENTS_NAMES.get(ast_node["syntax"]) if ast_node["syntax"] else None
+        )
 
         return html_element(
-            "pre",
-            f"<code>{escape(ast_node['code'])}</code>",
-            attrs={"class": html_class},
+            "misago-code",
+            escape(ast_node["code"]),
+            attrs={
+                "syntax": ast_node["syntax"],
+                "language": language,
+                "info": ast_node.get("info"),
+            },
         )
 
     if ast_type == "code-indented":
-        return f"<pre><code>{escape(ast_node['code'])}</code></pre>"
+        return html_element("misago-code", escape(ast_node["code"]))
 
     if ast_type == "code-inline":
         return f"<code>{escape(ast_node['code'])}</code>"
@@ -185,7 +189,14 @@ def _render_ast_node_to_html_action(
         return f'<div class="rich-text-attachment-group">{children}</div>'
 
     if ast_type == "attachment":
-        return f"<attachment={ast_node['name']}:{ast_node['slug']}:{ast_node['id']}>"
+        return html_element(
+            "misago-attachment",
+            attrs={
+                "name": ast_node["name"],
+                "slug": ast_node["slug"],
+                "id": str(ast_node["id"]),
+            },
+        )
 
     if ast_type in ("image", "image-bbcode"):
         return html_element(

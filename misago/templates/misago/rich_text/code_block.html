@@ -1,0 +1,23 @@
+{% load i18n %}
+<div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code-header">
+    <div class="rich-text-code-info">
+      {% if info %}
+        {{ info }}
+      {% elif language %}
+        {{ language }}
+      {% else %}
+        {% trans "Code" context "rich text code" %}
+      {% endif %}
+    </div>
+    {% if code %}
+      <button
+        type="button"
+        class="rich-text-code-copy-btn d-js-block"
+      >
+        {% trans "Copy" context "rich text code copy btn" %}
+      </button>
+    {% endif %}
+  </div>
+  <pre><code>{{ code|safe }}</code></pre>
+</div>

@@ -128,3 +128,20 @@ def test_start_thread_state_delete_attachments_excludes_unknown_attachments(
     assert attachment.thread == post.thread
     assert attachment.post == post
     assert not attachment.is_deleted
+
+
+def test_start_thread_state_schedules_post_upgrade_for_post_with_code_block(
+    mock_upgrade_post_content, user_request, default_category
+):
+    state = StartThreadState(user_request, default_category)
+    state.set_thread_title("Test thread")
+    state.set_post_message("Hello world[code=python]add(1, 3)[/code]")
+    state.save()
+
+    assert state.thread.id
+    assert state.post.id
+    assert state.post.thread == state.thread
+
+    mock_upgrade_post_content.delay.assert_called_once_with(
+        state.post.id, state.post.sha256_checksum
+    )

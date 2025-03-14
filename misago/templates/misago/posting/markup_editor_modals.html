@@ -17,13 +17,13 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_link_url">
+            <label class="control-label" for="markup_link_url">
               {% translate "Link address:" context "markup editor link modal" %}
             </label>
             <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_link_text">
+            <label class="control-label" for="markup_link_text">
               {% translate "Link text:" context "markup editor link modal" %}
             </label>
             <div>
@@ -66,13 +66,13 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_link_url">
+            <label class="control-label" for="markup_link_url">
               {% translate "Image URL:" context "markup editor image modal" %}
             </label>
             <input type="text" id="markup_link_url" name="url" class="form-control" value="" required>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_link_text">
+            <label class="control-label" for="markup_link_text">
               {% translate "Alternate text:" context "markup editor image modal" %}
             </label>
             <div>
@@ -115,10 +115,10 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_quote_author">
+            <label class="control-label" for="markup_quote_author">
               {% translate "Quote's author or source:" context "markup editor quote modal" %}
             </label>
-            <input type="text" id="markup_quote_author" name="author" class="form-control" value="" >
+            <input type="text" id="markup_quote_author" name="author" class="form-control" value="">
             <p class="help-block">
               {% blocktranslate trimmed context "markup editor quote modal" %}
                 Optional. If it's username, put "@" before it ("@JohnDoe").
@@ -126,7 +126,7 @@
             </p>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_quote_text">
+            <label class="control-label" for="markup_quote_text">
               {% translate "Quoted text:" context "markup editor quote modal" %}
             </label>
             <div>
@@ -164,56 +164,33 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="control-label " for="markup_code_syntax">
-              {% translate "Syntax highlighting:" context "markup editor code modal" %}
+            <label class="control-label" for="markup_code_info">
+              {% translate "Info:" context "markup editor code modal" %}
             </label>
-            <select id="markup_code_syntax" class="form-control" name="syntax">
-              <option value="">{% translate "No syntax highlighting" context "markup editor code syntax choice" %}</option>
-              <option value="bash">Bash</option>
-              <option value="c">C</option>
-              <option value="c#">C#</option>
-              <option value="c++">C++</option>
-              <option value="css">CSS</option>
-              <option value="diff">Diff</option>
-              <option value="go">Go</option>
-              <option value="graphql">GraphQL</option>
-              <option value="html,">HTML</option>
-              <option value="xml">XML</option>
-              <option value="json">JSON</option>
-              <option value="java">Java</option>
-              <option value="javascript">JavaScript</option>
-              <option value="kotlin">Kotlin</option>
-              <option value="less">Less</option>
-              <option value="lua">Lua</option>
-              <option value="makefile">Makefile</option>
-              <option value="markdown">Markdown</option>
-              <option value="objectivec">Objective-C</option>
-              <option value="php">PHP</option>
-              <option value="perl">Perl</option>
-              <option value="plaintext">Plaintext</option>
-              <option value="python">Python</option>
-              <option value="repl">REPL</option>
-              <option value="r">R</option>
-              <option value="ruby">Ruby</option>
-              <option value="rust">Rust</option>
-              <option value="scss">SCSS</option>
-              <option value="sql">SQL</option>
-              <option value="shell">{% translate "Shell Session" context "markup editor code syntax choice" %}</option>
-              <option value="swift">Swift</option>
-              <option value="toml">TOML</option>
-              <option value="ini">INI</option>
-              <option value="typescript">TypeScript</option>
-              <option value="visualbasic">Visual Basic .NET</option>
-              <option value="webassembly">WebAssembly</option>
-              <option value="yaml">YAML</option>
-            </select>
+            <input type="text" id="markup_code_info" name="info" class="form-control">
+            <p class="help-block">
+              {% blocktranslate trimmed context "markup editor quote modal" %}
+                Short description for the code. Optional.
+              {% endblocktranslate %}
+            </p>
           </div>
           <div class="form-group">
-            <label class="control-label " for="markup_code">
+            <label class="control-label" for="markup_code_syntax">
+              {% translate "Syntax highlighting:" context "markup editor code modal" %}
+            </label>
+            {% if syntax_highlighting %}
+              <select id="markup_code_syntax" class="form-control" name="syntax">
+                <option value="">{% translate "No syntax highlighting" context "markup editor code syntax choice" %}</option>
+                {% for value, name in syntax_highlighting %}<option value="{{ value }}">{{ name }}</option>{% endfor %}
+              </select>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="markup_code">
               {% translate "Code to insert:" context "markup editor code modal" %}
             </label>
             <div>
-              <textarea type="text" id="markup_code" name="code" class="form-control" rows="6" required></textarea>
+              <textarea id="markup_code" name="code" class="form-control" rows="6" required></textarea>
             </div>
           </div>
         </div>

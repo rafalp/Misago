@@ -97,6 +97,7 @@ def test_posting_state_set_post_message_updates_post_contents(user_request, post
         "outbound-links": set(),
         "posts": {"ids": set(), "objs": {}},
         "attachments": set(),
+        "highlight_code": False,
         "usernames": set(),
         "users": {},
     }
@@ -112,7 +113,7 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
     assert post.original == "<attachment=image.png:123>"
     assert post.parsed == (
         '<div class="rich-text-attachment-group">'
-        "<attachment=image.png:image-png:123>"
+        '<misago-attachment name="image.png" slug="image-png" id="123" />'
         "</div>"
     )
     assert post.metadata == {"attachments": [123]}
@@ -134,6 +135,7 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
         "outbound-links": set(),
         "posts": {"ids": set(), "objs": {}},
         "attachments": {123},
+        "highlight_code": False,
         "usernames": set(),
         "users": {},
     }

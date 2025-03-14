@@ -1,4 +1,96 @@
 # serializer version: 1
+# name: test_replace_rich_text_tokens_replaces_code_block_with_info
+  '''
+  
+  <div class="rich-text-code" misago-rich-text-code>
+    <div class="rich-text-code-header">
+      <div class="rich-text-code-info">
+        
+          Example string
+        
+      </div>
+      
+        <button
+          type="button"
+          class="rich-text-code-copy-btn d-js-block"
+        >
+          Copy
+        </button>
+      
+    </div>
+    <pre><code>Hello world!</code></pre>
+  </div>
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_code_block_with_info_and_syntax
+  '''
+  
+  <div class="rich-text-code" misago-rich-text-code>
+    <div class="rich-text-code-header">
+      <div class="rich-text-code-info">
+        
+          Example string
+        
+      </div>
+      
+        <button
+          type="button"
+          class="rich-text-code-copy-btn d-js-block"
+        >
+          Copy
+        </button>
+      
+    </div>
+    <pre><code>Hello world!</code></pre>
+  </div>
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_code_block_with_syntax
+  '''
+  
+  <div class="rich-text-code" misago-rich-text-code>
+    <div class="rich-text-code-header">
+      <div class="rich-text-code-info">
+        
+          PHP
+        
+      </div>
+      
+        <button
+          type="button"
+          class="rich-text-code-copy-btn d-js-block"
+        >
+          Copy
+        </button>
+      
+    </div>
+    <pre><code>Hello world!</code></pre>
+  </div>
+  '''
+# ---
 # name: test_replace_rich_text_tokens_replaces_default_spoiler_summary
   '<spoiler><p>Hello world!</p></spoiler>'
+# ---
+# name: test_replace_rich_text_tokens_replaces_minimal_code_block
+  '''
+  
+  <div class="rich-text-code" misago-rich-text-code>
+    <div class="rich-text-code-header">
+      <div class="rich-text-code-info">
+        
+          Code
+        
+      </div>
+      
+        <button
+          type="button"
+          class="rich-text-code-copy-btn d-js-block"
+        >
+          Copy
+        </button>
+      
+    </div>
+    <pre><code>Hello world!</code></pre>
+  </div>
+  '''
 # ---

@@ -1,4 +1,4 @@
-from ..htmlelement import html_element
+from ..element import html_element
 
 
 def test_html_element_returns_single_tag():

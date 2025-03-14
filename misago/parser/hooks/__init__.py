@@ -1,6 +1,7 @@
 from .clean_displayed_url import clean_displayed_url_hook
 from .create_parser import create_parser_hook
 from .get_ast_metadata_users_queryset import get_ast_metadata_users_queryset_hook
+from .highlight_syntax import highlight_syntax_hook
 from .render_ast_node_to_html import render_ast_node_to_html_hook
 from .render_ast_node_to_plaintext import render_ast_node_to_plaintext_hook
 from .replace_rich_text_tokens import replace_rich_text_tokens_hook
@@ -13,6 +14,7 @@ __all__ = [
     "clean_displayed_url_hook",
     "create_parser_hook",
     "get_ast_metadata_users_queryset_hook",
+    "highlight_syntax_hook",
     "render_ast_node_to_html_hook",
     "render_ast_node_to_plaintext_hook",
     "replace_rich_text_tokens_hook",

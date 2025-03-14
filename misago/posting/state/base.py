@@ -17,6 +17,8 @@ from ...parser.html import render_ast_to_html
 from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import render_ast_to_plaintext
 from ...threads.models import Post, Thread
+from ..tasks import upgrade_post_content
+from ..upgradepost import post_needs_content_upgrade
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -137,10 +139,17 @@ class PostingState:
             metadata,
             text_format=PlainTextFormat.SEARCH_DOCUMENT,
         )
+
         self.post.metadata["attachments"] = list(metadata["attachments"])
+        if metadata.get("highlight_code"):
+            self.post.metadata["highlight_code"] = True
 
         self.message_ast = ast
         self.message_metadata = metadata
+
+    def schedule_post_content_upgrade(self):
+        if post_needs_content_upgrade(self.post):
+            upgrade_post_content.delay(self.post.id, self.post.sha256_checksum)
 
     def set_attachments(self, attachments: list[Attachment]):
         self.attachments = attachments
