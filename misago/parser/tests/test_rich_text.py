@@ -3,8 +3,8 @@ from django.http import Http404
 from django.urls import reverse
 
 from ...attachments.models import Attachment
+from ...html.element import html_element
 from ...permissions.checkutils import PermissionCheckResult
-from ...html.htmlelement import html_element
 from ..html import render_ast_to_html
 from ..metadata import create_ast_metadata
 from ..richtext import replace_rich_text_tokens

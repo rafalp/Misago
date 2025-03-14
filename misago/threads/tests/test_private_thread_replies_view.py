@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from ...html.element import html_element
 from ...test import assert_contains, assert_not_contains
 from ..models import ThreadParticipant
 
@@ -247,7 +248,24 @@ def test_private_thread_replies_view_shows_post_with_embed_attachments(
     video_attachment,
     text_attachment,
 ):
+    attachments = (
+        image_attachment,
+        image_thumbnail_attachment,
+        video_attachment,
+        text_attachment,
+    )
     post = user_private_thread.first_post
+
+    post.parsed = "<p>Hello world!</>"
+    for attachment in attachments:
+        post.parsed += html_element(
+            "misago-attachment",
+            attrs={
+                "name": attachment.name,
+                "slug": attachment.slug,
+                "id": str(attachment.id),
+            },
+        )
 
     invalid_id = (
         max(
@@ -259,14 +277,15 @@ def test_private_thread_replies_view_shows_post_with_embed_attachments(
         * 100
     )
 
-    post.parsed = (
-        "<p>Hello world!</>"
-        f"<attachment={image_attachment.name}:{image_attachment.slug}:{image_attachment.id}>"
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.slug}:{image_thumbnail_attachment.id}>"
-        f"<attachment={video_attachment.name}:{video_attachment.slug}:{video_attachment.id}>"
-        f"<attachment={text_attachment.name}:{text_attachment.slug}:{text_attachment.id}>"
-        f"<attachment=invalid-attachment.txt:invalid-attachment-txt:{invalid_id}>"
+    post.parsed += html_element(
+        "misago-attachment",
+        attrs={
+            "name": "invalid-attachment.txt",
+            "slug": "invalid-attachment-txt",
+            "id": str(invalid_id),
+        },
     )
+
     post.metadata = {
         "attachments": [
             image_attachment.id,
