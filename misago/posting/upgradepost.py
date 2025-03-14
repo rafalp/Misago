@@ -61,8 +61,8 @@ def upgrade_post_code_blocks_syntax(match) -> str:
     code: str | None = None
     args = match.group("args") or ""
 
-    if match.group("code"):
-        code = html.unescape(match.group("code").strip())
+    if code := match.group("code"):
+        code = html.unescape(code.rstrip())
 
     if 'syntax="' in args:
         syntax = args[args.index('syntax="') + 8 :]
@@ -72,4 +72,4 @@ def upgrade_post_code_blocks_syntax(match) -> str:
         return match.group(0)
 
     result = highlight_syntax(syntax, code)
-    return f"<misago-code {args}>{result}</misago-code>"
+    return f"<misago-code{args}>{result}</misago-code>"
