@@ -70,6 +70,4 @@ def plugin_upgrade_post_code_blocks(action, post: Post):
         post.parsed = custom_highlight_code_util(post.parsed)
         post.metadata.pop("highlight_code")
         post.save(update_fields=["parsed", "metadata"])
-
-    action(post)
 ```
