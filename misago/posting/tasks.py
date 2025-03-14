@@ -16,8 +16,8 @@ logger = getLogger("misago.posting")
     serializer="json",
 )
 def upgrade_post_content(post_id: int, checksum: str):
-    post = Post.objects.filter(id=post_id).first()
-    if not post or post.sha256_checksum != checksum:
+    post = Post.objects.get(id=post_id)
+    if post.sha256_checksum != checksum:
         return
 
     try:
