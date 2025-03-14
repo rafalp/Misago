@@ -1,10 +1,13 @@
-import copy
 import html
 import re
 
 from ..parser.highlighter import highlight_syntax
 from ..threads.models import Post
-from .hooks import post_needs_content_upgrade_hook, upgrade_post_content_hook
+from .hooks import (
+    post_needs_content_upgrade_hook,
+    upgrade_post_content_hook,
+    upgrade_post_code_blocks_hook,
+)
 
 
 def post_needs_content_upgrade(post: Post) -> bool:
@@ -26,16 +29,20 @@ def _upgrade_post_content_action(post: Post):
     upgrade_post_code_blocks(post)
 
 
-CODE_BLOCK_TOKEN = re.compile(
+CODE_BLOCK_PATTERN = re.compile(
     r"\<misago-code(?P<args>.+?)\>(?P<code>.*?)\<\/misago-code\>", re.DOTALL
 )
 
 
 def upgrade_post_code_blocks(post: Post):
+    upgrade_post_code_blocks_hook(_upgrade_post_code_blocks_action, post)
+
+
+def _upgrade_post_code_blocks_action(post: Post):
     if not post.metadata.get("highlight_code"):
         return
 
-    html = CODE_BLOCK_TOKEN.sub(upgrade_post_code_blocks_syntax, post.parsed)
+    html = CODE_BLOCK_PATTERN.sub(upgrade_post_code_blocks_syntax, post.parsed)
     post.metadata.pop("highlight_code")
 
     if post.parsed != html:

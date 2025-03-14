@@ -1,6 +1,6 @@
 # `upgrade_post_content_hook`
 
-This hook wraps the standard Misago function to upgrade post content after it has been posted.
+This hook wraps the standard Misago function used to upgrade post content after it has been posted.
 
 The upgrade process runs in a Celery task scheduled after the post is created, allowing slow and costly operations, such as embedding previews of linked sites, to be performed without slowing down the posting process.
 

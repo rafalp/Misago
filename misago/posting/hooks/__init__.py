@@ -41,6 +41,7 @@ from .save_reply_private_thread_state import save_reply_private_thread_state_hoo
 from .save_reply_thread_state import save_reply_thread_state_hook
 from .save_start_private_thread_state import save_start_private_thread_state_hook
 from .save_start_thread_state import save_start_thread_state_hook
+from .upgrade_post_code_blocks import upgrade_post_code_blocks_hook
 from .upgrade_post_content import upgrade_post_content_hook
 from .validate_post import validate_post_hook
 from .validate_posted_contents import validate_posted_contents_hook
@@ -69,6 +70,7 @@ __all__ = [
     "save_reply_thread_state_hook",
     "save_start_private_thread_state_hook",
     "save_start_thread_state_hook",
+    "upgrade_post_code_blocks_hook",
     "upgrade_post_content_hook",
     "validate_post_hook",
     "validate_posted_contents_hook",

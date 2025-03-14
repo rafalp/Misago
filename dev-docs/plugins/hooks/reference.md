@@ -131,6 +131,7 @@ Hooks instances are importable from the following Python modules:
 - [`save_reply_thread_state_hook`](./save-reply-thread-state-hook.md)
 - [`save_start_private_thread_state_hook`](./save-start-private-thread-state-hook.md)
 - [`save_start_thread_state_hook`](./save-start-thread-state-hook.md)
+- [`upgrade_post_code_blocks_hook`](./upgrade-post-code-blocks-hook.md)
 - [`upgrade_post_content_hook`](./upgrade-post-content-hook.md)
 - [`validate_post_hook`](./validate-post-hook.md)
 - [`validate_posted_contents_hook`](./validate-posted-contents-hook.md)
