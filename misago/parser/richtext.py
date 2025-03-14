@@ -1,10 +1,14 @@
-import re
 from functools import partial
 
 from django.template.loader import render_to_string
 
 from ..attachments.models import Attachment
-from ..html.replace import replace_html_element, replace_html_element_func
+from ..html.replace import (
+    replace_html_element,
+    replace_html_element_func,
+    replace_html_void_element,
+    replace_html_void_element_func,
+)
 from ..permissions.checkutils import PermissionCheckResult
 from .hooks import replace_rich_text_tokens_hook
 
@@ -17,7 +21,7 @@ def replace_rich_text_tokens(html: str, data: dict | None = None) -> str:
 
 
 def _replace_rich_text_tokens_action(html: str, data) -> str:
-    html = replace_rich_text_tokens_attachments(
+    html = replace_rich_text_attachments(
         html, data.get("attachments"), data.get("attachment_errors")
     )
     html = replace_html_element(html, "misago-code", replace_rich_text_code_block)
@@ -25,10 +29,7 @@ def _replace_rich_text_tokens_action(html: str, data) -> str:
     return html
 
 
-ATTACHMENT_TOKEN = re.compile(r"\<attachment=(.+?)\>")
-
-
-def replace_rich_text_tokens_attachments(
+def replace_rich_text_attachments(
     html: str,
     attachments: dict[int, Attachment] | None,
     attachment_errors: dict[int, PermissionCheckResult],
@@ -36,23 +37,22 @@ def replace_rich_text_tokens_attachments(
     attachments = attachments or {}
     attachment_errors = attachment_errors or {}
 
-    replace = partial(
-        replace_rich_text_attachment_token, attachments, attachment_errors
+    replace = replace_html_void_element_func(
+        partial(replace_rich_text_attachment, attachments, attachment_errors)
     )
 
-    return ATTACHMENT_TOKEN.sub(replace, html)
+    return replace_html_void_element(html, "misago-attachment", replace)
 
 
-def replace_rich_text_attachment_token(
+def replace_rich_text_attachment(
     attachments: dict[int, Attachment],
     attachment_errors: dict[int, PermissionCheckResult],
-    matchobj: re.Match,
+    html: str,
+    args: dict,
 ) -> str:
-    name, slug, id = matchobj.group(1).split(":")
-
-    id = int(id)
-    name = name.strip()
-    slug = slug.strip()
+    id = int(args["id"])
+    name = args["name"]
+    slug = args["slug"]
 
     error = attachment_errors.get(id)
     if error is not None and error.permission_denied:

@@ -189,7 +189,14 @@ def _render_ast_node_to_html_action(
         return f'<div class="rich-text-attachment-group">{children}</div>'
 
     if ast_type == "attachment":
-        return f"<attachment={ast_node['name']}:{ast_node['slug']}:{ast_node['id']}>"
+        return html_element(
+            "misago-attachment",
+            attrs={
+                "name": ast_node["name"],
+                "slug": ast_node["slug"],
+                "id": str(ast_node["id"]),
+            },
+        )
 
     if ast_type in ("image", "image-bbcode"):
         return html_element(

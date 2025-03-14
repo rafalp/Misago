@@ -1,6 +1,6 @@
 # serializer version: 1
 # name: test_render_ast_to_html_attachment
-  '<p>See the site:</p><div class="rich-text-attachment-group"><attachment=image.png:image-png:123></div>'
+  '<p>See the site:</p><div class="rich-text-attachment-group"><misago-attachment name="image.png" slug="image-png" id="123" /></div>'
 # ---
 # name: test_render_ast_to_html_auto_link
   '<p>See the file: <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank">misago-project.org</a></p>'
