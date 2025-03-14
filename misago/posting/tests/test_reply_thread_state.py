@@ -157,3 +157,18 @@ def test_reply_thread_state_updates_existing_post_attachments(
     assert attachment.thread == user_thread
     assert attachment.post == post
     assert attachment.uploaded_at == state.timestamp
+
+
+def test_reply_thread_state_schedules_post_upgrade_for_post_with_code_block(
+    mock_upgrade_post_content, user_request, other_user_thread
+):
+    state = ReplyThreadState(user_request, other_user_thread)
+    state.set_post_message("Hello world[code=python]add(1, 3)[/code]")
+    state.save()
+
+    assert state.post.id
+    assert state.post.thread == state.thread
+
+    mock_upgrade_post_content.delay.assert_called_once_with(
+        state.post.id, state.post.sha256_checksum
+    )
