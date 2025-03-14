@@ -1,15 +1,29 @@
-import re
+import copy
 import html
+import re
 
 from ..parser.highlighter import highlight_syntax
 from ..threads.models import Post
+from .hooks import post_needs_content_upgrade_hook, upgrade_post_content_hook
 
 
-def post_requires_upgrade(post: Post) -> bool:
+def post_needs_content_upgrade(post: Post) -> bool:
+    return post_needs_content_upgrade_hook(_post_needs_content_upgrade_action, post)
+
+
+def _post_needs_content_upgrade_action(post: Post) -> bool:
     if post.metadata.get("highlight_code"):
         return True
 
     return False
+
+
+def upgrade_post_content(post: Post):
+    upgrade_post_content_hook(_upgrade_post_content_action, post)
+
+
+def _upgrade_post_content_action(post: Post):
+    upgrade_post_code_blocks(post)
 
 
 CODE_BLOCK_TOKEN = re.compile(
@@ -18,9 +32,17 @@ CODE_BLOCK_TOKEN = re.compile(
 
 
 def upgrade_post_code_blocks(post: Post):
-    if post.metadata.get("highlight_code"):
-        post.parsed = CODE_BLOCK_TOKEN.sub(upgrade_post_code_blocks_syntax, post.parsed)
-        post.metadata.pop("highlight_code")
+    if not post.metadata.get("highlight_code"):
+        return
+
+    html = CODE_BLOCK_TOKEN.sub(upgrade_post_code_blocks_syntax, post.parsed)
+    post.metadata.pop("highlight_code")
+
+    if post.parsed != html:
+        post.parsed = html
+        post.save(update_fields=["parsed", "metadata"])
+    else:
+        post.save(update_fields=["metadata"])
 
 
 def upgrade_post_code_blocks_syntax(match) -> str:

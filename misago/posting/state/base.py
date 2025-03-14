@@ -18,7 +18,7 @@ from ...parser.metadata import create_ast_metadata
 from ...parser.plaintext import render_ast_to_plaintext
 from ...threads.models import Post, Thread
 from ..tasks import upgrade_post_content
-from ..upgrade import post_requires_upgrade
+from ..upgradepost import post_requires_upgrade
 
 if TYPE_CHECKING:
     from ...users.models import User
