@@ -64,7 +64,7 @@ class ReplyThreadState(PostingState):
         self.post.update_search_vector()
         self.post.save()
 
-        self.upgrade_post_content()
+        self.schedule_post_content_upgrade()
 
     def save_thread(self):
         if not self.is_merged:

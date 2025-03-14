@@ -53,7 +53,7 @@ class StartThreadState(PostingState):
         self.post.update_search_vector()
         self.post.save()
 
-        self.upgrade_post_content()
+        self.schedule_post_content_upgrade()
 
     def save_category(self):
         self.category.threads = models.F("threads") + 1
