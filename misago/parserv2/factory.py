@@ -4,6 +4,7 @@ from markdown_it import MarkdownIt
 from markdown_it.utils import PresetType
 
 from .hooks import create_parser_hook
+from .bbcode import inline_bbcode_plugin
 
 
 def create_parser() -> MarkdownIt:
@@ -23,6 +24,8 @@ def _create_parser_action(
     disable: str | Iterable[str] | None = None,
 ) -> MarkdownIt:
     md = MarkdownIt(config, options_update)
+
+    inline_bbcode_plugin(md)
 
     if enable:
         md.enable(enable)
