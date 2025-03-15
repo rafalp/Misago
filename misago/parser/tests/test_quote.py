@@ -132,3 +132,31 @@ def test_quote_unescapes_text(parse_markup):
             ],
         }
     ]
+
+
+def test_quote_next_to_another(parse_markup):
+    result = parse_markup("> Lorem ipsum\n\n> Dolor met")
+    assert result == [
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {"type": "text", "text": "Lorem ipsum"},
+                    ],
+                },
+            ],
+        },
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {"type": "text", "text": "Dolor met"},
+                    ],
+                },
+            ],
+        },
+    ]

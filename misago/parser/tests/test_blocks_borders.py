@@ -351,6 +351,38 @@ PATTERNS = (
             ],
         },
     ),
+    (
+        "quote",
+        "> Lorem ipsum",
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {"type": "text", "text": "Lorem ipsum"},
+                    ],
+                },
+            ],
+        }
+    ),
+    (
+        "multiline quote",
+        "> Lorem ipsum\n> Dolor met",
+        {
+            "type": "quote",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {"type": "text", "text": "Lorem ipsum"},
+                        {"type": "softbreak"},
+                        {"type": "text", "text": "Dolor met"},
+                    ],
+                },
+            ],
+        }
+    ),
 )
 
 PATTERNS_IDS = tuple(pattern[0] for pattern in PATTERNS)
@@ -388,6 +420,24 @@ def get_expected_ast(ast, other_ast, separator):
                     {"type": "softbreak"},
                     {"type": "text", "text": "paragraph"},
                 ],
+            },
+        ]
+
+    if (
+        ast["type"] == "quote"
+        and ast["type"] == other_ast["type"]
+        and separator == "\n"
+    ):
+        # Only double newline character (or more) is a valid quote separator
+        return [
+            {
+                "type": "quote",
+                "children": {
+                    "type": "paragraph",
+                    "children": (
+                        ast["children"][0]["children"] + other_ast["children"][0]["children"],
+                    )
+                }
             },
         ]
 
