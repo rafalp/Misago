@@ -14,7 +14,7 @@
 # name: test_render_ast_to_html_code
   '''
   <misago-code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
+      output(&quot;Gotcha!&quot;)
       return True
   return False</misago-code>
   '''
@@ -22,7 +22,7 @@
 # name: test_render_ast_to_html_code_bbcode
   '''
   <misago-code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
+      output(&quot;Gotcha!&quot;)
       return True
   return False</misago-code>
   '''
@@ -30,7 +30,7 @@
 # name: test_render_ast_to_html_code_bbcode_with_syntax
   '''
   <misago-code syntax="python" language="Python">if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
+      output(&quot;Gotcha!&quot;)
       return True
   return False</misago-code>
   '''
@@ -38,7 +38,7 @@
 # name: test_render_ast_to_html_code_indented
   '''
   <p>Hello:</p><misago-code>if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
+      output(&quot;Gotcha!&quot;)
       return True
   return False</misago-code>
   '''
@@ -46,7 +46,7 @@
 # name: test_render_ast_to_html_code_with_syntax
   '''
   <misago-code syntax="python" language="Python">if random.randint(0, 10) &gt; 4:
-      print(&quot;Gotcha!&quot;)
+      output(&quot;Gotcha!&quot;)
       return True
   return False</misago-code>
   '''
@@ -115,7 +115,10 @@
   '<table class="rich-text-table"><tr><th class="rich-text-table-cell-align-left">Col1</th></tr></table></table>'
 # ---
 # name: test_render_ast_to_html_ordered_list
-  '<ol><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ol>'
+  '<ol><li><p>Lorem</p></li><li><p><em>Ipsum</em></p></li><li><p>Dolor</p></li></ol>'
+# ---
+# name: test_render_ast_to_html_ordered_list_with_custom_start
+  '<ol start="3"><li><p>Lorem</p></li><li><p><em>Ipsum</em></p></li><li><p>Dolor</p></li></ol>'
 # ---
 # name: test_render_ast_to_html_paragraph
   '<p>Hello world!</p>'
@@ -178,10 +181,10 @@
   '<p>Hello <u>world</u>!</p>'
 # ---
 # name: test_render_ast_to_html_unordered_list
-  '<ul><li>Lorem</li><li><em>Ipsum</em></li><li>Dolor</li></ul>'
+  '<ul><li><p>Lorem</p></li><li><p><em>Ipsum</em></p></li><li><p>Dolor</p></li></ul>'
 # ---
 # name: test_render_ast_to_html_unordered_list_with_nested_list
-  '<ul><li>Lorem</li><li><em>Ipsum</em><ul><li>Met</li><li>Elit</li></ul></li><li>Dolor</li></ul>'
+  '<ul><li><p>Lorem</p></li><li><p><em>Ipsum</em></p><ul><li><p>Met</p></li><li><p>Elit</p></li></ul></li><li><p>Dolor</p></li></ul>'
 # ---
 # name: test_render_ast_to_html_url
   '<p>See <a href="https://misago-project.org" rel="external nofollow noopener" target="_blank" title="https://misago-project.org"><em>the site</em></a>!</p>'

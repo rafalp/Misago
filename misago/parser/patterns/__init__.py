@@ -40,6 +40,7 @@ from .urls import (
 )
 
 block_patterns: list[Pattern] = [
+    IndentedCodeMarkdown(),
     FencedCodeMarkdown(),
     CodeBBCode(),
     AtxHeading(),
@@ -48,7 +49,6 @@ block_patterns: list[Pattern] = [
     ThematicBreakMarkdown(),
     ListMarkdown(),
     TableMarkdown(),
-    IndentedCodeMarkdown(),
     QuoteMarkdown(),
     QuoteBBCodeOpen(),
     QuoteBBCodeClose(),

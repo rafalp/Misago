@@ -28,7 +28,7 @@ def test_inline_bbcode_with_new_line(parse_markup):
                     "type": "bold-bbcode",
                     "children": [
                         {"type": "text", "text": "guest"},
-                        {"type": "line-break"},
+                        {"type": "softbreak"},
                         {"type": "text", "text": "name"},
                     ],
                 },

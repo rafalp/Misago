@@ -1,4 +1,7 @@
 # serializer version: 1
+# name: test_render_ast_to_html_ordered_list_with_custom_start
+  '3. Lorem 4. Ipsum 5. Dolor'
+# ---
 # name: test_render_ast_to_plaintext_attachment
   'See the logo: file.png'
 # ---
@@ -21,16 +24,16 @@
   'Hello world!'
 # ---
 # name: test_render_ast_to_plaintext_code
-  'if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+  'if random.randint(0, 10) > 4: output("Gotcha!") return True return False'
 # ---
 # name: test_render_ast_to_plaintext_code_bbcode
-  'if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+  'if random.randint(0, 10) > 4: output("Gotcha!") return True return False'
 # ---
 # name: test_render_ast_to_plaintext_code_bbcode_with_syntax
-  'python: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+  'python: if random.randint(0, 10) > 4: output("Gotcha!") return True return False'
 # ---
 # name: test_render_ast_to_plaintext_code_indented
-  'Hello: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+  'Hello: if random.randint(0, 10) > 4: output("Gotcha!") return True return False'
 # ---
 # name: test_render_ast_to_plaintext_code_with_info
   'misago.py: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
@@ -39,7 +42,7 @@
   'misago.py (python): if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
 # ---
 # name: test_render_ast_to_plaintext_code_with_syntax
-  'python: if random.randint(0, 10) > 4: print("Gotcha!") return True return False'
+  'python: if random.randint(0, 10) > 4: output("Gotcha!") return True return False'
 # ---
 # name: test_render_ast_to_plaintext_emphasis_text
   'Hello world!'
