@@ -4,8 +4,11 @@ from markdown_it import MarkdownIt
 from markdown_it.utils import PresetType
 
 from .hooks import create_parser_hook
-from .bbcode import formatting_bbcode_plugin
-from .rules import set_link_target_blank_rule
+from .plugins import (
+    attachment_plugin,
+    formatting_bbcode_plugin,
+    link_target_blank_plugin,
+)
 
 
 def create_parser() -> MarkdownIt:
@@ -14,8 +17,10 @@ def create_parser() -> MarkdownIt:
         config="js-default",
         options_update={"typographer": True, "linkify": True},
         enable=["replacements", "smartquotes"],
-        render_rules=[
-            ("link_open", set_link_target_blank_rule),
+        plugins=[
+            attachment_plugin,
+            formatting_bbcode_plugin,
+            link_target_blank_plugin,
         ],
     )
 
@@ -26,15 +31,13 @@ def _create_parser_action(
     options_update: Mapping[str, Any] | None = None,
     enable: str | Iterable[str] | None = None,
     disable: str | Iterable[str] | None = None,
-    render_rules: Iterable[tuple[str, Callable]] | None = None,
+    plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
 ) -> MarkdownIt:
     md = MarkdownIt(config, options_update)
 
-    if render_rules:
-        for rule_name, rule_func in render_rules:
-            md.add_render_rule(rule_name, rule_func)
-
-    formatting_bbcode_plugin(md)
+    if plugins:
+        for plugin in plugins:
+            plugin(md)
 
     if enable:
         md.enable(enable)

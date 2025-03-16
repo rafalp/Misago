@@ -23,16 +23,18 @@ class CreateParserHookAction(Protocol):
 
     ## `enable: str | Iterable[str] | None = None`
 
-    Argument to call the `MarkdownIt.enable(...)` method with. If empty or `None`, `enable()` will not be called.
+    Argument to call the `MarkdownIt.enable(...)` method with.
+    If empty or `None`, `enable()` will not be called.
 
     ## `disable: str | Iterable[str] | None = None`
 
-    Argument to call the `MarkdownIt.disable(...)` method with. If empty or `None`, `disable()` will not be called.
+    Argument to call the `MarkdownIt.disable(...)` method with.
+    If empty or `None`, `disable()` will not be called.
 
-    ## `render_rules: Iterable[tuple[str, Callable]] | None = None`
+    ## `plugins: Iterable[Callable[[MarkdownIt], None]] | None = None`
 
-    A list of render rules as tuples, each containing a name string and a callable to pass to
-    `MarkdownIt.add_render_rule()`. If empty or None, `add_render_rule()` will not be called.
+    A list of `MarkdownIt` plugins. Each plugin must be a callable that accepts
+    a single argument: the `MarkdownIt` instance.
 
     # Return value
 
@@ -46,7 +48,7 @@ class CreateParserHookAction(Protocol):
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
-        render_rules: Iterable[tuple[str, Callable]] | None = None,
+        plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
     ) -> MarkdownIt: ...
 
 
@@ -73,16 +75,18 @@ class CreateParserHookFilter(Protocol):
 
     ## `enable: str | Iterable[str] | None = None`
 
-    Argument to call the `MarkdownIt.enable(...)` method with. If empty or `None`, `enable()` will not be called.
+    Argument to call the `MarkdownIt.enable(...)` method with.
+    If empty or `None`, `enable()` will not be called.
 
     ## `disable: str | Iterable[str] | None = None`
 
-    Argument to call the `MarkdownIt.disable(...)` method with. If empty or `None`, `disable()` will not be called.
+    Argument to call the `MarkdownIt.disable(...)` method with.
+    If empty or `None`, `disable()` will not be called.
 
-    ## `render_rules: Iterable[tuple[str, Callable]] | None = None`
+    ## `plugins: Iterable[Callable[[MarkdownIt], None]] | None = None`
 
-    A list of render rules as tuples, each containing a name string and a callable to pass to
-    `MarkdownIt.add_render_rule()`. If empty or None, `add_render_rule()` will not be called.
+    A list of `MarkdownIt` plugins. Each plugin must be a callable that accepts
+    a single argument: the `MarkdownIt` instance.
 
     # Return value
 
@@ -97,7 +101,7 @@ class CreateParserHookFilter(Protocol):
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
-        render_rules: Iterable[tuple[str, Callable]] | None = None,
+        plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
     ) -> MarkdownIt: ...
 
 
@@ -127,7 +131,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
-        render_rules: Iterable[tuple[str, Callable]] | None = None,
+        plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
     ) -> Parser:
         options_update["linkify"] = False
 
@@ -136,7 +140,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
             options_update=options_update,
             enable=enable,
             disable=disable,
-            render_rules=render_rules,
+            plugins=plugins,
         )
     ```
     """
@@ -151,7 +155,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
-        render_rules: Iterable[tuple[str, Callable]] | None = None,
+        plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
     ) -> MarkdownIt:
         return super().__call__(
             action,
@@ -159,7 +163,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
             options_update=options_update,
             enable=enable,
             disable=disable,
-            render_rules=render_rules,
+            plugins=plugins,
         )
 
 
