@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Mapping, Protocol
+from typing import Any, Callable, Iterable, Mapping, Protocol
 
 from markdown_it import MarkdownIt
 from markdown_it.utils import PresetType
@@ -29,6 +29,11 @@ class CreateParserHookAction(Protocol):
 
     Argument to call the `MarkdownIt.disable(...)` method with. If empty or `None`, `disable()` will not be called.
 
+    ## `render_rules: Iterable[tuple[str, Callable]] | None = None`
+
+    A list of render rules as tuples, each containing a name string and a callable to pass to
+    `MarkdownIt.add_render_rule()`. If empty or None, `add_render_rule()` will not be called.
+
     # Return value
 
     An instance of the `MarkdownIt` class.
@@ -41,6 +46,7 @@ class CreateParserHookAction(Protocol):
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
+        render_rules: Iterable[tuple[str, Callable]] | None = None,
     ) -> MarkdownIt: ...
 
 
@@ -73,6 +79,11 @@ class CreateParserHookFilter(Protocol):
 
     Argument to call the `MarkdownIt.disable(...)` method with. If empty or `None`, `disable()` will not be called.
 
+    ## `render_rules: Iterable[tuple[str, Callable]] | None = None`
+
+    A list of render rules as tuples, each containing a name string and a callable to pass to
+    `MarkdownIt.add_render_rule()`. If empty or None, `add_render_rule()` will not be called.
+
     # Return value
 
     An instance of the `MarkdownIt` class.
@@ -86,6 +97,7 @@ class CreateParserHookFilter(Protocol):
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
+        render_rules: Iterable[tuple[str, Callable]] | None = None,
     ) -> MarkdownIt: ...
 
 
@@ -100,7 +112,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
     linkification in parsed messages:
 
     ```python
-    from typing import Any, Iterable, Mapping
+    from typing import Any, Callable, Iterable, Mapping
 
     from markdown_it import MarkdownIt
     from markdown_it.utils import PresetType
@@ -115,6 +127,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
+        render_rules: Iterable[tuple[str, Callable]] | None = None,
     ) -> Parser:
         options_update["linkify"] = False
 
@@ -123,6 +136,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
             options_update=options_update,
             enable=enable,
             disable=disable,
+            render_rules=render_rules,
         )
     ```
     """
@@ -137,6 +151,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
         options_update: Mapping[str, Any] | None = None,
         enable: str | Iterable[str] | None = None,
         disable: str | Iterable[str] | None = None,
+        render_rules: Iterable[tuple[str, Callable]] | None = None,
     ) -> MarkdownIt:
         return super().__call__(
             action,
@@ -144,6 +159,7 @@ class CreateParserHook(FilterHook[CreateParserHookAction, CreateParserHookFilter
             options_update=options_update,
             enable=enable,
             disable=disable,
+            render_rules=render_rules,
         )
 
 
