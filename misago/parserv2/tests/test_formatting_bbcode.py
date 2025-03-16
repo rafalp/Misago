@@ -11,3 +11,13 @@ def test_italics_bbcode_is_rendered(parse_to_html):
 def test_underline_bbcode_is_rendered(parse_to_html):
     html = parse_to_html("Hello [u]world[/u]!")
     assert html == "<p>Hello <u>world</u>!</p>"
+
+
+def test_strikethrough_bbcode_is_rendered(parse_to_html):
+    html = parse_to_html("Hello [s]world[/s]!")
+    assert html == "<p>Hello <del>world</del>!</p>"
+
+
+def test_nested_formatting_bbcode_is_rendered(parse_to_html):
+    html = parse_to_html("Hello [b]wo[u]r[/u]ld[/b]!")
+    assert html == "<p>Hello <b>wo<u>r</u>ld</b>!</p>"

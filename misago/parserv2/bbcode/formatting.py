@@ -1,25 +1,26 @@
 from markdown_it import MarkdownIt
-from markdown_it.rules_inline.state_inline import Delimiter, StateInline
+from markdown_it.rules_inline.state_inline import StateInline
 
-SIMPLE_INLINE_BBCODE = (
-    "bold",
-    "italics",
-    "underline",
-)
+FORMATTING_BBCODE = {
+    "bold": "b",
+    "italics": "i",
+    "underline": "u",
+    "strikethrough": "del",
+}
 
 
-def inline_bbcode_plugin(md: MarkdownIt):
-    for bbcode_name in SIMPLE_INLINE_BBCODE:
+def formatting_bbcode_plugin(md: MarkdownIt):
+    for name, markup in FORMATTING_BBCODE.items():
         md.inline.ruler.push(
-            bbcode_name + "bbcode",
-            get_simple_inline_bbcode_rule(bbcode_name, bbcode_name[0]),
+            name + "bbcode",
+            get_formatting_bbcode_rule(name, markup),
         )
 
 
-def get_simple_inline_bbcode_rule(name: str, markup: str):
-    def simple_inline_bbcode_rule(state: StateInline, silent: bool):
-        markup_open = f"[{markup}]"
-        markup_close = f"[/{markup}]"
+def get_formatting_bbcode_rule(name: str, markup: str):
+    def formatting_bbcode_rule(state: StateInline, silent: bool):
+        markup_open = f"[{name[0]}]"
+        markup_close = f"[/{name[0]}]"
 
         start = state.pos
         marker = state.src[start : start + 3]
@@ -58,4 +59,4 @@ def get_simple_inline_bbcode_rule(name: str, markup: str):
         state.posMax = maximum
         return True
 
-    return simple_inline_bbcode_rule
+    return formatting_bbcode_rule
