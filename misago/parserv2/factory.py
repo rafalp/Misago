@@ -5,14 +5,14 @@ from markdown_it.utils import PresetType
 
 from .hooks import create_parser_hook
 from .bbcode import formatting_bbcode_plugin
-from .urlblank import url_target_blank_plugin
+from .linktargetblank import link_target_blank_plugin
 
 
 def create_parser() -> MarkdownIt:
     return create_parser_hook(
         _create_parser_action,
         config="js-default",
-        options_update={"typographer": True},
+        options_update={"typographer": True, "linkify": True},
         enable=["replacements", "smartquotes"],
     )
 
@@ -26,7 +26,7 @@ def _create_parser_action(
 ) -> MarkdownIt:
     md = MarkdownIt(config, options_update)
 
-    url_target_blank_plugin(md)
+    link_target_blank_plugin(md)
     formatting_bbcode_plugin(md)
 
     if enable:
