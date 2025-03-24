@@ -7,14 +7,12 @@ from ...core.utils import slugify
 
 def attachment_plugin(md: MarkdownIt):
     md.block.ruler.before(
-        "table", "attachment", attachment_rule, {"alt": ["paragraph", "blockquote"]}
+        "paragraph", "attachment", attachment_rule, {"alt": ["paragraph", "blockquote"]}
     )
 
 
 def attachment_rule(state: StateBlock, startLine: int, endLine: int, silent: bool):
-    if state.is_code_block(startLine):
-        return False
-
+    return False
     start = state.bMarks[startLine] + state.tShift[startLine]
     maximum = state.eMarks[startLine]
 
@@ -39,9 +37,7 @@ def attachment_rule(state: StateBlock, startLine: int, endLine: int, silent: boo
     if silent:
         return True
 
-    state.line = startLine + 1
-
-    token = state.push("attachment", "misago-attachment", 0)
+    token = bbcode_parser.push(state, "attachment", "misago-attachment", 0)
     for attr_name, attr_value in args.items():
         token.attrSet(attr_name, attr_value)
 
