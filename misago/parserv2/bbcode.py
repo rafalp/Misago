@@ -51,8 +51,8 @@ class BBCodeBlockRule:
         if state.src[start + opening[3] : maximum].strip():
             return False
 
-        markup, attrs = opening
-        closing = None
+        markup, attrs, _, _ = opening
+        ending = None
 
         nesting = 1
         line += 1
@@ -60,25 +60,24 @@ class BBCodeBlockRule:
         while line <= endLine:
             start = state.bMarks[line] + state.tShift[line]
             maximum = state.eMarks[line]
-            src = state.src[start:maximum]
 
-            if state.is_code_block(startLine):
+            if state.is_code_block(startLine) or all(self.scan_full_line(state, line)):
                 line += 1
                 continue
 
-            if self.start(src):
+            if self.scan_line_for_start(state, line):
                 nesting += 1
 
-            elif match := self.end(src):
+            elif match := self.scan_line_for_end(state, line):
                 nesting -= 1
 
                 if nesting == 0:
-                    closing = match
+                    ending = match
                     break
 
             line += 1
 
-        if silent:
+        if silent or not ending:
             return nesting == 0
 
         max_line = line + 1
@@ -94,7 +93,7 @@ class BBCodeBlockRule:
         self.parse_children_blocks(state, startLine, max_line)
 
         token = state.push(f"{self.name}_close", self.element, -1)
-        token.markup = closing
+        token.markup = ending[0]
 
         state.line = max_line + 1
         return True
