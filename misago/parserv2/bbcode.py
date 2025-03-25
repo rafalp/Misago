@@ -34,69 +34,17 @@ class BBCodeBlockRule:
         if state.is_code_block(startLine):
             return False
 
-        opening, ending = self.scan_full_line(state, startLine)
-        if opening and ending:
+        start, end = self.scan_full_line(state, startLine)
+        if start and end:
             if silent:
                 return True
 
-            return self.parse_single_line(state, startLine, opening, ending)
+            return self.parse_single_line(state, startLine, start, end)
 
-        if not opening:
+        if not start:
             return False
 
-        line = startLine
-        start = state.bMarks[line] + state.tShift[line]
-        maximum = state.eMarks[line]
-
-        if state.src[start + opening[3] : maximum].strip():
-            return False
-
-        markup, attrs, _, _ = opening
-        ending = None
-
-        nesting = 1
-        line += 1
-
-        while line <= endLine:
-            start = state.bMarks[line] + state.tShift[line]
-            maximum = state.eMarks[line]
-
-            if state.is_code_block(startLine) or all(self.scan_full_line(state, line)):
-                line += 1
-                continue
-
-            if self.scan_line_for_start(state, line):
-                nesting += 1
-
-            elif match := self.scan_line_for_end(state, line):
-                nesting -= 1
-
-                if nesting == 0:
-                    ending = match
-                    break
-
-            line += 1
-
-        if silent or not ending:
-            return nesting == 0
-
-        max_line = line + 1
-
-        token = state.push(f"{self.name}_open", self.element, 1)
-        token.markup = markup
-        token.map = [startLine, max_line]
-
-        if attrs:
-            for attr_name, attr_value in attrs.items():
-                token.attrSet(attr_name, attr_value)
-
-        self.parse_children_blocks(state, startLine, max_line)
-
-        token = state.push(f"{self.name}_close", self.element, -1)
-        token.markup = ending[0]
-
-        state.line = max_line + 1
-        return True
+        return self.parse_multiple_lines(state, startLine, endLine, silent, start)
 
     def scan_full_line(
         self, state: StateBlock, line: int
@@ -211,6 +159,55 @@ class BBCodeBlockRule:
 
         return True
 
+    def parse_multiple_lines(
+        self,
+        state: StateBlock,
+        startLine: int,
+        endLine: int,
+        silent: bool,
+        start: BBCodeBlockStart,
+    ) -> bool:
+        line = startLine
+        pos = state.bMarks[line] + state.tShift[line] + start[3]
+        maximum = state.eMarks[line]
+
+        if state.src[pos:maximum].strip():
+            return False
+
+        end = None
+        nesting = 1
+
+        while line <= endLine:
+            line += 1
+
+            if (
+                state.isEmpty(line)
+                or state.is_code_block(line)
+                or all(self.scan_full_line(state, line))
+                or line > state.lineMax
+            ):
+                continue
+
+            if self.scan_line_for_start(state, line):
+                nesting += 1
+
+            elif match := self.scan_line_for_end(state, line):
+                nesting -= 1
+
+                if nesting == 0:
+                    end = match
+                    break
+
+        if silent or not end:
+            return nesting == 0
+
+        self.state_push_open_token(state, startLine, line, start)
+        self.parse_children_blocks(state, startLine + 1, line)
+        self.state_push_close_token(state, end)
+
+        state.line = line + 1
+        return True
+
     def state_push_open_token(
         self, state: StateBlock, startLine: int, endLine: int, start: BBCodeBlockStart
     ) -> Token:
@@ -230,17 +227,17 @@ class BBCodeBlockRule:
         return token
 
     def parse_children_blocks(self, state: StateBlock, startLine: int, endLine: int):
-        if startLine + 1 == endLine:
+        if startLine == endLine:
             return
 
         old_line_max = state.lineMax
         old_parent = state.parentType
 
-        state.lineMax = startLine + 1
+        state.lineMax = startLine
         state.parentType = self.name
 
         state.level += 1
-        state.md.block.tokenize(state, startLine + 1, endLine - 1)
+        state.md.block.tokenize(state, startLine, endLine)
         state.level -= 1
 
         state.lineMax = old_line_max
