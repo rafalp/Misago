@@ -19,15 +19,27 @@ def quote_bbcode_plugin(md: MarkdownIt):
     )
 
 
-def quote_bbcode_start(src: str) -> tuple[str, dict | None] | None:
-    if not src.lower().startswith("[quote") or "]" not in src:
+def quote_bbcode_start(
+    state: StateBlock, line: int
+) -> tuple[str, dict | None, int, int] | None:
+    start = state.bMarks[line] + state.tShift[line]
+    maximum = state.eMarks[line]
+    src = state.src[start:maximum]
+
+    if src.lower()[:6] != "[quote":
         return None
 
-    end = src.index("]")
-    if end > 6 and src[6] != "=":
+    if "]" not in src[6:]:
         return None
 
-    return src, quote_bbcode_parse_args(src[7:end])
+    end = src.index("]", start, maximum)
+    if end == 6:
+        return src[:7], None, start, end + 1
+
+    if end and src[6] != "=":
+        return None
+
+    return src[: end + 1], quote_bbcode_parse_args(src[7:end]), start, end + 1
 
 
 def quote_bbcode_parse_args(args_str: str) -> dict | None:
@@ -72,8 +84,12 @@ def parse_user_post_args(args: str) -> dict | None:
     return None
 
 
-def quote_bbcode_end(src: str) -> str | None:
-    if src.lower().startswith("[/quote]"):
-        return src
+def quote_bbcode_end(state: StateBlock, line: int) -> tuple[str, int, int] | None:
+    start = state.bMarks[line] + state.tShift[line]
+    maximum = state.eMarks[line]
+    src = state.src[start:maximum]
+
+    if src[:8].lower() == "[/quote]":
+        return src[:8], start, start + 8
 
     return None
