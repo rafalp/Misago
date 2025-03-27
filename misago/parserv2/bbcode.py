@@ -133,23 +133,9 @@ class BBCodeBlockRule:
     ):
         old_parent_type = state.parentType
 
-        content_start = start[3]
-        content_end = end[1]
-
         state.parentType = self.name
         self.state_push_open_token(state, startLine, startLine, start)
-
-        state.parentType = "paragraph"
-        token = state.push("paragraph_open", "p", 1)
-        token.map = [startLine, startLine]
-
-        token = state.push("inline", "", 0)
-        token.content = state.src[content_start:content_end].strip()
-        token.map = [startLine, state.line]
-        token.children = []
-
-        token = state.push("paragraph_close", "p", -1)
-
+        self.state_push_single_line_content(state, startLine, start, end)
         self.state_push_close_token(state, end)
 
         state.parentType = old_parent_type
@@ -200,7 +186,7 @@ class BBCodeBlockRule:
             return nesting == 0
 
         self.state_push_open_token(state, startLine, line, start)
-        self.parse_children_blocks(state, startLine + 1, line)
+        self.state_push_children(state, startLine + 1, line)
         self.state_push_close_token(state, end)
 
         state.line = line + 1
@@ -224,7 +210,41 @@ class BBCodeBlockRule:
         token.markup = end[0]
         return token
 
-    def parse_children_blocks(self, state: StateBlock, startLine: int, endLine: int):
+    def state_push_void_token(
+        self, state: StateBlock, startLine: int, start: BBCodeBlockStart
+    ) -> Token:
+        token = state.push(f"{self.name}", self.element, 0)
+        token.markup = start[0]
+        token.map = [startLine, startLine]
+
+        if attrs := start[1]:
+            for attr_name, attr_value in attrs.items():
+                token.attrSet(attr_name, attr_value)
+
+        return token
+
+    def state_push_single_line_content(
+        self,
+        state: StateBlock,
+        startLine: int,
+        start: BBCodeBlockStart,
+        end: BBCodeBlockEnd,
+    ):
+        content_start = start[3]
+        content_end = end[1]
+
+        state.parentType = "paragraph"
+        token = state.push("paragraph_open", "p", 1)
+        token.map = [startLine, startLine]
+
+        token = state.push("inline", "", 0)
+        token.content = state.src[content_start:content_end].strip()
+        token.map = [startLine, state.line]
+        token.children = []
+
+        token = state.push("paragraph_close", "p", -1)
+
+    def state_push_children(self, state: StateBlock, startLine: int, endLine: int):
         if startLine == endLine:
             return
 
@@ -240,3 +260,54 @@ class BBCodeBlockRule:
 
         state.lineMax = old_line_max
         state.parentType = old_parent
+
+
+def bbcode_block_start_rule(
+    bbcode: str, state: StateBlock, line: int, args: bool = False
+) -> tuple[str, str | None, int, int] | None:
+    start = state.bMarks[line] + state.tShift[line]
+    maximum = state.eMarks[line]
+    src = state.src[start:maximum]
+
+    block_bbcode = f"[{bbcode}".lower()
+    block_bbcode_len = len(block_bbcode)
+
+    if src.lower()[:block_bbcode_len] != block_bbcode:
+        return None
+
+    if "]" not in src[block_bbcode_len:]:
+        return None
+
+    end = src.index("]", 0, maximum - start)
+    if end == block_bbcode_len:
+        return src[: block_bbcode_len + 1], None, start, start + end + 1
+
+    if src[block_bbcode_len] != "=" or not args:
+        return None
+
+    args_str = src[block_bbcode_len + 1 : end]
+    if args_str:
+        if args_str[0] == '"' and args_str[-1] == '"':
+            args_str = args_str[1:-1]
+        elif args_str[0] == "'" and args_str[-1] == "'":
+            args_str = args_str[1:-1]
+
+    args_str = args_str.strip() or None
+
+    return src[: end + 1], args_str, start, end + 1
+
+
+def bbcode_block_end_rule(
+    bbcode: str, state: StateBlock, line: int
+) -> tuple[str, int, int] | None:
+    start = state.bMarks[line] + state.tShift[line]
+    maximum = state.eMarks[line]
+    src = state.src[start:maximum]
+
+    block_bbcode = f"[/{bbcode}]".lower()
+    block_bbcode_len = len(block_bbcode)
+
+    if src[:block_bbcode_len].lower() == block_bbcode:
+        return src[:block_bbcode_len], start, start + block_bbcode_len
+
+    return None

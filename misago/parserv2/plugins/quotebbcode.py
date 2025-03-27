@@ -3,7 +3,7 @@ import re
 from markdown_it import MarkdownIt
 from markdown_it.rules_block.state_block import StateBlock
 
-from ..bbcode import BBCodeBlockRule
+from ..bbcode import BBCodeBlockRule, bbcode_block_end_rule, bbcode_block_start_rule
 
 
 def quote_bbcode_plugin(md: MarkdownIt):
@@ -23,37 +23,21 @@ def quote_bbcode_plugin(md: MarkdownIt):
 def quote_bbcode_start(
     state: StateBlock, line: int
 ) -> tuple[str, dict | None, int, int] | None:
-    start = state.bMarks[line] + state.tShift[line]
-    maximum = state.eMarks[line]
-    src = state.src[start:maximum]
-
-    if src.lower()[:6] != "[quote":
+    start = bbcode_block_start_rule("quote", state, line, args=True)
+    if not start:
         return None
 
-    if "]" not in src[6:]:
-        return None
+    markup, args_str, start, end = start
 
-    end = src.index("]", 0, maximum - start)
-    if end == 6:
-        return src[:7], None, start, start + end + 1
+    if args_str:
+        args = quote_bbcode_parse_args(args_str)
+    else:
+        args = None
 
-    if end and src[6] != "=":
-        return None
-
-    return src[: end + 1], quote_bbcode_parse_args(src[7:end]), start, end + 1
+    return markup, args, start, end
 
 
 def quote_bbcode_parse_args(args_str: str) -> dict | None:
-    if not args_str:
-        return None
-
-    if args_str[0] == '"' and args_str[-1] == '"':
-        args_str = args_str[1:-1]
-    elif args_str[0] == "'" and args_str[-1] == "'":
-        args_str = args_str[1:-1]
-
-    args_str = args_str.strip()
-
     if not args_str:
         return None
 
@@ -88,11 +72,4 @@ def parse_user_post_args(args: str) -> dict | None:
 
 
 def quote_bbcode_end(state: StateBlock, line: int) -> tuple[str, int, int] | None:
-    start = state.bMarks[line] + state.tShift[line]
-    maximum = state.eMarks[line]
-    src = state.src[start:maximum]
-
-    if src[:8].lower() == "[/quote]":
-        return src[:8], start, start + 8
-
-    return None
+    return bbcode_block_end_rule("quote", state, line)

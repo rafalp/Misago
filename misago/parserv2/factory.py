@@ -6,6 +6,7 @@ from markdown_it.utils import PresetType
 from .hooks import create_parser_hook
 from .plugins import (
     attachment_plugin,
+    code_bbcode_plugin,
     formatting_bbcode_plugin,
     link_target_blank_plugin,
     quote_bbcode_plugin,
@@ -23,6 +24,7 @@ def create_parser() -> MarkdownIt:
             attachment_plugin,
             formatting_bbcode_plugin,
             link_target_blank_plugin,
+            code_bbcode_plugin,
             quote_bbcode_plugin,
             spoiler_bbcode_plugin,
         ],
